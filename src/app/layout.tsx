@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import "../css/variables.css";
 import "../css/globals.css";
-import { getLocale, getMessages } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Bilan Carbone +",
