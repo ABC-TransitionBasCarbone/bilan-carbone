@@ -1,0 +1,37 @@
+.logo {
+  position: absolute;
+  left: 0;
+  top: 50vh;
+  transform: translateY(-50%);
+  max-width: 90%;
+  height: auto;
+}
+
+.container {
+  position: absolute;
+  top: 40vh;
+  transform: translateY(-50%);
+  width: 100%;
+}
+
+.loginForm {
+  margin: auto;
+  padding: 2rem;
+  width: 300px;
+}
+
+.welcome {
+  background-color: var(--primary-50);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.welcomeLogo {
+  margin-top: 0.5rem;
+  height: auto;
+  max-width: 100%;
+}
