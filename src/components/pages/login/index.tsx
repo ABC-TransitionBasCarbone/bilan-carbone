@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
-import styles from "./Login.module.css";
 import { useTranslations } from "next-intl";
+import styles from "./styles.module.css";
 
 const Login = () => {
   const t = useTranslations("login");
