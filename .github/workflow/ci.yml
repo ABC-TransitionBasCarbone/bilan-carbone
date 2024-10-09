@@ -1,0 +1,56 @@
+name: CI
+on:
+  push:
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: bilancarbone
+          POSTGRES_PASSWORD: bilancarbone
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+      - name: Linter
+        run: yarn lint
+      - name: Run build
+        run: yarn build
+      - name: Start server
+        run: yarn start &
+      - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
+      - name: Lighthouse Check
+        uses: foo-software/lighthouse-check-action@master
+        id: lighthouseCheck
+        with:
+          device: all
+          urls: 'http://localhost:3000'
+          outputDirectory: ${{ github.workspace }}/tmp/artifacts
+      - name: Verify Lighthouse Check results
+        uses: foo-software/lighthouse-check-status-action@master
+        with:
+          lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
+          minAccessibilityScore: '100'
+          minBestPracticesScore: '100'
+      - name: Upload Lighthouse artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: Lighthouse reports
+          path: ${{ github.workspace }}/tmp/artifacts
