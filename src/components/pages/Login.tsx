@@ -1,8 +1,10 @@
 import Image from "next/image";
 import React from "react";
 import styles from "./Login.module.css";
+import { useTranslations } from "next-intl";
 
 const Login = () => {
+  const t = useTranslations("login");
   return (
     <>
       <Image
@@ -15,7 +17,7 @@ const Login = () => {
       <div className={styles.container}>
         <div className={styles.loginForm}>
           <div className={styles.welcome}>
-            Bienvenue
+            {t("welcome")}
             <Image
               className={styles.welcomeLogo}
               src="/logos/bcp-with-text.png"
@@ -25,7 +27,7 @@ const Login = () => {
             ></Image>
           </div>
           <input placeholder="email" />
-          <button>Se connecter</button>
+          <button>{t("login")}</button>
         </div>
       </div>
     </>
