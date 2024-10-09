@@ -30,6 +30,10 @@ jobs:
         run: yarn install --immutable --immutable-cache --check-cache
       - name: Linter
         run: yarn lint
+      - name: Generate prisma files
+        run: npx prisma generate
+      - name: Migrate DB
+        run: prisma migrate deploy
       - name: Run build
         run: yarn build
       - name: Start server
