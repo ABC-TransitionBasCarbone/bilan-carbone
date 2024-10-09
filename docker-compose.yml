@@ -1,0 +1,8 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: bilancarbone
+      POSTGRES_PASSWORD: bilancarbone
+    ports:
+      - '5432:5432'
