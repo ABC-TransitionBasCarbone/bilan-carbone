@@ -1,0 +1,8 @@
+model Actuality {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  title     String
+  text      String
+
+  @@map("actualities")
+}
