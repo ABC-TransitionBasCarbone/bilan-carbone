@@ -1,5 +1,5 @@
-import { Actuality } from "@prisma/client";
-import React from "react";
+import { Actuality } from '@prisma/client'
+import React from 'react'
 
 const Actualities = ({ actualities }: { actualities: Actuality[] }) => {
   return (
@@ -16,7 +16,7 @@ const Actualities = ({ actualities }: { actualities: Actuality[] }) => {
         ))
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Actualities;
+export default Actualities
