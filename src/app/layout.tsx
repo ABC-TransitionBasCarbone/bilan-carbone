@@ -11,11 +11,7 @@ export const metadata: Metadata = {
   description: 'Découvrez le logiciel Bilan Carbone +',
 }
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+const RootLayout = async ({ children }: Readonly<Props>) => {
   const locale = await getLocale()
 
   // Providing all messages to the client
@@ -34,3 +30,9 @@ export default async function RootLayout({
     </html>
   )
 }
+
+interface Props {
+  children: React.ReactNode
+}
+
+export default RootLayout
