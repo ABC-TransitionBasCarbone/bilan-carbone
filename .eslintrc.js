@@ -7,8 +7,9 @@ module.exports = {
     'next/core-web-vitals',
     'next/typescript',
   ],
-  plugins: ['@typescript-eslint', 'react'],
+  plugins: ['@typescript-eslint', 'react', 'prettier'],
   rules: {
+    'prettier/prettier': 'error',
     'react/jsx-tag-spacing': [
       'error',
       {
