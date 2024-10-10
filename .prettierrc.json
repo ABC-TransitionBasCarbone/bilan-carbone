@@ -1,0 +1,13 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "overrides": [
+    {
+      "files": ["*/.json", "*/.yml"],
+      "options": { "singleQuote": false }
+    }
+  ],
+  "printWidth": 120
+}

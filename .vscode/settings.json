@@ -1,0 +1,9 @@
+{
+  "eslint.workingDirectories": [{ "mode": "auto" }], // Needed to properly lint apps
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.rulers": [80, 100, 120] // optionnal - gives an indication of the length of your lines
+}

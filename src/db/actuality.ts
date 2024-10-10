@@ -1,3 +1,3 @@
-import { prismaClient } from "./client";
+import { prismaClient } from './client'
 
-export const getAllActualities = () => prismaClient.actuality.findMany();
+export const getAllActualities = () => prismaClient.actuality.findMany()
