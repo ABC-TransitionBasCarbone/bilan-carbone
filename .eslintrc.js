@@ -3,7 +3,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
-    'plugin:prettier/recommended', // Intègre Prettier dans ESLint
+    'plugin:prettier/recommended',
     'next/core-web-vitals',
     'next/typescript',
   ],
