@@ -24,9 +24,9 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body>
-        <NextIntlClientProvider messages={messages}>
-          <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
-        </NextIntlClientProvider>
+        <AppRouterCacheProvider>
+          <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   )
