@@ -1,6 +1,12 @@
 {
   "login": {
     "welcome": "Bienvenue",
-    "login": "Se connecter"
+    "form": {
+      "login": "Se connecter",
+      "email": "Email",
+      "password": "Mot de passe",
+      "forgot-password": "Mot de passe oublié",
+      "reset": "Réinitialiser"
+    }
   }
 }

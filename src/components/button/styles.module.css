@@ -1,0 +1,8 @@
+.button {
+  background-color: var(--primary-40) !important;
+  color: var(--neutral-00) !important;
+
+  &:hover {
+    background-color: var(--primary-60) !important;
+  }
+}

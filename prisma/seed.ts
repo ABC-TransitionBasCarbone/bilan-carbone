@@ -1,6 +1,6 @@
-import bcrypt from 'bcryptjs'
 import { PrismaClient, Role } from '@prisma/client'
 import { faker } from '@faker-js/faker'
+import { signPassword } from '@/services/auth'
 
 const prisma = new PrismaClient()
 
@@ -14,16 +14,20 @@ const users = async () => {
     },
   })
 
-  const salt = await bcrypt.genSalt(10)
   await prisma.user.createMany({
-    data: Array.from({ length: 10 }).map((_, index) => ({
-      email: `bc-test-user-${index}@yopmail.fr`,
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      organisationId: organisation.id,
-      password: bcrypt.hashSync(`password-${index}`, salt),
-      role: Role.DEFAULT,
-    })),
+    data: await Promise.all(
+      Array.from({ length: 10 }).map(async (_, index) => {
+        const password = await signPassword(`password-${index}`)
+        return {
+          email: `bc-test-user-${index}@yopmail.com`,
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          organisationId: organisation.id,
+          password,
+          role: Role.DEFAULT,
+        }
+      }),
+    ),
   })
 }
 

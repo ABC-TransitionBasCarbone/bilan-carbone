@@ -6,11 +6,12 @@ model User {
   organisation   Organisation @relation(fields: [organisationId], references: [id])
   organisationId String       @map("organisation_id")
 
-  role      Role
-  firstName String @map("first_name")
-  lastName  String @map("last_name")
-  email     String @unique
-  password  String
+  role       Role
+  firstName  String  @map("first_name")
+  lastName   String  @map("last_name")
+  email      String  @unique
+  password   String
+  resetToken String? @map("reset_token")
 
   @@map("users")
 }

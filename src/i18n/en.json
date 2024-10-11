@@ -1,6 +1,8 @@
 {
   "login": {
     "welcome": "Welcome",
-    "login": "Log in"
+    "form": {
+      "login": "Log in"
+    }
   }
 }
