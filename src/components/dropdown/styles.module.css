@@ -1,0 +1,27 @@
+.select {
+  border-radius: 3px;
+  padding: 10px;
+  background-color: var(--background);
+  color: var(--primary-50);
+  outline: none;
+  cursor: pointer;
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-color: var(--accent-color);
+  }
+
+  option {
+    background-color: var(--background);
+    color: var(--primary-50);
+    cursor: pointer;
+    padding: 10px;
+
+    &:hover {
+      color: var(--accent-color);
+      background-color: initial;
+      outline: none;
+    }
+  }
+}
