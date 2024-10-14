@@ -1,8 +1,25 @@
 {
+  "locale": {
+    "en": "English",
+    "fr": "Français"
+  },
   "login": {
     "welcome": "Welcome",
     "form": {
-      "login": "Log in"
+      "login": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "forgot-password": "Forgotten password",
+      "reset": "Reset"
     }
+  },
+  "navigation": {
+    "factors": "Emission factors",
+    "home": "Home",
+    "help": "Help",
+    "team": "Team"
+  },
+  "study": {
+    "title": "Study"
   }
 }
