@@ -13,6 +13,8 @@ const Settings = () => {
 
   const goToProfile = () => router.push('/profile')
 
+  const logout = (): void => router.push('/logout')
+
   const askSupport = (): void => {
     window.location.href = 'mailto:support@abc-transitionbascarbone.fr'
   }
@@ -25,6 +27,9 @@ const Settings = () => {
       </Button>
       <Button onClick={goToProfile} className="flex-cc">
         <Icon icon={ICON_TYPE.USER} />
+      </Button>
+      <Button onClick={logout} className="flex-cc">
+        <Icon icon={ICON_TYPE.LOGOUT} />
       </Button>
     </div>
   )

@@ -1,26 +1,20 @@
 .select {
   border-radius: 5px;
   padding: 0 10px;
-  background-color: var(--background);
-  color: var(--primary-50);
+  background-color: var(--primary-40) !important;
+  color: var(--neutral-00) !important;
   outline: none;
   cursor: pointer;
 
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    border-color: var(--accent-color);
-  }
-
   option {
-    background-color: var(--background);
-    color: var(--primary-50);
+    background-color: var(--primary-40) !important;
+    color: var(--neutral-00) !important;
     cursor: pointer;
     padding: 10px;
 
     &:hover {
-      color: var(--accent-color);
-      background-color: initial;
+      color: var(--primary-80);
+      background-color: red !important;
       outline: none;
     }
   }

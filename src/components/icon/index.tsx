@@ -2,10 +2,12 @@ import styles from './styles.module.css'
 
 // import from https://mui.com/material-ui/material-icons
 import HomeIcon from '@mui/icons-material/Home'
+import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
 
 export const ICON_TYPE = {
   HOME: HomeIcon,
+  LOGOUT: LogoutIcon,
   USER: PersonIcon,
 }
 
