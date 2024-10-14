@@ -2,13 +2,15 @@ import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
-import '../css/variables.css'
-import '../css/reset.css'
-import '../css/globals.css'
+import '@/css/index.css'
 
 export const metadata: Metadata = {
   title: 'Bilan Carbone +',
   description: 'Découvrez le logiciel Bilan Carbone +',
+}
+
+interface Props {
+  children: React.ReactNode
 }
 
 const RootLayout = async ({ children }: Readonly<Props>) => {
@@ -29,10 +31,6 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
       </body>
     </html>
   )
-}
-
-interface Props {
-  children: React.ReactNode
 }
 
 export default RootLayout
