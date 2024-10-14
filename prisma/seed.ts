@@ -5,29 +5,64 @@ import { signPassword } from '@/services/auth'
 const prisma = new PrismaClient()
 
 const users = async () => {
+  await prisma.site.deleteMany()
+  await prisma.cROrganization.deleteMany()
   await prisma.user.deleteMany()
-  await prisma.organisation.deleteMany()
+  await prisma.organization.deleteMany()
 
-  const organisation = await prisma.organisation.create({
-    data: {
-      name: 'ABC',
-    },
+  const organizations = await prisma.organization.createManyAndReturn({
+    data: Array.from({ length: 10 }).map(() => ({
+      name: faker.company.name(),
+    })),
+  })
+
+  await prisma.site.createMany({
+    data: organizations.flatMap((organization) => {
+      const sitesNumber = faker.number.int({ min: 0, max: 3 })
+      return Array.from({ length: sitesNumber }).map(() => ({
+        name: faker.commerce.department(),
+        organizationId: organization.id,
+      }))
+    }),
   })
 
   await prisma.user.createMany({
-    data: await Promise.all(
-      Array.from({ length: 10 }).map(async (_, index) => {
+    data: await Promise.all([
+      ...Array.from({ length: 10 }).map(async (_, index) => {
         const password = await signPassword(`password-${index}`)
+        const organization = faker.helpers.arrayElement(organizations)
         return {
           email: `bc-test-user-${index}@yopmail.com`,
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
-          organisationId: organisation.id,
+          organizationId: organization.id,
           password,
           role: Role.DEFAULT,
         }
       }),
-    ),
+      ...Array.from({ length: 10 }).map(async (_, index) => {
+        const password = await signPassword(`password-${index}`)
+        const organization = faker.helpers.arrayElement(organizations)
+        return {
+          email: `bc-cr-user-${index}@yopmail.com`,
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          organizationId: organization.id,
+          password,
+          role: Role.CR,
+        }
+      }),
+    ]),
+  })
+
+  const crUsers = await prisma.user.findMany({ where: { role: Role.CR } })
+
+  await prisma.cROrganization.createMany({
+    skipDuplicates: true,
+    data: Array.from({ length: 20 }).map(() => ({
+      userId: faker.helpers.arrayElement(crUsers).id,
+      organizationId: faker.helpers.arrayElement(organizations).id,
+    })),
   })
 }
 

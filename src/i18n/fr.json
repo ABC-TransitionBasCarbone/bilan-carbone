@@ -8,5 +8,11 @@
       "forgot-password": "Mot de passe oublié",
       "reset": "Réinitialiser"
     }
+  },
+  "study": {
+    "organization": {
+      "title": "Quelle organisation est concernée par l'étude ?",
+      "sites": "Les sites de l'organisation"
+    }
   }
 }

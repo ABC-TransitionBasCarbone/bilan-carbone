@@ -10,6 +10,7 @@ const Home = async () => {
   return (
     <>
       <Link href="/logout">Logout</Link>
+      <Link href="/etudes/creer">Nouvelle Étude</Link>
       <h1>Hello {session?.user.firstName}</h1>
       <Actualities actualities={actualities} />
     </>

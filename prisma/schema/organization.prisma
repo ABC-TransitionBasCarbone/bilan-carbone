@@ -1,0 +1,37 @@
+model Organization {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  name String
+
+  users           User[]
+  cROrganizations CROrganization[]
+  sites           Site[]
+
+  @@map("organizations")
+}
+
+model CROrganization {
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
+
+  @@id([userId, organizationId])
+  @@map("cr_organizations")
+}
+
+model Site {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  name String
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
+
+  @@map("sites")
+}

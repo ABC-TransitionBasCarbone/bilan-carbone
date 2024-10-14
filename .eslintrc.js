@@ -9,6 +9,7 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'react', 'prettier'],
   rules: {
+    'react/no-unescaped-entities': 'off',
     'prettier/prettier': 'error',
     'react/jsx-tag-spacing': [
       'error',
