@@ -1,5 +1,9 @@
 :root {
-  --background: #d6e2f5;
+  --neutral-00: #ffffff;
 
-  --primary-50: #272768;
+  --primary-10: #d6e2f5;
+  --primary-20: #009ac4;
+  --primary-40: #0074b4;
+  --primary-60: #004d94;
+  --primary-80: #272768;
 }

@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import '../css/variables.css'
+import '../css/reset.css'
 import '../css/globals.css'
 
 export const metadata: Metadata = {
@@ -25,7 +26,9 @@ export default async function RootLayout({
     <html lang={locale}>
       <body>
         <AppRouterCacheProvider>
-          <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+          <NextIntlClientProvider messages={messages}>
+            <main>{children}</main>
+          </NextIntlClientProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

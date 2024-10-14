@@ -24,6 +24,8 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
+      - name: Run maildev
+        run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
         run: cp .env.dist .env
       - name: Install dependencies
@@ -34,10 +36,14 @@ jobs:
         run: npx prisma generate
       - name: Migrate DB
         run: npx prisma migrate deploy
+      - name: Seed DB
+        run: npx prisma db seed
       - name: Run build
         run: yarn build
       - name: Start server
         run: yarn start &
+      - name: Launch e2e tests
+        run: yarn run cypress
       - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
       - name: Lighthouse Check
         uses: foo-software/lighthouse-check-action@master
