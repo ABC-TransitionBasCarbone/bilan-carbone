@@ -1,6 +1,6 @@
 .select {
-  border-radius: 3px;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 0 10px;
   background-color: var(--background);
   color: var(--primary-50);
   outline: none;
