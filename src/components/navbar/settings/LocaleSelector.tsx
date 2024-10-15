@@ -31,9 +31,9 @@ const LocaleSelector = () => {
   return (
     <Dropdown
       id="locale-selector"
-      className={styles['localeSelector']}
+      className={styles.localeSelector}
       options={localeOptions}
-      selectedOption={locale || defaultLocale}
+      selectedOption={locale}
       onChangeValue={changeLocale}
       label={t('selector')}
       data-testid="locale-selector"
