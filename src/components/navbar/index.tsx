@@ -5,11 +5,11 @@ import Study from './study'
 
 const Navbar = () => {
   return (
-    <div className={styles.navbar}>
+    <nav className={`${styles.navbar} px-2 align-center justify-between`}>
       <Navigation />
       <Study />
       <Settings />
-    </div>
+    </nav>
   )
 }
 

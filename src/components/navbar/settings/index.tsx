@@ -1,36 +1,27 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import styles from './styles.module.css'
-import Button from '@/components/button'
-import Icon, { ICON_TYPE } from '@/components/icon'
+import Link from '@/components/link'
 import LocaleSelector from './LocaleSelector'
+import LogoutIcon from '@mui/icons-material/Logout'
+import UserIcon from '@mui/icons-material/Person'
 
 const Settings = () => {
-  const router = useRouter()
   const t = useTranslations('navigation')
 
-  const goToProfile = () => router.push('/profil')
-
-  const logout = (): void => router.push('/logout')
-
-  const askSupport = (): void => {
-    window.location.href = 'mailto:support@abc-transitionbascarbone.fr'
-  }
-
   return (
-    <div className={styles.navSettings}>
+    <div className={`${styles.navSettings} flex`}>
       <LocaleSelector />
-      <Button onClick={askSupport}>
+      <Link title={t('help')} href="mailto:support@abc-transitionbascarbone.fr">
         <span>{t('help')}</span>
-      </Button>
-      <Button onClick={goToProfile} className="flex-cc">
-        <Icon icon={ICON_TYPE.USER} />
-      </Button>
-      <Button onClick={logout} className="flex-cc">
-        <Icon icon={ICON_TYPE.LOGOUT} />
-      </Button>
+      </Link>
+      <Link title={t('profile')} href="/profil">
+        <UserIcon />
+      </Link>
+      <Link title={t('logout')} href="/logout">
+        <LogoutIcon />
+      </Link>
     </div>
   )
 }

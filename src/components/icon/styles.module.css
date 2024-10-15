@@ -1,7 +1,0 @@
-.appIcon {
-  cursor: pointer;
-
-  &.disabled {
-    cursor: default;
-  }
-}

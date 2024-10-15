@@ -1,9 +1,0 @@
-.navLayout {
-  display: flex;
-  flex-direction: column;
-}
-
-.content {
-  flex-grow: 1;
-  margin: 10px;
-}

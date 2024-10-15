@@ -1,4 +1,3 @@
-import styles from './styles.module.css'
 import Navbar from '@/components/navbar'
 
 interface Props {
@@ -6,9 +5,9 @@ interface Props {
 }
 
 const NavLayout = ({ children }: Props) => (
-  <div className={styles.navLayout}>
+  <div className="flex-col">
     <Navbar />
-    <div className={styles.content}>{children}</div>
+    <div className="m-2 grow">{children}</div>
   </div>
 )
 

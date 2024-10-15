@@ -1,4 +1,7 @@
 .navSettings {
-  display: flex;
-  gap: 10px;
+  gap: 0.5rem;
+}
+
+.locale-selector {
+  min-width: 5rem !important;
 }

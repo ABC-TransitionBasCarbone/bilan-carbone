@@ -1,57 +1,46 @@
+import { ComponentProps } from 'react'
+import classNames from 'classnames'
 import styles from './styles.module.css'
-import { useTranslations } from 'next-intl'
 
-export type SelectedOption = string | number
+export type SelectedOption = string | readonly string[] | number | undefined
 
-export interface DropdownOption {
-  value: SelectedOption
+interface Props extends ComponentProps<'select'> {
+  id: string
+  className?: string
+  options: ComponentProps<'option'>[]
   label: string
+  hiddenLabel?: boolean
+  selectedOption?: SelectedOption
+  onChangeValue: (selectedOption: SelectedOption) => void
 }
 
-const Dropdown = (props: Props) => {
-  const { className, label, options, selectedOption, height, width, testId, onChange } = props
-
-  const propsStyle = {
-    minWidth: width ? `${width}rem` : '10rem',
-    minHeight: height ? `${height}rem` : '1.5rem',
-  }
-  const t = useTranslations('')
-
+const Dropdown = ({ id, className, label, hiddenLabel, options, selectedOption, onChangeValue, ...rest }: Props) => {
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    const newOption = e.target.value
-    onChange(newOption)
+    const newOption = e.target.value as SelectedOption
+    onChangeValue(newOption)
   }
 
   return (
     <>
-      {label && <label htmlFor="dropdown">{t(label)}</label>}
+      <label hidden={hiddenLabel} htmlFor={`dropdown-${id}`}>
+        {label}
+      </label>
       <select
-        id="dropdown"
+        id={`dropdown-${id}`}
+        aria-label={label}
         value={selectedOption}
         onChange={handleOptionChange}
-        className={`${styles.select} ${className}`}
-        style={propsStyle}
-        data-testid={testId}
+        className={classNames(styles.select, className)}
+        {...rest}
       >
         {options.map(({ value, label }) => (
-          <option key={value} value={value}>
+          <option key={`option-${value}`} value={value}>
             {label}
           </option>
         ))}
       </select>
     </>
   )
-}
-
-interface Props {
-  className?: string
-  options: DropdownOption[]
-  label?: string // Best practice to add a label to selectors
-  selectedOption?: SelectedOption
-  height?: number
-  width?: number
-  testId?: string
-  onChange: (selectedOption: SelectedOption) => void
 }
 
 export default Dropdown

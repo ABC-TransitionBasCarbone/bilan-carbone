@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { ComponentProps, useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import styles from './styles.module.css'
 import Dropdown from '@/components/dropdown'
-import { DropdownOption, SelectedOption } from '@/components/dropdown'
+import { SelectedOption } from '@/components/dropdown'
 import { getLocale, switchLocale } from '@/i18n/request'
-import { EN, FR, LocaleType, defaultLocale } from '@/i18n/config'
+import { Locale, LocaleType, defaultLocale } from '@/i18n/config'
 
-const LocaleSelector = ({ isOpen }: Props) => {
+const LocaleSelector = () => {
   const t = useTranslations('locale')
   const [locale, setLocale] = useState<LocaleType>(defaultLocale)
 
@@ -23,24 +23,23 @@ const LocaleSelector = ({ isOpen }: Props) => {
     setLocale(value as LocaleType)
   }
 
-  const localeOptions: DropdownOption[] = [
-    { value: EN, label: t('en') },
-    { value: FR, label: t('fr') },
-  ]
+  const localeOptions: ComponentProps<'option'>[] = Object.values(Locale).map((value) => ({
+    value,
+    label: t(value),
+  }))
 
   return (
     <Dropdown
+      id="locale-selector"
       className={styles['locale-selector']}
       options={localeOptions}
       selectedOption={locale || defaultLocale}
-      onChange={changeLocale}
-      width={isOpen ? 8 : 4}
+      onChangeValue={changeLocale}
+      label=""
+      data-testid="locale-selector"
+      hiddenLabel
     />
   )
-}
-
-interface Props {
-  isOpen?: boolean
 }
 
 export default LocaleSelector

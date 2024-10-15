@@ -14,18 +14,22 @@
 }
 
 .justify-center {
+  display: flex;
   justify-content: center;
 }
 
-.space-around {
+.justify-around {
+  display: flex;
   justify-content: space-around;
 }
 
-.space-between {
+.justify-between {
+  display: flex;
   justify-content: space-between;
 }
 
 .align-center {
+  display: flex;
   align-items: center;
 }
 

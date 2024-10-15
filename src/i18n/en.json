@@ -17,6 +17,9 @@
     "factors": "Emission factors",
     "home": "Home",
     "help": "Help",
+    "logout": "Logout",
+    "profile": "Profile",
+    "study": "Study",
     "team": "Team"
   },
   "study": {

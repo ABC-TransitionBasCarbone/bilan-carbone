@@ -1,5 +1,7 @@
-export const EN = 'en'
-export const FR = 'fr'
+export enum Locale {
+  EN = 'en',
+  FR = 'fr',
+}
 
-export type LocaleType = typeof EN | typeof FR
-export const defaultLocale: LocaleType = EN
+export type LocaleType = typeof Locale.EN | typeof Locale.FR
+export const defaultLocale: LocaleType = Locale.FR

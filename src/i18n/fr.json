@@ -17,8 +17,10 @@
     "factors": "Facteurs d'émission",
     "help": "Aide",
     "home": "Accueil",
+    "logout": "Déconnexion",
+    "profile": "Profil",
     "study": "Étude",
-    "team": "Equipe"
+    "team": "Équipe"
   },
   "study": {
     "title": "Étude"

@@ -1,9 +1,11 @@
 .select {
-  border-radius: 5px;
-  padding: 0 10px;
-  background-color: var(--primary-40) !important;
-  color: var(--neutral-00) !important;
-  outline: none;
+  border-radius: 0.25rem;
+  padding: 0 0.5rem;
+  min-width: 10rem;
+  min-height: 1.5rem;
+  outline: 0;
+  background-color: var(--primary-40);
+  color: var(--neutral-00);
   cursor: pointer;
 
   option {
@@ -11,11 +13,5 @@
     color: var(--neutral-00) !important;
     cursor: pointer;
     padding: 10px;
-
-    &:hover {
-      color: var(--primary-80);
-      background-color: red !important;
-      outline: none;
-    }
   }
 }
