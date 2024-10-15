@@ -31,11 +31,11 @@ const LocaleSelector = () => {
   return (
     <Dropdown
       id="locale-selector"
-      className={styles['locale-selector']}
+      className={styles['localeSelector']}
       options={localeOptions}
       selectedOption={locale || defaultLocale}
       onChangeValue={changeLocale}
-      label=""
+      label={t('selector')}
       data-testid="locale-selector"
       hiddenLabel
     />

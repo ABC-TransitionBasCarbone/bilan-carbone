@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import styles from './styles.module.css'
-import Link from '@/components/link'
+import LinkButton from '@/components/linkButton'
 import LocaleSelector from './LocaleSelector'
 import LogoutIcon from '@mui/icons-material/Logout'
 import UserIcon from '@mui/icons-material/Person'
@@ -13,15 +13,15 @@ const Settings = () => {
   return (
     <div className={`${styles.navSettings} flex`}>
       <LocaleSelector />
-      <Link title={t('help')} href="mailto:support@abc-transitionbascarbone.fr">
+      <LinkButton href="mailto:support@abc-transitionbascarbone.fr">
         <span>{t('help')}</span>
-      </Link>
-      <Link title={t('profile')} href="/profil">
+      </LinkButton>
+      <LinkButton title={t('profile')} href="/profil">
         <UserIcon />
-      </Link>
-      <Link title={t('logout')} href="/logout">
+      </LinkButton>
+      <LinkButton title={t('logout')} href="/logout">
         <LogoutIcon />
-      </Link>
+      </LinkButton>
     </div>
   )
 }

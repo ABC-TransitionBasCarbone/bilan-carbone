@@ -22,19 +22,18 @@ const Dropdown = ({ id, className, label, hiddenLabel, options, selectedOption, 
 
   return (
     <>
-      <label hidden={hiddenLabel} htmlFor={`dropdown-${id}`}>
+      <label className={classNames({ [styles.hiddenLabel]: hiddenLabel })} htmlFor={`dropdown-${id}`}>
         {label}
       </label>
       <select
         id={`dropdown-${id}`}
-        aria-label={label}
         value={selectedOption}
         onChange={handleOptionChange}
         className={classNames(styles.select, className)}
         {...rest}
       >
-        {options.map(({ value, label }) => (
-          <option key={`option-${value}`} value={value}>
+        {options.map(({ value, ...rest }) => (
+          <option key={`option-${value}`} value={value} {...rest}>
             {label}
           </option>
         ))}

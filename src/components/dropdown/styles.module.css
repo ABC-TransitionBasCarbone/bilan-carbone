@@ -3,15 +3,18 @@
   padding: 0 0.5rem;
   min-width: 10rem;
   min-height: 1.5rem;
-  outline: 0;
   background-color: var(--primary-40);
   color: var(--neutral-00);
   cursor: pointer;
 
   option {
-    background-color: var(--primary-40) !important;
-    color: var(--neutral-00) !important;
-    cursor: pointer;
-    padding: 10px;
+    background-color: var(--primary-40);
+    color: var(--neutral-00);
   }
+}
+
+.hiddenLabel {
+  height: 0;
+  width: 0;
+  overflow: hidden;
 }

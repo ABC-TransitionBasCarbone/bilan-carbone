@@ -1,7 +1,8 @@
 {
   "locale": {
     "en": "English",
-    "fr": "Français"
+    "fr": "Français",
+    "selector": "Sélectionner langue"
   },
   "login": {
     "welcome": "Bienvenue",
