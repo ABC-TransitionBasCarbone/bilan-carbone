@@ -17,10 +17,10 @@ const Navigation = () => {
       <Button onClick={() => redirect('')}>
         <Icon icon={ICON_TYPE.HOME} />
       </Button>
-      <Button onClick={() => redirect('factors')}>
+      <Button onClick={() => redirect('facteurs')}>
         <span>{t('factors')}</span>
       </Button>
-      <Button onClick={() => redirect('team')}>
+      <Button onClick={() => redirect('equipe')}>
         <span>{t('team')}</span>
       </Button>
     </div>

@@ -11,7 +11,7 @@ const Settings = () => {
   const router = useRouter()
   const t = useTranslations('navigation')
 
-  const goToProfile = () => router.push('/profile')
+  const goToProfile = () => router.push('/profil')
 
   const logout = (): void => router.push('/logout')
 
