@@ -1,4 +1,9 @@
 {
+  "locale": {
+    "en": "English",
+    "fr": "Français",
+    "selector": "Sélectionner langue"
+  },
   "login": {
     "welcome": "Bienvenue",
     "form": {
@@ -8,5 +13,17 @@
       "forgot-password": "Mot de passe oublié",
       "reset": "Réinitialiser"
     }
+  },
+  "navigation": {
+    "factors": "Facteurs d'émission",
+    "help": "Aide",
+    "home": "Accueil",
+    "logout": "Déconnexion",
+    "profile": "Profil",
+    "study": "Étude",
+    "team": "Équipe"
+  },
+  "study": {
+    "title": "Étude"
   }
 }
