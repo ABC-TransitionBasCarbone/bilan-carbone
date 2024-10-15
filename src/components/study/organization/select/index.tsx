@@ -5,7 +5,11 @@ import { MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import React, { useMemo, useState } from 'react'
 
-const SelectOrganization = ({ organizations }: { organizations: OrganizationWithSites[] }) => {
+interface Props {
+  organizations: OrganizationWithSites[]
+}
+
+const SelectOrganization = ({ organizations }: Props) => {
   const t = useTranslations('study.organization')
   const [organizationId, setOrganizationId] = useState(organizations[0]?.id || '')
 

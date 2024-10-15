@@ -6,7 +6,11 @@ import authStyles from '../styles.module.css'
 import Input from '../../input'
 import Button from '../../button'
 
-const ResetForm = ({ reset }: { reset: (email: string, password: string) => Promise<void> }) => {
+interface Props {
+  reset: (email: string, password: string) => Promise<void>
+}
+
+const ResetForm = ({ reset }: Props) => {
   const t = useTranslations('login.form')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

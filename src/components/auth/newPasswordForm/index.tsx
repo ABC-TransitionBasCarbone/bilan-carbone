@@ -7,7 +7,11 @@ import Input from '../../input'
 import Button from '../../button'
 import { useSearchParams } from 'next/navigation'
 
-const NewPasswordForm = ({ reset }: { reset: (email: string) => Promise<void> }) => {
+interface Props {
+  reset: (email: string) => Promise<void>
+}
+
+const NewPasswordForm = ({ reset }: Props) => {
   const t = useTranslations('login.form')
   const [email, setEmail] = useState('')
 

@@ -5,7 +5,11 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 import ResetForm from '@/components/auth/resetForm'
 
-const ResetPasswordPage = async ({ params: { token } }: { params: { token: string } }) => {
+interface Props {
+  params: { token: string }
+}
+
+const ResetPasswordPage = async ({ params: { token } }: Props) => {
   const session = await auth()
   if (session) {
     redirect('/')
