@@ -14,12 +14,8 @@ const Navigation = () => {
       <LinkButton title={t('home')} href="/">
         <HomeIcon />
       </LinkButton>
-      <LinkButton title={t('factors')} href="/facteurs">
-        {t('factors')}
-      </LinkButton>
-      <LinkButton title={t('team')} href="/equipe">
-        {t('team')}
-      </LinkButton>
+      <LinkButton href="/facteurs">{t('factors')}</LinkButton>
+      <LinkButton href="/equipe">{t('team')}</LinkButton>
     </div>
   )
 }
