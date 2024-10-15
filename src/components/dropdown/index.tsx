@@ -33,7 +33,7 @@ const Dropdown = ({ id, className, label, hiddenLabel, options, selectedOption, 
         {...rest}
       >
         {options.map(({ value, ...rest }) => (
-          <option key={`option-${value}`} value={value} {...rest}>
+          <option key={value?.toString()} value={value} {...rest}>
             {label}
           </option>
         ))}
