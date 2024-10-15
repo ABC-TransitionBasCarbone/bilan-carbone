@@ -7,7 +7,7 @@ interface Props {
 const NavLayout = ({ children }: Props) => (
   <div className="flex-col">
     <Navbar />
-    <div className="m-2 grow">{children}</div>
+    <main className="m-2 grow">{children}</main>
   </div>
 )
 

@@ -24,9 +24,7 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
     <html lang={locale}>
       <body>
         <AppRouterCacheProvider>
-          <NextIntlClientProvider messages={messages}>
-            <main>{children}</main>
-          </NextIntlClientProvider>
+          <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

@@ -2,7 +2,11 @@ import React, { ReactNode } from 'react'
 import PublicPage from '@/components/pages/public'
 
 const PublicLayout = ({ children }: { children: ReactNode }) => {
-  return <PublicPage>{children}</PublicPage>
+  return (
+    <main>
+      <PublicPage>{children}</PublicPage>
+    </main>
+  )
 }
 
 export default PublicLayout
