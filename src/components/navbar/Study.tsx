@@ -1,4 +1,4 @@
-import Button from '@/components/button'
+import Button from '@/components/base/Button'
 import { useTranslations } from 'next-intl'
 
 const Study = () => {

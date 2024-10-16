@@ -1,5 +1,5 @@
-import Navbar from '@/components/navbar'
-import Providers from '@/services/providers'
+import Navbar from '@/components/navbar/Navbar'
+import Providers from '@/services/providers/Providers'
 
 interface Props {
   children: React.ReactNode

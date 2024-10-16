@@ -1,4 +1,4 @@
-import LoginForm from '@/components/auth/loginForm'
+import LoginForm from '@/components/auth/LoginForm'
 import { auth } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import React from 'react'

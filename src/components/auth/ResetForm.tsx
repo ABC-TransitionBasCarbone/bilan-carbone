@@ -2,9 +2,9 @@
 
 import { useTranslations } from 'next-intl'
 import React, { FormEvent, useState } from 'react'
-import authStyles from '../styles.module.css'
-import Input from '../../input'
-import Button from '../../button'
+import authStyles from './Auth.module.css'
+import Input from '../base/Input'
+import Button from '../base/Button'
 
 interface Props {
   reset: (email: string, password: string) => Promise<void>

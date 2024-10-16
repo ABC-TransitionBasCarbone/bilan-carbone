@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@/components/button'
+import Button from '@/components/base/Button'
 import { OrganizationWithSites } from '@/db/user'
 import { MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'

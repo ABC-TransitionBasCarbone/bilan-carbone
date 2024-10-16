@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react'
 import classNames from 'classnames'
-import styles from './styles.module.css'
+import styles from './Dropdown.module.css'
 
 export type SelectedOption = string | readonly string[] | number | undefined
 

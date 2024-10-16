@@ -3,7 +3,7 @@ import { getUserByEmail, updateUserPasswordForEmail } from '@/db/user'
 import { auth } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import React from 'react'
-import ResetForm from '@/components/auth/resetForm'
+import ResetForm from '@/components/auth/ResetForm'
 
 interface Props {
   params: { token: string }

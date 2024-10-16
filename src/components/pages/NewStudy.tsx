@@ -1,7 +1,7 @@
 'use client'
 
-import NewStudyForm from '@/components/study/new'
-import SelectOrganization from '@/components/study/organization/select'
+import NewStudyForm from '@/components/study/new/Form'
+import SelectOrganization from '@/components/study/organization/Select'
 import { OrganizationWithSites } from '@/db/user'
 import React, { useState } from 'react'
 

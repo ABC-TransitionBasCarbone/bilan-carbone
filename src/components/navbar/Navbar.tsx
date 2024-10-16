@@ -1,7 +1,7 @@
-import styles from './styles.module.css'
-import Navigation from './navigation'
-import Settings from './settings'
-import Study from './study'
+import styles from './Navbar.module.css'
+import Navigation from './Navigation'
+import Settings from './Settings'
+import Study from './Study'
 import classNames from 'classnames'
 
 const Navbar = () => {

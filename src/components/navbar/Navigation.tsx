@@ -1,8 +1,8 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import styles from './styles.module.css'
-import LinkButton from '@/components/linkButton'
+import styles from './Navigation.module.css'
+import LinkButton from '@/components/base/LinkButton'
 import HomeIcon from '@mui/icons-material/Home'
 import classNames from 'classnames'
 
