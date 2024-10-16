@@ -26,6 +26,9 @@
     "study": "Study",
     "team": "Team"
   },
+  "profile": {
+    "legal-notices": "Legal notices"
+  },
   "study": {
     "title": "Study"
   }

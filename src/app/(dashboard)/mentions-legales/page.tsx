@@ -2,12 +2,19 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import styles from './styles.module.css'
 
+const privacyPoliticsLink =
+  'https://associationbilancarbone.sharepoint.com/:w:/s/AssociationBilanCarbone/EaGeLskZzYVGi4-ynn7gVkEB8oqSZfOsOzzyeShgyX3OGQ?e=K2SqeV'
+
+const contactMail = 'contact@associationbilancarbone.fr'
+
 const LegalNotices = () => {
   const t = useTranslations('legal-notices')
   return (
-    <div className={styles.notices}>
+    <div className={styles.notices} data-testid="legal-notices">
       <div className="mb1">
-        <Link href="/profil">{t('profile')}</Link>
+        <Link data-testid="profile-link" href="/profil">
+          {t('profile')}
+        </Link>
       </div>
 
       <p>
@@ -21,7 +28,10 @@ const LegalNotices = () => {
         <span>Bureaux : 41 rue Beauregard – 75002 Paris – France</span>
         <span>Téléphone : 09 81 10 27 93</span>
         <span>
-          Mail: <a href="mailto:contact@associationbilancarbone.fr">contact@associationbilancarbone.fr</a>
+          Mail :{' '}
+          <a data-testid="contact-mail" href={`mailto:${contactMail}`}>
+            {contactMail}
+          </a>
         </span>
         <span>N° d’identification à la TVA : FR 96 53 81 70 093</span>
       </p>
@@ -63,11 +73,7 @@ const LegalNotices = () => {
         Conformément au Règlement (UE) 2016/679 relatif à la protection des données à caractère personnel, vous disposez
         sur vos données des droit d’accès, droit de rectification et du droit d’opposition. Pour en savoir plus, vous
         pouvez consulter notre{' '}
-        <a
-          href="https://associationbilancarbone.sharepoint.com/:w:/s/AssociationBilanCarbone/EaGeLskZzYVGi4-ynn7gVkEB8oqSZfOsOzzyeShgyX3OGQ?e=K2SqeV"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a data-testid="privacy-link" href={privacyPoliticsLink} target="_blank" rel="noreferrer">
           politique de protection des données
         </a>
         .

@@ -26,6 +26,9 @@
     "study": "Étude",
     "team": "Équipe"
   },
+  "profile": {
+    "legal-notices": "Mentions légales"
+  },
   "study": {
     "title": "Étude",
     "create": "Nouvelle étude",
