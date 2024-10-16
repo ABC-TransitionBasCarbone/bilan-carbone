@@ -2,10 +2,8 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import styles from './styles.module.css'
 
-const privacyPoliticsLink =
-  'https://associationbilancarbone.sharepoint.com/:w:/s/AssociationBilanCarbone/EaGeLskZzYVGi4-ynn7gVkEB8oqSZfOsOzzyeShgyX3OGQ?e=K2SqeV'
-
-const contactMail = 'contact@associationbilancarbone.fr'
+const contactMail = process.env.ABC_CONTACT_MAIL
+const privacyPoliticsLink = process.env.ABC_PRIVACY_POLICY_LINK
 
 const LegalNotices = () => {
   const t = useTranslations('legal-notices')
