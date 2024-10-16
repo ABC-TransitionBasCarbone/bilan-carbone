@@ -27,7 +27,28 @@
     "title": "Étude",
     "organization": {
       "title": "Quelle organisation est concernée par l'étude ?",
-      "sites": "Les sites de l'organisation"
+      "sites": "Les sites de l'organisation",
+      "next": "Suivant"
+    },
+    "new": {
+      "name": "Nom de l'étude",
+      "start": "Début",
+      "end": "Fin",
+      "type": "Type de Bilan Carbone®",
+      "Initial": "Initial",
+      "Standard": "Standard",
+      "Advanced": "Avancé",
+      "exports": "Exports",
+      "Beges": "Bilan GES Reglementaire",
+      "GHGP": "GHG Protocol",
+      "ISO14069": "ISO 14069",
+      "control": "Mode de contrôle",
+      "CapitalShare": "Part de capital",
+      "Financial": "Financier",
+      "Operational": "Opérationel",
+      "private-title": "Visibilité de l'étude",
+      "private": "Privée",
+      "public": "Publique"
     }
   }
 }
