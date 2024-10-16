@@ -1,4 +1,4 @@
 .content {
-  margin-top: 4rem; /* navbar height */
+  margin-top: var(--header-height);
   overflow-y: auto;
 }

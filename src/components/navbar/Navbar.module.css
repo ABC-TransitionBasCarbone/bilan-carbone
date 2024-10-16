@@ -1,6 +1,5 @@
 .navbar {
-  height: 4rem;
-  width: calc(100% - 1rem);
+  height: var(--header-height);
   background-color: var(--primary-80);
   position: fixed;
   top: 0;
