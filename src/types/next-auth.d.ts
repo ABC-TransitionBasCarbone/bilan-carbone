@@ -7,5 +7,5 @@ declare module 'next-auth' {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface User extends Pick<PrismaUser, 'firstName' | 'lastName' | 'email' | 'id' | 'role'> {}
+  interface User extends Pick<PrismaUser, 'firstName' | 'lastName' | 'email' | 'role'> {}
 }

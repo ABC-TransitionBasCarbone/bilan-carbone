@@ -1,3 +1,4 @@
 enum Role {
   DEFAULT
+  CR
 }

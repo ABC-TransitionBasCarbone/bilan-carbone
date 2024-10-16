@@ -1,7 +1,11 @@
 import { Actuality } from '@prisma/client'
 import React from 'react'
 
-const Actualities = ({ actualities }: { actualities: Actuality[] }) => {
+interface Props {
+  actualities: Actuality[]
+}
+
+const Actualities = ({ actualities }: Props) => {
   return (
     <div>
       <h2>Mes actualités</h2>

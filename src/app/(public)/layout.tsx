@@ -1,7 +1,11 @@
 import React, { ReactNode } from 'react'
 import PublicPage from '@/components/pages/public'
 
-const PublicLayout = ({ children }: { children: ReactNode }) => {
+interface Props {
+  children: ReactNode
+}
+
+const PublicLayout = ({ children }: Props) => {
   return (
     <main>
       <PublicPage>{children}</PublicPage>

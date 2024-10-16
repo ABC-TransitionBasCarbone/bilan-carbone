@@ -3,15 +3,16 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
-  organisation   Organisation @relation(fields: [organisationId], references: [id])
-  organisationId String       @map("organisation_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
 
-  role       Role
-  firstName  String  @map("first_name")
-  lastName   String  @map("last_name")
-  email      String  @unique
-  password   String
-  resetToken String? @map("reset_token")
+  role            Role
+  firstName       String           @map("first_name")
+  lastName        String           @map("last_name")
+  email           String           @unique
+  password        String
+  resetToken      String?          @map("reset_token")
+  cROrganizations CROrganization[]
 
   @@map("users")
 }

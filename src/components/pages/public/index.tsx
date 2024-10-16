@@ -3,7 +3,11 @@ import React, { ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
 import styles from './styles.module.css'
 
-const PublicPage = ({ children }: { children: ReactNode }) => {
+interface Props {
+  children: ReactNode
+}
+
+const PublicPage = ({ children }: Props) => {
   const t = useTranslations('login')
   return (
     <>

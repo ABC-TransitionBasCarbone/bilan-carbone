@@ -24,6 +24,10 @@
     "team": "Équipe"
   },
   "study": {
-    "title": "Étude"
+    "title": "Étude",
+    "organization": {
+      "title": "Quelle organisation est concernée par l'étude ?",
+      "sites": "Les sites de l'organisation"
+    }
   }
 }
