@@ -1,7 +1,9 @@
-.m-2 {
-  margin: 0.5rem;
+.mb1 {
+  margin-bottom: 1rem;
 }
-
+.p15 {
+  padding: 1.5rem;
+}
 .p-2 {
   padding: 0.5rem;
 }
@@ -9,4 +11,8 @@
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+.h100 {
+  height: 100%;
 }
