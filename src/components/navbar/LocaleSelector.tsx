@@ -2,9 +2,9 @@
 
 import { ComponentProps, useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import styles from './styles.module.css'
-import Dropdown from '@/components/dropdown'
-import { SelectedOption } from '@/components/dropdown'
+import styles from './Settings.module.css'
+import Dropdown from '@/components/base/Dropdown'
+import { SelectedOption } from '@/components/base/Dropdown'
 import { getLocale, switchLocale } from '@/i18n/request'
 import { Locale, LocaleType, defaultLocale } from '@/i18n/config'
 

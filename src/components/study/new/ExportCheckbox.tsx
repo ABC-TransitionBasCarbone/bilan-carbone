@@ -2,7 +2,7 @@ import { Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select }
 import { ControlMode, Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import React, { Dispatch, SetStateAction } from 'react'
-import styles from './styles.module.css'
+import styles from './ExportCheckbox.module.css'
 
 interface Props {
   id: Export

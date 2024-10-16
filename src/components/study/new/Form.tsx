@@ -13,9 +13,9 @@ import { DatePicker } from '@mui/x-date-pickers'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
-import styles from './styles.module.css'
+import styles from './Form.module.css'
 import { ControlMode, Export, StudyType } from '@prisma/client'
-import ExportCheckbox from './exportCheckbox'
+import ExportCheckbox from './ExportCheckbox'
 
 const NewStudyForm = () => {
   const t = useTranslations('study.new')

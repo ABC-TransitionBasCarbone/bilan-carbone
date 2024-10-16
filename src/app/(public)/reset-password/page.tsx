@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken'
 import { getUserByEmail, updateUserResetTokenForEmail } from '@/db/user'
 import { auth } from '@/services/auth'
-import { sendResetPassword } from '@/services/email'
+import { sendResetPassword } from '@/services/email/email'
 import { redirect } from 'next/navigation'
 import React from 'react'
-import NewPasswordForm from '@/components/auth/newPasswordForm'
+import NewPasswordForm from '@/components/auth/NewPasswordForm'
 
 const NewPasswordPage = async () => {
   const session = await auth()

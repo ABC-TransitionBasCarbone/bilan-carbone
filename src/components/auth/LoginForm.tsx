@@ -3,10 +3,10 @@
 import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import React, { FormEvent, useState } from 'react'
-import styles from './styles.module.css'
-import authStyles from '../styles.module.css'
-import Input from '../../input'
-import Button from '../../button'
+import styles from './LoginForm.module.css'
+import authStyles from './Auth.module.css'
+import Input from '../base/Input'
+import Button from '../base/Button'
 import Link from 'next/link'
 
 const LoginForm = () => {

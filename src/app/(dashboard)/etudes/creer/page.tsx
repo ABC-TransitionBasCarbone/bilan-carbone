@@ -1,4 +1,4 @@
-import NewStudyPage from '@/components/pages/newStudy'
+import NewStudyPage from '@/components/pages/NewStudy'
 import { getUserOrganizations } from '@/db/user'
 import { auth } from '@/services/auth'
 import React from 'react'
