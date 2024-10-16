@@ -1,92 +1,108 @@
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  InputLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
-  TextField,
-} from '@mui/material'
-import { DatePicker } from '@mui/x-date-pickers'
-import dayjs from 'dayjs'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, MenuItem, Radio } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
 import styles from './Form.module.css'
-import { ControlMode, Export, StudyType } from '@prisma/client'
+import { Export, StudyType } from '@prisma/client'
+import { createStudyCommand } from '@/services/serverFunctions/study'
+import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
+import { FormTextField } from '@/components/form/TextField'
+import { FormDatePicker } from '@/components/form/DatePicker'
+import { FormSelect } from '@/components/form/Select'
+import { FormRadio } from '@/components/form/Radio'
 import ExportCheckbox from './ExportCheckbox'
+import Button from '@/components/base/Button'
+import { OrganizationWithSites } from '@/db/user'
+import { useRouter } from 'next/navigation'
+import dayjs from 'dayjs'
 
-const NewStudyForm = () => {
+interface Props {
+  organization: OrganizationWithSites
+}
+
+const NewStudyForm = ({ organization }: Props) => {
+  const router = useRouter()
   const t = useTranslations('study.new')
-  const [name, setName] = useState('')
-  const [startDate, setStartDate] = useState(dayjs())
-  const [endDate, setEndDate] = useState(dayjs())
-  const [type, setType] = useState<StudyType>(StudyType.Standard)
-  const [privateStudy, setPrivateStudy] = useState(true)
-  const [exports, setExports] = useState<Record<Export, ControlMode | false>>({
-    [Export.Beges]: false,
-    [Export.GHGP]: false,
-    [Export.ISO14069]: false,
+  const [error, setError] = useState('')
+
+  const form = useForm<CreateStudyCommand>({
+    resolver: zodResolver(CreateStudyCommandValidation),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      organizationId: organization.id,
+      isPublic: true,
+      startDate: dayjs(),
+      exports: {
+        [Export.Beges]: false,
+        [Export.GHGP]: false,
+        [Export.ISO14069]: false,
+      },
+    },
   })
 
+  const onSubmit = async (command: CreateStudyCommand) => {
+    const result = await createStudyCommand(command)
+    if (result) {
+      setError(result)
+    } else {
+      router.push('/etudes')
+    }
+  }
+
   return (
-    <form className={styles.form}>
-      <TextField label={t('name')} value={name} onChange={(event) => setName(event.target.value)}></TextField>
+    <form className={styles.form} onSubmit={form.handleSubmit(onSubmit)}>
+      <FormTextField
+        data-testid="new-study-name"
+        control={form.control}
+        translation={t}
+        name="name"
+        label={t('name')}
+      ></FormTextField>
       <div className={styles.dates}>
-        <DatePicker
-          label={t('start')}
-          value={startDate}
-          onChange={(value) => {
-            if (value) {
-              setStartDate(value)
-            }
-          }}
-        />
-        <DatePicker
+        <FormDatePicker control={form.control} translation={t} name="startDate" label={t('start')} />
+        <FormDatePicker
+          control={form.control}
+          translation={t}
+          name="endDate"
           label={t('end')}
-          value={endDate}
-          onChange={(value) => {
-            if (value) {
-              setEndDate(value)
-            }
-          }}
+          data-testid="new-study-endDate"
         />
       </div>
-      <FormControl>
-        <InputLabel id="type-select-label">{t('type')}</InputLabel>
-        <Select
-          label={t('type')}
-          labelId="type-select-label"
-          value={type}
-          onChange={(event) => setType(event.target.value as StudyType)}
-        >
-          {Object.keys(StudyType).map((key) => (
-            <MenuItem key={key} value={key}>
-              {t(key)}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl>
-        <FormLabel id="private-radio-group-label">{t('private-title')}</FormLabel>
-        <RadioGroup
-          row
-          aria-labelledby="private-radio-group-label"
-          name="private-radio-group-label"
-          value={privateStudy}
-          onChange={(_, value) => setPrivateStudy(value === 'true')}
-        >
-          <FormControlLabel value="true" control={<Radio />} label={t('private')} />
-          <FormControlLabel value="false" control={<Radio />} label={t('public')} />
-        </RadioGroup>
-      </FormControl>
-      <FormLabel>{t('exports')}</FormLabel>
-      <div className={styles.exports}>
-        {Object.keys(Export).map((key) => (
-          <ExportCheckbox key={key} id={key as Export} values={exports} setValues={setExports} />
+      <FormSelect control={form.control} translation={t} name="type" label={t('type')} data-testid="new-study-type">
+        {Object.keys(StudyType).map((key) => (
+          <MenuItem key={key} value={key}>
+            {t(key)}
+          </MenuItem>
         ))}
-      </div>
+      </FormSelect>
+      <FormRadio control={form.control} translation={t} name="isPublic" row label={t('is-public-title')}>
+        <FormControlLabel value="true" control={<Radio />} label={t('public')} />
+        <FormControlLabel value="false" control={<Radio />} label={t('private')} />
+      </FormRadio>
+
+      <Controller
+        name="exports"
+        control={form.control}
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <FormControl error={!!error} component="fieldset">
+            <FormLabel component="legend">{t('exports')}</FormLabel>
+            <FormGroup>
+              <div className={styles.exports}>
+                {Object.keys(Export).map((key) => (
+                  <ExportCheckbox key={key} id={key as Export} values={value} setValues={onChange} />
+                ))}
+              </div>
+            </FormGroup>
+            {error && error.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
+          </FormControl>
+        )}
+      />
+      <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-study-create-button">
+        {t('create')}
+      </Button>
+      {error && <p>{error}</p>}
     </form>
   )
 }

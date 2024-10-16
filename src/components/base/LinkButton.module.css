@@ -3,6 +3,7 @@
   color: var(--neutral-00);
   text-decoration: none;
   border-radius: 0.25rem;
+  width: fit-content;
 
   &:hover {
     background-color: var(--primary-60);

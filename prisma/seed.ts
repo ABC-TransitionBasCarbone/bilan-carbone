@@ -5,9 +5,13 @@ import { signPassword } from '@/services/auth'
 const prisma = new PrismaClient()
 
 const users = async () => {
+  await prisma.studyExport.deleteMany()
+  await prisma.study.deleteMany()
+
   await prisma.site.deleteMany()
   await prisma.cROrganization.deleteMany()
   await prisma.user.deleteMany()
+
   await prisma.organization.deleteMany()
 
   const organizations = await prisma.organization.createManyAndReturn({
@@ -59,7 +63,7 @@ const users = async () => {
 
   await prisma.cROrganization.createMany({
     skipDuplicates: true,
-    data: Array.from({ length: 20 }).map(() => ({
+    data: Array.from({ length: 50 }).map(() => ({
       userId: faker.helpers.arrayElement(crUsers).id,
       organizationId: faker.helpers.arrayElement(organizations).id,
     })),
