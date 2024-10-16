@@ -1,4 +1,5 @@
 import Navbar from '@/components/navbar'
+import Providers from '@/services/providers'
 
 interface Props {
   children: React.ReactNode
@@ -7,7 +8,9 @@ interface Props {
 const NavLayout = ({ children }: Props) => (
   <div className="flex-col">
     <Navbar />
-    <main className="m-2 grow">{children}</main>
+    <main className="m-2 grow">
+      <Providers>{children}</Providers>
+    </main>
   </div>
 )
 

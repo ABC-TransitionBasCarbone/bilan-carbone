@@ -1,15 +1,17 @@
 'use client'
 
+import Button from '@/components/button'
 import { OrganizationWithSites } from '@/db/user'
 import { MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import React, { useMemo, useState } from 'react'
+import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
 
 interface Props {
   organizations: OrganizationWithSites[]
+  selectOrganization: Dispatch<SetStateAction<OrganizationWithSites | undefined>>
 }
 
-const SelectOrganization = ({ organizations }: Props) => {
+const SelectOrganization = ({ organizations, selectOrganization }: Props) => {
   const t = useTranslations('study.organization')
   const [organizationId, setOrganizationId] = useState(organizations[0]?.id || '')
 
@@ -39,6 +41,7 @@ const SelectOrganization = ({ organizations }: Props) => {
             <p key={site.id}>{site.name}</p>
           ))}
           <p>TODO: ajout et modification des champs de l'organisation, pareil pour les sites</p>
+          <Button onClick={() => selectOrganization(organization)}>{t('next')}</Button>
         </>
       )}
     </>
