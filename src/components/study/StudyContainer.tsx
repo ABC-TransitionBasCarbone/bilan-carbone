@@ -18,7 +18,7 @@ const StudyContainer = ({ studies }: Props) => {
       <h2 className={classNames(styles.title, 'align-center pb1')}>
         <NewspaperIcon /> {t('my-studies')}
       </h2>
-      <LinkButton className="mb1" href="/etudes/creer">
+      <LinkButton data-testid="new-study" className="mb1" href="/etudes/creer">
         {t('create')}
       </LinkButton>
       <Studies studies={studies} />

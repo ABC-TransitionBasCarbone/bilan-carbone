@@ -7,13 +7,23 @@ describe('Create study', () => {
     cy.intercept('POST', '/etudes/creer').as('create')
   })
 
+  it('Should display a link to create a new study as a simple user', () => {
+    cy.login()
+
+    cy.get('[data-testid="new-study"]').scrollIntoView().should('be.visible')
+    cy.get('[data-testid="new-study"]').should('have.text', 'Nouvelle étude')
+    cy.get('[data-testid="new-study"]').should('have.attr', 'href').and('include', '/etudes/creer')
+
+    cy.get('[data-testid="new-study"]').click()
+
+    cy.url().should('include', '/etudes/creer')
+  })
+
   it('should create a study on your organization as a simple user', () => {
     cy.login()
 
-    cy.visit('/etudes')
-    cy.get('[data-testid="studies-My new study"]').should('not.exist')
+    cy.get('[data-testid="new-study"]').click()
 
-    cy.visit('/etudes/creer')
     cy.get('[data-testid="new-study-organization-title"]').should('be.visible')
     cy.get('[data-testid="new-study-organization-select"]').should('not.exist')
 
@@ -29,15 +39,23 @@ describe('Create study', () => {
 
     cy.wait('@create')
 
-    cy.get('[data-testid="studies-My new study"]').should('be.visible')
+    cy.url().should('eq', `${Cypress.config().baseUrl}/`)
+  })
+
+  it('Should display a link to create a new study as a CR user', () => {
+    cy.login('bc-cr-user-1@yopmail.com', 'password-1')
+
+    cy.get('[data-testid="new-study"]').scrollIntoView().should('be.visible')
+    cy.get('[data-testid="new-study"]').should('have.text', 'Nouvelle étude')
+    cy.get('[data-testid="new-study"]').should('have.attr', 'href').and('include', '/etudes/creer')
+
+    cy.get('[data-testid="new-study"]').click()
+
+    cy.url().should('include', '/etudes/creer')
   })
 
   it('should create a study on an organization as a CR user', () => {
     cy.login('bc-cr-user-1@yopmail.com', 'password-1')
-
-    cy.visit('/etudes')
-    cy.get('[data-testid="studies-My new study"]').should('not.exist')
-
     cy.visit('/etudes/creer')
     cy.get('[data-testid="new-study-organization-title"]').should('be.visible')
     cy.get('[data-testid="new-study-organization-select"]').click()
@@ -55,6 +73,6 @@ describe('Create study', () => {
 
     cy.wait('@create')
 
-    cy.get('[data-testid="studies-My new study"]').should('be.visible')
+    cy.url().should('eq', `${Cypress.config().baseUrl}/`)
   })
 })
