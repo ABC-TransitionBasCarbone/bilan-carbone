@@ -9,7 +9,15 @@ const Home = async () => {
   return (
     <>
       <h1>Hello {session?.user.firstName}</h1>
-      <Actualities actualities={actualities} />
+      <div className="flex-col">
+        <div>
+          <div></div>
+          <div></div>
+        </div>
+        <div className="flex w100">
+          <Actualities actualities={actualities} />
+        </div>
+      </div>
     </>
   )
 }
