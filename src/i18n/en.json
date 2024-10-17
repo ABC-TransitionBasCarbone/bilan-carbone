@@ -1,4 +1,8 @@
 {
+  "actuality": {
+    "title": "My actualities",
+    "no-item": "No actualities yet"
+  },
   "legal-notices": {
     "profile": "Back to profile"
   },
@@ -30,6 +34,43 @@
     "legal-notices": "Legal notices"
   },
   "study": {
+    "back-to-home": "Back to home",
+    "create": "New study",
+    "my-studies": "My studies",
+    "new": {
+      "name": "Study name",
+      "start": "Start",
+      "end": "End",
+      "type": "Bilan Carbone® type",
+      "Initial": "Initial",
+      "Standard": "Standard",
+      "Advanced": "Advanced",
+      "exports": "Exports",
+      "Beges": "Bilan GES Reglementaire",
+      "GHGP": "GHG Protocol",
+      "ISO14069": "ISO 14069",
+      "control": "Control mode",
+      "CapitalShare": "Capital share",
+      "Financial": "Financial",
+      "Operational": "Operational",
+      "is-public-title": "Study visibility",
+      "private": "Private",
+      "public": "Public",
+      "create": "Create study",
+      "validation": {
+        "name": "Please enter a name",
+        "startDate": "Please select a start date",
+        "endDate": "Please select an end date",
+        "endDateBeforStartDate": "The end date must be greater than the start date",
+        "type": "Please select a Bilan Carbone type"
+      }
+    },
+    "not-found": "Study not found",
+    "organization": {
+      "title": "Which organization does this study belong to?",
+      "sites": "organization's sites",
+      "next": "Next"
+    },
     "title": "Study"
   }
 }

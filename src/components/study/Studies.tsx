@@ -1,5 +1,5 @@
 import { Study } from '@prisma/client'
-import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import React from 'react'
 
 interface Props {
@@ -7,18 +7,14 @@ interface Props {
 }
 
 const Studies = ({ studies }: Props) => {
-  const t = useTranslations('study')
   return (
-    <>
-      <h2>{t('my-studies')}</h2>
-      <ul>
-        {studies.map((study) => (
-          <li key={study.id} data-testid={`studies-${study.name}`}>
-            {study.name}
-          </li>
-        ))}
-      </ul>
-    </>
+    <ul>
+      {studies.map((study) => (
+        <li key={study.id} data-testid={`studies-${study.name}`}>
+          <Link href={`/etudes/${study.id}`}>{study.name}</Link>
+        </li>
+      ))}
+    </ul>
   )
 }
 
