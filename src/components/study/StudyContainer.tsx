@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Study } from '@prisma/client'
+import { Role, Study } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import styles from './Study.module.css'
 import Studies from './Studies'
@@ -7,6 +7,7 @@ import LinkButton from '../base/LinkButton'
 import NewspaperIcon from '@mui/icons-material/Newspaper'
 
 interface Props {
+  role: Role
   studies: Study[]
 }
 

@@ -1,11 +1,5 @@
-import classNames from 'classnames'
-import styles from './styles.module.css'
-import Actualities from '@/components/actuality/Actualities'
-import Studies from '@/components/study/StudyContainer'
-import ResultsContainer from '@/components/study/results/ResultsContainer'
-import { getAllActualities } from '@/db/actuality'
-import { getStudyByUser } from '@/db/study'
 import { auth } from '@/services/auth'
+import UserView from '@/components/home/UserView'
 
 const Home = async () => {
   const session = await auth()
@@ -14,19 +8,12 @@ const Home = async () => {
     return null
   }
 
-  const actualities = await getAllActualities()
-  const studies = await getStudyByUser(session.user)
+  const { user } = session
 
   return (
     <>
-      <h1 className="mb1">Hello {session?.user.firstName}</h1>
-      <div className="flex-col">
-        <ResultsContainer />
-        <div className={classNames(styles.container, 'w100')}>
-          <Actualities actualities={actualities} />
-          <Studies studies={studies}></Studies>
-        </div>
-      </div>
+      <h1 className="mb1">Hello {user.firstName}</h1>
+      <UserView user={user} />
     </>
   )
 }
