@@ -1,9 +1,9 @@
 import { useTranslations } from 'next-intl'
-import LinkButton from '../base/LinkButton'
+import Button from '../base/Button'
 
 const Study = () => {
   const t = useTranslations('study')
-  return <LinkButton href="/etudes">{t('title')}</LinkButton>
+  return <Button>{t('title')}</Button>
 }
 
 export default Study

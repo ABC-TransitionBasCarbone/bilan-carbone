@@ -10,10 +10,10 @@ interface Props {
 const StudyPage = ({ studies }: Props) => {
   const t = useTranslations('study')
   return (
-    <>
+    <div className="flex-col grow">
       <LinkButton href="/etudes/creer">{t('create')}</LinkButton>
       <Studies studies={studies} />
-    </>
+    </div>
   )
 }
 
