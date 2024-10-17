@@ -1,4 +1,7 @@
 {
+  "legal-notices": {
+    "profile": "Retour au profil"
+  },
   "locale": {
     "en": "English",
     "fr": "Français",
@@ -22,6 +25,9 @@
     "profile": "Profil",
     "study": "Étude",
     "team": "Équipe"
+  },
+  "profile": {
+    "legal-notices": "Mentions légales"
   },
   "study": {
     "title": "Étude",

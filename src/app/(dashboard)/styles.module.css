@@ -1,0 +1,4 @@
+.content {
+  margin-top: var(--header-height);
+  overflow-y: auto;
+}

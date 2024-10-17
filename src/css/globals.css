@@ -1,3 +1,29 @@
 body {
   background: var(--primary-10);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Scrollbars for WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-60);
+  border-radius: 0.5rem;
+  border: 0.125rem solid var(--primary-10);
+}
+::-webkit-scrollbar-track {
+  background: var(--primary-10);
+  border-radius: 0.5rem;
+}
+
+/* Scrollbars for Firefox */
+
+@supports (-moz-appearance: none) {
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: var(--primary-60) var(--primary-10);
+  }
 }
