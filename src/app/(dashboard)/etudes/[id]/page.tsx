@@ -11,7 +11,7 @@ interface Props {
   }
 }
 
-const StudyPage = async ({ params }: Props) => {
+const StudyView = async ({ params }: Props) => {
   const session = await auth()
 
   const id = params.id
@@ -28,4 +28,4 @@ const StudyPage = async ({ params }: Props) => {
   return <StudyDetails study={study} />
 }
 
-export default StudyPage
+export default StudyView

@@ -1,3 +1,5 @@
+import classNames from 'classnames'
+import styles from './styles.module.css'
 import Actualities from '@/components/actuality/Actualities'
 import StudyPage from '@/components/pages/Study'
 import { getAllActualities } from '@/db/actuality'
@@ -22,7 +24,7 @@ const Home = async () => {
           <div></div>
           <div></div>
         </div>
-        <div className="flex w100">
+        <div className={classNames(styles.container, 'w100')}>
           <Actualities actualities={actualities} />
           <StudyPage studies={studies}></StudyPage>
         </div>
