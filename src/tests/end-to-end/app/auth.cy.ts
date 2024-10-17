@@ -49,10 +49,15 @@ describe('Authentication', () => {
     cy.get('.email-item-link')
       .first()
       .invoke('attr', 'href')
-      .then((link) => cy.visit(`http://localhost:1080${(link as string).replace('#/', '/')}/html`))
-    cy.get('a')
-      .invoke('attr', 'href')
-      .then((link) => cy.visit(link as string))
+      .then((link) => {
+        const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
+        cy.visit(hmtlUrl)
+        cy.url().should('include', hmtlUrl)
+
+        cy.get('a')
+          .invoke('attr', 'href')
+          .then((link) => cy.visit(link as string))
+      })
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('have.value', '')
     cy.get('[data-testid="input-password"] > .MuiInputBase-input').should('have.value', '')

@@ -16,6 +16,7 @@ export const createStudyCommand = async ({ organizationId, ...command }: CreateS
   try {
     await createStudy({
       ...command,
+      createdBy: { connect: { id: session.user.id } },
       startDate: dayjs(command.startDate).toDate(),
       endDate: dayjs(command.endDate).toDate(),
       organization: { connect: { id: organizationId } },

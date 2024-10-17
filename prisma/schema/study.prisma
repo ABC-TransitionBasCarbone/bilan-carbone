@@ -21,6 +21,9 @@ model Study {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
+  createdById String @map("created_by_id")
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
   name      String
   isPublic  Boolean       @map("is_public")
   startDate DateTime      @map("start_date") @db.Date
