@@ -4,14 +4,12 @@
   gap: 0.25rem;
 }
 
-.actuality {
-  .header {
-    font-weight: bold;
-    gap: 1.5rem;
-  }
+.header {
+  font-weight: bold;
+  gap: 1.5rem;
+}
 
-  .text {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
+.text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }

@@ -2,10 +2,3 @@
   margin-top: var(--header-height);
   overflow-y: auto;
 }
-
-.container {
-  display: flex;
-  @media screen and (max-width: 1000px) {
-    flex-direction: column;
-  }
-}

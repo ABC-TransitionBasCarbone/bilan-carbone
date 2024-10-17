@@ -1,6 +1,11 @@
 .container {
   display: flex;
+  border-radius: 1rem;
+}
+
+.resultsWrapper {
   gap: 1rem;
+
   @media screen and (max-width: 60rem) {
     flex-direction: column;
   }

@@ -1,14 +1,15 @@
 import classNames from 'classnames'
-import styles from './styles.module.css'
+import styles from './ResultsContainer.module.css'
+import Box from '@/components/base/Box'
 
 const ResultsContainer = () => {
   return (
-    <div className="px-2">
+    <div className="pb1">
       <div className={classNames(styles.container, 'w100')}>
-        <div className="p-2 flex grow box">
-          <div className="box grow">Résultats par postes</div>
-          <div className="box grow">Résultats par sous-postes</div>
-        </div>
+        <Box className={classNames(styles.resultsWrapper, 'p-2 flex grow')}>
+          <Box className="grow">Résultats par postes</Box>
+          <Box className="grow">Résultats par sous-postes</Box>
+        </Box>
       </div>
     </div>
   )
