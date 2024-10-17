@@ -4,7 +4,7 @@ import styles from './styles.module.css'
 import dayjs from 'dayjs'
 
 const ActualityRow = (actuality: Actuality) => (
-  <div className={classNames(styles.actuality, 'flex-col mb1')} key={actuality.id}>
+  <div data-testid="actuality" className={classNames(styles.actuality, 'flex-col mb1')} key={actuality.id}>
     <div className={classNames(styles.header, 'flex mb-2')}>
       <span>{dayjs(new Date(actuality.updatedAt)).format('DD/MM/YYYY')}</span>
       <span>{actuality.title}</span>

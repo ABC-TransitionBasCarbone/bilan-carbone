@@ -14,8 +14,8 @@ interface Props {
 const StudyContainer = ({ studies }: Props) => {
   const t = useTranslations('study')
   return (
-    <div className="flex-col box grow m-2">
-      <h2 className={classNames(styles.title, 'align-center pb1')}>
+    <div data-testid="home-studies" className="flex-col box grow m-2">
+      <h2 data-testid="studies-title" className={classNames(styles.title, 'align-center pb1')}>
         <NewspaperIcon /> {t('my-studies')}
       </h2>
       <LinkButton data-testid="new-study" className="mb1" href="/etudes/creer">
