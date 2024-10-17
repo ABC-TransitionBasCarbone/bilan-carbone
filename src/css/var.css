@@ -5,12 +5,19 @@
   margin-bottom: 0.5rem;
 }
 
+.p1 {
+  padding: 1rem;
+}
 .p15 {
   padding: 1.5rem;
 }
 
 .p-2 {
   padding: 0.5rem;
+}
+
+.pb1 {
+  padding-bottom: 1rem;
 }
 
 .px-2 {

@@ -1,7 +1,7 @@
-import { Actuality } from '@prisma/client'
 import classNames from 'classnames'
-import dayjs from 'dayjs'
+import { Actuality } from '@prisma/client'
 import styles from './styles.module.css'
+import dayjs from 'dayjs'
 
 const ActualityRow = (actuality: Actuality) => (
   <div className={classNames(styles.actuality, 'flex-col mb1')} key={actuality.id}>
@@ -9,7 +9,7 @@ const ActualityRow = (actuality: Actuality) => (
       <span>{dayjs(new Date(actuality.updatedAt)).format('DD/MM/YYYY')}</span>
       <span>{actuality.title}</span>
     </div>
-    <pre>{actuality.text}</pre>
+    <span className={styles.text}>{actuality.text}</span>
   </div>
 )
 
