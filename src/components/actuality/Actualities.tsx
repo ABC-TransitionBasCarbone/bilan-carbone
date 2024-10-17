@@ -13,7 +13,7 @@ const Actualities = ({ actualities }: Props) => {
   const t = useTranslations('actuality')
   const sortedActualities = actualities.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
   return (
-    <div className={classNames(styles.box, 'grow p1 m-2')}>
+    <div className="grow box m-2">
       <h2 className={classNames(styles.title, 'align-center pb1')}>
         <NewspaperIcon /> {t('title')}
       </h2>

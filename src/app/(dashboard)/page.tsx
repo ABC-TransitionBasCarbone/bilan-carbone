@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import styles from './styles.module.css'
 import Actualities from '@/components/actuality/Actualities'
 import Studies from '@/components/study/StudyContainer'
+import ResultsContainer from '@/components/study/results/ResultsContainer'
 import { getAllActualities } from '@/db/actuality'
 import { getStudyByUser } from '@/db/study'
 import { auth } from '@/services/auth'
@@ -18,12 +19,9 @@ const Home = async () => {
 
   return (
     <>
-      <h1>Hello {session?.user.firstName}</h1>
+      <h1 className="mb1">Hello {session?.user.firstName}</h1>
       <div className="flex-col">
-        <div>
-          <div></div>
-          <div></div>
-        </div>
+        <ResultsContainer />
         <div className={classNames(styles.container, 'w100')}>
           <Actualities actualities={actualities} />
           <Studies studies={studies}></Studies>

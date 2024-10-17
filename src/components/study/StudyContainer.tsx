@@ -13,7 +13,7 @@ interface Props {
 const StudyContainer = ({ studies }: Props) => {
   const t = useTranslations('study')
   return (
-    <div className={classNames(styles.box, 'flex-col grow m-2 p1')}>
+    <div className="flex-col box grow m-2">
       <h2 className={classNames(styles.title, 'align-center pb1')}>
         <NewspaperIcon /> {t('my-studies')}
       </h2>
