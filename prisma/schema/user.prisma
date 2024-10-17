@@ -13,6 +13,7 @@ model User {
   password        String
   resetToken      String?          @map("reset_token")
   cROrganizations CROrganization[]
+  Study           Study[]
 
   @@map("users")
 }
