@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import styles from './styles.module.css'
 import Actualities from '@/components/actuality/Actualities'
-import StudyPage from '@/components/pages/Study'
+import Studies from '@/components/study/StudyContainer'
 import { getAllActualities } from '@/db/actuality'
 import { getStudyByUser } from '@/db/study'
 import { auth } from '@/services/auth'
@@ -26,7 +26,7 @@ const Home = async () => {
         </div>
         <div className={classNames(styles.container, 'w100')}>
           <Actualities actualities={actualities} />
-          <StudyPage studies={studies}></StudyPage>
+          <Studies studies={studies}></Studies>
         </div>
       </div>
     </>

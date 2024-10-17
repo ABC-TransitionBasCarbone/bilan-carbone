@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { Study } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import styles from './Study.module.css'
-import Studies from '../study/Studies'
+import Studies from './Studies'
 import LinkButton from '../base/LinkButton'
 import NewspaperIcon from '@mui/icons-material/Newspaper'
 
@@ -10,7 +10,7 @@ interface Props {
   studies: Study[]
 }
 
-const StudyPage = ({ studies }: Props) => {
+const StudyContainer = ({ studies }: Props) => {
   const t = useTranslations('study')
   return (
     <div className={classNames(styles.box, 'flex-col grow m-2 p1')}>
@@ -25,4 +25,4 @@ const StudyPage = ({ studies }: Props) => {
   )
 }
 
-export default StudyPage
+export default StudyContainer
