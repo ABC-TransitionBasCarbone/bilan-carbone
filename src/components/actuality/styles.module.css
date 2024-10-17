@@ -4,6 +4,12 @@
   gap: 0.25rem;
 }
 
+.box {
+  background-color: var(--neutral-00);
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+}
+
 .actuality {
   .header {
     font-weight: bold;
