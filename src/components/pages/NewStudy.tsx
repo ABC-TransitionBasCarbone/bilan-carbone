@@ -11,10 +11,11 @@ interface Props {
 
 const NewStudyPage = ({ organizations }: Props) => {
   const [organization, setOrganization] = useState<OrganizationWithSites>()
+
   return (
     <>
       {organization ? (
-        <NewStudyForm />
+        <NewStudyForm organization={organization} />
       ) : (
         <SelectOrganization organizations={organizations} selectOrganization={setOrganization} />
       )}

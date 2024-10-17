@@ -22,10 +22,14 @@ model Study {
   updatedAt DateTime @default(now()) @map("updated_at")
 
   name      String
+  isPublic  Boolean       @map("is_public")
   startDate DateTime      @map("start_date") @db.Date
   endDate   DateTime      @map("end_date") @db.Date
   type      StudyType
   exports   StudyExport[]
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
 
   @@map("studies")
 }

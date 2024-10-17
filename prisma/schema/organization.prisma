@@ -8,6 +8,7 @@ model Organization {
   users           User[]
   cROrganizations CROrganization[]
   sites           Site[]
+  Study           Study[]
 
   @@map("organizations")
 }

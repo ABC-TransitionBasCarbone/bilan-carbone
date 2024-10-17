@@ -1,6 +1,7 @@
 .button {
   background-color: var(--primary-40) !important;
   color: var(--neutral-00) !important;
+  width: fit-content;
 
   &:hover {
     background-color: var(--primary-60) !important;

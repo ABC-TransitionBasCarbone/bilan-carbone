@@ -22,11 +22,15 @@ const SelectOrganization = ({ organizations, selectOrganization }: Props) => {
 
   return (
     <>
-      <h1>{t('title')}</h1>
+      <h1 data-testid="new-study-organization-title">{t('title')}</h1>
       {organizations.length === 1 ? (
         organizations[0].name
       ) : (
-        <Select value={organizationId} onChange={(event) => setOrganizationId(event.target.value)}>
+        <Select
+          data-testid="new-study-organization-select"
+          value={organizationId}
+          onChange={(event) => setOrganizationId(event.target.value)}
+        >
           {organizations.map((organization) => (
             <MenuItem key={organization.id} value={organization.id}>
               {organization.name}
@@ -41,7 +45,9 @@ const SelectOrganization = ({ organizations, selectOrganization }: Props) => {
             <p key={site.id}>{site.name}</p>
           ))}
           <p>TODO: ajout et modification des champs de l'organisation, pareil pour les sites</p>
-          <Button onClick={() => selectOrganization(organization)}>{t('next')}</Button>
+          <Button data-testid="new-study-organization-button" onClick={() => selectOrganization(organization)}>
+            {t('next')}
+          </Button>
         </>
       )}
     </>

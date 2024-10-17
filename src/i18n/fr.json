@@ -25,6 +25,8 @@
   },
   "study": {
     "title": "Étude",
+    "create": "Nouvelle étude",
+    "my-studies": "Mes études",
     "organization": {
       "title": "Quelle organisation est concernée par l'étude ?",
       "sites": "Les sites de l'organisation",
@@ -46,9 +48,17 @@
       "CapitalShare": "Part de capital",
       "Financial": "Financier",
       "Operational": "Opérationel",
-      "private-title": "Visibilité de l'étude",
+      "is-public-title": "Visibilité de l'étude",
       "private": "Privée",
-      "public": "Publique"
+      "public": "Publique",
+      "create": "Créer l'étude",
+      "validation": {
+        "name": "Veuillez renseigner un nom",
+        "startDate": "Veuillez selectionner une date de debut d'étude",
+        "endDate": "Veuillez selectionner une date de fin d'étude",
+        "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
+        "type": "Veuillez selectionner le type de Bilan Carbone"
+      }
     }
   }
 }
