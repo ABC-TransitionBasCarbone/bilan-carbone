@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 import { Input as InputMUI, InputProps } from '@mui/material'
-import React from 'react'
+import React, { InputHTMLAttributes } from 'react'
 import styles from './Input.module.css'
 
-const Input = ({ className, ...rest }: InputProps) => {
+const Input = ({ className, ...rest }: InputProps & InputHTMLAttributes<HTMLInputElement>) => {
   return <InputMUI className={classNames(styles.input, className)} {...rest} />
 }
 
