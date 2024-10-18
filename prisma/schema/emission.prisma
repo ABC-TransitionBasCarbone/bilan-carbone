@@ -30,6 +30,7 @@ model Emission {
 
   incertitude Int?
 
+  quality                      Float?
   technicalRepresentativeness  Float? @map("technical_representativeness")
   geographicRepresentativeness Float? @map("geographic_representativeness")
   temporalRepresentativeness   Float? @map("temporal_representativeness")
