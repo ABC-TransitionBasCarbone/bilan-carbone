@@ -19,7 +19,7 @@ const Actualities = ({ actualities }: Props) => {
         <NewspaperIcon /> {t('title')}
       </h2>
       {actualities.length ? (
-        sortedActualities.map((a) => <ActualityRow key={a.id} actuality={a} />)
+        sortedActualities.map((actuality) => <ActualityRow key={actuality.id} actuality={actuality} />)
       ) : (
         <>{t('no-item')}</>
       )}

@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 
 interface Props {
   actuality: Actuality
-  // key: string
 }
 
 const ActualityRow = ({ actuality }: Props) => (
@@ -14,7 +13,7 @@ const ActualityRow = ({ actuality }: Props) => (
       <span>{dayjs(new Date(actuality.updatedAt)).format('DD/MM/YYYY')}</span>
       <span>{actuality.title}</span>
     </p>
-    <span className={styles.text}>{actuality.text}</span>
+    <p className={styles.text}>{actuality.text}</p>
   </div>
 )
 
