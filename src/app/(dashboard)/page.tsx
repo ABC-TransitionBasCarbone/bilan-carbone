@@ -1,15 +1,19 @@
-import Actualities from '@/components/actuality/Actualities'
-import { getAllActualities } from '@/db/actuality'
 import { auth } from '@/services/auth'
+import UserView from '@/components/home/UserView'
 
 const Home = async () => {
   const session = await auth()
 
-  const actualities = await getAllActualities()
+  if (!session) {
+    return null
+  }
+
+  const { user } = session
+
   return (
     <>
-      <h1>Hello {session?.user.firstName}</h1>
-      <Actualities actualities={actualities} />
+      <h1 className="mb1">Hello {user.firstName}</h1>
+      <UserView user={user} />
     </>
   )
 }
