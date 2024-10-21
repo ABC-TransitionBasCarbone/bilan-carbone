@@ -26,6 +26,7 @@
     "@mui/material-nextjs": "^6.1.2",
     "@mui/x-date-pickers": "^7.20.0",
     "@prisma/client": "^5.20.0",
+    "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
