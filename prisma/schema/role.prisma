@@ -2,3 +2,15 @@ enum Role {
   DEFAULT
   CR
 }
+
+enum TrainingStatus {
+	INITIAL
+	STANDARD
+	ADVANCED
+}
+
+enum AdminRole {
+	SUPER_ADMIN
+	ADMIN
+	HR
+}

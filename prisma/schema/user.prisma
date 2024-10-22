@@ -7,6 +7,8 @@ model User {
   organizationId String       @map("organization_id")
 
   role            Role
+  adminRole       AdminRole?
+  training        TrainingStatus?
   firstName       String           @map("first_name")
   lastName        String           @map("last_name")
   email           String           @unique
