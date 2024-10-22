@@ -1,3 +1,8 @@
+.my2 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 .m-2 {
   margin: 0.5rem;
 }
@@ -5,16 +10,23 @@
 .mb1 {
   margin-bottom: 1rem;
 }
+
 .mb-2 {
   margin-bottom: 0.5rem;
+}
+
+.mt1 {
+  margin-top: 1rem;
 }
 
 .p1 {
   padding: 1rem;
 }
+
 .p15 {
   padding: 1.5rem;
 }
+
 .p2 {
   padding: 2rem;
 }
@@ -35,6 +47,7 @@
 .h100 {
   height: 100%;
 }
+
 .w100 {
   width: 100%;
 }

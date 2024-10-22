@@ -1,5 +1,5 @@
-@import './flex.css';
-@import './globals.css';
 @import './reset.css';
-@import './var.css';
 @import './variables.css';
+@import './globals.css';
+@import './flex.css';
+@import './var.css';

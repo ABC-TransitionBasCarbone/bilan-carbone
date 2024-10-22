@@ -72,5 +72,26 @@
       "next": "Suivant"
     },
     "title": "Étude"
+  },
+  "emissions": {
+    "title": "Facteurs d'émissions",
+    "loading": "Chargement des facteurs d'émissions",
+    "table": {
+      "search": "Rechercher un facteur d'émission",
+      "name": "Nom",
+      "detail": "Détails",
+      "valeur": "Valeur",
+      "unit": "Unité",
+      "quality": "Qualité",
+      "status": "Statut",
+      "Valid": "Valide",
+      "Archived": "Archivé",
+      "location": "Localisation",
+      "source": "Source",
+      "per": "par",
+      "page": "Page {page} sur {total}",
+      "goTo": "Aller à la page",
+      "showing": "Affichage de {number} lignes sur {total}"
+    }
   }
 }

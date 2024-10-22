@@ -36,6 +36,7 @@ type EmissionResponse = {
     Autres_GES: number
     N2O: number
     CO2f: number
+    Qualité: number
     Qualité_TeR: number
     Qualité_GR: number
     Qualité_TiR: number
@@ -73,6 +74,7 @@ const select = [
   'Autres_GES',
   'N2O',
   'CO2f',
+  'Qualité',
   'Qualité_TeR',
   'Qualité_GR',
   'Qualité_TiR',
@@ -80,6 +82,8 @@ const select = [
 ]
 
 const validStatus = ['Valide générique', 'Valide spécifique', 'Archivé']
+
+const escapeTranslation = (value?: string) => (value ? value.replaceAll('"""', '') : value)
 
 const saveEmissions = async (url: string) => {
   const emissions = await axios.get<EmissionResponse>(url)
@@ -96,6 +100,7 @@ const saveEmissions = async (url: string) => {
             source: emission.Source,
             location: emission.Localisation_géographique,
             incertitude: emission.Incertitude,
+            quality: emission.Qualité,
             technicalRepresentativeness: emission.Qualité_TeR,
             geographicRepresentativeness: emission.Qualité_GR,
             temporalRepresentativeness: emission.Qualité_TiR,
@@ -113,25 +118,25 @@ const saveEmissions = async (url: string) => {
                 data: [
                   {
                     language: 'fr',
-                    title: emission.Nom_base_français,
-                    attribute: emission.Nom_attribut_français,
-                    frontiere: emission.Nom_frontière_français,
-                    tag: emission.Tags_français,
-                    unit: emission.Unité_français,
-                    location: emission['Sous-localisation_géographique_français'],
-                    comment: emission.Commentaire_français,
-                    post: emission.Nom_poste_français,
+                    title: escapeTranslation(emission.Nom_base_français),
+                    attribute: escapeTranslation(emission.Nom_attribut_français),
+                    frontiere: escapeTranslation(emission.Nom_frontière_français),
+                    tag: escapeTranslation(emission.Tags_français),
+                    unit: escapeTranslation(emission.Unité_français),
+                    location: escapeTranslation(emission['Sous-localisation_géographique_français']),
+                    comment: escapeTranslation(emission.Commentaire_français),
+                    post: escapeTranslation(emission.Nom_poste_français),
                   },
                   {
                     language: 'en',
-                    title: emission.Nom_base_anglais,
-                    attribute: emission.Nom_attribut_anglais,
-                    frontiere: emission.Nom_frontière_anglais,
-                    tag: emission.Tags_anglais,
-                    unit: emission.Unité_anglais,
-                    location: emission['Sous-localisation_géographique_anglais'],
-                    comment: emission.Commentaire_anglais,
-                    post: emission.Nom_poste_anglais,
+                    title: escapeTranslation(emission.Nom_base_anglais),
+                    attribute: escapeTranslation(emission.Nom_attribut_anglais),
+                    frontiere: escapeTranslation(emission.Nom_frontière_anglais),
+                    tag: escapeTranslation(emission.Tags_anglais),
+                    unit: escapeTranslation(emission.Unité_anglais),
+                    location: escapeTranslation(emission['Sous-localisation_géographique_anglais']),
+                    comment: escapeTranslation(emission.Commentaire_anglais),
+                    post: escapeTranslation(emission.Nom_poste_anglais),
                   },
                 ],
               },
