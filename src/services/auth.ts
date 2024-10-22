@@ -29,6 +29,7 @@ export const authOptions: NextAuthOptions = {
           firstName: user.firstName,
           lastName: user.lastName,
           role: user.role,
+          organizationId: user.organizationId,
         }
       }
       return token
@@ -40,6 +41,7 @@ export const authOptions: NextAuthOptions = {
           id: token.id as string,
           firstName: token.firstName as string,
           lastName: token.lastName as string,
+          organizationId: token.organizationId as string,
           role: token.role as Role,
         }
       }
@@ -74,6 +76,7 @@ export const authOptions: NextAuthOptions = {
           lastName: user.lastName,
           role: user.role,
           email: user.email,
+          organizationId: user.organizationId,
         }
       },
     }),

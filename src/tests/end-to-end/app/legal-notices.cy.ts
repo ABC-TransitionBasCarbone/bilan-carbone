@@ -5,8 +5,8 @@ describe('Legal Notices', () => {
 
   it('Should be accessible from the profile view', () => {
     cy.visit('/profil')
-    cy.get('[data-testid="legal-notices-link"]').should('be.visible')
-    cy.get('[data-testid="legal-notices-link"]').click()
+    cy.getByTestId('legal-notices-link').should('be.visible')
+    cy.getByTestId('legal-notices-link').click()
     cy.url().should('include', '/mentions-legales')
   })
 
@@ -14,23 +14,21 @@ describe('Legal Notices', () => {
     cy.visit('/mentions-legales')
 
     // Body
-    cy.get('[data-testid="legal-notices"]').should('be.visible')
+    cy.getByTestId('legal-notices').should('be.visible')
 
     // Contact mail button
-    cy.get('[data-testid="contact-mail"]').should('be.visible')
-    cy.get('[data-testid="contact-mail"]').should('have.text', 'contact@associationbilancarbone.fr')
-    cy.get('[data-testid="contact-mail"]').should('have.attr', 'href').and('include', 'mailto:')
+    cy.getByTestId('contact-mail').should('be.visible')
+    cy.getByTestId('contact-mail').should('have.text', 'contact@associationbilancarbone.fr')
+    cy.getByTestId('contact-mail').should('have.attr', 'href').and('include', 'mailto:')
 
     // Privacy policy
-    cy.get('[data-testid="privacy-link"]').scrollIntoView().should('be.visible')
-    cy.get('[data-testid="privacy-link"]').should('have.text', 'politique de protection des données')
-    cy.get('[data-testid="privacy-link"]')
-      .should('have.attr', 'href')
-      .and('include', 'associationbilancarbone.sharepoint.com')
+    cy.getByTestId('privacy-link').scrollIntoView().should('be.visible')
+    cy.getByTestId('privacy-link').should('have.text', 'politique de protection des données')
+    cy.getByTestId('privacy-link').should('have.attr', 'href').and('include', 'associationbilancarbone.sharepoint.com')
 
     // Back to profile
-    cy.get('[data-testid="profile-link"]').scrollIntoView().should('be.visible')
-    cy.get('[data-testid="profile-link"]').should('have.attr', 'href', '/profil')
-    cy.get('[data-testid="profile-link"]').should('have.text', 'Retour au profil')
+    cy.getByTestId('profile-link').scrollIntoView().should('be.visible')
+    cy.getByTestId('profile-link').should('have.attr', 'href', '/profil')
+    cy.getByTestId('profile-link').should('have.text', 'Retour au profil')
   })
 })

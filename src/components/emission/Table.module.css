@@ -1,3 +1,12 @@
+.header {
+  gap: 2rem;
+  flex-wrap: wrap-reverse;
+}
+
+.searchInput {
+  min-width: 20rem;
+}
+
 .pagination {
   gap: 0.5rem;
 }
@@ -14,8 +23,4 @@
     font-size: 1.25rem;
     font-weight: 700;
   }
-}
-
-.searchInput {
-  min-width: 20rem;
 }

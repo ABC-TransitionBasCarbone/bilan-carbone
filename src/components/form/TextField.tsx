@@ -22,7 +22,13 @@ export const FormTextField = <T extends FieldValues>({
           {...textFieldProps}
           helperText={error && error.message ? translation('validation.' + error.message) : null}
           error={!!error}
-          onChange={onChange}
+          onChange={
+            textFieldProps.type === 'number'
+              ? (event) => {
+                  onChange(parseFloat(event.target.value))
+                }
+              : onChange
+          }
           value={value}
         />
       )}

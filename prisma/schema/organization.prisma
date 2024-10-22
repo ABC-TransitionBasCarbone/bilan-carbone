@@ -9,6 +9,7 @@ model Organization {
   cROrganizations CROrganization[]
   sites           Site[]
   Study           Study[]
+  Emission        Emission[]
 
   @@map("organizations")
 }
