@@ -47,7 +47,7 @@ const NewStudyForm = ({ organization }: Props) => {
     if (result) {
       setError(result)
     } else {
-      router.push('/etudes')
+      router.push('/')
     }
   }
 

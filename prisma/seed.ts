@@ -1,6 +1,7 @@
 import { PrismaClient, Role } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { signPassword } from '@/services/auth'
+import { ACTUALITIES } from './legacy_data/actualities'
 
 const prisma = new PrismaClient()
 
@@ -72,12 +73,7 @@ const users = async () => {
 
 const actualities = async () => {
   await prisma.actuality.deleteMany()
-  await prisma.actuality.createMany({
-    data: Array.from({ length: 10 }).map(() => ({
-      text: faker.lorem.paragraph(),
-      title: faker.lorem.sentence(),
-    })),
-  })
+  await prisma.actuality.createMany({ data: ACTUALITIES })
 }
 
 const licenses = async () => {

@@ -1,4 +1,8 @@
 {
+  "actuality": {
+    "title": "Mes actualités",
+    "no-item": "Aucune actualité pour le moment"
+  },
   "legal-notices": {
     "profile": "Retour au profil"
   },
@@ -30,14 +34,9 @@
     "legal-notices": "Mentions légales"
   },
   "study": {
-    "title": "Étude",
+    "back-to-home": "Retour a l'accueil",
     "create": "Nouvelle étude",
     "my-studies": "Mes études",
-    "organization": {
-      "title": "Quelle organisation est concernée par l'étude ?",
-      "sites": "Les sites de l'organisation",
-      "next": "Suivant"
-    },
     "new": {
       "name": "Nom de l'étude",
       "start": "Début",
@@ -65,6 +64,13 @@
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
         "type": "Veuillez selectionner le type de Bilan Carbone"
       }
-    }
+    },
+    "not-found": "Étude introuvable",
+    "organization": {
+      "title": "Quelle organisation est concernée par l'étude ?",
+      "sites": "Les sites de l'organisation",
+      "next": "Suivant"
+    },
+    "title": "Étude"
   }
 }

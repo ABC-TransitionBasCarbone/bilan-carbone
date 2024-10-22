@@ -1,11 +1,30 @@
+.m-2 {
+  margin: 0.5rem;
+}
+
 .mb1 {
   margin-bottom: 1rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.p1 {
+  padding: 1rem;
 }
 .p15 {
   padding: 1.5rem;
 }
+.p2 {
+  padding: 2rem;
+}
+
 .p-2 {
   padding: 0.5rem;
+}
+
+.pb1 {
+  padding-bottom: 1rem;
 }
 
 .px-2 {
