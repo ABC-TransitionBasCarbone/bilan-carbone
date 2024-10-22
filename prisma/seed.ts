@@ -5,6 +5,21 @@ import { ACTUALITIES } from './legacy_data/actualities'
 
 const prisma = new PrismaClient()
 
+const emissions = async () => {
+  const emissionsToDelete = await prisma.emission.findMany({
+    select: { id: true },
+    where: { organizationId: { not: null } },
+  })
+
+  const ids = emissionsToDelete.map((emission) => emission.id)
+  await prisma.emissionMetaData.deleteMany({
+    where: { emissionId: { in: ids } },
+  })
+  await prisma.emission.deleteMany({
+    where: { id: { in: ids } },
+  })
+}
+
 const users = async () => {
   await prisma.studyExport.deleteMany()
   await prisma.study.deleteMany()
@@ -16,7 +31,7 @@ const users = async () => {
   await prisma.organization.deleteMany()
 
   const organizations = await prisma.organization.createManyAndReturn({
-    data: Array.from({ length: 10 }).map(() => ({
+    data: Array.from({ length: 5 }).map(() => ({
       name: faker.company.name(),
     })),
   })
@@ -35,12 +50,11 @@ const users = async () => {
     data: await Promise.all([
       ...Array.from({ length: 10 }).map(async (_, index) => {
         const password = await signPassword(`password-${index}`)
-        const organization = faker.helpers.arrayElement(organizations)
         return {
           email: `bc-test-user-${index}@yopmail.com`,
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
-          organizationId: organization.id,
+          organizationId: organizations[index % organizations.length].id,
           password,
           role: Role.DEFAULT,
         }
@@ -93,7 +107,7 @@ const licenses = async () => {
 }
 
 const main = async () => {
-  await Promise.all([actualities(), licenses(), users()])
+  await Promise.all([actualities(), licenses(), users(), emissions()])
 }
 
 main()

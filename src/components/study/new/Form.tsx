@@ -1,3 +1,5 @@
+'use client'
+
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, MenuItem, Radio } from '@mui/material'
@@ -16,6 +18,7 @@ import Button from '@/components/base/Button'
 import { OrganizationWithSites } from '@/db/user'
 import { useRouter } from 'next/navigation'
 import dayjs from 'dayjs'
+import Form from '@/components/base/Form'
 
 interface Props {
   organization: OrganizationWithSites
@@ -52,7 +55,7 @@ const NewStudyForm = ({ organization }: Props) => {
   }
 
   return (
-    <form className={styles.form} onSubmit={form.handleSubmit(onSubmit)}>
+    <Form onSubmit={form.handleSubmit(onSubmit)}>
       <FormTextField
         data-testid="new-study-name"
         control={form.control}
@@ -103,7 +106,7 @@ const NewStudyForm = ({ organization }: Props) => {
         {t('create')}
       </Button>
       {error && <p>{error}</p>}
-    </form>
+    </Form>
   )
 }
 

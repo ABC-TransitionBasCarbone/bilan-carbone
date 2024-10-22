@@ -1,7 +1,13 @@
 import { getAllEmissions } from '@/db/emissions'
+import { auth } from './auth'
 
 export const getEmissions = async (locale: string) => {
-  const emissions = await getAllEmissions()
+  const session = await auth()
+  if (!session || !session.user) {
+    return []
+  }
+
+  const emissions = await getAllEmissions(session.user.organizationId)
 
   return emissions.map((emission) => ({
     ...emission,
