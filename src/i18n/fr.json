@@ -41,7 +41,7 @@
       "name": "Nom de l'étude",
       "start": "Début",
       "end": "Fin",
-      "type": "Type de Bilan Carbone®",
+      "level": "Type de Bilan Carbone®",
       "Initial": "Initial",
       "Standard": "Standard",
       "Advanced": "Avancé",
@@ -62,7 +62,7 @@
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
-        "type": "Veuillez selectionner le type de Bilan Carbone"
+        "level": "Veuillez selectionner le type de Bilan Carbone"
       }
     },
     "not-found": "Étude introuvable",

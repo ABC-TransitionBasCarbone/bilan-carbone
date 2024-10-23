@@ -93,6 +93,7 @@ const saveEmissions = async (url: string) => {
       .map((emission) =>
         prismaClient.emission.create({
           data: {
+            reliability: 5,
             importedFrom: Import.BaseEmpreinte,
             importedId: emission["Identifiant_de_l'élément"],
             status: emission["Statut_de_l'élément"] === 'Archivé' ? EmissionStatus.Archived : EmissionStatus.Valid,

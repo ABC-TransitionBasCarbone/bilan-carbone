@@ -26,6 +26,7 @@ export const createEmissionCommand = async ({ name, unit, attribute, comment, ..
     importedFrom: Import.Manual,
     type: EmissionType.Element,
     status: EmissionStatus.Valid,
+    reliability: 5,
     organization: { connect: { id: user.organizationId } },
     metaData: {
       create: {

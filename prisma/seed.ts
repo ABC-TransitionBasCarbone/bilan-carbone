@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client'
+import { Level, PrismaClient, Role } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { signPassword } from '@/services/auth'
 import { ACTUALITIES } from './legacy_data/actualities'
@@ -15,7 +15,6 @@ const users = async () => {
   await prisma.study.deleteMany()
 
   await prisma.site.deleteMany()
-  await prisma.cROrganization.deleteMany()
   await prisma.user.deleteMany()
 
   await prisma.organization.deleteMany()
@@ -23,11 +22,23 @@ const users = async () => {
   const organizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 5 }).map(() => ({
       name: faker.company.name(),
+      isCR: faker.datatype.boolean(),
+    })),
+  })
+
+  const crOrganizations = organizations.filter((organization) => organization.isCR)
+  const regularOrganizations = organizations.filter((organization) => !organization.isCR)
+
+  const childOrganizations = await prisma.organization.createManyAndReturn({
+    data: Array.from({ length: 50 }).map(() => ({
+      name: faker.company.name(),
+      parentId: faker.helpers.arrayElement(crOrganizations).id,
+      isCR: false,
     })),
   })
 
   await prisma.site.createMany({
-    data: organizations.flatMap((organization) => {
+    data: [...organizations, ...childOrganizations].flatMap((organization) => {
       const sitesNumber = faker.number.int({ min: 0, max: 3 })
       return Array.from({ length: sitesNumber }).map(() => ({
         name: faker.commerce.department(),
@@ -36,6 +47,7 @@ const users = async () => {
     }),
   })
 
+  const levels = Object.keys(Level)
   await prisma.user.createMany({
     data: await Promise.all([
       ...Array.from({ length: 10 }).map(async (_, index) => {
@@ -46,32 +58,24 @@ const users = async () => {
           lastName: faker.person.lastName(),
           organizationId: organizations[index % organizations.length].id,
           password,
+          level: faker.helpers.arrayElement(levels) as Level,
           role: Role.DEFAULT,
         }
       }),
       ...Array.from({ length: 10 }).map(async (_, index) => {
         const password = await signPassword(`password-${index}`)
-        const organization = faker.helpers.arrayElement(organizations)
+        const organization = faker.helpers.arrayElement(crOrganizations)
         return {
           email: `bc-cr-user-${index}@yopmail.com`,
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
           organizationId: organization.id,
           password,
-          role: Role.CR,
+          level: faker.helpers.arrayElement(levels) as Level,
+          role: Role.DEFAULT,
         }
       }),
     ]),
-  })
-
-  const crUsers = await prisma.user.findMany({ where: { role: Role.CR } })
-
-  await prisma.cROrganization.createMany({
-    skipDuplicates: true,
-    data: Array.from({ length: 50 }).map(() => ({
-      userId: faker.helpers.arrayElement(crUsers).id,
-      organizationId: faker.helpers.arrayElement(organizations).id,
-    })),
   })
 }
 
@@ -86,11 +90,11 @@ const licenses = async () => {
     data: [
       {
         name: 'Exploitation',
-        rights: [Role.DEFAULT],
+        rights: [Role.ADMIN],
       },
       {
         name: 'Utilisation',
-        rights: [Role.DEFAULT],
+        rights: [Role.ADMIN],
       },
     ],
   })

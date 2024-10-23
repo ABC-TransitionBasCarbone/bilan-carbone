@@ -1,4 +1,4 @@
-import { ControlMode, Export, StudyType } from '@prisma/client'
+import { ControlMode, Export, Level } from '@prisma/client'
 import dayjs, { Dayjs } from 'dayjs'
 import z from 'zod'
 
@@ -13,7 +13,7 @@ export const CreateStudyCommandValidation = z
       .min(1, 'name'),
     startDate: z.custom<Dayjs>((val) => val instanceof dayjs, 'startDate'),
     endDate: z.custom<Dayjs>((val) => val instanceof dayjs, 'endDate'),
-    type: z.nativeEnum(StudyType, { required_error: 'type' }),
+    level: z.nativeEnum(Level, { required_error: 'level' }),
     isPublic: z.boolean(),
     exports: z.object({
       [Export.Beges]: z.nativeEnum(ControlMode).or(z.literal(false)),

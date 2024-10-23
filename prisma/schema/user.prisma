@@ -1,3 +1,10 @@
+enum Role {
+  ADMIN
+  SUPER_ADMIN
+  HR
+  DEFAULT
+}
+
 model User {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -6,14 +13,15 @@ model User {
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
 
-  role            Role
-  firstName       String           @map("first_name")
-  lastName        String           @map("last_name")
-  email           String           @unique
-  password        String
-  resetToken      String?          @map("reset_token")
-  cROrganizations CROrganization[]
-  Study           Study[]
+  role           Role
+  level          Level
+  firstName      String        @map("first_name")
+  lastName       String        @map("last_name")
+  email          String        @unique
+  password       String
+  resetToken     String?       @map("reset_token")
+  createdStudies Study[]
+  allowedStudies UserOnStudy[]
 
   @@map("users")
 }
