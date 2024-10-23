@@ -51,6 +51,7 @@ const NewEmissionForm = () => {
         name="name"
         label={t('name')}
       ></FormTextField>
+      <FormTextField control={form.control} translation={t} name="attribute" label={t('attribute')}></FormTextField>
       <FormTextField
         data-testid="new-emission-unit"
         control={form.control}
@@ -158,6 +159,14 @@ const NewEmissionForm = () => {
         type="number"
         name="totalCo2"
         label={t('totalCo2')}
+      ></FormTextField>
+      <FormTextField
+        control={form.control}
+        translation={t}
+        name="comment"
+        label={t('comment')}
+        multiline
+        rows={2}
       ></FormTextField>
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-emission-create-button">
         {t('create')}

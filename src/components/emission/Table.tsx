@@ -79,18 +79,18 @@ const EmissionsTable = ({ emissions }: Props) => {
           }
         },
       },
-      { header: t('valeur'), accessorFn: (emission: EmissionWithMetaData) => emission.totalCo2 },
+      { header: t('valeur'), accessorKey: 'totalCo2' },
       {
         header: t('unit'),
-        accessorFn: (emission: EmissionWithMetaData) => emission.metaData?.unit?.replaceAll('/', ` ${t('per')} `),
+        accessorFn: (emission: EmissionWithMetaData) => emission.metaData?.unit,
       },
-      { header: t('quality'), accessorFn: (emission: EmissionWithMetaData) => emission.quality },
+      { header: t('quality'), accessorKey: 'quality' },
       { header: t('status'), accessorFn: (emission: EmissionWithMetaData) => t(emission.status) },
       {
         header: t('location'),
         accessorFn: (emission: EmissionWithMetaData) => [emission.location, emission.metaData?.location].join(' '),
       },
-      { header: t('source'), accessorFn: (emission: EmissionWithMetaData) => emission.source },
+      { header: t('source'), accessorKey: 'source' },
     ]
   }, [t])
 

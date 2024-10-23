@@ -6,18 +6,8 @@ import { ACTUALITIES } from './legacy_data/actualities'
 const prisma = new PrismaClient()
 
 const emissions = async () => {
-  const emissionsToDelete = await prisma.emission.findMany({
-    select: { id: true },
-    where: { organizationId: { not: null } },
-  })
-
-  const ids = emissionsToDelete.map((emission) => emission.id)
-  await prisma.emissionMetaData.deleteMany({
-    where: { emissionId: { in: ids } },
-  })
-  await prisma.emission.deleteMany({
-    where: { id: { in: ids } },
-  })
+  await prisma.emissionMetaData.deleteMany()
+  await prisma.emission.deleteMany()
 }
 
 const users = async () => {
