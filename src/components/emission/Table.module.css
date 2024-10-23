@@ -3,6 +3,14 @@
   flex-wrap: wrap-reverse;
 }
 
+.statusSelector {
+  width: 10rem;
+}
+
+.filters {
+  gap: 1rem;
+}
+
 .searchInput {
   input {
     min-width: 20rem;
@@ -14,7 +22,6 @@
 }
 
 .table {
-
   th,
   td {
     padding: 0.5rem;

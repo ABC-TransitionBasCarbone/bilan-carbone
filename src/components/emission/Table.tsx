@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo, useState } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,14 +10,15 @@ import {
 } from '@tanstack/react-table'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
-import React, { useMemo, useState } from 'react'
-import Button from '../base/Button'
 import classNames from 'classnames'
 import styles from './Table.module.css'
+import { EmissionStatus } from '@prisma/client'
+import { Checkbox, FormControl, Input, InputLabel, ListItemText, MenuItem, OutlinedInput, Select } from '@mui/material'
+import { SelectChangeEvent } from '@mui/material/Select'
+import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
-import { EmissionWithMetaData } from '@/services/emissions'
 import LinkButton from '../base/LinkButton'
-import { Input } from '@mui/material'
+import { EmissionWithMetaData } from '@/services/emissions'
 
 const fuseOptions = {
   keys: [
@@ -40,6 +42,8 @@ interface Props {
 const EmissionsTable = ({ emissions }: Props) => {
   const t = useTranslations('emissions.table')
   const [filter, setFilter] = useState('')
+  const statuses = Object.values(EmissionStatus).map((status) => status)
+  const [filteredStatus, setFilteredStatus] = useState<EmissionStatus[]>(statuses)
 
   const columns = useMemo(() => {
     return [
@@ -106,11 +110,11 @@ const EmissionsTable = ({ emissions }: Props) => {
 
   const data = useMemo(() => {
     if (!filter) {
-      return emissions
+      return emissions.filter((emission) => filteredStatus.includes(emission.status))
     }
     const results = fuse.search(filter)
-    return results.map(({ item }) => item)
-  }, [filter])
+    return results.map(({ item }) => item).filter((item) => filteredStatus.includes(item.status))
+  }, [filter, filteredStatus])
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -128,16 +132,54 @@ const EmissionsTable = ({ emissions }: Props) => {
     },
   })
 
+  const handleFilterStatus = (event: SelectChangeEvent<typeof filteredStatus>) => {
+    const {
+      target: { value },
+    } = event
+
+    setFilteredStatus(value as EmissionStatus[])
+  }
+
+  const StatusSelectorProps = {
+    PaperProps: {
+      style: {
+        width: 250,
+      },
+    },
+  }
+
   return (
     <>
       <div className={classNames(styles.header, 'justify-between align-center mb1')}>
-        <DebouncedInput
-          className={styles.searchInput}
-          debounce={200}
-          value={filter}
-          onChange={setFilter}
-          placeholder={t('search')}
-        />
+        <div className={classNames(styles.filters, 'flex')}>
+          <DebouncedInput
+            className={styles.searchInput}
+            debounce={200}
+            value={filter}
+            onChange={setFilter}
+            placeholder={t('search')}
+          />
+          <FormControl className={styles.statusSelector}>
+            <InputLabel id="emissions-status-filter-label">{t('status')}</InputLabel>
+            <Select
+              id="emissions-status-filter"
+              labelId="emissions-status-filter-label"
+              value={filteredStatus}
+              onChange={handleFilterStatus}
+              input={<OutlinedInput label={t('status')} />}
+              renderValue={(selected) => selected.map((status) => t(status)).join(', ')}
+              MenuProps={StatusSelectorProps}
+              multiple
+            >
+              {statuses.map((status) => (
+                <MenuItem key={status} value={status}>
+                  <Checkbox checked={filteredStatus.includes(status)} />
+                  <ListItemText primary={status} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
         <LinkButton href="/facteurs-d-emission/creer" data-testid="new-emission">
           {t('add')}
         </LinkButton>
