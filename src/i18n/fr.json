@@ -78,6 +78,7 @@
       "title": "Ajouter un facteur d'émission",
       "create": "Ajouter le facteur d'émission",
       "name": "Nom",
+      "attribute": "Détails",
       "unit": "Unité",
       "source": "Source",
       "detailedGES": "Connaissez-vous la décomposition des GES ?",
@@ -90,6 +91,7 @@
       "n2o": "N2O",
       "co2b": "CO2B",
       "otherGES": "Autres gaz",
+      "comment": "Commentaires",
       "validation": {
         "name": "Veuillez renseigner un nom",
         "unit": "Veuillez renseigner une unité",

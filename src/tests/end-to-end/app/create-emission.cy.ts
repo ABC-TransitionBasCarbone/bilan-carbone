@@ -26,7 +26,7 @@ describe('Create emission', () => {
 
     cy.getByTestId('cell-emission-name').should('be.visible')
     cy.getByTestId('cell-emission-name').should('have.text', 'My new FE')
-    cy.getByTestId('cell-emission-Valeur').should('have.text', '12')
+    cy.getByTestId('cell-emission-totalCo2').should('have.text', '12')
 
     cy.logout()
     cy.login('bc-test-user-2@yopmail.com', 'password-2')
@@ -81,7 +81,7 @@ describe('Create emission', () => {
 
     cy.getByTestId('cell-emission-name').should('be.visible')
     cy.getByTestId('cell-emission-name').should('have.text', 'My new detailed FE')
-    cy.getByTestId('cell-emission-Valeur').should('have.text', '21')
+    cy.getByTestId('cell-emission-totalCo2').should('have.text', '21')
 
     cy.logout()
     cy.login('bc-test-user-2@yopmail.com', 'password-2')

@@ -21,6 +21,7 @@ export const CreateEmissionCommandValidation = z.object({
     .min(1, 'source'),
   totalCo2: z
     .number({
+      invalid_type_error: 'totalCo2',
       required_error: 'totalCo2',
     })
     .min(0, 'totalCo2'),
@@ -30,6 +31,8 @@ export const CreateEmissionCommandValidation = z.object({
   n2o: z.number().min(0, 'n2o').optional(),
   co2b: z.number().min(0, 'co2b').optional(),
   otherGES: z.number().min(0, 'otherGES').optional(),
+  attribute: z.string().optional(),
+  comment: z.string().optional(),
 })
 
 export type CreateEmissionCommand = z.infer<typeof CreateEmissionCommandValidation>

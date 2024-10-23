@@ -1,3 +1,4 @@
+import { type Prisma } from '@prisma/client'
 import { prismaClient } from './client'
 
 export const getAllEmissions = (organizationId: string) =>
@@ -22,4 +23,9 @@ export const getAllEmissions = (organizationId: string) =>
         },
       },
     },
+  })
+
+export const createEmission = (emission: Prisma.EmissionCreateInput) =>
+  prismaClient.emission.create({
+    data: emission,
   })
