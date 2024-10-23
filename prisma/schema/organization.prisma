@@ -4,7 +4,7 @@ model Organization {
   updatedAt DateTime @default(now()) @map("updated_at")
 
   name String
-  isCR Boolean @default(false) @map("is_cr")
+  isCR Boolean @map("is_cr")
 
   users     User[]
   sites     Site[]
