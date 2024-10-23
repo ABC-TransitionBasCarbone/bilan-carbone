@@ -74,9 +74,35 @@
     "title": "Étude"
   },
   "emissions": {
+    "create": {
+      "title": "Ajouter un facteur d'émission",
+      "create": "Ajouter le facteur d'émission",
+      "name": "Nom",
+      "attribute": "Détails",
+      "unit": "Unité",
+      "source": "Source",
+      "detailedGES": "Connaissez-vous la décomposition des GES ?",
+      "yes": "Oui",
+      "no": "Non",
+      "totalCo2": "Émission totale de CO₂",
+      "co2f": "CO2F",
+      "ch4f": "CH4F",
+      "ch4b": "CH4B",
+      "n2o": "N2O",
+      "co2b": "CO2B",
+      "otherGES": "Autres gaz",
+      "comment": "Commentaires",
+      "validation": {
+        "name": "Veuillez renseigner un nom",
+        "unit": "Veuillez renseigner une unité",
+        "source": "Veuillez renseigner une source",
+        "totalCo2": "Veuillez renseigner une émission totale"
+      }
+    },
     "title": "Facteurs d'émissions",
     "loading": "Chargement des facteurs d'émissions",
     "table": {
+      "add": "Ajouter un facteur d'émission",
       "search": "Rechercher un facteur d'émission",
       "name": "Nom",
       "detail": "Détails",

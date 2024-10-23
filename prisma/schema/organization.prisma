@@ -6,9 +6,10 @@ model Organization {
   name String
   isCR Boolean @default(false) @map("is_cr")
 
-  users User[]
-  sites Site[]
-  Study Study[]
+  users     User[]
+  sites     Site[]
+  studies   Study[]
+  emissions Emission[]
 
   parentId String?
   parent   Organization?  @relation("childOrganizations", fields: [parentId], references: [id])

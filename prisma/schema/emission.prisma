@@ -18,18 +18,21 @@ model Emission {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
-  importedFrom Import  @map("imported_from")
-  importedId   String? @map("imported_id")
+  importedFrom   Import        @map("imported_from")
+  importedId     String?       @map("imported_id")
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
   type     EmissionType
   status   EmissionStatus
   metaData EmissionMetaData[]
   source   String?
-  location String
+  location String?
   post     String?
 
   incertitude Int?
 
+  reliability                  Int    @default(5)
   quality                      Float?
   technicalRepresentativeness  Float? @map("technical_representativeness")
   geographicRepresentativeness Float? @map("geographic_representativeness")

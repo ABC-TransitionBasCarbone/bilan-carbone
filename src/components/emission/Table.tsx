@@ -16,6 +16,7 @@ import styles from './Table.module.css'
 import Input from '../base/Input'
 import DebouncedInput from '../base/DebouncedInput'
 import { EmissionWithMetaData } from '@/services/emissions'
+import LinkButton from '../base/LinkButton'
 
 const fuseOptions = {
   keys: [
@@ -78,18 +79,18 @@ const EmissionsTable = ({ emissions }: Props) => {
           }
         },
       },
-      { header: t('valeur'), accessorFn: (emission: EmissionWithMetaData) => emission.totalCo2 },
+      { header: t('valeur'), accessorKey: 'totalCo2' },
       {
         header: t('unit'),
-        accessorFn: (emission: EmissionWithMetaData) => emission.metaData?.unit?.replaceAll('/', ` ${t('per')} `),
+        accessorFn: (emission: EmissionWithMetaData) => emission.metaData?.unit,
       },
-      { header: t('quality'), accessorFn: (emission: EmissionWithMetaData) => emission.quality },
+      { header: t('quality'), accessorKey: 'quality' },
       { header: t('status'), accessorFn: (emission: EmissionWithMetaData) => t(emission.status) },
       {
         header: t('location'),
         accessorFn: (emission: EmissionWithMetaData) => [emission.location, emission.metaData?.location].join(' '),
       },
-      { header: t('source'), accessorFn: (emission: EmissionWithMetaData) => emission.source },
+      { header: t('source'), accessorKey: 'source' },
     ]
   }, [t])
 
@@ -132,13 +133,18 @@ const EmissionsTable = ({ emissions }: Props) => {
 
   return (
     <>
-      <DebouncedInput
-        className={classNames(styles.searchInput, 'mb1')}
-        debounce={200}
-        value={filter}
-        onChange={setFilter}
-        placeholder={t('search')}
-      />
+      <div className={classNames(styles.header, 'justify-between mb1')}>
+        <DebouncedInput
+          className={styles.searchInput}
+          debounce={200}
+          value={filter}
+          onChange={setFilter}
+          placeholder={t('search')}
+        />
+        <LinkButton href="/facteurs-d-emission/creer" data-testid="new-emission">
+          {t('add')}
+        </LinkButton>
+      </div>
       <table className={styles.table}>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -155,7 +161,9 @@ const EmissionsTable = ({ emissions }: Props) => {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                <td key={cell.id} data-testid={`cell-emission-${cell.column.id}`}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
               ))}
             </tr>
           ))}

@@ -39,7 +39,7 @@ model Study {
 
   organization   Organization  @relation(fields: [organizationId], references: [id])
   organizationId String        @map("organization_id")
-  UserOnStudy    UserOnStudy[]
+  allowedUsers   UserOnStudy[]
 
   @@map("studies")
 }

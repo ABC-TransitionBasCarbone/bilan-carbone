@@ -1,7 +1,11 @@
+import { type Prisma } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getAllEmissions = () =>
+export const getAllEmissions = (organizationId: string) =>
   prismaClient.emission.findMany({
+    where: {
+      OR: [{ organizationId: null }, { organizationId }],
+    },
     select: {
       status: true,
       totalCo2: true,
@@ -19,4 +23,9 @@ export const getAllEmissions = () =>
         },
       },
     },
+  })
+
+export const createEmission = (emission: Prisma.EmissionCreateInput) =>
+  prismaClient.emission.create({
+    data: emission,
   })
