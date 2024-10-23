@@ -56,7 +56,7 @@ const users = async () => {
           email: `bc-test-user-${index}@yopmail.com`,
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
-          organizationId: organizations[index % organizations.length].id,
+          organizationId: regularOrganizations[index % regularOrganizations.length].id,
           password,
           level: faker.helpers.arrayElement(levels) as Level,
           role: Role.DEFAULT,
@@ -64,12 +64,11 @@ const users = async () => {
       }),
       ...Array.from({ length: 10 }).map(async (_, index) => {
         const password = await signPassword(`password-${index}`)
-        const organization = faker.helpers.arrayElement(crOrganizations)
         return {
           email: `bc-cr-user-${index}@yopmail.com`,
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
-          organizationId: organization.id,
+          organizationId: crOrganizations[index % crOrganizations.length].id,
           password,
           level: faker.helpers.arrayElement(levels) as Level,
           role: Role.DEFAULT,
