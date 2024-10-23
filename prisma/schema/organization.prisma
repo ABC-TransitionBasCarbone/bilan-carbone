@@ -4,24 +4,17 @@ model Organization {
   updatedAt DateTime @default(now()) @map("updated_at")
 
   name String
+  isCR Boolean @default(false) @map("is_cr")
 
-  users           User[]
-  cROrganizations CROrganization[]
-  sites           Site[]
-  Study           Study[]
+  users User[]
+  sites Site[]
+  Study Study[]
+
+  parentId String?
+  parent   Organization?  @relation("childOrganizations", fields: [parentId], references: [id])
+  childs   Organization[] @relation("childOrganizations")
 
   @@map("organizations")
-}
-
-model CROrganization {
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId String       @map("organization_id")
-
-  @@id([userId, organizationId])
-  @@map("cr_organizations")
 }
 
 model Site {

@@ -33,8 +33,8 @@ describe('Create study', () => {
     cy.get('[data-testid="new-study-endDate"]').within(() => {
       cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
     })
-    cy.get('[data-testid="new-study-type"]').click()
-    cy.get('[data-value="Standard"]').click()
+    cy.get('[data-testid="new-study-level"]').click()
+    cy.get('[data-value="Initial"]').click()
     cy.get('[data-testid="new-study-create-button"]').click()
 
     cy.wait('@create')
@@ -67,8 +67,8 @@ describe('Create study', () => {
     cy.get('[data-testid="new-study-endDate"]').within(() => {
       cy.get('input').type(dayjs().add(1, 'y').format('MM/DD/YYYY'))
     })
-    cy.get('[data-testid="new-study-type"]').click()
-    cy.get('[data-value="Standard"]').click()
+    cy.get('[data-testid="new-study-level"]').click()
+    cy.get('[data-value="Initial"]').click()
     cy.get('[data-testid="new-study-create-button"]').click()
 
     cy.wait('@create')

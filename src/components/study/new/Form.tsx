@@ -4,7 +4,7 @@ import { FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Me
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
 import styles from './Form.module.css'
-import { Export, StudyType } from '@prisma/client'
+import { Export, Level } from '@prisma/client'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { FormTextField } from '@/components/form/TextField'
@@ -70,8 +70,8 @@ const NewStudyForm = ({ organization }: Props) => {
           data-testid="new-study-endDate"
         />
       </div>
-      <FormSelect control={form.control} translation={t} name="type" label={t('type')} data-testid="new-study-type">
-        {Object.keys(StudyType).map((key) => (
+      <FormSelect control={form.control} translation={t} name="level" label={t('level')} data-testid="new-study-level">
+        {Object.keys(Level).map((key) => (
           <MenuItem key={key} value={key}>
             {t(key)}
           </MenuItem>

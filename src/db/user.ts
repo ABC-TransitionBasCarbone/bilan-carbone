@@ -1,8 +1,8 @@
 import { signPassword } from '@/services/auth'
 import { prismaClient } from './client'
-import { Role } from '@prisma/client'
 
-export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
+export const getUserByEmail = (email?: string | null) =>
+  email ? prismaClient.user.findUnique({ where: { email } }) : null
 
 export const updateUserPasswordForEmail = async (email: string, password: string) => {
   const signedPassword = await signPassword(password)
@@ -35,7 +35,6 @@ export const getUserOrganizations = async (email?: string | null) => {
     select: {
       role: true,
       organization: organizationSelect,
-      cROrganizations: { select: { organization: organizationSelect } },
     },
     where: { email },
   })
@@ -44,8 +43,12 @@ export const getUserOrganizations = async (email?: string | null) => {
     return []
   }
 
-  if (user.role === Role.CR) {
-    return [user.organization, ...user.cROrganizations.map(({ organization }) => organization)]
+  if (user.organization.isCR) {
+    const childOrganizations = await prismaClient.organization.findMany({
+      ...organizationSelect,
+      where: { parentId: user.organization.id },
+    })
+    return [user.organization, ...childOrganizations]
   }
 
   return [user.organization]
