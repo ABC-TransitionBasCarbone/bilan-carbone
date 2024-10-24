@@ -1,4 +1,6 @@
-export const UNITS_MATRIX = {
+import { Unit } from '@prisma/client'
+
+export const UNITS_MATRIX: Record<Unit, string> = {
   A4_SHEET_100: '100 feuilles A4',
   KM_100: '100km',
   ACTIVE: 'actif',
