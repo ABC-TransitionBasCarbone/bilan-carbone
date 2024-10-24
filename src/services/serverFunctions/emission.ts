@@ -6,22 +6,22 @@ import { CreateEmissionCommand } from './emission.command'
 import { EmissionStatus, EmissionType, Import } from '@prisma/client'
 import { getLocale } from '@/i18n/request'
 import { createEmission } from '@/db/emissions'
+import { checkPermission, NOT_AUTHORIZED } from '../permissions/check'
 
 export const createEmissionCommand = async ({ name, unit, attribute, comment, ...command }: CreateEmissionCommand) => {
   const session = await auth()
   const local = await getLocale()
-  if (!session || !session.user || !session.user.email) {
-    //TODO: Check du role
-    return 'Not authorized'
+  if (!session || !session.user) {
+    return NOT_AUTHORIZED
   }
 
   const user = await getUserByEmail(session.user.email)
 
   if (!user) {
-    return 'Not authorized'
+    return NOT_AUTHORIZED
   }
 
-  await createEmission({
+  const emission = {
     ...command,
     importedFrom: Import.Manual,
     type: EmissionType.Element,
@@ -37,5 +37,10 @@ export const createEmissionCommand = async ({ name, unit, attribute, comment, ..
         comment,
       },
     },
-  })
+  }
+  if (!checkPermission.emission.create()) {
+    return NOT_AUTHORIZED
+  }
+
+  await createEmission(emission)
 }

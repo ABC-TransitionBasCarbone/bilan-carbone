@@ -1,8 +1,12 @@
 import { signPassword } from '@/services/auth'
 import { prismaClient } from './client'
 
-export const getUserByEmail = (email?: string | null) =>
-  email ? prismaClient.user.findUnique({ where: { email } }) : null
+export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
+
+export const getUserByEmailWithAllowedStudies = (email: string) =>
+  prismaClient.user.findUnique({ where: { email }, include: { allowedStudies: true } })
+
+export type UserWithAllowedStudies = AsyncReturnType<typeof getUserByEmailWithAllowedStudies>
 
 export const updateUserPasswordForEmail = async (email: string, password: string) => {
   const signedPassword = await signPassword(password)
@@ -24,7 +28,7 @@ export const updateUserResetTokenForEmail = async (email: string, resetToken: st
     },
   })
 
-export const getUserOrganizations = async (email?: string | null) => {
+export const getUserOrganizations = async (email: string) => {
   if (!email) {
     return []
   }
