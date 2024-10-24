@@ -44,6 +44,7 @@ type EmissionResponse = {
     Qualité_C: number
   }[]
 }
+
 const select = [
   "Identifiant_de_l'élément",
   "Statut_de_l'élément",
@@ -91,29 +92,42 @@ const getUnit = (value?: string): Unit | null => {
     return null
   }
   if (value.startsWith('kgCO2e/')) value = value.replace('kgCO2e/', '')
-  if (value.toLowerCase() === 'tep pci') value = 'tep PCI'
-  if (value.toLowerCase() === 'tep pcs') value = 'tep PCS'
-  if (value.toLowerCase() === 'ha') value = 'ha'
-  if (value.toLowerCase() === 'kg') value = 'kg'
-  if (value.toLowerCase() === 'litre') value = 'litre'
-  if (['kWh (PCI)', 'KWh PCI', 'kWhPCI'].includes(value)) value = 'kWh PCI'
-  if (value === 'kWhPCS') value = 'kWh PCS'
-  if (value === 'm2 SHON') value = 'm² SHON'
-  if (value.includes('m3')) value = value.replace('m3', 'm³')
+  if (value.toLowerCase() === 'tep pci') {
+    value = 'tep PCI'
+  } else if (value.toLowerCase() === 'tep pcs') {
+    value = 'tep PCS'
+  } else if (value.toLowerCase() === 'ha') {
+    value = 'ha'
+  } else if (value.toLowerCase() === 'kg') {
+    value = 'kg'
+  } else if (value.toLowerCase() === 'litre') {
+    value = 'litre'
+  } else if (['kWh (PCI)', 'KWh PCI', 'kWhPCI'].includes(value)) {
+    value = 'kWh PCI'
+  } else if (value === 'kWhPCS') {
+    value = 'kWh PCS'
+  } else if (value === 'm2 SHON') {
+    value = 'm² SHON'
+  } else if (value.includes('m3')) {
+    value = value.replace('m3', 'm³')
+  }
 
   const unit = Object.entries(UNITS_MATRIX).find((entry) => entry[1] === value)
-  if (unit) return unit[0] as Unit
-  throw new Error('Unit not found for ' + value)
+  if (unit) {
+    return unit[0] as Unit
+  }
+  return null
 }
 
-const saveEmissions = async (url: string, posts: any[]) => {
+const saveEmissions = async (url: string, posts: EmissionResponse['results']) => {
+  const postsToCreate = [...posts]
   const emissions = await axios.get<EmissionResponse>(url)
   await Promise.all(
     emissions.data.results
       .filter((emission) => validStatus.includes(emission["Statut_de_l'élément"]))
       .map((emission) => {
         if (emission.Type_Ligne === 'Poste') {
-          posts.push(emission)
+          postsToCreate.push(emission)
           return
         }
         return prismaClient.emission.create({
@@ -166,10 +180,10 @@ const saveEmissions = async (url: string, posts: any[]) => {
       }),
   )
 
-  return { url: emissions.data.next, posts }
+  return { url: emissions.data.next, posts: postsToCreate }
 }
 
-const saveEmissionsPosts = async (posts: any[]) => {
+const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
   const emissions = await prismaClient.emission.findMany({
     where: {
       importedId: {
@@ -200,7 +214,6 @@ const saveEmissionsPosts = async (posts: any[]) => {
               data: [
                 {
                   language: 'fr',
-                  title: escapeTranslation(post.Nom_base_français),
                   attribute: escapeTranslation(post.Nom_attribut_français),
                   frontiere: escapeTranslation(post.Nom_frontière_français),
                   tag: escapeTranslation(post.Tags_français),
@@ -209,7 +222,6 @@ const saveEmissionsPosts = async (posts: any[]) => {
                 },
                 {
                   language: 'en',
-                  title: escapeTranslation(post.Nom_base_anglais),
                   attribute: escapeTranslation(post.Nom_attribut_anglais),
                   frontiere: escapeTranslation(post.Nom_frontière_anglais),
                   tag: escapeTranslation(post.Tags_anglais),
@@ -230,7 +242,7 @@ const main = async () => {
   await prismaClient.emissionPost.deleteMany()
   await prismaClient.emissionMetaData.deleteMany()
   await prismaClient.emission.deleteMany()
-  let posts = []
+  let posts: EmissionResponse['results'] = []
   let url: string | undefined =
     `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}`
   while (url) {
