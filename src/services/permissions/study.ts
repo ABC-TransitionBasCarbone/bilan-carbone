@@ -1,18 +1,12 @@
 import { getOrganizationById } from '@/db/organization'
-import { Level } from '@prisma/client'
+import { Level, Prisma, Study } from '@prisma/client'
+import { getAllowedLevels } from '../study'
+import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
+import { User } from 'next-auth'
 
-export const checkLevel = (userLevel: Level, studyLevel: Level) => {
-  switch (studyLevel) {
-    case Level.Advanced:
-      return userLevel === Level.Advanced
-    case Level.Standard:
-      return userLevel !== Level.Initial
-    default:
-      return true
-  }
-}
+const checkLevel = (userLevel: Level, studyLevel: Level) => getAllowedLevels(studyLevel).includes(userLevel)
 
-export const checkOrganization = async (userOrganizationId: string, organizationId: string) => {
+const checkOrganization = async (userOrganizationId: string, organizationId: string) => {
   if (userOrganizationId === organizationId) {
     return true
   }
@@ -23,4 +17,53 @@ export const checkOrganization = async (userOrganizationId: string, organization
   }
 
   return false
+}
+
+export const canReadStudy = async (
+  user: User | UserWithAllowedStudies,
+  study: Pick<Study, 'id' | 'organizationId' | 'isPublic'>,
+) => {
+  if (!user) {
+    return false
+  }
+
+  if (study.isPublic) {
+    if (await checkOrganization(user.organizationId, study.organizationId)) {
+      return true
+    }
+  }
+
+  let allowedStudies: Exclude<UserWithAllowedStudies, null>['allowedStudies']
+  if ('allowedStudies' in user) {
+    allowedStudies = user.allowedStudies
+  } else {
+    const userWithAllowedStudies = await getUserByEmailWithAllowedStudies(user.email)
+    if (!userWithAllowedStudies) {
+      return false
+    }
+    allowedStudies = userWithAllowedStudies.allowedStudies
+  }
+
+  if (allowedStudies.every((allowedStudy) => allowedStudy.studyId !== study.id)) {
+    return false
+  }
+  return true
+}
+
+export const canCreateStudy = async (user: User, study: Prisma.StudyCreateInput, organizationId: string) => {
+  const dbUser = await getUserByEmail(user.email)
+
+  if (!dbUser) {
+    return false
+  }
+
+  if (!checkLevel(dbUser.level, study.level)) {
+    return false
+  }
+
+  if (!(await checkOrganization(dbUser.organizationId, organizationId))) {
+    return false
+  }
+
+  return true
 }

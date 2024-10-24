@@ -5,12 +5,13 @@ import { auth } from '../auth'
 import { createStudy } from '@/db/study'
 import { ControlMode, Export } from '@prisma/client'
 import dayjs from 'dayjs'
-import { checkPermission } from '../permissions/check'
+import { NOT_AUTHORIZED } from '../permissions/check'
+import { canCreateStudy } from '../permissions/study'
 
 export const createStudyCommand = async ({ organizationId, ...command }: CreateStudyCommand) => {
   const session = await auth()
   if (!session || !session.user) {
-    return 'Not authorized'
+    return NOT_AUTHORIZED
   }
   const study = {
     ...command,
@@ -30,8 +31,8 @@ export const createStudyCommand = async ({ organizationId, ...command }: CreateS
     },
   }
 
-  if (!(await checkPermission.study.create(session.user, study, organizationId))) {
-    return 'Not authorized'
+  if (!(await canCreateStudy(session.user, study, organizationId))) {
+    return NOT_AUTHORIZED
   }
 
   try {
