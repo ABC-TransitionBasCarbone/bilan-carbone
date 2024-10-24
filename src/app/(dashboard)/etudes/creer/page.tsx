@@ -11,7 +11,7 @@ const NewStudy = async () => {
 
   const organizations = await getUserOrganizations(session.user.email)
 
-  return <NewStudyPage organizations={organizations}></NewStudyPage>
+  return <NewStudyPage organizations={organizations} user={session.user}></NewStudyPage>
 }
 
 export default NewStudy

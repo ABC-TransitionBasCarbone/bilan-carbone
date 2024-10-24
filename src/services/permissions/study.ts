@@ -1,16 +1,8 @@
 import { getOrganizationById } from '@/db/organization'
 import { Level } from '@prisma/client'
+import { getAllowedLevels } from '../study'
 
-export const checkLevel = (userLevel: Level, studyLevel: Level) => {
-  switch (studyLevel) {
-    case Level.Advanced:
-      return userLevel === Level.Advanced
-    case Level.Standard:
-      return userLevel !== Level.Initial
-    default:
-      return true
-  }
-}
+export const checkLevel = (userLevel: Level, studyLevel: Level) => getAllowedLevels(studyLevel).includes(userLevel)
 
 export const checkOrganization = async (userOrganizationId: string, organizationId: string) => {
   if (userOrganizationId === organizationId) {

@@ -20,9 +20,9 @@ const users = async () => {
   await prisma.organization.deleteMany()
 
   const organizations = await prisma.organization.createManyAndReturn({
-    data: Array.from({ length: 5 }).map(() => ({
+    data: Array.from({ length: 10 }).map((_, index) => ({
       name: faker.company.name(),
-      isCR: faker.datatype.boolean(),
+      isCR: index % 2 === 0,
     })),
   })
 
