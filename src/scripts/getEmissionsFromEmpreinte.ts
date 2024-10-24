@@ -1,5 +1,6 @@
 import { prismaClient } from '../db/client'
-import { EmissionStatus, EmissionType, Import } from '@prisma/client'
+import { EmissionStatus, Import, Unit } from '@prisma/client'
+import { UNITS_MATRIX } from './history_units'
 import axios from 'axios'
 
 type EmissionResponse = {
@@ -85,28 +86,49 @@ const validStatus = ['Valide générique', 'Valide spécifique', 'Archivé']
 
 const escapeTranslation = (value?: string) => (value ? value.replaceAll('"""', '') : value)
 
-const saveEmissions = async (url: string) => {
+const getUnit = (value?: string): Unit | null => {
+  if (!value) {
+    return null
+  }
+  if (value.startsWith('kgCO2e/')) value = value.replace('kgCO2e/', '')
+  if (value.toLowerCase() === 'tep pci') value = 'tep PCI'
+  if (value.toLowerCase() === 'tep pcs') value = 'tep PCS'
+  if (value.toLowerCase() === 'ha') value = 'ha'
+  if (value.toLowerCase() === 'kg') value = 'kg'
+  if (value.toLowerCase() === 'litre') value = 'litre'
+  if (['kWh (PCI)', 'KWh PCI', 'kWhPCI'].includes(value)) value = 'kWh PCI'
+  if (value === 'kWhPCS') value = 'kWh PCS'
+  if (value === 'm2 SHON') value = 'm² SHON'
+  if (value.includes('m3')) value = value.replace('m3', 'm³')
+
+  const unit = Object.entries(UNITS_MATRIX).find((entry) => entry[1] === value)
+  if (unit) return unit[0] as Unit
+  throw new Error('Unit not found for ' + value)
+}
+
+const saveEmissions = async (url: string, posts: any[]) => {
   const emissions = await axios.get<EmissionResponse>(url)
   await Promise.all(
     emissions.data.results
       .filter((emission) => validStatus.includes(emission["Statut_de_l'élément"]))
-      .map((emission) =>
-        prismaClient.emission.create({
+      .map((emission) => {
+        if (emission.Type_Ligne === 'Poste') {
+          posts.push(emission)
+          return
+        }
+        return prismaClient.emission.create({
           data: {
             reliability: 5,
             importedFrom: Import.BaseEmpreinte,
             importedId: emission["Identifiant_de_l'élément"],
             status: emission["Statut_de_l'élément"] === 'Archivé' ? EmissionStatus.Archived : EmissionStatus.Valid,
-            type: emission.Type_Ligne === 'Poste' ? EmissionType.Post : EmissionType.Element,
             source: emission.Source,
             location: emission.Localisation_géographique,
             incertitude: emission.Incertitude,
-            quality: emission.Qualité,
             technicalRepresentativeness: emission.Qualité_TeR,
             geographicRepresentativeness: emission.Qualité_GR,
             temporalRepresentativeness: emission.Qualité_TiR,
             completeness: emission.Qualité_C,
-            post: emission.Type_poste,
             totalCo2: emission.Total_poste_non_décomposé,
             co2f: emission.CO2f,
             ch4f: emission.CH4f,
@@ -114,6 +136,7 @@ const saveEmissions = async (url: string) => {
             n2o: emission.N2O,
             co2b: emission.CO2b,
             otherGES: emission.Autres_GES,
+            unit: getUnit(emission.Unité_français),
             metaData: {
               createMany: {
                 data: [
@@ -123,10 +146,8 @@ const saveEmissions = async (url: string) => {
                     attribute: escapeTranslation(emission.Nom_attribut_français),
                     frontiere: escapeTranslation(emission.Nom_frontière_français),
                     tag: escapeTranslation(emission.Tags_français),
-                    unit: escapeTranslation(emission.Unité_français),
                     location: escapeTranslation(emission['Sous-localisation_géographique_français']),
                     comment: escapeTranslation(emission.Commentaire_français),
-                    post: escapeTranslation(emission.Nom_poste_français),
                   },
                   {
                     language: 'en',
@@ -134,28 +155,90 @@ const saveEmissions = async (url: string) => {
                     attribute: escapeTranslation(emission.Nom_attribut_anglais),
                     frontiere: escapeTranslation(emission.Nom_frontière_anglais),
                     tag: escapeTranslation(emission.Tags_anglais),
-                    unit: escapeTranslation(emission.Unité_anglais),
                     location: escapeTranslation(emission['Sous-localisation_géographique_anglais']),
                     comment: escapeTranslation(emission.Commentaire_anglais),
-                    post: escapeTranslation(emission.Nom_poste_anglais),
                   },
                 ],
               },
             },
           },
-        }),
-      ),
+        })
+      }),
   )
 
-  return emissions.data.next
+  return { url: emissions.data.next, posts }
+}
+
+const saveEmissionsPosts = async (posts: any[]) => {
+  const emissions = await prismaClient.emission.findMany({
+    where: {
+      importedId: {
+        in: posts.map((post) => post["Identifiant_de_l'élément"]),
+      },
+    },
+  })
+
+  await Promise.all(
+    posts.map((post) => {
+      const emission = emissions.find((emission) => emission.importedId === post["Identifiant_de_l'élément"])
+      if (!emission) {
+        console.log('No emission found for ' + post["Identifiant_de_l'élément"])
+        return Promise.resolve()
+      }
+      return prismaClient.emissionPost.create({
+        data: {
+          emissionId: emission.id,
+          totalCo2: post.Total_poste_non_décomposé,
+          co2f: post.CO2f,
+          ch4f: post.CH4f,
+          ch4b: post.CH4b,
+          n2o: post.N2O,
+          co2b: post.CO2b,
+          otherGES: post.Autres_GES,
+          metaData: {
+            createMany: {
+              data: [
+                {
+                  language: 'fr',
+                  title: escapeTranslation(post.Nom_base_français),
+                  attribute: escapeTranslation(post.Nom_attribut_français),
+                  frontiere: escapeTranslation(post.Nom_frontière_français),
+                  tag: escapeTranslation(post.Tags_français),
+                  location: escapeTranslation(post['Sous-localisation_géographique_français']),
+                  comment: escapeTranslation(post.Commentaire_français),
+                },
+                {
+                  language: 'en',
+                  title: escapeTranslation(post.Nom_base_anglais),
+                  attribute: escapeTranslation(post.Nom_attribut_anglais),
+                  frontiere: escapeTranslation(post.Nom_frontière_anglais),
+                  tag: escapeTranslation(post.Tags_anglais),
+                  location: escapeTranslation(post['Sous-localisation_géographique_anglais']),
+                  comment: escapeTranslation(post.Commentaire_anglais),
+                },
+              ],
+            },
+          },
+        },
+      })
+    }),
+  )
 }
 
 const main = async () => {
+  await prismaClient.emissionPostMetaData.deleteMany()
+  await prismaClient.emissionPost.deleteMany()
+  await prismaClient.emissionMetaData.deleteMany()
+  await prismaClient.emission.deleteMany()
+  let posts = []
   let url: string | undefined =
     `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}`
   while (url) {
-    url = await saveEmissions(url)
+    const res = await saveEmissions(url, posts)
+    url = res.url
+    posts = res.posts
   }
+  await saveEmissionsPosts(posts)
 }
 
 main()
