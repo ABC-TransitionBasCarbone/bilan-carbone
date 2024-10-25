@@ -29,7 +29,7 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-totalCo2').should('have.text', '12')
 
     cy.logout()
-    cy.login('bc-test-user-2@yopmail.com', 'password-2')
+    cy.login('bc-default-2@yopmail.com', 'password-2')
     cy.visit('/facteurs-d-emission')
     cy.getByTestId('cell-emission-name').should('not.exist')
   })
@@ -84,7 +84,7 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-totalCo2').should('have.text', '21')
 
     cy.logout()
-    cy.login('bc-test-user-2@yopmail.com', 'password-2')
+    cy.login('bc-default-2@yopmail.com', 'password-2')
     cy.visit('/facteurs-d-emission')
     cy.getByTestId('cell-emission-name').should('not.exist')
   })

@@ -30,3 +30,8 @@ export const sendResetPassword = async (toEmail: string, token: string) => {
   const html = await getHtml('reset-password', { link: `${process.env.NEXTAUTH_URL}/reset-password/${token}` })
   return send([toEmail], 'Mot de passe oublié', html)
 }
+
+export const sendNewInvitation = async (toEmail: string, token: string) => {
+  const html = await getHtml('new-invitation', { link: `${process.env.NEXTAUTH_URL}/reset-password/${token}` })
+  return send([toEmail], 'Vous avez été invité au BC+', html)
+}

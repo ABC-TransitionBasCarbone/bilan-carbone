@@ -1,7 +1,7 @@
 enum Role {
   ADMIN
   SUPER_ADMIN
-  HR
+  GESTIONNAIRE
   DEFAULT
 }
 
@@ -18,8 +18,9 @@ model User {
   firstName      String        @map("first_name")
   lastName       String        @map("last_name")
   email          String        @unique
-  password       String
+  password       String?
   resetToken     String?       @map("reset_token")
+  isActive       Boolean       @map("is_active")
   createdStudies Study[]
   allowedStudies UserOnStudy[]
 

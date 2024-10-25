@@ -11,9 +11,6 @@ interface Props {
 
 const ResetPasswordPage = async ({ params: { token } }: Props) => {
   const session = await auth()
-  if (session) {
-    redirect('/')
-  }
 
   const reset = async (email: string, password: string) => {
     'use server'
@@ -31,7 +28,7 @@ const ResetPasswordPage = async ({ params: { token } }: Props) => {
     return redirect('/login')
   }
 
-  return <ResetForm reset={reset} />
+  return <ResetForm user={session?.user} reset={reset} />
 }
 
 export default ResetPasswordPage
