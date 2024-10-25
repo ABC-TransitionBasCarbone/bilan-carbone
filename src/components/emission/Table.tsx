@@ -13,10 +13,10 @@ import React, { useMemo, useState } from 'react'
 import Button from '../base/Button'
 import classNames from 'classnames'
 import styles from './Table.module.css'
-import Input from '../base/Input'
 import DebouncedInput from '../base/DebouncedInput'
 import { EmissionWithMetaData } from '@/services/emissions'
 import LinkButton from '../base/LinkButton'
+import { Input } from '@mui/material'
 
 const fuseOptions = {
   keys: [
@@ -133,7 +133,7 @@ const EmissionsTable = ({ emissions }: Props) => {
 
   return (
     <>
-      <div className={classNames(styles.header, 'justify-between mb1')}>
+      <div className={classNames(styles.header, 'justify-between align-center mb1')}>
         <DebouncedInput
           className={styles.searchInput}
           debounce={200}
@@ -189,8 +189,7 @@ const EmissionsTable = ({ emissions }: Props) => {
           {t('goTo')}
           <Input
             type="number"
-            min="1"
-            max={table.getPageCount()}
+            slotProps={{ input: { min: 1, max: table.getPageCount() } }}
             defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0

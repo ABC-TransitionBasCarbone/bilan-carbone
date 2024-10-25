@@ -4,7 +4,9 @@
 }
 
 .searchInput {
-  min-width: 20rem;
+  input {
+    min-width: 20rem;
+  }
 }
 
 .pagination {

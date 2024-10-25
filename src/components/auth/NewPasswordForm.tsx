@@ -3,9 +3,9 @@
 import { useTranslations } from 'next-intl'
 import React, { FormEvent, useEffect, useState } from 'react'
 import authStyles from './Auth.module.css'
-import Input from '../base/Input'
 import Button from '../base/Button'
 import { useSearchParams } from 'next/navigation'
+import { TextField } from '@mui/material'
 
 interface Props {
   reset: (email: string) => Promise<void>
@@ -30,11 +30,11 @@ const NewPasswordForm = ({ reset }: Props) => {
 
   return (
     <form onSubmit={onSubmit} className={authStyles.form}>
-      <Input
+      <TextField
         data-testid="input-email"
         className={authStyles.input}
         required
-        placeholder={t('email')}
+        label={t('email')}
         type="email"
         value={email}
         onChange={(event) => setEmail(event.target.value)}

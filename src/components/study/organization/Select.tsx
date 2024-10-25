@@ -1,5 +1,6 @@
 'use client'
 
+import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import { OrganizationWithSites } from '@/db/user'
 import { MenuItem, Select } from '@mui/material'
@@ -21,8 +22,7 @@ const SelectOrganization = ({ organizations, selectOrganization }: Props) => {
   )
 
   return (
-    <>
-      <h1 data-testid="new-study-organization-title">{t('title')}</h1>
+    <Block title={t('title')} as="h1" data-testid="new-study-organization-title">
       {organizations.length === 1 ? (
         organizations[0].name
       ) : (
@@ -50,7 +50,7 @@ const SelectOrganization = ({ organizations, selectOrganization }: Props) => {
           </Button>
         </>
       )}
-    </>
+    </Block>
   )
 }
 

@@ -1,12 +1,10 @@
 'use client'
 
-import { ComponentProps, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import styles from './Settings.module.css'
-import Dropdown from '@/components/base/Dropdown'
-import { SelectedOption } from '@/components/base/Dropdown'
 import { getLocale, switchLocale } from '@/i18n/request'
 import { Locale, LocaleType, defaultLocale } from '@/i18n/config'
+import { InputLabel, MenuItem, Select } from '@mui/material'
 
 const LocaleSelector = () => {
   const t = useTranslations('locale')
@@ -18,27 +16,27 @@ const LocaleSelector = () => {
     })
   }, [])
 
-  const changeLocale = (value: SelectedOption) => {
-    switchLocale(value as LocaleType)
-    setLocale(value as LocaleType)
-  }
-
-  const localeOptions: ComponentProps<'option'>[] = Object.values(Locale).map((value) => ({
-    value,
-    label: t(value),
-  }))
-
   return (
-    <Dropdown
-      id="locale-selector"
-      className={styles.localeSelector}
-      options={localeOptions}
-      selectedOption={locale}
-      onChangeValue={changeLocale}
-      label={t('selector')}
-      data-testid="locale-selector"
-      hiddenLabel
-    />
+    <>
+      <InputLabel id="local-selector-label">{t('selector')}</InputLabel>
+
+      <Select
+        value={locale}
+        aria-labelledby="local-selector-label"
+        onChange={(event) => {
+          switchLocale(event.target.value as LocaleType)
+          setLocale(event.target.value as LocaleType)
+        }}
+      >
+        {Object.keys(Locale)
+          .map((local) => local.toLowerCase())
+          .map((local) => (
+            <MenuItem key={local} value={local}>
+              {t(local)}
+            </MenuItem>
+          ))}
+      </Select>
+    </>
   )
 }
 

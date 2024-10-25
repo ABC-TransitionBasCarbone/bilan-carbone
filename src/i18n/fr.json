@@ -9,7 +9,7 @@
   "locale": {
     "en": "English",
     "fr": "Français",
-    "selector": "Sélectionner langue"
+    "selector": "Langue du site"
   },
   "login": {
     "welcome": "Bienvenue",
@@ -31,13 +31,16 @@
     "team": "Équipe"
   },
   "profile": {
-    "legal-notices": "Mentions légales"
+    "title": "Mon profile",
+    "legal-notices": "Mentions légales",
+    "logout": "Se déconnecter"
   },
   "study": {
     "back-to-home": "Retour a l'accueil",
     "create": "Nouvelle étude",
     "my-studies": "Mes études",
     "new": {
+      "title": "Informations sur la nouvelle étude",
       "name": "Nom de l'étude",
       "start": "Début",
       "end": "Fin",
