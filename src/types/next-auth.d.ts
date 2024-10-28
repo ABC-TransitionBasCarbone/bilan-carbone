@@ -6,6 +6,8 @@ declare module 'next-auth' {
     user: User
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface User extends Pick<PrismaUser, 'firstName' | 'lastName' | 'email' | 'id' | 'role' | 'organizationId'> {}
+  interface User extends Pick<PrismaUser, 'firstName' | 'lastName' | 'id' | 'role' | 'organizationId' | 'level'> {
+    // I don't get why email can be null if put on the list...
+    email: PrismaUser['email']
+  }
 }

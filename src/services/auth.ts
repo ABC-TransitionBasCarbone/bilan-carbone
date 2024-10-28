@@ -3,7 +3,7 @@ import Credentials from 'next-auth/providers/credentials'
 import { getUserByEmail } from '@/db/user'
 import { getServerSession, NextAuthOptions } from 'next-auth'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
-import { Role } from '@prisma/client'
+import { Level, Role } from '@prisma/client'
 
 export const signPassword = async (password: string) => {
   const salt = await bcrypt.genSalt(10)
@@ -30,6 +30,7 @@ export const authOptions: NextAuthOptions = {
           lastName: user.lastName,
           role: user.role,
           organizationId: user.organizationId,
+          level: user.level,
         }
       }
       return token
@@ -43,6 +44,7 @@ export const authOptions: NextAuthOptions = {
           lastName: token.lastName as string,
           organizationId: token.organizationId as string,
           role: token.role as Role,
+          level: token.level as Level,
         }
       }
       return session
@@ -77,6 +79,7 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
           email: user.email,
           organizationId: user.organizationId,
+          level: user.level,
         }
       },
     }),

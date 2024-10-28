@@ -1,9 +1,9 @@
 import { UUID } from 'crypto'
 import { getStudyByUserAndId } from '@/db/study'
 import { auth } from '@/services/auth'
-import { Study } from '@prisma/client'
 import NotFound from '@/components/study/NotFound'
 import StudyDetails from '@/components/study/StudyDetails'
+import { canReadStudy } from '@/services/permissions/study'
 
 interface Props {
   params: {
@@ -19,9 +19,13 @@ const StudyView = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  const study: Study | null = await getStudyByUserAndId(session.user, id)
+  const study = await getStudyByUserAndId(session.user, id)
 
   if (!study) {
+    return <NotFound />
+  }
+
+  if (!(await canReadStudy(session.user, study))) {
     return <NotFound />
   }
 

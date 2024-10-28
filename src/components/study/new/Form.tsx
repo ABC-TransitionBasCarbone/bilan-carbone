@@ -6,7 +6,7 @@ import { FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Me
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
 import styles from './Form.module.css'
-import { Export, Level } from '@prisma/client'
+import { Export } from '@prisma/client'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { FormTextField } from '@/components/form/TextField'
@@ -19,12 +19,15 @@ import { OrganizationWithSites } from '@/db/user'
 import { useRouter } from 'next/navigation'
 import dayjs from 'dayjs'
 import Form from '@/components/base/Form'
+import { getAllowedLevels } from '@/services/study'
+import { User } from 'next-auth'
 
 interface Props {
+  user: User
   organization: OrganizationWithSites
 }
 
-const NewStudyForm = ({ organization }: Props) => {
+const NewStudyForm = ({ organization, user }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.new')
   const [error, setError] = useState('')
@@ -74,7 +77,7 @@ const NewStudyForm = ({ organization }: Props) => {
         />
       </div>
       <FormSelect control={form.control} translation={t} name="level" label={t('level')} data-testid="new-study-level">
-        {Object.keys(Level).map((key) => (
+        {getAllowedLevels(user.level).map((key) => (
           <MenuItem key={key} value={key}>
             {t(key)}
           </MenuItem>
