@@ -1,6 +1,6 @@
 describe('Legal Notices', () => {
   beforeEach(() => {
-    cy.login('bc-test-user-1@yopmail.com', 'password-1')
+    cy.login('bc-default-1@yopmail.com', 'password-1')
   })
 
   it('Should be accessible from the profile view', () => {

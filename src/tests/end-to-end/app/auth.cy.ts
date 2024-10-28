@@ -7,7 +7,7 @@ describe('Authentication', () => {
     cy.visit('/')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-test-user-1@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-default-1@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-input').should('be.visible').type('test1')
     cy.getByTestId('login-button').click()
 
@@ -21,7 +21,7 @@ describe('Authentication', () => {
     cy.visit('/')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-test-user-1@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-default-1@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-input').should('be.visible').type('password-1')
     cy.getByTestId('login-button').click()
 
@@ -33,14 +33,14 @@ describe('Authentication', () => {
   it('does reset password', () => {
     cy.visit('/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-test-user-1@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-default-1@yopmail.com')
     cy.getByTestId('reset-password-link').click()
 
     cy.url().should('include', '/reset-password')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('have.value', 'bc-test-user-1@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('have.value', 'bc-default-1@yopmail.com')
     cy.get('[data-testid="input-email"] > .MuiInputBase-input').clear()
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-test-user-2@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-default-2@yopmail.com')
     cy.getByTestId('reset-button').click()
 
     cy.url().should('include', '/login')
@@ -61,21 +61,21 @@ describe('Authentication', () => {
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('have.value', '')
     cy.get('[data-testid="input-password"] > .MuiInputBase-input').should('have.value', '')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-test-user-2@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-default-2@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-input').should('be.visible').type('test2')
 
     cy.getByTestId('reset-button').click()
 
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-test-user-2@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-default-2@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-input').should('be.visible').type('password-2')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-test-user-2@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('bc-default-2@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-input').should('be.visible').type('test2')
     cy.getByTestId('login-button').click()
 

@@ -30,6 +30,7 @@ interface Props {
 const NewStudyForm = ({ organization, user }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.new')
+  const tLevel = useTranslations('level')
   const [error, setError] = useState('')
 
   const form = useForm<CreateStudyCommand>({
@@ -79,7 +80,7 @@ const NewStudyForm = ({ organization, user }: Props) => {
       <FormSelect control={form.control} translation={t} name="level" label={t('level')} data-testid="new-study-level">
         {getAllowedLevels(user.level).map((key) => (
           <MenuItem key={key} value={key}>
-            {t(key)}
+            {tLevel(key)}
           </MenuItem>
         ))}
       </FormSelect>

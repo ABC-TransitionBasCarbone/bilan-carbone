@@ -1,5 +1,8 @@
 import { signPassword } from '@/services/auth'
 import { prismaClient } from './client'
+import { User } from 'next-auth'
+import { findUserInfo } from '@/services/permissions/user'
+import { Prisma, Role } from '@prisma/client'
 
 export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
 
@@ -15,6 +18,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
     data: {
       resetToken: null,
       password: signedPassword,
+      isActive: true,
       updatedAt: new Date(),
     },
   })
@@ -59,3 +63,23 @@ export const getUserOrganizations = async (email: string) => {
 }
 
 export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]
+
+export const getUserFromUserOrganization = (user: User) =>
+  prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
+export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
+
+export const addUser = (user: Prisma.UserCreateInput) =>
+  prismaClient.user.create({
+    data: user,
+  })
+
+export const deleteUser = (email: string) =>
+  prismaClient.user.delete({
+    where: { email },
+  })
+
+export const changeUserRole = (email: string, role: Role) =>
+  prismaClient.user.update({
+    data: { role },
+    where: { email },
+  })

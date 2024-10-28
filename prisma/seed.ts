@@ -49,32 +49,36 @@ const users = async () => {
 
   const levels = Object.keys(Level)
   await prisma.user.createMany({
-    data: await Promise.all([
-      ...Array.from({ length: 10 }).map(async (_, index) => {
-        const password = await signPassword(`password-${index}`)
-        return {
-          email: `bc-test-user-${index}@yopmail.com`,
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          organizationId: regularOrganizations[index % regularOrganizations.length].id,
-          password,
-          level: faker.helpers.arrayElement(levels) as Level,
-          role: Role.DEFAULT,
-        }
-      }),
-      ...Array.from({ length: 10 }).map(async (_, index) => {
-        const password = await signPassword(`password-${index}`)
-        return {
-          email: `bc-cr-user-${index}@yopmail.com`,
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          organizationId: crOrganizations[index % crOrganizations.length].id,
-          password,
-          level: faker.helpers.arrayElement(levels) as Level,
-          role: Role.DEFAULT,
-        }
-      }),
-    ]),
+    data: await Promise.all(
+      Object.keys(Role).flatMap((role) => [
+        ...Array.from({ length: 3 }).map(async (_, index) => {
+          const password = await signPassword(`password-${index}`)
+          return {
+            email: `bc-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            organizationId: regularOrganizations[index % regularOrganizations.length].id,
+            password,
+            level: levels[index % levels.length] as Level,
+            role: role as Role,
+            isActive: true,
+          }
+        }),
+        ...Array.from({ length: 3 }).map(async (_, index) => {
+          const password = await signPassword(`password-${index}`)
+          return {
+            email: `bc-cr-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            organizationId: crOrganizations[index % crOrganizations.length].id,
+            password,
+            level: levels[index % levels.length] as Level,
+            role: role as Role,
+            isActive: true,
+          }
+        }),
+      ]),
+    ),
   })
 }
 

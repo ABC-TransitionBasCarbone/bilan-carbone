@@ -42,9 +42,6 @@
       "start": "Début",
       "end": "Fin",
       "level": "Type de Bilan Carbone®",
-      "Initial": "Initial",
-      "Standard": "Standard",
-      "Advanced": "Avancé",
       "exports": "Exports",
       "Beges": "Bilan GES Reglementaire",
       "GHGP": "GHG Protocol",
@@ -118,6 +115,47 @@
       "page": "Page {page} sur {total}",
       "goTo": "Aller à la page",
       "showing": "Affichage de {number} lignes sur {total}"
+    }
+  },
+  "level": {
+    "Initial": "Initial",
+    "Standard": "Standard",
+    "Advanced": "Avancé"
+  },
+  "role": {
+    "SUPER_ADMIN": "Administrateur Global",
+    "ADMIN": "Administrateur",
+    "GESTIONNAIRE": "Gestionnaire",
+    "DEFAULT": "Collaborateur"
+  },
+  "team": {
+    "title": "Mon organisation",
+    "pending": "Invitations en attentes",
+    "invitation-date": "Invitation envoyé le",
+    "new-user": "Inviter un utilisateur",
+    "delete": "Supprimer l'utilisateur",
+    "resend": "Renvoyer l'invitation",
+    "table": {
+      "title": "Mes collaborateurs",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "level": "Formation",
+      "role": "Droits"
+    }
+  },
+  "new-member": {
+    "title": "Inviter un utilisateur",
+    "email": "Email",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "role": "Droits",
+    "level": "Formation",
+    "create": "Inviter l'utilisateur",
+    "validation": {
+      "email": "Veuillez renseigner un email valide",
+      "firstName": "Veuillez renseigner un prénom",
+      "lastName": "Veuillez renseigner un nom"
     }
   }
 }
