@@ -30,6 +30,11 @@ const fuseOptions = {
       name: 'detail',
       weight: 0.5,
     },
+    {
+      name: 'location',
+      weight: 0.5,
+      getFn: (emission: EmissionWithMetaData) => [emission.location, emission.metaData?.location].join(' '),
+    },
   ],
   threshold: 0.3,
   isCaseSensitive: false,
