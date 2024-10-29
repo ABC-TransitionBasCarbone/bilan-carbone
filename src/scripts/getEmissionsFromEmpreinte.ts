@@ -42,6 +42,10 @@ type EmissionResponse = {
     Qualité_GR: number
     Qualité_TiR: number
     Qualité_C: number
+    Code_gaz_supplémentaire_1: string
+    Valeur_gaz_supplémentaire_1: number
+    Code_gaz_supplémentaire_2: string
+    Valeur_gaz_supplémentaire_2: number
   }[]
 }
 
@@ -81,6 +85,10 @@ const select = [
   'Qualité_GR',
   'Qualité_TiR',
   'Qualité_C',
+  'Code_gaz_supplémentaire_1',
+  'Valeur_gaz_supplémentaire_1',
+  'Code_gaz_supplémentaire_2',
+  'Valeur_gaz_supplémentaire_2',
 ]
 
 const validStatus = ['Valide générique', 'Valide spécifique', 'Archivé']
@@ -130,53 +138,74 @@ const saveEmissions = async (url: string, posts: EmissionResponse['results']) =>
           postsToCreate.push(emission)
           return
         }
-        return prismaClient.emission.create({
-          data: {
-            reliability: 5,
-            importedFrom: Import.BaseEmpreinte,
-            importedId: emission["Identifiant_de_l'élément"],
-            status: emission["Statut_de_l'élément"] === 'Archivé' ? EmissionStatus.Archived : EmissionStatus.Valid,
-            source: emission.Source,
-            location: emission.Localisation_géographique,
-            incertitude: emission.Incertitude,
-            technicalRepresentativeness: emission.Qualité_TeR,
-            geographicRepresentativeness: emission.Qualité_GR,
-            temporalRepresentativeness: emission.Qualité_TiR,
-            completeness: emission.Qualité_C,
-            totalCo2: emission.Total_poste_non_décomposé,
-            co2f: emission.CO2f,
-            ch4f: emission.CH4f,
-            ch4b: emission.CH4b,
-            n2o: emission.N2O,
-            co2b: emission.CO2b,
-            otherGES: emission.Autres_GES,
-            unit: getUnit(emission.Unité_français),
-            metaData: {
-              createMany: {
-                data: [
-                  {
-                    language: 'fr',
-                    title: escapeTranslation(emission.Nom_base_français),
-                    attribute: escapeTranslation(emission.Nom_attribut_français),
-                    frontiere: escapeTranslation(emission.Nom_frontière_français),
-                    tag: escapeTranslation(emission.Tags_français),
-                    location: escapeTranslation(emission['Sous-localisation_géographique_français']),
-                    comment: escapeTranslation(emission.Commentaire_français),
-                  },
-                  {
-                    language: 'en',
-                    title: escapeTranslation(emission.Nom_base_anglais),
-                    attribute: escapeTranslation(emission.Nom_attribut_anglais),
-                    frontiere: escapeTranslation(emission.Nom_frontière_anglais),
-                    tag: escapeTranslation(emission.Tags_anglais),
-                    location: escapeTranslation(emission['Sous-localisation_géographique_anglais']),
-                    comment: escapeTranslation(emission.Commentaire_anglais),
-                  },
-                ],
-              },
+        const data = {
+          reliability: 5,
+          importedFrom: Import.BaseEmpreinte,
+          importedId: emission["Identifiant_de_l'élément"],
+          status: emission["Statut_de_l'élément"] === 'Archivé' ? EmissionStatus.Archived : EmissionStatus.Valid,
+          source: emission.Source,
+          location: emission.Localisation_géographique,
+          incertitude: emission.Incertitude,
+          technicalRepresentativeness: emission.Qualité_TeR,
+          geographicRepresentativeness: emission.Qualité_GR,
+          temporalRepresentativeness: emission.Qualité_TiR,
+          completeness: emission.Qualité_C,
+          totalCo2: emission.Total_poste_non_décomposé,
+          co2f: emission.CO2f,
+          ch4f: emission.CH4f,
+          ch4b: emission.CH4b,
+          n2o: emission.N2O,
+          co2b: emission.CO2b,
+          sf6: 0,
+          hfc: 0,
+          pfc: 0,
+          otherGES: emission.Autres_GES,
+          unit: getUnit(emission.Unité_français),
+          metaData: {
+            createMany: {
+              data: [
+                {
+                  language: 'fr',
+                  title: escapeTranslation(emission.Nom_base_français),
+                  attribute: escapeTranslation(emission.Nom_attribut_français),
+                  frontiere: escapeTranslation(emission.Nom_frontière_français),
+                  tag: escapeTranslation(emission.Tags_français),
+                  location: escapeTranslation(emission['Sous-localisation_géographique_français']),
+                  comment: escapeTranslation(emission.Commentaire_français),
+                },
+                {
+                  language: 'en',
+                  title: escapeTranslation(emission.Nom_base_anglais),
+                  attribute: escapeTranslation(emission.Nom_attribut_anglais),
+                  frontiere: escapeTranslation(emission.Nom_frontière_anglais),
+                  tag: escapeTranslation(emission.Tags_anglais),
+                  location: escapeTranslation(emission['Sous-localisation_géographique_anglais']),
+                  comment: escapeTranslation(emission.Commentaire_anglais),
+                },
+              ],
             },
           },
-        })
+        }
+        if (emission.Valeur_gaz_supplémentaire_1) {
+          if (emission.Code_gaz_supplémentaire_1 === 'Divers') {
+            data.otherGES = emission.Valeur_gaz_supplémentaire_1 + data.otherGES
+          }
+          if (emission.Code_gaz_supplémentaire_1 === 'SF6') {
+            if (data.importedId === '24238') {
+              console.log(emission)
+            }
+            data.sf6 = emission.Valeur_gaz_supplémentaire_1
+          }
+        }
+        if (emission.Valeur_gaz_supplémentaire_2) {
+          if (emission.Code_gaz_supplémentaire_2 === 'Divers') {
+            data.otherGES = emission.Valeur_gaz_supplémentaire_2 + data.otherGES
+          }
+          if (emission.Code_gaz_supplémentaire_2 === 'SF6') {
+            data.sf6 = emission.Valeur_gaz_supplémentaire_2
+          }
+        }
+        return prismaClient.emission.create({ data })
       }),
   )
 
@@ -199,40 +228,60 @@ const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
         console.log('No emission found for ' + post["Identifiant_de_l'élément"])
         return Promise.resolve()
       }
-      return prismaClient.emissionPost.create({
-        data: {
-          emissionId: emission.id,
-          totalCo2: post.Total_poste_non_décomposé,
-          co2f: post.CO2f,
-          ch4f: post.CH4f,
-          ch4b: post.CH4b,
-          n2o: post.N2O,
-          co2b: post.CO2b,
-          otherGES: post.Autres_GES,
-          metaData: {
-            createMany: {
-              data: [
-                {
-                  language: 'fr',
-                  attribute: escapeTranslation(post.Nom_attribut_français),
-                  frontiere: escapeTranslation(post.Nom_frontière_français),
-                  tag: escapeTranslation(post.Tags_français),
-                  location: escapeTranslation(post['Sous-localisation_géographique_français']),
-                  comment: escapeTranslation(post.Commentaire_français),
-                },
-                {
-                  language: 'en',
-                  attribute: escapeTranslation(post.Nom_attribut_anglais),
-                  frontiere: escapeTranslation(post.Nom_frontière_anglais),
-                  tag: escapeTranslation(post.Tags_anglais),
-                  location: escapeTranslation(post['Sous-localisation_géographique_anglais']),
-                  comment: escapeTranslation(post.Commentaire_anglais),
-                },
-              ],
-            },
+      const data = {
+        emissionId: emission.id,
+        totalCo2: post.Total_poste_non_décomposé,
+        co2f: post.CO2f,
+        ch4f: post.CH4f,
+        ch4b: post.CH4b,
+        n2o: post.N2O,
+        co2b: post.CO2b,
+        sf6: 0,
+        hfc: 0,
+        pfc: 0,
+        otherGES: post.Autres_GES,
+        metaData: {
+          createMany: {
+            data: [
+              {
+                language: 'fr',
+                attribute: escapeTranslation(post.Nom_attribut_français),
+                frontiere: escapeTranslation(post.Nom_frontière_français),
+                tag: escapeTranslation(post.Tags_français),
+                location: escapeTranslation(post['Sous-localisation_géographique_français']),
+                comment: escapeTranslation(post.Commentaire_français),
+              },
+              {
+                language: 'en',
+                attribute: escapeTranslation(post.Nom_attribut_anglais),
+                frontiere: escapeTranslation(post.Nom_frontière_anglais),
+                tag: escapeTranslation(post.Tags_anglais),
+                location: escapeTranslation(post['Sous-localisation_géographique_anglais']),
+                comment: escapeTranslation(post.Commentaire_anglais),
+              },
+            ],
           },
         },
-      })
+      }
+      if (post.Valeur_gaz_supplémentaire_1) {
+        const type = post.Code_gaz_supplémentaire_1 || (emission.sf6 ? 'SF6' : 'Divers')
+        if (type === 'Divers') {
+          data.otherGES = post.Valeur_gaz_supplémentaire_1 + data.otherGES
+        }
+        if (type === 'SF6') {
+          data.sf6 = post.Valeur_gaz_supplémentaire_1
+        }
+      }
+      if (post.Valeur_gaz_supplémentaire_2) {
+        const type = post.Code_gaz_supplémentaire_2 || (emission.sf6 ? 'SF6' : 'Divers')
+        if (type === 'Divers') {
+          data.otherGES = post.Valeur_gaz_supplémentaire_2 + data.otherGES
+        }
+        if (type === 'SF6') {
+          data.sf6 = post.Valeur_gaz_supplémentaire_2
+        }
+      }
+      return prismaClient.emissionPost.create({ data })
     }),
   )
 }
@@ -250,6 +299,8 @@ const main = async () => {
     url = res.url
     posts = res.posts
   }
+  console.log('elements imported')
+
   await saveEmissionsPosts(posts)
 }
 
