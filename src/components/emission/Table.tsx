@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { ChangeEvent, useMemo, useState } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -12,9 +12,7 @@ import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import classNames from 'classnames'
 import styles from './Table.module.css'
-import { EmissionStatus } from '@prisma/client'
-import { Checkbox, FormControl, Input, InputLabel, ListItemText, MenuItem, OutlinedInput, Select } from '@mui/material'
-import { SelectChangeEvent } from '@mui/material/Select'
+import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, TextField } from '@mui/material'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import LinkButton from '../base/LinkButton'
@@ -47,8 +45,6 @@ interface Props {
 const EmissionsTable = ({ emissions }: Props) => {
   const t = useTranslations('emissions.table')
   const [filter, setFilter] = useState('')
-  const statuses = Object.values(EmissionStatus).map((status) => status)
-  const [filteredStatus, setFilteredStatus] = useState<EmissionStatus[]>(statuses)
 
   const columns = useMemo(() => {
     return [
@@ -115,16 +111,13 @@ const EmissionsTable = ({ emissions }: Props) => {
 
   const data = useMemo(() => {
     if (!filter) {
-      return emissions.filter((emission) => filteredStatus.includes(emission.status))
+      return emissions
     }
     const results = fuse.search(filter)
-    return results.map(({ item }) => item).filter((item) => filteredStatus.includes(item.status))
-  }, [filter, filteredStatus])
+    return results.map(({ item }) => item)
+  }, [filter])
 
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 25,
-  })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
   const table = useReactTable({
     columns,
@@ -132,25 +125,18 @@ const EmissionsTable = ({ emissions }: Props) => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    state: {
-      pagination,
-    },
+    state: { pagination },
   })
 
-  const handleFilterStatus = (event: SelectChangeEvent<typeof filteredStatus>) => {
-    const {
-      target: { value },
-    } = event
-
-    setFilteredStatus(value as EmissionStatus[])
-  }
-
-  const StatusSelectorProps = {
-    PaperProps: {
-      style: {
-        width: 250,
-      },
-    },
+  const onPaginationChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const page = e.target.value ? Number(e.target.value) - 1 : 0
+    if (page <= 0) {
+      table.setPageIndex(0)
+    } else if (page >= table.getPageCount()) {
+      table.setPageIndex(table.getPageCount() - 1)
+    } else {
+      table.setPageIndex(page)
+    }
   }
 
   return (
@@ -164,26 +150,6 @@ const EmissionsTable = ({ emissions }: Props) => {
             onChange={setFilter}
             placeholder={t('search')}
           />
-          <FormControl className={styles.statusSelector}>
-            <InputLabel id="emissions-status-filter-label">{t('status')}</InputLabel>
-            <Select
-              id="emissions-status-filter"
-              labelId="emissions-status-filter-label"
-              value={filteredStatus}
-              onChange={handleFilterStatus}
-              input={<OutlinedInput label={t('status')} />}
-              renderValue={(selected) => selected.map((status) => t(status)).join(', ')}
-              MenuProps={StatusSelectorProps}
-              multiple
-            >
-              {statuses.map((status) => (
-                <MenuItem key={status} value={status}>
-                  <Checkbox checked={filteredStatus.includes(status)} />
-                  <ListItemText primary={status} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
         </div>
         <LinkButton href="/facteurs-d-emission/creer" data-testid="new-emission">
           {t('add')}
@@ -229,30 +195,30 @@ const EmissionsTable = ({ emissions }: Props) => {
         <p>
           {t('page', { page: table.getState().pagination.pageIndex + 1, total: table.getPageCount().toLocaleString() })}
         </p>
-        <div>
-          {t('goTo')}
-          <Input
-            type="number"
-            slotProps={{ input: { min: 1, max: table.getPageCount() } }}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              table.setPageIndex(page)
-            }}
-          />
-        </div>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value))
-          }}
-        >
-          {[25, 50, 100, 200, 500].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              {pageSize}
-            </option>
-          ))}
-        </select>
+        {t('goTo')}
+        <TextField
+          type="number"
+          classes={{ root: styles.pageInput }}
+          slotProps={{ htmlInput: { min: 1, max: table.getPageCount() } }}
+          value={table.getState().pagination.pageIndex + 1}
+          onChange={onPaginationChange}
+        />
+        <FormControl className={styles.selector}>
+          <InputLabel id="emissions-paginator-count-selector">{t('items')}</InputLabel>
+          <Select
+            id="emissions-paginator-count-selector"
+            labelId="emissions-paginator-count-selector"
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => table.setPageSize(Number(e.target.value))}
+            input={<OutlinedInput label={t('items')} />}
+          >
+            {[25, 50, 100, 200, 500].map((count) => (
+              <MenuItem key={count} value={count}>
+                <ListItemText primary={count} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
       <div>
         {t('showing', {

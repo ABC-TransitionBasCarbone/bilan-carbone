@@ -3,8 +3,12 @@
   flex-wrap: wrap-reverse;
 }
 
-.statusSelector {
+.selector {
   width: 10rem;
+}
+
+.pageInput {
+  min-width: 5rem;
 }
 
 .filters {
