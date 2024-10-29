@@ -140,7 +140,8 @@
       "per": "par",
       "page": "Page {page} sur {total}",
       "goTo": "Aller à la page",
-      "showing": "Affichage de {number} lignes sur {total}"
+      "showing": "Affichage de {number} lignes sur {total}",
+      "items": "Élements par page"
     }
   },
   "level": {
