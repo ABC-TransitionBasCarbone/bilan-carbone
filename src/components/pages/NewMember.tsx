@@ -1,14 +1,14 @@
 import { useTranslations } from 'next-intl'
 import React from 'react'
 import NewMemberForm from '../team/NewMemberForm'
+import Block from '../base/Block'
 
 const NewMemberPage = () => {
   const t = useTranslations('new-member')
   return (
-    <>
-      <h1>{t('title')}</h1>
+    <Block title={t('title')} as="h1">
       <NewMemberForm />
-    </>
+    </Block>
   )
 }
 

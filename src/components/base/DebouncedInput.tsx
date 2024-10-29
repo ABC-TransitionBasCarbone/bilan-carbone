@@ -1,6 +1,5 @@
-import { InputProps } from '@mui/material'
+import { TextField, TextFieldProps } from '@mui/material'
 import React, { InputHTMLAttributes, useEffect, useState } from 'react'
-import Input from './Input'
 
 interface Props {
   debounce: number
@@ -13,7 +12,7 @@ const DebouncedInput = ({
   onChange,
   debounce,
   ...props
-}: Props & Omit<InputProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>) => {
+}: Props & Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>) => {
   const [value, setValue] = useState(initialValue)
 
   useEffect(() => {
@@ -28,7 +27,7 @@ const DebouncedInput = ({
     return () => clearTimeout(timeout)
   }, [value])
 
-  return <Input {...props} value={value} onChange={(e) => setValue(e.target.value)} />
+  return <TextField {...props} value={value} onChange={(e) => setValue(e.target.value)} />
 }
 
 export default DebouncedInput

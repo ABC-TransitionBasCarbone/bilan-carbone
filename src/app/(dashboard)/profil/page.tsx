@@ -1,15 +1,24 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import LocaleSelector from '@/components/navbar/LocaleSelector'
+import Block from '@/components/base/Block'
 
 const Profile = () => {
   const t = useTranslations('profile')
   return (
-    <>
-      <h1>Profile</h1>
-      <Link data-testid="legal-notices-link" href="/mentions-legales">
-        {t('legal-notices')}
-      </Link>
-    </>
+    <Block title={t('title')} as="h1">
+      <div className="mb1">
+        <LocaleSelector />
+      </div>
+      <div className="mb1">
+        <Link href="/logout">{t('logout')}</Link>
+      </div>
+      <div className="mb1">
+        <Link data-testid="legal-notices-link" href="/mentions-legales">
+          {t('legal-notices')}
+        </Link>
+      </div>
+    </Block>
   )
 }
 

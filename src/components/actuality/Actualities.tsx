@@ -15,14 +15,16 @@ const Actualities = ({ actualities }: Props) => {
   const sortedActualities = actualities.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
   return (
     <Box data-testid="home-actualities" className="grow">
-      <h2 data-testid="actualities-title" className={classNames(styles.title, 'align-center pb1')}>
-        <NewspaperIcon /> {t('title')}
-      </h2>
-      {actualities.length ? (
-        sortedActualities.map((actuality) => <ActualityRow key={actuality.id} actuality={actuality} />)
-      ) : (
-        <>{t('no-item')}</>
-      )}
+      <div data-testid="actualities-title" className={classNames(styles.title, 'flex-cc pb1')}>
+        <NewspaperIcon /> <h2>{t('title')}</h2>
+      </div>
+      <ul className={classNames(styles.actualities, 'flex-col')}>
+        {actualities.length ? (
+          sortedActualities.map((actuality) => <ActualityRow key={actuality.id} actuality={actuality} />)
+        ) : (
+          <>{t('no-item')}</>
+        )}
+      </ul>
     </Box>
   )
 }

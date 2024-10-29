@@ -6,6 +6,7 @@ import { Role } from '@prisma/client'
 import styles from './PendingInvitations.module.css'
 import classNames from 'classnames'
 import PendingInvitationsActions from './PendingInvitationsActions'
+import Block from '../base/Block'
 
 interface Props {
   user: User
@@ -17,8 +18,7 @@ const PendingInvitations = ({ user, team }: Props) => {
   const format = useFormatter()
 
   return user.role === Role.DEFAULT || team.length === 0 ? null : (
-    <>
-      <h2>{t('pending')}</h2>
+    <Block title={t('pending')}>
       <ul className={classNames(styles.members, 'flex-col')}>
         {team
           .sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())
@@ -40,7 +40,7 @@ const PendingInvitations = ({ user, team }: Props) => {
             </li>
           ))}
       </ul>
-    </>
+    </Block>
   )
 }
 

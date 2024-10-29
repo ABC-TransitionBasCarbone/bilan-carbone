@@ -16,12 +16,15 @@ const StudyContainer = ({ studies }: Props) => {
   const t = useTranslations('study')
   return (
     <Box data-testid="home-studies" className="flex-col grow">
-      <h2 data-testid="studies-title" className={classNames(styles.title, 'align-center pb1')}>
-        <NewspaperIcon /> {t('my-studies')}
-      </h2>
-      <LinkButton data-testid="new-study" className="mb1" href="/etudes/creer">
-        {t('create')}
-      </LinkButton>
+      <div data-testid="studies-title" className={classNames(styles.title, 'flex-cc pb1')}>
+        <NewspaperIcon /> <h2>{t('my-studies')}</h2>
+      </div>
+
+      <div className={classNames(styles.button, 'w100 flex')}>
+        <LinkButton data-testid="new-study" className="mb1" href="/etudes/creer">
+          {t('create')}
+        </LinkButton>
+      </div>
       <Studies studies={studies} />
     </Box>
   )

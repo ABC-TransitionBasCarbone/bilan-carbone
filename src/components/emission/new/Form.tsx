@@ -29,7 +29,9 @@ const NewEmissionForm = () => {
   useEffect(() => {
     if (detailedGES) {
       const newTotal = emissionValues.reduce((acc: number, current) => acc + (current || 0), 0)
-      if (totalCo2 !== newTotal) form.setValue('totalCo2', newTotal)
+      if (totalCo2 !== newTotal) {
+        form.setValue('totalCo2', newTotal)
+      }
     }
   }, [totalCo2, emissionValues, detailedGES])
 
@@ -50,22 +52,22 @@ const NewEmissionForm = () => {
         translation={t}
         name="name"
         label={t('name')}
-      ></FormTextField>
-      <FormTextField control={form.control} translation={t} name="attribute" label={t('attribute')}></FormTextField>
+      />
+      <FormTextField control={form.control} translation={t} name="attribute" label={t('attribute')} />
       <FormTextField
         data-testid="new-emission-unit"
         control={form.control}
         translation={t}
         name="unit"
         label={t('unit')}
-      ></FormTextField>
+      />
       <FormTextField
         data-testid="new-emission-source"
         control={form.control}
         translation={t}
         name="source"
         label={t('source')}
-      ></FormTextField>
+      />
       <div>
         <FormLabel id={`defailedGES-radio-group-label`} component="legend">
           {t('detailedGES')}
@@ -99,7 +101,7 @@ const NewEmissionForm = () => {
             type="number"
             name="co2f"
             label={t('co2f')}
-          ></FormTextField>
+          />
           <FormTextField
             data-testid="new-emission-ch4f"
             control={form.control}
@@ -108,7 +110,7 @@ const NewEmissionForm = () => {
             type="number"
             name="ch4f"
             label={t('ch4f')}
-          ></FormTextField>
+          />
           <FormTextField
             data-testid="new-emission-ch4b"
             control={form.control}
@@ -117,7 +119,7 @@ const NewEmissionForm = () => {
             type="number"
             name="ch4b"
             label={t('ch4b')}
-          ></FormTextField>
+          />
           <FormTextField
             data-testid="new-emission-n2o"
             control={form.control}
@@ -126,7 +128,7 @@ const NewEmissionForm = () => {
             type="number"
             name="n2o"
             label={t('n2o')}
-          ></FormTextField>
+          />
           <FormTextField
             data-testid="new-emission-co2b"
             control={form.control}
@@ -135,7 +137,7 @@ const NewEmissionForm = () => {
             type="number"
             name="co2b"
             label={t('co2b')}
-          ></FormTextField>
+          />
           <FormTextField
             data-testid="new-emission-otherGES"
             control={form.control}
@@ -144,7 +146,7 @@ const NewEmissionForm = () => {
             type="number"
             name="otherGES"
             label={t('otherGES')}
-          ></FormTextField>
+          />
         </>
       )}
       <FormTextField
@@ -159,15 +161,8 @@ const NewEmissionForm = () => {
         type="number"
         name="totalCo2"
         label={t('totalCo2')}
-      ></FormTextField>
-      <FormTextField
-        control={form.control}
-        translation={t}
-        name="comment"
-        label={t('comment')}
-        multiline
-        rows={2}
-      ></FormTextField>
+      />
+      <FormTextField control={form.control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-emission-create-button">
         {t('create')}
       </Button>

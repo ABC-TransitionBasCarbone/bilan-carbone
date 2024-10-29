@@ -46,7 +46,7 @@ const NewMemberForm = () => {
         translation={t}
         name="firstName"
         label={t('firstName')}
-      ></FormTextField>
+      />
       <FormTextField
         data-testid="new-member-lastName"
         type="lastName"
@@ -54,7 +54,7 @@ const NewMemberForm = () => {
         translation={t}
         name="lastName"
         label={t('lastName')}
-      ></FormTextField>
+      />
       <FormTextField
         data-testid="new-member-email"
         type="email"
@@ -62,7 +62,7 @@ const NewMemberForm = () => {
         translation={t}
         name="email"
         label={t('email')}
-      ></FormTextField>
+      />
       <FormSelect control={form.control} translation={t} name="level" label={t('level')} data-testid="new-member-level">
         {Object.keys(Level).map((key) => (
           <MenuItem key={key} value={key}>

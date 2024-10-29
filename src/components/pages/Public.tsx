@@ -16,7 +16,7 @@ const PublicPage = ({ children }: Props) => {
         <div className={styles.loginForm}>
           <div className={styles.welcome}>
             <h1>{t('welcome')}</h1>
-            <Image className={styles.welcomeLogo} src="/logos/bcp-with-text.png" alt="" width={228} height={40}></Image>
+            <Image className={styles.welcomeLogo} src="/logos/bcp-with-text.png" alt="" width={228} height={40} />
           </div>
           {children}
         </div>

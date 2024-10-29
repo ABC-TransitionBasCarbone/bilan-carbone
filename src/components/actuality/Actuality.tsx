@@ -1,20 +1,28 @@
 import classNames from 'classnames'
 import { Actuality } from '@prisma/client'
 import styles from './styles.module.css'
-import dayjs from 'dayjs'
+import { useFormatter } from 'next-intl'
 
 interface Props {
   actuality: Actuality
 }
 
-const ActualityRow = ({ actuality }: Props) => (
-  <div data-testid="actuality" className="flex-col mb1">
-    <p className={classNames(styles.header, 'flex mb-2')}>
-      <span>{dayjs(new Date(actuality.updatedAt)).format('DD/MM/YYYY')}</span>
-      <span>{actuality.title}</span>
-    </p>
-    <p className={styles.text}>{actuality.text}</p>
-  </div>
-)
+const ActualityRow = ({ actuality }: Props) => {
+  const format = useFormatter()
+
+  return (
+    <li data-testid="actuality" className="flex-col">
+      <h3 className={classNames(styles.header, 'title-h5 flex')}>{actuality.title}</h3>
+      <p className={classNames(styles.date, 'mb-2')}>
+        {format.dateTime(actuality.updatedAt, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        })}
+      </p>
+      <p className={styles.text}>{actuality.text}</p>
+    </li>
+  )
+}
 
 export default ActualityRow

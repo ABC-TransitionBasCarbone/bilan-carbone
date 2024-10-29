@@ -8,6 +8,7 @@ import React, { useMemo } from 'react'
 import styles from './TeamTable.module.css'
 import { Role } from '@prisma/client'
 import SelectRole from './SelectRole'
+import Block from '../base/Block'
 
 interface Props {
   user: User
@@ -54,8 +55,7 @@ const TeamTable = ({ user, team }: Props) => {
   })
 
   return (
-    <>
-      <h2 id="team-table-title">{t('title')}</h2>
+    <Block title={t('title')} id="team-table-title">
       <table className={styles.table} aria-labelledby="team-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -78,7 +78,7 @@ const TeamTable = ({ user, team }: Props) => {
           ))}
         </tbody>
       </table>
-    </>
+    </Block>
   )
 }
 

@@ -1,5 +1,6 @@
 import { auth } from '@/services/auth'
 import UserView from '@/components/home/UserView'
+import Block from '@/components/base/Block'
 
 const Home = async () => {
   const session = await auth()
@@ -12,8 +13,9 @@ const Home = async () => {
 
   return (
     <>
-      <h1 className="mb1">Hello {user.firstName}</h1>
-      <UserView user={user} />
+      <Block title={`Hello ${user.firstName}`} as="h1">
+        <UserView user={user} />
+      </Block>
     </>
   )
 }

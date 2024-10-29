@@ -1,0 +1,13 @@
+.block {
+  margin: auto;
+  padding-top: 3rem;
+  position: relative;
+}
+
+.children {
+  padding-bottom: 2rem;
+}
+
+.withMargin {
+  margin-top: 2rem;
+}

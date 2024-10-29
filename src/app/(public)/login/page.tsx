@@ -9,7 +9,7 @@ const LoginPage = async () => {
     redirect('/')
   }
 
-  return <LoginForm></LoginForm>
+  return <LoginForm />
 }
 
 export default LoginPage
