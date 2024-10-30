@@ -36,6 +36,7 @@
     "logout": "Se déconnecter"
   },
   "study": {
+    "change-rights": "Modifier les droits de l'études",
     "back-to-home": "Retour a l'accueil",
     "create": "Nouvelle étude",
     "my-studies": "Mes études",
@@ -71,7 +72,26 @@
       "sites": "Les sites de l'organisation",
       "next": "Suivant"
     },
-    "title": "Étude"
+    "role": {
+      "Validator": "Validateur",
+      "Editor": "Éditeur",
+      "Reader": "Lecteur"
+    },
+    "title": "Étude",
+    "rights": {
+      "new": {
+        "title": "Ajouter une personne sur l'étude : {name}",
+        "email": "Email",
+        "role": "Droit",
+        "create": "Ajouter la personne"
+      },
+      "table": {
+        "title": "Droits sur l'étude : {name}",
+        "new-right": "Ajouter une personne à l'étude",
+        "email": "Email",
+        "role": "Droits"
+      }
+    }
   },
   "emissions": {
     "create": {

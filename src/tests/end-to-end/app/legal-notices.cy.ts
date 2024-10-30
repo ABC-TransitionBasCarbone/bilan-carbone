@@ -22,12 +22,14 @@ describe('Legal Notices', () => {
     cy.getByTestId('contact-mail').should('have.attr', 'href').and('include', 'mailto:')
 
     // Privacy policy
-    cy.getByTestId('privacy-link').scrollIntoView().should('be.visible')
+    cy.getByTestId('privacy-link').scrollIntoView()
+    cy.getByTestId('privacy-link').should('be.visible')
     cy.getByTestId('privacy-link').should('have.text', 'politique de protection des données')
     cy.getByTestId('privacy-link').should('have.attr', 'href').and('include', 'associationbilancarbone.sharepoint.com')
 
     // Back to profile
-    cy.getByTestId('profile-link').scrollIntoView().should('be.visible')
+    cy.getByTestId('profile-link').scrollIntoView()
+    cy.getByTestId('profile-link').should('be.visible')
     cy.getByTestId('profile-link').should('have.attr', 'href', '/profil')
     cy.getByTestId('profile-link').should('have.text', 'Retour au profil')
   })

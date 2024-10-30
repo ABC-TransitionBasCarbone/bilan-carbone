@@ -26,6 +26,11 @@ const NewMemberForm = () => {
     resolver: zodResolver(AddMemberCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+    },
   })
 
   const onSubmit = async (command: AddMemberCommand) => {
@@ -34,6 +39,7 @@ const NewMemberForm = () => {
       setError(result)
     } else {
       router.push('/equipe')
+      router.refresh()
     }
   }
 

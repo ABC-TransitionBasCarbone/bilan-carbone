@@ -1,4 +1,4 @@
-import { ControlMode, Export, Level } from '@prisma/client'
+import { ControlMode, Export, Level, StudyRole } from '@prisma/client'
 import dayjs, { Dayjs } from 'dayjs'
 import z from 'zod'
 
@@ -32,3 +32,16 @@ export const CreateStudyCommandValidation = z
   )
 
 export type CreateStudyCommand = z.infer<typeof CreateStudyCommandValidation>
+
+export const NewStudyRightCommandValidation = z.object({
+  studyId: z.string(),
+  email: z
+    .string({
+      required_error: 'email',
+    })
+    .email('email')
+    .trim(),
+  role: z.nativeEnum(StudyRole, { required_error: 'role' }),
+})
+
+export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>

@@ -10,8 +10,10 @@ const Studies = ({ studies }: Props) => {
   return (
     <ul>
       {studies.map((study) => (
-        <li key={study.id} data-testid={`studies-${study.name}`}>
-          <Link href={`/etudes/${study.id}`}>{study.name}</Link>
+        <li key={study.id}>
+          <Link href={`/etudes/${study.id}`} data-testid={`studies-${study.name}`}>
+            {study.name}
+          </Link>
         </li>
       ))}
     </ul>

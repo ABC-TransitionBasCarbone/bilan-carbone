@@ -1,9 +1,10 @@
-import { UUID } from 'crypto'
-import { auth } from '@/services/auth'
+import StudyRightsPage from '@/components/pages/StudyRights'
 import NotFound from '@/components/study/NotFound'
-import StudyDetails from '@/components/study/StudyDetails'
-import { canReadStudy } from '@/services/permissions/study'
 import { getStudyWithRightsById } from '@/db/study'
+import { auth } from '@/services/auth'
+import { canReadStudy } from '@/services/permissions/study'
+import { UUID } from 'crypto'
+import React from 'react'
 
 interface Props {
   params: {
@@ -11,7 +12,9 @@ interface Props {
   }
 }
 
-const StudyView = async ({ params }: Props) => {
+export const revalidate = 0
+
+const StudyRights = async ({ params }: Props) => {
   const session = await auth()
 
   const id = params.id
@@ -29,7 +32,7 @@ const StudyView = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  return <StudyDetails study={study} />
+  return <StudyRightsPage study={study} user={session.user} />
 }
 
-export default StudyView
+export default StudyRights
