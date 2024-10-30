@@ -22,13 +22,15 @@ import Form from '@/components/base/Form'
 import { getAllowedLevels } from '@/services/study'
 import { User } from 'next-auth'
 import Block from '@/components/base/Block'
+import { FormAutocomplete } from '@/components/form/Autocomplete'
 
 interface Props {
   user: User
+  usersEmail: string[]
   organization: OrganizationWithSites
 }
 
-const NewStudyForm = ({ organization, user }: Props) => {
+const NewStudyForm = ({ organization, user, usersEmail }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.new')
   const tLevel = useTranslations('level')
@@ -40,6 +42,7 @@ const NewStudyForm = ({ organization, user }: Props) => {
     reValidateMode: 'onChange',
     defaultValues: {
       name: '',
+      validator: '',
       organizationId: organization.id,
       isPublic: true,
       startDate: dayjs(),
@@ -70,6 +73,14 @@ const NewStudyForm = ({ organization, user }: Props) => {
           translation={t}
           name="name"
           label={t('name')}
+        />
+        <FormAutocomplete
+          data-testid="new-validator-name"
+          control={form.control}
+          translation={t}
+          options={usersEmail}
+          name="validator"
+          label={t('validator')}
         />
         <div className={styles.dates}>
           <FormDatePicker control={form.control} translation={t} name="startDate" label={t('start')} />

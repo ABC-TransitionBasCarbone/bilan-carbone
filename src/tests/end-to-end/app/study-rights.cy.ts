@@ -13,6 +13,9 @@ describe('Create study', () => {
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').should('be.visible').type('Study with rights')
+    cy.getByTestId('new-validator-name').click()
+    cy.get('[data-option-index="1"]').click()
+
     cy.getByTestId('new-study-endDate').within(() => {
       cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
     })
@@ -23,7 +26,7 @@ describe('Create study', () => {
     cy.getByTestId('studies-Study with rights').click()
     cy.getByTestId('study-rights-button').click()
 
-    cy.getByTestId('study-rights-table-line').contains('bc-default-0@yopmail.comÉditeur')
+    cy.getByTestId('study-rights-table-line').contains('bc-default-0@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line').within(() => {
       cy.get('input').should('be.disabled')
     })
