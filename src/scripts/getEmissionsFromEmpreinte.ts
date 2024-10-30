@@ -1,7 +1,7 @@
 import { prismaClient } from '../db/client'
 import { EmissionStatus, Import, Unit } from '@prisma/client'
 import { UNITS_MATRIX } from './history_units'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 type EmissionResponse = {
   total: number
@@ -129,87 +129,76 @@ const getUnit = (value?: string): Unit | null => {
   return null
 }
 
-const saveEmissions = async (url: string, posts: EmissionResponse['results']) => {
-  const postsToCreate = [...posts]
-  const emissions = await axios.get<EmissionResponse>(url)
-  await Promise.all(
-    emissions.data.results
-      .filter((emission) => validStatus.includes(emission["Statut_de_l'élément"]))
-      .map((emission) => {
-        if (emission.Type_Ligne === 'Poste') {
-          postsToCreate.push(emission)
-          return
-        }
-        const data = {
-          reliability: 5,
-          importedFrom: Import.BaseEmpreinte,
-          importedId: emission["Identifiant_de_l'élément"],
-          status: emission["Statut_de_l'élément"] === 'Archivé' ? EmissionStatus.Archived : EmissionStatus.Valid,
-          source: emission.Source,
-          location: emission.Localisation_géographique,
-          incertitude: emission.Incertitude,
-          technicalRepresentativeness: emission.Qualité_TeR,
-          geographicRepresentativeness: emission.Qualité_GR,
-          temporalRepresentativeness: emission.Qualité_TiR,
-          completeness: emission.Qualité_C,
-          totalCo2: emission.Total_poste_non_décomposé,
-          co2f: emission.CO2f,
-          ch4f: emission.CH4f,
-          ch4b: emission.CH4b,
-          n2o: emission.N2O,
-          co2b: emission.CO2b,
-          sf6: 0,
-          hfc: 0,
-          pfc: 0,
-          otherGES: emission.Autres_GES,
-          unit: getUnit(emission.Unité_français),
-          metaData: {
-            createMany: {
-              data: [
-                {
-                  language: 'fr',
-                  title: escapeTranslation(emission.Nom_base_français),
-                  attribute: escapeTranslation(emission.Nom_attribut_français),
-                  frontiere: escapeTranslation(emission.Nom_frontière_français),
-                  tag: escapeTranslation(emission.Tags_français),
-                  location: escapeTranslation(emission['Sous-localisation_géographique_français']),
-                  comment: escapeTranslation(emission.Commentaire_français),
-                },
-                {
-                  language: 'en',
-                  title: escapeTranslation(emission.Nom_base_anglais),
-                  attribute: escapeTranslation(emission.Nom_attribut_anglais),
-                  frontiere: escapeTranslation(emission.Nom_frontière_anglais),
-                  tag: escapeTranslation(emission.Tags_anglais),
-                  location: escapeTranslation(emission['Sous-localisation_géographique_anglais']),
-                  comment: escapeTranslation(emission.Commentaire_anglais),
-                },
-              ],
-            },
+const saveEmissions = async (emissions: EmissionResponse['results']) =>
+  Promise.all(
+    emissions.map((emission) => {
+      const data = {
+        reliability: 5,
+        importedFrom: Import.BaseEmpreinte,
+        importedId: emission["Identifiant_de_l'élément"],
+        status: emission["Statut_de_l'élément"] === 'Archivé' ? EmissionStatus.Archived : EmissionStatus.Valid,
+        source: emission.Source,
+        location: emission.Localisation_géographique,
+        incertitude: emission.Incertitude,
+        technicalRepresentativeness: emission.Qualité_TeR,
+        geographicRepresentativeness: emission.Qualité_GR,
+        temporalRepresentativeness: emission.Qualité_TiR,
+        completeness: emission.Qualité_C,
+        totalCo2: emission.Total_poste_non_décomposé,
+        co2f: emission.CO2f,
+        ch4f: emission.CH4f,
+        ch4b: emission.CH4b,
+        n2o: emission.N2O,
+        co2b: emission.CO2b,
+        sf6: 0,
+        hfc: 0,
+        pfc: 0,
+        otherGES: emission.Autres_GES,
+        unit: getUnit(emission.Unité_français),
+        metaData: {
+          createMany: {
+            data: [
+              {
+                language: 'fr',
+                title: escapeTranslation(emission.Nom_base_français),
+                attribute: escapeTranslation(emission.Nom_attribut_français),
+                frontiere: escapeTranslation(emission.Nom_frontière_français),
+                tag: escapeTranslation(emission.Tags_français),
+                location: escapeTranslation(emission['Sous-localisation_géographique_français']),
+                comment: escapeTranslation(emission.Commentaire_français),
+              },
+              {
+                language: 'en',
+                title: escapeTranslation(emission.Nom_base_anglais),
+                attribute: escapeTranslation(emission.Nom_attribut_anglais),
+                frontiere: escapeTranslation(emission.Nom_frontière_anglais),
+                tag: escapeTranslation(emission.Tags_anglais),
+                location: escapeTranslation(emission['Sous-localisation_géographique_anglais']),
+                comment: escapeTranslation(emission.Commentaire_anglais),
+              },
+            ],
           },
+        },
+      }
+      if (emission.Valeur_gaz_supplémentaire_1) {
+        if (emission.Code_gaz_supplémentaire_1 === 'Divers') {
+          data.otherGES = emission.Valeur_gaz_supplémentaire_1 + data.otherGES
         }
-        if (emission.Valeur_gaz_supplémentaire_1) {
-          if (emission.Code_gaz_supplémentaire_1 === 'Divers') {
-            data.otherGES = emission.Valeur_gaz_supplémentaire_1 + data.otherGES
-          }
-          if (emission.Code_gaz_supplémentaire_1 === 'SF6') {
-            data.sf6 = emission.Valeur_gaz_supplémentaire_1
-          }
+        if (emission.Code_gaz_supplémentaire_1 === 'SF6') {
+          data.sf6 = emission.Valeur_gaz_supplémentaire_1
         }
-        if (emission.Valeur_gaz_supplémentaire_2) {
-          if (emission.Code_gaz_supplémentaire_2 === 'Divers') {
-            data.otherGES = emission.Valeur_gaz_supplémentaire_2 + data.otherGES
-          }
-          if (emission.Code_gaz_supplémentaire_2 === 'SF6') {
-            data.sf6 = emission.Valeur_gaz_supplémentaire_2
-          }
+      }
+      if (emission.Valeur_gaz_supplémentaire_2) {
+        if (emission.Code_gaz_supplémentaire_2 === 'Divers') {
+          data.otherGES = emission.Valeur_gaz_supplémentaire_2 + data.otherGES
         }
-        return prismaClient.emission.create({ data })
-      }),
+        if (emission.Code_gaz_supplémentaire_2 === 'SF6') {
+          data.sf6 = emission.Valeur_gaz_supplémentaire_2
+        }
+      }
+      return prismaClient.emission.create({ data })
+    }),
   )
-
-  return { url: emissions.data.next, posts: postsToCreate }
-}
 
 const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
   const emissions = await prismaClient.emission.findMany({
@@ -242,22 +231,8 @@ const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
         metaData: {
           createMany: {
             data: [
-              {
-                language: 'fr',
-                attribute: escapeTranslation(post.Nom_attribut_français),
-                frontiere: escapeTranslation(post.Nom_frontière_français),
-                tag: escapeTranslation(post.Tags_français),
-                location: escapeTranslation(post['Sous-localisation_géographique_français']),
-                comment: escapeTranslation(post.Commentaire_français),
-              },
-              {
-                language: 'en',
-                attribute: escapeTranslation(post.Nom_attribut_anglais),
-                frontiere: escapeTranslation(post.Nom_frontière_anglais),
-                tag: escapeTranslation(post.Tags_anglais),
-                location: escapeTranslation(post['Sous-localisation_géographique_anglais']),
-                comment: escapeTranslation(post.Commentaire_anglais),
-              },
+              { title: post.Nom_poste_français, language: 'fr' },
+              { title: post.Nom_poste_anglais, language: 'en' },
             ],
           },
         },
@@ -294,11 +269,15 @@ const main = async () => {
   let url: string | undefined =
     `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}`
   while (url) {
-    const res = await saveEmissions(url, posts)
-    url = res.url
-    posts = res.posts
+    const emissions: AxiosResponse<EmissionResponse> = await axios.get<EmissionResponse>(url)
+    const validEmissions = emissions.data.results.filter((emission) =>
+      validStatus.includes(emission["Statut_de_l'élément"]),
+    )
+    posts = [...posts].concat(validEmissions.filter((emission) => emission.Type_Ligne === 'Poste'))
+    await saveEmissions(validEmissions.filter((emission) => emission.Type_Ligne !== 'Poste'))
+
+    url = emissions.data.next
   }
-  console.log('elements imported')
 
   await saveEmissionsPosts(posts)
 }
