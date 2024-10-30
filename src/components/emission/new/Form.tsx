@@ -38,7 +38,7 @@ const NewEmissionForm = () => {
     },
   })
 
-  const emissionValues = form.watch(['ch4b', 'ch4f', 'co2b', 'co2f', 'n2o', 'otherGES'])
+  const emissionValues = form.watch(['ch4b', 'ch4f', 'co2b', 'co2f', 'n2o', 'sf6', 'hfc', 'pfc', 'otherGES'])
   const totalCo2 = form.watch('totalCo2')
   useEffect(() => {
     if (detailedGES) {
@@ -152,6 +152,33 @@ const NewEmissionForm = () => {
             type="number"
             name="co2b"
             label={t('co2b')}
+          />
+          <FormTextField
+            data-testid="new-emission-sf6"
+            control={form.control}
+            translation={t}
+            slotProps={{ htmlInput: { min: 0 } }}
+            type="number"
+            name="sf6"
+            label={t('sf6')}
+          />
+          <FormTextField
+            data-testid="new-emission-hfc"
+            control={form.control}
+            translation={t}
+            slotProps={{ htmlInput: { min: 0 } }}
+            type="number"
+            name="hfc"
+            label={t('hfc')}
+          />
+          <FormTextField
+            data-testid="new-emission-pfc"
+            control={form.control}
+            translation={t}
+            slotProps={{ htmlInput: { min: 0 } }}
+            type="number"
+            name="pfc"
+            label={t('pfc')}
           />
           <FormTextField
             data-testid="new-emission-otherGES"
