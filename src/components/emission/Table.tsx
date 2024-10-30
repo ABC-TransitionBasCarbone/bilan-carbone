@@ -39,10 +39,22 @@ const fuseOptions = {
       name: 'detail',
       weight: 0.5,
     },
+  ],
+  threshold: 0.3,
+  isCaseSensitive: false,
+}
+
+const locationFuseOptions = {
+  keys: [
     {
       name: 'location',
+      weight: 1,
+      getFn: (emission: EmissionWithMetaData) => emission.location || '',
+    },
+    {
+      name: 'sub-location',
       weight: 0.5,
-      getFn: (emission: EmissionWithMetaData) => [emission.location, emission.metaData?.location].join(' '),
+      getFn: (emission: EmissionWithMetaData) => emission.metaData?.location || '',
     },
   ],
   threshold: 0.3,
@@ -56,6 +68,7 @@ interface Props {
 const EmissionsTable = ({ emissions }: Props) => {
   const t = useTranslations('emissions.table')
   const [filter, setFilter] = useState('')
+  const [locationFilter, setLocationFilter] = useState('')
   const sources = Object.values(Import).map((source) => source)
   const [filteredSources, setSources] = useState<Import[]>(sources)
 
@@ -122,13 +135,21 @@ const EmissionsTable = ({ emissions }: Props) => {
     })
   }, [emissions, columns])
 
-  const data = useMemo(() => {
-    if (!filter) {
-      return emissions.filter((emission) => filteredSources.includes(emission.importedFrom))
+  const searchedEmissions = useMemo(() => {
+    if (!filter && !locationFilter) {
+      return emissions
     }
-    const results = fuse.search(filter)
-    return results.map(({ item }) => item).filter((emission) => filteredSources.includes(emission.importedFrom))
-  }, [filter, filteredSources])
+    const searchResults = filter ? fuse.search(filter).map(({ item }) => item) : emissions
+
+    const locationFuse = new Fuse(searchResults, locationFuseOptions)
+    const results = locationFilter ? locationFuse.search(locationFilter).map(({ item }) => item) : searchResults
+
+    return results
+  }, [filter, locationFilter])
+
+  const data = useMemo(() => {
+    return searchedEmissions.filter((emission) => filteredSources.includes(emission.importedFrom))
+  }, [searchedEmissions, filteredSources])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -143,9 +164,7 @@ const EmissionsTable = ({ emissions }: Props) => {
 
   const onPaginationChange = (e: ChangeEvent<HTMLInputElement>) => {
     const page = e.target.value ? Number(e.target.value) - 1 : 0
-    if (page <= 0) {
-      table.setPageIndex(0)
-    } else if (page >= table.getPageCount()) {
+    if (page >= table.getPageCount()) {
       table.setPageIndex(table.getPageCount() - 1)
     } else {
       table.setPageIndex(page)
@@ -162,8 +181,8 @@ const EmissionsTable = ({ emissions }: Props) => {
 
   return (
     <>
-      <div className={classNames(styles.header, 'justify-between align-center mb1')}>
-        <div className={classNames(styles.filters, 'flex')}>
+      <div className={classNames(styles.header, 'justify-between align-center wrap-reverse mb1')}>
+        <div className={classNames(styles.filters, 'wrap')}>
           <DebouncedInput
             className={styles.searchInput}
             debounce={200}
@@ -171,26 +190,33 @@ const EmissionsTable = ({ emissions }: Props) => {
             onChange={setFilter}
             placeholder={t('search')}
           />
+          <DebouncedInput
+            className={styles.searchInput}
+            debounce={200}
+            value={locationFilter}
+            onChange={setLocationFilter}
+            placeholder={t('location-search')}
+          />
+          <FormControl className={styles.selector}>
+            <InputLabel id="emissions-sources-selector">{t('source')}</InputLabel>
+            <Select
+              id="emissions-sources-selector"
+              labelId="emissions-sources-selector"
+              value={filteredSources}
+              onChange={selectLocations}
+              input={<OutlinedInput label={t('source')} />}
+              renderValue={(filteredSources) => filteredSources.map((source) => t(source)).join(', ')}
+              multiple
+            >
+              {sources.map((source, i) => (
+                <MenuItem key={`source-item-${i}`} value={source}>
+                  <Checkbox checked={filteredSources.includes(source)} />
+                  <ListItemText primary={source} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
-        <FormControl className={styles.selector}>
-          <InputLabel id="emissions-sources-selector">{t('source')}</InputLabel>
-          <Select
-            id="emissions-sources-selector"
-            labelId="emissions-sources-selector"
-            value={filteredSources}
-            onChange={selectLocations}
-            input={<OutlinedInput label={t('source')} />}
-            renderValue={(filteredSources) => filteredSources.map((source) => t(source)).join(', ')}
-            multiple
-          >
-            {sources.map((source, i) => (
-              <MenuItem key={`source-item-${i}`} value={source}>
-                <Checkbox checked={filteredSources.includes(source)} />
-                <ListItemText primary={source} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
         <LinkButton href="/facteurs-d-emission/creer" data-testid="new-emission">
           {t('add')}
         </LinkButton>
@@ -240,7 +266,7 @@ const EmissionsTable = ({ emissions }: Props) => {
           type="number"
           classes={{ root: styles.pageInput }}
           slotProps={{ htmlInput: { min: 1, max: table.getPageCount() } }}
-          value={table.getState().pagination.pageIndex + 1}
+          defaultValue={table.getState().pagination.pageIndex + 1}
           onChange={onPaginationChange}
         />
         <FormControl className={styles.selector}>
