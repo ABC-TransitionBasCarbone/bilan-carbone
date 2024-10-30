@@ -4,7 +4,7 @@ import { StudyRole, type Prisma } from '@prisma/client'
 import { getUserOrganizations } from './user'
 import { UUID } from 'crypto'
 
-export const createStudy = async (study: Prisma.StudyCreateInput) =>
+export const createStudy = (study: Prisma.StudyCreateInput) =>
   prismaClient.study.create({
     data: study,
   })
@@ -22,13 +22,13 @@ export const getStudyByUser = async (user: User) => {
   })
 }
 
-export const getStudyById = async (id: UUID) => {
+export const getStudyById = (id: UUID) => {
   return prismaClient.study.findUnique({
     where: { id },
   })
 }
 
-export const getStudyWithRightsById = async (id: string) => {
+export const getStudyWithRightsById = (id: string) => {
   return prismaClient.study.findUnique({
     where: { id },
     include: {
@@ -47,12 +47,12 @@ export const getStudyWithRightsById = async (id: string) => {
 }
 export type StudyWithRights = Exclude<AsyncReturnType<typeof getStudyWithRightsById>, null>
 
-export const createUserOnStudy = async (rigth: Prisma.UserOnStudyCreateInput) =>
+export const createUserOnStudy = (rigth: Prisma.UserOnStudyCreateInput) =>
   prismaClient.userOnStudy.create({
     data: rigth,
   })
 
-export const updateUserOnStudy = async (userId: string, studyId: string, role: StudyRole) =>
+export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRole) =>
   prismaClient.userOnStudy.update({
     where: {
       studyId_userId: {
@@ -64,3 +64,6 @@ export const updateUserOnStudy = async (userId: string, studyId: string, role: S
       role,
     },
   })
+
+export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
+  prismaClient.study.update({ where: { id }, data })

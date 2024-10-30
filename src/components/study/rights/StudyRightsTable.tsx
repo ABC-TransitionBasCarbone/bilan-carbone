@@ -10,6 +10,7 @@ import { StudyWithRights } from '@/db/study'
 import Block from '@/components/base/Block'
 import LinkButton from '@/components/base/LinkButton'
 import SelectStudyRole from './SelectStudyRole'
+import StudyPublicStatus from './StudyPublicStatus'
 
 interface Props {
   user: User
@@ -75,6 +76,7 @@ const StudyRightsTable = ({ user, study }: Props) => {
           </LinkButton>
         )}
       </div>
+      <StudyPublicStatus user={user} userRoleOnStudy={userRoleOnStudy} study={study} />
       <table className={styles.table} aria-labelledby="study-rights-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

@@ -41,7 +41,7 @@ const NewStudyForm = ({ organization, user }: Props) => {
     defaultValues: {
       name: '',
       organizationId: organization.id,
-      isPublic: true,
+      isPublic: 'true',
       startDate: dayjs(),
       exports: {
         [Export.Beges]: false,

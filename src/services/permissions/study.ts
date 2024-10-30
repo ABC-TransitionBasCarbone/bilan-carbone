@@ -69,10 +69,24 @@ export const canCreateStudy = async (user: User, study: Prisma.StudyCreateInput,
   return true
 }
 
+export const canChangePublicStatus = async (user: User, study: StudyWithRights) => {
+  if (user.role === Role.ADMIN) {
+    return true
+  }
+
+  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
+  if (!userRightsOnStudy || userRightsOnStudy.role === StudyRole.Reader) {
+    return false
+  }
+
+  return true
+}
+
 export const canAddRightOnStudy = (user: User, study: StudyWithRights, newUser: DbUser, role: StudyRole) => {
   if (user.id === newUser.id) {
     return false
   }
+
   if (user.role === Role.ADMIN) {
     return true
   }

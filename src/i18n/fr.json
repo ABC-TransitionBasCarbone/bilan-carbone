@@ -79,6 +79,8 @@
     },
     "title": "Étude",
     "rights": {
+      "isPublic": "L'étude est public",
+      "isPrivate": "L'étude est privée",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",
