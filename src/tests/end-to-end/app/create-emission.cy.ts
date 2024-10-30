@@ -14,7 +14,7 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission').click()
 
     cy.getByTestId('new-emission-name').type('My new FE')
-    cy.getByTestId('new-emission-unit').type('Bug per test')
+    cy.getByTestId('new-emission-unit').type('T')
     cy.getByTestId('new-emission-source').type('Magic')
     cy.getByTestId('new-emission-totalCo2').type('12')
 
@@ -43,7 +43,7 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission').click()
 
     cy.getByTestId('new-emission-name').type('My new detailed FE')
-    cy.getByTestId('new-emission-unit').type('Bug per test')
+    cy.getByTestId('new-emission-unit').type('T')
     cy.getByTestId('new-emission-source').type('Magic')
 
     cy.getByTestId('new-emission-co2f').should('not.exist')
