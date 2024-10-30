@@ -99,7 +99,9 @@ const getUnit = (value?: string): Unit | null => {
   if (!value) {
     return null
   }
-  if (value.startsWith('kgCO2e/')) value = value.replace('kgCO2e/', '')
+  if (value.startsWith('kgCO2e/')) {
+    value = value.replace('kgCO2e/', '')
+  }
   if (value.toLowerCase() === 'tep pci') {
     value = 'tep PCI'
   } else if (value.toLowerCase() === 'tep pcs') {
@@ -191,9 +193,6 @@ const saveEmissions = async (url: string, posts: EmissionResponse['results']) =>
             data.otherGES = emission.Valeur_gaz_supplémentaire_1 + data.otherGES
           }
           if (emission.Code_gaz_supplémentaire_1 === 'SF6') {
-            if (data.importedId === '24238') {
-              console.log(emission)
-            }
             data.sf6 = emission.Valeur_gaz_supplémentaire_1
           }
         }
@@ -225,8 +224,8 @@ const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
     posts.map((post) => {
       const emission = emissions.find((emission) => emission.importedId === post["Identifiant_de_l'élément"])
       if (!emission) {
-        console.log('No emission found for ' + post["Identifiant_de_l'élément"])
-        return Promise.resolve()
+        console.error('No emission found for ' + post["Identifiant_de_l'élément"])
+        throw new Error('No emission found for ' + post["Identifiant_de_l'élément"])
       }
       const data = {
         emissionId: emission.id,
