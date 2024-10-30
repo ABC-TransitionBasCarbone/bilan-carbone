@@ -6,7 +6,7 @@ Cypress.Commands.add('login', (email = 'bc-default-0@yopmail.com', password = 'p
   cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible').type(email)
   cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type(password)
   cy.getByTestId('login-button').click()
-  cy.wait('@login')
+  cy.url().should('eq', `${Cypress.config().baseUrl}/`)
 })
 
 Cypress.Commands.add('logout', () => {

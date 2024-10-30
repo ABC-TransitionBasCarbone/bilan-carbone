@@ -9,7 +9,7 @@ describe('Team', () => {
     cy.intercept('POST', '/equipe/ajouter').as('new-member')
   })
 
-  it.only('should change a member role', () => {
+  it('should change a member role', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
 
@@ -84,15 +84,23 @@ describe('Team', () => {
       })
 
     cy.wait('@logout')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('user-test-1@test.fr')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-input').should('be.visible').type('test1')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('user-test-1@test.fr')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('test1')
 
     cy.getByTestId('reset-button').click()
 
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-input').should('be.visible').type('user-test-1@test.fr')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-input').should('be.visible').type('test1')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('user-test-1@test.fr')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('test1')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')

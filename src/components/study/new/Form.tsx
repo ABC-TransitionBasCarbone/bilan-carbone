@@ -39,6 +39,7 @@ const NewStudyForm = ({ organization, user }: Props) => {
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
+      name: '',
       organizationId: organization.id,
       isPublic: true,
       startDate: dayjs(),
@@ -56,6 +57,7 @@ const NewStudyForm = ({ organization, user }: Props) => {
       setError(result)
     } else {
       router.push('/')
+      router.refresh()
     }
   }
 

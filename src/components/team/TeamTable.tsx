@@ -18,6 +18,7 @@ interface Props {
 const TeamTable = ({ user, team }: Props) => {
   const t = useTranslations('team.table')
   const tLevel = useTranslations('level')
+  const tRole = useTranslations('role')
 
   const columns = useMemo(() => {
     const columns: ColumnDef<TeamMember>[] = [
@@ -30,7 +31,6 @@ const TeamTable = ({ user, team }: Props) => {
       { header: t('level'), accessorFn: (member: TeamMember) => tLevel(member.level) },
     ]
     switch (user.role) {
-      case Role.SUPER_ADMIN:
       case Role.ADMIN:
         columns.push({
           header: t('role'),
@@ -42,11 +42,11 @@ const TeamTable = ({ user, team }: Props) => {
         })
         break
       case Role.GESTIONNAIRE:
-        columns.push({ header: t('role'), accessorKey: 'role' })
+        columns.push({ header: t('role'), accessorFn: (member: TeamMember) => tRole(member.role) })
         break
     }
     return columns
-  }, [t, tLevel, user])
+  }, [t, tLevel, tRole, user])
 
   const table = useReactTable({
     columns,

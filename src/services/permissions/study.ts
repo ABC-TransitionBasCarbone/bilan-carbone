@@ -1,8 +1,9 @@
 import { getOrganizationById } from '@/db/organization'
-import { Level, Prisma, Study } from '@prisma/client'
+import { Level, Prisma, Study, StudyRole, User as DbUser, Role } from '@prisma/client'
 import { getAllowedLevels } from '../study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { User } from 'next-auth'
+import { StudyWithRights } from '@/db/study'
 
 const checkLevel = (userLevel: Level, studyLevel: Level) => getAllowedLevels(studyLevel).includes(userLevel)
 
@@ -62,6 +63,26 @@ export const canCreateStudy = async (user: User, study: Prisma.StudyCreateInput,
   }
 
   if (!(await checkOrganization(dbUser.organizationId, organizationId))) {
+    return false
+  }
+
+  return true
+}
+
+export const canAddRightOnStudy = (user: User, study: StudyWithRights, newUser: DbUser, role: StudyRole) => {
+  if (user.id === newUser.id) {
+    return false
+  }
+  if (user.role === Role.ADMIN) {
+    return true
+  }
+
+  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
+  if (!userRightsOnStudy || userRightsOnStudy.role === StudyRole.Reader) {
+    return false
+  }
+
+  if (role === StudyRole.Validator && userRightsOnStudy.role !== StudyRole.Validator) {
     return false
   }
 

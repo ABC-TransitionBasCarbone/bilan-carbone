@@ -22,6 +22,20 @@ const NewEmissionForm = () => {
     resolver: zodResolver(CreateEmissionCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
+    defaultValues: {
+      name: '',
+      attribute: '',
+      unit: '',
+      source: '',
+      co2f: 0,
+      ch4f: 0,
+      ch4b: 0,
+      n2o: 0,
+      co2b: 0,
+      otherGES: 0,
+      totalCo2: 0,
+      comment: '',
+    },
   })
 
   const emissionValues = form.watch(['ch4b', 'ch4f', 'co2b', 'co2f', 'n2o', 'otherGES'])
@@ -41,6 +55,7 @@ const NewEmissionForm = () => {
       setError(result)
     } else {
       router.push('/facteurs-d-emission')
+      router.refresh()
     }
   }
 
