@@ -1,6 +1,8 @@
 'use client'
 
 import { ChangeEvent, useMemo, useState } from 'react'
+import { useTranslations } from 'next-intl'
+import { Import } from '@prisma/client'
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,14 +11,23 @@ import {
   getPaginationRowModel,
 } from '@tanstack/react-table'
 import Fuse from 'fuse.js'
-import { useTranslations } from 'next-intl'
+import { EmissionWithMetaData } from '@/services/emissions'
 import classNames from 'classnames'
 import styles from './Table.module.css'
-import { FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, TextField } from '@mui/material'
+import {
+  Checkbox,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from '@mui/material'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import LinkButton from '../base/LinkButton'
-import { EmissionWithMetaData } from '@/services/emissions'
 
 const fuseOptions = {
   keys: [
@@ -45,6 +56,8 @@ interface Props {
 const EmissionsTable = ({ emissions }: Props) => {
   const t = useTranslations('emissions.table')
   const [filter, setFilter] = useState('')
+  const sources = Object.values(Import).map((source) => source)
+  const [filteredSources, setSources] = useState<Import[]>(sources)
 
   const columns = useMemo(() => {
     return [
@@ -111,11 +124,11 @@ const EmissionsTable = ({ emissions }: Props) => {
 
   const data = useMemo(() => {
     if (!filter) {
-      return emissions
+      return emissions.filter((emission) => filteredSources.includes(emission.importedFrom))
     }
     const results = fuse.search(filter)
-    return results.map(({ item }) => item)
-  }, [filter])
+    return results.map(({ item }) => item).filter((emission) => filteredSources.includes(emission.importedFrom))
+  }, [filter, filteredSources])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -139,6 +152,14 @@ const EmissionsTable = ({ emissions }: Props) => {
     }
   }
 
+  const selectLocations = (event: SelectChangeEvent<typeof filteredSources>) => {
+    const {
+      target: { value },
+    } = event
+
+    setSources(value as Import[])
+  }
+
   return (
     <>
       <div className={classNames(styles.header, 'justify-between align-center mb1')}>
@@ -151,6 +172,25 @@ const EmissionsTable = ({ emissions }: Props) => {
             placeholder={t('search')}
           />
         </div>
+        <FormControl className={styles.selector}>
+          <InputLabel id="emissions-sources-selector">{t('source')}</InputLabel>
+          <Select
+            id="emissions-sources-selector"
+            labelId="emissions-sources-selector"
+            value={filteredSources}
+            onChange={selectLocations}
+            input={<OutlinedInput label={t('source')} />}
+            renderValue={(filteredSources) => filteredSources.map((source) => t(source)).join(', ')}
+            multiple
+          >
+            {sources.map((source, i) => (
+              <MenuItem key={`source-item-${i}`} value={source}>
+                <Checkbox checked={filteredSources.includes(source)} />
+                <ListItemText primary={source} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <LinkButton href="/facteurs-d-emission/creer" data-testid="new-emission">
           {t('add')}
         </LinkButton>

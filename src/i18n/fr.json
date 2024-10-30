@@ -126,6 +126,8 @@
     "loading": "Chargement des facteurs d'émissions",
     "table": {
       "add": "Ajouter un facteur d'émission",
+      "BaseEmpreinte": "Base Empreinte",
+      "Manual": "Manuelle",
       "search": "Rechercher un facteur d'émission",
       "name": "Nom",
       "detail": "Détails",

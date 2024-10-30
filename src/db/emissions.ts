@@ -13,6 +13,7 @@ export const getAllValidEmissions = (organizationId: string) =>
       location: true,
       source: true,
       unit: true,
+      importedFrom: true,
       metaData: {
         select: {
           language: true,
