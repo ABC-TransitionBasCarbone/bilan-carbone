@@ -13,6 +13,7 @@ import Button from '@/components/base/Button'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup } from '@mui/material'
+import DetailedGESFields from './DetailedGESForm'
 
 const NewEmissionForm = () => {
   const router = useRouter()
@@ -114,7 +115,7 @@ const NewEmissionForm = () => {
           />
         </RadioGroup>
       </div>
-      {detailedGES && (
+      {/* {detailedGES && (
         <>
           <FormTextField
             data-testid="new-emission-co2f"
@@ -211,7 +212,8 @@ const NewEmissionForm = () => {
         type="number"
         name="totalCo2"
         label={t('totalCo2')}
-      />
+      /> */}
+      <DetailedGESFields detailedGES={detailedGES} control={form.control} translation={t} totalCo2={totalCo2} />
       <FormTextField control={form.control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-emission-create-button">
         {t('create')}
