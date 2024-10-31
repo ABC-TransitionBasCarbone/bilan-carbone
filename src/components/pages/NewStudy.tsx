@@ -8,16 +8,17 @@ import React, { useState } from 'react'
 
 interface Props {
   user: User
+  usersEmail: string[]
   organizations: OrganizationWithSites[]
 }
 
-const NewStudyPage = ({ organizations, user }: Props) => {
+const NewStudyPage = ({ organizations, user, usersEmail }: Props) => {
   const [organization, setOrganization] = useState<OrganizationWithSites>()
 
   return (
     <>
       {organization ? (
-        <NewStudyForm organization={organization} user={user} />
+        <NewStudyForm organization={organization} user={user} usersEmail={usersEmail} />
       ) : (
         <SelectOrganization organizations={organizations} selectOrganization={setOrganization} />
       )}

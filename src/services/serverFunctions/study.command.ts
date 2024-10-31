@@ -11,10 +11,17 @@ export const CreateStudyCommandValidation = z
       })
       .trim()
       .min(1, 'name'),
+    validator: z
+      .string({
+        required_error: 'validator',
+        invalid_type_error: 'validator',
+      })
+      .email('validator')
+      .trim(),
     startDate: z.custom<Dayjs>((val) => val instanceof dayjs, 'startDate'),
     endDate: z.custom<Dayjs>((val) => val instanceof dayjs, 'endDate'),
     level: z.nativeEnum(Level, { required_error: 'level' }),
-    isPublic: z.boolean(),
+    isPublic: z.string(),
     exports: z.object({
       [Export.Beges]: z.nativeEnum(ControlMode).or(z.literal(false)),
       [Export.GHGP]: z.nativeEnum(ControlMode).or(z.literal(false)),
@@ -32,6 +39,13 @@ export const CreateStudyCommandValidation = z
   )
 
 export type CreateStudyCommand = z.infer<typeof CreateStudyCommandValidation>
+
+export const ChangeStudyPublicStatusCommandValidation = z.object({
+  studyId: z.string(),
+  isPublic: z.string(),
+})
+
+export type ChangeStudyPublicStatusCommand = z.infer<typeof ChangeStudyPublicStatusCommandValidation>
 
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),

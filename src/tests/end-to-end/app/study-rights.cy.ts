@@ -13,6 +13,9 @@ describe('Create study', () => {
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').should('be.visible').type('Study with rights')
+    cy.getByTestId('new-validator-name').click()
+    cy.get('[data-option-index="1"]').click()
+
     cy.getByTestId('new-study-endDate').within(() => {
       cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
     })
@@ -23,7 +26,7 @@ describe('Create study', () => {
     cy.getByTestId('studies-Study with rights').click()
     cy.getByTestId('study-rights-button').click()
 
-    cy.getByTestId('study-rights-table-line').contains('bc-default-0@yopmail.comÉditeur')
+    cy.getByTestId('study-rights-table-line').contains('bc-default-0@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line').within(() => {
       cy.get('input').should('be.disabled')
     })
@@ -53,9 +56,9 @@ describe('Create study', () => {
     cy.getByTestId('study-rights-create-button').click()
     cy.wait('@create')
 
-    cy.getByTestId('study-rights-table-line').eq(2).contains('bc-admin-1@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comLecteur')
     cy.getByTestId('study-rights-table-line')
-      .eq(2)
+      .eq(0)
       .within(() => {
         cy.get('input').should('not.be.disabled')
         cy.get('.MuiSelect-select').click()
@@ -64,9 +67,9 @@ describe('Create study', () => {
 
     cy.reload()
 
-    cy.getByTestId('study-rights-table-line').eq(2).contains('bc-admin-1@yopmail.comÉditeur')
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comÉditeur')
     cy.getByTestId('study-rights-table-line')
-      .eq(2)
+      .eq(0)
       .within(() => {
         cy.get('input').should('not.be.disabled')
       })
@@ -88,7 +91,7 @@ describe('Create study', () => {
     cy.getByTestId('select-study-role').should('have.length', 3)
 
     cy.getByTestId('study-rights-table-line')
-      .eq(0)
+      .eq(2)
       .within(() => {
         cy.get('input').should('not.be.disabled')
       })
@@ -98,7 +101,7 @@ describe('Create study', () => {
         cy.get('input').should('not.be.disabled')
       })
     cy.getByTestId('study-rights-table-line')
-      .eq(2)
+      .eq(0)
       .within(() => {
         cy.get('input').should('be.disabled')
       })

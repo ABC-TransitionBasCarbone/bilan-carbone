@@ -1,4 +1,4 @@
-import { Level, PrismaClient, Role } from '@prisma/client'
+import { Level, PrismaClient, Role, StudyRole } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { signPassword } from '@/services/auth'
 import { ACTUALITIES } from './legacy_data/actualities'
@@ -51,7 +51,7 @@ const users = async () => {
   })
 
   const levels = Object.keys(Level)
-  await prisma.user.createMany({
+  const users = await prisma.user.createManyAndReturn({
     data: await Promise.all(
       Object.keys(Role).flatMap((role) => [
         ...Array.from({ length: 3 }).map(async (_, index) => {
@@ -83,6 +83,26 @@ const users = async () => {
       ]),
     ),
   })
+
+  await Promise.all(
+    Array.from({ length: 20 }).map(() => {
+      const creator = faker.helpers.arrayElement(users)
+      return prisma.study.create({
+        data: {
+          createdById: creator.id,
+          startDate: new Date(),
+          endDate: faker.date.future(),
+          isPublic: faker.datatype.boolean(),
+          level: faker.helpers.enumValue(Level),
+          name: faker.lorem.words({ min: 2, max: 5 }),
+          organizationId: creator.organizationId,
+          allowedUsers: {
+            create: { role: StudyRole.Validator, userId: creator.id },
+          },
+        },
+      })
+    }),
+  )
 }
 
 const actualities = async () => {

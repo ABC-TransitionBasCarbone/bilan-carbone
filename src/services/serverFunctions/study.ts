@@ -1,34 +1,51 @@
 'use server'
 
-import { CreateStudyCommand, NewStudyRightCommand } from './study.command'
+import { ChangeStudyPublicStatusCommand, CreateStudyCommand, NewStudyRightCommand } from './study.command'
 import { auth } from '../auth'
-import { createStudy, createUserOnStudy, getStudyWithRightsById, updateUserOnStudy } from '@/db/study'
+import { createStudy, createUserOnStudy, getStudyWithRightsById, updateStudy, updateUserOnStudy } from '@/db/study'
 import { ControlMode, Export, Prisma, StudyRole } from '@prisma/client'
 import dayjs from 'dayjs'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canAddRightOnStudy, canCreateStudy } from '../permissions/study'
+import { canAddRightOnStudy, canChangePublicStatus, canCreateStudy } from '../permissions/study'
 import { getUserByEmail } from '@/db/user'
 
-export const createStudyCommand = async ({ organizationId, ...command }: CreateStudyCommand) => {
+export const createStudyCommand = async ({ organizationId, validator, ...command }: CreateStudyCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
+
+  const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
+  if (validator === session.user.email) {
+    rights.push({
+      role: StudyRole.Validator,
+      userId: session.user.id,
+    })
+  } else {
+    const userValidator = await getUserByEmail(validator)
+    if (!userValidator) {
+      return NOT_AUTHORIZED
+    }
+
+    rights.push({
+      role: StudyRole.Editor,
+      userId: session.user.id,
+    })
+    rights.push({
+      role: StudyRole.Validator,
+      userId: userValidator.id,
+    })
+  }
+
   const study = {
     ...command,
     createdBy: { connect: { id: session.user.id } },
     startDate: dayjs(command.startDate).toDate(),
     endDate: dayjs(command.endDate).toDate(),
     organization: { connect: { id: organizationId } },
+    isPublic: command.isPublic === 'true',
     allowedUsers: {
-      create: {
-        role: 'Editor',
-        user: {
-          connect: {
-            id: session.user.id,
-          },
-        },
-      },
+      createMany: { data: rights },
     },
     exports: {
       createMany: {
@@ -52,6 +69,24 @@ export const createStudyCommand = async ({ organizationId, ...command }: CreateS
     console.error(e)
     return 'Something went wrong...'
   }
+}
+
+export const changeStudyPublicStatus = async (command: ChangeStudyPublicStatusCommand) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return NOT_AUTHORIZED
+  }
+
+  const studyWithRights = await getStudyWithRightsById(command.studyId)
+
+  if (!studyWithRights) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!canChangePublicStatus(session.user, studyWithRights)) {
+    return NOT_AUTHORIZED
+  }
+  await updateStudy(command.studyId, { isPublic: command.isPublic === 'true' })
 }
 
 export const newStudyRight = async (right: NewStudyRightCommand) => {
@@ -87,6 +122,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
   }
 
   const [studyWithRights, user] = await Promise.all([getStudyWithRightsById(studyId), getUserByEmail(email)])
+
   if (!studyWithRights || !user) {
     return NOT_AUTHORIZED
   }

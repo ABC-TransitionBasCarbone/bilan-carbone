@@ -44,6 +44,7 @@
     "new": {
       "title": "Informations sur la nouvelle étude",
       "name": "Nom de l'étude",
+      "validator": "Email du validateur",
       "start": "Début",
       "end": "Fin",
       "level": "Type de Bilan Carbone®",
@@ -61,6 +62,7 @@
       "create": "Créer l'étude",
       "validation": {
         "name": "Veuillez renseigner un nom",
+        "validator": "Veuillez selectionner un validateur",
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
@@ -80,6 +82,8 @@
     },
     "title": "Étude",
     "rights": {
+      "isPublic": "L'étude est public",
+      "isPrivate": "L'étude est privée",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",
