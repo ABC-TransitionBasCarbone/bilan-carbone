@@ -73,7 +73,7 @@ model EmissionPost {
   emissionId String                 @map("emission_id")
   emission   Emission               @relation(fields: [emissionId], references: [id])
   metaData   EmissionPostMetaData[]
-	type       PostType
+  type       PostType
 
   totalCo2 Float  @map("total_co2")
   co2f     Float?

@@ -47,7 +47,6 @@ describe('Create emission', () => {
 
     cy.getByTestId('new-emission-unit').click()
     cy.get('[data-value="GWH"]').click()
-    // cy.getByTestId('new-emission-unit').type('T')
     cy.getByTestId('new-emission-source').type('Magic')
 
     cy.getByTestId('new-emission-co2f').should('not.exist')
