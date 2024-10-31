@@ -8,7 +8,6 @@ export const getAllValidEmissions = (organizationId: string) =>
       OR: [{ organizationId: null }, { organizationId }],
     },
     select: {
-      id: true,
       status: true,
       totalCo2: true,
       location: true,

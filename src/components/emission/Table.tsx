@@ -49,7 +49,6 @@ const locationFuseOptions = {
     {
       name: 'location',
       weight: 1,
-      getFn: (emission: EmissionWithMetaData) => emission.location || '',
     },
     {
       name: 'sub-location',
@@ -65,11 +64,12 @@ interface Props {
   emissions: EmissionWithMetaData[]
 }
 
+const sources = Object.values(Import).map((source) => source)
+
 const EmissionsTable = ({ emissions }: Props) => {
   const t = useTranslations('emissions.table')
   const [filter, setFilter] = useState('')
   const [locationFilter, setLocationFilter] = useState('')
-  const sources = Object.values(Import).map((source) => source)
   const [filteredSources, setSources] = useState<Import[]>(sources)
 
   const columns = useMemo(() => {
@@ -110,7 +110,7 @@ const EmissionsTable = ({ emissions }: Props) => {
           }
         },
       },
-      { header: t('valeur'), accessorKey: 'totalCo2' },
+      { header: t('value'), accessorKey: 'totalCo2' },
       { header: t('unit'), accessorKey: 'unit' },
       { header: t('quality'), accessorKey: 'quality' },
       { header: t('status'), accessorFn: (emission: EmissionWithMetaData) => t(emission.status) },
@@ -141,10 +141,11 @@ const EmissionsTable = ({ emissions }: Props) => {
     }
     const searchResults = filter ? fuse.search(filter).map(({ item }) => item) : emissions
 
-    const locationFuse = new Fuse(searchResults, locationFuseOptions)
-    const results = locationFilter ? locationFuse.search(locationFilter).map(({ item }) => item) : searchResults
-
-    return results
+    if (locationFilter) {
+      const locationFuse = new Fuse(searchResults, locationFuseOptions)
+      return locationFuse.search(locationFilter).map(({ item }) => item)
+    }
+    return searchResults
   }, [filter, locationFilter])
 
   const data = useMemo(() => {
@@ -179,6 +180,9 @@ const EmissionsTable = ({ emissions }: Props) => {
     setSources(value as Import[])
   }
 
+  const statusSelectorRenderValue = () =>
+    filteredSources.length === sources.length ? t('all') : filteredSources.map((source) => t(source)).join(', ')
+
   return (
     <>
       <div className={classNames(styles.header, 'justify-between align-center wrap-reverse mb1')}>
@@ -198,14 +202,14 @@ const EmissionsTable = ({ emissions }: Props) => {
             placeholder={t('location-search')}
           />
           <FormControl className={styles.selector}>
-            <InputLabel id="emissions-sources-selector">{t('source')}</InputLabel>
+            <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>
             <Select
               id="emissions-sources-selector"
               labelId="emissions-sources-selector"
               value={filteredSources}
               onChange={selectLocations}
-              input={<OutlinedInput label={t('source')} />}
-              renderValue={(filteredSources) => filteredSources.map((source) => t(source)).join(', ')}
+              input={<OutlinedInput label={t('sources')} />}
+              renderValue={statusSelectorRenderValue}
               multiple
             >
               {sources.map((source, i) => (
@@ -259,7 +263,10 @@ const EmissionsTable = ({ emissions }: Props) => {
           {'>>'}
         </Button>
         <p>
-          {t('page', { page: table.getState().pagination.pageIndex + 1, total: table.getPageCount().toLocaleString() })}
+          {t('page', {
+            page: table.getState().pagination.pageIndex + 1,
+            total: (table.getPageCount() || 1).toLocaleString(),
+          })}
         </p>
         {t('goTo')}
         <TextField
