@@ -68,6 +68,7 @@ const sources = Object.values(Import).map((source) => source)
 
 const EmissionsTable = ({ emissions }: Props) => {
   const t = useTranslations('emissions.table')
+  const tUnits = useTranslations('units')
   const [filter, setFilter] = useState('')
   const [locationFilter, setLocationFilter] = useState('')
   const [filteredSources, setSources] = useState<Import[]>(sources)
@@ -111,9 +112,7 @@ const EmissionsTable = ({ emissions }: Props) => {
         },
       },
       { header: t('value'), accessorKey: 'totalCo2' },
-      { header: t('unit'), accessorKey: 'unit' },
-      { header: t('quality'), accessorKey: 'quality' },
-      { header: t('status'), accessorFn: (emission: EmissionWithMetaData) => t(emission.status) },
+      { header: t('unit'), accessorFn: (emission: EmissionWithMetaData) => tUnits(emission.unit) },
       {
         header: t('location'),
         accessorFn: (emission: EmissionWithMetaData) => [emission.location, emission.metaData?.location].join(' '),

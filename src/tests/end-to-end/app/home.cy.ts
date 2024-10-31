@@ -4,7 +4,7 @@ describe('Home page', () => {
 
     cy.getByTestId('home-actualities').should('be.visible')
     cy.getByTestId('actualities-title').should('be.visible')
-    cy.getByTestId('actualities-title').contains('Mes actualités')
+    cy.getByTestId('actualities-title').contains('Actualités')
 
     cy.getByTestId('actuality').should('have.length.gt', 0)
   })
@@ -23,7 +23,7 @@ describe('Home page', () => {
 
     cy.getByTestId('home-actualities').should('be.visible')
     cy.getByTestId('actualities-title').should('be.visible')
-    cy.getByTestId('actualities-title').contains('Mes actualités')
+    cy.getByTestId('actualities-title').contains('Actualités')
 
     cy.getByTestId('actuality').should('have.length.gt', 0)
   })

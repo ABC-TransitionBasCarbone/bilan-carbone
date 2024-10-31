@@ -1,52 +1,55 @@
 {
   "actuality": {
-    "title": "My actualities",
-    "no-item": "No actualities yet"
+    "title": "News",
+    "no-item": "No news at the moment"
   },
   "legal-notices": {
     "profile": "Back to profile"
   },
   "locale": {
     "en": "English",
-    "fr": "Français",
-    "selector": "Select language"
+    "fr": "French",
+    "selector": "Site language"
   },
   "login": {
     "welcome": "Welcome",
     "form": {
-      "login": "Log in",
+      "login": "Login",
       "email": "Email",
       "password": "Password",
-      "forgot-password": "Forgotten password",
+      "forgot-password": "Forgot password",
       "reset": "Reset"
     }
   },
   "navigation": {
     "factors": "Emission factors",
-    "home": "Home",
     "help": "Help",
+    "home": "Home",
     "logout": "Logout",
     "profile": "Profile",
     "study": "Study",
-    "team": "Team"
+    "team": "Team",
+    "organization": "Organization"
   },
   "profile": {
-    "legal-notices": "Legal notices"
+    "title": "My profile",
+    "legal-notices": "Legal notices",
+    "logout": "Log out"
   },
   "study": {
+    "change-rights": "Modify study rights",
     "back-to-home": "Back to home",
     "create": "New study",
     "my-studies": "My studies",
     "new": {
+      "title": "New study information",
       "name": "Study name",
+      "validator": "Validator email",
       "start": "Start",
       "end": "End",
-      "type": "Bilan Carbone® type",
-      "Initial": "Initial",
-      "Standard": "Standard",
-      "Advanced": "Advanced",
+      "level": "Carbon Footprint Type",
       "exports": "Exports",
-      "Beges": "Bilan GES Reglementaire",
+      "Beges": "Regulatory GHG Inventory",
       "GHGP": "GHG Protocol",
       "ISO14069": "ISO 14069",
       "control": "Control mode",
@@ -58,19 +61,222 @@
       "public": "Public",
       "create": "Create study",
       "validation": {
-        "name": "Please enter a name",
-        "startDate": "Please select a start date",
-        "endDate": "Please select an end date",
-        "endDateBeforStartDate": "The end date must be greater than the start date",
-        "type": "Please select a Bilan Carbone type"
+        "name": "Please provide a name",
+        "validator": "Please select a validator",
+        "startDate": "Please select a study start date",
+        "endDate": "Please select a study end date",
+        "endDateBeforStartDate": "The end date must be after the start date",
+        "level": "Please select the Carbon Footprint Type"
       }
     },
     "not-found": "Study not found",
     "organization": {
-      "title": "Which organization does this study belong to?",
-      "sites": "organization's sites",
+      "title": "Which organization is involved in the study?",
+      "sites": "Organization sites",
       "next": "Next"
     },
-    "title": "Study"
+    "role": {
+      "Validator": "Validator",
+      "Editor": "Editor",
+      "Reader": "Reader"
+    },
+    "title": "Study",
+    "rights": {
+      "isPublic": "The study is public",
+      "isPrivate": "The study is private",
+      "new": {
+        "title": "Add a person to the study: {name}",
+        "email": "Email",
+        "role": "Role",
+        "create": "Add person"
+      },
+      "table": {
+        "title": "Study rights: {name}",
+        "new-right": "Add a person to the study",
+        "email": "Email",
+        "role": "Role"
+      }
+    }
+  },
+  "emissions": {
+    "create": {
+      "title": "Add an emission factor",
+      "create": "Add emission factor",
+      "name": "Name",
+      "attribute": "Details",
+      "unit": "Unit",
+      "source": "Source",
+      "detailedGES": "Do you know the breakdown of GHGs?",
+      "yes": "Yes",
+      "no": "No",
+      "totalCo2": "Total CO₂ emission",
+      "co2f": "CO2F",
+      "ch4f": "CH4F",
+      "ch4b": "CH4B",
+      "n2o": "N2O",
+      "co2b": "CO2B",
+      "sf6": "SF6",
+      "hfc": "HFC",
+      "pfc": "PFC",
+      "otherGES": "Other gases",
+      "comment": "Comments",
+      "validation": {
+        "name": "Please provide a name",
+        "unit": "Please provide a unit",
+        "source": "Please provide a source",
+        "totalCo2": "Please provide a total emission"
+      }
+    },
+    "title": "Emission factors",
+    "loading": "Loading emission factors",
+    "table": {
+      "add": "Add an emission factor",
+      "all": "All",
+      "Archived": "Archived",
+      "BaseEmpreinte": "Base Empreinte",
+      "detail": "Details",
+      "goTo": "Go to page",
+      "items": "Items per page",
+      "location": "Location",
+      "location-search": "Search location",
+      "Manual": "Manual",
+      "name": "Name",
+      "none": "None",
+      "per": "per",
+      "page": "Page {page} of {total}",
+      "quality": "Quality",
+      "search": "Search an emission factor",
+      "showing": "Showing {number} rows of {total}",
+      "source": "Source",
+      "sources": "Sources",
+      "status": "Status",
+      "unit": "Unit",
+      "value": "Value",
+      "Valid": "Valid"
+    }
+  },
+  "level": {
+    "Initial": "Initial",
+    "Standard": "Standard",
+    "Advanced": "Advanced"
+  },
+  "role": {
+    "SUPER_ADMIN": "Global Administrator",
+    "ADMIN": "Administrator",
+    "GESTIONNAIRE": "Manager",
+    "DEFAULT": "Collaborator"
+  },
+  "team": {
+    "title": "My organization",
+    "pending": "Pending invitations",
+    "invitation-date": "Invitation sent on",
+    "delete": "Delete user",
+    "resend": "Resend invitation",
+    "table": {
+      "title": "My collaborators",
+      "new-user": "Invite a user",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "level": "Training",
+      "role": "Role"
+    }
+  },
+  "new-member": {
+    "title": "Invite a user",
+    "email": "Email",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "role": "Role",
+    "level": "Training",
+    "create": "Invite user",
+    "validation": {
+      "email": "Please provide a valid email",
+      "firstName": "Please provide a first name",
+      "lastName": "Please provide a last name"
+    }
+  },
+  "units": {
+    "A4_SHEET_100": "100 A4 sheets",
+    "KM_100": "100km",
+    "ACTIVE": "active",
+    "APPAREL": "device",
+    "RACE_KM": "race.km",
+    "EURO_SPENT": "euro spent",
+    "FRANC_CFP": "CFP Franc",
+    "GJ_PCI": "GJ PCI",
+    "GJ_PCS": "GJ PCS",
+    "HA": "ha",
+    "HA_YEAR": "ha.year",
+    "HA_CLEMENTINE": "ha of clementine",
+    "HOUR": "hour",
+    "KEURO": "keuro",
+    "KG": "kg",
+    "KG_BIOGNC": "kg BioGNC",
+    "KG_NITROGEN_SPREAD": "kg of nitrogen spread",
+    "KG_DCO_REMOVED": "kg DCO removed",
+    "KG_BIOWASTE": "kg of biowaste",
+    "KG_SOFT_WHEAT_15": "kg of soft wheat at 15% humidity",
+    "KG_TREATED_LEATHER": "kg of treated leather",
+    "KG_FABA_BEAN_15": "kg of faba bean at 15% humidity",
+    "KG_GREEN_COFFEE_BEANS_NO_PULP": "kg of green coffee beans without pulp",
+    "KG_RAPESEED_9": "kg of rapeseed at 9% humidity",
+    "KG_WOOL": "kg of wool",
+    "KG_MILK": "kg of milk",
+    "KG_CORN_28": "kg of corn at 28% humidity",
+    "KG_ACTIVE_MATERIAL": "kg of active material",
+    "KG_RAW_MATERIAL": "kg of raw material",
+    "KG_RAW_MATERIAL_12": "kg of raw material (12% humidity)",
+    "KG_RAW_MATERIAL_15": "kg of raw material (15% humidity)",
+    "KG_RAW_MATERIAL_74": "kg of raw material (74% humidity)",
+    "KG_RAW_MATERIAL_80": "kg of raw material (80% humidity)",
+    "KG_RAW_MATERIAL_9": "kg of raw material (9% humidity)",
+    "KG_RAW_MATERIAL_16_SUGAR": "kg of raw material (16% sugar)",
+    "KG_RAW_MATERIAL_NO_PULP": "kg of raw material (no pulp)",
+    "KG_DRY_MATTER": "kg of dry matter",
+    "KG_NET_WEIGHT": "kg of net weight",
+    "KG_FUEL": "kg of fuel",
+    "KG_CO2E": "kg of CO2e",
+    "KG_PETROL_EQU": "kg petrol eq",
+    "L": "L",
+    "L_ETHANOL100": "L Ethanol100",
+    "L_INGREDIENTS_70_ALCOHOL": "L of ingredients at 70% alcohol",
+    "L_RAW_MATERIAL": "L of raw material",
+    "L_RAW_MATERIAL_60_ALCOHOL": "L of raw material at 60% alcohol",
+    "L_RAW_MATERIAL_40_ALCOHOL": "L of raw material at 40% alcohol",
+    "L_RAW_MATERIAL_30_ALCOHOL": "L of raw material at 30% alcohol",
+    "L_RAW_MATERIAL_17_ALCOHOL": "L of raw material at 17% alcohol",
+    "L_PETROL_EQUIV": "L petrol eq",
+    "M": "m",
+    "M2": "m²",
+    "M2_HA_YEAR": "m².ha.year",
+    "M2_HA": "m².ha",
+    "M3": "m³",
+    "KM": "km",
+    "KWH": "kWh",
+    "MONTH": "month",
+    "PASSENGER_KM": "passenger.km",
+    "PRODUCT": "product",
+    "T": "t",
+    "TONNE_KM": "ton.km",
+    "TONNE_KM_ROAD": "ton.km road",
+    "TONNE_KM_RAIL": "ton.km rail",
+    "TONNE_KM_INLAND": "ton.km inland",
+    "TONNE_KM_WATER": "ton.km water",
+    "TONNE_KM_MARITIME": "ton.km maritime",
+    "YEAR": "year"
+  },
+  "organization": {
+    "title": "Organization",
+    "my-organization": "My organization",
+    "modify": "Edit",
+    "name": "Name: ",
+    "sites": {
+      "title": "Organization sites",
+      "no-sites": "No sites configured for the organization",
+      "name": "Name",
+      "etp": "Employees",
+      "ca": "Revenue"
+    }
   }
 }

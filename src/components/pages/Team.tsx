@@ -3,7 +3,6 @@ import React from 'react'
 import Team from '../team/TeamTable'
 import { TeamMember } from '@/db/user'
 import { User } from 'next-auth'
-import { Role } from '@prisma/client'
 import PendingInvitations from '../team/PendingInvitations'
 import Block from '../base/Block'
 
@@ -16,12 +15,7 @@ const TeamPage = ({ user, team }: Props) => {
   const t = useTranslations('team')
   return (
     <>
-      <Block
-        title={t('title')}
-        link={user.role !== Role.DEFAULT ? '/equipe/ajouter' : ''}
-        linkLabel={t('new-user')}
-        linkDataTestId="add-member-link"
-      />
+      <Block title={t('title')} as="h1" />
       <PendingInvitations team={team.filter((member) => !member.isActive)} user={user} />
       <Team team={team.filter((member) => member.isActive)} user={user} />
     </>

@@ -8,6 +8,7 @@ import { Role, StudyRole } from '@prisma/client'
 import { StudyWithRights } from '@/db/study'
 import Block from '@/components/base/Block'
 import SelectStudyRole from './SelectStudyRole'
+import StudyPublicStatus from './StudyPublicStatus'
 
 interface Props {
   user: User
@@ -72,6 +73,7 @@ const StudyRightsTable = ({ user, study }: Props) => {
       linkDataTestId="study-rights-change-button"
       title={t('title', { name: study.name })}
     >
+      <StudyPublicStatus study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
       <table aria-labelledby="study-rights-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

@@ -51,6 +51,15 @@ export const canReadStudy = async (
   return true
 }
 
+export const filterAllowedStudies = async (user: User, studies: Study[]) => {
+  const userWithAllowedStudies = await getUserByEmailWithAllowedStudies(user.email)
+
+  const allowedStudies = await Promise.all(
+    studies.map(async (study) => ((await canReadStudy(userWithAllowedStudies, study)) ? study : null)),
+  )
+  return allowedStudies.filter((study) => study !== null)
+}
+
 export const canCreateStudy = async (user: User, study: Prisma.StudyCreateInput, organizationId: string) => {
   const dbUser = await getUserByEmail(user.email)
 
