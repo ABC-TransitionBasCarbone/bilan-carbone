@@ -1,22 +1,22 @@
-import { type Prisma } from '@prisma/client'
+import { type Prisma, EmissionStatus } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getAllEmissions = (organizationId: string) =>
+export const getAllValidEmissions = (organizationId: string) =>
   prismaClient.emission.findMany({
     where: {
+      status: EmissionStatus.Valid,
       OR: [{ organizationId: null }, { organizationId }],
     },
     select: {
       status: true,
       totalCo2: true,
-      quality: true,
       location: true,
       source: true,
+      unit: true,
       metaData: {
         select: {
           language: true,
           title: true,
-          unit: true,
           attribute: true,
           comment: true,
           location: true,

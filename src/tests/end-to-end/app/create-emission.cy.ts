@@ -14,7 +14,8 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission').click()
 
     cy.getByTestId('new-emission-name').type('My new FE')
-    cy.getByTestId('new-emission-unit').type('Bug per test')
+    cy.getByTestId('new-emission-unit').click()
+    cy.get('[data-value="GWH"]').click()
     cy.getByTestId('new-emission-source').type('Magic')
     cy.getByTestId('new-emission-totalCo2').type('12')
 
@@ -43,7 +44,9 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission').click()
 
     cy.getByTestId('new-emission-name').type('My new detailed FE')
-    cy.getByTestId('new-emission-unit').type('Bug per test')
+
+    cy.getByTestId('new-emission-unit').click()
+    cy.get('[data-value="GWH"]').click()
     cy.getByTestId('new-emission-source').type('Magic')
 
     cy.getByTestId('new-emission-co2f').should('not.exist')
@@ -51,6 +54,9 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission-ch4b').should('not.exist')
     cy.getByTestId('new-emission-n2o').should('not.exist')
     cy.getByTestId('new-emission-co2b').should('not.exist')
+    cy.getByTestId('new-emission-sf6').should('not.exist')
+    cy.getByTestId('new-emission-hfc').should('not.exist')
+    cy.getByTestId('new-emission-pfc').should('not.exist')
     cy.getByTestId('new-emission-otherGES').should('not.exist')
 
     cy.getByTestId('new-emission-detailedGES-true').click()
@@ -65,12 +71,18 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission-n2o').type('4')
     cy.getByTestId('new-emission-co2b').should('exist')
     cy.getByTestId('new-emission-co2b').type('5')
+    cy.getByTestId('new-emission-sf6').should('exist')
+    cy.getByTestId('new-emission-sf6').type('6')
+    cy.getByTestId('new-emission-hfc').should('exist')
+    cy.getByTestId('new-emission-hfc').type('7')
+    cy.getByTestId('new-emission-pfc').should('exist')
+    cy.getByTestId('new-emission-pfc').type('8')
     cy.getByTestId('new-emission-otherGES').should('exist')
-    cy.getByTestId('new-emission-otherGES').type('6')
+    cy.getByTestId('new-emission-otherGES').type('9')
 
     cy.getByTestId('new-emission-totalCo2').within(() => {
       cy.get('input').should('be.disabled')
-      cy.get('input').should('have.value', '21')
+      cy.get('input').should('have.value', '45')
     })
 
     cy.getByTestId('new-emission-create-button').click()
@@ -81,7 +93,7 @@ describe('Create emission', () => {
 
     cy.getByTestId('cell-emission-name').should('be.visible')
     cy.getByTestId('cell-emission-name').should('have.text', 'My new detailed FE')
-    cy.getByTestId('cell-emission-totalCo2').should('have.text', '21')
+    cy.getByTestId('cell-emission-totalCo2').should('have.text', '45')
 
     cy.logout()
     cy.login('bc-default-2@yopmail.com', 'password-2')

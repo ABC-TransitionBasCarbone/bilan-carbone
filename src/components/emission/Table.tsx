@@ -80,10 +80,7 @@ const EmissionsTable = ({ emissions }: Props) => {
         },
       },
       { header: t('valeur'), accessorKey: 'totalCo2' },
-      {
-        header: t('unit'),
-        accessorFn: (emission: EmissionWithMetaData) => emission.metaData?.unit,
-      },
+      { header: t('unit'), accessorKey: 'unit' },
       { header: t('quality'), accessorKey: 'quality' },
       { header: t('status'), accessorFn: (emission: EmissionWithMetaData) => t(emission.status) },
       {
