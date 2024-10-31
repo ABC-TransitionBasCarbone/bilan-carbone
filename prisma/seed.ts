@@ -5,12 +5,12 @@ import { ACTUALITIES } from './legacy_data/actualities'
 
 const prisma = new PrismaClient()
 
-const emissions = async () => {
+const users = async () => {
+  await prisma.emissionPostMetaData.deleteMany()
+  await prisma.emissionPost.deleteMany()
   await prisma.emissionMetaData.deleteMany()
   await prisma.emission.deleteMany()
-}
 
-const users = async () => {
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
   await prisma.study.deleteMany()
@@ -107,7 +107,7 @@ const licenses = async () => {
 }
 
 const main = async () => {
-  await Promise.all([actualities(), licenses(), users(), emissions()])
+  await Promise.all([actualities(), licenses(), users()])
 }
 
 main()

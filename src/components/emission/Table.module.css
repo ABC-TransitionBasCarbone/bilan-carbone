@@ -1,6 +1,17 @@
 .header {
   gap: 2rem;
-  flex-wrap: wrap-reverse;
+}
+
+.selector {
+  width: 10rem;
+}
+
+.pageInput {
+  min-width: 5rem;
+}
+
+.filters {
+  gap: 1rem;
 }
 
 .searchInput {
