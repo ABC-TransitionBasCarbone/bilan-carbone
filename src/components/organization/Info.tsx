@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { User } from 'next-auth'
 import { Role } from '@prisma/client'
 import Sites from './Sites'
+import styles from './Info.module.css'
 
 interface Props {
   user: User
@@ -19,7 +20,9 @@ const OrganizationInfo = ({ organization, user }: Props) => {
       link={user.role === Role.ADMIN ? `/organisations/${organization.id}/modifier` : ''}
       linkLabel={t('modify')}
     >
-      {organization.name}
+      <p>
+        <span className={styles.info}>{t('name')}</span> {organization.name}
+      </p>
       <Sites sites={organization.sites} />
     </Block>
   )

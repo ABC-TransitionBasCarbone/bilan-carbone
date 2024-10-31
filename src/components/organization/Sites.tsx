@@ -37,7 +37,9 @@ const Sites = ({ sites }: Props) => {
     data: sites,
     getCoreRowModel: getCoreRowModel(),
   })
-  return (
+  return sites.length === 0 ? (
+    <p className="title-h3">{t('no-sites')}</p>
+  ) : (
     <table className="mt1">
       <caption>{t('title')}</caption>
       <thead>

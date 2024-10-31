@@ -339,8 +339,10 @@
     "title": "Organisation",
     "my-organization": "Mon organisation",
     "modify": "Modifier",
+    "name": "Nom : ",
     "sites": {
       "title": "Les sites de l'organisation",
+      "no-sites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "etp": "Employés",
       "ca": "Chiffre d'affaire"
