@@ -38,9 +38,9 @@ model Emission {
   ch4b     Float?
   n2o      Float?
   co2b     Float?
-  sf6       Float?
-  hfc       Float?
-  pfc       Float?
+  sf6      Float?
+  hfc      Float?
+  pfc      Float?
   otherGES Float? @map("other_ges")
   unit     Unit?
 
@@ -73,6 +73,7 @@ model EmissionPost {
   emissionId String                 @map("emission_id")
   emission   Emission               @relation(fields: [emissionId], references: [id])
   metaData   EmissionPostMetaData[]
+	type       PostType
 
   totalCo2 Float  @map("total_co2")
   co2f     Float?
@@ -91,7 +92,7 @@ model EmissionPost {
 model EmissionPostMetaData {
   emissionPost   EmissionPost @relation(fields: [emissionPostId], references: [id])
   emissionPostId String       @map("emission_post_id")
-  title          String?
+  title          String
   language       String
 
   @@id([emissionPostId, language])
