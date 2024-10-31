@@ -225,7 +225,7 @@ const EmissionsTable = ({ emissions }: Props) => {
           {t('add')}
         </LinkButton>
       </div>
-      <table className={styles.table}>
+      <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

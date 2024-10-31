@@ -41,6 +41,7 @@ export const getStudyWithRightsById = (id: string) => {
           },
           role: true,
         },
+        orderBy: { user: { email: 'asc' } },
       },
     },
   })
