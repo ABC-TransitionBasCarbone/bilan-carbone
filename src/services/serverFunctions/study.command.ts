@@ -11,6 +11,13 @@ export const CreateStudyCommandValidation = z
       })
       .trim()
       .min(1, 'name'),
+    validator: z
+      .string({
+        required_error: 'validator',
+        invalid_type_error: 'validator',
+      })
+      .email('validator')
+      .trim(),
     startDate: z.custom<Dayjs>((val) => val instanceof dayjs, 'startDate'),
     endDate: z.custom<Dayjs>((val) => val instanceof dayjs, 'endDate'),
     level: z.nativeEnum(Level, { required_error: 'level' }),

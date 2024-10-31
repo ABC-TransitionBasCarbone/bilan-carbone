@@ -52,9 +52,7 @@ const StudyRightsTable = ({ user, study }: Props) => {
     } else {
       columns.push({
         header: t('role'),
-        accessorFn: (right: StudyWithRights['allowedUsers'][0]) => {
-          return tStudyRole(right.role)
-        },
+        accessorFn: (right: StudyWithRights['allowedUsers'][0]) => tStudyRole(right.role),
       })
     }
     return columns

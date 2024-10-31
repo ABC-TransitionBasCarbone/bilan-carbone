@@ -9,11 +9,34 @@ import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddRightOnStudy, canChangePublicStatus, canCreateStudy } from '../permissions/study'
 import { getUserByEmail } from '@/db/user'
 
-export const createStudyCommand = async ({ organizationId, ...command }: CreateStudyCommand) => {
+export const createStudyCommand = async ({ organizationId, validator, ...command }: CreateStudyCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
+
+  const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
+  if (validator === session.user.email) {
+    rights.push({
+      role: StudyRole.Validator,
+      userId: session.user.id,
+    })
+  } else {
+    const userValidator = await getUserByEmail(validator)
+    if (!userValidator) {
+      return NOT_AUTHORIZED
+    }
+
+    rights.push({
+      role: StudyRole.Editor,
+      userId: session.user.id,
+    })
+    rights.push({
+      role: StudyRole.Validator,
+      userId: userValidator.id,
+    })
+  }
+
   const study = {
     ...command,
     createdBy: { connect: { id: session.user.id } },
@@ -22,14 +45,7 @@ export const createStudyCommand = async ({ organizationId, ...command }: CreateS
     organization: { connect: { id: organizationId } },
     isPublic: command.isPublic === 'true',
     allowedUsers: {
-      create: {
-        role: 'Editor',
-        user: {
-          connect: {
-            id: session.user.id,
-          },
-        },
-      },
+      createMany: { data: rights },
     },
     exports: {
       createMany: {

@@ -47,9 +47,9 @@ export const getStudyWithRightsById = (id: string) => {
 }
 export type StudyWithRights = Exclude<AsyncReturnType<typeof getStudyWithRightsById>, null>
 
-export const createUserOnStudy = (rigth: Prisma.UserOnStudyCreateInput) =>
+export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
   prismaClient.userOnStudy.create({
-    data: rigth,
+    data: right,
   })
 
 export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRole) =>
