@@ -1,7 +1,8 @@
-import { prismaClient } from '../db/client'
-import { EmissionStatus, Import, PostType, Unit } from '@prisma/client'
-import { UNITS_MATRIX, POST_TYPE_MATRIX } from './history_units'
+import { prismaClient } from '../../db/client'
+import { EmissionStatus, Import, PostType, SubPost, Unit } from '@prisma/client'
+import { UNITS_MATRIX, POST_TYPE_MATRIX } from './historyUnits'
 import axios, { AxiosResponse } from 'axios'
+import { elementsBySubPost } from './posts.config'
 
 type EmissionResponse = {
   total: number
@@ -184,6 +185,9 @@ const saveEmissions = async (emissions: EmissionResponse['results']) =>
         pfc: 0,
         otherGES: emission.Autres_GES,
         unit: getUnit(emission.Unité_français),
+        subPosts: Object.entries(elementsBySubPost)
+          .filter(([, elements]) => elements.some((element) => element === emission["Identifiant_de_l'élément"]))
+          .map(([subPost]) => subPost as SubPost),
         metaData: {
           createMany: {
             data: [
