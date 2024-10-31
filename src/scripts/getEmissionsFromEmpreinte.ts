@@ -238,70 +238,82 @@ const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
     },
   })
 
-  await Promise.all(
-    posts.map((post) => {
-      const emission = emissions.find((emission) => emission.importedId === post["Identifiant_de_l'élément"])
-      if (!emission) {
-        console.error('No emission found for ' + post["Identifiant_de_l'élément"])
-        throw new Error('No emission found for ' + post["Identifiant_de_l'élément"])
+  for (const i in posts) {
+    if (Number(i) % 10 === 0) {
+      console.log(`Save post: ${i}/${posts.length}`)
+    }
+    const post = posts[i]
+    const emission = emissions.find((emission) => emission.importedId === post["Identifiant_de_l'élément"])
+    if (!emission) {
+      console.error('No emission found for ' + post["Identifiant_de_l'élément"])
+      throw new Error('No emission found for ' + post["Identifiant_de_l'élément"])
+    }
+
+    const metaData = []
+    if (post.Nom_poste_français) {
+      metaData.push({ title: post.Nom_poste_français, language: 'fr' })
+    }
+    if (post.Nom_poste_anglais) {
+      metaData.push({ title: post.Nom_poste_anglais, language: 'en' })
+    }
+
+    const data: EmissionPostDataType = {
+      emissionId: emission.id,
+      totalCo2: post.Total_poste_non_décomposé,
+      co2f: post.CO2f,
+      ch4f: post.CH4f,
+      ch4b: post.CH4b,
+      n2o: post.N2O,
+      co2b: post.CO2b,
+      sf6: 0,
+      hfc: 0,
+      pfc: 0,
+      otherGES: post.Autres_GES,
+      type: getPostType(post.Type_poste),
+      metaData:
+        metaData.length > 0
+          ? {
+              createMany: {
+                data: metaData,
+              },
+            }
+          : undefined,
+    }
+    if (!post.Nom_poste_français && !post.Nom_poste_anglais) {
+      delete data.metaData
+    }
+    if (post.Valeur_gaz_supplémentaire_1) {
+      const type = post.Code_gaz_supplémentaire_1 || (emission.sf6 ? 'SF6' : 'Divers')
+      if (type === 'Divers') {
+        data.otherGES = post.Valeur_gaz_supplémentaire_1 + data.otherGES
       }
-      const data: EmissionPostDataType = {
-        emissionId: emission.id,
-        totalCo2: post.Total_poste_non_décomposé,
-        co2f: post.CO2f,
-        ch4f: post.CH4f,
-        ch4b: post.CH4b,
-        n2o: post.N2O,
-        co2b: post.CO2b,
-        sf6: 0,
-        hfc: 0,
-        pfc: 0,
-        otherGES: post.Autres_GES,
-        type: getPostType(post.Type_poste),
-        metaData: {
-          createMany: {
-            data: [
-              { title: post.Nom_poste_français || '', language: 'fr' },
-              { title: post.Nom_poste_anglais || '', language: 'en' },
-            ],
-          },
-        },
+      if (type === 'SF6') {
+        data.sf6 = post.Valeur_gaz_supplémentaire_1
       }
-      if (!post.Nom_poste_français && !post.Nom_poste_anglais) {
-        delete data.metaData
+    }
+    if (post.Valeur_gaz_supplémentaire_2) {
+      const type = post.Code_gaz_supplémentaire_2 || (emission.sf6 ? 'SF6' : 'Divers')
+      if (type === 'Divers') {
+        data.otherGES = post.Valeur_gaz_supplémentaire_2 + data.otherGES
       }
-      if (post.Valeur_gaz_supplémentaire_1) {
-        const type = post.Code_gaz_supplémentaire_1 || (emission.sf6 ? 'SF6' : 'Divers')
-        if (type === 'Divers') {
-          data.otherGES = post.Valeur_gaz_supplémentaire_1 + data.otherGES
-        }
-        if (type === 'SF6') {
-          data.sf6 = post.Valeur_gaz_supplémentaire_1
-        }
+      if (type === 'SF6') {
+        data.sf6 = post.Valeur_gaz_supplémentaire_2
       }
-      if (post.Valeur_gaz_supplémentaire_2) {
-        const type = post.Code_gaz_supplémentaire_2 || (emission.sf6 ? 'SF6' : 'Divers')
-        if (type === 'Divers') {
-          data.otherGES = post.Valeur_gaz_supplémentaire_2 + data.otherGES
-        }
-        if (type === 'SF6') {
-          data.sf6 = post.Valeur_gaz_supplémentaire_2
-        }
-      }
-      return prismaClient.emissionPost.create({ data })
-    }),
-  )
+    }
+    await prismaClient.emissionPost.create({ data })
+  }
 }
 
 const main = async () => {
-  await prismaClient.emissionPostMetaData.deleteMany()
+  await Promise.all([prismaClient.emissionPostMetaData.deleteMany(), prismaClient.emissionMetaData.deleteMany()])
   await prismaClient.emissionPost.deleteMany()
-  await prismaClient.emissionMetaData.deleteMany()
   await prismaClient.emission.deleteMany()
+
   let posts: EmissionResponse['results'] = []
   let url: string | undefined =
     `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}`
   while (url) {
+    console.log(url)
     const emissions: AxiosResponse<EmissionResponse> = await axios.get<EmissionResponse>(url)
     const validEmissions = emissions.data.results.filter((emission) =>
       validStatus.includes(emission["Statut_de_l'élément"]),
