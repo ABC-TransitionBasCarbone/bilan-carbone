@@ -4,17 +4,20 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import React, { useEffect, useState } from 'react'
-import { FormTextField } from '@/components/form/TextField'
-import Button from '@/components/base/Button'
 import { useRouter } from 'next/navigation'
+import { Unit } from '@prisma/client'
 import { CreateEmissionCommand, CreateEmissionCommandValidation } from '@/services/serverFunctions/emission.command'
 import { createEmissionCommand } from '@/services/serverFunctions/emission'
 import Form from '@/components/base/Form'
-import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+import Button from '@/components/base/Button'
+import { FormSelect } from '@/components/form/Select'
+import { FormTextField } from '@/components/form/TextField'
+import { FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup } from '@mui/material'
 
 const NewEmissionForm = () => {
   const router = useRouter()
   const t = useTranslations('emissions.create')
+  const tUnit = useTranslations('units')
   const [error, setError] = useState('')
   const [detailedGES, setDetailedGES] = useState(false)
 
@@ -32,6 +35,9 @@ const NewEmissionForm = () => {
       ch4b: 0,
       n2o: 0,
       co2b: 0,
+      sf6: 0,
+      hfc: 0,
+      pfc: 0,
       otherGES: 0,
       totalCo2: 0,
       comment: '',
@@ -69,13 +75,13 @@ const NewEmissionForm = () => {
         label={t('name')}
       />
       <FormTextField control={form.control} translation={t} name="attribute" label={t('attribute')} />
-      <FormTextField
-        data-testid="new-emission-unit"
-        control={form.control}
-        translation={t}
-        name="unit"
-        label={t('unit')}
-      />
+      <FormSelect data-testid="new-emission-unit" control={form.control} translation={t} label={t('unit')} name="unit">
+        {Object.values(Unit).map((unit) => (
+          <MenuItem key={unit} value={unit}>
+            {tUnit(unit)}
+          </MenuItem>
+        ))}
+      </FormSelect>
       <FormTextField
         data-testid="new-emission-source"
         control={form.control}

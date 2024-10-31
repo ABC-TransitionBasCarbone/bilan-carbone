@@ -110,6 +110,9 @@
       "ch4b": "CH4B",
       "n2o": "N2O",
       "co2b": "CO2B",
+      "sf6": "SF6",
+      "hfc": "HFC",
+      "pfc": "PFC",
       "otherGES": "Autres gaz",
       "comment": "Commentaires",
       "validation": {
