@@ -12,17 +12,3 @@
 .pagination {
   gap: 0.5rem;
 }
-
-.table {
-
-  th,
-  td {
-    padding: 0.5rem;
-    border: solid 1px var(--neutral-100);
-  }
-
-  th {
-    font-size: 1.25rem;
-    font-weight: 700;
-  }
-}

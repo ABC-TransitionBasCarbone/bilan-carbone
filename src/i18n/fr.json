@@ -28,7 +28,8 @@
     "logout": "Déconnexion",
     "profile": "Profil",
     "study": "Étude",
-    "team": "Équipe"
+    "team": "Équipe",
+    "organization": "Organisation"
   },
   "profile": {
     "title": "Mon profile",
@@ -179,6 +180,17 @@
       "email": "Veuillez renseigner un email valide",
       "firstName": "Veuillez renseigner un prénom",
       "lastName": "Veuillez renseigner un nom"
+    }
+  },
+  "organization": {
+    "title": "Organisation",
+    "my-organization": "Mon organisation",
+    "modify": "Modifier",
+    "sites": {
+      "title": "Les sites de l'organisation",
+      "name": "Nom",
+      "etp": "Employés",
+      "ca": "Chiffre d'affaire"
     }
   }
 }

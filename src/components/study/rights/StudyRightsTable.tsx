@@ -4,11 +4,9 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import React, { useMemo } from 'react'
-import styles from './StudyRightsTable.module.css'
 import { Role, StudyRole } from '@prisma/client'
 import { StudyWithRights } from '@/db/study'
 import Block from '@/components/base/Block'
-import LinkButton from '@/components/base/LinkButton'
 import SelectStudyRole from './SelectStudyRole'
 
 interface Props {
@@ -66,16 +64,17 @@ const StudyRightsTable = ({ user, study }: Props) => {
   })
 
   return (
-    <Block>
-      <div className="align-center justify-between pb2">
-        <h1 id="study-rights-table-title">{t('title', { name: study.name })}</h1>
-        {(user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)) && (
-          <LinkButton href={`/etudes/${study.id}/droits/ajouter`} data-testid="study-rights-change-button">
-            {t('new-right')}
-          </LinkButton>
-        )}
-      </div>
-      <table className={styles.table} aria-labelledby="study-rights-table-title">
+    <Block
+      link={
+        user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
+          ? `/etudes/${study.id}/droits/ajouter`
+          : ''
+      }
+      linkLabel={t('new-right')}
+      linkDataTestId="study-rights-change-button"
+      title={t('title', { name: study.name })}
+    >
+      <table aria-labelledby="study-rights-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

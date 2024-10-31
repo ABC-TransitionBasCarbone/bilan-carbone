@@ -2,6 +2,7 @@
 
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
+import Sites from '@/components/organization/Sites'
 import { OrganizationWithSites } from '@/db/user'
 import { MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -24,7 +25,7 @@ const SelectOrganization = ({ organizations, selectOrganization }: Props) => {
   return (
     <Block title={t('title')} as="h1" data-testid="new-study-organization-title">
       {organizations.length === 1 ? (
-        organizations[0].name
+        <p className="title-h2">{organizations[0].name}</p>
       ) : (
         <Select
           data-testid="new-study-organization-select"
@@ -40,14 +41,12 @@ const SelectOrganization = ({ organizations, selectOrganization }: Props) => {
       )}
       {organization && (
         <>
-          <h2>{t('sites')}</h2>
-          {organization.sites.map((site) => (
-            <p key={site.id}>{site.name}</p>
-          ))}
-          <p>TODO: ajout et modification des champs de l'organisation, pareil pour les sites</p>
-          <Button data-testid="new-study-organization-button" onClick={() => selectOrganization(organization)}>
-            {t('next')}
-          </Button>
+          <Sites sites={organization.sites} />
+          <div className="mt2">
+            <Button data-testid="new-study-organization-button" onClick={() => selectOrganization(organization)}>
+              {t('next')}
+            </Button>
+          </div>
         </>
       )}
     </Block>

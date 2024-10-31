@@ -37,7 +37,7 @@ export const getUserOrganizations = async (email: string) => {
     return []
   }
 
-  const organizationSelect = { include: { sites: { select: { name: true, id: true } } } }
+  const organizationSelect = { include: { sites: { select: { name: true, etp: true, ca: true, id: true } } } }
 
   const user = await prismaClient.user.findUnique({
     select: {

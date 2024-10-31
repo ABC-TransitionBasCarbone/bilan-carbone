@@ -14,6 +14,9 @@ const Navbar = () => {
           <Link href="/" aria-label={t('home')}>
             <Image src="/logos/bcp-with-text.png" width={200} height={48} alt="" className={styles.logo} />
           </Link>
+          <Link className={styles.link} href="/organisations">
+            {t('organization')}
+          </Link>
           <Link className={styles.link} href="/facteurs-d-emission">
             {t('factors')}
           </Link>

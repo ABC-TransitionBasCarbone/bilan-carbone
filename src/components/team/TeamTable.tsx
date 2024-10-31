@@ -5,7 +5,6 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import React, { useMemo } from 'react'
-import styles from './TeamTable.module.css'
 import { Role } from '@prisma/client'
 import SelectRole from './SelectRole'
 import Block from '../base/Block'
@@ -56,7 +55,7 @@ const TeamTable = ({ user, team }: Props) => {
 
   return (
     <Block title={t('title')} id="team-table-title">
-      <table className={styles.table} aria-labelledby="team-table-title">
+      <table aria-labelledby="team-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

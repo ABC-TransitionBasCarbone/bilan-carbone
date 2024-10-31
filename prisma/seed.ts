@@ -43,6 +43,8 @@ const users = async () => {
       const sitesNumber = faker.number.int({ min: 0, max: 3 })
       return Array.from({ length: sitesNumber }).map(() => ({
         name: faker.commerce.department(),
+        etp: faker.number.int({ min: 1, max: 100 }),
+        ca: Math.round(faker.number.float({ min: 100_000, max: 1_000_000_000 })) / 100,
         organizationId: organization.id,
       }))
     }),
