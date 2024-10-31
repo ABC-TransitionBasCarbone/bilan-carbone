@@ -33,6 +33,16 @@
   align-items: center;
 }
 
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.wrap-reverse {
+  display: flex;
+  flex-wrap: wrap-reverse;
+}
+
 .grow {
   flex: 1;
 }

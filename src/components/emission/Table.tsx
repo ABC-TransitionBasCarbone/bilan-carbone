@@ -1,5 +1,8 @@
 'use client'
 
+import { ChangeEvent, useMemo, useState } from 'react'
+import { useTranslations } from 'next-intl'
+import { Import } from '@prisma/client'
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,15 +11,23 @@ import {
   getPaginationRowModel,
 } from '@tanstack/react-table'
 import Fuse from 'fuse.js'
-import { useTranslations } from 'next-intl'
-import React, { useMemo, useState } from 'react'
-import Button from '../base/Button'
+import { EmissionWithMetaData } from '@/services/emissions'
 import classNames from 'classnames'
 import styles from './Table.module.css'
+import {
+  Checkbox,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from '@mui/material'
+import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
-import { EmissionWithMetaData } from '@/services/emissions'
 import LinkButton from '../base/LinkButton'
-import { Input } from '@mui/material'
 
 const fuseOptions = {
   keys: [
@@ -33,13 +44,33 @@ const fuseOptions = {
   isCaseSensitive: false,
 }
 
+const locationFuseOptions = {
+  keys: [
+    {
+      name: 'location',
+      weight: 1,
+    },
+    {
+      name: 'sub-location',
+      weight: 0.5,
+      getFn: (emission: EmissionWithMetaData) => emission.metaData?.location || '',
+    },
+  ],
+  threshold: 0.3,
+  isCaseSensitive: false,
+}
+
 interface Props {
   emissions: EmissionWithMetaData[]
 }
 
+const sources = Object.values(Import).map((source) => source)
+
 const EmissionsTable = ({ emissions }: Props) => {
   const t = useTranslations('emissions.table')
   const [filter, setFilter] = useState('')
+  const [locationFilter, setLocationFilter] = useState('')
+  const [filteredSources, setSources] = useState<Import[]>(sources)
 
   const columns = useMemo(() => {
     return [
@@ -79,7 +110,7 @@ const EmissionsTable = ({ emissions }: Props) => {
           }
         },
       },
-      { header: t('valeur'), accessorKey: 'totalCo2' },
+      { header: t('value'), accessorKey: 'totalCo2' },
       { header: t('unit'), accessorKey: 'unit' },
       { header: t('quality'), accessorKey: 'quality' },
       { header: t('status'), accessorFn: (emission: EmissionWithMetaData) => t(emission.status) },
@@ -104,18 +135,24 @@ const EmissionsTable = ({ emissions }: Props) => {
     })
   }, [emissions, columns])
 
-  const data = useMemo(() => {
-    if (!filter) {
+  const searchedEmissions = useMemo(() => {
+    if (!filter && !locationFilter) {
       return emissions
     }
-    const results = fuse.search(filter)
-    return results.map(({ item }) => item)
-  }, [filter])
+    const searchResults = filter ? fuse.search(filter).map(({ item }) => item) : emissions
 
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 25,
-  })
+    if (locationFilter) {
+      const locationFuse = new Fuse(searchResults, locationFuseOptions)
+      return locationFuse.search(locationFilter).map(({ item }) => item)
+    }
+    return searchResults
+  }, [filter, locationFilter])
+
+  const data = useMemo(() => {
+    return searchedEmissions.filter((emission) => filteredSources.includes(emission.importedFrom))
+  }, [searchedEmissions, filteredSources])
+
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
   const table = useReactTable({
     columns,
@@ -123,21 +160,67 @@ const EmissionsTable = ({ emissions }: Props) => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    state: {
-      pagination,
-    },
+    state: { pagination },
   })
+
+  const onPaginationChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const page = e.target.value ? Number(e.target.value) - 1 : 0
+    if (page >= table.getPageCount()) {
+      table.setPageIndex(table.getPageCount() - 1)
+    } else {
+      table.setPageIndex(page)
+    }
+  }
+
+  const selectLocations = (event: SelectChangeEvent<typeof filteredSources>) => {
+    const {
+      target: { value },
+    } = event
+
+    setSources(value as Import[])
+  }
+
+  const statusSelectorRenderValue = () =>
+    filteredSources.length === sources.length ? t('all') : filteredSources.map((source) => t(source)).join(', ')
 
   return (
     <>
-      <div className={classNames(styles.header, 'justify-between align-center mb1')}>
-        <DebouncedInput
-          className={styles.searchInput}
-          debounce={200}
-          value={filter}
-          onChange={setFilter}
-          placeholder={t('search')}
-        />
+      <div className={classNames(styles.header, 'justify-between align-center wrap-reverse mb1')}>
+        <div className={classNames(styles.filters, 'wrap')}>
+          <DebouncedInput
+            className={styles.searchInput}
+            debounce={200}
+            value={filter}
+            onChange={setFilter}
+            placeholder={t('search')}
+          />
+          <DebouncedInput
+            className={styles.searchInput}
+            debounce={200}
+            value={locationFilter}
+            onChange={setLocationFilter}
+            placeholder={t('location-search')}
+          />
+          <FormControl className={styles.selector}>
+            <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>
+            <Select
+              id="emissions-sources-selector"
+              labelId="emissions-sources-selector"
+              value={filteredSources}
+              onChange={selectLocations}
+              input={<OutlinedInput label={t('sources')} />}
+              renderValue={statusSelectorRenderValue}
+              multiple
+            >
+              {sources.map((source, i) => (
+                <MenuItem key={`source-item-${i}`} value={source}>
+                  <Checkbox checked={filteredSources.includes(source)} />
+                  <ListItemText primary={source} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
         <LinkButton href="/facteurs-d-emission/creer" data-testid="new-emission">
           {t('add')}
         </LinkButton>
@@ -180,32 +263,35 @@ const EmissionsTable = ({ emissions }: Props) => {
           {'>>'}
         </Button>
         <p>
-          {t('page', { page: table.getState().pagination.pageIndex + 1, total: table.getPageCount().toLocaleString() })}
+          {t('page', {
+            page: table.getState().pagination.pageIndex + 1,
+            total: (table.getPageCount() || 1).toLocaleString(),
+          })}
         </p>
-        <div>
-          {t('goTo')}
-          <Input
-            type="number"
-            slotProps={{ input: { min: 1, max: table.getPageCount() } }}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              table.setPageIndex(page)
-            }}
-          />
-        </div>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value))
-          }}
-        >
-          {[25, 50, 100, 200, 500].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              {pageSize}
-            </option>
-          ))}
-        </select>
+        {t('goTo')}
+        <TextField
+          type="number"
+          classes={{ root: styles.pageInput }}
+          slotProps={{ htmlInput: { min: 1, max: table.getPageCount() } }}
+          defaultValue={table.getState().pagination.pageIndex + 1}
+          onChange={onPaginationChange}
+        />
+        <FormControl className={styles.selector}>
+          <InputLabel id="emissions-paginator-count-selector">{t('items')}</InputLabel>
+          <Select
+            id="emissions-paginator-count-selector"
+            labelId="emissions-paginator-count-selector"
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => table.setPageSize(Number(e.target.value))}
+            input={<OutlinedInput label={t('items')} />}
+          >
+            {[25, 50, 100, 200, 500].map((count) => (
+              <MenuItem key={count} value={count}>
+                <ListItemText primary={count} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
       <div>
         {t('showing', {
