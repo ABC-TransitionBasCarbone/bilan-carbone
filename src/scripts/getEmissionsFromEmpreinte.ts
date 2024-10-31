@@ -1,6 +1,6 @@
 import { prismaClient } from '../db/client'
-import { EmissionStatus, Import, Unit } from '@prisma/client'
-import { UNITS_MATRIX } from './history_units'
+import { EmissionStatus, Import, PostType, Unit } from '@prisma/client'
+import { UNITS_MATRIX, POST_TYPE_MATRIX } from './history_units'
 import axios, { AxiosResponse } from 'axios'
 
 type EmissionResponse = {
@@ -47,6 +47,26 @@ type EmissionResponse = {
     Code_gaz_supplémentaire_2: string
     Valeur_gaz_supplémentaire_2: number
   }[]
+}
+
+type EmissionPostDataType = {
+  emissionId: string
+  totalCo2: number
+  co2f: number
+  ch4f: number
+  ch4b: number
+  n2o: number
+  co2b: number
+  sf6: number
+  hfc: number
+  pfc: number
+  otherGES: number
+  type: PostType
+  metaData?: {
+    createMany: {
+      data: { title: string; language: string }[]
+    }
+  }
 }
 
 const select = [
@@ -127,6 +147,15 @@ const getUnit = (value?: string): Unit | null => {
     return unit[0] as Unit
   }
   return null
+}
+
+const getPostType = (value: string): PostType => {
+  const postType = Object.entries(POST_TYPE_MATRIX).find((entry) => entry[1] === value)
+  if (postType) {
+    return postType[0] as PostType
+  }
+
+  throw new Error(`Unknown post type: ${value}`)
 }
 
 const saveEmissions = async (emissions: EmissionResponse['results']) =>
@@ -216,7 +245,7 @@ const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
         console.error('No emission found for ' + post["Identifiant_de_l'élément"])
         throw new Error('No emission found for ' + post["Identifiant_de_l'élément"])
       }
-      const data = {
+      const data: EmissionPostDataType = {
         emissionId: emission.id,
         totalCo2: post.Total_poste_non_décomposé,
         co2f: post.CO2f,
@@ -228,14 +257,18 @@ const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
         hfc: 0,
         pfc: 0,
         otherGES: post.Autres_GES,
+        type: getPostType(post.Type_poste),
         metaData: {
           createMany: {
             data: [
-              { title: post.Nom_poste_français, language: 'fr' },
-              { title: post.Nom_poste_anglais, language: 'en' },
+              { title: post.Nom_poste_français || '', language: 'fr' },
+              { title: post.Nom_poste_anglais || '', language: 'en' },
             ],
           },
         },
+      }
+      if (!post.Nom_poste_français && !post.Nom_poste_anglais) {
+        delete data.metaData
       }
       if (post.Valeur_gaz_supplémentaire_1) {
         const type = post.Code_gaz_supplémentaire_1 || (emission.sf6 ? 'SF6' : 'Divers')
@@ -273,7 +306,7 @@ const main = async () => {
     const validEmissions = emissions.data.results.filter((emission) =>
       validStatus.includes(emission["Statut_de_l'élément"]),
     )
-    posts = [...posts].concat(validEmissions.filter((emission) => emission.Type_Ligne === 'Poste'))
+    posts = posts.concat(validEmissions.filter((emission) => emission.Type_Ligne === 'Poste'))
     await saveEmissions(validEmissions.filter((emission) => emission.Type_Ligne !== 'Poste'))
 
     url = emissions.data.next

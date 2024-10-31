@@ -1,4 +1,4 @@
-import { Unit } from '@prisma/client'
+import { PostType, Unit } from '@prisma/client'
 
 export const UNITS_MATRIX: Record<Unit, string> = {
   A4_SHEET_100: '100 feuilles A4',
@@ -142,4 +142,23 @@ export const UNITS_MATRIX: Record<Unit, string> = {
   KGDBO: 'kgDBO',
   KGDBO_PER_M3: 'kgDBO / m³',
   KG_H2_PER_100KM: 'kgH2/100km',
+}
+
+export const POST_TYPE_MATRIX: Record<PostType, string> = {
+  UPSTREAM: 'Amont',
+  DEPRECIATION: 'Amortissement',
+  OTHER: 'Autre',
+  FUEL_UPSTREAM_COMBUSTION: 'Carburant (amont/combustion)',
+  COLLECTION: 'Collecte',
+  COMBUSTION: 'Combustion',
+  COMBUSTION_PLANT: 'Combustion à la centrale',
+  FUGITIVE_EMISSIONS: 'Emissions fugitives',
+  ENERGY: 'Energie',
+  MANUFACTURING: 'Fabrication',
+  LEAKS: 'Fuites',
+  INCINERATION: 'Incinération',
+  INPUTS: 'Intrants',
+  PROCESSING: 'Traitement',
+  TRANSPORT: 'Transport',
+  TRANSPORT_DISTRIBUTION: 'Transport et distribution',
 }
