@@ -1,3 +1,4 @@
+import { SubPost, Unit } from '@prisma/client'
 import z from 'zod'
 
 export const CreateEmissionCommandValidation = z.object({
@@ -7,12 +8,7 @@ export const CreateEmissionCommandValidation = z.object({
     })
     .trim()
     .min(1, 'name'),
-  unit: z
-    .string({
-      required_error: 'unit',
-    })
-    .trim()
-    .min(1, 'unit'),
+  unit: z.nativeEnum(Unit, { required_error: 'unit' }),
   source: z
     .string({
       required_error: 'source',
@@ -35,6 +31,7 @@ export const CreateEmissionCommandValidation = z.object({
   pfc: z.number().min(0, 'pfc').optional(),
   otherGES: z.number().min(0, 'otherGES').optional(),
   attribute: z.string().optional(),
+  subPost: z.nativeEnum(SubPost, { required_error: 'subPost' }),
   comment: z.string().optional(),
 })
 

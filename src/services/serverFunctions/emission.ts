@@ -9,7 +9,14 @@ import { createEmission } from '@/db/emissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmission } from '../permissions/emission'
 
-export const createEmissionCommand = async ({ name, unit, attribute, comment, ...command }: CreateEmissionCommand) => {
+export const createEmissionCommand = async ({
+  name,
+  unit,
+  attribute,
+  comment,
+  subPost,
+  ...command
+}: CreateEmissionCommand) => {
   const session = await auth()
   const local = await getLocale()
   if (!session || !session.user) {
@@ -33,6 +40,7 @@ export const createEmissionCommand = async ({ name, unit, attribute, comment, ..
     reliability: 5,
     organization: { connect: { id: user.organizationId } },
     unit: unit as Unit,
+    subPosts: [subPost],
     metaData: {
       create: {
         language: local,

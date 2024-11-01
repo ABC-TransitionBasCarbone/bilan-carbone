@@ -1,16 +1,16 @@
 import { SubPost } from '@prisma/client'
 
-enum Post {
-  Energies,
-  AutresEmissionsNonEnergetiques,
-  IntrantsBienEtMatieres,
-  IntrantsServices,
-  DechetsDirects,
-  Fret,
-  Deplacements,
-  Immobilisations,
-  UtilisationEtDependance,
-  FinDeVie,
+export enum Post {
+  Energies = 'Energies',
+  AutresEmissionsNonEnergetiques = 'AutresEmissionsNonEnergetiques',
+  IntrantsBienEtMatieres = 'IntrantsBienEtMatieres',
+  IntrantsServices = 'IntrantsServices',
+  DechetsDirects = 'DechetsDirects',
+  Fret = 'Fret',
+  Deplacements = 'Deplacements',
+  Immobilisations = 'Immobilisations',
+  UtilisationEtDependance = 'UtilisationEtDependance',
+  FinDeVie = 'FinDeVie',
 }
 
 export const subPostsByPost: Record<Post, SubPost[]> = {

@@ -1,22 +1,62 @@
-import React from 'react'
-import { Control, Controller } from 'react-hook-form'
-import { FormTextField } from '@/components/form/TextField'
+'use client'
 
-interface DetailedGESFieldsProps {
-  control: Control<any> // Remplace `any` par ton type de données si possible pour plus de sécurité
-  translation: any
-  detailedGES: boolean
-  totalCo2?: number
+import React, { useEffect, useState } from 'react'
+import { UseFormReturn } from 'react-hook-form'
+import { FormTextField } from '@/components/form/TextField'
+import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
+import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+import { useTranslations } from 'next-intl'
+
+interface Props {
+  form: UseFormReturn<CreateEmissionCommand>
 }
 
-const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: DetailedGESFieldsProps) => {
+const DetailedGES = ({ form }: Props) => {
+  const t = useTranslations('emissions.create')
+  const [detailedGES, setDetailedGES] = useState(false)
+
+  const emissionValues = form.watch(['ch4b', 'ch4f', 'co2b', 'co2f', 'n2o', 'sf6', 'hfc', 'pfc', 'otherGES'])
+  const totalCo2 = form.watch('totalCo2')
+
+  useEffect(() => {
+    if (detailedGES) {
+      const newTotal = emissionValues.reduce((acc: number, current) => acc + (current || 0), 0)
+      if (totalCo2 !== newTotal) {
+        form.setValue('totalCo2', newTotal)
+      }
+    }
+  }, [totalCo2, emissionValues, detailedGES])
+
   return (
     <>
+      <div>
+        <FormLabel id={`defailedGES-radio-group-label`} component="legend">
+          {t('detailedGES')}
+        </FormLabel>
+        <RadioGroup
+          aria-labelledby={`defailedGES-radio-group-label`}
+          value={detailedGES}
+          onChange={(event) => setDetailedGES(event.target.value === 'true')}
+        >
+          <FormControlLabel
+            value="true"
+            control={<Radio />}
+            label={t('yes')}
+            data-testid="new-emission-detailedGES-true"
+          />
+          <FormControlLabel
+            value="false"
+            control={<Radio />}
+            label={t('no')}
+            data-testid="new-emission-detailedGES-false"
+          />
+        </RadioGroup>
+      </div>
       {detailedGES && (
         <>
           <FormTextField
             data-testid="new-emission-co2f"
-            control={control}
+            control={form.control}
             translation={t}
             slotProps={{ htmlInput: { min: 0 } }}
             type="number"
@@ -25,7 +65,7 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
           />
           <FormTextField
             data-testid="new-emission-ch4f"
-            control={control}
+            control={form.control}
             translation={t}
             slotProps={{ htmlInput: { min: 0 } }}
             type="number"
@@ -34,7 +74,7 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
           />
           <FormTextField
             data-testid="new-emission-ch4b"
-            control={control}
+            control={form.control}
             translation={t}
             slotProps={{ htmlInput: { min: 0 } }}
             type="number"
@@ -43,7 +83,7 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
           />
           <FormTextField
             data-testid="new-emission-n2o"
-            control={control}
+            control={form.control}
             translation={t}
             slotProps={{ htmlInput: { min: 0 } }}
             type="number"
@@ -52,7 +92,7 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
           />
           <FormTextField
             data-testid="new-emission-co2b"
-            control={control}
+            control={form.control}
             translation={t}
             slotProps={{ htmlInput: { min: 0 } }}
             type="number"
@@ -61,7 +101,7 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
           />
           <FormTextField
             data-testid="new-emission-sf6"
-            control={control}
+            control={form.control}
             translation={t}
             slotProps={{ htmlInput: { min: 0 } }}
             type="number"
@@ -70,7 +110,7 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
           />
           <FormTextField
             data-testid="new-emission-hfc"
-            control={control}
+            control={form.control}
             translation={t}
             slotProps={{ htmlInput: { min: 0 } }}
             type="number"
@@ -79,7 +119,7 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
           />
           <FormTextField
             data-testid="new-emission-pfc"
-            control={control}
+            control={form.control}
             translation={t}
             slotProps={{ htmlInput: { min: 0 } }}
             type="number"
@@ -88,7 +128,7 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
           />
           <FormTextField
             data-testid="new-emission-otherGES"
-            control={control}
+            control={form.control}
             translation={t}
             slotProps={{ htmlInput: { min: 0 } }}
             type="number"
@@ -100,7 +140,7 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
       <FormTextField
         disabled={detailedGES}
         data-testid="new-emission-totalCo2"
-        control={control}
+        control={form.control}
         translation={t}
         slotProps={{
           htmlInput: { min: 0 },
@@ -114,4 +154,4 @@ const DetailedGESFields = ({ control, translation: t, detailedGES, totalCo2 }: D
   )
 }
 
-export default DetailedGESFields
+export default DetailedGES
