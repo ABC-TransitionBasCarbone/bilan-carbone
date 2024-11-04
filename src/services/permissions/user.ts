@@ -45,6 +45,8 @@ export const canDeleteMember = (user: User, member: DbUser | null) => {
   if (member.isActive || member.password) {
     return false
   }
+
+  return true
 }
 
 export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) => {

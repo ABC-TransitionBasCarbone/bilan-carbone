@@ -54,7 +54,13 @@ const TeamTable = ({ user, team }: Props) => {
   })
 
   return (
-    <Block title={t('title')} id="team-table-title">
+    <Block
+      title={t('title')}
+      id="team-table-title"
+      link={user.role !== Role.DEFAULT ? '/equipe/ajouter' : ''}
+      linkLabel={t('new-user')}
+      linkDataTestId="add-member-link"
+    >
       <table aria-labelledby="team-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

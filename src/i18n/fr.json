@@ -1,6 +1,6 @@
 {
   "actuality": {
-    "title": "Mes actualités",
+    "title": "Actualités",
     "no-item": "Aucune actualité pour le moment"
   },
   "legal-notices": {
@@ -32,7 +32,7 @@
     "organization": "Organisation"
   },
   "profile": {
-    "title": "Mon profile",
+    "title": "Mon profil",
     "legal-notices": "Mentions légales",
     "logout": "Se déconnecter"
   },
@@ -170,11 +170,11 @@
     "title": "Mon organisation",
     "pending": "Invitations en attentes",
     "invitation-date": "Invitation envoyé le",
-    "new-user": "Inviter un utilisateur",
     "delete": "Supprimer l'utilisateur",
     "resend": "Renvoyer l'invitation",
     "table": {
       "title": "Mes collaborateurs",
+      "new-user": "Inviter un utilisateur",
       "firstName": "Prénom",
       "lastName": "Nom",
       "email": "Email",

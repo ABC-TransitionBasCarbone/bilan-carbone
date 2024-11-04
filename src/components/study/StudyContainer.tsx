@@ -1,18 +1,17 @@
 import classNames from 'classnames'
-import { Role, Study } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import styles from './StudyContainer.module.css'
 import Studies from './Studies'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import NewspaperIcon from '@mui/icons-material/Newspaper'
+import { User } from 'next-auth'
 
 interface Props {
-  role: Role
-  studies: Study[]
+  user: User
 }
 
-const StudyContainer = ({ studies }: Props) => {
+const StudyContainer = ({ user }: Props) => {
   const t = useTranslations('study')
   return (
     <Box data-testid="home-studies" className="flex-col grow">
@@ -25,7 +24,7 @@ const StudyContainer = ({ studies }: Props) => {
           {t('create')}
         </LinkButton>
       </div>
-      <Studies studies={studies} />
+      <Studies user={user} />
     </Box>
   )
 }

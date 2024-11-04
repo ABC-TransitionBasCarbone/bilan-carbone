@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Unit } from '@prisma/client'
 import { CreateEmissionCommand, CreateEmissionCommandValidation } from '@/services/serverFunctions/emission.command'
@@ -65,6 +65,8 @@ const NewEmissionForm = () => {
     }
   }
 
+  const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [t])
+
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
       <FormTextField
@@ -75,13 +77,6 @@ const NewEmissionForm = () => {
         label={t('name')}
       />
       <FormTextField control={form.control} translation={t} name="attribute" label={t('attribute')} />
-      <FormSelect data-testid="new-emission-unit" control={form.control} translation={t} label={t('unit')} name="unit">
-        {Object.values(Unit).map((unit) => (
-          <MenuItem key={unit} value={unit}>
-            {tUnit(unit)}
-          </MenuItem>
-        ))}
-      </FormSelect>
       <FormTextField
         data-testid="new-emission-source"
         control={form.control}
@@ -89,6 +84,13 @@ const NewEmissionForm = () => {
         name="source"
         label={t('source')}
       />
+      <FormSelect data-testid="new-emission-unit" control={form.control} translation={t} label={t('unit')} name="unit">
+        {units.map((unit) => (
+          <MenuItem key={unit} value={unit}>
+            {tUnit(unit)}
+          </MenuItem>
+        ))}
+      </FormSelect>
       <div>
         <FormLabel id={`defailedGES-radio-group-label`} component="legend">
           {t('detailedGES')}

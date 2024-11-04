@@ -15,7 +15,7 @@ const Home = async () => {
 
   return (
     <>
-      <Block title={`Hello ${user.firstName}`} as="h1">
+      <Block>
         <UserView user={user} />
       </Block>
     </>
