@@ -4,6 +4,7 @@ import { getLocale, getMessages } from 'next-intl/server'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import '@/css/index.css'
 import Providers from '@/services/providers/Providers'
+import Head from 'next/head'
 
 export const metadata: Metadata = {
   title: 'Bilan Carbone +',
@@ -23,6 +24,9 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
 
   return (
     <html lang={locale}>
+      <Head>
+        <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/gilroy-bold" />
+      </Head>
       <body>
         <AppRouterCacheProvider>
           <NextIntlClientProvider messages={messages}>
