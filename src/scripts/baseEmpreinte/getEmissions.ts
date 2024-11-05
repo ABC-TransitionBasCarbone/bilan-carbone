@@ -112,8 +112,6 @@ const select = [
   'Valeur_gaz_supplémentaire_2',
 ]
 
-const validStatus = ['Valide générique', 'Valide spécifique', 'Archivé']
-
 const escapeTranslation = (value?: string) => (value ? value.replaceAll('"""', '') : value)
 
 const getUnit = (value?: string): Unit | null => {
@@ -315,15 +313,12 @@ const main = async () => {
 
   let posts: EmissionResponse['results'] = []
   let url: string | undefined =
-    `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}`
+    `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
   while (url) {
     console.log(url)
     const emissions: AxiosResponse<EmissionResponse> = await axios.get<EmissionResponse>(url)
-    const validEmissions = emissions.data.results.filter((emission) =>
-      validStatus.includes(emission["Statut_de_l'élément"]),
-    )
-    posts = posts.concat(validEmissions.filter((emission) => emission.Type_Ligne === 'Poste'))
-    await saveEmissions(validEmissions.filter((emission) => emission.Type_Ligne !== 'Poste'))
+    posts = posts.concat(emissions.data.results.filter((emission) => emission.Type_Ligne === 'Poste'))
+    await saveEmissions(emissions.data.results.filter((emission) => emission.Type_Ligne !== 'Poste'))
 
     url = emissions.data.next
   }
