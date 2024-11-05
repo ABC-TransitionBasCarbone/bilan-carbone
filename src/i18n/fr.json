@@ -195,7 +195,7 @@
       "pfc": "PFC",
       "otherGES": "Autres gaz",
       "post": "Poste",
-      "missinPost": "Veuillez selectionner un poste",
+      "missingPost": "Veuillez selectionner un poste",
       "subPost": "Sous Poste",
       "comment": "Commentaires",
       "validation": {

@@ -192,7 +192,7 @@
       "pfc": "PFC",
       "otherGES": "Other gases",
       "post": "Post",
-      "missinPost": "Please select a post",
+      "missingPost": "Please select a post",
       "subPost": "Sub Post",
       "comment": "Comments",
       "validation": {
