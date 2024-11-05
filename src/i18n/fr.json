@@ -171,6 +171,24 @@
       "FuitesOuEmissionsNonEnergetiques": "Fuites ou émissions non énergétiques",
       "TraitementDesEmballagesEnFinDeVie": "Traitement des emballages en fin de vie"
     },
+    "postType": {
+      "UPSTREAM": "Amont",
+      "DEPRECIATION": "Amortissement",
+      "OTHER": "Autre",
+      "FUEL_UPSTREAM_COMBUSTION": "Carburant (amont/combustion)",
+      "COLLECTION": "Collecte",
+      "COMBUSTION": "Combustion",
+      "COMBUSTION_PLANT": "Combustion à la centrale",
+      "FUGITIVE_EMISSIONS": "Emissions fugitives",
+      "ENERGY": "Energie",
+      "MANUFACTURING": "Fabrication",
+      "LEAKS": "Fuites",
+      "INCINERATION": "Incinération",
+      "INPUTS": "Intrants",
+      "PROCESSING": "Traitement",
+      "TRANSPORT": "Transport",
+      "TRANSPORT_DISTRIBUTION": "Transport et distribution"
+    },
     "create": {
       "title": "Ajouter un facteur d'émission",
       "create": "Ajouter le facteur d'émission",
@@ -238,24 +256,6 @@
     "Initial": "Initial",
     "Standard": "Standard",
     "Advanced": "Avancé"
-  },
-  "postType": {
-    "UPSTREAM": "Amont",
-    "DEPRECIATION": "Amortissement",
-    "OTHER": "Autre",
-    "FUEL_UPSTREAM_COMBUSTION": "Carburant (amont/combustion)",
-    "COLLECTION": "Collecte",
-    "COMBUSTION": "Combustion",
-    "COMBUSTION_PLANT": "Combustion à la centrale",
-    "FUGITIVE_EMISSIONS": "Emissions fugitives",
-    "ENERGY": "Energie",
-    "MANUFACTURING": "Fabrication",
-    "LEAKS": "Fuites",
-    "INCINERATION": "Incinération",
-    "INPUTS": "Intrants",
-    "PROCESSING": "Traitement",
-    "TRANSPORT": "Transport",
-    "TRANSPORT_DISTRIBUTION": "Transport et distribution"
   },
   "role": {
     "SUPER_ADMIN": "Administrateur Global",
