@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import styles from './styles.module.css'
 import { FormTextField } from '@/components/form/TextField'
 import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
 import { FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material'
@@ -20,16 +21,8 @@ const DetailedGES = ({ form }: Props) => {
   const [postsCount, setPosts] = useState(1)
 
   const emissionValues = form.watch(['ch4b', 'ch4f', 'co2b', 'co2f', 'n2o', 'sf6', 'hfc', 'pfc', 'otherGES'])
+  const emissionPostsValues = form.watch('posts')
   const totalCo2 = form.watch('totalCo2')
-
-  useEffect(() => {
-    if (detailedGES) {
-      const newTotal = emissionValues.reduce((acc: number, current) => acc + (current || 0), 0)
-      if (totalCo2 !== newTotal) {
-        form.setValue('totalCo2', newTotal)
-      }
-    }
-  }, [totalCo2, emissionValues, detailedGES])
 
   useEffect(() => {
     if (detailedGES) {
@@ -141,20 +134,6 @@ const DetailedGES = ({ form }: Props) => {
       ) : (
         <DetailedGESFields detailedGES={detailedGES} control={form.control} index={0} />
       )}
-
-      <FormTextField
-        disabled={detailedGES}
-        data-testid="new-emission-totalCo2"
-        control={form.control}
-        translation={t}
-        slotProps={{
-          htmlInput: { min: 0 },
-          inputLabel: { shrink: detailedGES || totalCo2 !== undefined ? true : undefined },
-        }}
-        type="number"
-        name="totalCo2"
-        label={t('totalCo2')}
-      />
 
       <FormTextField
         disabled={detailedGES}
