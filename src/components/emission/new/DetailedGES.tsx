@@ -1,13 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import styles from './styles.module.css'
+import styles from './DetailedGES.module.css'
 import { FormTextField } from '@/components/form/TextField'
 import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
 import { FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import DetailedGESFields from './DetailedGESForm'
+import DetailedGESFields from './DetailedGESFields'
 import EmissionPostForm from './EmissionPostForm'
 
 interface Props {
@@ -17,26 +18,31 @@ interface Props {
 const DetailedGES = ({ form }: Props) => {
   const t = useTranslations('emissions.create')
   const [detailedGES, setDetailedGES] = useState(false)
-  const [multipleEmissions, setMultiple] = useState(true)
+  const [multipleEmissions, setMultiple] = useState(false)
   const [postsCount, setPosts] = useState(1)
 
   const emissionValues = form.watch(['ch4b', 'ch4f', 'co2b', 'co2f', 'n2o', 'sf6', 'hfc', 'pfc', 'otherGES'])
-  const emissionPostsValues = form.watch('posts')
+  const emissionPostsValues = form.watch('posts') || []
   const totalCo2 = form.watch('totalCo2')
 
   useEffect(() => {
     if (detailedGES) {
-      const newTotal = emissionValues.reduce((acc: number, current) => {
-        const accountableValues = current?.filter((_, i) => (multipleEmissions ? i < postsCount : i === 0)) || []
-        const totalCurrent = accountableValues.reduce((acc: number, current: number) => acc + current, 0)
-        return acc + (totalCurrent || 0)
-      }, 0)
+      const newTotal = emissionValues
+        .filter((value) => value !== undefined)
+        .reduce(
+          (acc, current) =>
+            acc +
+            current
+              .filter((_, i) => (multipleEmissions ? i < postsCount : i === 0))
+              .reduce((acc: number, current: number) => acc + current, 0),
+          0,
+        )
       if (totalCo2 !== newTotal) {
         form.setValue('totalCo2', newTotal)
       }
     } else {
-      const newTotal = (emissionPostsValues || [])
-        .filter((_, i) => i < postsCount)
+      const newTotal = emissionPostsValues
+        .filter((_, i) => (multipleEmissions ? i < postsCount : i === 0))
         .reduce((acc: number, current) => acc + (current.totalCo2 || 0), 0)
       if (totalCo2 !== newTotal) {
         form.setValue('totalCo2', newTotal)
@@ -47,23 +53,15 @@ const DetailedGES = ({ form }: Props) => {
   const updateEmissionPostsCount = (count: number) => {
     setPosts(count)
     if (count > (form.getValues('co2f') || []).length) {
-      form.setValue('ch4b', [...(form.getValues('ch4b') || []), 0])
-      form.setValue('ch4f', [...(form.getValues('ch4f') || []), 0])
-      form.setValue('co2b', [...(form.getValues('co2b') || []), 0])
-      form.setValue('co2f', [...(form.getValues('co2f') || []), 0])
-      form.setValue('n2o', [...(form.getValues('n2o') || []), 0])
-      form.setValue('sf6', [...(form.getValues('sf6') || []), 0])
-      form.setValue('hfc', [...(form.getValues('hfc') || []), 0])
-      form.setValue('pfc', [...(form.getValues('pfc') || []), 0])
-      form.setValue('otherGES', [...(form.getValues('otherGES') || []), 0])
+      const keys = ['co2f', 'ch4f', 'ch4b', 'n2o', 'co2b', 'sf6', 'hfc', 'pfc', 'otherGES'] as const
+      keys.forEach((key) => form.setValue(key, [...(form.getValues(key) || []), 0]))
       form.setValue('posts', (form.getValues('posts') || []).concat([{ name: '', totalCo2: 0 }]))
     }
   }
-
   return (
     <>
       <div className={`${styles.questions} flex`}>
-        <div className="grow">
+        <div className={styles.selector}>
           <FormLabel id={`defailedGES-radio-group-label`} component="legend">
             {t('detailedGES')}
           </FormLabel>
@@ -73,20 +71,20 @@ const DetailedGES = ({ form }: Props) => {
             onChange={(event) => setDetailedGES(event.target.value === 'true')}
           >
             <FormControlLabel
-              value="true"
-              control={<Radio />}
-              label={t('yes')}
-              data-testid="new-emission-detailedGES-true"
-            />
-            <FormControlLabel
               value="false"
               control={<Radio />}
               label={t('no')}
               data-testid="new-emission-detailedGES-false"
             />
+            <FormControlLabel
+              value="true"
+              control={<Radio />}
+              label={t('yes')}
+              data-testid="new-emission-detailedGES-true"
+            />
           </RadioGroup>
         </div>
-        <div className="grow">
+        <div className={styles.selector}>
           <FormLabel id={`multiple-emssions-radio-group-label`} component="legend">
             {t('multiple')}
           </FormLabel>
@@ -109,7 +107,7 @@ const DetailedGES = ({ form }: Props) => {
             />
           </RadioGroup>
         </div>
-        <div className="grow">
+        <div className={styles.input}>
           {multipleEmissions && (
             <>
               <FormLabel id={`sub-posts-count-label`} component="legend">
@@ -128,11 +126,17 @@ const DetailedGES = ({ form }: Props) => {
       {multipleEmissions ? (
         <>
           {Array.from({ length: postsCount }).map((_, index) => (
-            <EmissionPostForm key={index} detailedGES={detailedGES} form={form} index={index} totalCo2={totalCo2} />
+            <EmissionPostForm
+              key={`emission-post-${index}`}
+              detailedGES={detailedGES}
+              form={form}
+              index={index}
+              totalCo2={totalCo2}
+            />
           ))}
         </>
       ) : (
-        <DetailedGESFields detailedGES={detailedGES} control={form.control} index={0} />
+        detailedGES && <DetailedGESFields form={form} index={0} />
       )}
 
       <FormTextField
