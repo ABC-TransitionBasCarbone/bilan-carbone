@@ -1,6 +1,6 @@
 import { prismaClient } from '../../db/client'
-import { EmissionStatus, Import, PostType, SubPost, Unit } from '@prisma/client'
-import { UNITS_MATRIX, POST_TYPE_MATRIX } from './historyUnits'
+import { EmissionStatus, Import, SubPost, Unit } from '@prisma/client'
+import { UNITS_MATRIX } from './historyUnits'
 import axios, { AxiosResponse } from 'axios'
 import { elementsBySubPost } from './posts.config'
 
@@ -62,7 +62,7 @@ type EmissionPostDataType = {
   hfc: number
   pfc: number
   otherGES: number
-  type: PostType
+  type: string
   metaData?: {
     createMany: {
       data: { title: string; language: string }[]
@@ -146,15 +146,6 @@ const getUnit = (value?: string): Unit | null => {
     return unit[0] as Unit
   }
   return null
-}
-
-const getPostType = (value: string): PostType => {
-  const postType = Object.entries(POST_TYPE_MATRIX).find((entry) => entry[1] === value)
-  if (postType) {
-    return postType[0] as PostType
-  }
-
-  throw new Error(`Unknown post type: ${value}`)
 }
 
 const saveEmissions = async (emissions: EmissionResponse['results']) =>
@@ -271,7 +262,7 @@ const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
       hfc: 0,
       pfc: 0,
       otherGES: post.Autres_GES,
-      type: getPostType(post.Type_poste),
+      type: post.Type_poste,
       metaData:
         metaData.length > 0
           ? {

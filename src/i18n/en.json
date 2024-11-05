@@ -160,24 +160,6 @@
       "FuitesOuEmissionsNonEnergetiques": "Leaks or non-energy emissions",
       "TraitementDesEmballagesEnFinDeVie": "Packaging treatment at end of life"
     },
-    "postType": {
-      "UPSTREAM": "Amont",
-      "DEPRECIATION": "Amortissement",
-      "OTHER": "Other",
-      "FUEL_UPSTREAM_COMBUSTION": "Fuel (upstream/combustion)",
-      "COLLECTION": "Collection",
-      "COMBUSTION": "Combustion",
-      "COMBUSTION_PLANT": "Plant combustion",
-      "FUGITIVE_EMISSIONS": "Fugitive emissions",
-      "ENERGY": "Energy",
-      "MANUFACTURING": "Manufacturing",
-      "LEAKS": "Leaks",
-      "INCINERATION": "Incineration",
-      "INPUTS": "Inputs",
-      "PROCESSING": "Processing",
-      "TRANSPORT": "Transport",
-      "TRANSPORT_DISTRIBUTION": "Transport and distribution"
-    },
     "create": {
       "title": "Add an emission factor",
       "create": "Add emission factor",

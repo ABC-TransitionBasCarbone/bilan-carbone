@@ -1,14 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import styles from './EmissionPostForm.module.css'
-import { PostType } from '@prisma/client'
 import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
-import { Accordion, AccordionDetails, AccordionSummary, MenuItem } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import DetailedGESFields from './DetailedGESFields'
 import { FormTextField } from '@/components/form/TextField'
-import { FormSelect } from '@/components/form/Select'
 import classNames from 'classnames'
 
 interface DetailedGESFieldsProps {
@@ -20,12 +17,9 @@ interface DetailedGESFieldsProps {
 
 const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) => {
   const t = useTranslations('emissions.create')
-  const tPostType = useTranslations('emissions.postType')
 
   const header = form.watch(`posts.${index}.name`) || `${t('post')} ${index + 1}`
   const totalCo2 = form.watch(`posts.${index}.totalCo2`) || 0
-
-  const postTypes = useMemo(() => Object.values(PostType).sort((a, b) => tPostType(a).localeCompare(tPostType(b))), [t])
 
   return (
     <Accordion>
@@ -40,20 +34,14 @@ const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
             name={`posts.${index}.name`}
             label={t('name')}
           />
-          <FormSelect
-            data-testid={`post-${index}-type`}
-            className={styles['accordion-details-type-selector']}
+          <FormTextField
+            data-testid={`new-emission-post-${index}-type`}
             control={form.control}
             translation={t}
-            label={t('postType')}
+            type="string"
             name={`posts.${index}.type`}
-          >
-            {postTypes.map((postType) => (
-              <MenuItem key={postType} value={postType}>
-                {tPostType(postType)}
-              </MenuItem>
-            ))}
-          </FormSelect>
+            label={t('postType')}
+          />
         </div>
 
         {detailedGES ? (
