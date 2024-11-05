@@ -8,6 +8,73 @@ enum EmissionStatus {
   Valid
 }
 
+enum SubPost {
+  // Energies
+  CombustiblesFossiles
+  CombustiblesOrganiques
+  ReseauxDeChaleurEtDeVapeur
+  ReseauxDeFroid
+  Electricite
+
+  // AutresEmissionsNonEnergetiques
+  Agriculture
+  EmissionsLieesAuChangementDAffectationDesSolsCas
+  EmissionsLieesALaProductionDeFroid
+  EmissionsLieesAuxProcedesIndustriels
+  AutresEmissionsNonEnergetiques
+
+  // IntrantsBienEtMatieres
+  MetauxPlastiquesEtVerre
+  PapiersCartons
+  MateriauxDeConstruction
+  ProduitsChimiquesEtHydrogene
+  NourritureRepasBoissons
+  MatiereDestineeAuxEmballages
+  AutresIntrants
+  BiensEtMatieresEnApprocheMonetaire
+
+  // IntrantsServices
+  AchatsDeServices
+  UsagesNumeriques
+  ServicesEnApprocheMonetaire
+
+  // DechetsDirects
+  DechetsDEmballagesEtPlastiques
+  DechetsOrganiques
+  DechetsOrduresMenageres
+  DechetsDangereux
+  DechetsBatiments
+  DechetsFuitesOuEmissionsNonEnergetiques
+  EauxUsees
+
+  //Fret
+  FretEntrant
+  FretInterne
+  FretSortant
+
+  // Deplacements
+  DeplacementsDomicileTravail
+  DeplacementsDesEmployesDansLeCadreDuTravail
+  DeplacementsVisiteurs
+
+  // Immobilisations
+  Batiments
+  AutresInfrastructures
+  Equipements
+  Informatique
+
+  // UtilisationEtDependance
+  UtilisationEnResponsabilite
+  UtilisationEnDependance
+  InvestissementsFinanciersRealises
+
+  // FinDeVie
+  ConsommationDEnergieEnFinDeVie
+  TraitementDesDechetsEnFinDeVie
+  FuitesOuEmissionsNonEnergetiques
+  TraitementDesEmballagesEnFinDeVie
+}
+
 model Emission {
   id            String         @id @default(uuid())
   createdAt     DateTime       @default(now()) @map("created_at")
@@ -43,6 +110,8 @@ model Emission {
   pfc      Float?
   otherGES Float? @map("other_ges")
   unit     Unit?
+
+  subPosts SubPost[] @map("sub_posts")
 
   @@index([organizationId])
   @@index([status])

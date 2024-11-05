@@ -18,6 +18,10 @@ describe('Create emission', () => {
     cy.get('[data-value="GWH"]').click()
     cy.getByTestId('new-emission-source').type('Magic')
     cy.getByTestId('new-emission-totalCo2').type('12')
+    cy.getByTestId('new-emission-post').click()
+    cy.get('[data-value="Energies"]').click()
+    cy.getByTestId('new-emission-subPost').click()
+    cy.get('[data-value="Electricite"]').click()
 
     cy.getByTestId('new-emission-create-button').click()
 
@@ -84,6 +88,11 @@ describe('Create emission', () => {
       cy.get('input').should('be.disabled')
       cy.get('input').should('have.value', '45')
     })
+
+    cy.getByTestId('new-emission-post').click()
+    cy.get('[data-value="Energies"]').click()
+    cy.getByTestId('new-emission-subPost').click()
+    cy.get('[data-value="Electricite"]').click()
 
     cy.getByTestId('new-emission-create-button').click()
 
