@@ -42,8 +42,6 @@ describe('Create study', () => {
     cy.getByTestId('new-study-create-button').click()
 
     cy.wait('@create')
-
-    cy.url().should('eq', `${Cypress.config().baseUrl}/`)
   })
 
   it('Should display a link to create a new study as a CR user', () => {
@@ -80,7 +78,5 @@ describe('Create study', () => {
     cy.getByTestId('new-study-create-button').click()
 
     cy.wait('@create')
-
-    cy.url().should('eq', `${Cypress.config().baseUrl}/`)
   })
 })

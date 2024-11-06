@@ -9,10 +9,14 @@ import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddRightOnStudy, canChangePublicStatus, canCreateStudy } from '../permissions/study'
 import { getUserByEmail } from '@/db/user'
 
-export const createStudyCommand = async ({ organizationId, validator, ...command }: CreateStudyCommand) => {
+export const createStudyCommand = async ({
+  organizationId,
+  validator,
+  ...command
+}: CreateStudyCommand): Promise<{ message: string; success: false } | { id: string; success: true }> => {
   const session = await auth()
   if (!session || !session.user) {
-    return NOT_AUTHORIZED
+    return { success: false, message: NOT_AUTHORIZED }
   }
 
   const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
@@ -24,7 +28,7 @@ export const createStudyCommand = async ({ organizationId, validator, ...command
   } else {
     const userValidator = await getUserByEmail(validator)
     if (!userValidator) {
-      return NOT_AUTHORIZED
+      return { success: false, message: NOT_AUTHORIZED }
     }
 
     rights.push({
@@ -60,14 +64,15 @@ export const createStudyCommand = async ({ organizationId, validator, ...command
   } satisfies Prisma.StudyCreateInput
 
   if (!(await canCreateStudy(session.user, study, organizationId))) {
-    return NOT_AUTHORIZED
+    return { success: false, message: NOT_AUTHORIZED }
   }
 
   try {
-    await createStudy(study)
+    const createdStudy = await createStudy(study)
+    return { success: true, id: createdStudy.id }
   } catch (e) {
     console.error(e)
-    return 'Something went wrong...'
+    return { success: false, message: 'Something went wrong...' }
   }
 }
 

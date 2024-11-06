@@ -56,10 +56,10 @@ const NewStudyForm = ({ organization, user, usersEmail }: Props) => {
 
   const onSubmit = async (command: CreateStudyCommand) => {
     const result = await createStudyCommand(command)
-    if (result) {
-      setError(result)
+    if (!result.success) {
+      setError(result.message)
     } else {
-      router.push('/')
+      router.push(`/etudes/${result.id}`)
       router.refresh()
     }
   }

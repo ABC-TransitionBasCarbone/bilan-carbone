@@ -37,7 +37,8 @@
     "logout": "Log out"
   },
   "study": {
-    "change-rights": "Modify study rights",
+    "tags": "Manage tags",
+    "change-rights": "Manage contributors",
     "back-to-home": "Back to home",
     "create": "New study",
     "my-studies": "My studies",
@@ -116,7 +117,7 @@
       "ReseauxDeFroid": "Cooling networks",
       "Electricite": "Electricity",
       "Agriculture": "Agriculture",
-      "EmissionsLieesAuChangementDAffectationDesSolsCas": "Emissions related to land use change (case)",
+      "EmissionsLieesAuChangementDAffectationDesSolsCas": "Emissions related to land use change (LUC)",
       "EmissionsLieesALaProductionDeFroid": "Emissions related to cold production",
       "EmissionsLieesAuxProcedesIndustriels": "Emissions related to industrial processes",
       "MetauxPlastiquesEtVerre": "Metals, plastics, and glass",

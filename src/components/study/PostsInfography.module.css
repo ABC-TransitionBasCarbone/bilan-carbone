@@ -1,0 +1,16 @@
+.infography {
+  gap: 1rem;
+}
+
+.column {
+  gap: 1rem;
+  margin: 0 0.5rem;
+}
+
+.border {
+  gap: 1rem;
+  border-radius: 1rem;
+  border: dashed 4px #102A6B;
+  margin: 0 -0.5rem;
+  padding: 0.5rem 0.5rem;
+}
