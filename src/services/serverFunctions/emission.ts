@@ -103,7 +103,7 @@ export const createEmissionCommand = async (
               hfc: hfc[index],
               pfc: pfc[index],
               otherGES: otherGES[index],
-              totalCo2: getPostTotalCo2([co2f, ch4f, ch4b, n2o, co2b, sf6, hfc, pfc, otherGES], index),
+              totalCo2: post.totalCo2 || getPostTotalCo2([co2f, ch4f, ch4b, n2o, co2b, sf6, hfc, pfc, otherGES], index),
               metaData: {
                 create: {
                   language: local,
