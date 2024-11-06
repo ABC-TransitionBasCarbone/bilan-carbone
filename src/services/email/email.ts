@@ -7,7 +7,7 @@ const mailTransport = nodemailer.createTransport({
   port: process.env.MAIL_PORT,
   auth: {
     user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
+    pass: process.env.MAIL_PASSWORD,
   },
 } as SMTPTransport.Options)
 
@@ -16,7 +16,7 @@ const getHtml = (file: string, data?: Data) => ejs.renderFile(`./src/services/em
 const send = (toEmail: string[], subject: string, html: string) => {
   const mail = {
     to: toEmail.join(','),
-    from: `ABC@ABC.fr`,
+    from: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
     subject,
     html,
     text: html.replace(/<(?:.|\n)*?>/gm, ''),
