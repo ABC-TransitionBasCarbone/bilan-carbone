@@ -6,7 +6,7 @@ import { UseFormReturn } from 'react-hook-form'
 import styles from './DetailedGES.module.css'
 import { FormTextField } from '@/components/form/TextField'
 import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
-import { FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material'
+import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import DetailedGESFields from './DetailedGESFields'
 import EmissionPostForm from './EmissionPostForm'
@@ -62,6 +62,7 @@ const DetailedGES = ({ form, multipleEmissions, setMultiple, postsCount, setPost
       form.setValue('posts', (form.getValues('posts') || []).concat([{ name: '', type: '', totalCo2: 0 }]))
     }
   }
+
   return (
     <>
       <div className={`${styles.questions} flex`}>
@@ -69,47 +70,31 @@ const DetailedGES = ({ form, multipleEmissions, setMultiple, postsCount, setPost
           <FormLabel id={`defailedGES-radio-group-label`} component="legend">
             {t('detailedGES')}
           </FormLabel>
-          <RadioGroup
-            aria-labelledby={`defailedGES-radio-group-label`}
-            value={detailedGES}
-            onChange={(event) => setDetailedGES(event.target.value === 'true')}
-          >
-            <FormControlLabel
-              value="false"
-              control={<Radio />}
-              label={t('no')}
-              data-testid="new-emission-detailedGES-false"
-            />
-            <FormControlLabel
-              value="true"
-              control={<Radio />}
-              label={t('yes')}
-              data-testid="new-emission-detailedGES-true"
-            />
-          </RadioGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={detailedGES}
+                onChange={(event) => setDetailedGES(event.target.checked)}
+                data-testid="new-emission-detailed-switch"
+              />
+            }
+            label={t(detailedGES ? 'yes' : 'no')}
+          />
         </div>
         <div className={styles.selector}>
           <FormLabel id={`multiple-emssions-radio-group-label`} component="legend">
             {t('multiple')}
           </FormLabel>
-          <RadioGroup
-            aria-labelledby={`multiple-emssions-radio-group-labe`}
-            value={multipleEmissions}
-            onChange={(event) => setMultiple(event.target.value === 'true')}
-          >
-            <FormControlLabel
-              value={'false'}
-              control={<Radio />}
-              label={t('no')}
-              data-testid="new-emission-multiple-false"
-            />
-            <FormControlLabel
-              value={'true'}
-              control={<Radio />}
-              label={t('yes')}
-              data-testid="new-emission-multiple-true"
-            />
-          </RadioGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={multipleEmissions}
+                onChange={(event) => setMultiple(event.target.checked)}
+                data-testid="new-emission-multiple-switch"
+              />
+            }
+            label={t(multipleEmissions ? 'yes' : 'no')}
+          />
         </div>
         <div className={styles.input}>
           {multipleEmissions && (
