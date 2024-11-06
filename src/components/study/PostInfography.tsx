@@ -26,15 +26,25 @@ const colors: Record<Post, string> = {
 
 const PostInfography = ({ study, post }: Props) => {
   const t = useTranslations('emissions.post')
+  const mainPost = useMemo(() => {
+    if (Object.keys(Post).includes(post)) {
+      return post as Post
+    } else {
+      const entry = Object.entries(subPostsByPost).find(([, subPosts]) => subPosts.includes(post as SubPost))
+      return entry ? (entry[0] as Post) : null
+    }
+  }, [post])
+
   const subPosts = useMemo(() => {
     if (Object.keys(Post).includes(post)) {
       return subPostsByPost[post as Post]
     }
     return null
   }, [post])
+
   return (
     <Link
-      href={`/etudes/${study.id}/`}
+      href={`/etudes/${study.id}/${mainPost}`}
       className={styles[Object.keys(Post).includes(post) ? colors[post as Post] : 'green']}
     >
       <div className={classNames(styles.header)}>{t(post)}</div>
