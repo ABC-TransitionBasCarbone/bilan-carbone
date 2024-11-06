@@ -3,7 +3,6 @@ import { UseFormReturn } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import { FormTextField } from '@/components/form/TextField'
 import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
-import Form from '@/components/base/Form'
 
 interface DetailedGESFieldsProps {
   form: UseFormReturn<CreateEmissionCommand>
@@ -13,7 +12,7 @@ interface DetailedGESFieldsProps {
 const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
   const t = useTranslations('emissions.create')
   return (
-    <Form>
+    <>
       <FormTextField
         data-testid="new-emission-co2f"
         control={form.control}
@@ -95,7 +94,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         name={`otherGES.${index}`}
         label={t('otherGES')}
       />
-    </Form>
+    </>
   )
 }
 

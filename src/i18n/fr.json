@@ -189,11 +189,13 @@
       "comment": "Commentaires",
       "validation": {
         "name": "Veuillez renseigner un nom",
-        "unit": "Veuillez renseigner une unité",
+        "name-maxlength": "64 caractères maximum",
         "source": "Veuillez renseigner une source",
+        "subPost": "Veuillez selectionner un sous poste",
         "totalCo2": "Veuillez renseigner une émission totale",
-        "type": "Veuillez selectionner un type de poste",
-        "subPost": "Veuillez selectionner un sous poste"
+        "type": "Veuillez renseigner un type de poste",
+        "type-maxlength": "64 caractères maximum",
+        "unit": "Veuillez renseigner une unité"
       }
     },
     "title": "Facteurs d'émissions",

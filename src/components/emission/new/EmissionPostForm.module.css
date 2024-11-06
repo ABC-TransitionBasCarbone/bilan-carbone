@@ -1,6 +1,9 @@
+.accordion-details {
+  gap: 2rem;
+}
+
 .accordion-details-header {
   gap: 1rem;
-  margin-bottom: 2rem;
 }
 
 .accordion-details-type-selector {
