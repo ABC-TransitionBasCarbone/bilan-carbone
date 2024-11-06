@@ -37,7 +37,8 @@
     "logout": "Se déconnecter"
   },
   "study": {
-    "change-rights": "Modifier les droits de l'études",
+    "tags": "Gestion des tags",
+    "change-rights": "Gestion des contributeurs",
     "back-to-home": "Retour a l'accueil",
     "create": "Nouvelle étude",
     "my-studies": "Mes études",
@@ -116,7 +117,7 @@
       "ReseauxDeFroid": "Réseaux de froid",
       "Electricite": "Électricite",
       "Agriculture": "Agriculture",
-      "EmissionsLieesAuChangementDAffectationDesSolsCas": "Émissions liées au changement d'affectation des sols (cas)",
+      "EmissionsLieesAuChangementDAffectationDesSolsCas": "Émissions liées au changement d'affectation des sols (CAS)",
       "EmissionsLieesALaProductionDeFroid": "Émissions liées à la production de froid",
       "EmissionsLieesAuxProcedesIndustriels": "Émissions liées aux procédés industriels",
       "MetauxPlastiquesEtVerre": "Metaux plastiques et verre",

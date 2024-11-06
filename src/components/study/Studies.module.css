@@ -4,9 +4,4 @@
 
 .link {
   font-size: 1.25rem;
-  color: var(--primary-40);
-
-  &:hover {
-    color: var(--primary-60);
-  }
 }

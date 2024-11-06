@@ -1,7 +1,7 @@
-import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import LocaleSelector from '@/components/navbar/LocaleSelector'
 import Block from '@/components/base/Block'
+import Link from 'next/link'
 
 const Profile = () => {
   const t = useTranslations('profile')
