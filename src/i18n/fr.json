@@ -1,4 +1,13 @@
 {
+  "nav": {
+    "home": "Accueil",
+    "emissions": "Facteurs d'émission",
+    "organization": "Organisation",
+    "team": "Équipe",
+    "newStudy": "Ajouter une nouvelle étude",
+    "studyRights": "Droits",
+    "newStudyRights": "Ajouter une personne"
+  },
   "actuality": {
     "title": "Actualités",
     "no-item": "Aucune actualité pour le moment"
