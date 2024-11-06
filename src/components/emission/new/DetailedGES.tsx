@@ -13,13 +13,15 @@ import EmissionPostForm from './EmissionPostForm'
 
 interface Props {
   form: UseFormReturn<CreateEmissionCommand>
+  multipleEmissions: boolean
+  setMultiple: (value: boolean) => void
+  postsCount: number
+  setPosts: (value: number) => void
 }
 
-const DetailedGES = ({ form }: Props) => {
+const DetailedGES = ({ form, multipleEmissions, setMultiple, postsCount, setPosts }: Props) => {
   const t = useTranslations('emissions.create')
   const [detailedGES, setDetailedGES] = useState(false)
-  const [multipleEmissions, setMultiple] = useState(false)
-  const [postsCount, setPosts] = useState(1)
 
   const emissionValues = form.watch(['ch4b', 'ch4f', 'co2b', 'co2f', 'n2o', 'sf6', 'hfc', 'pfc', 'otherGES'])
   const emissionPostsValues = form.watch('posts') || []
@@ -41,11 +43,13 @@ const DetailedGES = ({ form }: Props) => {
         form.setValue('totalCo2', newTotal)
       }
     } else {
-      const newTotal = emissionPostsValues
-        .filter((_, i) => (multipleEmissions ? i < postsCount : i === 0))
-        .reduce((acc: number, current) => acc + (current.totalCo2 || 0), 0)
-      if (totalCo2 !== newTotal) {
-        form.setValue('totalCo2', newTotal)
+      if (multipleEmissions) {
+        const newTotal = emissionPostsValues
+          .filter((_, i) => (multipleEmissions ? i < postsCount : i === 0))
+          .reduce((acc: number, current) => acc + (current.totalCo2 || 0), 0)
+        if (totalCo2 !== newTotal) {
+          form.setValue('totalCo2', newTotal)
+        }
       }
     }
   }, [totalCo2, emissionValues, emissionPostsValues, detailedGES])
@@ -55,7 +59,7 @@ const DetailedGES = ({ form }: Props) => {
     if (count > (form.getValues('co2f') || []).length) {
       const keys = ['co2f', 'ch4f', 'ch4b', 'n2o', 'co2b', 'sf6', 'hfc', 'pfc', 'otherGES'] as const
       keys.forEach((key) => form.setValue(key, [...(form.getValues(key) || []), 0]))
-      form.setValue('posts', (form.getValues('posts') || []).concat([{ name: '', totalCo2: 0 }]))
+      form.setValue('posts', (form.getValues('posts') || []).concat([{ name: '', type: '', totalCo2: 0 }]))
     }
   }
   return (
@@ -115,7 +119,7 @@ const DetailedGES = ({ form }: Props) => {
               </FormLabel>
               <TextField
                 type="number"
-                slotProps={{ htmlInput: { min: 1 } }}
+                slotProps={{ htmlInput: { min: 1, max: 5 } }}
                 defaultValue={postsCount}
                 onChange={(e) => updateEmissionPostsCount(Number(e.target.value))}
               />

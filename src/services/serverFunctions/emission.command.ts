@@ -1,4 +1,4 @@
-import { PostType, SubPost, Unit } from '@prisma/client'
+import { SubPost, Unit } from '@prisma/client'
 import z from 'zod'
 
 export const CreateEmissionCommandValidation = z.object({
@@ -36,8 +36,8 @@ export const CreateEmissionCommandValidation = z.object({
   posts: z
     .array(
       z.object({
-        name: z.string({ required_error: 'name' }).trim().min(1, 'name'),
-        type: z.nativeEnum(PostType, { required_error: 'type' }),
+        name: z.string({ required_error: 'name' }).trim().min(1, 'name').max(64, 'name-maxlength'),
+        type: z.string({ required_error: 'type' }).trim().min(1, 'type').max(64, 'type-maxlength'),
         totalCo2: z
           .number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' })
           .min(0, 'totalCo2')
