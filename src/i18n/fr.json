@@ -70,6 +70,10 @@
         "level": "Veuillez selectionner le type de Bilan Carbone"
       }
     },
+    "post": {
+      "displayInfography": "Voir les différents postes",
+      "hideInfography": "Cacher les différents postes"
+    },
     "not-found": "Étude introuvable",
     "organization": {
       "title": "Quelle organisation est concernée par l'étude ?",

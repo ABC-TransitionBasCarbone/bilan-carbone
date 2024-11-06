@@ -1,6 +1,9 @@
 .block {
   margin: auto;
   padding-top: 3rem;
+}
+
+.content {
   position: relative;
 }
 

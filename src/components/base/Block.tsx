@@ -17,17 +17,19 @@ const Block = ({ children, link, linkLabel, title, as, id, linkDataTestId, ...re
   const Title = as === 'h1' ? 'h1' : 'h2'
   return (
     <div className={classNames('main-container', styles.block)} {...rest}>
-      {link ? (
-        <div className="align-center justify-between">
-          <Title id={id}>{title}</Title>
-          <LinkButton href={link} data-testid={linkDataTestId}>
-            {linkLabel}
-          </LinkButton>
-        </div>
-      ) : (
-        title && <Title id={id}>{title}</Title>
-      )}
-      {children && <div className={classNames(styles.children, { [styles.withMargin]: title })}>{children}</div>}
+      <div className={styles.content}>
+        {link ? (
+          <div className="align-center justify-between">
+            <Title id={id}>{title}</Title>
+            <LinkButton href={link} data-testid={linkDataTestId}>
+              {linkLabel}
+            </LinkButton>
+          </div>
+        ) : (
+          title && <Title id={id}>{title}</Title>
+        )}
+        {children && <div className={classNames(styles.children, { [styles.withMargin]: title })}>{children}</div>}
+      </div>
     </div>
   )
 }

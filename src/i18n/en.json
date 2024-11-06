@@ -70,6 +70,10 @@
         "level": "Please select the type of Carbon Assessment"
       }
     },
+    "post": {
+      "displayInfography": "Display all posts",
+      "hideInfography": "Hide all posts"
+    },
     "not-found": "Study not found",
     "organization": {
       "title": "Which organization is involved in the study?",
