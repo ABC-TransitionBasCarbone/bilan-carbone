@@ -107,6 +107,7 @@ const DetailedGES = ({ form, multipleEmissions, setMultiple, postsCount, setPost
                 slotProps={{ htmlInput: { min: 1, max: 5 } }}
                 defaultValue={postsCount}
                 onChange={(e) => updateEmissionPostsCount(Number(e.target.value))}
+                data-testid="new-emission-sub-posts-count"
               />
             </>
           )}
@@ -129,7 +130,7 @@ const DetailedGES = ({ form, multipleEmissions, setMultiple, postsCount, setPost
       )}
 
       <FormTextField
-        disabled={detailedGES}
+        disabled={detailedGES || multipleEmissions}
         data-testid="new-emission-totalCo2"
         control={form.control}
         translation={t}

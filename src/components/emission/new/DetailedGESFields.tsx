@@ -6,15 +6,17 @@ import { CreateEmissionCommand } from '@/services/serverFunctions/emission.comma
 
 interface DetailedGESFieldsProps {
   form: UseFormReturn<CreateEmissionCommand>
+  multiple?: boolean
   index: number
 }
 
-const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
+const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) => {
   const t = useTranslations('emissions.create')
+  const getTestId = (gaz: string) => `new-emission-${multiple ? `post-${index}-` : ''}${gaz}`
   return (
     <>
       <FormTextField
-        data-testid="new-emission-co2f"
+        data-testid={getTestId('co2f')}
         control={form.control}
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
@@ -23,7 +25,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         label={t('co2f')}
       />
       <FormTextField
-        data-testid="new-emission-ch4f"
+        data-testid={getTestId('ch4f')}
         control={form.control}
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
@@ -32,7 +34,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         label={t('ch4f')}
       />
       <FormTextField
-        data-testid="new-emission-ch4b"
+        data-testid={getTestId('ch4b')}
         control={form.control}
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
@@ -41,7 +43,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         label={t('ch4b')}
       />
       <FormTextField
-        data-testid="new-emission-n2o"
+        data-testid={getTestId('n2o')}
         control={form.control}
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
@@ -50,7 +52,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         label={t('n2o')}
       />
       <FormTextField
-        data-testid="new-emission-co2b"
+        data-testid={getTestId('co2b')}
         control={form.control}
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
@@ -59,7 +61,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         label={t('co2b')}
       />
       <FormTextField
-        data-testid="new-emission-sf6"
+        data-testid={getTestId('sf6')}
         control={form.control}
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
@@ -68,7 +70,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         label={t('sf6')}
       />
       <FormTextField
-        data-testid="new-emission-hfc"
+        data-testid={getTestId('hfc')}
         control={form.control}
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
@@ -77,7 +79,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         label={t('hfc')}
       />
       <FormTextField
-        data-testid="new-emission-pfc"
+        data-testid={getTestId('pfc')}
         control={form.control}
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
@@ -86,7 +88,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         label={t('pfc')}
       />
       <FormTextField
-        data-testid="new-emission-otherGES"
+        data-testid={getTestId('otherGES')}
         control={form.control}
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}

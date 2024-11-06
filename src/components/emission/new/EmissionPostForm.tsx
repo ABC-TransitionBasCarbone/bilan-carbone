@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import styles from './EmissionPostForm.module.css'
 import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
+import ExpandIcon from '@mui/icons-material/ExpandMore'
 import DetailedGESFields from './DetailedGESFields'
 import { FormTextField } from '@/components/form/TextField'
 import classNames from 'classnames'
@@ -23,7 +24,16 @@ const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
 
   return (
     <Accordion>
-      <AccordionSummary expandIcon={<>+</>}>{header}</AccordionSummary>
+      <AccordionSummary
+        data-testid={`emission-post-${index}-header`}
+        expandIcon={
+          <div data-testid={`emission-post-${index}-expand`}>
+            <ExpandIcon />
+          </div>
+        }
+      >
+        {header}
+      </AccordionSummary>
       <AccordionDetails className={classNames(styles['accordion-details'], 'flex-col')}>
         <div className={classNames(styles['accordion-details-header'], 'flex')}>
           <FormTextField
@@ -45,10 +55,10 @@ const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
         </div>
 
         {detailedGES ? (
-          <DetailedGESFields form={form} index={index} />
+          <DetailedGESFields form={form} index={index} multiple />
         ) : (
           <FormTextField
-            data-testid="new-emission-totalCo2"
+            data-testid={`new-emission-post-${index}-totalCo2`}
             control={form.control}
             translation={t}
             slotProps={{
