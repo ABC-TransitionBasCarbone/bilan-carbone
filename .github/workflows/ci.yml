@@ -59,7 +59,7 @@ jobs:
           minAccessibilityScore: '100'
           minBestPracticesScore: '100'
       - name: Upload Lighthouse artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Lighthouse reports
