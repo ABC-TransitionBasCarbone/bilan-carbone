@@ -2,6 +2,7 @@ import { FieldPath, UseFormReturn } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import { FormTextField } from '@/components/form/TextField'
 import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
+import { gazKeys } from '@/constants/emissions'
 
 interface DetailedGESFieldsProps {
   form: UseFormReturn<CreateEmissionCommand>
@@ -15,87 +16,18 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
   const getTestId = (gaz: string) => `new-emission-${multiple ? `post-${index}-` : ''}${gaz}`
   return (
     <>
-      <FormTextField
-        data-testid={getTestId('co2f')}
-        control={form.control}
-        translation={t}
-        slotProps={{ htmlInput: { min: 0 } }}
-        type="number"
-        name={getName('co2f')}
-        label={t('co2f')}
-      />
-      <FormTextField
-        data-testid={getTestId('ch4f')}
-        control={form.control}
-        translation={t}
-        slotProps={{ htmlInput: { min: 0 } }}
-        type="number"
-        name={getName('ch4f')}
-        label={t('ch4f')}
-      />
-      <FormTextField
-        data-testid={getTestId('ch4b')}
-        control={form.control}
-        translation={t}
-        slotProps={{ htmlInput: { min: 0 } }}
-        type="number"
-        name={getName('ch4b')}
-        label={t('ch4b')}
-      />
-      <FormTextField
-        data-testid={getTestId('n2o')}
-        control={form.control}
-        translation={t}
-        slotProps={{ htmlInput: { min: 0 } }}
-        type="number"
-        name={getName('n2o')}
-        label={t('n2o')}
-      />
-      <FormTextField
-        data-testid={getTestId('co2b')}
-        control={form.control}
-        translation={t}
-        slotProps={{ htmlInput: { min: 0 } }}
-        type="number"
-        name={getName('co2b')}
-        label={t('co2b')}
-      />
-      <FormTextField
-        data-testid={getTestId('sf6')}
-        control={form.control}
-        translation={t}
-        slotProps={{ htmlInput: { min: 0 } }}
-        type="number"
-        name={getName('sf6')}
-        label={t('sf6')}
-      />
-      <FormTextField
-        data-testid={getTestId('hfc')}
-        control={form.control}
-        translation={t}
-        slotProps={{ htmlInput: { min: 0 } }}
-        type="number"
-        name={getName('hfc')}
-        label={t('hfc')}
-      />
-      <FormTextField
-        data-testid={getTestId('pfc')}
-        control={form.control}
-        translation={t}
-        slotProps={{ htmlInput: { min: 0 } }}
-        type="number"
-        name={getName('pfc')}
-        label={t('pfc')}
-      />
-      <FormTextField
-        data-testid={getTestId('otherGES')}
-        control={form.control}
-        translation={t}
-        slotProps={{ htmlInput: { min: 0 } }}
-        type="number"
-        name={getName('otherGES')}
-        label={t('otherGES')}
-      />
+      {gazKeys.map((gaz) => (
+        <FormTextField
+          key={getName(gaz)}
+          data-testid={getTestId(gaz)}
+          control={form.control}
+          translation={t}
+          slotProps={{ htmlInput: { min: 0 } }}
+          type="number"
+          name={getName(gaz)}
+          label={t(gaz)}
+        />
+      ))}
     </>
   )
 }

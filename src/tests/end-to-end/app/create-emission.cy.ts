@@ -5,21 +5,6 @@ describe('Create emission', () => {
     cy.intercept('POST', '/facteurs-d-emission/creer').as('create')
   })
 
-  it('should set toggles to false by default', () => {
-    cy.login()
-    cy.visit('/facteurs-d-emission')
-    cy.getByTestId('new-emission').click()
-
-    cy.getByTestId('new-emission-detailed-switch').get('input').should('not.be.checked')
-    cy.getByTestId('new-emission-multiple-switch').get('input').should('not.be.checked')
-
-    cy.getByTestId('new-emission-detailed-switch').click()
-    cy.getByTestId('new-emission-multiple-switch').click()
-
-    cy.getByTestId('new-emission-detailed-switch').get('input').should('be.checked')
-    cy.getByTestId('new-emission-multiple-switch').get('input').should('be.checked')
-  })
-
   it('should create an emission with total CO2 on your organization', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
@@ -78,6 +63,7 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission-pfc').should('not.exist')
     cy.getByTestId('new-emission-otherGES').should('not.exist')
 
+    cy.getByTestId('new-emission-detailed-switch').get('input').should('not.be.checked')
     cy.getByTestId('new-emission-detailed-switch').click()
 
     cy.getByTestId('new-emission-co2f').should('exist')
@@ -138,6 +124,7 @@ describe('Create emission', () => {
     cy.get('[data-value="GWH"]').click()
     cy.getByTestId('new-emission-source').type('Magic')
 
+    cy.getByTestId('new-emission-multiple-switch').get('input').should('not.be.checked')
     cy.getByTestId('new-emission-multiple-switch').click()
 
     cy.getByTestId('new-emission-sub-posts-count').within(() => {
