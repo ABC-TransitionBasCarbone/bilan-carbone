@@ -5,14 +5,14 @@ import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import React, { useMemo } from 'react'
 import { Role, StudyRole } from '@prisma/client'
-import { StudyWithRights } from '@/db/study'
+import { FullStudy } from '@/db/study'
 import Block from '@/components/base/Block'
 import SelectStudyRole from './SelectStudyRole'
 import StudyPublicStatus from './StudyPublicStatus'
 
 interface Props {
   user: User
-  study: StudyWithRights
+  study: FullStudy
 }
 
 const StudyRightsTable = ({ user, study }: Props) => {
@@ -24,7 +24,7 @@ const StudyRightsTable = ({ user, study }: Props) => {
   }, [user, study])
 
   const columns = useMemo(() => {
-    const columns: ColumnDef<StudyWithRights['allowedUsers'][0]>[] = [
+    const columns: ColumnDef<FullStudy['allowedUsers'][0]>[] = [
       {
         header: t('email'),
         accessorKey: 'user.email',
@@ -50,7 +50,7 @@ const StudyRightsTable = ({ user, study }: Props) => {
     } else {
       columns.push({
         header: t('role'),
-        accessorFn: (right: StudyWithRights['allowedUsers'][0]) => tStudyRole(right.role),
+        accessorFn: (right: FullStudy['allowedUsers'][0]) => tStudyRole(right.role),
       })
     }
     return columns

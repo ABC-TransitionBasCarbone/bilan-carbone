@@ -1,4 +1,4 @@
-import { Level, PrismaClient, Role, StudyRole } from '@prisma/client'
+import { Level, PrismaClient, Role, StudyRole, SubPost } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { signPassword } from '@/services/auth'
 import { ACTUALITIES } from './legacy_data/actualities'
@@ -6,6 +6,7 @@ import { ACTUALITIES } from './legacy_data/actualities'
 const prisma = new PrismaClient()
 
 const users = async () => {
+  await prisma.studyEmissionSource.deleteMany()
   await prisma.emissionPostMetaData.deleteMany()
   await prisma.emissionPost.deleteMany()
   await prisma.emissionMetaData.deleteMany()
@@ -84,6 +85,7 @@ const users = async () => {
     ),
   })
 
+  const subPosts = Object.keys(SubPost)
   await Promise.all(
     Array.from({ length: 20 }).map(() => {
       const creator = faker.helpers.arrayElement(users)
@@ -96,6 +98,16 @@ const users = async () => {
           level: faker.helpers.enumValue(Level),
           name: faker.lorem.words({ min: 2, max: 5 }),
           organizationId: creator.organizationId,
+          emissionSources: {
+            createMany: {
+              data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) =>
+                Array.from({ length: Math.ceil(Math.random() * 20) }).map(() => ({
+                  name: faker.lorem.words({ min: 2, max: 5 }),
+                  subPost: subPost as SubPost,
+                })),
+              ),
+            },
+          },
           allowedUsers: {
             create: { role: StudyRole.Validator, userId: creator.id },
           },

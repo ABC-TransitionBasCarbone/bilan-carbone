@@ -3,7 +3,7 @@ import { Level, Prisma, Study, StudyRole, User as DbUser, Role } from '@prisma/c
 import { getAllowedLevels } from '../study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { User } from 'next-auth'
-import { StudyWithRights } from '@/db/study'
+import { FullStudy } from '@/db/study'
 
 const checkLevel = (userLevel: Level, studyLevel: Level) => getAllowedLevels(studyLevel).includes(userLevel)
 
@@ -78,7 +78,7 @@ export const canCreateStudy = async (user: User, study: Prisma.StudyCreateInput,
   return true
 }
 
-export const canChangePublicStatus = async (user: User, study: StudyWithRights) => {
+export const canChangePublicStatus = async (user: User, study: FullStudy) => {
   if (user.role === Role.ADMIN) {
     return true
   }
@@ -91,7 +91,7 @@ export const canChangePublicStatus = async (user: User, study: StudyWithRights) 
   return true
 }
 
-export const canAddRightOnStudy = (user: User, study: StudyWithRights, newUser: DbUser, role: StudyRole) => {
+export const canAddRightOnStudy = (user: User, study: FullStudy, newUser: DbUser, role: StudyRole) => {
   if (user.id === newUser.id) {
     return false
   }

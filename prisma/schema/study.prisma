@@ -37,9 +37,10 @@ model Study {
   level     Level
   exports   StudyExport[]
 
-  organization   Organization  @relation(fields: [organizationId], references: [id])
-  organizationId String        @map("organization_id")
-  allowedUsers   UserOnStudy[]
+  organization    Organization          @relation(fields: [organizationId], references: [id])
+  organizationId  String                @map("organization_id")
+  allowedUsers    UserOnStudy[]
+  emissionSources StudyEmissionSource[]
 
   @@map("studies")
 }
@@ -64,4 +65,15 @@ model UserOnStudy {
 
   @@id([studyId, userId])
   @@map("users_on_study")
+}
+
+model StudyEmissionSource {
+  id      String @id @default(uuid())
+  study   Study  @relation(fields: [studyId], references: [id])
+  studyId String @map("study_id")
+
+  subPost SubPost
+  name    String
+
+  @@map("study_emission_sources")
 }

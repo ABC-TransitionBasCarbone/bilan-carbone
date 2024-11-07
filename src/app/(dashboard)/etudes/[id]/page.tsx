@@ -2,7 +2,7 @@ import { UUID } from 'crypto'
 import { auth } from '@/services/auth'
 import NotFound from '@/components/study/NotFound'
 import { canReadStudy } from '@/services/permissions/study'
-import { getStudyWithRightsById } from '@/db/study'
+import { getStudyById } from '@/db/study'
 import StudyPage from '@/components/pages/Study'
 
 interface Props {
@@ -19,7 +19,7 @@ const StudyView = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  const study = await getStudyWithRightsById(id)
+  const study = await getStudyById(id)
 
   if (!study) {
     return <NotFound />
