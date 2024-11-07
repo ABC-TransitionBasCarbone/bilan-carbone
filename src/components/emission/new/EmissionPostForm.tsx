@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import styles from './EmissionPostForm.module.css'
@@ -19,12 +18,13 @@ interface DetailedGESFieldsProps {
 const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) => {
   const t = useTranslations('emissions.create')
 
-  const header = form.watch(`posts.${index}.name`) || `${t('post')} ${index + 1}`
-  const totalCo2 = form.watch(`posts.${index}.totalCo2`) || 0
+  const header = form.watch(`posts.${index}.name`) || `${t('part')} ${index + 1}`
+  const totalCo2 = form.watch(`posts.${index}.totalCo2`)
 
   return (
     <Accordion>
       <AccordionSummary
+        aria-controls={`emission-post-${index}`}
         data-testid={`emission-post-${index}-header`}
         expandIcon={
           <div data-testid={`emission-post-${index}-expand`}>
@@ -34,8 +34,8 @@ const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
       >
         {header}
       </AccordionSummary>
-      <AccordionDetails className={classNames(styles['accordion-details'], 'flex-col')}>
-        <div className={classNames(styles['accordion-details-header'], 'flex')}>
+      <AccordionDetails className={classNames(styles['accordionDetails'], 'flex-col')}>
+        <div className={classNames(styles['accordionDetailsHeader'], 'flex')}>
           <FormTextField
             data-testid={`new-emission-post-${index}-name`}
             control={form.control}

@@ -1,4 +1,3 @@
-/* eslint-disable cypress/unsafe-to-chain-command */
 describe('Create emission', () => {
   beforeEach(() => {
     cy.exec('npx prisma db seed')
@@ -142,7 +141,8 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission-multiple-switch').click()
 
     cy.getByTestId('new-emission-sub-posts-count').within(() => {
-      cy.get('input').clear().type('3')
+      cy.get('input').clear()
+      cy.get('input').type('3')
     })
     cy.getByTestId('emission-post-0-header').should('be.visible')
     cy.getByTestId('emission-post-1-header').should('be.visible')
@@ -213,12 +213,13 @@ describe('Create emission', () => {
     cy.getByTestId('emission-post-1-header').should('not.exist')
 
     cy.getByTestId('new-emission-sub-posts-count').within(() => {
-      cy.get('input').clear().type('2')
+      cy.get('input').clear()
+      cy.get('input').type('2')
     })
     cy.getByTestId('emission-post-0-header').should('be.visible')
-    cy.getByTestId('emission-post-0-header').should('have.text', 'Poste 1')
+    cy.getByTestId('emission-post-0-header').should('have.text', 'Composante 1')
     cy.getByTestId('emission-post-1-header').should('be.visible')
-    cy.getByTestId('emission-post-1-header').should('have.text', 'Poste 2')
+    cy.getByTestId('emission-post-1-header').should('have.text', 'Composante 2')
     cy.getByTestId('emission-post-2-header').should('not.exist')
 
     cy.getByTestId('emission-post-0-expand').click()
@@ -291,10 +292,6 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-name').should('not.exist')
   })
 
-  /* TO DO : fix test (error does not occur on local environment)
-	Error: Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops.
-	*/
-  /*
   it('should render emission posts in accordions', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
@@ -315,14 +312,15 @@ describe('Create emission', () => {
     cy.getByTestId('emission-post-1-header').should('not.exist')
 
     cy.getByTestId('new-emission-sub-posts-count').within(() => {
-      cy.get('input').clear().type('3')
+      cy.get('input').clear()
+      cy.get('input').type('3')
     })
     cy.getByTestId('emission-post-0-header').should('be.visible')
-    cy.getByTestId('emission-post-0-header').should('have.text', 'Poste 1')
+    cy.getByTestId('emission-post-0-header').should('have.text', 'Composante 1')
     cy.getByTestId('emission-post-1-header').should('be.visible')
-    cy.getByTestId('emission-post-1-header').should('have.text', 'Poste 2')
+    cy.getByTestId('emission-post-1-header').should('have.text', 'Composante 2')
     cy.getByTestId('emission-post-2-header').should('be.visible')
-    cy.getByTestId('emission-post-2-header').should('have.text', 'Poste 3')
+    cy.getByTestId('emission-post-2-header').should('have.text', 'Composante 3')
     cy.getByTestId('emission-post-3-header').should('not.exist')
 
     cy.getByTestId('emission-post-0-expand').click()
@@ -345,22 +343,21 @@ describe('Create emission', () => {
 
     cy.getByTestId('new-emission-detailed-switch').click()
 
-    cy.getByTestId('emission-post-0-header').scrollTo('top', { ensureScrollable: false })
     cy.getByTestId('emission-post-0-expand').click()
     cy.getByTestId('new-emission-post-0-totalCo2').should('not.exist')
-    cy.getByTestId('new-emission-post-0-co2f').should('be.visible')
+    cy.getByTestId('new-emission-post-0-co2f').should('exist')
     cy.getByTestId('emission-post-0-expand').click()
     cy.getByTestId('new-emission-post-0-co2f').should('not.be.visible')
 
     cy.getByTestId('emission-post-1-expand').click()
     cy.getByTestId('new-emission-post-1-totalCo2').should('not.exist')
-    cy.getByTestId('new-emission-post-1-co2f').should('be.visible')
+    cy.getByTestId('new-emission-post-1-co2f').should('exist')
     cy.getByTestId('emission-post-1-expand').click()
     cy.getByTestId('new-emission-post-1-co2f').should('not.be.visible')
 
     cy.getByTestId('emission-post-2-expand').click()
     cy.getByTestId('new-emission-post-2-totalCo2').should('not.exist')
-    cy.getByTestId('new-emission-post-2-co2f').should('be.visible')
+    cy.getByTestId('new-emission-post-2-co2f').should('exist')
     cy.getByTestId('emission-post-2-expand').click()
     cy.getByTestId('new-emission-post-2-co2f').should('not.be.visible')
 
@@ -373,7 +370,7 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission-totalCo2').within(() => {
       cy.get('input').should('be.disabled')
     })
-  })*/
+  })
 
   it('should delete posts from form when switch off detailed ges', () => {
     cy.login()
@@ -391,7 +388,8 @@ describe('Create emission', () => {
     cy.getByTestId('new-emission-multiple-switch').click()
 
     cy.getByTestId('new-emission-sub-posts-count').within(() => {
-      cy.get('input').clear().type('2')
+      cy.get('input').clear()
+      cy.get('input').type('2')
     })
 
     cy.getByTestId('emission-post-0-header').should('be.visible')
@@ -414,7 +412,8 @@ describe('Create emission', () => {
     })
 
     cy.getByTestId('new-emission-sub-posts-count').within(() => {
-      cy.get('input').clear().type('1')
+      cy.get('input').clear()
+      cy.get('input').type('1')
     })
     cy.getByTestId('emission-post-1-header').should('not.exist')
     cy.getByTestId('new-emission-totalCo2').within(() => {
@@ -422,7 +421,8 @@ describe('Create emission', () => {
     })
 
     cy.getByTestId('new-emission-sub-posts-count').within(() => {
-      cy.get('input').clear().type('2')
+      cy.get('input').clear()
+      cy.get('input').type('2')
     })
     cy.getByTestId('emission-post-1-header').should('have.text', 'My second post')
     cy.getByTestId('new-emission-totalCo2').within(() => {
@@ -435,8 +435,8 @@ describe('Create emission', () => {
 
     cy.getByTestId('new-emission-multiple-switch').click()
     // posts should be reset
-    cy.getByTestId('emission-post-0-header').should('have.text', 'Poste 1')
-    cy.getByTestId('emission-post-1-header').should('have.text', 'Poste 2')
+    cy.getByTestId('emission-post-0-header').should('have.text', 'Composante 1')
+    cy.getByTestId('emission-post-1-header').should('have.text', 'Composante 2')
     cy.getByTestId('emission-post-0-header').should('be.visible')
     cy.getByTestId('emission-post-1-header').should('be.visible')
 

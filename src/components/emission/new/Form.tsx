@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { useForm } from 'react-hook-form'
@@ -33,26 +32,25 @@ const NewEmissionForm = () => {
       name: '',
       attribute: '',
       source: '',
-      co2f: [0],
-      ch4f: [0],
-      ch4b: [0],
-      n2o: [0],
-      co2b: [0],
-      sf6: [0],
-      hfc: [0],
-      pfc: [0],
-      otherGES: [0],
+      co2f: 0,
+      ch4f: 0,
+      ch4b: 0,
+      n2o: 0,
+      co2b: 0,
+      sf6: 0,
+      hfc: 0,
+      pfc: 0,
+      otherGES: 0,
       totalCo2: 0,
       comment: '',
     },
   })
 
   const onSubmit = async (command: CreateEmissionCommand) => {
-    if (!multipleEmissions) {
-      delete command.posts
+    if (multipleEmissions) {
+      command.posts = (command.posts || []).filter((_, index) => index < postsCount)
     }
-
-    const result = await createEmissionCommand(command, multipleEmissions, postsCount)
+    const result = await createEmissionCommand(command)
     if (result) {
       setError(result)
     } else {
