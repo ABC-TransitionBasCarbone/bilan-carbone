@@ -1,5 +1,4 @@
-import React from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { FieldPath, UseFormReturn } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import { FormTextField } from '@/components/form/TextField'
 import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
@@ -12,6 +11,7 @@ interface DetailedGESFieldsProps {
 
 const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) => {
   const t = useTranslations('emissions.create')
+  const getName = (gaz: string) => `${multiple ? `posts.${index}.` : ''}${gaz}` as FieldPath<CreateEmissionCommand>
   const getTestId = (gaz: string) => `new-emission-${multiple ? `post-${index}-` : ''}${gaz}`
   return (
     <>
@@ -21,7 +21,7 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
         type="number"
-        name={`co2f.${index}`}
+        name={getName('co2f')}
         label={t('co2f')}
       />
       <FormTextField
@@ -30,7 +30,7 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
         type="number"
-        name={`ch4f.${index}`}
+        name={getName('ch4f')}
         label={t('ch4f')}
       />
       <FormTextField
@@ -39,7 +39,7 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
         type="number"
-        name={`ch4b.${index}`}
+        name={getName('ch4b')}
         label={t('ch4b')}
       />
       <FormTextField
@@ -48,7 +48,7 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
         type="number"
-        name={`n2o.${index}`}
+        name={getName('n2o')}
         label={t('n2o')}
       />
       <FormTextField
@@ -57,7 +57,7 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
         type="number"
-        name={`co2b.${index}`}
+        name={getName('co2b')}
         label={t('co2b')}
       />
       <FormTextField
@@ -66,7 +66,7 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
         type="number"
-        name={`sf6.${index}`}
+        name={getName('sf6')}
         label={t('sf6')}
       />
       <FormTextField
@@ -75,7 +75,7 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
         type="number"
-        name={`hfc.${index}`}
+        name={getName('hfc')}
         label={t('hfc')}
       />
       <FormTextField
@@ -84,7 +84,7 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
         type="number"
-        name={`pfc.${index}`}
+        name={getName('pfc')}
         label={t('pfc')}
       />
       <FormTextField
@@ -93,7 +93,7 @@ const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) =>
         translation={t}
         slotProps={{ htmlInput: { min: 0 } }}
         type="number"
-        name={`otherGES.${index}`}
+        name={getName('otherGES')}
         label={t('otherGES')}
       />
     </>

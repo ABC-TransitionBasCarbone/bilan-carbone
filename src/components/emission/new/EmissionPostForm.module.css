@@ -1,11 +1,7 @@
-.accordion-details {
+.accordionDetails {
   gap: 2rem;
 }
 
-.accordion-details-header {
+.accordionDetailsHeader {
   gap: 1rem;
-}
-
-.accordion-details-type-selector {
-  min-width: 10rem;
 }

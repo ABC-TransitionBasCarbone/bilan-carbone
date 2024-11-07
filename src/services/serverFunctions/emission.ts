@@ -10,34 +10,15 @@ import { createEmission } from '@/db/emissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmission } from '../permissions/emission'
 
-const getEmissionGazValue = (gaz: number[], multiple: boolean, postsCount: number) =>
-  gaz.filter((_, i) => (multiple ? i < postsCount : i === 0)).reduce((acc: number, current: number) => acc + current, 0)
-
-const getPostTotalCo2 = (gaz: number[][] = [], index: number) =>
-  gaz.filter((g) => g !== undefined).reduce((acc, current) => acc + current[index] || 0, 0)
-
-export const createEmissionCommand = async (
-  {
-    name,
-    unit,
-    attribute,
-    comment,
-    co2f = [],
-    ch4f = [],
-    ch4b = [],
-    n2o = [],
-    co2b = [],
-    sf6 = [],
-    hfc = [],
-    pfc = [],
-    otherGES = [],
-    posts = [],
-    subPost,
-    ...command
-  }: CreateEmissionCommand,
-  multiple: boolean,
-  postsCount: number,
-) => {
+export const createEmissionCommand = async ({
+  name,
+  unit,
+  attribute,
+  comment,
+  posts = [],
+  subPost,
+  ...command
+}: CreateEmissionCommand) => {
   const session = await auth()
   const local = await getLocale()
   if (!session || !session.user) {
@@ -54,21 +35,8 @@ export const createEmissionCommand = async (
     return NOT_AUTHORIZED
   }
 
-  const gazData = {
-    co2f: getEmissionGazValue(co2f, multiple, postsCount),
-    ch4f: getEmissionGazValue(ch4f, multiple, postsCount),
-    ch4b: getEmissionGazValue(ch4b, multiple, postsCount),
-    n2o: getEmissionGazValue(n2o, multiple, postsCount),
-    co2b: getEmissionGazValue(co2b, multiple, postsCount),
-    sf6: getEmissionGazValue(sf6, multiple, postsCount),
-    hfc: getEmissionGazValue(hfc, multiple, postsCount),
-    pfc: getEmissionGazValue(pfc, multiple, postsCount),
-    otherGES: getEmissionGazValue(otherGES, multiple, postsCount),
-  }
-
   const emission = await createEmission({
     ...command,
-    ...gazData,
     importedFrom: Import.Manual,
     status: EmissionStatus.Valid,
     reliability: 5,
@@ -85,34 +53,32 @@ export const createEmissionCommand = async (
     },
   })
 
-  if (multiple) {
+  if (posts) {
     await Promise.all(
-      posts
-        .filter((_, i) => (multiple ? i < postsCount : i === 0))
-        .map((post, index) =>
-          prismaClient.emissionPost.create({
-            data: {
-              emissionId: emission.id,
-              type: post.type,
-              co2f: co2f[index],
-              ch4f: ch4f[index],
-              ch4b: ch4b[index],
-              n2o: n2o[index],
-              co2b: co2b[index],
-              sf6: sf6[index],
-              hfc: hfc[index],
-              pfc: pfc[index],
-              otherGES: otherGES[index],
-              totalCo2: post.totalCo2 || getPostTotalCo2([co2f, ch4f, ch4b, n2o, co2b, sf6, hfc, pfc, otherGES], index),
-              metaData: {
-                create: {
-                  language: local,
-                  title: post.name,
-                },
+      posts.map((post) =>
+        prismaClient.emissionPost.create({
+          data: {
+            emissionId: emission.id,
+            type: post.type,
+            co2f: post.co2f || 0,
+            ch4f: post.ch4f || 0,
+            ch4b: post.ch4b || 0,
+            n2o: post.n2o || 0,
+            co2b: post.co2b || 0,
+            sf6: post.sf6 || 0,
+            hfc: post.hfc || 0,
+            pfc: post.pfc || 0,
+            otherGES: post.otherGES || 0,
+            totalCo2: post.totalCo2 || 0,
+            metaData: {
+              create: {
+                language: local,
+                title: post.name,
               },
             },
-          }),
-        ),
+          },
+        }),
+      ),
     )
   }
 }
