@@ -15,7 +15,7 @@ export const createEmissionCommand = async ({
   unit,
   attribute,
   comment,
-  posts = [],
+  posts,
   subPost,
   ...command
 }: CreateEmissionCommand) => {

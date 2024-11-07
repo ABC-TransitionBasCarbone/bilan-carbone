@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { UseFormReturn } from 'react-hook-form'
 import classNames from 'classnames'
@@ -10,6 +10,7 @@ import { CreateEmissionCommand } from '@/services/serverFunctions/emission.comma
 import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
 import DetailedGESFields from './DetailedGESFields'
 import EmissionPostForm from './EmissionPostForm'
+import { gazKeys } from '@/constants/emissions'
 
 interface Props {
   form: UseFormReturn<CreateEmissionCommand>
@@ -19,8 +20,6 @@ interface Props {
   setPosts: (value: number) => void
 }
 
-const gazKeys = ['co2f', 'ch4f', 'ch4b', 'n2o', 'co2b', 'sf6', 'hfc', 'pfc', 'otherGES'] as const
-
 const DetailedGES = ({ form, multipleEmissions, setMultiple, postsCount, setPosts }: Props) => {
   const t = useTranslations('emissions.create')
   const [detailedGES, setDetailedGES] = useState(false)
@@ -28,53 +27,53 @@ const DetailedGES = ({ form, multipleEmissions, setMultiple, postsCount, setPost
   const emissionValues = form.watch(gazKeys)
   const stringifiedEmissionValues = JSON.stringify(emissionValues)
   const emissionPostsValues = form.watch(['posts'])
+  const stringifiedEmissionPostsValues = JSON.stringify(emissionPostsValues[0])
   const totalCo2 = form.watch('totalCo2')
 
+  const updateTotalCo2 = useCallback(
+    (value: number) => {
+      if (value !== totalCo2) {
+        form.setValue('totalCo2', value)
+      }
+    },
+    [totalCo2, form],
+  )
+
   useEffect(() => {
-    if (detailedGES) {
-      if (multipleEmissions) {
-        const newTotal = (emissionPostsValues[0] || [])
-          .filter((value, index) => value !== undefined && index < postsCount)
-          .reduce((acc, current, index) => {
-            const filteredGaz: Record<(typeof gazKeys)[number], number> = Object.entries(current).reduce(
-              (acc, [key, value]) => {
-                if (gazKeys.includes(key as (typeof gazKeys)[number]) && value) {
-                  acc[key as (typeof gazKeys)[number]] = value as number
-                }
-                return acc
-              },
-              {} as Record<(typeof gazKeys)[number], number>,
-            )
-
-            const filteredGazSum = Object.values(filteredGaz).reduce((acc, current) => acc + current, 0)
-            if (form.getValues(`posts.${index}.totalCo2`) !== totalCo2) {
-              form.setValue(`posts.${index}.totalCo2`, totalCo2)
-            }
-            return acc + filteredGazSum
-          }, 0)
-
-        if (totalCo2 !== newTotal) {
-          form.setValue('totalCo2', newTotal)
-        }
-      } else {
-        const newTotal = emissionValues
-          .filter((value) => value !== undefined)
-          .reduce((acc, current) => acc + current || 0, 0)
-        if (totalCo2 !== newTotal) {
-          form.setValue('totalCo2', newTotal)
-        }
-      }
-    } else {
-      if (multipleEmissions) {
-        const newTotal = (emissionPostsValues[0] || [])
-          .filter((_, i) => (multipleEmissions ? i < postsCount : i === 0))
-          .reduce((acc: number, current) => acc + (current?.totalCo2 || 0), 0)
-        if (totalCo2 !== newTotal) {
-          form.setValue('totalCo2', newTotal)
-        }
-      }
+    if (detailedGES && !multipleEmissions) {
+      updateTotalCo2(getTotalForDetailedGES())
     }
-  }, [totalCo2, stringifiedEmissionValues, emissionPostsValues, detailedGES])
+  }, [totalCo2, updateTotalCo2, stringifiedEmissionValues, detailedGES])
+
+  useEffect(() => {
+    let totalCo2 = 0
+    if (detailedGES) {
+      emissionPostsValues[0]
+        ?.filter((value, index) => value !== undefined && index < postsCount)
+        .forEach((post, index) => {
+          const postTotalCo2 = gazKeys.reduce((acc, gaz) => acc + (post[gaz] || 0), 0)
+          totalCo2 += postTotalCo2
+          updatePostTotalCo2(index, postTotalCo2)
+        })
+      updateTotalCo2(totalCo2)
+    } else {
+      updateTotalCo2(getTotalForMultipleGES())
+    }
+  }, [postsCount, stringifiedEmissionPostsValues])
+
+  const getTotalForDetailedGES = () =>
+    emissionValues.filter((value) => value !== undefined).reduce((acc, current) => acc + current, 0)
+
+  const getTotalForMultipleGES = () =>
+    (emissionPostsValues[0] || [])
+      .filter((_, i) => (multipleEmissions ? i < postsCount : i === 0))
+      .reduce((acc, current) => acc + (current.totalCo2 || 0), 0)
+
+  const updatePostTotalCo2 = (index: number, value: number) => {
+    if (form.getValues(`posts.${index}.totalCo2`) !== value) {
+      form.setValue(`posts.${index}.totalCo2`, value)
+    }
+  }
 
   const updateEmissionPostsCount = (count: number) => {
     setPosts(count)

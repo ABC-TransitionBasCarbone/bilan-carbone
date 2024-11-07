@@ -24,6 +24,7 @@ const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
   return (
     <Accordion>
       <AccordionSummary
+        id={`emission-post-${index}-summary`}
         aria-controls={`emission-post-${index}`}
         data-testid={`emission-post-${index}-header`}
         expandIcon={
@@ -34,8 +35,8 @@ const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
       >
         {header}
       </AccordionSummary>
-      <AccordionDetails className={classNames(styles['accordionDetails'], 'flex-col')}>
-        <div className={classNames(styles['accordionDetailsHeader'], 'flex')}>
+      <AccordionDetails className={classNames(styles.accordionDetails, 'flex-col')}>
+        <div className={classNames(styles.accordionDetailsHeader, 'flex')}>
           <FormTextField
             data-testid={`new-emission-post-${index}-name`}
             control={form.control}
