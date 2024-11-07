@@ -9,6 +9,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 interface Props {
   study: Study
   post: Post | SubPost
+  hideSubPosts?: boolean
 }
 
 const colors: Record<Post, string> = {
@@ -24,7 +25,7 @@ const colors: Record<Post, string> = {
   UtilisationEtDependance: 'orange',
 }
 
-const PostInfography = ({ study, post }: Props) => {
+const PostInfography = ({ study, post, hideSubPosts }: Props) => {
   const t = useTranslations('emissions.post')
   const mainPost = useMemo(() => {
     if (Object.keys(Post).includes(post)) {
@@ -48,7 +49,7 @@ const PostInfography = ({ study, post }: Props) => {
       className={styles[Object.keys(Post).includes(post) ? colors[post as Post] : 'green']}
     >
       <div className={classNames(styles.header)}>{t(post)}</div>
-      {subPosts && (
+      {!hideSubPosts && subPosts && (
         <div className={classNames(styles.subPosts, 'flex')}>
           <ul className={classNames(styles.list, 'flex-col')}>
             {subPosts.map((subPost) => (

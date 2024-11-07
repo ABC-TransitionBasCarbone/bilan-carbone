@@ -1,5 +1,19 @@
 .infography {
   gap: 1rem;
+
+  @media screen and (max-width: 90rem) {
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  @media screen and (max-width: 64rem) {
+    gap: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  @media screen and (max-width: 55rem) {
+    font-size: 0.625rem;
+  }
 }
 
 .column {
