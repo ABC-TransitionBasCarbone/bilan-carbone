@@ -94,10 +94,10 @@ model Emission {
   incertitude Int?
 
   reliability                  Int
-  technicalRepresentativeness  Float? @map("technical_representativeness")
-  geographicRepresentativeness Float? @map("geographic_representativeness")
-  temporalRepresentativeness   Float? @map("temporal_representativeness")
-  completeness                 Float? @map("completeness")
+  technicalRepresentativeness  Int? @map("technical_representativeness")
+  geographicRepresentativeness Int? @map("geographic_representativeness")
+  temporalRepresentativeness   Int? @map("temporal_representativeness")
+  completeness                 Int? @map("completeness")
 
   totalCo2 Float  @map("total_co2")
   co2f     Float?
