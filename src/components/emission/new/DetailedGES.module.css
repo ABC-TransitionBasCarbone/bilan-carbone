@@ -8,4 +8,8 @@
 
 .input {
   flex: 1;
+
+  input {
+    width: 3rem;
+  }
 }

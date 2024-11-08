@@ -53,32 +53,20 @@ export const createEmissionCommand = async ({
     },
   })
 
-  if (posts) {
-    await Promise.all(
-      posts.map((post) =>
-        prismaClient.emissionPost.create({
-          data: {
-            emissionId: emission.id,
-            type: post.type,
-            co2f: post.co2f || 0,
-            ch4f: post.ch4f || 0,
-            ch4b: post.ch4b || 0,
-            n2o: post.n2o || 0,
-            co2b: post.co2b || 0,
-            sf6: post.sf6 || 0,
-            hfc: post.hfc || 0,
-            pfc: post.pfc || 0,
-            otherGES: post.otherGES || 0,
-            totalCo2: post.totalCo2 || 0,
-            metaData: {
-              create: {
-                language: local,
-                title: post.name,
-              },
+  await Promise.all(
+    posts.map(({ name, ...post }) =>
+      prismaClient.emissionPost.create({
+        data: {
+          emissionId: emission.id,
+          ...post,
+          metaData: {
+            create: {
+              language: local,
+              title: name,
             },
           },
-        }),
-      ),
-    )
-  }
+        },
+      }),
+    ),
+  )
 }

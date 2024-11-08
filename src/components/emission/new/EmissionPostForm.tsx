@@ -11,7 +11,6 @@ import classNames from 'classnames'
 interface DetailedGESFieldsProps {
   form: UseFormReturn<CreateEmissionCommand>
   detailedGES: boolean
-  totalCo2?: number
   index: number
 }
 
@@ -19,7 +18,6 @@ const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
   const t = useTranslations('emissions.create')
 
   const header = form.watch(`posts.${index}.name`) || `${t('part')} ${index + 1}`
-  const totalCo2 = form.watch(`posts.${index}.totalCo2`)
 
   return (
     <Accordion>
@@ -55,22 +53,20 @@ const EmissionPostForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
           />
         </div>
 
-        {detailedGES ? (
-          <DetailedGESFields form={form} index={index} multiple />
-        ) : (
-          <FormTextField
-            data-testid={`new-emission-post-${index}-totalCo2`}
-            control={form.control}
-            translation={t}
-            slotProps={{
-              htmlInput: { min: 0 },
-              inputLabel: { shrink: detailedGES || totalCo2 !== undefined ? true : undefined },
-            }}
-            type="number"
-            name={`posts.${index}.totalCo2`}
-            label={t('totalCo2')}
-          />
-        )}
+        {detailedGES && <DetailedGESFields form={form} index={index} multiple />}
+        <FormTextField
+          disabled={detailedGES}
+          data-testid={`new-emission-post-${index}-totalCo2`}
+          control={form.control}
+          translation={t}
+          slotProps={{
+            htmlInput: { min: 0 },
+            inputLabel: { shrink: true },
+          }}
+          type="number"
+          name={`posts.${index}.totalCo2`}
+          label={t('totalCo2')}
+        />
       </AccordionDetails>
     </Accordion>
   )
