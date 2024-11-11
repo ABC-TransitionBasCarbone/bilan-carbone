@@ -1,0 +1,37 @@
+.factor {
+  gap: 1rem;
+}
+
+.suggestions {
+  margin-top: 0.5rem;
+  position: absolute;
+  width: calc(100% - 4rem);
+  background-color: var(--neutral-00);
+  border: 1px solid var(--primary-10);
+  border-radius: 0.5rem;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.suggestion {
+  display: block;
+  cursor: pointer;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+
+  &:hover {
+    background-color: var(--primary-10);
+  }
+}
+
+.header {
+  font-weight: 500;
+}
+
+.detail {
+  font-size: 0.975rem;
+  color: var(--neutral-50);
+}

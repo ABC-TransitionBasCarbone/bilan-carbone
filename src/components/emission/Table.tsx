@@ -112,7 +112,7 @@ const EmissionsTable = ({ emissions }: Props) => {
         },
       },
       { header: t('value'), accessorKey: 'totalCo2' },
-      { header: t('unit'), accessorFn: (emission: EmissionWithMetaData) => tUnits(emission.unit) },
+      { header: t('unit'), accessorFn: (emission: EmissionWithMetaData) => `kgCO₂e/${tUnits(emission.unit)}` },
       {
         header: t('location'),
         accessorFn: (emission: EmissionWithMetaData) => [emission.location, emission.metaData?.location].join(' '),

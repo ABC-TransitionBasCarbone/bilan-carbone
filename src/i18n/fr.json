@@ -427,5 +427,19 @@
       "etp": "Employés",
       "ca": "Chiffre d'affaire"
     }
+  },
+  "emissionSource": {
+    "status": {
+      "valid": "Validé",
+      "waiting": "En attente",
+      "toVerify": "A vérifier"
+    },
+    "form": {
+      "name": "Nom",
+      "tag": "Tag",
+      "caracterisation": "Caractérisation",
+      "emissionFactor": "Facteur d'émission",
+      "value": "Valeur donnée d'activité"
+    }
   }
 }

@@ -111,7 +111,8 @@ model Emission {
   otherGES Float? @map("other_ges")
   unit     Unit?
 
-  subPosts SubPost[] @map("sub_posts")
+  subPosts            SubPost[]             @map("sub_posts")
+  StudyEmissionSource StudyEmissionSource[]
 
   @@index([organizationId])
   @@index([status])

@@ -8,6 +8,12 @@ import { getLocale } from '@/i18n/request'
 import { createEmission } from '@/db/emissions'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmission } from '../permissions/emission'
+import { getEmissions } from '../emissions'
+
+export const getEmissionsFactor = async () => {
+  const local = await getLocale()
+  return getEmissions(local)
+}
 
 export const createEmissionCommand = async ({
   name,

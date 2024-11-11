@@ -3,18 +3,17 @@ import { TextField } from '@mui/material'
 import React, { FocusEvent, KeyboardEvent, useCallback, useState } from 'react'
 import styles from './NewEmissionSource.module.css'
 import { useTranslations } from 'next-intl'
-import { CreateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { SubPost } from '@prisma/client'
 import { FullStudy } from '@/db/study'
 import { useRouter } from 'next/navigation'
+import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
 
 interface Props {
   study: FullStudy
   subPost: SubPost
-  onNewEmissionSource: (command: CreateEmissionSourceCommand) => Promise<string | undefined>
 }
 
-const NewEmissionSource = ({ study, subPost, onNewEmissionSource }: Props) => {
+const NewEmissionSource = ({ study, subPost }: Props) => {
   const [value, setValue] = useState('')
   const [saving, setSaving] = useState(false)
   const t = useTranslations('study.post')
@@ -31,7 +30,7 @@ const NewEmissionSource = ({ study, subPost, onNewEmissionSource }: Props) => {
     async (event: FocusEvent<HTMLInputElement>) => {
       if (event.target.value) {
         setSaving(true)
-        const result = await onNewEmissionSource({
+        const result = await createEmissionSource({
           name: event.target.value,
           subPost,
           studyId: study.id,
@@ -43,7 +42,7 @@ const NewEmissionSource = ({ study, subPost, onNewEmissionSource }: Props) => {
         setSaving(false)
       }
     },
-    [study, subPost, onNewEmissionSource, router],
+    [study, subPost, router],
   )
   return (
     <TextField

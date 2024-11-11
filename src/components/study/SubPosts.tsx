@@ -1,6 +1,8 @@
+'use client'
+
 import { Post, subPostsByPost } from '@/services/posts'
 import { FullStudy } from '@/db/study'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styles from './SubPosts.module.css'
 import classNames from 'classnames'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
@@ -8,7 +10,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useTranslations } from 'next-intl'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
-import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
+import { EmissionWithMetaData } from '@/services/emissions'
+import { getEmissionsFactor } from '@/services/serverFunctions/emission'
 
 interface Props {
   post: Post
@@ -20,7 +23,14 @@ const SubPosts = ({ post, study }: Props) => {
   const t = useTranslations('study.post')
 
   const subPosts = useMemo(() => subPostsByPost[post], [post])
-
+  const [emissions, setEmissions] = useState<EmissionWithMetaData[]>([])
+  useEffect(() => {
+    const fetchData = async () => {
+      const emissions = await getEmissionsFactor()
+      setEmissions(emissions)
+    }
+    fetchData()
+  }, [])
   return (
     <div className={classNames(styles.subPosts, 'flex-col')}>
       {subPosts.map((subPost) => {
@@ -37,11 +47,11 @@ const SubPosts = ({ post, study }: Props) => {
               {emissionSources.length > 0 && (
                 <div className="mb2">
                   {emissionSources.map((emissionSource) => (
-                    <EmissionSource emissionSource={emissionSource} study={study} key={emissionSource.id} />
+                    <EmissionSource emissionSource={emissionSource} key={emissionSource.id} emissions={emissions} />
                   ))}
                 </div>
               )}
-              <NewEmissionSource study={study} subPost={subPost} onNewEmissionSource={createEmissionSource} />
+              <NewEmissionSource study={study} subPost={subPost} />
             </AccordionDetails>
           </Accordion>
         )

@@ -21,16 +21,42 @@ export const getStudyByUser = async (user: User) => {
   })
 }
 
-export const getStudyById = (id: string) => {
+export const getStudyById = async (id: string) => {
   return prismaClient.study.findUnique({
     where: { id },
     include: {
       emissionSources: {
         select: {
           id: true,
-          name: true,
           subPost: true,
+          name: true,
+          dateLimite: true,
+          caracterisation: true,
+          tag: true,
+          value: true,
+          reliability: true,
+          technicalRepresentativeness: true,
+          geographicRepresentativeness: true,
+          temporalRepresentativeness: true,
+          completeness: true,
+          source: true,
+          type: true,
+          comment: true,
+          validated: true,
+          emissionFactor: {
+            select: {
+              id: true,
+              totalCo2: true,
+              unit: true,
+              reliability: true,
+              technicalRepresentativeness: true,
+              geographicRepresentativeness: true,
+              temporalRepresentativeness: true,
+              completeness: true,
+            },
+          },
         },
+        orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
       },
       allowedUsers: {
         select: {
