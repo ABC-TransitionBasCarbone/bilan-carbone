@@ -10,14 +10,14 @@ import { useRouter } from 'next/navigation'
 import Form from '@/components/base/Form'
 import { MenuItem } from '@mui/material'
 import { Role, StudyRole } from '@prisma/client'
-import { StudyWithRights } from '@/db/study'
+import { FullStudy } from '@/db/study'
 import { FormSelect } from '@/components/form/Select'
 import { User } from 'next-auth'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
 import { newStudyRight } from '@/services/serverFunctions/study'
 
 interface Props {
-  study: StudyWithRights
+  study: FullStudy
   user: User
 }
 

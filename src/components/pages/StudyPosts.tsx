@@ -1,5 +1,5 @@
 import { Post } from '@/services/posts'
-import { Study } from '@prisma/client'
+import { FullStudy } from '@/db/study'
 import { useTranslations } from 'next-intl'
 import React from 'react'
 import Block from '../base/Block'
@@ -10,10 +10,10 @@ import PostIcon from '../study/infography/icons/PostIcon'
 
 interface Props {
   post: Post
-  study: Study
+  study: FullStudy
 }
 
-const StudyPostPage = ({ post, study }: Props) => {
+const StudyPostsPage = ({ post, study }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissions.post')
   return (
@@ -34,4 +34,4 @@ const StudyPostPage = ({ post, study }: Props) => {
   )
 }
 
-export default StudyPostPage
+export default StudyPostsPage

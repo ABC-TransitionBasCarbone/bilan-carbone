@@ -2,7 +2,7 @@
 
 import { ChangeStudyPublicStatusCommand, CreateStudyCommand, NewStudyRightCommand } from './study.command'
 import { auth } from '../auth'
-import { createStudy, createUserOnStudy, getStudyWithRightsById, updateStudy, updateUserOnStudy } from '@/db/study'
+import { createStudy, createUserOnStudy, getStudyById, updateStudy, updateUserOnStudy } from '@/db/study'
 import { ControlMode, Export, Prisma, StudyRole } from '@prisma/client'
 import dayjs from 'dayjs'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -82,7 +82,7 @@ export const changeStudyPublicStatus = async (command: ChangeStudyPublicStatusCo
     return NOT_AUTHORIZED
   }
 
-  const studyWithRights = await getStudyWithRightsById(command.studyId)
+  const studyWithRights = await getStudyById(command.studyId)
 
   if (!studyWithRights) {
     return NOT_AUTHORIZED
@@ -100,10 +100,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, newUser] = await Promise.all([
-    getStudyWithRightsById(right.studyId),
-    getUserByEmail(right.email),
-  ])
+  const [studyWithRights, newUser] = await Promise.all([getStudyById(right.studyId), getUserByEmail(right.email)])
 
   if (!studyWithRights || !newUser) {
     return NOT_AUTHORIZED
@@ -126,7 +123,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, user] = await Promise.all([getStudyWithRightsById(studyId), getUserByEmail(email)])
+  const [studyWithRights, user] = await Promise.all([getStudyById(studyId), getUserByEmail(email)])
 
   if (!studyWithRights || !user) {
     return NOT_AUTHORIZED

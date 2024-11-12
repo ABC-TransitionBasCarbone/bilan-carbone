@@ -2,7 +2,6 @@ import { User } from 'next-auth'
 import { prismaClient } from './client'
 import { StudyRole, type Prisma } from '@prisma/client'
 import { getUserOrganizations } from './user'
-import { UUID } from 'crypto'
 
 export const createStudy = (study: Prisma.StudyCreateInput) =>
   prismaClient.study.create({
@@ -22,16 +21,17 @@ export const getStudyByUser = async (user: User) => {
   })
 }
 
-export const getStudyById = (id: UUID) => {
-  return prismaClient.study.findUnique({
-    where: { id },
-  })
-}
-
-export const getStudyWithRightsById = (id: string) => {
+export const getStudyById = (id: string) => {
   return prismaClient.study.findUnique({
     where: { id },
     include: {
+      emissionSources: {
+        select: {
+          id: true,
+          name: true,
+          subPost: true,
+        },
+      },
       allowedUsers: {
         select: {
           user: {
@@ -46,7 +46,7 @@ export const getStudyWithRightsById = (id: string) => {
     },
   })
 }
-export type StudyWithRights = Exclude<AsyncReturnType<typeof getStudyWithRightsById>, null>
+export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
   prismaClient.userOnStudy.create({
