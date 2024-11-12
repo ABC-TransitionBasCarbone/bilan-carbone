@@ -1,4 +1,13 @@
 {
+  "nav": {
+    "home": "Home",
+    "emissions": "Emission Factors",
+    "organization": "Organization",
+    "team": "Team",
+    "newStudy": "Add a New Study",
+    "studyRights": "Rights",
+    "newStudyRights": "Add a Person"
+  },
   "actuality": {
     "title": "News",
     "no-item": "No news at the moment"

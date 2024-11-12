@@ -2,6 +2,8 @@ import React from 'react'
 import { User } from 'next-auth'
 import { StudyWithRights } from '@/db/study'
 import StudyRightsTable from '../study/rights/StudyRightsTable'
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   study: StudyWithRights
@@ -9,7 +11,19 @@ interface Props {
 }
 
 const StudyRightsPage = ({ study, user }: Props) => {
-  return <StudyRightsTable study={study} user={user} />
+  const tNav = useTranslations('nav')
+  return (
+    <>
+      <Breadcrumbs
+        current={tNav('studyRights')}
+        links={[
+          { label: tNav('home'), link: '/' },
+          { label: study.name, link: `/etudes/${study.id}` },
+        ]}
+      />
+      <StudyRightsTable study={study} user={user} />
+    </>
+  )
 }
 
 export default StudyRightsPage

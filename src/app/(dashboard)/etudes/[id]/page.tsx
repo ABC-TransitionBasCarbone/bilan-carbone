@@ -1,9 +1,9 @@
 import { UUID } from 'crypto'
 import { auth } from '@/services/auth'
 import NotFound from '@/components/study/NotFound'
-import StudyDetails from '@/components/study/StudyDetails'
 import { canReadStudy } from '@/services/permissions/study'
 import { getStudyWithRightsById } from '@/db/study'
+import StudyPage from '@/components/pages/Study'
 
 interface Props {
   params: {
@@ -29,7 +29,7 @@ const StudyView = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  return <StudyDetails study={study} />
+  return <StudyPage study={study} />
 }
 
 export default StudyView
