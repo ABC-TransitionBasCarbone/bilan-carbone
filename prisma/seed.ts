@@ -13,6 +13,7 @@ const users = async () => {
 
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
+  await prisma.studyEmissionSource.deleteMany()
   await prisma.study.deleteMany()
 
   await prisma.site.deleteMany()
