@@ -1,4 +1,4 @@
-import { SubPost } from '@prisma/client'
+import { EmissionSourceType, SubPost } from '@prisma/client'
 import z from 'zod'
 
 export const CreateEmissionSourceCommandValidation = z.object({
@@ -16,5 +16,14 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   emissionId: z.string().trim().optional(),
   caracterisation: z.string().trim().optional(),
   value: z.number().optional(),
+  source: z.string().trim().optional(),
+  type: z.nativeEnum(EmissionSourceType).optional(),
+  reliability: z.number().optional(),
+  technicalRepresentativeness: z.number().optional(),
+  geographicRepresentativeness: z.number().optional(),
+  temporalRepresentativeness: z.number().optional(),
+  completeness: z.number().optional(),
+  comment: z.string().trim().optional(),
+  validated: z.boolean().optional(),
 })
 export type UpdateEmissionSourceCommand = z.infer<typeof UpdateEmissionSourceCommandValidation>

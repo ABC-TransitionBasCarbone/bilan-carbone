@@ -1,4 +1,4 @@
-import { Level, PrismaClient, Role, StudyRole, SubPost } from '@prisma/client'
+import { EmissionStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { signPassword } from '@/services/auth'
 import { ACTUALITIES } from './legacy_data/actualities'
@@ -20,6 +20,44 @@ const users = async () => {
   await prisma.user.deleteMany()
 
   await prisma.organization.deleteMany()
+
+  await Promise.all([
+    prisma.emission.create({
+      data: {
+        importedFrom: Import.BaseEmpreinte,
+        status: EmissionStatus.Valid,
+        totalCo2: 111,
+        completeness: 4,
+        reliability: 5,
+        importedId: '1',
+        unit: Unit.KG,
+        metaData: {
+          create: {
+            language: 'fr',
+            title: 'FE Test 1',
+          },
+        },
+      },
+    }),
+    prisma.emission.create({
+      data: {
+        importedFrom: Import.BaseEmpreinte,
+        status: EmissionStatus.Valid,
+        totalCo2: 123,
+        geographicRepresentativeness: 3,
+        completeness: 1,
+        reliability: 5,
+        importedId: '2',
+        unit: Unit.KG_DRY_MATTER,
+        metaData: {
+          create: {
+            language: 'fr',
+            title: 'FE Test 2',
+          },
+        },
+      },
+    }),
+  ])
 
   const organizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 10 }).map((_, index) => ({
@@ -87,8 +125,11 @@ const users = async () => {
 
   const subPosts = Object.keys(SubPost)
   await Promise.all(
-    Array.from({ length: 20 }).map(() => {
-      const creator = faker.helpers.arrayElement(users)
+    Array.from({ length: 20 }).map((_, index) => {
+      const creator =
+        index === 0
+          ? (users.find((user) => user.email === 'bc-default-0@yopmail.com') as User)
+          : faker.helpers.arrayElement(users)
       return prisma.study.create({
         data: {
           createdById: creator.id,

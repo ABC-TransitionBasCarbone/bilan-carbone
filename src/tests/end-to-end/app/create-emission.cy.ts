@@ -9,7 +9,7 @@ describe('Create emission', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
 
-    cy.getByTestId('cell-emission-name').should('not.exist')
+    cy.getByTestId('cell-emission-name').should('have.length', 2)
 
     cy.getByTestId('new-emission').click()
 
@@ -29,21 +29,21 @@ describe('Create emission', () => {
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
 
-    cy.getByTestId('cell-emission-name').should('be.visible')
-    cy.getByTestId('cell-emission-name').should('have.text', 'My new FE')
-    cy.getByTestId('cell-emission-totalCo2').should('have.text', '12')
+    cy.getByTestId('cell-emission-name').should('have.length', 3)
+    cy.getByTestId('cell-emission-name').last().should('have.text', 'My new FE')
+    cy.getByTestId('cell-emission-totalCo2').last().should('have.text', '12')
 
     cy.logout()
     cy.login('bc-default-2@yopmail.com', 'password-2')
     cy.visit('/facteurs-d-emission')
-    cy.getByTestId('cell-emission-name').should('not.exist')
+    cy.getByTestId('cell-emission-name').should('have.length', 2)
   })
 
   it('should create an emission with detailed CO2 on your organization', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
 
-    cy.getByTestId('cell-emission-name').should('not.exist')
+    cy.getByTestId('cell-emission-name').should('have.length', 2)
 
     cy.getByTestId('new-emission').click()
 
@@ -101,9 +101,9 @@ describe('Create emission', () => {
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
 
-    cy.getByTestId('cell-emission-name').should('be.visible')
-    cy.getByTestId('cell-emission-name').should('have.text', 'My new detailed FE')
-    cy.getByTestId('cell-emission-totalCo2').should('have.text', '45')
+    cy.getByTestId('cell-emission-name').should('have.length', 3)
+    cy.getByTestId('cell-emission-name').last().should('have.text', 'My new detailed FE')
+    cy.getByTestId('cell-emission-totalCo2').last().should('have.text', '45')
   })
 
   it('should create an emission with total CO2 and multiple parts on your organization', () => {

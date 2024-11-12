@@ -31,8 +31,13 @@
   }
 }
 
-.name {
-  margin-bottom: 0.25rem;
+.infosLeft,
+.infosRight {
+  gap: 0.25rem;
+}
+
+.infosRight {
+  text-align: right;
 }
 
 .status {
@@ -62,8 +67,8 @@
 
 .detailContent {
   border-top: solid 1px var(--neutral-20);
-  margin: -0.25rem 0.5rem 0.5rem 0.5rem;
-  padding: 0.5rem 0rem;
+  margin: -0.25rem 0 0.5rem 0;
+  padding: 1rem;
 }
 
 .row {
@@ -96,4 +101,8 @@
   top: 50%;
   right: 2rem;
   transform: translateY(-50%);
+}
+
+.results {
+  margin-top: 2rem;
 }

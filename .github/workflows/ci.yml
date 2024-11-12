@@ -42,6 +42,8 @@ jobs:
         run: yarn build
       - name: Start server
         run: yarn start &
+      - name: Launch unit tests
+        run: yarn run test
       - name: Launch e2e tests
         run: yarn run cypress
       - run: mkdir -p ${{ github.workspace }}/tmp/artifacts

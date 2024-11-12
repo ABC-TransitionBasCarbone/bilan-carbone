@@ -437,16 +437,47 @@
   },
   "emissionSource": {
     "status": {
-      "valid": "Validé",
+      "valid": "Validée",
       "waiting": "En attente",
       "toVerify": "A vérifier"
     },
+    "type": {
+      "Physical": "Physique",
+      "Accounting": "Comptable",
+      "Extrapolated": "Extrapolée",
+      "Statistical": "Statistique",
+      "Approched": "Approchée"
+    },
+    "informations": "Informations :",
+    "results": {
+      "title": "Résultats :",
+      "emission": "Émission :",
+      "confiance": "Intervalle de confiance à 95% :",
+      "alpha": "Alpha :"
+    },
     "form": {
+      "validate": "Validée",
       "name": "Nom",
       "tag": "Tag",
       "caracterisation": "Caractérisation",
       "emissionFactor": "Facteur d'émission",
-      "value": "Valeur donnée d'activité"
+      "value": "Valeur donnée d'activité",
+      "source": "Source",
+      "type": "Type",
+      "reliability": "Fiabilité",
+      "technicalRepresentativeness": "Représentativité technique",
+      "geographicRepresentativeness": "Représentativité géographique",
+      "temporalRepresentativeness": "Représentativité temporelle",
+      "completeness": "Complétude",
+      "comment": "Commentaires"
     }
+  },
+  "quality": {
+    "name": "Qualité :",
+    "1": "Très mauvaise",
+    "2": "Mauvaise",
+    "3": "Moyenne",
+    "4": "Bonne",
+    "5": "Très bonne"
   }
 }

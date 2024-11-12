@@ -93,7 +93,7 @@ model Emission {
 
   incertitude Int?
 
-  reliability                  Int
+  reliability                  Int?
   technicalRepresentativeness  Int? @map("technical_representativeness")
   geographicRepresentativeness Int? @map("geographic_representativeness")
   temporalRepresentativeness   Int? @map("temporal_representativeness")

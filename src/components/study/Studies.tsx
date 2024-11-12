@@ -20,7 +20,7 @@ const Studies = async ({ user }: Props) => {
     <ul className={classNames(styles.list, 'flex-col')}>
       {allowedStudies.map((study) => (
         <li key={study.id}>
-          <Link href={`/etudes/${study.id}`} data-testid={`studies-${study.name}`} className={styles.link}>
+          <Link href={`/etudes/${study.id}`} data-testid="study" className={styles.link}>
             {study.name}
           </Link>
         </li>
