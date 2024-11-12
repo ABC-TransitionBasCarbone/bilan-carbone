@@ -16,7 +16,7 @@ module.exports = {
     curly: 'error',
     'react/no-unescaped-entities': 'off',
     'react/self-closing-comp': 'error',
-    'prettier/prettier': 'error',
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'react/jsx-tag-spacing': [
       'error',
       {
