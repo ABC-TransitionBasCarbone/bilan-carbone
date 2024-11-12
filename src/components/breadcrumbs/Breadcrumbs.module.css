@@ -5,22 +5,20 @@
   gap: 0.5rem;
   padding: 1rem 0.75rem;
   list-style: none;
-
-  svg {
-    color: var(--neutral-40);
-  }
 }
 
-.current {
+.svg {
+  color: var(--neutral-40);
+}
+
+.currentPage {
   color: var(--neutral-60);
   width: max-content;
   font-weight: 500;
 }
 
-.li {
-  display: flex;
+.previousPage {
   flex-wrap: wrap;
-  align-items: center;
   gap: 0.5rem;
 }
 

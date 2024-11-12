@@ -9,14 +9,14 @@ const Breadcrumbs = ({ links, current }: { links: { label: string; link: string 
     <nav role="navigation" aria-label="Breadcrumb" className="main-container">
       <ol className={classNames(styles.container, 'flex-cc')}>
         {links.map(({ label, link }) => (
-          <li key={label} className={styles.li}>
+          <li key={label} className={classNames(styles.previousPage, 'flex-cc')}>
             <Link className={styles.link} href={link}>
               {label}
             </Link>
-            <KeyboardArrowRightIcon />
+            <KeyboardArrowRightIcon className={styles.svg} />
           </li>
         ))}
-        <li className={styles.current} aria-current="page">
+        <li className={styles.currentPage} aria-current="page">
           {current}
         </li>
       </ol>
