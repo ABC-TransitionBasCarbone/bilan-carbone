@@ -12,8 +12,8 @@ interface DetailedGESFieldsProps {
 
 const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) => {
   const t = useTranslations('emissions.create')
-  const getName = (gaz: string) => `${multiple ? `posts.${index}.` : ''}${gaz}` as FieldPath<CreateEmissionCommand>
-  const getTestId = (gaz: string) => `new-emission-${multiple ? `post-${index}-` : ''}${gaz}`
+  const getName = (gaz: string) => `${multiple ? `parts.${index}.` : ''}${gaz}` as FieldPath<CreateEmissionCommand>
+  const getTestId = (gaz: string) => `new-emission-${multiple ? `part-${index}-` : ''}${gaz}`
   return (
     <>
       {gazKeys.map((gaz) => (

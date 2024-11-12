@@ -6,8 +6,8 @@ import { ACTUALITIES } from './legacy_data/actualities'
 const prisma = new PrismaClient()
 
 const users = async () => {
-  await prisma.emissionPostMetaData.deleteMany()
-  await prisma.emissionPost.deleteMany()
+  await prisma.emissionPartMetaData.deleteMany()
+  await prisma.emissionPart.deleteMany()
   await prisma.emissionMetaData.deleteMany()
   await prisma.emission.deleteMany()
 

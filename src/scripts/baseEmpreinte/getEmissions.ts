@@ -1,5 +1,5 @@
 import { prismaClient } from '../../db/client'
-import { EmissionStatus, Import, SubPost, Unit } from '@prisma/client'
+import { EmissionStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { UNITS_MATRIX } from './historyUnits'
 import axios, { AxiosResponse } from 'axios'
 import { elementsBySubPost } from './posts.config'
@@ -48,26 +48,6 @@ type EmissionResponse = {
     Code_gaz_supplémentaire_2: string
     Valeur_gaz_supplémentaire_2: number
   }[]
-}
-
-type EmissionPostDataType = {
-  emissionId: string
-  totalCo2: number
-  co2f: number
-  ch4f: number
-  ch4b: number
-  n2o: number
-  co2b: number
-  sf6: number
-  hfc: number
-  pfc: number
-  otherGES: number
-  type: string
-  metaData?: {
-    createMany: {
-      data: { title: string; language: string }[]
-    }
-  }
 }
 
 const select = [
@@ -222,47 +202,47 @@ const saveEmissions = async (emissions: EmissionResponse['results']) =>
     }),
   )
 
-const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
+const saveEmissionsParts = async (parts: EmissionResponse['results']) => {
   const emissions = await prismaClient.emission.findMany({
     where: {
       importedId: {
-        in: posts.map((post) => post["Identifiant_de_l'élément"]),
+        in: parts.map((part) => part["Identifiant_de_l'élément"]),
       },
     },
   })
 
-  for (const i in posts) {
+  for (const i in parts) {
     if (Number(i) % 10 === 0) {
-      console.log(`Save post: ${i}/${posts.length}`)
+      console.log(`Save part: ${i}/${parts.length}`)
     }
-    const post = posts[i]
-    const emission = emissions.find((emission) => emission.importedId === post["Identifiant_de_l'élément"])
+    const part = parts[i]
+    const emission = emissions.find((emission) => emission.importedId === part["Identifiant_de_l'élément"])
     if (!emission) {
-      console.error('No emission found for ' + post["Identifiant_de_l'élément"])
-      throw new Error('No emission found for ' + post["Identifiant_de_l'élément"])
+      console.error('No emission found for ' + part["Identifiant_de_l'élément"])
+      throw new Error('No emission found for ' + part["Identifiant_de_l'élément"])
     }
 
     const metaData = []
-    if (post.Nom_poste_français) {
-      metaData.push({ title: post.Nom_poste_français, language: 'fr' })
+    if (part.Nom_poste_français) {
+      metaData.push({ title: part.Nom_poste_français, language: 'fr' })
     }
-    if (post.Nom_poste_anglais) {
-      metaData.push({ title: post.Nom_poste_anglais, language: 'en' })
+    if (part.Nom_poste_anglais) {
+      metaData.push({ title: part.Nom_poste_anglais, language: 'en' })
     }
 
-    const data: EmissionPostDataType = {
-      emissionId: emission.id,
-      totalCo2: post.Total_poste_non_décomposé,
-      co2f: post.CO2f,
-      ch4f: post.CH4f,
-      ch4b: post.CH4b,
-      n2o: post.N2O,
-      co2b: post.CO2b,
+    const data: Prisma.EmissionPartCreateInput = {
+      emission: { connect: { id: emission.id } },
+      totalCo2: part.Total_poste_non_décomposé,
+      co2f: part.CO2f,
+      ch4f: part.CH4f,
+      ch4b: part.CH4b,
+      n2o: part.N2O,
+      co2b: part.CO2b,
       sf6: 0,
       hfc: 0,
       pfc: 0,
-      otherGES: post.Autres_GES,
-      type: post.Type_poste,
+      otherGES: part.Autres_GES,
+      type: part.Type_poste,
       metaData:
         metaData.length > 0
           ? {
@@ -272,49 +252,49 @@ const saveEmissionsPosts = async (posts: EmissionResponse['results']) => {
             }
           : undefined,
     }
-    if (!post.Nom_poste_français && !post.Nom_poste_anglais) {
+    if (!part.Nom_poste_français && !part.Nom_poste_anglais) {
       delete data.metaData
     }
-    if (post.Valeur_gaz_supplémentaire_1) {
-      const type = post.Code_gaz_supplémentaire_1 || (emission.sf6 ? 'SF6' : 'Divers')
+    if (part.Valeur_gaz_supplémentaire_1) {
+      const type = part.Code_gaz_supplémentaire_1 || (emission.sf6 ? 'SF6' : 'Divers')
       if (type === 'Divers') {
-        data.otherGES = post.Valeur_gaz_supplémentaire_1 + data.otherGES
+        data.otherGES = part.Valeur_gaz_supplémentaire_1 + (data.otherGES || 0)
       }
       if (type === 'SF6') {
-        data.sf6 = post.Valeur_gaz_supplémentaire_1
+        data.sf6 = part.Valeur_gaz_supplémentaire_1
       }
     }
-    if (post.Valeur_gaz_supplémentaire_2) {
-      const type = post.Code_gaz_supplémentaire_2 || (emission.sf6 ? 'SF6' : 'Divers')
+    if (part.Valeur_gaz_supplémentaire_2) {
+      const type = part.Code_gaz_supplémentaire_2 || (emission.sf6 ? 'SF6' : 'Divers')
       if (type === 'Divers') {
-        data.otherGES = post.Valeur_gaz_supplémentaire_2 + data.otherGES
+        data.otherGES = part.Valeur_gaz_supplémentaire_2 + (data.otherGES || 0)
       }
       if (type === 'SF6') {
-        data.sf6 = post.Valeur_gaz_supplémentaire_2
+        data.sf6 = part.Valeur_gaz_supplémentaire_2
       }
     }
-    await prismaClient.emissionPost.create({ data })
+    await prismaClient.emissionPart.create({ data })
   }
 }
 
 const main = async () => {
-  await Promise.all([prismaClient.emissionPostMetaData.deleteMany(), prismaClient.emissionMetaData.deleteMany()])
-  await prismaClient.emissionPost.deleteMany()
+  await Promise.all([prismaClient.emissionPartMetaData.deleteMany(), prismaClient.emissionMetaData.deleteMany()])
+  await prismaClient.emissionPart.deleteMany()
   await prismaClient.emission.deleteMany()
 
-  let posts: EmissionResponse['results'] = []
+  let parts: EmissionResponse['results'] = []
   let url: string | undefined =
     `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
   while (url) {
     console.log(url)
     const emissions: AxiosResponse<EmissionResponse> = await axios.get<EmissionResponse>(url)
-    posts = posts.concat(emissions.data.results.filter((emission) => emission.Type_Ligne === 'Poste'))
+    parts = parts.concat(emissions.data.results.filter((emission) => emission.Type_Ligne === 'Poste'))
     await saveEmissions(emissions.data.results.filter((emission) => emission.Type_Ligne !== 'Poste'))
 
     url = emissions.data.next
   }
 
-  await saveEmissionsPosts(posts)
+  await saveEmissionsParts(parts)
 }
 
 main()

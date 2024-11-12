@@ -40,7 +40,7 @@ export const CreateEmissionCommandValidation = z.intersection(
     attribute: z.string().optional(),
     subPost: z.nativeEnum(SubPost, { required_error: 'subPost' }),
     comment: z.string().optional(),
-    posts: z
+    parts: z
       .array(
         z.intersection(
           GESschema,

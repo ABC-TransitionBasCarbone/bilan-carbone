@@ -15,7 +15,7 @@ export const createEmissionCommand = async ({
   unit,
   attribute,
   comment,
-  posts,
+  parts,
   subPost,
   ...command
 }: CreateEmissionCommand) => {
@@ -54,11 +54,11 @@ export const createEmissionCommand = async ({
   })
 
   await Promise.all(
-    posts.map(({ name, ...post }) =>
-      prismaClient.emissionPost.create({
+    parts.map(({ name, ...part }) =>
+      prismaClient.emissionPart.create({
         data: {
           emissionId: emission.id,
-          ...post,
+          ...part,
           metaData: {
             create: {
               language: local,
