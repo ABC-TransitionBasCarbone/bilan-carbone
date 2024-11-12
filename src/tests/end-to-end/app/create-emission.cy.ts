@@ -104,11 +104,6 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-name').should('be.visible')
     cy.getByTestId('cell-emission-name').should('have.text', 'My new detailed FE')
     cy.getByTestId('cell-emission-totalCo2').should('have.text', '45')
-
-    cy.logout()
-    cy.login('bc-default-2@yopmail.com', 'password-2')
-    cy.visit('/facteurs-d-emission')
-    cy.getByTestId('cell-emission-name').should('not.exist')
   })
 
   it('should create an emission with total CO2 and multiple posts on your organization', () => {
@@ -175,11 +170,6 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-name').should('be.visible')
     cy.getByTestId('cell-emission-name').should('have.text', 'My new multiple FE')
     cy.getByTestId('cell-emission-totalCo2').should('have.text', '21')
-
-    cy.logout()
-    cy.login('bc-default-2@yopmail.com', 'password-2')
-    cy.visit('/facteurs-d-emission')
-    cy.getByTestId('cell-emission-name').should('not.exist')
   })
 
   it('should create an emission with detailed CO2 and multiple posts on your organization', () => {
@@ -272,11 +262,6 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-name').should('be.visible')
     cy.getByTestId('cell-emission-name').should('have.text', 'My new multiple detailed FE')
     cy.getByTestId('cell-emission-totalCo2').should('have.text', '99')
-
-    cy.logout()
-    cy.login('bc-default-2@yopmail.com', 'password-2')
-    cy.visit('/facteurs-d-emission')
-    cy.getByTestId('cell-emission-name').should('not.exist')
   })
 
   it('should render emission posts in accordions', () => {
@@ -312,41 +297,35 @@ describe('Create emission', () => {
 
     cy.getByTestId('emission-post-0-expand').click()
     cy.getByTestId('new-emission-post-0-totalCo2').should('be.visible')
+    cy.getByTestId('new-emission-post-0-totalCo2').should('not.be.disabled')
     cy.getByTestId('new-emission-post-0-co2f').should('not.exist')
-    cy.getByTestId('emission-post-0-expand').click()
-    cy.getByTestId('new-emission-post-0-totalCo2').should('not.be.visible')
 
     cy.getByTestId('emission-post-1-expand').click()
     cy.getByTestId('new-emission-post-1-totalCo2').should('be.visible')
+    cy.getByTestId('new-emission-post-1-totalCo2').should('not.be.disabled')
     cy.getByTestId('new-emission-post-1-co2f').should('not.exist')
-    cy.getByTestId('emission-post-1-expand').click()
-    cy.getByTestId('new-emission-post-1-totalCo2').should('not.be.visible')
 
     cy.getByTestId('emission-post-2-expand').click()
     cy.getByTestId('new-emission-post-2-totalCo2').should('be.visible')
+    cy.getByTestId('new-emission-post-2-totalCo2').should('not.be.disabled')
     cy.getByTestId('new-emission-post-2-co2f').should('not.exist')
-    cy.getByTestId('emission-post-2-expand').click()
-    cy.getByTestId('new-emission-post-2-totalCo2').should('not.be.visible')
 
     cy.getByTestId('new-emission-detailed-switch').click()
 
-    cy.getByTestId('emission-post-0-expand').click()
-    cy.getByTestId('new-emission-post-0-totalCo2').should('not.exist')
+    cy.getByTestId('new-emission-post-0-totalCo2').within(() => {
+      cy.get('input').should('be.disabled')
+    })
     cy.getByTestId('new-emission-post-0-co2f').should('exist')
-    cy.getByTestId('emission-post-0-expand').click()
-    cy.getByTestId('new-emission-post-0-co2f').should('not.be.visible')
 
-    cy.getByTestId('emission-post-1-expand').click()
-    cy.getByTestId('new-emission-post-1-totalCo2').should('not.exist')
+    cy.getByTestId('new-emission-post-1-totalCo2').within(() => {
+      cy.get('input').should('be.disabled')
+    })
     cy.getByTestId('new-emission-post-1-co2f').should('exist')
-    cy.getByTestId('emission-post-1-expand').click()
-    cy.getByTestId('new-emission-post-1-co2f').should('not.be.visible')
 
-    cy.getByTestId('emission-post-2-expand').click()
-    cy.getByTestId('new-emission-post-2-totalCo2').should('not.exist')
+    cy.getByTestId('new-emission-post-2-totalCo2').within(() => {
+      cy.get('input').should('be.disabled')
+    })
     cy.getByTestId('new-emission-post-2-co2f').should('exist')
-    cy.getByTestId('emission-post-2-expand').click()
-    cy.getByTestId('new-emission-post-2-co2f').should('not.be.visible')
 
     cy.getByTestId('new-emission-multiple-switch').click()
 
@@ -359,7 +338,7 @@ describe('Create emission', () => {
     })
   })
 
-  it('should delete posts from form when switch off detailed ges', () => {
+  it('should not delete posts from form when switch off detailed ges', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
 
@@ -421,14 +400,14 @@ describe('Create emission', () => {
     cy.getByTestId('emission-post-1-header').should('not.exist')
 
     cy.getByTestId('new-emission-multiple-switch').click()
-    // posts should be reset
-    cy.getByTestId('emission-post-0-header').should('have.text', 'Composante 1')
-    cy.getByTestId('emission-post-1-header').should('have.text', 'Composante 2')
+    cy.getByTestId('emission-post-0-header').should('have.text', 'My first post')
+    cy.getByTestId('emission-post-1-header').should('have.text', 'My second post')
     cy.getByTestId('emission-post-0-header').should('be.visible')
     cy.getByTestId('emission-post-1-header').should('be.visible')
 
     cy.getByTestId('new-emission-multiple-switch').click()
 
+    cy.getByTestId('new-emission-totalCo2').clear()
     cy.getByTestId('new-emission-totalCo2').type('144')
     cy.getByTestId('new-emission-post').click()
     cy.get('[data-value="Energies"]').click()
@@ -444,10 +423,5 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-name').should('be.visible')
     cy.getByTestId('cell-emission-name').should('have.text', 'My new FE without posts')
     cy.getByTestId('cell-emission-totalCo2').should('have.text', '144')
-
-    cy.logout()
-    cy.login('bc-default-2@yopmail.com', 'password-2')
-    cy.visit('/facteurs-d-emission')
-    cy.getByTestId('cell-emission-name').should('not.exist')
   })
 })

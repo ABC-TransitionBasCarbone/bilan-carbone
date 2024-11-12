@@ -3,10 +3,14 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
-import React, { useMemo, useState } from 'react'
+import React, { FormEvent, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Unit } from '@prisma/client'
-import { CreateEmissionCommand, CreateEmissionCommandValidation } from '@/services/serverFunctions/emission.command'
+import {
+  CreateEmissionCommand,
+  CreateEmissionCommandValidation,
+  maxParts,
+} from '@/services/serverFunctions/emission.command'
 import { createEmissionCommand } from '@/services/serverFunctions/emission'
 import Form from '@/components/base/Form'
 import Button from '@/components/base/Button'
@@ -15,14 +19,15 @@ import { FormTextField } from '@/components/form/TextField'
 import { MenuItem } from '@mui/material'
 import DetailedGES from './DetailedGES'
 import Posts from './Posts'
+import { defaultGazValues } from '@/constants/emissions'
 
 const NewEmissionForm = () => {
   const router = useRouter()
   const t = useTranslations('emissions.create')
   const tUnit = useTranslations('units')
   const [error, setError] = useState('')
-  const [multipleEmissions, setMultiple] = useState(false)
-  const [postsCount, setPosts] = useState(1)
+  const [multipleEmissions, setMultipleEmissions] = useState(false)
+  const [postsCount, setPostsCount] = useState(1)
 
   const form = useForm<CreateEmissionCommand>({
     resolver: zodResolver(CreateEmissionCommandValidation),
@@ -32,44 +37,44 @@ const NewEmissionForm = () => {
       name: '',
       attribute: '',
       source: '',
-      co2f: 0,
-      ch4f: 0,
-      ch4b: 0,
-      n2o: 0,
-      co2b: 0,
-      sf6: 0,
-      hfc: 0,
-      pfc: 0,
-      otherGES: 0,
+      ...defaultGazValues,
       totalCo2: 0,
+      posts: Array.from({ length: maxParts }, () => ({ name: '', type: '', ...defaultGazValues, totalCo2: 0 })),
       comment: '',
     },
   })
 
-  const onSubmit = async (command: CreateEmissionCommand) => {
-    if (multipleEmissions) {
-      command.posts = (command.posts || []).filter((_, index) => index < postsCount)
-    }
-    const result = await createEmissionCommand(command)
-    if (result) {
-      setError(result)
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    form.clearErrors()
+    const command = form.getValues()
+    const isValid = CreateEmissionCommandValidation.safeParse({
+      ...command,
+      posts: multipleEmissions ? command.posts.slice(0, postsCount) : [],
+    })
+    if (isValid.success) {
+      const result = await createEmissionCommand(isValid.data)
+
+      if (result) {
+        setError(result)
+      } else {
+        router.push('/facteurs-d-emission')
+        router.refresh()
+      }
     } else {
-      router.push('/facteurs-d-emission')
-      router.refresh()
+      isValid.error.errors.forEach((error) => {
+        form.setError(error.path.join('.') as keyof CreateEmissionCommand, {
+          type: 'manual',
+          message: error.message,
+        })
+      })
     }
   }
 
-  const switchMultiple = (value: boolean) => {
-    if (!value) {
-      form.setValue('posts', undefined)
-    }
-    setMultiple(value)
-  }
-
-  const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [t])
+  const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [tUnit])
 
   return (
-    <Form onSubmit={form.handleSubmit(onSubmit)}>
+    <Form onSubmit={onSubmit}>
       <FormTextField
         data-testid="new-emission-name"
         control={form.control}
@@ -95,9 +100,9 @@ const NewEmissionForm = () => {
       <DetailedGES
         form={form}
         multipleEmissions={multipleEmissions}
-        setMultiple={switchMultiple}
+        setMultipleEmissions={setMultipleEmissions}
         postsCount={postsCount}
-        setPosts={setPosts}
+        setPostsCount={setPostsCount}
       />
       <Posts form={form} />
       <FormTextField control={form.control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
