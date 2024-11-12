@@ -2,7 +2,7 @@ import { Study } from '@prisma/client'
 import Block from '../base/Block'
 import { useTranslations } from 'next-intl'
 import LinkButton from '../base/LinkButton'
-import PostInfography from './PostsInfography'
+import PostsInfography from './infography/PostsInfography'
 
 interface Props {
   study: Study
@@ -19,7 +19,7 @@ const StudyDetails = ({ study }: Props) => {
       linkLabel={t('change-rights')}
     >
       <LinkButton href={'#'}>{t('tags')}</LinkButton>
-      <PostInfography study={study} />
+      <PostsInfography study={study} />
     </Block>
   )
 }

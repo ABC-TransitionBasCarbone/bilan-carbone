@@ -4,8 +4,9 @@ import { useTranslations } from 'next-intl'
 import React from 'react'
 import Block from '../base/Block'
 import SubPosts from '../study/SubPosts'
-import StudyPostInfography from '../study/StudyPostInfography'
+import StudyPostInfography from '../study/infography/StudyPostInfography'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import PostIcon from '../study/infography/icons/PostIcon'
 
 interface Props {
   post: Post
@@ -25,7 +26,7 @@ const StudyPostPage = ({ post, study }: Props) => {
         ]}
       />
       <Block title={study.name} as="h1" />
-      <Block title={tPost(post)}>
+      <Block title={tPost(post)} icon={<PostIcon post={post} />}>
         <StudyPostInfography study={study} />
         <SubPosts post={post} study={study} />
       </Block>
