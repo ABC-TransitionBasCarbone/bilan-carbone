@@ -60,6 +60,11 @@
   gap: 0.5rem;
   text-transform: uppercase;
   color: var(--neutral-00);
+
+  @media screen and (max-width: 64rem) {
+    padding: 1rem 0.5rem;
+  }
+
 }
 
 .subPosts {
@@ -88,4 +93,8 @@
 .icon {
   width: auto;
   height: 1.5rem;
+
+  @media screen and (max-width: 50rem) {
+    display: none;
+  }
 }

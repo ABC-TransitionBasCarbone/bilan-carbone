@@ -50,7 +50,7 @@ const PostInfography = ({ study, post, hideSubPosts }: Props) => {
       className={styles[Object.keys(Post).includes(post) ? colors[post as Post] : 'green']}
     >
       <p className={classNames(styles.header, 'align-center')}>
-        {mainPost && <PostIcon className={styles.icon} post={mainPost} />}
+        <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
         <span>{t(post)}</span>
       </p>
       {!hideSubPosts && subPosts && (
