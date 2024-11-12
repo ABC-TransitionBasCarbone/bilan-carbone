@@ -2,6 +2,7 @@ body {
   font-family: "Gilroy", sans-serif;
   background: var(--primary-10);
   height: 100vh;
+  line-height: 1.25;
   overflow: hidden;
 }
 

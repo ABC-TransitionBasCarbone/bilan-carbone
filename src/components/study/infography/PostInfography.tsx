@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import classNames from 'classnames'
 import Link from 'next/link'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import PostIcon from './icons/PostIcon'
 interface Props {
   study: Study
   post: Post | SubPost
@@ -48,7 +49,10 @@ const PostInfography = ({ study, post, hideSubPosts }: Props) => {
       href={`/etudes/${study.id}/${mainPost}`}
       className={styles[Object.keys(Post).includes(post) ? colors[post as Post] : 'green']}
     >
-      <div className={classNames(styles.header)}>{t(post)}</div>
+      <p className={classNames(styles.header, 'align-center')}>
+        {mainPost && <PostIcon className={styles.icon} post={mainPost} />}
+        <span>{t(post)}</span>
+      </p>
       {!hideSubPosts && subPosts && (
         <div className={classNames(styles.subPosts, 'flex')}>
           <ul className={classNames(styles.list, 'flex-col')}>
