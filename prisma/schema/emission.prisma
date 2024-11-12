@@ -79,7 +79,7 @@ model Emission {
   id            String         @id @default(uuid())
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @default(now()) @map("updated_at")
-  emissionPosts EmissionPost[]
+  emissionParts EmissionPart[]
 
   importedFrom   Import        @map("imported_from")
   importedId     String?       @map("imported_id")
@@ -134,15 +134,15 @@ model EmissionMetaData {
   @@map("emission_metadata")
 }
 
-model EmissionPost {
+model EmissionPart {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
   emissionId String                 @map("emission_id")
   emission   Emission               @relation(fields: [emissionId], references: [id])
-  metaData   EmissionPostMetaData[]
-  type       PostType
+  metaData   EmissionPartMetaData[]
+  type       String
 
   totalCo2 Float  @map("total_co2")
   co2f     Float?
@@ -158,12 +158,12 @@ model EmissionPost {
   @@map("emission_posts")
 }
 
-model EmissionPostMetaData {
-  emissionPost   EmissionPost @relation(fields: [emissionPostId], references: [id])
-  emissionPostId String       @map("emission_post_id")
+model EmissionPartMetaData {
+  emissionPart   EmissionPart @relation(fields: [emissionPartId], references: [id])
+  emissionPartId String       @map("emission_post_id")
   title          String
   language       String
 
-  @@id([emissionPostId, language])
+  @@id([emissionPartId, language])
   @@map("emission_post_metadata")
 }

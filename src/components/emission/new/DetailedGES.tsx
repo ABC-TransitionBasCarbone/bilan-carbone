@@ -1,150 +1,149 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
-import { FormTextField } from '@/components/form/TextField'
-import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
-import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { UseFormReturn } from 'react-hook-form'
+import classNames from 'classnames'
+import styles from './DetailedGES.module.css'
+import { FormTextField } from '@/components/form/TextField'
+import { CreateEmissionCommand, maxParts } from '@/services/serverFunctions/emission.command'
+import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
+import DetailedGESFields from './DetailedGESFields'
+import EmissionPartForm from './EmissionPartForm'
+import { gazKeys } from '@/constants/emissions'
 
 interface Props {
   form: UseFormReturn<CreateEmissionCommand>
+  multipleEmissions: boolean
+  setMultipleEmissions: (value: boolean) => void
+  partsCount: number
+  setPartsCount: (value: number) => void
 }
 
-const DetailedGES = ({ form }: Props) => {
+const DetailedGES = ({ form, multipleEmissions, setMultipleEmissions, partsCount, setPartsCount }: Props) => {
   const t = useTranslations('emissions.create')
   const [detailedGES, setDetailedGES] = useState(false)
 
-  const emissionValues = form.watch(['ch4b', 'ch4f', 'co2b', 'co2f', 'n2o', 'sf6', 'hfc', 'pfc', 'otherGES'])
-  const totalCo2 = form.watch('totalCo2')
-
+  const emissionValues = form.watch(gazKeys)
   useEffect(() => {
-    if (detailedGES) {
-      const newTotal = emissionValues.reduce((acc: number, current) => acc + (current || 0), 0)
-      if (totalCo2 !== newTotal) {
-        form.setValue('totalCo2', newTotal)
-      }
+    if (detailedGES && !multipleEmissions) {
+      const total = emissionValues.filter((value) => value !== undefined).reduce((acc, current) => acc + current, 0)
+      form.setValue('totalCo2', total)
     }
-  }, [totalCo2, emissionValues, detailedGES])
+  }, [form, detailedGES, ...emissionValues])
+
+  const emissionPartsValues = form.watch(
+    // @ts-expect-error cannot force type
+    Array.from({ length: maxParts }).flatMap((_, index) => gazKeys.map((key) => `parts.${index}.${key}`)),
+  )
+  useEffect(() => {
+    if (multipleEmissions && detailedGES) {
+      const values = form.getValues('parts')
+      const emissions = values.filter((_, index) => index < partsCount)
+
+      let totalCo2 = 0
+      emissions.forEach((part, index) => {
+        const partTotalCo2 = gazKeys.reduce((acc, gaz) => acc + part[gaz], 0)
+        totalCo2 += partTotalCo2
+        form.setValue(`parts.${index}.totalCo2`, partTotalCo2)
+      })
+      form.setValue('totalCo2', totalCo2)
+    }
+  }, [detailedGES, form, partsCount, multipleEmissions, ...emissionPartsValues])
+
+  const emissionPartsTotal = form.watch(
+    // @ts-expect-error cannot force type
+    Array.from({ length: maxParts }).map((_, index) => `parts.${index}.totalCo2`),
+  )
+  useEffect(() => {
+    if (multipleEmissions && !detailedGES) {
+      const values = form.getValues('parts')
+      const emissions = values.filter((_, index) => index < partsCount)
+      form.setValue(
+        'totalCo2',
+        emissions.reduce((acc, current) => acc + current.totalCo2, 0 as number),
+      )
+    }
+  }, [detailedGES, form, partsCount, multipleEmissions, ...emissionPartsTotal])
+
+  const updateEmissionPartsCount = (value: string) => {
+    const count = Number(value)
+    if (!value || Number.isNaN(count)) {
+      setPartsCount(-1)
+    } else {
+      setPartsCount(count > maxParts ? maxParts : count)
+    }
+  }
 
   return (
     <>
-      <div>
-        <FormLabel id={`defailedGES-radio-group-label`} component="legend">
-          {t('detailedGES')}
-        </FormLabel>
-        <RadioGroup
-          aria-labelledby={`defailedGES-radio-group-label`}
-          value={detailedGES}
-          onChange={(event) => setDetailedGES(event.target.value === 'true')}
-        >
+      <div className={classNames(styles.questions, 'flex')}>
+        <div className={styles.selector}>
+          <FormLabel id="defailedGES-radio-group-label" component="legend">
+            {t('detailedGES')}
+          </FormLabel>
           <FormControlLabel
-            value="true"
-            control={<Radio />}
-            label={t('yes')}
-            data-testid="new-emission-detailedGES-true"
+            control={
+              <Switch
+                checked={detailedGES}
+                onChange={(event) => setDetailedGES(event.target.checked)}
+                data-testid="new-emission-detailed-switch"
+              />
+            }
+            label={t(detailedGES ? 'yes' : 'no')}
           />
+        </div>
+        <div className={styles.selector}>
+          <FormLabel id="multiple-emssions-radio-group-label" component="legend">
+            {t('multiple')}
+          </FormLabel>
           <FormControlLabel
-            value="false"
-            control={<Radio />}
-            label={t('no')}
-            data-testid="new-emission-detailedGES-false"
+            control={
+              <Switch
+                checked={multipleEmissions}
+                onChange={(event) => {
+                  setMultipleEmissions(event.target.checked)
+                }}
+                data-testid="new-emission-multiple-switch"
+              />
+            }
+            label={t(multipleEmissions ? 'yes' : 'no')}
           />
-        </RadioGroup>
+        </div>
+        <div className={styles.input}>
+          {multipleEmissions && (
+            <>
+              <FormLabel id="sub-parts-count-label" component="legend">
+                {t('subPartsCount')}
+              </FormLabel>
+              <TextField
+                type="number"
+                value={partsCount < 0 ? '' : partsCount}
+                onChange={(e) => updateEmissionPartsCount(e.target.value)}
+                data-testid="new-emission-parts-count"
+                slotProps={{ htmlInput: { min: 1, max: maxParts } }}
+              />
+            </>
+          )}
+        </div>
       </div>
-      {detailedGES && (
+      {multipleEmissions ? (
         <>
-          <FormTextField
-            data-testid="new-emission-co2f"
-            control={form.control}
-            translation={t}
-            slotProps={{ htmlInput: { min: 0 } }}
-            type="number"
-            name="co2f"
-            label={t('co2f')}
-          />
-          <FormTextField
-            data-testid="new-emission-ch4f"
-            control={form.control}
-            translation={t}
-            slotProps={{ htmlInput: { min: 0 } }}
-            type="number"
-            name="ch4f"
-            label={t('ch4f')}
-          />
-          <FormTextField
-            data-testid="new-emission-ch4b"
-            control={form.control}
-            translation={t}
-            slotProps={{ htmlInput: { min: 0 } }}
-            type="number"
-            name="ch4b"
-            label={t('ch4b')}
-          />
-          <FormTextField
-            data-testid="new-emission-n2o"
-            control={form.control}
-            translation={t}
-            slotProps={{ htmlInput: { min: 0 } }}
-            type="number"
-            name="n2o"
-            label={t('n2o')}
-          />
-          <FormTextField
-            data-testid="new-emission-co2b"
-            control={form.control}
-            translation={t}
-            slotProps={{ htmlInput: { min: 0 } }}
-            type="number"
-            name="co2b"
-            label={t('co2b')}
-          />
-          <FormTextField
-            data-testid="new-emission-sf6"
-            control={form.control}
-            translation={t}
-            slotProps={{ htmlInput: { min: 0 } }}
-            type="number"
-            name="sf6"
-            label={t('sf6')}
-          />
-          <FormTextField
-            data-testid="new-emission-hfc"
-            control={form.control}
-            translation={t}
-            slotProps={{ htmlInput: { min: 0 } }}
-            type="number"
-            name="hfc"
-            label={t('hfc')}
-          />
-          <FormTextField
-            data-testid="new-emission-pfc"
-            control={form.control}
-            translation={t}
-            slotProps={{ htmlInput: { min: 0 } }}
-            type="number"
-            name="pfc"
-            label={t('pfc')}
-          />
-          <FormTextField
-            data-testid="new-emission-otherGES"
-            control={form.control}
-            translation={t}
-            slotProps={{ htmlInput: { min: 0 } }}
-            type="number"
-            name="otherGES"
-            label={t('otherGES')}
-          />
+          {Array.from({ length: partsCount }).map((_, index) => (
+            <EmissionPartForm key={`emission-part-${index}`} detailedGES={detailedGES} form={form} index={index} />
+          ))}
         </>
+      ) : (
+        detailedGES && <DetailedGESFields form={form} index={0} />
       )}
       <FormTextField
-        disabled={detailedGES}
+        disabled={detailedGES || multipleEmissions}
         data-testid="new-emission-totalCo2"
         control={form.control}
         translation={t}
         slotProps={{
           htmlInput: { min: 0 },
-          inputLabel: { shrink: detailedGES || totalCo2 !== undefined ? true : undefined },
+          inputLabel: { shrink: true },
         }}
         type="number"
         name="totalCo2"

@@ -1,0 +1,15 @@
+.questions {
+  gap: 1rem;
+}
+
+.selector {
+  flex: 2;
+}
+
+.input {
+  flex: 1;
+
+  input {
+    width: 3rem;
+  }
+}
