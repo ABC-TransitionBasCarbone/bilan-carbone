@@ -1,6 +1,6 @@
 'use client'
 
-import { StudyWithRights } from '@/db/study'
+import { FullStudy } from '@/db/study'
 import { Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -18,8 +18,8 @@ import { useEffect, useState } from 'react'
 
 interface Props {
   user: User
-  study: StudyWithRights
-  userRoleOnStudy?: StudyWithRights['allowedUsers'][0]
+  study: FullStudy
+  userRoleOnStudy?: FullStudy['allowedUsers'][0]
 }
 
 const StudyPublicStatus = ({ user, study, userRoleOnStudy }: Props) => {

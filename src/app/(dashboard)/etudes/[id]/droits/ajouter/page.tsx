@@ -1,6 +1,6 @@
 import NotFound from '@/components/study/NotFound'
 import NewStudyRightPage from '@/components/pages/NewStudyRight'
-import { getStudyWithRightsById } from '@/db/study'
+import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { UUID } from 'crypto'
 import React from 'react'
@@ -20,7 +20,7 @@ const NewStudyRight = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  const study = await getStudyWithRightsById(id)
+  const study = await getStudyById(id)
 
   if (!study) {
     return <NotFound />

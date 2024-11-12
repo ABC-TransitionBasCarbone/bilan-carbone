@@ -1,3 +1,8 @@
 .subPosts {
   gap: 1rem;
 }
+
+.count {
+  font-size: 0.875rem;
+  color: var(--neutral-50);
+}

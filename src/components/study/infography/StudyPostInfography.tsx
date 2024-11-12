@@ -3,8 +3,8 @@
 import React, { useState } from 'react'
 import styles from './StudyPostInfography.module.css'
 import { Study } from '@prisma/client'
-import Button from '../base/Button'
-import PostInfography from '../study/PostsInfography'
+import Button from '../../base/Button'
+import PostInfography from './PostsInfography'
 import { useTranslations } from 'use-intl'
 
 interface Props {

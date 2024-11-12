@@ -1,0 +1,32 @@
+.container {
+  border-radius: 0 0 1rem 1rem;
+  background: var(--neutral-10);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem;
+  list-style: none;
+}
+
+.svg {
+  color: var(--neutral-40);
+}
+
+.currentPage {
+  color: var(--neutral-60);
+  width: max-content;
+  font-weight: 500;
+}
+
+.previousPage {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.link {
+  width: max-content;
+  color: var(--primary-60) !important;
+
+  &:hover {
+    color: var(--primary-40) !important;
+  }
+}

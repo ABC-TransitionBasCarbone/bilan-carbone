@@ -1,6 +1,6 @@
 import StudyRightsPage from '@/components/pages/StudyRights'
 import NotFound from '@/components/study/NotFound'
-import { getStudyWithRightsById } from '@/db/study'
+import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudy } from '@/services/permissions/study'
 import { UUID } from 'crypto'
@@ -22,7 +22,7 @@ const StudyRights = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  const study = await getStudyWithRightsById(id)
+  const study = await getStudyById(id)
 
   if (!study) {
     return <NotFound />

@@ -1,6 +1,6 @@
-import StudyPostPage from '@/components/pages/StudyPost'
+import StudyPostsPage from '@/components/pages/StudyPosts'
 import NotFound from '@/components/study/NotFound'
-import { getStudyWithRightsById } from '@/db/study'
+import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudy } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
@@ -26,7 +26,7 @@ const StudyPost = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  const study = await getStudyWithRightsById(id)
+  const study = await getStudyById(id)
 
   if (!study) {
     return <NotFound />
@@ -36,7 +36,7 @@ const StudyPost = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  return <StudyPostPage post={post as Post} study={study} />
+  return <StudyPostsPage post={post as Post} study={study} />
 }
 
 export default StudyPost

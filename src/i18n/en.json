@@ -1,4 +1,13 @@
 {
+  "nav": {
+    "home": "Home",
+    "emissions": "Emission Factors",
+    "organization": "Organization",
+    "team": "Team",
+    "newStudy": "Add a New Study",
+    "studyRights": "Rights",
+    "newStudyRights": "Add a Person"
+  },
   "actuality": {
     "title": "News",
     "no-item": "No news at the moment"
@@ -72,7 +81,9 @@
     },
     "post": {
       "displayInfography": "Display all posts",
-      "hideInfography": "Hide all posts"
+      "hideInfography": "Hide all posts",
+      "emissionSource": "{count, plural, =0 {No emission source} =1 {1 emission source} other {# emission sources}}",
+      "new": "Add an emission source..."
     },
     "not-found": "Study not found",
     "organization": {
