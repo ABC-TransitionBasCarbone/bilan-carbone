@@ -27,7 +27,7 @@ const NewEmissionForm = () => {
   const tUnit = useTranslations('units')
   const [error, setError] = useState('')
   const [multipleEmissions, setMultipleEmissions] = useState(false)
-  const [postsCount, setPostsCount] = useState(1)
+  const [partsCount, setPartsCount] = useState(1)
 
   const form = useForm<CreateEmissionCommand>({
     resolver: zodResolver(CreateEmissionCommandValidation),
@@ -39,7 +39,7 @@ const NewEmissionForm = () => {
       source: '',
       ...defaultGazValues,
       totalCo2: 0,
-      posts: Array.from({ length: maxParts }, () => ({ name: '', type: '', ...defaultGazValues, totalCo2: 0 })),
+      parts: Array.from({ length: maxParts }, () => ({ name: '', type: '', ...defaultGazValues, totalCo2: 0 })),
       comment: '',
     },
   })
@@ -50,7 +50,7 @@ const NewEmissionForm = () => {
     const command = form.getValues()
     const isValid = CreateEmissionCommandValidation.safeParse({
       ...command,
-      posts: multipleEmissions ? command.posts.slice(0, postsCount) : [],
+      parts: multipleEmissions ? command.parts.slice(0, partsCount) : [],
     })
     if (isValid.success) {
       const result = await createEmissionCommand(isValid.data)
@@ -101,8 +101,8 @@ const NewEmissionForm = () => {
         form={form}
         multipleEmissions={multipleEmissions}
         setMultipleEmissions={setMultipleEmissions}
-        postsCount={postsCount}
-        setPostsCount={setPostsCount}
+        partsCount={partsCount}
+        setPartsCount={setPartsCount}
       />
       <Posts form={form} />
       <FormTextField control={form.control} translation={t} name="comment" label={t('comment')} multiline rows={2} />

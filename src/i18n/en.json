@@ -179,6 +179,7 @@
       "unit": "Unit",
       "source": "Source",
       "detailedGES": "Breakdown of GHG?",
+      "subPartsCount": "Number of parts",
       "multiple": "Disaggregated emission factor",
       "yes": "Yes",
       "no": "No",
@@ -200,9 +201,12 @@
       "comment": "Comments",
       "validation": {
         "name": "Please provide a name",
+        "name-maxlength": "maximum 64 characters",
         "unit": "Please provide a unit",
         "source": "Please provide a source",
         "totalCo2": "Please provide a total emission",
+        "type": "Please select a post type",
+        "type-maxlength": "maximum 64 characters",
         "subPost": "Please select a sub post"
       }
     },

@@ -180,7 +180,7 @@
       "source": "Source",
       "detailedGES": "Décomposition des GES ?",
       "multiple": "Facteur d'émission désagrégé",
-      "subPostsCount": "Nombre de postes",
+      "subPartsCount": "Nombre de postes",
       "postType": "Type de poste",
       "yes": "Oui",
       "no": "Non",
