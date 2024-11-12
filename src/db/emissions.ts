@@ -30,6 +30,3 @@ export const createEmission = (emission: Prisma.EmissionCreateInput) =>
   prismaClient.emission.create({
     data: emission,
   })
-
-export const createEmissionPost = (post: Prisma.EmissionPostCreateInput) =>
-  prismaClient.emissionPost.create({ data: post })
