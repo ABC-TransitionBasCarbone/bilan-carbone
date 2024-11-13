@@ -9,6 +9,7 @@ import { getTranslations } from 'next-intl/server'
 interface Props {
   study: FullStudy
   user: User
+  usersEmail: string[]
 }
 const NewStudyRightPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
@@ -25,7 +26,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
         ]}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <NewStudyRightForm study={study} user={user} />
+        <NewStudyRightForm study={study} user={user} usersEmail={usersEmail} />
       </Block>
     </>
   )

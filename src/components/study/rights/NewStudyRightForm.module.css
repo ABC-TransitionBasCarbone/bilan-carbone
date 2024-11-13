@@ -1,0 +1,5 @@
+.warning {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--neutral-50);
+}

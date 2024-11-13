@@ -1,10 +1,11 @@
-import NotFound from '@/components/study/NotFound'
-import NewStudyRightPage from '@/components/pages/NewStudyRight'
+import React from 'react'
+import { UUID } from 'crypto'
+import { getOrganizationUsers } from '@/db/organization'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
-import { UUID } from 'crypto'
-import React from 'react'
 import { canReadStudy } from '@/services/permissions/study'
+import NotFound from '@/components/study/NotFound'
+import NewStudyRightPage from '@/components/pages/NewStudyRight'
 
 interface Props {
   params: {
@@ -29,7 +30,12 @@ const NewStudyRight = async ({ params }: Props) => {
   if (!(await canReadStudy(session.user, study))) {
     return <NotFound />
   }
-  return <NewStudyRightPage study={study} user={session.user} />
+
+  const users = await getOrganizationUsers(session.user.organizationId)
+  const existingUsers = study.allowedUsers.map((allowedUser) => allowedUser.user.email)
+  const userEmails = users.filter((user) => !existingUsers.includes(user.email)).map((user) => user.email)
+
+  return <NewStudyRightPage study={study} user={session.user} usersEmail={userEmails} />
 }
 
 export default NewStudyRight

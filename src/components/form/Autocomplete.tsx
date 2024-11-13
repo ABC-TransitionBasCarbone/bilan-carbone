@@ -5,7 +5,9 @@ interface Props<T extends FieldValues> {
   name: FieldPath<T>
   control: Control<T>
   label: string
+  freeSolo?: boolean
   translation: (slug: string) => string
+  onChangedValue?: (value: string | null) => void
 }
 
 export const FormAutocomplete = <T extends FieldValues, Value>({
@@ -13,8 +15,10 @@ export const FormAutocomplete = <T extends FieldValues, Value>({
   control,
   label,
   translation,
+  onChangedValue,
+  freeSolo = false,
   ...autocompleteProps
-}: Props<T> & Omit<AutocompleteProps<Value, false, false, false>, 'renderInput'>) => {
+}: Props<T> & Omit<AutocompleteProps<string | Value, false, false, boolean>, 'renderInput'>) => {
   return (
     <Controller
       name={name}
@@ -25,6 +29,11 @@ export const FormAutocomplete = <T extends FieldValues, Value>({
           onChange={(_, newValue) => {
             onChange(newValue)
           }}
+          onInputChange={(_, newValue) => {
+            if (onChangedValue) {
+              onChangedValue(newValue as string)
+            }
+          }}
           value={value}
           renderInput={(params) => (
             <TextField
@@ -34,6 +43,7 @@ export const FormAutocomplete = <T extends FieldValues, Value>({
               error={!!error}
             />
           )}
+          freeSolo={freeSolo}
         />
       )}
     />
