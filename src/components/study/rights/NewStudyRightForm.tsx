@@ -41,6 +41,11 @@ const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
     },
   })
 
+  const onEmailChange = (value: string | null) => {
+    form.setValue('email', value || '')
+    checkExternal(value)
+  }
+
   const checkExternal = (value: string | null) => {
     setExternalWarning(false)
     const validEmail = NewStudyRightCommandValidation.shape.email.safeParse(value)
@@ -72,10 +77,14 @@ const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
         options={usersEmail}
         name="email"
         label={t('email')}
-        onChangedValue={checkExternal}
+        onChangedValue={onEmailChange}
         freeSolo
       />
-      {externalWarning && <p className={styles.warning}>{t('validation.external')}</p>}
+      {externalWarning && (
+        <p data-testid="study-rights-external-user-warning" className={styles.warning}>
+          {t('validation.external')}
+        </p>
+      )}
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="study-rights-role">
         {Object.keys(StudyRole)
           .filter(
