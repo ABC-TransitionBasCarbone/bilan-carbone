@@ -46,6 +46,7 @@ const PostInfography = ({ study, post, hideSubPosts }: Props) => {
 
   return (
     <Link
+      data-testid="post-infography"
       href={`/etudes/${study.id}/${mainPost}`}
       className={styles[Object.keys(Post).includes(post) ? colors[post as Post] : 'green']}
     >

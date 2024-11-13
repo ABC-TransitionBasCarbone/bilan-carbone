@@ -46,6 +46,7 @@ const NewEmissionSource = ({ study, subPost }: Props) => {
   )
   return (
     <TextField
+      data-testid="new-emission-source"
       disabled={saving}
       className={styles.input}
       label={t('new')}

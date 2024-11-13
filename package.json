@@ -57,7 +57,7 @@
     "@testing-library/react": "^16.0.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/ejs": "^3.1.5",
-    "@types/jest": "^29.5.13",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.16",
@@ -74,6 +74,7 @@
     "prettier": "^3.3.3",
     "prisma": "^5.20.0",
     "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.1",
     "typescript": "^5"
   }

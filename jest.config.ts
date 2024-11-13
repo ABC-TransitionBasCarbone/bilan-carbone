@@ -12,7 +12,7 @@ const config: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  testMatch: ['<rootDir>/src/tests/unit/**/*.test.ts', '<rootDir>/src/tests/unit/**/*.test.tsx'],
+  testMatch: ['<rootDir>/src/tests/unit/**/*.test.ts', '<rootDir>/src/**/*.test.*'],
   // Add more setup options before each test is run
   setupFilesAfterEnv: ['<rootDir>/src/tests/unit/setupTests.ts'],
   moduleNameMapper: {

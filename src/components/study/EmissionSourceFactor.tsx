@@ -7,6 +7,7 @@ import { EmissionWithMetaData } from '@/services/emissions'
 import styles from './EmissionSourceFactor.module.css'
 import classNames from 'classnames'
 import DebouncedInput from '../base/DebouncedInput'
+import { getQualityRating } from '@/services/uncertainty'
 
 const fuseOptions = {
   keys: [
@@ -50,6 +51,7 @@ const getDetail = (metadata: Exclude<EmissionWithMetaData['metaData'], undefined
 const EmissionSourceFactor = ({ emissions, update, selectedFactor }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
+  const tQuality = useTranslations('quality')
 
   const [display, setDisplay] = useState(false)
   const [value, setValue] = useState('')
@@ -70,10 +72,12 @@ const EmissionSourceFactor = ({ emissions, update, selectedFactor }: Props) => {
     setResults(value ? fuse.search(value).map(({ item }) => item) : [])
   }, [fuse, value])
 
+  const qualityRating = useMemo(() => (selectedFactor ? getQualityRating(selectedFactor) : null), [selectedFactor])
   return (
     <>
       <div className={classNames(styles.factor, 'align-center')}>
         <DebouncedInput
+          data-testid="emission-source-factor-search"
           debounce={200}
           value={value}
           onChange={setValue}
@@ -81,10 +85,11 @@ const EmissionSourceFactor = ({ emissions, update, selectedFactor }: Props) => {
           onFocus={() => setDisplay(true)}
         />
         {selectedFactor && (
-          <div>
+          <div data-testid="emission-source-factor">
             <p className={styles.header}>
               {selectedFactor.metaData?.title} - {selectedFactor.location} - {selectedFactor.totalCo2} kgCO₂e/
-              {tUnits(selectedFactor.unit)}
+              {tUnits(selectedFactor.unit)}{' '}
+              {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
             </p>
             {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
           </div>
@@ -94,6 +99,7 @@ const EmissionSourceFactor = ({ emissions, update, selectedFactor }: Props) => {
         <div className={styles.suggestions}>
           {results.map((result) => (
             <button
+              data-testid="emission-source-factor-suggestion"
               key={result.id}
               className={styles.suggestion}
               onClick={() => {

@@ -37,7 +37,11 @@ const SubPosts = ({ post, study }: Props) => {
         const emissionSources = study.emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
         return (
           <Accordion key={subPost}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`panel-${subPost}-content`}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel-${subPost}-content`}
+              data-testid="subpost"
+            >
               <p>
                 {tPost(subPost)}
                 <span className={styles.count}> - {t('emissionSource', { count: emissionSources.length })}</span>

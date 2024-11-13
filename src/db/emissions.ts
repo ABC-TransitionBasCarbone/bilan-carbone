@@ -15,6 +15,11 @@ export const getAllValidEmissions = (organizationId: string) =>
       source: true,
       unit: true,
       importedFrom: true,
+      reliability: true,
+      technicalRepresentativeness: true,
+      geographicRepresentativeness: true,
+      temporalRepresentativeness: true,
+      completeness: true,
       metaData: {
         select: {
           language: true,
@@ -25,6 +30,7 @@ export const getAllValidEmissions = (organizationId: string) =>
         },
       },
     },
+    orderBy: { createdAt: 'desc' },
   })
 
 export const createEmission = (emission: Prisma.EmissionCreateInput) =>

@@ -12,14 +12,20 @@ export const getAllowedLevels = (level: Level) => {
   }
 }
 
+export enum EmissionSourcesStatus {
+  Valid = 'valid',
+  ToVerify = 'toVerify',
+  Waiting = 'waiting',
+}
+
 export const getEmissionSourceStatus = (emissionSource: FullStudy['emissionSources'][0]) => {
   if (emissionSource.validated) {
-    return 'valid'
+    return EmissionSourcesStatus.Valid
   }
 
   if (emissionSource.value !== null && emissionSource.emissionFactor !== null) {
-    return 'toVerify'
+    return EmissionSourcesStatus.ToVerify
   }
 
-  return 'waiting'
+  return EmissionSourcesStatus.Waiting
 }
