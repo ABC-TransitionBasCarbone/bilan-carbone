@@ -67,13 +67,40 @@ model UserOnStudy {
   @@map("users_on_study")
 }
 
-model StudyEmissionSource {
-  id      String @id @default(uuid())
-  study   Study  @relation(fields: [studyId], references: [id])
-  studyId String @map("study_id")
+enum EmissionSourceType {
+  Physical
+  Accounting
+  Extrapolated
+  Statistical
+  Approched
+}
 
-  subPost SubPost
-  name    String
+model StudyEmissionSource {
+  id        String   @id @default(uuid())
+  study     Study    @relation(fields: [studyId], references: [id])
+  studyId   String   @map("study_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  subPost         SubPost
+  name            String
+  dateLimite      DateTime? @map("date_limite") @db.Date
+  tag             String?
+  caracterisation String?
+
+  emissionId     String?   @map("emission_id")
+  emissionFactor Emission? @relation(fields: [emissionId], references: [id])
+
+  value                        Float?
+  reliability                  Int?
+  technicalRepresentativeness  Int?                @map("technical_representativeness")
+  geographicRepresentativeness Int?                @map("geographic_representativeness")
+  temporalRepresentativeness   Int?                @map("temporal_representativeness")
+  completeness                 Int?                @map("completeness")
+  source                       String?
+  type                         EmissionSourceType?
+  comment                      String?
+  validated                    Boolean?
 
   @@map("study_emission_sources")
 }
