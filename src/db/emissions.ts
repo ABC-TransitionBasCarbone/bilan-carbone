@@ -30,6 +30,7 @@ export const getAllValidEmissions = (organizationId: string) =>
         },
       },
     },
+    orderBy: { createdAt: 'desc' },
   })
 
 export const createEmission = (emission: Prisma.EmissionCreateInput) =>
