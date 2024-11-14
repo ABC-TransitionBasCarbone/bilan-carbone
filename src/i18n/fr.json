@@ -27,7 +27,8 @@
       "email": "Email",
       "password": "Mot de passe",
       "forgot-password": "Mot de passe oublié",
-      "reset": "Réinitialiser"
+      "reset": "Réinitialiser",
+      "error": "Veuillez verifier votre email et votre mot de passe"
     }
   },
   "navigation": {

@@ -1,19 +1,19 @@
-import { useTranslations } from 'next-intl'
 import React from 'react'
 import Block from '../base/Block'
 import NewStudyRightForm from '../study/rights/NewStudyRightForm'
 import { FullStudy } from '@/db/study'
 import { User } from 'next-auth'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import { getTranslations } from 'next-intl/server'
 
 interface Props {
   study: FullStudy
   user: User
 }
+const NewStudyRightPage = async ({ study, user }: Props) => {
+  const tNav = await getTranslations('nav')
+  const t = await getTranslations('study.rights.new')
 
-const NewStudyRightPage = ({ study, user }: Props) => {
-  const tNav = useTranslations('nav')
-  const t = useTranslations('study.rights.new')
   return (
     <>
       <Breadcrumbs

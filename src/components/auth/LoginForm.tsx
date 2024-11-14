@@ -8,18 +8,29 @@ import authStyles from './Auth.module.css'
 import Button from '../base/Button'
 import Link from 'next/link'
 import { TextField } from '@mui/material'
+import { useRouter } from 'next/navigation'
 
 const LoginForm = () => {
   const t = useTranslations('login.form')
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await signIn('credentials', {
+    setError('')
+    const result = await signIn('credentials', {
       email,
       password,
+      redirect: false,
     })
+
+    if (result?.error) {
+      setError(t('error'))
+    } else {
+      router.push('/')
+    }
   }
 
   return (
@@ -41,8 +52,15 @@ const LoginForm = () => {
         value={password}
         type="password"
         onChange={(event) => setPassword(event.target.value)}
+        helperText={error}
+        error={!!error}
       />
-      <Link data-testid="reset-password-link" className={styles.link} href={`/reset-password?email=${email}`}>
+      <Link
+        data-testid="reset-password-link"
+        className={styles.link}
+        href={`/reset-password?email=${email}`}
+        prefetch={false}
+      >
         {t('forgot-password')}
       </Link>
       <Button data-testid="login-button" type="submit">
