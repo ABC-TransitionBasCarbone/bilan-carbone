@@ -181,7 +181,7 @@
       "detailedGES": "Décomposition des GES ?",
       "multiple": "Facteur d'émission désagrégé",
       "subPartsCount": "Nombre de postes",
-      "postType": "Type de poste",
+      "partType": "Type de composante",
       "yes": "Oui",
       "no": "Non",
       "totalCo2": "Émission totale de CO₂",

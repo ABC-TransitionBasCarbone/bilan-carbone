@@ -121,7 +121,10 @@ const DetailedGES = ({ form, multipleEmissions, setMultipleEmissions, partsCount
                 value={partsCount < 0 ? '' : partsCount}
                 onChange={(e) => updateEmissionPartsCount(e.target.value)}
                 data-testid="new-emission-parts-count"
-                slotProps={{ htmlInput: { min: 1, max: maxParts } }}
+                slotProps={{
+                  htmlInput: { min: 1, max: maxParts },
+                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                }}
               />
             </>
           )}

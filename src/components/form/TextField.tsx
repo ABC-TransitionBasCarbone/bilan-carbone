@@ -30,6 +30,7 @@ export const FormTextField = <T extends FieldValues>({
               : onChange
           }
           value={value}
+          slotProps={{ input: { onWheel: (event) => (event.target as HTMLInputElement).blur() } }}
         />
       )}
     />
