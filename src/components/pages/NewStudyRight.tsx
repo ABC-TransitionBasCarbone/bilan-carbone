@@ -21,7 +21,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
   return (
     <>
       <Breadcrumbs
-        current={tNav('newStudyRights')}
+        current={tNav('newStudyRight')}
         links={[
           { label: tNav('home'), link: '/' },
           { label: study.name, link: `/etudes/${study.id}` },

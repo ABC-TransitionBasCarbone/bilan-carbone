@@ -1,6 +1,6 @@
 import { User } from 'next-auth'
 import { prismaClient } from './client'
-import { StudyRole, type Prisma } from '@prisma/client'
+import { StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { getUserOrganizations } from './user'
 
 export const createStudy = (study: Prisma.StudyCreateInput) =>
@@ -58,6 +58,17 @@ export const getStudyById = async (id: string) => {
         },
         orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
       },
+      contributors: {
+        select: {
+          user: {
+            select: {
+              email: true,
+            },
+          },
+          subPost: true,
+        },
+        orderBy: { user: { email: 'asc' } },
+      },
       allowedUsers: {
         select: {
           user: {
@@ -94,3 +105,9 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
+
+export const createContributorOnStudy = (userId: string, studyId: string, subPosts: SubPost[]) =>
+  prismaClient.contributors.createMany({
+    data: subPosts.map((subPost) => ({ userId, studyId, subPost })),
+    skipDuplicates: true,
+  })

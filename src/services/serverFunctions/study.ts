@@ -1,13 +1,31 @@
 'use server'
 
-import { ChangeStudyPublicStatusCommand, CreateStudyCommand, NewStudyRightCommand } from './study.command'
+import {
+  ChangeStudyPublicStatusCommand,
+  CreateStudyCommand,
+  NewStudyContributorCommand,
+  NewStudyRightCommand,
+} from './study.command'
 import { auth } from '../auth'
-import { createStudy, createUserOnStudy, getStudyById, updateStudy, updateUserOnStudy } from '@/db/study'
-import { ControlMode, Export, Prisma, StudyRole } from '@prisma/client'
+import {
+  createContributorOnStudy,
+  createStudy,
+  createUserOnStudy,
+  getStudyById,
+  updateStudy,
+  updateUserOnStudy,
+} from '@/db/study'
+import { ControlMode, Export, Prisma, StudyRole, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canAddRightOnStudy, canChangePublicStatus, canCreateStudy } from '../permissions/study'
+import {
+  canAddContributorOnStudy,
+  canAddRightOnStudy,
+  canChangePublicStatus,
+  canCreateStudy,
+} from '../permissions/study'
 import { getUserByEmail } from '@/db/user'
+import { subPostsByPost } from '../posts'
 
 export const createStudyCommand = async ({
   organizationId,
@@ -106,7 +124,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  if (!(await canAddRightOnStudy(session.user, studyWithRights, newUser, right.role))) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, newUser, right.role)) {
     return NOT_AUTHORIZED
   }
 
@@ -129,9 +147,34 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
-  if (!(await canAddRightOnStudy(session.user, studyWithRights, user, studyRole))) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, user, studyRole)) {
     return NOT_AUTHORIZED
   }
 
   await updateUserOnStudy(user.id, studyWithRights.id, studyRole)
+}
+
+export const newStudyContributor = async (command: NewStudyContributorCommand) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return NOT_AUTHORIZED
+  }
+
+  const [studyWithRights, user] = await Promise.all([getStudyById(command.studyId), getUserByEmail(command.email)])
+
+  if (!studyWithRights || !user) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!canAddContributorOnStudy(session.user, studyWithRights)) {
+    return NOT_AUTHORIZED
+  }
+
+  if (command.post === 'all') {
+    await createContributorOnStudy(user.id, command.studyId, Object.values(SubPost))
+  } else if (!command.subPost || command.subPost === 'all') {
+    await createContributorOnStudy(user.id, command.studyId, subPostsByPost[command.post])
+  } else {
+    await createContributorOnStudy(user.id, command.studyId, [command.subPost])
+  }
 }

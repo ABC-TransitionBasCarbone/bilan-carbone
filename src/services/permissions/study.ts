@@ -111,3 +111,16 @@ export const canAddRightOnStudy = (user: User, study: FullStudy, newUser: DbUser
 
   return true
 }
+
+export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
+  if (user.role === Role.ADMIN) {
+    return true
+  }
+
+  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
+  if (!userRightsOnStudy || userRightsOnStudy.role === StudyRole.Reader) {
+    return false
+  }
+
+  return true
+}

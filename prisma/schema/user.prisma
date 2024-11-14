@@ -15,14 +15,15 @@ model User {
 
   role           Role
   level          Level
-  firstName      String        @map("first_name")
-  lastName       String        @map("last_name")
-  email          String        @unique
+  firstName      String         @map("first_name")
+  lastName       String         @map("last_name")
+  email          String         @unique
   password       String?
-  resetToken     String?       @map("reset_token")
-  isActive       Boolean       @map("is_active")
+  resetToken     String?        @map("reset_token")
+  isActive       Boolean        @map("is_active")
   createdStudies Study[]
   allowedStudies UserOnStudy[]
+  contributors   Contributors[]
 
   @@map("users")
 }

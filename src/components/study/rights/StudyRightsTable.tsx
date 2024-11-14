@@ -6,22 +6,18 @@ import { useTranslations } from 'next-intl'
 import React, { useMemo } from 'react'
 import { Role, StudyRole } from '@prisma/client'
 import { FullStudy } from '@/db/study'
-import Block from '@/components/base/Block'
 import SelectStudyRole from './SelectStudyRole'
 import StudyPublicStatus from './StudyPublicStatus'
 
 interface Props {
   user: User
   study: FullStudy
+  userRoleOnStudy?: FullStudy['allowedUsers'][0]
 }
 
-const StudyRightsTable = ({ user, study }: Props) => {
+const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
   const t = useTranslations('study.rights.table')
   const tStudyRole = useTranslations('study.role')
-
-  const userRoleOnStudy = useMemo(() => {
-    return study.allowedUsers.find((right) => right.user.email === user.email)
-  }, [user, study])
 
   const columns = useMemo(() => {
     const columns: ColumnDef<FullStudy['allowedUsers'][0]>[] = [
@@ -54,7 +50,7 @@ const StudyRightsTable = ({ user, study }: Props) => {
       })
     }
     return columns
-  }, [t, tStudyRole, userRoleOnStudy, user])
+  }, [t, tStudyRole, userRoleOnStudy, user, study])
 
   const table = useReactTable({
     columns,
@@ -63,16 +59,7 @@ const StudyRightsTable = ({ user, study }: Props) => {
   })
 
   return (
-    <Block
-      link={
-        user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
-          ? `/etudes/${study.id}/droits/ajouter`
-          : ''
-      }
-      linkLabel={t('new-right')}
-      linkDataTestId="study-rights-change-button"
-      title={t('title', { name: study.name })}
-    >
+    <>
       <StudyPublicStatus study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
       <table aria-labelledby="study-rights-table-title">
         <thead>
@@ -96,7 +83,7 @@ const StudyRightsTable = ({ user, study }: Props) => {
           ))}
         </tbody>
       </table>
-    </Block>
+    </>
   )
 }
 
