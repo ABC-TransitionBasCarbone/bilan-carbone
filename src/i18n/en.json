@@ -27,7 +27,8 @@
       "email": "Email",
       "password": "Password",
       "forgot-password": "Forgot password",
-      "reset": "Reset"
+      "reset": "Reset",
+      "error": "Please check your email and your password"
     }
   },
   "navigation": {

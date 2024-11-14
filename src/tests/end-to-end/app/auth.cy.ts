@@ -89,8 +89,12 @@ describe('Authentication', () => {
     cy.url().should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-2@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should(
+      'have.value',
+      'bc-default-2@yopmail.com',
+    )
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').clear()
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('test2')
     cy.getByTestId('login-button').click()
 
