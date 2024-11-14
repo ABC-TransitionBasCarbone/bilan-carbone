@@ -41,6 +41,7 @@ model Study {
   organizationId  String                @map("organization_id")
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
+  contributors    Contributors[]
 
   @@map("studies")
 }
@@ -65,6 +66,18 @@ model UserOnStudy {
 
   @@id([studyId, userId])
   @@map("users_on_study")
+}
+
+model Contributors {
+  study   Study  @relation(fields: [studyId], references: [id])
+  studyId String @map("study_id")
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+
+  subPost SubPost
+
+  @@id([studyId, userId, subPost])
+  @@map("contributors")
 }
 
 enum EmissionSourceType {

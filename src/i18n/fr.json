@@ -6,7 +6,8 @@
     "team": "Équipe",
     "newStudy": "Ajouter une nouvelle étude",
     "studyRights": "Droits",
-    "newStudyRights": "Ajouter une personne"
+    "newStudyRight": "Ajouter une personne",
+    "newStudyContributor": "Ajouter un contributeur"
   },
   "actuality": {
     "title": "Actualités",
@@ -99,17 +100,36 @@
     },
     "title": "Étude",
     "rights": {
+      "contributors": "Contributeurs",
       "isPublic": "L'étude est public",
       "isPrivate": "L'étude est privée",
+      "title": "Droits sur l'étude : {name}",
+      "new-right": "Ajouter une personne à l'étude",
+      "new-contributor": "Ajouter un contributeur",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",
         "role": "Droit",
         "create": "Ajouter la personne"
       },
+      "newContributor": {
+        "title": "Ajouter un contributeur sur l'étude : {name}",
+        "email": "Email",
+        "post": "Poste",
+        "subPost": "Sous poste",
+        "create": "Ajouter la personne",
+
+        "validation": {
+          "email": "Veuillez renseigner un email valide",
+          "post": "Veuillez selectionner un poste"
+        }
+      },
+      "contributorsTable": {
+        "email": "Email",
+        "post": "Poste",
+        "subPosts": "Sous postes"
+      },
       "table": {
-        "title": "Droits sur l'étude : {name}",
-        "new-right": "Ajouter une personne à l'étude",
         "email": "Email",
         "role": "Droits"
       }
@@ -117,6 +137,8 @@
   },
   "emissions": {
     "post": {
+      "allPost": "Tout les postes",
+      "allSubPost": "Tout les sous postes",
       "Energies": "Énergies",
       "AutresEmissionsNonEnergetiques": "Autres émissions non énergétiques",
       "IntrantsBienEtMatieres": "Intrants bien et matières",
