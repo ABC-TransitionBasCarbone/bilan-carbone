@@ -1,7 +1,7 @@
 {
   "nav": {
     "home": "Home",
-    "emissions": "Emission Factors",
+    "emissionFactors": "Emission Factors",
     "organization": "Organization",
     "team": "Team",
     "newStudy": "Add a New Study",
@@ -115,7 +115,7 @@
       }
     }
   },
-  "emissions": {
+  "emissionFactors": {
     "post": {
       "Energies": "Energies",
       "AutresEmissionsNonEnergetiques": "Other non-energy emissions",

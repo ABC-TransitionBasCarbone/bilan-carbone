@@ -10,8 +10,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useTranslations } from 'next-intl'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
-import { EmissionWithMetaData } from '@/services/emissions'
-import { getEmissionsFactor } from '@/services/serverFunctions/emission'
+import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { getEmissionsFactor } from '@/services/serverFunctions/emissionFactor'
 
 interface Props {
   post: Post
@@ -23,11 +23,11 @@ const SubPosts = ({ post, study }: Props) => {
   const t = useTranslations('study.post')
 
   const subPosts = useMemo(() => subPostsByPost[post], [post])
-  const [emissions, setEmissions] = useState<EmissionWithMetaData[]>([])
+  const [emissionFactors, setEmissionFactors] = useState<EmissionFactorWithMetaData[]>([])
   useEffect(() => {
     const fetchData = async () => {
-      const emissions = await getEmissionsFactor()
-      setEmissions(emissions)
+      const emissionFactors = await getEmissionsFactor()
+      setEmissionFactors(emissionFactors)
     }
     fetchData()
   }, [])
@@ -51,7 +51,11 @@ const SubPosts = ({ post, study }: Props) => {
               {emissionSources.length > 0 && (
                 <div className="mb2">
                   {emissionSources.map((emissionSource) => (
-                    <EmissionSource emissionSource={emissionSource} key={emissionSource.id} emissions={emissions} />
+                    <EmissionSource
+                      emissionSource={emissionSource}
+                      key={emissionSource.id}
+                      emissionFactors={emissionFactors}
+                    />
                   ))}
                 </div>
               )}

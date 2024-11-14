@@ -1,4 +1,4 @@
-import { EmissionStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
+import { EmissionFactorStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { signPassword } from '@/services/auth'
 import { ACTUALITIES } from './legacy_data/actualities'
@@ -6,10 +6,10 @@ import { ACTUALITIES } from './legacy_data/actualities'
 const prisma = new PrismaClient()
 
 const users = async () => {
-  await prisma.emissionPartMetaData.deleteMany()
-  await prisma.emissionPart.deleteMany()
-  await prisma.emissionMetaData.deleteMany()
-  await prisma.emission.deleteMany()
+  await prisma.emissionFactorPartMetaData.deleteMany()
+  await prisma.emissionFactorPart.deleteMany()
+  await prisma.emissionFactorMetaData.deleteMany()
+  await prisma.emissionFactor.deleteMany()
 
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
@@ -22,10 +22,10 @@ const users = async () => {
   await prisma.organization.deleteMany()
 
   await Promise.all([
-    prisma.emission.create({
+    prisma.emissionFactor.create({
       data: {
         importedFrom: Import.BaseEmpreinte,
-        status: EmissionStatus.Valid,
+        status: EmissionFactorStatus.Valid,
         totalCo2: 111,
         completeness: 4,
         reliability: 5,
@@ -39,10 +39,10 @@ const users = async () => {
         },
       },
     }),
-    prisma.emission.create({
+    prisma.emissionFactor.create({
       data: {
         importedFrom: Import.BaseEmpreinte,
-        status: EmissionStatus.Valid,
+        status: EmissionFactorStatus.Valid,
         totalCo2: 123,
         geographicRepresentativeness: 3,
         completeness: 1,

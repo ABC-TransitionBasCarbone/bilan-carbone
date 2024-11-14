@@ -13,7 +13,7 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   emissionSourceId: z.string(),
   name: z.string().trim().optional(),
   tag: z.string().trim().optional(),
-  emissionId: z.string().trim().optional(),
+  emissionFactorId: z.string().trim().optional(),
   caracterisation: z.string().trim().optional(),
   value: z.number().optional(),
   source: z.string().trim().optional(),

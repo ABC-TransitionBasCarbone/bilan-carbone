@@ -6,67 +6,69 @@ import { UseFormReturn } from 'react-hook-form'
 import classNames from 'classnames'
 import styles from './DetailedGES.module.css'
 import { FormTextField } from '@/components/form/TextField'
-import { CreateEmissionCommand, maxParts } from '@/services/serverFunctions/emission.command'
+import { CreateEmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
 import DetailedGESFields from './DetailedGESFields'
-import EmissionPartForm from './EmissionPartForm'
+import EmissionFactorPartForm from './EmissionFactorPartForm'
 import { gazKeys } from '@/constants/emissions'
 
 interface Props {
-  form: UseFormReturn<CreateEmissionCommand>
-  multipleEmissions: boolean
-  setMultipleEmissions: (value: boolean) => void
+  form: UseFormReturn<CreateEmissionFactorCommand>
+  hasParts: boolean
+  setHasParts: (value: boolean) => void
   partsCount: number
   setPartsCount: (value: number) => void
 }
 
-const DetailedGES = ({ form, multipleEmissions, setMultipleEmissions, partsCount, setPartsCount }: Props) => {
-  const t = useTranslations('emissions.create')
+const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }: Props) => {
+  const t = useTranslations('emissionFactors.create')
   const [detailedGES, setDetailedGES] = useState(false)
 
-  const emissionValues = form.watch(gazKeys)
+  const emissionFactorValues = form.watch(gazKeys)
   useEffect(() => {
-    if (detailedGES && !multipleEmissions) {
-      const total = emissionValues.filter((value) => value !== undefined).reduce((acc, current) => acc + current, 0)
+    if (detailedGES && !hasParts) {
+      const total = emissionFactorValues
+        .filter((value) => value !== undefined)
+        .reduce((acc, current) => acc + current, 0)
       form.setValue('totalCo2', total)
     }
-  }, [form, detailedGES, ...emissionValues])
+  }, [form, detailedGES, ...emissionFactorValues])
 
-  const emissionPartsValues = form.watch(
+  const emissionFactorPartsValues = form.watch(
     // @ts-expect-error cannot force type
     Array.from({ length: maxParts }).flatMap((_, index) => gazKeys.map((key) => `parts.${index}.${key}`)),
   )
   useEffect(() => {
-    if (multipleEmissions && detailedGES) {
+    if (hasParts && detailedGES) {
       const values = form.getValues('parts')
-      const emissions = values.filter((_, index) => index < partsCount)
+      const emissionFactors = values.filter((_, index) => index < partsCount)
 
       let totalCo2 = 0
-      emissions.forEach((part, index) => {
+      emissionFactors.forEach((part, index) => {
         const partTotalCo2 = gazKeys.reduce((acc, gaz) => acc + part[gaz], 0)
         totalCo2 += partTotalCo2
         form.setValue(`parts.${index}.totalCo2`, partTotalCo2)
       })
       form.setValue('totalCo2', totalCo2)
     }
-  }, [detailedGES, form, partsCount, multipleEmissions, ...emissionPartsValues])
+  }, [detailedGES, form, partsCount, hasParts, ...emissionFactorPartsValues])
 
-  const emissionPartsTotal = form.watch(
+  const emissionFactorPartsTotal = form.watch(
     // @ts-expect-error cannot force type
     Array.from({ length: maxParts }).map((_, index) => `parts.${index}.totalCo2`),
   )
   useEffect(() => {
-    if (multipleEmissions && !detailedGES) {
+    if (hasParts && !detailedGES) {
       const values = form.getValues('parts')
-      const emissions = values.filter((_, index) => index < partsCount)
+      const emissionFactors = values.filter((_, index) => index < partsCount)
       form.setValue(
         'totalCo2',
-        emissions.reduce((acc, current) => acc + current.totalCo2, 0 as number),
+        emissionFactors.reduce((acc, current) => acc + current.totalCo2, 0 as number),
       )
     }
-  }, [detailedGES, form, partsCount, multipleEmissions, ...emissionPartsTotal])
+  }, [detailedGES, form, partsCount, hasParts, ...emissionFactorPartsTotal])
 
-  const updateEmissionPartsCount = (value: string) => {
+  const updateEmissionFactorPartsCount = (value: string) => {
     const count = Number(value)
     if (!value || Number.isNaN(count)) {
       setPartsCount(-1)
@@ -100,18 +102,18 @@ const DetailedGES = ({ form, multipleEmissions, setMultipleEmissions, partsCount
           <FormControlLabel
             control={
               <Switch
-                checked={multipleEmissions}
+                checked={hasParts}
                 onChange={(event) => {
-                  setMultipleEmissions(event.target.checked)
+                  setHasParts(event.target.checked)
                 }}
                 data-testid="new-emission-multiple-switch"
               />
             }
-            label={t(multipleEmissions ? 'yes' : 'no')}
+            label={t(hasParts ? 'yes' : 'no')}
           />
         </div>
         <div className={styles.input}>
-          {multipleEmissions && (
+          {hasParts && (
             <>
               <FormLabel id="sub-parts-count-label" component="legend">
                 {t('subPartsCount')}
@@ -119,7 +121,7 @@ const DetailedGES = ({ form, multipleEmissions, setMultipleEmissions, partsCount
               <TextField
                 type="number"
                 value={partsCount < 0 ? '' : partsCount}
-                onChange={(e) => updateEmissionPartsCount(e.target.value)}
+                onChange={(e) => updateEmissionFactorPartsCount(e.target.value)}
                 data-testid="new-emission-parts-count"
                 slotProps={{
                   htmlInput: { min: 1, max: maxParts },
@@ -130,17 +132,22 @@ const DetailedGES = ({ form, multipleEmissions, setMultipleEmissions, partsCount
           )}
         </div>
       </div>
-      {multipleEmissions ? (
+      {hasParts ? (
         <>
           {Array.from({ length: partsCount }).map((_, index) => (
-            <EmissionPartForm key={`emission-part-${index}`} detailedGES={detailedGES} form={form} index={index} />
+            <EmissionFactorPartForm
+              key={`emission-part-${index}`}
+              detailedGES={detailedGES}
+              form={form}
+              index={index}
+            />
           ))}
         </>
       ) : (
-        detailedGES && <DetailedGESFields form={form} index={0} />
+        detailedGES && <DetailedGESFields form={form} />
       )}
       <FormTextField
-        disabled={detailedGES || multipleEmissions}
+        disabled={detailedGES || hasParts}
         data-testid="new-emission-totalCo2"
         control={form.control}
         translation={t}

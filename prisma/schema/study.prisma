@@ -88,8 +88,8 @@ model StudyEmissionSource {
   tag             String?
   caracterisation String?
 
-  emissionId     String?   @map("emission_id")
-  emissionFactor Emission? @relation(fields: [emissionId], references: [id])
+  emissionFactorId String?         @map("emission_factor_id")
+  emissionFactor   EmissionFactor? @relation(fields: [emissionFactorId], references: [id])
 
   value                        Float?
   reliability                  Int?

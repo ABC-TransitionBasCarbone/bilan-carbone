@@ -2,21 +2,21 @@
 
 import { getUserByEmail } from '@/db/user'
 import { auth } from '../auth'
-import { CreateEmissionCommand } from './emission.command'
-import { EmissionStatus, Import, Unit } from '@prisma/client'
+import { CreateEmissionFactorCommand } from './emissionFactor.command'
+import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { getLocale } from '@/i18n/request'
 import { prismaClient } from '@/db/client'
-import { createEmission } from '@/db/emissions'
+import { createEmissionFactor } from '@/db/emissionFactors'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canCreateEmission } from '../permissions/emission'
-import { getEmissions } from '../emissions'
+import { canCreateEmissionFactor } from '../permissions/emissionFactor'
+import { getEmissionFactors } from '../emissionFactors'
 
 export const getEmissionsFactor = async () => {
   const local = await getLocale()
-  return getEmissions(local)
+  return getEmissionFactors(local)
 }
 
-export const createEmissionCommand = async ({
+export const createEmissionFactorCommand = async ({
   name,
   unit,
   attribute,
@@ -24,7 +24,7 @@ export const createEmissionCommand = async ({
   parts,
   subPost,
   ...command
-}: CreateEmissionCommand) => {
+}: CreateEmissionFactorCommand) => {
   const session = await auth()
   const local = await getLocale()
   if (!session || !session.user) {
@@ -37,14 +37,14 @@ export const createEmissionCommand = async ({
     return NOT_AUTHORIZED
   }
 
-  if (!canCreateEmission()) {
+  if (!canCreateEmissionFactor()) {
     return NOT_AUTHORIZED
   }
 
-  const emission = await createEmission({
+  const emissionFactor = await createEmissionFactor({
     ...command,
     importedFrom: Import.Manual,
-    status: EmissionStatus.Valid,
+    status: EmissionFactorStatus.Valid,
     reliability: 5,
     organization: { connect: { id: user.organizationId } },
     unit: unit as Unit,
@@ -61,9 +61,9 @@ export const createEmissionCommand = async ({
 
   await Promise.all(
     parts.map(({ name, ...part }) =>
-      prismaClient.emissionPart.create({
+      prismaClient.emissionFactorPart.create({
         data: {
-          emissionId: emission.id,
+          emissionFactorId: emissionFactor.id,
           ...part,
           metaData: {
             create: {

@@ -1,11 +1,11 @@
-describe('Create emission', () => {
+describe('Create emission factor', () => {
   beforeEach(() => {
     cy.exec('npx prisma db seed')
 
     cy.intercept('POST', '/facteurs-d-emission/creer').as('create')
   })
 
-  it('should create an emission with total CO2 on your organization', () => {
+  it('should create an emission factor with total CO2 on your organization', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
 
@@ -39,7 +39,7 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-name').should('have.length', 2)
   })
 
-  it('should create an emission with detailed CO2 on your organization', () => {
+  it('should create an emission factor with detailed CO2 on your organization', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
 
@@ -106,7 +106,7 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-totalCo2').first().should('have.text', '45')
   })
 
-  it('should create an emission with total CO2 and multiple parts on your organization', () => {
+  it('should create an emission factor with total CO2 and multiple parts on your organization', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
 
@@ -172,7 +172,7 @@ describe('Create emission', () => {
     cy.getByTestId('cell-emission-totalCo2').first().should('have.text', '21')
   })
 
-  it('should create an emission with detailed CO2 and multiple parts on your organization', () => {
+  it('should create an emission factor with detailed CO2 and multiple parts on your organization', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
 

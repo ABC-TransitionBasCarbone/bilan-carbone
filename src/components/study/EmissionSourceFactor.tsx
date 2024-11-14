@@ -3,7 +3,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { useTranslations } from 'next-intl'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
-import { EmissionWithMetaData } from '@/services/emissions'
+import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import styles from './EmissionSourceFactor.module.css'
 import classNames from 'classnames'
 import DebouncedInput from '../base/DebouncedInput'
@@ -13,23 +13,23 @@ const fuseOptions = {
   keys: [
     {
       name: 'title',
-      getFn: (emission: EmissionWithMetaData) => emission.metaData?.title || '',
+      getFn: (emissionFactor: EmissionFactorWithMetaData) => emissionFactor.metaData?.title || '',
       weight: 1,
     },
     {
       name: 'sublocation',
-      getFn: (emission: EmissionWithMetaData) => emission.metaData?.location || '',
+      getFn: (emissionFactor: EmissionFactorWithMetaData) => emissionFactor.metaData?.location || '',
       weight: 0.7,
     },
     {
       name: 'location',
-      getFn: (emission: EmissionWithMetaData) => emission.location || '',
+      getFn: (emissionFactor: EmissionFactorWithMetaData) => emissionFactor.location || '',
       weight: 0.3,
     },
     {
       name: 'detail',
-      getFn: (emission: EmissionWithMetaData) =>
-        `${emission.metaData?.attribute || ''}  ${emission.metaData?.comment || ''}`,
+      getFn: (emissionFactor: EmissionFactorWithMetaData) =>
+        `${emissionFactor.metaData?.attribute || ''}  ${emissionFactor.metaData?.comment || ''}`,
       weight: 0.5,
     },
   ],
@@ -39,23 +39,23 @@ const fuseOptions = {
 }
 
 interface Props {
-  emissions: EmissionWithMetaData[]
+  emissionFactors: EmissionFactorWithMetaData[]
   update: (name: Path<UpdateEmissionSourceCommand>, value: string) => void
-  selectedFactor?: EmissionWithMetaData | null
+  selectedFactor?: EmissionFactorWithMetaData | null
 }
 
-const getDetail = (metadata: Exclude<EmissionWithMetaData['metaData'], undefined>) => {
+const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => {
   return [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 }
 
-const EmissionSourceFactor = ({ emissions, update, selectedFactor }: Props) => {
+const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tQuality = useTranslations('quality')
 
   const [display, setDisplay] = useState(false)
   const [value, setValue] = useState('')
-  const [results, setResults] = useState<EmissionWithMetaData[]>([])
+  const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
 
   useEffect(() => {
     setValue(selectedFactor?.metaData?.title || '')
@@ -63,10 +63,10 @@ const EmissionSourceFactor = ({ emissions, update, selectedFactor }: Props) => {
 
   const fuse = useMemo(() => {
     return new Fuse(
-      emissions.filter((emission) => emission.metaData),
+      emissionFactors.filter((emissionFactor) => emissionFactor.metaData),
       fuseOptions,
     )
-  }, [emissions])
+  }, [emissionFactors])
 
   useEffect(() => {
     setResults(value ? fuse.search(value).map(({ item }) => item) : [])
@@ -103,7 +103,7 @@ const EmissionSourceFactor = ({ emissions, update, selectedFactor }: Props) => {
               key={result.id}
               className={styles.suggestion}
               onClick={() => {
-                update('emissionId', result.id)
+                update('emissionFactorId', result.id)
                 setDisplay(false)
               }}
             >

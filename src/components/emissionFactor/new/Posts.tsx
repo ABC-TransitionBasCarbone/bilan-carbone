@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
+import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { SubPost } from '@prisma/client'
@@ -10,12 +10,12 @@ import { Post, subPostsByPost } from '@/services/posts'
 import { FormSelect } from '@/components/form/Select'
 
 interface Props {
-  form: UseFormReturn<CreateEmissionCommand>
+  form: UseFormReturn<CreateEmissionFactorCommand>
 }
 
 const Posts = ({ form }: Props) => {
-  const t = useTranslations('emissions.create')
-  const tPost = useTranslations('emissions.post')
+  const t = useTranslations('emissionFactors.create')
+  const tPost = useTranslations('emissionFactors.post')
   const [post, setPost] = useState<Post>()
 
   const posts = useMemo(() => Object.keys(Post).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])

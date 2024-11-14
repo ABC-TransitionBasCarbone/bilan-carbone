@@ -7,11 +7,11 @@ import React, { FormEvent, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Unit } from '@prisma/client'
 import {
-  CreateEmissionCommand,
-  CreateEmissionCommandValidation,
+  CreateEmissionFactorCommand,
+  CreateEmissionFactorCommandValidation,
   maxParts,
-} from '@/services/serverFunctions/emission.command'
-import { createEmissionCommand } from '@/services/serverFunctions/emission'
+} from '@/services/serverFunctions/emissionFactor.command'
+import { createEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import Form from '@/components/base/Form'
 import Button from '@/components/base/Button'
 import { FormSelect } from '@/components/form/Select'
@@ -21,16 +21,16 @@ import DetailedGES from './DetailedGES'
 import Posts from './Posts'
 import { defaultGazValues } from '@/constants/emissions'
 
-const NewEmissionForm = () => {
+const NewEmissionFactorForm = () => {
   const router = useRouter()
-  const t = useTranslations('emissions.create')
+  const t = useTranslations('emissionFactors.create')
   const tUnit = useTranslations('units')
   const [error, setError] = useState('')
-  const [multipleEmissions, setMultipleEmissions] = useState(false)
+  const [hasParts, setHasParts] = useState(false)
   const [partsCount, setPartsCount] = useState(1)
 
-  const form = useForm<CreateEmissionCommand>({
-    resolver: zodResolver(CreateEmissionCommandValidation),
+  const form = useForm<CreateEmissionFactorCommand>({
+    resolver: zodResolver(CreateEmissionFactorCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -48,12 +48,12 @@ const NewEmissionForm = () => {
     event.preventDefault()
     form.clearErrors()
     const command = form.getValues()
-    const isValid = CreateEmissionCommandValidation.safeParse({
+    const isValid = CreateEmissionFactorCommandValidation.safeParse({
       ...command,
-      parts: multipleEmissions ? command.parts.slice(0, partsCount) : [],
+      parts: hasParts ? command.parts.slice(0, partsCount) : [],
     })
     if (isValid.success) {
-      const result = await createEmissionCommand(isValid.data)
+      const result = await createEmissionFactorCommand(isValid.data)
 
       if (result) {
         setError(result)
@@ -63,7 +63,7 @@ const NewEmissionForm = () => {
       }
     } else {
       isValid.error.errors.forEach((error) => {
-        form.setError(error.path.join('.') as keyof CreateEmissionCommand, {
+        form.setError(error.path.join('.') as keyof CreateEmissionFactorCommand, {
           type: 'manual',
           message: error.message,
         })
@@ -99,8 +99,8 @@ const NewEmissionForm = () => {
       </FormSelect>
       <DetailedGES
         form={form}
-        multipleEmissions={multipleEmissions}
-        setMultipleEmissions={setMultipleEmissions}
+        hasParts={hasParts}
+        setHasParts={setHasParts}
         partsCount={partsCount}
         setPartsCount={setPartsCount}
       />
@@ -114,4 +114,4 @@ const NewEmissionForm = () => {
   )
 }
 
-export default NewEmissionForm
+export default NewEmissionFactorForm

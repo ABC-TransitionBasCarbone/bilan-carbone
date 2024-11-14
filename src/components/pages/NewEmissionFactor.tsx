@@ -1,26 +1,26 @@
 import { useTranslations } from 'next-intl'
 import React from 'react'
-import NewEmissionForm from '../emission/new/Form'
+import NewEmissionFactorForm from '../emissionFactor/new/Form'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
-const NewEmissionPage = () => {
+const NewEmissionFactorPage = () => {
   const tNav = useTranslations('nav')
-  const t = useTranslations('emissions.create')
+  const t = useTranslations('emissionFactors.create')
   return (
     <>
       <Breadcrumbs
         current={t('title')}
         links={[
           { label: tNav('home'), link: '/' },
-          { label: tNav('emissions'), link: '/facteurs-d-emission' },
+          { label: tNav('emissionFactors'), link: '/facteurs-d-emission' },
         ]}
       />
       <Block title={t('title')} as="h1">
-        <NewEmissionForm />
+        <NewEmissionFactorForm />
       </Block>
     </>
   )
 }
 
-export default NewEmissionPage
+export default NewEmissionFactorPage

@@ -15,7 +15,7 @@ interface Props {
 
 const StudyPostsPage = ({ post, study }: Props) => {
   const tNav = useTranslations('nav')
-  const tPost = useTranslations('emissions.post')
+  const tPost = useTranslations('emissionFactors.post')
   return (
     <>
       <Breadcrumbs

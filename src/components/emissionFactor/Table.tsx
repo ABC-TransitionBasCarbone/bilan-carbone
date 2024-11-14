@@ -11,7 +11,7 @@ import {
   getPaginationRowModel,
 } from '@tanstack/react-table'
 import Fuse from 'fuse.js'
-import { EmissionWithMetaData } from '@/services/emissions'
+import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import classNames from 'classnames'
 import styles from './Table.module.css'
 import {
@@ -53,7 +53,7 @@ const locationFuseOptions = {
     {
       name: 'sub-location',
       weight: 0.5,
-      getFn: (emission: EmissionWithMetaData) => emission.metaData?.location || '',
+      getFn: (emissionFactor: EmissionFactorWithMetaData) => emissionFactor.metaData?.location || '',
     },
   ],
   threshold: 0.3,
@@ -61,13 +61,13 @@ const locationFuseOptions = {
 }
 
 interface Props {
-  emissions: EmissionWithMetaData[]
+  emissionFactors: EmissionFactorWithMetaData[]
 }
 
 const sources = Object.values(Import).map((source) => source)
 
-const EmissionsTable = ({ emissions }: Props) => {
-  const t = useTranslations('emissions.table')
+const EmissionFactorsTable = ({ emissionFactors }: Props) => {
+  const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const [filter, setFilter] = useState('')
   const [locationFilter, setLocationFilter] = useState('')
@@ -78,7 +78,7 @@ const EmissionsTable = ({ emissions }: Props) => {
       {
         id: 'name',
         header: t('name'),
-        accessorFn: (emission: EmissionWithMetaData) => emission.metaData?.title,
+        accessorFn: (emissionFactor: EmissionFactorWithMetaData) => emissionFactor.metaData?.title,
       },
       {
         id: 'detail',
@@ -97,9 +97,9 @@ const EmissionsTable = ({ emissions }: Props) => {
             </>
           )
         },
-        accessorFn: (emission: EmissionWithMetaData) => {
-          const attribute = emission.metaData?.attribute
-          const comment = emission.metaData?.comment
+        accessorFn: (emissionFactor: EmissionFactorWithMetaData) => {
+          const attribute = emissionFactor.metaData?.attribute
+          const comment = emissionFactor.metaData?.comment
           if (attribute && comment) {
             return `${attribute}<br />${comment}`
           }
@@ -112,33 +112,37 @@ const EmissionsTable = ({ emissions }: Props) => {
         },
       },
       { header: t('value'), accessorKey: 'totalCo2' },
-      { header: t('unit'), accessorFn: (emission: EmissionWithMetaData) => `kgCO₂e/${tUnits(emission.unit)}` },
+      {
+        header: t('unit'),
+        accessorFn: (emissionFactor: EmissionFactorWithMetaData) => `kgCO₂e/${tUnits(emissionFactor.unit)}`,
+      },
       {
         header: t('location'),
-        accessorFn: (emission: EmissionWithMetaData) => [emission.location, emission.metaData?.location].join(' '),
+        accessorFn: (emissionFactor: EmissionFactorWithMetaData) =>
+          [emissionFactor.location, emissionFactor.metaData?.location].join(' '),
       },
       { header: t('source'), accessorKey: 'source' },
     ]
   }, [t])
 
   const fuse = useMemo(() => {
-    return new Fuse(emissions, {
+    return new Fuse(emissionFactors, {
       ...fuseOptions,
-      getFn: (emission, keys) => {
+      getFn: (emissionFactor, keys) => {
         const column = columns.find((column) => keys.includes(column.id || ''))
         if (!column || !column.accessorFn) {
           return ''
         }
-        return (column.accessorFn(emission) || '').toString()
+        return (column.accessorFn(emissionFactor) || '').toString()
       },
     })
-  }, [emissions, columns])
+  }, [emissionFactors, columns])
 
-  const searchedEmissions = useMemo(() => {
+  const searchedEmissionFactors = useMemo(() => {
     if (!filter && !locationFilter) {
-      return emissions
+      return emissionFactors
     }
-    const searchResults = filter ? fuse.search(filter).map(({ item }) => item) : emissions
+    const searchResults = filter ? fuse.search(filter).map(({ item }) => item) : emissionFactors
 
     if (locationFilter) {
       const locationFuse = new Fuse(searchResults, locationFuseOptions)
@@ -148,8 +152,8 @@ const EmissionsTable = ({ emissions }: Props) => {
   }, [filter, locationFilter])
 
   const data = useMemo(() => {
-    return searchedEmissions.filter((emission) => filteredSources.includes(emission.importedFrom))
-  }, [searchedEmissions, filteredSources])
+    return searchedEmissionFactors.filter((emissionFactor) => filteredSources.includes(emissionFactor.importedFrom))
+  }, [searchedEmissionFactors, filteredSources])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -305,4 +309,4 @@ const EmissionsTable = ({ emissions }: Props) => {
   )
 }
 
-export default EmissionsTable
+export default EmissionFactorsTable

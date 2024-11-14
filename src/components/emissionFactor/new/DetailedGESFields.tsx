@@ -1,19 +1,19 @@
 import { FieldPath, UseFormReturn } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
 import { FormTextField } from '@/components/form/TextField'
-import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
+import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { gazKeys } from '@/constants/emissions'
 
 interface DetailedGESFieldsProps {
-  form: UseFormReturn<CreateEmissionCommand>
-  multiple?: boolean
-  index: number
+  form: UseFormReturn<CreateEmissionFactorCommand>
+  index?: number
 }
 
-const DetailedGESFields = ({ form, index, multiple }: DetailedGESFieldsProps) => {
-  const t = useTranslations('emissions.create')
-  const getName = (gaz: string) => `${multiple ? `parts.${index}.` : ''}${gaz}` as FieldPath<CreateEmissionCommand>
-  const getTestId = (gaz: string) => `new-emission-${multiple ? `part-${index}-` : ''}${gaz}`
+const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
+  const t = useTranslations('emissionFactors.create')
+  const getName = (gaz: string) =>
+    `${index !== undefined ? `parts.${index}.` : ''}${gaz}` as FieldPath<CreateEmissionFactorCommand>
+  const getTestId = (gaz: string) => `new-emission-${index !== undefined ? `part-${index}-` : ''}${gaz}`
   return (
     <>
       {gazKeys.map((gaz) => (
