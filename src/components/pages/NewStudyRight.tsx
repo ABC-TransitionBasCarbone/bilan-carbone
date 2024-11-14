@@ -10,10 +10,10 @@ interface Props {
   study: FullStudy
   user: User
 }
-
+const NewStudyRightPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.rights.new')
-const NewStudyRightPage = async ({ study, user }: Props) => {
+
   return (
     <>
       <Breadcrumbs
