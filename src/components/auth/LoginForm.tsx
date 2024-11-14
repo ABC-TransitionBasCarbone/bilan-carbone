@@ -42,7 +42,12 @@ const LoginForm = () => {
         type="password"
         onChange={(event) => setPassword(event.target.value)}
       />
-      <Link data-testid="reset-password-link" className={styles.link} href={`/reset-password?email=${email}`}>
+      <Link
+        data-testid="reset-password-link"
+        className={styles.link}
+        href={`/reset-password?email=${email}`}
+        prefetch={false}
+      >
         {t('forgot-password')}
       </Link>
       <Button data-testid="login-button" type="submit">
