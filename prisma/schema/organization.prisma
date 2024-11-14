@@ -9,7 +9,7 @@ model Organization {
   users     User[]
   sites     Site[]
   studies   Study[]
-  emissions Emission[]
+  emissions EmissionFactor[]
 
   parentId String?
   parent   Organization?  @relation("childOrganizations", fields: [parentId], references: [id])

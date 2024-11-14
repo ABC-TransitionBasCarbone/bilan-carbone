@@ -1,10 +1,10 @@
-import { type Prisma, EmissionStatus } from '@prisma/client'
+import { type Prisma, EmissionFactorStatus } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getAllValidEmissions = (organizationId: string) =>
-  prismaClient.emission.findMany({
+export const getAllValidEmissionFactors = (organizationId: string) =>
+  prismaClient.emissionFactor.findMany({
     where: {
-      status: EmissionStatus.Valid,
+      status: EmissionFactorStatus.Valid,
       OR: [{ organizationId: null }, { organizationId }],
     },
     select: {
@@ -33,7 +33,7 @@ export const getAllValidEmissions = (organizationId: string) =>
     orderBy: { createdAt: 'desc' },
   })
 
-export const createEmission = (emission: Prisma.EmissionCreateInput) =>
-  prismaClient.emission.create({
-    data: emission,
+export const createEmissionFactor = (emissionFactor: Prisma.EmissionFactorCreateInput) =>
+  prismaClient.emissionFactor.create({
+    data: emissionFactor,
   })

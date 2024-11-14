@@ -1,7 +1,7 @@
-import EmissionsPage from '@/components/pages/Emissions'
+import EmissionsFactorPage from '@/components/pages/EmissionFactors'
 
-const Emissions = async () => {
-  return <EmissionsPage />
+const EmissionFactors = async () => {
+  return <EmissionsFactorPage />
 }
 
-export default Emissions
+export default EmissionFactors

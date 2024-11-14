@@ -1,7 +1,7 @@
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslations } from 'next-intl'
-import styles from './EmissionPartForm.module.css'
-import { CreateEmissionCommand } from '@/services/serverFunctions/emission.command'
+import styles from './EmissionFactorPartForm.module.css'
+import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import ExpandIcon from '@mui/icons-material/ExpandMore'
 import DetailedGESFields from './DetailedGESFields'
@@ -9,13 +9,13 @@ import { FormTextField } from '@/components/form/TextField'
 import classNames from 'classnames'
 
 interface DetailedGESFieldsProps {
-  form: UseFormReturn<CreateEmissionCommand>
+  form: UseFormReturn<CreateEmissionFactorCommand>
   detailedGES: boolean
   index: number
 }
 
-const EmissionPartForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) => {
-  const t = useTranslations('emissions.create')
+const EmissionFactorPartForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) => {
+  const t = useTranslations('emissionFactors.create')
 
   const header = form.watch(`parts.${index}.name`) || `${t('part')} ${index + 1}`
 
@@ -53,7 +53,7 @@ const EmissionPartForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
           />
         </div>
 
-        {detailedGES && <DetailedGESFields form={form} index={index} multiple />}
+        {detailedGES && <DetailedGESFields form={form} index={index} />}
         <FormTextField
           disabled={detailedGES}
           data-testid={`new-emission-part-${index}-totalCo2`}
@@ -72,4 +72,4 @@ const EmissionPartForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) 
   )
 }
 
-export default EmissionPartForm
+export default EmissionFactorPartForm

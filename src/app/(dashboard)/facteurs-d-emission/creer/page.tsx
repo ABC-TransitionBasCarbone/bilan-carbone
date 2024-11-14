@@ -1,8 +1,8 @@
-import NewEmissionPage from '@/components/pages/NewEmission'
+import NewEmissionFactorPage from '@/components/pages/NewEmissionFactor'
 import React from 'react'
 
-const NewEmission = async () => {
-  return <NewEmissionPage />
+const NewEmissionFactor = async () => {
+  return <NewEmissionFactorPage />
 }
 
-export default NewEmission
+export default NewEmissionFactor

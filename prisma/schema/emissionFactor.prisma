@@ -3,7 +3,7 @@ enum Import {
   Manual
 }
 
-enum EmissionStatus {
+enum EmissionFactorStatus {
   Archived
   Valid
 }
@@ -75,19 +75,19 @@ enum SubPost {
   TraitementDesEmballagesEnFinDeVie
 }
 
-model Emission {
-  id            String         @id @default(uuid())
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @default(now()) @map("updated_at")
-  emissionParts EmissionPart[]
+model EmissionFactor {
+  id                  String               @id @default(uuid())
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @default(now()) @map("updated_at")
+  emissionFactorParts EmissionFactorPart[]
 
   importedFrom   Import        @map("imported_from")
   importedId     String?       @map("imported_id")
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  status   EmissionStatus
-  metaData EmissionMetaData[]
+  status   EmissionFactorStatus
+  metaData EmissionFactorMetaData[]
   source   String?
   location String?
 
@@ -112,17 +112,17 @@ model Emission {
   unit     Unit?
 
   subPosts            SubPost[]             @map("sub_posts")
-  StudyEmissionSource StudyEmissionSource[]
+  studyEmissionSource StudyEmissionSource[]
 
   @@index([organizationId])
   @@index([status])
-  @@map("emissions")
+  @@map("emission_factors")
 }
 
-model EmissionMetaData {
-  emission   Emission @relation(fields: [emissionId], references: [id])
-  emissionId String   @map("emission_id")
-  language   String
+model EmissionFactorMetaData {
+  emissionFactor   EmissionFactor @relation(fields: [emissionFactorId], references: [id])
+  emissionFactorId String         @map("emission_factor_id")
+  language         String
 
   title     String?
   attribute String?
@@ -131,19 +131,19 @@ model EmissionMetaData {
   location  String?
   comment   String?
 
-  @@id([emissionId, language])
+  @@id([emissionFactorId, language])
   @@map("emission_metadata")
 }
 
-model EmissionPart {
+model EmissionFactorPart {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
-  emissionId String                 @map("emission_id")
-  emission   Emission               @relation(fields: [emissionId], references: [id])
-  metaData   EmissionPartMetaData[]
-  type       String
+  emissionFactorId String                       @map("emission_factor_id")
+  emissionFactor   EmissionFactor               @relation(fields: [emissionFactorId], references: [id])
+  metaData         EmissionFactorPartMetaData[]
+  type             String
 
   totalCo2 Float  @map("total_co2")
   co2f     Float?
@@ -156,15 +156,15 @@ model EmissionPart {
   pfc      Float?
   otherGES Float? @map("other_ges")
 
-  @@map("emission_posts")
+  @@map("emission_factor_parts")
 }
 
-model EmissionPartMetaData {
-  emissionPart   EmissionPart @relation(fields: [emissionPartId], references: [id])
-  emissionPartId String       @map("emission_post_id")
-  title          String
-  language       String
+model EmissionFactorPartMetaData {
+  emissionFactorPart   EmissionFactorPart @relation(fields: [emissionFactorPartId], references: [id])
+  emissionFactorPartId String             @map("emission_post_id")
+  title                String
+  language             String
 
-  @@id([emissionPartId, language])
-  @@map("emission_post_metadata")
+  @@id([emissionFactorPartId, language])
+  @@map("emission_factor_part_metadata")
 }

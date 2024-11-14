@@ -1,7 +1,7 @@
-import { Emission } from '@prisma/client'
+import { EmissionFactor } from '@prisma/client'
 
 type Quality = Pick<
-  Emission,
+  EmissionFactor,
   | 'reliability'
   | 'technicalRepresentativeness'
   | 'geographicRepresentativeness'

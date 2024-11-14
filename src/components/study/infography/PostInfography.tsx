@@ -27,7 +27,7 @@ const colors: Record<Post, string> = {
 }
 
 const PostInfography = ({ study, post, hideSubPosts }: Props) => {
-  const t = useTranslations('emissions.post')
+  const t = useTranslations('emissionFactors.post')
   const mainPost = useMemo(() => {
     if (Object.keys(Post).includes(post)) {
       return post as Post

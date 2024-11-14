@@ -16,18 +16,18 @@ import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { Path } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import EmissionSourceFactor from './EmissionSourceFactor'
-import { EmissionWithMetaData } from '@/services/emissions'
+import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import QualitySelect from '../form/QualitySelect'
 import { getQualityRating } from '@/services/uncertainty'
 import { EmissionSourceType } from '@prisma/client'
 import { getEmissionResults } from '@/services/emissionSource'
 
 interface Props {
-  emissions: EmissionWithMetaData[]
+  emissionFactors: EmissionFactorWithMetaData[]
   emissionSource: FullStudy['emissionSources'][0]
 }
 
-const EmissionSource = ({ emissionSource, emissions }: Props) => {
+const EmissionSource = ({ emissionSource, emissionFactors }: Props) => {
   const ref = useRef<HTMLDivElement>(null)
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -78,9 +78,9 @@ const EmissionSource = ({ emissionSource, emissions }: Props) => {
 
   const selectedFactor = useMemo(() => {
     if (emissionSource.emissionFactor) {
-      return emissions.find((emission) => emission.id === emissionSource.emissionFactor?.id)
+      return emissionFactors.find((emissionFactor) => emissionFactor.id === emissionSource.emissionFactor?.id)
     }
-  }, [emissionSource.emissionFactor, emissions])
+  }, [emissionSource.emissionFactor, emissionFactors])
 
   const status = useMemo(() => getEmissionSourceStatus(emissionSource), [emissionSource])
   const sourceRating = useMemo(() => getQualityRating(emissionSource), [emissionSource])
@@ -162,7 +162,7 @@ const EmissionSource = ({ emissionSource, emissions }: Props) => {
               />
             </div>
             <div className={styles.row}>
-              <EmissionSourceFactor update={update} emissions={emissions} selectedFactor={selectedFactor} />
+              <EmissionSourceFactor update={update} emissionFactors={emissionFactors} selectedFactor={selectedFactor} />
             </div>
             <div className={classNames(styles.row, 'flex')}>
               <div className={styles.inputWithUnit}>
