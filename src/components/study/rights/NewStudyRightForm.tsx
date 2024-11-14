@@ -1,12 +1,11 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import { SyntheticEvent, useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import styles from './NewStudyRightForm.module.css'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
@@ -27,7 +26,7 @@ const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
-  const [externalWarning, setExternalWarning] = useState(false)
+  const [externalUserWarning, setExternalUserWarning] = useState(false)
 
   const [error, setError] = useState('')
 
@@ -41,18 +40,22 @@ const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
     },
   })
 
-  const onEmailChange = (value: string | null) => {
+  const onEmailChange = (_: SyntheticEvent, value: string | null) => {
     form.setValue('email', value || '')
-    checkExternal(value)
+    form.clearErrors('email')
+    checkIfUserIsExternalUser(value)
   }
 
-  const checkExternal = (value: string | null) => {
-    setExternalWarning(false)
-    const validEmail = NewStudyRightCommandValidation.shape.email.safeParse(value)
-    if (validEmail.success && value && !usersEmail.includes(value)) {
-      setExternalWarning(true)
-    }
-  }
+  const checkIfUserIsExternalUser = useCallback(
+    (value: string | null) => {
+      setExternalUserWarning(false)
+      const validEmail = NewStudyRightCommandValidation.shape.email.safeParse(value)
+      if (validEmail.success && !usersEmail.includes(validEmail.data)) {
+        setExternalUserWarning(true)
+      }
+    },
+    [usersEmail, setExternalUserWarning, NewStudyRightCommandValidation],
+  )
 
   const onSubmit = async (command: NewStudyRightCommand) => {
     const result = await newStudyRight(command)
@@ -77,14 +80,10 @@ const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
         options={usersEmail}
         name="email"
         label={t('email')}
-        onChangedValue={onEmailChange}
+        onInputChange={onEmailChange}
+        helperText={externalUserWarning ? t('validation.external') : ''}
         freeSolo
       />
-      {externalWarning && (
-        <p data-testid="study-rights-external-user-warning" className={styles.warning}>
-          {t('validation.external')}
-        </p>
-      )}
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="study-rights-role">
         {Object.keys(StudyRole)
           .filter(
