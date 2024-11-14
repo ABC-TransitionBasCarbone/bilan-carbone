@@ -51,6 +51,11 @@ describe('Create study', () => {
 
     cy.getByTestId('study-rights-email').should('be.visible')
     cy.getByTestId('study-rights-email').type('bc-admin-1@yopmail.com')
+    cy.getByTestId('autocomplete-helper-text').should('be.visible')
+    cy.getByTestId('autocomplete-helper-text').should(
+      'have.text',
+      "Attention, cette personne ne fait pas partie de l'organisation ou n'a pas de compte",
+    )
 
     cy.getByTestId('study-rights-role').click()
     cy.get('[data-value="Reader"]').click()

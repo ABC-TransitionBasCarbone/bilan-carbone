@@ -1,6 +1,7 @@
 import React from 'react'
 import Block from '../base/Block'
 import NewStudyRightForm from '../study/rights/NewStudyRightForm'
+import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { User } from 'next-auth'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -14,6 +15,9 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.rights.new')
 
+  const users = await getOrganizationUsers(user.organizationId)
+  const existingUsers = study.allowedUsers.map((allowedUser) => allowedUser.user.email)
+  const usersEmail = users.filter((user) => !existingUsers.includes(user.email)).map((user) => user.email)
   return (
     <>
       <Breadcrumbs
@@ -25,7 +29,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
         ]}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <NewStudyRightForm study={study} user={user} />
+        <NewStudyRightForm study={study} user={user} usersEmail={usersEmail} />
       </Block>
     </>
   )

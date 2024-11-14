@@ -105,7 +105,13 @@
         "title": "Add a person to the study: {name}",
         "email": "Email",
         "role": "Role",
-        "create": "Add person"
+        "create": "Add person",
+        "validation": {
+          "email": "Please use a valid email",
+          "email_required": "Please enter an email",
+          "external": "Warning, this person is not part of the organization or does not have an account",
+          "role": "Please select a role"
+        }
       },
       "table": {
         "title": "Rights to the study: {name}",

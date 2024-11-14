@@ -105,7 +105,13 @@
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",
         "role": "Droit",
-        "create": "Ajouter la personne"
+        "create": "Ajouter la personne",
+        "validation": {
+          "email": "Veuillez utiliser un email valide",
+          "email_required": "Veuillez entrer un email",
+          "external": "Attention, cette personne ne fait pas partie de l'organisation ou n'a pas de compte",
+          "role": "Veuillez sélectionner un droit"
+        }
       },
       "table": {
         "title": "Droits sur l'étude : {name}",
