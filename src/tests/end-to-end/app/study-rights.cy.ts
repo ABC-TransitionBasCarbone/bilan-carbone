@@ -32,7 +32,8 @@ describe('Create study', () => {
 
     cy.getByTestId('study-rights-change-button').click()
 
-    cy.getByTestId('study-rights-email').should('be.visible').type('bc-default-1@yopmail.com')
+    cy.getByTestId('study-rights-email').should('be.visible')
+    cy.getByTestId('study-rights-email').type('bc-default-1@yopmail.com')
     cy.getByTestId('study-rights-role').click()
     cy.get('[data-value="Reader"]').click()
 
@@ -48,7 +49,9 @@ describe('Create study', () => {
 
     cy.getByTestId('study-rights-change-button').click()
 
-    cy.getByTestId('study-rights-email').should('be.visible').type('bc-admin-1@yopmail.com')
+    cy.getByTestId('study-rights-email').should('be.visible')
+    cy.getByTestId('study-rights-email').type('bc-admin-1@yopmail.com')
+
     cy.getByTestId('study-rights-role').click()
     cy.get('[data-value="Reader"]').click()
 

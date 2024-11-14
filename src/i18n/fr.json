@@ -27,7 +27,8 @@
       "email": "Email",
       "password": "Mot de passe",
       "forgot-password": "Mot de passe oublié",
-      "reset": "Réinitialiser"
+      "reset": "Réinitialiser",
+      "error": "Veuillez verifier votre email et votre mot de passe"
     }
   },
   "navigation": {
@@ -181,7 +182,7 @@
       "detailedGES": "Décomposition des GES ?",
       "multiple": "Facteur d'émission désagrégé",
       "subPartsCount": "Nombre de postes",
-      "postType": "Type de poste",
+      "partType": "Type de composante",
       "yes": "Oui",
       "no": "Non",
       "totalCo2": "Émission totale de CO₂",

@@ -27,7 +27,8 @@
       "email": "Email",
       "password": "Password",
       "forgot-password": "Forgot password",
-      "reset": "Reset"
+      "reset": "Reset",
+      "error": "Please check your email and your password"
     }
   },
   "navigation": {
@@ -197,7 +198,7 @@
       "post": "Post",
       "missingPost": "Please select a post",
       "subPost": "Sub Post",
-      "postType": "Post type",
+      "partType": "Part type",
       "comment": "Comments",
       "validation": {
         "name": "Please provide a name",

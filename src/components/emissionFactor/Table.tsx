@@ -275,7 +275,10 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
         <TextField
           type="number"
           classes={{ root: styles.pageInput }}
-          slotProps={{ htmlInput: { min: 1, max: table.getPageCount() } }}
+          slotProps={{
+            htmlInput: { min: 1, max: table.getPageCount() },
+            input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+          }}
           defaultValue={table.getState().pagination.pageIndex + 1}
           onChange={onPaginationChange}
         />
