@@ -34,21 +34,28 @@ export const canReadStudy = async (
     }
   }
 
-  let allowedStudies: Exclude<UserWithAllowedStudies, null>['allowedStudies']
+  let allowedStudiesId: string[]
   if ('allowedStudies' in user) {
-    allowedStudies = user.allowedStudies
+    allowedStudiesId = [
+      ...user.allowedStudies.map((allowedStudy) => allowedStudy.studyId),
+      ...user.contributors.map((contributor) => contributor.studyId),
+    ]
   } else {
     const userWithAllowedStudies = await getUserByEmailWithAllowedStudies(user.email)
     if (!userWithAllowedStudies) {
       return false
     }
-    allowedStudies = userWithAllowedStudies.allowedStudies
+    allowedStudiesId = [
+      ...userWithAllowedStudies.allowedStudies.map((allowedStudy) => allowedStudy.studyId),
+      ...userWithAllowedStudies.contributors.map((contributor) => contributor.studyId),
+    ]
   }
 
-  if (allowedStudies.every((allowedStudy) => allowedStudy.studyId !== study.id)) {
-    return false
+  if (allowedStudiesId.some((allowedStudiesId) => allowedStudiesId === study.id)) {
+    return true
   }
-  return true
+
+  return false
 }
 
 export const filterAllowedStudies = async (user: User, studies: Study[]) => {
@@ -119,6 +126,51 @@ export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
 
   const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
   if (!userRightsOnStudy || userRightsOnStudy.role === StudyRole.Reader) {
+    return false
+  }
+
+  return true
+}
+
+export const filterStudyDetail = (user: User, study: FullStudy) => {
+  const availableSubPosts = study.contributors
+    .filter((contributor) => contributor.user.email === user.email)
+    .map((contributor) => contributor.subPost)
+
+  return {
+    withoutDetail: true as const,
+    id: study.id,
+    name: study.name,
+    emissionSources: study.emissionSources
+      .filter((emissionSource) => availableSubPosts.includes(emissionSource.subPost))
+      .map((emissionSource) => ({
+        id: emissionSource.id,
+        name: emissionSource.name,
+        validated: emissionSource.validated,
+        subPost: emissionSource.subPost,
+        emissionFactor: emissionSource.emissionFactor,
+        value: emissionSource.value,
+        reliability: emissionSource.reliability,
+        technicalRepresentativeness: emissionSource.technicalRepresentativeness,
+        geographicRepresentativeness: emissionSource.geographicRepresentativeness,
+        temporalRepresentativeness: emissionSource.temporalRepresentativeness,
+        completeness: emissionSource.completeness,
+        source: emissionSource.source,
+      })),
+    contributors: undefined,
+    allowedUser: undefined,
+  }
+}
+export type StudyWithoutDetail = ReturnType<typeof filterStudyDetail>
+
+export const canReadStudyDetail = async (user: User, study: FullStudy) => {
+  const studyRight = await canReadStudy(user, study)
+  if (!studyRight) {
+    return false
+  }
+
+  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
+  if (!userRightsOnStudy) {
     return false
   }
 

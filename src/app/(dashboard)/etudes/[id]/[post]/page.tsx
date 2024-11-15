@@ -1,8 +1,8 @@
 import StudyPostsPage from '@/components/pages/StudyPosts'
-import NotFound from '@/components/study/NotFound'
+import NotFound from '@/components/pages/NotFound'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
-import { canReadStudy } from '@/services/permissions/study'
+import { canReadStudyDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import React from 'react'
 
@@ -22,7 +22,7 @@ const StudyPost = async ({ params }: Props) => {
   }
 
   const id = params.id
-  if (!id || !session) {
+  if (!id || !session || !session.user) {
     return <NotFound />
   }
 
@@ -32,11 +32,11 @@ const StudyPost = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  if (!(await canReadStudy(session.user, study))) {
+  if (!(await canReadStudyDetail(session.user, study))) {
     return <NotFound />
   }
 
-  return <StudyPostsPage post={post as Post} study={study} />
+  return <StudyPostsPage post={post as Post} study={study} user={session.user} />
 }
 
 export default StudyPost

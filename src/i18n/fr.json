@@ -7,7 +7,9 @@
     "newStudy": "Ajouter une nouvelle étude",
     "studyRights": "Droits",
     "newStudyRight": "Ajouter une personne",
-    "newStudyContributor": "Ajouter un contributeur"
+    "newStudyContributor": "Ajouter un contributeur",
+    "notFound": "Page non trouvé",
+    "backToHome": "Retour a l'accueil"
   },
   "actuality": {
     "title": "Actualités",
@@ -50,7 +52,6 @@
   "study": {
     "tags": "Gestion des tags",
     "change-rights": "Gestion des contributeurs",
-    "back-to-home": "Retour a l'accueil",
     "create": "Nouvelle étude",
     "my-studies": "Mes études",
     "new": {
@@ -87,7 +88,6 @@
       "emissionSource": "{count, plural, =0 {Pas de source d'emission} =1 {1 source d'émission} other {# sources d'émission}}",
       "new": "Ajouter une source d'émission..."
     },
-    "not-found": "Étude introuvable",
     "organization": {
       "title": "Quelle organisation est concernée par l'étude ?",
       "sites": "Les sites de l'organisation",
@@ -104,8 +104,8 @@
       "isPublic": "L'étude est public",
       "isPrivate": "L'étude est privée",
       "title": "Droits sur l'étude : {name}",
-      "new-right": "Ajouter une personne à l'étude",
-      "new-contributor": "Ajouter un contributeur",
+      "newRightLink": "Ajouter une personne à l'étude",
+      "newContributorLink": "Ajouter un contributeur",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",
@@ -121,12 +121,13 @@
       "newContributor": {
         "title": "Ajouter un contributeur sur l'étude : {name}",
         "email": "Email",
+        "limit": "Date limite de contribution",
         "post": "Poste",
         "subPost": "Sous poste",
         "create": "Ajouter la personne",
-
         "validation": {
           "email": "Veuillez renseigner un email valide",
+          "limit": "Veuillez renseigner une date limite future de contribution",
           "post": "Veuillez selectionner un poste"
         }
       },
@@ -468,6 +469,7 @@
     "status": {
       "valid": "Validée",
       "waiting": "En attente",
+      "waitingContributor": "En attente d'un contributeur",
       "toVerify": "A vérifier"
     },
     "type": {
@@ -477,12 +479,12 @@
       "Statistical": "Statistique",
       "Approched": "Approchée"
     },
-    "informations": "Informations :",
+    "informations": "Informations :",
     "results": {
-      "title": "Résultats :",
-      "emission": "Émission :",
-      "confiance": "Intervalle de confiance à 95% :",
-      "alpha": "Alpha :"
+      "title": "Résultats :",
+      "emission": "Émission :",
+      "confiance": "Intervalle de confiance à 95% :",
+      "alpha": "Alpha :"
     },
     "form": {
       "validate": "Validée",
@@ -502,7 +504,7 @@
     }
   },
   "quality": {
-    "name": "Qualité :",
+    "name": "Qualité :",
     "1": "Très mauvaise",
     "2": "Mauvaise",
     "3": "Moyenne",

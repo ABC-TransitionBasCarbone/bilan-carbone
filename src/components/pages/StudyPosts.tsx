@@ -7,13 +7,15 @@ import SubPosts from '../study/SubPosts'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import PostIcon from '../study/infography/icons/PostIcon'
+import { User } from 'next-auth'
 
 interface Props {
   post: Post
   study: FullStudy
+  user: User
 }
 
-const StudyPostsPage = ({ post, study }: Props) => {
+const StudyPostsPage = ({ post, study, user }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   return (
@@ -28,7 +30,7 @@ const StudyPostsPage = ({ post, study }: Props) => {
       <Block title={study.name} as="h1" />
       <Block title={tPost(post)} icon={<PostIcon post={post} />}>
         <StudyPostInfography study={study} />
-        <SubPosts post={post} study={study} />
+        <SubPosts post={post} study={study} user={user} withoutDetail={false} />
       </Block>
     </>
   )
