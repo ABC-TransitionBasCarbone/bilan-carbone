@@ -50,7 +50,13 @@ export type ChangeStudyPublicStatusCommand = z.infer<typeof ChangeStudyPublicSta
 
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
-  email: z.string({ required_error: 'email_required' }).email('email').trim(),
+  email: z
+    .string({
+      required_error: 'email_required',
+      invalid_type_error: 'email_required',
+    })
+    .email('email')
+    .trim(),
   role: z.nativeEnum(StudyRole, { required_error: 'role' }),
 })
 

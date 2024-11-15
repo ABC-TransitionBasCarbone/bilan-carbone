@@ -19,7 +19,7 @@ interface Props {
 }
 
 const SubPosts = ({ post, study }: Props) => {
-  const tPost = useTranslations('emissions.post')
+  const tPost = useTranslations('emissionFactors.post')
   const t = useTranslations('study.post')
 
   const subPosts = useMemo(() => subPostsByPost[post], [post])
