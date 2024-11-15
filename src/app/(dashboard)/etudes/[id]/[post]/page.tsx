@@ -7,13 +7,14 @@ import { Post } from '@/services/posts'
 import React from 'react'
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string
     post: string
-  }
+  }>
 }
 
-const StudyPost = async ({ params }: Props) => {
+const StudyPost = async (props: Props) => {
+  const params = await props.params
   const session = await auth()
 
   const post = Object.keys(Post).find((key) => key === params.post)

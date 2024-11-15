@@ -7,13 +7,14 @@ import Button from '../base/Button'
 import { signOut } from 'next-auth/react'
 import { User } from 'next-auth'
 import { TextField } from '@mui/material'
+import { reset } from '@/services/serverFunctions/auth'
 
 interface Props {
   user?: User
-  reset: (email: string, password: string) => Promise<void>
+  token: string
 }
 
-const ResetForm = ({ user, reset }: Props) => {
+const ResetForm = ({ user, token }: Props) => {
   useEffect(() => {
     if (user) {
       signOut({ redirect: false })
@@ -26,7 +27,7 @@ const ResetForm = ({ user, reset }: Props) => {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await reset(email, password)
+    await reset(email, password, token)
   }
 
   return (

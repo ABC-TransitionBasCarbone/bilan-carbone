@@ -1,34 +1,19 @@
-import jwt from 'jsonwebtoken'
-import { getUserByEmail, updateUserPasswordForEmail } from '@/db/user'
 import { auth } from '@/services/auth'
-import { redirect } from 'next/navigation'
 import React from 'react'
 import ResetForm from '@/components/auth/ResetForm'
 
 interface Props {
-  params: { token: string }
+  params: Promise<{ token: string }>
 }
 
-const ResetPasswordPage = async ({ params: { token } }: Props) => {
+const ResetPasswordPage = async (props: Props) => {
+  const params = await props.params
+
+  const { token } = params
+
   const session = await auth()
 
-  const reset = async (email: string, password: string) => {
-    'use server'
-    const tokenValues = jwt.verify(token, process.env.NEXTAUTH_SECRET as string) as {
-      email: string
-      resetToken: string
-    }
-
-    if (tokenValues && tokenValues.email === email) {
-      const user = await getUserByEmail(email)
-      if (user && user.resetToken && user.resetToken === tokenValues.resetToken) {
-        await updateUserPasswordForEmail(email, password)
-      }
-    }
-    return redirect('/login')
-  }
-
-  return <ResetForm user={session?.user} reset={reset} />
+  return <ResetForm user={session?.user} token={token} />
 }
 
 export default ResetPasswordPage
