@@ -34,7 +34,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
             ? `/etudes/${study.id}/droits/ajouter`
             : ''
         }
-        linkLabel={t('new-right')}
+        linkLabel={t('newRightLink')}
         linkDataTestId="study-rights-change-button"
         title={t('title', { name: study.name })}
         as="h1"
@@ -48,7 +48,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
             ? `/etudes/${study.id}/droits/ajouter-contributeur`
             : ''
         }
-        linkLabel={t('new-contributor')}
+        linkLabel={t('newContributorLink')}
       >
         <StudyContributorsTable study={study} />
       </Block>

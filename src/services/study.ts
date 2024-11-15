@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { Level } from '@prisma/client'
+import { StudyWithoutDetail } from './permissions/study'
 
 export const getAllowedLevels = (level: Level) => {
   switch (level) {
@@ -16,15 +17,23 @@ export enum EmissionSourcesStatus {
   Valid = 'valid',
   ToVerify = 'toVerify',
   Waiting = 'waiting',
+  WaitingContributor = 'waitingContributor',
 }
 
-export const getEmissionSourceStatus = (emissionSource: FullStudy['emissionSources'][0]) => {
+export const getEmissionSourceStatus = (
+  study: FullStudy | StudyWithoutDetail,
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+) => {
   if (emissionSource.validated) {
     return EmissionSourcesStatus.Valid
   }
 
   if (emissionSource.value !== null && emissionSource.emissionFactor !== null) {
     return EmissionSourcesStatus.ToVerify
+  }
+
+  if (study.contributors && study.contributors.some((contributor) => contributor.subPost === emissionSource.subPost)) {
+    return EmissionSourcesStatus.WaitingContributor
   }
 
   return EmissionSourcesStatus.Waiting

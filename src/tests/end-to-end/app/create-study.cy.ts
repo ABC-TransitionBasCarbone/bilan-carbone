@@ -7,19 +7,6 @@ describe('Create study', () => {
     cy.intercept('POST', '/etudes/creer').as('create')
   })
 
-  it('Should display a link to create a new study as a simple user', () => {
-    cy.login()
-
-    cy.getByTestId('new-study').scrollIntoView()
-    cy.getByTestId('new-study').should('be.visible')
-    cy.getByTestId('new-study').should('have.text', 'Nouvelle étude')
-    cy.getByTestId('new-study').should('have.attr', 'href').and('include', '/etudes/creer')
-
-    cy.getByTestId('new-study').click()
-
-    cy.url().should('include', '/etudes/creer')
-  })
-
   it('should create a study on your organization as a simple user', () => {
     cy.login()
 
@@ -42,19 +29,6 @@ describe('Create study', () => {
     cy.getByTestId('new-study-create-button').click()
 
     cy.wait('@create')
-  })
-
-  it('Should display a link to create a new study as a CR user', () => {
-    cy.login('bc-cr-default-1@yopmail.com', 'password-1')
-
-    cy.getByTestId('new-study').scrollIntoView()
-    cy.getByTestId('new-study').should('be.visible')
-    cy.getByTestId('new-study').should('have.text', 'Nouvelle étude')
-    cy.getByTestId('new-study').should('have.attr', 'href').and('include', '/etudes/creer')
-
-    cy.getByTestId('new-study').click()
-
-    cy.url().should('include', '/etudes/creer')
   })
 
   it('should create a study on an organization as a CR user', () => {

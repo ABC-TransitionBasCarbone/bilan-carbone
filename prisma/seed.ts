@@ -14,6 +14,7 @@ const users = async () => {
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
   await prisma.studyEmissionSource.deleteMany()
+  await prisma.contributors.deleteMany()
   await prisma.study.deleteMany()
 
   await prisma.site.deleteMany()
@@ -122,14 +123,25 @@ const users = async () => {
       ]),
     ),
   })
+  const [contributor] = await prisma.user.createManyAndReturn({
+    data: [
+      {
+        email: 'bc-contributor@yopmail.com',
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        password: await signPassword('password'),
+        level: Level.Initial,
+        organizationId: organizations[0].id,
+        role: Role.DEFAULT,
+        isActive: true,
+      },
+    ],
+  })
 
   const subPosts = Object.keys(SubPost)
   await Promise.all(
-    Array.from({ length: 20 }).map((_, index) => {
-      const creator =
-        index === 0
-          ? (users.find((user) => user.email === 'bc-default-0@yopmail.com') as User)
-          : faker.helpers.arrayElement(users)
+    Array.from({ length: 20 }).map(() => {
+      const creator = faker.helpers.arrayElement(users)
       return prisma.study.create({
         data: {
           createdById: creator.id,
@@ -156,6 +168,44 @@ const users = async () => {
       })
     }),
   )
+
+  const defaultUser = users.find((user) => user.email === 'bc-default-0@yopmail.com') as User
+  const reader = users.find((user) => user.email === 'bc-default-1@yopmail.com') as User
+  const editor = users.find((user) => user.email === 'bc-admin-0@yopmail.com') as User
+  await prisma.study.create({
+    data: {
+      id: '88c93e88-7c80-4be4-905b-f0bbd2ccc779',
+      createdById: defaultUser.id,
+      startDate: new Date(),
+      endDate: faker.date.future(),
+      isPublic: false,
+      level: faker.helpers.enumValue(Level),
+      name: faker.lorem.words({ min: 2, max: 5 }),
+      organizationId: defaultUser.organizationId,
+      emissionSources: {
+        createMany: {
+          data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) =>
+            Array.from({ length: Math.ceil(Math.random() * 20) }).map(() => ({
+              name: faker.lorem.words({ min: 2, max: 5 }),
+              subPost: subPost as SubPost,
+            })),
+          ),
+        },
+      },
+      allowedUsers: {
+        createMany: {
+          data: [
+            { role: StudyRole.Validator, userId: defaultUser.id },
+            { role: StudyRole.Reader, userId: reader.id },
+            { role: StudyRole.Editor, userId: editor.id },
+          ],
+        },
+      },
+      contributors: {
+        create: { userId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre, limit: new Date('2099-12-31') },
+      },
+    },
+  })
 }
 
 const actualities = async () => {

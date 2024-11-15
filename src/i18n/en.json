@@ -6,7 +6,10 @@
     "team": "Team",
     "newStudy": "Add a New Study",
     "studyRights": "Rights",
-    "newStudyRight": "Add a Person"
+    "newStudyRight": "Add a Person",
+    "newStudyContributor": "Add a contributor",
+    "notFound": "Page not found",
+    "backToHome": "Back to home"
   },
   "actuality": {
     "title": "News",
@@ -49,7 +52,6 @@
   "study": {
     "tags": "Manage tags",
     "change-rights": "Manage contributors",
-    "back-to-home": "Back to home",
     "create": "New study",
     "my-studies": "My studies",
     "new": {
@@ -86,7 +88,6 @@
       "emissionSource": "{count, plural, =0 {No emission source} =1 {1 emission source} other {# emission sources}}",
       "new": "Add an emission source..."
     },
-    "not-found": "Study not found",
     "organization": {
       "title": "Which organization is involved in the study?",
       "sites": "The organization’s sites",
@@ -99,8 +100,12 @@
     },
     "title": "Study",
     "rights": {
+      "contributors": "Contributors",
       "isPublic": "The study is public",
       "isPrivate": "The study is private",
+      "title": "Rights on study : {name}",
+      "newRightLink": "Add a person on study",
+      "newContributorLink": "Add a contributor",
       "new": {
         "title": "Add a person to the study: {name}",
         "email": "Email",
@@ -113,9 +118,25 @@
           "role": "Please select a role"
         }
       },
+      "newContributor": {
+        "title": "Add on contributor on study : {name}",
+        "email": "Email",
+        "limit": "Limit contribution date",
+        "post": "Post",
+        "subPost": "Sub post",
+        "create": "Add person",
+        "validation": {
+          "email": "Please enter a valid email",
+          "limit": "Please enter a futur contribution date",
+          "post": "Please select a post"
+        }
+      },
+      "contributorsTable": {
+        "email": "Email",
+        "post": "Post",
+        "subPosts": "Sub posts"
+      },
       "table": {
-        "title": "Rights to the study: {name}",
-        "new-right": "Add a person to the study",
         "email": "Email",
         "role": "Rights"
       }
@@ -123,6 +144,8 @@
   },
   "emissionFactors": {
     "post": {
+      "allPost": "All posts",
+      "allSubPost": "All sub posts",
       "Energies": "Energies",
       "AutresEmissionsNonEnergetiques": "Other non-energy emissions",
       "IntrantsBienEtMatieres": "Goods and materials inputs",
@@ -441,5 +464,51 @@
       "etp": "Employees",
       "ca": "Turnover"
     }
+  },
+  "emissionSource": {
+    "status": {
+      "valid": "Validated",
+      "waiting": "Pending",
+      "waitingContributor": "Waiting for a contributor",
+      "toVerify": "To verify"
+    },
+    "type": {
+      "Physical": "Physical",
+      "Accounting": "Accounting",
+      "Extrapolated": "Extrapolated",
+      "Statistical": "Statistical",
+      "Approched": "Approached"
+    },
+    "informations": "Information:",
+    "results": {
+      "title": "Results:",
+      "emission": "Emission:",
+      "confiance": "95% confidence interval:",
+      "alpha": "Alpha:"
+    },
+    "form": {
+      "validate": "Validated",
+      "name": "Name",
+      "tag": "Tag",
+      "caracterisation": "Characterization",
+      "emissionFactor": "Emission factor",
+      "value": "Activity value",
+      "source": "Source",
+      "type": "Type",
+      "reliability": "Reliability",
+      "technicalRepresentativeness": "Technical representativeness",
+      "geographicRepresentativeness": "Geographic representativeness",
+      "temporalRepresentativeness": "Temporal representativeness",
+      "completeness": "Completeness",
+      "comment": "Comments"
+    }
+  },
+  "quality": {
+    "name": "Quality:",
+    "1": "Very poor",
+    "2": "Poor",
+    "3": "Average",
+    "4": "Good",
+    "5": "Very good"
   }
 }

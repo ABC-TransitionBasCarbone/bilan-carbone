@@ -1,7 +1,11 @@
 import { FullStudy } from '@/db/study'
 import { getQualityStandardDeviation } from './uncertainty'
+import { StudyWithoutDetail } from './permissions/study'
 
-const getConfidenceInterval = (emissionSource: FullStudy['emissionSources'][0], emission: number | null) => {
+const getConfidenceInterval = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  emission: number | null,
+) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
     return null
   }
@@ -25,7 +29,7 @@ const getAlpha = (emission: number | null, confidenceInterval: number[] | null) 
   return (confidenceInterval[1] - emission) / emission
 }
 
-export const getEmissionResults = (emissionSource: FullStudy['emissionSources'][0]) => {
+export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
     return null
   }

@@ -75,6 +75,7 @@ model Contributors {
   userId  String
 
   subPost SubPost
+  limit   DateTime @db.Date
 
   @@id([studyId, userId, subPost])
   @@map("contributors")

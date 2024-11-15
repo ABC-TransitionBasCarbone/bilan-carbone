@@ -42,13 +42,14 @@ interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   update: (name: Path<UpdateEmissionSourceCommand>, value: string) => void
   selectedFactor?: EmissionFactorWithMetaData | null
+  canEdit: boolean | null
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => {
   return [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 }
 
-const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor }: Props) => {
+const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tQuality = useTranslations('quality')
@@ -77,6 +78,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor }: Props
     <>
       <div className={classNames(styles.factor, 'align-center')}>
         <DebouncedInput
+          disabled={!canEdit}
           data-testid="emission-source-factor-search"
           debounce={200}
           value={value}
