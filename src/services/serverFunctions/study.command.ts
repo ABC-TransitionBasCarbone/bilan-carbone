@@ -1,5 +1,5 @@
 import { ControlMode, Export, Level, StudyRole, SubPost } from '@prisma/client'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import z from 'zod'
 import { Post } from '../posts'
 
@@ -19,10 +19,14 @@ export const CreateStudyCommandValidation = z
       })
       .email('validator')
       .trim(),
-    startDate: z
-      .custom<Dayjs>((val) => val instanceof dayjs, 'startDate')
-      .refine((val) => val.isAfter(dayjs().add(-1, 'd')), 'startDate'),
-    endDate: z.custom<Dayjs>((val) => val instanceof dayjs, 'endDate'),
+    startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
+      const date = dayjs(val)
+      return date.isValid() && date.isAfter(dayjs().add(-1, 'day'))
+    }, 'startDate'),
+    endDate: z.string({ required_error: 'endDate' }).refine((val) => {
+      const date = dayjs(val)
+      return date.isValid()
+    }, 'endDate'),
     level: z.nativeEnum(Level, { required_error: 'level' }),
     isPublic: z.string(),
     exports: z.object({
@@ -33,7 +37,7 @@ export const CreateStudyCommandValidation = z
   })
   .refine(
     (data) => {
-      return data.endDate > data.startDate
+      return dayjs(data.endDate).isAfter(dayjs(data.startDate))
     },
     {
       message: 'endDateBeforStartDate',
@@ -74,7 +78,10 @@ export const NewStudyContributorCommandValidation = z.object({
     .trim(),
   post: z.union([z.nativeEnum(Post), z.literal('all')], { required_error: 'post' }),
   subPost: z.union([z.nativeEnum(SubPost), z.literal('all')]),
-  limit: z.custom<Dayjs>((val) => val instanceof dayjs, 'limit').refine((val) => val.isAfter(dayjs()), 'limit'),
+  limit: z.string({ required_error: 'limit' }).refine((val) => {
+    const date = dayjs(val)
+    return date.isValid()
+  }, 'limit'),
 })
 
 export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>
