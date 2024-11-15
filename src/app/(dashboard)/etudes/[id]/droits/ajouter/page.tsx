@@ -7,12 +7,13 @@ import NotFound from '@/components/pages/NotFound'
 import NewStudyRightPage from '@/components/pages/NewStudyRight'
 
 interface Props {
-  params: {
+  params: Promise<{
     id: UUID
-  }
+  }>
 }
 
-const NewStudyRight = async ({ params }: Props) => {
+const NewStudyRight = async (props: Props) => {
+  const params = await props.params
   const session = await auth()
 
   const id = params.id

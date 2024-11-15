@@ -7,14 +7,15 @@ import { UUID } from 'crypto'
 import React from 'react'
 
 interface Props {
-  params: {
+  params: Promise<{
     id: UUID
-  }
+  }>
 }
 
 export const revalidate = 0
 
-const StudyRights = async ({ params }: Props) => {
+const StudyRights = async (props: Props) => {
+  const params = await props.params
   const session = await auth()
 
   const id = params.id

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { getLocale, switchLocale } from '@/i18n/request'
+import { getLocale, switchLocale } from '@/i18n/locale'
 import { Locale, LocaleType, defaultLocale } from '@/i18n/config'
 import { InputLabel, MenuItem, Select } from '@mui/material'
 
