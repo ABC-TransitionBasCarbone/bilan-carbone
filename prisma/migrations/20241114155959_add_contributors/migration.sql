@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "emissions" ALTER COLUMN "reliability" DROP NOT NULL;
+ALTER TABLE "emission_factors" ALTER COLUMN "reliability" DROP NOT NULL;
 
 -- CreateTable
 CREATE TABLE "contributors" (
