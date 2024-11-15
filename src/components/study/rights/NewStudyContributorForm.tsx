@@ -26,7 +26,7 @@ interface Props {
 const NewStudyContributorForm = ({ study }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.newContributor')
-  const tPost = useTranslations('emissions.post')
+  const tPost = useTranslations('emissionFactors.post')
 
   const [error, setError] = useState('')
 
