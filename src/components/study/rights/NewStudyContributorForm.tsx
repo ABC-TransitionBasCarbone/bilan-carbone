@@ -18,7 +18,6 @@ import {
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { FormTextField } from '@/components/form/TextField'
-import { FormDatePicker } from '@/components/form/DatePicker'
 
 interface Props {
   study: FullStudy
@@ -67,7 +66,6 @@ const NewStudyContributorForm = ({ study }: Props) => {
         name="email"
         label={t('email')}
       />
-      <FormDatePicker control={form.control} translation={t} name="limit" label={t('limit')} />
       <FormSelect
         control={form.control}
         translation={t}

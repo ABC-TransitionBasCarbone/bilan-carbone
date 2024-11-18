@@ -202,7 +202,7 @@ const users = async () => {
         },
       },
       contributors: {
-        create: { userId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre, limit: new Date('2099-12-31') },
+        create: { userId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
       },
     },
   })

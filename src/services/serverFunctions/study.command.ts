@@ -78,10 +78,6 @@ export const NewStudyContributorCommandValidation = z.object({
     .trim(),
   post: z.union([z.nativeEnum(Post), z.literal('all')], { required_error: 'post' }),
   subPost: z.union([z.nativeEnum(SubPost), z.literal('all')]),
-  limit: z.string({ required_error: 'limit' }).refine((val) => {
-    const date = dayjs(val)
-    return date.isValid()
-  }, 'limit'),
 })
 
 export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>
