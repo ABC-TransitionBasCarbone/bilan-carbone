@@ -21,7 +21,7 @@ export const CreateStudyCommandValidation = z
       .trim(),
     startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
       const date = dayjs(val)
-      return date.isValid() && date.isAfter(dayjs().add(-1, 'day'))
+      return date.isValid()
     }, 'startDate'),
     endDate: z.string({ required_error: 'endDate' }).refine((val) => {
       const date = dayjs(val)
