@@ -1,6 +1,5 @@
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import { Autocomplete, AutocompleteProps, TextField } from '@mui/material'
-import styles from './Autocomplete.module.css'
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
@@ -30,12 +29,14 @@ export const FormAutocomplete = <T extends FieldValues, Value>({
           renderInput={(params) => (
             <TextField
               {...params}
+              slotProps={{
+                formHelperText: {
+                  // @ts-expect-error: Known missing props in TS
+                  'data-testid': `${name}-autocomplete-helper-text`,
+                },
+              }}
               label={label}
-              helperText={
-                <span className={styles.textHelper} data-testid="autocomplete-helper-text">
-                  {(error && error.message ? translation('validation.' + error.message) : null) || helperText}
-                </span>
-              }
+              helperText={(error && error.message ? translation('validation.' + error.message) : null) || helperText}
               error={!!error}
             />
           )}
