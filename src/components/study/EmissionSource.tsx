@@ -7,7 +7,7 @@ import styles from './EmissionSource.module.css'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { useTranslations } from 'next-intl'
 import classNames from 'classnames'
-import { FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material'
+import { FormControlLabel, Switch } from '@mui/material'
 import {
   UpdateEmissionSourceCommand,
   UpdateEmissionSourceCommandValidation,
@@ -15,19 +15,38 @@ import {
 import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { Path } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
-import EmissionSourceFactor from './EmissionSourceFactor'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import QualitySelect from '../form/QualitySelect'
 import { getQualityRating } from '@/services/uncertainty'
-import { EmissionSourceType } from '@prisma/client'
+import { StudyRole } from '@prisma/client'
 import { getEmissionResults } from '@/services/emissionSource'
+import { StudyWithoutDetail } from '@/services/permissions/study'
+import EmissionSourceForm from './EmissionSourceForm'
+import EmissionSourceContributorForm from './EmissionSourceContributorForm'
+
+type StudyProps = {
+  study: FullStudy
+  emissionSource: FullStudy['emissionSources'][0]
+  withoutDetail: false
+}
+
+type StudyWithoutDetailProps = {
+  study: StudyWithoutDetail
+  emissionSource: StudyWithoutDetail['emissionSources'][0]
+  withoutDetail: true
+}
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
-  emissionSource: FullStudy['emissionSources'][0]
+  userRoleOnStudy: StudyRole | null
 }
 
-const EmissionSource = ({ emissionSource, emissionFactors }: Props) => {
+const EmissionSource = ({
+  study,
+  emissionSource,
+  emissionFactors,
+  userRoleOnStudy,
+  withoutDetail,
+}: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const ref = useRef<HTMLDivElement>(null)
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -37,6 +56,8 @@ const EmissionSource = ({ emissionSource, emissionFactors }: Props) => {
   const [display, setDisplay] = useState(false)
 
   const detailId = `${emissionSource.id}-detail`
+  const canEdit = userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
+  const canValidate = userRoleOnStudy && userRoleOnStudy === StudyRole.Validator
 
   const update = useCallback(
     async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => {
@@ -82,9 +103,10 @@ const EmissionSource = ({ emissionSource, emissionFactors }: Props) => {
     }
   }, [emissionSource.emissionFactor, emissionFactors])
 
-  const status = useMemo(() => getEmissionSourceStatus(emissionSource), [emissionSource])
+  const status = useMemo(() => getEmissionSourceStatus(study, emissionSource), [study, emissionSource])
   const sourceRating = useMemo(() => getQualityRating(emissionSource), [emissionSource])
   const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
+
   return (
     <div className={styles.container}>
       <button
@@ -102,13 +124,15 @@ const EmissionSource = ({ emissionSource, emissionFactors }: Props) => {
         </div>
         <div className={classNames(styles.infosRight, 'flex-col')}>
           <p data-testid="emission-source-value">
-            {emissionResults === null
-              ? (emissionSource.value ?? (
-                  <>
-                    {emissionSource.value} {selectedFactor && tUnits(selectedFactor.unit)}
-                  </>
-                ))
-              : `${emissionResults.emission.toFixed(2)} kgCO₂e`}
+            {emissionResults === null ? (
+              emissionSource.value !== null ? (
+                <>
+                  {emissionSource.value} {selectedFactor && tUnits(selectedFactor.unit)}
+                </>
+              ) : null
+            ) : (
+              `${emissionResults.emission.toFixed(2)} kgCO₂e`
+            )}
           </p>
           {sourceRating && (
             <p className={styles.status} data-testid="emission-source-quality">
@@ -126,123 +150,40 @@ const EmissionSource = ({ emissionSource, emissionFactors }: Props) => {
             <div className="justify-between align-center">
               <p>{t('informations')}</p>
               <div>
-                {status !== EmissionSourcesStatus.Waiting && (
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        data-testid="emission-source-validated"
-                        defaultChecked={emissionSource.validated || false}
-                        onChange={(event) => update('validated', event.target.checked)}
-                      />
-                    }
-                    label={t('form.validate')}
-                    labelPlacement="start"
-                  />
-                )}
+                {!withoutDetail &&
+                  canValidate &&
+                  status !== EmissionSourcesStatus.Waiting &&
+                  status !== EmissionSourcesStatus.WaitingContributor && (
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          data-testid="emission-source-validated"
+                          checked={emissionSource.validated || false}
+                          onChange={(event) => update('validated', event.target.checked)}
+                        />
+                      }
+                      label={t('form.validate')}
+                      labelPlacement="start"
+                    />
+                  )}
               </div>
             </div>
-            <div className={classNames(styles.row, 'flex')}>
-              <TextField
-                defaultValue={emissionSource.name}
-                data-testid="emission-source-name"
-                onBlur={(event) => update('name', event.target.value)}
-                label={t('form.name')}
+            {withoutDetail ? (
+              <EmissionSourceContributorForm
+                emissionSource={emissionSource}
+                selectedFactor={selectedFactor}
+                emissionFactors={emissionFactors}
+                update={update}
               />
-              <TextField
-                defaultValue={emissionSource.tag}
-                data-testid="emission-source-tag"
-                onBlur={(event) => update('tag', event.target.value)}
-                label={t('form.tag')}
+            ) : (
+              <EmissionSourceForm
+                canEdit={canEdit}
+                emissionSource={emissionSource}
+                selectedFactor={selectedFactor}
+                emissionFactors={emissionFactors}
+                update={update}
               />
-              <TextField
-                defaultValue={emissionSource.caracterisation}
-                data-testid="emission-source-caracterisation"
-                onBlur={(event) => update('caracterisation', event.target.value)}
-                label={t('form.caracterisation')}
-              />
-            </div>
-            <div className={styles.row}>
-              <EmissionSourceFactor update={update} emissionFactors={emissionFactors} selectedFactor={selectedFactor} />
-            </div>
-            <div className={classNames(styles.row, 'flex')}>
-              <div className={styles.inputWithUnit}>
-                <TextField
-                  type="number"
-                  data-testid="emission-source-value-da"
-                  defaultValue={emissionSource.value}
-                  onBlur={(event) => update('value', Number(event.target.value))}
-                  label={t('form.value')}
-                />
-                {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
-              </div>
-              <TextField
-                data-testid="emission-source-source"
-                defaultValue={emissionSource.source}
-                onBlur={(event) => update('source', event.target.value)}
-                label={t('form.source')}
-              />
-              <FormControl>
-                <InputLabel id={'type-label'}>{t('form.type')}</InputLabel>
-                <Select
-                  data-testid="emission-source-type"
-                  value={emissionSource.type || ''}
-                  onChange={(event) => update('type', event.target.value)}
-                  label={t('form.type')}
-                  labelId={'type-label'}
-                >
-                  {Object.keys(EmissionSourceType).map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {t(`type.${value}`)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div className={classNames(styles.row, 'flex')}>
-              <QualitySelect
-                data-testid="emission-source-reliability"
-                id="reliability"
-                value={emissionSource.reliability || ''}
-                onChange={(event) => update('reliability', Number(event.target.value))}
-                label={t('form.reliability')}
-              />
-              <QualitySelect
-                data-testid="emission-source-technicalRepresentativeness"
-                id="technicalRepresentativeness"
-                value={emissionSource.technicalRepresentativeness || ''}
-                onChange={(event) => update('technicalRepresentativeness', Number(event.target.value))}
-                label={t('form.technicalRepresentativeness')}
-              />
-              <QualitySelect
-                data-testid="emission-source-geographicRepresentativeness"
-                id="geographicRepresentativeness"
-                value={emissionSource.geographicRepresentativeness || ''}
-                onChange={(event) => update('geographicRepresentativeness', Number(event.target.value))}
-                label={t('form.geographicRepresentativeness')}
-              />
-              <QualitySelect
-                data-testid="emission-source-temporalRepresentativeness"
-                id="temporalRepresentativeness"
-                value={emissionSource.temporalRepresentativeness || ''}
-                onChange={(event) => update('temporalRepresentativeness', Number(event.target.value))}
-                label={t('form.temporalRepresentativeness')}
-              />
-              <QualitySelect
-                data-testid="emission-source-completeness"
-                id="completeness"
-                value={emissionSource.completeness || ''}
-                onChange={(event) => update('completeness', Number(event.target.value))}
-                label={t('form.completeness')}
-              />
-            </div>
-            <div className={classNames(styles.row, 'flex')}>
-              <TextField
-                data-testid="emission-source-comment"
-                defaultValue={emissionSource.comment}
-                onBlur={(event) => update('comment', event.target.value)}
-                label={t('form.comment')}
-              />
-            </div>
+            )}
             {emissionResults && (
               <div className={styles.results} data-testid="emission-source-result">
                 <p>{t('results.title')}</p>

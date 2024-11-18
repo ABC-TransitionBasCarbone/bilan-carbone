@@ -154,13 +154,13 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
   await updateUserOnStudy(user.id, studyWithRights.id, studyRole)
 }
 
-export const newStudyContributor = async (command: NewStudyContributorCommand) => {
+export const newStudyContributor = async ({ email, post, subPost, ...command }: NewStudyContributorCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, user] = await Promise.all([getStudyById(command.studyId), getUserByEmail(command.email)])
+  const [studyWithRights, user] = await Promise.all([getStudyById(command.studyId), getUserByEmail(email)])
 
   if (!studyWithRights || !user) {
     return NOT_AUTHORIZED
@@ -170,11 +170,16 @@ export const newStudyContributor = async (command: NewStudyContributorCommand) =
     return NOT_AUTHORIZED
   }
 
-  if (command.post === 'all') {
-    await createContributorOnStudy(user.id, command.studyId, Object.values(SubPost))
-  } else if (!command.subPost || command.subPost === 'all') {
-    await createContributorOnStudy(user.id, command.studyId, subPostsByPost[command.post])
+  const data = {
+    ...command,
+    limit: dayjs(command.limit).toDate(),
+  }
+
+  if (post === 'all') {
+    await createContributorOnStudy(user.id, Object.values(SubPost), data)
+  } else if (!subPost || subPost === 'all') {
+    await createContributorOnStudy(user.id, subPostsByPost[post], data)
   } else {
-    await createContributorOnStudy(user.id, command.studyId, [command.subPost])
+    await createContributorOnStudy(user.id, [subPost], data)
   }
 }

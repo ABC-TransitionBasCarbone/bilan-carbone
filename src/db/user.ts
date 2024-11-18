@@ -7,7 +7,7 @@ import { Prisma, Role } from '@prisma/client'
 export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
 
 export const getUserByEmailWithAllowedStudies = (email: string) =>
-  prismaClient.user.findUnique({ where: { email }, include: { allowedStudies: true } })
+  prismaClient.user.findUnique({ where: { email }, include: { allowedStudies: true, contributors: true } })
 
 export type UserWithAllowedStudies = AsyncReturnType<typeof getUserByEmailWithAllowedStudies>
 

@@ -11,11 +11,14 @@ export const createStudy = (study: Prisma.StudyCreateInput) =>
 export const getStudyByUser = async (user: User) => {
   const userOrganizations = await getUserOrganizations(user.email)
 
+  // Be carefull: study on this query is shown to a lot of user
+  // Never display sensitive data here (like emission source)
   return prismaClient.study.findMany({
     where: {
       OR: [
         { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
         { allowedUsers: { some: { userId: user.id } } },
+        { contributors: { some: { userId: user.id } } },
       ],
     },
   })
@@ -106,8 +109,12 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
 
-export const createContributorOnStudy = (userId: string, studyId: string, subPosts: SubPost[]) =>
+export const createContributorOnStudy = (
+  userId: string,
+  subPosts: SubPost[],
+  data: Omit<Prisma.ContributorsCreateManyInput, 'userId' | 'subPost'>,
+) =>
   prismaClient.contributors.createMany({
-    data: subPosts.map((subPost) => ({ userId, studyId, subPost })),
+    data: subPosts.map((subPost) => ({ ...data, userId, subPost })),
     skipDuplicates: true,
   })

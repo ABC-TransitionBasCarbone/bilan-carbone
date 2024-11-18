@@ -2,8 +2,8 @@ import React from 'react'
 import { UUID } from 'crypto'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
-import { canReadStudy } from '@/services/permissions/study'
-import NotFound from '@/components/study/NotFound'
+import { canReadStudyDetail } from '@/services/permissions/study'
+import NotFound from '@/components/pages/NotFound'
 import NewStudyRightPage from '@/components/pages/NewStudyRight'
 
 interface Props {
@@ -26,7 +26,7 @@ const NewStudyRight = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  if (!(await canReadStudy(session.user, study))) {
+  if (!(await canReadStudyDetail(session.user, study))) {
     return <NotFound />
   }
 

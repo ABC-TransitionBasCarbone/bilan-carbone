@@ -32,7 +32,7 @@ export const FormDatePicker = <T extends FieldValues>({
             },
           }}
           onChange={onChange}
-          value={value}
+          value={value || null}
         />
       )}
     />

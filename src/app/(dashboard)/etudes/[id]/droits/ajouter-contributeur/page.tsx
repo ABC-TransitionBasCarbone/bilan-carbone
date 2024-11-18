@@ -1,10 +1,10 @@
-import NotFound from '@/components/study/NotFound'
+import NotFound from '@/components/pages/NotFound'
 import NewStudyContributorPage from '@/components/pages/NewStudyContributor'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { UUID } from 'crypto'
 import React from 'react'
-import { canReadStudy } from '@/services/permissions/study'
+import { canReadStudyDetail } from '@/services/permissions/study'
 
 interface Props {
   params: {
@@ -26,7 +26,7 @@ const NewStudyContributor = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  if (!(await canReadStudy(session.user, study))) {
+  if (!(await canReadStudyDetail(session.user, study))) {
     return <NotFound />
   }
   return <NewStudyContributorPage study={study} />

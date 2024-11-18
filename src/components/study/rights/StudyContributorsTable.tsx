@@ -13,7 +13,7 @@ interface Props {
 const allPosts = Object.values(Post)
 const StudyContributorsTable = ({ study }: Props) => {
   const t = useTranslations('study.rights.contributorsTable')
-  const tPost = useTranslations('emissions.post')
+  const tPost = useTranslations('emissionFactors.post')
 
   // Complexe method to simplify the display on the table...
   const data = useMemo(

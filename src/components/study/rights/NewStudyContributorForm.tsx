@@ -18,6 +18,7 @@ import {
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { FormTextField } from '@/components/form/TextField'
+import { FormDatePicker } from '@/components/form/DatePicker'
 
 interface Props {
   study: FullStudy
@@ -26,7 +27,7 @@ interface Props {
 const NewStudyContributorForm = ({ study }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.newContributor')
-  const tPost = useTranslations('emissions.post')
+  const tPost = useTranslations('emissionFactors.post')
 
   const [error, setError] = useState('')
 
@@ -66,6 +67,7 @@ const NewStudyContributorForm = ({ study }: Props) => {
         name="email"
         label={t('email')}
       />
+      <FormDatePicker control={form.control} translation={t} name="limit" label={t('limit')} />
       <FormSelect
         control={form.control}
         translation={t}

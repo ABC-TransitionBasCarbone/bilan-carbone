@@ -19,7 +19,9 @@ export const CreateStudyCommandValidation = z
       })
       .email('validator')
       .trim(),
-    startDate: z.custom<Dayjs>((val) => val instanceof dayjs, 'startDate'),
+    startDate: z
+      .custom<Dayjs>((val) => val instanceof dayjs, 'startDate')
+      .refine((val) => val.isAfter(dayjs().add(-1, 'd')), 'startDate'),
     endDate: z.custom<Dayjs>((val) => val instanceof dayjs, 'endDate'),
     level: z.nativeEnum(Level, { required_error: 'level' }),
     isPublic: z.string(),
@@ -50,7 +52,13 @@ export type ChangeStudyPublicStatusCommand = z.infer<typeof ChangeStudyPublicSta
 
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
-  email: z.string({ required_error: 'email_required' }).email('email').trim(),
+  email: z
+    .string({
+      required_error: 'email_required',
+      invalid_type_error: 'email_required',
+    })
+    .email('email')
+    .trim(),
   role: z.nativeEnum(StudyRole, { required_error: 'role' }),
 })
 
@@ -66,6 +74,7 @@ export const NewStudyContributorCommandValidation = z.object({
     .trim(),
   post: z.union([z.nativeEnum(Post), z.literal('all')], { required_error: 'post' }),
   subPost: z.union([z.nativeEnum(SubPost), z.literal('all')]),
+  limit: z.custom<Dayjs>((val) => val instanceof dayjs, 'limit').refine((val) => val.isAfter(dayjs()), 'limit'),
 })
 
 export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>

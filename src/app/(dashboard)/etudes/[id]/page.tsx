@@ -1,9 +1,10 @@
 import { UUID } from 'crypto'
 import { auth } from '@/services/auth'
-import NotFound from '@/components/study/NotFound'
-import { canReadStudy } from '@/services/permissions/study'
+import NotFound from '@/components/pages/NotFound'
+import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
 import { getStudyById } from '@/db/study'
 import StudyPage from '@/components/pages/Study'
+import StudyContributorPage from '@/components/pages/StudyContributor'
 
 interface Props {
   params: {
@@ -25,8 +26,12 @@ const StudyView = async ({ params }: Props) => {
     return <NotFound />
   }
 
-  if (!(await canReadStudy(session.user, study))) {
-    return <NotFound />
+  if (!(await canReadStudyDetail(session.user, study))) {
+    if (!(await canReadStudy(session.user, study))) {
+      return <NotFound />
+    }
+    const studyWithoutDetail = filterStudyDetail(session.user, study)
+    return <StudyContributorPage study={studyWithoutDetail} user={session.user} />
   }
 
   return <StudyPage study={study} />
