@@ -38,11 +38,14 @@
     "factors": "Facteurs d'émission",
     "help": "Aide",
     "home": "Accueil",
-    "logout": "Déconnexion",
     "profile": "Profil",
     "study": "Étude",
     "team": "Équipe",
     "organization": "Organisation"
+  },
+  "results": {
+    "byPost": "Résultats par poste",
+    "bySubPost": "Résultats par sous poste"
   },
   "profile": {
     "title": "Mon profil",
@@ -210,7 +213,7 @@
       "source": "Source",
       "detailedGES": "Décomposition des GES ?",
       "multiple": "Facteur d'émission désagrégé",
-      "subPartsCount": "Nombre de postes",
+      "subPartsCount": "Nombre de composantes",
       "partType": "Type de composante",
       "yes": "Oui",
       "no": "Non",

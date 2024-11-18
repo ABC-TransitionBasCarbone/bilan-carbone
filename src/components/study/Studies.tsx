@@ -4,7 +4,7 @@ import React from 'react'
 import styles from './Studies.module.css'
 import classNames from 'classnames'
 import { User } from 'next-auth'
-import { getStudyByUser } from '@/db/study'
+import { getStudiesByUser } from '@/db/study'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import Link from '../base/Link'
 
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const Studies = async ({ user }: Props) => {
-  const studies = await getStudyByUser(user)
+  const studies = await getStudiesByUser(user)
   const allowedStudies = await filterAllowedStudies(user, studies)
 
   return (
