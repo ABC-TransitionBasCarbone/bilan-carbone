@@ -19,10 +19,10 @@ import { newStudyRight } from '@/services/serverFunctions/study'
 interface Props {
   study: FullStudy
   user: User
-  usersEmail: string[]
+  users: { email: string; firstName: string; lastName: string }[]
 }
 
-const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
+const NewStudyRightForm = ({ study, user, users }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
@@ -50,11 +50,11 @@ const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
     (value: string | null) => {
       setExternalUserWarning(false)
       const validEmail = NewStudyRightCommandValidation.shape.email.safeParse(value)
-      if (validEmail.success && !usersEmail.includes(validEmail.data)) {
+      if (validEmail.success && !users.map((user) => user.email).includes(validEmail.data)) {
         setExternalUserWarning(true)
       }
     },
-    [usersEmail, setExternalUserWarning, NewStudyRightCommandValidation],
+    [users, setExternalUserWarning, NewStudyRightCommandValidation],
   )
 
   const onSubmit = async (command: NewStudyRightCommand) => {
@@ -77,7 +77,10 @@ const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
         data-testid="study-rights-email"
         control={form.control}
         translation={t}
-        options={usersEmail}
+        options={users.map((user) => ({
+          label: `${user.firstName} ${user.lastName} - ${user.email}`,
+          value: user.email,
+        }))}
         name="email"
         label={t('email')}
         onInputChange={onEmailChange}

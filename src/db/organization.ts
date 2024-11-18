@@ -5,7 +5,7 @@ export const getOrganizationById = (id: string) =>
 
 export const getOrganizationUsers = (id: string) =>
   prismaClient.user.findMany({
-    select: { email: true },
+    select: { email: true, firstName: true, lastName: true },
     where: { organizationId: id, isActive: true },
     orderBy: { email: 'asc' },
   })
