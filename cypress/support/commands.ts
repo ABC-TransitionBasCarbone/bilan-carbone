@@ -1,5 +1,3 @@
-import { time } from 'console'
-
 Cypress.Commands.add('getByTestId', (testId: string) => cy.get(`[data-testid="${testId}"]`))
 
 Cypress.Commands.add('login', (email = 'bc-default-0@yopmail.com', password = 'password-0') => {
