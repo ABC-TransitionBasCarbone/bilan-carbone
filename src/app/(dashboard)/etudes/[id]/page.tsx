@@ -7,12 +7,13 @@ import StudyPage from '@/components/pages/Study'
 import StudyContributorPage from '@/components/pages/StudyContributor'
 
 interface Props {
-  params: {
+  params: Promise<{
     id: UUID
-  }
+  }>
 }
 
-const StudyView = async ({ params }: Props) => {
+const StudyView = async (props: Props) => {
+  const params = await props.params
   const session = await auth()
 
   const id = params.id

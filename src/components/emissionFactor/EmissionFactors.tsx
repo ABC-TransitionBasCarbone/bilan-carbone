@@ -2,7 +2,7 @@
 
 import React from 'react'
 import EmissionFactorsTable from './Table'
-import { getLocale } from '@/i18n/request'
+import { getLocale } from '@/i18n/locale'
 import { getEmissionFactors } from '@/services/emissionFactors'
 
 const EmissionFactors = async () => {

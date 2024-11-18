@@ -19,7 +19,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "target": "ESNext"
   },
   "ts-node": {
     "experimentalResolver": true,

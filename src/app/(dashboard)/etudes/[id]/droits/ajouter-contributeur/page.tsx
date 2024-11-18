@@ -7,12 +7,13 @@ import React from 'react'
 import { canReadStudyDetail } from '@/services/permissions/study'
 
 interface Props {
-  params: {
+  params: Promise<{
     id: UUID
-  }
+  }>
 }
 
-const NewStudyContributor = async ({ params }: Props) => {
+const NewStudyContributor = async (props: Props) => {
+  const params = await props.params
   const session = await auth()
 
   const id = params.id
