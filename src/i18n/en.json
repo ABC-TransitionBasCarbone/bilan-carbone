@@ -38,11 +38,14 @@
     "factors": "Emission factors",
     "help": "Help",
     "home": "Home",
-    "logout": "Logout",
     "profile": "Profile",
     "study": "Study",
     "team": "Team",
     "organization": "Organization"
+  },
+  "results": {
+    "byPost": "Results by post",
+    "bySubPost": "Results by sub post"
   },
   "profile": {
     "title": "My profile",

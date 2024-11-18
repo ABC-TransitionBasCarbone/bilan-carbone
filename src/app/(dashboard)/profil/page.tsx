@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl'
 import LocaleSelector from '@/components/navbar/LocaleSelector'
 import Block from '@/components/base/Block'
 import Link from 'next/link'
+import Logout from '@/components/auth/Logout'
 
 const Profile = () => {
   const t = useTranslations('profile')
@@ -11,7 +12,7 @@ const Profile = () => {
         <LocaleSelector />
       </div>
       <div className="mb1">
-        <Link href="/logout">{t('logout')}</Link>
+        <Logout />
       </div>
       <div className="mb1">
         <Link data-testid="legal-notices-link" href="/mentions-legales">
