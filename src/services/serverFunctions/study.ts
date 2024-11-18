@@ -16,7 +16,6 @@ import {
   updateUserOnStudy,
 } from '@/db/study'
 import { ControlMode, Export, Prisma, StudyRole, SubPost } from '@prisma/client'
-import dayjs from 'dayjs'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
   canAddContributorOnStudy,
@@ -62,8 +61,6 @@ export const createStudyCommand = async ({
   const study = {
     ...command,
     createdBy: { connect: { id: session.user.id } },
-    startDate: dayjs(command.startDate).toDate(),
-    endDate: dayjs(command.endDate).toDate(),
     organization: { connect: { id: organizationId } },
     isPublic: command.isPublic === 'true',
     allowedUsers: {
@@ -170,16 +167,11 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     return NOT_AUTHORIZED
   }
 
-  const data = {
-    ...command,
-    limit: dayjs(command.limit).toDate(),
-  }
-
   if (post === 'all') {
-    await createContributorOnStudy(user.id, Object.values(SubPost), data)
+    await createContributorOnStudy(user.id, Object.values(SubPost), command)
   } else if (!subPost || subPost === 'all') {
-    await createContributorOnStudy(user.id, subPostsByPost[post], data)
+    await createContributorOnStudy(user.id, subPostsByPost[post], command)
   } else {
-    await createContributorOnStudy(user.id, [subPost], data)
+    await createContributorOnStudy(user.id, [subPost], command)
   }
 }
