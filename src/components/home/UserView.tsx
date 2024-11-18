@@ -1,10 +1,10 @@
 import classNames from 'classnames'
 import { User } from 'next-auth'
-import { Role } from '@prisma/client'
 import styles from './styles.module.css'
 import ResultsContainer from '../study/results/ResultsContainer'
 import Actualities from '../actuality/Actualities'
-import Studies from '../study/StudyContainer'
+import Studies from '../study/StudiesContainer'
+import { Suspense } from 'react'
 
 interface Props {
   user: User
@@ -13,7 +13,9 @@ interface Props {
 const UserView = ({ user }: Props) => {
   return (
     <div className="flex-col">
-      {user.role === Role.DEFAULT && <ResultsContainer />}
+      <Suspense>
+        <ResultsContainer user={user} />
+      </Suspense>
       <div className={classNames(styles.container, 'w100')}>
         <Actualities />
         <Studies user={user} />

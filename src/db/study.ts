@@ -8,7 +8,22 @@ export const createStudy = (study: Prisma.StudyCreateInput) =>
     data: study,
   })
 
-export const getStudyByUser = async (user: User) => {
+export const getMainStudy = async (user: User) => {
+  const userOrganizations = await getUserOrganizations(user.email)
+
+  return prismaClient.study.findFirst({
+    where: {
+      OR: [
+        { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
+        { allowedUsers: { some: { userId: user.id } } },
+        { contributors: { some: { userId: user.id } } },
+      ],
+    },
+    orderBy: { startDate: 'desc' },
+  })
+}
+
+export const getStudiesByUser = async (user: User) => {
   const userOrganizations = await getUserOrganizations(user.email)
 
   // Be carefull: study on this query is shown to a lot of user
