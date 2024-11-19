@@ -48,7 +48,6 @@ export const getStudyById = async (id: string) => {
           id: true,
           subPost: true,
           name: true,
-          dateLimite: true,
           caracterisation: true,
           tag: true,
           value: true,

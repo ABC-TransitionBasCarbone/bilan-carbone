@@ -75,7 +75,6 @@ model Contributors {
   userId  String
 
   subPost SubPost
-  limit   DateTime @db.Date
 
   @@id([studyId, userId, subPost])
   @@map("contributors")
@@ -98,7 +97,6 @@ model StudyEmissionSource {
 
   subPost         SubPost
   name            String
-  dateLimite      DateTime? @map("date_limite") @db.Date
   tag             String?
   caracterisation String?
 

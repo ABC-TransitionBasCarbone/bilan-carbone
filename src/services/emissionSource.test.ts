@@ -7,7 +7,6 @@ const defaultEmissionSource = {
   id: 'random',
   caracterisation: null,
   comment: null,
-  dateLimite: null,
   emissionFactor: {
     id: 'random',
     unit: Unit.A4_SHEET_100,
