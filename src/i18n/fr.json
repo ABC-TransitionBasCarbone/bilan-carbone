@@ -124,13 +124,11 @@
       "newContributor": {
         "title": "Ajouter un contributeur sur l'étude : {name}",
         "email": "Email",
-        "limit": "Date limite de contribution",
         "post": "Poste",
         "subPost": "Sous poste",
         "create": "Ajouter la personne",
         "validation": {
           "email": "Veuillez renseigner un email valide",
-          "limit": "Veuillez renseigner une date limite future de contribution",
           "post": "Veuillez selectionner un poste"
         }
       },
