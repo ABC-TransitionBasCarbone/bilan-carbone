@@ -11,6 +11,7 @@ import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
 import { MenuItem } from '@mui/material'
 import { Role, StudyRole } from '@prisma/client'
+import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { FormSelect } from '@/components/form/Select'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
@@ -19,10 +20,10 @@ import { newStudyRight } from '@/services/serverFunctions/study'
 interface Props {
   study: FullStudy
   user: User
-  usersEmail: string[]
+  users: Awaited<ReturnType<typeof getOrganizationUsers>>
 }
 
-const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
+const NewStudyRightForm = ({ study, user, users }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
@@ -50,11 +51,11 @@ const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
     (value: string | null) => {
       setExternalUserWarning(false)
       const validEmail = NewStudyRightCommandValidation.shape.email.safeParse(value)
-      if (validEmail.success && !usersEmail.includes(validEmail.data)) {
+      if (validEmail.success && !users.some((user) => user.email === validEmail.data)) {
         setExternalUserWarning(true)
       }
     },
-    [usersEmail, setExternalUserWarning, NewStudyRightCommandValidation],
+    [users, setExternalUserWarning, NewStudyRightCommandValidation],
   )
 
   const onSubmit = async (command: NewStudyRightCommand) => {
@@ -71,13 +72,28 @@ const NewStudyRightForm = ({ study, user, usersEmail }: Props) => {
     return study.allowedUsers.find((right) => right.user.email === user.email)
   }, [user, study])
 
+  const usersOptions = useMemo(
+    () =>
+      users.map((user) => ({
+        label: `${user.firstName} ${user.lastName.toUpperCase()} - ${user.email}`,
+        value: user.email,
+      })),
+    [users],
+  )
+
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
       <FormAutocomplete
         data-testid="study-rights-email"
         control={form.control}
         translation={t}
-        options={usersEmail}
+        options={usersOptions}
+        getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
+        filterOptions={(options, { inputValue }) =>
+          options.filter((option) =>
+            typeof option === 'string' ? option : option.label.toLowerCase().includes(inputValue.toLowerCase()),
+          )
+        }
         name="email"
         label={t('email')}
         onInputChange={onEmailChange}

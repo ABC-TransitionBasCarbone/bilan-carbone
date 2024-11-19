@@ -17,7 +17,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
 
   const users = await getOrganizationUsers(user.organizationId)
   const existingUsers = study.allowedUsers.map((allowedUser) => allowedUser.user.email)
-  const usersEmail = users.filter((user) => !existingUsers.includes(user.email)).map((user) => user.email)
+  const filteredUsers = users.filter((user) => !existingUsers.includes(user.email))
   return (
     <>
       <Breadcrumbs
@@ -29,7 +29,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
         ]}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <NewStudyRightForm study={study} user={user} usersEmail={usersEmail} />
+        <NewStudyRightForm study={study} user={user} users={filteredUsers} />
       </Block>
     </>
   )
