@@ -26,17 +26,8 @@ export const FormAutocomplete = <T extends FieldValues>({
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <Autocomplete
           {...autocompleteProps}
-          onChange={(_, newValue) => onChange(typeof newValue === 'string' ? newValue : newValue?.value)}
+          onChange={(_, option) => onChange(typeof option === 'string' ? option : option?.value)}
           value={value}
-          getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
-          filterOptions={(options, { inputValue }) =>
-            options.filter((option) =>
-              typeof option === 'string'
-                ? option
-                : option.label.toLowerCase().includes(inputValue.toLowerCase()) ||
-                  option.value.toLowerCase().includes(inputValue.toLowerCase()),
-            )
-          }
           renderInput={(params) => (
             <TextField
               {...params}
