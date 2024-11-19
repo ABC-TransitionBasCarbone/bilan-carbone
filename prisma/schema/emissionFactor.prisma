@@ -83,6 +83,7 @@ model EmissionFactorImportVersion {
   createdAt DateTime @default(now()) @map("created_at")
 
   emissionFactors EmissionFactor[]
+  Study           Study[]
 
   @@unique([source, internId])
   @@map("emission_factor_import_version")

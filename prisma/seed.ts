@@ -156,6 +156,7 @@ const users = async () => {
           level: faker.helpers.enumValue(Level),
           name: faker.lorem.words({ min: 2, max: 5 }),
           organizationId: creator.organizationId,
+          versionId: emissionFactorsImportVersion.id,
           emissionSources: {
             createMany: {
               data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) =>
@@ -187,6 +188,7 @@ const users = async () => {
       level: faker.helpers.enumValue(Level),
       name: faker.lorem.words({ min: 2, max: 5 }),
       organizationId: defaultUser.organizationId,
+      versionId: emissionFactorsImportVersion.id,
       emissionSources: {
         createMany: {
           data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) =>

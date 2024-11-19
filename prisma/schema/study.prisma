@@ -43,6 +43,9 @@ model Study {
   emissionSources StudyEmissionSource[]
   contributors    Contributors[]
 
+  versionId String                      @map("version_id")
+  version   EmissionFactorImportVersion @relation(fields: [versionId], references: [id])
+
   @@map("studies")
 }
 

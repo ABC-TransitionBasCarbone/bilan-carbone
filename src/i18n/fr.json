@@ -83,6 +83,10 @@
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
         "level": "Veuillez selectionner le type de Bilan Carbone"
+      },
+      "error": {
+        "default": "Une erreur s'est produite ...",
+        "noActiveVersion_BaseEmpreinte": "Aucune version active de Base Empreinte. Veuillez contacter le support."
       }
     },
     "post": {
