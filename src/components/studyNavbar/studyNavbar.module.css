@@ -1,0 +1,25 @@
+.studyNavbar {
+    /* display: flex;
+    height: 100vh;
+    align-items: center; */
+}
+
+.studyNavbarContainer {
+    /* background-color: var(--primary-80);
+    height: fit-content;
+    width: 15rem; */
+}
+
+.link {
+    /* color: var(--neutral-00);
+    padding: 1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 600;   */
+}
+.button{
+    position: absolute;
+    top: 4rem;
+    left: 0;
+    z-index: 1000;
+}

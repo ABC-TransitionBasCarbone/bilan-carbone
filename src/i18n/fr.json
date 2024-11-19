@@ -55,6 +55,16 @@
   "study": {
     "create": "Nouvelle étude",
     "my-studies": "Mes études",
+    "navigation": {
+      "homepage": "Accueil",
+      "framing": "Cadrage",
+      "scope": "Périmètre",
+      "mobilisation": "mobilisation",
+      "accounting": "Comptabilisation",
+      "data-entry": "Saisie",
+      "results": "Résultats",
+      "transition-plan": "Plan de transition"
+    },
     "new": {
       "title": "Informations sur la nouvelle étude",
       "name": "Nom de l'étude",

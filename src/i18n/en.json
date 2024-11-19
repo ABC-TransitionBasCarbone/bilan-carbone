@@ -55,6 +55,16 @@
   "study": {
     "create": "New study",
     "my-studies": "My studies",
+    "navigation": {
+      "homepage": "Homepage",
+      "framing": "Framing",
+      "scope": "Scope",
+      "mobilisation": "mobilisation",
+      "accounting": "Accounting",
+      "data-entry": "Data entry",
+      "results": "Results",
+      "transition-plan": "Transition plan"
+    },
     "new": {
       "title": "Information about the new study",
       "name": "Study name",
