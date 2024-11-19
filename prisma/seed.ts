@@ -16,6 +16,7 @@ const users = async () => {
   await prisma.studyEmissionSource.deleteMany()
   await prisma.contributors.deleteMany()
   await prisma.study.deleteMany()
+  await prisma.emissionFactorImportVersion.deleteMany()
 
   await prisma.site.deleteMany()
   await prisma.user.deleteMany()
@@ -136,6 +137,10 @@ const users = async () => {
         isActive: true,
       },
     ],
+  })
+
+  const emissionFactorsImportVersion = await prisma.emissionFactorImportVersion.create({
+    data: { source: Import.BaseEmpreinte, name: '1', internId: 'Base_Carbone_V1.csv' },
   })
 
   const subPosts = Object.keys(SubPost)
