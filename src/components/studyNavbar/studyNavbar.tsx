@@ -7,9 +7,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Drawer, IconButton } from "@mui/material"
 import { useState } from "react"
+import { UUID } from "crypto"
 
 
-const StudyNavbar = () => {
+const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
     const t = useTranslations('study.navigation')
     const [open, setOpen] = useState<boolean>(false);
 
@@ -34,20 +35,20 @@ const StudyNavbar = () => {
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
-                <Link className={styles.link} href="/">
+                <Link className={styles.link} href={`/etudes/${studyId}`}>
                     {t('homepage')}
                 </Link>
-                <Link className={styles.link} href="/cadrage">
+                <Link className={styles.link} href={`/etudes/${studyId}/cadrage`}>
                     {t('framing')}
                 </Link>
-                <Link className={styles.link} href="/perimetre">
+                <Link className={styles.link} href={`/etudes/${studyId}/perimetre`}>
                     {t('scope')}
                 </Link>
                 <div className={styles.link}>
                     {t('mobilisation')}
                 </div>
-                <Link className={styles.link} href="/accounting">
-                    {t('accounting')}
+                <Link className={styles.link} href={`/etudes/${studyId}/accounting/data-entry`}>
+                    {t('data-entry')}
                 </Link>
                 <div className={styles.link}>
                     {t('transition-plan')}
