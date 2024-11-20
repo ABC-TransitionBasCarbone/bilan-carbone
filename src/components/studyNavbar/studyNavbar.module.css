@@ -42,3 +42,9 @@
 .button {
     width: fit-content
 }
+
+.childrenLink {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+}
