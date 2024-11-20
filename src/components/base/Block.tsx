@@ -6,20 +6,23 @@ import LinkButton from './LinkButton'
 interface Props {
   children?: ReactNode
   title?: string
-  icon?: ReactNode
+  preTitleIcon?: ReactNode
+  postTitleIcon?: ReactNode
   as?: 'h1'
   id?: string
   link?: string
   linkLabel?: string
   linkDataTestId?: string
+  noSpace?: boolean
 }
 
-const Block = ({ children, link, linkLabel, title, icon, as, id, linkDataTestId, ...rest }: Props) => {
+const Block = ({ children, link, linkLabel, title, preTitleIcon, postTitleIcon, as, id, linkDataTestId, noSpace, ...rest }: Props) => {
   const Title = as === 'h1' ? 'h1' : 'h2'
   const titleDiv = (
     <div className={classNames(styles.title, 'align-center')}>
-      {icon && <div className={as === 'h1' ? styles.bigIcon : styles.icon}>{icon}</div>}
+      {preTitleIcon && <div className={as === 'h1' ? styles.bigIcon : styles.icon}>{preTitleIcon}</div>}
       <Title id={id}>{title}</Title>
+      {postTitleIcon && <div className={as === 'h1' ? styles.bigIcon : styles.icon}>{postTitleIcon}</div>}
     </div>
   )
 
@@ -36,7 +39,7 @@ const Block = ({ children, link, linkLabel, title, icon, as, id, linkDataTestId,
         ) : (
           title && titleDiv
         )}
-        {children && <div className={classNames(styles.children, { [styles.withMargin]: title })}>{children}</div>}
+        {children && <div className={classNames(styles.children, !noSpace && { [styles.withMargin]: title })}>{children}</div>}
       </div>
     </div>
   )

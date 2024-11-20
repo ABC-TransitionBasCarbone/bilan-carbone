@@ -26,7 +26,7 @@ const StudyContributorPage = ({ study, user }: Props) => {
           return study.emissionSources.some((emissionSource) => subPosts.includes(emissionSource.subPost))
         })
         .map((post) => (
-          <Block key={post} title={tPost(post)} icon={<PostIcon post={post} />}>
+          <Block key={post} title={tPost(post)} preTitleIcon={<PostIcon post={post} />}>
             <SubPosts post={post} study={study} user={user} withoutDetail />
           </Block>
         ))}

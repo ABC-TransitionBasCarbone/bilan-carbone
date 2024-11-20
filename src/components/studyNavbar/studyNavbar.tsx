@@ -35,22 +35,22 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
-                <Link className={styles.link} href={`/etudes/${studyId}`}>
+                <Link className={styles.link} href={`/etudes/${studyId}`} onClick={() => setOpen(false)}>
                     {t('homepage')}
                 </Link>
-                <Link className={styles.link} href={`/etudes/${studyId}/cadrage`}>
+                <Link className={styles.link} href={`/etudes/${studyId}/cadrage`} onClick={() => setOpen(false)}>
                     {t('framing')}
                 </Link>
-                <Link className={styles.link} href={`/etudes/${studyId}/perimetre`}>
+                <Link className={styles.link} href={`/etudes/${studyId}/perimetre`} onClick={() => setOpen(false)}>
                     {t('scope')}
                 </Link>
-                <div className={styles.link}>
+                <div className={styles.link} onClick={() => setOpen(false)}>
                     {t('mobilisation')}
                 </div>
-                <Link className={styles.link} href={`/etudes/${studyId}/accounting/data-entry`}>
+                <Link className={styles.link} href={`/etudes/${studyId}/accounting/data-entry`} onClick={() => setOpen(false)}>
                     {t('data-entry')}
                 </Link>
-                <div className={styles.link}>
+                <div className={styles.link} onClick={() => setOpen(false)}>
                     {t('transition-plan')}
                 </div>
             </Drawer>
