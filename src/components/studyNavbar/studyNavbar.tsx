@@ -3,7 +3,9 @@ import classNames from "classnames"
 import styles from './studyNavbar.module.css'
 import { useTranslations } from "next-intl"
 import Link from "next/link"
-import { Drawer } from "@mui/material"
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Drawer, IconButton } from "@mui/material"
 import { useState } from "react"
 
 
@@ -12,9 +14,26 @@ const StudyNavbar = () => {
     const [open, setOpen] = useState<boolean>(false);
 
     return <>
-        <div onClick={() => setOpen(prev => !prev)} className={classNames(styles.button)}>test</div>
-        <div className={classNames(styles.studyNavbar)}>
-            <Drawer className={classNames(styles.studyNavbarContainer, 'flex-col')} open={open}>
+        {!open && <div className={styles.toolbarContainer}>
+            <div className={styles.openDrawerButton}>                
+                <IconButton
+                    color="inherit"
+                    style={{ margin: "0px", padding: "0px"}}
+                    aria-label="open drawer"
+                    onClick={() => setOpen(prev => !prev)}
+                    edge="start"
+                >
+                    <MenuIcon />
+                </IconButton>
+            </div>
+        </div>}
+        <div>
+            <Drawer className={classNames('flex-col')} open={open} PaperProps={{ className: classNames(styles.studyNavbarContainer) }}>
+                <div className={classNames(styles.buttonContainer)}>
+                    <IconButton onClick={() => setOpen(false)} color="primary" className={classNames(styles.button)}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                </div>
                 <Link className={styles.link} href="/">
                     {t('homepage')}
                 </Link>

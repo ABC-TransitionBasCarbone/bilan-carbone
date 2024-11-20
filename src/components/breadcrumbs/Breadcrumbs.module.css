@@ -2,8 +2,8 @@
   background: var(--neutral-10);
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 0.5rem;
   list-style: none;
+  height: var(--breadcrumb-height);
 }
 
 .svg {

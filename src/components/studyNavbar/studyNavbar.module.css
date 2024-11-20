@@ -1,25 +1,45 @@
-.studyNavbar {
-    /* display: flex;
-    height: 100vh;
-    align-items: center; */
+.toolbarContainer {
+    top: calc(var(--header-height) + var(--breadcrumb-height)+ 1rem);
+    position: fixed;
+    width: var(--study-navbar-width);
+    height: 100%;
+    justify-content: center;
+    display: flex;
+}
+
+.openDrawerButton {
+    height: 40px;
+    width: 40px;
+    background-color: var(--primary-80);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white
 }
 
 .studyNavbarContainer {
-    /* background-color: var(--primary-80);
+    display: flex;
+    height: 100%;
+    background-color: var(--neutral-10) !important;
     height: fit-content;
-    width: 15rem; */
+    width: 14rem;
+    top: calc(var(--header-height) + var(--breadcrumb-height)) !important;
 }
 
 .link {
-    /* color: var(--neutral-00);
+    color: var(--primary-80);
     padding: 1rem;
     text-decoration: none;
     text-transform: uppercase;
-    font-weight: 600;   */
+    font-weight: 600;  
 }
-.button{
-    position: absolute;
-    top: 4rem;
-    left: 0;
-    z-index: 1000;
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.button {
+    width: fit-content
 }
