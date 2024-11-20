@@ -29,7 +29,12 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
             </div>
         </div>}
         <div>
-            <Drawer className={classNames('flex-col')} open={open} PaperProps={{ className: classNames(styles.studyNavbarContainer) }}>
+            <Drawer
+                className={classNames('flex-col')}
+                open={open}
+                PaperProps={{ className: classNames(styles.studyNavbarContainer) }}
+                onBlur={() => setOpen(false)}
+            >
                 <div className={classNames(styles.buttonContainer)}>
                     <IconButton onClick={() => setOpen(false)} color="primary" className={classNames(styles.button)}>
                         <ChevronLeftIcon />
