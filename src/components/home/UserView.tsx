@@ -1,16 +1,21 @@
+import { Suspense } from 'react'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import styles from './styles.module.css'
 import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
+import { getUserOrganizations } from '@/db/user'
 import Actualities from '../actuality/Actualities'
+import Organizations from '../organization/OrganizationsContainer'
 import Studies from '../study/StudiesContainer'
-import { Suspense } from 'react'
 
 interface Props {
   user: User
 }
 
-const UserView = ({ user }: Props) => {
+const UserView = async ({ user }: Props) => {
+  const organizations = await getUserOrganizations(user.email)
+  const isCR = organizations.find((organization) => organization.id === user.organizationId)?.isCR
+
   return (
     <div className="flex-col">
       <Suspense>
@@ -18,7 +23,7 @@ const UserView = ({ user }: Props) => {
       </Suspense>
       <div className={classNames(styles.container, 'w100')}>
         <Actualities />
-        <Studies user={user} />
+        {isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}
       </div>
     </div>
   )
