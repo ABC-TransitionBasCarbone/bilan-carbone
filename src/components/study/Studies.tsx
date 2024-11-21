@@ -4,16 +4,20 @@ import React from 'react'
 import styles from './Studies.module.css'
 import classNames from 'classnames'
 import { User } from 'next-auth'
-import { getStudiesByUser } from '@/db/study'
+import { getStudiesByUserAndOrganization, getStudiesByUser } from '@/db/study'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import Link from '../base/Link'
 
 interface Props {
   user: User
+  orgnizationId?: string
 }
 
-const Studies = async ({ user }: Props) => {
-  const studies = await getStudiesByUser(user)
+const Studies = async ({ user, orgnizationId }: Props) => {
+  const getStudies = orgnizationId
+    ? () => getStudiesByUserAndOrganization(user, orgnizationId)
+    : () => getStudiesByUser(user)
+  const studies = await getStudies()
   const allowedStudies = await filterAllowedStudies(user, studies)
 
   return (

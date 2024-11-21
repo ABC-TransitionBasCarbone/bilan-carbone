@@ -22,7 +22,6 @@ const OrganizationInfo = ({ organization, user }: Props) => {
       <p>
         <span className={styles.info}>{t('name')}</span> {organization.name}
       </p>
-      <Sites sites={organization.sites} />
     </Block>
   )
 }
