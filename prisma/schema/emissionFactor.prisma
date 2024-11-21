@@ -75,11 +75,28 @@ enum SubPost {
   TraitementDesEmballagesEnFinDeVie
 }
 
+model EmissionFactorImportVersion {
+  id        String   @id @default(uuid())
+  internId  String   @map("intern_id")
+  source    Import
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  emissionFactors EmissionFactor[]
+  Study           Study[]
+
+  @@unique([source, internId])
+  @@map("emission_factor_import_version")
+}
+
 model EmissionFactor {
   id                  String               @id @default(uuid())
   createdAt           DateTime             @default(now()) @map("created_at")
   updatedAt           DateTime             @default(now()) @map("updated_at")
   emissionFactorParts EmissionFactorPart[]
+
+  versionId String?                      @map("version_id")
+  version   EmissionFactorImportVersion? @relation(fields: [versionId], references: [id])
 
   importedFrom   Import        @map("imported_from")
   importedId     String?       @map("imported_id")

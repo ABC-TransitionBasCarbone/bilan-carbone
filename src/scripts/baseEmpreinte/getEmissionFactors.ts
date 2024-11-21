@@ -1,8 +1,17 @@
-import { prismaClient } from '../../db/client'
+import { Command } from 'commander'
+import axios, { AxiosResponse } from 'axios'
 import { EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { UNITS_MATRIX } from './historyUnits'
-import axios, { AxiosResponse } from 'axios'
 import { elementsBySubPost } from './posts.config'
+import { prismaClient } from '../../db/client'
+
+const program = new Command()
+
+const source = Import.BaseEmpreinte
+
+type Params = {
+  name: string
+}
 
 type EmissionFactorResponse = {
   total: number
@@ -94,6 +103,20 @@ const select = [
 
 const escapeTranslation = (value?: string) => (value ? value.replaceAll('"""', '') : value)
 
+const getEmissionFactorImportVersion = async (name: string) => {
+  const results = await axios.get('https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner')
+  const fileName = results.data.file.name
+
+  const existingVersion = await prismaClient.emissionFactorImportVersion.findFirst({ where: { internId: fileName } })
+  if (existingVersion) {
+    return { success: false, id: existingVersion.id }
+  }
+  const newVersion = await prismaClient.emissionFactorImportVersion.create({
+    data: { name, source, internId: fileName },
+  })
+  return { success: true, id: newVersion.id }
+}
+
 const getUnit = (value?: string): Unit | null => {
   if (!value) {
     return null
@@ -128,7 +151,7 @@ const getUnit = (value?: string): Unit | null => {
   return null
 }
 
-const saveEmissionFactors = async (emissionFactors: EmissionFactorResponse['results']) =>
+const saveEmissionFactors = async (emissionFactors: EmissionFactorResponse['results'], versionId: string) =>
   Promise.all(
     emissionFactors.map((emissionFactor) => {
       const data = {
@@ -140,6 +163,7 @@ const saveEmissionFactors = async (emissionFactors: EmissionFactorResponse['resu
             ? EmissionFactorStatus.Archived
             : EmissionFactorStatus.Valid,
         source: emissionFactor.Source,
+        versionId,
         location: emissionFactor.Localisation_géographique,
         incertitude: emissionFactor.Incertitude,
         technicalRepresentativeness: emissionFactor.Qualité_TeR,
@@ -282,23 +306,23 @@ const saveEmissionFactorsParts = async (parts: EmissionFactorResponse['results']
   }
 }
 
-const main = async () => {
-  await Promise.all([
-    prismaClient.emissionFactorPartMetaData.deleteMany(),
-    prismaClient.emissionFactorMetaData.deleteMany(),
-  ])
-  await prismaClient.emissionFactorPart.deleteMany()
-  await prismaClient.emissionFactor.deleteMany()
+const main = async (params: Params) => {
+  const emissionFactorImportVersion = await getEmissionFactorImportVersion(params.name)
+  if (!emissionFactorImportVersion.success) {
+    return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
+  }
 
   let parts: EmissionFactorResponse['results'] = []
   let url: string | undefined =
     `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
+
   while (url) {
     console.log(url)
     const emissionFactors: AxiosResponse<EmissionFactorResponse> = await axios.get<EmissionFactorResponse>(url)
     parts = parts.concat(emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne === 'Poste'))
     await saveEmissionFactors(
       emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne !== 'Poste'),
+      emissionFactorImportVersion.id,
     )
 
     url = emissionFactors.data.next
@@ -307,4 +331,11 @@ const main = async () => {
   await saveEmissionFactorsParts(parts)
 }
 
-main()
+program
+  .name('base-empreinte-import-emission')
+  .description("Script pour importer les facteurs d'émission depuis la base empreinte")
+  .version('1.0.0')
+  .requiredOption('-n, --name <value>', 'Nom de la version')
+  .parse(process.argv)
+
+main(program.opts())

@@ -8,6 +8,7 @@ import {
   NewStudyRightCommand,
 } from './study.command'
 import { auth } from '../auth'
+import { prismaClient } from '@/db/client'
 import {
   createContributorOnStudy,
   createStudy,
@@ -16,7 +17,7 @@ import {
   updateStudy,
   updateUserOnStudy,
 } from '@/db/study'
-import { ControlMode, Export, Prisma, StudyRole, SubPost } from '@prisma/client'
+import { ControlMode, Export, Import, Prisma, StudyRole, SubPost } from '@prisma/client'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
   canAddContributorOnStudy,
@@ -60,10 +61,20 @@ export const createStudyCommand = async ({
     })
   }
 
+  const activeVersion = await prismaClient.emissionFactorImportVersion.findFirst({
+    where: { source: Import.BaseEmpreinte },
+    orderBy: { createdAt: 'desc' },
+  })
+
+  if (!activeVersion) {
+    return { success: false, message: `noActiveVersion_${Import.BaseEmpreinte}` }
+  }
+
   const study = {
     ...command,
     createdBy: { connect: { id: session.user.id } },
     organization: { connect: { id: organizationId } },
+    version: { connect: { id: activeVersion.id } },
     isPublic: command.isPublic === 'true',
     allowedUsers: {
       createMany: { data: rights },
@@ -89,7 +100,7 @@ export const createStudyCommand = async ({
     return { success: true, id: createdStudy.id }
   } catch (e) {
     console.error(e)
-    return { success: false, message: 'Something went wrong...' }
+    return { success: false, message: 'default' }
   }
 }
 

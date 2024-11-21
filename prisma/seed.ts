@@ -16,6 +16,7 @@ const users = async () => {
   await prisma.studyEmissionSource.deleteMany()
   await prisma.contributors.deleteMany()
   await prisma.study.deleteMany()
+  await prisma.emissionFactorImportVersion.deleteMany()
 
   await prisma.site.deleteMany()
   await prisma.user.deleteMany()
@@ -138,6 +139,10 @@ const users = async () => {
     ],
   })
 
+  const emissionFactorsImportVersion = await prisma.emissionFactorImportVersion.create({
+    data: { source: Import.BaseEmpreinte, name: '1', internId: 'Base_Carbone_V1.csv' },
+  })
+
   const subPosts = Object.keys(SubPost)
   await Promise.all(
     Array.from({ length: 20 }).map(() => {
@@ -151,6 +156,7 @@ const users = async () => {
           level: faker.helpers.enumValue(Level),
           name: faker.lorem.words({ min: 2, max: 5 }),
           organizationId: creator.organizationId,
+          versionId: emissionFactorsImportVersion.id,
           emissionSources: {
             createMany: {
               data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) =>
@@ -182,6 +188,7 @@ const users = async () => {
       level: faker.helpers.enumValue(Level),
       name: faker.lorem.words({ min: 2, max: 5 }),
       organizationId: defaultUser.organizationId,
+      versionId: emissionFactorsImportVersion.id,
       emissionSources: {
         createMany: {
           data: faker.helpers.arrayElements(subPosts, { min: 1, max: subPosts.length }).flatMap((subPost) =>

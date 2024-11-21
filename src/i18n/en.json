@@ -81,6 +81,10 @@
         "endDate": "Please select a study end date",
         "endDateBeforStartDate": "The end date must be after the start date",
         "level": "Please select the type of Carbon Assessment"
+      },
+      "error": {
+        "default": "Something went wrong ...",
+        "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support"
       }
     },
     "post": {

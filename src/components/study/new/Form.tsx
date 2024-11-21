@@ -130,7 +130,7 @@ const NewStudyForm = ({ organization, user, usersEmail }: Props) => {
         <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-study-create-button">
           {t('create')}
         </Button>
-        {error && <p>{error}</p>}
+        {error && <p>{t(`error.${error}`)}</p>}
       </Form>
     </Block>
   )
