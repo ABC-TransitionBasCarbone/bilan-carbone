@@ -16,19 +16,17 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
     const [openAccountingDetails, setOpenAccountingDetails] = useState<boolean>(false);
 
     return <>
-        {!open && <div className={styles.toolbarContainer}>
-            <div className={styles.openDrawerButton}>                
-                <IconButton
-                    color="inherit"
-                    style={{ margin: "0px", padding: "0px"}}
-                    aria-label="open drawer"
-                    onClick={() => setOpen(prev => !prev)}
-                    edge="start"
-                >
-                    <MenuIcon />
-                </IconButton>
-            </div>
-        </div>}
+        <div className={styles.toolbarContainer}>
+            <IconButton
+                className={styles.openDrawerButton}
+                color="inherit"
+                aria-label="open drawer"
+                onClick={() => setOpen(prev => !prev)}
+                edge="start"
+            >
+                <MenuIcon />
+            </IconButton>
+        </div>
         <div>
             <Drawer
                 className={classNames('flex-col')}
