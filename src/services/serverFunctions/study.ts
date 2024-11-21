@@ -1,6 +1,7 @@
 'use server'
 
 import {
+  ChangeStudyLevelCommand,
   ChangeStudyPublicStatusCommand,
   CreateStudyCommand,
   NewStudyContributorCommand,
@@ -20,6 +21,7 @@ import { NOT_AUTHORIZED } from '../permissions/check'
 import {
   canAddContributorOnStudy,
   canAddRightOnStudy,
+  canChangeLevel,
   canChangePublicStatus,
   canCreateStudy,
 } from '../permissions/study'
@@ -107,6 +109,24 @@ export const changeStudyPublicStatus = async (command: ChangeStudyPublicStatusCo
     return NOT_AUTHORIZED
   }
   await updateStudy(command.studyId, { isPublic: command.isPublic === 'true' })
+}
+
+export const changeStudyLevel = async (command: ChangeStudyLevelCommand) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return NOT_AUTHORIZED
+  }
+
+  const studyWithRights = await getStudyById(command.studyId)
+
+  if (!studyWithRights) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!canChangeLevel(session.user, studyWithRights, command.level)) {
+    return NOT_AUTHORIZED
+  }
+  await updateStudy(command.studyId, { level: command.level })
 }
 
 export const newStudyRight = async (right: NewStudyRightCommand) => {

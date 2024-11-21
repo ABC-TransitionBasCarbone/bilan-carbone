@@ -53,8 +53,6 @@
     "logout": "Log out"
   },
   "study": {
-    "tags": "Manage tags",
-    "change-rights": "Manage contributors",
     "create": "New study",
     "my-studies": "My studies",
     "new": {

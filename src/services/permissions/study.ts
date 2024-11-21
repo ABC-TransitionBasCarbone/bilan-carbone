@@ -98,6 +98,23 @@ export const canChangePublicStatus = async (user: User, study: FullStudy) => {
   return true
 }
 
+export const canChangeLevel = async (user: User, study: FullStudy, level: Level) => {
+  if (!getAllowedLevels(user.level).includes(level)) {
+    return false
+  }
+
+  if (user.role === Role.ADMIN) {
+    return true
+  }
+
+  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
+  if (!userRightsOnStudy || userRightsOnStudy.role !== StudyRole.Validator) {
+    return false
+  }
+
+  return true
+}
+
 export const canAddRightOnStudy = (user: User, study: FullStudy, newUser: DbUser, role: StudyRole) => {
   if (user.id === newUser.id) {
     return false

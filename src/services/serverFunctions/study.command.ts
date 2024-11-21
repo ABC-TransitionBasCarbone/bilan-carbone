@@ -54,6 +54,13 @@ export const ChangeStudyPublicStatusCommandValidation = z.object({
 
 export type ChangeStudyPublicStatusCommand = z.infer<typeof ChangeStudyPublicStatusCommandValidation>
 
+export const ChangeStudyLevelCommandValidation = z.object({
+  studyId: z.string(),
+  level: z.nativeEnum(Level),
+})
+
+export type ChangeStudyLevelCommand = z.infer<typeof ChangeStudyLevelCommandValidation>
+
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
   email: z
