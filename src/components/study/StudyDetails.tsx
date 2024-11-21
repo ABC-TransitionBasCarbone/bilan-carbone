@@ -1,13 +1,13 @@
-import { Study } from '@prisma/client'
 import Block from '../base/Block'
 import dayjs from 'dayjs'
 import styles from "./StudyDetails.module.css"
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import ResultsContainerForStudy from './results/ResultsContainerForStudy'
+import { FullStudy } from '@/db/study';
 
 interface Props {
-  study: Study
+  study: FullStudy
 }
 
 const StudyDetails = async ({ study }: Props) => {  

@@ -35,6 +35,7 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
                 open={open}
                 PaperProps={{ className: classNames(styles.studyNavbarContainer) }}
                 onBlur={() => setOpen(false)}
+                variant="persistent"
             >
                 <div className={classNames(styles.buttonContainer)}>
                     <IconButton onClick={() => setOpen(false)} color="primary" className={classNames(styles.button)}>
@@ -60,11 +61,13 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
                 <Divider />
                 <div>
                     <div className={styles.link} onClick={() => setOpenAccountingDetails((prev) => !prev)}>{t('accounting')}</div>
-                    {openAccountingDetails && <div className={styles.childrenLink}>
-                        <Link className={styles.link} href={`/etudes/${studyId}/accounting/data-entry`} onClick={() => setOpen(false)}>
+                    {openAccountingDetails && <div>
+                        <Divider style={{ marginLeft: "1.5rem" }} />
+                        <Link className={classNames(styles.link, styles.childrenLink)} href={`/etudes/${studyId}/accounting/data-entry`} onClick={() => setOpen(false)}>
                             {t('data-entry')}
                         </Link>
-                        <Link className={styles.link} href={`/etudes/${studyId}/accounting/results`} onClick={() => setOpen(false)}>
+                        <Divider style={{ marginLeft: "1.5rem" }} />
+                        <Link className={classNames(styles.link, styles.childrenLink)} href={`/etudes/${studyId}/accounting/results`} onClick={() => setOpen(false)}>
                             {t('results')}
                         </Link>
                     </div>}
