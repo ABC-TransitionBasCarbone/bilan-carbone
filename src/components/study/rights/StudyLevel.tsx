@@ -65,7 +65,7 @@ const StudyLevel = ({ user, study, userRoleOnStudy }: Props) => {
                 {tLevel(level)}
               </MenuItem>
             ))}
-          </FormSelect>{' '}
+          </FormSelect>
           {error && <p>{error}</p>}
         </>
       ) : (
