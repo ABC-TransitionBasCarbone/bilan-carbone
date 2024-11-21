@@ -40,7 +40,7 @@ const NewOrganizationForm = () => {
   }
 
   return (
-    <Block title={t('title')} as="h1">
+    <Block title={t('title')} as="h1" data-testid="new-organization-title">
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <FormTextField
           data-testid="new-organization-name"
