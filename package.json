@@ -15,7 +15,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "cypress": "cypress run",
-    "cypress:gui": "cypress open"
+    "cypress:gui": "cypress open",
+    "seed:import": "prisma db seed -- -i"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
