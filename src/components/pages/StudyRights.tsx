@@ -7,6 +7,8 @@ import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import { Role, StudyRole } from '@prisma/client'
 import StudyContributorsTable from '../study/rights/StudyContributorsTable'
+import StudyPublicStatus from '../study/rights/StudyPublicStatus'
+import StudyLevel from '../study/rights/StudyLevel'
 
 interface Props {
   study: FullStudy
@@ -31,7 +33,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
       <Block
         link={
           user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
-            ? `/etudes/${study.id}/droits/ajouter`
+            ? `/etudes/${study.id}/cadrage/ajouter`
             : ''
         }
         linkLabel={t('newRightLink')}
@@ -39,13 +41,15 @@ const StudyRightsPage = async ({ study, user }: Props) => {
         title={t('title', { name: study.name })}
         as="h1"
       >
+        <StudyLevel study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
+        <StudyPublicStatus study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
         <StudyRightsTable study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
       </Block>
       <Block
         title={t('contributors')}
         link={
           user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
-            ? `/etudes/${study.id}/droits/ajouter-contributeur`
+            ? `/etudes/${study.id}/cadrage/ajouter-contributeur`
             : ''
         }
         linkLabel={t('newContributorLink')}

@@ -7,7 +7,6 @@ import React, { useMemo } from 'react'
 import { Role, StudyRole } from '@prisma/client'
 import { FullStudy } from '@/db/study'
 import SelectStudyRole from './SelectStudyRole'
-import StudyPublicStatus from './StudyPublicStatus'
 
 interface Props {
   user: User
@@ -60,7 +59,6 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
 
   return (
     <>
-      <StudyPublicStatus study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
       <table aria-labelledby="study-rights-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
