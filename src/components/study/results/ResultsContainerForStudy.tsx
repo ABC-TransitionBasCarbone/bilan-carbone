@@ -4,21 +4,18 @@ import classNames from 'classnames'
 import styles from './ResultsContainer.module.css'
 import Box from '@/components/base/Box'
 import { getTranslations } from 'next-intl/server'
-import { Study } from '@prisma/client'
 
-interface Props {
-  study: Study,
-}
-
-const ResultsContainerForStudy = async ({ study }: Props) => {
+const ResultsContainerForStudy = async () => {
   const t = await getTranslations('results')
 
-  return <div className="pb1">
+  return (
+    <div className="pb1">
       <div className={classNames(styles.container, 'flex')}>
         <Box className="grow">{t('byPost')}</Box>
         <Box className="grow">{t('bySubPost')}</Box>
       </div>
     </div>
+  )
 }
 
 export default ResultsContainerForStudy

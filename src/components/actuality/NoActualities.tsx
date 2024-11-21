@@ -1,9 +1,8 @@
 import { useTranslations } from 'next-intl'
-import React from 'react'
 
 const NoActualities = () => {
   const t = useTranslations('actuality')
-  return <p>{t('no-item')}</p>
+  return <p>{t('noItems')}</p>
 }
 
 export default NoActualities

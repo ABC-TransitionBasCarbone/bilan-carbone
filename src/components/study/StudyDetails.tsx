@@ -1,28 +1,38 @@
 import Block from '../base/Block'
-import dayjs from 'dayjs'
-import styles from "./StudyDetails.module.css"
-import LockIcon from '@mui/icons-material/Lock';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
+import styles from './StudyDetails.module.css'
+import LockIcon from '@mui/icons-material/Lock'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
 import ResultsContainerForStudy from './results/ResultsContainerForStudy'
-import { FullStudy } from '@/db/study';
+import { FullStudy } from '@/db/study'
+import { getFormatter } from 'next-intl/server'
 
 interface Props {
   study: FullStudy
 }
 
-const StudyDetails = async ({ study }: Props) => {  
-  const datesInfo = `${dayjs(study.startDate).format("DD/MM/YYYY")} - ${dayjs(study.endDate).format("DD/MM/YYYY")}`;
+const StudyDetails = async ({ study }: Props) => {
+  const format = await getFormatter()
 
   return (
-    <Block title={study.name} as="h1" noSpace postTitleIcon={study.isPublic ? <LockIcon /> : <LockOpenIcon />}>
-      <span className={styles.studyInfo}>
-        <div>{datesInfo}</div>
-        <div>Exports : {study.exports.map((e) => e.type).join(", ")}</div>
-      </span>
-      <div className={styles.graphsContainer}>
-        <ResultsContainerForStudy study={study} />
-      </div>
-    </Block>
+    <>
+      <Block
+        title={study.name}
+        as="h1"
+        icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
+        description={
+          <div className={styles.studyInfo}>
+            <p>
+              {format.dateTime(study.startDate, { year: 'numeric', day: 'numeric', month: 'long' })} -{' '}
+              {format.dateTime(study.endDate, { year: 'numeric', day: 'numeric', month: 'long' })}
+            </p>
+            <p>Exports : {study.exports.map((e) => e.type).join(', ')}</p>
+          </div>
+        }
+      />
+      <Block>
+        <ResultsContainerForStudy />
+      </Block>
+    </>
   )
 }
 

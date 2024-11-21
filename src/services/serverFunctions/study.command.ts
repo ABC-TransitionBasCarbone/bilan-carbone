@@ -65,8 +65,8 @@ export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
   email: z
     .string({
-      required_error: 'email_required',
-      invalid_type_error: 'email_required',
+      required_error: 'emailRequired',
+      invalid_type_error: 'emailRequired',
     })
     .email('email')
     .trim(),

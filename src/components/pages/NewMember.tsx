@@ -6,7 +6,7 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 const NewMemberPage = () => {
   const tNav = useTranslations('nav')
-  const t = useTranslations('new-member')
+  const t = useTranslations('newMember')
   return (
     <>
       <Breadcrumbs

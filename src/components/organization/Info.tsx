@@ -1,5 +1,4 @@
 import { OrganizationWithSites } from '@/db/user'
-import React from 'react'
 import Block from '../base/Block'
 import { useTranslations } from 'next-intl'
 import { User } from 'next-auth'
@@ -16,7 +15,7 @@ const OrganizationInfo = ({ organization, user }: Props) => {
   const t = useTranslations('organization')
   return (
     <Block
-      title={t('my-organization')}
+      title={t('myOrganization')}
       link={user.role === Role.ADMIN ? `/organisations/${organization.id}/modifier` : ''}
       linkLabel={t('modify')}
     >

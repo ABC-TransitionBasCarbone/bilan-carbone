@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, MenuItem, Radio } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import styles from './Form.module.css'
 import { Export } from '@prisma/client'
 import { createStudyCommand } from '@/services/serverFunctions/study'
@@ -105,7 +105,7 @@ const NewStudyForm = ({ organization, user, usersEmail }: Props) => {
             </MenuItem>
           ))}
         </FormSelect>
-        <FormRadio control={form.control} translation={t} name="isPublic" row label={t('is-public-title')}>
+        <FormRadio control={form.control} translation={t} name="isPublic" row label={t('isPublicTitle')}>
           <FormControlLabel value="true" control={<Radio />} label={t('public')} />
           <FormControlLabel value="false" control={<Radio />} label={t('private')} />
         </FormRadio>

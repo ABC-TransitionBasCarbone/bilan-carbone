@@ -1,6 +1,14 @@
+.header {
+  gap: 2rem;
+}
+
 .title {
   color: var(--neutral-100);
   gap: 1rem;
+}
+
+.description {
+  margin-top: 0.25rem;
 }
 
 .block {
@@ -20,21 +28,18 @@
   margin-top: 2rem;
 }
 
-.icon,
 .bigIcon {
+  height: 2rem;
   svg {
+    height: 2rem;
     width: auto;
   }
 }
 
-.bigIcon {
-  svg {
-    height: 2rem;
-  }
-}
-
 .icon {
+  height: 1.5rem;
   svg {
     height: 1.5rem;
+    width: auto;
   }
 }

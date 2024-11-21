@@ -1,9 +1,10 @@
 .container {
+  border-radius: 0 0 1rem 1rem;
   background: var(--neutral-10);
   flex-wrap: wrap;
-  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem;
   list-style: none;
-  height: var(--breadcrumb-height);
 }
 
 .svg {

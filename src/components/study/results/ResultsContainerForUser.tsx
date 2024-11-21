@@ -9,7 +9,7 @@ import { getMainStudy } from '@/db/study'
 import { canReadStudy } from '@/services/permissions/study'
 
 interface Props {
-  user: User,
+  user: User
 }
 
 const ResultsContainerForUser = async ({ user }: Props) => {

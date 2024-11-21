@@ -42,13 +42,13 @@ const DataEntry = async (props: Props) => {
   return (
     <>
       <Breadcrumbs
-        current={tStudyNav('data-entry')}
+        current={tStudyNav('dataEntry')}
         links={[
           { label: tNav('home'), link: '/' },
-          { label: study.name, link: `/etudes/${study.id}` }
+          { label: study.name, link: `/etudes/${study.id}` },
         ]}
       />
-      <Block title="Saisie des données" as="h1">
+      <Block title={tStudyNav('dataEntry')} as="h1">
         <PostsInfography study={study} />
       </Block>
     </>

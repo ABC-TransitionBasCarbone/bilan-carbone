@@ -9,7 +9,7 @@ const Navbar = () => {
 
   return (
     <nav className={classNames(styles.navbar, 'w100')}>
-      <div className="px-2 align-center justify-between grow h100">
+      <div className="main-container px-2 align-center justify-between grow h100">
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
           <Link href="/" aria-label={t('home')}>
             <Image src="/logos/bcp-with-text.png" width={200} height={48} alt="" className={styles.logo} />

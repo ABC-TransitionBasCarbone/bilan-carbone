@@ -13,9 +13,9 @@
   },
   "actuality": {
     "title": "News",
-    "no-item": "No news at the moment"
+    "noItems": "No news at the moment"
   },
-  "legal-notices": {
+  "legalNotices": {
     "profile": "Return to profile"
   },
   "locale": {
@@ -29,7 +29,7 @@
       "login": "Log in",
       "email": "Email",
       "password": "Password",
-      "forgot-password": "Forgot password",
+      "forgotPassword": "Forgot password",
       "reset": "Reset",
       "error": "Please check your email and your password"
     }
@@ -49,21 +49,21 @@
   },
   "profile": {
     "title": "My profile",
-    "legal-notices": "Legal notices",
+    "legalNotices": "Legal notices",
     "logout": "Log out"
   },
   "study": {
     "create": "New study",
-    "my-studies": "My studies",
+    "myStudies": "My studies",
     "navigation": {
       "homepage": "Homepage",
       "framing": "Framing",
       "scope": "Scope",
       "mobilisation": "mobilisation",
       "accounting": "Accounting",
-      "data-entry": "Data entry",
+      "dataEntry": "Data entry",
       "results": "Results",
-      "transition-plan": "Transition plan"
+      "transitionPlan": "Transition plan"
     },
     "new": {
       "title": "Information about the new study",
@@ -80,7 +80,7 @@
       "CapitalShare": "Capital share",
       "Financial": "Financial",
       "Operational": "Operational",
-      "is-public-title": "Study visibility",
+      "isPublicTitle": "Study visibility",
       "private": "Private",
       "public": "Public",
       "create": "Create study",
@@ -128,7 +128,7 @@
         "create": "Add person",
         "validation": {
           "email": "Please use a valid email",
-          "email_required": "Please enter an email",
+          "emailRequired": "Please enter an email",
           "external": "Warning, this person is not part of the organization or does not have an account",
           "role": "Please select a role"
         }
@@ -244,12 +244,12 @@
       "comment": "Comments",
       "validation": {
         "name": "Please provide a name",
-        "name-maxlength": "maximum 64 characters",
+        "nameMaxLength": "maximum 64 characters",
         "unit": "Please provide a unit",
         "source": "Please provide a source",
         "totalCo2": "Please provide a total emission",
         "type": "Please select a post type",
-        "type-maxlength": "maximum 64 characters",
+        "typeMaxLength": "maximum 64 characters",
         "subPost": "Please select a sub post"
       }
     },
@@ -264,7 +264,7 @@
       "goTo": "Go to page",
       "items": "Items per page",
       "location": "Location",
-      "location-search": "Search a location",
+      "locationSearch": "Search a location",
       "Manual": "Manual",
       "name": "Name",
       "none": "None",
@@ -295,12 +295,12 @@
   "team": {
     "title": "My Organization",
     "pending": "Pending Invitations",
-    "invitation-date": "Invitation sent on",
+    "invitationDate": "Invitation sent on",
     "delete": "Delete user",
     "resend": "Resend invitation",
     "table": {
       "title": "My Collaborators",
-      "new-user": "Invite a user",
+      "newUser": "Invite a user",
       "firstName": "First Name",
       "lastName": "Last Name",
       "email": "Email",
@@ -308,7 +308,7 @@
       "role": "Rights"
     }
   },
-  "new-member": {
+  "newMember": {
     "title": "Invite a User",
     "email": "Email",
     "firstName": "First Name",
@@ -467,12 +467,12 @@
   },
   "organization": {
     "title": "Organization",
-    "my-organization": "My Organization",
+    "myOrganization": "My Organization",
     "modify": "Modify",
     "name": "Name: ",
     "sites": {
       "title": "The organization's sites",
-      "no-sites": "There are no sites configured for the organization",
+      "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "etp": "Employees",
       "ca": "Turnover"
