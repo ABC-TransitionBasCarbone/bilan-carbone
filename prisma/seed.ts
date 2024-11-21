@@ -1,7 +1,14 @@
+import { Command } from 'commander'
 import { EmissionFactorStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
 import { faker } from '@faker-js/faker'
 import { signPassword } from '@/services/auth'
+import getEmissionFactors from '@/services/baseEmpreinte/getEmissionFactors'
 import { ACTUALITIES } from './legacy_data/actualities'
+
+const program = new Command()
+type Params = {
+  importFactors: string | undefined
+}
 
 const prisma = new PrismaClient()
 
@@ -236,11 +243,21 @@ const licenses = async () => {
   })
 }
 
-const main = async () => {
+const main = async (params: Params) => {
   await Promise.all([actualities(), licenses(), users()])
+  if (params.importFactors) {
+    await getEmissionFactors({ name: params.importFactors })
+  }
 }
 
-main()
+program
+  .name('seed database')
+  .description('Clear and seed the database')
+  .version('1.0.0')
+  .option('-i, --import-factors <value>', 'Import BaseCarbone emission factors')
+  .parse(process.argv)
+
+main(program.opts())
   .then(async () => {
     await prisma.$disconnect()
   })
