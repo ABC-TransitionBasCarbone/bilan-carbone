@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import styles from './StudyPerimeter.module.css'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { useFormatter, useTranslations } from 'next-intl'
@@ -66,7 +66,7 @@ const StudyPerimeter = ({ study, userRoleOnStudy, organization }: Props) => {
           {t('dates', {
             startDate: format.dateTime(new Date(startDate), { year: 'numeric', month: 'long', day: 'numeric' }),
             endDate: format.dateTime(new Date(endDate), { year: 'numeric', month: 'long', day: 'numeric' }),
-          })}{' '}
+          })}
         </p>
       )}
       <Sites sites={organization.sites} />
