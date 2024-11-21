@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import styles from './styles.module.css'
-import ResultsContainer from '../study/results/ResultsContainer'
+import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Actualities from '../actuality/Actualities'
 import Studies from '../study/StudiesContainer'
 import { Suspense } from 'react'
@@ -14,7 +14,7 @@ const UserView = ({ user }: Props) => {
   return (
     <div className="flex-col">
       <Suspense>
-        <ResultsContainer user={user} />
+        <ResultsContainerForUser user={user} />
       </Suspense>
       <div className={classNames(styles.container, 'w100')}>
         <Actualities />

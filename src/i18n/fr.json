@@ -14,9 +14,9 @@
   },
   "actuality": {
     "title": "Actualités",
-    "no-item": "Aucune actualité pour le moment"
+    "noItems": "Aucune actualité pour le moment"
   },
-  "legal-notices": {
+  "legalNotices": {
     "profile": "Retour au profil"
   },
   "locale": {
@@ -30,7 +30,7 @@
       "login": "Se connecter",
       "email": "Email",
       "password": "Mot de passe",
-      "forgot-password": "Mot de passe oublié",
+      "forgotPassword": "Mot de passe oublié",
       "reset": "Réinitialiser",
       "error": "Veuillez verifier votre email et votre mot de passe"
     }
@@ -50,12 +50,22 @@
   },
   "profile": {
     "title": "Mon profil",
-    "legal-notices": "Mentions légales",
+    "legalNotices": "Mentions légales",
     "logout": "Se déconnecter"
   },
   "study": {
     "create": "Nouvelle étude",
-    "my-studies": "Mes études",
+    "myStudies": "Mes études",
+    "navigation": {
+      "homepage": "Accueil",
+      "framing": "Cadrage",
+      "scope": "Périmètre",
+      "mobilisation": "Mobilisation",
+      "accounting": "Comptabilisation",
+      "dataEntry": "Saisie des données",
+      "results": "Résultats",
+      "transitionPlan": "Plan de transition"
+    },
     "new": {
       "title": "Informations sur la nouvelle étude",
       "name": "Nom de l'étude",
@@ -71,7 +81,7 @@
       "CapitalShare": "Part de capital",
       "Financial": "Financier",
       "Operational": "Opérationel",
-      "is-public-title": "Visibilité de l'étude",
+      "isPublicTitle": "Visibilité de l'étude",
       "private": "Privée",
       "public": "Publique",
       "create": "Créer l'étude",
@@ -119,7 +129,7 @@
         "create": "Ajouter la personne",
         "validation": {
           "email": "Veuillez utiliser un email valide",
-          "email_required": "Veuillez entrer un email",
+          "emailRequired": "Veuillez entrer un email",
           "external": "Attention, cette personne ne fait pas partie de l'organisation ou n'a pas de compte",
           "role": "Veuillez sélectionner un droit"
         }
@@ -239,12 +249,12 @@
       "comment": "Commentaires",
       "validation": {
         "name": "Veuillez renseigner un nom",
-        "name-maxlength": "64 caractères maximum",
+        "nameMaxLength": "64 caractères maximum",
         "source": "Veuillez renseigner une source",
         "subPost": "Veuillez selectionner un sous poste",
         "totalCo2": "Veuillez renseigner une émission totale",
         "type": "Veuillez renseigner un type de poste",
-        "type-maxlength": "64 caractères maximum",
+        "typeMaxLength": "64 caractères maximum",
         "unit": "Veuillez renseigner une unité"
       }
     },
@@ -259,7 +269,7 @@
       "goTo": "Aller à la page",
       "items": "Élements par page",
       "location": "Localisation",
-      "location-search": "Rechercher une localisation",
+      "locationSearch": "Rechercher une localisation",
       "Manual": "Manuelle",
       "name": "Nom",
       "none": "Aucune",
@@ -290,12 +300,12 @@
   "team": {
     "title": "Mon organisation",
     "pending": "Invitations en attentes",
-    "invitation-date": "Invitation envoyé le",
+    "invitationDate": "Invitation envoyé le",
     "delete": "Supprimer l'utilisateur",
     "resend": "Renvoyer l'invitation",
     "table": {
       "title": "Mes collaborateurs",
-      "new-user": "Inviter un utilisateur",
+      "newUser": "Inviter un utilisateur",
       "firstName": "Prénom",
       "lastName": "Nom",
       "email": "Email",
@@ -303,7 +313,7 @@
       "role": "Droits"
     }
   },
-  "new-member": {
+  "newMember": {
     "title": "Inviter un utilisateur",
     "email": "Email",
     "firstName": "Prénom",
@@ -462,12 +472,12 @@
   },
   "organization": {
     "title": "Organisation",
-    "my-organization": "Mon organisation",
+    "myOrganization": "Mon organisation",
     "modify": "Modifier",
     "name": "Nom : ",
     "sites": {
       "title": "Les sites de l'organisation",
-      "no-sites": "Il n'y a pas de sites configurés sur l'organisation",
+      "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "etp": "Employés",
       "ca": "Chiffre d'affaire"

@@ -61,7 +61,7 @@ const LoginForm = () => {
         href={`/reset-password?email=${email}`}
         prefetch={false}
       >
-        {t('forgot-password')}
+        {t('forgotPassword')}
       </Link>
       <Button data-testid="login-button" type="submit">
         {t('login')}

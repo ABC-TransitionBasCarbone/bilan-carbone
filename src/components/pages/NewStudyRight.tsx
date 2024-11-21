@@ -25,7 +25,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
         links={[
           { label: tNav('home'), link: '/' },
           { label: study.name, link: `/etudes/${study.id}` },
-          { label: tNav('studyRights'), link: `/etudes/${study.id}/droits` },
+          { label: tNav('studyRights'), link: `/etudes/${study.id}/cadrage` },
         ]}
       />
       <Block title={t('title', { name: study.name })} as="h1">

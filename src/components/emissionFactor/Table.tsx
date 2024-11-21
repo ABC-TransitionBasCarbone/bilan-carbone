@@ -202,7 +202,7 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
             debounce={200}
             value={locationFilter}
             onChange={setLocationFilter}
-            placeholder={t('location-search')}
+            placeholder={t('locationSearch')}
           />
           <FormControl className={styles.selector}>
             <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>

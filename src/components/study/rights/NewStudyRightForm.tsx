@@ -63,7 +63,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
     if (result) {
       setError(result)
     } else {
-      router.push(`/etudes/${study.id}/droits`)
+      router.push(`/etudes/${study.id}/cadrage`)
       router.refresh()
     }
   }

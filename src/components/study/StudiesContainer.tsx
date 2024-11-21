@@ -16,7 +16,7 @@ const StudiesContainer = ({ user }: Props) => {
   return (
     <Box data-testid="home-studies" className="flex-col grow">
       <div data-testid="studies-title" className={classNames(styles.title, 'flex-cc pb1')}>
-        <NewspaperIcon /> <h2>{t('my-studies')}</h2>
+        <NewspaperIcon /> <h2>{t('myStudies')}</h2>
       </div>
       <div className={classNames(styles.button, 'w100 flex')}>
         <LinkButton data-testid="new-study" className="mb1" href="/etudes/creer">

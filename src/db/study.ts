@@ -97,6 +97,7 @@ export const getStudyById = async (id: string) => {
         },
         orderBy: { user: { email: 'asc' } },
       },
+      exports: { select: { type: true } },
     },
   })
 }

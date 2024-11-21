@@ -1,6 +1,5 @@
 import { Post, subPostsByPost } from '@/services/posts'
 import { useTranslations } from 'next-intl'
-import React from 'react'
 import Block from '../base/Block'
 import SubPosts from '../study/SubPosts'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -26,7 +25,7 @@ const StudyContributorPage = ({ study, user }: Props) => {
           return study.emissionSources.some((emissionSource) => subPosts.includes(emissionSource.subPost))
         })
         .map((post) => (
-          <Block key={post} title={tPost(post)} icon={<PostIcon post={post} />}>
+          <Block key={post} title={tPost(post)} icon={<PostIcon post={post} />} iconPosition="before">
             <SubPosts post={post} study={study} user={user} withoutDetail />
           </Block>
         ))}

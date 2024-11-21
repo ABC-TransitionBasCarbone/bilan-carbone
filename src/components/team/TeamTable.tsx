@@ -4,7 +4,7 @@ import { TeamMember } from '@/db/user'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Role } from '@prisma/client'
 import SelectRole from './SelectRole'
 import Block from '../base/Block'
@@ -58,7 +58,7 @@ const TeamTable = ({ user, team }: Props) => {
       title={t('title')}
       id="team-table-title"
       link={user.role !== Role.DEFAULT ? '/equipe/ajouter' : ''}
-      linkLabel={t('new-user')}
+      linkLabel={t('newUser')}
       linkDataTestId="add-member-link"
     >
       <table aria-labelledby="team-table-title">

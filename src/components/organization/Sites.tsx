@@ -3,7 +3,7 @@
 import { OrganizationWithSites } from '@/db/user'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 
 interface Props {
   sites: OrganizationWithSites['sites']
@@ -38,7 +38,7 @@ const Sites = ({ sites }: Props) => {
     getCoreRowModel: getCoreRowModel(),
   })
   return sites.length === 0 ? (
-    <p className="title-h3">{t('no-sites')}</p>
+    <p className="title-h3">{t('noSites')}</p>
   ) : (
     <table className="mt1">
       <caption>{t('title')}</caption>
@@ -55,7 +55,7 @@ const Sites = ({ sites }: Props) => {
       </thead>
       <tbody>
         {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} data-testid="study-rights-table-line">
+          <tr key={row.id}>
             {row.getVisibleCells().map((cell) => (
               <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
             ))}

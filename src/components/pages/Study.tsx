@@ -1,11 +1,11 @@
-import { Study } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import React from 'react'
 import StudyDetails from '../study/StudyDetails'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import { FullStudy } from '@/db/study'
 
 interface Props {
-  study: Study
+  study: FullStudy
 }
 
 const StudyPage = ({ study }: Props) => {

@@ -1,7 +1,6 @@
 import { TeamMember } from '@/db/user'
 import { User } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
-import React from 'react'
 import { Role } from '@prisma/client'
 import styles from './PendingInvitations.module.css'
 import classNames from 'classnames'
@@ -28,7 +27,7 @@ const PendingInvitations = ({ user, team }: Props) => {
                 <span className={styles.email}>{member.email}</span>
                 <br />
                 <span className={styles.invitation}>
-                  {t('invitation-date')}{' '}
+                  {t('invitationDate')}{' '}
                   {format.dateTime(member.updatedAt, {
                     year: 'numeric',
                     month: 'short',

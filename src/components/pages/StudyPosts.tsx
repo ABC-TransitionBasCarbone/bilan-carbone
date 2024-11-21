@@ -1,7 +1,6 @@
 import { Post } from '@/services/posts'
 import { FullStudy } from '@/db/study'
 import { useTranslations } from 'next-intl'
-import React from 'react'
 import Block from '../base/Block'
 import SubPosts from '../study/SubPosts'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
@@ -28,7 +27,7 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
         ]}
       />
       <Block title={study.name} as="h1" />
-      <Block title={tPost(post)} icon={<PostIcon post={post} />}>
+      <Block title={tPost(post)} icon={<PostIcon post={post} />} iconPosition="before">
         <StudyPostInfography study={study} />
         <SubPosts post={post} study={study} user={user} withoutDetail={false} />
       </Block>

@@ -16,7 +16,7 @@ import { Level, Role } from '@prisma/client'
 
 const NewMemberForm = () => {
   const router = useRouter()
-  const t = useTranslations('new-member')
+  const t = useTranslations('newMember')
   const tLevel = useTranslations('level')
   const tRole = useTranslations('role')
 

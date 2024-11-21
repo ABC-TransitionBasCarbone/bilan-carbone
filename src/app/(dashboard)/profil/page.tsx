@@ -16,7 +16,7 @@ const Profile = () => {
       </div>
       <div className="mb1">
         <Link data-testid="legal-notices-link" href="/mentions-legales">
-          {t('legal-notices')}
+          {t('legalNotices')}
         </Link>
       </div>
     </Block>

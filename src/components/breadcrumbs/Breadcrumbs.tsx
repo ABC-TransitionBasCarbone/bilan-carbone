@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './Breadcrumbs.module.css'
 import Link from '../base/Link'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'

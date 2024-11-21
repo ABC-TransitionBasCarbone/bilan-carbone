@@ -7,7 +7,7 @@ const contactMail = process.env.ABC_CONTACT_MAIL
 const privacyPoliticsLink = process.env.ABC_PRIVACY_POLICY_LINK
 
 const LegalNotices = () => {
-  const t = useTranslations('legal-notices')
+  const t = useTranslations('legalNotices')
   return (
     <Block>
       <div className={styles.notices} data-testid="legal-notices">

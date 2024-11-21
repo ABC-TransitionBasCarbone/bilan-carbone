@@ -1,0 +1,60 @@
+.toolbarContainer {
+  bottom: 1rem;
+  left: 1rem;
+  position: fixed;
+  justify-content: center;
+  display: flex;
+  z-index: 10;
+}
+
+.openDrawerButton {
+  height: 4rem;
+  width: 4rem;
+  background-color: var(--primary-80) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  color: white !important;
+
+  &:hover {
+    background-color: var(--primary-60) !important;
+  }
+}
+
+.studyNavbarContainer {
+  display: flex;
+  height: 100%;
+  background-color: var(--neutral-10) !important;
+  height: fit-content !important;
+  width: 14rem;
+  border-radius: 0px 1rem 1rem 0px;
+  top: calc(50vh - 10rem) !important;
+  overflow: hidden !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.button,
+.link {
+  background-color: var(--neutral-00);
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  color: var(--primary-80);
+  padding: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: left;
+  font-size: 1rem;
+
+  &:hover {
+    background-color: var(--primary-10);
+  }
+}
+
+.childrenLink {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
+}
