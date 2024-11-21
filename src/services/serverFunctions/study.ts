@@ -1,6 +1,7 @@
 'use server'
 
 import {
+  ChangeStudyDatesCommand,
   ChangeStudyLevelCommand,
   ChangeStudyPublicStatusCommand,
   CreateStudyCommand,
@@ -22,6 +23,7 @@ import { NOT_AUTHORIZED } from '../permissions/check'
 import {
   canAddContributorOnStudy,
   canAddRightOnStudy,
+  canChangeDates,
   canChangeLevel,
   canChangePublicStatus,
   canCreateStudy,
@@ -104,40 +106,53 @@ export const createStudyCommand = async ({
   }
 }
 
-export const changeStudyPublicStatus = async (command: ChangeStudyPublicStatusCommand) => {
+const getStudyRightsInformations = async (studyId: string) => {
   const session = await auth()
   if (!session || !session.user) {
-    return NOT_AUTHORIZED
+    return null
   }
 
-  const studyWithRights = await getStudyById(command.studyId)
+  const studyWithRights = await getStudyById(studyId)
 
   if (!studyWithRights) {
-    return NOT_AUTHORIZED
+    return null
   }
-
-  if (!canChangePublicStatus(session.user, studyWithRights)) {
-    return NOT_AUTHORIZED
-  }
-  await updateStudy(command.studyId, { isPublic: command.isPublic === 'true' })
+  return { user: session.user, studyWithRights }
 }
 
-export const changeStudyLevel = async (command: ChangeStudyLevelCommand) => {
-  const session = await auth()
-  if (!session || !session.user) {
+export const changeStudyPublicStatus = async ({ studyId, ...command }: ChangeStudyPublicStatusCommand) => {
+  const informations = await getStudyRightsInformations(studyId)
+  if (informations === null) {
+    return NOT_AUTHORIZED
+  }
+  if (!canChangePublicStatus(informations.user, informations.studyWithRights)) {
+    return NOT_AUTHORIZED
+  }
+  await updateStudy(studyId, { isPublic: command.isPublic === 'true' })
+}
+
+export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevelCommand) => {
+  const informations = await getStudyRightsInformations(studyId)
+  if (informations === null) {
     return NOT_AUTHORIZED
   }
 
-  const studyWithRights = await getStudyById(command.studyId)
+  if (!canChangeLevel(informations.user, informations.studyWithRights, command.level)) {
+    return NOT_AUTHORIZED
+  }
+  await updateStudy(studyId, command)
+}
 
-  if (!studyWithRights) {
+export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDatesCommand) => {
+  const informations = await getStudyRightsInformations(studyId)
+  if (informations === null) {
     return NOT_AUTHORIZED
   }
 
-  if (!canChangeLevel(session.user, studyWithRights, command.level)) {
+  if (!canChangeDates(informations.user, informations.studyWithRights)) {
     return NOT_AUTHORIZED
   }
-  await updateStudy(command.studyId, { level: command.level })
+  await updateStudy(studyId, command)
 }
 
 export const newStudyRight = async (right: NewStudyRightCommand) => {

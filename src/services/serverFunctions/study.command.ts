@@ -61,6 +61,30 @@ export const ChangeStudyLevelCommandValidation = z.object({
 
 export type ChangeStudyLevelCommand = z.infer<typeof ChangeStudyLevelCommandValidation>
 
+export const ChangeStudyDatesCommandValidation = z
+  .object({
+    studyId: z.string(),
+    startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
+      const date = dayjs(val)
+      return date.isValid()
+    }, 'startDate'),
+    endDate: z.string({ required_error: 'endDate' }).refine((val) => {
+      const date = dayjs(val)
+      return date.isValid()
+    }, 'endDate'),
+  })
+  .refine(
+    (data) => {
+      return dayjs(data.endDate).isAfter(dayjs(data.startDate))
+    },
+    {
+      message: 'endDateBeforStartDate',
+      path: ['endDate'],
+    },
+  )
+
+export type ChangeStudyDatesCommand = z.infer<typeof ChangeStudyDatesCommandValidation>
+
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
   email: z

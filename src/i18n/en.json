@@ -5,7 +5,8 @@
     "organization": "Organization",
     "team": "Team",
     "newStudy": "Add a New Study",
-    "studyRights": "Rights",
+    "studyRights": "Cadrage",
+    "studyPermimeter": "Perimeter",
     "newStudyRight": "Add a Person",
     "newStudyContributor": "Add a contributor",
     "notFound": "Page not found",
@@ -142,6 +143,10 @@
       "table": {
         "email": "Email",
         "role": "Rights"
+      },
+      "perimeter": {
+        "title": "Permiter on study : {name}",
+        "dates": "from {startDate} to {endDate}"
       }
     }
   },
