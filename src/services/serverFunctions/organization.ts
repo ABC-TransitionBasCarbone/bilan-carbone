@@ -5,6 +5,7 @@ import { auth } from '../auth'
 import { Prisma } from '@prisma/client'
 import { createOrganization } from '@/db/organization'
 import { NOT_AUTHORIZED } from '../permissions/check'
+import { canCreateOrganization } from '../permissions/organization'
 
 export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,
@@ -19,6 +20,10 @@ export const createOrganizationCommand = async (
     isCR: false,
     parent: { connect: { id: session.user.organizationId } },
   } satisfies Prisma.OrganizationCreateInput
+
+  if (!(await canCreateOrganization(session.user))) {
+    return { success: false, message: NOT_AUTHORIZED }
+  }
 
   try {
     const createdOrganization = await createOrganization(organization)

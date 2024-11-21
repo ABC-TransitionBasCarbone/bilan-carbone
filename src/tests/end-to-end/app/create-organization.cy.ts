@@ -15,5 +15,7 @@ describe('Create organization', () => {
     cy.getByTestId('new-organization-create-button').click()
 
     cy.wait('@create')
+
+    cy.getByTestId('organization-name').should('include.text', 'My new organization')
   })
 })

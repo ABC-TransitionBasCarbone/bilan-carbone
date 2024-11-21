@@ -3,7 +3,7 @@ import { auth } from '@/services/auth'
 import NotFound from '@/components/pages/NotFound'
 import OrganizationPage from '@/components/pages/Organization'
 import { checkOrganization } from '@/services/permissions/organization'
-import { getOrganizationByIdWithSites } from '@/db/organization'
+import { getOrganizationWithSitesById } from '@/db/organization'
 
 interface Props {
   params: Promise<{ id: UUID }>
@@ -22,7 +22,7 @@ const OrganizationView = async (props: Props) => {
     return <NotFound />
   }
 
-  const organization = await getOrganizationByIdWithSites(id)
+  const organization = await getOrganizationWithSitesById(id)
 
   if (!organization) {
     return <NotFound />

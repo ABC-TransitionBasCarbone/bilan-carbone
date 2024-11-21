@@ -18,7 +18,7 @@ const OrganizationInfo = ({ organization, user }: Props) => {
       link={user.role === Role.ADMIN ? `/organisations/${organization.id}/modifier` : ''}
       linkLabel={t('modify')}
     >
-      <p>
+      <p data-testid="organization-name">
         <span className={styles.info}>{t('name')}</span> {organization.name}
       </p>
     </Block>

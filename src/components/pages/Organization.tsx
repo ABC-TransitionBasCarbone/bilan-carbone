@@ -35,7 +35,7 @@ const OrganizationPage = ({ organizations, user }: Props) => {
             <ResultsContainer user={user} />
           </Suspense>
           <div className={classNames(styles.container, 'w100')}>
-            <Studies user={user} orgnizationId={organizations[0].id} />
+            <Studies user={user} organizationId={organizations[0].id} />
           </div>
         </div>
       </Block>

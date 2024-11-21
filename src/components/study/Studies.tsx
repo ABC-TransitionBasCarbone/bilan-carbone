@@ -10,14 +10,13 @@ import Link from '../base/Link'
 
 interface Props {
   user: User
-  orgnizationId?: string
+  organizationId?: string
 }
 
-const Studies = async ({ user, orgnizationId }: Props) => {
-  const getStudies = orgnizationId
-    ? () => getStudiesByUserAndOrganization(user, orgnizationId)
-    : () => getStudiesByUser(user)
-  const studies = await getStudies()
+const Studies = async ({ user, organizationId }: Props) => {
+  const studies = organizationId
+    ? await getStudiesByUserAndOrganization(user, organizationId)
+    : await getStudiesByUser(user)
   const allowedStudies = await filterAllowedStudies(user, studies)
 
   return (

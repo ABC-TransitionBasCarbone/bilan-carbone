@@ -9,10 +9,10 @@ import { User } from 'next-auth'
 
 interface Props {
   user: User
-  orgnizationId?: string
+  organizationId?: string
 }
 
-const StudiesContainer = ({ user, orgnizationId }: Props) => {
+const StudiesContainer = ({ user, organizationId }: Props) => {
   const t = useTranslations('study')
   return (
     <Box data-testid="home-studies" className="flex-col grow">
@@ -24,7 +24,7 @@ const StudiesContainer = ({ user, orgnizationId }: Props) => {
           {t('create')}
         </LinkButton>
       </div>
-      <Studies user={user} orgnizationId={orgnizationId} />
+      <Studies user={user} organizationId={organizationId} />
     </Box>
   )
 }
