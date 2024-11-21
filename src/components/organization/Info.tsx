@@ -3,7 +3,6 @@ import Block from '../base/Block'
 import { useTranslations } from 'next-intl'
 import { User } from 'next-auth'
 import { Role } from '@prisma/client'
-import Sites from './Sites'
 import styles from './Info.module.css'
 
 interface Props {

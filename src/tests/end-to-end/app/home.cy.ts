@@ -28,12 +28,12 @@ describe('Home page', () => {
     cy.getByTestId('actuality').should('have.length.gt', 0)
   })
 
-  it('Should display the list of studies as a CR user', () => {
+  it('Should display the list of organizations as a CR user', () => {
     cy.login('bc-cr-default-1@yopmail.com', 'password-1')
 
-    cy.getByTestId('home-studies').scrollIntoView()
-    cy.getByTestId('home-studies').should('be.visible')
-    cy.getByTestId('studies-title').should('be.visible')
-    cy.getByTestId('studies-title').contains('Mes études')
+    cy.getByTestId('home-organizations').scrollIntoView()
+    cy.getByTestId('home-organizations').should('be.visible')
+    cy.getByTestId('organizations-title').should('be.visible')
+    cy.getByTestId('organizations-title').contains('Mes organisations')
   })
 })
