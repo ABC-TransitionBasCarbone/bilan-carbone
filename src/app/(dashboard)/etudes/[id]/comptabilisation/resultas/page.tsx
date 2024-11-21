@@ -1,5 +1,5 @@
 const ResultatsPages = () => {
-  return <div></div>
+  return <div />
 }
 
 export default ResultatsPages

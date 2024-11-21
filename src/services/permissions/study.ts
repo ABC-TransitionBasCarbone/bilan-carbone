@@ -85,7 +85,7 @@ export const canCreateStudy = async (user: User, study: Prisma.StudyCreateInput,
   return true
 }
 
-export const canChangePublicStatus = async (user: User, study: FullStudy) => {
+const canChangeStudyValues = async (user: User, study: FullStudy) => {
   if (user.role === Role.ADMIN) {
     return true
   }
@@ -98,13 +98,22 @@ export const canChangePublicStatus = async (user: User, study: FullStudy) => {
   return true
 }
 
+export const canChangePublicStatus = async (user: User, study: FullStudy) => {
+  return canChangeStudyValues(user, study)
+}
+
+export const canChangeDates = async (user: User, study: FullStudy) => {
+  return canChangeStudyValues(user, study)
+}
+
 export const canChangeLevel = async (user: User, study: FullStudy, level: Level) => {
-  if (!getAllowedLevels(user.level).includes(level)) {
+  const basicRight = canChangeStudyValues(user, study)
+  if (!basicRight) {
     return false
   }
 
-  if (user.role === Role.ADMIN) {
-    return true
+  if (!getAllowedLevels(user.level).includes(level)) {
+    return false
   }
 
   const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)

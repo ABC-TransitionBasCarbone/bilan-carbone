@@ -91,7 +91,7 @@ const StudyContributorsTable = ({ study }: Props) => {
       </thead>
       <tbody>
         {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} data-testid="study-rights-table-line">
+          <tr key={row.id} data-testid="study-contributors-table-line">
             {row.getVisibleCells().map((cell) => (
               <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
             ))}
