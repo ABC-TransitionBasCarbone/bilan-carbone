@@ -9,3 +9,9 @@ export const getOrganizationUsers = (id: string) =>
     where: { organizationId: id, isActive: true },
     orderBy: { email: 'asc' },
   })
+
+export const getOrganizationWithSitesById = (id: string) =>
+  prismaClient.organization.findUnique({
+    where: { id },
+    include: { sites: { select: { name: true, etp: true, ca: true, id: true } } },
+  })

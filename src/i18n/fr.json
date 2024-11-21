@@ -5,7 +5,8 @@
     "organization": "Organisation",
     "team": "Équipe",
     "newStudy": "Ajouter une nouvelle étude",
-    "studyRights": "Droits",
+    "studyRights": "Cadrage",
+    "studyPermimeter": "Périmètre",
     "newStudyRight": "Ajouter une personne",
     "newStudyContributor": "Ajouter un contributeur",
     "notFound": "Page non trouvé",
@@ -104,7 +105,7 @@
       "contributors": "Contributeurs",
       "isPublic": "L'étude est public",
       "isPrivate": "L'étude est privée",
-      "title": "Droits sur l'étude : {name}",
+      "title": "Cadrage de l'étude : {name}",
       "newRightLink": "Ajouter une personne à l'étude",
       "newContributorLink": "Ajouter un contributeur",
       "new": {
@@ -139,6 +140,10 @@
         "email": "Email",
         "role": "Droits"
       }
+    },
+    "perimeter": {
+      "title": "Périmètre de l'étude : {name}",
+      "dates": "Du {startDate} au {endDate}"
     }
   },
   "emissionFactors": {
