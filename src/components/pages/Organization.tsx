@@ -1,15 +1,14 @@
-import React, { Suspense } from 'react'
-import Block from '../base/Block'
+import { Suspense } from 'react'
 import { useTranslations } from 'next-intl'
 import OrganizationInfo from '../organization/Info'
 import { OrganizationWithSites } from '@/db/user'
 import { User } from 'next-auth'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
-import ResultsContainer from '../study/results/ResultsContainer'
 import classNames from 'classnames'
 import styles from './Organization.module.css'
 import Studies from '../study/StudiesContainer'
-import Box from '../base/Box'
+import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
+import Block from '../base/Block'
 
 interface Props {
   organizations: OrganizationWithSites[]
@@ -18,25 +17,20 @@ interface Props {
 
 const OrganizationPage = ({ organizations, user }: Props) => {
   const tNav = useTranslations('nav')
-  const t = useTranslations('organization')
+
   return (
     <>
       <Breadcrumbs
         current={`${tNav('organization')} : ${organizations[0].name}`}
         links={[{ label: tNav('home'), link: '/' }]}
       />
-      <Block title={t('title')} as="h1" />
+      <OrganizationInfo organization={organizations[0]} user={user} />
       <Block>
-        <Box className="mb1">
-          <OrganizationInfo organization={organizations[0]} user={user} />
-        </Box>
-        <div className="flex-col">
-          <Suspense>
-            <ResultsContainer user={user} />
-          </Suspense>
-          <div className={classNames(styles.container, 'w100')}>
-            <Studies user={user} organizationId={organizations[0].id} />
-          </div>
+        <Suspense>
+          <ResultsContainerForUser user={user} />
+        </Suspense>
+        <div className={classNames(styles.container, 'w100')}>
+          <Studies user={user} organizationId={organizations[0].id} />
         </div>
       </Block>
     </>

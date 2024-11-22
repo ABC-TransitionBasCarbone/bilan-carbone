@@ -14,6 +14,7 @@ const OrganizationInfo = ({ organization, user }: Props) => {
   const t = useTranslations('organization')
   return (
     <Block
+      as="h1"
       title={t('myOrganization')}
       link={user.role === Role.ADMIN ? `/organisations/${organization.id}/modifier` : ''}
       linkLabel={t('modify')}
