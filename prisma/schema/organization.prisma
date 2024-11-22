@@ -11,7 +11,7 @@ model Organization {
   studies   Study[]
   emissions EmissionFactor[]
 
-  parentId String?
+  parentId String?        @map("parent_id")
   parent   Organization?  @relation("childOrganizations", fields: [parentId], references: [id])
   childs   Organization[] @relation("childOrganizations")
 

@@ -39,6 +39,15 @@ export const getStudiesByUser = async (user: User) => {
   })
 }
 
+export const getStudiesByUserAndOrganization = async (user: User, organizationId: string) => {
+  return prismaClient.study.findMany({
+    where: {
+      organizationId,
+      OR: [{ allowedUsers: { some: { userId: user.id } } }, { contributors: { some: { userId: user.id } } }],
+    },
+  })
+}
+
 export const getStudyById = async (id: string) => {
   return prismaClient.study.findUnique({
     where: { id },

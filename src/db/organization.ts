@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { prismaClient } from './client'
 
 export const getOrganizationById = (id: string) =>
@@ -14,4 +15,9 @@ export const getOrganizationWithSitesById = (id: string) =>
   prismaClient.organization.findUnique({
     where: { id },
     include: { sites: { select: { name: true, etp: true, ca: true, id: true } } },
+  })
+
+export const createOrganization = (organization: Prisma.OrganizationCreateInput) =>
+  prismaClient.organization.create({
+    data: organization,
   })

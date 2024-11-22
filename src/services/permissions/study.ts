@@ -1,24 +1,11 @@
-import { getOrganizationById } from '@/db/organization'
-import { Level, Prisma, Study, StudyRole, User as DbUser, Role } from '@prisma/client'
-import { getAllowedLevels } from '../study'
-import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { User } from 'next-auth'
+import { Level, Prisma, Study, StudyRole, User as DbUser, Role } from '@prisma/client'
 import { FullStudy } from '@/db/study'
+import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
+import { checkOrganization } from './organization'
+import { getAllowedLevels } from '../study'
 
 const checkLevel = (userLevel: Level, studyLevel: Level) => getAllowedLevels(studyLevel).includes(userLevel)
-
-const checkOrganization = async (userOrganizationId: string, organizationId: string) => {
-  if (userOrganizationId === organizationId) {
-    return true
-  }
-
-  const organization = await getOrganizationById(organizationId)
-  if (organization && organization.childs.some((child) => child.id === userOrganizationId)) {
-    return true
-  }
-
-  return false
-}
 
 export const canReadStudy = async (
   user: User | UserWithAllowedStudies,

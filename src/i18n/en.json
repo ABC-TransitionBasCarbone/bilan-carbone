@@ -1,16 +1,17 @@
 {
   "nav": {
-    "home": "Home",
+    "backToHome": "Back to home",
     "emissionFactors": "Emission Factors",
-    "organization": "Organization",
-    "team": "Team",
+    "home": "Home",
+    "newOrganization": "Add an Organization",
     "newStudy": "Add a New Study",
-    "studyRights": "Cadrage",
     "studyPermimeter": "Perimeter",
-    "newStudyRight": "Add a Person",
     "newStudyContributor": "Add a contributor",
+    "newStudyRight": "Add a Person",
     "notFound": "Page not found",
-    "backToHome": "Back to home"
+    "organization": "Organization",
+    "studyRights": "Rights",
+    "team": "Team"
   },
   "actuality": {
     "title": "News",
@@ -471,10 +472,17 @@
     "KG_H2_PER_100KM": "kgH2/100km"
   },
   "organization": {
-    "title": "Organization",
-    "myOrganization": "My Organization",
+    "create": "New Organization",
     "modify": "Modify",
+    "myOrganization": "My Organization",
+    "myOrganizations": "My Organizations",
     "name": "Name: ",
+    "title": "Organization",
+    "new": {
+      "create": "Create organization",
+      "name": "Organization name",
+      "title": "Information about the new organization"
+    },
     "sites": {
       "title": "The organization's sites",
       "noSites": "There are no sites configured for the organization",

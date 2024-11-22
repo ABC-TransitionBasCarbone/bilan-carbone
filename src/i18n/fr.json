@@ -1,16 +1,17 @@
 {
   "nav": {
-    "home": "Accueil",
+    "backToHome": "Retour a l'accueil",
     "emissionFactors": "Facteurs d'émission",
-    "organization": "Organisation",
-    "team": "Équipe",
+    "home": "Accueil",
+    "newOrganization": "Ajouter une nouvelle organisation",
     "newStudy": "Ajouter une nouvelle étude",
-    "studyRights": "Cadrage",
     "studyPermimeter": "Périmètre",
-    "newStudyRight": "Ajouter une personne",
     "newStudyContributor": "Ajouter un contributeur",
+    "newStudyRight": "Ajouter une personne",
     "notFound": "Page non trouvé",
-    "backToHome": "Retour a l'accueil"
+    "organization": "Organisation",
+    "studyRights": "Droits",
+    "team": "Équipe"
   },
   "actuality": {
     "title": "Actualités",
@@ -471,10 +472,17 @@
     "KG_H2_PER_100KM": "kgH2/100km"
   },
   "organization": {
-    "title": "Organisation",
-    "myOrganization": "Mon organisation",
+    "create": "Nouvelle Organisation",
     "modify": "Modifier",
+    "myOrganization": "Mon organisation",
+    "myOrganizations": "Mes organisations",
     "name": "Nom : ",
+    "title": "Organisation",
+    "new": {
+      "create": "Créer l'organisation",
+      "name": "Nom de l'organisation",
+      "title": "Informations sur la nouvelle organisation"
+    },
     "sites": {
       "title": "Les sites de l'organisation",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
