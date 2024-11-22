@@ -35,12 +35,8 @@ export const canUpdateEmissionSource = async (
   user: User,
   emissionSource: StudyEmissionSource,
   change: Prisma.StudyEmissionSourceUpdateInput,
+  study: FullStudy,
 ) => {
-  const study = await getStudyById(emissionSource.studyId)
-  if (!study) {
-    return false
-  }
-
   const canCreate = await canCreateEmissionSource(user, emissionSource, study)
   if (!canCreate) {
     return false

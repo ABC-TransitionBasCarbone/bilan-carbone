@@ -81,6 +81,11 @@ export const getStudyById = async (id: string) => {
               completeness: true,
             },
           },
+          contributor: {
+            select: {
+              email: true,
+            },
+          },
         },
         orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
       },

@@ -1,7 +1,5 @@
 'use client'
-
 import { FullStudy } from '@/db/study'
-import React from 'react'
 import styles from './EmissionSource.module.css'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import EmissionSourceFactor from './EmissionSourceFactor'
