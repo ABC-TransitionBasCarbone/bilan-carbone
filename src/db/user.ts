@@ -51,7 +51,7 @@ export const getUserOrganizations = async (email: string) => {
     return []
   }
 
-  if (user.organization.isCR) {
+  if (user.organization && user.organization.isCR) {
     const childOrganizations = await prismaClient.organization.findMany({
       ...organizationSelect,
       where: { parentId: user.organization.id },
@@ -59,7 +59,7 @@ export const getUserOrganizations = async (email: string) => {
     return [user.organization, ...childOrganizations]
   }
 
-  return [user.organization]
+  return user.organization ? [user.organization] : []
 }
 
 export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]

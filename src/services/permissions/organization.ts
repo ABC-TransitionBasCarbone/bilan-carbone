@@ -2,7 +2,7 @@ import { User } from 'next-auth'
 import { getOrganizationById } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
 
-export const checkOrganization = async (userOrganizationId: string, organizationId: string) => {
+export const checkOrganization = async (userOrganizationId: string | null, organizationId: string) => {
   if (userOrganizationId === organizationId) {
     return true
   }

@@ -1,4 +1,3 @@
-import React from 'react'
 import Block from '../base/Block'
 import NewStudyRightForm from '../study/rights/NewStudyRightForm'
 import { getOrganizationUsers } from '@/db/organization'

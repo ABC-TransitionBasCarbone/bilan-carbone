@@ -9,7 +9,7 @@ import { AddMemberCommand } from './user.command'
 import { sendNewInvitation } from '../email/email'
 import { Role } from '@prisma/client'
 
-const sendInvitation = async (email: string) => {
+export const sendInvitation = async (email: string) => {
   const resetToken = Math.random().toString(36)
   const payload = {
     email,
@@ -24,7 +24,7 @@ const sendInvitation = async (email: string) => {
 
 export const addMember = async (member: AddMemberCommand) => {
   const session = await auth()
-  if (!session || !session.user) {
+  if (!session || !session.user || !session.user.organizationId) {
     return NOT_AUTHORIZED
   }
 

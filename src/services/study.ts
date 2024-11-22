@@ -2,7 +2,13 @@ import { FullStudy } from '@/db/study'
 import { Level } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 
-export const getAllowedLevels = (level: Level) => {
+export enum NewStudyRightStatus {
+  SameOrganization,
+  OtherOrganization,
+  NonExisting,
+}
+
+export const getAllowedLevels = (level: Level | null) => {
   switch (level) {
     case Level.Advanced:
       return [Level.Initial]
@@ -10,6 +16,8 @@ export const getAllowedLevels = (level: Level) => {
       return [Level.Initial, Level.Standard]
     case Level.Initial:
       return [Level.Initial, Level.Standard, Level.Advanced]
+    default:
+      return []
   }
 }
 

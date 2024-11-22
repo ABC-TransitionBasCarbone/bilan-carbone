@@ -18,7 +18,15 @@ export const findUserInfo = (user: User) =>
         : { organizationId: user.organizationId },
   }) satisfies Prisma.UserFindManyArgs
 
-export const canAddMember = (user: User, member: Pick<Prisma.UserCreateInput, 'role'>, organizationId: string) => {
+export const canAddMember = (
+  user: User,
+  member: Pick<Prisma.UserCreateInput, 'role'>,
+  organizationId: string | null,
+) => {
+  if (!organizationId) {
+    return false
+  }
+
   if (user.role === Role.DEFAULT) {
     return false
   }

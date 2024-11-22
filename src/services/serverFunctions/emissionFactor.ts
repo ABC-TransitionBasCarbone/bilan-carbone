@@ -33,7 +33,7 @@ export const createEmissionFactorCommand = async ({
 
   const user = await getUserByEmail(session.user.email)
 
-  if (!user) {
+  if (!user || !user.organizationId) {
     return NOT_AUTHORIZED
   }
 
