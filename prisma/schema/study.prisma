@@ -117,5 +117,8 @@ model StudyEmissionSource {
   comment                      String?
   validated                    Boolean?
 
+  contributorId String? @map("contributor_id")
+  contributor   User?   @relation(fields: [contributorId], references: [id])
+
   @@map("study_emission_sources")
 }

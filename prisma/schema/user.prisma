@@ -24,6 +24,7 @@ model User {
   createdStudies Study[]
   allowedStudies UserOnStudy[]
   contributors   Contributors[]
+  contributedEmissionSources StudyEmissionSource[]
 
   @@map("users")
 }

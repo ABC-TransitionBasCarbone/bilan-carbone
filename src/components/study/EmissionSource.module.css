@@ -37,7 +37,9 @@
 }
 
 .infosRight {
-  text-align: right;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-end;
 }
 
 .status {

@@ -6,6 +6,7 @@ import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionSource, canUpdateEmissionSource } from '../permissions/emissionSource'
 import { getUserByEmail } from '@/db/user'
+import { getStudyById } from '@/db/study'
 
 export const createEmissionSource = async (command: CreateEmissionSourceCommand) => {
   const session = await auth()
@@ -29,7 +30,11 @@ export const createEmissionSource = async (command: CreateEmissionSourceCommand)
   })
 }
 
-export const updateEmissionSource = async ({ emissionSourceId, ...command }: UpdateEmissionSourceCommand) => {
+export const updateEmissionSource = async ({
+  emissionSourceId,
+  emissionFactorId,
+  ...command
+}: UpdateEmissionSourceCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
@@ -42,10 +47,18 @@ export const updateEmissionSource = async ({ emissionSourceId, ...command }: Upd
   if (!user || !emissionSource) {
     return NOT_AUTHORIZED
   }
+  const data = { ...command, emissionFactor: emissionFactorId ? { connect: { id: emissionFactorId } } : undefined }
 
-  if (!(await canUpdateEmissionSource(user, emissionSource, command))) {
+  const study = await getStudyById(emissionSource.studyId)
+  if (!study || !(await canUpdateEmissionSource(user, emissionSource, data, study))) {
     return NOT_AUTHORIZED
   }
 
-  await updateEmissionSourceOnStudy(emissionSourceId, command)
+  const isContributor = study.contributors.some(
+    (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
+  )
+  await updateEmissionSourceOnStudy(
+    emissionSourceId,
+    isContributor ? { ...data, contributor: { connect: { id: user.id } } } : data,
+  )
 }

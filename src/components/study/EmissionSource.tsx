@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import EditIcon from '@mui/icons-material/Edit'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './EmissionSource.module.css'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { useTranslations } from 'next-intl'
@@ -107,6 +107,11 @@ const EmissionSource = ({
   const sourceRating = useMemo(() => getQualityRating(emissionSource), [emissionSource])
   const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
 
+  const selectedFactorQualityRating = useMemo(
+    () => (selectedFactor ? getQualityRating(selectedFactor) : null),
+    [selectedFactor],
+  )
+
   return (
     <div className={styles.container}>
       <button
@@ -118,27 +123,49 @@ const EmissionSource = ({
       >
         <div className={classNames(styles.infosLeft, 'flex-col')}>
           <p>{emissionSource.name}</p>
+          {emissionSource.contributor && (
+            <p data-testid="emission-source-contributor" className={styles.status}>
+              {emissionSource.contributor.email}
+            </p>
+          )}
           <p data-testid="emission-source-status" className={styles.status}>
             {t(`status.${status}`)}
           </p>
         </div>
-        <div className={classNames(styles.infosRight, 'flex-col')}>
-          <p data-testid="emission-source-value">
-            {emissionResults === null ? (
-              emissionSource.value !== null ? (
-                <>
-                  {emissionSource.value} {selectedFactor && tUnits(selectedFactor.unit)}
-                </>
-              ) : null
-            ) : (
-              `${emissionResults.emission.toFixed(2)} kgCO₂e`
+        <div className={classNames(styles.infosRight, 'flex')}>
+          <div className="flex-col">
+            {selectedFactor && (
+              <>
+                <p>
+                  {selectedFactor.metaData?.title} - {selectedFactor.location} - {selectedFactor.totalCo2} kgCO₂e/
+                  {tUnits(selectedFactor.unit)}
+                </p>
+                {selectedFactorQualityRating && (
+                  <p className={styles.status}>
+                    {tQuality('name')} {tQuality(selectedFactorQualityRating.toString())}
+                  </p>
+                )}
+              </>
             )}
-          </p>
-          {sourceRating && (
-            <p className={styles.status} data-testid="emission-source-quality">
-              {tQuality('name')} {tQuality(sourceRating.toString())}
+          </div>
+          <div className="flex-col">
+            <p data-testid="emission-source-value">
+              {emissionResults === null ? (
+                emissionSource.value !== null ? (
+                  <>
+                    {emissionSource.value} {selectedFactor && tUnits(selectedFactor.unit)}
+                  </>
+                ) : null
+              ) : (
+                `${emissionResults.emission.toFixed(2)} kgCO₂e`
+              )}
             </p>
-          )}
+            {sourceRating && (
+              <p className={styles.status} data-testid="emission-source-quality">
+                {tQuality('name')} {tQuality(sourceRating.toString())}
+              </p>
+            )}
+          </div>
         </div>
         <div className={styles.editIcon}>
           <EditIcon />
