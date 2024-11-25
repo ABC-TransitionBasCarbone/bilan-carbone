@@ -6,7 +6,7 @@ import Sites from '@/components/organization/Sites'
 import { OrganizationWithSites } from '@/db/user'
 import { MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 
 interface Props {
   organizations: OrganizationWithSites[]

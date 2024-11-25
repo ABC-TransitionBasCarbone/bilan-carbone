@@ -1,10 +1,9 @@
 'use server'
 
-import React from 'react'
-import styles from './Organizations.module.css'
+import { Organization } from '@prisma/client'
 import classNames from 'classnames'
 import Link from '../base/Link'
-import { Organization } from '@prisma/client'
+import styles from './Organizations.module.css'
 
 interface Props {
   organizations: Organization[]

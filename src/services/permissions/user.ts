@@ -1,4 +1,4 @@
-import { Prisma, Role, User as DbUser } from '@prisma/client'
+import { User as DbUser, Prisma, Role } from '@prisma/client'
 import { User } from 'next-auth'
 
 export const findUserInfo = (user: User) =>

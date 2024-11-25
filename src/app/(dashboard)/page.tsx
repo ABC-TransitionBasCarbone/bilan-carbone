@@ -1,6 +1,6 @@
-import { auth } from '@/services/auth'
-import UserView from '@/components/home/UserView'
 import Block from '@/components/base/Block'
+import UserView from '@/components/home/UserView'
+import { auth } from '@/services/auth'
 
 export const revalidate = 0
 

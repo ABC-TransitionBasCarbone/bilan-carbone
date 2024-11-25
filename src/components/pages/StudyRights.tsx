@@ -1,14 +1,13 @@
-import React from 'react'
-import { User } from 'next-auth'
 import { FullStudy } from '@/db/study'
-import StudyRightsTable from '../study/rights/StudyRightsTable'
-import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import { Role, StudyRole } from '@prisma/client'
+import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
-import { Role, StudyRole } from '@prisma/client'
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyContributorsTable from '../study/rights/StudyContributorsTable'
-import StudyPublicStatus from '../study/rights/StudyPublicStatus'
 import StudyLevel from '../study/rights/StudyLevel'
+import StudyPublicStatus from '../study/rights/StudyPublicStatus'
+import StudyRightsTable from '../study/rights/StudyRightsTable'
 
 interface Props {
   study: FullStudy

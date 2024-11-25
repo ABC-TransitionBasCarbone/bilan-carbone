@@ -1,13 +1,13 @@
 'use client'
 
-import classNames from 'classnames'
-import styles from './StudyNavbar.module.css'
-import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import MenuIcon from '@mui/icons-material/Menu'
 import { Divider, Drawer, IconButton } from '@mui/material'
-import { useState } from 'react'
+import classNames from 'classnames'
 import { UUID } from 'crypto'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { useState } from 'react'
+import styles from './StudyNavbar.module.css'
 
 const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
   const t = useTranslations('study.navigation')

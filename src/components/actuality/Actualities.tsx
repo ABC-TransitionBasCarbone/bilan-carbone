@@ -1,10 +1,10 @@
+import NewspaperIcon from '@mui/icons-material/Newspaper'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import styles from './styles.module.css'
-import Box from '../base/Box'
-import NewspaperIcon from '@mui/icons-material/Newspaper'
 import { Suspense } from 'react'
+import Box from '../base/Box'
 import ActualitiesList from './ActualitiesList'
+import styles from './styles.module.css'
 
 const Actualities = () => {
   const t = useTranslations('actuality')

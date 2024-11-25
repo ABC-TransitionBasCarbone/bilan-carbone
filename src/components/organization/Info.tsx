@@ -1,8 +1,8 @@
 import { OrganizationWithSites } from '@/db/user'
-import Block from '../base/Block'
-import { useTranslations } from 'next-intl'
-import { User } from 'next-auth'
 import { Role } from '@prisma/client'
+import { User } from 'next-auth'
+import { useTranslations } from 'next-intl'
+import Block from '../base/Block'
 import styles from './Info.module.css'
 
 interface Props {

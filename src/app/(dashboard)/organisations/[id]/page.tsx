@@ -1,9 +1,9 @@
-import { UUID } from 'crypto'
-import { auth } from '@/services/auth'
 import NotFound from '@/components/pages/NotFound'
 import OrganizationPage from '@/components/pages/Organization'
-import { checkOrganization } from '@/services/permissions/organization'
 import { getOrganizationWithSitesById } from '@/db/organization'
+import { auth } from '@/services/auth'
+import { checkOrganization } from '@/services/permissions/organization'
+import { UUID } from 'crypto'
 
 interface Props {
   params: Promise<{ id: UUID }>

@@ -1,13 +1,13 @@
-import Fuse from 'fuse.js'
-import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
-import { useTranslations } from 'next-intl'
-import React, { useEffect, useMemo, useState } from 'react'
-import { Path } from 'react-hook-form'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import styles from './EmissionSourceFactor.module.css'
-import classNames from 'classnames'
-import DebouncedInput from '../base/DebouncedInput'
+import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { getQualityRating } from '@/services/uncertainty'
+import classNames from 'classnames'
+import Fuse from 'fuse.js'
+import { useTranslations } from 'next-intl'
+import { useEffect, useMemo, useState } from 'react'
+import { Path } from 'react-hook-form'
+import DebouncedInput from '../base/DebouncedInput'
+import styles from './EmissionSourceFactor.module.css'
 
 const fuseOptions = {
   keys: [

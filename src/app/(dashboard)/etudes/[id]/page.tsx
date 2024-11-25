@@ -1,10 +1,10 @@
-import { UUID } from 'crypto'
-import { auth } from '@/services/auth'
 import NotFound from '@/components/pages/NotFound'
-import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
-import { getStudyById } from '@/db/study'
 import StudyPage from '@/components/pages/Study'
 import StudyContributorPage from '@/components/pages/StudyContributor'
+import { getStudyById } from '@/db/study'
+import { auth } from '@/services/auth'
+import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
+import { UUID } from 'crypto'
 
 interface Props {
   params: Promise<{

@@ -1,10 +1,9 @@
-import StudyPostsPage from '@/components/pages/StudyPosts'
 import NotFound from '@/components/pages/NotFound'
+import StudyPostsPage from '@/components/pages/StudyPosts'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
-import React from 'react'
 
 interface Props {
   params: Promise<{

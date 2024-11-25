@@ -1,12 +1,12 @@
 'use client'
 
+import { changeRole } from '@/services/serverFunctions/user'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './SelectRole.module.css'
-import { changeRole } from '@/services/serverFunctions/user'
 
 interface Props {
   user: User

@@ -1,6 +1,6 @@
-import { AnchorHTMLAttributes } from 'react'
-import Link, { LinkProps } from 'next/link'
 import classNames from 'classnames'
+import Link, { LinkProps } from 'next/link'
+import { AnchorHTMLAttributes } from 'react'
 import buttonStyles from './Button.module.css'
 import styles from './LinkButton.module.css'
 

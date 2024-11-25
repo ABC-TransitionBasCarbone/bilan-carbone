@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react'
 import PublicPage from '@/components/pages/Public'
+import { ReactNode } from 'react'
 
 interface Props {
   children: ReactNode

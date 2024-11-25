@@ -1,10 +1,10 @@
-import Block from '../base/Block'
-import NewStudyRightForm from '../study/rights/NewStudyRightForm'
 import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { User } from 'next-auth'
-import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import { getTranslations } from 'next-intl/server'
+import Block from '../base/Block'
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import NewStudyRightForm from '../study/rights/NewStudyRightForm'
 
 interface Props {
   study: FullStudy

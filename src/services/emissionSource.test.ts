@@ -1,7 +1,7 @@
-import { expect } from '@jest/globals'
-import { getEmissionResults } from './emissionSource'
 import { FullStudy } from '@/db/study'
+import { expect } from '@jest/globals'
 import { SubPost, Unit } from '@prisma/client'
+import { getEmissionResults } from './emissionSource'
 
 const defaultEmissionSource = {
   id: 'random',

@@ -1,10 +1,9 @@
-import NotFound from '@/components/pages/NotFound'
 import NewStudyContributorPage from '@/components/pages/NewStudyContributor'
+import NotFound from '@/components/pages/NotFound'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
-import { UUID } from 'crypto'
-import React from 'react'
 import { canReadStudyDetail } from '@/services/permissions/study'
+import { UUID } from 'crypto'
 
 interface Props {
   params: Promise<{

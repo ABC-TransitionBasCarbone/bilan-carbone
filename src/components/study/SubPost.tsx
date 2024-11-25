@@ -1,14 +1,14 @@
-import styles from './SubPosts.module.css'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { FullStudy } from '@/db/study'
+import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
-import { useTranslations } from 'next-intl'
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import { useMemo } from 'react'
+import styles from './SubPosts.module.css'
 
 type StudyProps = {
   study: FullStudy

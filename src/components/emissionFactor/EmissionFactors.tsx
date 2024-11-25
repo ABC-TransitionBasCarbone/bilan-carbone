@@ -1,9 +1,8 @@
 'use server'
 
-import React from 'react'
-import EmissionFactorsTable from './Table'
 import { getLocale } from '@/i18n/locale'
 import { getEmissionFactors } from '@/services/emissionFactors'
+import EmissionFactorsTable from './Table'
 
 const EmissionFactors = async () => {
   const locale = await getLocale()

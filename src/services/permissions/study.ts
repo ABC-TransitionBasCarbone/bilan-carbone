@@ -1,9 +1,9 @@
-import { User } from 'next-auth'
-import { Level, Prisma, Study, StudyRole, User as DbUser, Role } from '@prisma/client'
 import { FullStudy } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { checkOrganization } from './organization'
+import { User as DbUser, Level, Prisma, Role, Study, StudyRole } from '@prisma/client'
+import { User } from 'next-auth'
 import { getAllowedLevels } from '../study'
+import { checkOrganization } from './organization'
 
 const checkLevel = (userLevel: Level | null, studyLevel: Level) =>
   userLevel ? getAllowedLevels(studyLevel).includes(userLevel) : false

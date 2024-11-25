@@ -1,14 +1,14 @@
 'use client'
 
+import { TextField } from '@mui/material'
 import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import React, { FormEvent, useState } from 'react'
-import styles from './LoginForm.module.css'
-import authStyles from './Auth.module.css'
-import Button from '../base/Button'
 import Link from 'next/link'
-import { TextField } from '@mui/material'
 import { useRouter } from 'next/navigation'
+import { FormEvent, useState } from 'react'
+import Button from '../base/Button'
+import authStyles from './Auth.module.css'
+import styles from './LoginForm.module.css'
 
 const LoginForm = () => {
   const t = useTranslations('login.form')

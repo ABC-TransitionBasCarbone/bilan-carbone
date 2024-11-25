@@ -1,6 +1,5 @@
-import { auth } from '@/services/auth'
-import React from 'react'
 import ResetForm from '@/components/auth/ResetForm'
+import { auth } from '@/services/auth'
 
 interface Props {
   params: Promise<{ token: string }>

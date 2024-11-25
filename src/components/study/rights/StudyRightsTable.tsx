@@ -1,11 +1,11 @@
 'use client'
 
+import { FullStudy } from '@/db/study'
+import { Role, StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import React, { useMemo } from 'react'
-import { Role, StudyRole } from '@prisma/client'
-import { FullStudy } from '@/db/study'
+import { useMemo } from 'react'
 import SelectStudyRole from './SelectStudyRole'
 
 interface Props {

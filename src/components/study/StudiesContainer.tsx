@@ -1,11 +1,11 @@
+import NewspaperIcon from '@mui/icons-material/Newspaper'
 import classNames from 'classnames'
+import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import styles from './StudiesContainer.module.css'
-import Studies from './Studies'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
-import NewspaperIcon from '@mui/icons-material/Newspaper'
-import { User } from 'next-auth'
+import Studies from './Studies'
+import styles from './StudiesContainer.module.css'
 
 interface Props {
   user: User

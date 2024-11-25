@@ -1,13 +1,13 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
-import React, { FormEvent, useEffect, useState } from 'react'
-import authStyles from './Auth.module.css'
-import Button from '../base/Button'
-import { signOut } from 'next-auth/react'
-import { User } from 'next-auth'
-import { TextField } from '@mui/material'
 import { reset } from '@/services/serverFunctions/auth'
+import { TextField } from '@mui/material'
+import { User } from 'next-auth'
+import { signOut } from 'next-auth/react'
+import { useTranslations } from 'next-intl'
+import { FormEvent, useEffect, useState } from 'react'
+import Button from '../base/Button'
+import authStyles from './Auth.module.css'
 
 interface Props {
   user?: User

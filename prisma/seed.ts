@@ -1,8 +1,8 @@
-import { Command } from 'commander'
-import { EmissionFactorStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
-import { faker } from '@faker-js/faker'
 import { signPassword } from '@/services/auth'
 import getEmissionFactors from '@/services/baseEmpreinte/getEmissionFactors'
+import { faker } from '@faker-js/faker'
+import { EmissionFactorStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
+import { Command } from 'commander'
 import { ACTUALITIES } from './legacy_data/actualities'
 
 const program = new Command()

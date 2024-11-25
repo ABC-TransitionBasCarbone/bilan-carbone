@@ -1,6 +1,6 @@
-import Image from 'next/image'
-import React, { ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
+import { ReactNode } from 'react'
 import styles from './Public.module.css'
 
 interface Props {

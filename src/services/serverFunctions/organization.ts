@@ -1,11 +1,11 @@
 'use server'
 
-import { CreateOrganizationCommand } from './organization.command'
-import { auth } from '../auth'
-import { Prisma } from '@prisma/client'
 import { createOrganization } from '@/db/organization'
+import { Prisma } from '@prisma/client'
+import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateOrganization } from '../permissions/organization'
+import { CreateOrganizationCommand } from './organization.command'
 
 export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,

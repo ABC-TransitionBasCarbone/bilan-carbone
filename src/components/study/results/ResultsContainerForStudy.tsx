@@ -1,9 +1,9 @@
 'use server'
 
-import classNames from 'classnames'
-import styles from './ResultsContainer.module.css'
 import Box from '@/components/base/Box'
+import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
+import styles from './ResultsContainer.module.css'
 
 const ResultsContainerForStudy = async () => {
   const t = await getTranslations('results')

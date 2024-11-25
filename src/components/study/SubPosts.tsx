@@ -1,14 +1,15 @@
 'use client'
-import { Post, subPostsByPost } from '@/services/posts'
+
 import { FullStudy } from '@/db/study'
-import { useEffect, useMemo, useState } from 'react'
-import styles from './SubPosts.module.css'
-import classNames from 'classnames'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import { getEmissionsFactor } from '@/services/serverFunctions/emissionFactor'
-import { User } from 'next-auth'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { Post, subPostsByPost } from '@/services/posts'
+import { getEmissionsFactor } from '@/services/serverFunctions/emissionFactor'
+import classNames from 'classnames'
+import { User } from 'next-auth'
+import { useEffect, useMemo, useState } from 'react'
 import SubPost from './SubPost'
+import styles from './SubPosts.module.css'
 
 type StudyProps = {
   study: FullStudy

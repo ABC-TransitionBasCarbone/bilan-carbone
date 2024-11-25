@@ -1,7 +1,6 @@
 import OrganizationPage from '@/components/pages/Organization'
 import { getUserOrganizations } from '@/db/user'
 import { auth } from '@/services/auth'
-import React from 'react'
 
 const Organisation = async () => {
   const session = await auth()

@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import { useTranslations } from 'next-intl'
-import styles from './styles.module.css'
 import Block from '@/components/base/Block'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import styles from './styles.module.css'
 
 const contactMail = process.env.ABC_CONTACT_MAIL
 const privacyPoliticsLink = process.env.ABC_PRIVACY_POLICY_LINK

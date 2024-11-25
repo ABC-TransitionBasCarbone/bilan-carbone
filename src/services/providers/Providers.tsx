@@ -1,10 +1,10 @@
 'use client'
 
-import React, { ReactNode } from 'react'
 import { createTheme, THEME_ID, ThemeProvider } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import 'dayjs/locale/fr'
+import { ReactNode } from 'react'
 
 interface Props {
   children: ReactNode

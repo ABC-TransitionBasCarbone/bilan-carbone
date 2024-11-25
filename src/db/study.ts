@@ -1,6 +1,6 @@
+import { StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
-import { StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { getUserOrganizations } from './user'
 
 export const createStudy = (study: Prisma.StudyCreateInput) =>

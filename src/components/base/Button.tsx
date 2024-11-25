@@ -1,7 +1,6 @@
-import React from 'react'
 import { Button as ButtonMUI, ButtonProps } from '@mui/material'
-import styles from './Button.module.css'
 import classNames from 'classnames'
+import styles from './Button.module.css'
 
 const Button = ({ className, ...rest }: ButtonProps) => {
   return <ButtonMUI className={classNames(styles.button, className)} {...rest} />

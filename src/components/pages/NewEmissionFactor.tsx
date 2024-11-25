@@ -1,8 +1,7 @@
 import { useTranslations } from 'next-intl'
-import React from 'react'
-import NewEmissionFactorForm from '../emissionFactor/new/Form'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import NewEmissionFactorForm from '../emissionFactor/new/Form'
 
 const NewEmissionFactorPage = () => {
   const tNav = useTranslations('nav')

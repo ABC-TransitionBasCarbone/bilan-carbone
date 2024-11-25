@@ -1,8 +1,7 @@
-import { useTranslations } from 'next-intl'
-import React from 'react'
-import StudyDetails from '../study/StudyDetails'
-import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import { FullStudy } from '@/db/study'
+import { useTranslations } from 'next-intl'
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import StudyDetails from '../study/StudyDetails'
 
 interface Props {
   study: FullStudy

@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useState } from 'react'
-import styles from './StudyPostInfography.module.css'
 import { Study } from '@prisma/client'
+import { useState } from 'react'
+import { useTranslations } from 'use-intl'
 import Button from '../../base/Button'
 import PostInfography from './PostsInfography'
-import { useTranslations } from 'use-intl'
+import styles from './StudyPostInfography.module.css'
 
 interface Props {
   study: Study

@@ -1,10 +1,10 @@
 'use client'
 
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { useTranslations } from 'next-intl'
-import React, { useMemo } from 'react'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 
 interface Props {
   study: FullStudy

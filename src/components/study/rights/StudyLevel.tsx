@@ -1,18 +1,18 @@
 'use client'
 
+import { FormSelect } from '@/components/form/Select'
 import { FullStudy } from '@/db/study'
+import { changeStudyLevel } from '@/services/serverFunctions/study'
+import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
+import { getAllowedLevels } from '@/services/study'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { MenuItem } from '@mui/material'
 import { Level, Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import styles from './StudyPublicStatus.module.css'
-import { MenuItem } from '@mui/material'
-import { useForm } from 'react-hook-form'
-import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { useEffect, useMemo, useState } from 'react'
-import { FormSelect } from '@/components/form/Select'
-import { getAllowedLevels } from '@/services/study'
+import { useForm } from 'react-hook-form'
+import styles from './StudyPublicStatus.module.css'
 
 interface Props {
   user: User

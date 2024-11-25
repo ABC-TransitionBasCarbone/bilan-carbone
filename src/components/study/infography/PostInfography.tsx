@@ -1,12 +1,12 @@
 import { Post, subPostsByPost } from '@/services/posts'
-import { Study, SubPost } from '@prisma/client'
-import React, { useMemo } from 'react'
-import styles from './PostInfography.module.css'
-import { useTranslations } from 'next-intl'
-import classNames from 'classnames'
-import Link from 'next/link'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { Study, SubPost } from '@prisma/client'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { useMemo } from 'react'
 import PostIcon from './icons/PostIcon'
+import styles from './PostInfography.module.css'
 interface Props {
   study: Study
   post: Post | SubPost

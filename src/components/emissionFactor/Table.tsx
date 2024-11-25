@@ -1,19 +1,6 @@
 'use client'
 
-import { ChangeEvent, useMemo, useState } from 'react'
-import { useTranslations } from 'next-intl'
-import { Import } from '@prisma/client'
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  PaginationState,
-  getPaginationRowModel,
-} from '@tanstack/react-table'
-import Fuse from 'fuse.js'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import classNames from 'classnames'
-import styles from './Table.module.css'
 import {
   Checkbox,
   FormControl,
@@ -25,9 +12,22 @@ import {
   SelectChangeEvent,
   TextField,
 } from '@mui/material'
+import { Import } from '@prisma/client'
+import {
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  PaginationState,
+  useReactTable,
+} from '@tanstack/react-table'
+import classNames from 'classnames'
+import Fuse from 'fuse.js'
+import { useTranslations } from 'next-intl'
+import { ChangeEvent, useMemo, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import LinkButton from '../base/LinkButton'
+import styles from './Table.module.css'
 
 const fuseOptions = {
   keys: [

@@ -1,13 +1,13 @@
 'use client'
 
 import { TeamMember } from '@/db/user'
+import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { Role } from '@prisma/client'
-import SelectRole from './SelectRole'
 import Block from '../base/Block'
+import SelectRole from './SelectRole'
 
 interface Props {
   user: User

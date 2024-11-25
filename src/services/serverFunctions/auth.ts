@@ -1,7 +1,7 @@
 'use server'
 
-import jwt from 'jsonwebtoken'
 import { getUserByEmail, updateUserPasswordForEmail } from '@/db/user'
+import jwt from 'jsonwebtoken'
 import { redirect } from 'next/navigation'
 
 export const reset = async (email: string, password: string, token: string) => {
