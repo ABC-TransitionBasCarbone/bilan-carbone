@@ -1,16 +1,18 @@
+'use client'
+
 import { Post, subPostsByPost } from '@/services/posts'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { Box, LinearProgress } from '@mui/material'
 import { Study, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import PostIcon from './icons/PostIcon'
 import styles from './PostInfography.module.css'
 interface Props {
   study: Study
   post: Post | SubPost
-  hideSubPosts?: boolean
 }
 
 const colors: Record<Post, string> = {
@@ -26,8 +28,11 @@ const colors: Record<Post, string> = {
   UtilisationEtDependance: 'orange',
 }
 
-const PostInfography = ({ study, post, hideSubPosts }: Props) => {
+const PostInfography = ({ study, post }: Props) => {
+  const [showSubPosts, setShowSubPosts] = useState<boolean>(false)
+
   const t = useTranslations('emissionFactors.post')
+
   const mainPost = useMemo(() => {
     if (Object.keys(Post).includes(post)) {
       return post as Post
@@ -46,26 +51,38 @@ const PostInfography = ({ study, post, hideSubPosts }: Props) => {
 
   return (
     <Link
+      onMouseEnter={() => setShowSubPosts(true)}
+      onMouseLeave={() => setShowSubPosts(false)}
       data-testid="post-infography"
       href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${mainPost}`}
       className={styles[Object.keys(Post).includes(post) ? colors[post as Post] : 'green']}
     >
       <p className={classNames(styles.header, 'align-center')}>
-        <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
-        <span>{t(post)}</span>
-      </p>
-      {!hideSubPosts && subPosts && (
-        <div className={classNames(styles.subPosts, 'flex')}>
-          <ul className={classNames(styles.list, 'flex-col')}>
-            {subPosts.map((subPost) => (
-              <li className="align-center" key={subPost}>
-                <KeyboardArrowRightIcon />
-                {t(subPost)}
-              </li>
-            ))}
-          </ul>
+        <div className={classNames(styles.titleInfo)}>
+          <span>56 tCO2e</span>
+          <Box className={classNames(styles.progress)}>
+            <LinearProgress variant="determinate" value={50} />
+          </Box>
         </div>
-      )}
+        <div className={classNames(styles.title)}>
+          <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
+          <span>{t(post)}</span>
+        </div>
+      </p>
+      <div className={classNames(styles.subPostsContainer)}>
+        {showSubPosts && subPosts && (
+          <div className={classNames(styles.subPosts, 'flex')}>
+            <ul className={classNames(styles.list, 'flex-col')}>
+              {subPosts.map((subPost) => (
+                <li className="align-center" key={subPost}>
+                  <KeyboardArrowRightIcon />
+                  {t(subPost)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </Link>
   )
 }
