@@ -2,11 +2,10 @@ import NewStudyPage from '@/components/pages/NewStudy'
 import { getOrganizationUsers } from '@/db/organization'
 import { getUserOrganizations } from '@/db/user'
 import { auth } from '@/services/auth'
-import React from 'react'
 
 const NewStudy = async () => {
   const session = await auth()
-  if (!session) {
+  if (!session || !session.user.organizationId) {
     return null
   }
 

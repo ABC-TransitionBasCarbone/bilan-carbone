@@ -3,7 +3,7 @@ import { auth } from './auth'
 
 export const getEmissionFactors = async (locale: string) => {
   const session = await auth()
-  if (!session || !session.user) {
+  if (!session || !session.user.organizationId) {
     return []
   }
 

@@ -10,7 +10,7 @@
     "newStudyRight": "Ajouter une personne",
     "notFound": "Page non trouvé",
     "organization": "Organisation",
-    "studyRights": "Droits",
+    "studyRights": "Cadrage",
     "team": "Équipe"
   },
   "actuality": {
@@ -133,8 +133,14 @@
         "validation": {
           "email": "Veuillez utiliser un email valide",
           "emailRequired": "Veuillez entrer un email",
-          "external": "Attention, cette personne ne fait pas partie de l'organisation ou n'a pas de compte",
           "role": "Veuillez sélectionner un droit"
+        },
+        "dialog": {
+          "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
+          "otherOrganization": "Elle est utilisatrice du BC+ au sein d'une autre organisation que la votre.",
+          "nonExisting": "Elle n'est pas utilisatrice du BC+, vous ne pourrez donc lui donner un accès à l'étude qu'avec les droits de lecture ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
+          "accept": "Oui",
+          "decline": "Non"
         }
       },
       "newContributor": {

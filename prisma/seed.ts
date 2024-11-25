@@ -162,7 +162,7 @@ const users = async () => {
           isPublic: faker.datatype.boolean(),
           level: faker.helpers.enumValue(Level),
           name: faker.lorem.words({ min: 2, max: 5 }),
-          organizationId: creator.organizationId,
+          organizationId: creator.organizationId as string,
           versionId: emissionFactorsImportVersion.id,
           emissionSources: {
             createMany: {
@@ -194,7 +194,7 @@ const users = async () => {
       isPublic: false,
       level: faker.helpers.enumValue(Level),
       name: faker.lorem.words({ min: 2, max: 5 }),
-      organizationId: defaultUser.organizationId,
+      organizationId: defaultUser.organizationId as string,
       versionId: emissionFactorsImportVersion.id,
       emissionSources: {
         createMany: {

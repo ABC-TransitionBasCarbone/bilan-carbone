@@ -1,6 +1,6 @@
 'use client'
 
-import { SyntheticEvent, useCallback, useMemo, useState } from 'react'
+import { SyntheticEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { User } from 'next-auth'
@@ -15,7 +15,9 @@ import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { FormSelect } from '@/components/form/Select'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
-import { newStudyRight } from '@/services/serverFunctions/study'
+import { getNewStudyRightStatus, newStudyRight } from '@/services/serverFunctions/study'
+import NewStudyRightDialog from './NewStudyRightDialog'
+import { NewStudyRightStatus } from '@/services/study'
 
 interface Props {
   study: FullStudy
@@ -27,9 +29,9 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
-  const [externalUserWarning, setExternalUserWarning] = useState(false)
 
   const [error, setError] = useState('')
+  const [status, setStatus] = useState<NewStudyRightStatus>()
 
   const form = useForm<NewStudyRightCommand>({
     resolver: zodResolver(NewStudyRightCommandValidation),
@@ -43,28 +45,29 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
 
   const onEmailChange = (_: SyntheticEvent, value: string | null) => {
     form.setValue('email', value || '')
-    form.clearErrors('email')
-    checkIfUserIsExternalUser(value)
   }
 
-  const checkIfUserIsExternalUser = useCallback(
-    (value: string | null) => {
-      setExternalUserWarning(false)
-      const validEmail = NewStudyRightCommandValidation.shape.email.safeParse(value)
-      if (validEmail.success && !users.some((user) => user.email === validEmail.data)) {
-        setExternalUserWarning(true)
-      }
-    },
-    [users, setExternalUserWarning, NewStudyRightCommandValidation],
-  )
-
-  const onSubmit = async (command: NewStudyRightCommand) => {
-    const result = await newStudyRight(command)
+  const saveRight = async (command: NewStudyRightCommand) => {
+    const result = await newStudyRight(
+      status === NewStudyRightStatus.NonExisting ? { ...command, role: StudyRole.Reader } : command,
+    )
+    setStatus(undefined)
     if (result) {
       setError(result)
     } else {
       router.push(`/etudes/${study.id}/cadrage`)
       router.refresh()
+    }
+  }
+
+  const onSubmit = async (command: NewStudyRightCommand) => {
+    const status = await getNewStudyRightStatus(command.email)
+    if (status === NewStudyRightStatus.SameOrganization) {
+      await saveRight(command)
+    } else if (status === NewStudyRightStatus.OtherOrganization || status === NewStudyRightStatus.NonExisting) {
+      setStatus(status)
+    } else {
+      setError(error)
     }
   }
 
@@ -82,43 +85,55 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   )
 
   return (
-    <Form onSubmit={form.handleSubmit(onSubmit)}>
-      <FormAutocomplete
-        data-testid="study-rights-email"
-        control={form.control}
-        translation={t}
-        options={usersOptions}
-        getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
-        filterOptions={(options, { inputValue }) =>
-          options.filter((option) =>
-            typeof option === 'string' ? option : option.label.toLowerCase().includes(inputValue.toLowerCase()),
-          )
-        }
-        name="email"
-        label={t('email')}
-        onInputChange={onEmailChange}
-        helperText={externalUserWarning ? t('validation.external') : ''}
-        freeSolo
+    <>
+      <Form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormAutocomplete
+          data-testid="study-rights-email"
+          control={form.control}
+          translation={t}
+          options={usersOptions}
+          getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
+          filterOptions={(options, { inputValue }) =>
+            options.filter((option) =>
+              typeof option === 'string' ? option : option.label.toLowerCase().includes(inputValue.toLowerCase()),
+            )
+          }
+          name="email"
+          label={t('email')}
+          onInputChange={onEmailChange}
+          freeSolo
+        />
+        <FormSelect
+          control={form.control}
+          translation={t}
+          name="role"
+          label={t('role')}
+          data-testid="study-rights-role"
+        >
+          {Object.keys(StudyRole)
+            .filter(
+              (role) =>
+                user.role === Role.ADMIN ||
+                (userRoleOnStudy && userRoleOnStudy.role === StudyRole.Validator) ||
+                role !== StudyRole.Validator,
+            )
+            .map((key) => (
+              <MenuItem key={key} value={key}>
+                {tRole(key)}
+              </MenuItem>
+            ))}
+        </FormSelect>
+        <Button type="submit" disabled={form.formState.isSubmitting} data-testid="study-rights-create-button">
+          {t('create')}
+        </Button>
+        {error && <p>{error}</p>}
+      </Form>
+      <NewStudyRightDialog
+        status={status}
+        decline={() => setStatus(undefined)}
+        accept={() => saveRight(form.getValues())}
       />
-      <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="study-rights-role">
-        {Object.keys(StudyRole)
-          .filter(
-            (role) =>
-              user.role === Role.ADMIN ||
-              (userRoleOnStudy && userRoleOnStudy.role === StudyRole.Validator) ||
-              role !== StudyRole.Validator,
-          )
-          .map((key) => (
-            <MenuItem key={key} value={key}>
-              {tRole(key)}
-            </MenuItem>
-          ))}
-      </FormSelect>
-      <Button type="submit" disabled={form.formState.isSubmitting} data-testid="study-rights-create-button">
-        {t('create')}
-      </Button>
-      {error && <p>{error}</p>}
-    </Form>
+    </>
   )
 }
 

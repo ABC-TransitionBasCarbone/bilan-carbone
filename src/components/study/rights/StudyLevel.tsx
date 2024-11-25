@@ -43,9 +43,12 @@ const StudyLevel = ({ user, study, userRoleOnStudy }: Props) => {
       setError(result)
     }
   }
+
   useEffect(() => {
-    onSubmit(form.getValues())
-  }, [level])
+    if (level !== study.level) {
+      onSubmit(form.getValues())
+    }
+  }, [level, form, study])
 
   const allowedLevels = useMemo(() => getAllowedLevels(user.level), [user])
   return (

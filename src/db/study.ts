@@ -94,6 +94,7 @@ export const getStudyById = async (id: string) => {
           user: {
             select: {
               email: true,
+              organizationId: true,
             },
           },
           subPost: true,
@@ -105,6 +106,7 @@ export const getStudyById = async (id: string) => {
           user: {
             select: {
               email: true,
+              organizationId: true,
             },
           },
           role: true,

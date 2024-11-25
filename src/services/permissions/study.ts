@@ -5,7 +5,8 @@ import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudie
 import { checkOrganization } from './organization'
 import { getAllowedLevels } from '../study'
 
-const checkLevel = (userLevel: Level, studyLevel: Level) => getAllowedLevels(studyLevel).includes(userLevel)
+const checkLevel = (userLevel: Level | null, studyLevel: Level) =>
+  userLevel ? getAllowedLevels(studyLevel).includes(userLevel) : false
 
 export const canReadStudy = async (
   user: User | UserWithAllowedStudies,
@@ -111,8 +112,12 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
   return true
 }
 
-export const canAddRightOnStudy = (user: User, study: FullStudy, newUser: DbUser, role: StudyRole) => {
-  if (user.id === newUser.id) {
+export const canAddRightOnStudy = (user: User, study: FullStudy, newUser: DbUser | null, role: StudyRole) => {
+  if (newUser && user.id === newUser.id) {
+    return false
+  }
+
+  if ((!newUser || !newUser.organizationId) && role !== StudyRole.Reader) {
     return false
   }
 
