@@ -4,6 +4,7 @@ describe('Create study', () => {
   beforeEach(() => {
     cy.exec('npx prisma db seed')
     cy.intercept('POST', '/etudes/*/cadrage/ajouter').as('create')
+    cy.intercept('POST', '/etudes/*/cadrage').as('update')
   })
 
   it('should set user as editor and manage role', () => {
@@ -39,6 +40,7 @@ describe('Create study', () => {
     cy.get('[data-value="Reader"]').click()
 
     cy.getByTestId('study-rights-create-button').click()
+    cy.getByTestId('new-study-right-dialog-accept').click()
     cy.wait('@create')
 
     cy.getByTestId('study-rights-table-line').eq(1).contains('bc-default-1@yopmail.comLecteur')
@@ -52,16 +54,12 @@ describe('Create study', () => {
 
     cy.getByTestId('study-rights-email').should('be.visible')
     cy.getByTestId('study-rights-email').type('bc-admin-1@yopmail.com')
-    cy.getByTestId('email-autocomplete-helper-text').should('be.visible')
-    cy.getByTestId('email-autocomplete-helper-text').should(
-      'have.text',
-      "Attention, cette personne ne fait pas partie de l'organisation ou n'a pas de compte",
-    )
 
     cy.getByTestId('study-rights-role').click()
     cy.get('[data-value="Reader"]').click()
 
     cy.getByTestId('study-rights-create-button').click()
+    cy.getByTestId('new-study-right-dialog-accept').click()
     cy.wait('@create')
 
     cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comLecteur')
@@ -72,6 +70,7 @@ describe('Create study', () => {
         cy.get('.MuiSelect-select').click()
       })
     cy.get('[data-value="Editor"]').click()
+    cy.wait('@update')
 
     cy.reload()
 

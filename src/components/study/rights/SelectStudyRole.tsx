@@ -4,18 +4,19 @@ import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { changeStudyRole } from '@/services/serverFunctions/study'
+import { FullStudy } from '@/db/study'
 
 interface Props {
   user: User
   userRole?: StudyRole
-  email: string
+  rowUser: FullStudy['allowedUsers'][0]['user']
   studyId: string
   currentRole: StudyRole
 }
 
-const SelectStudyRole = ({ user, email, studyId, currentRole, userRole }: Props) => {
+const SelectStudyRole = ({ user, rowUser, studyId, currentRole, userRole }: Props) => {
   const t = useTranslations('study.role')
   const [role, setRole] = useState(currentRole)
   useEffect(() => {
@@ -26,7 +27,7 @@ const SelectStudyRole = ({ user, email, studyId, currentRole, userRole }: Props)
     const newRole = event.target.value as StudyRole
     setRole(newRole)
     if (newRole !== role) {
-      changeStudyRole(studyId, email, newRole)
+      changeStudyRole(studyId, rowUser.email, newRole)
     }
   }
 
@@ -37,12 +38,13 @@ const SelectStudyRole = ({ user, email, studyId, currentRole, userRole }: Props)
       value={role}
       onChange={selectNewRole}
       disabled={
-        user.email === email ||
+        user.email === rowUser.email ||
         (currentRole === StudyRole.Validator && userRole !== StudyRole.Validator && user.role !== Role.ADMIN)
       }
     >
       {Object.keys(StudyRole)
         .filter((role) => role !== StudyRole.Validator || user.role === Role.ADMIN || userRole === StudyRole.Validator)
+        .filter((role) => rowUser.organizationId || role === StudyRole.Reader)
         .map((role) => (
           <MenuItem key={role} value={role}>
             {t(role)}

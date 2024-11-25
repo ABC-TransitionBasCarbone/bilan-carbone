@@ -46,8 +46,10 @@ const StudyPublicStatus = ({ user, study, userRoleOnStudy }: Props) => {
     }
   }
   useEffect(() => {
-    onSubmit(form.getValues())
-  }, [isPublic])
+    if (isPublic !== study.isPublic.toString()) {
+      onSubmit(form.getValues())
+    }
+  }, [isPublic, study, form])
 
   return (
     <div className="pb2">

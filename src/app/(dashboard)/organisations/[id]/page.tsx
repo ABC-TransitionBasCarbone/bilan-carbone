@@ -14,7 +14,7 @@ const OrganizationView = async (props: Props) => {
   const session = await auth()
 
   const id = params.id
-  if (!id || !session) {
+  if (!id || !session || !session.user.organizationId) {
     return <NotFound />
   }
 

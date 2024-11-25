@@ -11,7 +11,7 @@ export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,
 ): Promise<{ message: string; success: false } | { id: string; success: true }> => {
   const session = await auth()
-  if (!session || !session.user) {
+  if (!session || !session.user.organizationId) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 

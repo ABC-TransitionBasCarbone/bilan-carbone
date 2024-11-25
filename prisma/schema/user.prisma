@@ -10,11 +10,11 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId String       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       @map("organization_id")
 
   role           Role
-  level          Level
+  level          Level?
   firstName      String         @map("first_name")
   lastName       String         @map("last_name")
   email          String         @unique
