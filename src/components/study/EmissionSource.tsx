@@ -12,7 +12,7 @@ import {
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getQualityRating } from '@/services/uncertainty'
 import EditIcon from '@mui/icons-material/Edit'
-import { FormControlLabel, Switch } from '@mui/material'
+import { Alert, CircularProgress, FormControlLabel, Switch } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -48,10 +48,12 @@ const EmissionSource = ({
   withoutDetail,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const ref = useRef<HTMLDivElement>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const tError = useTranslations('error')
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tQuality = useTranslations('quality')
-
   const router = useRouter()
   const [display, setDisplay] = useState(false)
 
@@ -62,16 +64,28 @@ const EmissionSource = ({
   const update = useCallback(
     async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => {
       if (key) {
-        const command = {
-          emissionSourceId: emissionSource.id,
-          [key]: value,
+        if (value === emissionSource[key as keyof typeof emissionSource]) {
+          return
         }
-        const isValid = UpdateEmissionSourceCommandValidation.safeParse(command)
-        if (isValid.success) {
-          const result = await updateEmissionSource(isValid.data)
-          if (!result) {
+        setLoading(true)
+        try {
+          const command = {
+            emissionSourceId: emissionSource.id,
+            [key]: value,
+          }
+          const isValid = UpdateEmissionSourceCommandValidation.safeParse(command)
+          if (isValid.success) {
+            const result = await updateEmissionSource(isValid.data)
+            if (result) {
+              setError(result)
+            }
+            setLoading(false)
             router.refresh()
           }
+        } catch {
+          setError('default')
+        } finally {
+          setLoading(false)
         }
       }
     },
@@ -129,7 +143,13 @@ const EmissionSource = ({
             </p>
           )}
           <p data-testid="emission-source-status" className={styles.status}>
-            {t(`status.${status}`)}
+            {loading ? (
+              <>
+                {t('saving')} <CircularProgress size="1rem" />
+              </>
+            ) : (
+              t(`status.${status}`)
+            )}
           </p>
         </div>
         <div className={classNames(styles.infosRight, 'flex')}>
@@ -174,6 +194,11 @@ const EmissionSource = ({
       <div id={detailId} className={classNames(styles.detail, { [styles.displayed]: display })} ref={ref}>
         {display && (
           <div className={styles.detailContent}>
+            {error && (
+              <Alert className="mb1" severity="error">
+                {tError(error)}
+              </Alert>
+            )}
             <div className="justify-between align-center">
               <p>{t('informations')}</p>
               <div>

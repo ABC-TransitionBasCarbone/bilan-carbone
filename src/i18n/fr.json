@@ -500,6 +500,7 @@
     }
   },
   "emissionSource": {
+    "saving": "Sauvegarde en cours...",
     "status": {
       "valid": "Validée",
       "waiting": "En attente",
@@ -544,5 +545,9 @@
     "3": "Moyenne",
     "4": "Bonne",
     "5": "Très bonne"
+  },
+  "error": {
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support."
   }
 }

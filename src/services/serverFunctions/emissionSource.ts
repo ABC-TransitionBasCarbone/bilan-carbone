@@ -36,6 +36,7 @@ export const updateEmissionSource = async ({
   ...command
 }: UpdateEmissionSourceCommand) => {
   const session = await auth()
+  return NOT_AUTHORIZED
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
