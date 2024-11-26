@@ -143,12 +143,12 @@ const EmissionSource = ({
             </p>
           )}
           <p data-testid="emission-source-status" className={styles.status}>
-            {loading ? (
+            {t(`status.${status}`)}
+            {loading && (
               <>
-                {t('saving')} <CircularProgress size="1rem" />
+                {' '}
+                - {t('saving')} <CircularProgress size="1rem" />
               </>
-            ) : (
-              t(`status.${status}`)
             )}
           </p>
         </div>
