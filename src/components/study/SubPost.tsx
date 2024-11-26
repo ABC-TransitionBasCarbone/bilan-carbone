@@ -1,6 +1,9 @@
 import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { Post } from '@/services/posts'
+import { downloadStudySubPosts } from '@/services/study'
+import DownloadIcon from '@mui/icons-material/Download'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
@@ -21,12 +24,14 @@ type StudyWithoutDetailProps = {
 }
 
 interface Props {
+  post: Post
   subPost: SubPostEnum
   userRoleOnStudy: StudyRole | null
   emissionFactors: EmissionFactorWithMetaData[]
 }
 
 const SubPost = ({
+  post,
   subPost,
   withoutDetail,
   study,
@@ -50,6 +55,13 @@ const SubPost = ({
     [study, subPost, withoutDetail],
   )
 
+  const donwloadSubPost = (
+    emissionSources: FullStudy['emissionSources'] | StudyWithoutDetail['emissionSources'],
+    subPost: SubPostEnum,
+  ) => {
+    downloadStudySubPosts(study, post, subPost, emissionSources, emissionFactors)
+  }
+
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <Accordion>
       <AccordionSummary
@@ -57,13 +69,18 @@ const SubPost = ({
         aria-controls={`panel-${subPost}-content`}
         data-testid="subpost"
       >
-        <p>
+        <div className="flex align-center">
           {tPost(subPost)}
-          <span className={styles.count}> - {t('emissionSource', { count: emissionSources.length })}</span>
-          {contributors && contributors.length > 0 && (
-            <span className={styles.count}> - {t('contributors', { count: contributors.length })}</span>
+          {emissionSources.length > 0 && (
+            <DownloadIcon
+              onClick={(event) => {
+                event.stopPropagation()
+                donwloadSubPost(emissionSources, subPost)
+              }}
+            />
           )}
-        </p>
+          <span className={styles.count}> - {t('emissionSource', { count: emissionSources.length })}</span>
+        </div>
       </AccordionSummary>
       <AccordionDetails id={`panel-${subPost}-content`}>
         {contributors && contributors.length > 0 && (
