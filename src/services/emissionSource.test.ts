@@ -29,6 +29,7 @@ const defaultEmissionSource = {
   temporalRepresentativeness: 2,
   geographicRepresentativeness: 4,
   completeness: null,
+  contributor: null,
 } satisfies FullStudy['emissionSources'][0]
 
 describe('emissionSource Service', () => {
@@ -37,8 +38,9 @@ describe('emissionSource Service', () => {
       const result = getEmissionResults(defaultEmissionSource)
       expect(result).toEqual({
         emission: 1200,
-        confidenceInterval: [634.4420232775785, 2269.7109383783313],
-        alpha: 0.8914257819819428,
+        confidenceInterval: [516.2597423212065, 2789.2936093088983],
+        alpha: 1.3244113410907485,
+        standardDeviation: 2.3244113410907485,
       })
     })
 

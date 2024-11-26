@@ -63,13 +63,13 @@ describe('Create study', () => {
     })
     cy.getByTestId('emission-source-result').should(
       'have.text',
-      'Résultats :Émission :50616.00 kgCO₂eQualité :Très bonneIntervalle de confiance à 95% :[50518.29; 50713.90]Alpha :0.00',
+      'Résultats :Émission :50616.00 kgCO₂eQualité :Très bonneIntervalle de confiance à 95% :[48019.73; 53352.64]Alpha :0.05',
     )
     cy.getByTestId('emission-source-technicalRepresentativeness').click()
     cy.get('[data-value="1"]').click()
     cy.getByTestId('emission-source-result').should(
       'have.text',
-      'Résultats :Émission :50616.00 kgCO₂eQualité :MauvaiseIntervalle de confiance à 95% :[49242.03; 52028.31]Alpha :0.03',
+      'Résultats :Émission :50616.00 kgCO₂eQualité :MauvaiseIntervalle de confiance à 95% :[25257.51; 101434.38]Alpha :1.00',
     )
     cy.getByTestId('emission-source-geographicRepresentativeness').click()
     cy.get('[data-value="2"]').click()

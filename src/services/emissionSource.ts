@@ -2,7 +2,7 @@ import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from './permissions/study'
 import { getQualityStandardDeviation } from './uncertainty'
 
-const getConfidenceInterval = (
+const getStandardDeviation = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
   emission: number | null,
 ) => {
@@ -15,10 +15,13 @@ const getConfidenceInterval = (
     return null
   }
 
-  const standardDeviation = Math.exp(
-    2 * Math.sqrt(Math.pow(Math.log(factorStandardDeviation), 2) * Math.pow(Math.log(emissionStandardDeviation), 2)),
+  return Math.exp(
+    2 *
+      Math.sqrt(
+        Math.pow(Math.log(Math.sqrt(factorStandardDeviation)), 2) +
+          Math.pow(Math.log(Math.sqrt(emissionStandardDeviation)), 2),
+      ),
   )
-  return [emission / standardDeviation, emission * standardDeviation]
 }
 
 const getAlpha = (emission: number | null, confidenceInterval: number[] | null) => {
@@ -34,11 +37,31 @@ export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDeta
     return null
   }
   const emission = emissionSource.emissionFactor.totalCo2 * emissionSource.value
-  const confidenceInterval = getConfidenceInterval(emissionSource, emission)
+  const standardDeviation = getStandardDeviation(emissionSource, emission)
+  const confidenceInterval = standardDeviation ? [emission / standardDeviation, emission * standardDeviation] : null
   const alpha = getAlpha(emission, confidenceInterval)
+
   return {
     emission,
+    standardDeviation,
     confidenceInterval,
     alpha,
   }
+}
+
+export const sumEmissionSourcesResults = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources']) => {
+  const results = emissionSource.map(getEmissionResults).filter((result) => result !== null)
+  const total = results.reduce((acc, result) => acc + result.emission, 0)
+  return Math.pow(
+    Math.exp(
+      Math.sqrt(
+        results.reduce(
+          (acc, result) =>
+            acc + Math.pow(result.emission / total, 2) * Math.pow(Math.log(result.standardDeviation || 1), 2),
+          0,
+        ),
+      ),
+    ),
+    2,
+  )
 }
