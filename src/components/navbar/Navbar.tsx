@@ -1,8 +1,8 @@
 import classNames from 'classnames'
-import styles from './Navbar.module.css'
-import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
+import Link from 'next/link'
+import styles from './Navbar.module.css'
 
 const Navbar = () => {
   const t = useTranslations('navigation')

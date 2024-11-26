@@ -1,14 +1,14 @@
-import { Suspense } from 'react'
-import { useTranslations } from 'next-intl'
-import OrganizationInfo from '../organization/Info'
 import { OrganizationWithSites } from '@/db/user'
-import { User } from 'next-auth'
-import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import classNames from 'classnames'
-import styles from './Organization.module.css'
+import { User } from 'next-auth'
+import { useTranslations } from 'next-intl'
+import { Suspense } from 'react'
+import Block from '../base/Block'
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import OrganizationInfo from '../organization/Info'
 import Studies from '../study/StudiesContainer'
 import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
-import Block from '../base/Block'
+import styles from './Organization.module.css'
 
 interface Props {
   organizations: OrganizationWithSites[]

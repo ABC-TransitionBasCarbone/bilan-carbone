@@ -1,12 +1,12 @@
-import { Suspense } from 'react'
+import { getUserOrganizations } from '@/db/user'
 import classNames from 'classnames'
 import { User } from 'next-auth'
-import styles from './styles.module.css'
-import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
-import { getUserOrganizations } from '@/db/user'
+import { Suspense } from 'react'
 import Actualities from '../actuality/Actualities'
 import Organizations from '../organization/OrganizationsContainer'
+import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Studies from '../study/StudiesContainer'
+import styles from './styles.module.css'
 
 interface Props {
   user: User

@@ -1,11 +1,11 @@
 import { TeamMember } from '@/db/user'
+import { Role } from '@prisma/client'
+import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
-import { Role } from '@prisma/client'
-import styles from './PendingInvitations.module.css'
-import classNames from 'classnames'
-import PendingInvitationsActions from './PendingInvitationsActions'
 import Block from '../base/Block'
+import styles from './PendingInvitations.module.css'
+import PendingInvitationsActions from './PendingInvitationsActions'
 
 interface Props {
   user: User

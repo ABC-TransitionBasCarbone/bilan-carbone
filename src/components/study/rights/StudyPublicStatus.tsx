@@ -1,20 +1,20 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
-import { Role, StudyRole } from '@prisma/client'
-import { User } from 'next-auth'
-import { useTranslations } from 'next-intl'
-import styles from './StudyPublicStatus.module.css'
 import { FormRadio } from '@/components/form/Radio'
-import { FormControlLabel, Radio } from '@mui/material'
-import { useForm } from 'react-hook-form'
+import { FullStudy } from '@/db/study'
+import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
 import {
   ChangeStudyPublicStatusCommand,
   ChangeStudyPublicStatusCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
+import { FormControlLabel, Radio } from '@mui/material'
+import { Role, StudyRole } from '@prisma/client'
+import { User } from 'next-auth'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import styles from './StudyPublicStatus.module.css'
 
 interface Props {
   user: User

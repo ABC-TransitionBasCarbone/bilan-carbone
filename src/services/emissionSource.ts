@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
-import { getQualityStandardDeviation } from './uncertainty'
 import { StudyWithoutDetail } from './permissions/study'
+import { getQualityStandardDeviation } from './uncertainty'
 
 const getConfidenceInterval = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],

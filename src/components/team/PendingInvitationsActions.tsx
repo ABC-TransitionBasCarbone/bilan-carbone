@@ -1,13 +1,12 @@
 'use client'
 
 import { TeamMember } from '@/db/user'
-import classNames from 'classnames'
-import React from 'react'
-import styles from './PendingInvitationsActions.module.css'
 import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
-import Button from '../base/Button'
-import { useRouter } from 'next/navigation'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
+import Button from '../base/Button'
+import styles from './PendingInvitationsActions.module.css'
 
 interface Props {
   member: TeamMember

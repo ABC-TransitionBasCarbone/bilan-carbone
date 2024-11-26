@@ -1,12 +1,12 @@
-import { UseFormReturn } from 'react-hook-form'
-import { useTranslations } from 'next-intl'
-import styles from './EmissionFactorPartForm.module.css'
-import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
-import ExpandIcon from '@mui/icons-material/ExpandMore'
-import DetailedGESFields from './DetailedGESFields'
 import { FormTextField } from '@/components/form/TextField'
+import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import ExpandIcon from '@mui/icons-material/ExpandMore'
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import { UseFormReturn } from 'react-hook-form'
+import DetailedGESFields from './DetailedGESFields'
+import styles from './EmissionFactorPartForm.module.css'
 
 interface DetailedGESFieldsProps {
   form: UseFormReturn<CreateEmissionFactorCommand>

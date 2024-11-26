@@ -1,9 +1,9 @@
+import { getUserByEmail } from '@/db/user'
+import { Level, Role } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { Level, Role } from '@prisma/client'
-import { getUserByEmail } from '@/db/user'
 
 export const signPassword = async (password: string) => {
   const salt = await bcrypt.genSalt(10)

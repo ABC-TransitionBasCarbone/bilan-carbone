@@ -1,6 +1,6 @@
-import { User } from 'next-auth'
 import { getOrganizationById } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
+import { User } from 'next-auth'
 
 export const checkOrganization = async (userOrganizationId: string | null, organizationId: string) => {
   if (userOrganizationId === organizationId) {

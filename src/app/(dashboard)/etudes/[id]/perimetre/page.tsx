@@ -1,11 +1,10 @@
 import NotFound from '@/components/pages/NotFound'
+import StudyPerimeterPage from '@/components/pages/StudyPerimeter'
+import { getOrganizationWithSitesById } from '@/db/organization'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { UUID } from 'crypto'
-import React from 'react'
-import StudyPerimeterPage from '@/components/pages/StudyPerimeter'
-import { getOrganizationWithSitesById } from '@/db/organization'
 
 interface Props {
   params: Promise<{

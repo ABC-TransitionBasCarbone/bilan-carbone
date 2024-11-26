@@ -1,9 +1,8 @@
-import { Study, SubPost } from '@prisma/client'
-import React from 'react'
 import { Post } from '@/services/posts'
-import styles from './PostsInfography.module.css'
+import { Study, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import PostInfography from './PostInfography'
+import styles from './PostsInfography.module.css'
 
 interface Props {
   study: Study

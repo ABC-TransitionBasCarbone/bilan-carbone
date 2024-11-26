@@ -1,7 +1,7 @@
-import styles from './Breadcrumbs.module.css'
-import Link from '../base/Link'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import classNames from 'classnames'
+import Link from '../base/Link'
+import styles from './Breadcrumbs.module.css'
 
 const Breadcrumbs = ({ links, current }: { links: { label: string; link: string }[]; current: string }) => {
   return (

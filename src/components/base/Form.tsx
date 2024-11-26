@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React, { FormHTMLAttributes } from 'react'
+import { FormHTMLAttributes } from 'react'
 import styles from './Form.module.css'
 
 const Form = ({ className, ...props }: FormHTMLAttributes<HTMLFormElement>) => {

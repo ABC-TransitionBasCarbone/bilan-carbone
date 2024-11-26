@@ -1,11 +1,11 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
-import React, { FormEvent, useEffect, useState } from 'react'
-import authStyles from './Auth.module.css'
-import Button from '../base/Button'
-import { useSearchParams } from 'next/navigation'
 import { TextField } from '@mui/material'
+import { useTranslations } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
+import { FormEvent, useEffect, useState } from 'react'
+import Button from '../base/Button'
+import authStyles from './Auth.module.css'
 
 interface Props {
   reset: (email: string) => Promise<void>

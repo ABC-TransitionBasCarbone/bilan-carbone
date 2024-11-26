@@ -1,8 +1,7 @@
 import { useTranslations } from 'next-intl'
-import React from 'react'
-import NewMemberForm from '../team/NewMemberForm'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import NewMemberForm from '../team/NewMemberForm'
 
 const NewMemberPage = () => {
   const tNav = useTranslations('nav')

@@ -1,8 +1,8 @@
 import { signPassword } from '@/services/auth'
-import { prismaClient } from './client'
-import { User } from 'next-auth'
 import { findUserInfo } from '@/services/permissions/user'
 import { Prisma, Role } from '@prisma/client'
+import { User } from 'next-auth'
+import { prismaClient } from './client'
 
 export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
 

@@ -1,5 +1,5 @@
-import { getQualityRating, getQualityStandardDeviation } from './uncertainty'
 import { expect } from '@jest/globals'
+import { getQualityRating, getQualityStandardDeviation } from './uncertainty'
 
 describe('Uncertainty Service', () => {
   describe('getQualityStandardDeviation', () => {

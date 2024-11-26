@@ -1,7 +1,7 @@
 'use server'
 
-import { getTranslations } from 'next-intl/server'
 import NewOrganizationForm from '@/components/organization/new/Form'
+import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 const NewOrganizationPage = async () => {

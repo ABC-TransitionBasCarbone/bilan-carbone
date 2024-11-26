@@ -1,7 +1,7 @@
-import classNames from 'classnames'
 import { Actuality } from '@prisma/client'
-import styles from './styles.module.css'
+import classNames from 'classnames'
 import { useFormatter } from 'next-intl'
+import styles from './styles.module.css'
 
 interface Props {
   actuality: Actuality

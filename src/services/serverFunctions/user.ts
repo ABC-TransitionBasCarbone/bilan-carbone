@@ -1,13 +1,13 @@
 'use server'
 
-import jwt from 'jsonwebtoken'
 import { addUser, changeUserRole, deleteUser, getUserByEmail, updateUserResetTokenForEmail } from '@/db/user'
+import { Role } from '@prisma/client'
+import jwt from 'jsonwebtoken'
 import { auth } from '../auth'
+import { sendNewInvitation } from '../email/email'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 import { AddMemberCommand } from './user.command'
-import { sendNewInvitation } from '../email/email'
-import { Role } from '@prisma/client'
 
 export const sendInvitation = async (email: string) => {
   const resetToken = Math.random().toString(36)

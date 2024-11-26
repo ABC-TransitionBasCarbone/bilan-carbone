@@ -1,11 +1,11 @@
-import classNames from 'classnames'
-import { useTranslations } from 'next-intl'
-import styles from './OrganizationsContainer.module.css'
-import Organizations from './Organizations'
-import Box from '../base/Box'
-import LinkButton from '../base/LinkButton'
 import NewspaperIcon from '@mui/icons-material/Newspaper'
 import { Organization } from '@prisma/client'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import Box from '../base/Box'
+import LinkButton from '../base/LinkButton'
+import Organizations from './Organizations'
+import styles from './OrganizationsContainer.module.css'
 
 interface Props {
   organizations: Organization[]

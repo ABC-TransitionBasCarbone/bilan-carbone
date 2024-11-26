@@ -1,12 +1,12 @@
-import { Post } from '@/services/posts'
 import { FullStudy } from '@/db/study'
+import { Post } from '@/services/posts'
+import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import SubPosts from '../study/SubPosts'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
-import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import PostIcon from '../study/infography/icons/PostIcon'
-import { User } from 'next-auth'
 
 interface Props {
   post: Post

@@ -1,16 +1,15 @@
 'use client'
 
-import React from 'react'
-import styles from './EmissionSource.module.css'
-import { TextField } from '@mui/material'
-import EmissionSourceFactor from './EmissionSourceFactor'
-import classNames from 'classnames'
-import QualitySelect from '../form/QualitySelect'
-import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
-import { Path } from 'react-hook-form'
-import { useTranslations } from 'next-intl'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { TextField } from '@mui/material'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import { Path } from 'react-hook-form'
+import QualitySelect from '../form/QualitySelect'
+import styles from './EmissionSource.module.css'
+import EmissionSourceFactor from './EmissionSourceFactor'
 
 interface Props {
   emissionSource: StudyWithoutDetail['emissionSources'][0]

@@ -1,15 +1,14 @@
 import { Post } from '@/services/posts'
-import React from 'react'
-import { EnergiesIcon } from './energies'
 import { AutresEmissionsNonEnergetiquesIcon } from './autresemissionsnonenergetiques'
 import { DechetsDirectsIcon } from './dechetsdirects'
 import { DeplacementsIcon } from './deplacements'
-import { ImmobilisationsIcon } from './immobilisations'
+import { EnergiesIcon } from './energies'
 import { FinDeVieIcon } from './findevie'
-import { UtilisationEtDependanceIcon } from './utilisationetdependance'
-import { IntrantsBienEtMatieresIcon } from './intrantsbienetmatieres'
 import { FretIcon } from './fret'
+import { ImmobilisationsIcon } from './immobilisations'
+import { IntrantsBienEtMatieresIcon } from './intrantsbienetmatieres'
 import { IntrantsServicesIcon } from './intrantsservices'
+import { UtilisationEtDependanceIcon } from './utilisationetdependance'
 
 interface Props {
   post: Post

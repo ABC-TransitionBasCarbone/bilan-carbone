@@ -1,12 +1,12 @@
 'use server'
 
-import classNames from 'classnames'
-import styles from './ResultsContainer.module.css'
 import Box from '@/components/base/Box'
-import { getTranslations } from 'next-intl/server'
-import { User } from 'next-auth'
 import { getMainStudy } from '@/db/study'
 import { canReadStudy } from '@/services/permissions/study'
+import classNames from 'classnames'
+import { User } from 'next-auth'
+import { getTranslations } from 'next-intl/server'
+import styles from './ResultsContainer.module.css'
 
 interface Props {
   user: User

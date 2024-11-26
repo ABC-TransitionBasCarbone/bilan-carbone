@@ -1,16 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useTranslations } from 'next-intl'
-import { UseFormReturn } from 'react-hook-form'
-import classNames from 'classnames'
-import styles from './DetailedGES.module.css'
 import { FormTextField } from '@/components/form/TextField'
+import { gazKeys } from '@/constants/emissions'
 import { CreateEmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
+import { UseFormReturn } from 'react-hook-form'
+import styles from './DetailedGES.module.css'
 import DetailedGESFields from './DetailedGESFields'
 import EmissionFactorPartForm from './EmissionFactorPartForm'
-import { gazKeys } from '@/constants/emissions'
 
 interface Props {
   form: UseFormReturn<CreateEmissionFactorCommand>

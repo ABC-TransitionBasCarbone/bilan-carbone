@@ -1,12 +1,12 @@
 'use client'
 
+import { FullStudy } from '@/db/study'
+import { changeStudyRole } from '@/services/serverFunctions/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import { changeStudyRole } from '@/services/serverFunctions/study'
-import { FullStudy } from '@/db/study'
 
 interface Props {
   user: User

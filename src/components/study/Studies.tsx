@@ -1,12 +1,11 @@
 'use server'
 
-import React from 'react'
-import styles from './Studies.module.css'
+import { getStudiesByUser, getStudiesByUserAndOrganization } from '@/db/study'
+import { filterAllowedStudies } from '@/services/permissions/study'
 import classNames from 'classnames'
 import { User } from 'next-auth'
-import { getStudiesByUserAndOrganization, getStudiesByUser } from '@/db/study'
-import { filterAllowedStudies } from '@/services/permissions/study'
 import Link from '../base/Link'
+import styles from './Studies.module.css'
 
 interface Props {
   user: User

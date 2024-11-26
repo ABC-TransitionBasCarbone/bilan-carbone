@@ -1,15 +1,15 @@
 'use server'
 
-import { getUserByEmail } from '@/db/user'
-import { auth } from '../auth'
-import { CreateEmissionFactorCommand } from './emissionFactor.command'
-import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
-import { getLocale } from '@/i18n/locale'
 import { prismaClient } from '@/db/client'
 import { createEmissionFactor } from '@/db/emissionFactors'
+import { getUserByEmail } from '@/db/user'
+import { getLocale } from '@/i18n/locale'
+import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
+import { auth } from '../auth'
+import { getEmissionFactors } from '../emissionFactors'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
-import { getEmissionFactors } from '../emissionFactors'
+import { CreateEmissionFactorCommand } from './emissionFactor.command'
 
 export const getEmissionsFactor = async () => {
   const local = await getLocale()

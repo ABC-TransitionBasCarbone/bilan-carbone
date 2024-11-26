@@ -1,8 +1,8 @@
-import { FieldPath, UseFormReturn } from 'react-hook-form'
-import { useTranslations } from 'next-intl'
 import { FormTextField } from '@/components/form/TextField'
-import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { gazKeys } from '@/constants/emissions'
+import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { useTranslations } from 'next-intl'
+import { FieldPath, UseFormReturn } from 'react-hook-form'
 
 interface DetailedGESFieldsProps {
   form: UseFormReturn<CreateEmissionFactorCommand>

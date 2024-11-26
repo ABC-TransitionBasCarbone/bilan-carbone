@@ -1,10 +1,10 @@
-import Block from '../base/Block'
-import styles from './StudyDetails.module.css'
+import { FullStudy } from '@/db/study'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
-import ResultsContainerForStudy from './results/ResultsContainerForStudy'
-import { FullStudy } from '@/db/study'
 import { getFormatter } from 'next-intl/server'
+import Block from '../base/Block'
+import ResultsContainerForStudy from './results/ResultsContainerForStudy'
+import styles from './StudyDetails.module.css'
 
 interface Props {
   study: FullStudy

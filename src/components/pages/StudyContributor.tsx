@@ -1,11 +1,11 @@
+import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
+import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
-import SubPosts from '../study/SubPosts'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import PostIcon from '../study/infography/icons/PostIcon'
-import { User } from 'next-auth'
-import { StudyWithoutDetail } from '@/services/permissions/study'
+import SubPosts from '../study/SubPosts'
 
 interface Props {
   study: StudyWithoutDetail

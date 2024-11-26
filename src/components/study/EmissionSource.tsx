@@ -1,27 +1,27 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import EditIcon from '@mui/icons-material/Edit'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import styles from './EmissionSource.module.css'
-import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
-import { useTranslations } from 'next-intl'
-import classNames from 'classnames'
-import { FormControlLabel, Switch } from '@mui/material'
+import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { getEmissionResults } from '@/services/emissionSource'
+import { StudyWithoutDetail } from '@/services/permissions/study'
+import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import {
   UpdateEmissionSourceCommand,
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
-import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
-import { Path } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getQualityRating } from '@/services/uncertainty'
+import EditIcon from '@mui/icons-material/Edit'
+import { FormControlLabel, Switch } from '@mui/material'
 import { StudyRole } from '@prisma/client'
-import { getEmissionResults } from '@/services/emissionSource'
-import { StudyWithoutDetail } from '@/services/permissions/study'
-import EmissionSourceForm from './EmissionSourceForm'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Path } from 'react-hook-form'
+import styles from './EmissionSource.module.css'
 import EmissionSourceContributorForm from './EmissionSourceContributorForm'
+import EmissionSourceForm from './EmissionSourceForm'
 
 type StudyProps = {
   study: FullStudy

@@ -1,11 +1,10 @@
-import { useTranslations } from 'next-intl'
-import React from 'react'
-import Team from '../team/TeamTable'
 import { TeamMember } from '@/db/user'
 import { User } from 'next-auth'
-import PendingInvitations from '../team/PendingInvitations'
+import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import PendingInvitations from '../team/PendingInvitations'
+import Team from '../team/TeamTable'
 
 interface Props {
   user: User

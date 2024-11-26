@@ -5,7 +5,7 @@ import SelectOrganization from '@/components/study/organization/Select'
 import { OrganizationWithSites } from '@/db/user'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 interface Props {

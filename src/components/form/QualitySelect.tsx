@@ -1,6 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectProps } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import React from 'react'
 
 const QualitySelect = ({ ...props }: Omit<SelectProps, 'options' | 'labelId'>) => {
   const t = useTranslations('quality')

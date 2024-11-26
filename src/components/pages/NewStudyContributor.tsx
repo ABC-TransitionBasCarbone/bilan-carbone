@@ -1,9 +1,8 @@
-import React from 'react'
-import Block from '../base/Block'
-import NewStudyContributorForm from '../study/rights/NewStudyContributorForm'
 import { FullStudy } from '@/db/study'
-import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import { getTranslations } from 'next-intl/server'
+import Block from '../base/Block'
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import NewStudyContributorForm from '../study/rights/NewStudyContributorForm'
 
 interface Props {
   study: FullStudy

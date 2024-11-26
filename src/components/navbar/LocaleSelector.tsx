@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useTranslations } from 'next-intl'
-import { getLocale, switchLocale } from '@/i18n/locale'
 import { Locale, LocaleType, defaultLocale } from '@/i18n/config'
+import { getLocale, switchLocale } from '@/i18n/locale'
 import { InputLabel, MenuItem, Select } from '@mui/material'
+import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
 
 const LocaleSelector = () => {
   const t = useTranslations('locale')

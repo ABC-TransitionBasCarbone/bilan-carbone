@@ -1,11 +1,10 @@
-import React from 'react'
-import { User } from 'next-auth'
 import { FullStudy } from '@/db/study'
-import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import { OrganizationWithSites } from '@/db/user'
+import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
+import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyPerimeter from '../study/perimeter/StudyPerimeter'
-import { OrganizationWithSites } from '@/db/user'
 
 interface Props {
   study: FullStudy

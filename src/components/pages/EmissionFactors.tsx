@@ -1,8 +1,8 @@
-import React, { Suspense } from 'react'
 import { useTranslations } from 'next-intl'
-import EmissionFactors from '../emissionFactor/EmissionFactors'
+import { Suspense } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import EmissionFactors from '../emissionFactor/EmissionFactors'
 
 const EmissionFactorsPage = () => {
   const tNav = useTranslations('nav')
