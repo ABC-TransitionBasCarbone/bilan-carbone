@@ -491,6 +491,7 @@
     }
   },
   "emissionSource": {
+    "saving": "Saving ...",
     "status": {
       "valid": "Validated",
       "waiting": "Pending",
@@ -535,5 +536,9 @@
     "3": "Average",
     "4": "Good",
     "5": "Very good"
+  },
+  "error": {
+    "Not authorized": "You are not allowed to do this action",
+    "default": "Something went wrong ..., please try again. If the problem persists, please contact support"
   }
 }
