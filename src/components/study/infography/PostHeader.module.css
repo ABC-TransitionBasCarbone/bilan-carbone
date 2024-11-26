@@ -1,0 +1,33 @@
+.header {
+    padding: 1rem;
+    gap: 0.5rem;
+    color: var(--neutral-00);
+    display: flex;
+    flex-direction: column;
+  
+    @media screen and (max-width: 64rem) {
+      padding: 1rem 0.5rem;
+    }
+  }
+  
+  .title {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    text-transform: uppercase;
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .titleInfo {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .progress {
+    width: 5rem;
+    align-self: center;
+  }
+  

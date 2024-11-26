@@ -10,6 +10,8 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import PostIcon from './icons/PostIcon'
 import styles from './PostInfography.module.css'
+import { PostHeader } from './PostHeader'
+
 interface Props {
   study: Study
   post: Post | SubPost
@@ -57,18 +59,7 @@ const PostInfography = ({ study, post }: Props) => {
       href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees/${mainPost}`}
       className={styles[Object.keys(Post).includes(post) ? colors[post as Post] : 'green']}
     >
-      <p className={classNames(styles.header, 'align-center')}>
-        <div className={classNames(styles.titleInfo)}>
-          <span>56 tCO2e</span>
-          <Box className={classNames(styles.progress)}>
-            <LinearProgress variant="determinate" value={50} />
-          </Box>
-        </div>
-        <div className={classNames(styles.title)}>
-          <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
-          <span>{t(post)}</span>
-        </div>
-      </p>
+      <PostHeader study={study} post={post} mainPost={mainPost} />
       <div className={classNames(styles.subPostsContainer)}>
         {showSubPosts && subPosts && (
           <div className={classNames(styles.subPosts, 'flex')}>
