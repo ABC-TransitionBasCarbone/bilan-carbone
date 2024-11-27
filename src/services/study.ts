@@ -75,10 +75,13 @@ const getEmissionSourceRows = (
   t: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
-  type?: 'Post',
+  type?: 'Post' | 'Study',
 ) => {
   const initCols = []
   if (type === 'Post') {
+    initCols.push('subPost')
+  } else if (type === 'Study') {
+    initCols.push('post')
     initCols.push('subPost')
   }
   const columns = initCols
@@ -101,6 +104,12 @@ const getEmissionSourceRows = (
     const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
     const initCols: (string | number)[] = []
     if (type === 'Post') {
+      initCols.push(tPost(emissionSource.subPost))
+    } else if (type === 'Study') {
+      const post = Object.keys(subPostsByPost).find((post) =>
+        subPostsByPost[post as Post].includes(emissionSource.subPost),
+      )
+      initCols.push(tPost(post))
       initCols.push(tPost(emissionSource.subPost))
     }
     return initCols
@@ -176,6 +185,34 @@ export const downloadStudyPost = async (
   const date = dayjs()
   const formattedDate = date.format('YYYY_MM_DD')
   const fileName = `${study.name}_${post}_${formattedDate}.csv`
+
+  download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
+}
+
+export const downloadStudyEmissionSources = async (
+  study: FullStudy,
+  t: ReturnType<typeof useTranslations>,
+  tPost: ReturnType<typeof useTranslations>,
+  tQuality: ReturnType<typeof useTranslations>,
+) => {
+  const emissionSources = study.emissionSources.sort((a, b) => a.subPost.localeCompare(b.subPost))
+
+  const emissionFactorIds = (emissionSources || [])
+    .map((emissionSource) => emissionSource.emissionFactor?.id)
+    .filter((emissionFactorId) => emissionFactorId !== undefined)
+  const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
+
+  const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tPost, tQuality, 'Study')
+
+  const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
+  const totalRow = [t('total'), '', '', '', totalEmissions].join(';')
+
+  // TODO : Ajouter la ligne des incertitudes
+  const csvContent = [columns, ...rows, totalRow].join('\n')
+
+  const date = dayjs()
+  const formattedDate = date.format('YYYY_MM_DD')
+  const fileName = `${study.name}_${formattedDate}.csv`
 
   download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
 }

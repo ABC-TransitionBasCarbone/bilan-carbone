@@ -5,6 +5,7 @@ import { getFormatter } from 'next-intl/server'
 import Block from '../base/Block'
 import ResultsContainerForStudy from './results/ResultsContainerForStudy'
 import styles from './StudyDetails.module.css'
+import DownloadEmissionSourcesButton from './StudyDownloadEmissionSourcesButton'
 
 interface Props {
   study: FullStudy
@@ -19,6 +20,7 @@ const StudyDetails = async ({ study }: Props) => {
         title={study.name}
         as="h1"
         icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
+        styleLessChildren
         description={
           <div className={styles.studyInfo}>
             <p>
@@ -28,7 +30,9 @@ const StudyDetails = async ({ study }: Props) => {
             <p>Exports : {study.exports.map((e) => e.type).join(', ')}</p>
           </div>
         }
-      />
+      >
+        <DownloadEmissionSourcesButton study={study} />
+      </Block>
       <Block>
         <ResultsContainerForStudy />
       </Block>
