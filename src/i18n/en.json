@@ -160,24 +160,24 @@
       }
     },
     "export": {
-      "subPost": {
-        "date": "Deadline",
-        "downloadSubPost": "Download {name} emission sources",
-        "emissionName": "Emission factor (EF) name",
-        "emissionQuality": "EF quality",
-        "emissionSource": "EF source",
-        "emissionValue": "EF value",
-        "no": "No",
-        "noFactor": "No emission factor",
-        "sourceCharacterization": "Emission source characterization",
-        "sourceComment": "Emission source comment",
-        "sourceName": "Emission source name",
-        "sourceQuality": "Emission source quality",
-        "sourceValue": "Emission source value",
-        "total": "Total",
-        "validation": "Emission source validation",
-        "yes": "Yes"
-      }
+      "date": "Deadline",
+      "download": "Download emission sources",
+      "downloadSubPost": "Download {name} emission sources",
+      "emissionName": "Emission factor (EF) name",
+      "emissionQuality": "EF quality",
+      "emissionSource": "EF source",
+      "emissionValue": "EF value",
+      "no": "No",
+      "noFactor": "No emission factor",
+      "sourceCharacterization": "Emission source characterization",
+      "sourceComment": "Emission source comment",
+      "sourceName": "Emission source name",
+      "sourceQuality": "Emission source quality",
+      "sourceValue": "Emission source value",
+      "subPost": "Sub post",
+      "total": "Total",
+      "validation": "Emission source validation",
+      "yes": "Yes"
     }
   },
   "emissionFactors": {

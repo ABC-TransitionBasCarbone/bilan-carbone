@@ -6,14 +6,19 @@ import { getUserByEmail } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { auth } from '../auth'
-import { getEmissionFactors } from '../emissionFactors'
+import { getEmissionFactors, getEmissionFactorsByIds } from '../emissionFactors'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
 import { CreateEmissionFactorCommand } from './emissionFactor.command'
 
 export const getEmissionsFactor = async () => {
-  const local = await getLocale()
-  return getEmissionFactors(local)
+  const locale = await getLocale()
+  return getEmissionFactors(locale)
+}
+
+export const getEmissionFactorByIds = async (ids: string[]) => {
+  const locale = await getLocale()
+  return getEmissionFactorsByIds(ids, locale)
 }
 
 export const createEmissionFactorCommand = async ({
