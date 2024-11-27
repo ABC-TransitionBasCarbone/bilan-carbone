@@ -50,6 +50,7 @@ const SubPosts = ({ post, study, user, withoutDetail }: Props & (StudyProps | St
       {subPosts.map((subPost) => (
         <SubPost
           emissionFactors={emissionFactors}
+          post={post}
           subPost={subPost}
           key={subPost}
           userRoleOnStudy={userRoleOnStudy}
