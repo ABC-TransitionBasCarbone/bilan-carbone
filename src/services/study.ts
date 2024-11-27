@@ -1,23 +1,14 @@
 import { FullStudy } from '@/db/study'
 import { Level, SubPost } from '@prisma/client'
-import { saveAs } from 'file-saver'
+import dayjs from 'dayjs'
+import { useTranslations } from 'next-intl'
 import { EmissionFactorWithMetaData } from './emissionFactors'
+import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { getQualityRating } from './uncertainty'
 
-const QualityMatrix = {
-  1: 'Très mauvaise',
-  2: 'Mauvaise',
-  3: 'Moyenne',
-  4: 'Bonne',
-  5: 'Très bonne',
-}
-
-const getQuality = (quality: ReturnType<typeof getQualityRating>) => {
-  if (quality === null) {
-    return 'Inconnue'
-  }
-  return QualityMatrix[quality]
+const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<typeof useTranslations>) => {
+  return quality === null ? t('unknown') : t(quality.toString())
 }
 
 export enum NewStudyRightStatus {
@@ -65,53 +56,68 @@ export const getEmissionSourceStatus = (
   return EmissionSourcesStatus.Waiting
 }
 
-export const downloadStudySubPosts = (
-  study: FullStudy | StudyWithoutDetail,
+const encodeCSVField = (field: string | number = '') => {
+  if (typeof field === 'number') {
+    return field
+  }
+  const escapedField = field.replace(/"/g, '""')
+  if (escapedField.includes(';') || escapedField.includes('"') || escapedField.includes("'")) {
+    return `"${escapedField}"`
+  }
+  return escapedField
+}
+
+export const downloadStudySubPosts = async (
+  study: FullStudy,
   post: string,
   subPost: SubPost,
-  emissionSources: FullStudy['emissionSources'] | StudyWithoutDetail['emissionSources'],
+  emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
+  t: ReturnType<typeof useTranslations>,
+  tQuality: ReturnType<typeof useTranslations>,
 ) => {
   const columns = [
-    "Validation de la source d'émission",
-    "Nom de la source d'émission",
-    "Caractérisation de la source d'émission",
-    "Valeur de la source d'émission",
-    "Commentaire de la source d'émission",
-    "Qualité de la source d'émission",
-    "Nom du FE (facteur d'émission)",
-    'Valeur du FE',
-    'Source du FE',
-    'Qualité du FE',
-  ].join(',')
+    'validation',
+    'sourceName',
+    'sourceCharacterization',
+    'sourceValue',
+    'sourceComment',
+    'sourceQuality',
+    'emissionName',
+    'emissionValue',
+    'emissionSource',
+    'emissionQuality',
+  ]
+    .map((key) => t(key))
+    .join(';')
 
   const csvRows = emissionSources.map((emissionSource) => {
     const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
-
     return [
-      emissionSource.validated ? 'Oui' : 'Non',
+      emissionSource.validated ? t('yes') : t('no'),
       emissionSource.name || '',
       emissionSource.caracterisation || '',
       emissionSource.value || '0',
       emissionSource.comment || '',
-      getQuality(getQualityRating(emissionSource)),
-      emissionFactor?.metaData?.title || 'Aucun facteur',
+      getQuality(getQualityRating(emissionSource), tQuality),
+      emissionFactor?.metaData?.title || t('noFactor'),
       emissionFactor?.totalCo2 || '',
       emissionFactor?.source || '',
-      emissionFactor ? getQuality(getQualityRating(emissionFactor)) : '',
-    ].join(',')
+      emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
+    ]
+      .map((field) => encodeCSVField(field))
+      .join(';')
   })
-  const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
-  const totalRow = ['TOTAL', '', '', totalEmissions].join(',')
 
-  // TO DO : Ajouter la ligne des incertitudes
+  const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
+  const totalRow = [t('total'), '', '', totalEmissions].join(';')
+
+  // TODO : Ajouter la ligne des incertitudes
   const csvContent = [columns, ...csvRows, totalRow].join('\n')
 
-  const currentDate = new Date()
-  const getDay = (day: number) => (day < 10 ? `0${day}` : day)
-  const dateString = `${currentDate.getFullYear()}_${currentDate.getMonth() + 1}_${getDay(currentDate.getDate())}`
-  const fileName = `${study.name}_${post}_${subPost}_${dateString}.csv`
+  const date = dayjs()
+  const formattedDate = date.format('YYYY_MM_DD')
+  const fileName = `${study.name}_${post}_${subPost}_${formattedDate}.csv`
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-  saveAs(blob, fileName)
+  download(csvContent, fileName, 'text/csv')
 }

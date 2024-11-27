@@ -27,7 +27,7 @@ export const canCreateOrganization = async (user: User) => {
     return false
   }
 
-  // TO DO : check potential other rights
+  // TODO : check potential other rights
 
   return true
 }
