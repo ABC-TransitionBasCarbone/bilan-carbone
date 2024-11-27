@@ -19,13 +19,14 @@ interface Props {
 const StudyPostInfography = ({ post, study }: Props) => {
   const t = useTranslations('study.post')
   const tExport = useTranslations('study.export')
+  const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
   const [display, setDisplay] = useState(false)
 
   return (
     <>
       <div className={classNames(styles.buttons, 'flex')}>
-        <Button onClick={() => downloadStudyPost(study, post, tExport, tQuality)}>
+        <Button onClick={() => downloadStudyPost(study, post, tExport, tPost, tQuality)}>
           {tExport('download')}
           <DownloadIcon />
         </Button>
