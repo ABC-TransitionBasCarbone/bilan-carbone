@@ -167,6 +167,11 @@
     "perimeter": {
       "title": "Périmètre de l'étude : {name}",
       "dates": "Du {startDate} au {endDate}"
+    },
+    "results": {
+      "post": "Poste",
+      "value": "Émissions (kgCO₂e)",
+      "uncertainty": "Incertitude"
     }
   },
   "emissionFactors": {

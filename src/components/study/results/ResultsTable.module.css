@@ -1,0 +1,28 @@
+.subPost {
+  padding-left: 1rem;
+}
+
+.expandable {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  border: none;
+  background-color: transparent;
+  font-size: inherit;
+  margin: -0.5rem;
+  padding: 0.5rem;
+
+  &:hover {
+    color: var(--primary-40);
+  }
+}
+
+.notExpandable {
+  margin-left: 1.5rem;
+  line-height: 1.5rem;
+}
+
+.number {
+  text-align: right;
+}
