@@ -28,7 +28,7 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
       />
       <Block title={study.name} as="h1" />
       <Block title={tPost(post)} icon={<PostIcon post={post} />} iconPosition="before">
-        <StudyPostInfography study={study} />
+        <StudyPostInfography study={study} post={post} />
         <SubPosts post={post} study={study} user={user} withoutDetail={false} />
       </Block>
     </>

@@ -42,7 +42,7 @@ const SubPost = ({
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const tPost = useTranslations('emissionFactors.post')
   const t = useTranslations('study.post')
-  const tExport = useTranslations('study.export.subPost')
+  const tExport = useTranslations('study.export')
   const tQuality = useTranslations('quality')
 
   const emissionSources = useMemo(
