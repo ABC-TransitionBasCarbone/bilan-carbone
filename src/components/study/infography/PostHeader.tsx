@@ -16,15 +16,10 @@ export const PostHeader = ({ study, post, mainPost }: Props) => {
     const t = useTranslations('emissionFactors.post')
 
     return (<div className={classNames(styles.header, 'align-center')}>
-    <div className={classNames(styles.titleInfo)}>
-      <span>56 tCO2e</span>
-        <Box className={classNames(styles.progress)}>
-          <LinearProgress variant='determinate' value={50} />
-        </Box>
-      </div>
       <div className={classNames(styles.title)}>
         <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
         <span>{t(post)}</span>
       </div>
-    </div>)
+      <span>56 tCO2e</span>
+  </div>)
 };

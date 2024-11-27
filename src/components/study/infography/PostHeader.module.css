@@ -10,24 +10,26 @@
     }
   }
   
-  .title {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    text-transform: uppercase;
-    justify-content: flex-start;
-    gap: 0.5rem;
+.title {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  text-transform: uppercase;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.progress {
+  width: 5rem;
+  align-self: center;
+}
+
+.icon {
+  width: auto;
+  height: 1.5rem;
+
+  @media screen and (max-width: 50rem) {
+    display: none;
   }
-  
-  .titleInfo {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-  }
-  
-  .progress {
-    width: 5rem;
-    align-self: center;
-  }
-  
+}
