@@ -44,7 +44,7 @@ export const canUpdateOrganization = async (user: User, command: UpdateOrganizat
     return false
   }
 
-  // TO DO : check potential other rights
+  // TODO : check potential other rights
 
   return true
 }
