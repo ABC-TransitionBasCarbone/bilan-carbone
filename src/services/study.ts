@@ -73,6 +73,7 @@ const getEmissionSourceRows = (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   t: ReturnType<typeof useTranslations>,
+  tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   type?: 'Post',
 ) => {
@@ -100,7 +101,7 @@ const getEmissionSourceRows = (
     const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
     const initCols: (string | number)[] = []
     if (type === 'Post') {
-      initCols.push(emissionSource.subPost)
+      initCols.push(tPost(emissionSource.subPost))
     }
     return initCols
       .concat([
@@ -128,14 +129,15 @@ export const downloadStudySubPosts = async (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   t: ReturnType<typeof useTranslations>,
+  tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
 ) => {
-  const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tQuality)
+  const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tPost, tQuality)
 
   const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
   const totalRow = [t('total'), '', '', totalEmissions].join(';')
 
-  // TO DO : Ajouter la ligne des incertitudes
+  // TODO : Ajouter la ligne des incertitudes
   const csvContent = [columns, ...rows, totalRow].join('\n')
 
   const date = dayjs()
@@ -150,6 +152,7 @@ export const downloadStudyPost = async (
   study: FullStudy,
   post: Post | SubPost,
   t: ReturnType<typeof useTranslations>,
+  tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
 ) => {
   const validSubPosts = Object.keys(subPostsByPost).includes(post) ? subPostsByPost[post as Post] : [post]
@@ -162,12 +165,12 @@ export const downloadStudyPost = async (
     .filter((emissionFactorId) => emissionFactorId !== undefined)
   const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
 
-  const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tQuality, 'Post')
+  const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tPost, tQuality, 'Post')
 
   const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
   const totalRow = [t('total'), '', '', '', totalEmissions].join(';')
 
-  // TO DO : Ajouter la ligne des incertitudes
+  // TODO : Ajouter la ligne des incertitudes
   const csvContent = [columns, ...rows, totalRow].join('\n')
 
   const date = dayjs()

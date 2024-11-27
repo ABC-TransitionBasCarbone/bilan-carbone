@@ -40,9 +40,9 @@ const SubPost = ({
   userRoleOnStudy,
   emissionFactors,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
-  const tPost = useTranslations('emissionFactors.post')
   const t = useTranslations('study.post')
   const tExport = useTranslations('study.export')
+  const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
 
   const emissionSources = useMemo(
@@ -119,6 +119,7 @@ const SubPost = ({
                 emissionSources as FullStudy['emissionSources'],
                 emissionFactors,
                 tExport,
+                tPost,
                 tQuality,
               )
             }}
