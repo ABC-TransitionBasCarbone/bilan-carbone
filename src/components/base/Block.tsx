@@ -14,6 +14,7 @@ interface Props {
   linkLabel?: string
   linkDataTestId?: string
   description?: ReactNode
+  styleLessChildren?: boolean
 }
 
 const Block = ({
@@ -27,6 +28,7 @@ const Block = ({
   id,
   linkDataTestId,
   description,
+  styleLessChildren,
   ...rest
 }: Props) => {
   const Title = as === 'h1' ? 'h1' : 'h2'
@@ -53,7 +55,16 @@ const Block = ({
           title && titleDiv
         )}
         {description && <div className={styles.description}>{description}</div>}
-        {children && <div className={classNames(styles.children, { [styles.withMargin]: title })}>{children}</div>}
+        {children && (
+          <div
+            className={classNames(
+              { [styles.children]: !styleLessChildren },
+              { [styles.withMargin]: title && !styleLessChildren },
+            )}
+          >
+            {children}
+          </div>
+        )}
       </div>
     </div>
   )

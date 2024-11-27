@@ -1,3 +1,9 @@
 .studyInfo {
   color: var(--neutral-50);
 }
+
+.download {
+  position: absolute !important;
+  top: 0;
+  right: 0;
+}
