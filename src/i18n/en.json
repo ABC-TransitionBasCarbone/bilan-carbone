@@ -158,6 +158,26 @@
         "title": "Permiter on study : {name}",
         "dates": "from {startDate} to {endDate}"
       }
+    },
+    "export": {
+      "subPost": {
+        "date": "Deadline",
+        "downloadSubPost": "Download {name} emission sources",
+        "emissionName": "Emission factor (EF) name",
+        "emissionQuality": "EF quality",
+        "emissionSource": "EF source",
+        "emissionValue": "EF value",
+        "no": "No",
+        "noFactor": "No emission factor",
+        "sourceCharacterization": "Emission source characterization",
+        "sourceComment": "Emission source comment",
+        "sourceName": "Emission source name",
+        "sourceQuality": "Emission source quality",
+        "sourceValue": "Emission source value",
+        "total": "Total",
+        "validation": "Emission source validation",
+        "yes": "Yes"
+      }
     }
   },
   "emissionFactors": {
@@ -535,7 +555,8 @@
     "2": "Poor",
     "3": "Average",
     "4": "Good",
-    "5": "Very good"
+    "5": "Very good",
+    "unknown": "Unknown"
   },
   "error": {
     "Not authorized": "You are not allowed to do this action",
