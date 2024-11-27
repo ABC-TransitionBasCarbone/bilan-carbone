@@ -1,32 +1,25 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { sumEmissionSourcesResults } from '@/services/emissionSource'
-import { Post, subPostsByPost } from '@/services/posts'
+import { computeResultsByPost, ResultsByPost } from '@/services/results'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './ResultsTable.module.css'
 
 interface Props {
   study: FullStudy
 }
 
-type Data = {
-  post: string
-  value: number
-  uncertainty?: number
-  subPosts?: Data[]
-}
-
 const ResultsTable = ({ study }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
+  const [data, setData] = useState<ResultsByPost[]>([])
 
   const columns = useMemo(
     () =>
@@ -64,52 +57,19 @@ const ResultsTable = ({ study }: Props) => {
           accessorKey: 'value',
           cell: ({ getValue }) => <p className={styles.number}>{getValue<number>().toFixed(2)}</p>,
         },
-      ] as ColumnDef<Data>[],
-    [t],
+      ] as ColumnDef<ResultsByPost>[],
+    [t, tPost, tQuality],
   )
 
-  const data = useMemo(() => {
-    return Object.values(Post)
-      .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-      .map((post) => {
-        const subPosts = subPostsByPost[post]
-          .map((subPost) => {
-            const emissionSources = study.emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
-            return {
-              post: subPost,
-              value: emissionSources.reduce(
-                (acc, emission) =>
-                  acc +
-                  (!emission.value || !emission.emissionFactor ? 0 : emission.value * emission.emissionFactor.totalCo2),
-                0,
-              ),
-              uncertainty: sumEmissionSourcesResults(emissionSources),
-            }
-          })
-          .filter((subPost) => subPost.value > 0)
+  useEffect(() => {
+    async function loadData() {
+      const computedResults = await computeResultsByPost(study)
+      setData(computedResults)
+    }
 
-        const value = subPosts.flatMap((subPost) => subPost).reduce((acc, subPost) => acc + subPost.value, 0)
-        return {
-          post,
-          value,
-          uncertainty:
-            subPosts.length > 0
-              ? Math.exp(
-                  Math.sqrt(
-                    subPosts.reduce(
-                      (acc, subPost) =>
-                        acc + Math.pow(subPost.value / value, 2) * Math.pow(Math.log(subPost.uncertainty || 1), 2),
-                      0,
-                    ),
-                  ),
-                )
-              : undefined,
-          subPosts: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
-        } as Data
-      })
-  }, [tPost, study])
+    loadData()
+  }, [study])
 
-  console.log(data)
   const table = useReactTable({
     columns,
     data,

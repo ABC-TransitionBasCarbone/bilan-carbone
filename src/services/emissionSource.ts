@@ -49,7 +49,7 @@ export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDeta
   }
 }
 
-export const sumEmissionSourcesResults = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources']) => {
+export const sumEmissionSourcesUncertainty = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources']) => {
   const results = emissionSource.map(getEmissionResults).filter((result) => result !== null)
   const total = results.reduce((acc, result) => acc + result.emission, 0)
   return Math.pow(
