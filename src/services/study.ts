@@ -119,5 +119,6 @@ export const downloadStudySubPosts = async (
   const formattedDate = date.format('YYYY_MM_DD')
   const fileName = `${study.name}_${post}_${subPost}_${formattedDate}.csv`
 
-  download(csvContent, fileName, 'text/csv')
+  // \ufeff  (Byte Order Mark) adds BOM to indicate UTF-8 encoding
+  download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
 }
