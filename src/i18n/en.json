@@ -10,6 +10,7 @@
     "newStudyRight": "Add a Person",
     "notFound": "Page not found",
     "organization": "Organization",
+    "edit": "Edit",
     "studyRights": "Rights",
     "team": "Team"
   },
@@ -103,6 +104,8 @@
       "displayInfography": "Display all posts",
       "hideInfography": "Hide all posts",
       "emissionSource": "{count, plural, =0 {No emission source} =1 {1 emission source} other {# emission sources}}",
+      "contributors": "{count, plural, =1 {1 contributor} other {# contibutors}}",
+      "contributorsList": "{count, plural, =1 {Contributor :} other {Contributors :}}",
       "new": "Add an emission source..."
     },
     "organization": {
@@ -132,6 +135,13 @@
           "email": "Please use a valid email",
           "emailRequired": "Please enter an email",
           "role": "Please select a role"
+        },
+        "dialog": {
+          "title": "Are you sure you want to add this person to your study?",
+          "otherOrganization": "They are a BC+ user within another organization than yours.",
+          "nonExisting": "They are not a BC+ user, so you will only be able to give them access to the study with read or contribution rights. An email will be sent to them to give access to the study.",
+          "accept": "Yes",
+          "decline": "No"
         }
       },
       "newContributor": {
@@ -153,11 +163,16 @@
       "table": {
         "email": "Email",
         "role": "Rights"
-      },
-      "perimeter": {
-        "title": "Permiter on study : {name}",
-        "dates": "from {startDate} to {endDate}"
       }
+    },
+    "perimeter": {
+      "title": "Permiter on study : {name}",
+      "dates": "from {startDate} to {endDate}"
+    },
+    "results": {
+      "post": "Post",
+      "value": "Emissions (kgCO₂e)",
+      "uncertainty": "Uncertainty"
     }
   },
   "emissionFactors": {
@@ -473,12 +488,14 @@
   "organization": {
     "create": "New Organization",
     "modify": "Modify",
-    "myOrganization": "My Organization",
+    "myOrganization": "My Organization:",
     "myOrganizations": "My Organizations",
     "name": "Name: ",
     "title": "Organization",
-    "new": {
+    "form": {
       "create": "Create organization",
+      "editTile": "Edit my organization",
+      "edit": "Edit",
       "name": "Organization name",
       "title": "Information about the new organization"
     },
@@ -487,7 +504,15 @@
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "etp": "Employees",
-      "ca": "Turnover"
+      "ca": "Turnover",
+      "actions": "Actions",
+      "delete": "Delete",
+      "add": "Add a site",
+      "validation": {
+        "name": "Please enter a name",
+        "etp": "Please enter a number of employees",
+        "ca": "Please enter a turnover"
+      }
     }
   },
   "emissionSource": {

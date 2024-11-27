@@ -44,6 +44,5 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     return NOT_AUTHORIZED
   }
 
-  const { organizationId, ...data } = command
-  await updateOrganization(organizationId, data)
+  await updateOrganization(command)
 }

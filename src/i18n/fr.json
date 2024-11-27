@@ -488,7 +488,7 @@
   "organization": {
     "create": "Nouvelle Organisation",
     "modify": "Modifier",
-    "myOrganization": "Mon organisation",
+    "myOrganization": "Mon organisation :",
     "myOrganizations": "Mes organisations",
     "name": "Nom : ",
     "title": "Organisation",
@@ -504,7 +504,15 @@
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "etp": "Employés",
-      "ca": "Chiffre d'affaire"
+      "ca": "Chiffre d'affaire",
+      "actions": "Actions",
+      "delete": "Supprimer",
+      "add": "Ajouter un site",
+      "validation": {
+        "name": "Veuillez renseigner un nom",
+        "etp": "Veuillez renseigner un nombre d'employés",
+        "ca": "Veuillez renseigner un chiffre d'affaire"
+      }
     }
   },
   "emissionSource": {
