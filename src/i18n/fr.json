@@ -10,6 +10,7 @@
     "newStudyRight": "Ajouter une personne",
     "notFound": "Page non trouvé",
     "organization": "Organisation",
+    "edit": "Modifier",
     "studyRights": "Cadrage",
     "team": "Équipe"
   },
@@ -491,8 +492,10 @@
     "myOrganizations": "Mes organisations",
     "name": "Nom : ",
     "title": "Organisation",
-    "new": {
+    "form": {
       "create": "Créer l'organisation",
+      "editTitle": "Modifier mon organisation",
+      "edit": "Modifier",
       "name": "Nom de l'organisation",
       "title": "Informations sur la nouvelle organisation"
     },

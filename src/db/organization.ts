@@ -23,3 +23,9 @@ export const createOrganization = (organization: Prisma.OrganizationCreateInput)
   prismaClient.organization.create({
     data: organization,
   })
+
+export const updateOrganization = (id: string, organization: Prisma.OrganizationUpdateInput) =>
+  prismaClient.organization.update({
+    where: { id },
+    data: organization,
+  })

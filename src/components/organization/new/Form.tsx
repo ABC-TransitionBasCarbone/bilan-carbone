@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form'
 
 const NewOrganizationForm = () => {
   const router = useRouter()
-  const t = useTranslations('organization.new')
+  const t = useTranslations('organization.form')
   const [error, setError] = useState('')
 
   const form = useForm<CreateOrganizationCommand>({

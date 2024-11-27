@@ -1,5 +1,4 @@
 import { OrganizationWithSites } from '@/db/user'
-import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { Suspense } from 'react'
@@ -8,7 +7,6 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import OrganizationInfo from '../organization/Info'
 import Studies from '../study/StudiesContainer'
 import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
-import styles from './Organization.module.css'
 
 interface Props {
   organizations: OrganizationWithSites[]
@@ -29,9 +27,7 @@ const OrganizationPage = ({ organizations, user }: Props) => {
         <Suspense>
           <ResultsContainerForUser user={user} />
         </Suspense>
-        <div className={classNames(styles.container, 'w100')}>
-          <Studies user={user} organizationId={organizations[0].id} />
-        </div>
+        <Studies user={user} organizationId={organizations[0].id} />
       </Block>
     </>
   )
