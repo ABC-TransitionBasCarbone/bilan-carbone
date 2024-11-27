@@ -8,4 +8,8 @@
   &:hover {
     background-color: var(--primary-60) !important;
   }
+
+  &:disabled {
+    background-color: var(--neutral-30) !important;
+  }
 }
