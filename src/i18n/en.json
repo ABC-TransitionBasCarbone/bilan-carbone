@@ -192,6 +192,7 @@
       "sourceValue": "Emission source value",
       "subPost": "Sub post",
       "total": "Total",
+      "uncertainty": "Uncertainty",
       "validation": "Emission source validation",
       "yes": "Yes"
     }

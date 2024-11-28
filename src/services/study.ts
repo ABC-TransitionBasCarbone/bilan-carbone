@@ -7,7 +7,7 @@ import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
 import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
-import { getQualityRating } from './uncertainty'
+import { getEmissionSourcesGlobalUncertainty, getQualityRating } from './uncertainty'
 
 const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<typeof useTranslations>) => {
   return quality === null ? t('unknown') : t(quality.toString())
@@ -57,6 +57,12 @@ export const getEmissionSourceStatus = (
 
   return EmissionSourcesStatus.Waiting
 }
+
+const getEmissionSourcesTotalCo2 = (emissionSources: FullStudy['emissionSources']) =>
+  emissionSources.reduce(
+    (sum, emissionSource) => sum + (emissionSource.value || 0) * (emissionSource.emissionFactor?.totalCo2 || 1),
+    0,
+  )
 
 const encodeCSVField = (field: string | number = '') => {
   if (typeof field === 'number') {
@@ -163,11 +169,13 @@ export const downloadStudySubPosts = async (
 ) => {
   const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tPost, tQuality)
 
-  const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
   const totalRow = [t('total'), '', '', totalEmissions].join(';')
 
-  // TODO : Ajouter la ligne des incertitudes
-  const csvContent = [columns, ...rows, totalRow].join('\n')
+  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources, totalEmissions)
+  const uncertaintyRow = [t('uncertainty'), '', uncertainty[0], uncertainty[1]].join(';')
+
+  const csvContent = [columns, ...rows, totalRow, uncertaintyRow].join('\n')
 
   const fileName = getFileName(study, post, subPost)
   downloadCSV(csvContent, fileName)
@@ -188,11 +196,13 @@ export const downloadStudyPost = async (
 
   const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tPost, tQuality, 'Post')
 
-  const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
   const totalRow = [t('total'), '', '', '', totalEmissions].join(';')
 
-  // TODO : Ajouter la ligne des incertitudes
-  const csvContent = [columns, ...rows, totalRow].join('\n')
+  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources, totalEmissions)
+  const uncertaintyRow = [t('uncertainty'), '', '', uncertainty[0], uncertainty[1]].join(';')
+
+  const csvContent = [columns, ...rows, totalRow, uncertaintyRow].join('\n')
 
   const fileName = getFileName(study, post)
   downloadCSV(csvContent, fileName)
@@ -213,11 +223,13 @@ export const downloadStudyEmissionSources = async (
 
   const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tPost, tQuality, 'Study')
 
-  const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
-  const totalRow = [t('total'), '', '', '', totalEmissions].join(';')
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
+  const totalRow = [t('total'), '', '', '', '', totalEmissions].join(';')
 
-  // TODO : Ajouter la ligne des incertitudes
-  const csvContent = [columns, ...rows, totalRow].join('\n')
+  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources, totalEmissions)
+  const uncertaintyRow = [t('uncertainty'), '', '', '', uncertainty[0], uncertainty[1]].join(';')
+
+  const csvContent = [columns, ...rows, totalRow, uncertaintyRow].join('\n')
 
   const fileName = getFileName(study)
   downloadCSV(csvContent, fileName)
