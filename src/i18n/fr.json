@@ -175,24 +175,24 @@
       "uncertainty": "Incertitude"
     },
     "export": {
-      "subPost": {
-        "date": "Date butoire",
-        "downloadSubPost": "Télécharger les sources d'émissions de {name}",
-        "emissionName": "Nom du FE (facteur d'émission)",
-        "emissionQuality": "Qualité du FE",
-        "emissionSource": "Source du FE",
-        "emissionValue": "Valeur du FE",
-        "no": "Non",
-        "noFactor": "Aucun facteur d'émission",
-        "sourceCharacterization": "Caractérisation de la source d'émission",
-        "sourceComment": "Commentaire de la source d'émission",
-        "sourceName": "Nom de la source d'émission",
-        "sourceQuality": "Qualité de la source d'émission",
-        "sourceValue": "Valeur de la source d'émission",
-        "total": "Total",
-        "validation": "Validation de la source d'émission",
-        "yes": "Oui"
-      }
+      "date": "Date butoire",
+      "download": "Télécharger les sources d'émissions",
+      "downloadSubPost": "Télécharger les sources d'émissions de {name}",
+      "emissionName": "Nom du FE (facteur d'émission)",
+      "emissionQuality": "Qualité du FE",
+      "emissionSource": "Source du FE",
+      "emissionValue": "Valeur du FE",
+      "no": "Non",
+      "noFactor": "Aucun facteur d'émission",
+      "sourceCharacterization": "Caractérisation de la source d'émission",
+      "sourceComment": "Commentaire de la source d'émission",
+      "sourceName": "Nom de la source d'émission",
+      "sourceQuality": "Qualité de la source d'émission",
+      "sourceValue": "Valeur de la source d'émission",
+      "subPost": "Sous-poste",
+      "total": "Total",
+      "validation": "Validation de la source d'émission",
+      "yes": "Oui"
     }
   },
   "emissionFactors": {
