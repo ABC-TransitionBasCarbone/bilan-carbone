@@ -20,7 +20,7 @@ const StudyDetails = async ({ study }: Props) => {
         title={study.name}
         as="h1"
         icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
-        styleLessChildren
+        Buttons={<DownloadEmissionSourcesButton study={study} />}
         description={
           <div className={styles.studyInfo}>
             <p>
@@ -30,9 +30,7 @@ const StudyDetails = async ({ study }: Props) => {
             <p>Exports : {study.exports.map((e) => e.type).join(', ')}</p>
           </div>
         }
-      >
-        <DownloadEmissionSourcesButton study={study} />
-      </Block>
+      />
       <Block>
         <ResultsContainerForStudy />
       </Block>

@@ -5,7 +5,6 @@ import { downloadStudyEmissionSources } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useTranslations } from 'next-intl'
 import Button from '../base/Button'
-import styles from './StudyDetails.module.css'
 
 interface Props {
   study: FullStudy
@@ -17,7 +16,7 @@ const DownloadEmissionSourcesButton = ({ study }: Props) => {
   const tQuality = useTranslations('quality')
 
   return (
-    <Button className={styles.download} onClick={() => downloadStudyEmissionSources(study, tExport, tPost, tQuality)}>
+    <Button onClick={() => downloadStudyEmissionSources(study, tExport, tPost, tQuality)}>
       {tExport('download')}
       <DownloadIcon />
     </Button>
