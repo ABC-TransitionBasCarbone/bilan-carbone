@@ -7,7 +7,7 @@ import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo } from 'react'
 import { PostHeader } from './PostHeader'
 import styles from './PostInfography.module.css'
 
@@ -50,12 +50,6 @@ const postColors: Record<Post, string> = {
 }
 
 const PostInfography = ({ post, data, studyId }: Props) => {
-  const ref = useRef<HTMLDivElement>(null)
-
-  const [showSubPosts, setShowSubPosts] = useState<boolean>(false)
-  const [hoverEnterTimeout, setHoverEnterTimeout] = useState<NodeJS.Timeout | null>(null)
-  const [hoverLeaveTimeout, setHoverLeaveTimeout] = useState<NodeJS.Timeout | null>(null)
-
   const t = useTranslations('emissionFactors.post')
 
   const mainPost = useMemo(() => {
@@ -90,54 +84,9 @@ const PostInfography = ({ post, data, studyId }: Props) => {
     return null
   }, [post])
 
-  useEffect(() => {
-    if (ref.current) {
-      if (showSubPosts) {
-        const height = ref.current.scrollHeight
-        ref.current.style.height = `${height}px`
-
-        setTimeout(() => {
-          if (ref.current) {
-            ref.current.style.height = 'auto'
-            ref.current.style.overflow = 'visible'
-          }
-        }, 300)
-      } else {
-        setTimeout(() => {
-          if (ref.current) {
-            ref.current.style.height = '0px'
-            ref.current.style.overflow = 'hidden'
-          }
-        }, 300)
-      }
-    }
-  }, [showSubPosts, ref])
-
   return (
     mainPost && (
       <Link
-        onMouseEnter={() => {
-          if (hoverLeaveTimeout) {
-            clearTimeout(hoverLeaveTimeout)
-            setHoverLeaveTimeout(null)
-          }
-
-          const timeout = setTimeout(() => {
-            setShowSubPosts(true)
-          }, 200)
-          setHoverEnterTimeout(timeout)
-        }}
-        onMouseLeave={() => {
-          if (hoverEnterTimeout) {
-            clearTimeout(hoverEnterTimeout)
-            setHoverEnterTimeout(null)
-          }
-
-          const timeout = setTimeout(() => {
-            setShowSubPosts(false)
-          }, 500)
-          setHoverLeaveTimeout(timeout)
-        }}
         data-testid="post-infography"
         href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
         className={classNames(styles.link)}
@@ -147,8 +96,8 @@ const PostInfography = ({ post, data, studyId }: Props) => {
         }}
       >
         <PostHeader post={post} mainPost={mainPost} emissionValue={data?.value} />
-        <div className={classNames(styles.subPostsContainer)} ref={ref}>
-          {showSubPosts && subPosts && (
+        <div className={styles.subPostsContainer}>
+          {subPosts && (
             <div className={classNames(styles.subPosts, 'flex')}>
               <ul className={classNames(styles.list, 'flex-col')}>
                 {subPosts.map((subPost) => (

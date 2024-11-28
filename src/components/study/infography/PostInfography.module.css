@@ -1,3 +1,17 @@
+.subPostsContainer {
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    visibility 0 500ms,
+    opacity 500ms linear;
+
+  .subPosts {
+    margin-top: -10000px;
+    transition: margin-top 500ms ease-in;
+  }
+}
+
 .link {
   border-radius: 1rem;
   border: solid 4px;
@@ -8,6 +22,17 @@
   &:hover {
     .list {
       color: var(--primary-60);
+    }
+
+    .subPostsContainer {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 500ms linear;
+
+      .subPosts {
+        margin-top: 0;
+        transition: unset;
+      }
     }
   }
 }
@@ -44,10 +69,6 @@
   @media screen and (max-width: 55rem) {
     display: none;
   }
-}
-
-.subPostsContainer {
-  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
 .list {
