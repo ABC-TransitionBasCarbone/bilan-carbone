@@ -16,7 +16,10 @@ const DownloadEmissionSourcesButton = ({ study }: Props) => {
   const tQuality = useTranslations('quality')
 
   return (
-    <Button onClick={() => downloadStudyEmissionSources(study, tExport, tPost, tQuality)}>
+    <Button
+      onClick={() => downloadStudyEmissionSources(study, tExport, tPost, tQuality)}
+      disabled={study.emissionSources.length === 0}
+    >
       {tExport('download')}
       <DownloadIcon />
     </Button>
