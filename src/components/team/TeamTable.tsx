@@ -1,5 +1,4 @@
 'use client'
-
 import { TeamMember } from '@/db/user'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -7,7 +6,6 @@ import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import Block from '../base/Block'
-import LinkButton from '../base/LinkButton'
 import SelectRole from './SelectRole'
 
 interface Props {
@@ -58,10 +56,17 @@ const TeamTable = ({ user, team }: Props) => {
     <Block
       title={t('title')}
       id="team-table-title"
-      Buttons={
-        <LinkButton href={user.role !== Role.DEFAULT ? '/equipe/ajouter' : ''} data-testid={'add-member-link'}>
-          {t('newUser')}
-        </LinkButton>
+      actions={
+        user.role !== Role.DEFAULT
+          ? [
+              {
+                actionType: 'link',
+                href: '/equipe/ajouter',
+                'data-testid': 'add-member-link',
+                children: t('newUser'),
+              },
+            ]
+          : undefined
       }
     >
       <table aria-labelledby="team-table-title">
