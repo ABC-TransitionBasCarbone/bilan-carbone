@@ -1,10 +1,14 @@
+'use client'
+
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import SubPosts from '../study/SubPosts'
+import StudyPostsButtons from '../study/buttons/StudyPostsButtons'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
 import PostIcon from '../study/infography/icons/PostIcon'
 
@@ -15,6 +19,7 @@ interface Props {
 }
 
 const StudyPostsPage = ({ post, study, user }: Props) => {
+  const [showInfography, setShowInfography] = useState(false)
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   return (
@@ -27,8 +32,15 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
         ]}
       />
       <Block title={study.name} as="h1" />
-      <Block title={tPost(post)} icon={<PostIcon post={post} />} iconPosition="before">
-        <StudyPostInfography study={study} post={post} />
+      <Block
+        title={tPost(post)}
+        icon={<PostIcon post={post} />}
+        iconPosition="before"
+        Buttons={
+          <StudyPostsButtons post={post} study={study} display={showInfography} setDisplay={setShowInfography} />
+        }
+      >
+        {showInfography && <StudyPostInfography study={study} />}
         <SubPosts post={post} study={study} user={user} withoutDetail={false} />
       </Block>
     </>
