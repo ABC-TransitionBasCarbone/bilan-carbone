@@ -192,6 +192,7 @@
       "sourceValue": "Valeur de la source d'émission",
       "subPost": "Sous poste",
       "total": "Total",
+      "uncertainty": "Incertitude",
       "validation": "Validation de la source d'émission",
       "yes": "Oui"
     }
