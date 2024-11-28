@@ -9,8 +9,6 @@
 }
 
 .title {
-  display: flex;
-  flex-direction: row;
   width: 100%;
   text-transform: uppercase;
   justify-content: center;

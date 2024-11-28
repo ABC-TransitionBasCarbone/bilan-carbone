@@ -1,11 +1,8 @@
-'use client'
-
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
-import { computeResultsByPost, ResultsByPost } from '@/services/results'
+import { computeResultsByPost } from '@/services/results'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
-import { useEffect, useState } from 'react'
 import styles from './AllPostsInfography.module.css'
 import PostInfography from './PostInfography'
 
@@ -13,17 +10,14 @@ interface Props {
   study: FullStudy
 }
 
-const AllPostsInfography = ({ study }: Props) => {
-  const [data, setData] = useState<ResultsByPost[]>([])
+const AllPostsInfography = async ({ study }: Props) => {
+  const data = await computeResultsByPost(study)
 
-  useEffect(() => {
-    async function loadData() {
-      const computedResults = await computeResultsByPost(study)
-      setData(computedResults)
-    }
-
-    loadData()
-  }, [study])
+  const findSubPost = (subPost: SubPost) => {
+    const post = data.find((post) => post.subPosts.find((sb) => sb.post === subPost))
+    const foundSubPost = post?.subPosts.find((sb) => sb.post === subPost)
+    return foundSubPost
+  }
 
   return (
     <div className={classNames(styles.infography, 'flex', 'justify-between', 'align-center')}>
@@ -45,11 +39,7 @@ const AllPostsInfography = ({ study }: Props) => {
         />
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
-        <PostInfography
-          studyId={study.id}
-          data={data.find((d) => d.post === SubPost.FretEntrant)}
-          post={SubPost.FretEntrant}
-        />
+        <PostInfography studyId={study.id} data={findSubPost(SubPost.FretEntrant)} post={SubPost.FretEntrant} />
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
         <PostInfography
@@ -64,11 +54,7 @@ const AllPostsInfography = ({ study }: Props) => {
             data={data.find((d) => d.post === Post.AutresEmissionsNonEnergetiques)}
             post={Post.AutresEmissionsNonEnergetiques}
           />
-          <PostInfography
-            studyId={study.id}
-            data={data.find((d) => d.post === SubPost.FretInterne)}
-            post={SubPost.FretInterne}
-          />
+          <PostInfography studyId={study.id} data={findSubPost(SubPost.FretInterne)} post={SubPost.FretInterne} />
         </div>
         <PostInfography
           studyId={study.id}
@@ -77,11 +63,7 @@ const AllPostsInfography = ({ study }: Props) => {
         />
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
-        <PostInfography
-          studyId={study.id}
-          data={data.find((d) => d.post === SubPost.FretSortant)}
-          post={SubPost.FretSortant}
-        />
+        <PostInfography studyId={study.id} data={findSubPost(SubPost.FretSortant)} post={SubPost.FretSortant} />
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
         <PostInfography studyId={study.id} data={data.find((d) => d.post === Post.FinDeVie)} post={Post.FinDeVie} />

@@ -11,7 +11,7 @@ export type ResultsByPost = {
   numberOfEmissionSource: number
   numberOfValidatedEmissionSource: number
   uncertainty?: number
-  subPosts?: ResultsByPost[]
+  subPosts: ResultsByPost[]
 }
 
 export const computeResultsByPost = async (study: FullStudy) => {

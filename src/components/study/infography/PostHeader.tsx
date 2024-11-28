@@ -15,8 +15,8 @@ export const PostHeader = ({ post, mainPost, emissionValue }: Props) => {
   const t = useTranslations('emissionFactors.post')
 
   return (
-    <div className={classNames(styles.header, 'flex-col', 'align-center')}>
-      <div className={classNames(styles.title)}>
+    <div className={classNames(styles.header, 'align-center', 'flex-col')}>
+      <div className={classNames(styles.title, 'flex-cc')}>
         <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
         <span>{t(post)}</span>
       </div>

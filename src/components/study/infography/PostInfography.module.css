@@ -17,7 +17,7 @@
   border: solid 4px;
   text-decoration: none;
   outline-offset: 6px;
-  width: 250px;
+  width: 15rem;
 
   &:hover {
     .list {
