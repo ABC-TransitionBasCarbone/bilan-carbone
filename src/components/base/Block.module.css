@@ -43,3 +43,7 @@
     width: auto;
   }
 }
+
+.actions {
+  gap: 1rem;
+}

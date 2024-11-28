@@ -1,5 +1,4 @@
 'use client'
-
 import { TeamMember } from '@/db/user'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -57,9 +56,18 @@ const TeamTable = ({ user, team }: Props) => {
     <Block
       title={t('title')}
       id="team-table-title"
-      link={user.role !== Role.DEFAULT ? '/equipe/ajouter' : ''}
-      linkLabel={t('newUser')}
-      linkDataTestId="add-member-link"
+      actions={
+        user.role !== Role.DEFAULT
+          ? [
+              {
+                actionType: 'link',
+                href: '/equipe/ajouter',
+                'data-testid': 'add-member-link',
+                children: t('newUser'),
+              },
+            ]
+          : undefined
+      }
     >
       <table aria-labelledby="team-table-title">
         <thead>
