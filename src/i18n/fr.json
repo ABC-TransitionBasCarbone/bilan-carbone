@@ -184,7 +184,7 @@
       "emissionValue": "Valeur du FE",
       "no": "Non",
       "noFactor": "Aucun facteur d'émission",
-      "post:": "Poste",
+      "post": "Poste",
       "sourceCharacterization": "Caractérisation de la source d'émission",
       "sourceComment": "Commentaire de la source d'émission",
       "sourceName": "Nom de la source d'émission",
