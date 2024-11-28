@@ -1,6 +1,11 @@
+import { ButtonProps } from '@mui/material'
 import classNames from 'classnames'
-import { ReactNode } from 'react'
+import { LinkProps } from 'next/link'
+
+import { AnchorHTMLAttributes, ReactNode } from 'react'
 import styles from './Block.module.css'
+import Button from './Button'
+import LinkButton from './LinkButton'
 
 interface Props {
   children?: ReactNode
@@ -11,7 +16,11 @@ interface Props {
   id?: string
   ['data-testid']?: string
   description?: ReactNode
-  Buttons?: ReactNode
+  actions?: (
+    | (ButtonProps & { actionType: 'button' })
+    // No idea why i have to add data-testid here :/
+    | (LinkProps & AnchorHTMLAttributes<HTMLAnchorElement> & { actionType: 'link'; 'data-testid'?: string })
+  )[]
 }
 
 const Block = ({
@@ -23,7 +32,7 @@ const Block = ({
   id,
   'data-testid': dataTestId,
   description,
-  Buttons,
+  actions,
   ...rest
 }: Props) => {
   const Title = as === 'h1' ? 'h1' : 'h2'
@@ -41,10 +50,18 @@ const Block = ({
   return (
     <div className={classNames('main-container', styles.block)} {...rest}>
       <div className={styles.content}>
-        {Buttons ? (
+        {actions ? (
           <div className={classNames(styles.header, 'align-center justify-between')}>
             {titleDiv}
-            {Buttons}
+            <div className={classNames(styles.actions, 'flex')}>
+              {actions.map(({ actionType, ...action }, index) =>
+                actionType === 'button' ? (
+                  <Button key={index} {...(action as ButtonProps)} />
+                ) : (
+                  <LinkButton key={index} {...(action as LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>)} />
+                ),
+              )}
+            </div>
           </div>
         ) : (
           title && titleDiv

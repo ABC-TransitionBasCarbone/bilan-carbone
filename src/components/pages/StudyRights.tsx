@@ -1,10 +1,9 @@
 import { FullStudy } from '@/db/study'
+import { Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
-import StudyChangeRightLink from '../study/buttons/StudyChangeRightsLink'
-import StudyRightsAddContributorLink from '../study/buttons/StudyRightsAddContributorLink'
 import StudyContributorsTable from '../study/rights/StudyContributorsTable'
 import StudyLevel from '../study/rights/StudyLevel'
 import StudyPublicStatus from '../study/rights/StudyPublicStatus'
@@ -31,9 +30,20 @@ const StudyRightsPage = async ({ study, user }: Props) => {
         ]}
       />
       <Block
-        Buttons={<StudyChangeRightLink study={study} userRole={user.role} userRoleOnStudy={userRoleOnStudy} />}
         title={t('title', { name: study.name })}
         as="h1"
+        actions={
+          user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
+            ? [
+                {
+                  actionType: 'link',
+                  href: `/etudes/${study.id}/cadrage/ajouter`,
+                  'data-testid': 'study-rights-change-button',
+                  children: t('newRightLink'),
+                },
+              ]
+            : undefined
+        }
       >
         <StudyLevel study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
         <StudyPublicStatus study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
@@ -41,7 +51,18 @@ const StudyRightsPage = async ({ study, user }: Props) => {
       </Block>
       <Block
         title={t('contributors')}
-        Buttons={<StudyRightsAddContributorLink study={study} userRole={user.role} userRoleOnStudy={userRoleOnStudy} />}
+        actions={
+          user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
+            ? [
+                {
+                  actionType: 'link',
+                  href: `/etudes/${study.id}/cadrage/ajouter-contributeur`,
+                  'data-testid': 'study-rights-add-contributor',
+                  children: t('newContributorLink'),
+                },
+              ]
+            : undefined
+        }
       >
         <StudyContributorsTable study={study} />
       </Block>
