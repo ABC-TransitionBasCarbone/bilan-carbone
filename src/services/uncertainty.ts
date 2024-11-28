@@ -1,3 +1,6 @@
+// Documentation : https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner
+
+import { FullStudy } from '@/db/study'
 import { EmissionFactor } from '@prisma/client'
 
 type Quality = Pick<
@@ -58,4 +61,21 @@ export const getQualityRating = (quality: Quality) => {
     return null
   }
   return getStandardDeviationRating(standardDeviation)
+}
+
+export const getEmissionSourcesGlobalUncertainty = (
+  emissionSources: FullStudy['emissionSources'],
+  totalEmissions: number,
+) => {
+  const gsd = Math.exp(
+    Math.sqrt(
+      emissionSources.reduce((acc, emissionSource) => {
+        const emissionSensibility =
+          ((emissionSource.value || 0) * (emissionSource.emissionFactor?.totalCo2 || 0)) / totalEmissions
+        const emissionGSD = getQualityStandardDeviation(emissionSource)
+        return emissionGSD === null ? acc : acc + Math.pow(emissionSensibility, 2) * Math.pow(Math.log(emissionGSD), 2)
+      }, 0),
+    ),
+  )
+  return [totalEmissions / Math.pow(gsd, 2), totalEmissions * Math.pow(gsd, 2)]
 }
