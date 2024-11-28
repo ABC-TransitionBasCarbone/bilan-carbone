@@ -65,6 +65,7 @@ const Sites = ({ sites, form }: Props) => {
       {
         id: 'ca',
         header: t('ca'),
+        accessorKey: 'ca',
         cell: ({ row, getValue }) =>
           form ? (
             <FormTextField
