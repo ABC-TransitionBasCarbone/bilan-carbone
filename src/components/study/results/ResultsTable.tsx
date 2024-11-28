@@ -8,7 +8,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import styles from './ResultsTable.module.css'
 
 interface Props {
@@ -19,7 +19,6 @@ const ResultsTable = ({ study }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
-  const [data, setData] = useState<ResultsByPost[]>([])
 
   const columns = useMemo(
     () =>
@@ -61,14 +60,7 @@ const ResultsTable = ({ study }: Props) => {
     [t, tPost, tQuality],
   )
 
-  useEffect(() => {
-    async function loadData() {
-      const computedResults = await computeResultsByPost(study)
-      setData(computedResults)
-    }
-
-    loadData()
-  }, [study])
+  const data = useMemo(() => computeResultsByPost(study, tPost), [study, tPost])
 
   const table = useReactTable({
     columns,

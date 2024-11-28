@@ -7,7 +7,7 @@ import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { PostHeader } from './PostHeader'
 import styles from './PostInfography.module.css'
 
@@ -51,6 +51,9 @@ const postColors: Record<Post, string> = {
 
 const PostInfography = ({ post, data, studyId }: Props) => {
   const t = useTranslations('emissionFactors.post')
+  const ref = useRef<HTMLDivElement>(null)
+  const [displayChildren, setDisplayChildren] = useState(false)
+  const displayTimeout = useRef<NodeJS.Timeout | null>(null)
 
   const mainPost = useMemo(() => {
     if (Object.keys(Post).includes(post)) {
@@ -61,20 +64,15 @@ const PostInfography = ({ post, data, studyId }: Props) => {
     }
   }, [post])
 
-  const dark = useMemo(() => {
-    return mainPost ? colors[postColors[mainPost]].dark : colors.green.dark
-  }, [mainPost])
-
-  const light = useMemo(() => {
-    return mainPost ? colors[postColors[mainPost]].light : colors.green.light
-  }, [mainPost])
+  const postColor = useMemo(() => (mainPost ? postColors[mainPost] : 'green'), [mainPost])
 
   const colorPercentage = useMemo(() => {
-    if (!data) return { inf: 0, sup: 0 }
+    if (!data || data.numberOfEmissionSource === 0) {
+      return 0
+    }
 
-    const percent = (data?.numberOfValidatedEmissionSource / data?.numberOfEmissionSource) * 100
-
-    return { inf: Math.max(percent - 2, 0), sup: Math.min(percent + 2, 100) }
+    const percent = (data.numberOfValidatedEmissionSource / data.numberOfEmissionSource) * 100
+    return Math.max(percent - 2, 0)
   }, [data])
 
   const subPosts = useMemo(() => {
@@ -84,21 +82,38 @@ const PostInfography = ({ post, data, studyId }: Props) => {
     return null
   }, [post])
 
+  useEffect(() => {
+    if (ref.current) {
+      if (displayChildren) {
+        const height = ref.current.scrollHeight
+        ref.current.style.height = `${height}px`
+      } else {
+        ref.current.style.height = '0px'
+      }
+    }
+  }, [displayChildren, ref])
+
   return (
     mainPost && (
       <Link
         data-testid="post-infography"
+        onMouseEnter={() => (displayTimeout.current = setTimeout(() => setDisplayChildren(true), 300))}
+        onMouseLeave={() => {
+          if (displayTimeout.current) {
+            clearTimeout(displayTimeout.current)
+          }
+          setDisplayChildren(false)
+        }}
         href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
-        className={classNames(styles.link)}
+        className={classNames(styles[postColor], styles.link, { [styles.displayChildren]: displayChildren })}
         style={{
-          borderColor: dark,
-          background: `linear-gradient(to right, ${dark} 0%, ${dark} ${colorPercentage.inf}%, ${light} ${colorPercentage.sup}%, ${light} 100%)`,
+          background: `linear-gradient(to right, ${colors[postColor].dark} 0%, ${colors[postColor].dark} ${colorPercentage}%, ${colors[postColor].light} ${colorPercentage}%, ${colors[postColor].light} 100%)`,
         }}
       >
         <PostHeader post={post} mainPost={mainPost} emissionValue={data?.value} />
-        <div className={styles.subPostsContainer}>
+        <div className={styles.subPostsContainer} ref={ref}>
           {subPosts && (
-            <div className={classNames(styles.subPosts, 'flex')}>
+            <div className={classNames(styles[postColor], styles.subPosts, 'flex')}>
               <ul className={classNames(styles.list, 'flex-col')}>
                 {subPosts.map((subPost) => (
                   <li className="align-center" key={subPost}>

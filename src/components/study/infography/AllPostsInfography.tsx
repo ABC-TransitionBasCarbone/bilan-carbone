@@ -3,6 +3,8 @@ import { Post } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import styles from './AllPostsInfography.module.css'
 import PostInfography from './PostInfography'
 
@@ -10,8 +12,9 @@ interface Props {
   study: FullStudy
 }
 
-const AllPostsInfography = async ({ study }: Props) => {
-  const data = await computeResultsByPost(study)
+const AllPostsInfography = ({ study }: Props) => {
+  const tPost = useTranslations('emissionFactors.post')
+  const data = useMemo(() => computeResultsByPost(study, tPost), [study, tPost])
 
   const findSubPost = (subPost: SubPost) => {
     const post = data.find((post) => post.subPosts.find((sb) => sb.post === subPost))

@@ -1,7 +1,4 @@
-'use server'
-
 import { FullStudy } from '@/db/study'
-import { getTranslations } from 'next-intl/server'
 import { sumEmissionSourcesUncertainty } from './emissionSource'
 import { Post, subPostsByPost } from './posts'
 
@@ -14,10 +11,8 @@ export type ResultsByPost = {
   subPosts: ResultsByPost[]
 }
 
-export const computeResultsByPost = async (study: FullStudy) => {
-  const tPost = await getTranslations('emissionFactors.post')
-
-  return Object.values(Post)
+export const computeResultsByPost = (study: FullStudy, tPost: (key: string) => string) =>
+  Object.values(Post)
     .sort((a, b) => tPost(a).localeCompare(tPost(b)))
     .map((post) => {
       const subPosts = subPostsByPost[post]
@@ -62,4 +57,3 @@ export const computeResultsByPost = async (study: FullStudy) => {
         ),
       } as ResultsByPost
     })
-}

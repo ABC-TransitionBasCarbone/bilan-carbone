@@ -6,6 +6,20 @@
   @media screen and (max-width: 64rem) {
     padding: 1rem 0.5rem;
   }
+
+  span {
+    @media screen and (max-width: 90rem) {
+      font-size: 0.875rem;
+    }
+
+    @media screen and (max-width: 64rem) {
+      font-size: 0.75rem;
+    }
+
+    @media screen and (max-width: 55rem) {
+      font-size: 0.625rem;
+    }
+  }
 }
 
 .title {
@@ -17,7 +31,6 @@
 }
 
 .progress {
-  width: 5rem;
   align-self: center;
 }
 

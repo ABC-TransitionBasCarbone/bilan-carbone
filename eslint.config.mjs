@@ -51,7 +51,7 @@ export default [
       'mocha/no-mocha-arrows': 'off',
       'react/no-unescaped-entities': 'off',
       'react/self-closing-comp': 'error',
-
+      curly: 'error',
       'prettier/prettier': [
         'error',
         {

@@ -1,15 +1,7 @@
 .subPostsContainer {
+  height: 0;
   overflow: hidden;
-  visibility: hidden;
-  opacity: 0;
-  transition:
-    visibility 0 500ms,
-    opacity 500ms linear;
-
-  .subPosts {
-    margin-top: -10000px;
-    transition: margin-top 500ms ease-in;
-  }
+  transition: height 300ms ease-in-out;
 }
 
 .link {
@@ -17,50 +9,25 @@
   border: solid 4px;
   text-decoration: none;
   outline-offset: 6px;
-  width: 15rem;
 
   &:hover {
     .list {
       color: var(--primary-60);
     }
-
-    .subPostsContainer {
-      visibility: visible;
-      opacity: 1;
-      transition: opacity 500ms linear;
-
-      .subPosts {
-        margin-top: 0;
-        transition: unset;
-      }
-    }
   }
 }
 
-.green {
-  background: linear-gradient(to right, #469478 0%, #469478 45%, #58ba96 55%, #58ba96 100%);
-  border-color: #469478;
-}
-
-.darkBlue {
-  background: linear-gradient(to right, #0c2155 0%, #0c2155 45%, #273f79 55%, #273f79 100%);
-  border-color: #0c2155;
-}
-
-.blue {
-  background: linear-gradient(to right, #2c6498 0%, #2c6498 45%, #377dbe 55%, #377dbe 100%);
-  border-color: #2c6498;
-}
-
-.orange {
-  background: linear-gradient(to right, #c88938 0%, #c88938 45%, #faac47 55%, #faac47 100%);
-  border-color: #c88938;
+.displayChildren {
+  .subPostsContainer {
+    min-height: 0;
+    height: auto;
+  }
 }
 
 .subPosts {
   background-color: var(--neutral-00);
   padding: 0.5rem;
-  border-radius: 1rem;
+  border-radius: 0 0 calc(1rem - 2px) calc(1rem - 2px);
 
   @media screen and (max-width: 64rem) {
     padding: 0.25rem;
@@ -78,4 +45,35 @@
   @media screen and (max-width: 90rem) {
     gap: 0.125rem;
   }
+
+  li,
+  svg {
+    @media screen and (max-width: 90rem) {
+      font-size: 0.875rem;
+    }
+
+    @media screen and (max-width: 64rem) {
+      font-size: 0.75rem;
+    }
+
+    @media screen and (max-width: 55rem) {
+      font-size: 0.625rem;
+    }
+  }
+}
+
+.green {
+  border-color: #469478;
+}
+
+.darkBlue {
+  border-color: #0c2155;
+}
+
+.blue {
+  border-color: #2c6498;
+}
+
+.orange {
+  border-color: #c88938;
 }
