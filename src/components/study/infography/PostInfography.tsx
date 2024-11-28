@@ -66,14 +66,14 @@ const PostInfography = ({ post, data, studyId }: Props) => {
 
   const postColor = useMemo(() => (mainPost ? postColors[mainPost] : 'green'), [mainPost])
 
-  const colorPercentage = useMemo(() => {
-    if (!data || data.numberOfEmissionSource === 0) {
-      return 0
-    }
-
-    const percent = (data.numberOfValidatedEmissionSource / data.numberOfEmissionSource) * 100
-    return Math.max(percent - 2, 0)
-  }, [data])
+  const background = useMemo(() => {
+    const percent =
+      !data || data.numberOfEmissionSource === 0
+        ? 0
+        : (data.numberOfValidatedEmissionSource / data.numberOfEmissionSource) * 100
+    const { dark, light } = colors[postColor]
+    return `linear-gradient(to right, ${dark} 0%, ${dark} ${percent}%, ${light} ${percent}%, ${light} 100%)`
+  }, [data, postColor])
 
   const subPosts = useMemo(() => {
     if (Object.keys(Post).includes(post)) {
@@ -107,7 +107,7 @@ const PostInfography = ({ post, data, studyId }: Props) => {
         href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
         className={classNames(styles[postColor], styles.link, { [styles.displayChildren]: displayChildren })}
         style={{
-          background: `linear-gradient(to right, ${colors[postColor].dark} 0%, ${colors[postColor].dark} ${colorPercentage}%, ${colors[postColor].light} ${colorPercentage}%, ${colors[postColor].light} 100%)`,
+          background,
         }}
       >
         <PostHeader post={post} mainPost={mainPost} emissionValue={data?.value} />
