@@ -131,6 +131,26 @@ const getEmissionSourceRows = (
   return { columns, rows }
 }
 
+const getFileName = (study: FullStudy, post?: string, subPost?: SubPost) => {
+  let name = study.name
+
+  if (post) {
+    name += `_${post}`
+  }
+  if (subPost) {
+    name += `_${subPost}`
+  }
+
+  const date = dayjs()
+  const formattedDate = date.format('YYYY_MM_DD')
+  return `${name}_${formattedDate}.csv`
+}
+
+const downloadCSV = (csvContent: string, fileName: string) => {
+  // \ufeff  (Byte Order Mark) adds BOM to indicate UTF-8 encoding
+  return download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
+}
+
 export const downloadStudySubPosts = async (
   study: FullStudy,
   post: string,
@@ -149,27 +169,19 @@ export const downloadStudySubPosts = async (
   // TODO : Ajouter la ligne des incertitudes
   const csvContent = [columns, ...rows, totalRow].join('\n')
 
-  const date = dayjs()
-  const formattedDate = date.format('YYYY_MM_DD')
-  const fileName = `${study.name}_${post}_${subPost}_${formattedDate}.csv`
-
-  // \ufeff  (Byte Order Mark) adds BOM to indicate UTF-8 encoding
-  download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
+  const fileName = getFileName(study, post, subPost)
+  downloadCSV(csvContent, fileName)
 }
 
 export const downloadStudyPost = async (
   study: FullStudy,
+  emissionSources: FullStudy['emissionSources'],
   post: Post | SubPost,
   t: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
 ) => {
-  const validSubPosts = Object.keys(subPostsByPost).includes(post) ? subPostsByPost[post as Post] : [post]
-  const emissionSources = study.emissionSources
-    .filter((emissionSource) => validSubPosts.includes(emissionSource.subPost))
-    .sort((a, b) => a.subPost.localeCompare(b.subPost))
-
-  const emissionFactorIds = (emissionSources || [])
+  const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
   const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
@@ -182,11 +194,8 @@ export const downloadStudyPost = async (
   // TODO : Ajouter la ligne des incertitudes
   const csvContent = [columns, ...rows, totalRow].join('\n')
 
-  const date = dayjs()
-  const formattedDate = date.format('YYYY_MM_DD')
-  const fileName = `${study.name}_${post}_${formattedDate}.csv`
-
-  download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
+  const fileName = getFileName(study, post)
+  downloadCSV(csvContent, fileName)
 }
 
 export const downloadStudyEmissionSources = async (
@@ -197,7 +206,7 @@ export const downloadStudyEmissionSources = async (
 ) => {
   const emissionSources = study.emissionSources.sort((a, b) => a.subPost.localeCompare(b.subPost))
 
-  const emissionFactorIds = (emissionSources || [])
+  const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
   const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
@@ -210,9 +219,6 @@ export const downloadStudyEmissionSources = async (
   // TODO : Ajouter la ligne des incertitudes
   const csvContent = [columns, ...rows, totalRow].join('\n')
 
-  const date = dayjs()
-  const formattedDate = date.format('YYYY_MM_DD')
-  const fileName = `${study.name}_${formattedDate}.csv`
-
-  download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
+  const fileName = getFileName(study)
+  downloadCSV(csvContent, fileName)
 }
