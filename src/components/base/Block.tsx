@@ -12,6 +12,7 @@ interface Props {
   id?: string
   link?: string
   linkLabel?: string
+  ['data-testid']?: string
   linkDataTestId?: string
   description?: ReactNode
 }
@@ -25,6 +26,7 @@ const Block = ({
   iconPosition,
   as,
   id,
+  'data-testid': dataTestId,
   linkDataTestId,
   description,
   ...rest
@@ -34,7 +36,9 @@ const Block = ({
   const titleDiv = (
     <div className={classNames(styles.title, 'align-center')}>
       {iconPosition === 'before' && iconDiv}
-      <Title id={id}>{title}</Title>
+      <Title id={id} data-testid={dataTestId}>
+        {title}
+      </Title>
       {iconPosition !== 'before' && iconDiv}
     </div>
   )

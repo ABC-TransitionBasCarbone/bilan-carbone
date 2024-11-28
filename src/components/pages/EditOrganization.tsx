@@ -2,7 +2,7 @@ import { OrganizationWithSites } from '@/db/user'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
-import OrganizationEditForm from '../organization/edit/OrganizationEditForm'
+import EditOrganizationForm from '../organization/edit/EditOrganizationForm'
 
 interface Props {
   organization: OrganizationWithSites
@@ -18,11 +18,11 @@ const EditOrganizationPage = ({ organization }: Props) => {
         current={tNav('edit')}
         links={[
           { label: tNav('home'), link: '/' },
-          { label: organization.name, link: `/organization/${organization.id}` },
+          { label: organization.name, link: `/organisations/${organization.id}` },
         ]}
       />
       <Block as="h1" title={t('editTitle')}>
-        <OrganizationEditForm organization={organization} />
+        <EditOrganizationForm organization={organization} />
       </Block>
     </>
   )

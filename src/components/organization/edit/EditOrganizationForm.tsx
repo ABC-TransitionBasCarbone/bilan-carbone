@@ -14,12 +14,13 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Sites from '../Sites'
 
 interface Props {
   organization: OrganizationWithSites
 }
 
-const OrganizationEditForm = ({ organization }: Props) => {
+const EditOrganizationForm = ({ organization }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
   const [error, setError] = useState('')
@@ -31,13 +32,12 @@ const OrganizationEditForm = ({ organization }: Props) => {
     defaultValues: {
       organizationId: organization.id,
       name: organization.name,
+      sites: organization.sites,
     },
   })
 
   const onSubmit = async (command: UpdateOrganizationCommand) => {
-    console.log(command)
     const result = await updateOrganizationCommand(command)
-    console.log(result)
     if (result) {
       setError(result)
     } else {
@@ -46,6 +46,7 @@ const OrganizationEditForm = ({ organization }: Props) => {
     }
   }
 
+  const sites = form.watch('sites')
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
       <FormTextField
@@ -55,6 +56,7 @@ const OrganizationEditForm = ({ organization }: Props) => {
         name="name"
         label={t('name')}
       />
+      <Sites sites={sites} form={form} />
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}
       </Button>
@@ -63,4 +65,4 @@ const OrganizationEditForm = ({ organization }: Props) => {
   )
 }
 
-export default OrganizationEditForm
+export default EditOrganizationForm

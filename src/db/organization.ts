@@ -1,3 +1,4 @@
+import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { Prisma } from '@prisma/client'
 import { prismaClient } from './client'
 
@@ -24,8 +25,18 @@ export const createOrganization = (organization: Prisma.OrganizationCreateInput)
     data: organization,
   })
 
-export const updateOrganization = (id: string, organization: Prisma.OrganizationUpdateInput) =>
-  prismaClient.organization.update({
-    where: { id },
-    data: organization,
-  })
+export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrganizationCommand) =>
+  prismaClient.$transaction([
+    ...sites.map((site) =>
+      prismaClient.site.upsert({
+        where: { id: site.id },
+        create: { organizationId, ...site },
+        update: { name: site.name, etp: site.etp, ca: site.ca },
+      }),
+    ),
+    prismaClient.site.deleteMany({ where: { organizationId, id: { notIn: sites.map((site) => site.id) } } }),
+    prismaClient.organization.update({
+      where: { id: organizationId },
+      data: data,
+    }),
+  ])
