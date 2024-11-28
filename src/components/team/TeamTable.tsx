@@ -7,6 +7,7 @@ import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import Block from '../base/Block'
+import LinkButton from '../base/LinkButton'
 import SelectRole from './SelectRole'
 
 interface Props {
@@ -57,9 +58,11 @@ const TeamTable = ({ user, team }: Props) => {
     <Block
       title={t('title')}
       id="team-table-title"
-      link={user.role !== Role.DEFAULT ? '/equipe/ajouter' : ''}
-      linkLabel={t('newUser')}
-      linkDataTestId="add-member-link"
+      Buttons={
+        <LinkButton href={user.role !== Role.DEFAULT ? '/equipe/ajouter' : ''} data-testid={'add-member-link'}>
+          {t('newUser')}
+        </LinkButton>
+      }
     >
       <table aria-labelledby="team-table-title">
         <thead>
