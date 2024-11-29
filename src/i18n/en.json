@@ -48,7 +48,9 @@
   },
   "results": {
     "byPost": "Results by post",
-    "bySubPost": "Results by sub post"
+    "bySubPost": "Results by sub post",
+    "loading": "Loading...",
+    "noData": "No data to display"
   },
   "profile": {
     "title": "My profile",
