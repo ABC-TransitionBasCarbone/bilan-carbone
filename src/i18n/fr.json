@@ -301,7 +301,6 @@
       "all": "Toutes",
       "Archived": "Archivé",
       "BaseEmpreinte": "Base Empreinte",
-      "detail": "Détails",
       "goTo": "Aller à la page",
       "items": "Élements par page",
       "location": "Localisation",
@@ -317,9 +316,12 @@
       "source": "Source",
       "sources": "Sources",
       "status": "Statut",
-      "unit": "Unité",
       "value": "Valeur",
-      "Valid": "Valide"
+      "Valid": "Valide",
+      "importedFrom": {
+        "baseEmpreinte": "Logo de la Base Empreinte",
+        "manual": "Manuel"
+      }
     }
   },
   "level": {

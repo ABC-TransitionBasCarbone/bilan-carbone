@@ -1,6 +1,6 @@
 'use client'
-
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import {
   Checkbox,
   FormControl,
@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import { Import } from '@prisma/client'
 import {
+  ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -32,12 +33,16 @@ import styles from './Table.module.css'
 const fuseOptions = {
   keys: [
     {
-      name: 'name',
+      name: 'metaData.title',
       weight: 1,
     },
     {
-      name: 'detail',
+      name: 'metaData.attribute',
       weight: 0.5,
+    },
+    {
+      name: 'metaData.comment',
+      weight: 0.3,
     },
   ],
   threshold: 0.3,
@@ -51,9 +56,8 @@ const locationFuseOptions = {
       weight: 1,
     },
     {
-      name: 'sub-location',
+      name: 'metaData.location',
       weight: 0.5,
-      getFn: (emissionFactor: EmissionFactorWithMetaData) => emissionFactor.metaData?.location || '',
     },
   ],
   threshold: 0.3,
@@ -78,64 +82,50 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
       {
         id: 'name',
         header: t('name'),
-        accessorFn: (emissionFactor: EmissionFactorWithMetaData) => emissionFactor.metaData?.title,
+        accessorFn: (emissionFactor) =>
+          emissionFactor.metaData
+            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}`
+            : '',
+        cell: ({ getValue }) => <span className={styles.name}>{getValue<string>()}</span>,
       },
       {
-        id: 'detail',
-        header: t('detail'),
-        cell: ({ getValue }: { getValue: () => string }) => {
-          const value = getValue()
-          if (!value) {
-            return null
-          }
-          const lines = value.split('<br />')
-          return lines.length === 1 ? (
-            lines
-          ) : (
-            <>
-              {lines[0]} <br /> {lines[1]}
-            </>
-          )
-        },
-        accessorFn: (emissionFactor: EmissionFactorWithMetaData) => {
-          const attribute = emissionFactor.metaData?.attribute
-          const comment = emissionFactor.metaData?.comment
-          if (attribute && comment) {
-            return `${attribute}<br />${comment}`
-          }
-          if (attribute) {
-            return attribute
-          }
-          if (comment) {
-            return comment
-          }
-        },
-      },
-      { header: t('value'), accessorKey: 'totalCo2' },
-      {
-        header: t('unit'),
-        accessorFn: (emissionFactor: EmissionFactorWithMetaData) => `kgCO₂e/${tUnits(emissionFactor.unit)}`,
+        header: t('value'),
+        accessorFn: (emissionFactor) => `${emissionFactor.totalCo2} kgCO₂e/${tUnits(emissionFactor.unit)}`,
       },
       {
         header: t('location'),
-        accessorFn: (emissionFactor: EmissionFactorWithMetaData) =>
-          [emissionFactor.location, emissionFactor.metaData?.location].join(' '),
+        accessorKey: 'location',
       },
-      { header: t('source'), accessorKey: 'source' },
-    ]
+      {
+        header: t('source'),
+        accessorKey: 'importedFrom',
+        cell: ({ getValue }) => {
+          const importedFrom = getValue<Import>()
+          switch (importedFrom) {
+            case Import.BaseEmpreinte:
+              return (
+                <img
+                  className={styles.importFrom}
+                  src="https://base-empreinte.ademe.fr/assets/img/base-empreinte.svg"
+                  title={t('importedFrom.baseEmpreinte')}
+                />
+              )
+            default:
+              return (
+                <span className={styles.importFrom}>
+                  <HomeWorkIcon />
+                  {t('importedFrom.manual')}
+                </span>
+              )
+          }
+          return null
+        },
+      },
+    ] as ColumnDef<EmissionFactorWithMetaData>[]
   }, [t])
 
   const fuse = useMemo(() => {
-    return new Fuse(emissionFactors, {
-      ...fuseOptions,
-      getFn: (emissionFactor, keys) => {
-        const column = columns.find((column) => keys.includes(column.id || ''))
-        if (!column || !column.accessorFn) {
-          return ''
-        }
-        return (column.accessorFn(emissionFactor) || '').toString()
-      },
-    })
+    return new Fuse(emissionFactors, fuseOptions)
   }, [emissionFactors, columns])
 
   const searchedEmissionFactors = useMemo(() => {

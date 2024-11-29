@@ -31,7 +31,7 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new FE')
-    cy.getByTestId('cell-emission-totalCo2').first().should('have.text', '12')
+    cy.getByTestId('cell-emission-Valeur').first().should('have.text', '12 kgCO₂e/GWh')
 
     cy.logout()
     cy.login('bc-default-2@yopmail.com', 'password-2')
@@ -103,7 +103,7 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new detailed FE')
-    cy.getByTestId('cell-emission-totalCo2').first().should('have.text', '45')
+    cy.getByTestId('cell-emission-Valeur').first().should('have.text', '45 kgCO₂e/GWh')
   })
 
   it('should create an emission factor with total CO2 and multiple parts on your organization', () => {
@@ -169,7 +169,7 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new multiple FE')
-    cy.getByTestId('cell-emission-totalCo2').first().should('have.text', '21')
+    cy.getByTestId('cell-emission-Valeur').first().should('have.text', '21 kgCO₂e/GWh')
   })
 
   it('should create an emission factor with detailed CO2 and multiple parts on your organization', () => {
@@ -261,7 +261,7 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new multiple detailed FE')
-    cy.getByTestId('cell-emission-totalCo2').first().should('have.text', '99')
+    cy.getByTestId('cell-emission-Valeur').first().should('have.text', '99 kgCO₂e/GWh')
   })
 
   it('should render emission parts in accordions', () => {
@@ -422,6 +422,6 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new FE without parts')
-    cy.getByTestId('cell-emission-totalCo2').first().should('have.text', '144')
+    cy.getByTestId('cell-emission-Valeur').first().should('have.text', '144 kgCO₂e/GWh')
   })
 })
