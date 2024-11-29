@@ -11,7 +11,7 @@ export const createStudy = (study: Prisma.StudyCreateInput) =>
 export const getMainStudy = async (user: User) => {
   const userOrganizations = await getUserOrganizations(user.email)
 
-  return prismaClient.study.findFirst({
+  const study = await prismaClient.study.findFirst({
     where: {
       OR: [
         { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
@@ -20,7 +20,9 @@ export const getMainStudy = async (user: User) => {
       ],
     },
     orderBy: { startDate: 'desc' },
+    select: { id: true },
   })
+  return study ? getStudyById(study.id) : null
 }
 
 export const getStudiesByUser = async (user: User) => {
