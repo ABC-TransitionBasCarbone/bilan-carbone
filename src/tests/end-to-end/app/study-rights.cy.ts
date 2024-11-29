@@ -24,7 +24,6 @@ describe('Create study', () => {
     cy.get('[data-value="Initial"]').click()
     cy.getByTestId('new-study-create-button').click()
 
-    cy.getByTestId('study-navbar-button').click()
     cy.getByTestId('study-cadrage-link').click()
 
     cy.getByTestId('study-rights-table-line').contains('bc-default-0@yopmail.comValidateur')

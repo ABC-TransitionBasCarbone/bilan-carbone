@@ -1,10 +1,10 @@
 import NotFound from '@/components/pages/NotFound'
-import StudyPage from '@/components/pages/Study'
 import StudyContributorPage from '@/components/pages/StudyContributor'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
 import { UUID } from 'crypto'
+import { redirect } from 'next/navigation'
 
 interface Props {
   params: Promise<{
@@ -27,15 +27,16 @@ const StudyView = async (props: Props) => {
     return <NotFound />
   }
 
-  if (!(await canReadStudyDetail(session.user, study))) {
-    if (!(await canReadStudy(session.user, study))) {
-      return <NotFound />
-    }
-    const studyWithoutDetail = filterStudyDetail(session.user, study)
-    return <StudyContributorPage study={studyWithoutDetail} user={session.user} />
+  if (!(await canReadStudy(session.user, study))) {
+    return <NotFound />
   }
 
-  return <StudyPage study={study} />
+  if (await canReadStudyDetail(session.user, study)) {
+    return redirect(`/etudes/${study.id}`)
+  }
+
+  const studyWithoutDetail = filterStudyDetail(session.user, study)
+  return <StudyContributorPage study={studyWithoutDetail} user={session.user} />
 }
 
 export default StudyView
