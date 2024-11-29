@@ -29,6 +29,7 @@
     "@mui/icons-material": "^6.1.9",
     "@mui/material": "^6.1.9",
     "@mui/material-nextjs": "^6.1.9",
+    "@mui/x-charts": "^7.22.3",
     "@mui/x-date-pickers": "^7.23.0",
     "@prisma/client": "^6.0.1",
     "@tanstack/react-table": "^8.20.5",
