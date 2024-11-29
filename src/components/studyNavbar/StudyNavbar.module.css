@@ -58,3 +58,21 @@
   flex-direction: column;
   padding-left: 2rem;
 }
+
+.openable {
+  margin-left: -1rem;
+  width: calc(100% + 1rem);
+}
+
+.icon {
+  font-size: 1rem !important;
+}
+
+.disabled {
+  background-color: var(--neutral-00);
+  color: var(--neutral-40);
+  cursor: not-allowed;
+  &:hover {
+    background-color: var(--neutral-00);
+  }
+}
