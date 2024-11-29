@@ -2,6 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { EmissionFactor } from '@prisma/client'
+import { getEmissionSourcesTotalCo2, sumEmissionSourcesResults } from './emissionSource'
 
 type Quality = Pick<
   EmissionFactor,
@@ -63,19 +64,13 @@ export const getQualityRating = (quality: Quality) => {
   return getStandardDeviationRating(standardDeviation)
 }
 
-export const getEmissionSourcesGlobalUncertainty = (
-  emissionSources: FullStudy['emissionSources'],
-  totalEmissions: number,
-) => {
-  const gsd = Math.exp(
-    Math.sqrt(
-      emissionSources.reduce((acc, emissionSource) => {
-        const emissionSensibility =
-          ((emissionSource.value || 0) * (emissionSource.emissionFactor?.totalCo2 || 0)) / totalEmissions
-        const emissionGSD = getQualityStandardDeviation(emissionSource)
-        return emissionGSD === null ? acc : acc + Math.pow(emissionSensibility, 2) * Math.pow(Math.log(emissionGSD), 2)
-      }, 0),
-    ),
-  )
-  return [totalEmissions / Math.pow(gsd, 2), totalEmissions * Math.pow(gsd, 2)]
+export const getEmissionSourcesGlobalUncertainty = (emissionSources: FullStudy['emissionSources']) => {
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
+  const gsd = sumEmissionSourcesResults(emissionSources)
+  return getConfidenceInterval(totalEmissions, gsd)
 }
+
+export const getConfidenceInterval = (emission: number, standardDeviation: number) => [
+  emission / standardDeviation,
+  emission * standardDeviation,
+]

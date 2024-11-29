@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from './permissions/study'
-import { getQualityStandardDeviation } from './uncertainty'
+import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
 
 const getStandardDeviation = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
@@ -38,7 +38,7 @@ export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDeta
   }
   const emission = emissionSource.emissionFactor.totalCo2 * emissionSource.value
   const standardDeviation = getStandardDeviation(emissionSource, emission)
-  const confidenceInterval = standardDeviation ? [emission / standardDeviation, emission * standardDeviation] : null
+  const confidenceInterval = standardDeviation ? getConfidenceInterval(emission, standardDeviation) : null
   const alpha = getAlpha(emission, confidenceInterval)
 
   return {
@@ -65,3 +65,9 @@ export const sumEmissionSourcesResults = (emissionSource: (FullStudy | StudyWith
     2,
   )
 }
+
+export const getEmissionSourcesTotalCo2 = (emissionSources: FullStudy['emissionSources']) =>
+  emissionSources.reduce(
+    (sum, emissionSource) => sum + (emissionSource.value || 0) * (emissionSource.emissionFactor?.totalCo2 || 0),
+    0,
+  )
