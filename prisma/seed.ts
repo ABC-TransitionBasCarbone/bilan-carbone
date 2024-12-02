@@ -40,6 +40,7 @@ const users = async () => {
         reliability: 5,
         importedId: '1',
         unit: Unit.KG,
+        subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
             language: 'fr',
@@ -58,6 +59,7 @@ const users = async () => {
         reliability: 5,
         importedId: '2',
         unit: Unit.KG_DRY_MATTER,
+        subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
             language: 'fr',

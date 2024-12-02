@@ -19,7 +19,7 @@ export const createEmissionSource = async (command: CreateEmissionSourceCommand)
     return NOT_AUTHORIZED
   }
 
-  if (!(await canCreateEmissionSource(user, { studyId: command.studyId, subPost: command.subPost }))) {
+  if (!(await canCreateEmissionSource(user, command))) {
     return NOT_AUTHORIZED
   }
 

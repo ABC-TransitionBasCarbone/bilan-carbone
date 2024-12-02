@@ -51,6 +51,14 @@ export const getAllValidEmissionFactors = (organizationId: string) =>
     orderBy: { createdAt: 'desc' },
   })
 
+export const getEmissionFactorById = (id: string) =>
+  prismaClient.emissionFactor.findUnique({
+    where: {
+      id,
+    },
+    select: selectEmissionFactor,
+  })
+
 export const getAllEmissionFactorsByIds = (ids: string[], organizationId: string) =>
   prismaClient.emissionFactor.findMany({
     where: {

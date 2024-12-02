@@ -45,6 +45,10 @@ const SubPost = ({
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
 
+  const subPostEmissionFactors = useMemo(() => {
+    return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost))
+  }, [emissionFactors, subPost])
+
   const emissionSources = useMemo(
     () => study.emissionSources.filter((emissionSource) => emissionSource.subPost === subPost),
     [study, subPost],
@@ -85,7 +89,7 @@ const SubPost = ({
                 study={study}
                 emissionSource={emissionSource as StudyWithoutDetail['emissionSources'][0]}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
+                emissionFactors={subPostEmissionFactors}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail
               />
@@ -94,7 +98,7 @@ const SubPost = ({
                 study={study}
                 emissionSource={emissionSource as FullStudy['emissionSources'][0]}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
+                emissionFactors={subPostEmissionFactors}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail={false}
               />
