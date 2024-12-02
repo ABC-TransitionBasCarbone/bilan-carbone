@@ -17,7 +17,7 @@ export const getOrganizationUsers = (id: string | null) =>
 export const getOrganizationWithSitesById = (id: string) =>
   prismaClient.organization.findUnique({
     where: { id },
-    include: { sites: { select: { name: true, etp: true, ca: true, id: true } } },
+    include: { sites: { select: { name: true, etp: true, ca: true, id: true }, orderBy: { createdAt: 'asc' } } },
   })
 
 export const createOrganization = (organization: Prisma.OrganizationCreateInput) =>
