@@ -3,7 +3,6 @@
 import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { Post, subPostsByPost } from '@/services/posts'
 import { downloadStudyEmissionSources, downloadStudyPost } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -15,21 +14,21 @@ import { useMemo, useState } from 'react'
 import styles from './Result.module.css'
 
 interface Props {
-  emissionFactors: EmissionFactorWithMetaData[]
   study: FullStudy
   isPost: boolean
 }
 
-const Result = ({ emissionFactors, study, isPost }: Props) => {
+const sort = (arr: string[]) => arr.sort((a, b) => a.length - b.length)
+
+const Result = ({ study, isPost }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
-  const [post, setPost] = useState<Post>(Object.keys(subPostsByPost)[0] as Post)
+  const [post, setPost] = useState<Post>(Object.values(Post)[0])
 
-  const selectorOptions: Post[] = useMemo(() => (isPost ? [] : (Object.keys(subPostsByPost) as Post[])), [post])
+  const selectorOptions = useMemo(() => (isPost ? [] : Object.values(Post)), [post])
 
-  const sort = (arr: string[]) => arr.sort((a, b) => a.length - b.length)
   const xAxis = useMemo(() => (isPost ? sort(Object.keys(subPostsByPost)) : sort(subPostsByPost[post])), [post, isPost])
 
   const yData = useMemo(() => {
@@ -41,12 +40,10 @@ const Result = ({ emissionFactors, study, isPost }: Props) => {
           ),
         )
         .map((emissionSources) =>
-          emissionSources.reduce((acc, emissionSource) => {
-            const emissionFactor = emissionFactors.find(
-              (emissionFactor) => emissionFactor.id === emissionSource.emissionFactor?.id,
-            )
-            return acc + (emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0)
-          }, 0),
+          emissionSources.reduce(
+            (acc, emissionSource) => acc + (emissionSource.value || 0) * (emissionSource.emissionFactor?.totalCo2 || 0),
+            0,
+          ),
         )
       if (data.every((totalEmissions) => totalEmissions === 0)) {
         return []
@@ -56,12 +53,10 @@ const Result = ({ emissionFactors, study, isPost }: Props) => {
       const data = xAxis.map((subPost) =>
         study.emissionSources
           .filter((emissionSource) => emissionSource.subPost === subPost)
-          .reduce((acc, emissionSource) => {
-            const emissionFactor = emissionFactors.find(
-              (emissionFactor) => emissionFactor.id === emissionSource.emissionFactor?.id,
-            )
-            return acc + (emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0)
-          }, 0),
+          .reduce(
+            (acc, emissionSource) => acc + (emissionSource.value || 0) * (emissionSource.emissionFactor?.totalCo2 || 0),
+            0,
+          ),
       )
       if (data.every((totalEmissions) => totalEmissions === 0)) {
         return []
