@@ -16,3 +16,5 @@ export const updateEmissionSourceOnStudy = (
     data: { ...emissionSource, updatedAt: new Date() },
     where: { id },
   })
+
+export const deleteEmissionSourceOnStudy = (id: string) => prismaClient.studyEmissionSource.delete({ where: { id } })
