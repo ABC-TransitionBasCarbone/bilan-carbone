@@ -7,10 +7,10 @@ import { Post, subPostsByPost } from '@/services/posts'
 import { downloadStudyEmissionSources, downloadStudyPost } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import { MenuItem, Select } from '@mui/material'
-import { BarChart } from '@mui/x-charts/BarChart'
+import Chart from 'chart.js/auto'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './Result.module.css'
 
 interface Props {
@@ -26,6 +26,8 @@ const Result = ({ study, isPost }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
   const [post, setPost] = useState<Post>(Object.values(Post)[0])
+  const chartRef = useRef<Chart | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   const selectorOptions = useMemo(() => (isPost ? [] : Object.values(Post)), [post])
 
@@ -72,6 +74,43 @@ const Result = ({ study, isPost }: Props) => {
 
   const dynamicHeight = useMemo(() => Math.min(dynamicMargin.bottom * 3, 500), [dynamicMargin])
 
+  useEffect(() => {
+    if (chartRef.current) {
+      chartRef.current.destroy()
+    }
+
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d')
+      if (ctx) {
+        chartRef.current = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: xAxis.map((post) => tPost(post)),
+            datasets: [{ data: yData, backgroundColor: '#346fef' }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              tooltip: { callbacks: { label: (context) => `${context.raw} kgCO₂e` } },
+              legend: { display: false },
+            },
+            scales: {
+              x: { ticks: { maxRotation: 45, minRotation: 45 } },
+              y: { beginAtZero: true },
+            },
+          },
+        })
+      }
+    }
+
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.destroy()
+      }
+    }
+  }, [xAxis, yData])
+
   const downloadResults = () => {
     if (isPost) {
       downloadStudyEmissionSources(study, tExport, tPost, tQuality)
@@ -87,7 +126,7 @@ const Result = ({ study, isPost }: Props) => {
     <Box className="grow flex-col">
       <h4 className={styles.title}>{t(isPost ? 'byPost' : 'bySubPost')}</h4>
       {!isPost && (
-        <div className={classNames(styles.buttons, 'flex')}>
+        <div className={classNames(styles.buttons, 'flex mb1')}>
           <Select className="mr-2 grow" value={post} onChange={(e) => setPost(e.target.value as Post)}>
             {selectorOptions.map((post) => (
               <MenuItem key={post} value={post}>
@@ -100,24 +139,9 @@ const Result = ({ study, isPost }: Props) => {
           </Button>
         </div>
       )}
-      <BarChart
-        xAxis={[
-          {
-            scaleType: 'band',
-            data: xAxis.map((post) => tPost(post)),
-            tickLabelStyle: { angle: -45, textAnchor: 'end' },
-          },
-        ]}
-        // TODO : add css class to properly use color
-        series={[{ data: yData, color: '#346fef' }]}
-        width={500}
-        height={dynamicHeight}
-        margin={dynamicMargin}
-        slotProps={{
-          loadingOverlay: { message: t('loading') },
-          noDataOverlay: { message: t('noData') },
-        }}
-      />
+      <div style={{ width: 500, height: dynamicHeight }}>
+        <canvas data-testid={`study-${isPost ? 'post' : 'subPost'}-chart`} className={styles.chart} ref={canvasRef} />
+      </div>
     </Box>
   )
 }
