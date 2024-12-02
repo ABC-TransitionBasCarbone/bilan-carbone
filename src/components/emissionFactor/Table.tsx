@@ -1,4 +1,5 @@
 'use client'
+
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import {
@@ -29,7 +30,7 @@ import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import LinkButton from '../base/LinkButton'
-import Detail from './Detail'
+import EmissionFactorDetails from './EmissionFactorDetails'
 import styles from './Table.module.css'
 
 const fuseOptions = {
@@ -265,7 +266,7 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
               lines.push(
                 <tr key={`todo${row.id}`}>
                   <td colSpan={4} className={styles.detail}>
-                    <Detail emissionFactor={row.original} />
+                    <EmissionFactorDetails emissionFactor={row.original} />
                   </td>
                 </tr>,
               )

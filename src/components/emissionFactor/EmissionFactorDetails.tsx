@@ -11,7 +11,7 @@ import styles from './Detail.module.css'
 interface Props {
   emissionFactor: EmissionFactorWithMetaData
 }
-const Detail = ({ emissionFactor }: Props) => {
+const EmissionFactorDetails = ({ emissionFactor }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('units')
@@ -66,4 +66,4 @@ const Detail = ({ emissionFactor }: Props) => {
   )
 }
 
-export default Detail
+export default EmissionFactorDetails
