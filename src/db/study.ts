@@ -8,10 +8,72 @@ export const createStudy = (study: Prisma.StudyCreateInput) =>
     data: study,
   })
 
+const FullStudyIncluder = {
+  emissionSources: {
+    select: {
+      id: true,
+      subPost: true,
+      name: true,
+      caracterisation: true,
+      tag: true,
+      value: true,
+      reliability: true,
+      technicalRepresentativeness: true,
+      geographicRepresentativeness: true,
+      temporalRepresentativeness: true,
+      completeness: true,
+      source: true,
+      type: true,
+      comment: true,
+      validated: true,
+      emissionFactor: {
+        select: {
+          id: true,
+          totalCo2: true,
+          unit: true,
+          reliability: true,
+          technicalRepresentativeness: true,
+          geographicRepresentativeness: true,
+          temporalRepresentativeness: true,
+          completeness: true,
+        },
+      },
+      contributor: {
+        select: {
+          email: true,
+        },
+      },
+    },
+  },
+  contributors: {
+    select: {
+      user: {
+        select: {
+          email: true,
+          organizationId: true,
+        },
+      },
+      subPost: true,
+    },
+  },
+  allowedUsers: {
+    select: {
+      user: {
+        select: {
+          email: true,
+          organizationId: true,
+        },
+      },
+      role: true,
+    },
+    orderBy: { user: { email: 'asc' } },
+  },
+  exports: { select: { type: true } },
+}
+
 export const getMainStudy = async (user: User) => {
   const userOrganizations = await getUserOrganizations(user.email)
-
-  const study = await prismaClient.study.findFirst({
+  return prismaClient.study.findFirst({
     where: {
       OR: [
         { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
@@ -19,10 +81,14 @@ export const getMainStudy = async (user: User) => {
         { contributors: { some: { userId: user.id } } },
       ],
     },
+    include: {
+      ...FullStudyIncluder,
+      emissionSources: { ...FullStudyIncluder.emissionSources, orderBy: [{ createdAt: 'asc' }, { name: 'asc' }] },
+      contributors: { ...FullStudyIncluder.contributors, orderBy: { user: { email: 'asc' } } },
+      allowedUsers: { ...FullStudyIncluder.allowedUsers, orderBy: { user: { email: 'asc' } } },
+    },
     orderBy: { startDate: 'desc' },
-    select: { id: true },
   })
-  return study ? getStudyById(study.id) : null
 }
 
 export const getStudiesByUser = async (user: User) => {
@@ -54,72 +120,14 @@ export const getStudyById = async (id: string) => {
   return prismaClient.study.findUnique({
     where: { id },
     include: {
-      emissionSources: {
-        select: {
-          id: true,
-          subPost: true,
-          name: true,
-          caracterisation: true,
-          tag: true,
-          value: true,
-          reliability: true,
-          technicalRepresentativeness: true,
-          geographicRepresentativeness: true,
-          temporalRepresentativeness: true,
-          completeness: true,
-          source: true,
-          type: true,
-          comment: true,
-          validated: true,
-          emissionFactor: {
-            select: {
-              id: true,
-              totalCo2: true,
-              unit: true,
-              reliability: true,
-              technicalRepresentativeness: true,
-              geographicRepresentativeness: true,
-              temporalRepresentativeness: true,
-              completeness: true,
-            },
-          },
-          contributor: {
-            select: {
-              email: true,
-            },
-          },
-        },
-        orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
-      },
-      contributors: {
-        select: {
-          user: {
-            select: {
-              email: true,
-              organizationId: true,
-            },
-          },
-          subPost: true,
-        },
-        orderBy: { user: { email: 'asc' } },
-      },
-      allowedUsers: {
-        select: {
-          user: {
-            select: {
-              email: true,
-              organizationId: true,
-            },
-          },
-          role: true,
-        },
-        orderBy: { user: { email: 'asc' } },
-      },
-      exports: { select: { type: true } },
+      ...FullStudyIncluder,
+      emissionSources: { ...FullStudyIncluder.emissionSources, orderBy: [{ createdAt: 'asc' }, { name: 'asc' }] },
+      contributors: { ...FullStudyIncluder.contributors, orderBy: { user: { email: 'asc' } } },
+      allowedUsers: { ...FullStudyIncluder.allowedUsers, orderBy: { user: { email: 'asc' } } },
     },
   })
 }
-export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
+export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById | typeof getMainStudy>, null>
 
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
   prismaClient.userOnStudy.create({
