@@ -1,11 +1,25 @@
+'use client'
+
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Navbar.module.css'
+import { auth } from '@/services/auth'
+import { useState, useEffect } from 'react'
 
 const Navbar = () => {
-  const t = useTranslations('navigation')
+  const [canSeeAdmin, setCanSeeAdmin] = useState(false);
+  const t = useTranslations('navigation');
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const session = await auth()
+      setCanSeeAdmin(session?.user?.role === 'SUPER_ADMIN')
+    };
+
+    checkAdmin();
+  }, []);
 
   return (
     <nav className={classNames(styles.navbar, 'w100')}>
@@ -26,9 +40,9 @@ const Navbar = () => {
         </div>
 
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
-          <Link className={styles.link} href="/admin">
+          {canSeeAdmin && <Link className={styles.link} href="/admin">
             {t('admin')}
-          </Link>
+          </Link>}
           <Link
             target="_blank"
             rel="noreferrer noopener"
