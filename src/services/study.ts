@@ -3,11 +3,12 @@ import { Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { EmissionFactorWithMetaData } from './emissionFactors'
+import { getEmissionSourcesTotalCo2 } from './emissionSource'
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
 import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
-import { getQualityRating } from './uncertainty'
+import { getEmissionSourcesGlobalUncertainty, getQualityRating } from './uncertainty'
 
 const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<typeof useTranslations>) => {
   return quality === null ? t('unknown') : t(quality.toString())
@@ -69,7 +70,7 @@ const encodeCSVField = (field: string | number = '') => {
   return escapedField
 }
 
-const getEmissionSourceRows = (
+const getEmissionSourcesRows = (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   t: ReturnType<typeof useTranslations>,
@@ -151,6 +152,28 @@ const downloadCSV = (csvContent: string, fileName: string) => {
   return download(['\ufeff', csvContent], fileName, 'text/csv;charset=utf-8;')
 }
 
+const getEmissionSourcesCSVContent = (
+  emissionSources: FullStudy['emissionSources'],
+  emissionFactors: EmissionFactorWithMetaData[],
+  t: ReturnType<typeof useTranslations>,
+  tPost: ReturnType<typeof useTranslations>,
+  tQuality: ReturnType<typeof useTranslations>,
+  type?: 'Post' | 'Study',
+) => {
+  const { columns, rows } = getEmissionSourcesRows(emissionSources, emissionFactors, t, tPost, tQuality, type)
+
+  const emptyFieldsCount = type === 'Study' ? 3 : type === 'Post' ? 2 : 1
+  const emptyFields = (count: number) => Array(count).fill('')
+
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
+  const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
+
+  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources)
+  const uncertaintyRow = [t('uncertainty'), ...emptyFields(emptyFieldsCount), uncertainty[0], uncertainty[1]].join(';')
+
+  return [columns, ...rows, totalRow, uncertaintyRow].join('\n')
+}
+
 export const downloadStudySubPosts = async (
   study: FullStudy,
   post: string,
@@ -161,15 +184,8 @@ export const downloadStudySubPosts = async (
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
 ) => {
-  const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tPost, tQuality)
-
-  const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
-  const totalRow = [t('total'), '', '', totalEmissions].join(';')
-
-  // TODO : Ajouter la ligne des incertitudes
-  const csvContent = [columns, ...rows, totalRow].join('\n')
-
   const fileName = getFileName(study, post, subPost)
+  const csvContent = getEmissionSourcesCSVContent(emissionSources, emissionFactors, t, tPost, tQuality)
   downloadCSV(csvContent, fileName)
 }
 
@@ -185,16 +201,8 @@ export const downloadStudyPost = async (
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
   const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
-
-  const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tPost, tQuality, 'Post')
-
-  const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
-  const totalRow = [t('total'), '', '', '', totalEmissions].join(';')
-
-  // TODO : Ajouter la ligne des incertitudes
-  const csvContent = [columns, ...rows, totalRow].join('\n')
-
   const fileName = getFileName(study, post)
+  const csvContent = getEmissionSourcesCSVContent(emissionSources, emissionFactors, t, tPost, tQuality, 'Post')
   downloadCSV(csvContent, fileName)
 }
 
@@ -210,15 +218,7 @@ export const downloadStudyEmissionSources = async (
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
   const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
-
-  const { columns, rows } = getEmissionSourceRows(emissionSources, emissionFactors, t, tPost, tQuality, 'Study')
-
-  const totalEmissions = emissionSources.reduce((sum, item) => sum + (item.value || 0), 0)
-  const totalRow = [t('total'), '', '', '', totalEmissions].join(';')
-
-  // TODO : Ajouter la ligne des incertitudes
-  const csvContent = [columns, ...rows, totalRow].join('\n')
-
   const fileName = getFileName(study)
+  const csvContent = getEmissionSourcesCSVContent(emissionSources, emissionFactors, t, tPost, tQuality, 'Study')
   downloadCSV(csvContent, fileName)
 }
