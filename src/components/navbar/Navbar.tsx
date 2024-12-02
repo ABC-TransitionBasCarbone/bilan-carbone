@@ -26,6 +26,9 @@ const Navbar = () => {
         </div>
 
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
+          <Link className={styles.link} href="/admin">
+            {t('admin')}
+          </Link>
           <Link
             target="_blank"
             rel="noreferrer noopener"

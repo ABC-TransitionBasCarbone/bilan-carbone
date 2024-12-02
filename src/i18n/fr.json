@@ -40,6 +40,7 @@
   "navigation": {
     "factors": "Facteurs d'émission",
     "help": "Aide",
+    "admin": "Admin",
     "home": "Accueil",
     "profile": "Profil",
     "study": "Étude",
@@ -54,6 +55,9 @@
     "title": "Mon profil",
     "legalNotices": "Mentions légales",
     "logout": "Se déconnecter"
+  },
+  "admin": {
+    "title": "Administration du BC+"
   },
   "study": {
     "create": "Nouvelle étude",
