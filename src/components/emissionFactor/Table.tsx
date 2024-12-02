@@ -17,6 +17,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getPaginationRowModel,
   PaginationState,
   useReactTable,
@@ -24,10 +25,11 @@ import {
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
-import { ChangeEvent, useMemo, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import LinkButton from '../base/LinkButton'
+import Detail from './Detail'
 import styles from './Table.module.css'
 
 const fuseOptions = {
@@ -39,6 +41,10 @@ const fuseOptions = {
     {
       name: 'metaData.attribute',
       weight: 0.5,
+    },
+    {
+      name: 'metaData.frontiere',
+      weight: 0.4,
     },
     {
       name: 'metaData.comment',
@@ -84,7 +90,7 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
         header: t('name'),
         accessorFn: (emissionFactor) =>
           emissionFactor.metaData
-            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}`
+            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}`
             : '',
         cell: ({ getValue }) => <span className={styles.name}>{getValue<string>()}</span>,
       },
@@ -95,6 +101,7 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
       {
         header: t('location'),
         accessorKey: 'location',
+        cell: ({ getValue }) => <span>{getValue<string>() || ' '}</span>,
       },
       {
         header: t('source'),
@@ -153,8 +160,14 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
+    getRowCanExpand: () => true,
+    getExpandedRowModel: getExpandedRowModel(),
     state: { pagination },
   })
+
+  useEffect(() => {
+    table.toggleAllRowsExpanded(false)
+  }, [table, data])
 
   const onPaginationChange = (e: ChangeEvent<HTMLInputElement>) => {
     const page = e.target.value ? Number(e.target.value) - 1 : 0
@@ -231,15 +244,34 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} data-testid={`cell-emission-${cell.column.id}`}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {table.getRowModel().rows.flatMap((row) => {
+            const lines = [
+              <tr key={row.id} className={styles.line}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className={styles.cell} data-testid={`cell-emission-${cell.column.id}`}>
+                    <button
+                      className={styles.cellButton}
+                      onClick={() => {
+                        row.toggleExpanded()
+                      }}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </button>
+                  </td>
+                ))}
+              </tr>,
+            ]
+            if (row.getIsExpanded()) {
+              lines.push(
+                <tr key={`todo${row.id}`}>
+                  <td colSpan={4} className={styles.detail}>
+                    <Detail emissionFactor={row.original} />
+                  </td>
+                </tr>,
+              )
+            }
+            return lines
+          })}
         </tbody>
       </table>
       <div className={classNames(styles.pagination, 'align-center mt1')}>

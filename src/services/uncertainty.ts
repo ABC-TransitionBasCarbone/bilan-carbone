@@ -4,14 +4,15 @@ import { FullStudy } from '@/db/study'
 import { EmissionFactor } from '@prisma/client'
 import { getEmissionSourcesTotalCo2, sumEmissionSourcesResults } from './emissionSource'
 
-type Quality = Pick<
-  EmissionFactor,
-  | 'reliability'
-  | 'technicalRepresentativeness'
-  | 'geographicRepresentativeness'
-  | 'temporalRepresentativeness'
-  | 'completeness'
->
+export const qualityKeys = [
+  'reliability',
+  'technicalRepresentativeness',
+  'geographicRepresentativeness',
+  'temporalRepresentativeness',
+  'completeness',
+] as const
+
+type Quality = Pick<EmissionFactor, (typeof qualityKeys)[number]>
 
 const coeffs: Record<keyof Quality, number[]> = {
   reliability: [1.5, 1.2, 1.1, 1.05, 1],
