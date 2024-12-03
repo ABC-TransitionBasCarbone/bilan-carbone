@@ -2,7 +2,7 @@ import Block from '@/components/base/Block'
 import Breadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 import NotFound from '@/components/pages/NotFound'
 import StudyContributorPage from '@/components/pages/StudyContributor'
-import PostsInfography from '@/components/study/infography/PostsInfography'
+import AllPostsInfography from '@/components/study/infography/AllPostsInfography'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
@@ -49,7 +49,7 @@ const DataEntry = async (props: Props) => {
         ]}
       />
       <Block title={tStudyNav('dataEntry')} as="h1">
-        <PostsInfography study={study} />
+        <AllPostsInfography study={study} />
       </Block>
     </>
   )

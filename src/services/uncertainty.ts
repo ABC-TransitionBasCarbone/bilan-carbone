@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { EmissionFactor } from '@prisma/client'
-import { getEmissionSourcesTotalCo2, sumEmissionSourcesResults } from './emissionSource'
+import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from './emissionSource'
 
 export const qualityKeys = [
   'reliability',
@@ -67,7 +67,7 @@ export const getQualityRating = (quality: Quality) => {
 
 export const getEmissionSourcesGlobalUncertainty = (emissionSources: FullStudy['emissionSources']) => {
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
-  const gsd = sumEmissionSourcesResults(emissionSources)
+  const gsd = sumEmissionSourcesUncertainty(emissionSources)
   return getConfidenceInterval(totalEmissions, gsd)
 }
 
