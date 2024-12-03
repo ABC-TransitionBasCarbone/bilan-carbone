@@ -48,9 +48,7 @@
   },
   "results": {
     "byPost": "Résultats par poste",
-    "bySubPost": "Résultats par sous poste",
-    "loading": "Chargement...",
-    "noData": "Aucune donnée à afficher"
+    "bySubPost": "Résultats par sous poste"
   },
   "profile": {
     "title": "Mon profil",

@@ -4,69 +4,59 @@ import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { computeResultsByPost } from '@/services/results'
+import { computeResultsByPost, ResultsByPost } from '@/services/results'
 import { downloadStudyEmissionSources, downloadStudyPost } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import { MenuItem, Select } from '@mui/material'
 import Chart from 'chart.js/auto'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import styles from './Result.module.css'
 
 interface Props {
   study: FullStudy
-  isPost: boolean
+  by: 'Post' | 'SubPost'
 }
+
+const graphBarColor = '#346fef' // --primary-40
 
 const sort = (arr: string[]) => arr.sort((a, b) => a.length - b.length)
 
-const Result = ({ study, isPost }: Props) => {
+const Result = ({ study, by }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
+  const [labelsHeight, setLabelsHeight] = useState(0)
   const [post, setPost] = useState<Post>(Object.values(Post)[0])
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
-  const selectorOptions = useMemo(() => (isPost ? [] : Object.values(Post)), [post])
+  const selectorOptions = by === 'Post' ? [] : Object.values(Post)
 
-  const xAxis = useMemo(() => (isPost ? sort(Object.keys(subPostsByPost)) : sort(subPostsByPost[post])), [post, isPost])
+  const xAxis = useMemo(() => sort(by === 'Post' ? Object.values(Post) : subPostsByPost[post]), [post, by])
 
   const yData = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost)
-    if (isPost) {
-      const data = computedResults
-        .sort((post1, post2) => post1.post.length - post2.post.length)
-        .map((post) => post.value)
-
-      if (data.every((totalEmissions) => totalEmissions === 0)) {
+    if (by === 'Post') {
+      if (computedResults.every((post) => post.value === 0)) {
         return []
       }
-      return data
+      return xAxis.map(
+        (post) => (computedResults.find((postResult) => postResult.post === post) as ResultsByPost).value,
+      )
     } else {
-      const subPosts = computedResults.find((emissionPost) => emissionPost.post === post)?.subPosts || []
-      const data = xAxis.map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
-      if (data.every((totalEmissions) => totalEmissions === 0)) {
+      const subPosts = (computedResults.find((emissionPost) => emissionPost.post === post) as ResultsByPost).subPosts
+      if (subPosts.every((subPost) => subPost.value === 0)) {
         return []
       }
-      return data
+      return xAxis.map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
     }
-  }, [post, isPost])
+  }, [post, by])
 
-  const dynamicMargin = useMemo(() => {
-    const longestLabelLength = Math.max(...xAxis.map((label) => label.length))
-    return { bottom: isPost ? 150 : longestLabelLength * 6 }
-  }, [post])
-
-  const dynamicHeight = useMemo(() => Math.min(dynamicMargin.bottom * 3, 500), [dynamicMargin])
+  // add 70px tot the height for the Post because of the selector and download button
+  const dynamicHeight = useMemo(() => labelsHeight + 300 + (by === 'Post' ? 70 : 0), [yData, labelsHeight])
 
   useEffect(() => {
-    if (chartRef.current) {
-      chartRef.current.destroy()
-    }
-
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d')
       if (ctx) {
@@ -74,7 +64,7 @@ const Result = ({ study, isPost }: Props) => {
           type: 'bar',
           data: {
             labels: xAxis.map((post) => tPost(post)),
-            datasets: [{ data: yData, backgroundColor: '#346fef' }],
+            datasets: [{ data: yData, backgroundColor: graphBarColor }],
           },
           options: {
             responsive: true,
@@ -84,7 +74,7 @@ const Result = ({ study, isPost }: Props) => {
               legend: { display: false },
             },
             scales: {
-              x: { ticks: { maxRotation: 45, minRotation: 45 } },
+              x: { afterUpdate: ({ height }) => setLabelsHeight(height || 0) },
               y: { beginAtZero: true },
             },
           },
@@ -100,21 +90,21 @@ const Result = ({ study, isPost }: Props) => {
   }, [xAxis, yData])
 
   const downloadResults = () => {
-    if (isPost) {
+    if (by === 'Post') {
       downloadStudyEmissionSources(study, tExport, tPost, tQuality)
     } else {
-      const emissionSources = study.emissionSources
-        .filter((emissionSource) => subPostsByPost[post as Post].includes(emissionSource.subPost))
-        .sort((a, b) => a.subPost.localeCompare(b.subPost))
+      const emissionSources = study.emissionSources.filter((emissionSource) =>
+        subPostsByPost[post].includes(emissionSource.subPost),
+      )
       downloadStudyPost(study, emissionSources, post, tExport, tPost, tQuality)
     }
   }
 
   return (
     <Box className="grow flex-col">
-      <h4 className={styles.title}>{t(isPost ? 'byPost' : 'bySubPost')}</h4>
-      {!isPost && (
-        <div className={classNames(styles.buttons, 'flex mb1')}>
+      <h4 className="mb1">{t(`by${by}`)}</h4>
+      {by === 'SubPost' && (
+        <div className="flex mb1">
           <Select className="mr-2 grow" value={post} onChange={(e) => setPost(e.target.value as Post)}>
             {selectorOptions.map((post) => (
               <MenuItem key={post} value={post}>
@@ -127,8 +117,8 @@ const Result = ({ study, isPost }: Props) => {
           </Button>
         </div>
       )}
-      <div style={{ width: 500, height: dynamicHeight }}>
-        <canvas data-testid={`study-${isPost ? 'post' : 'subPost'}-chart`} className={styles.chart} ref={canvasRef} />
+      <div style={{ height: dynamicHeight }}>
+        <canvas data-testid={`study-${by}-chart`} ref={canvasRef} />
       </div>
     </Box>
   )

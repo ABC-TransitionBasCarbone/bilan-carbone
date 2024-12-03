@@ -17,9 +17,9 @@ const ResultsContainerForUser = async ({ user }: Props) => {
 
   return showResults ? (
     <div className="pb1">
-      <div className={classNames(styles.container, 'flex')}>
-        <Result study={study} isPost />
-        <Result study={study} isPost={false} />
+      <div className={classNames(styles.container, 'wrap')}>
+        <Result study={study} by="Post" />
+        <Result study={study} by="SubPost" />
       </div>
     </div>
   ) : null

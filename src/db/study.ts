@@ -8,7 +8,7 @@ export const createStudy = (study: Prisma.StudyCreateInput) =>
     data: study,
   })
 
-const FullStudyIncluder = {
+const FullStudyInclude = {
   emissionSources: {
     select: {
       id: true,
@@ -44,6 +44,7 @@ const FullStudyIncluder = {
         },
       },
     },
+    orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
   },
   contributors: {
     select: {
@@ -55,6 +56,7 @@ const FullStudyIncluder = {
       },
       subPost: true,
     },
+    orderBy: { user: { email: 'asc' } },
   },
   allowedUsers: {
     select: {
@@ -69,7 +71,7 @@ const FullStudyIncluder = {
     orderBy: { user: { email: 'asc' } },
   },
   exports: { select: { type: true } },
-}
+} satisfies Prisma.StudyInclude
 
 export const getMainStudy = async (user: User) => {
   const userOrganizations = await getUserOrganizations(user.email)
@@ -81,12 +83,7 @@ export const getMainStudy = async (user: User) => {
         { contributors: { some: { userId: user.id } } },
       ],
     },
-    include: {
-      ...FullStudyIncluder,
-      emissionSources: { ...FullStudyIncluder.emissionSources, orderBy: [{ createdAt: 'asc' }, { name: 'asc' }] },
-      contributors: { ...FullStudyIncluder.contributors, orderBy: { user: { email: 'asc' } } },
-      allowedUsers: { ...FullStudyIncluder.allowedUsers, orderBy: { user: { email: 'asc' } } },
-    },
+    include: FullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
 }
@@ -119,15 +116,10 @@ export const getStudiesByUserAndOrganization = async (user: User, organizationId
 export const getStudyById = async (id: string) => {
   return prismaClient.study.findUnique({
     where: { id },
-    include: {
-      ...FullStudyIncluder,
-      emissionSources: { ...FullStudyIncluder.emissionSources, orderBy: [{ createdAt: 'asc' }, { name: 'asc' }] },
-      contributors: { ...FullStudyIncluder.contributors, orderBy: { user: { email: 'asc' } } },
-      allowedUsers: { ...FullStudyIncluder.allowedUsers, orderBy: { user: { email: 'asc' } } },
-    },
+    include: FullStudyInclude,
   })
 }
-export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById | typeof getMainStudy>, null>
+export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
   prismaClient.userOnStudy.create({
