@@ -270,6 +270,7 @@
     }
   },
   "emissionFactors": {
+    "add": "Ajouter un facteur d'émissions",
     "post": {
       "allPost": "Tout les postes",
       "allSubPost": "Tout les sous postes",
@@ -369,10 +370,10 @@
     "title": "Facteurs d'émissions",
     "loading": "Chargement des facteurs d'émissions",
     "table": {
-      "add": "Ajouter un facteur d'émission",
       "all": "Toutes",
       "Archived": "Archivé",
       "BaseEmpreinte": "Base Empreinte",
+      "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
       "items": "Élements par page",
       "location": "Localisation",
@@ -380,6 +381,7 @@
       "Manual": "Manuelle",
       "name": "Nom",
       "none": "Aucune",
+      "no": "Non",
       "per": "par",
       "page": "Page {page} sur {total}",
       "quality": "Qualité",
@@ -390,6 +392,7 @@
       "status": "Statut",
       "value": "Valeur",
       "Valid": "Valide",
+      "yes": "Oui",
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
         "manual": "Manuel"

@@ -1,4 +1,4 @@
-import { getAllEmissionFactorsByIds, getAllValidEmissionFactors } from '@/db/emissionFactors'
+import { getAllEmissionFactors, getAllEmissionFactorsByIds } from '@/db/emissionFactors'
 import { auth } from './auth'
 
 export const getEmissionFactors = async (locale: string) => {
@@ -7,7 +7,7 @@ export const getEmissionFactors = async (locale: string) => {
     return []
   }
 
-  const emissionFactors = await getAllValidEmissionFactors(session.user.organizationId)
+  const emissionFactors = await getAllEmissionFactors(session.user.organizationId)
 
   return emissionFactors.map((emissionFactor) => ({
     ...emissionFactor,

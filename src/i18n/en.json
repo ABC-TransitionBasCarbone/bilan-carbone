@@ -272,6 +272,7 @@
     }
   },
   "emissionFactors": {
+    "add": "Add an emission factor",
     "post": {
       "allPost": "All posts",
       "allSubPost": "All sub posts",
@@ -371,10 +372,10 @@
     "title": "Emission factors",
     "loading": "Loading emission factors",
     "table": {
-      "add": "Add an emission factor",
       "all": "All",
       "Archived": "Archived",
       "BaseEmpreinte": "Footprint Base",
+      "displayArchived": "Display archived factors",
       "goTo": "Go to page",
       "items": "Items per page",
       "location": "Location",
@@ -382,6 +383,7 @@
       "Manual": "Manual",
       "name": "Name",
       "none": "None",
+      "no": "No",
       "per": "per",
       "page": "Page {page} of {total}",
       "quality": "Quality",
@@ -412,7 +414,8 @@
       "technicalRepresentativeness": "Technical representativeness:",
       "geographicRepresentativeness": "Geographic representativeness:",
       "temporalRepresentativeness": "Temporal representativeness:",
-      "completeness": "Completeness:"
+      "completeness": "Completeness:",
+      "yes": "Yes"
     }
   },
   "level": {
