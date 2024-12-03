@@ -72,6 +72,24 @@ const users = async () => {
         },
       },
     }),
+    prisma.emissionFactor.create({
+      data: {
+        importedFrom: Import.BaseEmpreinte,
+        status: EmissionFactorStatus.Archived,
+        totalCo2: 42,
+        geographicRepresentativeness: 4,
+        completeness: 2,
+        reliability: 3,
+        importedId: '3',
+        unit: Unit.CAR_KM,
+        metaData: {
+          create: {
+            language: 'fr',
+            title: 'FE Test Archived',
+          },
+        },
+      },
+    }),
   ])
 
   const organizations = await prisma.organization.createManyAndReturn({
