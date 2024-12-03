@@ -9,6 +9,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Path } from 'react-hook-form'
 import QualitySelect from '../form/QualitySelect'
+import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
 
@@ -144,6 +145,9 @@ const EmissionSourceForm = ({ emissionSource, canEdit, update, emissionFactors, 
           onBlur={(event) => update('comment', event.target.value)}
           label={t('form.comment')}
         />
+      </div>
+      <div className={classNames(styles.delete, 'mt1', 'w100', 'flex')}>
+        <DeleteEmissionSource emissionSource={emissionSource} />
       </div>
     </>
   )

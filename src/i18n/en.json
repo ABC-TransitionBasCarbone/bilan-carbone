@@ -269,11 +269,11 @@
       "yes": "Yes",
       "no": "No",
       "totalCo2": "Total CO₂ emission",
-      "co2f": "CO2F",
-      "ch4f": "CH4F",
-      "ch4b": "CH4B",
+      "co2f": "CO2f",
+      "ch4f": "CH4f",
+      "ch4b": "CH4b",
       "n2o": "N2O",
-      "co2b": "CO2B",
+      "co2b": "CO2b",
       "sf6": "SF6",
       "hfc": "HFC",
       "pfc": "PFC",
@@ -320,7 +320,28 @@
       "status": "Status",
       "unit": "Unit",
       "value": "Value",
-      "Valid": "Valid"
+      "Valid": "Valid",
+      "importedFrom": {
+        "baseEmpreinte": "Base Empreinte logo",
+        "manual": "Manual"
+      },
+      "post": "Post:",
+      "subPost": "Sub post:",
+      "co2f": "CO2f:",
+      "ch4f": "CH4f:",
+      "ch4b": "CH4b:",
+      "n2o": "N2O:",
+      "co2b": "CO2b:",
+      "sf6": "SF6:",
+      "hfc": "HFC:",
+      "pfc": "PFC:",
+      "otherGES": "Other gases:",
+      "qualityRating": "Quality:",
+      "reliability": "Reliability:",
+      "technicalRepresentativeness": "Technical representativeness:",
+      "geographicRepresentativeness": "Geographic representativeness:",
+      "temporalRepresentativeness": "Temporal representativeness:",
+      "completeness": "Completeness:"
     }
   },
   "level": {
@@ -493,7 +514,7 @@
     "KG_FLUID_PER_KW_FRIDGE": "kg of fluid / kW fridge",
     "KG_FLUID_PER_m2": "kg of fluid / m²",
     "KG_FLUID_PER_EQUIPMENT": "kg of fluid / equipment",
-    "KG_FLUID_PER_STORAGE_M3": "kg of fluid / m³ of storage",
+    "KG_FUILD_PER_STORAGE_M3": "kg of fluid / m³ of storage",
     "KWH_PER_HOUSING_YEAR": "kWh / (housing/year)",
     "PERCENT_APPARTMENTS": "% of apartments",
     "PERCENT_HOUSES": "% of houses",
@@ -516,7 +537,7 @@
     "title": "Organization",
     "form": {
       "create": "Create organization",
-      "editTile": "Edit my organization",
+      "editTitle": "Edit my organization",
       "edit": "Edit",
       "name": "Organization name",
       "title": "Information about the new organization"
@@ -538,6 +559,13 @@
     }
   },
   "emissionSource": {
+    "dialog": {
+      "delete": "Delete this emission source",
+      "title": "Are you sur you want to delete this emission source?",
+      "description": "All data entered will be permanently lost, and any contributors will no longer have access to this emission source.",
+      "accept": "Yes",
+      "decline": "No"
+    },
     "saving": "Saving ...",
     "status": {
       "valid": "Validated",

@@ -270,11 +270,11 @@
       "yes": "Oui",
       "no": "Non",
       "totalCo2": "Émission totale de CO₂",
-      "co2f": "CO2F",
-      "ch4f": "CH4F",
-      "ch4b": "CH4B",
+      "co2f": "CO2f",
+      "ch4f": "CH4f",
+      "ch4b": "CH4b",
       "n2o": "N2O",
-      "co2b": "CO2B",
+      "co2b": "CO2b",
       "sf6": "SF6",
       "hfc": "HFC",
       "pfc": "PFC",
@@ -322,7 +322,24 @@
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
         "manual": "Manuel"
-      }
+      },
+      "post": "Poste :",
+      "subPost": "Sous poste :",
+      "co2f": "CO2f :",
+      "ch4f": "CH4f :",
+      "ch4b": "CH4b :",
+      "n2o": "N2O :",
+      "co2b": "CO2b :",
+      "sf6": "SF6 :",
+      "hfc": "HFC :",
+      "pfc": "PFC :",
+      "otherGES": "Autres gaz :",
+      "qualityRating": "Qualité :",
+      "reliability": "Fiabilité :",
+      "technicalRepresentativeness": "Représentativité technique :",
+      "geographicRepresentativeness": "Représentativité géographique :",
+      "temporalRepresentativeness": "Représentativité temporelle :",
+      "completeness": "Complétude :"
     }
   },
   "level": {
@@ -540,6 +557,13 @@
     }
   },
   "emissionSource": {
+    "dialog": {
+      "delete": "Supprimer cette source d'émission",
+      "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
+      "description": "Toutes les données renseignées seront définitivement perdues, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
+      "accept": "Oui",
+      "decline": "Non"
+    },
     "saving": "Sauvegarde en cours...",
     "status": {
       "valid": "Validée",
