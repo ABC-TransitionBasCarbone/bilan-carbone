@@ -228,6 +228,7 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
           value={filter}
           onChange={setFilter}
           placeholder={t('search')}
+          data-testid="emission-factor-search-input"
         />
         <DebouncedInput
           className={styles.searchInput}
