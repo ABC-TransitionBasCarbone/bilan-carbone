@@ -1,25 +1,19 @@
-'use client'
 
 import classNames from 'classnames'
-import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Navbar.module.css'
 import { auth } from '@/services/auth'
-import { useState, useEffect } from 'react'
+import { getTranslations } from 'next-intl/server'
 
-const Navbar = () => {
-  const [canSeeAdmin, setCanSeeAdmin] = useState(false);
-  const t = useTranslations('navigation');
+const Navbar = async () => {
+  const t = await getTranslations('navigation')
 
-  useEffect(() => {
-    const checkAdmin = async () => {
-      const session = await auth()
-      setCanSeeAdmin(session?.user?.role === 'SUPER_ADMIN')
-    };
-
-    checkAdmin();
-  }, []);
+  const checkAdmin = async () => {
+    'use server'
+    const session = await auth()
+    return session?.user?.role === 'SUPER_ADMIN'
+  };
 
   return (
     <nav className={classNames(styles.navbar, 'w100')}>
@@ -40,7 +34,7 @@ const Navbar = () => {
         </div>
 
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
-          {canSeeAdmin && <Link className={styles.link} href="/admin">
+          {await checkAdmin() && <Link className={styles.link} href="/admin">
             {t('admin')}
           </Link>}
           <Link
