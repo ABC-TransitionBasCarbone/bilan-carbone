@@ -4,6 +4,7 @@ import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
+import { computeResultsByPost } from '@/services/results'
 import { downloadStudyEmissionSources, downloadStudyPost } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import { MenuItem, Select } from '@mui/material'
@@ -34,32 +35,19 @@ const Result = ({ study, isPost }: Props) => {
   const xAxis = useMemo(() => (isPost ? sort(Object.keys(subPostsByPost)) : sort(subPostsByPost[post])), [post, isPost])
 
   const yData = useMemo(() => {
+    const computedResults = computeResultsByPost(study, tPost)
     if (isPost) {
-      const data = xAxis
-        .map((post) =>
-          study.emissionSources.filter((emissionSource) =>
-            subPostsByPost[post as Post].includes(emissionSource.subPost),
-          ),
-        )
-        .map((emissionSources) =>
-          emissionSources.reduce(
-            (acc, emissionSource) => acc + (emissionSource.value || 0) * (emissionSource.emissionFactor?.totalCo2 || 0),
-            0,
-          ),
-        )
+      const data = computedResults
+        .sort((post1, post2) => post1.post.length - post2.post.length)
+        .map((post) => post.value)
+
       if (data.every((totalEmissions) => totalEmissions === 0)) {
         return []
       }
       return data
     } else {
-      const data = xAxis.map((subPost) =>
-        study.emissionSources
-          .filter((emissionSource) => emissionSource.subPost === subPost)
-          .reduce(
-            (acc, emissionSource) => acc + (emissionSource.value || 0) * (emissionSource.emissionFactor?.totalCo2 || 0),
-            0,
-          ),
-      )
+      const subPosts = computedResults.find((emissionPost) => emissionPost.post === post)?.subPosts || []
+      const data = xAxis.map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
       if (data.every((totalEmissions) => totalEmissions === 0)) {
         return []
       }
