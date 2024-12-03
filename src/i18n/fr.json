@@ -371,7 +371,6 @@
     "loading": "Chargement des facteurs d'émissions",
     "table": {
       "all": "Toutes",
-      "Archived": "Archivé",
       "BaseEmpreinte": "Base Empreinte",
       "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
@@ -391,7 +390,6 @@
       "sources": "Sources",
       "status": "Statut",
       "value": "Valeur",
-      "Valid": "Valide",
       "yes": "Oui",
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",

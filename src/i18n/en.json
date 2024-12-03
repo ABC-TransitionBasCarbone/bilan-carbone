@@ -373,7 +373,6 @@
     "loading": "Loading emission factors",
     "table": {
       "all": "All",
-      "Archived": "Archived",
       "BaseEmpreinte": "Footprint Base",
       "displayArchived": "Display archived factors",
       "goTo": "Go to page",
@@ -393,7 +392,6 @@
       "sources": "Sources",
       "status": "Status",
       "value": "Value",
-      "Valid": "Valid",
       "importedFrom": {
         "baseEmpreinte": "Base Empreinte logo",
         "manual": "Manual"

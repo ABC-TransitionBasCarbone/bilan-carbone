@@ -1,7 +1,9 @@
 'use client'
 
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
+import InventoryIcon from '@mui/icons-material/Inventory'
 import {
   Checkbox,
   FormControl,
@@ -109,7 +111,24 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
       },
       {
         header: t('status'),
-        accessorFn: (emissionFactor) => t(emissionFactor.status),
+        accessorKey: 'status',
+        cell: ({ getValue }) => {
+          const status = getValue<EmissionFactorStatus>()
+          switch (status) {
+            case EmissionFactorStatus.Archived:
+              return (
+                <div className="flex-cc">
+                  <InventoryIcon color="inherit" />
+                </div>
+              )
+            default:
+              return (
+                <div className="flex-cc">
+                  <CheckCircleIcon color="success" />
+                </div>
+              )
+          }
+        },
       },
       {
         header: t('source'),
@@ -119,21 +138,22 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
           switch (importedFrom) {
             case Import.BaseEmpreinte:
               return (
-                <img
-                  className={styles.importFrom}
-                  src="https://base-empreinte.ademe.fr/assets/img/base-empreinte.svg"
-                  title={t('importedFrom.baseEmpreinte')}
-                />
+                <div className="flex-cc">
+                  <img
+                    className={styles.importFrom}
+                    src="https://base-empreinte.ademe.fr/assets/img/base-empreinte.svg"
+                    title={t('importedFrom.baseEmpreinte')}
+                  />
+                </div>
               )
             default:
               return (
-                <span className={styles.importFrom}>
+                <span className={classNames(styles.importFrom, 'flex-cc')}>
                   <HomeWorkIcon />
                   {t('importedFrom.manual')}
                 </span>
               )
           }
-          return null
         },
       },
     ] as ColumnDef<EmissionFactorWithMetaData>[]
