@@ -82,6 +82,7 @@ const users = async () => {
         reliability: 3,
         importedId: '3',
         unit: Unit.CAR_KM,
+        subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
             language: 'fr',
