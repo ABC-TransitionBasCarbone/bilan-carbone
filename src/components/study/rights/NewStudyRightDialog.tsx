@@ -26,7 +26,7 @@ const NewStudyRightDialog = ({ status, decline, accept }: Props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={decline}>{t('decline')}</Button>
-        <Button onClick={accept} autoFocus data-testid="new-study-right-dialog-accept">
+        <Button onClick={accept} data-testid="new-study-right-dialog-accept">
           {t('accept')}
         </Button>
       </DialogActions>

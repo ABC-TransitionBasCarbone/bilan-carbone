@@ -41,7 +41,7 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>{t('decline')}</Button>
-          <Button onClick={onAccept} autoFocus data-testid="delete-emission-source-dialog-accept">
+          <Button onClick={onAccept} data-testid="delete-emission-source-dialog-accept">
             {t('accept')}
           </Button>
         </DialogActions>
