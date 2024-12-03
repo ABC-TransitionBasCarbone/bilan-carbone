@@ -540,6 +540,13 @@
     }
   },
   "emissionSource": {
+    "dialog": {
+      "delete": "Supprimer cette source d'émission",
+      "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
+      "description": "Toutes les données renseignées seront définitivement perdues, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
+      "accept": "Oui",
+      "decline": "Non"
+    },
     "saving": "Sauvegarde en cours...",
     "status": {
       "valid": "Validée",

@@ -538,6 +538,13 @@
     }
   },
   "emissionSource": {
+    "dialog": {
+      "delete": "Delete this emission source",
+      "title": "Are you sur you want to delete this emission source?",
+      "description": "All data entered will be permanently lost, and any contributors will no longer have access to this emission source.",
+      "accept": "Yes",
+      "decline": "No"
+    },
     "saving": "Saving ...",
     "status": {
       "valid": "Validated",
