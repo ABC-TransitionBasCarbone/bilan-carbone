@@ -493,7 +493,7 @@
     "KG_FLUID_PER_KW_FRIDGE": "kg of fluid / kW fridge",
     "KG_FLUID_PER_m2": "kg of fluid / m²",
     "KG_FLUID_PER_EQUIPMENT": "kg of fluid / equipment",
-    "KG_FLUID_PER_STORAGE_M3": "kg of fluid / m³ of storage",
+    "KG_FUILD_PER_STORAGE_M3": "kg of fluid / m³ of storage",
     "KWH_PER_HOUSING_YEAR": "kWh / (housing/year)",
     "PERCENT_APPARTMENTS": "% of apartments",
     "PERCENT_HOUSES": "% of houses",
@@ -516,7 +516,7 @@
     "title": "Organization",
     "form": {
       "create": "Create organization",
-      "editTile": "Edit my organization",
+      "editTitle": "Edit my organization",
       "edit": "Edit",
       "name": "Organization name",
       "title": "Information about the new organization"
