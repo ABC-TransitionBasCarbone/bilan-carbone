@@ -22,6 +22,17 @@ enum StudyRole {
   Reader
 }
 
+enum EmissionSourceCaracterisation {
+  Operated
+  NotOperated
+  OperatedProcedeed
+  OperatedFugitive
+  NotOperatedSupported
+  NotOperatedNotSupported
+  Rented
+  FinalClient
+}
+
 model Study {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -101,7 +112,7 @@ model StudyEmissionSource {
   subPost         SubPost
   name            String
   tag             String?
-  caracterisation String?
+  caracterisation EmissionSourceCaracterisation?
 
   emissionFactorId String?         @map("emission_factor_id")
   emissionFactor   EmissionFactor? @relation(fields: [emissionFactorId], references: [id])
@@ -121,4 +132,25 @@ model StudyEmissionSource {
   contributor   User?   @relation(fields: [contributorId], references: [id])
 
   @@map("study_emission_sources")
+}
+
+model ExportRule {
+  id String @id @default(uuid())
+
+  export  Export
+  subPost SubPost                 @map("sub_post")
+  type    EmissionFactorPartType?
+
+  // BEGES Controle opérationnel
+  operated                String?
+  notOperated             String? @map("not_operated")
+  operatedProcedeed       String? @map("operated_procedeed")
+  operatedFugitive        String? @map("operated_fugitive")
+  notOperatedSupported    String? @map("not_operated_supported")
+  notOperatedNotSupported String? @map("not_operated_not_supported")
+  rented                  String?
+  finalClient             String? @map("final_client")
+
+  @@unique([export, subPost, type])
+  @@map("export_rules")
 }

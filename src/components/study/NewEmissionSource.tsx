@@ -2,7 +2,7 @@
 import { FullStudy } from '@/db/study'
 import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { TextField } from '@mui/material'
-import { SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { FocusEvent, KeyboardEvent, useCallback, useState } from 'react'
@@ -11,9 +11,10 @@ import styles from './NewEmissionSource.module.css'
 interface Props {
   study: FullStudy
   subPost: SubPost
+  caracterisations: EmissionSourceCaracterisation[]
 }
 
-const NewEmissionSource = ({ study, subPost }: Props) => {
+const NewEmissionSource = ({ study, subPost, caracterisations }: Props) => {
   const [value, setValue] = useState('')
   const [saving, setSaving] = useState(false)
   const t = useTranslations('study.post')
@@ -34,6 +35,7 @@ const NewEmissionSource = ({ study, subPost }: Props) => {
           name: event.target.value,
           subPost,
           studyId: study.id,
+          caracterisation: caracterisations.length === 1 ? caracterisations[0] : undefined,
         })
         if (!result) {
           setValue('')
