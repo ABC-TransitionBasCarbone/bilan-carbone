@@ -14,6 +14,16 @@ const selectEmissionFactor = {
   geographicRepresentativeness: true,
   temporalRepresentativeness: true,
   completeness: true,
+  subPosts: true,
+  co2f: true,
+  ch4f: true,
+  ch4b: true,
+  n2o: true,
+  co2b: true,
+  sf6: true,
+  hfc: true,
+  pfc: true,
+  otherGES: true,
   metaData: {
     select: {
       language: true,
@@ -21,9 +31,15 @@ const selectEmissionFactor = {
       attribute: true,
       comment: true,
       location: true,
+      frontiere: true,
     },
   },
-}
+  version: {
+    select: {
+      name: true,
+    },
+  },
+} as Prisma.EmissionFactorSelect
 
 export const getAllValidEmissionFactors = (organizationId: string) =>
   prismaClient.emissionFactor.findMany({

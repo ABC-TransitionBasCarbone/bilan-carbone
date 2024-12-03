@@ -109,7 +109,6 @@ const ResultsTable = ({ study }: Props) => {
       })
   }, [tPost, study])
 
-  console.log(data)
   const table = useReactTable({
     columns,
     data,
