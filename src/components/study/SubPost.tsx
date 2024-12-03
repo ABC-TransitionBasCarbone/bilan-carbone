@@ -121,7 +121,7 @@ const SubPost = ({
                 post,
                 subPost,
                 emissionSources as FullStudy['emissionSources'],
-                emissionFactors,
+                subPostEmissionFactors,
                 tExport,
                 tPost,
                 tQuality,
