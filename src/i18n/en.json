@@ -302,7 +302,6 @@
       "all": "All",
       "Archived": "Archived",
       "BaseEmpreinte": "Footprint Base",
-      "detail": "Details",
       "goTo": "Go to page",
       "items": "Items per page",
       "location": "Location",
@@ -318,7 +317,6 @@
       "source": "Source",
       "sources": "Sources",
       "status": "Status",
-      "unit": "Unit",
       "value": "Value",
       "Valid": "Valid",
       "importedFrom": {
