@@ -59,3 +59,12 @@ export const canUpdateEmissionSource = async (
 
   return true
 }
+
+export const canDeleteEmissionSource = async (user: User, study: FullStudy) => {
+  const rights = study.allowedUsers.find((right) => right.user.email === user.email)
+  if (rights && rights.role !== StudyRole.Reader) {
+    return true
+  }
+
+  return false
+}
