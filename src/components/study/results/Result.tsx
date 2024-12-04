@@ -17,8 +17,6 @@ interface Props {
   by: 'Post' | 'SubPost'
 }
 
-const graphBarColor = '#346fef' // --primary-40
-
 const sort = (arr: string[]) => arr.sort((a, b) => a.length - b.length)
 
 const Result = ({ study, by }: Props) => {
@@ -26,12 +24,12 @@ const Result = ({ study, by }: Props) => {
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
-  const [labelsHeight, setLabelsHeight] = useState(0)
+  const [dynamicHeight, setDynamicHeight] = useState(0)
   const [post, setPost] = useState<Post>(Object.values(Post)[0])
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
-  const selectorOptions = by === 'Post' ? [] : Object.values(Post)
+  const selectorOptions = Object.values(Post)
 
   const xAxis = useMemo(() => sort(by === 'Post' ? Object.values(Post) : subPostsByPost[post]), [post, by])
 
@@ -53,9 +51,6 @@ const Result = ({ study, by }: Props) => {
     }
   }, [post, by])
 
-  // add 70px tot the height for the Post because of the selector and download button
-  const dynamicHeight = useMemo(() => labelsHeight + 300 + (by === 'Post' ? 70 : 0), [yData, labelsHeight])
-
   useEffect(() => {
     if (canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d')
@@ -64,7 +59,9 @@ const Result = ({ study, by }: Props) => {
           type: 'bar',
           data: {
             labels: xAxis.map((post) => tPost(post)),
-            datasets: [{ data: yData, backgroundColor: graphBarColor }],
+            datasets: [
+              { data: yData, backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary-40') },
+            ],
           },
           options: {
             responsive: true,
@@ -74,7 +71,8 @@ const Result = ({ study, by }: Props) => {
               legend: { display: false },
             },
             scales: {
-              x: { afterUpdate: ({ height }) => setLabelsHeight(height || 0) },
+              // add 70px tot the height for the Post because of the selector and download button in the SubPost
+              x: { afterUpdate: ({ height }) => setDynamicHeight((by === 'Post' ? 370 : 300) + (height || 0)) },
               y: { beginAtZero: true },
             },
           },

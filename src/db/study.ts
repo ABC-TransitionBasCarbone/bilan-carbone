@@ -8,7 +8,7 @@ export const createStudy = (study: Prisma.StudyCreateInput) =>
     data: study,
   })
 
-const FullStudyInclude = {
+const fullStudyInclude = {
   emissionSources: {
     select: {
       id: true,
@@ -83,7 +83,7 @@ export const getMainStudy = async (user: User) => {
         { contributors: { some: { userId: user.id } } },
       ],
     },
-    include: FullStudyInclude,
+    include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
 }
@@ -116,7 +116,7 @@ export const getStudiesByUserAndOrganization = async (user: User, organizationId
 export const getStudyById = async (id: string) => {
   return prismaClient.study.findUnique({
     where: { id },
-    include: FullStudyInclude,
+    include: fullStudyInclude,
   })
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
