@@ -49,8 +49,10 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
 
   const saveRight = async (command: NewStudyRightCommand) => {
     const result = await newStudyRight(
-      status === NewStudyRightStatus.NonExisting ? { ...command, role: StudyRole.Reader } : command,
+      status === NewStudyRightStatus.ReaderOnly ? { ...command, role: StudyRole.Reader } : command,
     )
+    console.log('result', result)
+
     setStatus(undefined)
     if (result) {
       setError(result)
@@ -61,10 +63,10 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   }
 
   const onSubmit = async (command: NewStudyRightCommand) => {
-    const status = await getNewStudyRightStatus(command.email)
-    if (status === NewStudyRightStatus.SameOrganization) {
+    const status = await getNewStudyRightStatus(command.email, command.role)
+    if (status === NewStudyRightStatus.Valid) {
       await saveRight(command)
-    } else if (status === NewStudyRightStatus.OtherOrganization || status === NewStudyRightStatus.NonExisting) {
+    } else if (status === NewStudyRightStatus.ReaderOnly) {
       setStatus(status)
     } else {
       setError(error)

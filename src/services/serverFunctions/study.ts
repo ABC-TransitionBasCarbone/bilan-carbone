@@ -11,7 +11,7 @@ import {
   updateUserOnStudy,
 } from '@/db/study'
 import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
-import { ControlMode, Export, Import, Prisma, Role, StudyRole, SubPost } from '@prisma/client'
+import { ControlMode, Export, Import, Level, Prisma, Role, StudyRole, SubPost } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -178,22 +178,29 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-export const getNewStudyRightStatus = async (email: string) => {
+export const getNewStudyRightStatus = async (email: string, role: StudyRole) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
 
+  if (role === StudyRole.Reader) {
+    return NewStudyRightStatus.Valid
+  }
+
   const newUser = await getUserByEmail(email)
   if (!newUser) {
-    return NewStudyRightStatus.NonExisting
+    return NewStudyRightStatus.ReaderOnly
   }
 
   if (newUser.organizationId !== session.user.organizationId) {
-    return NewStudyRightStatus.OtherOrganization
+    // TODO : check if the organization has an up-to-date licence
+    console.log('level : ', newUser.level)
+
+    return newUser.level === Level.Initial ? NewStudyRightStatus.ReaderOnly : NewStudyRightStatus.Valid
   }
 
-  return NewStudyRightStatus.SameOrganization
+  return NewStudyRightStatus.Valid
 }
 
 export const newStudyRight = async (right: NewStudyRightCommand) => {
