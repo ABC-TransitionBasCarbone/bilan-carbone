@@ -55,25 +55,25 @@ describe('Create study', () => {
     cy.getByTestId('study-rights-email').type('bc-admin-1@yopmail.com')
 
     cy.getByTestId('study-rights-role').click()
-    cy.get('[data-value="Reader"]').click()
+    cy.get('[data-value="Editor"]').click()
 
     cy.getByTestId('study-rights-create-button').click()
     cy.getByTestId('new-study-right-dialog-accept').click()
     cy.wait('@create')
 
-    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comÉditeur')
     cy.getByTestId('study-rights-table-line')
       .eq(0)
       .within(() => {
         cy.get('input').should('not.be.disabled')
         cy.get('.MuiSelect-select').click()
       })
-    cy.get('[data-value="Editor"]').click()
+    cy.get('[data-value="Validator"]').click()
     cy.wait('@update')
 
     cy.reload()
 
-    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comÉditeur')
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line')
       .eq(0)
       .within(() => {
@@ -104,12 +104,97 @@ describe('Create study', () => {
     cy.getByTestId('study-rights-table-line')
       .eq(1)
       .within(() => {
-        cy.get('input').should('not.be.disabled')
+        cy.get('input').should('be.disabled')
       })
     cy.getByTestId('study-rights-table-line')
       .eq(0)
       .within(() => {
         cy.get('input').should('be.disabled')
+      })
+  })
+
+  it('should receive a warning message when set an unauthorized role', () => {
+    cy.login()
+
+    cy.visit('/etudes/creer')
+    cy.getByTestId('organization-sites-checkbox').first().click()
+    cy.getByTestId('new-study-organization-button').click()
+
+    cy.getByTestId('new-study-name').should('be.visible').type('Study with unauthorized rights')
+    cy.getByTestId('new-validator-name').click()
+    cy.get('[data-option-index="1"]').click()
+
+    cy.getByTestId('new-study-endDate').within(() => {
+      cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
+    })
+    cy.getByTestId('new-study-level').click()
+    cy.get('[data-value="Initial"]').click()
+    cy.getByTestId('new-study-create-button').click()
+
+    cy.getByTestId('study-cadrage-link').click()
+
+    cy.getByTestId('study-rights-table-line').contains('bc-default-0@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line').within(() => {
+      cy.get('input').should('be.disabled')
+    })
+
+    cy.getByTestId('study-rights-change-button').click()
+
+    cy.getByTestId('study-rights-email').should('be.visible')
+    cy.getByTestId('study-rights-email').type('bc-cr-default-0@yopmail.com')
+    cy.getByTestId('study-rights-role').click()
+    cy.get('[data-value="Editor"]').click()
+
+    cy.getByTestId('study-rights-create-button').click()
+    cy.getByTestId('new-study-right-dialog-accept').should('be.visible')
+    cy.getByTestId('new-study-right-dialog-accept').click()
+    cy.wait('@create')
+
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-cr-default-0@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('be.disabled')
+      })
+
+    cy.getByTestId('study-rights-change-button').click()
+
+    cy.getByTestId('study-rights-email').should('be.visible')
+    cy.getByTestId('study-rights-email').type('external@yopmail.com')
+
+    cy.getByTestId('study-rights-role').click()
+    cy.get('[data-value="Validator"]').click()
+
+    cy.getByTestId('study-rights-create-button').click()
+    cy.getByTestId('new-study-right-dialog-accept').should('be.visible')
+    cy.getByTestId('new-study-right-dialog-accept').click()
+    cy.wait('@create')
+
+    cy.getByTestId('study-rights-table-line').eq(2).contains('external@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line')
+      .eq(2)
+      .within(() => {
+        cy.get('input').should('be.disabled')
+      })
+
+    cy.getByTestId('study-rights-change-button').click()
+
+    cy.getByTestId('study-rights-email').should('be.visible')
+    cy.getByTestId('study-rights-email').type('bc-admin-2@yopmail.com')
+
+    cy.getByTestId('study-rights-role').click()
+    cy.get('[data-value="Validator"]').click()
+
+    cy.getByTestId('study-rights-create-button').click()
+    cy.getByTestId('new-study-right-dialog-accept').should('be.visible')
+    cy.getByTestId('new-study-right-dialog-accept').click()
+    cy.wait('@create')
+
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-2@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('not.be.disabled')
       })
   })
 })
