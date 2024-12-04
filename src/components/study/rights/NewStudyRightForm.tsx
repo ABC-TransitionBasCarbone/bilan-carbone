@@ -51,7 +51,6 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
     const result = await newStudyRight(
       status === NewStudyRightStatus.ReaderOnly ? { ...command, role: StudyRole.Reader } : command,
     )
-    console.log('result', result)
 
     setStatus(undefined)
     if (result) {

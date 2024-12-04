@@ -194,9 +194,7 @@ export const getNewStudyRightStatus = async (email: string, role: StudyRole) => 
   }
 
   if (newUser.organizationId !== session.user.organizationId) {
-    // TODO : check if the organization has an up-to-date licence
-    console.log('level : ', newUser.level)
-
+    // TODO : check if the organization has an up-to-date licences
     return newUser.level === Level.Initial ? NewStudyRightStatus.ReaderOnly : NewStudyRightStatus.Valid
   }
 
