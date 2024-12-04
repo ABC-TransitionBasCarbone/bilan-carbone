@@ -37,7 +37,7 @@ const users = async () => {
   await Promise.all([
     prisma.emissionFactor.create({
       data: {
-        importedFrom: Import.BaseEmpreinte,
+        importedFrom: Import.Manual,
         status: EmissionFactorStatus.Valid,
         totalCo2: 111,
         completeness: 4,
@@ -55,7 +55,7 @@ const users = async () => {
     }),
     prisma.emissionFactor.create({
       data: {
-        importedFrom: Import.BaseEmpreinte,
+        importedFrom: Import.Manual,
         status: EmissionFactorStatus.Valid,
         totalCo2: 123,
         geographicRepresentativeness: 3,
@@ -74,7 +74,7 @@ const users = async () => {
     }),
     prisma.emissionFactor.create({
       data: {
-        importedFrom: Import.BaseEmpreinte,
+        importedFrom: Import.Manual,
         status: EmissionFactorStatus.Archived,
         totalCo2: 42,
         geographicRepresentativeness: 4,
