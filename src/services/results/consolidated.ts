@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
-import { sumEmissionSourcesUncertainty } from './emissionSource'
-import { Post, subPostsByPost } from './posts'
+import { sumEmissionSourcesUncertainty } from '../emissionSource'
+import { Post, subPostsByPost } from '../posts'
 
 export type ResultsByPost = {
   post: string

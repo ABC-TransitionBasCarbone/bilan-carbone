@@ -291,7 +291,6 @@
         "source": "Please provide a source",
         "totalCo2": "Please provide a total emission",
         "type": "Please select a post type",
-        "typeMaxLength": "maximum 64 characters",
         "subPost": "Please select a sub post"
       }
     },

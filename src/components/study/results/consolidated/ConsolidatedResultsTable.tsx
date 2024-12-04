@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { computeResultsByPost, ResultsByPost } from '@/services/results'
+import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
@@ -9,13 +9,13 @@ import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTa
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import styles from './ResultsTable.module.css'
+import styles from './ConsolidatedResultsTable.module.css'
 
 interface Props {
   study: FullStudy
 }
 
-const ResultsTable = ({ study }: Props) => {
+const ConsolidatedResultsTable = ({ study }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
@@ -98,4 +98,4 @@ const ResultsTable = ({ study }: Props) => {
   )
 }
 
-export default ResultsTable
+export default ConsolidatedResultsTable

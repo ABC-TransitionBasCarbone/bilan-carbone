@@ -1,5 +1,7 @@
 import NotFound from '@/components/pages/NotFound'
 import ResultsPage from '@/components/pages/Results'
+import { getEmissionFactorsWithPartsInIds } from '@/db/emissionFactors'
+import { getExportRules } from '@/db/exportRule'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudyDetail } from '@/services/permissions/study'
@@ -29,7 +31,12 @@ const ResultatsPages = async (props: Props) => {
     return <NotFound />
   }
 
-  return <ResultsPage study={study} />
+  const ids = study.emissionSources
+    .map((emissionSource) => emissionSource.emissionFactor?.id)
+    .filter((id) => id !== undefined)
+  const [rules, emissionFactorsWithParts] = await Promise.all([getExportRules(), getEmissionFactorsWithPartsInIds(ids)])
+
+  return <ResultsPage study={study} rules={rules} emissionFactorsWithParts={emissionFactorsWithParts} />
 }
 
 export default ResultatsPages
