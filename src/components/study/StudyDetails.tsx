@@ -12,7 +12,7 @@ const StudyDetails = async ({ study }: Props) => {
     <>
       <StudyDetailsHeader study={study} />
       <Block>
-        <ResultsContainerForStudy />
+        <ResultsContainerForStudy study={study} />
       </Block>
     </>
   )

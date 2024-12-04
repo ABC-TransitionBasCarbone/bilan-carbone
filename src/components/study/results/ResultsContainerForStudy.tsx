@@ -1,18 +1,20 @@
 'use server'
 
-import Box from '@/components/base/Box'
+import { FullStudy } from '@/db/study'
 import classNames from 'classnames'
-import { getTranslations } from 'next-intl/server'
+import Result from './Result'
 import styles from './ResultsContainer.module.css'
 
-const ResultsContainerForStudy = async () => {
-  const t = await getTranslations('results')
+interface Props {
+  study: FullStudy
+}
 
+const ResultsContainerForStudy = async ({ study }: Props) => {
   return (
     <div className="pb1">
-      <div className={classNames(styles.container, 'flex')}>
-        <Box className="grow">{t('byPost')}</Box>
-        <Box className="grow">{t('bySubPost')}</Box>
+      <div className={classNames(styles.container, 'wrap')}>
+        <Result study={study} by="Post" />
+        <Result study={study} by="SubPost" />
       </div>
     </div>
   )
