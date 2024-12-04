@@ -3,7 +3,7 @@
 import { FullStudy } from '@/db/study'
 import { changeStudyRole } from '@/services/serverFunctions/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import { Role, StudyRole } from '@prisma/client'
+import { Level, Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -31,16 +31,19 @@ const SelectStudyRole = ({ user, rowUser, studyId, currentRole, userRole }: Prop
     }
   }
 
+  const isDisabled =
+    user.email === rowUser.email ||
+    (currentRole === StudyRole.Validator && userRole !== StudyRole.Validator && user.role !== Role.ADMIN) ||
+    !rowUser.organizationId ||
+    (user.organizationId !== rowUser.organizationId && rowUser.level === Level.Initial)
+
   return (
     <Select
       className="w100"
       data-testid="select-study-role"
       value={role}
       onChange={selectNewRole}
-      disabled={
-        user.email === rowUser.email ||
-        (currentRole === StudyRole.Validator && userRole !== StudyRole.Validator && user.role !== Role.ADMIN)
-      }
+      disabled={isDisabled}
     >
       {Object.keys(StudyRole)
         .filter((role) => role !== StudyRole.Validator || user.role === Role.ADMIN || userRole === StudyRole.Validator)

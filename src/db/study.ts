@@ -64,6 +64,7 @@ const fullStudyInclude = {
         select: {
           email: true,
           organizationId: true,
+          level: true,
         },
       },
       role: true,
