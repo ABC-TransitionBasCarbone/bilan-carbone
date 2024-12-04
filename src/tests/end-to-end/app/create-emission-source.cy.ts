@@ -30,7 +30,6 @@ describe('Create study', () => {
     cy.getByTestId('emission-source-name').clear()
     cy.getByTestId('emission-source-name').type('My emission source name')
     cy.getByTestId('emission-source-tag').type('my tag')
-    cy.getByTestId('emission-source-caracterisation').type('My caracterisation')
 
     cy.getByTestId('emission-source-My new emission source').should('not.exist')
     cy.getByTestId('emission-source-My emission source name').should('exist')

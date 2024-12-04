@@ -1,4 +1,4 @@
-import { EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
+import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import axios, { AxiosResponse } from 'axios'
 import { prismaClient } from '../../db/client'
 import { UNITS_MATRIX } from './historyUnits'
@@ -148,6 +148,45 @@ const getUnit = (value?: string): Unit | null => {
   return null
 }
 
+const getType = (value: string) => {
+  switch (value) {
+    case 'Carburant (amont/combustion)':
+      return EmissionFactorPartType.CarburantAmontCombustion
+    case 'Amont':
+      return EmissionFactorPartType.Amont
+    case 'Intrants':
+      return EmissionFactorPartType.Intrants
+    case 'Combustion':
+      return EmissionFactorPartType.Combustion
+    case 'Transport et distribution':
+      return EmissionFactorPartType.TransportEtDistribution
+    case 'Energie':
+      return EmissionFactorPartType.Energie
+    case 'Fabrication':
+      return EmissionFactorPartType.Fabrication
+    case 'Traitement':
+      return EmissionFactorPartType.Traitement
+    case 'Collecte':
+      return EmissionFactorPartType.Collecte
+    case 'Autre':
+      return EmissionFactorPartType.Autre
+    case 'Amortissement':
+      return EmissionFactorPartType.Amortissement
+    case 'Incinération':
+      return EmissionFactorPartType.Incineration
+    case 'Emissions fugitives':
+      return EmissionFactorPartType.EmissionsFugitives
+    case 'Fuites':
+      return EmissionFactorPartType.Fuites
+    case 'Transport':
+      return EmissionFactorPartType.Transport
+    case 'Combustion à la centrale':
+      return EmissionFactorPartType.CombustionALaCentrale
+    default:
+      throw new Error(`Emission factor type not found: ${value}`)
+  }
+}
+
 const saveEmissionFactors = async (emissionFactors: EmissionFactorResponse['results'], versionId: string) =>
   Promise.all(
     emissionFactors.map((emissionFactor) => {
@@ -268,7 +307,7 @@ const saveEmissionFactorsParts = async (parts: EmissionFactorResponse['results']
       hfc: 0,
       pfc: 0,
       otherGES: part.Autres_GES,
-      type: part.Type_poste,
+      type: getType(part.Type_poste),
       metaData:
         metaData.length > 0
           ? {

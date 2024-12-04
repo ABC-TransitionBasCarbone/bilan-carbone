@@ -13,7 +13,7 @@ import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study
 import { getQualityRating } from '@/services/uncertainty'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormControlLabel, Switch } from '@mui/material'
-import { StudyRole } from '@prisma/client'
+import { EmissionSourceCaracterisation, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -38,6 +38,7 @@ type StudyWithoutDetailProps = {
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   userRoleOnStudy: StudyRole | null
+  caracterisations: EmissionSourceCaracterisation[]
 }
 
 const EmissionSource = ({
@@ -46,6 +47,7 @@ const EmissionSource = ({
   emissionFactors,
   userRoleOnStudy,
   withoutDetail,
+  caracterisations,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const ref = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(false)
@@ -234,6 +236,7 @@ const EmissionSource = ({
                 selectedFactor={selectedFactor}
                 emissionFactors={emissionFactors}
                 update={update}
+                caracterisations={caracterisations}
               />
             )}
             {emissionResults && (

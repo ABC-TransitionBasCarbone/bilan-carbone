@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { caracterisationsBySubPost } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { downloadStudySubPosts } from '@/services/study'
@@ -63,6 +64,8 @@ const SubPost = ({
     [study, subPost, withoutDetail],
   )
 
+  const caracterisations = useMemo(() => caracterisationsBySubPost[subPost], [subPost])
+
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div className="flex">
       <Accordion className="grow">
@@ -92,6 +95,7 @@ const SubPost = ({
                 emissionFactors={subPostEmissionFactors}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail
+                caracterisations={caracterisations}
               />
             ) : (
               <EmissionSource
@@ -101,12 +105,13 @@ const SubPost = ({
                 emissionFactors={subPostEmissionFactors}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail={false}
+                caracterisations={caracterisations}
               />
             ),
           )}
           {!withoutDetail && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader && (
             <div className="mt2">
-              <NewEmissionSource study={study} subPost={subPost} />
+              <NewEmissionSource study={study} subPost={subPost} caracterisations={caracterisations} />
             </div>
           )}
         </AccordionDetails>

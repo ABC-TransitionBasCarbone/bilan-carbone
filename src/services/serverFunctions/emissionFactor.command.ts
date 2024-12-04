@@ -1,4 +1,4 @@
-import { SubPost, Unit } from '@prisma/client'
+import { EmissionFactorPartType, SubPost, Unit } from '@prisma/client'
 import z from 'zod'
 
 export const maxParts = 5
@@ -46,7 +46,7 @@ export const CreateEmissionFactorCommandValidation = z.intersection(
           GESschema,
           z.object({
             name: z.string({ required_error: 'name' }).trim().min(1, 'name').max(64, 'nameMaxLength'),
-            type: z.string({ required_error: 'type' }).trim().min(1, 'type').max(64, 'typeMaxLength'),
+            type: z.nativeEnum(EmissionFactorPartType, { required_error: 'type' }),
             totalCo2: z.number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' }).min(0, 'totalCo2'),
           }),
         ),
