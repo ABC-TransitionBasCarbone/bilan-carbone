@@ -1,7 +1,7 @@
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import axios, { AxiosResponse } from 'axios'
 import { prismaClient } from '../../db/client'
-import { UNITS_MATRIX } from './historyUnits'
+import { unitsMatrix } from './historyUnits'
 import { elementsBySubPost } from './posts.config'
 
 const source = Import.BaseEmpreinte
@@ -141,11 +141,7 @@ const getUnit = (value?: string): Unit | null => {
     value = value.replace('m3', 'm³')
   }
 
-  const unit = Object.entries(UNITS_MATRIX).find((entry) => entry[1] === value)
-  if (unit) {
-    return unit[0] as Unit
-  }
-  return null
+  return unitsMatrix[value] || null
 }
 
 const getType = (value: string) => {
