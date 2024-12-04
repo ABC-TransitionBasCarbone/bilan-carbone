@@ -8,9 +8,73 @@ export const createStudy = (study: Prisma.StudyCreateInput) =>
     data: study,
   })
 
+const fullStudyInclude = {
+  emissionSources: {
+    select: {
+      id: true,
+      subPost: true,
+      name: true,
+      caracterisation: true,
+      tag: true,
+      value: true,
+      reliability: true,
+      technicalRepresentativeness: true,
+      geographicRepresentativeness: true,
+      temporalRepresentativeness: true,
+      completeness: true,
+      source: true,
+      type: true,
+      comment: true,
+      validated: true,
+      emissionFactor: {
+        select: {
+          id: true,
+          totalCo2: true,
+          unit: true,
+          reliability: true,
+          technicalRepresentativeness: true,
+          geographicRepresentativeness: true,
+          temporalRepresentativeness: true,
+          completeness: true,
+        },
+      },
+      contributor: {
+        select: {
+          email: true,
+        },
+      },
+    },
+    orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
+  },
+  contributors: {
+    select: {
+      user: {
+        select: {
+          email: true,
+          organizationId: true,
+        },
+      },
+      subPost: true,
+    },
+    orderBy: { user: { email: 'asc' } },
+  },
+  allowedUsers: {
+    select: {
+      user: {
+        select: {
+          email: true,
+          organizationId: true,
+        },
+      },
+      role: true,
+    },
+    orderBy: { user: { email: 'asc' } },
+  },
+  exports: { select: { type: true } },
+} satisfies Prisma.StudyInclude
+
 export const getMainStudy = async (user: User) => {
   const userOrganizations = await getUserOrganizations(user.email)
-
   return prismaClient.study.findFirst({
     where: {
       OR: [
@@ -19,6 +83,7 @@ export const getMainStudy = async (user: User) => {
         { contributors: { some: { userId: user.id } } },
       ],
     },
+    include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
 }
@@ -51,70 +116,7 @@ export const getStudiesByUserAndOrganization = async (user: User, organizationId
 export const getStudyById = async (id: string) => {
   return prismaClient.study.findUnique({
     where: { id },
-    include: {
-      emissionSources: {
-        select: {
-          id: true,
-          subPost: true,
-          name: true,
-          caracterisation: true,
-          tag: true,
-          value: true,
-          reliability: true,
-          technicalRepresentativeness: true,
-          geographicRepresentativeness: true,
-          temporalRepresentativeness: true,
-          completeness: true,
-          source: true,
-          type: true,
-          comment: true,
-          validated: true,
-          emissionFactor: {
-            select: {
-              id: true,
-              totalCo2: true,
-              unit: true,
-              reliability: true,
-              technicalRepresentativeness: true,
-              geographicRepresentativeness: true,
-              temporalRepresentativeness: true,
-              completeness: true,
-            },
-          },
-          contributor: {
-            select: {
-              email: true,
-            },
-          },
-        },
-        orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
-      },
-      contributors: {
-        select: {
-          user: {
-            select: {
-              email: true,
-              organizationId: true,
-            },
-          },
-          subPost: true,
-        },
-        orderBy: { user: { email: 'asc' } },
-      },
-      allowedUsers: {
-        select: {
-          user: {
-            select: {
-              email: true,
-              organizationId: true,
-            },
-          },
-          role: true,
-        },
-        orderBy: { user: { email: 'asc' } },
-      },
-      exports: { select: { type: true } },
-    },
+    include: fullStudyInclude,
   })
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>

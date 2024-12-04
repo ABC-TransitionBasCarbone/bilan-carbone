@@ -1,9 +1,10 @@
 import { FullStudy } from '@/db/study'
+import { SubPost } from '@prisma/client'
 import { sumEmissionSourcesUncertainty } from './emissionSource'
 import { Post, subPostsByPost } from './posts'
 
 export type ResultsByPost = {
-  post: string
+  post: Post | SubPost
   value: number
   numberOfEmissionSource: number
   numberOfValidatedEmissionSource: number
