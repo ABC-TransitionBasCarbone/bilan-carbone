@@ -115,6 +115,15 @@ const sumLines = (lines: Omit<BegesLine, 'rule'>[]) => {
   }
 }
 
+const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSourceCaracterisation) => {
+  const rule = rules.find((rule) => rule.type === null)
+  if (!rule) {
+    return null
+  }
+
+  return getRulePost(rule, caracterisation)
+}
+
 export const computeBegesResult = (
   study: FullStudy,
   rules: ExportRule[],
@@ -130,6 +139,9 @@ export const computeBegesResult = (
     }
 
     const id = emissionSource.emissionFactor.id
+    const caracterisation = emissionSource.caracterisation
+    const value = emissionSource.value
+
     const emissionFactor = emissionFactorsWithParts.find(
       (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,
     )
@@ -142,26 +154,41 @@ export const computeBegesResult = (
       return
     }
 
+    // l'incertitude est globale, peu importe
     const uncertainty = getStandardDeviation(emissionSource)
     if (!uncertainty) {
       return
     }
 
-    let post: string | null = null
     if (emissionFactor.emissionFactorParts.length === 0) {
       // Pas de decomposition => on ventile selon la regle par default
-      const rule = subPostRules.find((rule) => rule.type === null)
-      if (!rule) {
-        return
-      }
-
-      post = getRulePost(rule, emissionSource.caracterisation)
+      const post = getDefaultRule(subPostRules, caracterisation)
       if (post) {
         results[post].push({
-          ...getBegesLine(emissionSource.value, emissionFactor),
+          ...getBegesLine(value, emissionFactor),
           uncertainty: uncertainty,
         })
       }
+    } else {
+      emissionFactor.emissionFactorParts.forEach((part) => {
+        let post: string | null = null
+        const rule = subPostRules.find((rule) => rule.type === part.type)
+        if (!rule) {
+          // On a pas de regle specifique pour cette composante => on ventile selon la regle par default
+          post = getDefaultRule(subPostRules, caracterisation)
+        } else {
+          // On ventile selon la regle specifique
+          post = getRulePost(rule, caracterisation)
+        }
+
+        if (post) {
+          // Et on ajoute la valeur selon la composante quoi qu'il arrive
+          results[post].push({
+            ...getBegesLine(value, part),
+            uncertainty: uncertainty,
+          })
+        }
+      })
     }
   })
 

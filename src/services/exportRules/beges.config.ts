@@ -1,6 +1,7 @@
 import { EmissionFactorPartType, ExportRule, SubPost } from '@prisma/client'
 
 export const begesRules = [
+  { subPost: SubPost.CombustiblesFossiles, operated: '1.1', notOperated: '6.1' },
   { subPost: SubPost.CombustiblesFossiles, type: EmissionFactorPartType.Amont, operated: '4.1', notOperated: '6.1' },
   {
     subPost: SubPost.CombustiblesFossiles,
@@ -34,6 +35,11 @@ export const begesRules = [
   },
   {
     subPost: SubPost.ReseauxDeChaleurEtDeVapeur,
+    operated: '2.3',
+    notOperated: '6.1',
+  },
+  {
+    subPost: SubPost.ReseauxDeChaleurEtDeVapeur,
     type: EmissionFactorPartType.Amont,
     operated: '4.1',
     notOperated: '6.1',
@@ -50,6 +56,7 @@ export const begesRules = [
     operated: '4.1',
     notOperated: '6.1',
   },
+  { subPost: SubPost.Electricite, operated: '2.1', notOperated: '6.1' },
   { subPost: SubPost.Electricite, type: EmissionFactorPartType.Amont, operated: '4.1', notOperated: '6.1' },
   { subPost: SubPost.Electricite, type: EmissionFactorPartType.Combustion, operated: '2.1', notOperated: '6.1' },
   {
@@ -114,6 +121,12 @@ export const begesRules = [
   { subPost: SubPost.ServicesEnApprocheMonetaire, operated: '4.5' },
   {
     subPost: SubPost.FretEntrant,
+    operated: '1.2',
+    notOperatedSupported: '3.1',
+    notOperatedNotSupported: '3.2',
+  },
+  {
+    subPost: SubPost.FretEntrant,
     type: EmissionFactorPartType.Amont,
     operated: '4.1',
     notOperatedSupported: '3.1',
@@ -138,6 +151,12 @@ export const begesRules = [
     subPost: SubPost.FretEntrant,
     type: EmissionFactorPartType.Fabrication,
     operated: '4.2',
+    notOperatedSupported: '3.1',
+    notOperatedNotSupported: '3.2',
+  },
+  {
+    subPost: SubPost.FretInterne,
+    operated: '1.2',
     notOperatedSupported: '3.1',
     notOperatedNotSupported: '3.2',
   },
@@ -172,6 +191,12 @@ export const begesRules = [
   },
   {
     subPost: SubPost.FretSortant,
+    operated: '1.2',
+    notOperatedSupported: '3.1',
+    notOperatedNotSupported: '3.2',
+  },
+  {
+    subPost: SubPost.FretSortant,
     type: EmissionFactorPartType.Amont,
     operated: '4.1',
     notOperatedSupported: '3.1',
@@ -201,6 +226,11 @@ export const begesRules = [
   },
   {
     subPost: SubPost.DeplacementsDomicileTravail,
+    operated: '1.2',
+    notOperated: '3.3',
+  },
+  {
+    subPost: SubPost.DeplacementsDomicileTravail,
     type: EmissionFactorPartType.Amont,
     operated: '4.1',
     notOperated: '3.3',
@@ -231,6 +261,11 @@ export const begesRules = [
   },
   {
     subPost: SubPost.DeplacementsDesEmployesDansLeCadreDuTravail,
+    operated: '1.2',
+    notOperated: '3.5',
+  },
+  {
+    subPost: SubPost.DeplacementsDesEmployesDansLeCadreDuTravail,
     type: EmissionFactorPartType.Amont,
     operated: '4.1',
     notOperated: '3.5',
@@ -258,6 +293,11 @@ export const begesRules = [
     type: EmissionFactorPartType.Fabrication,
     operated: '4.2',
     notOperated: '3.5',
+  },
+  {
+    subPost: SubPost.DeplacementsVisiteurs,
+    operated: '1.2',
+    notOperated: '3.4',
   },
   {
     subPost: SubPost.DeplacementsVisiteurs,
