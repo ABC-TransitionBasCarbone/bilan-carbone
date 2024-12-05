@@ -3,16 +3,13 @@ import { EmissionSourceCaracterisation, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
 
-const getStandardDeviation = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-  emission: number | null,
-) => {
+export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
     return null
   }
   const emissionStandardDeviation = getQualityStandardDeviation(emissionSource)
   const factorStandardDeviation = getQualityStandardDeviation(emissionSource.emissionFactor)
-  if (emission === null || emissionStandardDeviation === null || factorStandardDeviation === null) {
+  if (emissionStandardDeviation === null || factorStandardDeviation === null) {
     return null
   }
 
@@ -38,7 +35,7 @@ export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDeta
     return null
   }
   const emission = emissionSource.emissionFactor.totalCo2 * emissionSource.value
-  const standardDeviation = getStandardDeviation(emissionSource, emission)
+  const standardDeviation = getStandardDeviation(emissionSource)
   const confidenceInterval = standardDeviation ? getConfidenceInterval(emission, standardDeviation) : null
   const alpha = getAlpha(emission, confidenceInterval)
 
@@ -50,21 +47,32 @@ export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDeta
   }
 }
 
-export const sumEmissionSourcesUncertainty = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources']) => {
-  const results = emissionSource.map(getEmissionResults).filter((result) => result !== null)
-  const total = results.reduce((acc, result) => acc + result.emission, 0)
+export const sumStandardDeviations = (standardDeviations: { value: number; standardDeviation: number | null }[]) => {
+  const total = standardDeviations.reduce((acc, { value }) => acc + value, 0)
   return Math.pow(
     Math.exp(
       Math.sqrt(
-        results.reduce(
-          (acc, result) =>
-            acc + Math.pow(result.emission / total, 2) * Math.pow(Math.log(result.standardDeviation || 1), 2),
+        standardDeviations.reduce(
+          (acc, { value, standardDeviation }) =>
+            acc + Math.pow(value / total, 2) * Math.pow(Math.log(standardDeviation || 1), 2),
           0,
         ),
       ),
     ),
     2,
   )
+}
+
+export const sumEmissionSourcesUncertainty = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources']) => {
+  const results = emissionSource
+    .map(getEmissionResults)
+    .filter((result) => result !== null)
+    .map((result) => ({
+      value: result.emission,
+      standardDeviation: result.standardDeviation,
+    }))
+
+  return sumStandardDeviations(results)
 }
 
 export const getEmissionSourcesTotalCo2 = (emissionSources: FullStudy['emissionSources']) =>

@@ -1,4 +1,73 @@
 {
+  "exports": {
+    "consolidated": "Consolidated",
+    "Beges": "Regulatory GHG Assesment",
+    "GHGP": "GHG Protocol",
+    "ISO14069": "ISO 14069"
+  },
+  "categorisations": {
+    "Operated": "Operated",
+    "NotOperated": "Not operated",
+    "OperatedProcedeed": "Operated, processed",
+    "OperatedFugitive": "Operated, fugitive",
+    "NotOperatedSupported": "Not operated, supported",
+    "NotOperatedNotSupported": "Not operated, not supported",
+    "Rented": "Rented",
+    "FinalClient": "By the final client or an intermediary"
+  },
+  "beges": {
+    "rule": "Rule",
+    "category": {
+      "title": "Category",
+      "1": "Direct GHG emissions",
+      "2": "Indirect emissions associated with energy",
+      "3": "Indirect emissions associated with transport",
+      "4": "Indirect emissions associated with purchased products",
+      "5": "Indirect emissions associated with sold products",
+      "6": "Other indirect emissions"
+    },
+    "post": {
+      "title": "Emission post",
+      "1": {
+        "1": "Direct emissions from stationary combustion sources",
+        "2": "Direct emissions from mobile combustion sources",
+        "3": "Direct emissions from non-energy processes",
+        "4": "Direct fugitive emissions",
+        "5": "Emissions from biomass (soils and forests)"
+      },
+      "2": {
+        "1": "Indirect emissions from electricity consumption",
+        "2": "Indirect emissions from steam, heat, or cold consumption"
+      },
+      "3": {
+        "1": "Upstream freight transport",
+        "2": "Downstream freight transport",
+        "3": "Home-to-work travel",
+        "4": "Visitor and client transport",
+        "5": "Business travel"
+      },
+      "4": {
+        "1": "Purchases of goods",
+        "2": "Capital goods",
+        "3": "Waste management",
+        "4": "Upstream leased assets",
+        "5": "Purchases of services"
+      },
+      "5": {
+        "1": "Use of sold products",
+        "2": "Downstream leased assets",
+        "3": "End of life",
+        "4": "Investments"
+      },
+      "6": {
+        "1": "Other indirect emissions"
+      }
+    },
+    "other": "Other gases",
+    "total": "Total",
+    "uncertainty": "Uncertainty",
+    "ges": "GHG emissions"
+  },
   "nav": {
     "backToHome": "Back to home",
     "emissionFactors": "Emission Factors",
@@ -76,9 +145,6 @@
       "end": "End",
       "level": "Type of Carbon Assessment®",
       "exports": "Exports",
-      "Beges": "Regulatory GHG Assessment",
-      "GHGP": "GHG Protocol",
-      "ISO14069": "ISO 14069",
       "control": "Control mode",
       "CapitalShare": "Capital share",
       "Financial": "Financial",
@@ -170,6 +236,7 @@
       "dates": "from {startDate} to {endDate}"
     },
     "results": {
+      "type": "Type",
       "post": "Post",
       "value": "Emissions (kgCO₂e)",
       "uncertainty": "Uncertainty"
@@ -291,7 +358,6 @@
         "source": "Please provide a source",
         "totalCo2": "Please provide a total emission",
         "type": "Please select a post type",
-        "typeMaxLength": "maximum 64 characters",
         "subPost": "Please select a sub post"
       }
     },

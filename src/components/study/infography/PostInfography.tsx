@@ -1,7 +1,7 @@
 'use client'
 
 import { Post, subPostsByPost } from '@/services/posts'
-import { ResultsByPost } from '@/services/results'
+import { ResultsByPost } from '@/services/results/consolidated'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'

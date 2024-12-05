@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
-import { computeResultsByPost } from '@/services/results'
+import { computeResultsByPost } from '@/services/results/consolidated'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

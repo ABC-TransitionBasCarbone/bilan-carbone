@@ -73,3 +73,37 @@ export const createEmissionFactor = (emissionFactor: Prisma.EmissionFactorCreate
   prismaClient.emissionFactor.create({
     data: emissionFactor,
   })
+
+const gazColumns = {
+  ch4b: true,
+  ch4f: true,
+  co2b: true,
+  co2f: true,
+  n2o: true,
+  pfc: true,
+  hfc: true,
+  sf6: true,
+  otherGES: true,
+  totalCo2: true,
+}
+export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
+  prismaClient.emissionFactor.findMany({
+    select: {
+      id: true,
+      ...gazColumns,
+      reliability: true,
+      technicalRepresentativeness: true,
+      geographicRepresentativeness: true,
+      temporalRepresentativeness: true,
+      completeness: true,
+      emissionFactorParts: {
+        select: {
+          ...gazColumns,
+          type: true,
+        },
+      },
+    },
+    where: { id: { in: ids } },
+  })
+
+export type EmissionFactorWithParts = AsyncReturnType<typeof getEmissionFactorsWithPartsInIds>[0]
