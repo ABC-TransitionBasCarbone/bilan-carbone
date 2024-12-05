@@ -37,6 +37,7 @@
     "chart.js": "^4.4.7",
     "classnames": "^2.5.1",
     "commander": "^12.1.0",
+    "csv-parse": "^5.6.0",
     "dayjs": "^1.11.13",
     "ejs": "^3.1.10",
     "fuse.js": "^7.0.0",
