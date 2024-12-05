@@ -3,6 +3,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { BegesLine, computeBegesResult, rulesSpans } from '@/services/results/beges'
+import { getStandardDeviationRating } from '@/services/uncertainty'
 import { ExportRule } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -49,7 +50,11 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts }: Props) =>
             { header: t('other'), accessorKey: 'other' },
             { header: t('total'), accessorKey: 'total' },
             { header: 'CO2b', accessorKey: 'co2b' },
-            { header: t('uncertainty'), accessorKey: 'uncertainty' },
+            {
+              header: t('uncertainty'),
+              accessorFn: ({ uncertainty }) =>
+                uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
+            },
           ],
         },
       ] as ColumnDef<BegesLine>[],
