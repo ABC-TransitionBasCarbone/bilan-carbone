@@ -74,20 +74,23 @@ export const createEmissionFactor = (emissionFactor: Prisma.EmissionFactorCreate
     data: emissionFactor,
   })
 
+const gazColumns = {
+  ch4b: true,
+  ch4f: true,
+  co2b: true,
+  co2f: true,
+  n2o: true,
+  pfc: true,
+  hfc: true,
+  sf6: true,
+  otherGES: true,
+  totalCo2: true,
+}
 export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
   prismaClient.emissionFactor.findMany({
     select: {
       id: true,
-      ch4b: true,
-      ch4f: true,
-      co2b: true,
-      co2f: true,
-      n2o: true,
-      pfc: true,
-      hfc: true,
-      sf6: true,
-      otherGES: true,
-      totalCo2: true,
+      ...gazColumns,
       reliability: true,
       technicalRepresentativeness: true,
       geographicRepresentativeness: true,
@@ -95,16 +98,7 @@ export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
       completeness: true,
       emissionFactorParts: {
         select: {
-          ch4b: true,
-          ch4f: true,
-          co2b: true,
-          co2f: true,
-          n2o: true,
-          pfc: true,
-          hfc: true,
-          sf6: true,
-          otherGES: true,
-          totalCo2: true,
+          ...gazColumns,
           type: true,
         },
       },

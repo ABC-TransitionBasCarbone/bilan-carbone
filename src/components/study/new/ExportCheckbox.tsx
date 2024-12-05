@@ -12,11 +12,13 @@ interface Props {
 
 const ExportCheckbox = ({ id, values, setValues }: Props) => {
   const t = useTranslations('study.new')
+  const tExport = useTranslations('exports')
+
   return (
     <div className={styles.container}>
       <FormControlLabel
         control={<Checkbox />}
-        label={t(id)}
+        label={tExport(id)}
         value={!!values[id]}
         onChange={(_, checked) => setValues({ ...values, [id]: checked ? ControlMode.CapitalShare : false })}
       />

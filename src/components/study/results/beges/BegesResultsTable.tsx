@@ -86,7 +86,6 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts }: Props) =>
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => {
                 const [category, post] = row.original.rule.split('.')
-                console.log(cell.column.id, post)
                 return cell.column.id !== 'category' || post === '1' ? (
                   <td key={cell.id} rowSpan={cell.column.id === 'category' ? rulesSpans[category] : undefined}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

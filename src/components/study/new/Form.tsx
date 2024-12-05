@@ -33,7 +33,6 @@ interface Props {
 const NewStudyForm = ({ organization, user, usersEmail }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.new')
-  const tExport = useTranslations('exports')
   const tLevel = useTranslations('level')
   const [error, setError] = useState('')
 
@@ -116,7 +115,7 @@ const NewStudyForm = ({ organization, user, usersEmail }: Props) => {
           control={form.control}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <FormControl error={!!error} component="fieldset">
-              <FormLabel component="legend">{tExport('exports')}</FormLabel>
+              <FormLabel component="legend">{t('exports')}</FormLabel>
               <FormGroup>
                 <div className={styles.exports}>
                   {Object.keys(Export).map((key) => (
