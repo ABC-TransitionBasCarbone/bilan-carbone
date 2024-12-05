@@ -187,6 +187,22 @@ const getType = (value: string) => {
   }
 }
 
+const getEmissionQuality = (uncertainty?: number) => {
+  if (!uncertainty) {
+    return null
+  } else if (uncertainty < 5) {
+    return 5
+  } else if (uncertainty < 20) {
+    return 4
+  } else if (uncertainty < 45) {
+    return 3
+  } else if (uncertainty < 75) {
+    return 2
+  } else {
+    return 1
+  }
+}
+
 const saveEmissionFactors = async (emissionFactors: EmissionFactorResponse['results'], versionId: string) =>
   Promise.all(
     emissionFactors.map((emissionFactor) => {
@@ -202,10 +218,10 @@ const saveEmissionFactors = async (emissionFactors: EmissionFactorResponse['resu
         versionId,
         location: emissionFactor.Localisation_géographique,
         incertitude: emissionFactor.Incertitude,
-        technicalRepresentativeness: emissionFactor.Qualité_TeR,
-        geographicRepresentativeness: emissionFactor.Qualité_GR,
-        temporalRepresentativeness: emissionFactor.Qualité_TiR,
-        completeness: emissionFactor.Qualité_C,
+        technicalRepresentativeness: emissionFactor.Qualité_TeR || getEmissionQuality(emissionFactor.Incertitude),
+        geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
+        temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
+        completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
         totalCo2: emissionFactor.Total_poste_non_décomposé,
         co2f: emissionFactor.CO2f,
         ch4f: emissionFactor.CH4f,
