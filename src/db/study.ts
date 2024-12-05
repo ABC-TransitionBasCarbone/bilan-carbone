@@ -132,6 +132,22 @@ export const getStudyById = async (id: string) => {
     include: fullStudyInclude,
   })
 }
+
+export const getStudyByWithAnonymousUsersOrganization = async (id: string, organizationId: string) => {
+  return getStudyById(id).then((study) => {
+    if (!study) {
+      return null
+    }
+    return {
+      ...study,
+      allowedUsers: study.allowedUsers.map((allowedUser) =>
+        allowedUser.user.organizationId === organizationId
+          ? allowedUser
+          : { ...allowedUser, user: { ...allowedUser.user, organizationId: null } },
+      ),
+    }
+  })
+}
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>

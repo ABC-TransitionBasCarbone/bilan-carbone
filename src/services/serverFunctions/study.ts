@@ -23,7 +23,7 @@ import {
   canCreateStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
-import { NewStudyRightStatus } from '../study'
+import { getAllowedLevels, NewStudyRightStatus } from '../study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyLevelCommand,
@@ -178,7 +178,7 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-export const getNewStudyRightStatus = async (email: string, role: StudyRole) => {
+export const getNewStudyRightStatus = async (email: string, studyLevel: Level, role: StudyRole) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
@@ -195,7 +195,9 @@ export const getNewStudyRightStatus = async (email: string, role: StudyRole) => 
 
   if (newUser.organizationId !== session.user.organizationId) {
     // TODO : check if the organization has an up-to-date licences
-    return newUser.level === Level.Initial ? NewStudyRightStatus.ReaderOnly : NewStudyRightStatus.Valid
+    return newUser.level && getAllowedLevels(studyLevel).includes(newUser.level)
+      ? NewStudyRightStatus.Valid
+      : NewStudyRightStatus.ReaderOnly
   }
 
   return NewStudyRightStatus.Valid

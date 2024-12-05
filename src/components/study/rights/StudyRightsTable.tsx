@@ -38,6 +38,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
               currentRole={role}
               rowUser={context.row.original.user}
               studyId={study.id}
+              studyLevel={study.level}
             />
           )
         },

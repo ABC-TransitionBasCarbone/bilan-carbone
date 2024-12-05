@@ -2,21 +2,23 @@
 
 import { FullStudy } from '@/db/study'
 import { changeStudyRole } from '@/services/serverFunctions/study'
+import { getAllowedLevels } from '@/services/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Level, Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
   user: User
   userRole?: StudyRole
   rowUser: FullStudy['allowedUsers'][0]['user']
   studyId: string
+  studyLevel: Level
   currentRole: StudyRole
 }
 
-const SelectStudyRole = ({ user, rowUser, studyId, currentRole, userRole }: Props) => {
+const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, currentRole, userRole }: Props) => {
   const t = useTranslations('study.role')
   const [role, setRole] = useState(currentRole)
   useEffect(() => {
@@ -31,11 +33,15 @@ const SelectStudyRole = ({ user, rowUser, studyId, currentRole, userRole }: Prop
     }
   }
 
-  const isDisabled =
-    user.email === rowUser.email ||
-    (currentRole === StudyRole.Validator && userRole !== StudyRole.Validator && user.role !== Role.ADMIN) ||
-    !rowUser.organizationId ||
-    (user.organizationId !== rowUser.organizationId && rowUser.level === Level.Initial)
+  const isDisabled = useMemo(
+    () =>
+      user.email === rowUser.email ||
+      (currentRole === StudyRole.Validator && userRole !== StudyRole.Validator && user.role !== Role.ADMIN) ||
+      !rowUser.organizationId ||
+      !rowUser.level ||
+      !getAllowedLevels(studyLevel).includes(rowUser.level),
+    [currentRole, rowUser, studyLevel, user, userRole],
+  )
 
   return (
     <Select
