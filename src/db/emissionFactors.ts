@@ -86,7 +86,7 @@ const gazColumns = {
   otherGES: true,
   totalCo2: true,
 }
-export const getEmissionFactorsWithPartsfromIds = async (ids: string[]) =>
+export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
   prismaClient.emissionFactor.findMany({
     select: {
       id: true,
@@ -106,4 +106,4 @@ export const getEmissionFactorsWithPartsfromIds = async (ids: string[]) =>
     where: { id: { in: ids } },
   })
 
-export type EmissionFactorWithParts = AsyncReturnType<typeof getEmissionFactorsWithPartsfromIds>[0]
+export type EmissionFactorWithParts = AsyncReturnType<typeof getEmissionFactorsWithPartsInIds>[0]
