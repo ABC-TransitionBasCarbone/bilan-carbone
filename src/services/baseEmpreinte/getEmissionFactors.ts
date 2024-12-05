@@ -100,15 +100,15 @@ const select = [
 
 const escapeTranslation = (value?: string) => (value ? value.replaceAll('"""', '') : value)
 
-const getEmissionFactorImportVersion = async (name: string) => {
+const getEmissionFactorImportVersion = async (prisma: Prisma.TransactionClient, name: string) => {
   const results = await axios.get('https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner')
   const fileName = results.data.file.name
 
-  const existingVersion = await prismaClient.emissionFactorImportVersion.findFirst({ where: { internId: fileName } })
+  const existingVersion = await prisma.emissionFactorImportVersion.findFirst({ where: { internId: fileName } })
   if (existingVersion) {
     return { success: false, id: existingVersion.id }
   }
-  const newVersion = await prismaClient.emissionFactorImportVersion.create({
+  const newVersion = await prisma.emissionFactorImportVersion.create({
     data: { name, source, internId: fileName },
   })
   return { success: true, id: newVersion.id }
@@ -141,7 +141,10 @@ const getUnit = (value?: string): Unit | null => {
     value = value.replace('m3', 'm³')
   }
 
-  return unitsMatrix[value] || null
+  if (unitsMatrix[value]) {
+    return unitsMatrix[value]
+  }
+  throw new Error('Unknown unit : ' + value)
 }
 
 const getType = (value: string) => {
@@ -199,7 +202,11 @@ const getEmissionQuality = (uncertainty?: number) => {
   }
 }
 
-const saveEmissionFactors = async (emissionFactors: EmissionFactorResponse['results'], versionId: string) =>
+const saveEmissionFactors = async (
+  prisma: Prisma.TransactionClient,
+  emissionFactors: EmissionFactorResponse['results'],
+  versionId: string,
+) =>
   Promise.all(
     emissionFactors.map((emissionFactor) => {
       const data = {
@@ -272,17 +279,13 @@ const saveEmissionFactors = async (emissionFactors: EmissionFactorResponse['resu
           data.sf6 = emissionFactor.Valeur_gaz_supplémentaire_2
         }
       }
-      return prismaClient.emissionFactor.create({ data })
+      return prisma.emissionFactor.create({ data })
     }),
   )
 
-const saveEmissionFactorsParts = async (parts: EmissionFactorResponse['results']) => {
-  const emissionFactors = await prismaClient.emissionFactor.findMany({
-    where: {
-      importedId: {
-        in: parts.map((part) => part["Identifiant_de_l'élément"]),
-      },
-    },
+const saveEmissionFactorsParts = async (prisma: Prisma.TransactionClient, parts: EmissionFactorResponse['results']) => {
+  const emissionFactors = await prisma.emissionFactor.findMany({
+    where: { importedId: { in: parts.map((part) => part["Identifiant_de_l'élément"]) } },
   })
 
   for (const i in parts) {
@@ -294,8 +297,7 @@ const saveEmissionFactorsParts = async (parts: EmissionFactorResponse['results']
       (emissionFactor) => emissionFactor.importedId === part["Identifiant_de_l'élément"],
     )
     if (!emissionFactor) {
-      console.error('No emission factor found for ' + part["Identifiant_de_l'élément"])
-      throw new Error('No emission factor found for ' + part["Identifiant_de_l'élément"])
+      throw new Error('No emission factor found for element ' + part["Identifiant_de_l'élément"])
     }
 
     const metaData = []
@@ -349,33 +351,44 @@ const saveEmissionFactorsParts = async (parts: EmissionFactorResponse['results']
         data.sf6 = part.Valeur_gaz_supplémentaire_2
       }
     }
-    await prismaClient.emissionFactorPart.create({ data })
+    await prisma.emissionFactorPart.create({ data })
   }
 }
 
 const main = async (params: Params) => {
-  const emissionFactorImportVersion = await getEmissionFactorImportVersion(params.name)
-  if (!emissionFactorImportVersion.success) {
-    return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
-  }
+  try {
+    let parts: EmissionFactorResponse['results'] = []
+    await await prismaClient.$transaction(
+      async (prisma) => {
+        const emissionFactorImportVersion = await getEmissionFactorImportVersion(prisma, params.name)
+        if (!emissionFactorImportVersion.success) {
+          return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
+        }
 
-  let parts: EmissionFactorResponse['results'] = []
-  let url: string | undefined =
-    `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
+        let url: string | undefined =
+          `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${select.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
 
-  while (url) {
-    console.log(url)
-    const emissionFactors: AxiosResponse<EmissionFactorResponse> = await axios.get<EmissionFactorResponse>(url)
-    parts = parts.concat(emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne === 'Poste'))
-    await saveEmissionFactors(
-      emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne !== 'Poste'),
-      emissionFactorImportVersion.id,
+        while (url) {
+          console.log(url)
+          const emissionFactors: AxiosResponse<EmissionFactorResponse> = await axios.get<EmissionFactorResponse>(url)
+          parts = parts.concat(
+            emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne === 'Poste'),
+          )
+          await saveEmissionFactors(
+            prisma,
+            emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne !== 'Poste'),
+            emissionFactorImportVersion.id,
+          )
+
+          url = emissionFactors.data.next
+        }
+        await saveEmissionFactorsParts(prisma, parts)
+      },
+      { timeout: 300000 },
     )
-
-    url = emissionFactors.data.next
+  } catch (error) {
+    console.error(error)
   }
-
-  await saveEmissionFactorsParts(parts)
 }
 
 export default main
