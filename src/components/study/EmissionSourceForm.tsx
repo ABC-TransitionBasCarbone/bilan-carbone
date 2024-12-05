@@ -4,11 +4,12 @@ import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import { EmissionSourceType } from '@prisma/client'
+import { EmissionSourceCaracterisation, EmissionSourceType } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Path } from 'react-hook-form'
 import QualitySelect from '../form/QualitySelect'
+import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
 
@@ -18,12 +19,20 @@ interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   selectedFactor?: EmissionFactorWithMetaData
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
+  caracterisations: EmissionSourceCaracterisation[]
 }
 
-const EmissionSourceForm = ({ emissionSource, canEdit, update, emissionFactors, selectedFactor }: Props) => {
+const EmissionSourceForm = ({
+  emissionSource,
+  canEdit,
+  update,
+  emissionFactors,
+  selectedFactor,
+  caracterisations,
+}: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
-
+  const tCategorisations = useTranslations('categorisations')
   return (
     <>
       <div className={classNames(styles.row, 'flex')}>
@@ -41,13 +50,25 @@ const EmissionSourceForm = ({ emissionSource, canEdit, update, emissionFactors, 
           onBlur={(event) => update('tag', event.target.value)}
           label={t('form.tag')}
         />
-        <TextField
-          disabled={!canEdit}
-          defaultValue={emissionSource.caracterisation}
-          data-testid="emission-source-caracterisation"
-          onBlur={(event) => update('caracterisation', event.target.value)}
-          label={t('form.caracterisation')}
-        />
+        {caracterisations.length > 0 && (
+          <FormControl>
+            <InputLabel id="emission-source-caracterisation-label">{t('form.caracterisation')}</InputLabel>
+            <Select
+              disabled={!canEdit || caracterisations.length === 1}
+              value={emissionSource.caracterisation || ''}
+              data-testid="emission-source-caracterisation"
+              onChange={(event) => update('caracterisation', event.target.value)}
+              labelId="emission-source-caracterisation-label"
+              label={t('form.caracterisation')}
+            >
+              {caracterisations.map((categorisation) => (
+                <MenuItem key={categorisation} value={categorisation}>
+                  {tCategorisations(categorisation)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
       </div>
       <div className={styles.row}>
         <EmissionSourceFactor
@@ -144,6 +165,9 @@ const EmissionSourceForm = ({ emissionSource, canEdit, update, emissionFactors, 
           onBlur={(event) => update('comment', event.target.value)}
           label={t('form.comment')}
         />
+      </div>
+      <div className={classNames(styles.delete, 'mt1', 'w100', 'flex')}>
+        <DeleteEmissionSource emissionSource={emissionSource} />
       </div>
     </>
   )

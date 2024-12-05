@@ -1,4 +1,71 @@
 {
+  "exports": {
+    "consolidated": "Consolidés",
+    "Beges": "Bilan GES Reglementaire",
+    "GHGP": "GHG Protocol",
+    "ISO14069": "ISO 14069"
+  },
+  "categorisations": {
+    "Operated": "Opéré",
+    "NotOperated": "Non opéré",
+    "OperatedProcedeed": "Opéré, procédé",
+    "OperatedFugitive": "Opéré, fugitive",
+    "NotOperatedSupported": "Non opéré, supporté",
+    "NotOperatedNotSupported": "Non opéré, non supporté",
+    "Rented": "Mis en location",
+    "FinalClient": "Par le client final ou un intermédiaire"
+  },
+  "beges": {
+    "rule": "Règle",
+    "category": {
+      "title": "Catégorie",
+      "1": "Émissions directes de GES",
+      "2": "Émissions indirectes associées à l'énergie",
+      "3": "Émissions indirectes associées au transport",
+      "4": "Émissions indirectes associées aux produits achetés",
+      "5": "Émissions indirectes associées aux produits vendus",
+      "6": "Autres émissions indirectes"
+    },
+    "post": {
+      "title": "Poste d'émission",
+      "1": {
+        "1": "Émissions directes des sources fixes de combustion",
+        "2": "Émissions directes des sources mobiles de combustion",
+        "3": "Émissions directes des procédés hors énergie",
+        "4": "Émissions directes fugitives",
+        "5": "Émissions issues de la biomasse (sols et forêts)"
+      },
+      "2": {
+        "1": "Émissions indirectes liées à la consommation d'électricité",
+        "2": "Émissions indirectes liées à la consommation de vapeur, chaleur ou froid"
+      },
+      "3": {
+        "1": "Transport de marchandises amont",
+        "2": "Transport de marchandises aval",
+        "3": "Déplacements domicile travail",
+        "4": "Transports de visiteurs et des clients",
+        "5": "Déplacements professionnels"
+      },
+      "4": {
+        "1": "Achats de biens",
+        "2": "Immobilisations de biens",
+        "3": "Gestion des déchets",
+        "4": "Actifs en leasing amont",
+        "5": "Achats de services"
+      },
+      "5": {
+        "1": "Utilisation des produits vendus",
+        "2": "Actifs en leasing aval",
+        "3": "Fin de vie",
+        "4": "Investissements"
+      },
+      "6": { "1": "Autres émissions indirectes" }
+    },
+    "other": "Autres gaz",
+    "total": "Total",
+    "uncertainty": "Incertitude",
+    "ges": "Émissions de GES"
+  },
   "nav": {
     "backToHome": "Retour a l'accueil",
     "emissionFactors": "Facteurs d'émission",
@@ -82,9 +149,6 @@
       "end": "Fin",
       "level": "Type de Bilan Carbone®",
       "exports": "Exports",
-      "Beges": "Bilan GES Reglementaire",
-      "GHGP": "GHG Protocol",
-      "ISO14069": "ISO 14069",
       "control": "Mode de contrôle",
       "CapitalShare": "Part de capital",
       "Financial": "Financier",
@@ -176,6 +240,7 @@
       "dates": "Du {startDate} au {endDate}"
     },
     "results": {
+      "type": "Type",
       "post": "Poste",
       "value": "Émissions (kgCO₂e)",
       "uncertainty": "Incertitude"
@@ -276,11 +341,11 @@
       "yes": "Oui",
       "no": "Non",
       "totalCo2": "Émission totale de CO₂",
-      "co2f": "CO2F",
-      "ch4f": "CH4F",
-      "ch4b": "CH4B",
+      "co2f": "CO2f",
+      "ch4f": "CH4f",
+      "ch4b": "CH4b",
       "n2o": "N2O",
-      "co2b": "CO2B",
+      "co2b": "CO2b",
       "sf6": "SF6",
       "hfc": "HFC",
       "pfc": "PFC",
@@ -297,7 +362,6 @@
         "subPost": "Veuillez selectionner un sous poste",
         "totalCo2": "Veuillez renseigner une émission totale",
         "type": "Veuillez renseigner un type de poste",
-        "typeMaxLength": "64 caractères maximum",
         "unit": "Veuillez renseigner une unité"
       }
     },
@@ -328,7 +392,24 @@
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
         "manual": "Manuel"
-      }
+      },
+      "post": "Poste :",
+      "subPost": "Sous poste :",
+      "co2f": "CO2f :",
+      "ch4f": "CH4f :",
+      "ch4b": "CH4b :",
+      "n2o": "N2O :",
+      "co2b": "CO2b :",
+      "sf6": "SF6 :",
+      "hfc": "HFC :",
+      "pfc": "PFC :",
+      "otherGES": "Autres gaz :",
+      "qualityRating": "Qualité :",
+      "reliability": "Fiabilité :",
+      "technicalRepresentativeness": "Représentativité technique :",
+      "geographicRepresentativeness": "Représentativité géographique :",
+      "temporalRepresentativeness": "Représentativité temporelle :",
+      "completeness": "Complétude :"
     }
   },
   "level": {
@@ -501,7 +582,7 @@
     "KG_FLUID_PER_KW_FRIDGE": "kg de fluide / kW frigo",
     "KG_FLUID_PER_m2": "kg de fluide / m²",
     "KG_FLUID_PER_EQUIPMENT": "Kg de fluide / équipement",
-    "KG_FUILD_PER_STORAGE_M3": "kg de fluide / m³ de stockage",
+    "KG_FLUID_PER_STORAGE_M3": "kg de fluide / m³ de stockage",
     "KWH_PER_HOUSING_YEAR": "kWh / (logement.an)",
     "PERCENT_APPARTMENTS": "% des appartements",
     "PERCENT_HOUSES": "% des maisons",
@@ -546,6 +627,13 @@
     }
   },
   "emissionSource": {
+    "dialog": {
+      "delete": "Supprimer cette source d'émission",
+      "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
+      "description": "Toutes les données renseignées seront définitivement perdues, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
+      "accept": "Oui",
+      "decline": "Non"
+    },
     "saving": "Sauvegarde en cours...",
     "status": {
       "valid": "Validée",

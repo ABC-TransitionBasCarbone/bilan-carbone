@@ -1,4 +1,73 @@
 {
+  "exports": {
+    "consolidated": "Consolidated",
+    "Beges": "Regulatory GHG Assesment",
+    "GHGP": "GHG Protocol",
+    "ISO14069": "ISO 14069"
+  },
+  "categorisations": {
+    "Operated": "Operated",
+    "NotOperated": "Not operated",
+    "OperatedProcedeed": "Operated, processed",
+    "OperatedFugitive": "Operated, fugitive",
+    "NotOperatedSupported": "Not operated, supported",
+    "NotOperatedNotSupported": "Not operated, not supported",
+    "Rented": "Rented",
+    "FinalClient": "By the final client or an intermediary"
+  },
+  "beges": {
+    "rule": "Rule",
+    "category": {
+      "title": "Category",
+      "1": "Direct GHG emissions",
+      "2": "Indirect emissions associated with energy",
+      "3": "Indirect emissions associated with transport",
+      "4": "Indirect emissions associated with purchased products",
+      "5": "Indirect emissions associated with sold products",
+      "6": "Other indirect emissions"
+    },
+    "post": {
+      "title": "Emission post",
+      "1": {
+        "1": "Direct emissions from stationary combustion sources",
+        "2": "Direct emissions from mobile combustion sources",
+        "3": "Direct emissions from non-energy processes",
+        "4": "Direct fugitive emissions",
+        "5": "Emissions from biomass (soils and forests)"
+      },
+      "2": {
+        "1": "Indirect emissions from electricity consumption",
+        "2": "Indirect emissions from steam, heat, or cold consumption"
+      },
+      "3": {
+        "1": "Upstream freight transport",
+        "2": "Downstream freight transport",
+        "3": "Home-to-work travel",
+        "4": "Visitor and client transport",
+        "5": "Business travel"
+      },
+      "4": {
+        "1": "Purchases of goods",
+        "2": "Capital goods",
+        "3": "Waste management",
+        "4": "Upstream leased assets",
+        "5": "Purchases of services"
+      },
+      "5": {
+        "1": "Use of sold products",
+        "2": "Downstream leased assets",
+        "3": "End of life",
+        "4": "Investments"
+      },
+      "6": {
+        "1": "Other indirect emissions"
+      }
+    },
+    "other": "Other gases",
+    "total": "Total",
+    "uncertainty": "Uncertainty",
+    "ges": "GHG emissions"
+  },
   "nav": {
     "backToHome": "Back to home",
     "emissionFactors": "Emission Factors",
@@ -81,9 +150,6 @@
       "end": "End",
       "level": "Type of Carbon Assessment®",
       "exports": "Exports",
-      "Beges": "Regulatory GHG Assessment",
-      "GHGP": "GHG Protocol",
-      "ISO14069": "ISO 14069",
       "control": "Control mode",
       "CapitalShare": "Capital share",
       "Financial": "Financial",
@@ -175,6 +241,7 @@
       "dates": "from {startDate} to {endDate}"
     },
     "results": {
+      "type": "Type",
       "post": "Post",
       "value": "Emissions (kgCO₂e)",
       "uncertainty": "Uncertainty"
@@ -274,11 +341,11 @@
       "yes": "Yes",
       "no": "No",
       "totalCo2": "Total CO₂ emission",
-      "co2f": "CO2F",
-      "ch4f": "CH4F",
-      "ch4b": "CH4B",
+      "co2f": "CO2f",
+      "ch4f": "CH4f",
+      "ch4b": "CH4b",
       "n2o": "N2O",
-      "co2b": "CO2B",
+      "co2b": "CO2b",
       "sf6": "SF6",
       "hfc": "HFC",
       "pfc": "PFC",
@@ -296,7 +363,6 @@
         "source": "Please provide a source",
         "totalCo2": "Please provide a total emission",
         "type": "Please select a post type",
-        "typeMaxLength": "maximum 64 characters",
         "subPost": "Please select a sub post"
       }
     },
@@ -307,7 +373,6 @@
       "all": "All",
       "Archived": "Archived",
       "BaseEmpreinte": "Footprint Base",
-      "detail": "Details",
       "goTo": "Go to page",
       "items": "Items per page",
       "location": "Location",
@@ -323,9 +388,29 @@
       "source": "Source",
       "sources": "Sources",
       "status": "Status",
-      "unit": "Unit",
       "value": "Value",
-      "Valid": "Valid"
+      "Valid": "Valid",
+      "importedFrom": {
+        "baseEmpreinte": "Base Empreinte logo",
+        "manual": "Manual"
+      },
+      "post": "Post:",
+      "subPost": "Sub post:",
+      "co2f": "CO2f:",
+      "ch4f": "CH4f:",
+      "ch4b": "CH4b:",
+      "n2o": "N2O:",
+      "co2b": "CO2b:",
+      "sf6": "SF6:",
+      "hfc": "HFC:",
+      "pfc": "PFC:",
+      "otherGES": "Other gases:",
+      "qualityRating": "Quality:",
+      "reliability": "Reliability:",
+      "technicalRepresentativeness": "Technical representativeness:",
+      "geographicRepresentativeness": "Geographic representativeness:",
+      "temporalRepresentativeness": "Temporal representativeness:",
+      "completeness": "Completeness:"
     }
   },
   "level": {
@@ -521,7 +606,7 @@
     "title": "Organization",
     "form": {
       "create": "Create organization",
-      "editTile": "Edit my organization",
+      "editTitle": "Edit my organization",
       "edit": "Edit",
       "name": "Organization name",
       "title": "Information about the new organization"
@@ -543,6 +628,13 @@
     }
   },
   "emissionSource": {
+    "dialog": {
+      "delete": "Delete this emission source",
+      "title": "Are you sur you want to delete this emission source?",
+      "description": "All data entered will be permanently lost, and any contributors will no longer have access to this emission source.",
+      "accept": "Yes",
+      "decline": "No"
+    },
     "saving": "Saving ...",
     "status": {
       "valid": "Validated",

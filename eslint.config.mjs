@@ -49,10 +49,9 @@ export default [
     rules: {
       'mocha/no-exclusive-tests': 'error',
       'mocha/no-mocha-arrows': 'off',
-      curly: 'error',
       'react/no-unescaped-entities': 'off',
       'react/self-closing-comp': 'error',
-
+      curly: 'error',
       'prettier/prettier': [
         'error',
         {

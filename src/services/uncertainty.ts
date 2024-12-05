@@ -2,16 +2,17 @@
 
 import { FullStudy } from '@/db/study'
 import { EmissionFactor } from '@prisma/client'
-import { getEmissionSourcesTotalCo2, sumEmissionSourcesResults } from './emissionSource'
+import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from './emissionSource'
 
-type Quality = Pick<
-  EmissionFactor,
-  | 'reliability'
-  | 'technicalRepresentativeness'
-  | 'geographicRepresentativeness'
-  | 'temporalRepresentativeness'
-  | 'completeness'
->
+export const qualityKeys = [
+  'reliability',
+  'technicalRepresentativeness',
+  'geographicRepresentativeness',
+  'temporalRepresentativeness',
+  'completeness',
+] as const
+
+type Quality = Pick<EmissionFactor, (typeof qualityKeys)[number]>
 
 const coeffs: Record<keyof Quality, number[]> = {
   reliability: [1.5, 1.2, 1.1, 1.05, 1],
@@ -66,7 +67,7 @@ export const getQualityRating = (quality: Quality) => {
 
 export const getEmissionSourcesGlobalUncertainty = (emissionSources: FullStudy['emissionSources']) => {
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
-  const gsd = sumEmissionSourcesResults(emissionSources)
+  const gsd = sumEmissionSourcesUncertainty(emissionSources)
   return getConfidenceInterval(totalEmissions, gsd)
 }
 

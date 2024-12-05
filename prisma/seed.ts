@@ -1,5 +1,6 @@
 import { signPassword } from '@/services/auth'
 import getEmissionFactors from '@/services/baseEmpreinte/getEmissionFactors'
+import { reCreateBegesRules } from '@/services/exportRules/beges'
 import { faker } from '@faker-js/faker'
 import { EmissionFactorStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
 import { Command } from 'commander'
@@ -40,6 +41,7 @@ const users = async () => {
         reliability: 5,
         importedId: '1',
         unit: Unit.KG,
+        subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
             language: 'fr',
@@ -58,6 +60,7 @@ const users = async () => {
         reliability: 5,
         importedId: '2',
         unit: Unit.KG_DRY_MATTER,
+        subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
             language: 'fr',
@@ -244,7 +247,7 @@ const licenses = async () => {
 }
 
 const main = async (params: Params) => {
-  await Promise.all([actualities(), licenses(), users()])
+  await Promise.all([actualities(), licenses(), users(), reCreateBegesRules()])
   if (params.importFactors) {
     await getEmissionFactors({ name: params.importFactors })
   }

@@ -39,7 +39,7 @@ const NewEmissionFactorForm = () => {
       source: '',
       ...defaultGazValues,
       totalCo2: 0,
-      parts: Array.from({ length: maxParts }, () => ({ name: '', type: '', ...defaultGazValues, totalCo2: 0 })),
+      parts: Array.from({ length: maxParts }, () => ({ name: '', ...defaultGazValues, totalCo2: 0 })),
       comment: '',
     },
   })

@@ -2,6 +2,7 @@ describe('Home page', () => {
   it('Should display the list of actualities as a simple user', () => {
     cy.login()
 
+    cy.getByTestId('home-actualities').scrollIntoView()
     cy.getByTestId('home-actualities').should('be.visible')
     cy.getByTestId('actualities-title').should('be.visible')
     cy.getByTestId('actualities-title').contains('Actualités')

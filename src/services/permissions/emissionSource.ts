@@ -1,10 +1,11 @@
+import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { Prisma, StudyEmissionSource, StudyRole, User } from '@prisma/client'
 import { canReadStudy } from './study'
 
 export const canCreateEmissionSource = async (
   user: User,
-  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost'>,
+  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost'> & { emissionFactorId?: string | null },
   study?: FullStudy,
 ) => {
   const dbStudy = study || (await getStudyById(emissionSource.studyId))
@@ -16,6 +17,13 @@ export const canCreateEmissionSource = async (
     return false
   }
 
+  if (emissionSource.emissionFactorId) {
+    const emissionFactor = await getEmissionFactorById(emissionSource.emissionFactorId)
+    if (!emissionFactor || !emissionFactor.subPosts.includes(emissionSource.subPost)) {
+      return false
+    }
+  }
+
   const rights = dbStudy.allowedUsers.find((right) => right.user.email === user.email)
   if (rights && rights.role !== StudyRole.Reader) {
     return true
@@ -24,10 +32,10 @@ export const canCreateEmissionSource = async (
   const contributor = dbStudy.contributors.find(
     (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
   )
+
   if (contributor) {
     return true
   }
-
   return false
 }
 
@@ -50,4 +58,13 @@ export const canUpdateEmissionSource = async (
   }
 
   return true
+}
+
+export const canDeleteEmissionSource = async (user: User, study: FullStudy) => {
+  const rights = study.allowedUsers.find((right) => right.user.email === user.email)
+  if (rights && rights.role !== StudyRole.Reader) {
+    return true
+  }
+
+  return false
 }

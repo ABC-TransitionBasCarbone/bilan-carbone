@@ -36,3 +36,29 @@
     font-size: 1.25rem !important;
   }
 }
+
+.line {
+  &:hover {
+    background-color: var(--primary-20);
+  }
+}
+
+.cell {
+  padding: 0;
+}
+
+.cellButton {
+  padding: 0.5rem;
+  cursor: pointer;
+  background-color: transparent;
+  width: 100%;
+  border: none;
+  text-align: inherit;
+  display: block;
+  font-size: 1rem;
+}
+
+.detail {
+  background-color: var(--neutral-00);
+  padding: 1rem;
+}

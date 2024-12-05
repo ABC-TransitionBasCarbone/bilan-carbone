@@ -1,0 +1,10 @@
+.info {
+  &:not(:last-child) {
+    margin-bottom: 0.25rem;
+  }
+}
+
+.list {
+  gap: 0.25rem 1rem;
+  flex-wrap: wrap;
+}

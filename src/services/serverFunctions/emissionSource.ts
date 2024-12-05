@@ -1,14 +1,23 @@
 'use server'
 
-import { createEmissionSourceOnStudy, getEmissionSourceById, updateEmissionSourceOnStudy } from '@/db/emissionSource'
+import {
+  createEmissionSourceOnStudy,
+  deleteEmissionSourceOnStudy,
+  getEmissionSourceById,
+  updateEmissionSourceOnStudy,
+} from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
 import { getUserByEmail } from '@/db/user'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canCreateEmissionSource, canUpdateEmissionSource } from '../permissions/emissionSource'
+import {
+  canCreateEmissionSource,
+  canDeleteEmissionSource,
+  canUpdateEmissionSource,
+} from '../permissions/emissionSource'
 import { CreateEmissionSourceCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
 
-export const createEmissionSource = async (command: CreateEmissionSourceCommand) => {
+export const createEmissionSource = async ({ studyId, ...command }: CreateEmissionSourceCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
@@ -19,14 +28,13 @@ export const createEmissionSource = async (command: CreateEmissionSourceCommand)
     return NOT_AUTHORIZED
   }
 
-  if (!(await canCreateEmissionSource(user, { studyId: command.studyId, subPost: command.subPost }))) {
+  if (!(await canCreateEmissionSource(user, { studyId, ...command }))) {
     return NOT_AUTHORIZED
   }
 
   await createEmissionSourceOnStudy({
-    name: command.name,
-    subPost: command.subPost,
-    study: { connect: { id: command.studyId } },
+    ...command,
+    study: { connect: { id: studyId } },
   })
 }
 
@@ -83,4 +91,26 @@ export const updateEmissionSource = async ({
     emissionSourceId,
     isContributor ? { ...data, contributor: { connect: { id: user.id } } } : data,
   )
+}
+
+export const deleteEmissionSource = async (emissionSourceId: string) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return NOT_AUTHORIZED
+  }
+
+  const [user, emissionSource] = await Promise.all([
+    getUserByEmail(session.user.email),
+    getEmissionSourceById(emissionSourceId),
+  ])
+  if (!user || !emissionSource) {
+    return NOT_AUTHORIZED
+  }
+  const study = await getStudyById(emissionSource.studyId)
+
+  if (!study || !(await canDeleteEmissionSource(user, study))) {
+    return NOT_AUTHORIZED
+  }
+
+  await deleteEmissionSourceOnStudy(emissionSourceId)
 }

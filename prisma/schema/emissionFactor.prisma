@@ -1,3 +1,23 @@
+enum EmissionFactorPartType {
+  CarburantAmontCombustion
+  Amont
+  Intrants
+  Combustion
+  TransportEtDistribution
+  Energie
+  Fabrication
+  Traitement
+  Collecte
+  Autre
+  Amortissement
+  Incineration
+  EmissionsFugitives
+  Fuites
+  Transport
+  CombustionALaCentrale
+  Pertes
+}
+
 enum Import {
   BaseEmpreinte
   Manual
@@ -160,7 +180,7 @@ model EmissionFactorPart {
   emissionFactorId String                       @map("emission_factor_id")
   emissionFactor   EmissionFactor               @relation(fields: [emissionFactorId], references: [id])
   metaData         EmissionFactorPartMetaData[]
-  type             String
+  type             EmissionFactorPartType
 
   totalCo2 Float  @map("total_co2")
   co2f     Float?

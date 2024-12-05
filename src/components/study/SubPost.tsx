@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { caracterisationsBySubPost } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { downloadStudySubPosts } from '@/services/study'
@@ -45,6 +46,10 @@ const SubPost = ({
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
 
+  const subPostEmissionFactors = useMemo(() => {
+    return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost))
+  }, [emissionFactors, subPost])
+
   const emissionSources = useMemo(
     () => study.emissionSources.filter((emissionSource) => emissionSource.subPost === subPost),
     [study, subPost],
@@ -58,6 +63,8 @@ const SubPost = ({
             .map((contributor) => contributor.user.email),
     [study, subPost, withoutDetail],
   )
+
+  const caracterisations = useMemo(() => caracterisationsBySubPost[subPost], [subPost])
 
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div className="flex">
@@ -85,24 +92,26 @@ const SubPost = ({
                 study={study}
                 emissionSource={emissionSource as StudyWithoutDetail['emissionSources'][0]}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
+                emissionFactors={subPostEmissionFactors}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail
+                caracterisations={caracterisations}
               />
             ) : (
               <EmissionSource
                 study={study}
                 emissionSource={emissionSource as FullStudy['emissionSources'][0]}
                 key={emissionSource.id}
-                emissionFactors={emissionFactors}
+                emissionFactors={subPostEmissionFactors}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail={false}
+                caracterisations={caracterisations}
               />
             ),
           )}
           {!withoutDetail && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader && (
             <div className="mt2">
-              <NewEmissionSource study={study} subPost={subPost} />
+              <NewEmissionSource study={study} subPost={subPost} caracterisations={caracterisations} />
             </div>
           )}
         </AccordionDetails>
@@ -117,7 +126,7 @@ const SubPost = ({
                 post,
                 subPost,
                 emissionSources as FullStudy['emissionSources'],
-                emissionFactors,
+                subPostEmissionFactors,
                 tExport,
                 tPost,
                 tQuality,
