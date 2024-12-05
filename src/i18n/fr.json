@@ -205,7 +205,8 @@
         "validation": {
           "email": "Veuillez utiliser un email valide",
           "emailRequired": "Veuillez entrer un email",
-          "role": "Veuillez sélectionner un droit"
+          "role": "Veuillez sélectionner un droit",
+          "externalWarning": "Attention, cette personne ne fait pas partie de votre organisation"
         },
         "dialog": {
           "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
