@@ -1,13 +1,17 @@
+import { auth } from '@/services/auth'
+import AdminPage from '@/components/pages/Admin'
+import { canAccessAdmin } from '@/services/permissions/user'
 import Block from '@/components/base/Block'
-import { useTranslations } from 'next-intl'
-import DownloadIcon from '@mui/icons-material/Download'
 
-const Admin = () => {
-  const t = useTranslations('admin')
+const Admin = async () => {
+  const session = await auth()
+  if (session && canAccessAdmin(session.user)) {
+    return null
+  }
+
   return (
-    <Block title={t('title')} as="h1">
-      <DownloadIcon />
-
+    <Block>
+      <AdminPage user={session.user} />
     </Block>
   )
 }

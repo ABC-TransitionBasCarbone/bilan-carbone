@@ -55,6 +55,11 @@
     "legalNotices": "Legal notices",
     "logout": "Log out"
   },
+  "admin": {
+    "title": "Administration",
+    "csvOnly": "Only CSV files are accepted",
+    "uploadButton": "Import emission factors"
+  },
   "study": {
     "create": "New study",
     "myStudies": "My studies",

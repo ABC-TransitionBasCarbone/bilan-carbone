@@ -1,18 +1,21 @@
-
 import classNames from 'classnames'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Navbar.module.css'
 import { auth } from '@/services/auth'
 import { getTranslations } from 'next-intl/server'
+import { canAccessAdmin } from '@/services/permissions/user'
 
 const Navbar = async () => {
   const t = await getTranslations('navigation')
 
-  const checkAdmin = async () => {
+  const canAccessAdminLink = async () => {
     'use server'
     const session = await auth()
-    return session?.user?.role === 'SUPER_ADMIN'
+    if (!session) {
+      return false
+    }
+    return canAccessAdmin(session.user)
   };
 
   return (
@@ -34,7 +37,7 @@ const Navbar = async () => {
         </div>
 
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
-          {await checkAdmin() && <Link className={styles.link} href="/admin">
+          {await canAccessAdminLink() && <Link className={styles.link} href="/admin">
             {t('admin')}
           </Link>}
           <Link
