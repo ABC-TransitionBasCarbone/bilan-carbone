@@ -217,7 +217,6 @@ const saveEmissionFactors = async (emissionFactors: EmissionFactorResponse['resu
         source: emissionFactor.Source,
         versionId,
         location: emissionFactor.Localisation_géographique,
-        incertitude: emissionFactor.Incertitude,
         technicalRepresentativeness: emissionFactor.Qualité_TeR || getEmissionQuality(emissionFactor.Incertitude),
         geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
         temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
