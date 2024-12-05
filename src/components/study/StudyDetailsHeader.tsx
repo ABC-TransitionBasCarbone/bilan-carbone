@@ -41,6 +41,7 @@ const StudyDetailsHeader = ({ study }: Props) => {
             {format.dateTime(study.startDate, { year: 'numeric', day: 'numeric', month: 'long' })} -{' '}
             {format.dateTime(study.endDate, { year: 'numeric', day: 'numeric', month: 'long' })}
           </p>
+          <p>Exports : {study.exports.map((e) => e.type).join(', ')}</p>
         </div>
       }
     />
