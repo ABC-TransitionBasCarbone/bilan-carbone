@@ -1,6 +1,5 @@
 import NotFound from '@/components/pages/NotFound'
 import StudyPerimeterPage from '@/components/pages/StudyPerimeter'
-import { getOrganizationWithSitesById } from '@/db/organization'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudyDetail } from '@/services/permissions/study'
@@ -31,12 +30,7 @@ const StudyPerimeter = async (props: Props) => {
     return <NotFound />
   }
 
-  const organization = await getOrganizationWithSitesById(study.organizationId)
-  if (!organization) {
-    return <NotFound />
-  }
-
-  return <StudyPerimeterPage study={study} user={session.user} organization={organization} />
+  return <StudyPerimeterPage study={study} user={session.user} />
 }
 
 export default StudyPerimeter

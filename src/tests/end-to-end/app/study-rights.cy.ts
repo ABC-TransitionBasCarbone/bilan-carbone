@@ -11,6 +11,7 @@ describe('Create study', () => {
     cy.login()
 
     cy.visit('/etudes/creer')
+    cy.getByTestId('organization-sites-checkbox').first().click()
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').should('be.visible').type('Study with rights')

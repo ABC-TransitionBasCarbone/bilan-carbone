@@ -1,6 +1,7 @@
 'use server'
 
 import { prismaClient } from '@/db/client'
+import { getOrganizationWithSitesById } from '@/db/organization'
 import {
   createContributorOnStudy,
   createStudy,
@@ -9,7 +10,7 @@ import {
   updateStudy,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserByEmail } from '@/db/user'
+import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
 import { ControlMode, Export, Import, Prisma, Role, StudyRole, SubPost } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -36,6 +37,7 @@ import { sendInvitation } from './user'
 export const createStudyCommand = async ({
   organizationId,
   validator,
+  sites,
   ...command
 }: CreateStudyCommand): Promise<{ message: string; success: false } | { id: string; success: true }> => {
   const session = await auth()
@@ -69,9 +71,18 @@ export const createStudyCommand = async ({
     where: { source: Import.BaseEmpreinte },
     orderBy: { createdAt: 'desc' },
   })
-
   if (!activeVersion) {
     return { success: false, message: `noActiveVersion_${Import.BaseEmpreinte}` }
+  }
+
+  const studySites = sites.filter((site) => site.selected)
+  const organization = await getOrganizationWithSitesById(organizationId)
+  if (!organization) {
+    return { success: false, message: NOT_AUTHORIZED }
+  }
+
+  if (studySites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.id))) {
+    return { success: false, message: NOT_AUTHORIZED }
   }
 
   const study = {
@@ -91,6 +102,16 @@ export const createStudyCommand = async ({
             type: key as Export,
             control: value as ControlMode,
           })),
+      },
+    },
+    sites: {
+      createMany: {
+        data: studySites.map((site) => {
+          const organizationSite = organization.sites.find(
+            (organizationSite) => organizationSite.id === site.id,
+          ) as OrganizationWithSites['sites'][0]
+          return { siteId: site.id, etp: site.etp || organizationSite.etp, ca: site.ca || organizationSite.ca }
+        }),
       },
     },
   } satisfies Prisma.StudyCreateInput

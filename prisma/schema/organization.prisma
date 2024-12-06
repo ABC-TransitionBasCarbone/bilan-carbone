@@ -29,6 +29,7 @@ model Site {
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
+  studies        StudySite[]
 
   @@map("sites")
 }

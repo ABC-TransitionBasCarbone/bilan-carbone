@@ -48,14 +48,16 @@ model Study {
   level     Level
   exports   StudyExport[]
 
-  organization    Organization          @relation(fields: [organizationId], references: [id])
-  organizationId  String                @map("organization_id")
-  allowedUsers    UserOnStudy[]
-  emissionSources StudyEmissionSource[]
-  contributors    Contributors[]
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
 
   versionId String                      @map("version_id")
   version   EmissionFactorImportVersion @relation(fields: [versionId], references: [id])
+
+  allowedUsers    UserOnStudy[]
+  emissionSources StudyEmissionSource[]
+  contributors    Contributors[]
+  sites           StudySite[]
 
   @@map("studies")
 }
@@ -153,4 +155,17 @@ model ExportRule {
 
   @@unique([export, subPost, type])
   @@map("export_rules")
+}
+
+model StudySite {
+  id String @id @default(uuid())
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  siteId String @map("site_id")
+  site   Site   @relation(fields: [siteId], references: [id])
+
+  etp Int
+  ca  Float
 }

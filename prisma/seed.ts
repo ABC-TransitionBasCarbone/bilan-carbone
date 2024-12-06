@@ -20,10 +20,13 @@ const users = async () => {
   await prisma.emissionFactor.deleteMany()
 
   await prisma.userOnStudy.deleteMany()
+  await prisma.studySite.deleteMany()
   await prisma.studyExport.deleteMany()
   await prisma.studyEmissionSource.deleteMany()
   await prisma.contributors.deleteMany()
+
   await prisma.study.deleteMany()
+
   await prisma.emissionFactorImportVersion.deleteMany()
 
   await prisma.site.deleteMany()
@@ -91,7 +94,7 @@ const users = async () => {
 
   await prisma.site.createMany({
     data: [...organizations, ...childOrganizations].flatMap((organization) => {
-      const sitesNumber = faker.number.int({ min: 0, max: 3 })
+      const sitesNumber = faker.number.int({ min: 1, max: 5 })
       return Array.from({ length: sitesNumber }).map(() => ({
         name: faker.commerce.department(),
         etp: faker.number.int({ min: 1, max: 100 }),
