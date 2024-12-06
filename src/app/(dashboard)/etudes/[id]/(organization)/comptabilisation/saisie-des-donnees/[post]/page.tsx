@@ -26,7 +26,7 @@ const StudyPost = async (props: Props) => {
     return <NotFound />
   }
 
-  const study = await getStudyById(id)
+  const study = await getStudyById(id, session.user.organizationId as string)
 
   if (!study) {
     return <NotFound />

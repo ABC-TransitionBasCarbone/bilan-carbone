@@ -57,7 +57,7 @@ export const updateEmissionSource = async ({
   }
   const data = { ...command, emissionFactor: emissionFactorId ? { connect: { id: emissionFactorId } } : undefined }
 
-  const study = await getStudyById(emissionSource.studyId)
+  const study = await getStudyById(emissionSource.studyId, user.organizationId as string)
   if (!study || !(await canUpdateEmissionSource(user, emissionSource, data, study))) {
     return NOT_AUTHORIZED
   }
@@ -84,7 +84,7 @@ export const deleteEmissionSource = async (emissionSourceId: string) => {
   if (!user || !emissionSource) {
     return NOT_AUTHORIZED
   }
-  const study = await getStudyById(emissionSource.studyId)
+  const study = await getStudyById(emissionSource.studyId, user.organizationId as string)
 
   if (!study || !(await canDeleteEmissionSource(user, study))) {
     return NOT_AUTHORIZED

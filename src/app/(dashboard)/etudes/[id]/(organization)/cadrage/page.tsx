@@ -1,6 +1,6 @@
 import NotFound from '@/components/pages/NotFound'
 import StudyRightsPage from '@/components/pages/StudyRights'
-import { getStudyByWithAnonymousUsersOrganization } from '@/db/study'
+import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { UUID } from 'crypto'
@@ -22,7 +22,7 @@ const StudyRights = async (props: Props) => {
     return <NotFound />
   }
 
-  const study = await getStudyByWithAnonymousUsersOrganization(id, session.user.organizationId as string)
+  const study = await getStudyById(id, session.user.organizationId as string)
 
   if (!study) {
     return <NotFound />
