@@ -3,6 +3,7 @@
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { deleteEmissionSource } from '@/services/serverFunctions/emissionSource'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Dialog,
   DialogActions,
@@ -18,14 +19,21 @@ import { useCallback, useState } from 'react'
 interface Props {
   emissionSource: FullStudy['emissionSources'][0]
 }
+
 const DeleteEmissionSource = ({ emissionSource }: Props) => {
   const t = useTranslations('emissionSource.dialog')
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const [disabled, setDisabled] = useState(false)
 
   const onAccept = useCallback(async () => {
-    await deleteEmissionSource(emissionSource.id)
-    router.refresh()
+    try {
+      setDisabled(true)
+      await deleteEmissionSource(emissionSource.id)
+      router.refresh()
+    } finally {
+      setDisabled(false)
+    }
   }, [emissionSource])
 
   return (
@@ -40,14 +48,22 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
           <DialogContentText id="delete-emission-source-dialog-description">{t('description')}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>{t('decline')}</Button>
-          <Button onClick={onAccept} data-testid="delete-emission-source-dialog-accept">
+          <Button disabled={disabled} onClick={() => setOpen(false)}>
+            {t('decline')}
+          </Button>
+          <Button disabled={disabled} onClick={onAccept} data-testid="delete-emission-source-dialog-accept">
             {t('accept')}
           </Button>
         </DialogActions>
       </Dialog>
-      <MUIButton data-testid="emission-source-delete" onClick={() => setOpen(true)} variant="contained" color="error">
-        {t('delete')}
+      <MUIButton
+        data-testid="emission-source-delete"
+        onClick={() => setOpen(true)}
+        variant="contained"
+        color="error"
+        aria-label={t('delete')}
+      >
+        <DeleteIcon />
       </MUIButton>
     </>
   )
