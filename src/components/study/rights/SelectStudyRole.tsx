@@ -2,7 +2,6 @@
 
 import { FullStudy } from '@/db/study'
 import { changeStudyRole } from '@/services/serverFunctions/study'
-import { getAllowedLevels } from '@/services/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Level, Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
@@ -15,10 +14,11 @@ interface Props {
   rowUser: FullStudy['allowedUsers'][0]['user']
   studyId: string
   studyLevel: Level
+  studyOrganizationId: string
   currentRole: StudyRole
 }
 
-const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, currentRole, userRole }: Props) => {
+const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, studyOrganizationId, currentRole, userRole }: Props) => {
   const t = useTranslations('study.role')
   const [role, setRole] = useState(currentRole)
   useEffect(() => {
@@ -33,13 +33,19 @@ const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, currentRole, user
     }
   }
 
+  /**
+   * Disabled if:
+   * - user is the same as the one in the row
+   * - current role is Validator and user is not Validator and (user is not admin OR user is not part of the study's organization)
+   * - user has readerOnly attribute (calculated by back-end if : user has no account or user is from another orgaization and level does not match the study's level)
+   */
   const isDisabled = useMemo(
     () =>
       user.email === rowUser.email ||
-      (currentRole === StudyRole.Validator && userRole !== StudyRole.Validator && user.role !== Role.ADMIN) ||
-      !rowUser.organizationId ||
-      !rowUser.level ||
-      !getAllowedLevels(studyLevel).includes(rowUser.level),
+      (currentRole === StudyRole.Validator &&
+        userRole !== StudyRole.Validator &&
+        (user.role !== Role.ADMIN || user.organizationId !== studyOrganizationId)) ||
+      'readerOnly' in rowUser,
     [currentRole, rowUser, studyLevel, user, userRole],
   )
 
@@ -53,7 +59,6 @@ const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, currentRole, user
     >
       {Object.keys(StudyRole)
         .filter((role) => role !== StudyRole.Validator || user.role === Role.ADMIN || userRole === StudyRole.Validator)
-        .filter((role) => rowUser.organizationId || role === StudyRole.Reader)
         .map((role) => (
           <MenuItem key={role} value={role}>
             {t(role)}

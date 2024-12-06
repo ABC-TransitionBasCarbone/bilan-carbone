@@ -1,3 +1,4 @@
+import { getAllowedLevels } from '@/services/study'
 import { StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
@@ -126,28 +127,37 @@ export const getStudiesByUserAndOrganization = async (user: User, organizationId
   })
 }
 
-export const getStudyById = async (id: string) => {
-  return prismaClient.study.findUnique({
-    where: { id },
-    include: fullStudyInclude,
-  })
+export const getStudyById = async (id: string, organizationId: string) => {
+  return prismaClient.study
+    .findUnique({
+      where: { id },
+      include: fullStudyInclude,
+    })
+    .then((study) => {
+      if (!study) {
+        return null
+      }
+      return {
+        ...study,
+        allowedUsers: study.allowedUsers.map((allowedUser) => {
+          const readerOnly =
+            !allowedUser.user.organizationId || !getAllowedLevels(allowedUser.user.level).includes(study.level)
+          return allowedUser.user.organizationId === organizationId
+            ? allowedUser
+            : {
+                ...allowedUser,
+                user: {
+                  ...allowedUser.user,
+                  organizationId: null,
+                  level: null,
+                  ...(readerOnly ? { readerOnly: true } : {}),
+                },
+              }
+        }),
+      }
+    })
 }
 
-export const getStudyByWithAnonymousUsersOrganization = async (id: string, organizationId: string) => {
-  return getStudyById(id).then((study) => {
-    if (!study) {
-      return null
-    }
-    return {
-      ...study,
-      allowedUsers: study.allowedUsers.map((allowedUser) =>
-        allowedUser.user.organizationId === organizationId
-          ? allowedUser
-          : { ...allowedUser, user: { ...allowedUser.user, organizationId: null } },
-      ),
-    }
-  })
-}
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>

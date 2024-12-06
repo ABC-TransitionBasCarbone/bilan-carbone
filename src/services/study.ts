@@ -16,6 +16,7 @@ const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<
 
 export enum NewStudyRightStatus {
   Valid,
+  OtherOrganization,
   ReaderOnly,
 }
 

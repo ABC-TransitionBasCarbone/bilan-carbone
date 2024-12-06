@@ -15,7 +15,7 @@ import { Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { SyntheticEvent, useCallback, useMemo, useState } from 'react'
+import { SyntheticEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import NewStudyRightDialog from './NewStudyRightDialog'
 
@@ -31,7 +31,6 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   const tRole = useTranslations('study.role')
 
   const [error, setError] = useState('')
-  const [externalUserWarning, setExternalUserWarning] = useState(false)
   const [status, setStatus] = useState<NewStudyRightStatus>()
 
   const form = useForm<NewStudyRightCommand>({
@@ -44,21 +43,8 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
     },
   })
 
-  const checkIfUserIsExternalUser = useCallback(
-    (value: string | null) => {
-      setExternalUserWarning(false)
-      const validEmail = NewStudyRightCommandValidation.shape.email.safeParse(value)
-      if (validEmail.success && !users.some((user) => user.email === validEmail.data)) {
-        setExternalUserWarning(true)
-      }
-    },
-    [users, setExternalUserWarning, NewStudyRightCommandValidation],
-  )
-
   const onEmailChange = (_: SyntheticEvent, value: string | null) => {
     form.setValue('email', value || '')
-    form.clearErrors('email')
-    checkIfUserIsExternalUser(value)
   }
 
   const saveRight = async (command: NewStudyRightCommand) => {
@@ -76,10 +62,10 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   }
 
   const onSubmit = async (command: NewStudyRightCommand) => {
-    const status = await getNewStudyRightStatus(command.email, study.level, command.role)
+    const status = await getNewStudyRightStatus(command.email, command.role, study.level)
     if (status === NewStudyRightStatus.Valid) {
       await saveRight(command)
-    } else if (status === NewStudyRightStatus.ReaderOnly) {
+    } else if (status === NewStudyRightStatus.OtherOrganization || status === NewStudyRightStatus.ReaderOnly) {
       setStatus(status)
     } else {
       setError(error)
@@ -117,7 +103,6 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
           label={t('email')}
           onInputChange={onEmailChange}
           freeSolo
-          helperText={externalUserWarning ? t('validation.externalWarning') : ''}
         />
         <FormSelect
           control={form.control}

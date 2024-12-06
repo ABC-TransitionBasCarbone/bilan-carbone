@@ -104,6 +104,44 @@ describe('Create study', () => {
     cy.getByTestId('study-rights-table-line')
       .eq(1)
       .within(() => {
+        cy.get('input').should('not.be.disabled')
+      })
+    cy.getByTestId('study-rights-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('be.disabled')
+      })
+
+    cy.url().then((link) => {
+      cy.logout()
+      cy.login()
+      cy.visit(link)
+    })
+    cy.getByTestId('study-rights-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('not.be.disabled')
+        cy.get('.MuiSelect-select').click()
+      })
+    cy.get('[data-value="Editor"]').click()
+    cy.wait('@update')
+
+    cy.url().then((link) => {
+      cy.logout()
+      cy.login('bc-admin-1@yopmail.com', 'password-1')
+      cy.visit(link)
+    })
+
+    cy.getByTestId('select-study-role').should('have.length', 3)
+
+    cy.getByTestId('study-rights-table-line')
+      .eq(2)
+      .within(() => {
+        cy.get('input').should('not.be.disabled')
+      })
+    cy.getByTestId('study-rights-table-line')
+      .eq(1)
+      .within(() => {
         cy.get('input').should('be.disabled')
       })
     cy.getByTestId('study-rights-table-line')
@@ -114,7 +152,7 @@ describe('Create study', () => {
   })
 
   it('should receive a warning message when set an unauthorized role', () => {
-    cy.login()
+    cy.login('bc-default-1@yopmail.com', 'password-1')
 
     cy.visit('/etudes/creer')
     cy.getByTestId('organization-sites-checkbox').first().click()
@@ -128,12 +166,12 @@ describe('Create study', () => {
       cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
     })
     cy.getByTestId('new-study-level').click()
-    cy.get('[data-value="Initial"]').click()
+    cy.get('[data-value="Standard"]').click()
     cy.getByTestId('new-study-create-button').click()
 
     cy.getByTestId('study-cadrage-link').click()
 
-    cy.getByTestId('study-rights-table-line').contains('bc-default-0@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line').contains('bc-default-1@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line').within(() => {
       cy.get('input').should('be.disabled')
     })

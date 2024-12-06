@@ -135,7 +135,7 @@ const getStudyRightsInformations = async (studyId: string) => {
     return null
   }
 
-  const studyWithRights = await getStudyById(studyId)
+  const studyWithRights = await getStudyById(studyId, session.user.organizationId as string)
 
   if (!studyWithRights) {
     return null
@@ -178,25 +178,21 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-export const getNewStudyRightStatus = async (email: string, studyLevel: Level, role: StudyRole) => {
+export const getNewStudyRightStatus = async (email: string, role: StudyRole, studyLevel: Level) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
 
-  if (role === StudyRole.Reader) {
-    return NewStudyRightStatus.Valid
-  }
-
   const newUser = await getUserByEmail(email)
   if (!newUser) {
-    return NewStudyRightStatus.ReaderOnly
+    return role === StudyRole.Reader ? NewStudyRightStatus.OtherOrganization : NewStudyRightStatus.ReaderOnly
   }
 
   if (newUser.organizationId !== session.user.organizationId) {
     // TODO : check if the organization has an up-to-date licences
-    return newUser.level && getAllowedLevels(studyLevel).includes(newUser.level)
-      ? NewStudyRightStatus.Valid
+    return getAllowedLevels(newUser.level).includes(studyLevel)
+      ? NewStudyRightStatus.OtherOrganization
       : NewStudyRightStatus.ReaderOnly
   }
 
@@ -209,7 +205,10 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, newUser] = await Promise.all([getStudyById(right.studyId), getUserByEmail(right.email)])
+  const [studyWithRights, newUser] = await Promise.all([
+    getStudyById(right.studyId, session.user.organizationId as string),
+    getUserByEmail(right.email),
+  ])
 
   if (!studyWithRights) {
     return NOT_AUTHORIZED
@@ -247,7 +246,10 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, user] = await Promise.all([getStudyById(studyId), getUserByEmail(email)])
+  const [studyWithRights, user] = await Promise.all([
+    getStudyById(studyId, session.user.organizationId as string),
+    getUserByEmail(email),
+  ])
 
   if (!studyWithRights || !user) {
     return NOT_AUTHORIZED
@@ -266,7 +268,10 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, user] = await Promise.all([getStudyById(command.studyId), getUserByEmail(email)])
+  const [studyWithRights, user] = await Promise.all([
+    getStudyById(command.studyId, session.user.organizationId as string),
+    getUserByEmail(email),
+  ])
 
   if (!studyWithRights) {
     return NOT_AUTHORIZED
