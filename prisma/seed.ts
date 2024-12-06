@@ -74,6 +74,7 @@ const users = async () => {
   const organizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 10 }).map((_, index) => ({
       name: faker.company.name(),
+      siret: faker.finance.accountNumber(14),
       isCR: index % 2 === 0,
     })),
   })
