@@ -10,6 +10,7 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
+import SelectStudySite from '../study/site/SelectStudySite'
 
 interface Props {
   post: Post
@@ -30,7 +31,9 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ]}
       />
-      <Block title={study.name} as="h1" />
+      <Block title={study.name} as="h1">
+        <SelectStudySite study={study} />
+      </Block>
       <StudyPostsBlock post={post} study={study} display={showInfography} setDisplay={setShowInfography}>
         {showInfography && <StudyPostInfography study={study} />}
         <SubPosts post={post} study={study} user={user} withoutDetail={false} />

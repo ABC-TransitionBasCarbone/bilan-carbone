@@ -119,6 +119,9 @@ model StudyEmissionSource {
   emissionFactorId String?         @map("emission_factor_id")
   emissionFactor   EmissionFactor? @relation(fields: [emissionFactorId], references: [id])
 
+  siteId String    @map("site_id")
+  site   StudySite @relation(fields: [siteId], references: [id])
+
   value                        Float?
   reliability                  Int?
   technicalRepresentativeness  Int?                @map("technical_representativeness")
@@ -166,6 +169,7 @@ model StudySite {
   siteId String @map("site_id")
   site   Site   @relation(fields: [siteId], references: [id])
 
-  etp Int
-  ca  Float
+  etp                 Int
+  ca                  Float
+  StudyEmissionSource StudyEmissionSource[]
 }

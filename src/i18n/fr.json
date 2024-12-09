@@ -173,6 +173,8 @@
       "new": "Ajouter une source d'émission..."
     },
     "organization": {
+      "site": "Site",
+      "allSites": "Tous les sites",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "addSite": "Creer un site",
       "title": "Quelle organisation est concernée par l'étude ?",

@@ -175,6 +175,8 @@
       "new": "Add an emission source..."
     },
     "organization": {
+      "site": "Site",
+      "allSites": "All sites",
       "noSites": "There are no sites configured for the organization",
       "addSite": "Create a site",
       "title": "Which organization is concerned by the study?",

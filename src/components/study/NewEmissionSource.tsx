@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { FocusEvent, KeyboardEvent, useCallback, useState } from 'react'
 import styles from './NewEmissionSource.module.css'
+import { getStudySite } from './site/useStudySite'
 
 interface Props {
   study: FullStudy
@@ -35,6 +36,7 @@ const NewEmissionSource = ({ study, subPost, caracterisations }: Props) => {
           name: event.target.value,
           subPost,
           studyId: study.id,
+          siteId: getStudySite(study.id),
           caracterisation: caracterisations.length === 1 ? caracterisations[0] : undefined,
         })
         if (!result) {
