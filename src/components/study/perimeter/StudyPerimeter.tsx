@@ -1,9 +1,7 @@
 'use client'
-
 import { FormDatePicker } from '@/components/form/DatePicker'
 import Sites from '@/components/organization/Sites'
 import { FullStudy } from '@/db/study'
-import { OrganizationWithSites } from '@/db/user'
 import { changeStudyDates } from '@/services/serverFunctions/study'
 import { ChangeStudyDatesCommand, ChangeStudyDatesCommandValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,10 +15,9 @@ import styles from './StudyPerimeter.module.css'
 interface Props {
   study: FullStudy
   userRoleOnStudy?: FullStudy['allowedUsers'][0]
-  organization: OrganizationWithSites
 }
 
-const StudyPerimeter = ({ study, userRoleOnStudy, organization }: Props) => {
+const StudyPerimeter = ({ study, userRoleOnStudy }: Props) => {
   const format = useFormatter()
   const tForm = useTranslations('study.new')
   const t = useTranslations('study.perimeter')
@@ -69,7 +66,7 @@ const StudyPerimeter = ({ study, userRoleOnStudy, organization }: Props) => {
           })}
         </p>
       )}
-      <Sites sites={organization.sites} />
+      <Sites sites={study.sites.map((site) => ({ ...site, name: site.site.name }))} />
     </>
   )
 }

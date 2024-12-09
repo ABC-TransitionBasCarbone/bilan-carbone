@@ -70,6 +70,18 @@ const fullStudyInclude = {
     },
     orderBy: { user: { email: 'asc' } },
   },
+  sites: {
+    select: {
+      id: true,
+      etp: true,
+      ca: true,
+      site: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  },
   exports: { select: { type: true } },
 } satisfies Prisma.StudyInclude
 

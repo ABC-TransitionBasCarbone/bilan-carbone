@@ -175,9 +175,15 @@
       "new": "Add an emission source..."
     },
     "organization": {
-      "title": "Which organization is involved in the study?",
-      "sites": "The organization’s sites",
-      "next": "Next"
+      "noSites": "There are no sites configured for the organization",
+      "addSite": "Create a site",
+      "title": "Which organization is concerned by the study?",
+      "sites": "The organization's sites",
+      "next": "Next",
+      "select": "Organization",
+      "validation": {
+        "sites": "Please select at least one site concerned by the study"
+      }
     },
     "role": {
       "Validator": "Validator",
@@ -607,7 +613,7 @@
       "title": "Information about the new organization"
     },
     "sites": {
-      "title": "The organization's sites",
+      "title": "The organization's sites concerned by this study",
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "etp": "Employees",

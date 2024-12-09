@@ -173,9 +173,15 @@
       "new": "Ajouter une source d'émission..."
     },
     "organization": {
+      "noSites": "Il n'y a pas de sites configurés sur l'organisation",
+      "addSite": "Creer un site",
       "title": "Quelle organisation est concernée par l'étude ?",
       "sites": "Les sites de l'organisation",
-      "next": "Suivant"
+      "next": "Suivant",
+      "select": "Organisation",
+      "validation": {
+        "sites": "Veuillez selectionner au moins un site concerné par l'étude"
+      }
     },
     "role": {
       "Validator": "Validateur",
@@ -605,7 +611,7 @@
       "title": "Informations sur la nouvelle organisation"
     },
     "sites": {
-      "title": "Les sites de l'organisation",
+      "title": "Les sites de l'organisation concernés par l'étude",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "etp": "Employés",

@@ -1,5 +1,4 @@
 import { FullStudy } from '@/db/study'
-import { OrganizationWithSites } from '@/db/user'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -9,10 +8,9 @@ import StudyPerimeter from '../study/perimeter/StudyPerimeter'
 interface Props {
   study: FullStudy
   user: User
-  organization: OrganizationWithSites
 }
 
-const StudyPerimeterPage = async ({ study, user, organization }: Props) => {
+const StudyPerimeterPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.perimeter')
 
@@ -28,7 +26,7 @@ const StudyPerimeterPage = async ({ study, user, organization }: Props) => {
         ]}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <StudyPerimeter study={study} userRoleOnStudy={userRoleOnStudy} organization={organization} />
+        <StudyPerimeter study={study} userRoleOnStudy={userRoleOnStudy} />
       </Block>
     </>
   )
