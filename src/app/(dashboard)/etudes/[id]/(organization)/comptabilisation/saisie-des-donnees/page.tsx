@@ -25,7 +25,7 @@ const DataEntry = async (props: Props) => {
     return <NotFound />
   }
 
-  const study = await getStudyById(id, session.user.organizationId as string)
+  const study = await getStudyById(id, session.user.organizationId)
 
   if (!study) {
     return <NotFound />

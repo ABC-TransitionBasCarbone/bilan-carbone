@@ -135,7 +135,7 @@ const getStudyRightsInformations = async (studyId: string) => {
     return null
   }
 
-  const studyWithRights = await getStudyById(studyId, session.user.organizationId as string)
+  const studyWithRights = await getStudyById(studyId, session.user.organizationId)
 
   if (!studyWithRights) {
     return null
@@ -206,7 +206,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
   }
 
   const [studyWithRights, newUser] = await Promise.all([
-    getStudyById(right.studyId, session.user.organizationId as string),
+    getStudyById(right.studyId, session.user.organizationId),
     getUserByEmail(right.email),
   ])
 
@@ -247,7 +247,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
   }
 
   const [studyWithRights, user] = await Promise.all([
-    getStudyById(studyId, session.user.organizationId as string),
+    getStudyById(studyId, session.user.organizationId),
     getUserByEmail(email),
   ])
 
@@ -269,7 +269,7 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
   }
 
   const [studyWithRights, user] = await Promise.all([
-    getStudyById(command.studyId, session.user.organizationId as string),
+    getStudyById(command.studyId, session.user.organizationId),
     getUserByEmail(email),
   ])
 

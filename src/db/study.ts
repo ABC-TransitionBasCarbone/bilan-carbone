@@ -127,7 +127,7 @@ export const getStudiesByUserAndOrganization = async (user: User, organizationId
   })
 }
 
-export const getStudyById = async (id: string, organizationId: string) => {
+export const getStudyById = async (id: string, organizationId: string | null) => {
   const study = await prismaClient.study.findUnique({
     where: { id },
     include: fullStudyInclude,
@@ -140,7 +140,7 @@ export const getStudyById = async (id: string, organizationId: string) => {
     allowedUsers: study.allowedUsers.map((allowedUser) => {
       const readerOnly =
         !allowedUser.user.organizationId || !getAllowedLevels(allowedUser.user.level).includes(study.level)
-      return allowedUser.user.organizationId === organizationId
+      return organizationId && allowedUser.user.organizationId === organizationId
         ? allowedUser
         : {
             ...allowedUser,
