@@ -45,7 +45,7 @@ const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, studyOrganization
       (currentRole === StudyRole.Validator &&
         userRole !== StudyRole.Validator &&
         (user.role !== Role.ADMIN || user.organizationId !== studyOrganizationId)) ||
-      'readerOnly' in rowUser,
+      ('readerOnly' in rowUser && rowUser.readerOnly),
     [currentRole, rowUser, studyLevel, user, userRole],
   )
 

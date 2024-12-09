@@ -128,34 +128,31 @@ export const getStudiesByUserAndOrganization = async (user: User, organizationId
 }
 
 export const getStudyById = async (id: string, organizationId: string) => {
-  return prismaClient.study
-    .findUnique({
-      where: { id },
-      include: fullStudyInclude,
-    })
-    .then((study) => {
-      if (!study) {
-        return null
-      }
-      return {
-        ...study,
-        allowedUsers: study.allowedUsers.map((allowedUser) => {
-          const readerOnly =
-            !allowedUser.user.organizationId || !getAllowedLevels(allowedUser.user.level).includes(study.level)
-          return allowedUser.user.organizationId === organizationId
-            ? allowedUser
-            : {
-                ...allowedUser,
-                user: {
-                  ...allowedUser.user,
-                  organizationId: null,
-                  level: null,
-                  ...(readerOnly ? { readerOnly: true } : {}),
-                },
-              }
-        }),
-      }
-    })
+  const study = await prismaClient.study.findUnique({
+    where: { id },
+    include: fullStudyInclude,
+  })
+  if (!study) {
+    return null
+  }
+  return {
+    ...study,
+    allowedUsers: study.allowedUsers.map((allowedUser) => {
+      const readerOnly =
+        !allowedUser.user.organizationId || !getAllowedLevels(allowedUser.user.level).includes(study.level)
+      return allowedUser.user.organizationId === organizationId
+        ? allowedUser
+        : {
+            ...allowedUser,
+            user: {
+              ...allowedUser.user,
+              organizationId: undefined,
+              level: undefined,
+              readerOnly: readerOnly ? true : undefined,
+            },
+          }
+    }),
+  }
 }
 
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
