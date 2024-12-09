@@ -4,7 +4,7 @@ import { FullStudy } from '@/db/study'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { Export, ExportRule } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolidatedResultsTable from './consolidated/ConsolidatedResultsTable'
 
@@ -19,6 +19,7 @@ const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const tExport = useTranslations('exports')
 
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
+  const exports = useMemo(() => study.exports.map((e) => e.type), [study.exports])
   return (
     <>
       <FormControl>
@@ -30,9 +31,10 @@ const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
           onChange={(event) => {
             setType(event.target.value as Export | 'consolidated')
           }}
+          disabled={exports.length === 0}
         >
           <MenuItem value="consolidated">{tExport('consolidated')}</MenuItem>
-          {Object.keys(Export).map((type) => (
+          {exports.map((type) => (
             <MenuItem key={type} value={type} disabled={type !== Export.Beges}>
               {tExport(type)}
             </MenuItem>
