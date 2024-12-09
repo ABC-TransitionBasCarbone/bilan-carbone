@@ -30,6 +30,7 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
         `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${requiredColums.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
 
       while (url) {
+        console.log(url)
         const emissionFactors: AxiosResponse<EmissionFactorResponse> = await axios.get<EmissionFactorResponse>(url)
         parts = parts.concat(
           emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne === 'Poste'),
@@ -44,6 +45,6 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
 
       await saveEmissionFactorsParts(transaction, parts)
     },
-    { timeout: 10 * 60 * 1000 },
+    { timeout: 60 * 60 * 1000 },
   )
 }
