@@ -105,6 +105,7 @@ describe('Create study', () => {
     cy.getByTestId('emission-source-name').clear()
     cy.getByTestId('emission-source-name').type('My edited emission source name')
     cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').blur()
+    cy.reload()
 
     cy.getByTestId('emission-source-validated').should('not.exist')
 
