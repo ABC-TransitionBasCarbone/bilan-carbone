@@ -1,4 +1,5 @@
 'use client'
+
 import { FullStudy } from '@/db/study'
 import { downloadStudyEmissionSources } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -13,7 +14,8 @@ interface Props {
 }
 const StudyDetailsHeader = ({ study }: Props) => {
   const format = useFormatter()
-  const tExport = useTranslations('study.export')
+  const t = useTranslations('study.export')
+  const tExport = useTranslations('exports')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
 
@@ -25,11 +27,11 @@ const StudyDetailsHeader = ({ study }: Props) => {
       actions={[
         {
           actionType: 'button',
-          onClick: () => downloadStudyEmissionSources(study, tExport, tPost, tQuality),
+          onClick: () => downloadStudyEmissionSources(study, t, tPost, tQuality),
           disabled: study.emissionSources.length === 0,
           children: (
             <>
-              {tExport('download')}
+              {t('download')}
               <DownloadIcon />
             </>
           ),
@@ -41,7 +43,11 @@ const StudyDetailsHeader = ({ study }: Props) => {
             {format.dateTime(study.startDate, { year: 'numeric', day: 'numeric', month: 'long' })} -{' '}
             {format.dateTime(study.endDate, { year: 'numeric', day: 'numeric', month: 'long' })}
           </p>
-          <p>Exports : {study.exports.map((e) => e.type).join(', ')}</p>
+          {study.exports.length > 0 && (
+            <p>
+              {tExport('title')} {study.exports.map((e) => e.type).join(', ')}
+            </p>
+          )}
         </div>
       }
     />
