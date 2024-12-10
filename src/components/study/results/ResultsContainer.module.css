@@ -1,6 +1,17 @@
+.studyName {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 .container {
   border-radius: 1rem;
   gap: 1rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr) 1);
+}
+
+.separator {
+  height: 80%;
+  align-self: center;
+  background-color: var(--neutral-30);
 }

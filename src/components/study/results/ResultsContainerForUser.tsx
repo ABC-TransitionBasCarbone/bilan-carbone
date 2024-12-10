@@ -1,5 +1,6 @@
 'use server'
 
+import Box from '@/components/base/Box'
 import { getMainStudy } from '@/db/study'
 import { canReadStudy } from '@/services/permissions/study'
 import classNames from 'classnames'
@@ -18,10 +19,14 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props)
 
   return showResults ? (
     <div className="pb1">
-      <div className={classNames(styles.container, 'wrap')}>
-        <Result study={study} by="Post" site="all" />
-        <Result study={study} by="SubPost" site="all" />
-      </div>
+      <Box>
+        <div className={classNames(styles.studyName, 'grow justify-center mb-2')}>{study.name}</div>
+        <div className={classNames(styles.container)}>
+          <Result study={study} by="Post" site="all" />
+          <div className={styles.separator} />
+          <Result study={study} by="SubPost" site="all" />
+        </div>
+      </Box>
     </div>
   ) : null
 }

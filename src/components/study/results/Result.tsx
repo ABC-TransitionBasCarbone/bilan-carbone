@@ -1,6 +1,5 @@
 'use client'
 
-import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
@@ -98,7 +97,7 @@ const Result = ({ study, by, site }: Props) => {
   }
 
   return (
-    <Box className="grow flex-col">
+    <div className="grow flex-col">
       <h4 className="mb1">{t(`by${by}`)}</h4>
       {by === 'SubPost' && (
         <div className="flex mb1">
@@ -117,7 +116,7 @@ const Result = ({ study, by, site }: Props) => {
       <div style={{ height: dynamicHeight }}>
         <canvas data-testid={`study-${by}-chart`} ref={canvasRef} />
       </div>
-    </Box>
+    </div>
   )
 }
 
