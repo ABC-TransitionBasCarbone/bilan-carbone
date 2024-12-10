@@ -22,11 +22,11 @@ export enum NewStudyRightStatus {
 
 export const getAllowedLevels = (level: Level | null) => {
   switch (level) {
-    case Level.Advanced:
+    case Level.Initial:
       return [Level.Initial]
     case Level.Standard:
       return [Level.Initial, Level.Standard]
-    case Level.Initial:
+    case Level.Advanced:
       return [Level.Initial, Level.Standard, Level.Advanced]
     default:
       return []
