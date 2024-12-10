@@ -89,6 +89,7 @@ export const requiredColums = [
   'Autres_GES',
   'N2O',
   'CO2f',
+  'Incertitude',
   'Qualité',
   'Qualité_TeR',
   'Qualité_GR',
