@@ -196,7 +196,9 @@ export const getNewStudyRightStatus = async (email: string, role: StudyRole, stu
       : NewStudyRightStatus.ReaderOnly
   }
 
-  return NewStudyRightStatus.Valid
+  return getAllowedLevels(newUser.level).includes(studyLevel)
+    ? NewStudyRightStatus.Valid
+    : NewStudyRightStatus.InternReader
 }
 
 export const newStudyRight = async (right: NewStudyRightCommand) => {
