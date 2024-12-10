@@ -6,13 +6,17 @@ import DownloadIcon from '@mui/icons-material/Download'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import { useFormatter, useTranslations } from 'next-intl'
+import { Dispatch, SetStateAction } from 'react'
 import Block from '../base/Block'
 import styles from './StudyDetailsHeader.module.css'
+import SelectStudySite from './site/SelectStudySite'
 
 interface Props {
   study: FullStudy
+  site: string
+  setSite: Dispatch<SetStateAction<string>>
 }
-const StudyDetailsHeader = ({ study }: Props) => {
+const StudyDetailsHeader = ({ study, site, setSite }: Props) => {
   const format = useFormatter()
   const t = useTranslations('study.export')
   const tExport = useTranslations('exports')
@@ -50,7 +54,9 @@ const StudyDetailsHeader = ({ study }: Props) => {
           )}
         </div>
       }
-    />
+    >
+      <SelectStudySite study={study} allowAll site={site} setSite={setSite} />
+    </Block>
   )
 }
 

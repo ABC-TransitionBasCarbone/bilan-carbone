@@ -15,11 +15,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 interface Props {
   study: FullStudy
   by: 'Post' | 'SubPost'
+  site: string
 }
 
 const sort = (arr: string[]) => arr.sort((a, b) => a.length - b.length)
 
-const Result = ({ study, by }: Props) => {
+const Result = ({ study, by, site }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
@@ -34,7 +35,7 @@ const Result = ({ study, by }: Props) => {
   const xAxis = useMemo(() => sort(by === 'Post' ? Object.values(Post) : subPostsByPost[post]), [post, by])
 
   const yData = useMemo(() => {
-    const computedResults = computeResultsByPost(study, tPost)
+    const computedResults = computeResultsByPost(study, tPost, site)
     if (by === 'Post') {
       if (computedResults.every((post) => post.value === 0)) {
         return []
@@ -49,7 +50,7 @@ const Result = ({ study, by }: Props) => {
       }
       return xAxis.map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
     }
-  }, [post, by])
+  }, [post, by, site])
 
   useEffect(() => {
     if (canvasRef.current) {

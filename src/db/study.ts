@@ -26,6 +26,11 @@ const fullStudyInclude = {
       type: true,
       comment: true,
       validated: true,
+      site: {
+        select: {
+          id: true,
+        },
+      },
       emissionFactor: {
         select: {
           id: true,

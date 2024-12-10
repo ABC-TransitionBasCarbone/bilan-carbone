@@ -12,13 +12,17 @@ export type ResultsByPost = {
   subPosts: ResultsByPost[]
 }
 
-export const computeResultsByPost = (study: FullStudy, tPost: (key: string) => string) =>
-  Object.values(Post)
+export const computeResultsByPost = (study: FullStudy, tPost: (key: string) => string, site: string) => {
+  const siteEmissionSources =
+    site === 'all'
+      ? study.emissionSources
+      : study.emissionSources.filter((emissionSource) => emissionSource.site.id === site)
+  return Object.values(Post)
     .sort((a, b) => tPost(a).localeCompare(tPost(b)))
     .map((post) => {
       const subPosts = subPostsByPost[post]
         .map((subPost) => {
-          const emissionSources = study.emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
+          const emissionSources = siteEmissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
           return {
             post: subPost,
             value: emissionSources.reduce(
@@ -58,3 +62,4 @@ export const computeResultsByPost = (study: FullStudy, tPost: (key: string) => s
         ),
       } as ResultsByPost
     })
+}
