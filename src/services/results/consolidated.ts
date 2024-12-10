@@ -28,7 +28,9 @@ export const computeResultsByPost = (study: FullStudy, tPost: (key: string) => s
             value: emissionSources.reduce(
               (acc, emission) =>
                 acc +
-                (!emission.value || !emission.emissionFactor ? 0 : emission.value * emission.emissionFactor.totalCo2),
+                (!emission.value || !emission.emissionFactor || !emission.validated
+                  ? 0
+                  : emission.value * emission.emissionFactor.totalCo2),
               0,
             ),
             numberOfEmissionSource: emissionSources.length,
