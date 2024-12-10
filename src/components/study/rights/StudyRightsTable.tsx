@@ -1,5 +1,6 @@
 'use client'
 
+import Block from '@/components/base/Block'
 import { FullStudy } from '@/db/study'
 import { Role, StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -58,7 +59,21 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
   })
 
   return (
-    <>
+    <Block
+      title={t('title')}
+      actions={
+        user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
+          ? [
+              {
+                actionType: 'link',
+                href: `/etudes/${study.id}/cadrage/ajouter`,
+                'data-testid': 'study-rights-change-button',
+                children: t('newRightLink'),
+              },
+            ]
+          : undefined
+      }
+    >
       <table aria-labelledby="study-rights-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -81,7 +96,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
           ))}
         </tbody>
       </table>
-    </>
+    </Block>
   )
 }
 

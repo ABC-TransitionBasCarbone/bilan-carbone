@@ -52,7 +52,7 @@ const StudyPublicStatus = ({ user, study, userRoleOnStudy }: Props) => {
   }, [isPublic, study, form])
 
   return (
-    <div className="pb2">
+    <div>
       {user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader) ? (
         <>
           <FormRadio control={form.control} translation={tForm} name="isPublic" row label={tForm('isPublicTitle')}>
