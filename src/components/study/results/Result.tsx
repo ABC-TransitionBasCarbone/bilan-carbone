@@ -18,8 +18,6 @@ interface Props {
   site: string
 }
 
-const sort = (arr: string[]) => arr.sort((a, b) => a.length - b.length)
-
 const Result = ({ study, by, site }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
@@ -32,7 +30,7 @@ const Result = ({ study, by, site }: Props) => {
 
   const selectorOptions = Object.values(Post)
 
-  const xAxis = useMemo(() => sort(by === 'Post' ? Object.values(Post) : subPostsByPost[post]), [post, by])
+  const xAxis = useMemo(() => (by === 'Post' ? Object.values(Post) : subPostsByPost[post]), [post, by])
 
   const yData = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, site)
