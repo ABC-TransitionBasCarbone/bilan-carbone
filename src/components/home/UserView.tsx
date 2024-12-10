@@ -19,7 +19,7 @@ const UserView = async ({ user }: Props) => {
   return (
     <div className="flex-col">
       <Suspense>
-        <ResultsContainerForUser user={user} />
+        <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
       </Suspense>
       <div className={classNames(styles.container, 'w100')}>
         <Actualities />

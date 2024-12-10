@@ -9,10 +9,11 @@ import styles from './ResultsContainer.module.css'
 
 interface Props {
   user: User
+  mainStudyOrganizationId: string | null
 }
 
-const ResultsContainerForUser = async ({ user }: Props) => {
-  const study = await getMainStudy(user)
+const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props) => {
+  const study = await getMainStudy(user, mainStudyOrganizationId)
   const showResults = study && (await canReadStudy(user, study))
 
   return showResults ? (
