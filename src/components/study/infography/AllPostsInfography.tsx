@@ -10,11 +10,12 @@ import PostInfography from './PostInfography'
 
 interface Props {
   study: FullStudy
+  site: string
 }
 
-const AllPostsInfography = ({ study }: Props) => {
+const AllPostsInfography = ({ study, site }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
-  const data = useMemo(() => computeResultsByPost(study, tPost), [study, tPost])
+  const data = useMemo(() => computeResultsByPost(study, tPost, site), [study, tPost])
 
   const findSubPost = (subPost: SubPost) => {
     const post = data.find((post) => post.subPosts.find((sb) => sb.post === subPost))

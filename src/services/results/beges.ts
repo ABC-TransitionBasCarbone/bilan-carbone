@@ -128,12 +128,17 @@ export const computeBegesResult = (
   study: FullStudy,
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
+  site: string,
 ) => {
   const results: Record<string, Omit<BegesLine, 'rule'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
     {},
   )
-  study.emissionSources.forEach((emissionSource) => {
+  const emissionSources =
+    site === 'all'
+      ? study.emissionSources
+      : study.emissionSources.filter((emissionSource) => emissionSource.site.id === site)
+  emissionSources.forEach((emissionSource) => {
     if (emissionSource.emissionFactor === null || !emissionSource.value || emissionSource.caracterisation === null) {
       return
     }

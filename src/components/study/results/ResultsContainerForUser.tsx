@@ -18,8 +18,8 @@ const ResultsContainerForUser = async ({ user }: Props) => {
   return showResults ? (
     <div className="pb1">
       <div className={classNames(styles.container, 'wrap')}>
-        <Result study={study} by="Post" />
-        <Result study={study} by="SubPost" />
+        <Result study={study} by="Post" site="all" />
+        <Result study={study} by="SubPost" site="all" />
       </div>
     </div>
   ) : null

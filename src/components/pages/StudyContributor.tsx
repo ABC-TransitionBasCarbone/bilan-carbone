@@ -12,7 +12,7 @@ interface Props {
   user: User
 }
 
-const StudyContributorPage = ({ study, user }: Props) => {
+const StudyContributionPage = ({ study, user }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   return (
@@ -33,4 +33,4 @@ const StudyContributorPage = ({ study, user }: Props) => {
   )
 }
 
-export default StudyContributorPage
+export default StudyContributionPage

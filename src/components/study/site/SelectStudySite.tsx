@@ -3,23 +3,17 @@
 import { FullStudy } from '@/db/study'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useEffect } from 'react'
-import useStudySite from './useStudySite'
+import { Dispatch, SetStateAction } from 'react'
 
 interface Props {
   study: FullStudy
   allowAll?: boolean
+  site: string
+  setSite: Dispatch<SetStateAction<string>>
 }
 
-const SelectStudySite = ({ study, allowAll }: Props) => {
+const SelectStudySite = ({ study, allowAll, site, setSite }: Props) => {
   const t = useTranslations('study.organization')
-  const { site, setSite } = useStudySite(study.id)
-
-  useEffect(() => {
-    if (!site && !allowAll) {
-      setSite(study.sites[0].id)
-    }
-  }, [allowAll])
 
   return (
     <FormControl>
@@ -27,11 +21,11 @@ const SelectStudySite = ({ study, allowAll }: Props) => {
       <Select
         labelId="study-site-select"
         label={t('site')}
-        value={site}
+        value={site === 'all' && !allowAll ? '' : site}
         onChange={(event) => setSite(event.target.value)}
-        disabled={study.sites.length === 1 || allowAll}
+        disabled={study.sites.length === 1 && !allowAll}
       >
-        {allowAll && <MenuItem value={''}>{t('all')}</MenuItem>}
+        {allowAll && <MenuItem value={'all'}>{t('allSites')}</MenuItem>}
         {study.sites.map((site) => (
           <MenuItem key={site.id} value={site.id}>
             {site.site.name}
