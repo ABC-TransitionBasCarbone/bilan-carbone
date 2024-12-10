@@ -211,7 +211,7 @@
         "dialog": {
           "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
           "otherOrganization": "Elle ne fait pas partie de votre organisation.",
-          "readerOnly": "La personne ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle. Vous ne pourrez donc lui donner un accès à l'étude qu'avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
+          "readerOnly": "Elle ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle. Vous ne pourrez donc lui donner un accès à l'étude qu'avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
           "accept": "Oui",
           "decline": "Non"
         }

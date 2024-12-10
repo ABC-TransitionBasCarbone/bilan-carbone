@@ -20,7 +20,8 @@ const NewStudyRightDialog = ({ status, decline, accept }: Props) => {
       <DialogTitle id="new-study-right-dialog-title">{t('title')}</DialogTitle>
       <DialogContent>
         <DialogContentText id="new-study-right-dialog-description">
-          {status === NewStudyRightStatus.OtherOrganization && t('otherOrganization')}
+          {(status === NewStudyRightStatus.OtherOrganization || status === NewStudyRightStatus.ReaderOnly) &&
+            t('otherOrganization')}
           {(status === NewStudyRightStatus.ReaderOnly || status === NewStudyRightStatus.InternReader) &&
             t('readerOnly')}
         </DialogContentText>

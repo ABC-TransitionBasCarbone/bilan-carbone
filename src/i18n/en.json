@@ -213,7 +213,7 @@
         "dialog": {
           "title": "Are you sure you want to add this person to your study?",
           "otherOrganization": "They are not within your organization.",
-          "readerOnly": "The person does not match the necessary conditions for this role. You will only be able to give them access to the study with READ or contribution rights. An email will be sent to them to give access to the study.",
+          "readerOnly": "They not match the necessary conditions for this role. You will only be able to give them access to the study with READ or contribution rights. An email will be sent to them to give access to the study.",
           "accept": "Yes",
           "decline": "No"
         }
