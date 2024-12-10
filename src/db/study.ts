@@ -1,3 +1,4 @@
+import { getAllowedLevels } from '@/services/study'
 import { StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
@@ -69,6 +70,7 @@ const fullStudyInclude = {
         select: {
           email: true,
           organizationId: true,
+          level: true,
         },
       },
       role: true,
@@ -122,11 +124,32 @@ export const getStudiesByUserAndOrganization = async (user: User, organizationId
   })
 }
 
-export const getStudyById = async (id: string) => {
-  return prismaClient.study.findUnique({
+export const getStudyById = async (id: string, organizationId: string | null) => {
+  const study = await prismaClient.study.findUnique({
     where: { id },
     include: fullStudyInclude,
   })
+  if (!study) {
+    return null
+  }
+  return {
+    ...study,
+    allowedUsers: study.allowedUsers.map((allowedUser) => {
+      const readerOnly =
+        !allowedUser.user.organizationId || !getAllowedLevels(allowedUser.user.level).includes(study.level)
+      return organizationId && allowedUser.user.organizationId === organizationId
+        ? { ...allowedUser, user: { ...allowedUser.user, readerOnly } }
+        : {
+            ...allowedUser,
+            user: {
+              ...allowedUser.user,
+              organizationId: undefined,
+              level: undefined,
+              readerOnly,
+            },
+          }
+    }),
+  }
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
