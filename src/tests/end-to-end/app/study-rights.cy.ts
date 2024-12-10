@@ -2,7 +2,6 @@ import dayjs from 'dayjs'
 
 describe('Create study', () => {
   beforeEach(() => {
-    cy.exec('npx prisma db seed')
     cy.intercept('POST', '/etudes/*/cadrage/ajouter').as('create')
     cy.intercept('POST', '/etudes/*/cadrage').as('update')
   })
@@ -10,7 +9,7 @@ describe('Create study', () => {
   it('should set user as editor and manage role', () => {
     cy.login()
 
-    cy.visit('/etudes/creer')
+    cy.getByTestId('new-study').click()
     cy.getByTestId('organization-sites-checkbox').first().click()
     cy.getByTestId('new-study-organization-button').click()
 
