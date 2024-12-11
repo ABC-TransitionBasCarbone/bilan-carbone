@@ -24,7 +24,7 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
   const t = useTranslations('emissionFactors.create')
   const [detailedGES, setDetailedGES] = useState(false)
 
-  const emissionFactorValues = form.watch(gazKeys)
+  const emissionFactorValues = form.watch(gazKeys.filter((key) => !key.endsWith('b')))
   useEffect(() => {
     if (detailedGES && !hasParts) {
       const total = emissionFactorValues
@@ -45,7 +45,7 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
 
       let totalCo2 = 0
       emissionFactors.forEach((part, index) => {
-        const partTotalCo2 = gazKeys.reduce((acc, gaz) => acc + part[gaz], 0)
+        const partTotalCo2 = gazKeys.filter((key) => !key.endsWith('b')).reduce((acc, gaz) => acc + part[gaz], 0)
         totalCo2 += partTotalCo2
         form.setValue(`parts.${index}.totalCo2`, partTotalCo2)
       })

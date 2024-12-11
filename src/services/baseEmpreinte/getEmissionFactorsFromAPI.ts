@@ -2,10 +2,12 @@ import axios, { AxiosResponse } from 'axios'
 import { prismaClient } from '../../db/client'
 import {
   BaseEmpreinteEmissionFactor,
+  cleanSums,
   getEmissionFactorImportVersion,
   mapEmissionFactors,
   requiredColums,
   saveEmissionFactorsParts,
+  validStatuses,
 } from './import'
 
 type EmissionFactorResponse = {
@@ -27,7 +29,7 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
 
       let parts: BaseEmpreinteEmissionFactor[] = []
       let url: string | undefined =
-        `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${requiredColums.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
+        `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${requiredColums.join(',')}&q_fields=Statut_de_l'élément&q=${validStatuses.map((status) => encodeURI(status)).join(',')}`
 
       while (url) {
         console.log(url)
@@ -44,6 +46,7 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
       }
 
       await saveEmissionFactorsParts(transaction, parts)
+      await cleanSums(transaction, emissionFactorImportVersion.id)
     },
     { timeout: 60 * 60 * 1000 },
   )

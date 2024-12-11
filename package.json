@@ -19,7 +19,7 @@
     "seed:import": "prisma db seed -- -i"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
     "@emotion/cache": "^11.13.5",

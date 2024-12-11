@@ -31,13 +31,16 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site }: Pro
               header: t('category.title'),
               accessorFn: ({ rule }) => {
                 const category = rule.split('.')[0]
-                return `${category}. ${t(`category.${category}`)}`
+                return category === 'total' ? '' : `${category}. ${t(`category.${category}`)}`
               },
             },
             {
               header: t('post.title'),
               accessorFn: ({ rule }) => {
-                return `${rule}. ${t(`post.${rule}`)}`
+                if (rule === 'total') {
+                  return t('total')
+                }
+                return rule.includes('.total') ? t('subTotal') : `${rule}. ${t(`post.${rule}`)}`
               },
             },
           ],
@@ -91,9 +94,9 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site }: Pro
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => {
-                const [category, post] = row.original.rule.split('.')
-                return cell.column.id !== 'category' || post === '1' ? (
-                  <td key={cell.id} rowSpan={cell.column.id === 'category' ? rulesSpans[category] : undefined}>
+                const rule = row.original.rule.split('.')
+                return cell.column.id !== 'category' || rule[1] === '1' || rule[0] === 'total' ? (
+                  <td key={cell.id} rowSpan={cell.column.id === 'category' ? rulesSpans[rule[0]] : undefined}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ) : null

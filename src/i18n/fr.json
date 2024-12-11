@@ -18,6 +18,7 @@
   },
   "beges": {
     "rule": "Règle",
+    "subTotal": "Sous-total",
     "category": {
       "title": "Catégorie",
       "1": "Émissions directes de GES",

@@ -4,10 +4,12 @@ import path from 'path'
 import { prismaClient } from '../../db/client'
 import {
   BaseEmpreinteEmissionFactor,
+  cleanSums,
   getEmissionFactorImportVersion,
   mapEmissionFactors,
   requiredColums,
   saveEmissionFactorsParts,
+  validStatuses,
 } from './import'
 
 const checkHeaders = (headers: string[]) => {
@@ -75,10 +77,12 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
             }),
           )
           .on('data', (row: BaseEmpreinteEmissionFactor) => {
-            if (row.Type_Ligne === 'Poste') {
-              parts.push(row)
-            } else {
-              emissionFactors.push(row)
+            if (validStatuses.includes(row["Statut_de_l'élément"])) {
+              if (row.Type_Ligne === 'Poste') {
+                parts.push(row)
+              } else {
+                emissionFactors.push(row)
+              }
             }
           })
           .on('end', async () => {
@@ -92,8 +96,8 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
               const data = mapEmissionFactors(emissionFactor, emissionFactorImportVersion.id)
               await transaction.emissionFactor.create({ data })
             }
-            console.log(`Save ${parts.length} emission factors parts...`)
             await saveEmissionFactorsParts(transaction, parts)
+            await cleanSums(transaction, emissionFactorImportVersion.id)
             console.log('Done')
             resolve()
           })

@@ -4,7 +4,8 @@ import { reCreateBegesRules } from '@/services/exportRules/beges'
 import { faker } from '@faker-js/faker'
 import { EmissionFactorStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
 import { Command } from 'commander'
-import { ACTUALITIES } from './legacy_data/actualities'
+import { ACTUALITIES } from '../legacy_data/actualities'
+import { createRealStudy } from './study'
 
 const program = new Command()
 type Params = {
@@ -276,6 +277,8 @@ const users = async () => {
       })
     }),
   )
+
+  await createRealStudy(prisma, defaultUser)
 }
 
 const actualities = async () => {
