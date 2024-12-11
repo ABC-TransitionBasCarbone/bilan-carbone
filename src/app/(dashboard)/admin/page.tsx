@@ -6,14 +6,12 @@ import Block from '@/components/base/Block'
 const Admin = async () => {
   const session = await auth()
   if (session && canAccessAdmin(session.user)) {
-    return null
+    return (
+      <Block>
+        <AdminPage user={session.user} />
+      </Block>
+    )
   }
-
-  return (
-    <Block>
-      <AdminPage user={session.user} />
-    </Block>
-  )
 }
 
 export default Admin
