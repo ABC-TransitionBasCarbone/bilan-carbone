@@ -51,21 +51,16 @@ const StudyPublicStatus = ({ user, study, userRoleOnStudy }: Props) => {
     }
   }, [isPublic, study, form])
 
-  return (
-    <div>
-      {user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader) ? (
-        <>
-          <FormRadio control={form.control} translation={tForm} name="isPublic" row label={tForm('isPublicTitle')}>
-            <FormControlLabel value="true" control={<Radio />} label={tForm('public')} />
-            <FormControlLabel value="false" control={<Radio />} label={tForm('private')} />
-          </FormRadio>
-          {error && <p>{error}</p>}
-        </>
-      ) : (
-        <p className={styles.text}>{t(study.isPublic ? 'isPublic' : 'isPrivate')}</p>
-      )}
-    </div>
+  return user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader) ? (
+    <>
+      <FormRadio control={form.control} translation={tForm} name="isPublic" row label={tForm('isPublicTitle')}>
+        <FormControlLabel value="true" control={<Radio />} label={tForm('public')} />
+        <FormControlLabel value="false" control={<Radio />} label={tForm('private')} />
+      </FormRadio>
+      {error && <p>{error}</p>}
+    </>
+  ) : (
+    <p className={styles.text}>{t(study.isPublic ? 'isPublic' : 'isPrivate')}</p>
   )
 }
-
 export default StudyPublicStatus
