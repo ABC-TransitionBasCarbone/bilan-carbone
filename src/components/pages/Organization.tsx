@@ -27,6 +27,8 @@ const OrganizationPage = ({ organizations, user }: Props) => {
         <Suspense>
           <ResultsContainerForUser user={user} mainStudyOrganizationId={organizations[0].id} />
         </Suspense>
+      </Block>
+      <Block>
         <Studies user={user} organizationId={organizations[0].id} />
       </Block>
     </>

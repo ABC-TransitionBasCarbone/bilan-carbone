@@ -1,12 +1,12 @@
 import { getUserOrganizations } from '@/db/user'
-import classNames from 'classnames'
 import { User } from 'next-auth'
 import { Suspense } from 'react'
 import Actualities from '../actuality/Actualities'
+import Block from '../base/Block'
 import Organizations from '../organization/OrganizationsContainer'
 import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Studies from '../study/StudiesContainer'
-import styles from './styles.module.css'
+import styles from './UserView.module.css'
 
 interface Props {
   user: User
@@ -17,15 +17,19 @@ const UserView = async ({ user }: Props) => {
   const isCR = organizations.find((organization) => organization.id === user.organizationId)?.isCR
 
   return (
-    <div className="flex-col">
+    <>
       <Suspense>
-        <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
+        <Block>
+          <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
+        </Block>
       </Suspense>
-      <div className={classNames(styles.container, 'w100')}>
-        <Actualities />
-        {isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}
-      </div>
-    </div>
+      <Block>
+        <div className={styles.container}>
+          <Actualities />
+          {isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}
+        </div>
+      </Block>
+    </>
   )
 }
 

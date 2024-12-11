@@ -97,8 +97,8 @@ const Result = ({ study, by, site }: Props) => {
   }
 
   return (
-    <div className="grow flex-col">
-      <h4 className="mb1">{t(`by${by}`)}</h4>
+    <div className="">
+      <h3 className="mb1">{t(`by${by}`)}</h3>
       {by === 'SubPost' && (
         <div className="flex mb1">
           <Select className="mr-2 grow" value={post} onChange={(e) => setPost(e.target.value as Post)}>
