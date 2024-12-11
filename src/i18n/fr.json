@@ -194,7 +194,7 @@
     "title": "Étude",
     "rights": {
       "contributors": "Contributeurs",
-      "isPublic": "L'étude est public",
+      "isPublic": "L'étude est publique",
       "isPrivate": "L'étude est privée",
       "title": "Cadrage de l'étude : {name}",
       "newContributorLink": "Ajouter un contributeur",
