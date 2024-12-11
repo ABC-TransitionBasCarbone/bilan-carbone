@@ -26,7 +26,9 @@ const NewStudyRightDialog = ({ rightsWarning, status, decline, accept }: Props) 
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={decline}>{t('decline')}</Button>
+        <Button onClick={decline} data-testid="new-study-right-dialog-decline">
+          {t('decline')}
+        </Button>
         <Button onClick={accept} data-testid="new-study-right-dialog-accept">
           {t('accept')}
         </Button>
