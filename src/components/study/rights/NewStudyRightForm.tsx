@@ -6,9 +6,9 @@ import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
 import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
-import { getNewStudyRightStatus, newStudyRight } from '@/services/serverFunctions/study'
+import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
-import { getAllowedLevels, NewStudyRightStatus } from '@/services/study'
+import { getAllowedLevels } from '@/services/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { Role, StudyRole } from '@prisma/client'
@@ -32,7 +32,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
 
   const [error, setError] = useState('')
   const [readerOnly, setReaderOnly] = useState(false)
-  const [status, setStatus] = useState<NewStudyRightStatus>()
+  const [otherOrganization, setOtherOrganization] = useState(false)
 
   const form = useForm<NewStudyRightCommand>({
     resolver: zodResolver(NewStudyRightCommandValidation),
@@ -47,23 +47,19 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   const onEmailChange = (_: SyntheticEvent, value: string | null) => {
     form.setValue('email', value || '')
     if (value) {
-      manageChangedEmail(value)
-    }
-  }
-
-  const manageChangedEmail = (email: string) => {
-    const organizationUser = users.find((user) => user.email === email)
-    if (!organizationUser || getAllowedLevels(organizationUser.level).includes(study.level)) {
-      setReaderOnly(false)
-    } else {
-      setReaderOnly(true)
-      form.setValue('role', StudyRole.Reader)
+      const organizationUser = users.find((user) => user.email === value)
+      if (!organizationUser || getAllowedLevels(organizationUser.level).includes(study.level)) {
+        setReaderOnly(false)
+      } else {
+        setReaderOnly(true)
+        form.setValue('role', StudyRole.Reader)
+      }
     }
   }
 
   const saveRight = async (command: NewStudyRightCommand) => {
     const result = await newStudyRight(command)
-    setStatus(undefined)
+    setOtherOrganization(false)
     if (result) {
       setError(result)
     } else {
@@ -73,14 +69,10 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   }
 
   const onSubmit = async (command: NewStudyRightCommand) => {
-    const right = await getNewStudyRightStatus()
-    if (right) {
-      setError(right)
-    }
     if (users.some((user) => user.email === command.email)) {
       await saveRight(command)
     } else {
-      setStatus(NewStudyRightStatus.OtherOrganization)
+      setOtherOrganization(true)
     }
   }
 
@@ -148,9 +140,9 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
         {error && <p>{error}</p>}
       </Form>
       <NewStudyRightDialog
-        status={status}
-        rightsWarning={status == NewStudyRightStatus.OtherOrganization && form.getValues().role !== StudyRole.Reader}
-        decline={() => setStatus(undefined)}
+        otherOrganization={otherOrganization}
+        rightsWarning={form.getValues().role !== StudyRole.Reader}
+        decline={() => setOtherOrganization(false)}
         accept={() => saveRight(form.getValues())}
       />
     </>

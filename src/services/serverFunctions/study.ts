@@ -178,14 +178,6 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-export const getNewStudyRightStatus = async () => {
-  const session = await auth()
-  if (!session || !session.user) {
-    return NOT_AUTHORIZED
-  }
-  return
-}
-
 export const newStudyRight = async (right: NewStudyRightCommand) => {
   const session = await auth()
   if (!session || !session.user) {
