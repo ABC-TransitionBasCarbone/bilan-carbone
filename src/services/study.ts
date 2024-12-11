@@ -15,9 +15,7 @@ const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<
 }
 
 export enum NewStudyRightStatus {
-  SameOrganization,
   OtherOrganization,
-  NonExisting,
 }
 
 export const getAllowedLevels = (level: Level | null) => {

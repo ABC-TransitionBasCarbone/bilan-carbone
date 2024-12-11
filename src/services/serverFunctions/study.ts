@@ -23,7 +23,7 @@ import {
   canCreateStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
-import { NewStudyRightStatus } from '../study'
+import { getAllowedLevels } from '../study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyLevelCommand,
@@ -178,22 +178,12 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-export const getNewStudyRightStatus = async (email: string) => {
+export const getNewStudyRightStatus = async () => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
-
-  const newUser = await getUserByEmail(email)
-  if (!newUser) {
-    return NewStudyRightStatus.NonExisting
-  }
-
-  if (newUser.organizationId !== session.user.organizationId) {
-    return NewStudyRightStatus.OtherOrganization
-  }
-
-  return NewStudyRightStatus.SameOrganization
+  return
 }
 
 export const newStudyRight = async (right: NewStudyRightCommand) => {
@@ -209,6 +199,10 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
 
   if (!studyWithRights) {
     return NOT_AUTHORIZED
+  }
+
+  if (!newUser || !getAllowedLevels(newUser.level).includes(studyWithRights.level)) {
+    right.role = StudyRole.Reader
   }
 
   if (!canAddRightOnStudy(session.user, studyWithRights, newUser, right.role)) {

@@ -4,16 +4,17 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import { useTranslations } from 'next-intl'
 
 interface Props {
+  rightsWarning: boolean
   status?: NewStudyRightStatus
   decline: () => void
   accept: () => void
 }
-const NewStudyRightDialog = ({ status, decline, accept }: Props) => {
+const NewStudyRightDialog = ({ rightsWarning, status, decline, accept }: Props) => {
   const t = useTranslations('study.rights.new.dialog')
 
   return (
     <Dialog
-      open={!!status}
+      open={status !== undefined}
       aria-labelledby="new-study-right-dialog-title"
       aria-describedby="new-study-right-dialog-description"
     >
@@ -21,7 +22,7 @@ const NewStudyRightDialog = ({ status, decline, accept }: Props) => {
       <DialogContent>
         <DialogContentText id="new-study-right-dialog-description">
           {status === NewStudyRightStatus.OtherOrganization && t('otherOrganization')}
-          {status === NewStudyRightStatus.NonExisting && t('nonExisting')}
+          {rightsWarning && t('rightsWarning')}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
