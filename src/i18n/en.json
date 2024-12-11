@@ -199,7 +199,6 @@
       "isPublic": "The study is public",
       "isPrivate": "The study is private",
       "title": "Rights on study : {name}",
-      "newRightLink": "Add a person on study",
       "newContributorLink": "Add a contributor",
       "new": {
         "title": "Add a person to the study: {name}",
@@ -237,7 +236,9 @@
       },
       "table": {
         "email": "Email",
-        "role": "Rights"
+        "role": "Rights",
+        "title": "Team management",
+        "newRightLink": "Add a person on study"
       }
     },
     "perimeter": {

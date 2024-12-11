@@ -197,7 +197,6 @@
       "isPublic": "L'étude est public",
       "isPrivate": "L'étude est privée",
       "title": "Cadrage de l'étude : {name}",
-      "newRightLink": "Ajouter une personne à l'étude",
       "newContributorLink": "Ajouter un contributeur",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
@@ -235,7 +234,9 @@
       },
       "table": {
         "email": "Email",
-        "role": "Droits"
+        "role": "Droits",
+        "title": "Gestion de l'équipe",
+        "newRightLink": "Ajouter une personne à l'étude"
       }
     },
     "perimeter": {
