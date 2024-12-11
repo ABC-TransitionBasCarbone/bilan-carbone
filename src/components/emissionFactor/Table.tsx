@@ -1,19 +1,24 @@
 'use client'
 
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
+import InventoryIcon from '@mui/icons-material/Inventory'
 import {
   Checkbox,
   FormControl,
+  FormControlLabel,
+  FormLabel,
   InputLabel,
   ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  Switch,
   TextField,
 } from '@mui/material'
-import { Import } from '@prisma/client'
+import { EmissionFactorStatus, Import } from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -29,7 +34,6 @@ import { useTranslations } from 'next-intl'
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
-import LinkButton from '../base/LinkButton'
 import EmissionFactorDetails from './EmissionFactorDetails'
 import styles from './Table.module.css'
 
@@ -81,6 +85,7 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const [filter, setFilter] = useState('')
+  const [displayArchived, setDisplayArchived] = useState(false)
   const [locationFilter, setLocationFilter] = useState('')
   const [filteredSources, setSources] = useState<Import[]>(sources)
 
@@ -105,6 +110,27 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
         cell: ({ getValue }) => <span>{getValue<string>() || ' '}</span>,
       },
       {
+        header: t('status'),
+        accessorKey: 'status',
+        cell: ({ getValue }) => {
+          const status = getValue<EmissionFactorStatus>()
+          switch (status) {
+            case EmissionFactorStatus.Archived:
+              return (
+                <div className="flex-cc">
+                  <InventoryIcon color="inherit" />
+                </div>
+              )
+            default:
+              return (
+                <div className="flex-cc">
+                  <CheckCircleIcon color="success" />
+                </div>
+              )
+          }
+        },
+      },
+      {
         header: t('source'),
         accessorKey: 'importedFrom',
         cell: ({ getValue }) => {
@@ -112,21 +138,22 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
           switch (importedFrom) {
             case Import.BaseEmpreinte:
               return (
-                <img
-                  className={styles.importFrom}
-                  src="https://base-empreinte.ademe.fr/assets/img/base-empreinte.svg"
-                  title={t('importedFrom.baseEmpreinte')}
-                />
+                <div className="flex-cc">
+                  <img
+                    className={styles.importFrom}
+                    src="https://base-empreinte.ademe.fr/assets/img/base-empreinte.svg"
+                    title={t('importedFrom.baseEmpreinte')}
+                  />
+                </div>
               )
             default:
               return (
-                <span className={styles.importFrom}>
+                <span className={classNames(styles.importFrom, 'flex-cc')}>
                   <HomeWorkIcon />
                   {t('importedFrom.manual')}
                 </span>
               )
           }
-          return null
         },
       },
     ] as ColumnDef<EmissionFactorWithMetaData>[]
@@ -150,8 +177,10 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
   }, [filter, locationFilter])
 
   const data = useMemo(() => {
-    return searchedEmissionFactors.filter((emissionFactor) => filteredSources.includes(emissionFactor.importedFrom))
-  }, [searchedEmissionFactors, filteredSources])
+    return searchedEmissionFactors
+      .filter((emissionFactor) => filteredSources.includes(emissionFactor.importedFrom))
+      .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived)
+  }, [searchedEmissionFactors, filteredSources, displayArchived])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -192,45 +221,56 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
 
   return (
     <>
-      <div className={classNames(styles.header, 'justify-between align-center wrap-reverse mb1')}>
-        <div className={classNames(styles.filters, 'wrap')}>
-          <DebouncedInput
-            className={styles.searchInput}
-            debounce={200}
-            value={filter}
-            onChange={setFilter}
-            placeholder={t('search')}
+      <div className={classNames(styles.filters, 'align-center wrap mb1')}>
+        <DebouncedInput
+          className={styles.searchInput}
+          debounce={200}
+          value={filter}
+          onChange={setFilter}
+          placeholder={t('search')}
+          data-testid="emission-factor-search-input"
+        />
+        <DebouncedInput
+          className={styles.searchInput}
+          debounce={200}
+          value={locationFilter}
+          onChange={setLocationFilter}
+          placeholder={t('locationSearch')}
+        />
+        <FormControl className={styles.selector}>
+          <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>
+          <Select
+            id="emissions-sources-selector"
+            labelId="emissions-sources-selector"
+            value={filteredSources}
+            onChange={selectLocations}
+            input={<OutlinedInput label={t('sources')} />}
+            renderValue={statusSelectorRenderValue}
+            multiple
+          >
+            {sources.map((source, i) => (
+              <MenuItem key={`source-item-${i}`} value={source}>
+                <Checkbox checked={filteredSources.includes(source)} />
+                <ListItemText primary={source} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl className={styles.selector}>
+          <FormLabel id="archived-emissions-factors-radio-group-label" component="legend">
+            {t('displayArchived')}
+          </FormLabel>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={displayArchived}
+                data-testid="archived-emissions-factors-switch"
+                onChange={(event) => setDisplayArchived(event.target.checked)}
+              />
+            }
+            label={t(displayArchived ? 'yes' : 'no')}
           />
-          <DebouncedInput
-            className={styles.searchInput}
-            debounce={200}
-            value={locationFilter}
-            onChange={setLocationFilter}
-            placeholder={t('locationSearch')}
-          />
-          <FormControl className={styles.selector}>
-            <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>
-            <Select
-              id="emissions-sources-selector"
-              labelId="emissions-sources-selector"
-              value={filteredSources}
-              onChange={selectLocations}
-              input={<OutlinedInput label={t('sources')} />}
-              renderValue={statusSelectorRenderValue}
-              multiple
-            >
-              {sources.map((source, i) => (
-                <MenuItem key={`source-item-${i}`} value={source}>
-                  <Checkbox checked={filteredSources.includes(source)} />
-                  <ListItemText primary={source} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-        <LinkButton href="/facteurs-d-emission/creer" data-testid="new-emission">
-          {t('add')}
-        </LinkButton>
+        </FormControl>
       </div>
       <table>
         <thead>

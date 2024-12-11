@@ -10,7 +10,13 @@ const EmissionFactorsPage = () => {
   return (
     <>
       <Breadcrumbs current={tNav('emissionFactors')} links={[{ label: tNav('home'), link: '/' }]} />
-      <Block title={t('title')} as="h1">
+      <Block
+        title={t('title')}
+        as="h1"
+        actions={[
+          { actionType: 'link', href: '/facteurs-d-emission/creer', 'data-testid': 'new-emission', children: t('add') },
+        ]}
+      >
         <Suspense fallback={t('loading')}>
           <EmissionFactors />
         </Suspense>
