@@ -1,5 +1,5 @@
 import { getAllowedLevels } from '@/services/study'
-import { StudyRole, SubPost, type Prisma } from '@prisma/client'
+import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 import { getUserOrganizations } from './user'
@@ -92,12 +92,39 @@ const fullStudyInclude = {
   exports: { select: { type: true } },
 } satisfies Prisma.StudyInclude
 
-export const getMainStudy = async (organizationId: string) =>
-  prismaClient.study.findFirst({
+const normalizeAllowedUsers = (
+  allowedUsers: Prisma.StudyGetPayload<{ include: typeof fullStudyInclude }>['allowedUsers'],
+  studyLevel: Level,
+  organizationId: string | null,
+) =>
+  allowedUsers.map((allowedUser) => {
+    const readerOnly =
+      !allowedUser.user.organizationId || !getAllowedLevels(allowedUser.user.level).includes(studyLevel)
+
+    return organizationId && allowedUser.user.organizationId === organizationId
+      ? { ...allowedUser, user: { ...allowedUser.user, readerOnly } }
+      : {
+          ...allowedUser,
+          user: {
+            ...allowedUser.user,
+            organizationId: undefined,
+            level: undefined,
+            readerOnly,
+          },
+        }
+  })
+
+export const getMainStudy = async (organizationId: string) => {
+  const study = await prismaClient.study.findFirst({
     where: { organizationId },
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
+  if (!study) {
+    return null
+  }
+  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId) }
+}
 
 export const getStudiesByUser = async (user: User) => {
   const userOrganizations = await getUserOrganizations(user.email)
@@ -132,24 +159,7 @@ export const getStudyById = async (id: string, organizationId: string | null) =>
   if (!study) {
     return null
   }
-  return {
-    ...study,
-    allowedUsers: study.allowedUsers.map((allowedUser) => {
-      const readerOnly =
-        !allowedUser.user.organizationId || !getAllowedLevels(allowedUser.user.level).includes(study.level)
-      return organizationId && allowedUser.user.organizationId === organizationId
-        ? { ...allowedUser, user: { ...allowedUser.user, readerOnly } }
-        : {
-            ...allowedUser,
-            user: {
-              ...allowedUser.user,
-              organizationId: undefined,
-              level: undefined,
-              readerOnly,
-            },
-          }
-    }),
-  }
+  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId) }
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
