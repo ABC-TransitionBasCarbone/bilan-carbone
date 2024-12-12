@@ -3,12 +3,17 @@ import { Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { EmissionFactorWithMetaData } from './emissionFactors'
-import { canBeValidated, getEmissionSourcesTotalCo2 } from './emissionSource'
+import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
 import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
-import { getEmissionSourcesGlobalUncertainty, getQualityRating } from './uncertainty'
+import {
+  getEmissionSourcesGlobalUncertainty,
+  getQualityRating,
+  getStandardDeviationRating,
+  sumQualities,
+} from './uncertainty'
 
 const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<typeof useTranslations>) => {
   return quality === null ? t('unknown') : t(quality.toString())
@@ -68,8 +73,10 @@ const getEmissionSourcesRows = (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   t: ReturnType<typeof useTranslations>,
+  tCaract: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
+  tUnit: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
 ) => {
   const initCols = []
@@ -85,10 +92,15 @@ const getEmissionSourcesRows = (
       'sourceName',
       'sourceCharacterization',
       'sourceValue',
-      'sourceComment',
+      'sourceUnit',
       'sourceQuality',
+      'activityDataValue',
+      'activityDataUnit',
+      'activityDataComment',
+      'activityDataQuality',
       'emissionName',
       'emissionValue',
+      'emissionUnit',
       'emissionSource',
       'emissionQuality',
     ])
@@ -107,16 +119,22 @@ const getEmissionSourcesRows = (
       initCols.push(tPost(post))
       initCols.push(tPost(emissionSource.subPost))
     }
+    const emissionSourceSD = getStandardDeviation(emissionSource)
     return initCols
       .concat([
         emissionSource.validated ? t('yes') : t('no'),
         emissionSource.name || '',
-        emissionSource.caracterisation || '',
+        tCaract(emissionSource.caracterisation || ''),
+        (emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0) || '0',
+        'kgCO₂e',
+        emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
         emissionSource.value || '0',
+        emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
         emissionSource.comment || '',
         getQuality(getQualityRating(emissionSource), tQuality),
         emissionFactor?.metaData?.title || t('noFactor'),
         emissionFactor?.totalCo2 || '',
+        emissionFactor?.unit ? `kgCO₂e/${tUnit(emissionFactor.unit)}` : '',
         emissionFactor?.source || '',
         emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
       ])
@@ -150,11 +168,22 @@ const getEmissionSourcesCSVContent = (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   t: ReturnType<typeof useTranslations>,
+  tCaract: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
+  tUnit: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
 ) => {
-  const { columns, rows } = getEmissionSourcesRows(emissionSources, emissionFactors, t, tPost, tQuality, type)
+  const { columns, rows } = getEmissionSourcesRows(
+    emissionSources,
+    emissionFactors,
+    t,
+    tCaract,
+    tPost,
+    tQuality,
+    tUnit,
+    type,
+  )
 
   const emptyFieldsCount = type === 'Study' ? 3 : type === 'Post' ? 2 : 1
   const emptyFields = (count: number) => Array(count).fill('')
@@ -162,10 +191,14 @@ const getEmissionSourcesCSVContent = (
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
+  const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
+  const quality = getQuality(getStandardDeviationRating(sumQualities(qualities)), tQuality)
+  const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
+
   const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources)
   const uncertaintyRow = [t('uncertainty'), ...emptyFields(emptyFieldsCount), uncertainty[0], uncertainty[1]].join(';')
 
-  return [columns, ...rows, totalRow, uncertaintyRow].join('\n')
+  return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
 }
 
 export const downloadStudySubPosts = async (
@@ -175,11 +208,13 @@ export const downloadStudySubPosts = async (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   t: ReturnType<typeof useTranslations>,
+  tCaract: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
+  tUnit: ReturnType<typeof useTranslations>,
 ) => {
   const fileName = getFileName(study, post, subPost)
-  const csvContent = getEmissionSourcesCSVContent(emissionSources, emissionFactors, t, tPost, tQuality)
+  const csvContent = getEmissionSourcesCSVContent(emissionSources, emissionFactors, t, tCaract, tPost, tQuality, tUnit)
   downloadCSV(csvContent, fileName)
 }
 
@@ -188,23 +223,36 @@ export const downloadStudyPost = async (
   emissionSources: FullStudy['emissionSources'],
   post: Post | SubPost,
   t: ReturnType<typeof useTranslations>,
+  tCaract: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
+  tUnit: ReturnType<typeof useTranslations>,
 ) => {
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
   const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
   const fileName = getFileName(study, post)
-  const csvContent = getEmissionSourcesCSVContent(emissionSources, emissionFactors, t, tPost, tQuality, 'Post')
+  const csvContent = getEmissionSourcesCSVContent(
+    emissionSources,
+    emissionFactors,
+    t,
+    tCaract,
+    tPost,
+    tQuality,
+    tUnit,
+    'Post',
+  )
   downloadCSV(csvContent, fileName)
 }
 
 export const downloadStudyEmissionSources = async (
   study: FullStudy,
   t: ReturnType<typeof useTranslations>,
+  tCaract: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
+  tUnit: ReturnType<typeof useTranslations>,
 ) => {
   const emissionSources = study.emissionSources.sort((a, b) => a.subPost.localeCompare(b.subPost))
 
@@ -213,6 +261,15 @@ export const downloadStudyEmissionSources = async (
     .filter((emissionFactorId) => emissionFactorId !== undefined)
   const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
   const fileName = getFileName(study)
-  const csvContent = getEmissionSourcesCSVContent(emissionSources, emissionFactors, t, tPost, tQuality, 'Study')
+  const csvContent = getEmissionSourcesCSVContent(
+    emissionSources,
+    emissionFactors,
+    t,
+    tCaract,
+    tPost,
+    tQuality,
+    tUnit,
+    'Study',
+  )
   downloadCSV(csvContent, fileName)
 }

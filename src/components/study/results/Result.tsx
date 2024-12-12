@@ -33,8 +33,10 @@ const postXAxisList = [
 const Result = ({ study, by, site }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
+  const tCaract = useTranslations('categorisations')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
+  const tUnit = useTranslations('units')
   const [dynamicHeight, setDynamicHeight] = useState(0)
   const [post, setPost] = useState<Post>(Object.values(Post)[0])
   const chartRef = useRef<Chart | null>(null)
@@ -100,12 +102,12 @@ const Result = ({ study, by, site }: Props) => {
 
   const downloadResults = () => {
     if (by === 'Post') {
-      downloadStudyEmissionSources(study, tExport, tPost, tQuality)
+      downloadStudyEmissionSources(study, tExport, tCaract, tPost, tQuality, tUnit)
     } else {
       const emissionSources = study.emissionSources.filter((emissionSource) =>
         subPostsByPost[post].includes(emissionSource.subPost),
       )
-      downloadStudyPost(study, emissionSources, post, tExport, tPost, tQuality)
+      downloadStudyPost(study, emissionSources, post, tExport, tCaract, tPost, tQuality, tUnit)
     }
   }
 
