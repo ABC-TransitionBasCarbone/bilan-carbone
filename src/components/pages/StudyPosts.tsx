@@ -10,6 +10,8 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
+import SelectStudySite from '../study/site/SelectStudySite'
+import useStudySite from '../study/site/useStudySite'
 
 interface Props {
   post: Post
@@ -21,6 +23,8 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
+  const { site, setSite } = useStudySite(study)
+
   return (
     <>
       <Breadcrumbs
@@ -30,9 +34,11 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ]}
       />
-      <Block title={study.name} as="h1" />
+      <Block title={study.name} as="h1">
+        <SelectStudySite study={study} site={site} setSite={setSite} />
+      </Block>
       <StudyPostsBlock post={post} study={study} display={showInfography} setDisplay={setShowInfography}>
-        {showInfography && <StudyPostInfography study={study} />}
+        {showInfography && <StudyPostInfography study={study} site={site} />}
         <SubPosts post={post} study={study} user={user} withoutDetail={false} />
       </StudyPostsBlock>
     </>

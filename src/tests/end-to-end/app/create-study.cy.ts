@@ -14,6 +14,7 @@ describe('Create study', () => {
 
     cy.getByTestId('new-study-organization-title').should('be.visible')
     cy.getByTestId('new-study-organization-select').should('not.exist')
+    cy.getByTestId('organization-sites-checkbox').first().click()
 
     cy.getByTestId('new-study-organization-button').click()
 
@@ -37,6 +38,7 @@ describe('Create study', () => {
     cy.getByTestId('new-study-organization-title').should('be.visible')
     cy.getByTestId('new-study-organization-select').click()
     cy.get('[role="option"]').first().click()
+    cy.getByTestId('organization-sites-checkbox').first().click()
 
     cy.getByTestId('new-study-organization-button').click()
 

@@ -22,7 +22,6 @@ const checkHeaders = (headers: string[]) => {
 }
 
 const numberColumns: (keyof BaseEmpreinteEmissionFactor)[] = [
-  'Incertitude',
   'Total_poste_non_décomposé',
   'CO2b',
   'CH4f',
@@ -40,57 +39,69 @@ const numberColumns: (keyof BaseEmpreinteEmissionFactor)[] = [
 ]
 
 export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
-  const emissionFactorImportVersion = await getEmissionFactorImportVersion(name, path.basename(file))
-  if (!emissionFactorImportVersion.success) {
-    return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
-  }
-
-  console.log('Parse file...')
-  const emissionFactors: BaseEmpreinteEmissionFactor[] = []
-  const parts: BaseEmpreinteEmissionFactor[] = []
-  fs.createReadStream(file)
-    .pipe(
-      parse({
-        columns: (headers: string[]) => {
-          const formattedHeader = headers.map((header) => header.replaceAll(' ', '_'))
-          checkHeaders(formattedHeader)
-          return formattedHeader
-        },
-        delimiter: ';',
-        encoding: 'latin1',
-        cast: (value, context) => {
-          if (value === '') {
-            return undefined
-          }
-
-          if (numberColumns.includes(context.column as keyof BaseEmpreinteEmissionFactor)) {
-            return Number(value.replace(',', '.'))
-          }
-
-          return value
-        },
-      }),
-    )
-    .on('data', (row: BaseEmpreinteEmissionFactor) => {
-      if (row.Type_Ligne === 'Poste') {
-        parts.push(row)
-      } else {
-        emissionFactors.push(row)
+  await prismaClient.$transaction(
+    async (transaction) => {
+      const emissionFactorImportVersion = await getEmissionFactorImportVersion(transaction, name, path.basename(file))
+      if (!emissionFactorImportVersion.success) {
+        return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
       }
-    })
-    .on('end', async () => {
-      console.log(`Save ${emissionFactors.length} emission factors...`)
-      let i = 0
-      for (const emissionFactor of emissionFactors) {
-        i++
-        if (i % 500 === 0) {
-          console.log(`${i}/${emissionFactors.length}...`)
-        }
-        const data = mapEmissionFactors(emissionFactor, emissionFactorImportVersion.id)
-        await prismaClient.emissionFactor.create({ data })
-      }
-      console.log(`Save ${parts.length} emission factors parts...`)
-      await saveEmissionFactorsParts(parts)
-      console.log('Done')
-    })
+
+      console.log('Parse file...')
+      const emissionFactors: BaseEmpreinteEmissionFactor[] = []
+      const parts: BaseEmpreinteEmissionFactor[] = []
+
+      await new Promise<void>((resolve, reject) => {
+        fs.createReadStream(file)
+          .pipe(
+            parse({
+              columns: (headers: string[]) => {
+                const formattedHeader = headers.map((header) => header.replaceAll(' ', '_'))
+                checkHeaders(formattedHeader)
+                return formattedHeader
+              },
+              delimiter: ';',
+              encoding: 'latin1',
+              cast: (value, context) => {
+                if (value === '') {
+                  return undefined
+                }
+
+                if (numberColumns.includes(context.column as keyof BaseEmpreinteEmissionFactor)) {
+                  return Number(value.replace(',', '.'))
+                }
+
+                return value
+              },
+            }),
+          )
+          .on('data', (row: BaseEmpreinteEmissionFactor) => {
+            if (row.Type_Ligne === 'Poste') {
+              parts.push(row)
+            } else {
+              emissionFactors.push(row)
+            }
+          })
+          .on('end', async () => {
+            console.log(`Save ${emissionFactors.length} emission factors...`)
+            let i = 0
+            for (const emissionFactor of emissionFactors) {
+              i++
+              if (i % 500 === 0) {
+                console.log(`${i}/${emissionFactors.length}...`)
+              }
+              const data = mapEmissionFactors(emissionFactor, emissionFactorImportVersion.id)
+              await transaction.emissionFactor.create({ data })
+            }
+            console.log(`Save ${parts.length} emission factors parts...`)
+            await saveEmissionFactorsParts(transaction, parts)
+            console.log('Done')
+            resolve()
+          })
+          .on('error', (error) => {
+            reject(error)
+          })
+      })
+    },
+    { timeout: 10 * 60 * 1000 },
+  )
 }

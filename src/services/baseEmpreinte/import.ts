@@ -1,14 +1,17 @@
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
-import { prismaClient } from '../../db/client'
-import { UNITS_MATRIX } from './historyUnits'
+import { unitsMatrix } from './historyUnits'
 import { elementsBySubPost } from './posts.config'
 
-export const getEmissionFactorImportVersion = async (name: string, id: string) => {
-  const existingVersion = await prismaClient.emissionFactorImportVersion.findFirst({ where: { internId: id } })
+export const getEmissionFactorImportVersion = async (
+  transaction: Prisma.TransactionClient,
+  name: string,
+  id: string,
+) => {
+  const existingVersion = await transaction.emissionFactorImportVersion.findFirst({ where: { internId: id } })
   if (existingVersion) {
     return { success: false, id: existingVersion.id }
   }
-  const newVersion = await prismaClient.emissionFactorImportVersion.create({
+  const newVersion = await transaction.emissionFactorImportVersion.create({
     data: { name, source: Import.BaseEmpreinte, internId: id },
   })
   return { success: true, id: newVersion.id }
@@ -37,7 +40,6 @@ export type BaseEmpreinteEmissionFactor = {
   Nom_base_anglais: string
   Nom_frontière_français: string
   Nom_frontière_anglais: string
-  Incertitude: number
   Total_poste_non_décomposé: number
   CO2b: number
   CH4f: number
@@ -45,6 +47,7 @@ export type BaseEmpreinteEmissionFactor = {
   Autres_GES: number
   N2O: number
   CO2f: number
+  Incertitude: number
   Qualité: number
   Qualité_TeR: number
   Qualité_GR: number
@@ -79,7 +82,6 @@ export const requiredColums = [
   'Nom_base_anglais',
   'Nom_frontière_français',
   'Nom_frontière_anglais',
-  'Incertitude',
   'Total_poste_non_décomposé',
   'CO2b',
   'CH4f',
@@ -87,6 +89,7 @@ export const requiredColums = [
   'Autres_GES',
   'N2O',
   'CO2f',
+  'Incertitude',
   'Qualité',
   'Qualité_TeR',
   'Qualité_GR',
@@ -127,11 +130,11 @@ const getUnit = (value?: string): Unit | null => {
     value = value.replace('m3', 'm³')
   }
 
-  const unit = Object.entries(UNITS_MATRIX).find((entry) => entry[1] === value)
-  if (unit) {
-    return unit[0] as Unit
+  if (!unitsMatrix[value]) {
+    throw new Error('Unknown unit : ' + value)
   }
-  return null
+
+  return unitsMatrix[value]
 }
 
 const getType = (value: string) => {
@@ -173,6 +176,22 @@ const getType = (value: string) => {
   }
 }
 
+const getEmissionQuality = (uncertainty?: number) => {
+  if (!uncertainty) {
+    return null
+  } else if (uncertainty < 5) {
+    return 5
+  } else if (uncertainty < 20) {
+    return 4
+  } else if (uncertainty < 45) {
+    return 3
+  } else if (uncertainty < 75) {
+    return 2
+  } else {
+    return 1
+  }
+}
+
 export const mapEmissionFactors = (emissionFactor: BaseEmpreinteEmissionFactor, versionId: string) => {
   const data = {
     reliability: 5,
@@ -183,11 +202,10 @@ export const mapEmissionFactors = (emissionFactor: BaseEmpreinteEmissionFactor, 
     source: emissionFactor.Source,
     versionId,
     location: emissionFactor.Localisation_géographique,
-    incertitude: emissionFactor.Incertitude,
-    technicalRepresentativeness: emissionFactor.Qualité_TeR,
-    geographicRepresentativeness: emissionFactor.Qualité_GR,
-    temporalRepresentativeness: emissionFactor.Qualité_TiR,
-    completeness: emissionFactor.Qualité_C,
+    technicalRepresentativeness: emissionFactor.Qualité_TeR || getEmissionQuality(emissionFactor.Incertitude),
+    geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
+    temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
+    completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
     totalCo2: emissionFactor.Total_poste_non_décomposé,
     co2f: emissionFactor.CO2f,
     ch4f: emissionFactor.CH4f,
@@ -247,8 +265,11 @@ export const mapEmissionFactors = (emissionFactor: BaseEmpreinteEmissionFactor, 
   return data
 }
 
-export const saveEmissionFactorsParts = async (parts: BaseEmpreinteEmissionFactor[]) => {
-  const emissionFactors = await prismaClient.emissionFactor.findMany({
+export const saveEmissionFactorsParts = async (
+  transaction: Prisma.TransactionClient,
+  parts: BaseEmpreinteEmissionFactor[],
+) => {
+  const emissionFactors = await transaction.emissionFactor.findMany({
     where: {
       importedId: {
         in: parts.map((part) => part["Identifiant_de_l'élément"]),
@@ -265,7 +286,6 @@ export const saveEmissionFactorsParts = async (parts: BaseEmpreinteEmissionFacto
       (emissionFactor) => emissionFactor.importedId === part["Identifiant_de_l'élément"],
     )
     if (!emissionFactor) {
-      console.error('No emission factor found for ' + part["Identifiant_de_l'élément"])
       throw new Error('No emission factor found for ' + part["Identifiant_de_l'élément"])
     }
 
@@ -321,6 +341,6 @@ export const saveEmissionFactorsParts = async (parts: BaseEmpreinteEmissionFacto
         data.sf6 = part.Valeur_gaz_supplémentaire_2
       }
     }
-    await prismaClient.emissionFactorPart.create({ data })
+    await transaction.emissionFactorPart.create({ data })
   }
 }

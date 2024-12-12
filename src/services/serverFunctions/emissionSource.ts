@@ -17,7 +17,7 @@ import {
 } from '../permissions/emissionSource'
 import { CreateEmissionSourceCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
 
-export const createEmissionSource = async ({ studyId, ...command }: CreateEmissionSourceCommand) => {
+export const createEmissionSource = async ({ studyId, siteId, ...command }: CreateEmissionSourceCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
@@ -28,12 +28,13 @@ export const createEmissionSource = async ({ studyId, ...command }: CreateEmissi
     return NOT_AUTHORIZED
   }
 
-  if (!(await canCreateEmissionSource(user, { studyId, ...command }))) {
+  if (!(await canCreateEmissionSource(user, { studyId, siteId, ...command }))) {
     return NOT_AUTHORIZED
   }
 
   await createEmissionSourceOnStudy({
     ...command,
+    site: { connect: { id: siteId } },
     study: { connect: { id: studyId } },
   })
 }

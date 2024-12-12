@@ -29,26 +29,11 @@ const StudyRightsPage = async ({ study, user }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ]}
       />
-      <Block
-        title={t('title', { name: study.name })}
-        as="h1"
-        actions={
-          user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
-            ? [
-                {
-                  actionType: 'link',
-                  href: `/etudes/${study.id}/cadrage/ajouter`,
-                  'data-testid': 'study-rights-change-button',
-                  children: t('newRightLink'),
-                },
-              ]
-            : undefined
-        }
-      >
+      <Block title={t('title', { name: study.name })} as="h1">
         <StudyLevel study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
         <StudyPublicStatus study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
-        <StudyRightsTable study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
       </Block>
+      <StudyRightsTable study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
       <Block
         title={t('contributors')}
         actions={

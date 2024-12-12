@@ -3,8 +3,9 @@ model Organization {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
-  name String
-  isCR Boolean @map("is_cr")
+  name  String
+  siret String?
+  isCR  Boolean @map("is_cr")
 
   users     User[]
   sites     Site[]
@@ -29,6 +30,7 @@ model Site {
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
+  studies        StudySite[]
 
   @@map("sites")
 }

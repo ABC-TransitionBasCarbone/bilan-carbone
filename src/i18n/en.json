@@ -1,6 +1,7 @@
 {
   "exports": {
-    "consolidated": "Consolidated",
+    "title": "Exports:",
+    "consolidated": "Carbon Assessment®",
     "Beges": "Regulatory GHG Assesment",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069"
@@ -181,9 +182,17 @@
       "new": "Add an emission source..."
     },
     "organization": {
-      "title": "Which organization is involved in the study?",
-      "sites": "The organization’s sites",
-      "next": "Next"
+      "site": "Site",
+      "allSites": "All sites",
+      "noSites": "There are no sites configured for the organization",
+      "addSite": "Create a site",
+      "title": "Which organization is concerned by the study?",
+      "sites": "The organization's sites",
+      "next": "Next",
+      "select": "Organization",
+      "validation": {
+        "sites": "Please select at least one site concerned by the study"
+      }
     },
     "role": {
       "Validator": "Validator",
@@ -196,7 +205,6 @@
       "isPublic": "The study is public",
       "isPrivate": "The study is private",
       "title": "Rights on study : {name}",
-      "newRightLink": "Add a person on study",
       "newContributorLink": "Add a contributor",
       "new": {
         "title": "Add a person to the study: {name}",
@@ -234,7 +242,9 @@
       },
       "table": {
         "email": "Email",
-        "role": "Rights"
+        "role": "Rights",
+        "title": "Team management",
+        "newRightLink": "Add a person on study"
       }
     },
     "perimeter": {
@@ -271,11 +281,12 @@
     }
   },
   "emissionFactors": {
+    "add": "Add an emission factor",
     "post": {
       "allPost": "All posts",
       "allSubPost": "All sub posts",
       "Energies": "Energies",
-      "AutresEmissionsNonEnergetiques": "Other non-energy emissions",
+      "AutresEmissionsNonEnergetiques": "Other direct emissions",
       "IntrantsBienEtMatieres": "Goods and materials inputs",
       "IntrantsServices": "Service inputs",
       "DechetsDirects": "Direct waste",
@@ -370,10 +381,9 @@
     "title": "Emission factors",
     "loading": "Loading emission factors",
     "table": {
-      "add": "Add an emission factor",
       "all": "All",
-      "Archived": "Archived",
       "BaseEmpreinte": "Footprint Base",
+      "displayArchived": "Display archived factors",
       "goTo": "Go to page",
       "items": "Items per page",
       "location": "Location",
@@ -381,6 +391,7 @@
       "Manual": "Manual",
       "name": "Name",
       "none": "None",
+      "no": "No",
       "per": "per",
       "page": "Page {page} of {total}",
       "quality": "Quality",
@@ -390,7 +401,6 @@
       "sources": "Sources",
       "status": "Status",
       "value": "Value",
-      "Valid": "Valid",
       "importedFrom": {
         "baseEmpreinte": "Base Empreinte logo",
         "manual": "Manual"
@@ -411,7 +421,8 @@
       "technicalRepresentativeness": "Technical representativeness:",
       "geographicRepresentativeness": "Geographic representativeness:",
       "temporalRepresentativeness": "Temporal representativeness:",
-      "completeness": "Completeness:"
+      "completeness": "Completeness:",
+      "yes": "Yes"
     }
   },
   "level": {
@@ -608,12 +619,12 @@
     "form": {
       "create": "Create organization",
       "editTitle": "Edit my organization",
-      "edit": "Edit",
+      "edit": "Validate modification",
       "name": "Organization name",
       "title": "Information about the new organization"
     },
     "sites": {
-      "title": "The organization's sites",
+      "title": "The organization's sites concerned by this study",
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "etp": "Employees",

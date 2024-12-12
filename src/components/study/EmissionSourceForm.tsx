@@ -1,5 +1,4 @@
 'use client'
-
 import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -166,9 +165,11 @@ const EmissionSourceForm = ({
           label={t('form.comment')}
         />
       </div>
-      <div className={classNames(styles.delete, 'mt1', 'w100', 'flex')}>
-        <DeleteEmissionSource emissionSource={emissionSource} />
-      </div>
+      {canEdit && (
+        <div className={classNames(styles.delete, 'mt1', 'w100', 'flex')}>
+          <DeleteEmissionSource emissionSource={emissionSource} />
+        </div>
+      )}
     </>
   )
 }

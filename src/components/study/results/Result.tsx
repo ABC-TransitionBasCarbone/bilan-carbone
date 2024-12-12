@@ -1,6 +1,5 @@
 'use client'
 
-import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
@@ -15,11 +14,23 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 interface Props {
   study: FullStudy
   by: 'Post' | 'SubPost'
+  site: string
 }
 
-const sort = (arr: string[]) => arr.sort((a, b) => a.length - b.length)
+const postXAxisList = [
+  Post.Energies,
+  Post.DechetsDirects,
+  Post.IntrantsBienEtMatieres,
+  Post.IntrantsServices,
+  Post.AutresEmissionsNonEnergetiques,
+  Post.Fret,
+  Post.Deplacements,
+  Post.Immobilisations,
+  Post.UtilisationEtDependance,
+  Post.FinDeVie,
+]
 
-const Result = ({ study, by }: Props) => {
+const Result = ({ study, by, site }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
@@ -31,10 +42,10 @@ const Result = ({ study, by }: Props) => {
 
   const selectorOptions = Object.values(Post)
 
-  const xAxis = useMemo(() => sort(by === 'Post' ? Object.values(Post) : subPostsByPost[post]), [post, by])
+  const xAxis = useMemo(() => (by === 'Post' ? postXAxisList : subPostsByPost[post]), [post, by])
 
   const yData = useMemo(() => {
-    const computedResults = computeResultsByPost(study, tPost)
+    const computedResults = computeResultsByPost(study, tPost, site)
     if (by === 'Post') {
       if (computedResults.every((post) => post.value === 0)) {
         return []
@@ -49,7 +60,7 @@ const Result = ({ study, by }: Props) => {
       }
       return xAxis.map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
     }
-  }, [post, by])
+  }, [post, by, site])
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -99,8 +110,8 @@ const Result = ({ study, by }: Props) => {
   }
 
   return (
-    <Box className="grow flex-col">
-      <h4 className="mb1">{t(`by${by}`)}</h4>
+    <>
+      <h3 className="mb1">{t(`by${by}`)}</h3>
       {by === 'SubPost' && (
         <div className="flex mb1">
           <Select className="mr-2 grow" value={post} onChange={(e) => setPost(e.target.value as Post)}>
@@ -118,7 +129,7 @@ const Result = ({ study, by }: Props) => {
       <div style={{ height: dynamicHeight }}>
         <canvas data-testid={`study-${by}-chart`} ref={canvasRef} />
       </div>
-    </Box>
+    </>
   )
 }
 

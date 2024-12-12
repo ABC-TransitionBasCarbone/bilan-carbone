@@ -1,6 +1,7 @@
 {
   "exports": {
-    "consolidated": "Consolidés",
+    "title": "Exports :",
+    "consolidated": "Bilan Carbone®",
     "Beges": "Bilan GES Reglementaire",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069"
@@ -179,9 +180,17 @@
       "new": "Ajouter une source d'émission..."
     },
     "organization": {
+      "site": "Site",
+      "allSites": "Tous les sites",
+      "noSites": "Il n'y a pas de sites configurés sur l'organisation",
+      "addSite": "Creer un site",
       "title": "Quelle organisation est concernée par l'étude ?",
       "sites": "Les sites de l'organisation",
-      "next": "Suivant"
+      "next": "Suivant",
+      "select": "Organisation",
+      "validation": {
+        "sites": "Veuillez selectionner au moins un site concerné par l'étude"
+      }
     },
     "role": {
       "Validator": "Validateur",
@@ -194,7 +203,6 @@
       "isPublic": "L'étude est public",
       "isPrivate": "L'étude est privée",
       "title": "Cadrage de l'étude : {name}",
-      "newRightLink": "Ajouter une personne à l'étude",
       "newContributorLink": "Ajouter un contributeur",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
@@ -232,7 +240,9 @@
       },
       "table": {
         "email": "Email",
-        "role": "Droits"
+        "role": "Droits",
+        "title": "Gestion de l'équipe",
+        "newRightLink": "Ajouter une personne à l'étude"
       }
     },
     "perimeter": {
@@ -269,11 +279,12 @@
     }
   },
   "emissionFactors": {
+    "add": "Ajouter un facteur d'émissions",
     "post": {
       "allPost": "Tout les postes",
       "allSubPost": "Tout les sous postes",
       "Energies": "Énergies",
-      "AutresEmissionsNonEnergetiques": "Autres émissions non énergétiques",
+      "AutresEmissionsNonEnergetiques": "Autres émissions directes",
       "IntrantsBienEtMatieres": "Intrants bien et matières",
       "IntrantsServices": "Intrants services",
       "DechetsDirects": "Déchets directs",
@@ -368,10 +379,9 @@
     "title": "Facteurs d'émissions",
     "loading": "Chargement des facteurs d'émissions",
     "table": {
-      "add": "Ajouter un facteur d'émission",
       "all": "Toutes",
-      "Archived": "Archivé",
       "BaseEmpreinte": "Base Empreinte",
+      "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
       "items": "Élements par page",
       "location": "Localisation",
@@ -379,6 +389,7 @@
       "Manual": "Manuelle",
       "name": "Nom",
       "none": "Aucune",
+      "no": "Non",
       "per": "par",
       "page": "Page {page} sur {total}",
       "quality": "Qualité",
@@ -388,7 +399,7 @@
       "sources": "Sources",
       "status": "Statut",
       "value": "Valeur",
-      "Valid": "Valide",
+      "yes": "Oui",
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
         "manual": "Manuel"
@@ -606,12 +617,12 @@
     "form": {
       "create": "Créer l'organisation",
       "editTitle": "Modifier mon organisation",
-      "edit": "Modifier",
+      "edit": "Valider la modification",
       "name": "Nom de l'organisation",
       "title": "Informations sur la nouvelle organisation"
     },
     "sites": {
-      "title": "Les sites de l'organisation",
+      "title": "Les sites de l'organisation concernés par l'étude",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "etp": "Employés",

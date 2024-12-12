@@ -5,7 +5,7 @@ import { canReadStudy } from './study'
 
 export const canCreateEmissionSource = async (
   user: User,
-  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost'> & { emissionFactorId?: string | null },
+  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'siteId'> & { emissionFactorId?: string | null },
   study?: FullStudy,
 ) => {
   const dbStudy = study || (await getStudyById(emissionSource.studyId))
@@ -14,6 +14,10 @@ export const canCreateEmissionSource = async (
   }
 
   if (!(await canReadStudy(user, dbStudy))) {
+    return false
+  }
+
+  if (!dbStudy.sites.find((site) => site.id === emissionSource.siteId)) {
     return false
   }
 

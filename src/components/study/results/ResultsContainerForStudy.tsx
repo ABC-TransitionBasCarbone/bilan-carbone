@@ -1,22 +1,29 @@
-'use server'
-
+import Box from '@/components/base/Box'
 import { FullStudy } from '@/db/study'
-import classNames from 'classnames'
 import Result from './Result'
 import styles from './ResultsContainer.module.css'
 
 interface Props {
   study: FullStudy
+  site: string
 }
 
-const ResultsContainerForStudy = async ({ study }: Props) => {
+const ResultsContainerForStudy = ({ study, site }: Props) => {
   return (
-    <div className="pb1">
-      <div className={classNames(styles.container, 'wrap')}>
-        <Result study={study} by="Post" />
-        <Result study={study} by="SubPost" />
+    <Box>
+      <h2 className={styles.studyName}>{study.name}</h2>
+      <div className={styles.container}>
+        <div className={styles.graph}>
+          <Result study={study} by="Post" site={site} />
+        </div>
+        <div className={styles.separatorContainer}>
+          <div className={styles.separator} />
+        </div>
+        <div className={styles.graph}>
+          <Result study={study} by="SubPost" site={site} />
+        </div>
       </div>
-    </div>
+    </Box>
   )
 }
 

@@ -1,5 +1,4 @@
 'use client'
-
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
@@ -8,51 +7,30 @@ import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormRadio } from '@/components/form/Radio'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { OrganizationWithSites } from '@/db/user'
 import { createStudyCommand } from '@/services/serverFunctions/study'
-import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
+import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, MenuItem, Radio } from '@mui/material'
 import { Export } from '@prisma/client'
-import dayjs from 'dayjs'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, UseFormReturn } from 'react-hook-form'
 import ExportCheckbox from './ExportCheckbox'
 import styles from './Form.module.css'
 
 interface Props {
   user: User
   usersEmail: string[]
-  organization: OrganizationWithSites
+  form: UseFormReturn<CreateStudyCommand>
 }
 
-const NewStudyForm = ({ organization, user, usersEmail }: Props) => {
+const NewStudyForm = ({ user, usersEmail, form }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.new')
   const tLevel = useTranslations('level')
   const [error, setError] = useState('')
-
-  const form = useForm<CreateStudyCommand>({
-    resolver: zodResolver(CreateStudyCommandValidation),
-    mode: 'onBlur',
-    reValidateMode: 'onChange',
-    defaultValues: {
-      name: '',
-      validator: '',
-      organizationId: organization.id,
-      isPublic: 'true',
-      startDate: dayjs().toISOString(),
-      exports: {
-        [Export.Beges]: false,
-        [Export.GHGP]: false,
-        [Export.ISO14069]: false,
-      },
-    },
-  })
 
   const onSubmit = async (command: CreateStudyCommand) => {
     const result = await createStudyCommand(command)

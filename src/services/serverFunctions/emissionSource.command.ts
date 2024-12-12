@@ -5,6 +5,7 @@ export const CreateEmissionSourceCommandValidation = z.object({
   name: z.string().trim().min(1, 'name'),
   subPost: z.nativeEnum(SubPost),
   studyId: z.string(),
+  siteId: z.string(),
   caracterisation: z.nativeEnum(EmissionSourceCaracterisation).optional(),
 })
 

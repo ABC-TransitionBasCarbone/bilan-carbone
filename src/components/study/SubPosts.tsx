@@ -5,6 +5,7 @@ import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { getEmissionsFactor } from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorStatus } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useEffect, useMemo, useState } from 'react'
@@ -32,7 +33,9 @@ const SubPosts = ({ post, study, user, withoutDetail }: Props & (StudyProps | St
   useEffect(() => {
     const fetchData = async () => {
       const emissionFactors = await getEmissionsFactor()
-      setEmissionFactors(emissionFactors)
+      setEmissionFactors(
+        emissionFactors.filter((emissionFactor) => emissionFactor.status !== EmissionFactorStatus.Archived),
+      )
     }
     fetchData()
   }, [])

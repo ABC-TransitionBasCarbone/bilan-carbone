@@ -34,6 +34,18 @@ export const CreateStudyCommandValidation = z
       [Export.GHGP]: z.nativeEnum(ControlMode).or(z.literal(false)),
       [Export.ISO14069]: z.nativeEnum(ControlMode).or(z.literal(false)),
     }),
+    sites: z
+      .array(
+        z.object({
+          id: z.string(),
+          selected: z.boolean(),
+          etp: z.number().optional(),
+          ca: z.number().optional(),
+        }),
+      )
+      .refine((sites) => {
+        return sites.some((site) => site.selected)
+      }, 'sites'),
   })
   .refine(
     (data) => {

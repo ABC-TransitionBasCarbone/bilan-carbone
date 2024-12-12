@@ -2,27 +2,19 @@
 
 import { getMainStudy } from '@/db/study'
 import { canReadStudy } from '@/services/permissions/study'
-import classNames from 'classnames'
 import { User } from 'next-auth'
-import Result from './Result'
-import styles from './ResultsContainer.module.css'
+import ResultsContainerForStudy from './ResultsContainerForStudy'
 
 interface Props {
   user: User
+  mainStudyOrganizationId: string
 }
 
-const ResultsContainerForUser = async ({ user }: Props) => {
-  const study = await getMainStudy(user)
+const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props) => {
+  const study = await getMainStudy(mainStudyOrganizationId)
   const showResults = study && (await canReadStudy(user, study))
 
-  return showResults ? (
-    <div className="pb1">
-      <div className={classNames(styles.container, 'wrap')}>
-        <Result study={study} by="Post" />
-        <Result study={study} by="SubPost" />
-      </div>
-    </div>
-  ) : null
+  return showResults ? <ResultsContainerForStudy study={study} site="all" /> : null
 }
 
 export default ResultsContainerForUser
