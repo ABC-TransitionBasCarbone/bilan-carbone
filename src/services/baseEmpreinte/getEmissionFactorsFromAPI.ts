@@ -9,8 +9,6 @@ import {
   saveEmissionFactorsParts,
 } from './import'
 
-const source = Import.BaseEmpreinte
-
 type EmissionFactorResponse = {
   total: number
   next?: string
