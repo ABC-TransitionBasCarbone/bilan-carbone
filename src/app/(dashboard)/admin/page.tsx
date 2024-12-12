@@ -8,7 +8,7 @@ const Admin = async () => {
   if (session && canAccessAdmin(session.user)) {
     return (
       <Block>
-        <AdminPage user={session.user} />
+        <AdminPage />
       </Block>
     )
   }
