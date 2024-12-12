@@ -611,7 +611,7 @@
     "form": {
       "create": "Créer l'organisation",
       "editTitle": "Modifier mon organisation",
-      "edit": "Modifier",
+      "edit": "Valider la modification",
       "name": "Nom de l'organisation",
       "title": "Informations sur la nouvelle organisation"
     },

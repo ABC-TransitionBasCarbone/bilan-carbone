@@ -16,14 +16,18 @@ const OrganizationInfo = ({ organization, user }: Props) => {
     <Block
       as="h1"
       title={t('myOrganization')}
-      actions={[
-        {
-          actionType: 'link',
-          href: user.role === Role.ADMIN ? `/organisations/${organization.id}/modifier` : '',
-          'data-testid': 'edit-organization-button',
-          children: t('modify'),
-        },
-      ]}
+      actions={
+        user.role === Role.ADMIN
+          ? [
+              {
+                actionType: 'link',
+                href: `/organisations/${organization.id}/modifier`,
+                'data-testid': 'edit-organization-button',
+                children: t('modify'),
+              },
+            ]
+          : undefined
+      }
     >
       <p data-testid="organization-name">
         <span className={styles.info}>{t('name')}</span> {organization.name}
