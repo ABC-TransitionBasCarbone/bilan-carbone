@@ -139,7 +139,12 @@ export const computeBegesResult = (
       ? study.emissionSources
       : study.emissionSources.filter((emissionSource) => emissionSource.site.id === site)
   emissionSources.forEach((emissionSource) => {
-    if (emissionSource.emissionFactor === null || !emissionSource.value || emissionSource.caracterisation === null) {
+    if (
+      emissionSource.emissionFactor === null ||
+      !emissionSource.value ||
+      emissionSource.caracterisation === null ||
+      !emissionSource.validated
+    ) {
       return
     }
 

@@ -1,6 +1,7 @@
 .container {
   display: flex;
   gap: 1rem;
+
   @media screen and (max-width: 60rem) {
     flex-direction: column-reverse;
   }

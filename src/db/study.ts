@@ -90,20 +90,12 @@ const fullStudyInclude = {
   exports: { select: { type: true } },
 } satisfies Prisma.StudyInclude
 
-export const getMainStudy = async (user: User) => {
-  const userOrganizations = await getUserOrganizations(user.email)
-  return prismaClient.study.findFirst({
-    where: {
-      OR: [
-        { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
-        { allowedUsers: { some: { userId: user.id } } },
-        { contributors: { some: { userId: user.id } } },
-      ],
-    },
+export const getMainStudy = async (organizationId: string) =>
+  prismaClient.study.findFirst({
+    where: { organizationId },
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
-}
 
 export const getStudiesByUser = async (user: User) => {
   const userOrganizations = await getUserOrganizations(user.email)
