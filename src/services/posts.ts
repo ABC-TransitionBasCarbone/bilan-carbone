@@ -2,10 +2,10 @@ import { SubPost } from '@prisma/client'
 
 export enum Post {
   Energies = 'Energies',
-  DechetsDirects = 'DechetsDirects',
+  AutresEmissionsNonEnergetiques = 'AutresEmissionsNonEnergetiques',
   IntrantsBienEtMatieres = 'IntrantsBienEtMatieres',
   IntrantsServices = 'IntrantsServices',
-  AutresEmissionsNonEnergetiques = 'AutresEmissionsNonEnergetiques',
+  DechetsDirects = 'DechetsDirects',
   Fret = 'Fret',
   Deplacements = 'Deplacements',
   Immobilisations = 'Immobilisations',
@@ -21,14 +21,12 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
     SubPost.ReseauxDeFroid,
     SubPost.Electricite,
   ],
-  [Post.DechetsDirects]: [
-    SubPost.DechetsDEmballagesEtPlastiques,
-    SubPost.DechetsOrganiques,
-    SubPost.DechetsOrduresMenageres,
-    SubPost.DechetsDangereux,
-    SubPost.DechetsBatiments,
-    SubPost.DechetsFuitesOuEmissionsNonEnergetiques,
-    SubPost.EauxUsees,
+  [Post.AutresEmissionsNonEnergetiques]: [
+    SubPost.Agriculture,
+    SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
+    SubPost.EmissionsLieesALaProductionDeFroid,
+    SubPost.EmissionsLieesAuxProcedesIndustriels,
+    SubPost.AutresEmissionsNonEnergetiques,
   ],
   [Post.IntrantsBienEtMatieres]: [
     SubPost.MetauxPlastiquesEtVerre,
@@ -41,12 +39,14 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
     SubPost.BiensEtMatieresEnApprocheMonetaire,
   ],
   [Post.IntrantsServices]: [SubPost.AchatsDeServices, SubPost.UsagesNumeriques, SubPost.ServicesEnApprocheMonetaire],
-  [Post.AutresEmissionsNonEnergetiques]: [
-    SubPost.Agriculture,
-    SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
-    SubPost.EmissionsLieesALaProductionDeFroid,
-    SubPost.EmissionsLieesAuxProcedesIndustriels,
-    SubPost.AutresEmissionsNonEnergetiques,
+  [Post.DechetsDirects]: [
+    SubPost.DechetsDEmballagesEtPlastiques,
+    SubPost.DechetsOrganiques,
+    SubPost.DechetsOrduresMenageres,
+    SubPost.DechetsDangereux,
+    SubPost.DechetsBatiments,
+    SubPost.DechetsFuitesOuEmissionsNonEnergetiques,
+    SubPost.EauxUsees,
   ],
   [Post.Fret]: [SubPost.FretEntrant, SubPost.FretInterne, SubPost.FretSortant],
   [Post.Deplacements]: [

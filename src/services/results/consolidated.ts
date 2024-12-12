@@ -22,15 +22,15 @@ export const computeResultsByPost = (study: FullStudy, tPost: (key: string) => s
     .map((post) => {
       const subPosts = subPostsByPost[post]
         .map((subPost) => {
-          const emissionSources = siteEmissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
+          const emissionSources = siteEmissionSources.filter(
+            (emissionSource) => emissionSource.subPost === subPost && emissionSource.validated,
+          )
           return {
             post: subPost,
             value: emissionSources.reduce(
               (acc, emission) =>
                 acc +
-                (!emission.value || !emission.emissionFactor || !emission.validated
-                  ? 0
-                  : emission.value * emission.emissionFactor.totalCo2),
+                (!emission.value || !emission.emissionFactor ? 0 : emission.value * emission.emissionFactor.totalCo2),
               0,
             ),
             numberOfEmissionSource: emissionSources.length,

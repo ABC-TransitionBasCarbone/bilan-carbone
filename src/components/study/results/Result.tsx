@@ -17,6 +17,19 @@ interface Props {
   site: string
 }
 
+const postXAxisList = [
+  Post.Energies,
+  Post.DechetsDirects,
+  Post.IntrantsBienEtMatieres,
+  Post.IntrantsServices,
+  Post.AutresEmissionsNonEnergetiques,
+  Post.Fret,
+  Post.Deplacements,
+  Post.Immobilisations,
+  Post.UtilisationEtDependance,
+  Post.FinDeVie,
+]
+
 const Result = ({ study, by, site }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
@@ -29,7 +42,7 @@ const Result = ({ study, by, site }: Props) => {
 
   const selectorOptions = Object.values(Post)
 
-  const xAxis = useMemo(() => (by === 'Post' ? Object.values(Post) : subPostsByPost[post]), [post, by])
+  const xAxis = useMemo(() => (by === 'Post' ? postXAxisList : subPostsByPost[post]), [post, by])
 
   const yData = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, site)
@@ -97,7 +110,7 @@ const Result = ({ study, by, site }: Props) => {
   }
 
   return (
-    <div className="">
+    <>
       <h3 className="mb1">{t(`by${by}`)}</h3>
       {by === 'SubPost' && (
         <div className="flex mb1">
@@ -116,7 +129,7 @@ const Result = ({ study, by, site }: Props) => {
       <div style={{ height: dynamicHeight }}>
         <canvas data-testid={`study-${by}-chart`} ref={canvasRef} />
       </div>
-    </div>
+    </>
   )
 }
 

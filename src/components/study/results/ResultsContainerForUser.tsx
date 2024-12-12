@@ -7,11 +7,11 @@ import ResultsContainerForStudy from './ResultsContainerForStudy'
 
 interface Props {
   user: User
-  mainStudyOrganizationId: string | null
+  mainStudyOrganizationId: string
 }
 
 const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props) => {
-  const study = await getMainStudy(user, mainStudyOrganizationId)
+  const study = await getMainStudy(mainStudyOrganizationId)
   const showResults = study && (await canReadStudy(user, study))
 
   return showResults ? <ResultsContainerForStudy study={study} site="all" /> : null

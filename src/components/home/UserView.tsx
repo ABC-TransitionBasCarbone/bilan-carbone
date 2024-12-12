@@ -18,11 +18,13 @@ const UserView = async ({ user }: Props) => {
 
   return (
     <>
-      <Suspense>
-        <Block>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
-        </Block>
-      </Suspense>
+      {user.organizationId && (
+        <Suspense>
+          <Block>
+            <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
+          </Block>
+        </Suspense>
+      )}
       <Block>
         <div className={styles.container}>
           <Actualities />
