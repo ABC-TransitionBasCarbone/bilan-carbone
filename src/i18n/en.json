@@ -613,7 +613,7 @@
     "form": {
       "create": "Create organization",
       "editTitle": "Edit my organization",
-      "edit": "Edit",
+      "edit": "Validate modification",
       "name": "Organization name",
       "title": "Information about the new organization"
     },
