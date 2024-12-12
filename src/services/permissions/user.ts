@@ -83,4 +83,3 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
 export const canAccessAdmin = (user: User | undefined) => {
   return user && user.role === Role.SUPER_ADMIN
 }
-

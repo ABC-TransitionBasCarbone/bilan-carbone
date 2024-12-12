@@ -1,10 +1,10 @@
 'use client'
 
+import { Alert, Button } from '@mui/material'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import Block from '../base/Block'
 import { ChangeEvent, useRef, useState } from 'react'
-import { Alert, Button } from '@mui/material'
+import Block from '../base/Block'
 
 interface Props {
   user: User
@@ -31,24 +31,19 @@ const AdminPage = ({ user }: Props) => {
         const rows = text.split('\n')
       }
       // "cp1252" is the encoding for Windows-1252 CSV files to match with UTF-8 javascript encoding
-      reader.readAsText(file, "cp1252")
+      reader.readAsText(file, 'cp1252')
     }
   }
-
 
   return (
     <>
       <Block title={t('title')} as="h1">
-        {error && <Alert className="mb1" severity="error">
-          {t(error)}
-        </Alert>}
-        <input
-          type="file"
-          accept=".csv"
-          ref={fileInputRef}
-          onChange={handleFileUpload}
-          style={{ display: 'none' }}
-        />
+        {error && (
+          <Alert className="mb1" severity="error">
+            {t(error)}
+          </Alert>
+        )}
+        <input type="file" accept=".csv" ref={fileInputRef} onChange={handleFileUpload} style={{ display: 'none' }} />
         <Button onClick={() => fileInputRef.current?.click()} data-testid="upload-button" type="submit">
           {t('uploadButton')}
         </Button>
