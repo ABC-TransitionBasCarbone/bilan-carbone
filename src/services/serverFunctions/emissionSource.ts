@@ -39,28 +39,6 @@ export const createEmissionSource = async ({ studyId, siteId, ...command }: Crea
   })
 }
 
-export const createEmissionSourceFromVersion = async (command: CreateEmissionSourceCommand) => {
-  const session = await auth()
-  if (!session || !session.user) {
-    return NOT_AUTHORIZED
-  }
-
-  const user = await getUserByEmail(session.user.email)
-  if (!user) {
-    return NOT_AUTHORIZED
-  }
-
-  if (!(await canCreateEmissionSource(user, { studyId: command.studyId, subPost: command.subPost }))) {
-    return NOT_AUTHORIZED
-  }
-
-  await createEmissionSourceOnStudy({
-    name: command.name,
-    subPost: command.subPost,
-    study: { connect: { id: command.studyId } },
-  })
-}
-
 export const updateEmissionSource = async ({
   emissionSourceId,
   emissionFactorId,
