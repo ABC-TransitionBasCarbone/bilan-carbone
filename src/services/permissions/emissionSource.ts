@@ -8,7 +8,7 @@ export const canCreateEmissionSource = async (
   emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'siteId'> & { emissionFactorId?: string | null },
   study?: FullStudy,
 ) => {
-  const dbStudy = study || (await getStudyById(emissionSource.studyId))
+  const dbStudy = study || (await getStudyById(emissionSource.studyId, user.organizationId))
   if (!dbStudy) {
     return false
   }

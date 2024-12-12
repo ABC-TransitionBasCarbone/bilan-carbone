@@ -212,8 +212,8 @@
         },
         "dialog": {
           "title": "Are you sure you want to add this person to your study?",
-          "otherOrganization": "They are a BC+ user within another organization than yours.",
-          "nonExisting": "They are not a BC+ user, so you will only be able to give them access to the study with read or contribution rights. An email will be sent to them to give access to the study.",
+          "otherOrganization": "They are not within your organization.",
+          "rightsWarning": "If they do not match the necessary conditions for this role, you will only be able to give them access to this study only with READ or contribution rights. An email will be sent to them to give access to the study.",
           "accept": "Yes",
           "decline": "No"
         }

@@ -20,7 +20,7 @@ const StudyPerimeter = async (props: Props) => {
     return <NotFound />
   }
 
-  const study = await getStudyById(id)
+  const study = await getStudyById(id, session.user.organizationId)
 
   if (!study) {
     return <NotFound />

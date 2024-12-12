@@ -14,19 +14,13 @@ const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<
   return quality === null ? t('unknown') : t(quality.toString())
 }
 
-export enum NewStudyRightStatus {
-  SameOrganization,
-  OtherOrganization,
-  NonExisting,
-}
-
 export const getAllowedLevels = (level: Level | null) => {
   switch (level) {
-    case Level.Advanced:
+    case Level.Initial:
       return [Level.Initial]
     case Level.Standard:
       return [Level.Initial, Level.Standard]
-    case Level.Initial:
+    case Level.Advanced:
       return [Level.Initial, Level.Standard, Level.Advanced]
     default:
       return []

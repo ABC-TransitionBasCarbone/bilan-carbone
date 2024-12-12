@@ -171,6 +171,20 @@ const users = async () => {
       },
     ],
   })
+  await prisma.user.createManyAndReturn({
+    data: [
+      {
+        email: 'untrained@yopmail.com',
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        password: await signPassword('password'),
+        level: Level.Initial,
+        organizationId: regularOrganizations[1].id,
+        role: Role.DEFAULT,
+        isActive: true,
+      },
+    ],
+  })
 
   const emissionFactorsImportVersion = await prisma.emissionFactorImportVersion.create({
     data: { source: Import.BaseEmpreinte, name: '1', internId: 'Base_Carbone_V1.csv' },
