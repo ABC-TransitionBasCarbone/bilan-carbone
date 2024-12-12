@@ -1,15 +1,21 @@
 'use server'
 
+import { FullStudy } from '@/db/study'
 import { addUser, changeUserRole, deleteUser, getUserByEmail, updateUserResetTokenForEmail } from '@/db/user'
-import { Role } from '@prisma/client'
+import { User as DBUser, Organization, Role } from '@prisma/client'
 import jwt from 'jsonwebtoken'
+import { User } from 'next-auth'
 import { auth } from '../auth'
-import { sendNewInvitation } from '../email/email'
+import {
+  sendContributorInvitationEmail,
+  sendNewContributorInvitationEmail,
+  sendNewInvitationEmail,
+} from '../email/email'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 import { AddMemberCommand } from './user.command'
 
-export const sendInvitation = async (email: string) => {
+const updateUserResetToken = async (email: string) => {
   const resetToken = Math.random().toString(36)
   const payload = {
     email,
@@ -17,9 +23,47 @@ export const sendInvitation = async (email: string) => {
     exp: Math.round(Date.now() / 1000) + 60 * 60 * 24 * 7, // 7 days expiration
   }
 
-  const token = jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
   await updateUserResetTokenForEmail(email, resetToken)
-  return sendNewInvitation(email, token)
+  return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
+}
+
+export const sendNewInvitation = async (email: string) => {
+  const token = await updateUserResetToken(email)
+  return sendNewInvitationEmail(email, token)
+}
+
+export const sendNewContributorInvitation = async (
+  email: string,
+  study: FullStudy,
+  organization: Organization,
+  user: User,
+) => {
+  const token = await updateUserResetToken(email)
+  return sendNewContributorInvitationEmail(
+    email,
+    token,
+    study.name,
+    study.id,
+    organization.name,
+    `${user.firstName} ${user.lastName}`,
+  )
+}
+
+export const sendContributorInvitation = async (
+  email: string,
+  study: FullStudy,
+  organization: Organization,
+  user: User,
+  newUser: DBUser,
+) => {
+  return sendContributorInvitationEmail(
+    email,
+    study.name,
+    study.id,
+    organization.name,
+    `${user.firstName} ${user.lastName}`,
+    newUser.firstName,
+  )
 }
 
 export const addMember = async (member: AddMemberCommand) => {
@@ -36,7 +80,7 @@ export const addMember = async (member: AddMemberCommand) => {
 
   //TODO: que fait on si l'utilisateur existe déjà ?
   await addUser(newMember)
-  await sendInvitation(member.email)
+  await sendNewInvitation(member.email)
 }
 
 export const resendInvitation = async (email: string) => {
@@ -50,7 +94,7 @@ export const resendInvitation = async (email: string) => {
     return NOT_AUTHORIZED
   }
 
-  await sendInvitation(member.email)
+  await sendNewInvitation(member.email)
 }
 
 export const deleteMember = async (email: string) => {

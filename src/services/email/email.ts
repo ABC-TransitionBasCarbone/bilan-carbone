@@ -31,7 +31,47 @@ export const sendResetPassword = async (toEmail: string, token: string) => {
   return send([toEmail], 'Mot de passe oublié', html)
 }
 
-export const sendNewInvitation = async (toEmail: string, token: string) => {
+export const sendNewInvitationEmail = async (toEmail: string, token: string) => {
   const html = await getHtml('new-invitation', { link: `${process.env.NEXTAUTH_URL}/reset-password/${token}` })
   return send([toEmail], 'Vous avez été invité au BC+', html)
+}
+
+export const sendContributorInvitationEmail = async (
+  toEmail: string,
+  studyName: string,
+  studyId: string,
+  organizationName: string,
+  creatorName: string,
+  userName: string,
+) => {
+  const html = await getHtml('contributor-invitation', {
+    link: process.env.NEXTAUTH_URL,
+    userName,
+    studyName,
+    studyId,
+    studyLink: `${process.env.NEXTAUTH_URL}/etudes/${studyId}`,
+    organizationName,
+    creatorName,
+  })
+  return send([toEmail], `Demande de contribution sur l'étude ${studyName}`, html)
+}
+
+export const sendNewContributorInvitationEmail = async (
+  toEmail: string,
+  token: string,
+  studyName: string,
+  studyId: string,
+  organizationName: string,
+  creatorName: string,
+) => {
+  const html = await getHtml('new-contributor-invitation', {
+    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+    studyName,
+    studyId,
+    studyLink: `${process.env.NEXTAUTH_URL}/etudes/${studyId}`,
+    organizationName,
+    creatorName,
+    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+  })
+  return send([toEmail], `Demande de contribution sur l'étude ${studyName}`, html)
 }
