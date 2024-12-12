@@ -10,14 +10,12 @@ const AdminPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   return (
-    <>
-      <Block title={t('title')} as="h1">
-        <input type="file" accept=".csv" ref={fileInputRef} style={{ display: 'none' }} />
-        <Button onClick={() => fileInputRef.current?.click()} data-testid="upload-button" type="submit">
-          {t('uploadButton')}
-        </Button>
-      </Block>
-    </>
+    <Block title={t('title')} as="h1">
+      <input type="file" accept=".csv" ref={fileInputRef} style={{ display: 'none' }} />
+      <Button onClick={() => fileInputRef.current?.click()} data-testid="upload-button" type="submit">
+        {t('uploadButton')}
+      </Button>
+    </Block>
   )
 }
 

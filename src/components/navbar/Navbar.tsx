@@ -1,22 +1,17 @@
-import { auth } from '@/services/auth'
-import { canAccessAdmin } from '@/services/permissions/user'
+import { Role } from '@prisma/client'
 import classNames from 'classnames'
-import { getTranslations } from 'next-intl/server'
+import { User } from 'next-auth'
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Navbar.module.css'
 
-const Navbar = async () => {
-  const t = await getTranslations('navigation')
+interface Props {
+  user: User
+}
 
-  const canAccessAdminLink = async () => {
-    'use server'
-    const session = await auth()
-    if (!session) {
-      return false
-    }
-    return canAccessAdmin(session.user)
-  }
+const Navbar = ({ user }: Props) => {
+  const t = useTranslations('navigation')
 
   return (
     <nav className={classNames(styles.navbar, 'w100')}>
@@ -37,7 +32,7 @@ const Navbar = async () => {
         </div>
 
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
-          {(await canAccessAdminLink()) && (
+          {user.role === Role.SUPER_ADMIN && (
             <Link className={styles.link} href="/admin">
               {t('admin')}
             </Link>
