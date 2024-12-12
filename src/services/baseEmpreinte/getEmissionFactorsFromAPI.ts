@@ -1,4 +1,3 @@
-import { Import } from '@prisma/client'
 import axios, { AxiosResponse } from 'axios'
 import { prismaClient } from '../../db/client'
 import {
