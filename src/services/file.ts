@@ -4,10 +4,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { auth } from './auth'
 import { NOT_AUTHORIZED } from './permissions/check'
 
-const accessKey = process.env.NEXT_SCW_ACCESS_KEY
-const secretKey = process.env.NEXT_SCW_SECRET_KEY
-const bucketName = process.env.NEXT_SCW_BUCKET_NAME as string
-const region = process.env.NEXT_SCW_REGION
+const accessKey = process.env.SCW_ACCESS_KEY
+const secretKey = process.env.SCW_SECRET_KEY
+const bucketName = process.env.SCW_BUCKET_NAME as string
+const region = process.env.SCW_REGION
 
 const enpoint = `https://${bucketName}.s3.${region}.scw.cloud`
 
