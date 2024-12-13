@@ -251,7 +251,9 @@
     },
     "perimeter": {
       "title": "Périmètre de l'étude : {name}",
-      "dates": "Du {startDate} au {endDate}"
+      "dates": "Du {startDate} au {endDate}",
+      "addFlow": "Ajouter un flux",
+      "flows": "Cartographie des fluxs"
     },
     "results": {
       "type": "Type",
