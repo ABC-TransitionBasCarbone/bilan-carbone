@@ -1,0 +1,19 @@
+model Document {
+  id   String @id @default(uuid())
+  name String
+  type String
+
+  bucketETag String @map("bucket__etag")
+  bucketKey  String @map("bucket_key")
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  uploaderId String @map("uploader_id")
+  uploader   User   @relation(fields: [uploaderId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("documents")
+}
