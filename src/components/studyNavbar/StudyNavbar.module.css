@@ -35,6 +35,12 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
 }
 
+.opened {
+  @media screen and (max-width: 115rem) {
+    width: 14rem;
+  }
+}
+
 .button,
 .link {
   background-color: var(--neutral-00);
