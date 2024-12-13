@@ -1,8 +1,5 @@
-import { createDocument } from '@/db/document'
 import AWS from 'aws-sdk'
 import { v4 as uuidv4 } from 'uuid'
-import { auth } from './auth'
-import { NOT_AUTHORIZED } from './permissions/check'
 
 const accessKey = process.env.SCW_ACCESS_KEY
 const secretKey = process.env.SCW_SECRET_KEY
@@ -29,51 +26,29 @@ export const download = (fileContent: string[], filename: string, filetype: stri
   a.click()
 }
 
-export const uploadFileToBucket = async (file: File, studyId: string): Promise<string> => {
-  try {
-    const session = await auth()
-    const bucketFileKey = uuidv4()
+export const uploadFileToBucket = async (file: File): Promise<AWS.S3.ManagedUpload.SendData> => {
+  const bucketFileKey = uuidv4()
 
-    if (!session || !session.user) {
-      return NOT_AUTHORIZED
-    }
+  const fileContent = await file.arrayBuffer()
+  const buffer = Buffer.from(fileContent)
 
-    const fileContent = await file.arrayBuffer()
-    const buffer = Buffer.from(fileContent)
-
-    const params = {
-      Bucket: bucketName,
-      Key: bucketFileKey,
-      Body: buffer,
-      ContentType: file.type,
-    }
-
-    const result = await s3.upload(params).promise()
-    await createDocument({
-      name: file.name,
-      type: file.type,
-      uploader: { connect: { id: session.user.id } },
-      study: { connect: { id: studyId } },
-      bucketKey: bucketFileKey,
-      bucketETag: result.ETag,
-    })
-    return result.Location
-  } catch (error) {
-    console.error('Erreur lors de l’upload du fichier:', error)
-    throw new Error('Échec de l’upload')
-  }
-}
-
-export const getFileUrlFromBucket = async (fileName: string): Promise<string> => {
-  const params: AWS.S3.GetObjectRequest = {
+  const params = {
     Bucket: bucketName,
-    Key: fileName,
+    Key: bucketFileKey,
+    Body: buffer,
+    ContentType: file.type,
   }
 
-  try {
-    return s3.getSignedUrl('getObject', { ...params, Expires: 3600 })
-  } catch (error) {
-    console.error('Erreur lors de la récupération de l’URL du fichier :', error)
-    throw new Error('Impossible de récupérer le fichier')
-  }
+  return s3.upload(params).promise()
 }
+
+export const deleteFileFromBucket = async (fileKey: string) => {
+  const params = {
+    Bucket: bucketName,
+    Key: fileKey,
+  }
+  return s3.deleteObject(params).promise()
+}
+
+export const getFileUrlFromBucket = async (fileKey: string): Promise<string> =>
+  s3.getSignedUrl('getObject', { Bucket: bucketName, Key: fileKey, Expires: 3600 })

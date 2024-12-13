@@ -1,7 +1,9 @@
-import { FullStudy } from '@/db/study'
+import { getDocumentById } from '@/db/document'
+import { FullStudy, getStudyById } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { User as DbUser, Level, Prisma, Role, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
+import { auth } from '../auth'
 import { checkLevel } from '../study'
 import { checkOrganization } from './organization'
 
@@ -196,6 +198,37 @@ export const canReadStudyDetail = async (user: User, study: FullStudy) => {
 
   const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
   if (!userRightsOnStudy) {
+    return false
+  }
+
+  return true
+}
+
+export const canAddFlowToStudy = async (studyId: string) => {
+  const session = await auth()
+
+  if (!session || !session.user) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, session.user.organizationId)
+  if (!study || study.allowedUsers.some((right) => right.user.email === session.user.email)) {
+    return false
+  }
+
+  return session.user.id
+}
+
+export const canDeleteFlowFromStudy = async (documentId: string, studyId: string) => {
+  const session = await auth()
+
+  if (!session || !session.user) {
+    return false
+  }
+
+  const document = await getDocumentById(documentId)
+
+  if (!document || document?.studyId !== studyId) {
     return false
   }
 

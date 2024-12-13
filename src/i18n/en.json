@@ -255,7 +255,11 @@
       "title": "Permiter on study : {name}",
       "dates": "from {startDate} to {endDate}",
       "addFlow": "Add a flow",
-      "flows": "Flows mapping"
+      "flows": "Flows mapping",
+      "flowSelector": "Flux to display",
+      "newFlow": "Add a flow",
+      "noFlows": "No flow to display",
+      "removeFlow": "Remove flow"
     },
     "results": {
       "type": "Type",

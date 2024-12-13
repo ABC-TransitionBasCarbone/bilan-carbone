@@ -1,6 +1,7 @@
 'use server'
 
 import { prismaClient } from '@/db/client'
+import { createDocument, deleteDocument } from '@/db/document'
 import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
 import {
   createContributorOnStudy,
@@ -15,6 +16,7 @@ import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
 import {
   ControlMode,
   User as DBUser,
+  Document,
   Export,
   Import,
   Organization,
@@ -26,14 +28,17 @@ import {
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { auth } from '../auth'
+import { deleteFileFromBucket, uploadFileToBucket } from '../file'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
   canAddContributorOnStudy,
+  canAddFlowToStudy,
   canAddRightOnStudy,
   canChangeDates,
   canChangeLevel,
   canChangePublicStatus,
   canCreateStudy,
+  canDeleteFlowFromStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
 import { checkLevel } from '../study'
@@ -327,5 +332,31 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     await createContributorOnStudy(userId, subPostsByPost[post], command)
   } else {
     await createContributorOnStudy(userId, [subPost], command)
+  }
+}
+
+export const addFlowToStudy = async (file: File, studyId: string) => {
+  const allowedUserId = await canAddFlowToStudy(studyId)
+  if (!allowedUserId) {
+    return
+  }
+  const butcketUploadResult = await uploadFileToBucket(file)
+  await createDocument({
+    name: file.name,
+    type: file.type,
+    uploader: { connect: { id: allowedUserId } },
+    study: { connect: { id: studyId } },
+    bucketKey: butcketUploadResult.Key,
+    bucketETag: butcketUploadResult.ETag,
+  })
+}
+
+export const deleteFlowFromStudy = async (document: Document, studyId: string) => {
+  if (!(await canDeleteFlowFromStudy(document.id, studyId))) {
+    return
+  }
+  const bucketDelete = await deleteFileFromBucket(document.bucketKey)
+  if (bucketDelete) {
+    deleteDocument(document.id)
   }
 }
