@@ -37,7 +37,7 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         </IconButton>
       </div>
       <Drawer
-        className={'flex-col'}
+        className={open ? styles.opened : ''}
         open={open}
         PaperProps={{ className: styles.studyNavbarContainer }}
         onBlur={() => setOpen(false)}
