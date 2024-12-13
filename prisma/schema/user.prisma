@@ -13,17 +13,18 @@ model User {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?       @map("organization_id")
 
-  role           Role
-  level          Level?
-  firstName      String         @map("first_name")
-  lastName       String         @map("last_name")
-  email          String         @unique
-  password       String?
-  resetToken     String?        @map("reset_token")
-  isActive       Boolean        @map("is_active")
-  createdStudies Study[]
-  allowedStudies UserOnStudy[]
-  contributors   Contributors[]
+  role                       Role
+  level                      Level?
+  firstName                  String                @map("first_name")
+  lastName                   String                @map("last_name")
+  email                      String                @unique
+  password                   String?
+  resetToken                 String?               @map("reset_token")
+  isActive                   Boolean               @map("is_active")
+  isValidated                Boolean               @map("is_validated")
+  createdStudies             Study[]
+  allowedStudies             UserOnStudy[]
+  contributors               Contributors[]
   contributedEmissionSources StudyEmissionSource[]
 
   @@map("users")

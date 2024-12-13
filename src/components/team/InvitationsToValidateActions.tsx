@@ -1,34 +1,42 @@
 'use client'
 
 import { TeamMember } from '@/db/user'
-import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
-import { Button as MUIButton } from '@mui/material'
+import { deleteMember, validateMember } from '@/services/serverFunctions/user'
+import CheckIcon from '@mui/icons-material/Check'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Button } from '@mui/material'
 import classNames from 'classnames'
+import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import Button from '../base/Button'
 import styles from './InvitationsActions.module.css'
+import SelectRole from './SelectRole'
 
 interface Props {
+  user: User
   member: TeamMember
 }
 
-const PendingInvitationsActions = ({ member }: Props) => {
+const InvitationsToValidateActions = ({ user, member }: Props) => {
   const t = useTranslations('team')
   const router = useRouter()
   return (
     <div className={classNames(styles.buttons, 'flex')}>
+      <SelectRole user={user} email={member.email} currentRole={member.role} />
       <Button
+        variant="contained"
+        color="success"
         onClick={async () => {
-          const result = await resendInvitation(member.email)
+          const result = await validateMember(member.email)
           if (!result) {
             router.refresh()
           }
         }}
+        aria-label={t('resend')}
       >
-        {t('resend')}
+        <CheckIcon />
       </Button>
-      <MUIButton
+      <Button
         variant="contained"
         color="error"
         onClick={async () => {
@@ -37,11 +45,12 @@ const PendingInvitationsActions = ({ member }: Props) => {
             router.refresh()
           }
         }}
+        aria-label={t('delete')}
       >
-        {t('delete')}
-      </MUIButton>
+        <DeleteIcon />
+      </Button>
     </div>
   )
 }
 
-export default PendingInvitationsActions
+export default InvitationsToValidateActions
