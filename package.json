@@ -32,6 +32,7 @@
     "@mui/x-date-pickers": "^7.23.2",
     "@prisma/client": "^6.0.1",
     "@tanstack/react-table": "^8.20.6",
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.7",
