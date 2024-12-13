@@ -1,5 +1,6 @@
 import NotFound from '@/components/pages/NotFound'
 import StudyPerimeterPage from '@/components/pages/StudyPerimeter'
+import { getLatestDocumentForStudy } from '@/db/document'
 import { getStudyById } from '@/db/study'
 import { auth } from '@/services/auth'
 import { canReadStudyDetail } from '@/services/permissions/study'
@@ -26,11 +27,13 @@ const StudyPerimeter = async (props: Props) => {
     return <NotFound />
   }
 
+  const latest = await getLatestDocumentForStudy(study.id)
+
   if (!(await canReadStudyDetail(session.user, study))) {
     return <NotFound />
   }
 
-  return <StudyPerimeterPage study={study} user={session.user} />
+  return <StudyPerimeterPage study={study} user={session.user} flow={latest} />
 }
 
 export default StudyPerimeter

@@ -243,7 +243,9 @@
     },
     "perimeter": {
       "title": "Permiter on study : {name}",
-      "dates": "from {startDate} to {endDate}"
+      "dates": "from {startDate} to {endDate}",
+      "addFlow": "Add a flow",
+      "flows": "Flows mapping"
     },
     "results": {
       "type": "Type",
