@@ -1,3 +1,7 @@
+.flowButtons {
+  gap: 1rem;
+}
+
 .flowUploadButton {
   display: none;
 }

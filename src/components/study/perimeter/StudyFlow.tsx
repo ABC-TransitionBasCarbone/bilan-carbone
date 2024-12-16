@@ -1,13 +1,16 @@
 'use client'
 
+import Button from '@/components/base/Button'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
-import { allowedFlowFileTypes, isAllowedFileType } from '@/services/file'
-import { getDocument } from '@/services/serverFunctions/file'
+import { allowedFlowFileTypes, downloadFromUrl, isAllowedFileType } from '@/services/file'
+import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { addFlowToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Delete'
+import DownloadIcon from '@mui/icons-material/Download'
 import { InputLabel, MenuItem, Button as MUIButton, Select } from '@mui/material'
 import { Document } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Block from '../../base/Block'
@@ -32,7 +35,7 @@ const StudyFlow = ({ study }: Props) => {
     if (!selectedFlow) {
       setDocumentUrl(undefined)
     } else {
-      fetchAndSetPdfUrl(selectedFlow.bucketKey)
+      fetchAndSetFlowUrl(selectedFlow)
     }
   }, [selectedFlow])
 
@@ -44,8 +47,8 @@ const StudyFlow = ({ study }: Props) => {
     }
   }
 
-  const fetchAndSetPdfUrl = async (bucketKey: string) => {
-    const url = await getDocument(bucketKey)
+  const fetchAndSetFlowUrl = async (document: Document) => {
+    const url = await getDocumentUrl(document, study.id)
     setDocumentUrl(url)
   }
 
@@ -60,6 +63,13 @@ const StudyFlow = ({ study }: Props) => {
     }
     await addFlowToStudy(file, study.id)
     fetchDocuments(documents.length === 0)
+  }
+
+  const downloadDocument = async () => {
+    if (!selectedFlow || !documentUrl) {
+      return
+    }
+    downloadFromUrl(documentUrl, selectedFlow.name)
   }
 
   const removeDocument = async () => {
@@ -97,9 +107,9 @@ const StudyFlow = ({ study }: Props) => {
         <div className="flex-col">
           <div className="flex-col mb1">
             <InputLabel id="local-selector-label">{t('flowSelector')}</InputLabel>
-            <div className="flex grow">
+            <div className={classNames(styles.flowButtons, 'flex grow')}>
               <Select
-                className="grow mr1"
+                className="grow"
                 value={selectedFlow.id}
                 aria-labelledby="local-selector-label"
                 onChange={(event) => setSelectedFlow(documents.find((flow) => flow.id === event.target.value))}
@@ -111,6 +121,9 @@ const StudyFlow = ({ study }: Props) => {
                   </MenuItem>
                 ))}
               </Select>
+              <Button data-testid="flow-mapping-download" onClick={downloadDocument}>
+                <DownloadIcon />
+              </Button>
               <MUIButton
                 data-testid="flow-mapping-delete"
                 onClick={removeDocument}

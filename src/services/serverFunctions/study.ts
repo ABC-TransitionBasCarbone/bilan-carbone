@@ -31,6 +31,7 @@ import { auth } from '../auth'
 import { deleteFileFromBucket, uploadFileToBucket } from '../file'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
+  canAccessFlowFromStudy,
   canAddContributorOnStudy,
   canAddFlowToStudy,
   canAddRightOnStudy,
@@ -38,7 +39,6 @@ import {
   canChangeLevel,
   canChangePublicStatus,
   canCreateStudy,
-  canDeleteFlowFromStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
 import { checkLevel } from '../study'
@@ -338,7 +338,7 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
 export const addFlowToStudy = async (file: File, studyId: string) => {
   const allowedUserId = await canAddFlowToStudy(studyId)
   if (!allowedUserId) {
-    return
+    return NOT_AUTHORIZED
   }
   const butcketUploadResult = await uploadFileToBucket(file)
   await createDocument({
@@ -352,8 +352,8 @@ export const addFlowToStudy = async (file: File, studyId: string) => {
 }
 
 export const deleteFlowFromStudy = async (document: Document, studyId: string) => {
-  if (!(await canDeleteFlowFromStudy(document.id, studyId))) {
-    return
+  if (!(await canAccessFlowFromStudy(document.id, studyId))) {
+    return NOT_AUTHORIZED
   }
   const bucketDelete = await deleteFileFromBucket(document.bucketKey)
   if (bucketDelete) {

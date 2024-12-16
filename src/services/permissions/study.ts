@@ -219,10 +219,15 @@ export const canAddFlowToStudy = async (studyId: string) => {
   return session.user.id
 }
 
-export const canDeleteFlowFromStudy = async (documentId: string, studyId: string) => {
+export const canAccessFlowFromStudy = async (documentId: string, studyId: string) => {
   const session = await auth()
 
   if (!session || !session.user) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, session.user.organizationId)
+  if (!study || !study.allowedUsers.some((right) => right.user.email === session.user.email)) {
     return false
   }
 

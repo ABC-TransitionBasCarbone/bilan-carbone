@@ -17,14 +17,31 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4',
 })
 
-export const download = (fileContent: string[], filename: string, filetype: string) => {
-  const blob = new Blob(fileContent, { type: filetype })
+export const download = (fileContent: string[], fileName: string, fileType: string) => {
+  const blob = new Blob(fileContent, { type: fileType })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = filename
+  a.download = fileName
   document.body.appendChild(a)
   a.click()
+}
+
+export const downloadFromUrl = async (url: string, fileName: string) => {
+  const response = await fetch(url)
+  if (!response.ok) {
+    return response.statusText
+  }
+
+  const fileBlob = await response.blob()
+  const downloadUrl = window.URL.createObjectURL(fileBlob)
+  const a = document.createElement('a')
+  a.href = downloadUrl
+  a.download = fileName
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  window.URL.revokeObjectURL(downloadUrl)
 }
 
 export const allowedFlowFileTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp']
@@ -58,5 +75,5 @@ export const deleteFileFromBucket = async (fileKey: string) => {
   return s3.deleteObject(params).promise()
 }
 
-export const getFileUrlFromBucket = async (fileKey: string): Promise<string> =>
+export const getFileUrlFromBucket = async (fileKey: string) =>
   s3.getSignedUrl('getObject', { Bucket: bucketName, Key: fileKey, Expires: 3600 })
