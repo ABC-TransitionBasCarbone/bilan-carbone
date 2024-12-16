@@ -212,7 +212,7 @@ export const canAddFlowToStudy = async (studyId: string) => {
   }
 
   const study = await getStudyById(studyId, session.user.organizationId)
-  if (!study || study.allowedUsers.some((right) => right.user.email === session.user.email)) {
+  if (!study || !study.allowedUsers.some((right) => right.user.email === session.user.email)) {
     return false
   }
 
