@@ -1,20 +1,23 @@
-import AWS from 'aws-sdk'
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { fileTypeFromBlob } from 'file-type'
 import { v4 as uuidv4 } from 'uuid'
 
-const accessKey = process.env.SCW_ACCESS_KEY
-const secretKey = process.env.SCW_SECRET_KEY
+const accessKey = process.env.SCW_ACCESS_KEY as string
+const secretKey = process.env.SCW_SECRET_KEY as string
 const bucketName = process.env.SCW_BUCKET_NAME as string
 const region = process.env.SCW_REGION
 
-const enpoint = `https://${bucketName}.s3.${region}.scw.cloud`
+const endpoint = `https://${bucketName}.s3.${region}.scw.cloud`
 
-const s3 = new AWS.S3({
-  accessKeyId: accessKey,
-  secretAccessKey: secretKey,
-  endpoint: enpoint,
-  s3ForcePathStyle: true,
-  signatureVersion: 'v4',
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretKey,
+  },
+  region,
+  endpoint,
+  forcePathStyle: true,
 })
 
 export const download = (fileContent: string[], fileName: string, fileType: string) => {
@@ -51,9 +54,8 @@ export const isAllowedFileType = async (file: File, allowedTypes: string[]) => {
   return fileType && allowedTypes.includes(fileType)
 }
 
-export const uploadFileToBucket = async (file: File): Promise<AWS.S3.ManagedUpload.SendData> => {
+export const uploadFileToBucket = async (file: File) => {
   const bucketFileKey = uuidv4()
-
   const fileContent = await file.arrayBuffer()
   const buffer = Buffer.from(fileContent)
 
@@ -63,8 +65,8 @@ export const uploadFileToBucket = async (file: File): Promise<AWS.S3.ManagedUplo
     Body: buffer,
     ContentType: file.type,
   }
-
-  return s3.upload(params).promise()
+  const data = await s3.send(new PutObjectCommand(params))
+  return { key: bucketFileKey, ETag: data.ETag || '' }
 }
 
 export const deleteFileFromBucket = async (fileKey: string) => {
@@ -72,8 +74,13 @@ export const deleteFileFromBucket = async (fileKey: string) => {
     Bucket: bucketName,
     Key: fileKey,
   }
-  return s3.deleteObject(params).promise()
+  return s3.send(new DeleteObjectCommand(params))
 }
 
-export const getFileUrlFromBucket = async (fileKey: string) =>
-  s3.getSignedUrl('getObject', { Bucket: bucketName, Key: fileKey, Expires: 3600 })
+export const getFileUrlFromBucket = async (fileKey: string) => {
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: fileKey,
+  })
+  return getSignedUrl(s3, command, { expiresIn: 3600 })
+}

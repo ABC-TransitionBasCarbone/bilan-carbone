@@ -346,8 +346,8 @@ export const addFlowToStudy = async (file: File, studyId: string) => {
     type: file.type,
     uploader: { connect: { id: allowedUserId } },
     study: { connect: { id: studyId } },
-    bucketKey: butcketUploadResult.Key,
-    bucketETag: butcketUploadResult.ETag,
+    bucketKey: butcketUploadResult.key,
+    bucketETag: butcketUploadResult.ETag || '',
   })
 }
 
