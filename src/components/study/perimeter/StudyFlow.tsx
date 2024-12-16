@@ -1,8 +1,8 @@
 'use client'
 
-import PdfViewer from '@/components/document/PDFViewer'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
+import { allowedFileTypes } from '@/services/file'
 import { getDocument } from '@/services/serverFunctions/file'
 import { addFlowToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -12,6 +12,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Block from '../../base/Block'
 import styles from './StudyFlow.module.css'
+import StudyFlowViewer from './StudyFlowViewer'
 
 interface Props {
   study: FullStudy
@@ -19,7 +20,7 @@ interface Props {
 
 const StudyFlow = ({ study }: Props) => {
   const t = useTranslations('study.perimeter')
-  const [pdfUrl, setPdfUrl] = useState<string | undefined>(undefined)
+  const [documentUrl, setDocumentUrl] = useState<string | undefined>(undefined)
   const [documents, setDocuments] = useState<Document[]>([])
   const [selectedFlow, setSelectedFlow] = useState<Document | undefined>(undefined)
 
@@ -29,7 +30,7 @@ const StudyFlow = ({ study }: Props) => {
 
   useEffect(() => {
     if (!selectedFlow) {
-      setPdfUrl(undefined)
+      setDocumentUrl(undefined)
     } else {
       fetchAndSetPdfUrl(selectedFlow.bucketKey)
     }
@@ -45,12 +46,15 @@ const StudyFlow = ({ study }: Props) => {
 
   const fetchAndSetPdfUrl = async (bucketKey: string) => {
     const url = await getDocument(bucketKey)
-    setPdfUrl(url)
+    setDocumentUrl(url)
   }
 
   const addFlow = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) {
+      return
+    }
+    if (!allowedFileTypes.includes(file.type)) {
       return
     }
     await addFlowToStudy(file, study.id)
@@ -80,7 +84,7 @@ const StudyFlow = ({ study }: Props) => {
                 id="flow-upload-input"
                 className={styles.flowUploadButton}
                 type="file"
-                accept="application/pdf"
+                accept={allowedFileTypes.join(',')}
                 onChange={addFlow}
               />
             </div>
@@ -117,7 +121,7 @@ const StudyFlow = ({ study }: Props) => {
               </MUIButton>
             </div>
           </div>
-          <PdfViewer pdfUrl={pdfUrl} fileName={selectedFlow.name} />
+          <StudyFlowViewer documentUrl={documentUrl} selectedFlow={selectedFlow} />
         </div>
       ) : (
         t('noFlows')

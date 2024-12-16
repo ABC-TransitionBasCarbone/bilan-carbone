@@ -250,14 +250,15 @@
       }
     },
     "perimeter": {
-      "title": "Périmètre de l'étude : {name}",
-      "dates": "Du {startDate} au {endDate}",
       "addFlow": "Ajouter un flux",
+      "dates": "Du {startDate} au {endDate}",
+      "documentNotFound": "Document non trouvé",
       "flows": "Cartographie des fluxs",
       "flowSelector": "Flux à afficher",
       "newFlow": "Ajouter un flux",
       "noFlows": "Aucun flux à afficher",
-      "removeFlow": "Supprimer le flux"
+      "removeFlow": "Supprimer le flux",
+      "title": "Périmètre de l'étude : {name}"
     },
     "results": {
       "type": "Type",

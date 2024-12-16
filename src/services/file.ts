@@ -26,6 +26,8 @@ export const download = (fileContent: string[], filename: string, filetype: stri
   a.click()
 }
 
+export const allowedFileTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp']
+
 export const uploadFileToBucket = async (file: File): Promise<AWS.S3.ManagedUpload.SendData> => {
   const bucketFileKey = uuidv4()
 

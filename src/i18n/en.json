@@ -252,14 +252,15 @@
       }
     },
     "perimeter": {
-      "title": "Permiter on study : {name}",
-      "dates": "from {startDate} to {endDate}",
       "addFlow": "Add a flow",
+      "dates": "from {startDate} to {endDate}",
+      "documentNotFound": "Document not found",
       "flows": "Flows mapping",
       "flowSelector": "Flux to display",
       "newFlow": "Add a flow",
       "noFlows": "No flow to display",
-      "removeFlow": "Remove flow"
+      "removeFlow": "Remove flow",
+      "title": "Permiter on study : {name}"
     },
     "results": {
       "type": "Type",
