@@ -1,4 +1,7 @@
 {
+  "home": {
+    "userToValidate": "A user has been added to your organization because they have just been trained in the carbon assessment method. Go to <link>your team page</link> to validate their account"
+  },
   "exports": {
     "title": "Exports:",
     "consolidated": "Carbon Assessment®",
@@ -432,8 +435,10 @@
   },
   "team": {
     "title": "My Organization",
-    "pending": "Pending Invitations",
+    "pending": "Pending invitations",
     "invitationDate": "Invitation sent on",
+    "toValidate": "Invitations to validate",
+    "addedDate": "Added on",
     "delete": "Delete user",
     "resend": "Resend invitation",
     "table": {

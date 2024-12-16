@@ -1,7 +1,14 @@
 'use server'
 
 import { FullStudy } from '@/db/study'
-import { addUser, changeUserRole, deleteUser, getUserByEmail, updateUserResetTokenForEmail } from '@/db/user'
+import {
+  addUser,
+  changeUserRole,
+  deleteUser,
+  getUserByEmail,
+  updateUserResetTokenForEmail,
+  validateUser,
+} from '@/db/user'
 import { User as DBUser, Organization, Role } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
@@ -72,7 +79,12 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const newMember = { ...member, isActive: false, organization: { connect: { id: session.user.organizationId } } }
+  const newMember = {
+    ...member,
+    isActive: false,
+    isValidated: true,
+    organization: { connect: { id: session.user.organizationId } },
+  }
 
   if (!canAddMember(session.user, newMember, session.user.organizationId)) {
     return NOT_AUTHORIZED
@@ -80,6 +92,21 @@ export const addMember = async (member: AddMemberCommand) => {
 
   //TODO: que fait on si l'utilisateur existe déjà ?
   await addUser(newMember)
+  await sendNewInvitation(member.email)
+}
+
+export const validateMember = async (email: string) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return NOT_AUTHORIZED
+  }
+
+  const member = await getUserByEmail(email)
+  if (!member || !canAddMember(session.user, member, member.organizationId)) {
+    return NOT_AUTHORIZED
+  }
+
+  await validateUser(email)
   await sendNewInvitation(member.email)
 }
 

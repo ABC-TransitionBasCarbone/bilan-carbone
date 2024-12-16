@@ -126,8 +126,8 @@ const users = async () => {
 
   const levels = Object.keys(Level)
   const users = await prisma.user.createManyAndReturn({
-    data: await Promise.all(
-      Object.keys(Role).flatMap((role) => [
+    data: await Promise.all([
+      ...Object.keys(Role).flatMap((role) => [
         ...Array.from({ length: 3 }).map(async (_, index) => {
           const password = await signPassword(`password-${index}`)
           return {
@@ -139,6 +139,7 @@ const users = async () => {
             level: levels[index % levels.length] as Level,
             role: role as Role,
             isActive: true,
+            isValidated: true,
           }
         }),
         ...Array.from({ length: 3 }).map(async (_, index) => {
@@ -152,10 +153,25 @@ const users = async () => {
             level: levels[index % levels.length] as Level,
             role: role as Role,
             isActive: true,
+            isValidated: true,
           }
         }),
       ]),
-    ),
+      ...Array.from({ length: 3 }).map(async (_, index) => {
+        const password = await signPassword(`password-${index}`)
+        return {
+          email: `bc-new-${index}@yopmail.com`,
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          organizationId: regularOrganizations[index % regularOrganizations.length].id,
+          password,
+          level: levels[index % levels.length] as Level,
+          role: Role.DEFAULT,
+          isActive: false,
+          isValidated: false,
+        }
+      }),
+    ]),
   })
   const [contributor] = await prisma.user.createManyAndReturn({
     data: [
@@ -168,11 +184,8 @@ const users = async () => {
         organizationId: organizations[0].id,
         role: Role.DEFAULT,
         isActive: true,
+        isValidated: true,
       },
-    ],
-  })
-  await prisma.user.createManyAndReturn({
-    data: [
       {
         email: 'untrained@yopmail.com',
         firstName: faker.person.firstName(),
@@ -182,10 +195,10 @@ const users = async () => {
         organizationId: regularOrganizations[1].id,
         role: Role.DEFAULT,
         isActive: true,
+        isValidated: true,
       },
     ],
   })
-
   const emissionFactorsImportVersion = await prisma.emissionFactorImportVersion.create({
     data: { source: Import.BaseEmpreinte, name: '1', internId: 'Base_Carbone_V1.csv' },
   })
@@ -193,7 +206,7 @@ const users = async () => {
   const subPosts = Object.keys(SubPost)
   const studies = await Promise.all(
     Array.from({ length: 20 }).map(() => {
-      const creator = faker.helpers.arrayElement(users)
+      const creator = faker.helpers.arrayElement(users.filter((user) => user.isValidated))
       const organizationSites = sites.filter((site) => site.organizationId === creator.organizationId)
       return prisma.study.create({
         include: { sites: true },

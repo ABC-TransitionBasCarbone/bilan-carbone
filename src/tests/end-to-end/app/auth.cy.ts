@@ -101,4 +101,20 @@ describe('Authentication', () => {
     cy.wait('@login')
     cy.url().should('not.include', '/login')
   })
+
+  it('does not authorize unactive user', () => {
+    cy.visit('/')
+    cy.url().should('include', '/login')
+
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-new-1@yopmail.com')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('password-1')
+    cy.getByTestId('login-button').click()
+
+    cy.wait('@login')
+
+    cy.visit('/')
+    cy.url().should('include', '/login')
+  })
 })

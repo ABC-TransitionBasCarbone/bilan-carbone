@@ -202,6 +202,7 @@ const getUserOnStudy = async (
     const newUser = await addUser({
       email: email,
       isActive: true,
+      isValidated: true,
       role: Role.DEFAULT,
       firstName: '',
       lastName: '',

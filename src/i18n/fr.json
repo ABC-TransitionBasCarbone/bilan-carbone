@@ -1,4 +1,7 @@
 {
+  "home": {
+    "userToValidate": "Un utilisateur a été ajouté à votre organisation car il vient d'être formé à la méthode bilan carbone. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte"
+  },
   "exports": {
     "title": "Exports :",
     "consolidated": "Bilan Carbone®",
@@ -432,6 +435,8 @@
     "title": "Mon organisation",
     "pending": "Invitations en attentes",
     "invitationDate": "Invitation envoyé le",
+    "toValidate": "Invitations à valider",
+    "addedDate": "Ajouté le",
     "delete": "Supprimer l'utilisateur",
     "resend": "Renvoyer l'invitation",
     "table": {
