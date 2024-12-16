@@ -96,13 +96,13 @@ const getEmissionSourcesRows = (
       'sourceQuality',
       'activityDataValue',
       'activityDataUnit',
-      'activityDataComment',
       'activityDataQuality',
+      'activityDataComment',
       'emissionName',
       'emissionValue',
       'emissionUnit',
-      'emissionSource',
       'emissionQuality',
+      'emissionSource',
     ])
     .map((key) => t(key))
     .join(';')
@@ -130,13 +130,13 @@ const getEmissionSourcesRows = (
         emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
         emissionSource.value || '0',
         emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
-        emissionSource.comment || '',
         getQuality(getQualityRating(emissionSource), tQuality),
+        emissionSource.comment || '',
         emissionFactor?.metaData?.title || t('noFactor'),
         emissionFactor?.totalCo2 || '',
         emissionFactor?.unit ? `kgCO₂e/${tUnit(emissionFactor.unit)}` : '',
-        emissionFactor?.source || '',
         emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
+        emissionFactor?.source || '',
       ])
       .map((field) => encodeCSVField(field))
       .join(';')
