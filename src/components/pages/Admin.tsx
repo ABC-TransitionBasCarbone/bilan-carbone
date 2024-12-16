@@ -2,8 +2,8 @@
 
 import { useTranslations } from 'next-intl'
 import { useRef } from 'react'
-import Button from '../base/Button'
 import Block from '../base/Block'
+import Button from '../base/Button'
 
 const AdminPage = () => {
   const t = useTranslations('admin')
