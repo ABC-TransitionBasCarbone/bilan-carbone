@@ -2,7 +2,7 @@
 
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
-import { allowedFileTypes } from '@/services/file'
+import { allowedFlowFileTypes, isAllowedFileType } from '@/services/file'
 import { getDocument } from '@/services/serverFunctions/file'
 import { addFlowToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -54,7 +54,8 @@ const StudyFlow = ({ study }: Props) => {
     if (!file) {
       return
     }
-    if (!allowedFileTypes.includes(file.type)) {
+    const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
+    if (!allowedType) {
       return
     }
     await addFlowToStudy(file, study.id)
@@ -84,7 +85,7 @@ const StudyFlow = ({ study }: Props) => {
                 id="flow-upload-input"
                 className={styles.flowUploadButton}
                 type="file"
-                accept={allowedFileTypes.join(',')}
+                accept={allowedFlowFileTypes.join(',')}
                 onChange={addFlow}
               />
             </div>

@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk'
+import { fileTypeFromBlob } from 'file-type'
 import { v4 as uuidv4 } from 'uuid'
 
 const accessKey = process.env.SCW_ACCESS_KEY
@@ -26,7 +27,12 @@ export const download = (fileContent: string[], filename: string, filetype: stri
   a.click()
 }
 
-export const allowedFileTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp']
+export const allowedFlowFileTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp']
+
+export const isAllowedFileType = async (file: File, allowedTypes: string[]) => {
+  const fileType = (await fileTypeFromBlob(file))?.mime
+  return fileType && allowedTypes.includes(fileType)
+}
 
 export const uploadFileToBucket = async (file: File): Promise<AWS.S3.ManagedUpload.SendData> => {
   const bucketFileKey = uuidv4()
