@@ -1,8 +1,8 @@
 'use client'
 
-import { Button } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRef } from 'react'
+import Button from '../base/Button'
 import Block from '../base/Block'
 
 const AdminPage = () => {
