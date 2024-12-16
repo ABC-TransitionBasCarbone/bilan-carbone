@@ -1,6 +1,6 @@
 'use client'
-
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import InventoryIcon from '@mui/icons-material/Inventory'
@@ -75,13 +75,14 @@ const locationFuseOptions = {
   isCaseSensitive: false,
 }
 
-interface Props {
-  emissionFactors: EmissionFactorWithMetaData[]
-}
-
 const sources = Object.values(Import).map((source) => source)
 
-const EmissionFactorsTable = ({ emissionFactors }: Props) => {
+interface Props {
+  emissionFactors: EmissionFactorWithMetaData[]
+  selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
+}
+
+const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const [filter, setFilter] = useState('')
@@ -90,7 +91,7 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
   const [filteredSources, setSources] = useState<Import[]>(sources)
 
   const columns = useMemo(() => {
-    return [
+    const columns = [
       {
         id: 'name',
         header: t('name'),
@@ -157,7 +158,26 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
         },
       },
     ] as ColumnDef<EmissionFactorWithMetaData>[]
-  }, [t])
+
+    if (selectEmissionFactor) {
+      columns.push({
+        header: '',
+        accessorKey: 'id',
+        cell: ({ row }) => (
+          <Button
+            className={styles.selectButton}
+            aria-label={t('selectLine')}
+            title={t('selectLine')}
+            onClick={() => selectEmissionFactor(row.original)}
+          >
+            <CheckIcon />
+          </Button>
+        ),
+      })
+    }
+
+    return columns
+  }, [t, selectEmissionFactor])
 
   const fuse = useMemo(() => {
     return new Fuse(emissionFactors, fuseOptions)
@@ -305,7 +325,7 @@ const EmissionFactorsTable = ({ emissionFactors }: Props) => {
             if (row.getIsExpanded()) {
               lines.push(
                 <tr key={`todo${row.id}`}>
-                  <td colSpan={4} className={styles.detail}>
+                  <td colSpan={columns.length} className={styles.detail}>
                     <EmissionFactorDetails emissionFactor={row.original} />
                   </td>
                 </tr>,

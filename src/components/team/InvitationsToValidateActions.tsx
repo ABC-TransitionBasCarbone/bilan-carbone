@@ -33,6 +33,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
           }
         }}
         aria-label={t('resend')}
+        title={t('resend')}
       >
         <CheckIcon />
       </Button>
@@ -46,6 +47,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
           }
         }}
         aria-label={t('delete')}
+        title={t('delete')}
       >
         <DeleteIcon />
       </Button>

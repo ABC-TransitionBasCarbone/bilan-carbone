@@ -376,6 +376,9 @@
     "title": "Facteurs d'émissions",
     "loading": "Chargement des facteurs d'émissions",
     "table": {
+      "Valid": "Valide",
+      "Archived": "Archivé",
+      "selectLine": "Selectionner ce facteur d'émission",
       "all": "Toutes",
       "BaseEmpreinte": "Base Empreinte",
       "displayArchived": "Afficher les facteurs archivés",
@@ -637,7 +640,9 @@
     }
   },
   "emissionSource": {
-    "dialog": {
+    "advancedSearch": "Recherche avancée",
+    "noResults": "Rechercher avec plus de filtres",
+    "deleteDialog": {
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
       "description": "Toutes les données renseignées seront définitivement perdues, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
@@ -680,6 +685,10 @@
       "temporalRepresentativeness": "Représentativité temporelle",
       "completeness": "Complétude",
       "comment": "Commentaires"
+    },
+    "emissionFactorDialog": {
+      "title": "Choisir un facteur d'émission",
+      "cancel": "Annuler"
     }
   },
   "quality": {

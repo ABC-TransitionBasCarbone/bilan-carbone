@@ -21,7 +21,7 @@ interface Props {
 }
 
 const DeleteEmissionSource = ({ emissionSource }: Props) => {
-  const t = useTranslations('emissionSource.dialog')
+  const t = useTranslations('emissionSource.deleteDialog')
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [disabled, setDisabled] = useState(false)
@@ -62,6 +62,7 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
         variant="contained"
         color="error"
         aria-label={t('delete')}
+        title={t('delete')}
       >
         <DeleteIcon />
       </MUIButton>
