@@ -91,7 +91,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
   const [filteredSources, setSources] = useState<Import[]>(sources)
 
   const columns = useMemo(() => {
-    const columns = [
+    const columnsToReturn = [
       {
         id: 'name',
         header: t('name'),
@@ -160,12 +160,11 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
     ] as ColumnDef<EmissionFactorWithMetaData>[]
 
     if (selectEmissionFactor) {
-      columns.push({
+      columnsToReturn.push({
         header: '',
         accessorKey: 'id',
         cell: ({ row }) => (
           <Button
-            className={styles.selectButton}
             aria-label={t('selectLine')}
             title={t('selectLine')}
             onClick={() => selectEmissionFactor(row.original)}
@@ -176,7 +175,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
       })
     }
 
-    return columns
+    return columnsToReturn
   }, [t, selectEmissionFactor])
 
   const fuse = useMemo(() => {

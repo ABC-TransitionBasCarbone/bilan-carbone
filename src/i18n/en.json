@@ -139,7 +139,8 @@
       "accounting": "Accounting",
       "dataEntry": "Data entry",
       "results": "Results",
-      "transitionPlan": "Transition plan"
+      "transitionPlan": "Transition plan",
+      "menu": "Open the study navigation menu"
     },
     "new": {
       "title": "Information about the new study",

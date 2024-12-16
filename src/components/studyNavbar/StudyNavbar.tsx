@@ -30,8 +30,8 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         <IconButton
           data-testid="study-navbar-button"
           className={styles.openDrawerButton}
-          aria-label="Ouvrir le menu de navigation de l'étude"
-          title="Ouvrir le menu de navigation de l'étude"
+          aria-label={t('menun')}
+          title={t('menun')}
           onClick={() => setOpen((prev) => !prev)}
         >
           <MenuIcon />
