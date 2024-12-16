@@ -4,6 +4,7 @@ import Button from '@/components/base/Button'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { allowedFlowFileTypes, downloadFromUrl, isAllowedFileType } from '@/services/file'
+import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { addFlowToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -23,6 +24,7 @@ interface Props {
 
 const StudyFlow = ({ study }: Props) => {
   const t = useTranslations('study.perimeter')
+  const [error, setError] = useState<string | undefined>(undefined)
   const [documentUrl, setDocumentUrl] = useState<string | undefined>(undefined)
   const [documents, setDocuments] = useState<Document[]>([])
   const [selectedFlow, setSelectedFlow] = useState<Document | undefined>(undefined)
@@ -49,19 +51,29 @@ const StudyFlow = ({ study }: Props) => {
 
   const fetchAndSetFlowUrl = async (document: Document) => {
     const url = await getDocumentUrl(document, study.id)
+    if (url === NOT_AUTHORIZED) {
+      return
+    }
     setDocumentUrl(url)
   }
 
   const addFlow = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setError(undefined)
     const file = event.target.files?.[0]
     if (!file) {
+      setError('noFileSelected')
       return
     }
     const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
     if (!allowedType) {
+      setError('invalidFileType')
       return
     }
-    await addFlowToStudy(file, study.id)
+    const res = await addFlowToStudy(file, study.id)
+    if (res === NOT_AUTHORIZED) {
+      setError('notAuthorized')
+      return
+    }
     fetchDocuments(documents.length === 0)
   }
 
@@ -73,10 +85,15 @@ const StudyFlow = ({ study }: Props) => {
   }
 
   const removeDocument = async () => {
+    setError(undefined)
     if (!selectedFlow) {
       return
     }
-    await deleteFlowFromStudy(selectedFlow, study.id)
+    const res = await deleteFlowFromStudy(selectedFlow, study.id)
+    if (res === NOT_AUTHORIZED) {
+      setError('notAuthorized')
+      return
+    }
     fetchDocuments(true)
   }
 
@@ -135,6 +152,7 @@ const StudyFlow = ({ study }: Props) => {
               </MUIButton>
             </div>
           </div>
+          {error && <div className={classNames(styles.error, 'mb1')}>{t(error)}</div>}
           <StudyFlowViewer documentUrl={documentUrl} selectedFlow={selectedFlow} />
         </div>
       ) : (

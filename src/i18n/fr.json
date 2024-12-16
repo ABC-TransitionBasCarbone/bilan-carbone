@@ -255,8 +255,11 @@
       "documentNotFound": "Document non trouvé",
       "flows": "Cartographie des fluxs",
       "flowSelector": "Flux à afficher",
+      "invalidFileType": "Type de fichier non supporté",
       "newFlow": "Ajouter un flux",
+      "noFileSelected": "Aucun fichier selectionné",
       "noFlows": "Aucun flux à afficher",
+      "notAuthorized": "Action non authorisée",
       "removeFlow": "Supprimer le flux",
       "title": "Périmètre de l'étude : {name}"
     },
