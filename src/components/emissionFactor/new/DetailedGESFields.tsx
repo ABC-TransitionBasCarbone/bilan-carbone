@@ -24,7 +24,10 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
           data-testid={getTestId(gaz)}
           control={form.control}
           translation={t}
-          slotProps={{ htmlInput: { min: 0 } }}
+          slotProps={{
+            htmlInput: { min: 0 },
+            input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+          }}
           type="number"
           name={getName(gaz)}
           label={t(gaz)}

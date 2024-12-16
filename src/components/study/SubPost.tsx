@@ -120,6 +120,7 @@ const SubPost = ({
         <div className={classNames(styles.download, 'flex ml1')}>
           <Button
             aria-label={tExport('downloadSubPost', { name: subPost })}
+            title={tExport('downloadSubPost', { name: subPost })}
             onClick={() => {
               downloadStudySubPosts(
                 study as FullStudy,
