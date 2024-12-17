@@ -88,7 +88,7 @@ const getBegesLine = (
   const other =
     (emissionFactor.otherGES || 0) + (emissionFactor.pfc || 0) + (emissionFactor.hfc || 0) + (emissionFactor.sf6 || 0)
   const total = ch4 + n2o + other
-  const co2 = (emissionFactor.totalCo2 || 0) * -total
+  const co2 = (emissionFactor.totalCo2 || 0) - total
   const co2b = emissionFactor.co2b || 0
 
   return {
