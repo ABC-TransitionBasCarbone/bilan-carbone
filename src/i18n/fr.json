@@ -655,7 +655,7 @@
       "valid": "Validée",
       "waiting": "En attente",
       "waitingContributor": "En attente d'un contributeur",
-      "toVerify": "A vérifier"
+      "toVerify": "À vérifier"
     },
     "type": {
       "Physical": "Physique",
@@ -673,13 +673,13 @@
     },
     "form": {
       "validate": "Validée",
-      "name": "Nom",
+      "name": "Nom *",
       "tag": "Tag",
-      "caracterisation": "Caractérisation",
-      "emissionFactor": "Facteur d'émission",
-      "value": "Valeur donnée d'activité",
+      "caracterisation": "Caractérisation *",
+      "emissionFactor": "Facteur d'émission *",
+      "value": "Valeur donnée d'activité *",
       "source": "Source",
-      "type": "Type",
+      "type": "Type *",
       "reliability": "Fiabilité",
       "technicalRepresentativeness": "Représentativité technique",
       "geographicRepresentativeness": "Représentativité géographique",

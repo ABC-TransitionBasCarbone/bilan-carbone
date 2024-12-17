@@ -32,6 +32,7 @@ const fullStudyInclude = {
           id: true,
         },
       },
+      emissionFactorId: true,
       emissionFactor: {
         select: {
           id: true,

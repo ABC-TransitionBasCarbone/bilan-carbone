@@ -15,7 +15,7 @@ describe('Create study emission source', () => {
 
     cy.getByTestId('emission-source-My new emission source').should('exist')
     cy.getByTestId('emission-source-My new emission source').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', "En attente d'un contributeur")
+      cy.getByTestId('emission-source-status').should('have.text', "En attente d'un contributeur - 40%")
       cy.getByTestId('emission-source-value').should('have.text', '')
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
@@ -47,7 +47,7 @@ describe('Create study emission source', () => {
     cy.get('[data-value="Physical"]').click()
 
     cy.getByTestId('emission-source-My emission source name').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', 'A vérifier')
+      cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
@@ -58,7 +58,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-reliability').click()
     cy.get('[data-value="4"]').click()
     cy.getByTestId('emission-source-My emission source name').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', 'A vérifier')
+      cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Très bonne')
     })

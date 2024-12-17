@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import { getEmissionResults } from '@/services/emissionSource'
+import { getEmissionResults, getEmissionSourceCompletion } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import {
@@ -146,6 +146,9 @@ const EmissionSource = ({
           )}
           <p data-testid="emission-source-status" className={styles.status}>
             {t(`status.${status}`)}
+            {(status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor) && (
+              <> - {getEmissionSourceCompletion(emissionSource) * 100}%</>
+            )}
             {loading && (
               <>
                 {' '}
