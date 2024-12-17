@@ -20,6 +20,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
 
   const userRoleOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
 
+  console.log('render StudyRightsPage')
   return (
     <>
       <Breadcrumbs

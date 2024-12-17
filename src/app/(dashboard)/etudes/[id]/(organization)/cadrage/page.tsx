@@ -32,6 +32,7 @@ const StudyRights = async (props: Props) => {
     return <NotFound />
   }
 
+  console.log('render StudyRights')
   return <StudyRightsPage study={study} user={session.user} />
 }
 

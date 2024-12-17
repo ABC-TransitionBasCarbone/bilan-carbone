@@ -60,6 +60,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
     getCoreRowModel: getCoreRowModel(),
   })
 
+  console.log('render StudyContributorsTable')
   return (
     <Block
       title={t('title')}

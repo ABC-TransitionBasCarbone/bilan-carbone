@@ -1,3 +1,4 @@
+/* eslint-disable cypress/unsafe-to-chain-command */
 import dayjs from 'dayjs'
 
 describe('Create study', () => {
@@ -164,9 +165,14 @@ describe('Create study', () => {
       .eq(2)
       .within(() => {
         cy.get('input').should('not.be.disabled')
-        cy.get('.MuiSelect-select').click()
+        cy.get('.MuiSelect-select').as('BCDefault1RoleSelector')
       })
-    cy.get('[data-value="Editor"]').click()
+    cy.get('@BCDefault1RoleSelector')
+      .click()
+      .then(() => console.log('Sélecteur cliqué'))
+    cy.get('[data-value="Editor"]')
+      .click()
+      .then(() => console.log('Sélecteur changé'))
     cy.wait('@update')
     cy.getByTestId('study-rights-table-line').eq(2).contains('bc-default-1@yopmail.comÉditeur')
 
@@ -190,8 +196,9 @@ describe('Create study', () => {
       .eq(3)
       .within(() => {
         cy.get('input').should('not.be.disabled')
-        cy.get('.MuiSelect-select').click()
+        cy.get('.MuiSelect-select').as('BCDefault2RoleSelector')
       })
+    cy.get('@BCDefault2RoleSelector').click()
     cy.get('[data-value="Reader"]').should('exist')
     cy.get('[data-value="Editor"]').should('exist')
     cy.get('[data-value="Validator"]').should('not.exist')
