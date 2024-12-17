@@ -111,6 +111,7 @@
   "navigation": {
     "factors": "Facteurs d'émission",
     "help": "Aide",
+    "admin": "Admin",
     "home": "Accueil",
     "profile": "Profil",
     "study": "Étude",
@@ -125,6 +126,11 @@
     "title": "Mon profil",
     "legalNotices": "Mentions légales",
     "logout": "Se déconnecter"
+  },
+  "admin": {
+    "title": "Administration du BC+",
+    "csvOnly": "Seuls les fichiers CSV sont acceptés",
+    "uploadButton": "Importer un fichier CSV de l'ADEME"
   },
   "study": {
     "create": "Nouvelle étude",

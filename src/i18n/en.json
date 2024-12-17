@@ -114,6 +114,7 @@
     "factors": "Emission factors",
     "help": "Help",
     "home": "Home",
+    "admin": "Admin",
     "profile": "Profile",
     "study": "Study",
     "team": "Team",
@@ -127,6 +128,11 @@
     "title": "My profile",
     "legalNotices": "Legal notices",
     "logout": "Log out"
+  },
+  "admin": {
+    "title": "Administration",
+    "csvOnly": "Only CSV files are accepted",
+    "uploadButton": "Import emission factors"
   },
   "study": {
     "create": "New study",

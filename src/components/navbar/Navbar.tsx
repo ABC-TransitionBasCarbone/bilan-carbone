@@ -1,10 +1,16 @@
+import { Role } from '@prisma/client'
 import classNames from 'classnames'
+import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Navbar.module.css'
 
-const Navbar = () => {
+interface Props {
+  user: User
+}
+
+const Navbar = ({ user }: Props) => {
   const t = useTranslations('navigation')
 
   return (
@@ -26,6 +32,11 @@ const Navbar = () => {
         </div>
 
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
+          {user.role === Role.SUPER_ADMIN && (
+            <Link className={styles.link} href="/admin">
+              {t('admin')}
+            </Link>
+          )}
           <Link
             target="_blank"
             rel="noreferrer noopener"
