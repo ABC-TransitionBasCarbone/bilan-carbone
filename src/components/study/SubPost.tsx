@@ -43,7 +43,7 @@ const SubPost = ({
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tExport = useTranslations('study.export')
-  const tCaract = useTranslations('categorisations')
+  const tCaracterisations = useTranslations('categorisations')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
@@ -131,7 +131,7 @@ const SubPost = ({
                 emissionSources as FullStudy['emissionSources'],
                 subPostEmissionFactors,
                 tExport,
-                tCaract,
+                tCaracterisations,
                 tPost,
                 tQuality,
                 tUnit,

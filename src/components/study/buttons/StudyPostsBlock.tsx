@@ -17,7 +17,7 @@ interface Props {
 }
 
 const StudyPostsBlock = ({ post, study, display, setDisplay, children }: Props) => {
-  const tCaract = useTranslations('categorisations')
+  const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
@@ -41,7 +41,8 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children }: Props) 
       actions={[
         {
           actionType: 'button',
-          onClick: () => downloadStudyPost(study, emissionSources, post, tExport, tCaract, tPost, tQuality, tUnit),
+          onClick: () =>
+            downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit),
           disabled: emissionSources.length === 0,
           children: (
             <>

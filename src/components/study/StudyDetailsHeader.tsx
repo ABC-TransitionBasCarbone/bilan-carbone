@@ -19,7 +19,7 @@ interface Props {
 const StudyDetailsHeader = ({ study, site, setSite }: Props) => {
   const format = useFormatter()
   const t = useTranslations('study.export')
-  const tCaract = useTranslations('categorisations')
+  const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('exports')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
@@ -33,7 +33,7 @@ const StudyDetailsHeader = ({ study, site, setSite }: Props) => {
       actions={[
         {
           actionType: 'button',
-          onClick: () => downloadStudyEmissionSources(study, t, tCaract, tPost, tQuality, tUnit),
+          onClick: () => downloadStudyEmissionSources(study, t, tCaracterisations, tPost, tQuality, tUnit),
           disabled: study.emissionSources.length === 0,
           children: (
             <>

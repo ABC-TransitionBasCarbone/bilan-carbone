@@ -73,7 +73,7 @@ const getEmissionSourcesRows = (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   t: ReturnType<typeof useTranslations>,
-  tCaract: ReturnType<typeof useTranslations>,
+  tCaracterisations: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
@@ -124,7 +124,7 @@ const getEmissionSourcesRows = (
       .concat([
         emissionSource.validated ? t('yes') : t('no'),
         emissionSource.name || '',
-        tCaract(emissionSource.caracterisation || ''),
+        tCaracterisations(emissionSource.caracterisation || ''),
         (emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0) || '0',
         'kgCO₂e',
         emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
@@ -168,7 +168,7 @@ const getEmissionSourcesCSVContent = (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   t: ReturnType<typeof useTranslations>,
-  tCaract: ReturnType<typeof useTranslations>,
+  tCaracterisations: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
@@ -178,7 +178,7 @@ const getEmissionSourcesCSVContent = (
     emissionSources,
     emissionFactors,
     t,
-    tCaract,
+    tCaracterisations,
     tPost,
     tQuality,
     tUnit,
@@ -208,13 +208,21 @@ export const downloadStudySubPosts = async (
   emissionSources: FullStudy['emissionSources'],
   emissionFactors: EmissionFactorWithMetaData[],
   t: ReturnType<typeof useTranslations>,
-  tCaract: ReturnType<typeof useTranslations>,
+  tCaracterisations: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
 ) => {
   const fileName = getFileName(study, post, subPost)
-  const csvContent = getEmissionSourcesCSVContent(emissionSources, emissionFactors, t, tCaract, tPost, tQuality, tUnit)
+  const csvContent = getEmissionSourcesCSVContent(
+    emissionSources,
+    emissionFactors,
+    t,
+    tCaracterisations,
+    tPost,
+    tQuality,
+    tUnit,
+  )
   downloadCSV(csvContent, fileName)
 }
 
@@ -223,7 +231,7 @@ export const downloadStudyPost = async (
   emissionSources: FullStudy['emissionSources'],
   post: Post | SubPost,
   t: ReturnType<typeof useTranslations>,
-  tCaract: ReturnType<typeof useTranslations>,
+  tCaracterisations: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
@@ -237,7 +245,7 @@ export const downloadStudyPost = async (
     emissionSources,
     emissionFactors,
     t,
-    tCaract,
+    tCaracterisations,
     tPost,
     tQuality,
     tUnit,
@@ -249,7 +257,7 @@ export const downloadStudyPost = async (
 export const downloadStudyEmissionSources = async (
   study: FullStudy,
   t: ReturnType<typeof useTranslations>,
-  tCaract: ReturnType<typeof useTranslations>,
+  tCaracterisations: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
@@ -265,7 +273,7 @@ export const downloadStudyEmissionSources = async (
     emissionSources,
     emissionFactors,
     t,
-    tCaract,
+    tCaracterisations,
     tPost,
     tQuality,
     tUnit,
