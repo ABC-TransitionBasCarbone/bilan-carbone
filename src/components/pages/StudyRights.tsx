@@ -1,7 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
-import { getTranslations } from 'next-intl/server'
+import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyContributorsTable from '../study/rights/StudyContributorsTable'
@@ -12,13 +12,12 @@ import StudyRightsTable from '../study/rights/StudyRightsTable'
 interface Props {
   study: FullStudy
   user: User
+  userRoleOnStudy?: FullStudy['allowedUsers'][0]
 }
 
-const StudyRightsPage = async ({ study, user }: Props) => {
-  const tNav = await getTranslations('nav')
-  const t = await getTranslations('study.rights')
-
-  const userRoleOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
+const StudyRightsPage = ({ study, user, userRoleOnStudy }: Props) => {
+  const tNav = useTranslations('nav')
+  const t = useTranslations('study.rights')
 
   return (
     <>

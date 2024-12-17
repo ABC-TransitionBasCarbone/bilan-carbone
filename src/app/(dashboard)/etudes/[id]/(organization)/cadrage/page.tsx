@@ -32,7 +32,8 @@ const StudyRights = async (props: Props) => {
     return <NotFound />
   }
 
-  return <StudyRightsPage study={study} user={session.user} />
+  const userRoleOnStudy = study.allowedUsers.find((right) => right.user.email === session.user.email)
+  return <StudyRightsPage study={study} user={session.user} userRoleOnStudy={userRoleOnStudy} />
 }
 
 export default StudyRights
