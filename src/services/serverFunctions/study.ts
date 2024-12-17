@@ -45,7 +45,7 @@ import {
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
-import { sendInvitation, sendNewInvitation } from './user'
+import { sendInvitation } from './user'
 
 export const createStudyCommand = async ({
   organizationId,
@@ -191,17 +191,17 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-const getUserOnStudy = async (
+const getOrCreateUserOnStudy = async (
   email: string,
   study: FullStudy,
   organization: Organization,
   creator: User,
-  newUser: DBUser | null,
+  existingUser: DBUser | null,
   role?: StudyRole,
 ) => {
   let userId = ''
   const t = await getTranslations('study.role')
-  if (!newUser) {
+  if (!existingUser) {
     const newUser = await addUser({
       email: email,
       isActive: true,
@@ -210,13 +210,13 @@ const getUserOnStudy = async (
       firstName: '',
       lastName: '',
     })
-    await sendNewInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '')
+    await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '')
     userId = newUser.id
   } else {
-    if (newUser.organizationId !== organization.id) {
-      await sendInvitation(email, study, organization, creator, newUser, role ? t(role).toLowerCase() : '')
+    if (existingUser.organizationId !== organization.id) {
+      await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '', existingUser)
     }
-    userId = newUser.id
+    userId = existingUser.id
   }
   return userId
 }
@@ -249,7 +249,14 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const userId = await getUserOnStudy(right.email, studyWithRights, organization, session.user, newUser, right.role)
+  const userId = await getOrCreateUserOnStudy(
+    right.email,
+    studyWithRights,
+    organization,
+    session.user,
+    newUser,
+    right.role,
+  )
   await createUserOnStudy({
     user: { connect: { id: userId } },
     study: { connect: { id: studyWithRights.id } },
@@ -303,7 +310,7 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     return NOT_AUTHORIZED
   }
 
-  const userId = await getUserOnStudy(email, studyWithRights, organization, session.user, newUser)
+  const userId = await getOrCreateUserOnStudy(email, studyWithRights, organization, session.user, newUser)
 
   if (post === 'all') {
     await createContributorOnStudy(userId, Object.values(SubPost), command)

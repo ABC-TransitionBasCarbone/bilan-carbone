@@ -36,7 +36,7 @@ export const sendNewUserEmail = async (toEmail: string, token: string) => {
   return send([toEmail], 'Vous avez été invité au BC+', html)
 }
 
-export const sendStudyInvitationEmail = async (
+export const sendUserOnStudyInvitationEmail = async (
   toEmail: string,
   studyName: string,
   studyId: string,
@@ -45,7 +45,7 @@ export const sendStudyInvitationEmail = async (
   userName: string,
   role: string,
 ) => {
-  const html = await getHtml('study-invitation', {
+  const html = await getHtml('user-on-study-invitation', {
     link: process.env.NEXTAUTH_URL,
     userName,
     studyName,
@@ -57,7 +57,7 @@ export const sendStudyInvitationEmail = async (
   })
   return send([toEmail], `Ajout sur l'étude ${studyName}`, html)
 }
-export const sendNewStudyInvitationEmail = async (
+export const sendNewUserOnStudyInvitationEmail = async (
   toEmail: string,
   token: string,
   studyName: string,
@@ -66,7 +66,7 @@ export const sendNewStudyInvitationEmail = async (
   creatorName: string,
   role: string,
 ) => {
-  const html = await getHtml('new-study-invitation', {
+  const html = await getHtml('new-user-on-study-invitation', {
     link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
     studyName,
     studyId,

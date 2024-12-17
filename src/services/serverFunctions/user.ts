@@ -16,9 +16,9 @@ import { auth } from '../auth'
 import {
   sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
-  sendNewStudyInvitationEmail,
   sendNewUserEmail,
-  sendStudyInvitationEmail,
+  sendNewUserOnStudyInvitationEmail,
+  sendUserOnStudyInvitationEmail,
 } from '../email/email'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
@@ -41,16 +41,38 @@ export const sendNewUser = async (email: string) => {
   return sendNewUserEmail(email, token)
 }
 
-export const sendNewInvitation = async (
+export const sendInvitation = async (
   email: string,
   study: FullStudy,
   organization: Organization,
   user: User,
   role: string,
+  newUser?: DBUser,
 ) => {
+  if (newUser) {
+    return role
+      ? sendUserOnStudyInvitationEmail(
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${user.firstName} ${user.lastName}`,
+          newUser.firstName,
+          role,
+        )
+      : sendContributorInvitationEmail(
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${user.firstName} ${user.lastName}`,
+          newUser.firstName,
+        )
+  }
+
   const token = await updateUserResetToken(email)
   return role
-    ? sendNewStudyInvitationEmail(
+    ? sendNewUserOnStudyInvitationEmail(
         email,
         token,
         study.name,
@@ -66,34 +88,6 @@ export const sendNewInvitation = async (
         study.id,
         organization.name,
         `${user.firstName} ${user.lastName}`,
-      )
-}
-
-export const sendInvitation = async (
-  email: string,
-  study: FullStudy,
-  organization: Organization,
-  user: User,
-  newUser: DBUser,
-  role: string,
-) => {
-  return role
-    ? sendStudyInvitationEmail(
-        email,
-        study.name,
-        study.id,
-        organization.name,
-        `${user.firstName} ${user.lastName}`,
-        newUser.firstName,
-        role,
-      )
-    : sendContributorInvitationEmail(
-        email,
-        study.name,
-        study.id,
-        organization.name,
-        `${user.firstName} ${user.lastName}`,
-        newUser.firstName,
       )
 }
 
