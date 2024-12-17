@@ -24,6 +24,7 @@ import {
   SubPost,
 } from '@prisma/client'
 import { User } from 'next-auth'
+import { getTranslations } from 'next-intl/server'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -44,7 +45,7 @@ import {
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
-import { sendContributorInvitation, sendNewContributorInvitation } from './user'
+import { sendInvitation, sendNewInvitation } from './user'
 
 export const createStudyCommand = async ({
   organizationId,
@@ -196,8 +197,10 @@ const getUserOnStudy = async (
   organization: Organization,
   creator: User,
   newUser: DBUser | null,
+  role?: StudyRole,
 ) => {
   let userId = ''
+  const t = await getTranslations('study.role')
   if (!newUser) {
     const newUser = await addUser({
       email: email,
@@ -207,11 +210,11 @@ const getUserOnStudy = async (
       firstName: '',
       lastName: '',
     })
-    await sendNewContributorInvitation(email, study, organization, creator)
+    await sendNewInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '')
     userId = newUser.id
   } else {
     if (newUser.organizationId !== organization.id) {
-      await sendContributorInvitation(email, study, organization, creator, newUser)
+      await sendInvitation(email, study, organization, creator, newUser, role ? t(role).toLowerCase() : '')
     }
     userId = newUser.id
   }
@@ -246,7 +249,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const userId = await getUserOnStudy(right.email, studyWithRights, organization, session.user, newUser)
+  const userId = await getUserOnStudy(right.email, studyWithRights, organization, session.user, newUser, right.role)
   await createUserOnStudy({
     user: { connect: { id: userId } },
     study: { connect: { id: studyWithRights.id } },
