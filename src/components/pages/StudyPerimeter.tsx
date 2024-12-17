@@ -1,8 +1,8 @@
-'use client'
+'use server'
 
 import { FullStudy } from '@/db/study'
 import { User } from 'next-auth'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyFlow from '../study/perimeter/StudyFlow'
@@ -13,9 +13,9 @@ interface Props {
   user: User
 }
 
-const StudyPerimeterPage = ({ study, user }: Props) => {
-  const tNav = useTranslations('nav')
-  const t = useTranslations('study.perimeter')
+const StudyPerimeterPage = async ({ study, user }: Props) => {
+  const tNav = await getTranslations('nav')
+  const t = await getTranslations('study.perimeter')
 
   const userRoleOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
 

@@ -3,7 +3,7 @@ model Document {
   name String
   type String
 
-  bucketETag String @map("bucket__etag")
+  bucketETag String @map("bucket_e_tag")
   bucketKey  String @map("bucket_key")
 
   studyId String @map("study_id")

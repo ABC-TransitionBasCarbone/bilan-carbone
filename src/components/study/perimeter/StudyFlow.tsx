@@ -123,12 +123,12 @@ const StudyFlow = ({ study }: Props) => {
       {documents.length > 0 && selectedFlow ? (
         <div className="flex-col">
           <div className="flex-col mb1">
-            <InputLabel id="local-selector-label">{t('flowSelector')}</InputLabel>
+            <InputLabel id="flow-selector-label">{t('flowSelector')}</InputLabel>
             <div className={classNames(styles.flowButtons, 'flex grow')}>
               <Select
                 className="grow"
                 value={selectedFlow.id}
-                aria-labelledby="local-selector-label"
+                aria-labelledby="flow-selector-label"
                 onChange={(event) => setSelectedFlow(documents.find((flow) => flow.id === event.target.value))}
                 disabled={documents.length === 1}
               >

@@ -3,7 +3,7 @@ CREATE TABLE "documents" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "type" TEXT NOT NULL,
-    "bucket__etag" TEXT NOT NULL,
+    "bucket_e_tag" TEXT NOT NULL,
     "bucket_key" TEXT NOT NULL,
     "study_id" TEXT NOT NULL,
     "uploader_id" TEXT NOT NULL,

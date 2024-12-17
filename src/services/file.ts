@@ -20,6 +20,8 @@ const s3 = new S3Client({
   forcePathStyle: true,
 })
 
+export const allowedFlowFileTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp']
+
 export const download = (fileContent: string[], fileName: string, fileType: string) => {
   const blob = new Blob(fileContent, { type: fileType })
   const url = URL.createObjectURL(blob)
@@ -46,8 +48,6 @@ export const downloadFromUrl = async (url: string, fileName: string) => {
   document.body.removeChild(a)
   window.URL.revokeObjectURL(downloadUrl)
 }
-
-export const allowedFlowFileTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp']
 
 export const isAllowedFileType = async (file: File, allowedTypes: string[]) => {
   const fileType = (await fileTypeFromBlob(file))?.mime
