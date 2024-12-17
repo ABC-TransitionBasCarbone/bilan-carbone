@@ -3,7 +3,7 @@ import { Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { EmissionFactorWithMetaData } from './emissionFactors'
-import { getEmissionSourcesTotalCo2 } from './emissionSource'
+import { canBeValidated, getEmissionSourcesTotalCo2 } from './emissionSource'
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
@@ -42,7 +42,7 @@ export const getEmissionSourceStatus = (
     return EmissionSourcesStatus.Valid
   }
 
-  if (emissionSource.value !== null && emissionSource.emissionFactor !== null) {
+  if (canBeValidated(emissionSource)) {
     return EmissionSourcesStatus.ToVerify
   }
 
