@@ -33,6 +33,7 @@
     "@prisma/client": "^6.0.1",
     "@tanstack/react-table": "^8.20.5",
     "axios": "^1.7.8",
+    "basic-ftp": "^5.0.5",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.7",
     "classnames": "^2.5.1",
@@ -55,6 +56,7 @@
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-hook-form": "^7.53.2",
+    "ssh2-sftp-client": "^11.0.0",
     "uuid": "^11.0.3",
     "zod": "^3.23.8"
   },
@@ -73,6 +75,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "@types/ssh2-sftp-client": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "^8.16.0",
     "@typescript-eslint/parser": "^8.16.0",
     "cypress": "^13.16.0",

@@ -1,6 +1,6 @@
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/baseEmpreinte/getEmissionFactorsFromAPI'
-import { reCreateBegesRules } from '@/services/exportRules/beges'
+import { getUsersFromFTP } from '@/services/ftpUsers/getUsers'
 import { faker } from '@faker-js/faker'
 import { EmissionFactorStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
 import { Command } from 'commander'
@@ -313,8 +313,14 @@ const licenses = async () => {
   })
 }
 
+// const main = async (params: Params) => {
+//   await Promise.all([actualities(), licenses(), users(), reCreateBegesRules(), getUsersFromFTP()])
+//   if (params.importFactors) {
+//     await getEmissionFactorsFromAPI(params.importFactors)
+//   }
+// }
 const main = async (params: Params) => {
-  await Promise.all([actualities(), licenses(), users(), reCreateBegesRules()])
+  await Promise.all([getUsersFromFTP()])
   if (params.importFactors) {
     await getEmissionFactorsFromAPI(params.importFactors)
   }
