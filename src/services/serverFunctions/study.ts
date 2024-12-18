@@ -28,7 +28,7 @@ import {
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { auth } from '../auth'
-import { deleteFileFromBucket, uploadFileToBucket } from '../file'
+import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
   canAccessFlowFromStudy,
@@ -41,6 +41,7 @@ import {
   canCreateStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
+import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
 import {
   ChangeStudyDatesCommand,
@@ -335,7 +336,14 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
   }
 }
 
-export const addFlowToStudy = async (file: File, studyId: string) => {
+export const addFlowToStudy = async (studyId: string, file?: File) => {
+  if (!file) {
+    return 'noFileSelected'
+  }
+  const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
+  if (!allowedType) {
+    return 'invalidFileType'
+  }
   const allowedUserId = await canAddFlowToStudy(studyId)
   if (!allowedUserId) {
     return NOT_AUTHORIZED

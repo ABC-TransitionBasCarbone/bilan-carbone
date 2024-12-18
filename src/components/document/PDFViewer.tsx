@@ -1,4 +1,4 @@
-import styles from './styles.module.css'
+import styles from './PDFViewer.module.css'
 
 interface Props {
   pdfUrl?: string

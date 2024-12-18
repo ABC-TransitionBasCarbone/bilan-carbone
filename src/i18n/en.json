@@ -252,17 +252,7 @@
       }
     },
     "perimeter": {
-      "addFlow": "Add a flow",
       "dates": "from {startDate} to {endDate}",
-      "documentNotFound": "Document not found",
-      "invalidFileType": "Invalid file type",
-      "flows": "Flows mapping",
-      "flowSelector": "Flux to display",
-      "newFlow": "Add a flow",
-      "noFileSelected": "No file selected",
-      "noFlows": "No flow to display",
-      "notAuthorized": "Action not authorized",
-      "removeFlow": "Remove flow",
       "title": "Permiter on study : {name}"
     },
     "results": {
@@ -298,6 +288,19 @@
       "uncertainty": "Uncertainty",
       "validation": "Emission source validation",
       "yes": "Yes"
+    },
+    "flow": {
+      "addFlow": "Add a flow",
+      "documentNotFound": "Document not found",
+      "invalidFileType": "Invalid file type",
+      "flows": "Flows mapping",
+      "flowSelector": "Flux to display",
+      "newFlow": "Add a flow",
+      "noFileSelected": "No file selected",
+      "noFlows": "No flow to display",
+      "notAuthorized": "Action not authorized",
+      "removeFlow": "Remove flow",
+      "Not authorized": "You are not allowed to do this action"
     }
   },
   "emissionFactors": {

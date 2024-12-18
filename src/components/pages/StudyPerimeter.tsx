@@ -5,7 +5,7 @@ import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
-import StudyFlow from '../study/perimeter/StudyFlow'
+import StudyFlow from '../study/perimeter/flow/StudyFlow'
 import StudyPerimeter from '../study/perimeter/StudyPerimeter'
 
 interface Props {

@@ -204,7 +204,7 @@ export const canReadStudyDetail = async (user: User, study: FullStudy) => {
   return true
 }
 
-export const canAddFlowToStudy = async (studyId: string) => {
+const canAccessStudyFlow = async (studyId: string) => {
   const session = await auth()
 
   if (!session || !session.user) {
@@ -219,15 +219,10 @@ export const canAddFlowToStudy = async (studyId: string) => {
   return session.user.id
 }
 
+export const canAddFlowToStudy = async (studyId: string) => canAccessStudyFlow(studyId)
+
 export const canAccessFlowFromStudy = async (documentId: string, studyId: string) => {
-  const session = await auth()
-
-  if (!session || !session.user) {
-    return false
-  }
-
-  const study = await getStudyById(studyId, session.user.organizationId)
-  if (!study || !study.allowedUsers.some((right) => right.user.email === session.user.email)) {
+  if (!(await canAccessStudyFlow(studyId))) {
     return false
   }
 
