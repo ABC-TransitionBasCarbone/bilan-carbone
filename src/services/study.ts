@@ -32,6 +32,9 @@ export const getAllowedLevels = (level: Level | null) => {
   }
 }
 
+export const checkLevel = (userLevel: Level | null, targetLevel: Level) =>
+  userLevel ? getAllowedLevels(userLevel).includes(targetLevel) : false
+
 export enum EmissionSourcesStatus {
   Valid = 'valid',
   ToVerify = 'toVerify',
