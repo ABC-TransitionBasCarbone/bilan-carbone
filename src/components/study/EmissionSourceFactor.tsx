@@ -86,7 +86,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
   return (
     <>
       <div className={classNames(styles.factor, 'align-center')}>
-        <div className={styles.inputContainer}>
+        <div className={classNames(styles.inputContainer, { [styles.withSearch]: canEdit })}>
           <DebouncedInput
             disabled={!canEdit}
             data-testid="emission-source-factor-search"
@@ -96,14 +96,16 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
             label={t('form.emissionFactor')}
             onFocus={() => setDisplay(true)}
           />
-          <button
-            className={styles.search}
-            aria-label={t('advancedSearch')}
-            title={t('advancedSearch')}
-            onClick={() => setAdvancedSearch(true)}
-          >
-            <SearchIcon />
-          </button>
+          {canEdit && (
+            <button
+              className={styles.search}
+              aria-label={t('advancedSearch')}
+              title={t('advancedSearch')}
+              onClick={() => setAdvancedSearch(true)}
+            >
+              <SearchIcon />
+            </button>
+          )}
         </div>
         {selectedFactor && (
           <div data-testid="emission-source-factor">
