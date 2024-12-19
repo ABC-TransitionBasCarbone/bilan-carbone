@@ -3,7 +3,7 @@
 import Button from '@/components/base/Button'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
-import { allowedFlowFileTypes, downloadFromUrl } from '@/services/file'
+import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { addFlowToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -27,6 +27,7 @@ const StudyFlow = ({ study }: Props) => {
   const [selectedFlow, setSelectedFlow] = useState<Document | undefined>(undefined)
   const [documents, setDocuments] = useState<Document[]>([])
   const [error, setError] = useState('')
+  const [errorParams, setErrorParams] = useState({})
 
   useEffect(() => {
     fetchDocuments()
@@ -42,7 +43,18 @@ const StudyFlow = ({ study }: Props) => {
 
   const addFlow = async (files: FileList | null) => {
     setError('')
-    const result = await addFlowToStudy(study.id, files?.[0])
+    const file = files?.[0]
+    if (!file) {
+      setError('noFileSelected')
+      return
+    }
+    if (file.size > maxAllowedFileSize) {
+      setError('fileTooBig')
+      setErrorParams({ size: maxAllowedFileSize / MB })
+      return
+    }
+
+    const result = await addFlowToStudy(study.id, file)
     if (result) {
       setError(result)
       return
@@ -100,7 +112,7 @@ const StudyFlow = ({ study }: Props) => {
         },
       ]}
     >
-      {error && <div className={classNames(styles.error, 'mb1')}>{t(error)}</div>}
+      {error && <div className={classNames(styles.error, 'mb1')}>{t(error, errorParams)}</div>}
       {selectedFlow ? (
         <div className="flex-col">
           <div className="flex-col mb1">

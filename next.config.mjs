@@ -11,6 +11,11 @@ const nextConfig = {
   images: {
     domains: [scalewayUrl],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
+  },
 }
 
 export default withNextIntl(nextConfig)

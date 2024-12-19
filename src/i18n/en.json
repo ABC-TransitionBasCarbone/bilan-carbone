@@ -293,6 +293,7 @@
       "addFlow": "Add a flow",
       "documentNotFound": "Document not found",
       "invalidFileType": "Invalid file type",
+      "fileTooBig": "File too big (max size {size} MB)",
       "flows": "Flows mapping",
       "flowSelector": "Flux to display",
       "newFlow": "Add a flow",

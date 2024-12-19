@@ -1,6 +1,11 @@
 import { fileTypeFromBlob } from 'file-type'
 
+const KB = 1024
+export const MB = 1024 * KB
+
 export const allowedFlowFileTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp']
+
+export const maxAllowedFileSize = 5 * MB
 
 export const download = (fileContent: string[], fileName: string, fileType: string) => {
   const blob = new Blob(fileContent, { type: fileType })

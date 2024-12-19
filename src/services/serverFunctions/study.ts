@@ -336,10 +336,7 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
   }
 }
 
-export const addFlowToStudy = async (studyId: string, file?: File) => {
-  if (!file) {
-    return 'noFileSelected'
-  }
+export const addFlowToStudy = async (studyId: string, file: File) => {
   const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
   if (!allowedType) {
     return 'invalidFileType'
