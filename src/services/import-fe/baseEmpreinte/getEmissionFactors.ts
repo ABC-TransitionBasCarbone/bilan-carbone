@@ -1,3 +1,4 @@
+import { Import } from '@prisma/client'
 import axios, { AxiosResponse } from 'axios'
 import { parse } from 'csv-parse'
 import fs from 'fs'
@@ -50,7 +51,12 @@ type EmissionFactorResponse = {
 export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
   await prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersion = await getEmissionFactorImportVersion(transaction, name, path.basename(file))
+      const emissionFactorImportVersion = await getEmissionFactorImportVersion(
+        transaction,
+        name,
+        Import.BaseEmpreinte,
+        path.basename(file),
+      )
       if (!emissionFactorImportVersion.success) {
         return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
       }
@@ -123,7 +129,12 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
 
   await prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersion = await getEmissionFactorImportVersion(transaction, name, fileName)
+      const emissionFactorImportVersion = await getEmissionFactorImportVersion(
+        transaction,
+        name,
+        Import.BaseEmpreinte,
+        fileName,
+      )
       if (!emissionFactorImportVersion.success) {
         return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
       }
