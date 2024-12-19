@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 class MyWritableStream extends Writable {
   private data: string = ''
 
-  _write(chunk: any, encoding: string, callback: Function) {
+  _write(chunk: Buffer | string, encoding: string, callback: (error?: Error | null) => void) {
     this.data += chunk.toString()
     callback()
     return encoding
