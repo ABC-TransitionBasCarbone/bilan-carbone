@@ -174,6 +174,8 @@ const getType = (value: string) => {
       return EmissionFactorPartType.Transport
     case 'Combustion à la centrale':
       return EmissionFactorPartType.CombustionALaCentrale
+    case 'Pertes':
+      return EmissionFactorPartType.Pertes
     default:
       throw new Error(`Emission factor type not found: ${value}`)
   }
