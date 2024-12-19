@@ -5,6 +5,7 @@ import { NegaoctetEmissionFactor } from './negaoctet/import'
 export const getEmissionFactorImportVersion = async (
   transaction: Prisma.TransactionClient,
   name: string,
+  source: Import,
   id: string,
 ) => {
   const existingVersion = await transaction.emissionFactorImportVersion.findFirst({ where: { internId: id } })
@@ -12,7 +13,7 @@ export const getEmissionFactorImportVersion = async (
     return { success: false, id: existingVersion.id }
   }
   const newVersion = await transaction.emissionFactorImportVersion.create({
-    data: { name, source: Import.BaseEmpreinte, internId: id },
+    data: { name, source, internId: id },
   })
   return { success: true, id: newVersion.id }
 }
