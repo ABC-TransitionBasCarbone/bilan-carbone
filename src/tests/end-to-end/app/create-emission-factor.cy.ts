@@ -81,7 +81,7 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('new-emission-totalCo2').within(() => {
       cy.get('input').should('be.disabled')
-      cy.get('input').should('have.value', '45')
+      cy.get('input').should('have.value', '37')
     })
 
     cy.getByTestId('new-emission-post').click()
@@ -95,7 +95,7 @@ describe('Create emission factor', () => {
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new detailed FE')
-    cy.getByTestId('cell-emission-Valeur').first().should('have.text', '45 kgCO₂e/GWh')
+    cy.getByTestId('cell-emission-Valeur').first().should('have.text', '37 kgCO₂e/GWh')
   })
 
   it('should create an emission factor with total CO2 and multiple parts on your organization', () => {
@@ -231,7 +231,7 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('new-emission-totalCo2').within(() => {
       cy.get('input').should('be.disabled')
-      cy.get('input').should('have.value', '99')
+      cy.get('input').should('have.value', '81')
     })
 
     cy.getByTestId('new-emission-post').click()
@@ -245,7 +245,7 @@ describe('Create emission factor', () => {
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new multiple detailed FE')
-    cy.getByTestId('cell-emission-Valeur').first().should('have.text', '99 kgCO₂e/GWh')
+    cy.getByTestId('cell-emission-Valeur').first().should('have.text', '81 kgCO₂e/GWh')
   })
 
   it('should render emission parts in accordions', () => {

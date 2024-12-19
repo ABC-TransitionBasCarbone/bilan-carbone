@@ -358,7 +358,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         validated: true,
         reliability: 5,
         name: 'Carton - Fin de vie moyenne filière - impacts, France continentale, Base Carbone',
-        subPost: SubPost.DechetsDEmballagesEtPlastiques,
+        subPost: SubPost.DechetsBatiments,
         value: 1.3,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34486')?.id,
       },
@@ -368,9 +368,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         validated: true,
         reliability: 5,
         name: 'Papier/fin de vie moyenne, France continentale, Base Carbone',
-        subPost: SubPost.DechetsDEmballagesEtPlastiques,
+        subPost: SubPost.DechetsBatiments,
         value: 0.2,
-        // Le facteur d'emission n'est associé à aucun sous post
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '22024')?.id,
       },
       {
@@ -381,7 +380,6 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Plastique souple PET pétrosourcé - Fin de vie moyenne filière - Impacts, France continentale, Base Carbone',
         subPost: SubPost.DechetsDEmballagesEtPlastiques,
         value: 0.5,
-        // Le facteur d'emission de la BE est à 1489, celui de l'excel à 1649
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34512')?.id,
       },
       {
