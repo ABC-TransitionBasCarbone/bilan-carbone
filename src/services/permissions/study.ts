@@ -2,11 +2,8 @@ import { FullStudy } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { User as DbUser, Level, Prisma, Role, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
-import { getAllowedLevels } from '../study'
+import { checkLevel } from '../study'
 import { checkOrganization } from './organization'
-
-const checkLevel = (userLevel: Level | null, studyLevel: Level) =>
-  userLevel ? getAllowedLevels(studyLevel).includes(userLevel) : false
 
 export const canReadStudy = async (
   user: User | UserWithAllowedStudies,
@@ -100,7 +97,7 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
     return false
   }
 
-  if (!getAllowedLevels(user.level).includes(level)) {
+  if (!checkLevel(user.level, level)) {
     return false
   }
 

@@ -36,7 +36,7 @@ import {
   canCreateStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
-import { getAllowedLevels } from '../study'
+import { checkLevel } from '../study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyLevelCommand,
@@ -243,7 +243,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  if (!existingUser || !getAllowedLevels(existingUser.level).includes(studyWithRights.level)) {
+  if (!existingUser || !checkLevel(existingUser.level, studyWithRights.level)) {
     right.role = StudyRole.Reader
   }
 
