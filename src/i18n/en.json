@@ -290,6 +290,7 @@
       "yes": "Yes"
     },
     "flow": {
+      "loading": "Loading document...",
       "addFlow": "Add a flow",
       "documentNotFound": "Document not found",
       "invalidFileType": "Invalid file type",

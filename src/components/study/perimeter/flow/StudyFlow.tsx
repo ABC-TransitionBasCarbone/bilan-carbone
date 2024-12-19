@@ -1,7 +1,5 @@
 'use client'
-
 import Button from '@/components/base/Button'
-import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
@@ -12,6 +10,7 @@ import { InputLabel, Button as MUIButton } from '@mui/material'
 import { Document } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Block from '../../../base/Block'
 import FlowSelector from './FlowSelector'
@@ -20,46 +19,39 @@ import StudyFlowViewer from './StudyFlowViewer'
 
 interface Props {
   study: FullStudy
+  documents: Document[]
+  initialDocument?: Document
 }
 
-const StudyFlow = ({ study }: Props) => {
+const StudyFlow = ({ study, documents, initialDocument }: Props) => {
   const t = useTranslations('study.flow')
-  const [selectedFlow, setSelectedFlow] = useState<Document | undefined>(undefined)
-  const [documents, setDocuments] = useState<Document[]>([])
+
+  const router = useRouter()
   const [error, setError] = useState('')
-  const [errorParams, setErrorParams] = useState({})
+  const [selectedFlow, setSelectedFlow] = useState<Document | undefined>(initialDocument)
 
   useEffect(() => {
-    fetchDocuments()
-  }, [])
-
-  const fetchDocuments = async (init = true) => {
-    const documents = await getDocumentsForStudy(study.id)
-    setDocuments(documents || [])
-    if (init) {
-      setSelectedFlow(documents[0])
-    }
-  }
+    setSelectedFlow(initialDocument)
+  }, [initialDocument])
 
   const addFlow = async (files: FileList | null) => {
     setError('')
     const file = files?.[0]
     if (!file) {
-      setError('noFileSelected')
+      setError(t('noFileSelected'))
       return
     }
     if (file.size > maxAllowedFileSize) {
-      setError('fileTooBig')
-      setErrorParams({ size: maxAllowedFileSize / MB })
+      setError(t('fileTooBig', { size: maxAllowedFileSize / MB }))
       return
     }
 
     const result = await addFlowToStudy(study.id, file)
     if (result) {
-      setError(result)
+      setError(t(result))
       return
     }
-    fetchDocuments(documents.length === 0)
+    router.refresh()
   }
 
   const downloadDocument = async () => {
@@ -77,10 +69,10 @@ const StudyFlow = ({ study }: Props) => {
     }
     const result = await deleteFlowFromStudy(selectedFlow, study.id)
     if (result) {
-      setError(result)
+      setError(t(result))
       return
     }
-    fetchDocuments()
+    router.refresh()
   }
 
   return (
@@ -112,7 +104,7 @@ const StudyFlow = ({ study }: Props) => {
         },
       ]}
     >
-      {error && <div className={classNames(styles.error, 'mb1')}>{t(error, errorParams)}</div>}
+      {error && <div className={classNames(styles.error, 'mb1')}>{error}</div>}
       {selectedFlow ? (
         <div className="flex-col">
           <div className="flex-col mb1">
@@ -133,8 +125,7 @@ const StudyFlow = ({ study }: Props) => {
               </MUIButton>
             </div>
           </div>
-
-          <StudyFlowViewer selectedFlow={selectedFlow} studyId={study.id} />
+          {selectedFlow && <StudyFlowViewer selectedFlow={selectedFlow} studyId={study.id} />}
         </div>
       ) : (
         t('noFlows')

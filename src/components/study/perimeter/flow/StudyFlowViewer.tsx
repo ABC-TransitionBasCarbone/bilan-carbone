@@ -15,20 +15,25 @@ const StudyFlowViewer = ({ studyId, selectedFlow }: Props) => {
   const t = useTranslations('study.flow')
   const isPdf = useMemo(() => selectedFlow?.type === 'application/pdf', [selectedFlow])
   const [documentUrl, setDocumentUrl] = useState('')
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
-    if (!selectedFlow) {
-      return
-    }
     fetchAndSetFlowUrl(selectedFlow)
   }, [selectedFlow])
 
   const fetchAndSetFlowUrl = async (document: Document) => {
+    setLoading(true)
     const url = await getDocumentUrl(document, studyId)
     setDocumentUrl(url || '')
+    setLoading(false)
+  }
+
+  if (loading) {
+    return <p>{t('loading')}</p>
   }
 
   if (!documentUrl) {
-    return <div>{t('documentNotFound')}</div>
+    return <p>{t('documentNotFound')}</p>
   }
 
   return (
