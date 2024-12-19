@@ -147,6 +147,16 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
                   />
                 </div>
               )
+            case Import.Legifrance:
+              return (
+                <div className="flex-cc">
+                  <img
+                    className={styles.importFrom}
+                    src="https://www.legifrance.gouv.fr/contenu/logo"
+                    title={t('importedFrom.legifrance')}
+                  />
+                </div>
+              )
             case Import.NegaOctet:
               return (
                 <div className="flex-cc">
