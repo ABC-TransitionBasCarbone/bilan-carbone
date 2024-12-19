@@ -17,10 +17,12 @@ interface Props {
 }
 
 const StudyPostsBlock = ({ post, study, display, setDisplay, children }: Props) => {
+  const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
   const tStudyPost = useTranslations('study.post')
+  const tUnit = useTranslations('units')
 
   const validSubPosts = useMemo(() => subPostsByPost[post], [post])
   const emissionSources = useMemo(
@@ -39,7 +41,8 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children }: Props) 
       actions={[
         {
           actionType: 'button',
-          onClick: () => downloadStudyPost(study, emissionSources, post, tExport, tPost, tQuality),
+          onClick: () =>
+            downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit),
           disabled: emissionSources.length === 0,
           children: (
             <>

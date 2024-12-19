@@ -1,7 +1,28 @@
 import { FullStudy } from '@/db/study'
-import { EmissionSourceCaracterisation, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
+
+export const getEmissionSourceCompletion = (
+  emissionSource: Pick<StudyEmissionSource, 'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation'>,
+) => {
+  const mandatoryFields = [
+    'name',
+    'type',
+    'value',
+    'emissionFactorId',
+    'caracterisation',
+  ] as (keyof typeof emissionSource)[]
+  return (
+    mandatoryFields.reduce((acc, field) => acc + (emissionSource[field] !== null ? 1 : 0), 0) / mandatoryFields.length
+  )
+}
+
+export const canBeValidated = (
+  emissionSource: Pick<StudyEmissionSource, 'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation'>,
+) => {
+  return getEmissionSourceCompletion(emissionSource) === 1
+}
 
 export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {

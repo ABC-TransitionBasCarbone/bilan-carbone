@@ -2,11 +2,8 @@ import { FullStudy } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { User as DbUser, Level, Prisma, Role, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
-import { getAllowedLevels } from '../study'
+import { checkLevel } from '../study'
 import { checkOrganization } from './organization'
-
-const checkLevel = (userLevel: Level | null, studyLevel: Level) =>
-  userLevel ? getAllowedLevels(studyLevel).includes(userLevel) : false
 
 export const canReadStudy = async (
   user: User | UserWithAllowedStudies,
@@ -100,7 +97,7 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
     return false
   }
 
-  if (!getAllowedLevels(user.level).includes(level)) {
+  if (!checkLevel(user.level, level)) {
     return false
   }
 
@@ -112,12 +109,12 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
   return true
 }
 
-export const canAddRightOnStudy = (user: User, study: FullStudy, newUser: DbUser | null, role: StudyRole) => {
-  if (newUser && user.id === newUser.id) {
+export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStudy: DbUser | null, role: StudyRole) => {
+  if (userToAddOnStudy && user.id === userToAddOnStudy.id) {
     return false
   }
 
-  if ((!newUser || !newUser.organizationId) && role !== StudyRole.Reader) {
+  if ((!userToAddOnStudy || !userToAddOnStudy.organizationId) && role !== StudyRole.Reader) {
     return false
   }
 
@@ -167,6 +164,7 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
         name: emissionSource.name,
         validated: emissionSource.validated,
         subPost: emissionSource.subPost,
+        emissionFactorId: emissionSource.emissionFactorId,
         emissionFactor: emissionSource.emissionFactor,
         value: emissionSource.value,
         reliability: emissionSource.reliability,
@@ -175,6 +173,8 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
         temporalRepresentativeness: emissionSource.temporalRepresentativeness,
         completeness: emissionSource.completeness,
         source: emissionSource.source,
+        type: emissionSource.type,
+        caracterisation: emissionSource.caracterisation,
       })),
     contributors: undefined,
     allowedUser: undefined,

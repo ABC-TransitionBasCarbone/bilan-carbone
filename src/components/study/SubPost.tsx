@@ -43,8 +43,10 @@ const SubPost = ({
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tExport = useTranslations('study.export')
+  const tCaracterisations = useTranslations('categorisations')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
+  const tUnit = useTranslations('units')
 
   const subPostEmissionFactors = useMemo(() => {
     return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost))
@@ -120,6 +122,7 @@ const SubPost = ({
         <div className={classNames(styles.download, 'flex ml1')}>
           <Button
             aria-label={tExport('downloadSubPost', { name: subPost })}
+            title={tExport('downloadSubPost', { name: subPost })}
             onClick={() => {
               downloadStudySubPosts(
                 study as FullStudy,
@@ -128,8 +131,10 @@ const SubPost = ({
                 emissionSources as FullStudy['emissionSources'],
                 subPostEmissionFactors,
                 tExport,
+                tCaracterisations,
                 tPost,
                 tQuality,
+                tUnit,
               )
             }}
             disabled={emissionSources.length === 0}

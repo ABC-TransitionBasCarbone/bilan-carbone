@@ -1,15 +1,30 @@
 'use server'
 
-import { addUser, changeUserRole, deleteUser, getUserByEmail, updateUserResetTokenForEmail } from '@/db/user'
-import { Role } from '@prisma/client'
+import { FullStudy } from '@/db/study'
+import {
+  addUser,
+  changeUserRole,
+  deleteUser,
+  getUserByEmail,
+  updateUserResetTokenForEmail,
+  validateUser,
+} from '@/db/user'
+import { User as DBUser, Organization, Role } from '@prisma/client'
 import jwt from 'jsonwebtoken'
+import { User } from 'next-auth'
 import { auth } from '../auth'
-import { sendNewInvitation } from '../email/email'
+import {
+  sendContributorInvitationEmail,
+  sendNewContributorInvitationEmail,
+  sendNewUserEmail,
+  sendNewUserOnStudyInvitationEmail,
+  sendUserOnStudyInvitationEmail,
+} from '../email/email'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 import { AddMemberCommand } from './user.command'
 
-export const sendInvitation = async (email: string) => {
+const updateUserResetToken = async (email: string) => {
   const resetToken = Math.random().toString(36)
   const payload = {
     email,
@@ -17,9 +32,63 @@ export const sendInvitation = async (email: string) => {
     exp: Math.round(Date.now() / 1000) + 60 * 60 * 24 * 7, // 7 days expiration
   }
 
-  const token = jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
   await updateUserResetTokenForEmail(email, resetToken)
-  return sendNewInvitation(email, token)
+  return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
+}
+
+export const sendNewUser = async (email: string) => {
+  const token = await updateUserResetToken(email)
+  return sendNewUserEmail(email, token)
+}
+
+export const sendInvitation = async (
+  email: string,
+  study: FullStudy,
+  organization: Organization,
+  user: User,
+  role: string,
+  newUser?: DBUser,
+) => {
+  if (newUser) {
+    return role
+      ? sendUserOnStudyInvitationEmail(
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${user.firstName} ${user.lastName}`,
+          newUser.firstName,
+          role,
+        )
+      : sendContributorInvitationEmail(
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${user.firstName} ${user.lastName}`,
+          newUser.firstName,
+        )
+  }
+
+  const token = await updateUserResetToken(email)
+  return role
+    ? sendNewUserOnStudyInvitationEmail(
+        email,
+        token,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+        role,
+      )
+    : sendNewContributorInvitationEmail(
+        email,
+        token,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+      )
 }
 
 export const addMember = async (member: AddMemberCommand) => {
@@ -28,7 +97,12 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const newMember = { ...member, isActive: false, organization: { connect: { id: session.user.organizationId } } }
+  const newMember = {
+    ...member,
+    isActive: false,
+    isValidated: true,
+    organization: { connect: { id: session.user.organizationId } },
+  }
 
   if (!canAddMember(session.user, newMember, session.user.organizationId)) {
     return NOT_AUTHORIZED
@@ -36,7 +110,22 @@ export const addMember = async (member: AddMemberCommand) => {
 
   //TODO: que fait on si l'utilisateur existe déjà ?
   await addUser(newMember)
-  await sendInvitation(member.email)
+  await sendNewUser(member.email)
+}
+
+export const validateMember = async (email: string) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return NOT_AUTHORIZED
+  }
+
+  const member = await getUserByEmail(email)
+  if (!member || !canAddMember(session.user, member, member.organizationId)) {
+    return NOT_AUTHORIZED
+  }
+
+  await validateUser(email)
+  await sendNewUser(member.email)
 }
 
 export const resendInvitation = async (email: string) => {
@@ -50,7 +139,7 @@ export const resendInvitation = async (email: string) => {
     return NOT_AUTHORIZED
   }
 
-  await sendInvitation(member.email)
+  await sendNewUser(member.email)
 }
 
 export const deleteMember = async (email: string) => {

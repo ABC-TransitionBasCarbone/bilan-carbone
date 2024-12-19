@@ -62,6 +62,7 @@ const EmissionFactorPartForm = ({ detailedGES, form, index }: DetailedGESFieldsP
           slotProps={{
             htmlInput: { min: 0 },
             inputLabel: { shrink: true },
+            input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
           }}
           type="number"
           name={`parts.${index}.totalCo2`}

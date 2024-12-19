@@ -10,11 +10,12 @@ export const findUserInfo = (user: User) =>
       role: user.role !== Role.DEFAULT,
       level: true,
       isActive: true,
+      isValidated: true,
       updatedAt: true,
     },
     where:
       user.role === Role.DEFAULT
-        ? { isActive: true, organizationId: user.organizationId }
+        ? { isActive: true, isValidated: true, organizationId: user.organizationId }
         : { organizationId: user.organizationId },
   }) satisfies Prisma.UserFindManyArgs
 
@@ -50,7 +51,7 @@ export const canDeleteMember = (user: User, member: DbUser | null) => {
     return false
   }
 
-  if (member.isActive || member.password) {
+  if (member.isValidated && (member.isActive || member.password)) {
     return false
   }
 

@@ -1,7 +1,10 @@
 {
+  "home": {
+    "userToValidate": "Un utilisateur a été ajouté à votre organisation car il vient d'être formé à la méthode bilan carbone. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte"
+  },
   "exports": {
     "title": "Exports :",
-    "consolidated": "Consolidés",
+    "consolidated": "Bilan Carbone®",
     "Beges": "Bilan GES Reglementaire",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069"
@@ -109,6 +112,7 @@
   "navigation": {
     "factors": "Facteurs d'émission",
     "help": "Aide",
+    "admin": "Admin",
     "home": "Accueil",
     "profile": "Profil",
     "study": "Étude",
@@ -124,6 +128,11 @@
     "legalNotices": "Mentions légales",
     "logout": "Se déconnecter"
   },
+  "admin": {
+    "title": "Administration du BC+",
+    "csvOnly": "Seuls les fichiers CSV sont acceptés",
+    "uploadButton": "Importer un fichier CSV de l'ADEME"
+  },
   "study": {
     "create": "Nouvelle étude",
     "myStudies": "Mes études",
@@ -135,7 +144,8 @@
       "accounting": "Comptabilisation",
       "dataEntry": "Saisie des données",
       "results": "Résultats",
-      "transitionPlan": "Plan de transition"
+      "transitionPlan": "Plan de transition",
+      "menu": "Ouvrir le menu de navigation de l'étude"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -195,7 +205,7 @@
     "title": "Étude",
     "rights": {
       "contributors": "Contributeurs",
-      "isPublic": "L'étude est public",
+      "isPublic": "L'étude est publique",
       "isPrivate": "L'étude est privée",
       "title": "Cadrage de l'étude : {name}",
       "newContributorLink": "Ajouter un contributeur",
@@ -210,9 +220,9 @@
           "role": "Veuillez sélectionner un droit"
         },
         "dialog": {
-          "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
-          "otherOrganization": "Elle est utilisatrice du BC+ au sein d'une autre organisation que la votre.",
-          "nonExisting": "Elle n'est pas utilisatrice du BC+, vous ne pourrez donc lui donner un accès à l'étude qu'avec les droits de lecture ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
+          "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
+          "otherOrganization": "Elle ne fait pas partie de votre organisation.",
+          "rightsWarning": "Si elle ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle, vous ne pourrez donc lui donner un accès qu'à cette étude et avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
           "accept": "Oui",
           "decline": "Non"
         }
@@ -251,20 +261,26 @@
       "uncertainty": "Incertitude"
     },
     "export": {
+      "activityDataComment": "Commentaire de la donnée d'activité",
+      "activityDataQuality": "Qualité de la donnée d'activité",
+      "activityDataUnit": "Unité de la donnée d'activité",
+      "activityDataValue": "Valeur de la donnée d'activité",
       "date": "Date butoire",
       "download": "Télécharger les sources d'émissions",
       "downloadSubPost": "Télécharger les sources d'émissions de {name}",
       "emissionName": "Nom du FE (facteur d'émission)",
       "emissionQuality": "Qualité du FE",
       "emissionSource": "Source du FE",
+      "emissionUnit": "Unité du FE",
       "emissionValue": "Valeur du FE",
       "no": "Non",
       "noFactor": "Aucun facteur d'émission",
       "post": "Poste",
+      "quality": "Qualité",
       "sourceCharacterization": "Caractérisation de la source d'émission",
-      "sourceComment": "Commentaire de la source d'émission",
       "sourceName": "Nom de la source d'émission",
       "sourceQuality": "Qualité de la source d'émission",
+      "sourceUnit": "Unité de la source d'émission",
       "sourceValue": "Valeur de la source d'émission",
       "subPost": "Sous poste",
       "total": "Total",
@@ -279,8 +295,8 @@
       "allPost": "Tout les postes",
       "allSubPost": "Tout les sous postes",
       "Energies": "Énergies",
-      "AutresEmissionsNonEnergetiques": "Autres émissions non énergétiques",
-      "IntrantsBienEtMatieres": "Intrants bien et matières",
+      "AutresEmissionsNonEnergetiques": "Autres émissions directes",
+      "IntrantsBienEtMatieres": "Intrants biens et matières",
       "IntrantsServices": "Intrants services",
       "DechetsDirects": "Déchets directs",
       "Fret": "Fret",
@@ -374,6 +390,9 @@
     "title": "Facteurs d'émissions",
     "loading": "Chargement des facteurs d'émissions",
     "table": {
+      "Valid": "Valide",
+      "Archived": "Archivé",
+      "selectLine": "Selectionner ce facteur d'émission",
       "all": "Toutes",
       "BaseEmpreinte": "Base Empreinte",
       "displayArchived": "Afficher les facteurs archivés",
@@ -433,6 +452,8 @@
     "title": "Mon organisation",
     "pending": "Invitations en attentes",
     "invitationDate": "Invitation envoyé le",
+    "toValidate": "Invitations à valider",
+    "addedDate": "Ajouté le",
     "delete": "Supprimer l'utilisateur",
     "resend": "Renvoyer l'invitation",
     "table": {
@@ -612,7 +633,7 @@
     "form": {
       "create": "Créer l'organisation",
       "editTitle": "Modifier mon organisation",
-      "edit": "Modifier",
+      "edit": "Valider la modification",
       "name": "Nom de l'organisation",
       "title": "Informations sur la nouvelle organisation"
     },
@@ -633,7 +654,9 @@
     }
   },
   "emissionSource": {
-    "dialog": {
+    "advancedSearch": "Recherche avancée",
+    "noResults": "Rechercher avec plus de filtres",
+    "deleteDialog": {
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
       "description": "Toutes les données renseignées seront définitivement perdues, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
@@ -645,7 +668,7 @@
       "valid": "Validée",
       "waiting": "En attente",
       "waitingContributor": "En attente d'un contributeur",
-      "toVerify": "A vérifier"
+      "toVerify": "À vérifier"
     },
     "type": {
       "Physical": "Physique",
@@ -663,19 +686,23 @@
     },
     "form": {
       "validate": "Validée",
-      "name": "Nom",
+      "name": "Nom *",
       "tag": "Tag",
-      "caracterisation": "Caractérisation",
-      "emissionFactor": "Facteur d'émission",
-      "value": "Valeur donnée d'activité",
+      "caracterisation": "Caractérisation *",
+      "emissionFactor": "Facteur d'émission *",
+      "value": "Valeur donnée d'activité *",
       "source": "Source",
-      "type": "Type",
+      "type": "Type *",
       "reliability": "Fiabilité",
       "technicalRepresentativeness": "Représentativité technique",
       "geographicRepresentativeness": "Représentativité géographique",
       "temporalRepresentativeness": "Représentativité temporelle",
       "completeness": "Complétude",
       "comment": "Commentaires"
+    },
+    "emissionFactorDialog": {
+      "title": "Choisir un facteur d'émission",
+      "cancel": "Annuler"
     }
   },
   "quality": {

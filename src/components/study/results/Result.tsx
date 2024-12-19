@@ -1,6 +1,5 @@
 'use client'
 
-import Box from '@/components/base/Box'
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
@@ -18,13 +17,26 @@ interface Props {
   site: string
 }
 
-const sort = (arr: string[]) => arr.sort((a, b) => a.length - b.length)
+const postXAxisList = [
+  Post.Energies,
+  Post.DechetsDirects,
+  Post.IntrantsBienEtMatieres,
+  Post.IntrantsServices,
+  Post.AutresEmissionsNonEnergetiques,
+  Post.Fret,
+  Post.Deplacements,
+  Post.Immobilisations,
+  Post.UtilisationEtDependance,
+  Post.FinDeVie,
+]
 
 const Result = ({ study, by, site }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
+  const tCaracterisations = useTranslations('categorisations')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
+  const tUnit = useTranslations('units')
   const [dynamicHeight, setDynamicHeight] = useState(0)
   const [post, setPost] = useState<Post>(Object.values(Post)[0])
   const chartRef = useRef<Chart | null>(null)
@@ -32,7 +44,7 @@ const Result = ({ study, by, site }: Props) => {
 
   const selectorOptions = Object.values(Post)
 
-  const xAxis = useMemo(() => sort(by === 'Post' ? Object.values(Post) : subPostsByPost[post]), [post, by])
+  const xAxis = useMemo(() => (by === 'Post' ? postXAxisList : subPostsByPost[post]), [post, by])
 
   const yData = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, site)
@@ -90,18 +102,18 @@ const Result = ({ study, by, site }: Props) => {
 
   const downloadResults = () => {
     if (by === 'Post') {
-      downloadStudyEmissionSources(study, tExport, tPost, tQuality)
+      downloadStudyEmissionSources(study, tExport, tCaracterisations, tPost, tQuality, tUnit)
     } else {
       const emissionSources = study.emissionSources.filter((emissionSource) =>
         subPostsByPost[post].includes(emissionSource.subPost),
       )
-      downloadStudyPost(study, emissionSources, post, tExport, tPost, tQuality)
+      downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit)
     }
   }
 
   return (
-    <Box className="grow flex-col">
-      <h4 className="mb1">{t(`by${by}`)}</h4>
+    <>
+      <h3 className="mb1">{t(`by${by}`)}</h3>
       {by === 'SubPost' && (
         <div className="flex mb1">
           <Select className="mr-2 grow" value={post} onChange={(e) => setPost(e.target.value as Post)}>
@@ -119,7 +131,7 @@ const Result = ({ study, by, site }: Props) => {
       <div style={{ height: dynamicHeight }}>
         <canvas data-testid={`study-${by}-chart`} ref={canvasRef} />
       </div>
-    </Box>
+    </>
   )
 }
 

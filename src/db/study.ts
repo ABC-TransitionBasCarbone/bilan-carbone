@@ -1,4 +1,5 @@
-import { StudyRole, SubPost, type Prisma } from '@prisma/client'
+import { checkLevel } from '@/services/study'
+import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 import { getUserOrganizations } from './user'
@@ -31,6 +32,7 @@ const fullStudyInclude = {
           id: true,
         },
       },
+      emissionFactorId: true,
       emissionFactor: {
         select: {
           id: true,
@@ -69,6 +71,7 @@ const fullStudyInclude = {
         select: {
           email: true,
           organizationId: true,
+          level: true,
         },
       },
       role: true,
@@ -90,19 +93,36 @@ const fullStudyInclude = {
   exports: { select: { type: true } },
 } satisfies Prisma.StudyInclude
 
-export const getMainStudy = async (user: User) => {
-  const userOrganizations = await getUserOrganizations(user.email)
-  return prismaClient.study.findFirst({
-    where: {
-      OR: [
-        { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
-        { allowedUsers: { some: { userId: user.id } } },
-        { contributors: { some: { userId: user.id } } },
-      ],
-    },
+const normalizeAllowedUsers = (
+  allowedUsers: Prisma.StudyGetPayload<{ include: typeof fullStudyInclude }>['allowedUsers'],
+  studyLevel: Level,
+  organizationId: string | null,
+) =>
+  allowedUsers.map((allowedUser) => {
+    const readerOnly = !allowedUser.user.organizationId || !checkLevel(allowedUser.user.level, studyLevel)
+    return organizationId && allowedUser.user.organizationId === organizationId
+      ? { ...allowedUser, user: { ...allowedUser.user, readerOnly } }
+      : {
+          ...allowedUser,
+          user: {
+            ...allowedUser.user,
+            organizationId: undefined,
+            level: undefined,
+            readerOnly,
+          },
+        }
+  })
+
+export const getMainStudy = async (organizationId: string) => {
+  const study = await prismaClient.study.findFirst({
+    where: { organizationId },
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
+  if (!study) {
+    return null
+  }
+  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId) }
 }
 
 export const getStudiesByUser = async (user: User) => {
@@ -130,11 +150,15 @@ export const getStudiesByUserAndOrganization = async (user: User, organizationId
   })
 }
 
-export const getStudyById = async (id: string) => {
-  return prismaClient.study.findUnique({
+export const getStudyById = async (id: string, organizationId: string | null) => {
+  const study = await prismaClient.study.findUnique({
     where: { id },
     include: fullStudyInclude,
   })
+  if (!study) {
+    return null
+  }
+  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId) }
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 

@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
 import Block from '../base/Block'
-import styles from './PendingInvitations.module.css'
+import styles from './Invitations.module.css'
 import PendingInvitationsActions from './PendingInvitationsActions'
 
 interface Props {

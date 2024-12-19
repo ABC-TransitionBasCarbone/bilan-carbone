@@ -14,7 +14,6 @@
 }
 
 .suggestion {
-  display: block;
   cursor: pointer;
   width: 100%;
   padding: 0.5rem 1rem;
@@ -34,4 +33,39 @@
 .detail {
   font-size: 0.975rem;
   color: var(--neutral-50);
+}
+
+.inputContainer {
+  position: relative;
+  min-width: 15rem;
+  :global(.MuiFormControl-root) {
+    width: 100%;
+  }
+}
+
+.withSearch {
+  :global(.MuiFormControl-root) {
+    input {
+      padding-right: 3rem;
+    }
+  }
+}
+
+.search {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.75rem;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  background-color: var(--neutral-10);
+  border: none;
+  cursor: pointer;
+  height: 2rem;
+
+  &:hover {
+    background-color: var(--neutral-20);
+    svg {
+      color: var(--primary-60);
+    }
+  }
 }

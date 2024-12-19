@@ -1,31 +1,47 @@
-import { getUserOrganizations } from '@/db/user'
-import classNames from 'classnames'
+import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
+import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { Suspense } from 'react'
 import Actualities from '../actuality/Actualities'
+import Block from '../base/Block'
 import Organizations from '../organization/OrganizationsContainer'
 import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Studies from '../study/StudiesContainer'
-import styles from './styles.module.css'
+import UserToValidate from './UserToValidate'
+import styles from './UserView.module.css'
 
 interface Props {
   user: User
 }
 
 const UserView = async ({ user }: Props) => {
-  const organizations = await getUserOrganizations(user.email)
+  const [organizations, hasUserToValidate] = await Promise.all([
+    getUserOrganizations(user.email),
+    hasUserToValidateInOrganization(user.organizationId),
+  ])
   const isCR = organizations.find((organization) => organization.id === user.organizationId)?.isCR
 
   return (
-    <div className="flex-col">
-      <Suspense>
-        <ResultsContainerForUser user={user} />
-      </Suspense>
-      <div className={classNames(styles.container, 'w100')}>
-        <Actualities />
-        {isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}
-      </div>
-    </div>
+    <>
+      {!!hasUserToValidate && (user.role === Role.ADMIN || user.role === Role.GESTIONNAIRE) && (
+        <div className="main-container">
+          <UserToValidate />
+        </div>
+      )}
+      {user.organizationId && (
+        <Suspense>
+          <Block>
+            <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
+          </Block>
+        </Suspense>
+      )}
+      <Block>
+        <div className={styles.container}>
+          <Actualities />
+          {isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}
+        </div>
+      </Block>
+    </>
   )
 }
 
