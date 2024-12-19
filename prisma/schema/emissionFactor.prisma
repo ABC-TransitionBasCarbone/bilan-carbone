@@ -21,6 +21,7 @@ enum EmissionFactorPartType {
 enum Import {
   BaseEmpreinte
   NegaOctet
+  Legifrance
   Manual
 }
 
