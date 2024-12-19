@@ -432,6 +432,7 @@
       "yes": "Oui",
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
+        "legifrance": "Logo de Légifrance",
         "negaOctet": "Logo de NegaOctet",
         "manual": "Manuel"
       },
