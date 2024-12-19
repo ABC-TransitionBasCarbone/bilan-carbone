@@ -433,6 +433,7 @@
       "value": "Value",
       "importedFrom": {
         "baseEmpreinte": "Base Empreinte logo",
+        "negaoctet": "NegaOctet logo",
         "manual": "Manual"
       },
       "post": "Post:",

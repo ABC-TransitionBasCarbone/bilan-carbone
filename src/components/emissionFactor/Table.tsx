@@ -147,6 +147,16 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
                   />
                 </div>
               )
+            case Import.NegaOctet:
+              return (
+                <div className="flex-cc">
+                  <img
+                    className={styles.importFrom}
+                    src="https://negaoctet.org/wp-content/uploads/2019/03/negooctet-logo-simple.png"
+                    title={t('importedFrom.negaoctet')}
+                  />
+                </div>
+              )
             default:
               return (
                 <span className={classNames(styles.importFrom, 'flex-cc')}>
