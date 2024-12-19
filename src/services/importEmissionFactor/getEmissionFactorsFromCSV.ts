@@ -1,23 +1,27 @@
-import { Import } from '@prisma/client'
+import { Import, Prisma } from '@prisma/client'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import path from 'path'
-import { prismaClient } from '../../../db/client'
-import { getEmissionFactorImportVersion, ImportEmissionFactor } from '../import'
-import { mapNegaOctetEmissionFactors, NegaoctetEmissionFactor, negaoctetRequiredColumns } from './import'
+import { prismaClient } from '../../db/client'
+import {
+  getEmissionFactorImportVersion,
+  ImportEmissionFactor,
+  requiredColumns,
+  saveEmissionFactorsParts,
+} from './import'
 
 const checkHeaders = (headers: string[]) => {
-  if (negaoctetRequiredColumns.length > headers.length) {
-    throw new Error(`Please check your headers, required headers: ${negaoctetRequiredColumns.join(', ')}`)
+  if (requiredColumns.length > headers.length) {
+    throw new Error(`Please check your headers, required headers: ${requiredColumns.join(', ')}`)
   }
 
-  const missingHeaders = negaoctetRequiredColumns.filter((header) => !headers.includes(header))
+  const missingHeaders = requiredColumns.filter((header) => !headers.includes(header))
   if (missingHeaders.length > 0) {
     throw new Error(`Missing headers: ${missingHeaders.join(', ')}`)
   }
 }
 
-const numberColumns: (keyof NegaoctetEmissionFactor)[] = [
+const numberColumns: (keyof ImportEmissionFactor)[] = [
   'Total_poste_non_décomposé',
   'CO2b',
   'CH4f',
@@ -34,13 +38,18 @@ const numberColumns: (keyof NegaoctetEmissionFactor)[] = [
   'Valeur_gaz_supplémentaire_2',
 ]
 
-export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
+export const getEmissionFactorsFromCSV = async (
+  name: string,
+  file: string,
+  importFrom: Import,
+  mapFunction: (emissionFactor: ImportEmissionFactor, importVersionId: string) => Prisma.EmissionFactorCreateInput,
+) => {
   await prismaClient.$transaction(
     async (transaction) => {
       const emissionFactorImportVersion = await getEmissionFactorImportVersion(
         transaction,
         name,
-        Import.NegaOctet,
+        importFrom,
         path.basename(file),
       )
       if (!emissionFactorImportVersion.success) {
@@ -49,6 +58,7 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
 
       console.log('Parse file...')
       const emissionFactors: ImportEmissionFactor[] = []
+      const parts: ImportEmissionFactor[] = []
 
       await new Promise<void>((resolve, reject) => {
         fs.createReadStream(file)
@@ -75,7 +85,11 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
             }),
           )
           .on('data', (row: ImportEmissionFactor) => {
-            emissionFactors.push(row)
+            if (row.Type_Ligne === 'Poste') {
+              parts.push(row)
+            } else {
+              emissionFactors.push(row)
+            }
           })
           .on('end', async () => {
             console.log(`Save ${emissionFactors.length} emission factors...`)
@@ -85,9 +99,11 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
               if (i % 500 === 0) {
                 console.log(`${i}/${emissionFactors.length}...`)
               }
-              const data = mapNegaOctetEmissionFactors(emissionFactor, emissionFactorImportVersion.id)
+              const data = mapFunction(emissionFactor, emissionFactorImportVersion.id)
               await transaction.emissionFactor.create({ data })
             }
+            console.log(`Save ${parts.length} emission factors parts...`)
+            await saveEmissionFactorsParts(transaction, parts)
             console.log('Done')
             resolve()
           })

@@ -1,8 +1,6 @@
 import { Command } from 'commander'
-import {
-  getEmissionFactorsFromAPI,
-  getEmissionFactorsFromCSV,
-} from '../../services/import-fe/baseEmpreinte/getEmissionFactors'
+import { getEmissionFactorsFromAPI } from '../../services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
+import { getEmissionFactorsFromCSV } from '../../services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromCSV'
 
 const program = new Command()
 

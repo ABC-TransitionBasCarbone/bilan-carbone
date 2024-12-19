@@ -153,7 +153,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
                   <img
                     className={styles.importFrom}
                     src="https://negaoctet.org/wp-content/uploads/2019/03/negooctet-logo-simple.png"
-                    title={t('importedFrom.negaoctet')}
+                    title={t('importedFrom.negaOctet')}
                   />
                 </div>
               )
