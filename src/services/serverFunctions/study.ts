@@ -337,6 +337,7 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
 }
 
 export const addFlowToStudy = async (studyId: string, file: File) => {
+  const session = await auth()
   const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
   if (!allowedType) {
     return 'invalidFileType'
@@ -349,7 +350,7 @@ export const addFlowToStudy = async (studyId: string, file: File) => {
   await createDocument({
     name: file.name,
     type: file.type,
-    uploader: { connect: { id: allowedUserId } },
+    uploader: { connect: { id: session?.user.id } },
     study: { connect: { id: studyId } },
     bucketKey: butcketUploadResult.key,
     bucketETag: butcketUploadResult.ETag || '',

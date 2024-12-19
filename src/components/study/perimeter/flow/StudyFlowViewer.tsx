@@ -1,8 +1,8 @@
-import ImageViewer from '@/components/document/ImageViewer'
 import PdfViewer from '@/components/document/PDFViewer'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { Document } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import styles from './StudyFlow.module.css'
 
@@ -41,7 +41,14 @@ const StudyFlowViewer = ({ studyId, selectedFlow }: Props) => {
       {isPdf ? (
         <PdfViewer pdfUrl={documentUrl} fileName={selectedFlow.name} />
       ) : (
-        <ImageViewer url={documentUrl} alt={selectedFlow.name} className={styles.flowImage} />
+        <Image
+          className={styles.flowImage}
+          src={documentUrl}
+          alt={selectedFlow.name}
+          width={0}
+          height={0}
+          layout="responsive"
+        />
       )}
     </div>
   )

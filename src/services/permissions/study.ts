@@ -216,7 +216,7 @@ const canAccessStudyFlow = async (studyId: string) => {
     return false
   }
 
-  return session.user.id
+  return true
 }
 
 export const canAddFlowToStudy = async (studyId: string) => canAccessStudyFlow(studyId)

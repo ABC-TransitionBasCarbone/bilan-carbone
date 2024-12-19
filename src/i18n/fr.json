@@ -292,6 +292,7 @@
       "loading": "Chargement du document...",
       "addFlow": "Ajouter un flux",
       "documentNotFound": "Document non trouvé",
+      "download": "Télécharger le flux",
       "flows": "Cartographie des fluxs",
       "flowSelector": "Flux à afficher",
       "invalidFileType": "Type de fichier non supporté",

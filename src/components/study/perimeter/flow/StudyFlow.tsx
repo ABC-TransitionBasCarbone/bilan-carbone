@@ -34,9 +34,9 @@ const StudyFlow = ({ study, documents, initialDocument }: Props) => {
     setSelectedFlow(initialDocument)
   }, [initialDocument])
 
-  const addFlow = async (files: FileList | null) => {
+  const addFlow = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setError('')
-    const file = files?.[0]
+    const file = event.target.files?.[0]
     if (!file) {
       setError(t('noFileSelected'))
       return
@@ -93,11 +93,9 @@ const StudyFlow = ({ study, documents, initialDocument }: Props) => {
                 id="flow-upload-input"
                 className={styles.flowUploadButton}
                 type="file"
+                value=""
                 accept={allowedFlowFileTypes.join(',')}
-                onChange={(event) => {
-                  addFlow(event.target.files)
-                  event.target.value = ''
-                }}
+                onChange={addFlow}
               />
             </div>
           ),
@@ -111,7 +109,12 @@ const StudyFlow = ({ study, documents, initialDocument }: Props) => {
             <InputLabel id="flow-selector-label">{t('flowSelector')}</InputLabel>
             <div className={classNames(styles.flowButtons, 'flex grow')}>
               <FlowSelector documents={documents} selectedFlow={selectedFlow} setSelectedFlow={setSelectedFlow} />
-              <Button data-testid="flow-mapping-download" onClick={downloadDocument}>
+              <Button
+                aria-label={t('download')}
+                title={t('download')}
+                data-testid="flow-mapping-download"
+                onClick={downloadDocument}
+              >
                 <DownloadIcon />
               </Button>
               <MUIButton
@@ -119,13 +122,14 @@ const StudyFlow = ({ study, documents, initialDocument }: Props) => {
                 onClick={removeDocument}
                 variant="contained"
                 color="error"
+                title={t('removeFlow')}
                 aria-label={t('removeFlow')}
               >
                 <DeleteIcon />
               </MUIButton>
             </div>
           </div>
-          {selectedFlow && <StudyFlowViewer selectedFlow={selectedFlow} studyId={study.id} />}
+          <StudyFlowViewer selectedFlow={selectedFlow} studyId={study.id} />
         </div>
       ) : (
         t('noFlows')

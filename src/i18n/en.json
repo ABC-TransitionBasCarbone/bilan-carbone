@@ -293,6 +293,7 @@
       "loading": "Loading document...",
       "addFlow": "Add a flow",
       "documentNotFound": "Document not found",
+      "download": "Download flow",
       "invalidFileType": "Invalid file type",
       "fileTooBig": "File too big (max size {size} MB)",
       "flows": "Flows mapping",
