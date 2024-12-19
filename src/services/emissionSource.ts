@@ -4,24 +4,28 @@ import { StudyWithoutDetail } from './permissions/study'
 import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
 
 export const getEmissionSourceCompletion = (
-  emissionSource: Pick<StudyEmissionSource, 'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation'>,
+  emissionSource: Pick<
+    StudyEmissionSource,
+    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost'
+  >,
+  study: FullStudy | StudyWithoutDetail,
 ) => {
-  const mandatoryFields = [
-    'name',
-    'type',
-    'value',
-    'emissionFactorId',
-    'caracterisation',
-  ] as (keyof typeof emissionSource)[]
-  return (
-    mandatoryFields.reduce((acc, field) => acc + (emissionSource[field] !== null ? 1 : 0), 0) / mandatoryFields.length
-  )
+  const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
+  const caracterisations = caracterisationsBySubPost[emissionSource.subPost]
+  if (study.exports.length > 0 && caracterisations.length > 0) {
+    mandatoryFields.push('caracterisation')
+  }
+  return mandatoryFields.reduce((acc, field) => acc + (emissionSource[field] ? 1 : 0), 0) / mandatoryFields.length
 }
 
 export const canBeValidated = (
-  emissionSource: Pick<StudyEmissionSource, 'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation'>,
+  emissionSource: Pick<
+    StudyEmissionSource,
+    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost'
+  >,
+  study: FullStudy | StudyWithoutDetail,
 ) => {
-  return getEmissionSourceCompletion(emissionSource) === 1
+  return getEmissionSourceCompletion(emissionSource, study) === 1
 }
 
 export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
