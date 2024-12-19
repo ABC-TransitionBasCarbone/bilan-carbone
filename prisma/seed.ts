@@ -1,6 +1,6 @@
 import { signPassword } from '@/services/auth'
 import { reCreateBegesRules } from '@/services/exportRules/beges'
-import { getEmissionFactorsFromAPI } from '@/services/import-fe/baseEmpreinte/getEmissionFactors'
+import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { faker } from '@faker-js/faker'
 import { EmissionFactorStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
 import { Command } from 'commander'

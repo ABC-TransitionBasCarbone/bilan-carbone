@@ -432,7 +432,7 @@
       "yes": "Oui",
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
-        "negaoctet": "Logo de NegaOctet",
+        "negaOctet": "Logo de NegaOctet",
         "manual": "Manuel"
       },
       "post": "Poste :",
