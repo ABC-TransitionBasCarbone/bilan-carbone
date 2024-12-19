@@ -60,7 +60,7 @@ const EmissionSource = ({
   const [display, setDisplay] = useState(false)
 
   const detailId = `${emissionSource.id}-detail`
-  const canEdit = userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
+  const canEdit = !emissionSource.validated && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
   const canValidate = userRoleOnStudy && userRoleOnStudy === StudyRole.Validator
 
   const update = useCallback(
@@ -144,10 +144,10 @@ const EmissionSource = ({
               {emissionSource.contributor.email}
             </p>
           )}
-          <p data-testid="emission-source-status" className={styles.status}>
+          <p data-testid="emission-source-status" className={classNames(styles.status, 'align-center')}>
             {t(`status.${status}`)}
             {(status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor) && (
-              <> - {getEmissionSourceCompletion(emissionSource) * 100}%</>
+              <> - {getEmissionSourceCompletion(emissionSource, study) * 100}%</>
             )}
             {loading && (
               <>

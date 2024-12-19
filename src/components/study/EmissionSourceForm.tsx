@@ -32,6 +32,7 @@ const EmissionSourceForm = ({
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tCategorisations = useTranslations('categorisations')
+
   return (
     <>
       <div className={classNames(styles.row, 'flex')}>
@@ -87,7 +88,7 @@ const EmissionSourceForm = ({
             onBlur={(event) => update('value', Number(event.target.value))}
             label={t('form.value')}
             slotProps={{
-              inputLabel: { shrink: !!selectedFactor },
+              inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
               input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
             }}
           />
