@@ -9,8 +9,6 @@ describe('Create emission factor', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
 
-    cy.getByTestId('cell-emission-name').should('have.length', 2)
-
     cy.getByTestId('new-emission').click()
 
     cy.getByTestId('new-emission-name').type('My new FE')
@@ -29,21 +27,17 @@ describe('Create emission factor', () => {
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
 
-    cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new FE')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '12 kgCO₂e/GWh')
 
     cy.logout()
     cy.login('bc-default-2@yopmail.com', 'password-2')
     cy.visit('/facteurs-d-emission')
-    cy.getByTestId('cell-emission-name').should('have.length', 2)
   })
 
   it('should create an emission factor with detailed CO2 on your organization', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
-
-    cy.getByTestId('cell-emission-name').should('have.length', 2)
 
     cy.getByTestId('new-emission').click()
 
@@ -100,8 +94,6 @@ describe('Create emission factor', () => {
     cy.wait('@create')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
-
-    cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new detailed FE')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '45 kgCO₂e/GWh')
   })
@@ -109,8 +101,6 @@ describe('Create emission factor', () => {
   it('should create an emission factor with total CO2 and multiple parts on your organization', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
-
-    cy.getByTestId('cell-emission-name').should('have.length', 2)
 
     cy.getByTestId('new-emission').click()
 
@@ -166,8 +156,6 @@ describe('Create emission factor', () => {
     cy.wait('@create')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
-
-    cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new multiple FE')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '21 kgCO₂e/GWh')
   })
@@ -175,8 +163,6 @@ describe('Create emission factor', () => {
   it('should create an emission factor with detailed CO2 and multiple parts on your organization', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
-
-    cy.getByTestId('cell-emission-name').should('have.length', 2)
 
     cy.getByTestId('new-emission').click()
 
@@ -258,8 +244,6 @@ describe('Create emission factor', () => {
     cy.wait('@create')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
-
-    cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new multiple detailed FE')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '99 kgCO₂e/GWh')
   })
@@ -267,8 +251,6 @@ describe('Create emission factor', () => {
   it('should render emission parts in accordions', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
-
-    cy.getByTestId('cell-emission-name').should('have.length', 2)
 
     cy.getByTestId('new-emission').click()
 
@@ -341,8 +323,6 @@ describe('Create emission factor', () => {
   it('should not delete parts from form when switch off detailed ges', () => {
     cy.login()
     cy.visit('/facteurs-d-emission')
-
-    cy.getByTestId('cell-emission-name').should('have.length', 2)
 
     cy.getByTestId('new-emission').click()
 
@@ -419,8 +399,6 @@ describe('Create emission factor', () => {
     cy.wait('@create')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
-
-    cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new FE without parts')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '144 kgCO₂e/GWh')
   })

@@ -251,8 +251,8 @@
       }
     },
     "perimeter": {
-      "title": "Périmètre de l'étude : {name}",
-      "dates": "Du {startDate} au {endDate}"
+      "dates": "Du {startDate} au {endDate}",
+      "title": "Périmètre de l'étude : {name}"
     },
     "results": {
       "type": "Type",
@@ -287,6 +287,23 @@
       "uncertainty": "Incertitude",
       "validation": "Validation de la source d'émission",
       "yes": "Oui"
+    },
+
+    "flow": {
+      "loading": "Chargement du document...",
+      "addFlow": "Ajouter un flux",
+      "documentNotFound": "Document non trouvé",
+      "download": "Télécharger le flux",
+      "flows": "Cartographie des fluxs",
+      "flowSelector": "Flux à afficher",
+      "invalidFileType": "Type de fichier non supporté",
+      "fileTooBig": "Fichier trop gros (taille maximale {size} MB)",
+      "newFlow": "Ajouter un flux",
+      "noFileSelected": "Aucun fichier selectionné",
+      "noFlows": "Aucun flux à afficher",
+      "notAuthorized": "Action non authorisée",
+      "removeFlow": "Supprimer le flux",
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
     }
   },
   "emissionFactors": {

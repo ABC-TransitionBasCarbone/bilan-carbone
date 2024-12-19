@@ -58,6 +58,7 @@ model Study {
   emissionSources StudyEmissionSource[]
   contributors    Contributors[]
   sites           StudySite[]
+  flows           Document[]
 
   @@map("studies")
 }
