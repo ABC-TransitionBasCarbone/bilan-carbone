@@ -112,12 +112,12 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
   return true
 }
 
-export const canAddRightOnStudy = (user: User, study: FullStudy, newUser: DbUser | null, role: StudyRole) => {
-  if (newUser && user.id === newUser.id) {
+export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStudy: DbUser | null, role: StudyRole) => {
+  if (userToAddOnStudy && user.id === userToAddOnStudy.id) {
     return false
   }
 
-  if ((!newUser || !newUser.organizationId) && role !== StudyRole.Reader) {
+  if ((!userToAddOnStudy || !userToAddOnStudy.organizationId) && role !== StudyRole.Reader) {
     return false
   }
 

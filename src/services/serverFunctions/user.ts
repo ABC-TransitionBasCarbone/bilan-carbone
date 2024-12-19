@@ -16,7 +16,9 @@ import { auth } from '../auth'
 import {
   sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
-  sendNewInvitationEmail,
+  sendNewUserEmail,
+  sendNewUserOnStudyInvitationEmail,
+  sendUserOnStudyInvitationEmail,
 } from '../email/email'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
@@ -34,43 +36,59 @@ const updateUserResetToken = async (email: string) => {
   return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
 }
 
-export const sendNewInvitation = async (email: string) => {
+export const sendNewUser = async (email: string) => {
   const token = await updateUserResetToken(email)
-  return sendNewInvitationEmail(email, token)
+  return sendNewUserEmail(email, token)
 }
 
-export const sendNewContributorInvitation = async (
+export const sendInvitation = async (
   email: string,
   study: FullStudy,
   organization: Organization,
   user: User,
+  role: string,
+  newUser?: DBUser,
 ) => {
-  const token = await updateUserResetToken(email)
-  return sendNewContributorInvitationEmail(
-    email,
-    token,
-    study.name,
-    study.id,
-    organization.name,
-    `${user.firstName} ${user.lastName}`,
-  )
-}
+  if (newUser) {
+    return role
+      ? sendUserOnStudyInvitationEmail(
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${user.firstName} ${user.lastName}`,
+          newUser.firstName,
+          role,
+        )
+      : sendContributorInvitationEmail(
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${user.firstName} ${user.lastName}`,
+          newUser.firstName,
+        )
+  }
 
-export const sendContributorInvitation = async (
-  email: string,
-  study: FullStudy,
-  organization: Organization,
-  user: User,
-  newUser: DBUser,
-) => {
-  return sendContributorInvitationEmail(
-    email,
-    study.name,
-    study.id,
-    organization.name,
-    `${user.firstName} ${user.lastName}`,
-    newUser.firstName,
-  )
+  const token = await updateUserResetToken(email)
+  return role
+    ? sendNewUserOnStudyInvitationEmail(
+        email,
+        token,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+        role,
+      )
+    : sendNewContributorInvitationEmail(
+        email,
+        token,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+      )
 }
 
 export const addMember = async (member: AddMemberCommand) => {
@@ -92,7 +110,7 @@ export const addMember = async (member: AddMemberCommand) => {
 
   //TODO: que fait on si l'utilisateur existe déjà ?
   await addUser(newMember)
-  await sendNewInvitation(member.email)
+  await sendNewUser(member.email)
 }
 
 export const validateMember = async (email: string) => {
@@ -107,7 +125,7 @@ export const validateMember = async (email: string) => {
   }
 
   await validateUser(email)
-  await sendNewInvitation(member.email)
+  await sendNewUser(member.email)
 }
 
 export const resendInvitation = async (email: string) => {
@@ -121,7 +139,7 @@ export const resendInvitation = async (email: string) => {
     return NOT_AUTHORIZED
   }
 
-  await sendNewInvitation(member.email)
+  await sendNewUser(member.email)
 }
 
 export const deleteMember = async (email: string) => {

@@ -24,6 +24,7 @@ import {
   SubPost,
 } from '@prisma/client'
 import { User } from 'next-auth'
+import { getTranslations } from 'next-intl/server'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -44,7 +45,7 @@ import {
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
-import { sendContributorInvitation, sendNewContributorInvitation } from './user'
+import { sendInvitation } from './user'
 
 export const createStudyCommand = async ({
   organizationId,
@@ -190,15 +191,18 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-const getUserOnStudy = async (
+const getOrCreateUserAndSendStudyInvite = async (
   email: string,
   study: FullStudy,
   organization: Organization,
   creator: User,
-  newUser: DBUser | null,
+  existingUser: DBUser | null,
+  role?: StudyRole,
 ) => {
   let userId = ''
-  if (!newUser) {
+  const t = await getTranslations('study.role')
+
+  if (!existingUser) {
     const newUser = await addUser({
       email: email,
       isActive: true,
@@ -207,14 +211,15 @@ const getUserOnStudy = async (
       firstName: '',
       lastName: '',
     })
-    await sendNewContributorInvitation(email, study, organization, creator)
+    await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '')
     userId = newUser.id
   } else {
-    if (newUser.organizationId !== organization.id) {
-      await sendContributorInvitation(email, study, organization, creator, newUser)
+    if (existingUser.organizationId !== organization.id) {
+      await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '', existingUser)
     }
-    userId = newUser.id
+    userId = existingUser.id
   }
+
   return userId
 }
 
@@ -224,7 +229,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, newUser] = await Promise.all([
+  const [studyWithRights, existingUser] = await Promise.all([
     getStudyById(right.studyId, session.user.organizationId),
     getUserByEmail(right.email),
   ])
@@ -238,15 +243,23 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  if (!newUser || !getAllowedLevels(newUser.level).includes(studyWithRights.level)) {
+  if (!existingUser || !getAllowedLevels(existingUser.level).includes(studyWithRights.level)) {
     right.role = StudyRole.Reader
   }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, newUser, right.role)) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, right.role)) {
     return NOT_AUTHORIZED
   }
 
-  const userId = await getUserOnStudy(right.email, studyWithRights, organization, session.user, newUser)
+  const userId = await getOrCreateUserAndSendStudyInvite(
+    right.email,
+    studyWithRights,
+    organization,
+    session.user,
+    existingUser,
+    right.role,
+  )
+
   await createUserOnStudy({
     user: { connect: { id: userId } },
     study: { connect: { id: studyWithRights.id } },
@@ -260,20 +273,20 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, user] = await Promise.all([
+  const [studyWithRights, existingUser] = await Promise.all([
     getStudyById(studyId, session.user.organizationId),
     getUserByEmail(email),
   ])
 
-  if (!studyWithRights || !user) {
+  if (!studyWithRights || !existingUser) {
     return NOT_AUTHORIZED
   }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, user, studyRole)) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole)) {
     return NOT_AUTHORIZED
   }
 
-  await updateUserOnStudy(user.id, studyWithRights.id, studyRole)
+  await updateUserOnStudy(existingUser.id, studyWithRights.id, studyRole)
 }
 
 export const newStudyContributor = async ({ email, post, subPost, ...command }: NewStudyContributorCommand) => {
@@ -282,7 +295,7 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, newUser] = await Promise.all([
+  const [studyWithRights, existingUser] = await Promise.all([
     getStudyById(command.studyId, session.user.organizationId),
     getUserByEmail(email),
   ])
@@ -300,7 +313,13 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     return NOT_AUTHORIZED
   }
 
-  const userId = await getUserOnStudy(email, studyWithRights, organization, session.user, newUser)
+  const userId = await getOrCreateUserAndSendStudyInvite(
+    email,
+    studyWithRights,
+    organization,
+    session.user,
+    existingUser,
+  )
 
   if (post === 'all') {
     await createContributorOnStudy(userId, Object.values(SubPost), command)
