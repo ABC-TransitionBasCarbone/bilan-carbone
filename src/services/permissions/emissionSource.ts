@@ -55,13 +55,17 @@ export const canUpdateEmissionSource = async (
     return false
   }
 
+  if (emissionSource.validated && change.validated !== false) {
+    return false
+  }
+
   if (change.validated !== undefined) {
     const rights = study.allowedUsers.find((right) => right.user.email === user.email)
     if (!rights || rights.role !== StudyRole.Validator) {
       return false
     }
 
-    if (change.validated === true && !canBeValidated({ ...emissionSource, ...change })) {
+    if (change.validated === true && !canBeValidated({ ...emissionSource, ...change }, study)) {
       return false
     }
   }
