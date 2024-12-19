@@ -1,6 +1,7 @@
 'use server'
 
 import { prismaClient } from '@/db/client'
+import { createDocument, deleteDocument } from '@/db/document'
 import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
 import {
   createContributorOnStudy,
@@ -15,6 +16,7 @@ import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
 import {
   ControlMode,
   User as DBUser,
+  Document,
   Export,
   Import,
   Organization,
@@ -26,9 +28,12 @@ import {
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { auth } from '../auth'
+import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
+  canAccessFlowFromStudy,
   canAddContributorOnStudy,
+  canAddFlowToStudy,
   canAddRightOnStudy,
   canChangeDates,
   canChangeLevel,
@@ -36,6 +41,7 @@ import {
   canCreateStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
+import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
 import {
   ChangeStudyDatesCommand,
@@ -327,5 +333,36 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     await createContributorOnStudy(userId, subPostsByPost[post], command)
   } else {
     await createContributorOnStudy(userId, [subPost], command)
+  }
+}
+
+export const addFlowToStudy = async (studyId: string, file: File) => {
+  const session = await auth()
+  const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
+  if (!allowedType) {
+    return 'invalidFileType'
+  }
+  const allowedUserId = await canAddFlowToStudy(studyId)
+  if (!allowedUserId) {
+    return NOT_AUTHORIZED
+  }
+  const butcketUploadResult = await uploadFileToBucket(file)
+  await createDocument({
+    name: file.name,
+    type: file.type,
+    uploader: { connect: { id: session?.user.id } },
+    study: { connect: { id: studyId } },
+    bucketKey: butcketUploadResult.key,
+    bucketETag: butcketUploadResult.ETag || '',
+  })
+}
+
+export const deleteFlowFromStudy = async (document: Document, studyId: string) => {
+  if (!(await canAccessFlowFromStudy(document.id, studyId))) {
+    return NOT_AUTHORIZED
+  }
+  const bucketDelete = await deleteFileFromBucket(document.bucketKey)
+  if (bucketDelete) {
+    deleteDocument(document.id)
   }
 }

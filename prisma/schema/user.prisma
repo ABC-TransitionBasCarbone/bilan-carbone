@@ -26,6 +26,7 @@ model User {
   allowedStudies             UserOnStudy[]
   contributors               Contributors[]
   contributedEmissionSources StudyEmissionSource[]
+  flows                      Document[]
 
   @@map("users")
 }
