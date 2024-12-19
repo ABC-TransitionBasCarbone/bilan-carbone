@@ -142,4 +142,7 @@ export const unitsMatrix: Record<string, Unit> = {
   kgDBO: Unit.KGDBO,
   'kgDBO / m³': Unit.KGDBO_PER_M3,
   'kgH2/100km': Unit.KG_H2_PER_100KM,
+  Go: Unit.GO,
+  requête: Unit.REQUEST,
+  mail: Unit.MAIL,
 }

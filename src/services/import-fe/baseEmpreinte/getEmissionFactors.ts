@@ -1,21 +1,22 @@
+import axios, { AxiosResponse } from 'axios'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import path from 'path'
-import { prismaClient } from '../../db/client'
+import { prismaClient } from '../../../db/client'
+import { getEmissionFactorImportVersion } from '../import'
 import {
   BaseEmpreinteEmissionFactor,
-  getEmissionFactorImportVersion,
-  mapEmissionFactors,
-  requiredColums,
+  beRequiredColumns,
+  mapBaseEmpreinteEmissionFactors,
   saveEmissionFactorsParts,
 } from './import'
 
 const checkHeaders = (headers: string[]) => {
-  if (requiredColums.length > headers.length) {
-    throw new Error(`Please check your headers, required headers: ${requiredColums.join(', ')}`)
+  if (beRequiredColumns.length > headers.length) {
+    throw new Error(`Please check your headers, required headers: ${beRequiredColumns.join(', ')}`)
   }
 
-  const missingHeaders = requiredColums.filter((header) => !headers.includes(header))
+  const missingHeaders = beRequiredColumns.filter((header) => !headers.includes(header))
   if (missingHeaders.length > 0) {
     throw new Error(`Missing headers: ${missingHeaders.join(', ')}`)
   }
@@ -37,6 +38,12 @@ const numberColumns: (keyof BaseEmpreinteEmissionFactor)[] = [
   'Valeur_gaz_supplémentaire_1',
   'Valeur_gaz_supplémentaire_2',
 ]
+
+type EmissionFactorResponse = {
+  total: number
+  next?: string
+  results: BaseEmpreinteEmissionFactor[]
+}
 
 export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
   await prismaClient.$transaction(
@@ -89,7 +96,7 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
               if (i % 500 === 0) {
                 console.log(`${i}/${emissionFactors.length}...`)
               }
-              const data = mapEmissionFactors(emissionFactor, emissionFactorImportVersion.id)
+              const data = mapBaseEmpreinteEmissionFactors(emissionFactor, emissionFactorImportVersion.id)
               await transaction.emissionFactor.create({ data })
             }
             console.log(`Save ${parts.length} emission factors parts...`)
@@ -103,5 +110,40 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
       })
     },
     { timeout: 10 * 60 * 1000 },
+  )
+}
+
+export const getEmissionFactorsFromAPI = async (name: string) => {
+  const results = await axios.get('https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner')
+  const fileName = results.data.file.name
+
+  await prismaClient.$transaction(
+    async (transaction) => {
+      const emissionFactorImportVersion = await getEmissionFactorImportVersion(transaction, name, fileName)
+      if (!emissionFactorImportVersion.success) {
+        return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
+      }
+
+      let parts: BaseEmpreinteEmissionFactor[] = []
+      let url: string | undefined =
+        `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${beRequiredColumns.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
+
+      while (url) {
+        console.log(url)
+        const emissionFactors: AxiosResponse<EmissionFactorResponse> = await axios.get<EmissionFactorResponse>(url)
+        parts = parts.concat(
+          emissionFactors.data.results.filter((emissionFactor) => emissionFactor.Type_Ligne === 'Poste'),
+        )
+        const data = emissionFactors.data.results
+          .filter((emissionFactor) => emissionFactor.Type_Ligne !== 'Poste')
+          .map((emissionFactor) => mapBaseEmpreinteEmissionFactors(emissionFactor, emissionFactorImportVersion.id))
+
+        await Promise.all(data.map((data) => transaction.emissionFactor.create({ data })))
+        url = emissionFactors.data.next
+      }
+
+      await saveEmissionFactorsParts(transaction, parts)
+    },
+    { timeout: 60 * 60 * 1000 },
   )
 }
