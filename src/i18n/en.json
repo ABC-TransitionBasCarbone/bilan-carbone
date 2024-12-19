@@ -21,6 +21,7 @@
   },
   "beges": {
     "rule": "Rule",
+    "subTotal": "Sub total",
     "category": {
       "title": "Category",
       "1": "Direct GHG emissions",
