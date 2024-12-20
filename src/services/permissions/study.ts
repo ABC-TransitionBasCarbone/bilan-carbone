@@ -158,6 +158,7 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
     withoutDetail: true as const,
     id: study.id,
     name: study.name,
+    sites: study.sites,
     emissionSources: study.emissionSources
       .filter((emissionSource) => availableSubPosts.includes(emissionSource.subPost))
       .map((emissionSource) => ({
@@ -177,6 +178,7 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
         source: emissionSource.source,
         type: emissionSource.type,
         caracterisation: emissionSource.caracterisation,
+        site: emissionSource.site,
       })),
     exports: study.exports,
     contributors: undefined,

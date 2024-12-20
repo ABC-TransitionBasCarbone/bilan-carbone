@@ -110,40 +110,42 @@ const getEmissionSourcesRows = (
     .map((key) => t(key))
     .join(';')
 
-  const rows = emissionSources.map((emissionSource) => {
-    const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
-    const initCols: (string | number)[] = []
-    if (type === 'Post') {
-      initCols.push(tPost(emissionSource.subPost))
-    } else if (type === 'Study') {
-      const post = Object.keys(subPostsByPost).find((post) =>
-        subPostsByPost[post as Post].includes(emissionSource.subPost),
-      )
-      initCols.push(tPost(post))
-      initCols.push(tPost(emissionSource.subPost))
-    }
-    const emissionSourceSD = getStandardDeviation(emissionSource)
-    return initCols
-      .concat([
-        emissionSource.validated ? t('yes') : t('no'),
-        emissionSource.name || '',
-        tCaracterisations(emissionSource.caracterisation || ''),
-        (emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0) || '0',
-        'kgCO₂e',
-        emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
-        emissionSource.value || '0',
-        emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
-        getQuality(getQualityRating(emissionSource), tQuality),
-        emissionSource.comment || '',
-        emissionFactor?.metaData?.title || t('noFactor'),
-        emissionFactor?.totalCo2 || '',
-        emissionFactor?.unit ? `kgCO₂e/${tUnit(emissionFactor.unit)}` : '',
-        emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
-        emissionFactor?.source || '',
-      ])
-      .map((field) => encodeCSVField(field))
-      .join(';')
-  })
+  const rows = emissionSources
+    .sort((a, b) => a.subPost.localeCompare(b.subPost))
+    .map((emissionSource) => {
+      const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
+      const initCols: (string | number)[] = []
+      if (type === 'Post') {
+        initCols.push(tPost(emissionSource.subPost))
+      } else if (type === 'Study') {
+        const post = Object.keys(subPostsByPost).find((post) =>
+          subPostsByPost[post as Post].includes(emissionSource.subPost),
+        )
+        initCols.push(tPost(post))
+        initCols.push(tPost(emissionSource.subPost))
+      }
+      const emissionSourceSD = getStandardDeviation(emissionSource)
+      return initCols
+        .concat([
+          emissionSource.validated ? t('yes') : t('no'),
+          emissionSource.name || '',
+          tCaracterisations(emissionSource.caracterisation || ''),
+          (emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0) || '0',
+          'kgCO₂e',
+          emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
+          emissionSource.value || '0',
+          emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
+          getQuality(getQualityRating(emissionSource), tQuality),
+          emissionSource.comment || '',
+          emissionFactor?.metaData?.title || t('noFactor'),
+          emissionFactor?.totalCo2 || '',
+          emissionFactor?.unit ? `kgCO₂e/${tUnit(emissionFactor.unit)}` : '',
+          emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
+          emissionFactor?.source || '',
+        ])
+        .map((field) => encodeCSVField(field))
+        .join(';')
+    })
   return { columns, rows }
 }
 

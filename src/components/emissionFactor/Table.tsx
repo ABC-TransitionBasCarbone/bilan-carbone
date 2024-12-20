@@ -161,6 +161,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
 
     if (selectEmissionFactor) {
       columnsToReturn.push({
+        id: 'actions',
         header: '',
         accessorKey: 'id',
         cell: ({ row }) => (
@@ -309,14 +310,18 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
               <tr key={row.id} className={styles.line}>
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className={styles.cell} data-testid={`cell-emission-${cell.column.id}`}>
-                    <button
-                      className={styles.cellButton}
-                      onClick={() => {
-                        row.toggleExpanded()
-                      }}
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </button>
+                    {cell.column.id === 'actions' ? (
+                      <div className={styles.cellDiv}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
+                    ) : (
+                      <button
+                        className={styles.cellButton}
+                        onClick={() => {
+                          row.toggleExpanded()
+                        }}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </button>
+                    )}
                   </td>
                 ))}
               </tr>,

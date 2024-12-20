@@ -43,15 +43,19 @@
   padding: 0;
 }
 
+.cellDiv,
 .cellButton {
   padding: 0.5rem;
-  cursor: pointer;
   background-color: transparent;
   width: 100%;
   border: none;
   text-align: inherit;
   display: block;
   font-size: 1rem;
+}
+
+.cellButton {
+  cursor: pointer;
 }
 
 .detail {

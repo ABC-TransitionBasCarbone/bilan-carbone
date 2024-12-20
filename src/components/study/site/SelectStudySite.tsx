@@ -1,12 +1,13 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { StudyWithoutDetail } from '@/services/permissions/study'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction } from 'react'
 
 interface Props {
-  study: FullStudy
+  study: FullStudy | StudyWithoutDetail
   allowAll?: boolean
   site: string
   setSite: Dispatch<SetStateAction<string>>

@@ -15,8 +15,8 @@ interface Props {
 
 const AllPostsInfography = ({ study, site }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
-  const data = useMemo(() => computeResultsByPost(study, tPost, site), [study, tPost])
 
+  const data = useMemo(() => computeResultsByPost(study, tPost, site), [study, tPost, site])
   const findSubPost = (subPost: SubPost) => {
     const post = data.find((post) => post.subPosts.find((sb) => sb.post === subPost))
     const foundSubPost = post?.subPosts.find((sb) => sb.post === subPost)
