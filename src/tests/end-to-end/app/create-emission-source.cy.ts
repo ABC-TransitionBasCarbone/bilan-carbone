@@ -16,7 +16,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My new emission source').should('exist')
     cy.getByTestId('emission-source-My new emission source').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', "En attente d'un contributeur - 25%")
-      cy.getByTestId('emission-source-value').should('have.text', '')
+      cy.getByTestId('emission-source-value').should('not.exist')
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
 
