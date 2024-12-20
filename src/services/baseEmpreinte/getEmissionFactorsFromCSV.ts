@@ -4,7 +4,7 @@ import path from 'path'
 import { prismaClient } from '../../db/client'
 import {
   BaseEmpreinteEmissionFactor,
-  cleanSums,
+  cleanImport,
   getEmissionFactorImportVersion,
   mapEmissionFactors,
   requiredColums,
@@ -97,7 +97,7 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
               await transaction.emissionFactor.create({ data })
             }
             await saveEmissionFactorsParts(transaction, parts)
-            await cleanSums(transaction, emissionFactorImportVersion.id)
+            await cleanImport(transaction, emissionFactorImportVersion.id)
             console.log('Done')
             resolve()
           })

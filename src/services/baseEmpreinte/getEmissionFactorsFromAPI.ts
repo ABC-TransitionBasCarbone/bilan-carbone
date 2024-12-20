@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { prismaClient } from '../../db/client'
 import {
   BaseEmpreinteEmissionFactor,
-  cleanSums,
+  cleanImport,
   getEmissionFactorImportVersion,
   mapEmissionFactors,
   requiredColums,
@@ -46,7 +46,7 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
       }
 
       await saveEmissionFactorsParts(transaction, parts)
-      await cleanSums(transaction, emissionFactorImportVersion.id)
+      await cleanImport(transaction, emissionFactorImportVersion.id)
     },
     { timeout: 60 * 60 * 1000 },
   )

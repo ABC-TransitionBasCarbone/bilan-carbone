@@ -1,5 +1,6 @@
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { unitsMatrix } from './historyUnits'
+import { additionalParts } from './parts.config'
 import { elementsBySubPost } from './posts.config'
 
 export const validStatuses = ['Valide générique', 'Valide spécifique', 'Archivé']
@@ -208,19 +209,17 @@ const getGases = (emissionFactor: BaseEmpreinteEmissionFactor) => {
     otherGES: Number(emissionFactor.Autres_GES),
   }
   if (emissionFactor.Valeur_gaz_supplémentaire_1) {
-    if (emissionFactor.Code_gaz_supplémentaire_1 === 'Divers') {
-      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_1) + gases.otherGES
-    }
     if (emissionFactor.Code_gaz_supplémentaire_1 === 'SF6') {
       gases.sf6 = Number(emissionFactor.Valeur_gaz_supplémentaire_1)
+    } else {
+      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_1) + gases.otherGES
     }
   }
   if (emissionFactor.Valeur_gaz_supplémentaire_2) {
-    if (emissionFactor.Code_gaz_supplémentaire_2 === 'Divers') {
-      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_2) + gases.otherGES
-    }
     if (emissionFactor.Code_gaz_supplémentaire_2 === 'SF6') {
       gases.sf6 = Number(emissionFactor.Valeur_gaz_supplémentaire_2)
+    } else {
+      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_2) + gases.otherGES
     }
   }
   const totalCo2 = gases.co2f + gases.ch4f + gases.n2o + gases.sf6 + gases.hfc + gases.pfc + gases.otherGES
@@ -328,7 +327,7 @@ export const saveEmissionFactorsParts = async (
   }
 }
 
-export const cleanSums = async (transaction: Prisma.TransactionClient, versionId: string) => {
+export const cleanImport = async (transaction: Prisma.TransactionClient, versionId: string) => {
   console.log('Clean emission factors sums')
   const emissionFactors = await transaction.emissionFactor.findMany({
     where: { versionId },
@@ -342,6 +341,28 @@ export const cleanSums = async (transaction: Prisma.TransactionClient, versionId
     }
 
     i++
+    if (emissionFactor.importedId) {
+      const additionalPart = additionalParts[emissionFactor.importedId]
+      if (additionalPart) {
+        await transaction.emissionFactorPart.create({
+          data: {
+            emissionFactor: { connect: { id: emissionFactor.id } },
+            type: additionalPart,
+            co2f: emissionFactor.co2f,
+            ch4f: emissionFactor.ch4f,
+            ch4b: emissionFactor.ch4b,
+            n2o: emissionFactor.n2o,
+            co2b: emissionFactor.co2b,
+            sf6: emissionFactor.sf6,
+            hfc: emissionFactor.hfc,
+            pfc: emissionFactor.pfc,
+            otherGES: emissionFactor.otherGES,
+            totalCo2: emissionFactor.totalCo2,
+          },
+        })
+      }
+    }
+
     if (emissionFactor.emissionFactorParts.length === 0) {
       continue
     }
