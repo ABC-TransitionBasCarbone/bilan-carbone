@@ -1,6 +1,9 @@
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { unitsMatrix } from './historyUnits'
+import { additionalParts } from './parts.config'
 import { elementsBySubPost } from './posts.config'
+
+export const validStatuses = ['Valide générique', 'Valide spécifique', 'Archivé']
 
 export const getEmissionFactorImportVersion = async (
   transaction: Prisma.TransactionClient,
@@ -192,8 +195,44 @@ const getEmissionQuality = (uncertainty?: number) => {
   }
 }
 
+const getGases = (emissionFactor: BaseEmpreinteEmissionFactor) => {
+  const gases = {
+    totalCo2: Number(emissionFactor.Total_poste_non_décomposé),
+    co2f: Number(emissionFactor.CO2f),
+    ch4f: Number(emissionFactor.CH4f),
+    ch4b: Number(emissionFactor.CH4b),
+    n2o: Number(emissionFactor.N2O),
+    co2b: Number(emissionFactor.CO2b),
+    sf6: 0,
+    hfc: 0,
+    pfc: 0,
+    otherGES: Number(emissionFactor.Autres_GES),
+  }
+  if (emissionFactor.Valeur_gaz_supplémentaire_1) {
+    if (emissionFactor.Code_gaz_supplémentaire_1 === 'SF6') {
+      gases.sf6 = Number(emissionFactor.Valeur_gaz_supplémentaire_1)
+    } else {
+      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_1) + gases.otherGES
+    }
+  }
+  if (emissionFactor.Valeur_gaz_supplémentaire_2) {
+    if (emissionFactor.Code_gaz_supplémentaire_2 === 'SF6') {
+      gases.sf6 = Number(emissionFactor.Valeur_gaz_supplémentaire_2)
+    } else {
+      gases.otherGES = Number(emissionFactor.Valeur_gaz_supplémentaire_2) + gases.otherGES
+    }
+  }
+  const totalCo2 = gases.co2f + gases.ch4f + gases.n2o + gases.sf6 + gases.hfc + gases.pfc + gases.otherGES
+  if (totalCo2) {
+    gases.totalCo2 = totalCo2
+  }
+
+  return gases
+}
+
 export const mapEmissionFactors = (emissionFactor: BaseEmpreinteEmissionFactor, versionId: string) => {
-  const data = {
+  return {
+    ...getGases(emissionFactor),
     reliability: 5,
     importedFrom: Import.BaseEmpreinte,
     importedId: emissionFactor["Identifiant_de_l'élément"],
@@ -206,16 +245,6 @@ export const mapEmissionFactors = (emissionFactor: BaseEmpreinteEmissionFactor, 
     geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
     temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
     completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
-    totalCo2: emissionFactor.Total_poste_non_décomposé,
-    co2f: emissionFactor.CO2f,
-    ch4f: emissionFactor.CH4f,
-    ch4b: emissionFactor.CH4b,
-    n2o: emissionFactor.N2O,
-    co2b: emissionFactor.CO2b,
-    sf6: 0,
-    hfc: 0,
-    pfc: 0,
-    otherGES: emissionFactor.Autres_GES,
     unit: getUnit(emissionFactor.Unité_français),
     subPosts: Object.entries(elementsBySubPost)
       .filter(([, elements]) => elements.some((element) => element === emissionFactor["Identifiant_de_l'élément"]))
@@ -245,30 +274,13 @@ export const mapEmissionFactors = (emissionFactor: BaseEmpreinteEmissionFactor, 
       },
     },
   }
-  if (emissionFactor.Valeur_gaz_supplémentaire_1) {
-    if (emissionFactor.Code_gaz_supplémentaire_1 === 'Divers') {
-      data.otherGES = emissionFactor.Valeur_gaz_supplémentaire_1 + data.otherGES
-    }
-    if (emissionFactor.Code_gaz_supplémentaire_1 === 'SF6') {
-      data.sf6 = emissionFactor.Valeur_gaz_supplémentaire_1
-    }
-  }
-  if (emissionFactor.Valeur_gaz_supplémentaire_2) {
-    if (emissionFactor.Code_gaz_supplémentaire_2 === 'Divers') {
-      data.otherGES = emissionFactor.Valeur_gaz_supplémentaire_2 + data.otherGES
-    }
-    if (emissionFactor.Code_gaz_supplémentaire_2 === 'SF6') {
-      data.sf6 = emissionFactor.Valeur_gaz_supplémentaire_2
-    }
-  }
-
-  return data
 }
 
 export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,
   parts: BaseEmpreinteEmissionFactor[],
 ) => {
+  console.log(`Save ${parts.length} emission factors parts...`)
   const emissionFactors = await transaction.emissionFactor.findMany({
     where: {
       importedId: {
@@ -278,8 +290,8 @@ export const saveEmissionFactorsParts = async (
   })
 
   for (const i in parts) {
-    if (Number(i) % 10 === 0) {
-      console.log(`Save part: ${i}/${parts.length}`)
+    if (Number(i) % 100 === 0) {
+      console.log(`${i}/${parts.length}`)
     }
     const part = parts[i]
     const emissionFactor = emissionFactors.find(
@@ -298,17 +310,8 @@ export const saveEmissionFactorsParts = async (
     }
 
     const data = {
+      ...getGases(part),
       emissionFactor: { connect: { id: emissionFactor.id } },
-      totalCo2: part.Total_poste_non_décomposé,
-      co2f: part.CO2f,
-      ch4f: part.CH4f,
-      ch4b: part.CH4b,
-      n2o: part.N2O,
-      co2b: part.CO2b,
-      sf6: 0,
-      hfc: 0,
-      pfc: 0,
-      otherGES: part.Autres_GES,
       type: getType(part.Type_poste),
       metaData:
         metaData.length > 0
@@ -320,27 +323,64 @@ export const saveEmissionFactorsParts = async (
           : undefined,
     } satisfies Prisma.EmissionFactorPartCreateInput
 
-    if (!part.Nom_poste_français && !part.Nom_poste_anglais) {
-      delete data.metaData
-    }
-    if (part.Valeur_gaz_supplémentaire_1) {
-      const type = part.Code_gaz_supplémentaire_1 || (emissionFactor.sf6 ? 'SF6' : 'Divers')
-      if (type === 'Divers') {
-        data.otherGES = part.Valeur_gaz_supplémentaire_1 + (data.otherGES || 0)
-      }
-      if (type === 'SF6') {
-        data.sf6 = part.Valeur_gaz_supplémentaire_1
-      }
-    }
-    if (part.Valeur_gaz_supplémentaire_2) {
-      const type = part.Code_gaz_supplémentaire_2 || (emissionFactor.sf6 ? 'SF6' : 'Divers')
-      if (type === 'Divers') {
-        data.otherGES = part.Valeur_gaz_supplémentaire_2 + (data.otherGES || 0)
-      }
-      if (type === 'SF6') {
-        data.sf6 = part.Valeur_gaz_supplémentaire_2
-      }
-    }
     await transaction.emissionFactorPart.create({ data })
+  }
+}
+
+export const cleanImport = async (transaction: Prisma.TransactionClient, versionId: string) => {
+  console.log('Clean emission factors sums')
+  const emissionFactors = await transaction.emissionFactor.findMany({
+    where: { versionId },
+    include: { emissionFactorParts: true },
+  })
+
+  let i = 0
+  for (const emissionFactor of emissionFactors) {
+    if (Number(i) % 500 === 0) {
+      console.log(`Emission factor: ${i}/${emissionFactors.length}`)
+    }
+
+    i++
+    if (emissionFactor.importedId) {
+      const additionalPart = additionalParts[emissionFactor.importedId]
+      if (additionalPart) {
+        await transaction.emissionFactorPart.create({
+          data: {
+            emissionFactor: { connect: { id: emissionFactor.id } },
+            type: additionalPart,
+            co2f: emissionFactor.co2f,
+            ch4f: emissionFactor.ch4f,
+            ch4b: emissionFactor.ch4b,
+            n2o: emissionFactor.n2o,
+            co2b: emissionFactor.co2b,
+            sf6: emissionFactor.sf6,
+            hfc: emissionFactor.hfc,
+            pfc: emissionFactor.pfc,
+            otherGES: emissionFactor.otherGES,
+            totalCo2: emissionFactor.totalCo2,
+          },
+        })
+      }
+    }
+
+    if (emissionFactor.emissionFactorParts.length === 0) {
+      continue
+    }
+
+    await transaction.emissionFactor.update({
+      where: { id: emissionFactor.id },
+      data: {
+        co2f: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.co2f || 0), 0),
+        ch4f: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.ch4f || 0), 0),
+        ch4b: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.ch4b || 0), 0),
+        n2o: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.n2o || 0), 0),
+        co2b: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.co2b || 0), 0),
+        sf6: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.sf6 || 0), 0),
+        hfc: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.hfc || 0), 0),
+        pfc: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.pfc || 0), 0),
+        otherGES: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.otherGES || 0), 0),
+        totalCo2: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.totalCo2 || 0), 0),
+      },
+    })
   }
 }

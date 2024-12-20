@@ -29,12 +29,13 @@ const allRules = [
 ]
 
 export const rulesSpans: Record<string, number> = {
-  '1': 5,
-  '2': 2,
-  '3': 5,
-  '4': 5,
-  '5': 4,
-  '6': 1,
+  '1': 6,
+  '2': 3,
+  '3': 6,
+  '4': 6,
+  '5': 5,
+  '6': 2,
+  total: 1,
 }
 
 export type BegesLine = {
@@ -45,7 +46,7 @@ export type BegesLine = {
   other: number
   total: number
   co2b: number
-  uncertainty: number
+  uncertainty: number | null
 }
 
 export const getRulePost = (rule: ExportRule, caracterisation: EmissionSourceCaracterisation) => {
@@ -102,16 +103,17 @@ const getBegesLine = (
 }
 
 const sumLines = (lines: Omit<BegesLine, 'rule'>[]) => {
+  const total = lines.reduce((acc, line) => acc + line.total, 0)
   return {
     co2: lines.reduce((acc, line) => acc + line.co2, 0),
     ch4: lines.reduce((acc, line) => acc + line.ch4, 0),
     n2o: lines.reduce((acc, line) => acc + line.n2o, 0),
     other: lines.reduce((acc, line) => acc + line.other, 0),
-    total: lines.reduce((acc, line) => acc + line.total, 0),
+    total,
     co2b: lines.reduce((acc, line) => acc + line.co2b, 0),
-    uncertainty: sumStandardDeviations(
-      lines.map((line) => ({ value: line.total, standardDeviation: line.uncertainty })),
-    ),
+    uncertainty: total
+      ? sumStandardDeviations(lines.map((line) => ({ value: line.total, standardDeviation: line.uncertainty })))
+      : null,
   }
 }
 
@@ -174,6 +176,10 @@ export const computeBegesResult = (
       // Pas de decomposition => on ventile selon la regle par default
       const post = getDefaultRule(subPostRules, caracterisation)
       if (post) {
+        if (post === '5.3') {
+          console.log('post', emissionSource.name, emissionFactor)
+        }
+
         results[post].push({
           ...getBegesLine(value, emissionFactor),
           uncertainty: uncertainty,
@@ -190,8 +196,10 @@ export const computeBegesResult = (
           // On ventile selon la regle specifique
           post = getRulePost(rule, caracterisation)
         }
-
         if (post) {
+          if (post === '5.3') {
+            console.log('part', emissionSource.name, part)
+          }
           // Et on ajoute la valeur selon la composante quoi qu'il arrive
           results[post].push({
             ...getBegesLine(value, part),
@@ -202,5 +210,19 @@ export const computeBegesResult = (
     }
   })
 
-  return Object.entries(results).map(([rule, result]) => ({ rule, ...sumLines(result) }))
+  console.log(results)
+  const lines = Object.entries(results).map(([rule, result]) => ({ rule, ...sumLines(result) }))
+  lines.push({
+    rule: 'total',
+    ...sumLines(Object.values(lines)),
+  })
+  Array.from({ length: 6 }).map((_, index) => {
+    const rule = (index + 1).toString()
+    lines.push({
+      rule: rule + '.total',
+      ...sumLines(Object.values(lines).filter((line) => line.rule.startsWith(rule))),
+    })
+  })
+
+  return lines.sort((a, b) => a.rule.localeCompare(b.rule))
 }

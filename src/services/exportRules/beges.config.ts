@@ -33,6 +33,38 @@ export const begesRules = [
     operated: '1.4',
     notOperated: '6.1',
   },
+  { subPost: SubPost.CombustiblesOrganiques, operated: '1.1', notOperated: '6.1' },
+  { subPost: SubPost.CombustiblesOrganiques, type: EmissionFactorPartType.Amont, operated: '4.1', notOperated: '6.1' },
+  {
+    subPost: SubPost.CombustiblesOrganiques,
+    type: EmissionFactorPartType.Combustion,
+    operated: '1.1',
+    notOperated: '6.1',
+  },
+  {
+    subPost: SubPost.CombustiblesOrganiques,
+    type: EmissionFactorPartType.CombustionALaCentrale,
+    operated: '1.1',
+    notOperated: '6.1',
+  },
+  {
+    subPost: SubPost.CombustiblesOrganiques,
+    type: EmissionFactorPartType.EmissionsFugitives,
+    operated: '1.4',
+    notOperated: '6.1',
+  },
+  {
+    subPost: SubPost.CombustiblesOrganiques,
+    type: EmissionFactorPartType.Fabrication,
+    operated: '4.1',
+    notOperated: '6.1',
+  },
+  {
+    subPost: SubPost.CombustiblesOrganiques,
+    type: EmissionFactorPartType.Fuites,
+    operated: '1.4',
+    notOperated: '6.1',
+  },
   {
     subPost: SubPost.ReseauxDeChaleurEtDeVapeur,
     operated: '2.3',

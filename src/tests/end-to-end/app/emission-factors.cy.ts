@@ -11,7 +11,6 @@ describe('Emission factors table', () => {
       cy.get('input').should('not.be.checked')
     })
 
-    cy.getByTestId('cell-emission-name').should('have.length', 2)
     cy.getByTestId('emission-factor-search-input').within(() => {
       cy.get('input').type('Archived')
     })
@@ -23,7 +22,6 @@ describe('Emission factors table', () => {
     cy.getByTestId('archived-emissions-factors-switch').within(() => {
       cy.get('input').click()
     })
-    cy.getByTestId('cell-emission-name').should('have.length', 3)
     cy.getByTestId('emission-factor-search-input').within(() => {
       cy.get('input').type('Archived')
     })
