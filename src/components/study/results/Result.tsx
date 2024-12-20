@@ -20,7 +20,7 @@ interface Props {
 const postXAxisList = [
   Post.Energies,
   Post.DechetsDirects,
-  Post.IntrantsBienEtMatieres,
+  Post.IntrantsBiensEtMatieres,
   Post.IntrantsServices,
   Post.AutresEmissionsNonEnergetiques,
   Post.Fret,

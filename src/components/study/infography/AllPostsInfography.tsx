@@ -28,8 +28,8 @@ const AllPostsInfography = ({ study, site }: Props) => {
       <div className={classNames(styles.column, 'flex-col')}>
         <PostInfography
           studyId={study.id}
-          data={data.find((d) => d.post === Post.IntrantsBienEtMatieres)}
-          post={Post.IntrantsBienEtMatieres}
+          data={data.find((d) => d.post === Post.IntrantsBiensEtMatieres)}
+          post={Post.IntrantsBiensEtMatieres}
         />
         <PostInfography
           studyId={study.id}
