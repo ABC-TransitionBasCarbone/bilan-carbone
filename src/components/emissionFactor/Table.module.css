@@ -35,7 +35,13 @@
 
 .line {
   &:hover {
-    background-color: var(--primary-20);
+    border-color: var(--neutral-40);
+    &:nth-child(even) {
+      background: var(--neutral-10);
+    }
+    &:nth-child(odd) {
+      background: var(--neutral-30);
+    }
   }
 }
 
