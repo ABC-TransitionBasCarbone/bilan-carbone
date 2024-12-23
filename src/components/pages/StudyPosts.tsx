@@ -1,10 +1,10 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { Post } from '@/services/posts'
+import { Post, subPostsByPost } from '@/services/posts'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import SubPosts from '../study/SubPosts'
@@ -25,6 +25,14 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const { site, setSite } = useStudySite(study)
 
+  const emissionSources = useMemo(
+    () =>
+      study.emissionSources.filter(
+        (emissionSource) => subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.site.id === site,
+      ) as FullStudy['emissionSources'],
+    [study, post, site],
+  )
+
   return (
     <>
       <Breadcrumbs
@@ -37,9 +45,22 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
       <Block title={study.name} as="h1">
         <SelectStudySite study={study} site={site} setSite={setSite} />
       </Block>
-      <StudyPostsBlock post={post} study={study} display={showInfography} setDisplay={setShowInfography}>
+      <StudyPostsBlock
+        post={post}
+        study={study}
+        display={showInfography}
+        setDisplay={setShowInfography}
+        emissionSources={emissionSources}
+      >
         {showInfography && <StudyPostInfography study={study} site={site} />}
-        <SubPosts post={post} study={study} user={user} withoutDetail={false} />
+        <SubPosts
+          post={post}
+          study={study}
+          user={user}
+          withoutDetail={false}
+          site={site}
+          emissionSources={emissionSources}
+        />
       </StudyPostsBlock>
     </>
   )

@@ -1,11 +1,11 @@
 'use client'
 import Block from '@/components/base/Block'
 import { FullStudy } from '@/db/study'
-import { Post, subPostsByPost } from '@/services/posts'
+import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useTranslations } from 'next-intl'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode } from 'react'
 import PostIcon from '../infography/icons/PostIcon'
 
 interface Props {
@@ -14,24 +14,16 @@ interface Props {
   display: boolean
   setDisplay: (display: boolean) => void
   children: ReactNode
+  emissionSources: FullStudy['emissionSources']
 }
 
-const StudyPostsBlock = ({ post, study, display, setDisplay, children }: Props) => {
+const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources }: Props) => {
   const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
   const tStudyPost = useTranslations('study.post')
   const tUnit = useTranslations('units')
-
-  const validSubPosts = useMemo(() => subPostsByPost[post], [post])
-  const emissionSources = useMemo(
-    () =>
-      study.emissionSources
-        .filter((emissionSource) => validSubPosts.includes(emissionSource.subPost))
-        .sort((a, b) => a.subPost.localeCompare(b.subPost)),
-    [study, validSubPosts],
-  )
 
   return (
     <Block

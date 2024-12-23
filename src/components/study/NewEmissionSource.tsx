@@ -7,15 +7,15 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { FocusEvent, KeyboardEvent, useCallback, useState } from 'react'
 import styles from './NewEmissionSource.module.css'
-import { getStudySite } from './site/useStudySite'
 
 interface Props {
   study: FullStudy
   subPost: SubPost
   caracterisations: EmissionSourceCaracterisation[]
+  site: string
 }
 
-const NewEmissionSource = ({ study, subPost, caracterisations }: Props) => {
+const NewEmissionSource = ({ study, subPost, caracterisations, site }: Props) => {
   const [value, setValue] = useState('')
   const [saving, setSaving] = useState(false)
   const t = useTranslations('study.post')
@@ -36,7 +36,7 @@ const NewEmissionSource = ({ study, subPost, caracterisations }: Props) => {
           name: event.target.value,
           subPost,
           studyId: study.id,
-          siteId: getStudySite(study.id),
+          siteId: site,
           caracterisation: caracterisations.length === 1 ? caracterisations[0] : undefined,
         })
         if (!result) {
@@ -46,7 +46,7 @@ const NewEmissionSource = ({ study, subPost, caracterisations }: Props) => {
         setSaving(false)
       }
     },
-    [study, subPost, router],
+    [study, subPost, router, site],
   )
   return (
     <TextField
