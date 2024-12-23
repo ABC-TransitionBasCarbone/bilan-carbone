@@ -6,6 +6,7 @@ import {
   ImportEmissionFactor,
   requiredColumns,
   saveEmissionFactorsParts,
+  validStatuses,
 } from '../import'
 import { mapBaseEmpreinteEmissionFactors } from './import'
 
@@ -33,7 +34,7 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
 
       let parts: ImportEmissionFactor[] = []
       let url: string | undefined =
-        `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${requiredColumns.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
+        `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${requiredColumns.join(',')}&q_fields=Statut_de_l'élément&q=${validStatuses.map((status) => encodeURI(status)).join(',')}`
 
       while (url) {
         console.log(url)
