@@ -1,5 +1,6 @@
 .container {
   border-radius: 0 0 1rem 1rem;
+  border: 1px solid var(--neutral-30);
   background: var(--neutral-10);
   flex-wrap: wrap;
   gap: 0.5rem;
