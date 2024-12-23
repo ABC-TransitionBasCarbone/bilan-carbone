@@ -6,7 +6,7 @@ import { EnergiesIcon } from './energies'
 import { FinDeVieIcon } from './findevie'
 import { FretIcon } from './fret'
 import { ImmobilisationsIcon } from './immobilisations'
-import { IntrantsBiensEtMatieresIcon } from './intrantsbienetmatieres'
+import { IntrantsBiensEtMatieresIcon } from './intrantsbiensetmatieres'
 import { IntrantsServicesIcon } from './intrantsservices'
 import { UtilisationEtDependanceIcon } from './utilisationetdependance'
 
