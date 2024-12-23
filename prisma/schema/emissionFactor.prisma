@@ -115,6 +115,8 @@ model EmissionFactor {
   updatedAt           DateTime             @default(now()) @map("updated_at")
   emissionFactorParts EmissionFactorPart[]
 
+  oldBCId String? @map("old_bc_id")
+
   versionId String?                      @map("version_id")
   version   EmissionFactorImportVersion? @relation(fields: [versionId], references: [id])
 
@@ -174,6 +176,8 @@ model EmissionFactorPart {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
+
+  oldBCId String? @map("old_bc_id")
 
   emissionFactorId String                       @map("emission_factor_id")
   emissionFactor   EmissionFactor               @relation(fields: [emissionFactorId], references: [id])
