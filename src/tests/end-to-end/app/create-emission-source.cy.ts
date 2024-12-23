@@ -8,7 +8,7 @@ describe('Create study emission source', () => {
   it('should create an emission source on a study', () => {
     cy.login()
 
-    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBienEtMatieres`)
+    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('subpost').first().click()
 
     cy.getByTestId('new-emission-source').first().type('My new emission source{enter}')
@@ -93,7 +93,7 @@ describe('Create study emission source', () => {
     // Editor can add source, edit but not validate
     cy.logout()
     cy.login('bc-admin-0@yopmail.com', 'password-0')
-    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBienEtMatieres`)
+    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('subpost').first().click()
     cy.getByTestId('new-emission-source').should('exist')
     cy.getByTestId('emission-source-My emission source name').within(() => {
@@ -116,7 +116,7 @@ describe('Create study emission source', () => {
     // Reader can only read
     cy.logout()
     cy.login('bc-default-1@yopmail.com', 'password-1')
-    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBienEtMatieres`)
+    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('subpost').first().click()
     cy.getByTestId('new-emission-source').should('not.exist')
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
@@ -136,7 +136,7 @@ describe('Create study emission source', () => {
     cy.logout()
 
     cy.login('bc-contributor@yopmail.com', 'password')
-    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBienEtMatieres`)
+    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('not-found-page').should('exist')
 
     cy.visit(`/etudes/${studyId}`)

@@ -3,7 +3,7 @@ import { SubPost } from '@prisma/client'
 export enum Post {
   Energies = 'Energies',
   AutresEmissionsNonEnergetiques = 'AutresEmissionsNonEnergetiques',
-  IntrantsBienEtMatieres = 'IntrantsBienEtMatieres',
+  IntrantsBiensEtMatieres = 'IntrantsBiensEtMatieres',
   IntrantsServices = 'IntrantsServices',
   DechetsDirects = 'DechetsDirects',
   Fret = 'Fret',
@@ -28,7 +28,7 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
     SubPost.EmissionsLieesAuxProcedesIndustriels,
     SubPost.AutresEmissionsNonEnergetiques,
   ],
-  [Post.IntrantsBienEtMatieres]: [
+  [Post.IntrantsBiensEtMatieres]: [
     SubPost.MetauxPlastiquesEtVerre,
     SubPost.PapiersCartons,
     SubPost.MateriauxDeConstruction,

@@ -1,4 +1,4 @@
-export const IntrantsBienEtMatieresIcon = ({ className }: { className?: string }) => {
+export const IntrantsBiensEtMatieresIcon = ({ className }: { className?: string }) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 403.5 459" className={className}>
       <g data-name="Calque_1">

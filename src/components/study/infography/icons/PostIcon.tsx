@@ -6,7 +6,7 @@ import { EnergiesIcon } from './energies'
 import { FinDeVieIcon } from './findevie'
 import { FretIcon } from './fret'
 import { ImmobilisationsIcon } from './immobilisations'
-import { IntrantsBienEtMatieresIcon } from './intrantsbienetmatieres'
+import { IntrantsBiensEtMatieresIcon } from './intrantsbiensetmatieres'
 import { IntrantsServicesIcon } from './intrantsservices'
 import { UtilisationEtDependanceIcon } from './utilisationetdependance'
 
@@ -31,8 +31,8 @@ const PostIcon = ({ post, className }: Props) => {
       return <UtilisationEtDependanceIcon className={className} />
     case Post.FinDeVie:
       return <FinDeVieIcon className={className} />
-    case Post.IntrantsBienEtMatieres:
-      return <IntrantsBienEtMatieresIcon className={className} />
+    case Post.IntrantsBiensEtMatieres:
+      return <IntrantsBiensEtMatieresIcon className={className} />
     case Post.Fret:
       return <FretIcon className={className} />
     case Post.IntrantsServices:

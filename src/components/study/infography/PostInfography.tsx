@@ -41,7 +41,7 @@ const postColors: Record<Post, string> = {
   AutresEmissionsNonEnergetiques: 'darkBlue',
   DechetsDirects: 'darkBlue',
   Immobilisations: 'darkBlue',
-  IntrantsBienEtMatieres: 'blue',
+  IntrantsBiensEtMatieres: 'blue',
   IntrantsServices: 'blue',
   Deplacements: 'green',
   Fret: 'green',
