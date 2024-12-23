@@ -20,7 +20,7 @@ const ExportCheckbox = ({ id, values, setValues }: Props) => {
         control={<Checkbox />}
         label={tExport(id)}
         value={!!values[id]}
-        onChange={(_, checked) => setValues({ ...values, [id]: checked ? ControlMode.CapitalShare : false })}
+        onChange={(_, checked) => setValues({ ...values, [id]: checked ? ControlMode.Operational : false })}
       />
       {values[id] && (
         <div className={styles.select}>
