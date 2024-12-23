@@ -93,7 +93,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
             debounce={200}
             value={value}
             onChange={setValue}
-            label={t('form.emissionFactor')}
+            label={`${t('form.emissionFactor')} *`}
             onFocus={() => setDisplay(true)}
           />
           {canEdit && (

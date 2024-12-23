@@ -247,6 +247,7 @@ const EmissionSource = ({
                 emissionFactors={emissionFactors}
                 update={update}
                 caracterisations={caracterisations}
+                mandatoryCaracterisation={study.exports.length > 0}
               />
             )}
             {emissionResults && (

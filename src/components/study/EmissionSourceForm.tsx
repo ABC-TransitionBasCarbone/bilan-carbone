@@ -19,6 +19,7 @@ interface Props {
   selectedFactor?: EmissionFactorWithMetaData
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
   caracterisations: EmissionSourceCaracterisation[]
+  mandatoryCaracterisation: boolean
 }
 
 const EmissionSourceForm = ({
@@ -28,6 +29,7 @@ const EmissionSourceForm = ({
   emissionFactors,
   selectedFactor,
   caracterisations,
+  mandatoryCaracterisation,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -41,7 +43,7 @@ const EmissionSourceForm = ({
           defaultValue={emissionSource.name}
           data-testid="emission-source-name"
           onBlur={(event) => update('name', event.target.value)}
-          label={t('form.name')}
+          label={`${t('form.name')} *`}
         />
         <TextField
           disabled={!canEdit}
@@ -59,7 +61,7 @@ const EmissionSourceForm = ({
               data-testid="emission-source-caracterisation"
               onChange={(event) => update('caracterisation', event.target.value)}
               labelId="emission-source-caracterisation-label"
-              label={t('form.caracterisation')}
+              label={`${t('form.caracterisation')}${mandatoryCaracterisation ? ' *' : ''}`}
             >
               {caracterisations.map((categorisation) => (
                 <MenuItem key={categorisation} value={categorisation}>
@@ -86,7 +88,7 @@ const EmissionSourceForm = ({
             data-testid="emission-source-value-da"
             defaultValue={emissionSource.value}
             onBlur={(event) => update('value', Number(event.target.value))}
-            label={t('form.value')}
+            label={`${t('form.value')} *`}
             slotProps={{
               inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
               input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
@@ -108,7 +110,7 @@ const EmissionSourceForm = ({
             data-testid="emission-source-type"
             value={emissionSource.type || ''}
             onChange={(event) => update('type', event.target.value)}
-            label={t('form.type')}
+            label={`${t('form.type')} *`}
             labelId={'type-label'}
           >
             {Object.keys(EmissionSourceType).map((value) => (
