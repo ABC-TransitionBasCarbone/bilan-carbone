@@ -2,7 +2,7 @@ import { Import, SubPost } from '@prisma/client'
 import { getEmissionFactorsFromCSV as getEmissionFactors } from '../getEmissionFactorsFromCSV'
 import { ImportEmissionFactor, mapEmissionFactors } from '../import'
 
-const mapLegiFranceEmissionFactors = (
+const mapLegifranceEmissionFactors = (
   emissionFactor: ImportEmissionFactor,
   versionId: string,
   reseau: 'froid' | 'chaud',
@@ -17,5 +17,5 @@ const mapLegiFranceEmissionFactors = (
 
 export const getEmissionFactorsFromCSV = async (name: string, file: string, reseau: 'froid' | 'chaud') =>
   getEmissionFactors(name, file, Import.NegaOctet, (emissionFactor: ImportEmissionFactor, versionId: string) =>
-    mapLegiFranceEmissionFactors(emissionFactor, versionId, reseau),
+    mapLegifranceEmissionFactors(emissionFactor, versionId, reseau),
   )
