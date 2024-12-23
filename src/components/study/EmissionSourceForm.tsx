@@ -54,7 +54,7 @@ const EmissionSourceForm = ({
         />
         {caracterisations.length > 0 && (
           <FormControl>
-            <InputLabel id="emission-source-caracterisation-label">{t('form.caracterisation')}</InputLabel>
+            <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')}${mandatoryCaracterisation ? ' *' : ''}`}</InputLabel>
             <Select
               disabled={!canEdit || caracterisations.length === 1}
               value={emissionSource.caracterisation || ''}
