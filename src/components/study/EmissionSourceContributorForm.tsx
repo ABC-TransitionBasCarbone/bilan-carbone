@@ -2,6 +2,7 @@
 
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { Post, subPostsByPost } from '@/services/posts'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { TextField } from '@mui/material'
 import classNames from 'classnames'
@@ -53,6 +54,22 @@ const EmissionSourceContributorForm = ({ emissionSource, update, emissionFactors
           label={t('form.source')}
         />
       </div>
+      {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
+        <div className={classNames(styles.row, styles.inputWithUnit, 'flex')}>
+          <TextField
+            type="number"
+            defaultValue={emissionSource.depreciationPeriod}
+            className={styles.depreciationPeriod}
+            onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+            label={`${t('form.depreciationPeriod')} *`}
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+            }}
+          />
+          <div className={styles.unit}>{t('form.years')}</div>
+        </div>
+      )}
       <div className={classNames(styles.row, 'flex')}>
         <QualitySelect
           data-testid="emission-source-reliability"

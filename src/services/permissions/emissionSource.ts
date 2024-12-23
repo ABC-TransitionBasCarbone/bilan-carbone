@@ -2,6 +2,7 @@ import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { StudyEmissionSource, StudyRole, User } from '@prisma/client'
 import { canBeValidated } from '../emissionSource'
+import { Post, subPostsByPost } from '../posts'
 import { canReadStudy } from './study'
 
 export const canCreateEmissionSource = async (
@@ -68,6 +69,10 @@ export const canUpdateEmissionSource = async (
     if (change.validated === true && !canBeValidated({ ...emissionSource, ...change }, study)) {
       return false
     }
+  }
+
+  if (change.depreciationPeriod && !subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)) {
+    return false
   }
 
   return true

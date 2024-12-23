@@ -1,6 +1,7 @@
 'use client'
 import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { Post, subPostsByPost } from '@/services/posts'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { EmissionSourceCaracterisation, EmissionSourceType } from '@prisma/client'
@@ -121,6 +122,23 @@ const EmissionSourceForm = ({
           </Select>
         </FormControl>
       </div>
+      {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
+        <div className={classNames(styles.row, styles.inputWithUnit, 'flex')}>
+          <TextField
+            disabled={!canEdit}
+            type="number"
+            defaultValue={emissionSource.depreciationPeriod}
+            className={styles.depreciationPeriod}
+            onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+            label={`${t('form.depreciationPeriod')} *`}
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+            }}
+          />
+          <div className={styles.unit}>{t('form.years')}</div>
+        </div>
+      )}
       <div className={classNames(styles.row, 'flex')}>
         <QualitySelect
           disabled={!canEdit}

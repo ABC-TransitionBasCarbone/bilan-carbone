@@ -161,8 +161,7 @@ const EmissionSource = ({
             {emissionSource.value && (
               <>
                 <p>
-                  {emissionSource.value}
-                  {selectedFactor && tUnits(selectedFactor.unit)}
+                  {emissionSource.value} {selectedFactor && tUnits(selectedFactor.unit)}
                 </p>
                 {sourceRating && (
                   <p className={styles.status}>

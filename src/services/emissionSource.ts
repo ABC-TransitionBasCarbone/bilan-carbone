@@ -1,12 +1,13 @@
 import { FullStudy } from '@/db/study'
 import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
+import { Post, subPostsByPost } from './posts'
 import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
 
 export const getEmissionSourceCompletion = (
   emissionSource: Pick<
     StudyEmissionSource,
-    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost'
+    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost' | 'depreciationPeriod'
   >,
   study: FullStudy | StudyWithoutDetail,
 ) => {
@@ -15,13 +16,16 @@ export const getEmissionSourceCompletion = (
   if (study.exports.length > 0 && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
+  if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)) {
+    mandatoryFields.push('depreciationPeriod')
+  }
   return mandatoryFields.reduce((acc, field) => acc + (emissionSource[field] ? 1 : 0), 0) / mandatoryFields.length
 }
 
 export const canBeValidated = (
   emissionSource: Pick<
     StudyEmissionSource,
-    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost'
+    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost' | 'depreciationPeriod'
   >,
   study: FullStudy | StudyWithoutDetail,
 ) => {
@@ -55,11 +59,24 @@ const getAlpha = (emission: number | null, confidenceInterval: number[] | null) 
   return (confidenceInterval[1] - emission) / emission
 }
 
-export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
+const getEmissionSourceEmission = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
     return null
   }
-  const emission = emissionSource.emissionFactor.totalCo2 * emissionSource.value
+
+  let emission = emissionSource.emissionFactor.totalCo2 * emissionSource.value
+  if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && emissionSource.depreciationPeriod) {
+    emission = emission / emissionSource.depreciationPeriod
+  }
+  return emission
+}
+
+export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
+  const emission = getEmissionSourceEmission(emissionSource)
+  if (emission === null) {
+    return null
+  }
+
   const standardDeviation = getStandardDeviation(emissionSource)
   const confidenceInterval = standardDeviation ? getConfidenceInterval(emission, standardDeviation) : null
   const alpha = getAlpha(emission, confidenceInterval)
@@ -99,10 +116,7 @@ export const sumEmissionSourcesUncertainty = (emissionSource: (FullStudy | Study
 }
 
 export const getEmissionSourcesTotalCo2 = (emissionSources: FullStudy['emissionSources']) =>
-  emissionSources.reduce(
-    (sum, emissionSource) => sum + (emissionSource.value || 0) * (emissionSource.emissionFactor?.totalCo2 || 0),
-    0,
-  )
+  emissionSources.reduce((sum, emissionSource) => sum + (getEmissionSourceEmission(emissionSource) || 0), 0)
 
 export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
   [SubPost.CombustiblesFossiles]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],

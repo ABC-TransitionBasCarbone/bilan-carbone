@@ -27,6 +27,7 @@ const fullStudyInclude = {
       type: true,
       comment: true,
       validated: true,
+      depreciationPeriod: true,
       site: {
         select: {
           id: true,

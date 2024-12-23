@@ -134,6 +134,8 @@ model StudyEmissionSource {
   comment                      String?
   validated                    Boolean?
 
+  depreciationPeriod Int? @map("depreciation_period")
+
   contributorId String? @map("contributor_id")
   contributor   User?   @relation(fields: [contributorId], references: [id])
 

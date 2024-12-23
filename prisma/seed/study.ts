@@ -646,8 +646,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Bâtiment industriel, structure métallique, France continentale, Base Carbone',
         subPost: SubPost.Batiments,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        value: 750 / 30,
-        // TODO: remplir l'amortissement
+        value: 750,
+        depreciationPeriod: 30,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20731')?.id,
       },
       {
@@ -658,8 +658,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Parking, classique - bitume, France continentale, Base Carbone',
         subPost: SubPost.AutresInfrastructures,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        value: 500 / 30,
-        // TODO: remplir l'amortissement
+        value: 500,
+        depreciationPeriod: 30,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '26011')?.id,
       },
       {
@@ -670,8 +670,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Machines, France continentale, Base Carbone',
         subPost: SubPost.Equipements,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        // TODO: remplir l'amortissement
-        value: 1500 / 10,
+        value: 1500,
+        depreciationPeriod: 10,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20906')?.id,
       },
       {
@@ -682,8 +682,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Mobilier, France continentale, Base Carbone',
         subPost: SubPost.Equipements,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        // TODO: remplir l'amortissement
-        value: 2 / 10,
+        value: 2,
+        depreciationPeriod: 10,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20907')?.id,
       },
       {
@@ -694,8 +694,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Ordinateur portable, France continentale, Base Carbone',
         subPost: SubPost.Informatique,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        // TODO: remplir l'amortissement
-        value: 15 / 3,
+        value: 15,
+        depreciationPeriod: 3,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27002')?.id,
       },
       {
@@ -706,8 +706,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Ordinateur fixe - bureautique, France continentale, Base Carbone',
         subPost: SubPost.Informatique,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        // TODO: remplir l'amortissement
-        value: 10 / 3,
+        value: 10,
+        depreciationPeriod: 3,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27003')?.id,
       },
       {
@@ -718,8 +718,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: "Imprimante jet d'encre, France continentale, Base Carbone",
         subPost: SubPost.Informatique,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        // TODO: remplir l'amortissement
-        value: 5 / 5,
+        value: 5,
+        depreciationPeriod: 5,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27025')?.id,
       },
       {
@@ -730,8 +730,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Photocopieurs, Monde, Base Carbone',
         subPost: SubPost.Informatique,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        // TODO: remplir l'amortissement
-        value: 2 / 7,
+        value: 2,
+        depreciationPeriod: 7,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20591')?.id,
       },
     ],

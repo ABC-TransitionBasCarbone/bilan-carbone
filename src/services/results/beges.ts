@@ -2,6 +2,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
 import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
+import { Post, subPostsByPost } from '../posts'
 
 const allRules = [
   '1.1',
@@ -152,7 +153,10 @@ export const computeBegesResult = (
 
     const id = emissionSource.emissionFactor.id
     const caracterisation = emissionSource.caracterisation
-    const value = emissionSource.value
+    let value = emissionSource.value
+    if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && emissionSource.depreciationPeriod) {
+      value = value / emissionSource.depreciationPeriod
+    }
 
     const emissionFactor = emissionFactorsWithParts.find(
       (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,
@@ -176,10 +180,6 @@ export const computeBegesResult = (
       // Pas de decomposition => on ventile selon la regle par default
       const post = getDefaultRule(subPostRules, caracterisation)
       if (post) {
-        if (post === '5.3') {
-          console.log('post', emissionSource.name, emissionFactor)
-        }
-
         results[post].push({
           ...getBegesLine(value, emissionFactor),
           uncertainty: uncertainty,
@@ -197,9 +197,6 @@ export const computeBegesResult = (
           post = getRulePost(rule, caracterisation)
         }
         if (post) {
-          if (post === '5.3') {
-            console.log('part', emissionSource.name, part)
-          }
           // Et on ajoute la valeur selon la composante quoi qu'il arrive
           results[post].push({
             ...getBegesLine(value, part),
