@@ -27,5 +27,6 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   completeness: z.number().optional(),
   comment: z.string().trim().optional(),
   validated: z.boolean().optional(),
+  depreciationPeriod: z.number().optional(),
 })
 export type UpdateEmissionSourceCommand = z.infer<typeof UpdateEmissionSourceCommandValidation>

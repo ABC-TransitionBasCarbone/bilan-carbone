@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
-import { sumEmissionSourcesUncertainty } from '../emissionSource'
+import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 
 export type ResultsByPost = {
@@ -27,12 +27,7 @@ export const computeResultsByPost = (study: FullStudy, tPost: (key: string) => s
           )
           return {
             post: subPost,
-            value: emissionSources.reduce(
-              (acc, emission) =>
-                acc +
-                (!emission.value || !emission.emissionFactor ? 0 : emission.value * emission.emissionFactor.totalCo2),
-              0,
-            ),
+            value: getEmissionSourcesTotalCo2(emissionSources),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: emissionSources.filter((es) => es.validated).length,
             uncertainty: sumEmissionSourcesUncertainty(emissionSources),

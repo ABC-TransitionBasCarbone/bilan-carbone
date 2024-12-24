@@ -714,6 +714,8 @@
       "value": "Valeur donnée d'activité",
       "source": "Source",
       "type": "Type",
+      "depreciationPeriod": "Durée d'amortissement",
+      "years": "ans",
       "reliability": "Fiabilité",
       "technicalRepresentativeness": "Représentativité technique",
       "geographicRepresentativeness": "Représentativité géographique",

@@ -715,6 +715,8 @@
       "value": "Activity value",
       "source": "Source",
       "type": "Type",
+      "depreciationPeriod": "Depreciation per",
+      "years": "years",
       "reliability": "Reliability",
       "technicalRepresentativeness": "Technical representativeness",
       "geographicRepresentativeness": "Geographic representativeness",
