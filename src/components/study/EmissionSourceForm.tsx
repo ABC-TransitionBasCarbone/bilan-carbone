@@ -54,7 +54,7 @@ const EmissionSourceForm = ({
         />
         {caracterisations.length > 0 && (
           <FormControl>
-            <InputLabel id="emission-source-caracterisation-label">{t('form.caracterisation')}</InputLabel>
+            <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')}${mandatoryCaracterisation ? ' *' : ''}`}</InputLabel>
             <Select
               disabled={!canEdit || caracterisations.length === 1}
               value={emissionSource.caracterisation || ''}
@@ -104,7 +104,7 @@ const EmissionSourceForm = ({
           label={t('form.source')}
         />
         <FormControl>
-          <InputLabel id={'type-label'}>{t('form.type')}</InputLabel>
+          <InputLabel id={'type-label'}>{`${t('form.type')} *`}</InputLabel>
           <Select
             disabled={!canEdit}
             data-testid="emission-source-type"
