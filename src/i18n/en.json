@@ -745,7 +745,7 @@
     "organizations": "Organizations",
     "organizationsUpload": "Import my organizations",
     "requiredHeaders": "The following columns are mandatory:",
-    "missingHeaders": "Missing headers :",
+    "missingHeaders": "Missing headers:",
     "loading": "Loading document...",
     "success": "File successfully imported, please check the information created",
     "existingOrganizations": "Please note that some organizations (based on SIRET, or name) already exist. These have been ignored. Please check that all your data is correct."
