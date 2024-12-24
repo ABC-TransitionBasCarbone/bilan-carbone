@@ -140,4 +140,7 @@ enum Unit {
   KGDBO
   KGDBO_PER_M3
   KG_H2_PER_100KM
+  GO
+  REQUEST
+  MAIL
 }

@@ -15,8 +15,8 @@ interface Props {
 
 const AllPostsInfography = ({ study, site }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
-  const data = useMemo(() => computeResultsByPost(study, tPost, site), [study, tPost])
 
+  const data = useMemo(() => computeResultsByPost(study, tPost, site), [study, tPost, site])
   const findSubPost = (subPost: SubPost) => {
     const post = data.find((post) => post.subPosts.find((sb) => sb.post === subPost))
     const foundSubPost = post?.subPosts.find((sb) => sb.post === subPost)
@@ -28,8 +28,8 @@ const AllPostsInfography = ({ study, site }: Props) => {
       <div className={classNames(styles.column, 'flex-col')}>
         <PostInfography
           studyId={study.id}
-          data={data.find((d) => d.post === Post.IntrantsBienEtMatieres)}
-          post={Post.IntrantsBienEtMatieres}
+          data={data.find((d) => d.post === Post.IntrantsBiensEtMatieres)}
+          post={Post.IntrantsBiensEtMatieres}
         />
         <PostInfography
           studyId={study.id}

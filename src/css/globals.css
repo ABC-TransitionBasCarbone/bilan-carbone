@@ -1,6 +1,6 @@
 body {
   font-family: 'Gilroy', sans-serif;
-  background: var(--primary-10);
+  background: var(--background);
   height: 100vh;
   line-height: 1.25;
   overflow: hidden;
@@ -64,6 +64,8 @@ caption {
 
 table {
   width: 100%;
+  border: var(--border);
+  border-radius: 0.25rem;
 
   th,
   td {

@@ -58,6 +58,7 @@ model Study {
   emissionSources StudyEmissionSource[]
   contributors    Contributors[]
   sites           StudySite[]
+  flows           Document[]
 
   @@map("studies")
 }
@@ -76,7 +77,7 @@ model UserOnStudy {
   study   Study  @relation(fields: [studyId], references: [id])
   studyId String @map("study_id")
   user    User   @relation(fields: [userId], references: [id])
-  userId  String
+  userId  String @map("user_id")
 
   role StudyRole
 
@@ -172,4 +173,6 @@ model StudySite {
   etp                 Int
   ca                  Float
   StudyEmissionSource StudyEmissionSource[]
+
+  @@map("study_sites")
 }

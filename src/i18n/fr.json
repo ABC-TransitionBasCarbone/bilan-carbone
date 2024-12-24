@@ -1,4 +1,7 @@
 {
+  "home": {
+    "userToValidate": "Un utilisateur a été ajouté à votre organisation car il vient d'être formé à la méthode bilan carbone. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte"
+  },
   "exports": {
     "title": "Exports :",
     "consolidated": "Bilan Carbone®",
@@ -18,6 +21,7 @@
   },
   "beges": {
     "rule": "Règle",
+    "subTotal": "Sous-total",
     "category": {
       "title": "Catégorie",
       "1": "Émissions directes de GES",
@@ -108,6 +112,7 @@
   "navigation": {
     "factors": "Facteurs d'émission",
     "help": "Aide",
+    "admin": "Admin",
     "home": "Accueil",
     "profile": "Profil",
     "study": "Étude",
@@ -123,6 +128,11 @@
     "legalNotices": "Mentions légales",
     "logout": "Se déconnecter"
   },
+  "admin": {
+    "title": "Administration du BC+",
+    "csvOnly": "Seuls les fichiers CSV sont acceptés",
+    "uploadButton": "Importer un fichier CSV de l'ADEME"
+  },
   "study": {
     "create": "Nouvelle étude",
     "myStudies": "Mes études",
@@ -134,7 +144,8 @@
       "accounting": "Comptabilisation",
       "dataEntry": "Saisie des données",
       "results": "Résultats",
-      "transitionPlan": "Plan de transition"
+      "transitionPlan": "Plan de transition",
+      "menu": "Ouvrir le menu de navigation de l'étude"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -240,8 +251,8 @@
       }
     },
     "perimeter": {
-      "title": "Périmètre de l'étude : {name}",
-      "dates": "Du {startDate} au {endDate}"
+      "dates": "Du {startDate} au {endDate}",
+      "title": "Périmètre de l'étude : {name}"
     },
     "results": {
       "type": "Type",
@@ -250,26 +261,49 @@
       "uncertainty": "Incertitude"
     },
     "export": {
+      "activityDataComment": "Commentaire de la donnée d'activité",
+      "activityDataQuality": "Qualité de la donnée d'activité",
+      "activityDataUnit": "Unité de la donnée d'activité",
+      "activityDataValue": "Valeur de la donnée d'activité",
       "date": "Date butoire",
       "download": "Télécharger les sources d'émissions",
       "downloadSubPost": "Télécharger les sources d'émissions de {name}",
       "emissionName": "Nom du FE (facteur d'émission)",
       "emissionQuality": "Qualité du FE",
       "emissionSource": "Source du FE",
+      "emissionUnit": "Unité du FE",
       "emissionValue": "Valeur du FE",
       "no": "Non",
       "noFactor": "Aucun facteur d'émission",
       "post": "Poste",
+      "quality": "Qualité",
       "sourceCharacterization": "Caractérisation de la source d'émission",
-      "sourceComment": "Commentaire de la source d'émission",
       "sourceName": "Nom de la source d'émission",
       "sourceQuality": "Qualité de la source d'émission",
+      "sourceUnit": "Unité de la source d'émission",
       "sourceValue": "Valeur de la source d'émission",
       "subPost": "Sous poste",
       "total": "Total",
       "uncertainty": "Incertitude",
       "validation": "Validation de la source d'émission",
       "yes": "Oui"
+    },
+
+    "flow": {
+      "loading": "Chargement du document...",
+      "addFlow": "Ajouter un flux",
+      "documentNotFound": "Document non trouvé",
+      "download": "Télécharger le flux",
+      "flows": "Cartographie des fluxs",
+      "flowSelector": "Flux à afficher",
+      "invalidFileType": "Type de fichier non supporté",
+      "fileTooBig": "Fichier trop gros (taille maximale {size} MB)",
+      "newFlow": "Ajouter un flux",
+      "noFileSelected": "Aucun fichier selectionné",
+      "noFlows": "Aucun flux à afficher",
+      "notAuthorized": "Action non authorisée",
+      "removeFlow": "Supprimer le flux",
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
     }
   },
   "emissionFactors": {
@@ -279,7 +313,7 @@
       "allSubPost": "Tout les sous postes",
       "Energies": "Énergies",
       "AutresEmissionsNonEnergetiques": "Autres émissions directes",
-      "IntrantsBienEtMatieres": "Intrants bien et matières",
+      "IntrantsBiensEtMatieres": "Intrants biens et matières",
       "IntrantsServices": "Intrants services",
       "DechetsDirects": "Déchets directs",
       "Fret": "Fret",
@@ -373,6 +407,9 @@
     "title": "Facteurs d'émissions",
     "loading": "Chargement des facteurs d'émissions",
     "table": {
+      "Valid": "Valide",
+      "Archived": "Archivé",
+      "selectLine": "Selectionner ce facteur d'émission",
       "all": "Toutes",
       "BaseEmpreinte": "Base Empreinte",
       "displayArchived": "Afficher les facteurs archivés",
@@ -396,6 +433,7 @@
       "yes": "Oui",
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
+        "negaOctet": "Logo de NegaOctet",
         "manual": "Manuel"
       },
       "post": "Poste :",
@@ -432,6 +470,8 @@
     "title": "Mon organisation",
     "pending": "Invitations en attentes",
     "invitationDate": "Invitation envoyé le",
+    "toValidate": "Invitations à valider",
+    "addedDate": "Ajouté le",
     "delete": "Supprimer l'utilisateur",
     "resend": "Renvoyer l'invitation",
     "table": {
@@ -599,7 +639,10 @@
     "KG_PER_m3": "kg / m³",
     "KGDBO": "kgDBO",
     "KGDBO_PER_M3": "kgDBO / m³",
-    "KG_H2_PER_100KM": "kgH2/100km"
+    "KG_H2_PER_100KM": "kgH2/100km",
+    "GO": "Go",
+    "REQUEST": "requête",
+    "MAIL": "mail"
   },
   "organization": {
     "create": "Nouvelle Organisation",
@@ -632,7 +675,9 @@
     }
   },
   "emissionSource": {
-    "dialog": {
+    "advancedSearch": "Recherche avancée",
+    "noResults": "Rechercher avec plus de filtres",
+    "deleteDialog": {
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
       "description": "Toutes les données renseignées seront définitivement perdues, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
@@ -644,7 +689,7 @@
       "valid": "Validée",
       "waiting": "En attente",
       "waitingContributor": "En attente d'un contributeur",
-      "toVerify": "A vérifier"
+      "toVerify": "À vérifier"
     },
     "type": {
       "Physical": "Physique",
@@ -675,6 +720,10 @@
       "temporalRepresentativeness": "Représentativité temporelle",
       "completeness": "Complétude",
       "comment": "Commentaires"
+    },
+    "emissionFactorDialog": {
+      "title": "Choisir un facteur d'émission",
+      "cancel": "Annuler"
     }
   },
   "quality": {

@@ -8,7 +8,7 @@ import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
-import { getAllowedLevels } from '@/services/study'
+import { checkLevel } from '@/services/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { Role, StudyRole } from '@prisma/client'
@@ -48,7 +48,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
     form.setValue('email', value || '')
     if (value) {
       const organizationUser = users.find((user) => user.email === value)
-      if (!organizationUser || getAllowedLevels(organizationUser.level).includes(study.level)) {
+      if (!organizationUser || checkLevel(organizationUser.level, study.level)) {
         setReaderOnly(false)
       } else {
         setReaderOnly(true)

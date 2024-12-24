@@ -16,7 +16,6 @@ const StudyContributionPage = ({ study }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
   const { site, setSite } = useStudySite(study)
-
   return (
     <>
       <Breadcrumbs

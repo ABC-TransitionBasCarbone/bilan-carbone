@@ -31,6 +31,8 @@ interface Props {
   subPost: SubPostEnum
   userRoleOnStudy: StudyRole | null
   emissionFactors: EmissionFactorWithMetaData[]
+  emissionSources: FullStudy['emissionSources']
+  site: string
 }
 
 const SubPost = ({
@@ -40,20 +42,20 @@ const SubPost = ({
   study,
   userRoleOnStudy,
   emissionFactors,
+  emissionSources,
+  site,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tExport = useTranslations('study.export')
+  const tCaracterisations = useTranslations('categorisations')
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
+  const tUnit = useTranslations('units')
 
   const subPostEmissionFactors = useMemo(() => {
     return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost))
   }, [emissionFactors, subPost])
 
-  const emissionSources = useMemo(
-    () => study.emissionSources.filter((emissionSource) => emissionSource.subPost === subPost),
-    [study, subPost],
-  )
   const contributors = useMemo(
     () =>
       withoutDetail
@@ -65,7 +67,6 @@ const SubPost = ({
   )
 
   const caracterisations = useMemo(() => caracterisationsBySubPost[subPost], [subPost])
-
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div className="flex">
       <Accordion className="grow">
@@ -90,7 +91,7 @@ const SubPost = ({
             withoutDetail ? (
               <EmissionSource
                 study={study}
-                emissionSource={emissionSource as StudyWithoutDetail['emissionSources'][0]}
+                emissionSource={emissionSource}
                 key={emissionSource.id}
                 emissionFactors={subPostEmissionFactors}
                 userRoleOnStudy={userRoleOnStudy}
@@ -100,7 +101,7 @@ const SubPost = ({
             ) : (
               <EmissionSource
                 study={study}
-                emissionSource={emissionSource as FullStudy['emissionSources'][0]}
+                emissionSource={emissionSource}
                 key={emissionSource.id}
                 emissionFactors={subPostEmissionFactors}
                 userRoleOnStudy={userRoleOnStudy}
@@ -111,7 +112,7 @@ const SubPost = ({
           )}
           {!withoutDetail && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader && (
             <div className="mt2">
-              <NewEmissionSource study={study} subPost={subPost} caracterisations={caracterisations} />
+              <NewEmissionSource study={study} subPost={subPost} caracterisations={caracterisations} site={site} />
             </div>
           )}
         </AccordionDetails>
@@ -120,16 +121,19 @@ const SubPost = ({
         <div className={classNames(styles.download, 'flex ml1')}>
           <Button
             aria-label={tExport('downloadSubPost', { name: subPost })}
+            title={tExport('downloadSubPost', { name: subPost })}
             onClick={() => {
               downloadStudySubPosts(
                 study as FullStudy,
                 post,
                 subPost,
-                emissionSources as FullStudy['emissionSources'],
+                emissionSources,
                 subPostEmissionFactors,
                 tExport,
+                tCaracterisations,
                 tPost,
                 tQuality,
+                tUnit,
               )
             }}
             disabled={emissionSources.length === 0}

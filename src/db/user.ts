@@ -29,6 +29,7 @@ export const updateUserResetTokenForEmail = async (email: string, resetToken: st
     where: { email },
     data: {
       resetToken,
+      updatedAt: new Date(),
     },
   })
 
@@ -78,8 +79,21 @@ export const deleteUser = (email: string) =>
     where: { email },
   })
 
+export const validateUser = (email: string) =>
+  prismaClient.user.update({
+    where: { email },
+    data: { isValidated: true, updatedAt: new Date() },
+  })
+
 export const changeUserRole = (email: string, role: Role) =>
   prismaClient.user.update({
-    data: { role },
+    data: { role, updatedAt: new Date() },
     where: { email },
   })
+
+export const hasUserToValidateInOrganization = async (organizationId: string | null) =>
+  organizationId
+    ? prismaClient.user.count({
+        where: { organizationId, isValidated: false },
+      })
+    : 0

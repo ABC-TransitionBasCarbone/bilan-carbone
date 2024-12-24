@@ -40,6 +40,9 @@ const EmissionSourceContributorForm = ({ emissionSource, update, emissionFactors
             defaultValue={emissionSource.value}
             onBlur={(event) => update('value', Number(event.target.value))}
             label={t('form.value')}
+            slotProps={{
+              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+            }}
           />
           {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
         </div>

@@ -1,4 +1,4 @@
-import { getAllowedLevels } from '@/services/study'
+import { checkLevel } from '@/services/study'
 import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
@@ -32,6 +32,7 @@ const fullStudyInclude = {
           id: true,
         },
       },
+      emissionFactorId: true,
       emissionFactor: {
         select: {
           id: true,
@@ -98,9 +99,7 @@ const normalizeAllowedUsers = (
   organizationId: string | null,
 ) =>
   allowedUsers.map((allowedUser) => {
-    const readerOnly =
-      !allowedUser.user.organizationId || !getAllowedLevels(allowedUser.user.level).includes(studyLevel)
-
+    const readerOnly = !allowedUser.user.organizationId || !checkLevel(allowedUser.user.level, studyLevel)
     return organizationId && allowedUser.user.organizationId === organizationId
       ? { ...allowedUser, user: { ...allowedUser.user, readerOnly } }
       : {

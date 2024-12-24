@@ -1,6 +1,7 @@
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { getQualityRating } from '@/services/uncertainty'
+import SearchIcon from '@mui/icons-material/Search'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
@@ -8,7 +9,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
 import DebouncedInput from '../base/DebouncedInput'
 import styles from './EmissionSourceFactor.module.css'
-
+import EmissionSourceFactorDialog from './EmissionSourceFactorDialog'
 const fuseOptions = {
   keys: [
     {
@@ -54,6 +55,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
   const tUnits = useTranslations('units')
   const tQuality = useTranslations('quality')
 
+  const [advancedSearch, setAdvancedSearch] = useState(false)
   const [display, setDisplay] = useState(false)
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
@@ -70,22 +72,41 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
   }, [emissionFactors])
 
   useEffect(() => {
-    setResults(value ? fuse.search(value).map(({ item }) => item) : [])
+    setResults(
+      value
+        ? fuse
+            .search(value)
+            .map(({ item }) => item)
+            .slice(0, 10)
+        : [],
+    )
   }, [fuse, value])
 
   const qualityRating = useMemo(() => (selectedFactor ? getQualityRating(selectedFactor) : null), [selectedFactor])
   return (
     <>
       <div className={classNames(styles.factor, 'align-center')}>
-        <DebouncedInput
-          disabled={!canEdit}
-          data-testid="emission-source-factor-search"
-          debounce={200}
-          value={value}
-          onChange={setValue}
-          label={t('form.emissionFactor')}
-          onFocus={() => setDisplay(true)}
-        />
+        <div className={classNames(styles.inputContainer, { [styles.withSearch]: canEdit })}>
+          <DebouncedInput
+            disabled={!canEdit}
+            data-testid="emission-source-factor-search"
+            debounce={200}
+            value={value}
+            onChange={setValue}
+            label={`${t('form.emissionFactor')} *`}
+            onFocus={() => setDisplay(true)}
+          />
+          {canEdit && (
+            <button
+              className={styles.search}
+              aria-label={t('advancedSearch')}
+              title={t('advancedSearch')}
+              onClick={() => setAdvancedSearch(true)}
+            >
+              <SearchIcon />
+            </button>
+          )}
+        </div>
         {selectedFactor && (
           <div data-testid="emission-source-factor">
             <p className={styles.header}>
@@ -116,7 +137,24 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>
           ))}
+          {results.length === 0 && (
+            <button className={classNames(styles.suggestion, 'align-center')} onClick={() => setAdvancedSearch(true)}>
+              <SearchIcon />
+              {t('noResults')}
+            </button>
+          )}
         </div>
+      )}
+      {advancedSearch && (
+        <EmissionSourceFactorDialog
+          close={() => setAdvancedSearch(false)}
+          emissionFactors={emissionFactors}
+          selectEmissionFactor={(emissionFactor) => {
+            update('emissionFactorId', emissionFactor.id)
+            setDisplay(false)
+            setAdvancedSearch(false)
+          }}
+        />
       )}
     </>
   )

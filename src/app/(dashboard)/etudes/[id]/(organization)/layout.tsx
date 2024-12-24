@@ -1,5 +1,6 @@
 import StudyNavbar from '@/components/studyNavbar/StudyNavbar'
 import { UUID } from 'crypto'
+import styles from './layout.module.css'
 
 interface Props {
   children: React.ReactNode
@@ -13,8 +14,10 @@ const NavLayout = async ({ children, params }: Props) => {
 
   return (
     <>
-      <StudyNavbar studyId={id} />
-      {children}
+      <div className="flex">
+        <StudyNavbar studyId={id} />
+        <div className={styles.children}>{children}</div>
+      </div>
     </>
   )
 }

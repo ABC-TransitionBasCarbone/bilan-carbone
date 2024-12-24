@@ -6,7 +6,7 @@ describe('Create study', () => {
   it('should create an emission source on a study', () => {
     cy.login()
 
-    cy.visit('/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccc779/comptabilisation/saisie-des-donnees/IntrantsBienEtMatieres')
+    cy.visit('/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccc779/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres')
     cy.getByTestId('subpost').first().click()
 
     cy.getByTestId('new-emission-source').first().type('My temp emission source{enter}')
