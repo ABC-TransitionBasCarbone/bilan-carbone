@@ -10,15 +10,17 @@ import { useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../base/Button'
+import LinkButton from '../base/LinkButton'
 import { FormTextField } from '../form/TextField'
 import styles from './Sites.module.css'
 
 interface Props {
   sites: OrganizationWithSites['sites']
   form?: UseFormReturn<UpdateOrganizationCommand>
+  studyId?: string
 }
 
-const Sites = ({ sites, form }: Props) => {
+const Sites = ({ sites, form, studyId }: Props) => {
   const t = useTranslations('organization.sites')
 
   const columns = useMemo(() => {
@@ -132,7 +134,16 @@ const Sites = ({ sites, form }: Props) => {
         </Button>
       )}
       <table className="mt1">
-        <caption>{t('title')}</caption>
+        <caption>
+          <div className={classNames(styles.title, 'justify-between align-center')}>
+            {t('title')}
+            {!form && (
+              <LinkButton href={`/etudes/${studyId}/perimetre/modifier`} className="align-right">
+                {t('update')}
+              </LinkButton>
+            )}
+          </div>
+        </caption>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

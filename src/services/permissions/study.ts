@@ -93,6 +93,10 @@ export const canChangeDates = async (user: User, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
+export const canChangeSites = async (user: User, study: FullStudy) => {
+  return canChangeStudyValues(user, study)
+}
+
 export const canChangeLevel = async (user: User, study: FullStudy, level: Level) => {
   const basicRight = canChangeStudyValues(user, study)
   if (!basicRight) {
