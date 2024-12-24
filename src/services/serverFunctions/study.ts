@@ -11,6 +11,7 @@ import {
   getStudiesFromSites,
   getStudyById,
   updateStudy,
+  updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
 import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
@@ -39,6 +40,7 @@ import {
   canChangeDates,
   canChangeLevel,
   canChangePublicStatus,
+  canChangeSites,
   canCreateStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
@@ -48,6 +50,7 @@ import {
   ChangeStudyDatesCommand,
   ChangeStudyLevelCommand,
   ChangeStudyPublicStatusCommand,
+  ChangeStudySitesCommand,
   CreateStudyCommand,
   NewStudyContributorCommand,
   NewStudyRightCommand,
@@ -200,6 +203,39 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
     return NOT_AUTHORIZED
   }
   await updateStudy(studyId, command)
+}
+
+export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) => {
+  const organization = await getOrganizationWithSitesById(organizationId)
+
+  if (!organization) {
+    return NOT_AUTHORIZED
+  }
+
+  const newStudySites = command.sites
+    .filter((site) => site.selected)
+    .map((site) => {
+      const organizationSite = organization.sites.find(
+        (organizationSite) => organizationSite.id === site.id,
+      ) as OrganizationWithSites['sites'][0]
+      return { studyId, siteId: site.id, etp: site.etp || organizationSite.etp, ca: site.ca || organizationSite.ca }
+    })
+
+  if (
+    newStudySites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.siteId))
+  ) {
+    return NOT_AUTHORIZED
+  }
+
+  const informations = await getStudyRightsInformations(studyId)
+  if (informations === null) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!canChangeSites(informations.user, informations.studyWithRights)) {
+    return NOT_AUTHORIZED
+  }
+  await updateStudySites(studyId, newStudySites)
 }
 
 const getOrCreateUserAndSendStudyInvite = async (

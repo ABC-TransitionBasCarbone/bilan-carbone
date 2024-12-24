@@ -59,10 +59,28 @@ export const CreateStudyCommandValidation = z
 
 export type CreateStudyCommand = z.infer<typeof CreateStudyCommandValidation>
 
+export const ChangeStudySitesCommandValidation = z.object({
+  organizationId: z.string(),
+  sites: z
+    .array(
+      z.object({
+        id: z.string(),
+        selected: z.boolean(),
+        etp: z.number().optional(),
+        ca: z.number().optional(),
+      }),
+    )
+    .refine((sites) => sites.some((site) => site.selected), 'sites'),
+})
+export type ChangeStudySitesCommand = z.infer<typeof ChangeStudySitesCommandValidation>
+
 export const ChangeStudyPublicStatusCommandValidation = z.object({
   studyId: z.string(),
   isPublic: z.string(),
 })
+
+export const SitesCommandValidation = z.union([ChangeStudySitesCommandValidation, CreateStudyCommandValidation])
+export type SitesCommand = z.infer<typeof SitesCommandValidation>
 
 export type ChangeStudyPublicStatusCommand = z.infer<typeof ChangeStudyPublicStatusCommandValidation>
 

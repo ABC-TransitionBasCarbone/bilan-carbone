@@ -79,7 +79,7 @@
     "home": "Home",
     "newOrganization": "Add an Organization",
     "newStudy": "Add a New Study",
-    "studyPermimeter": "Perimeter",
+    "studyPerimeter": "Perimeter",
     "newStudyContributor": "Add a contributor",
     "newStudyRight": "Add a Person",
     "notFound": "Page not found",
@@ -267,7 +267,8 @@
     },
     "perimeter": {
       "dates": "from {startDate} to {endDate}",
-      "title": "Permiter on study : {name}"
+      "title": "Permiter on study : {name}",
+      "save": "Save"
     },
     "results": {
       "type": "Type",
@@ -687,6 +688,7 @@
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",
+      "update": "Update list",
       "validation": {
         "name": "Please enter a name",
         "etp": "Please enter a number of employees",
