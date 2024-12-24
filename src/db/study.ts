@@ -85,6 +85,7 @@ const fullStudyInclude = {
       ca: true,
       site: {
         select: {
+          id: true,
           name: true,
         },
       },
@@ -182,6 +183,13 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
+
+export const updateStudySites = (studyId: string, newStudySites: Prisma.StudySiteCreateManyInput[]) => {
+  prismaClient.$transaction([
+    prismaClient.studySite.deleteMany({ where: { studyId } }),
+    prismaClient.studySite.createMany({ data: newStudySites }),
+  ])
+}
 
 export const createContributorOnStudy = (
   userId: string,

@@ -1,7 +1,7 @@
 'use client'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
-import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
+import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -10,8 +10,8 @@ import { UseFormReturn } from 'react-hook-form'
 import styles from './Sites.module.css'
 
 interface Props {
-  form: UseFormReturn<CreateStudyCommand>
-  sites: CreateStudyCommand['sites']
+  form: UseFormReturn<SitesCommand>
+  sites: SitesCommand['sites']
 }
 
 const Sites = ({ form, sites }: Props) => {
@@ -68,7 +68,7 @@ const Sites = ({ form, sites }: Props) => {
           />
         ),
       },
-    ] as ColumnDef<CreateStudyCommand['sites'][0]>[]
+    ] as ColumnDef<SitesCommand['sites'][0]>[]
   }, [t, form])
 
   const table = useReactTable({

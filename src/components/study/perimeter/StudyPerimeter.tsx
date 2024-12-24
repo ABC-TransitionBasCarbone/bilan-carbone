@@ -66,7 +66,7 @@ const StudyPerimeter = ({ study, userRoleOnStudy }: Props) => {
           })}
         </p>
       )}
-      <Sites sites={study.sites.map((site) => ({ ...site, name: site.site.name }))} />
+      <Sites studyId={study.id} sites={study.sites.map((site) => ({ ...site, name: site.site.name }))} />
     </>
   )
 }

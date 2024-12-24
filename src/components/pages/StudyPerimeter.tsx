@@ -27,7 +27,7 @@ const StudyPerimeterPage = async ({ study, user }: Props) => {
   return (
     <>
       <Breadcrumbs
-        current={tNav('studyPermimeter')}
+        current={tNav('studyPerimeter')}
         links={[
           { label: tNav('home'), link: '/' },
           { label: study.name, link: `/etudes/${study.id}` },
