@@ -16,6 +16,7 @@
 }
 
 .link {
+  gap: 0.25rem;
   color: var(--neutral-00);
   padding: 1rem;
   text-decoration: none;
@@ -24,5 +25,19 @@
 
   &:hover {
     color: var(--primary-20);
+  }
+}
+
+.big {
+  display: block;
+  @media screen and (max-width: 60rem) {
+    display: none;
+  }
+}
+
+.small {
+  display: none;
+  @media screen and (max-width: 60rem) {
+    display: block;
   }
 }

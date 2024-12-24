@@ -86,7 +86,8 @@
     "organization": "Organization",
     "edit": "Edit",
     "studyRights": "Rights",
-    "team": "Team"
+    "team": "Team",
+    "transition": "BC+ transition"
   },
   "actuality": {
     "title": "News",
@@ -113,13 +114,15 @@
   },
   "navigation": {
     "factors": "Emission factors",
+    "fe": "EF",
     "help": "Help",
     "home": "Home",
     "admin": "Admin",
     "profile": "Profile",
     "study": "Study",
     "team": "Team",
-    "organization": "Organization"
+    "organization": "Organization",
+    "transition": "BC+ transition"
   },
   "results": {
     "byPost": "Results by post",
@@ -296,11 +299,9 @@
       "documentNotFound": "Document not found",
       "download": "Download flow",
       "invalidFileType": "Invalid file type",
-      "fileTooBig": "File too big (max size {size} MB)",
       "flows": "Flows mapping",
       "flowSelector": "Flux to display",
       "newFlow": "Add a flow",
-      "noFileSelected": "No file selected",
       "noFlows": "No flow to display",
       "notAuthorized": "Action not authorized",
       "removeFlow": "Remove flow",
@@ -739,5 +740,18 @@
   "error": {
     "Not authorized": "You are not allowed to do this action",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support"
+  },
+  "transition": {
+    "organizations": "Organizations",
+    "organizationsUpload": "Import my organizations",
+    "requiredHeaders": "The following columns are mandatory:",
+    "missingHeaders": "Missing headers :",
+    "loading": "Loading document...",
+    "success": "File successfully imported, please check the information created",
+    "existingOrganizations": "Please note that some organizations (based on SIRET, or name) already exist. These have been ignored. Please check that all your data is correct."
+  },
+  "upload": {
+    "fileTooBig": "File too big (max size {size} MB)",
+    "noFileSelected": "No file selected"
   }
 }

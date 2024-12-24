@@ -1,3 +1,5 @@
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -21,13 +23,17 @@ const Navbar = ({ user }: Props) => {
             <Image src="/logos/bcp-with-text.png" width={200} height={48} alt="" className={styles.logo} />
           </Link>
           <Link className={styles.link} href="/facteurs-d-emission">
-            {t('factors')}
+            <span className={styles.big}>{t('factors')}</span>
+            <span className={styles.small}>{t('fe')}</span>
           </Link>
           <Link className={styles.link} href="/organisations">
             {t('organization')}
           </Link>
           <Link className={styles.link} href="/equipe">
             {t('team')}
+          </Link>
+          <Link className={styles.link} href="/transition">
+            {t('transition')}
           </Link>
         </div>
 
@@ -40,13 +46,16 @@ const Navbar = ({ user }: Props) => {
           <Link
             target="_blank"
             rel="noreferrer noopener"
-            className={styles.link}
             href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}
+            className={classNames(styles.link, 'align-center')}
+            aria-label={t('help')}
           >
-            <span>{t('help')}</span>
+            <HelpOutlineIcon />
+            <span className={styles.big}>{t('help')}</span>
           </Link>
-          <Link className={styles.link} href="/profil">
-            {t('profile')}
+          <Link className={classNames(styles.link, 'align-center')} aria-label={t('profile')} href="/profil">
+            <AccountCircleIcon />
+            <span className={styles.big}>{t('profile')}</span>
           </Link>
         </div>
       </div>
