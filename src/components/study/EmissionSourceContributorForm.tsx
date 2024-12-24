@@ -40,7 +40,7 @@ const EmissionSourceContributorForm = ({ emissionSource, update, emissionFactors
             data-testid="emission-source-value-da"
             defaultValue={emissionSource.value}
             onBlur={(event) => update('value', Number(event.target.value))}
-            label={t('form.value')}
+            label={`${t('form.value')} *`}
             slotProps={{
               input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
             }}
