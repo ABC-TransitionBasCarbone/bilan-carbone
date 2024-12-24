@@ -44,7 +44,7 @@ export const getUsersFromFTP = async () => {
           firstName: value[0],
           lastName: value[0],
           isActive: false,
-          isValidated: false
+          isValidated: false,
         })),
       })
     })
