@@ -104,7 +104,7 @@ const EmissionSourceForm = ({
           label={t('form.source')}
         />
         <FormControl>
-          <InputLabel id={'type-label'}>{t('form.type')}</InputLabel>
+          <InputLabel id={'type-label'}>{`${t('form.type')} *`}</InputLabel>
           <Select
             disabled={!canEdit}
             data-testid="emission-source-type"
