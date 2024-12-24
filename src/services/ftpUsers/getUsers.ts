@@ -30,12 +30,11 @@ export const getUsersFromFTP = async () => {
     })
 
     passThrough.on('end', async () => {
-      // Insert data into PostgreSQL using Prisma
       const users = data
         .split('\n')
         .map((line) => line.split(','))
-        .filter((data) => data.length > 1) // Adjust based on your file format
-      users.shift()
+        .filter((data) => data.length > 1) // Remove empty lines
+      users.shift() // Remove the header
 
       await prismaClient.user.createMany({
         data: users.map((value) => ({
