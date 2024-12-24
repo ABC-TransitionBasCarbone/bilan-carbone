@@ -31,7 +31,7 @@
   border-radius: 0px 1rem 1rem 0px;
   top: calc(50vh - 10rem) !important;
   overflow: hidden !important;
-  border: 1px solid var(--neutral-30) !important;
+  border: var(--border) !important;
   hr {
     color: var(--neutral-30) !important;
   }

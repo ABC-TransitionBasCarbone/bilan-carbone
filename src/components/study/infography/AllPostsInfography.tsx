@@ -1,4 +1,3 @@
-import Box from '@/components/base/Box'
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
@@ -25,62 +24,60 @@ const AllPostsInfography = ({ study, site }: Props) => {
   }
 
   return (
-    <Box>
-      <div className={classNames(styles.infography, 'flex', 'justify-between', 'align-center')}>
-        <div className={classNames(styles.column, 'flex-col')}>
-          <PostInfography
-            studyId={study.id}
-            data={data.find((d) => d.post === Post.IntrantsBiensEtMatieres)}
-            post={Post.IntrantsBiensEtMatieres}
-          />
-          <PostInfography
-            studyId={study.id}
-            data={data.find((d) => d.post === Post.IntrantsServices)}
-            post={Post.IntrantsServices}
-          />
-          <PostInfography
-            studyId={study.id}
-            data={data.find((d) => d.post === Post.Immobilisations)}
-            post={Post.Immobilisations}
-          />
-        </div>
-        <div className={classNames(styles.column, 'flex-col')}>
-          <PostInfography studyId={study.id} data={findSubPost(SubPost.FretEntrant)} post={SubPost.FretEntrant} />
-        </div>
-        <div className={classNames(styles.column, 'flex-col')}>
-          <PostInfography
-            studyId={study.id}
-            data={data.find((d) => d.post === Post.Deplacements)}
-            post={Post.Deplacements}
-          />
-          <div className={classNames(styles.border, 'flex-col')}>
-            <PostInfography studyId={study.id} data={data.find((d) => d.post === Post.Energies)} post={Post.Energies} />
-            <PostInfography
-              studyId={study.id}
-              data={data.find((d) => d.post === Post.AutresEmissionsNonEnergetiques)}
-              post={Post.AutresEmissionsNonEnergetiques}
-            />
-            <PostInfography studyId={study.id} data={findSubPost(SubPost.FretInterne)} post={SubPost.FretInterne} />
-          </div>
-          <PostInfography
-            studyId={study.id}
-            data={data.find((d) => d.post === Post.DechetsDirects)}
-            post={Post.DechetsDirects}
-          />
-        </div>
-        <div className={classNames(styles.column, 'flex-col')}>
-          <PostInfography studyId={study.id} data={findSubPost(SubPost.FretSortant)} post={SubPost.FretSortant} />
-        </div>
-        <div className={classNames(styles.column, 'flex-col')}>
-          <PostInfography studyId={study.id} data={data.find((d) => d.post === Post.FinDeVie)} post={Post.FinDeVie} />
-          <PostInfography
-            studyId={study.id}
-            data={data.find((d) => d.post === Post.UtilisationEtDependance)}
-            post={Post.UtilisationEtDependance}
-          />
-        </div>
+    <div className={classNames(styles.infography, 'flex', 'justify-between', 'align-center')}>
+      <div className={classNames(styles.column, 'flex-col')}>
+        <PostInfography
+          studyId={study.id}
+          data={data.find((d) => d.post === Post.IntrantsBiensEtMatieres)}
+          post={Post.IntrantsBiensEtMatieres}
+        />
+        <PostInfography
+          studyId={study.id}
+          data={data.find((d) => d.post === Post.IntrantsServices)}
+          post={Post.IntrantsServices}
+        />
+        <PostInfography
+          studyId={study.id}
+          data={data.find((d) => d.post === Post.Immobilisations)}
+          post={Post.Immobilisations}
+        />
       </div>
-    </Box>
+      <div className={classNames(styles.column, 'flex-col')}>
+        <PostInfography studyId={study.id} data={findSubPost(SubPost.FretEntrant)} post={SubPost.FretEntrant} />
+      </div>
+      <div className={classNames(styles.column, 'flex-col')}>
+        <PostInfography
+          studyId={study.id}
+          data={data.find((d) => d.post === Post.Deplacements)}
+          post={Post.Deplacements}
+        />
+        <div className={classNames(styles.border, 'flex-col')}>
+          <PostInfography studyId={study.id} data={data.find((d) => d.post === Post.Energies)} post={Post.Energies} />
+          <PostInfography
+            studyId={study.id}
+            data={data.find((d) => d.post === Post.AutresEmissionsNonEnergetiques)}
+            post={Post.AutresEmissionsNonEnergetiques}
+          />
+          <PostInfography studyId={study.id} data={findSubPost(SubPost.FretInterne)} post={SubPost.FretInterne} />
+        </div>
+        <PostInfography
+          studyId={study.id}
+          data={data.find((d) => d.post === Post.DechetsDirects)}
+          post={Post.DechetsDirects}
+        />
+      </div>
+      <div className={classNames(styles.column, 'flex-col')}>
+        <PostInfography studyId={study.id} data={findSubPost(SubPost.FretSortant)} post={SubPost.FretSortant} />
+      </div>
+      <div className={classNames(styles.column, 'flex-col')}>
+        <PostInfography studyId={study.id} data={data.find((d) => d.post === Post.FinDeVie)} post={Post.FinDeVie} />
+        <PostInfography
+          studyId={study.id}
+          data={data.find((d) => d.post === Post.UtilisationEtDependance)}
+          post={Post.UtilisationEtDependance}
+        />
+      </div>
+    </div>
   )
 }
 

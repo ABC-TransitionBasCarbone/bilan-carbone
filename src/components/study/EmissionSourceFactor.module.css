@@ -7,7 +7,7 @@
   position: absolute;
   width: calc(100% - 4rem);
   background-color: var(--neutral-00);
-  border: 1px solid var(--primary-10);
+  border: var(--border);
   border-radius: 0.5rem;
   z-index: 2;
   overflow: hidden;
