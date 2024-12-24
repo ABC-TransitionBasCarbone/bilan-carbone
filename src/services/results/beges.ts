@@ -176,10 +176,6 @@ export const computeBegesResult = (
       // Pas de decomposition => on ventile selon la regle par default
       const post = getDefaultRule(subPostRules, caracterisation)
       if (post) {
-        if (post === '5.3') {
-          console.log('post', emissionSource.name, emissionFactor)
-        }
-
         results[post].push({
           ...getBegesLine(value, emissionFactor),
           uncertainty: uncertainty,
@@ -197,9 +193,6 @@ export const computeBegesResult = (
           post = getRulePost(rule, caracterisation)
         }
         if (post) {
-          if (post === '5.3') {
-            console.log('part', emissionSource.name, part)
-          }
           // Et on ajoute la valeur selon la composante quoi qu'il arrive
           results[post].push({
             ...getBegesLine(value, part),
@@ -210,7 +203,6 @@ export const computeBegesResult = (
     }
   })
 
-  console.log(results)
   const lines = Object.entries(results).map(([rule, result]) => ({ rule, ...sumLines(result) }))
   lines.push({
     rule: 'total',

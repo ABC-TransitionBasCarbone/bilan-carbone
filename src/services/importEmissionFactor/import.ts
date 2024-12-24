@@ -1,13 +1,13 @@
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
-import { elementsBySubPost } from './posts.config'
 
 export const validStatuses = ['Valide générique', 'Valide spécifique', 'Archivé']
 
 export const getEmissionFactorImportVersion = async (
   transaction: Prisma.TransactionClient,
   name: string,
+  source: Import,
   id: string,
 ) => {
   const existingVersion = await transaction.emissionFactorImportVersion.findFirst({ where: { internId: id } })
@@ -15,12 +15,12 @@ export const getEmissionFactorImportVersion = async (
     return { success: false, id: existingVersion.id }
   }
   const newVersion = await transaction.emissionFactorImportVersion.create({
-    data: { name, source: Import.BaseEmpreinte, internId: id },
+    data: { name, source, internId: id },
   })
   return { success: true, id: newVersion.id }
 }
 
-export type BaseEmpreinteEmissionFactor = {
+export type ImportEmissionFactor = {
   "Identifiant_de_l'élément": string
   "Statut_de_l'élément": string
   Type_Ligne: string
@@ -62,7 +62,7 @@ export type BaseEmpreinteEmissionFactor = {
   Valeur_gaz_supplémentaire_2: number
 }
 
-export const requiredColums = [
+export const requiredColumns = [
   "Identifiant_de_l'élément",
   "Statut_de_l'élément",
   'Type_Ligne',
@@ -195,7 +195,7 @@ const getEmissionQuality = (uncertainty?: number) => {
   }
 }
 
-const getGases = (emissionFactor: BaseEmpreinteEmissionFactor) => {
+const getGases = (emissionFactor: ImportEmissionFactor) => {
   const gases = {
     totalCo2: Number(emissionFactor.Total_poste_non_décomposé),
     co2f: Number(emissionFactor.CO2f),
@@ -230,57 +230,57 @@ const getGases = (emissionFactor: BaseEmpreinteEmissionFactor) => {
   return gases
 }
 
-export const mapEmissionFactors = (emissionFactor: BaseEmpreinteEmissionFactor, versionId: string) => {
-  return {
-    ...getGases(emissionFactor),
-    reliability: 5,
-    importedFrom: Import.BaseEmpreinte,
-    importedId: emissionFactor["Identifiant_de_l'élément"],
-    status:
-      emissionFactor["Statut_de_l'élément"] === 'Archivé' ? EmissionFactorStatus.Archived : EmissionFactorStatus.Valid,
-    source: emissionFactor.Source,
-    versionId,
-    location: emissionFactor.Localisation_géographique,
-    technicalRepresentativeness: emissionFactor.Qualité_TeR || getEmissionQuality(emissionFactor.Incertitude),
-    geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
-    temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
-    completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
-    unit: getUnit(emissionFactor.Unité_français),
-    subPosts: Object.entries(elementsBySubPost)
-      .filter(([, elements]) => elements.some((element) => element === emissionFactor["Identifiant_de_l'élément"]))
-      .map(([subPost]) => subPost as SubPost),
-    metaData: {
-      createMany: {
-        data: [
-          {
-            language: 'fr',
-            title: escapeTranslation(emissionFactor.Nom_base_français),
-            attribute: escapeTranslation(emissionFactor.Nom_attribut_français),
-            frontiere: escapeTranslation(emissionFactor.Nom_frontière_français),
-            tag: escapeTranslation(emissionFactor.Tags_français),
-            location: escapeTranslation(emissionFactor['Sous-localisation_géographique_français']),
-            comment: escapeTranslation(emissionFactor.Commentaire_français),
-          },
-          {
-            language: 'en',
-            title: escapeTranslation(emissionFactor.Nom_base_anglais),
-            attribute: escapeTranslation(emissionFactor.Nom_attribut_anglais),
-            frontiere: escapeTranslation(emissionFactor.Nom_frontière_anglais),
-            tag: escapeTranslation(emissionFactor.Tags_anglais),
-            location: escapeTranslation(emissionFactor['Sous-localisation_géographique_anglais']),
-            comment: escapeTranslation(emissionFactor.Commentaire_anglais),
-          },
-        ],
-      },
+export const mapEmissionFactors = (
+  emissionFactor: ImportEmissionFactor,
+  importedFrom: Import,
+  versionId: string,
+  getSubPost: (emissionFactor: ImportEmissionFactor) => SubPost[],
+) => ({
+  ...getGases(emissionFactor),
+  reliability: 5,
+  importedFrom,
+  importedId: emissionFactor["Identifiant_de_l'élément"],
+  status:
+    emissionFactor["Statut_de_l'élément"] === 'Archivé' ? EmissionFactorStatus.Archived : EmissionFactorStatus.Valid,
+  source: emissionFactor.Source,
+  versionId,
+  location: emissionFactor.Localisation_géographique,
+  technicalRepresentativeness: emissionFactor.Qualité_TeR || getEmissionQuality(emissionFactor.Incertitude),
+  geographicRepresentativeness: emissionFactor.Qualité_GR || getEmissionQuality(emissionFactor.Incertitude),
+  temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
+  completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
+  unit: getUnit(emissionFactor.Unité_français),
+  subPosts: getSubPost(emissionFactor),
+  metaData: {
+    createMany: {
+      data: [
+        {
+          language: 'fr',
+          title: escapeTranslation(emissionFactor.Nom_base_français),
+          attribute: escapeTranslation(emissionFactor.Nom_attribut_français),
+          frontiere: escapeTranslation(emissionFactor.Nom_frontière_français),
+          tag: escapeTranslation(emissionFactor.Tags_français),
+          location: escapeTranslation(emissionFactor['Sous-localisation_géographique_français']),
+          comment: escapeTranslation(emissionFactor.Commentaire_français),
+        },
+        {
+          language: 'en',
+          title: escapeTranslation(emissionFactor.Nom_base_anglais),
+          attribute: escapeTranslation(emissionFactor.Nom_attribut_anglais),
+          frontiere: escapeTranslation(emissionFactor.Nom_frontière_anglais),
+          tag: escapeTranslation(emissionFactor.Tags_anglais),
+          location: escapeTranslation(emissionFactor['Sous-localisation_géographique_anglais']),
+          comment: escapeTranslation(emissionFactor.Commentaire_anglais),
+        },
+      ],
     },
-  }
-}
+  },
+})
 
 export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,
-  parts: BaseEmpreinteEmissionFactor[],
+  parts: ImportEmissionFactor[],
 ) => {
-  console.log(`Save ${parts.length} emission factors parts...`)
   const emissionFactors = await transaction.emissionFactor.findMany({
     where: {
       importedId: {
@@ -313,14 +313,7 @@ export const saveEmissionFactorsParts = async (
       ...getGases(part),
       emissionFactor: { connect: { id: emissionFactor.id } },
       type: getType(part.Type_poste),
-      metaData:
-        metaData.length > 0
-          ? {
-              createMany: {
-                data: metaData,
-              },
-            }
-          : undefined,
+      metaData: metaData.length > 0 ? { createMany: { data: metaData } } : undefined,
     } satisfies Prisma.EmissionFactorPartCreateInput
 
     await transaction.emissionFactorPart.create({ data })
