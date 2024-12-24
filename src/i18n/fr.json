@@ -84,7 +84,8 @@
     "organization": "Organisation",
     "edit": "Modifier",
     "studyRights": "Cadrage",
-    "team": "Équipe"
+    "team": "Équipe",
+    "transition": "Transition BC+"
   },
   "actuality": {
     "title": "Actualités",
@@ -111,13 +112,15 @@
   },
   "navigation": {
     "factors": "Facteurs d'émission",
+    "fe": "FE",
     "help": "Aide",
     "admin": "Admin",
     "home": "Accueil",
     "profile": "Profil",
     "study": "Étude",
     "team": "Équipe",
-    "organization": "Organisation"
+    "organization": "Organisation",
+    "transition": "Transition BC+"
   },
   "results": {
     "byPost": "Résultats par poste",
@@ -297,9 +300,7 @@
       "flows": "Cartographie des fluxs",
       "flowSelector": "Flux à afficher",
       "invalidFileType": "Type de fichier non supporté",
-      "fileTooBig": "Fichier trop gros (taille maximale {size} MB)",
       "newFlow": "Ajouter un flux",
-      "noFileSelected": "Aucun fichier selectionné",
       "noFlows": "Aucun flux à afficher",
       "notAuthorized": "Action non authorisée",
       "removeFlow": "Supprimer le flux",
@@ -740,5 +741,18 @@
   "error": {
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
     "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support."
+  },
+  "transition": {
+    "organizations": "Organisations",
+    "organizationsUpload": "Importer mes organisations",
+    "requiredHeaders": "Les colonnes suivantes sont obligatoires :",
+    "missingHeaders": "Colonnes manquantes :",
+    "loading": "Chargement du fichier en cours...",
+    "success": "Fichier correctement importé, veuillez vérifier les informations créees",
+    "existingOrganizations": "Attention, certaines organisations (basé sur le SIRET, ou le nom) existent déjà. Ces dernières ont été ignorées. Veuillez verifier que toutes vos données sont correctes."
+  },
+  "upload": {
+    "fileTooBig": "Fichier trop gros (taille maximale {size} MB)",
+    "noFileSelected": "Aucun fichier selectionné"
   }
 }

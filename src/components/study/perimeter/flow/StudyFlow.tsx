@@ -25,6 +25,7 @@ interface Props {
 
 const StudyFlow = ({ study, documents, initialDocument }: Props) => {
   const t = useTranslations('study.flow')
+  const tUpload = useTranslations('upload')
 
   const router = useRouter()
   const [error, setError] = useState('')
@@ -38,11 +39,11 @@ const StudyFlow = ({ study, documents, initialDocument }: Props) => {
     setError('')
     const file = event.target.files?.[0]
     if (!file) {
-      setError(t('noFileSelected'))
+      setError(tUpload('noFileSelected'))
       return
     }
     if (file.size > maxAllowedFileSize) {
-      setError(t('fileTooBig', { size: maxAllowedFileSize / MB }))
+      setError(tUpload('fileTooBig', { size: maxAllowedFileSize / MB }))
       return
     }
 
