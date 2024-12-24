@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import { getEmissionResults } from '@/services/emissionSource'
+import { getEmissionResults, getEmissionSourceCompletion } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import {
@@ -10,7 +10,7 @@ import {
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
-import { getQualityRating } from '@/services/uncertainty'
+import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormControlLabel, Switch } from '@mui/material'
 import { EmissionSourceCaracterisation, StudyRole } from '@prisma/client'
@@ -60,7 +60,7 @@ const EmissionSource = ({
   const [display, setDisplay] = useState(false)
 
   const detailId = `${emissionSource.id}-detail`
-  const canEdit = userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
+  const canEdit = !emissionSource.validated && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
   const canValidate = userRoleOnStudy && userRoleOnStudy === StudyRole.Validator
 
   const update = useCallback(
@@ -122,7 +122,6 @@ const EmissionSource = ({
   const status = useMemo(() => getEmissionSourceStatus(study, emissionSource), [study, emissionSource])
   const sourceRating = useMemo(() => getQualityRating(emissionSource), [emissionSource])
   const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
-
   const selectedFactorQualityRating = useMemo(
     () => (selectedFactor ? getQualityRating(selectedFactor) : null),
     [selectedFactor],
@@ -144,8 +143,11 @@ const EmissionSource = ({
               {emissionSource.contributor.email}
             </p>
           )}
-          <p data-testid="emission-source-status" className={styles.status}>
+          <p data-testid="emission-source-status" className={classNames(styles.status, 'align-center')}>
             {t(`status.${status}`)}
+            {(status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor) && (
+              <> - {getEmissionSourceCompletion(emissionSource, study) * 100}%</>
+            )}
             {loading && (
               <>
                 {' '}
@@ -155,6 +157,21 @@ const EmissionSource = ({
           </p>
         </div>
         <div className={classNames(styles.infosRight, 'flex')}>
+          <div className="flex-col">
+            {emissionSource.value && (
+              <>
+                <p>
+                  {emissionSource.value}
+                  {selectedFactor && tUnits(selectedFactor.unit)}
+                </p>
+                {sourceRating && (
+                  <p className={styles.status}>
+                    {tQuality('name')} {tQuality(sourceRating.toString())}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
           <div className="flex-col">
             {selectedFactor && (
               <>
@@ -170,24 +187,17 @@ const EmissionSource = ({
               </>
             )}
           </div>
-          <div className="flex-col">
-            <p data-testid="emission-source-value">
-              {emissionResults === null ? (
-                emissionSource.value !== null ? (
-                  <>
-                    {emissionSource.value} {selectedFactor && tUnits(selectedFactor.unit)}
-                  </>
-                ) : null
-              ) : (
-                `${emissionResults.emission.toFixed(2)} kgCO₂e`
+          {emissionResults && (
+            <div className="flex-col">
+              <p data-testid="emission-source-value">{`${emissionResults.emission.toFixed(2)} kgCO₂e`}</p>
+              {emissionResults.standardDeviation && (
+                <p className={styles.status} data-testid="emission-source-quality">
+                  {tQuality('name')}{' '}
+                  {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
+                </p>
               )}
-            </p>
-            {sourceRating && (
-              <p className={styles.status} data-testid="emission-source-quality">
-                {tQuality('name')} {tQuality(sourceRating.toString())}
-              </p>
-            )}
-          </div>
+            </div>
+          )}
         </div>
         <div className={styles.editIcon}>
           <EditIcon />
@@ -237,6 +247,7 @@ const EmissionSource = ({
                 emissionFactors={emissionFactors}
                 update={update}
                 caracterisations={caracterisations}
+                mandatoryCaracterisation={study.exports.length > 0}
               />
             )}
             {emissionResults && (

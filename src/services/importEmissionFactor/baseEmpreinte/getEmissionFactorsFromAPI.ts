@@ -1,17 +1,19 @@
+import { Import } from '@prisma/client'
 import axios, { AxiosResponse } from 'axios'
-import { prismaClient } from '../../db/client'
+import { prismaClient } from '../../../db/client'
 import {
-  BaseEmpreinteEmissionFactor,
   getEmissionFactorImportVersion,
-  mapEmissionFactors,
-  requiredColums,
+  ImportEmissionFactor,
+  requiredColumns,
   saveEmissionFactorsParts,
-} from './import'
+  validStatuses,
+} from '../import'
+import { mapBaseEmpreinteEmissionFactors } from './import'
 
 type EmissionFactorResponse = {
   total: number
   next?: string
-  results: BaseEmpreinteEmissionFactor[]
+  results: ImportEmissionFactor[]
 }
 
 export const getEmissionFactorsFromAPI = async (name: string) => {
@@ -20,14 +22,19 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
 
   await prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersion = await getEmissionFactorImportVersion(transaction, name, fileName)
+      const emissionFactorImportVersion = await getEmissionFactorImportVersion(
+        transaction,
+        name,
+        Import.BaseEmpreinte,
+        fileName,
+      )
       if (!emissionFactorImportVersion.success) {
         return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
       }
 
-      let parts: BaseEmpreinteEmissionFactor[] = []
+      let parts: ImportEmissionFactor[] = []
       let url: string | undefined =
-        `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${requiredColums.join(',')}&q_fields=Statut_de_l'élément&q=Valide%20générique,Valide%20spécifique,Archivé`
+        `https://data.ademe.fr/data-fair/api/v1/datasets/base-carboner/lines?select=${requiredColumns.join(',')}&q_fields=Statut_de_l'élément&q=${validStatuses.map((status) => encodeURI(status)).join(',')}`
 
       while (url) {
         console.log(url)
@@ -37,7 +44,7 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
         )
         const data = emissionFactors.data.results
           .filter((emissionFactor) => emissionFactor.Type_Ligne !== 'Poste')
-          .map((emissionFactor) => mapEmissionFactors(emissionFactor, emissionFactorImportVersion.id))
+          .map((emissionFactor) => mapBaseEmpreinteEmissionFactors(emissionFactor, emissionFactorImportVersion.id))
 
         await Promise.all(data.map((data) => transaction.emissionFactor.create({ data })))
         url = emissionFactors.data.next

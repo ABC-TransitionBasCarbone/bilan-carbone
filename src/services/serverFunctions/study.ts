@@ -1,6 +1,7 @@
 'use server'
 
 import { prismaClient } from '@/db/client'
+import { createDocument, deleteDocument } from '@/db/document'
 import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
 import {
   createContributorOnStudy,
@@ -15,6 +16,7 @@ import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
 import {
   ControlMode,
   User as DBUser,
+  Document,
   Export,
   Import,
   Organization,
@@ -24,10 +26,14 @@ import {
   SubPost,
 } from '@prisma/client'
 import { User } from 'next-auth'
+import { getTranslations } from 'next-intl/server'
 import { auth } from '../auth'
+import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
+  canAccessFlowFromStudy,
   canAddContributorOnStudy,
+  canAddFlowToStudy,
   canAddRightOnStudy,
   canChangeDates,
   canChangeLevel,
@@ -35,7 +41,8 @@ import {
   canCreateStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
-import { getAllowedLevels } from '../study'
+import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
+import { checkLevel } from '../study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyLevelCommand,
@@ -44,7 +51,7 @@ import {
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
-import { sendContributorInvitation, sendNewContributorInvitation } from './user'
+import { sendInvitation } from './user'
 
 export const createStudyCommand = async ({
   organizationId,
@@ -190,30 +197,35 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-const getUserOnStudy = async (
+const getOrCreateUserAndSendStudyInvite = async (
   email: string,
   study: FullStudy,
   organization: Organization,
   creator: User,
-  newUser: DBUser | null,
+  existingUser: DBUser | null,
+  role?: StudyRole,
 ) => {
   let userId = ''
-  if (!newUser) {
+  const t = await getTranslations('study.role')
+
+  if (!existingUser) {
     const newUser = await addUser({
       email: email,
       isActive: true,
+      isValidated: true,
       role: Role.DEFAULT,
       firstName: '',
       lastName: '',
     })
-    await sendNewContributorInvitation(email, study, organization, creator)
+    await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '')
     userId = newUser.id
   } else {
-    if (newUser.organizationId !== organization.id) {
-      await sendContributorInvitation(email, study, organization, creator, newUser)
+    if (existingUser.organizationId !== organization.id) {
+      await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '', existingUser)
     }
-    userId = newUser.id
+    userId = existingUser.id
   }
+
   return userId
 }
 
@@ -223,7 +235,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, newUser] = await Promise.all([
+  const [studyWithRights, existingUser] = await Promise.all([
     getStudyById(right.studyId, session.user.organizationId),
     getUserByEmail(right.email),
   ])
@@ -237,15 +249,23 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  if (!newUser || !getAllowedLevels(newUser.level).includes(studyWithRights.level)) {
+  if (!existingUser || !checkLevel(existingUser.level, studyWithRights.level)) {
     right.role = StudyRole.Reader
   }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, newUser, right.role)) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, right.role)) {
     return NOT_AUTHORIZED
   }
 
-  const userId = await getUserOnStudy(right.email, studyWithRights, organization, session.user, newUser)
+  const userId = await getOrCreateUserAndSendStudyInvite(
+    right.email,
+    studyWithRights,
+    organization,
+    session.user,
+    existingUser,
+    right.role,
+  )
+
   await createUserOnStudy({
     user: { connect: { id: userId } },
     study: { connect: { id: studyWithRights.id } },
@@ -259,20 +279,20 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, user] = await Promise.all([
+  const [studyWithRights, existingUser] = await Promise.all([
     getStudyById(studyId, session.user.organizationId),
     getUserByEmail(email),
   ])
 
-  if (!studyWithRights || !user) {
+  if (!studyWithRights || !existingUser) {
     return NOT_AUTHORIZED
   }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, user, studyRole)) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole)) {
     return NOT_AUTHORIZED
   }
 
-  await updateUserOnStudy(user.id, studyWithRights.id, studyRole)
+  await updateUserOnStudy(existingUser.id, studyWithRights.id, studyRole)
 }
 
 export const newStudyContributor = async ({ email, post, subPost, ...command }: NewStudyContributorCommand) => {
@@ -281,7 +301,7 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, newUser] = await Promise.all([
+  const [studyWithRights, existingUser] = await Promise.all([
     getStudyById(command.studyId, session.user.organizationId),
     getUserByEmail(email),
   ])
@@ -299,7 +319,13 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     return NOT_AUTHORIZED
   }
 
-  const userId = await getUserOnStudy(email, studyWithRights, organization, session.user, newUser)
+  const userId = await getOrCreateUserAndSendStudyInvite(
+    email,
+    studyWithRights,
+    organization,
+    session.user,
+    existingUser,
+  )
 
   if (post === 'all') {
     await createContributorOnStudy(userId, Object.values(SubPost), command)
@@ -307,5 +333,36 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     await createContributorOnStudy(userId, subPostsByPost[post], command)
   } else {
     await createContributorOnStudy(userId, [subPost], command)
+  }
+}
+
+export const addFlowToStudy = async (studyId: string, file: File) => {
+  const session = await auth()
+  const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
+  if (!allowedType) {
+    return 'invalidFileType'
+  }
+  const allowedUserId = await canAddFlowToStudy(studyId)
+  if (!allowedUserId) {
+    return NOT_AUTHORIZED
+  }
+  const butcketUploadResult = await uploadFileToBucket(file)
+  await createDocument({
+    name: file.name,
+    type: file.type,
+    uploader: { connect: { id: session?.user.id } },
+    study: { connect: { id: studyId } },
+    bucketKey: butcketUploadResult.key,
+    bucketETag: butcketUploadResult.ETag || '',
+  })
+}
+
+export const deleteFlowFromStudy = async (document: Document, studyId: string) => {
+  if (!(await canAccessFlowFromStudy(document.id, studyId))) {
+    return NOT_AUTHORIZED
+  }
+  const bucketDelete = await deleteFileFromBucket(document.bucketKey)
+  if (bucketDelete) {
+    deleteDocument(document.id)
   }
 }

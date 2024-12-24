@@ -21,7 +21,7 @@ const NewStudyRightDialog = ({ otherOrganization, rightsWarning, decline, accept
       <DialogContent>
         <DialogContentText id="new-study-right-dialog-description">
           {t('otherOrganization')}
-          {rightsWarning && t('rightsWarning')}
+          {rightsWarning && ` ${t('rightsWarning')}`}
         </DialogContentText>
       </DialogContent>
       <DialogActions>

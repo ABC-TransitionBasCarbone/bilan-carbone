@@ -3978,6 +3978,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
   [SubPost.DechetsOrduresMenageres]: ['34654', '34650', '34652'],
   [SubPost.DechetsDangereux]: ['34713', '34712', '34714'],
   [SubPost.DechetsBatiments]: [
+    '22024',
     '34668',
     '34670',
     '34672',
@@ -12311,6 +12312,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '34943',
   ],
   [SubPost.TraitementDesDechetsEnFinDeVie]: [
+    '22024',
     '34598',
     '34602',
     '34600',

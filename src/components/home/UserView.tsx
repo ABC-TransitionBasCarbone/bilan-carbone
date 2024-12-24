@@ -1,4 +1,5 @@
-import { getUserOrganizations } from '@/db/user'
+import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
+import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { Suspense } from 'react'
 import Actualities from '../actuality/Actualities'
@@ -6,6 +7,7 @@ import Block from '../base/Block'
 import Organizations from '../organization/OrganizationsContainer'
 import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Studies from '../study/StudiesContainer'
+import UserToValidate from './UserToValidate'
 import styles from './UserView.module.css'
 
 interface Props {
@@ -13,11 +15,19 @@ interface Props {
 }
 
 const UserView = async ({ user }: Props) => {
-  const organizations = await getUserOrganizations(user.email)
+  const [organizations, hasUserToValidate] = await Promise.all([
+    getUserOrganizations(user.email),
+    hasUserToValidateInOrganization(user.organizationId),
+  ])
   const isCR = organizations.find((organization) => organization.id === user.organizationId)?.isCR
 
   return (
     <>
+      {!!hasUserToValidate && (user.role === Role.ADMIN || user.role === Role.GESTIONNAIRE) && (
+        <div className="main-container">
+          <UserToValidate />
+        </div>
+      )}
       {user.organizationId && (
         <Suspense>
           <Block>

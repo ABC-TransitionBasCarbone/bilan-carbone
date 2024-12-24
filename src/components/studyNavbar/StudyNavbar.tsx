@@ -30,14 +30,15 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         <IconButton
           data-testid="study-navbar-button"
           className={styles.openDrawerButton}
-          aria-label="Ouvrir le menu de navigation de l'étude"
+          aria-label={t('menu')}
+          title={t('menu')}
           onClick={() => setOpen((prev) => !prev)}
         >
           <MenuIcon />
         </IconButton>
       </div>
       <Drawer
-        className={'flex-col'}
+        className={open ? styles.opened : ''}
         open={open}
         PaperProps={{ className: styles.studyNavbarContainer }}
         onBlur={() => setOpen(false)}

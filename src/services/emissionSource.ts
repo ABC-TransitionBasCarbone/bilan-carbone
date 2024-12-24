@@ -1,7 +1,32 @@
 import { FullStudy } from '@/db/study'
-import { EmissionSourceCaracterisation, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
+
+export const getEmissionSourceCompletion = (
+  emissionSource: Pick<
+    StudyEmissionSource,
+    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost'
+  >,
+  study: FullStudy | StudyWithoutDetail,
+) => {
+  const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
+  const caracterisations = caracterisationsBySubPost[emissionSource.subPost]
+  if (study.exports.length > 0 && caracterisations.length > 0) {
+    mandatoryFields.push('caracterisation')
+  }
+  return mandatoryFields.reduce((acc, field) => acc + (emissionSource[field] ? 1 : 0), 0) / mandatoryFields.length
+}
+
+export const canBeValidated = (
+  emissionSource: Pick<
+    StudyEmissionSource,
+    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost'
+  >,
+  study: FullStudy | StudyWithoutDetail,
+) => {
+  return getEmissionSourceCompletion(emissionSource, study) === 1
+}
 
 export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
@@ -48,18 +73,16 @@ export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDeta
 }
 
 export const sumStandardDeviations = (standardDeviations: { value: number; standardDeviation: number | null }[]) => {
-  const total = standardDeviations.reduce((acc, { value }) => acc + value, 0)
-  return Math.pow(
-    Math.exp(
-      Math.sqrt(
-        standardDeviations.reduce(
-          (acc, { value, standardDeviation }) =>
-            acc + Math.pow(value / total, 2) * Math.pow(Math.log(standardDeviation || 1), 2),
-          0,
-        ),
-      ),
+  const totalValue = standardDeviations.reduce((acc, { value }) => acc + value, 0)
+
+  return Math.exp(
+    Math.sqrt(
+      standardDeviations.reduce((acc, { value, standardDeviation }) => {
+        const sensibility = value / totalValue
+        const sd = Math.log(standardDeviation || 1)
+        return acc + sensibility * sensibility * sd * sd
+      }, 0),
     ),
-    2,
   )
 }
 

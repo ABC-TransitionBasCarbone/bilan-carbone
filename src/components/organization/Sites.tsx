@@ -94,6 +94,7 @@ const Sites = ({ sites, form }: Props) => {
           <div className={classNames(styles.delete, 'w100 flex-cc')}>
             <Button
               data-testid="delete-site-button"
+              title={t('delete')}
               aria-label={t('delete')}
               onClick={() => {
                 const id = getValue<string>()

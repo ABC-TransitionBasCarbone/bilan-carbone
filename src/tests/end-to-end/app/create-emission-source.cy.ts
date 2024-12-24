@@ -8,15 +8,15 @@ describe('Create study emission source', () => {
   it('should create an emission source on a study', () => {
     cy.login()
 
-    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBienEtMatieres`)
+    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('subpost').first().click()
 
     cy.getByTestId('new-emission-source').first().type('My new emission source{enter}')
 
     cy.getByTestId('emission-source-My new emission source').should('exist')
     cy.getByTestId('emission-source-My new emission source').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', "En attente d'un contributeur")
-      cy.getByTestId('emission-source-value').should('have.text', '')
+      cy.getByTestId('emission-source-status').should('have.text', "En attente d'un contributeur - 25%")
+      cy.getByTestId('emission-source-value').should('not.exist')
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
 
@@ -47,7 +47,7 @@ describe('Create study emission source', () => {
     cy.get('[data-value="Physical"]').click()
 
     cy.getByTestId('emission-source-My emission source name').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', 'A vérifier')
+      cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
@@ -58,7 +58,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-reliability').click()
     cy.get('[data-value="4"]').click()
     cy.getByTestId('emission-source-My emission source name').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', 'A vérifier')
+      cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Très bonne')
     })
@@ -87,14 +87,17 @@ describe('Create study emission source', () => {
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
     })
 
+    cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should('be.disabled')
+    cy.getByTestId('emission-source-validated').click()
+
     // Editor can add source, edit but not validate
     cy.logout()
     cy.login('bc-admin-0@yopmail.com', 'password-0')
-    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBienEtMatieres`)
+    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('subpost').first().click()
     cy.getByTestId('new-emission-source').should('exist')
     cy.getByTestId('emission-source-My emission source name').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', 'Validée')
+      cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
     })
@@ -113,11 +116,11 @@ describe('Create study emission source', () => {
     // Reader can only read
     cy.logout()
     cy.login('bc-default-1@yopmail.com', 'password-1')
-    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBienEtMatieres`)
+    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('subpost').first().click()
     cy.getByTestId('new-emission-source').should('not.exist')
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', 'Validée')
+      cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
     })
@@ -133,14 +136,14 @@ describe('Create study emission source', () => {
     cy.logout()
 
     cy.login('bc-contributor@yopmail.com', 'password')
-    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBienEtMatieres`)
+    cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('not-found-page').should('exist')
 
     cy.visit(`/etudes/${studyId}`)
     cy.getByTestId('subpost').first().click()
     cy.getByTestId('new-emission-source').should('not.exist')
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', 'Validée')
+      cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
       cy.getByTestId('emission-source-contributor').should('not.exist')
@@ -156,7 +159,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-value-da').type('789')
     cy.get('[data-testid="emission-source-value-da"] > .MuiInputBase-root > .MuiInputBase-input').blur()
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
-      cy.getByTestId('emission-source-status').should('have.text', 'Validée')
+      cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '87579.00 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
       cy.getByTestId('emission-source-contributor').should('have.text', 'bc-contributor@yopmail.com')

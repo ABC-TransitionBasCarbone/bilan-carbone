@@ -1,6 +1,7 @@
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
-import { Prisma, StudyEmissionSource, StudyRole, User } from '@prisma/client'
+import { StudyEmissionSource, StudyRole, User } from '@prisma/client'
+import { canBeValidated } from '../emissionSource'
 import { canReadStudy } from './study'
 
 export const canCreateEmissionSource = async (
@@ -46,7 +47,7 @@ export const canCreateEmissionSource = async (
 export const canUpdateEmissionSource = async (
   user: User,
   emissionSource: StudyEmissionSource,
-  change: Prisma.StudyEmissionSourceUpdateInput,
+  change: Partial<StudyEmissionSource>,
   study: FullStudy,
 ) => {
   const canCreate = await canCreateEmissionSource(user, emissionSource, study)
@@ -54,9 +55,17 @@ export const canUpdateEmissionSource = async (
     return false
   }
 
+  if (emissionSource.validated && change.validated !== false) {
+    return false
+  }
+
   if (change.validated !== undefined) {
     const rights = study.allowedUsers.find((right) => right.user.email === user.email)
     if (!rights || rights.role !== StudyRole.Validator) {
+      return false
+    }
+
+    if (change.validated === true && !canBeValidated({ ...emissionSource, ...change }, study)) {
       return false
     }
   }

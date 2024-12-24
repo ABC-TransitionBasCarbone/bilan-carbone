@@ -63,7 +63,7 @@ export const authOptions: NextAuthOptions = {
           return null
         }
         const user = await getUserByEmail(credentials.email)
-        if (!user || !user.password) {
+        if (!user || !user.password || !user.isValidated) {
           return null
         }
 

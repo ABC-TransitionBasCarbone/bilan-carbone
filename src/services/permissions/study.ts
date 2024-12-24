@@ -1,12 +1,11 @@
-import { FullStudy } from '@/db/study'
+import { getDocumentById } from '@/db/document'
+import { FullStudy, getStudyById } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { User as DbUser, Level, Prisma, Role, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
-import { getAllowedLevels } from '../study'
+import { auth } from '../auth'
+import { checkLevel } from '../study'
 import { checkOrganization } from './organization'
-
-const checkLevel = (userLevel: Level | null, studyLevel: Level) =>
-  userLevel ? getAllowedLevels(studyLevel).includes(userLevel) : false
 
 export const canReadStudy = async (
   user: User | UserWithAllowedStudies,
@@ -100,7 +99,7 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
     return false
   }
 
-  if (!getAllowedLevels(user.level).includes(level)) {
+  if (!checkLevel(user.level, level)) {
     return false
   }
 
@@ -112,12 +111,12 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
   return true
 }
 
-export const canAddRightOnStudy = (user: User, study: FullStudy, newUser: DbUser | null, role: StudyRole) => {
-  if (newUser && user.id === newUser.id) {
+export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStudy: DbUser | null, role: StudyRole) => {
+  if (userToAddOnStudy && user.id === userToAddOnStudy.id) {
     return false
   }
 
-  if ((!newUser || !newUser.organizationId) && role !== StudyRole.Reader) {
+  if ((!userToAddOnStudy || !userToAddOnStudy.organizationId) && role !== StudyRole.Reader) {
     return false
   }
 
@@ -159,6 +158,7 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
     withoutDetail: true as const,
     id: study.id,
     name: study.name,
+    sites: study.sites,
     emissionSources: study.emissionSources
       .filter((emissionSource) => availableSubPosts.includes(emissionSource.subPost))
       .map((emissionSource) => ({
@@ -167,6 +167,7 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
         name: emissionSource.name,
         validated: emissionSource.validated,
         subPost: emissionSource.subPost,
+        emissionFactorId: emissionSource.emissionFactorId,
         emissionFactor: emissionSource.emissionFactor,
         value: emissionSource.value,
         reliability: emissionSource.reliability,
@@ -175,7 +176,11 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
         temporalRepresentativeness: emissionSource.temporalRepresentativeness,
         completeness: emissionSource.completeness,
         source: emissionSource.source,
+        type: emissionSource.type,
+        caracterisation: emissionSource.caracterisation,
+        site: emissionSource.site,
       })),
+    exports: study.exports,
     contributors: undefined,
     allowedUser: undefined,
   }
@@ -196,6 +201,37 @@ export const canReadStudyDetail = async (user: User, study: FullStudy) => {
 
   const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
   if (!userRightsOnStudy) {
+    return false
+  }
+
+  return true
+}
+
+const canAccessStudyFlow = async (studyId: string) => {
+  const session = await auth()
+
+  if (!session || !session.user) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, session.user.organizationId)
+  if (!study || !study.allowedUsers.some((right) => right.user.email === session.user.email)) {
+    return false
+  }
+
+  return true
+}
+
+export const canAddFlowToStudy = async (studyId: string) => canAccessStudyFlow(studyId)
+
+export const canAccessFlowFromStudy = async (documentId: string, studyId: string) => {
+  if (!(await canAccessStudyFlow(studyId))) {
+    return false
+  }
+
+  const document = await getDocumentById(documentId)
+
+  if (!document || document?.studyId !== studyId) {
     return false
   }
 

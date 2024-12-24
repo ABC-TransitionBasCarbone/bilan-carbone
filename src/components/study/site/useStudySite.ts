@@ -1,16 +1,15 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { StudyWithoutDetail } from '@/services/permissions/study'
 import { useEffect, useState } from 'react'
 
-export const getStudySite = (studyId: string) => window.localStorage.getItem(`studySite-${studyId}`) || 'all'
-
-export default function useStudySite(study: FullStudy, allowAll?: boolean) {
+export default function useStudySite(study: FullStudy | StudyWithoutDetail, allowAll?: boolean) {
   const [ready, setReady] = useState(false)
   const [site, setSite] = useState('all')
 
   useEffect(() => {
-    const defaultSite = getStudySite(study.id)
+    const defaultSite = window.localStorage.getItem(`studySite-${study.id}`) || 'all'
     if (defaultSite === 'all' && !allowAll) {
       setSite(study.sites[0].id)
     } else {
