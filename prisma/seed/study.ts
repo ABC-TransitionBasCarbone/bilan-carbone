@@ -1,4 +1,4 @@
-import { getEmissionFactorsFromCSV } from '@/services/baseEmpreinte/getEmissionFactorsFromCSV'
+import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromCSV'
 import {
   ControlMode,
   EmissionFactorStatus,

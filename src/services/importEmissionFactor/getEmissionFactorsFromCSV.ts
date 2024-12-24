@@ -1,29 +1,29 @@
+import { Import, Prisma } from '@prisma/client'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import path from 'path'
 import { prismaClient } from '../../db/client'
 import {
-  BaseEmpreinteEmissionFactor,
   cleanImport,
   getEmissionFactorImportVersion,
-  mapEmissionFactors,
-  requiredColums,
+  ImportEmissionFactor,
+  requiredColumns,
   saveEmissionFactorsParts,
   validStatuses,
 } from './import'
 
 const checkHeaders = (headers: string[]) => {
-  if (requiredColums.length > headers.length) {
-    throw new Error(`Please check your headers, required headers: ${requiredColums.join(', ')}`)
+  if (requiredColumns.length > headers.length) {
+    throw new Error(`Please check your headers, required headers: ${requiredColumns.join(', ')}`)
   }
 
-  const missingHeaders = requiredColums.filter((header) => !headers.includes(header))
+  const missingHeaders = requiredColumns.filter((header) => !headers.includes(header))
   if (missingHeaders.length > 0) {
     throw new Error(`Missing headers: ${missingHeaders.join(', ')}`)
   }
 }
 
-const numberColumns: (keyof BaseEmpreinteEmissionFactor)[] = [
+const numberColumns: (keyof ImportEmissionFactor)[] = [
   'Total_poste_non_décomposé',
   'CO2b',
   'CH4f',
@@ -40,17 +40,34 @@ const numberColumns: (keyof BaseEmpreinteEmissionFactor)[] = [
   'Valeur_gaz_supplémentaire_2',
 ]
 
-export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
+export const getEmissionFactorsFromCSV = async (
+  name: string,
+  file: string,
+  importFrom: Import,
+  mapFunction: (emissionFactor: ImportEmissionFactor, importVersionId: string) => Prisma.EmissionFactorCreateInput,
+) => {
   await prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersion = await getEmissionFactorImportVersion(transaction, name, path.basename(file))
+      const emissionFactorImportVersion = await getEmissionFactorImportVersion(
+        transaction,
+        name,
+        importFrom,
+        path.basename(file),
+      )
       if (!emissionFactorImportVersion.success) {
         return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
       }
 
       console.log('Parse file...')
-      const emissionFactors: BaseEmpreinteEmissionFactor[] = []
-      const parts: BaseEmpreinteEmissionFactor[] = []
+      const emissionFactors: ImportEmissionFactor[] = []
+      const parts: ImportEmissionFactor[] = []
+
+      const buffer = fs.readFileSync(file, { encoding: 'binary' })
+      /**
+       * https://www.w3schools.com/charsets/ref_html_8859.asp
+       * \xE8 and \xE9 are the hexadecimal codes for "è" (232) and "é" (233) in Latin-1 (ISO-8859-1).
+       */
+      const encoding = buffer.includes('\xE9') || buffer.includes('\xE8') ? 'latin1' : 'utf-8'
 
       await new Promise<void>((resolve, reject) => {
         fs.createReadStream(file)
@@ -62,13 +79,13 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
                 return formattedHeader
               },
               delimiter: ';',
-              encoding: 'latin1',
+              encoding,
               cast: (value, context) => {
                 if (value === '') {
                   return undefined
                 }
 
-                if (numberColumns.includes(context.column as keyof BaseEmpreinteEmissionFactor)) {
+                if (numberColumns.includes(context.column as keyof ImportEmissionFactor)) {
                   return Number(value.replace(',', '.'))
                 }
 
@@ -76,7 +93,7 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
               },
             }),
           )
-          .on('data', (row: BaseEmpreinteEmissionFactor) => {
+          .on('data', (row: ImportEmissionFactor) => {
             if (validStatuses.includes(row["Statut_de_l'élément"])) {
               if (row.Type_Ligne === 'Poste') {
                 parts.push(row)
@@ -93,9 +110,10 @@ export const getEmissionFactorsFromCSV = async (name: string, file: string) => {
               if (i % 500 === 0) {
                 console.log(`${i}/${emissionFactors.length}...`)
               }
-              const data = mapEmissionFactors(emissionFactor, emissionFactorImportVersion.id)
+              const data = mapFunction(emissionFactor, emissionFactorImportVersion.id)
               await transaction.emissionFactor.create({ data })
             }
+            console.log(`Save ${parts.length} emission factors parts...`)
             await saveEmissionFactorsParts(transaction, parts)
             await cleanImport(transaction, emissionFactorImportVersion.id)
             console.log('Done')

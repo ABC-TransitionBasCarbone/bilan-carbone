@@ -433,6 +433,7 @@
       "value": "Value",
       "importedFrom": {
         "baseEmpreinte": "Base Empreinte logo",
+        "negaOctet": "NegaOctet logo",
         "manual": "Manual"
       },
       "post": "Post:",
@@ -639,7 +640,10 @@
     "KG_PER_m3": "kg / m³",
     "KGDBO": "kgDBO",
     "KGDBO_PER_M3": "kgDBO / m³",
-    "KG_H2_PER_100KM": "kgH2/100km"
+    "KG_H2_PER_100KM": "kgH2/100km",
+    "GO": "GB",
+    "REQUEST": "request",
+    "MAIL": "mail"
   },
   "organization": {
     "create": "New Organization",
