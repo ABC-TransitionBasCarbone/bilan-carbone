@@ -5,11 +5,12 @@ import Button from '@/components/base/Button'
 import LinkButton from '@/components/base/LinkButton'
 import { FormSelect } from '@/components/form/Select'
 import { OrganizationWithSites } from '@/db/user'
-import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
+import { CreateStudyCommand, SitesCommand, SitesCommandValidation } from '@/services/serverFunctions/study.command'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { FormHelperText, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import Sites from './Sites'
 
 interface Props {
@@ -23,6 +24,22 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
   const [error, setError] = useState('')
   const sites = form.watch('sites')
   const organizationId = form.watch('organizationId')
+
+  const sitesForm = useForm<SitesCommand>({
+    resolver: zodResolver(SitesCommandValidation),
+    defaultValues: {
+      sites,
+    },
+  })
+
+  const currentSites = useWatch({
+    control: sitesForm.control,
+    name: 'sites',
+  })
+
+  useEffect(() => {
+    form.setValue('sites', currentSites)
+  }, [currentSites, form])
 
   const organization = useMemo(
     () => organizations.find((organization) => organization.id === organizationId),
@@ -62,7 +79,7 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
       {organization &&
         (organization.sites.length > 0 ? (
           <>
-            <Sites form={form} sites={sites} />
+            <Sites form={sitesForm} sites={sites} />
             <div className="mt2">
               <Button
                 data-testid="new-study-organization-button"
