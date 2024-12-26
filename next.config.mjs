@@ -9,7 +9,7 @@ const scalewayUrl = `${bucketName}.s3.${region}.scw.cloud`
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [scalewayUrl],
+    remotePatterns: [{ hostname: scalewayUrl }],
   },
   experimental: {
     serverActions: {
