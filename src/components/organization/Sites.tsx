@@ -134,20 +134,7 @@ const Sites = ({ sites, form, studyId }: Props) => {
         </Button>
       )}
       <table className="mt1">
-        <caption>
-          <div className={classNames(styles.title, 'justify-between align-center')}>
-            {t('title')}
-            {!form && (
-              <LinkButton
-                href={`/etudes/${studyId}/perimetre/modifier`}
-                className="align-right"
-                data-testid="edit-study-sites"
-              >
-                {t('update')}
-              </LinkButton>
-            )}
-          </div>
-        </caption>
+        <caption>{t('title')}</caption>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -169,6 +156,17 @@ const Sites = ({ sites, form, studyId }: Props) => {
           ))}
         </tbody>
       </table>
+      {!form && (
+        <div className="mt1 grow justify-end">
+          <LinkButton
+            href={`/etudes/${studyId}/perimetre/modifier`}
+            className="align-right"
+            data-testid="edit-study-sites"
+          >
+            {t('update')}
+          </LinkButton>
+        </div>
+      )}
     </div>
   )
 }
