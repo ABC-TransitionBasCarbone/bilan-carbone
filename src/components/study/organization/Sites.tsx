@@ -48,6 +48,7 @@ const Sites = ({ form, sites }: Props) => {
               htmlInput: { type: 'number', min: 0 },
               input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
             }}
+            data-testid="organization-sites-etp"
           />
         ),
       },
@@ -65,6 +66,7 @@ const Sites = ({ form, sites }: Props) => {
               htmlInput: { type: 'number', min: 0 },
               input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
             }}
+            data-testid="organization-sites-ca"
           />
         ),
       },

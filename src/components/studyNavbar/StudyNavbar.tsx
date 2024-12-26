@@ -57,7 +57,12 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
           {t('framing')}
         </Link>
         <Divider />
-        <Link className={styles.link} href={`/etudes/${studyId}/perimetre`} onClick={() => setOpen(false)}>
+        <Link
+          className={styles.link}
+          href={`/etudes/${studyId}/perimetre`}
+          onClick={() => setOpen(false)}
+          data-testid="study-perimetre-link"
+        >
           {t('scope')}
         </Link>
         <Divider />

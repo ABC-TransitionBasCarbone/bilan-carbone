@@ -138,7 +138,11 @@ const Sites = ({ sites, form, studyId }: Props) => {
           <div className={classNames(styles.title, 'justify-between align-center')}>
             {t('title')}
             {!form && (
-              <LinkButton href={`/etudes/${studyId}/perimetre/modifier`} className="align-right">
+              <LinkButton
+                href={`/etudes/${studyId}/perimetre/modifier`}
+                className="align-right"
+                data-testid="edit-study-sites"
+              >
                 {t('update')}
               </LinkButton>
             )}
@@ -155,7 +159,7 @@ const Sites = ({ sites, form, studyId }: Props) => {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody data-testid="sites-table-body">
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
