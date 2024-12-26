@@ -434,6 +434,7 @@
       "value": "Value",
       "importedFrom": {
         "baseEmpreinte": "Base Empreinte logo",
+        "legifrance": "Légifrance logo",
         "negaOctet": "NegaOctet logo",
         "manual": "Manual"
       },
