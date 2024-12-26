@@ -9,7 +9,7 @@ import { ChangeStudySitesCommand, ChangeStudySitesCommandValidation } from '@/se
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Sites from '../organization/Sites'
 
@@ -23,15 +23,18 @@ const EditStudySitesForm = ({ study, organization }: Props) => {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  const siteList =
-    organization.sites
-      .map((site) => {
-        const studySite = study.sites.find((ss) => ss.site.id === site.id)
-        return studySite
-          ? { ...studySite, id: site.id, name: studySite.site.name, selected: true }
-          : { ...site, selected: false }
-      })
-      .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || []
+  const siteList = useMemo(
+    () =>
+      organization.sites
+        .map((site) => {
+          const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
+          return existingStudySite
+            ? { ...existingStudySite, id: site.id, name: existingStudySite.site.name, selected: true }
+            : { ...site, selected: false }
+        })
+        .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
+    [organization.sites, study.sites],
+  )
 
   const form = useForm<ChangeStudySitesCommand>({
     resolver: zodResolver(ChangeStudySitesCommandValidation),

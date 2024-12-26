@@ -10,8 +10,8 @@ import {
   FullStudy,
   getStudiesFromSites,
   getStudyById,
+  recreateStudySites,
   updateStudy,
-  updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
 import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
@@ -235,7 +235,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
   if (!canChangeSites(informations.user, informations.studyWithRights)) {
     return NOT_AUTHORIZED
   }
-  await updateStudySites(studyId, newStudySites)
+  await recreateStudySites(studyId, newStudySites)
 }
 
 const getOrCreateUserAndSendStudyInvite = async (
