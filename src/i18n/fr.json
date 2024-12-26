@@ -293,10 +293,9 @@
       "validation": "Validation de la source d'émission",
       "yes": "Oui"
     },
-
     "flow": {
       "loading": "Chargement du document...",
-      "addFlow": "Ajouter un flux",
+      "add": "Ajouter un flux",
       "documentNotFound": "Document non trouvé",
       "download": "Télécharger le flux",
       "flows": "Cartographie des fluxs",
