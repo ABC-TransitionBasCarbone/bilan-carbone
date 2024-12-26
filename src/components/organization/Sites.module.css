@@ -2,11 +2,6 @@
   position: relative;
 }
 
-.title {
-  font-size: inherit;
-  line-height: inherit;
-}
-
 .addButton {
   position: absolute !important;
   top: 1.25rem !important;

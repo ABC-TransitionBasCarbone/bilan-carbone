@@ -267,7 +267,7 @@
     },
     "perimeter": {
       "dates": "from {startDate} to {endDate}",
-      "title": "Permiter on study : {name}",
+      "title": "Perimeter on study: {name}",
       "save": "Save"
     },
     "results": {
