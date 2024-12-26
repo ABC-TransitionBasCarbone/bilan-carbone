@@ -1,4 +1,5 @@
 'use client'
+
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
@@ -18,12 +19,13 @@ import styles from './StudyFlow.module.css'
 import StudyFlowViewer from './StudyFlowViewer'
 
 interface Props {
-  study: FullStudy
+  canAddFlow: boolean
   documents: Document[]
   initialDocument?: Document
+  study: FullStudy
 }
 
-const StudyFlow = ({ study, documents, initialDocument }: Props) => {
+const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => {
   const t = useTranslations('study.flow')
   const tUpload = useTranslations('upload')
 
@@ -80,28 +82,32 @@ const StudyFlow = ({ study, documents, initialDocument }: Props) => {
     <Block
       title={t('flows', { name: study.name })}
       as="h1"
-      actions={[
-        {
-          actionType: 'button',
-          component: 'label',
-          role: undefined,
-          variant: 'contained',
-          tabIndex: -1,
-          children: (
-            <div className="align-center">
-              {t('addFlow')}
-              <input
-                id="flow-upload-input"
-                className={styles.flowUploadButton}
-                type="file"
-                value=""
-                accept={allowedFlowFileTypes.join(',')}
-                onChange={addFlow}
-              />
-            </div>
-          ),
-        },
-      ]}
+      actions={
+        canAddFlow
+          ? [
+              {
+                actionType: 'button',
+                component: 'label',
+                role: undefined,
+                variant: 'contained',
+                tabIndex: -1,
+                children: (
+                  <div className="align-center">
+                    {t('add')}
+                    <input
+                      id="flow-upload-input"
+                      className={styles.flowUploadButton}
+                      type="file"
+                      value=""
+                      accept={allowedFlowFileTypes.join(',')}
+                      onChange={addFlow}
+                    />
+                  </div>
+                ),
+              },
+            ]
+          : []
+      }
     >
       {error && <div className={classNames(styles.error, 'mb1')}>{error}</div>}
       {selectedFlow ? (

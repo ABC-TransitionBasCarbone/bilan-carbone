@@ -295,7 +295,7 @@
     },
     "flow": {
       "loading": "Loading document...",
-      "addFlow": "Add a flow",
+      "add": "Add a flow",
       "documentNotFound": "Document not found",
       "download": "Download flow",
       "invalidFileType": "Invalid file type",
