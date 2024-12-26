@@ -1,6 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
+import { EmissionSourceCaracterisation, ExportRule, SubPost } from '@prisma/client'
 import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 
@@ -50,7 +50,11 @@ export type BegesLine = {
   uncertainty: number | null
 }
 
-export const getRulePost = (rule: ExportRule, caracterisation: EmissionSourceCaracterisation) => {
+const getRulePost = (rule: ExportRule, caracterisation: EmissionSourceCaracterisation | null) => {
+  if (caracterisation === null) {
+    return null
+  }
+
   switch (caracterisation) {
     case EmissionSourceCaracterisation.Operated:
       return rule.operated
@@ -118,7 +122,7 @@ const sumLines = (lines: Omit<BegesLine, 'rule'>[]) => {
   }
 }
 
-const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSourceCaracterisation) => {
+const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSourceCaracterisation | null) => {
   const rule = rules.find((rule) => rule.type === null)
   if (!rule) {
     return null
@@ -132,6 +136,7 @@ export const computeBegesResult = (
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
   site: string,
+  withDependancies: boolean,
 ) => {
   const results: Record<string, Omit<BegesLine, 'rule'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
@@ -141,71 +146,70 @@ export const computeBegesResult = (
     site === 'all'
       ? study.emissionSources
       : study.emissionSources.filter((emissionSource) => emissionSource.site.id === site)
-  emissionSources.forEach((emissionSource) => {
-    if (
-      emissionSource.emissionFactor === null ||
-      !emissionSource.value ||
-      emissionSource.caracterisation === null ||
-      !emissionSource.validated
-    ) {
-      return
-    }
 
-    const id = emissionSource.emissionFactor.id
-    const caracterisation = emissionSource.caracterisation
-    let value = emissionSource.value
-    if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && emissionSource.depreciationPeriod) {
-      value = value / emissionSource.depreciationPeriod
-    }
-
-    const emissionFactor = emissionFactorsWithParts.find(
-      (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,
-    )
-    if (!emissionFactor) {
-      return
-    }
-
-    const subPostRules = rules.filter((rule) => rule.subPost === emissionSource.subPost)
-    if (subPostRules.length === 0) {
-      return
-    }
-
-    // l'incertitude est globale, peu importe
-    const uncertainty = getStandardDeviation(emissionSource)
-    if (!uncertainty) {
-      return
-    }
-
-    if (emissionFactor.emissionFactorParts.length === 0) {
-      // Pas de decomposition => on ventile selon la regle par default
-      const post = getDefaultRule(subPostRules, caracterisation)
-      if (post) {
-        results[post].push({
-          ...getBegesLine(value, emissionFactor),
-          uncertainty: uncertainty,
-        })
+  emissionSources
+    .filter((emissionSource) => withDependancies || emissionSource.subPost !== SubPost.UtilisationEnDependance)
+    .forEach((emissionSource) => {
+      if (emissionSource.emissionFactor === null || !emissionSource.value || !emissionSource.validated) {
+        return
       }
-    } else {
-      emissionFactor.emissionFactorParts.forEach((part) => {
-        let post: string | null = null
-        const rule = subPostRules.find((rule) => rule.type === part.type)
-        if (!rule) {
-          // On a pas de regle specifique pour cette composante => on ventile selon la regle par default
-          post = getDefaultRule(subPostRules, caracterisation)
-        } else {
-          // On ventile selon la regle specifique
-          post = getRulePost(rule, caracterisation)
-        }
+
+      const id = emissionSource.emissionFactor.id
+      const caracterisation = emissionSource.caracterisation
+      let value = emissionSource.value
+      if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && emissionSource.depreciationPeriod) {
+        value = value / emissionSource.depreciationPeriod
+      }
+
+      const emissionFactor = emissionFactorsWithParts.find(
+        (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,
+      )
+
+      if (!emissionFactor) {
+        return
+      }
+
+      const subPostRules = rules.filter((rule) => rule.subPost === emissionSource.subPost)
+      if (subPostRules.length === 0) {
+        return
+      }
+
+      // l'incertitude est globale, peu importe
+      const uncertainty = getStandardDeviation(emissionSource)
+      if (!uncertainty) {
+        return
+      }
+
+      if (emissionFactor.emissionFactorParts.length === 0) {
+        // Pas de decomposition => on ventile selon la regle par default
+        const post = getDefaultRule(subPostRules, caracterisation)
         if (post) {
-          // Et on ajoute la valeur selon la composante quoi qu'il arrive
           results[post].push({
-            ...getBegesLine(value, part),
+            ...getBegesLine(value, emissionFactor),
             uncertainty: uncertainty,
           })
         }
-      })
-    }
-  })
+      } else {
+        emissionFactor.emissionFactorParts.forEach((part) => {
+          let post: string | null = null
+          const rule = subPostRules.find((rule) => rule.type === part.type)
+          if (!rule) {
+            // On a pas de regle specifique pour cette composante => on ventile selon la regle par default
+            post = getDefaultRule(subPostRules, caracterisation)
+          } else {
+            // On ventile selon la regle specifique
+            post = getRulePost(rule, caracterisation)
+          }
+          if (post) {
+            // Et on ajoute la valeur selon la composante quoi qu'il arrive
+            results[post].push({
+              ...getBegesLine(value, part),
+              uncertainty: uncertainty,
+            })
+          }
+        })
+      }
+    })
 
   const lines = Object.entries(results).map(([rule, result]) => ({ rule, ...sumLines(result) }))
   lines.push({

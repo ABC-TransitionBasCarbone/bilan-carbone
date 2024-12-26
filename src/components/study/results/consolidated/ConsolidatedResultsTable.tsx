@@ -14,9 +14,10 @@ import styles from './ConsolidatedResultsTable.module.css'
 interface Props {
   study: FullStudy
   site: string
+  withDependancies: boolean
 }
 
-const ConsolidatedResultsTable = ({ study, site }: Props) => {
+const ConsolidatedResultsTable = ({ study, site, withDependancies }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
@@ -61,7 +62,10 @@ const ConsolidatedResultsTable = ({ study, site }: Props) => {
     [t, tPost, tQuality],
   )
 
-  const data = useMemo(() => computeResultsByPost(study, tPost, site), [study, tPost, site])
+  const data = useMemo(
+    () => computeResultsByPost(study, tPost, site, withDependancies),
+    [study, tPost, site, withDependancies],
+  )
 
   const table = useReactTable({
     columns,

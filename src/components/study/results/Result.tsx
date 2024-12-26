@@ -7,9 +7,13 @@ import { computeResultsByPost, ResultsByPost } from '@/services/results/consolid
 import { downloadStudyEmissionSources, downloadStudyPost } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import { MenuItem, Select } from '@mui/material'
+import { SubPost } from '@prisma/client'
 import Chart from 'chart.js/auto'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import DependanciesSwitch from './DependanciesSwitch'
+import styles from './Result.module.css'
 
 interface Props {
   study: FullStudy
@@ -42,12 +46,20 @@ const Result = ({ study, by, site }: Props) => {
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
+  const [withDependancies, setWithDependancies] = useState(true)
+
   const selectorOptions = Object.values(Post)
 
-  const xAxis = useMemo(() => (by === 'Post' ? postXAxisList : subPostsByPost[post]), [post, by])
+  const xAxis = useMemo(
+    () =>
+      by === 'Post'
+        ? postXAxisList
+        : subPostsByPost[post].filter((subPost) => withDependancies || subPost !== SubPost.UtilisationEnDependance),
+    [post, by, withDependancies],
+  )
 
   const yData = useMemo(() => {
-    const computedResults = computeResultsByPost(study, tPost, site)
+    const computedResults = computeResultsByPost(study, tPost, site, withDependancies)
     if (by === 'Post') {
       if (computedResults.every((post) => post.value === 0)) {
         return []
@@ -60,9 +72,11 @@ const Result = ({ study, by, site }: Props) => {
       if (subPosts.every((subPost) => subPost.value === 0)) {
         return []
       }
-      return xAxis.map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
+      return xAxis
+        .filter((subPost) => withDependancies || subPost !== SubPost.UtilisationEnDependance)
+        .map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
     }
-  }, [post, by, site])
+  }, [post, by, site, withDependancies])
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -113,7 +127,10 @@ const Result = ({ study, by, site }: Props) => {
 
   return (
     <>
-      <h3 className="mb1">{t(`by${by}`)}</h3>
+      <div className={classNames(styles.header, 'align-center', 'mb1')}>
+        <h3>{t(`by${by}`)}</h3>
+        <DependanciesSwitch withDependancies={withDependancies} setWithDependancies={setWithDependancies} />
+      </div>
       {by === 'SubPost' && (
         <div className="flex mb1">
           <Select className="mr-2 grow" value={post} onChange={(e) => setPost(e.target.value as Post)}>
