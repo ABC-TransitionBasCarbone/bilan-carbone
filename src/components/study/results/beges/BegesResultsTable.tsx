@@ -14,9 +14,10 @@ interface Props {
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
   site: string
+  withDependancies: boolean
 }
 
-const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site }: Props) => {
+const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site, withDependancies }: Props) => {
   const t = useTranslations('beges')
   const tQuality = useTranslations('quality')
 
@@ -66,8 +67,8 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site }: Pro
   )
 
   const data = useMemo(
-    () => computeBegesResult(study, rules, emissionFactorsWithParts, site),
-    [study, rules, emissionFactorsWithParts, site],
+    () => computeBegesResult(study, rules, emissionFactorsWithParts, site, withDependancies),
+    [study, rules, emissionFactorsWithParts, site, withDependancies],
   )
 
   const table = useReactTable({

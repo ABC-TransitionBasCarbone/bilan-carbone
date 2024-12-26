@@ -263,7 +263,9 @@
       "type": "Type",
       "post": "Post",
       "value": "Emissions (kgCO₂e)",
-      "uncertainty": "Uncertainty"
+      "uncertainty": "Uncertainty",
+      "withDependancies": "With dependancies",
+      "withoutDependancies": "Without dependancies"
     },
     "export": {
       "activityDataComment": "Activity data comment",

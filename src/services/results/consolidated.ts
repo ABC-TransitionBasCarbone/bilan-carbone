@@ -12,15 +12,22 @@ export type ResultsByPost = {
   subPosts: ResultsByPost[]
 }
 
-export const computeResultsByPost = (study: FullStudy, tPost: (key: string) => string, site: string) => {
+export const computeResultsByPost = (
+  study: FullStudy,
+  tPost: (key: string) => string,
+  site: string,
+  withDependancies: boolean,
+) => {
   const siteEmissionSources =
     site === 'all'
       ? study.emissionSources
       : study.emissionSources.filter((emissionSource) => emissionSource.site.id === site)
+
   return Object.values(Post)
     .sort((a, b) => tPost(a).localeCompare(tPost(b)))
     .map((post) => {
       const subPosts = subPostsByPost[post]
+        .filter((subPost) => withDependancies || subPost !== SubPost.UtilisationEnDependance)
         .map((subPost) => {
           const emissionSources = siteEmissionSources.filter(
             (emissionSource) => emissionSource.subPost === subPost && emissionSource.validated,
