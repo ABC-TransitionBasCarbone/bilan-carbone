@@ -1,9 +1,12 @@
 'use client'
+
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import InventoryIcon from '@mui/icons-material/Inventory'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import {
   Checkbox,
   FormControl,
@@ -99,7 +102,16 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
           emissionFactor.metaData
             ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}`
             : '',
-        cell: ({ getValue }) => <span className={styles.name}>{getValue<string>()}</span>,
+        cell: ({ getValue, row }) => (
+          <div className="align-center">
+            {row.getIsExpanded() ? (
+              <KeyboardArrowDownIcon className={styles.svg} />
+            ) : (
+              <KeyboardArrowRightIcon className={styles.svg} />
+            )}
+            <span className={styles.name}>{getValue<string>()}</span>
+          </div>
+        ),
       },
       {
         header: t('value'),
