@@ -1,5 +1,6 @@
 import Logout from '@/components/auth/Logout'
 import Block from '@/components/base/Block'
+import withAuth from '@/components/hoc/withAuth'
 import LocaleSelector from '@/components/navbar/LocaleSelector'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -23,4 +24,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default withAuth(Profile)

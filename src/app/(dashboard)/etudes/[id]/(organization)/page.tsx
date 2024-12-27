@@ -1,7 +1,7 @@
+import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import StudyPage from '@/components/pages/Study'
 import { getStudyById } from '@/db/study'
-import { auth } from '@/services/auth'
 import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
 import { UUID } from 'crypto'
 import { redirect } from 'next/navigation'
@@ -12,23 +12,21 @@ interface Props {
   }>
 }
 
-const StudyView = async (props: Props) => {
+const StudyView = async (props: Props & UserProps) => {
   const params = await props.params
-  const session = await auth()
 
   const id = params.id
-  if (!id || !session) {
+  if (!id) {
     return <NotFound />
   }
 
-  const study = await getStudyById(id, session.user.organizationId)
-
+  const study = await getStudyById(id, props.user.organizationId)
   if (!study) {
     return <NotFound />
   }
 
-  if (!(await canReadStudyDetail(session.user, study))) {
-    if (!(await canReadStudy(session.user, study))) {
+  if (!(await canReadStudyDetail(props.user, study))) {
+    if (!(await canReadStudy(props.user, study))) {
       return <NotFound />
     }
     return redirect(`/etudes/${study.id}/contributeur`)
@@ -37,4 +35,4 @@ const StudyView = async (props: Props) => {
   return <StudyPage study={study} />
 }
 
-export default StudyView
+export default withAuth(StudyView)
