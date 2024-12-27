@@ -1,6 +1,7 @@
 'use server'
 
 import { getDocumentsForStudy } from '@/db/document'
+import { getOrganizationWithSitesById } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { canAddFlowToStudy } from '@/services/permissions/study'
 import { User } from 'next-auth'
@@ -9,6 +10,7 @@ import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyFlow from '../study/perimeter/flow/StudyFlow'
 import StudyPerimeter from '../study/perimeter/StudyPerimeter'
+import NotFound from './NotFound'
 
 interface Props {
   study: FullStudy
@@ -18,7 +20,14 @@ interface Props {
 const StudyPerimeterPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.perimeter')
-  const documents = await getDocumentsForStudy(study.id)
+  const [documents, organization] = await Promise.all([
+    getDocumentsForStudy(study.id),
+    getOrganizationWithSitesById(study.organizationId),
+  ])
+
+  if (!organization) {
+    return <NotFound />
+  }
 
   const userRoleOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
 
@@ -34,7 +43,7 @@ const StudyPerimeterPage = async ({ study, user }: Props) => {
         ]}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <StudyPerimeter study={study} userRoleOnStudy={userRoleOnStudy} />
+        <StudyPerimeter study={study} userRoleOnStudy={userRoleOnStudy} organization={organization} />
       </Block>
       <StudyFlow
         canAddFlow={canAddFlow}

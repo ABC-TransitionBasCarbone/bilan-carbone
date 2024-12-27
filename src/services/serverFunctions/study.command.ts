@@ -38,6 +38,7 @@ export const CreateStudyCommandValidation = z
       .array(
         z.object({
           id: z.string(),
+          name: z.string(),
           selected: z.boolean(),
           etp: z.number().optional(),
           ca: z.number().optional(),
@@ -59,28 +60,10 @@ export const CreateStudyCommandValidation = z
 
 export type CreateStudyCommand = z.infer<typeof CreateStudyCommandValidation>
 
-export const ChangeStudySitesCommandValidation = z.object({
-  organizationId: z.string(),
-  sites: z
-    .array(
-      z.object({
-        id: z.string(),
-        selected: z.boolean(),
-        etp: z.number().optional(),
-        ca: z.number().optional(),
-      }),
-    )
-    .refine((sites) => sites.some((site) => site.selected), 'sites'),
-})
-export type ChangeStudySitesCommand = z.infer<typeof ChangeStudySitesCommandValidation>
-
 export const ChangeStudyPublicStatusCommandValidation = z.object({
   studyId: z.string(),
   isPublic: z.string(),
 })
-
-export const SitesCommandValidation = z.union([ChangeStudySitesCommandValidation, CreateStudyCommandValidation])
-export type SitesCommand = z.infer<typeof SitesCommandValidation>
 
 export type ChangeStudyPublicStatusCommand = z.infer<typeof ChangeStudyPublicStatusCommandValidation>
 
@@ -112,8 +95,45 @@ export const ChangeStudyDatesCommandValidation = z
       path: ['endDate'],
     },
   )
-
 export type ChangeStudyDatesCommand = z.infer<typeof ChangeStudyDatesCommandValidation>
+
+export const ChangeStudyPerimeterCommandValidation = z
+  .object({
+    studyId: z.string(),
+    organizationId: z.string(),
+    startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
+      const date = dayjs(val)
+      return date.isValid()
+    }, 'startDate'),
+    endDate: z.string({ required_error: 'endDate' }).refine((val) => {
+      const date = dayjs(val)
+      return date.isValid()
+    }, 'endDate'),
+    sites: z
+      .array(
+        z.object({
+          id: z.string(),
+          name: z.string(),
+          selected: z.boolean(),
+          etp: z.number().optional(),
+          ca: z.number().optional(),
+        }),
+      )
+      .refine((sites) => sites.some((site) => site.selected), 'sites'),
+  })
+  .refine(
+    (data) => {
+      return dayjs(data.endDate).isAfter(dayjs(data.startDate))
+    },
+    {
+      message: 'endDateBeforStartDate',
+      path: ['endDate'],
+    },
+  )
+export type ChangeStudyPerimeterCommand = z.infer<typeof ChangeStudyPerimeterCommandValidation>
+
+// export const SitesCommandValidation = z.union([CreateStudyCommandValidation, ChangeStudyPerimeterCommandValidation])
+// export type SitesCommand = z.infer<typeof SitesCommandValidation>
 
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),

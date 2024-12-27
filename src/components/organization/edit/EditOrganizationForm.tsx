@@ -14,6 +14,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
 import Sites from '../Sites'
 
 interface Props {
@@ -46,6 +47,15 @@ const EditOrganizationForm = ({ organization }: Props) => {
     }
   }
 
+  const addSite = () => form.setValue('sites', [...form.getValues().sites, { id: uuidv4(), name: '', etp: 0, ca: 0 }])
+
+  const removeSite = (id: string) => {
+    form.setValue(
+      'sites',
+      form.getValues().sites.filter((site) => site.id !== id),
+    )
+  }
+
   const sites = form.watch('sites')
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -56,7 +66,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
         name="name"
         label={t('name')}
       />
-      <Sites sites={sites} form={form} />
+      <Sites sites={sites} form={form} addSite={addSite} removeSite={removeSite} />
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}
       </Button>
