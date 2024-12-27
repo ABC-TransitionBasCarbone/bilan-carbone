@@ -7,6 +7,7 @@ import {
   Import,
   Level,
   PrismaClient,
+  StudyRole,
   SubPost,
   Unit,
   User,
@@ -83,6 +84,14 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
           ],
         },
       },
+    },
+  })
+
+  await prisma.userOnStudy.create({
+    data: {
+      role: StudyRole.Validator,
+      userId: creator.id,
+      studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
     },
   })
 
