@@ -9,7 +9,7 @@ import { useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
-import ConsolidatedResultsTable from './consolidated/ConsolidatedResultsTable'
+import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import DependanciesSwitch from './DependanciesSwitch'
 import styles from './ResultsTables.module.css'
 
@@ -19,7 +19,7 @@ interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
 }
 
-const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
+const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const t = useTranslations('study.results')
   const tExport = useTranslations('exports')
 
@@ -55,7 +55,7 @@ const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
-          <ConsolidatedResultsTable study={study} site={site} withDependencies={withDependencies} />
+          <ConsolidatedResults study={study} site={site} withDependancies={withDependencies} />
         )}
         {type === Export.Beges && (
           <BegesResultsTable
@@ -71,4 +71,4 @@ const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
   )
 }
 
-export default ResultsTables
+export default AllResults
