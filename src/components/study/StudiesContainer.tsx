@@ -20,7 +20,11 @@ const StudiesContainer = ({ user, organizationId }: Props) => {
         <NewspaperIcon /> <h2>{t('myStudies')}</h2>
       </div>
       <div className={classNames(styles.button, 'w100 flex')}>
-        <LinkButton data-testid="new-study" className="mb1" href="/etudes/creer">
+        <LinkButton
+          data-testid="new-study"
+          className="mb1"
+          href={`${organizationId ? `/organisations/${organizationId}` : ''}/etudes/creer`}
+        >
           {t('create')}
         </LinkButton>
       </div>
