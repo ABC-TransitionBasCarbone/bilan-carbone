@@ -1,8 +1,8 @@
+import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import StudyContributionPage from '@/components/pages/StudyContribution'
 import StudyContributorPage from '@/components/pages/StudyContributor'
 import { getStudyById } from '@/db/study'
-import { auth } from '@/services/auth'
 import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
 import { UUID } from 'crypto'
 
@@ -11,30 +11,28 @@ interface Props {
     id: UUID
   }>
 }
-const DataEntry = async (props: Props) => {
-  const session = await auth()
-
+const DataEntry = async (props: Props & UserProps) => {
   const params = await props.params
   const id = params.id
-  if (!id || !session) {
+  if (!id) {
     return <NotFound />
   }
 
-  const study = await getStudyById(id, session.user.organizationId)
+  const study = await getStudyById(id, props.user.organizationId)
 
   if (!study) {
     return <NotFound />
   }
 
-  if (!(await canReadStudyDetail(session.user, study))) {
-    if (!(await canReadStudy(session.user, study))) {
+  if (!(await canReadStudyDetail(props.user, study))) {
+    if (!(await canReadStudy(props.user, study))) {
       return <NotFound />
     }
-    const studyWithoutDetail = filterStudyDetail(session.user, study)
-    return <StudyContributorPage study={studyWithoutDetail} user={session.user} />
+    const studyWithoutDetail = filterStudyDetail(props.user, study)
+    return <StudyContributorPage study={studyWithoutDetail} user={props.user} />
   }
 
   return <StudyContributionPage study={study} />
 }
 
-export default DataEntry
+export default withAuth(DataEntry)
