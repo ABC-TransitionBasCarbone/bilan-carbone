@@ -23,9 +23,9 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
 
   return (
     <>
-      {emissionFactor.importedFrom === Import.BaseEmpreinte && emissionFactor.version && (
+      {emissionFactor.importedFrom !== Import.Manual && emissionFactor.version && (
         <div className={styles.info}>
-          {t('BaseEmpreinte')} {emissionFactor.version.name} - {t(emissionFactor.status)}
+          {t(emissionFactor.importedFrom)} {emissionFactor.version.name} - {t(emissionFactor.status)}
         </div>
       )}
       <div className={styles.info}>
