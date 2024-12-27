@@ -1,4 +1,5 @@
 import { type Prisma } from '@prisma/client'
+import { unstable_cache } from 'next/cache'
 import { prismaClient } from './client'
 
 const selectEmissionFactor = {
@@ -41,15 +42,27 @@ const selectEmissionFactor = {
   },
 } as Prisma.EmissionFactorSelect
 
-export const getAllEmissionFactors = (organizationId: string) => {
-  const where = {
-    OR: [{ organizationId: null }, { organizationId }],
-  }
-  return prismaClient.emissionFactor.findMany({
-    where,
+const getDefaultEmissionFactors = () =>
+  prismaClient.emissionFactor.findMany({
+    where: { organizationId: null },
     select: selectEmissionFactor,
     orderBy: { createdAt: 'desc' },
   })
+
+const getCachedDefaultEmissionFactors = unstable_cache(() => {
+  return getDefaultEmissionFactors()
+})
+
+export const getAllEmissionFactors = async (organizationId: string) => {
+  const organizationEmissionFactor = await prismaClient.emissionFactor.findMany({
+    where: { organizationId },
+    select: selectEmissionFactor,
+    orderBy: { createdAt: 'desc' },
+  })
+  const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
+    ? getDefaultEmissionFactors()
+    : getCachedDefaultEmissionFactors())
+  return organizationEmissionFactor.concat(defaultEmissionFactors)
 }
 
 export const getEmissionFactorById = (id: string) =>
