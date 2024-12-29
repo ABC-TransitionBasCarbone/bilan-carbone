@@ -238,6 +238,25 @@ export const addStudySite = async (
   })
 }
 
+export const hasEmissionSources = async (studyId: string, siteId: string, organizationId: string) => {
+  const study = await getStudyById(studyId, organizationId)
+  if (!study) {
+    return false
+  }
+
+  const studySite = study.sites.find((site) => site.site.id === siteId)
+  if (!studySite) {
+    return false
+  }
+
+  const emissionSources = study.emissionSources.find((emissionSource) => emissionSource.site.id === studySite.id)
+  if (!emissionSources) {
+    return false
+  }
+
+  return true
+}
+
 export const removeStudySite = async (studyId: string, organizationId: string, siteId: string) => {
   const organization = await getOrganizationWithSitesById(organizationId)
 

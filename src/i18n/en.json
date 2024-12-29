@@ -258,7 +258,12 @@
     "perimeter": {
       "dates": "from {startDate} to {endDate}",
       "title": "Perimeter on study: {name}",
-      "save": "Save"
+      "deleteDialog": {
+        "accept": "Yes",
+        "decline": "No",
+        "description": "It contains emission sources. All data will be permanently deleted.",
+        "title": "Are you sure you want to delete this site ?"
+      }
     },
     "results": {
       "type": "Type",

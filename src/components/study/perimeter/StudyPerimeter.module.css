@@ -1,3 +1,7 @@
 .dates {
   gap: 1rem;
 }
+
+.delete {
+  justify-content: flex-end;
+}

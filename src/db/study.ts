@@ -195,8 +195,11 @@ export const recreateStudySites = (studyId: string, newStudySites: Prisma.StudyS
 export const createStudySite = (data: Prisma.StudySiteCreateInput) => prismaClient.studySite.create({ data })
 
 export const deleteStudySite = async (studyId: string, siteId: string) => {
-  const res = await prismaClient.studySite.deleteMany({ where: { studyId, siteId } })
-  console.log('deleteStudySite res', res)
+  const site = await prismaClient.studySite.findFirst({ where: { studyId, siteId } })
+  if (site) {
+    await prismaClient.studyEmissionSource.deleteMany({ where: { siteId: site.id } })
+    await prismaClient.studySite.deleteMany({ where: { studyId, siteId } })
+  }
 }
 
 export const createContributorOnStudy = (

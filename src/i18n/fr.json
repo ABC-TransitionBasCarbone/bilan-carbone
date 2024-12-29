@@ -256,7 +256,13 @@
     "perimeter": {
       "dates": "Du {startDate} au {endDate}",
       "title": "Périmètre de l'étude : {name}",
-      "save": "Modifier"
+      "deleteDialog": {
+        "accept": "Oui",
+        "decline": "Non",
+        "delete": "Supprimer",
+        "description": "Il contient des sources d'emission. Toutes les données renseignées seront definitivement perdues.",
+        "title": "Êtes-vous sûr de vouloir supprimer ce site ?"
+      }
     },
     "results": {
       "type": "Type",
