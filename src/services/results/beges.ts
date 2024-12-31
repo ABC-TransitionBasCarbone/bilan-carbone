@@ -1,8 +1,9 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { EmissionSourceCaracterisation, ExportRule, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
 import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
+import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 const allRules = [
   '1.1',
@@ -142,13 +143,10 @@ export const computeBegesResult = (
     (acc, rule) => ({ ...acc, [rule]: [] }),
     {},
   )
-  const emissionSources =
-    site === 'all'
-      ? study.emissionSources
-      : study.emissionSources.filter((emissionSource) => emissionSource.site.id === site)
+  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, site)
 
-  emissionSources
-    .filter((emissionSource) => withDependencies || emissionSource.subPost !== SubPost.UtilisationEnDependance)
+  siteEmissionSources
+    .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .forEach((emissionSource) => {
       if (emissionSource.emissionFactor === null || !emissionSource.value || !emissionSource.validated) {
         return
