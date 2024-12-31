@@ -311,6 +311,7 @@
   "emissionFactors": {
     "add": "Ajouter un facteur d'émissions",
     "post": {
+      "total": "Total",
       "allPost": "Tout les postes",
       "allSubPost": "Tout les sous postes",
       "Energies": "Énergies",

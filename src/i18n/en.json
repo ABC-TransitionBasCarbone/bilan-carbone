@@ -313,6 +313,7 @@
   "emissionFactors": {
     "add": "Add an emission factor",
     "post": {
+      "total": "Total",
       "allPost": "All posts",
       "allSubPost": "All sub posts",
       "Energies": "Energies",
