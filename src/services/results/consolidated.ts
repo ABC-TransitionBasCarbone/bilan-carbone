@@ -6,17 +6,17 @@ import { Post, subPostsByPost } from '../posts'
 export type ResultsByPost = {
   post: Post | SubPost | 'total'
   value: number
-  numberOfEmissionSource?: number
-  numberOfValidatedEmissionSource?: number
+  numberOfEmissionSource: number
+  numberOfValidatedEmissionSource: number
   uncertainty?: number
-  subPosts?: ResultsByPost[]
+  subPosts: ResultsByPost[]
 }
 
-const computeUncertainty = (uncertaintyToReduce: ResultsByPost[], value: number) => {
+const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: number }[], value: number) => {
   return Math.exp(
     Math.sqrt(
       uncertaintyToReduce.reduce(
-        (acc, subPost) => acc + Math.pow(subPost.value / value, 2) * Math.pow(Math.log(subPost.uncertainty || 1), 2),
+        (acc, info) => acc + Math.pow(info.value / value, 2) * Math.pow(Math.log(info.uncertainty || 1), 2),
         0,
       ),
     ),
@@ -77,6 +77,8 @@ export const computeResultsByPost = (
       value,
       subPosts: [],
       uncertainty: computeUncertainty(postInfos, value),
+      numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),
+      numberOfValidatedEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfValidatedEmissionSource, 0),
     } as ResultsByPost,
   ]
 }
