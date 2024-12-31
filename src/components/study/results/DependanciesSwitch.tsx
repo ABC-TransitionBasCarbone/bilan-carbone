@@ -1,16 +1,16 @@
 import { FormControlLabel, Switch } from '@mui/material'
 import { useTranslations } from 'next-intl'
 interface Props {
-  withDependancies: boolean
+  withDependencies: boolean
   setWithDependancies: (value: boolean) => void
 }
-const DependanciesSwitch = ({ withDependancies, setWithDependancies }: Props) => {
+const DependanciesSwitch = ({ withDependencies, setWithDependancies }: Props) => {
   const t = useTranslations('study.results')
 
   return (
     <FormControlLabel
-      control={<Switch checked={withDependancies} onChange={(event) => setWithDependancies(event.target.checked)} />}
-      label={t(withDependancies ? 'withDependancies' : 'withoutDependancies')}
+      control={<Switch checked={withDependencies} onChange={(event) => setWithDependancies(event.target.checked)} />}
+      label={t(withDependencies ? 'withDependencies' : 'withoutDependancies')}
     />
   )
 }

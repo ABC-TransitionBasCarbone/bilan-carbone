@@ -46,7 +46,7 @@ const Result = ({ study, by, site }: Props) => {
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
-  const [withDependancies, setWithDependancies] = useState(true)
+  const [withDependencies, setWithDependancies] = useState(true)
 
   const selectorOptions = Object.values(Post)
 
@@ -54,12 +54,12 @@ const Result = ({ study, by, site }: Props) => {
     () =>
       by === 'Post'
         ? postXAxisList
-        : subPostsByPost[post].filter((subPost) => withDependancies || subPost !== SubPost.UtilisationEnDependance),
-    [post, by, withDependancies],
+        : subPostsByPost[post].filter((subPost) => withDependencies || subPost !== SubPost.UtilisationEnDependance),
+    [post, by, withDependencies],
   )
 
   const yData = useMemo(() => {
-    const computedResults = computeResultsByPost(study, tPost, site, withDependancies)
+    const computedResults = computeResultsByPost(study, tPost, site, withDependencies)
     if (by === 'Post') {
       if (computedResults.every((post) => post.value === 0)) {
         return []
@@ -73,10 +73,10 @@ const Result = ({ study, by, site }: Props) => {
         return []
       }
       return xAxis
-        .filter((subPost) => withDependancies || subPost !== SubPost.UtilisationEnDependance)
+        .filter((subPost) => withDependencies || subPost !== SubPost.UtilisationEnDependance)
         .map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
     }
-  }, [post, by, site, withDependancies])
+  }, [post, by, site, withDependencies])
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -129,7 +129,7 @@ const Result = ({ study, by, site }: Props) => {
     <>
       <div className={classNames(styles.header, 'align-center', 'mb1')}>
         <h3>{t(`by${by}`)}</h3>
-        <DependanciesSwitch withDependancies={withDependancies} setWithDependancies={setWithDependancies} />
+        <DependanciesSwitch withDependencies={withDependencies} setWithDependancies={setWithDependancies} />
       </div>
       {by === 'SubPost' && (
         <div className="flex mb1">

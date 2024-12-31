@@ -15,10 +15,13 @@ export type ResultsByPost = {
 const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: number }[], value: number) => {
   return Math.exp(
     Math.sqrt(
-      uncertaintyToReduce.reduce(
-        (acc, info) => acc + Math.pow(info.value / value, 2) * Math.pow(Math.log(info.uncertainty || 1), 2),
-        0,
-      ),
+      uncertaintyToReduce.reduce((acc, info) => {
+        if (!info.value) {
+          return acc
+        }
+
+        return acc + Math.pow(info.value / value, 2) * Math.pow(Math.log(info.uncertainty || 1), 2)
+      }, 0),
     ),
   )
 }
@@ -27,7 +30,7 @@ export const computeResultsByPost = (
   study: FullStudy,
   tPost: (key: string) => string,
   site: string,
-  withDependancies: boolean,
+  withDependencies: boolean,
 ) => {
   const siteEmissionSources =
     site === 'all'
@@ -38,7 +41,7 @@ export const computeResultsByPost = (
     .sort((a, b) => tPost(a).localeCompare(tPost(b)))
     .map((post) => {
       const subPosts = subPostsByPost[post]
-        .filter((subPost) => withDependancies || subPost !== SubPost.UtilisationEnDependance)
+        .filter((subPost) => withDependencies || subPost !== SubPost.UtilisationEnDependance)
         .map((subPost) => {
           const emissionSources = siteEmissionSources.filter(
             (emissionSource) => emissionSource.subPost === subPost && emissionSource.validated,

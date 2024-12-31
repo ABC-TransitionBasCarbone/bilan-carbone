@@ -264,8 +264,8 @@
       "post": "Post",
       "value": "Emissions (kgCO₂e)",
       "uncertainty": "Uncertainty",
-      "withDependancies": "With dependancies",
-      "withoutDependancies": "Without dependancies"
+      "withDependencies": "With dependencies",
+      "withoutDependancies": "Without dependencies"
     },
     "export": {
       "activityDataComment": "Activity data comment",

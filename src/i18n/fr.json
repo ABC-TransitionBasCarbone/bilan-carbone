@@ -262,7 +262,7 @@
       "post": "Poste",
       "value": "Émissions (kgCO₂e)",
       "uncertainty": "Incertitude",
-      "withDependancies": "Avec les dépendances",
+      "withDependencies": "Avec les dépendances",
       "withoutDependancies": "Sans les dépendances"
     },
     "export": {
