@@ -264,8 +264,8 @@
       "post": "Post",
       "value": "Emissions (kgCO₂e)",
       "uncertainty": "Uncertainty",
-      "withDependancies": "With dependancies",
-      "withoutDependancies": "Without dependancies"
+      "withDependencies": "With dependencies",
+      "withoutDependancies": "Without dependencies"
     },
     "export": {
       "activityDataComment": "Activity data comment",
@@ -313,6 +313,7 @@
   "emissionFactors": {
     "add": "Add an emission factor",
     "post": {
+      "total": "Total",
       "allPost": "All posts",
       "allSubPost": "All sub posts",
       "Energies": "Energies",

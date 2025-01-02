@@ -23,7 +23,7 @@ const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const t = useTranslations('study.results')
   const tExport = useTranslations('exports')
 
-  const [withDependancies, setWithDependancies] = useState(true)
+  const [withDependencies, setWithDependancies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
   const exports = useMemo(() => study.exports.map((e) => e.type), [study.exports])
   const { site, setSite } = useStudySite(study, true)
@@ -51,11 +51,11 @@ const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
             ))}
           </Select>
         </FormControl>
-        <DependanciesSwitch withDependancies={withDependancies} setWithDependancies={setWithDependancies} />
+        <DependanciesSwitch withDependencies={withDependencies} setWithDependancies={setWithDependancies} />
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
-          <ConsolidatedResultsTable study={study} site={site} withDependancies={withDependancies} />
+          <ConsolidatedResultsTable study={study} site={site} withDependencies={withDependencies} />
         )}
         {type === Export.Beges && (
           <BegesResultsTable
@@ -63,7 +63,7 @@ const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
             rules={rules.filter((rule) => rule.export === Export.Beges)}
             emissionFactorsWithParts={emissionFactorsWithParts}
             site={site}
-            withDependancies={withDependancies}
+            withDependencies={withDependencies}
           />
         )}
       </div>
