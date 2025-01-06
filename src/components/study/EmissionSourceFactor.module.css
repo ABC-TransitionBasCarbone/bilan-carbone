@@ -10,7 +10,8 @@
   border: var(--border);
   border-radius: 0.5rem;
   z-index: 2;
-  overflow: hidden;
+  overflow: scroll;
+  max-height: 16rem;
 }
 
 .suggestion {

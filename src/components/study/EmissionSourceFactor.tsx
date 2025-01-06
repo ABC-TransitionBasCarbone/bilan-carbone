@@ -78,7 +78,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
         ? fuse
             .search(value)
             .map(({ item }) => item)
-            .slice(0, 10)
+            .slice(0, 30)
         : [],
     )
   }, [fuse, value])
@@ -144,12 +144,10 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>
           ))}
-          {results.length === 0 && (
-            <button className={classNames(styles.suggestion, 'align-center')} onClick={() => setAdvancedSearch(true)}>
-              <SearchIcon />
-              {t('noResults')}
-            </button>
-          )}
+          <button className={classNames(styles.suggestion, 'align-center')} onClick={() => setAdvancedSearch(true)}>
+            <SearchIcon />
+            {results.length === 0 ? t('noResults') : t('seeMore')}
+          </button>
         </div>
       )}
       {advancedSearch && (
