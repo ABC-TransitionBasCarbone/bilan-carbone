@@ -1,6 +1,7 @@
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { getQualityRating } from '@/services/uncertainty'
+import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
@@ -131,7 +132,13 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
               }}
             >
               <p className={styles.header}>
-                {result.metaData?.title} - {result.location} - {result.totalCo2} kgCO₂e/
+                {displayOnlyExistingDataWithDash([
+                  result.metaData?.title,
+                  result.metaData?.frontiere,
+                  result.location,
+                  result.totalCo2,
+                ])}{' '}
+                kgCO₂e/
                 {tUnits(result.unit)}
               </p>
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
@@ -147,6 +154,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
       )}
       {advancedSearch && (
         <EmissionSourceFactorDialog
+          open={advancedSearch}
           close={() => setAdvancedSearch(false)}
           emissionFactors={emissionFactors}
           selectEmissionFactor={(emissionFactor) => {
