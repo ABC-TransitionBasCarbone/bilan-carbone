@@ -27,6 +27,10 @@ describe('Create emission factor', () => {
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
 
+    cy.getByTestId('emission-factor-search-input').within(() => {
+      cy.get('input').type('My new FE')
+    })
+
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new FE')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '12 kgCO₂e/GWh')
 
@@ -94,6 +98,10 @@ describe('Create emission factor', () => {
     cy.wait('@create')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
+
+    cy.getByTestId('emission-factor-search-input').within(() => {
+      cy.get('input').type('My new detailed FE')
+    })
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new detailed FE')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '37 kgCO₂e/GWh')
   })
@@ -156,6 +164,11 @@ describe('Create emission factor', () => {
     cy.wait('@create')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
+
+    cy.getByTestId('emission-factor-search-input').within(() => {
+      cy.get('input').type('My new multiple FE')
+    })
+
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new multiple FE')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '21 kgCO₂e/GWh')
   })
@@ -244,6 +257,11 @@ describe('Create emission factor', () => {
     cy.wait('@create')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
+
+    cy.getByTestId('emission-factor-search-input').within(() => {
+      cy.get('input').type('My new multiple detailed FE')
+    })
+
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new multiple detailed FE')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '81 kgCO₂e/GWh')
   })
@@ -399,6 +417,11 @@ describe('Create emission factor', () => {
     cy.wait('@create')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)
+
+    cy.getByTestId('emission-factor-search-input').within(() => {
+      cy.get('input').type('My new FE without parts')
+    })
+
     cy.getByTestId('cell-emission-name').first().should('have.text', 'My new FE without parts')
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '144 kgCO₂e/GWh')
   })
