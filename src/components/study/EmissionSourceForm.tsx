@@ -88,11 +88,14 @@ const EmissionSourceForm = ({
             type="number"
             data-testid="emission-source-value-da"
             defaultValue={emissionSource.value}
-            onBlur={(event) => update('value', Number(event.target.value))}
+            onBlur={(event) => (
+              Number(event.target.value) < 0 && (event.target.value = ''), update('value', Number(event.target.value))
+            )}
             label={`${t('form.value')} *`}
             slotProps={{
+              htmlInput: { min: 0 },
+              input: { onWheel: (event) => ((event.target as HTMLInputElement).blur(), console.log(event.target)) },
               inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
-              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
             }}
           />
           {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
