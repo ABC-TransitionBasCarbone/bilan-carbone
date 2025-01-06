@@ -685,6 +685,7 @@
   "emissionSource": {
     "advancedSearch": "Advanced search",
     "noResults": "Search with more filters",
+    "seeMore": "...See more and search with more filters",
     "deleteDialog": {
       "delete": "Delete this emission source",
       "title": "Are you sur you want to delete this emission source?",

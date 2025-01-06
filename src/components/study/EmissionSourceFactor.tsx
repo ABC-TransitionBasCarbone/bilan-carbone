@@ -1,6 +1,7 @@
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { getQualityRating } from '@/services/uncertainty'
+import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
@@ -77,7 +78,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
         ? fuse
             .search(value)
             .map(({ item }) => item)
-            .slice(0, 10)
+            .slice(0, 30)
         : [],
     )
   }, [fuse, value])
@@ -131,22 +132,27 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
               }}
             >
               <p className={styles.header}>
-                {result.metaData?.title} - {result.location} - {result.totalCo2} kgCO₂e/
+                {displayOnlyExistingDataWithDash([
+                  result.metaData?.title,
+                  result.metaData?.frontiere,
+                  result.location,
+                  result.totalCo2,
+                ])}{' '}
+                kgCO₂e/
                 {tUnits(result.unit)}
               </p>
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>
           ))}
-          {results.length === 0 && (
-            <button className={classNames(styles.suggestion, 'align-center')} onClick={() => setAdvancedSearch(true)}>
-              <SearchIcon />
-              {t('noResults')}
-            </button>
-          )}
+          <button className={classNames(styles.suggestion, 'align-center')} onClick={() => setAdvancedSearch(true)}>
+            <SearchIcon />
+            {results.length === 0 ? t('noResults') : t('seeMore')}
+          </button>
         </div>
       )}
       {advancedSearch && (
         <EmissionSourceFactorDialog
+          open={advancedSearch}
           close={() => setAdvancedSearch(false)}
           emissionFactors={emissionFactors}
           selectEmissionFactor={(emissionFactor) => {

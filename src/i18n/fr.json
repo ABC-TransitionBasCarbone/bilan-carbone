@@ -685,6 +685,7 @@
   "emissionSource": {
     "advancedSearch": "Recherche avancée",
     "noResults": "Rechercher avec plus de filtres",
+    "seeMore": "...Voir plus et rechercher avec plus de filtres",
     "deleteDialog": {
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
