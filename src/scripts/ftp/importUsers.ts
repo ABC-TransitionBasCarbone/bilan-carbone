@@ -19,12 +19,27 @@ export const getUsersFromFTP = async () => {
   const fileName = process.env.FTP_FILE_NAME || ''
 
   const users: Prisma.UserCreateManyInput[] = []
-  const parseStream = parse({ delimiter: ',', columns: true, bom: true })
-    .on('data', (value) => {
+  const parseStream = parse({ delimiter: ';', columns: true, bom: true })
+    .on('data', async (value) => {
       if (users.length % 10 === 0) {
         console.log(`Processed ${users.length} lines...`)
       }
       const email = value['User Email']
+
+      const siretValue = value['SIRET']
+      const SIRET = /^\d{14}$/
+      let organizationId = null
+
+      if (siretValue && SIRET.test(siretValue)) {
+        const result = await prismaClient.organization.findFirst({
+          where: { siret: siretValue },
+        }).catch((err) => {
+        })
+        if (result) {
+          organizationId = result.id
+        }
+      }
+
       users.push({
         email,
         role: Role.DEFAULT,
@@ -32,6 +47,7 @@ export const getUsersFromFTP = async () => {
         lastName: email,
         isActive: false,
         isValidated: false,
+        organizationId: organizationId
       })
     })
     .on('end', async () => {

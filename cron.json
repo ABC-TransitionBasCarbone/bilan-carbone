@@ -1,8 +1,8 @@
 {
-    "jobs": [
-        {
-            "command": "0 0 * * * yarn user:import",
-            "description": "Import users from FTP server at midnight"
-        }
-    ]
+  "jobs": [
+    {
+      "command": "0 0 * * * yarn user:import",
+      "description": "Import users from FTP server at midnight"
+    }
+  ]
 }
