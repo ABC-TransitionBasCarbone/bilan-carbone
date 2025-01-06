@@ -50,6 +50,7 @@ export const getUsersFromFTP = async () => {
 
       await prismaClient.user.createMany({ data: users, skipDuplicates: true })
       console.log(`Done! ${users.length} users imported.`)
+      client.close()
     })
     .on('error', (err) => {
       console.error('Error during parsing:', err)
