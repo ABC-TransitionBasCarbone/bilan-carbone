@@ -10,7 +10,7 @@ import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
-import DependanciesSwitch from './DependanciesSwitch'
+import DependenciesSwitch from './DependenciesSwitch'
 import styles from './ResultsTables.module.css'
 
 interface Props {
@@ -23,7 +23,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const t = useTranslations('study.results')
   const tExport = useTranslations('exports')
 
-  const [withDependencies, setWithDependancies] = useState(true)
+  const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
   const exports = useMemo(() => study.exports.map((e) => e.type), [study.exports])
   const { site, setSite } = useStudySite(study, true)
@@ -51,11 +51,11 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
             ))}
           </Select>
         </FormControl>
-        <DependanciesSwitch withDependencies={withDependencies} setWithDependancies={setWithDependancies} />
+        <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
-          <ConsolidatedResults study={study} site={site} withDependancies={withDependencies} />
+          <ConsolidatedResults study={study} site={site} withDependencies={withDependencies} />
         )}
         {type === Export.Beges && (
           <BegesResultsTable

@@ -265,7 +265,7 @@
       "value": "Émissions (kgCO₂e)",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec les dépendances",
-      "withoutDependancies": "Sans les dépendances"
+      "withoutDependencies": "Sans les dépendances"
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",

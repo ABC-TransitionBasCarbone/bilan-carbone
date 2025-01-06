@@ -5,16 +5,16 @@ import ConsolidatedResultsTable from './ConsolidatedResultsTable'
 interface Props {
   study: FullStudy
   site: string
-  withDependancies: boolean
+  withDependencies: boolean
 }
 
-const ConsolidatedResults = ({ study, site, withDependancies }: Props) => {
+const ConsolidatedResults = ({ study, site, withDependencies }: Props) => {
   return (
     <>
       <div className="mb1">
-        <ResultsContainerForStudy study={study} site={site} withDependancies={withDependancies} />
+        <ResultsContainerForStudy study={study} site={site} withDependencies={withDependencies} />
       </div>
-      <ConsolidatedResultsTable study={study} site={site} withDependencies={withDependancies} />
+      <ConsolidatedResultsTable study={study} site={site} withDependencies={withDependencies} />
     </>
   )
 }

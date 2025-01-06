@@ -12,14 +12,14 @@ import Chart from 'chart.js/auto'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import DependanciesSwitch from './DependanciesSwitch'
+import DependenciesSwitch from './DependenciesSwitch'
 import styles from './Result.module.css'
 
 interface Props {
   study: FullStudy
   by: 'Post' | 'SubPost'
   site: string
-  withDependanciesGlobal?: boolean
+  withDependenciesGlobal?: boolean
 }
 
 const postXAxisList = [
@@ -35,7 +35,7 @@ const postXAxisList = [
   Post.FinDeVie,
 ]
 
-const Result = ({ study, by, site, withDependanciesGlobal }: Props) => {
+const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
   const tCaracterisations = useTranslations('categorisations')
@@ -48,14 +48,14 @@ const Result = ({ study, by, site, withDependanciesGlobal }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   const [withDependencies, setWithDependencies] = useState(
-    withDependanciesGlobal === undefined ? true : withDependanciesGlobal,
+    withDependenciesGlobal === undefined ? true : withDependenciesGlobal,
   )
 
   useEffect(() => {
-    if (withDependanciesGlobal !== undefined) {
-      setWithDependencies(withDependanciesGlobal)
+    if (withDependenciesGlobal !== undefined) {
+      setWithDependencies(withDependenciesGlobal)
     }
-  }, [withDependanciesGlobal])
+  }, [withDependenciesGlobal])
 
   const selectorOptions = Object.values(Post)
 
@@ -138,8 +138,8 @@ const Result = ({ study, by, site, withDependanciesGlobal }: Props) => {
     <>
       <div className={classNames(styles.header, 'align-center', 'mb1')}>
         <h3>{t(`by${by}`)}</h3>
-        {withDependanciesGlobal === undefined && (
-          <DependanciesSwitch withDependencies={withDependencies} setWithDependancies={setWithDependencies} />
+        {withDependenciesGlobal === undefined && (
+          <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
         )}
       </div>
       {by === 'SubPost' && (
