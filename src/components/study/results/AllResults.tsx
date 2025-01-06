@@ -1,7 +1,9 @@
 'use client'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { downloadStudyResults } from '@/services/study'
+import DownloadIcon from '@mui/icons-material/Download'
+import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { ControlMode, Export, ExportRule } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -21,6 +23,8 @@ interface Props {
 
 const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const t = useTranslations('study.results')
+  const tOrga = useTranslations('study.organization')
+  const tPost = useTranslations('emissionFactors.post')
   const tExport = useTranslations('exports')
 
   const [withDependencies, setWithDependencies] = useState(true)
@@ -56,6 +60,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
             ))}
           </Select>
         </FormControl>
+        <Button onClick={() => downloadStudyResults(study, tPost, tOrga)}>
+          <DownloadIcon />
+        </Button>
         <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
       </div>
       <div className="mt1">

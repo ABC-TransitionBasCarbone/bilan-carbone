@@ -2,11 +2,13 @@ import { FullStudy } from '@/db/study'
 import { Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
+import xlsx from 'node-xlsx'
 import { EmissionFactorWithMetaData } from './emissionFactors'
 import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
+import { computeResultsByPost } from './results/consolidated'
 import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
 import {
   getEmissionSourcesGlobalUncertainty,
@@ -285,4 +287,29 @@ export const downloadStudyEmissionSources = async (
     'Study',
   )
   downloadCSV(csvContent, fileName)
+}
+export const downloadStudyResults = (
+  study: FullStudy,
+  tPost: ReturnType<typeof useTranslations>,
+  tOrga: ReturnType<typeof useTranslations>,
+) => {
+  const data = []
+
+  const exportList = [{ type: 'consolidé' }, ...study.exports]
+  const siteList = [
+    { name: tOrga('allSites'), id: 'all' },
+    ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
+  ]
+
+  for (const exp of exportList) {
+    const dataForExport = []
+    for (const site of siteList) {
+      dataForExport.push([site.name])
+      dataForExport.push(computeResultsByPost(study, tPost, site.id, true))
+      dataForExport.push([])
+    }
+    data.push({ name: exp.type, data: dataForExport, options: {} })
+  }
+
+  const buffer = xlsx.build(data)
 }
