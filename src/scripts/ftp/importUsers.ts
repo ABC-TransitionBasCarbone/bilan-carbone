@@ -20,25 +20,11 @@ export const getUsersFromFTP = async () => {
 
   const users: Prisma.UserCreateManyInput[] = []
   const parseStream = parse({ delimiter: ';', columns: true, bom: true })
-    .on('data', async (value) => {
+    .on('data', (value) => {
       if (users.length % 10 === 0) {
         console.log(`Processed ${users.length} lines...`)
       }
       const email = value['User Email']
-
-      const siretValue = value['SIRET']
-      const SIRET = /^\d{14}$/
-      let organizationId = null
-
-      if (siretValue && SIRET.test(siretValue)) {
-        const result = await prismaClient.organization.findFirst({
-          where: { siret: siretValue },
-        }).catch((err) => {
-        })
-        if (result) {
-          organizationId = result.id
-        }
-      }
 
       users.push({
         email,
@@ -47,14 +33,23 @@ export const getUsersFromFTP = async () => {
         lastName: email,
         isActive: false,
         isValidated: false,
-        organizationId: organizationId
+        organizationId: value['SIRET'],
       })
     })
     .on('end', async () => {
       console.log('Parsing complete, saving users to database...')
+
+      for (const user of users) {
+        if (user.organizationId) {
+          const result = await prismaClient.organization.findFirst({
+            where: { siret: { startsWith: user.organizationId } },
+          })
+          user.organizationId = result?.id
+        }
+      }
+
       await prismaClient.user.createMany({ data: users, skipDuplicates: true })
       console.log(`Done! ${users.length} users imported.`)
-      client.close()
     })
     .on('error', (err) => {
       console.error('Error during parsing:', err)
