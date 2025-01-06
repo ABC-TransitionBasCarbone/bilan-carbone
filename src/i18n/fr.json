@@ -64,7 +64,9 @@
         "3": "Fin de vie",
         "4": "Investissements"
       },
-      "6": { "1": "Autres émissions indirectes" }
+      "6": {
+        "1": "Autres émissions indirectes"
+      }
     },
     "other": "Autres gaz",
     "total": "Total",
@@ -745,7 +747,11 @@
   },
   "error": {
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
-    "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support."
+    "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support.",
+    "error": "Une erreur s'est produite...",
+    "try": "Essayez de revenir sur ",
+    "homePage": "la page d'accueil",
+    "contactSupport": "Si cela ne fonctionne pas, contactez notre support à "
   },
   "transition": {
     "organizations": "Organisations",

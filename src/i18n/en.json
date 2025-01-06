@@ -747,7 +747,11 @@
   },
   "error": {
     "Not authorized": "You are not allowed to do this action",
-    "default": "Something went wrong ..., please try again. If the problem persists, please contact support"
+    "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
+    "error": "Something went wrong ...",
+    "try": "Try returning to ",
+    "homePage": "the homepage",
+    "contactSupport": "If this does not work, contact our support at "
   },
   "transition": {
     "organizations": "Organizations",
