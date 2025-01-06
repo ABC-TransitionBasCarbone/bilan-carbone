@@ -41,16 +41,15 @@ export const computeResultsByPost = (
       const subPosts = subPostsByPost[post]
         .filter((subPost) => filterWithDependencies(subPost, withDependencies))
         .map((subPost) => {
-          const emissionSources = siteEmissionSources.filter(
-            (emissionSource) => emissionSource.subPost === subPost && emissionSource.validated,
-          )
+          const emissionSources = siteEmissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
+          const validatedEmissionSources = emissionSources.filter((emissionSource) => emissionSource.validated)
 
           return {
             post: subPost,
-            value: getEmissionSourcesTotalCo2(emissionSources),
+            value: getEmissionSourcesTotalCo2(validatedEmissionSources),
             numberOfEmissionSource: emissionSources.length,
-            numberOfValidatedEmissionSource: emissionSources.filter((es) => es.validated).length,
-            uncertainty: sumEmissionSourcesUncertainty(emissionSources),
+            numberOfValidatedEmissionSource: validatedEmissionSources.length,
+            uncertainty: sumEmissionSourcesUncertainty(validatedEmissionSources),
           }
         })
         .filter((subPost) => subPost.numberOfEmissionSource > 0)
