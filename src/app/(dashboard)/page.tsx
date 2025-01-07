@@ -4,11 +4,11 @@ import UserView from '@/components/home/UserView'
 
 export const revalidate = 0
 
-const Home = async (props: UserProps) => {
+const Home = async ({ user }: UserProps) => {
   return (
     <>
       <Block>
-        <UserView user={props.user} />
+        <UserView user={user} />
       </Block>
     </>
   )

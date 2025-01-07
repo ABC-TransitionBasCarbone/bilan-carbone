@@ -29,6 +29,7 @@ const withStudy = (WrappedComponent: React.ComponentType<any & UserProps & Study
 
     return <WrappedComponent {...props} study={study} />
   }
+
   Component.displayName = 'WithStudy'
   return Component
 }
