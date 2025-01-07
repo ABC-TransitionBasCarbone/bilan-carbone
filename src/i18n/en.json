@@ -268,7 +268,17 @@
     "perimeter": {
       "dates": "from {startDate} to {endDate}",
       "title": "Perimeter on study: {name}",
-      "save": "Save"
+      "save": "Save",
+      "editSites": "Edit sites list",
+      "cancelEditSites": "Cancel modification",
+      "validSites": "Validate changes",
+      "deleteDialog": {
+        "accept": "Yes",
+        "decline": "No",
+        "delete": "Delete",
+        "description": "{count, plural, =1 {It contains} other {Some of them contain}} emission sources. All registered data will be definitively lost.",
+        "title": "Are you sure you want to delete {count, plural, =1 {this site} other {these sites}} ?"
+      }
     },
     "results": {
       "type": "Type",

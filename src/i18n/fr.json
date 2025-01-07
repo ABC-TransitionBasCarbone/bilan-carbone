@@ -268,7 +268,17 @@
     "perimeter": {
       "dates": "Du {startDate} au {endDate}",
       "title": "Périmètre de l'étude : {name}",
-      "save": "Modifier"
+      "save": "Modifier",
+      "editSites": "Modifier la liste de sites",
+      "cancelEditSites": "Annuler la modification",
+      "validSites": "Valider les changements",
+      "deleteDialog": {
+        "accept": "Oui",
+        "decline": "Non",
+        "delete": "Supprimer",
+        "description": "{count, plural, =1 {Il contient} other {Certains contiennent}} des sources d'emission. Toutes les données renseignées seront definitivement perdues.",
+        "title": "Êtes-vous sûr de vouloir supprimer {count, plural, =1 {ce site} other {ces sites}} ?"
+      }
     },
     "results": {
       "type": "Type",
