@@ -74,7 +74,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
     },
   })
 
-  const sites = siteForm.watch('sites').sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0))
+  const sites = siteForm.watch('sites')
   const disabledUpdateButton = isEditing && sites.every((site) => !site.selected)
 
   useEffect(() => {
@@ -148,8 +148,10 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         <>
           <EditSites sites={sites} form={siteForm} />
           <div className="mt1 justify-between">
-            <Button onClick={() => setIsEditing(false)}>{t('cancelEditSites')}</Button>
-            <Button disabled={disabledUpdateButton} onClick={onSitesSubmit}>
+            <Button data-testid="cancel-edit-study-sites" onClick={() => setIsEditing(false)}>
+              {t('cancelEditSites')}
+            </Button>
+            <Button data-testid="confirm-edit-study-sites" disabled={disabledUpdateButton} onClick={onSitesSubmit}>
               {t('validSites')}
             </Button>
           </div>
@@ -158,7 +160,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         <>
           <Sites studyId={study.id} sites={study.sites.map((site) => ({ ...site, name: site.site.name }))} />
           <div className="mt1">
-            <Button disabled={disabledUpdateButton} onClick={() => setIsEditing(true)}>
+            <Button data-testid="edit-study-sites" onClick={() => setIsEditing(true)}>
               {t('editSites')}
             </Button>
           </div>
