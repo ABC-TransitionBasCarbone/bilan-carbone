@@ -720,6 +720,7 @@
       "caracterisation": "Caractérisation",
       "emissionFactor": "Facteur d'émission",
       "value": "Valeur donnée d'activité",
+      "sign": "Valeur uniquement positive",
       "source": "Source",
       "type": "Type",
       "depreciationPeriod": "Durée d'amortissement",
