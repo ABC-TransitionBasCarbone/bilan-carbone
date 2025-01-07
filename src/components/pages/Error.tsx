@@ -8,13 +8,11 @@ const Error = () => {
   const t = useTranslations('error')
   return (
     <Block title={t('error')} as="h1">
-      <div>
-        {t('try')} <Link href="/">{t('homePage')}</Link>.
-      </div>
-      <div>
-        {t('contactSupport')}
-        <Link href="mailto:support@abc-transitionbascarbone.fr">support@abc-transitionbascarbone.fr</Link>
-      </div>
+      {t.rich('contactSupport', {
+        p: (children) => <p>{children}</p>,
+        link: (children) => <Link href="/">{children}</Link>,
+        m: (children) => <Link href="mailto:support@abc-transitionbascarbone.fr">{children}</Link>
+      })}
     </Block>
   )
 }

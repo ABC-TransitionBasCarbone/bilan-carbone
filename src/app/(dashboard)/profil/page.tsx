@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 const Profile = () => {
+  throw new Error('use client')
   const t = useTranslations('profile')
   return (
     <Block title={t('title')} as="h1">
