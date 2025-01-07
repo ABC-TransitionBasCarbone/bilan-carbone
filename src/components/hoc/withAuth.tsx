@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import NotFound from '@/components/pages/NotFound'
 import { auth } from '@/services/auth'
 import { User } from 'next-auth'
@@ -8,7 +7,9 @@ export type UserProps = {
   user: User
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const withAuth = (WrappedComponent: React.ComponentType<any & UserProps>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any) => {
     const session = await auth()
     if (!session || !session.user) {

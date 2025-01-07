@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import NotFound from '@/components/pages/NotFound'
 import { FullStudy, getStudyById } from '@/db/study'
 import React from 'react'
@@ -14,7 +13,9 @@ interface Props {
   }>
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const withStudy = (WrappedComponent: React.ComponentType<any & UserProps & StudyProps>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & Props & UserProps) => {
     const params = await props.params
     const id = params.id
