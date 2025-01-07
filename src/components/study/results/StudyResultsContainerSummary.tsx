@@ -9,7 +9,7 @@ interface Props {
   withDependencies?: boolean
 }
 
-const ResultsContainerForStudy = ({ study, site, withDependencies }: Props) => {
+const StudyResultsContainerSummary = ({ study, site, withDependencies }: Props) => {
   return (
     <Box>
       {withDependencies === undefined && <h2 className={styles.studyName}>{study.name}</h2>}
@@ -28,4 +28,4 @@ const ResultsContainerForStudy = ({ study, site, withDependencies }: Props) => {
   )
 }
 
-export default ResultsContainerForStudy
+export default StudyResultsContainerSummary

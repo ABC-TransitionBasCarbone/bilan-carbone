@@ -1,5 +1,5 @@
 import { FullStudy } from '@/db/study'
-import ResultsContainerForStudy from '../ResultsContainerForStudy'
+import StudyResultsContainerSummary from '../StudyResultsContainerSummary'
 import ConsolidatedResultsTable from './ConsolidatedResultsTable'
 
 interface Props {
@@ -12,7 +12,7 @@ const ConsolidatedResults = ({ study, site, withDependencies }: Props) => {
   return (
     <>
       <div className="mb1">
-        <ResultsContainerForStudy study={study} site={site} withDependencies={withDependencies} />
+        <StudyResultsContainerSummary study={study} site={site} withDependencies={withDependencies} />
       </div>
       <ConsolidatedResultsTable study={study} site={site} withDependencies={withDependencies} />
     </>

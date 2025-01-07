@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import Block from '../base/Block'
-import ResultsContainerForStudy from './results/ResultsContainerForStudy'
+import StudyResultsContainerSummary from './results/StudyResultsContainerSummary'
 import useStudySite from './site/useStudySite'
 import StudyDetailsHeader from './StudyDetailsHeader'
 
@@ -17,7 +17,7 @@ const StudyDetails = ({ study }: Props) => {
     <>
       <StudyDetailsHeader study={study} site={site} setSite={setSite} />
       <Block>
-        <ResultsContainerForStudy study={study} site={site} />
+        <StudyResultsContainerSummary study={study} site={site} />
       </Block>
     </>
   )
