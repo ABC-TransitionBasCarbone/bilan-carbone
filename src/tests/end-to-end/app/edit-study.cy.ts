@@ -7,7 +7,7 @@ describe('Edit study', () => {
   })
 
   it('Should be able to edit a study sites', () => {
-    cy.intercept('POST', '/etudes/*/perimetre/modifier').as('update')
+    cy.intercept('POST', '/etudes/*/perimetre').as('update')
     cy.login()
 
     cy.getByTestId('new-study').click()
@@ -92,9 +92,9 @@ describe('Edit study', () => {
       })
 
     // manage different sites count : may have to be scrolled (many sites) or may not be able to scroll (few sites)
-    cy.getByTestId('edit-study-sites-button').scrollIntoView({ ensureScrollable: false })
+    cy.getByTestId('confirm-edit-study-sites').scrollIntoView({ ensureScrollable: false })
     // edit button could be under the menu button
-    cy.getByTestId('edit-study-sites-button').click({ force: true })
+    cy.getByTestId('confirm-edit-study-sites').click({ force: true })
 
     cy.wait('@update')
 
