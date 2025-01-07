@@ -7,6 +7,7 @@ import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/mater
 import { EmissionSourceCaracterisation, EmissionSourceType } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 import { Path } from 'react-hook-form'
 import QualitySelect from '../form/QualitySelect'
 import DeleteEmissionSource from './DeleteEmissionSource'
@@ -35,6 +36,7 @@ const EmissionSourceForm = ({
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tCategorisations = useTranslations('categorisations')
+  const [error, setError] = useState('')
 
   return (
     <>
@@ -88,11 +90,17 @@ const EmissionSourceForm = ({
             type="number"
             data-testid="emission-source-value-da"
             defaultValue={emissionSource.value}
-            onBlur={(event) => update('value', Number(event.target.value))}
+            onBlur={(event) => (
+              Number(event.target.value) <= 0 && (setError(`${t('form.sign')}`), (event.target.value = '')),
+              update('value', Number(event.target.value))
+            )}
             label={`${t('form.value')} *`}
+            helperText={error}
+            error={!!error}
             slotProps={{
-              inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
+              htmlInput: { min: 0 },
               input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+              inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
             }}
           />
           {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
