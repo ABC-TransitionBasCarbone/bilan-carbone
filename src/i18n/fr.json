@@ -109,7 +109,9 @@
       "password": "Mot de passe",
       "forgotPassword": "Mot de passe oublié",
       "reset": "Réinitialiser",
-      "error": "Veuillez verifier votre email et votre mot de passe"
+      "error": "Veuillez verifier votre email et votre mot de passe",
+      "expired": "Ce lien de réinitialisation de mot de passe a expiré",
+      "backToHome": "Retour a l'accueil"
     }
   },
   "navigation": {

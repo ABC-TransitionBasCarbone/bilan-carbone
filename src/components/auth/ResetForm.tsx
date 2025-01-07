@@ -1,12 +1,13 @@
 'use client'
 
-import { reset } from '@/services/serverFunctions/auth'
+import { checkToken, reset } from '@/services/serverFunctions/auth'
 import { TextField } from '@mui/material'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { FormEvent, useEffect, useState } from 'react'
 import Button from '../base/Button'
+import ResetAlreadyUsed from '../pages/ResetAlreadyUsed'
 import authStyles from './Auth.module.css'
 
 interface Props {
@@ -16,6 +17,12 @@ interface Props {
 
 const ResetForm = ({ user, token }: Props) => {
   useEffect(() => {
+    checkToken(token).then((resetAlreadyUsed) => {
+      setResetAlreadyUsed(resetAlreadyUsed)
+    })
+  }, [token])
+
+  useEffect(() => {
     if (user) {
       signOut({ redirect: false })
     }
@@ -24,13 +31,16 @@ const ResetForm = ({ user, token }: Props) => {
   const t = useTranslations('login.form')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [resetAlreadyUsed, setResetAlreadyUsed] = useState(false)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     await reset(email, password, token)
   }
 
-  return (
+  return resetAlreadyUsed ? (
+    <ResetAlreadyUsed />
+  ) : (
     <form onSubmit={onSubmit} className={authStyles.form}>
       <TextField
         data-testid="input-email"

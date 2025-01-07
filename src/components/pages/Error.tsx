@@ -4,9 +4,8 @@ import Block from '@/components/base/Block'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
-export default function Error() {
+const Error = () => {
   const t = useTranslations('error')
-
   return (
     <Block title={t('error')} as="h1">
       <div>
@@ -19,3 +18,5 @@ export default function Error() {
     </Block>
   )
 }
+
+export default Error
