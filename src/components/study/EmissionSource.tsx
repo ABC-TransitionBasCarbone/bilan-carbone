@@ -159,7 +159,7 @@ const EmissionSource = ({
         </div>
         <div className={classNames(styles.infosRight, 'flex')}>
           <div className="flex-col">
-            {emissionSource.value && (
+            {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
               <>
                 <p>
                   {formatNumber(emissionSource.value, 5)} {selectedFactor && tUnits(selectedFactor.unit)}
