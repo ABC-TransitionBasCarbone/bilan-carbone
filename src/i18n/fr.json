@@ -240,8 +240,7 @@
         "create": "Ajouter la personne",
         "validation": {
           "email": "Veuillez renseigner un email valide",
-          "post": "Veuillez selectionner un poste",
-          "Required": "Veuillez renseigner un poste"
+          "Required": "Veuillez selectionner un poste"
         }
       },
       "contributorsTable": {
