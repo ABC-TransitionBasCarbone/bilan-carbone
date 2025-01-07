@@ -1,14 +1,14 @@
 import withAuth, { UserProps } from '@/components/hoc/withAuth'
-import AdminPage from '@/components/pages/Admin'
 import NotFound from '@/components/pages/NotFound'
+import SuperAdminPage from '@/components/pages/SuperAdmin'
 import { Role } from '@prisma/client'
 
-const Admin = async ({ user }: UserProps) => {
+const SuperAdmin = async ({ user }: UserProps) => {
   if (user.role !== Role.SUPER_ADMIN) {
     return <NotFound />
   }
 
-  return <AdminPage />
+  return <SuperAdminPage />
 }
 
-export default withAuth(Admin)
+export default withAuth(SuperAdmin)
