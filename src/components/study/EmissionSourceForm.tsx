@@ -91,7 +91,7 @@ const EmissionSourceForm = ({
             data-testid="emission-source-value-da"
             defaultValue={emissionSource.value}
             onBlur={(event) => (
-              Number(event.target.value) < 0 && (setError(`${t('form.sign')}`), (event.target.value = '')),
+              Number(event.target.value) <= 0 && (setError(`${t('form.sign')}`), (event.target.value = '')),
               update('value', Number(event.target.value))
             )}
             label={`${t('form.value')} *`}
