@@ -48,29 +48,29 @@ describe('Create study emission source', () => {
 
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
-      cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
+      cy.getByTestId('emission-source-value').should('have.text', '50 616 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
     cy.getByTestId('emission-source-result').should('exist')
     cy.getByTestId('emission-source-validated').should('exist')
-    cy.getByTestId('emission-source-result').should('have.text', 'Résultats :Émission :50616.00 kgCO₂e')
+    cy.getByTestId('emission-source-result').should('have.text', 'Résultats :Émission :50 616 kgCO₂e')
 
     cy.getByTestId('emission-source-reliability').click()
     cy.get('[data-value="4"]').click()
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
-      cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
+      cy.getByTestId('emission-source-value').should('have.text', '50 616 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Très bonne')
     })
     cy.getByTestId('emission-source-result').should(
       'have.text',
-      'Résultats :Émission :50616.00 kgCO₂eQualité :Très bonneIntervalle de confiance à 95% :[48019.73; 53352.64]Alpha :0.05',
+      'Résultats :Émission :50 616 kgCO₂eQualité :Très bonneIntervalle de confiance à 95% :[48 019,73; 53 352,64]Alpha :0,05',
     )
     cy.getByTestId('emission-source-technicalRepresentativeness').click()
     cy.get('[data-value="1"]').click()
     cy.getByTestId('emission-source-result').should(
       'have.text',
-      'Résultats :Émission :50616.00 kgCO₂eQualité :MauvaiseIntervalle de confiance à 95% :[25257.51; 101434.38]Alpha :1.00',
+      'Résultats :Émission :50 616 kgCO₂eQualité :MauvaiseIntervalle de confiance à 95% :[25 257,51; 101 434,38]Alpha :1',
     )
     cy.getByTestId('emission-source-geographicRepresentativeness').click()
     cy.get('[data-value="2"]').click()
@@ -83,7 +83,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-validated').click()
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', 'Validée')
-      cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
+      cy.getByTestId('emission-source-value').should('have.text', '50 616 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
     })
 
@@ -98,7 +98,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('new-emission-source').should('exist')
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
-      cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
+      cy.getByTestId('emission-source-value').should('have.text', '50 616 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
     })
     cy.getByTestId('emission-source-My emission source name').click()
@@ -121,7 +121,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('new-emission-source').should('not.exist')
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
-      cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
+      cy.getByTestId('emission-source-value').should('have.text', '50 616 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
     })
     cy.getByTestId('emission-source-My edited emission source name').click()
@@ -144,7 +144,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('new-emission-source').should('not.exist')
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
-      cy.getByTestId('emission-source-value').should('have.text', '50616.00 kgCO₂e')
+      cy.getByTestId('emission-source-value').should('have.text', '50 616 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
       cy.getByTestId('emission-source-contributor').should('not.exist')
     })
@@ -160,7 +160,7 @@ describe('Create study emission source', () => {
     cy.get('[data-testid="emission-source-value-da"] > .MuiInputBase-root > .MuiInputBase-input').blur()
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', 'À vérifier')
-      cy.getByTestId('emission-source-value').should('have.text', '87579.00 kgCO₂e')
+      cy.getByTestId('emission-source-value').should('have.text', '87 579 kgCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
       cy.getByTestId('emission-source-contributor').should('have.text', 'bc-contributor@yopmail.com')
     })
