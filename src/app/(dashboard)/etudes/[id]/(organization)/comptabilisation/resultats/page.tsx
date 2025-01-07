@@ -1,5 +1,6 @@
 import withAuth from '@/components/hoc/withAuth'
-import withStudy, { StudyProps } from '@/components/hoc/withStudy'
+import { StudyProps } from '@/components/hoc/withStudy'
+import withStudyNotContributor from '@/components/hoc/withStudyNotContributor'
 import ResultsPage from '@/components/pages/Results'
 import { getEmissionFactorsWithPartsInIds } from '@/db/emissionFactors'
 import { getExportRules } from '@/db/exportRule'
@@ -13,4 +14,4 @@ const ResultatsPages = async ({ study }: StudyProps) => {
   return <ResultsPage study={study} rules={rules} emissionFactorsWithParts={emissionFactorsWithParts} />
 }
 
-export default withAuth(withStudy(ResultatsPages))
+export default withAuth(withStudyNotContributor(ResultatsPages))

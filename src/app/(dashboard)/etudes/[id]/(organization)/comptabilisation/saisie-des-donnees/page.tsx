@@ -1,5 +1,6 @@
 import withAuth from '@/components/hoc/withAuth'
-import withStudyNotContributor, { StudyProps } from '@/components/hoc/withStudyNotContributor'
+import { StudyProps } from '@/components/hoc/withStudy'
+import withStudyNotContributor from '@/components/hoc/withStudyNotContributor'
 import StudyContributionPage from '@/components/pages/StudyContribution'
 
 const DataEntry = async ({ study }: StudyProps) => {
