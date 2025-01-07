@@ -11,7 +11,6 @@ import { useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../base/Button'
-import LinkButton from '../base/LinkButton'
 import { FormTextField } from '../form/TextField'
 import styles from './Sites.module.css'
 
@@ -21,7 +20,7 @@ interface Props {
   studyId?: string
 }
 
-const Sites = ({ sites, form, studyId }: Props) => {
+const Sites = ({ sites, form }: Props) => {
   const t = useTranslations('organization.sites')
 
   const columns = useMemo(() => {
@@ -157,17 +156,6 @@ const Sites = ({ sites, form, studyId }: Props) => {
           ))}
         </tbody>
       </table>
-      {!form && (
-        <div className="mt1 grow justify-end">
-          <LinkButton
-            href={`/etudes/${studyId}/perimetre/modifier`}
-            className="align-right"
-            data-testid="edit-study-sites"
-          >
-            {t('update')}
-          </LinkButton>
-        </div>
-      )}
     </div>
   )
 }

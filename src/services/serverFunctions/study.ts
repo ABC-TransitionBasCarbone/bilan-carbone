@@ -10,8 +10,8 @@ import {
   FullStudy,
   getStudiesFromSites,
   getStudyById,
-  recreateStudySites,
   updateStudy,
+  updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
 import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
@@ -205,14 +205,37 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) => {
+export const hasEmissionSources = async (studyId: string, siteId: string, organizationId: string) => {
+  const study = await getStudyById(studyId, organizationId)
+  if (!study) {
+    return false
+  }
+
+  const studySite = study.sites.find((site) => site.site.id === siteId)
+  if (!studySite) {
+    return false
+  }
+
+  const emissionSources = study.emissionSources.find((emissionSource) => emissionSource.site.id === studySite.id)
+  if (!emissionSources) {
+    return false
+  }
+
+  return true
+}
+
+export const changeStudySites = async (
+  studyId: string,
+  existingSiteIds: string[],
+  { organizationId, ...command }: ChangeStudySitesCommand,
+) => {
   const organization = await getOrganizationWithSitesById(organizationId)
 
   if (!organization) {
     return NOT_AUTHORIZED
   }
 
-  const newStudySites = command.sites
+  const selectedSites = command.sites
     .filter((site) => site.selected)
     .map((site) => {
       const organizationSite = organization.sites.find(
@@ -220,9 +243,8 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
       ) as OrganizationWithSites['sites'][0]
       return { studyId, siteId: site.id, etp: site.etp || organizationSite.etp, ca: site.ca || organizationSite.ca }
     })
-
   if (
-    newStudySites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.siteId))
+    selectedSites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.siteId))
   ) {
     return NOT_AUTHORIZED
   }
@@ -235,7 +257,13 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
   if (!canChangeSites(informations.user, informations.studyWithRights)) {
     return NOT_AUTHORIZED
   }
-  await recreateStudySites(studyId, newStudySites)
+
+  const deletedSites = existingSiteIds.filter(
+    (siteId) => !selectedSites.find((studySite) => studySite.siteId === siteId),
+  )
+  const addedSites = selectedSites.filter((studySite) => !existingSiteIds.includes(studySite.siteId))
+  const updatedSites = selectedSites.filter((studySite) => existingSiteIds.includes(studySite.siteId))
+  await updateStudySites(studyId, addedSites, deletedSites, updatedSites)
 }
 
 const getOrCreateUserAndSendStudyInvite = async (
