@@ -2,6 +2,7 @@
 
 import { OrganizationWithSites } from '@/db/user'
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
+import { formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -59,7 +60,7 @@ const Sites = ({ sites, form }: Props) => {
               }}
             />
           ) : (
-            getValue<number>()
+            formatNumber(getValue<number>())
           ),
       },
       {
@@ -81,7 +82,7 @@ const Sites = ({ sites, form }: Props) => {
               }}
             />
           ) : (
-            `${getValue<number>()}€`
+            `${formatNumber(getValue<number>())}€`
           ),
       },
     ] as ColumnDef<OrganizationWithSites['sites'][0]>[]

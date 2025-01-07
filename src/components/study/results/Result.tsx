@@ -5,6 +5,7 @@ import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { downloadStudyEmissionSources, downloadStudyPost } from '@/services/study'
+import { formatNumber } from '@/utils/number'
 import DownloadIcon from '@mui/icons-material/Download'
 import { MenuItem, Select } from '@mui/material'
 import { SubPost } from '@prisma/client'
@@ -94,7 +95,7 @@ const Result = ({ study, by, site }: Props) => {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              tooltip: { callbacks: { label: (context) => `${context.raw} kgCO₂e` } },
+              tooltip: { callbacks: { label: (context) => `${formatNumber(context.raw as number)} kgCO₂e` } },
               legend: { display: false },
             },
             scales: {

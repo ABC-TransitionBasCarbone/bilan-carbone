@@ -3,6 +3,7 @@
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getStandardDeviationRating } from '@/services/uncertainty'
+import { formatNumber } from '@/utils/number'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
@@ -56,7 +57,7 @@ const ConsolidatedResultsTable = ({ study, site, withDependencies }: Props) => {
         {
           header: t('value'),
           accessorKey: 'value',
-          cell: ({ getValue }) => <p className={styles.number}>{getValue<number>().toFixed(2)}</p>,
+          cell: ({ getValue }) => <p className={styles.number}>{formatNumber(getValue<number>())}</p>,
         },
       ] as ColumnDef<ResultsByPost>[],
     [t, tPost, tQuality],

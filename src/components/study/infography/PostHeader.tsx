@@ -1,4 +1,5 @@
 import { Post } from '@/services/posts'
+import { formatNumber } from '@/utils/number'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -20,7 +21,7 @@ export const PostHeader = ({ post, mainPost, emissionValue }: Props) => {
         <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
         <span>{t(post)}</span>
       </div>
-      <span>{emissionValue || 0} kgCO2e</span>
+      <span>{formatNumber(emissionValue || 0, 5)} kgCO2e</span>
     </div>
   )
 }
