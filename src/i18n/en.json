@@ -109,7 +109,9 @@
       "password": "Password",
       "forgotPassword": "Forgot password",
       "reset": "Reset",
-      "error": "Please check your email and your password"
+      "error": "Please check your email and your password",
+      "expired": "This password reset link has expired",
+      "backToHome": "Back to home"
     }
   },
   "navigation": {
@@ -753,9 +755,7 @@
     "Not authorized": "You are not allowed to do this action",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
-    "try": "Try returning to ",
-    "homePage": "the homepage",
-    "contactSupport": "If this does not work, contact our support at "
+    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m>.</p>"
   },
   "transition": {
     "organizations": "Organizations",

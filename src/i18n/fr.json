@@ -109,7 +109,9 @@
       "password": "Mot de passe",
       "forgotPassword": "Mot de passe oublié",
       "reset": "Réinitialiser",
-      "error": "Veuillez verifier votre email et votre mot de passe"
+      "error": "Veuillez verifier votre email et votre mot de passe",
+      "expired": "Ce lien de réinitialisation de mot de passe a expiré",
+      "backToHome": "Retour a l'accueil"
     }
   },
   "navigation": {
@@ -753,9 +755,7 @@
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
     "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support.",
     "error": "Une erreur s'est produite...",
-    "try": "Essayez de revenir sur ",
-    "homePage": "la page d'accueil",
-    "contactSupport": "Si cela ne fonctionne pas, contactez notre support à "
+    "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m>.</p>"
   },
   "transition": {
     "organizations": "Organisations",
