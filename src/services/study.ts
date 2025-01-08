@@ -288,6 +288,35 @@ export const downloadStudyEmissionSources = async (
   )
   downloadCSV(csvContent, fileName)
 }
+
+export const formatConsolidatedStudyResultsForExport = (
+  study: FullStudy,
+  siteList: { name: string; id: string }[],
+  tPost: ReturnType<typeof useTranslations>,
+  tQuality: ReturnType<typeof useTranslations>,
+) => {
+  const dataForExport = []
+
+  for (const site of siteList) {
+    const resultList = computeResultsByPost(study, tPost, site.id, true)
+
+    dataForExport.push([site.name])
+    dataForExport.push(['Poste', 'Incertitude', 'Valeur'])
+
+    for (const result of resultList) {
+      dataForExport.push([
+        tPost(result.post) ?? '',
+        result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
+        result.value ?? '',
+      ])
+    }
+
+    dataForExport.push([])
+  }
+
+  return dataForExport
+}
+
 export const downloadStudyResults = async (
   study: FullStudy,
   tPost: ReturnType<typeof useTranslations>,
@@ -296,32 +325,17 @@ export const downloadStudyResults = async (
 ) => {
   const data = []
 
-  const exportList = [{ type: 'consolidé' }, ...study.exports]
   const siteList = [
     { name: tOrga('allSites'), id: 'all' },
     ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
   ]
 
-  for (const exp of exportList) {
-    const dataForExport = []
-    for (const site of siteList) {
-      const resultList = computeResultsByPost(study, tPost, site.id, true)
+  data.push({
+    name: 'consolidé',
+    data: formatConsolidatedStudyResultsForExport(study, siteList, tPost, tQuality),
+    options: {},
+  })
 
-      dataForExport.push([site.name])
-      dataForExport.push(['Poste', 'Incertitude', 'Valeur'])
-
-      for (const result of resultList) {
-        dataForExport.push([
-          tPost(result.post) ?? '',
-          result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
-          result.value ?? '',
-        ])
-      }
-
-      dataForExport.push([])
-    }
-    data.push({ name: exp.type, data: dataForExport, options: {} })
-  }
   console.log(data)
   const buffer = await prepareExcel(data)
 
