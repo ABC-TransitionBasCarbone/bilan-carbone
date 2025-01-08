@@ -13,7 +13,7 @@ interface Props {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const withStudyNotContributor = (WrappedComponent: React.ComponentType<any & UserProps & StudyProps>) => {
+const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserProps & StudyProps>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & Props & UserProps) => {
     const params = await props.params
@@ -37,8 +37,8 @@ const withStudyNotContributor = (WrappedComponent: React.ComponentType<any & Use
     return <WrappedComponent {...props} study={study} />
   }
 
-  Component.displayName = 'withStudyNotContributor'
+  Component.displayName = 'WithStudyDetails'
   return Component
 }
 
-export default withStudyNotContributor
+export default WithStudyDetails
