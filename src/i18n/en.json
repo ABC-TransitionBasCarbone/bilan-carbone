@@ -503,7 +503,9 @@
     "validation": {
       "email": "Please enter a valid email",
       "firstName": "Please enter a first name",
-      "lastName": "Please enter a last name"
+      "lastName": "Please enter a last name",
+      "level": "Please enter a training level",
+      "role": "Please enter a role"
     }
   },
   "units": {

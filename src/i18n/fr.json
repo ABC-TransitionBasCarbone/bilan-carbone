@@ -503,7 +503,9 @@
     "validation": {
       "email": "Veuillez renseigner un email valide",
       "firstName": "Veuillez renseigner un prénom",
-      "lastName": "Veuillez renseigner un nom"
+      "lastName": "Veuillez renseigner un nom",
+      "level": "Veuillez renseigner un niveau de formation",
+      "role": "Veuillez renseigner un rôle"
     }
   },
   "units": {
