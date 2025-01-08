@@ -18,13 +18,13 @@ describe('Create organization', () => {
 
     cy.getByTestId('add-site-button').type('click')
     cy.getByTestId('edit-site-name').last().type('My new site 0')
-    cy.getByTestId('edit-site-etp').last().type('10')
-    cy.getByTestId('edit-site-ca').last().type('1000')
+    cy.getByTestId('organization-sites-etp').last().type('10')
+    cy.getByTestId('organization-sites-ca').last().type('1000')
 
     cy.getByTestId('add-site-button').type('click')
     cy.getByTestId('edit-site-name').last().type('My new site 1')
-    cy.getByTestId('edit-site-etp').last().type('20')
-    cy.getByTestId('edit-site-ca').last().type('2000')
+    cy.getByTestId('organization-sites-etp').last().type('20')
+    cy.getByTestId('organization-sites-ca').last().type('2000')
 
     cy.getByTestId('edit-organization-button').click()
     cy.wait('@update')
@@ -38,13 +38,13 @@ describe('Create organization', () => {
         cy.get('input').should('have.value', 'My new site 1')
       })
 
-    cy.getByTestId('edit-site-etp')
+    cy.getByTestId('organization-sites-etp')
       .last()
       .within(() => {
         cy.get('input').should('have.value', '20')
       })
 
-    cy.getByTestId('edit-site-ca')
+    cy.getByTestId('organization-sites-ca')
       .last()
       .within(() => {
         cy.get('input').should('have.value', '2000')
@@ -59,7 +59,7 @@ describe('Create organization', () => {
         cy.get('input').type('My new site')
       })
 
-    cy.getByTestId('edit-site-etp')
+    cy.getByTestId('organization-sites-etp')
       .last()
       .within(() => {
         cy.get('input').should('have.value', '10')
@@ -67,7 +67,7 @@ describe('Create organization', () => {
         cy.get('input').type('100')
       })
 
-    cy.getByTestId('edit-site-ca')
+    cy.getByTestId('organization-sites-ca')
       .last()
       .within(() => {
         cy.get('input').should('have.value', '1000')
@@ -86,13 +86,13 @@ describe('Create organization', () => {
         cy.get('input').should('have.value', 'My new site')
       })
 
-    cy.getByTestId('edit-site-etp')
+    cy.getByTestId('organization-sites-etp')
       .last()
       .within(() => {
         cy.get('input').should('have.value', '100')
       })
 
-    cy.getByTestId('edit-site-ca')
+    cy.getByTestId('organization-sites-ca')
       .last()
       .within(() => {
         cy.get('input').should('have.value', '10000')

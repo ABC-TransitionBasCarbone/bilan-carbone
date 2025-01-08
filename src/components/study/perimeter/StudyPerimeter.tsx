@@ -150,7 +150,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         withSelection
       />
       <div className={classNames('mt1', { 'justify-between': isEditing })}>
-        <Button data-testid="cancel-edit-study-sites" onClick={() => setIsEditing(!isEditing)}>
+        <Button data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`} onClick={() => setIsEditing(!isEditing)}>
           {t(isEditing ? 'cancelEditSites' : 'editSites')}
         </Button>
         {isEditing && (
