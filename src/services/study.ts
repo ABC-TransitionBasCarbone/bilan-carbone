@@ -316,7 +316,11 @@ export const formatConsolidatedStudyResultsForExport = (
     dataForExport.push([])
   }
 
-  return dataForExport
+  return {
+    name: 'Consolidé',
+    data: dataForExport,
+    options: {},
+  }
 }
 
 export const formatBegesStudyResultsForExport = async (
@@ -326,7 +330,10 @@ export const formatBegesStudyResultsForExport = async (
   tQuality: ReturnType<typeof useTranslations>,
   tBeges: ReturnType<typeof useTranslations>,
 ) => {
+  const lengthOfBeges = 33
   const dataForExport = []
+
+  const sheetOptions: { '!merges': object[] } = { '!merges': [] }
 
   const ids = study.emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
@@ -334,10 +341,20 @@ export const formatBegesStudyResultsForExport = async (
 
   const { rules, emissionFactorsWithParts } = await getInfosForBeges(ids)
 
-  for (const site of siteList) {
+  for (let i = 0; i < siteList.length; i++) {
+    const site = siteList[i]
     const resultList = computeBegesResult(study, rules, emissionFactorsWithParts, site.id, true)
 
-    console.log(resultList)
+    // Merge cells
+    sheetOptions['!merges'].push(
+      { s: { c: 0, r: 3 + i * lengthOfBeges }, e: { c: 0, r: 8 + i * lengthOfBeges } },
+      { s: { c: 0, r: 9 + i * lengthOfBeges }, e: { c: 0, r: 11 + i * lengthOfBeges } },
+      { s: { c: 0, r: 12 + i * lengthOfBeges }, e: { c: 0, r: 17 + i * lengthOfBeges } },
+      { s: { c: 0, r: 18 + i * lengthOfBeges }, e: { c: 0, r: 23 + i * lengthOfBeges } },
+      { s: { c: 0, r: 24 + i * lengthOfBeges }, e: { c: 0, r: 28 + i * lengthOfBeges } },
+      { s: { c: 0, r: 29 + i * lengthOfBeges }, e: { c: 0, r: 30 + i * lengthOfBeges } },
+    )
+
     dataForExport.push([site.name])
     dataForExport.push(['Règle', '', 'Emissions de GES'])
     dataForExport.push([
@@ -380,7 +397,7 @@ export const formatBegesStudyResultsForExport = async (
     dataForExport.push([])
   }
 
-  return dataForExport
+  return { name: 'BEGES', data: dataForExport, options: sheetOptions }
 }
 
 export const downloadStudyResults = async (
@@ -397,17 +414,9 @@ export const downloadStudyResults = async (
     ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
   ]
 
-  data.push({
-    name: 'consolidé',
-    data: formatConsolidatedStudyResultsForExport(study, siteList, tPost, tQuality),
-    options: {},
-  })
+  data.push(formatConsolidatedStudyResultsForExport(study, siteList, tPost, tQuality))
 
-  data.push({
-    name: 'BEGES',
-    data: await formatBegesStudyResultsForExport(study, siteList, tQuality, tBeges),
-    options: {},
-  })
+  data.push(await formatBegesStudyResultsForExport(study, siteList, tQuality, tBeges))
 
   const buffer = await prepareExcel(data)
 
