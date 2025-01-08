@@ -176,7 +176,8 @@ const EmissionSource = ({
             {selectedFactor && (
               <>
                 <p>
-                  {selectedFactor.metaData?.title} - {selectedFactor.location} - {selectedFactor.totalCo2} kgCO₂e/
+                  {selectedFactor.metaData?.title}
+                  {selectedFactor.location ? ` - ${selectedFactor.location}` : ''} - {selectedFactor.totalCo2} kgCO₂e/
                   {tUnits(selectedFactor.unit)}
                 </p>
                 {selectedFactorQualityRating && (

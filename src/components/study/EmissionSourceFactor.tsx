@@ -111,7 +111,8 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
         {selectedFactor && (
           <div data-testid="emission-source-factor">
             <p className={styles.header}>
-              {selectedFactor.metaData?.title} - {selectedFactor.location} - {selectedFactor.totalCo2} kgCO₂e/
+              {selectedFactor.metaData?.title}
+              {selectedFactor.location ? ` - ${selectedFactor.location}` : ''} - {selectedFactor.totalCo2} kgCO₂e/
               {tUnits(selectedFactor.unit)}{' '}
               {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
             </p>
