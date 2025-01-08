@@ -11,7 +11,11 @@ const Error = () => {
       {t.rich('contactSupport', {
         p: (children) => <p>{children}</p>,
         link: (children) => <Link href="/">{children}</Link>,
-        m: (children) => <Link href="mailto:support@abc-transitionbascarbone.fr">{children}</Link>,
+        m: (children) => (
+          <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>
+            {process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}
+          </Link>
+        ),
       })}
     </Block>
   )

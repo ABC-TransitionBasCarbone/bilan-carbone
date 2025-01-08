@@ -752,7 +752,7 @@
     "Not authorized": "You are not allowed to do this action",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
-    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m>support@abc-transitionbascarbone.fr</m>.</p>"
+    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m>.</p>"
   },
   "transition": {
     "organizations": "Organizations",

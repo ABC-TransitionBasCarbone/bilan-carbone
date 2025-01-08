@@ -18,9 +18,9 @@ interface Props {
 const ResetForm = ({ user, token }: Props) => {
   useEffect(() => {
     checkToken(token).then((resetAlreadyUsed) => {
-      setResetAlreadyUsed(resetAlreadyUsed)
+      setResetLinkAlreadyUsed(resetAlreadyUsed)
     })
-  }, [token])
+  }, [])
 
   useEffect(() => {
     if (user) {
@@ -31,16 +31,18 @@ const ResetForm = ({ user, token }: Props) => {
   const t = useTranslations('login.form')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [resetAlreadyUsed, setResetAlreadyUsed] = useState(false)
+  const [resetLinkAlreadyUsed, setResetLinkAlreadyUsed] = useState(false)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     await reset(email, password, token)
   }
 
-  return resetAlreadyUsed ? (
-    <ResetAlreadyUsed />
-  ) : (
+  if (resetLinkAlreadyUsed) {
+    return <ResetAlreadyUsed />
+  }
+
+  return (
     <form onSubmit={onSubmit} className={authStyles.form}>
       <TextField
         data-testid="input-email"
