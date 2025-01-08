@@ -26,6 +26,7 @@ const users = async () => {
   await prisma.contributors.deleteMany()
 
   await prisma.studySite.deleteMany()
+  await prisma.document.deleteMany()
   await prisma.study.deleteMany()
 
   await prisma.emissionFactorImportVersion.deleteMany()

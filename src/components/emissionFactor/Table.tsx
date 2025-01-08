@@ -1,6 +1,7 @@
 'use client'
 
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { formatNumber } from '@/utils/number'
 import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
@@ -115,7 +116,8 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
       },
       {
         header: t('value'),
-        accessorFn: (emissionFactor) => `${emissionFactor.totalCo2} kgCO₂e/${tUnits(emissionFactor.unit)}`,
+        accessorFn: (emissionFactor) =>
+          `${formatNumber(emissionFactor.totalCo2, 5)} kgCO₂e/${tUnits(emissionFactor.unit)}`,
       },
       {
         header: t('location'),

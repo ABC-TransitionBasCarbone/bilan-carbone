@@ -11,6 +11,7 @@ import {
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
+import { formatNumber } from '@/utils/number'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormControlLabel, Switch } from '@mui/material'
 import { EmissionSourceCaracterisation, StudyRole } from '@prisma/client'
@@ -146,7 +147,7 @@ const EmissionSource = ({
           <p data-testid="emission-source-status" className={classNames(styles.status, 'align-center')}>
             {t(`status.${status}`)}
             {(status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor) && (
-              <> - {getEmissionSourceCompletion(emissionSource, study) * 100}%</>
+              <> - {formatNumber(getEmissionSourceCompletion(emissionSource, study) * 100)}%</>
             )}
             {loading && (
               <>
@@ -158,10 +159,10 @@ const EmissionSource = ({
         </div>
         <div className={classNames(styles.infosRight, 'flex')}>
           <div className="flex-col">
-            {emissionSource.value && (
+            {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
               <>
                 <p>
-                  {emissionSource.value} {selectedFactor && tUnits(selectedFactor.unit)}
+                  {formatNumber(emissionSource.value, 5)} {selectedFactor && tUnits(selectedFactor.unit)}
                 </p>
                 {sourceRating && (
                   <p className={styles.status}>
@@ -188,7 +189,7 @@ const EmissionSource = ({
           </div>
           {emissionResults && (
             <div className="flex-col">
-              <p data-testid="emission-source-value">{`${emissionResults.emission.toFixed(2)} kgCO₂e`}</p>
+              <p data-testid="emission-source-value">{`${formatNumber(emissionResults.emission)} kgCO₂e`}</p>
               {emissionResults.standardDeviation && (
                 <p className={styles.status} data-testid="emission-source-quality">
                   {tQuality('name')}{' '}
@@ -255,7 +256,7 @@ const EmissionSource = ({
                 <div className={classNames(styles.row, 'flex')}>
                   <div>
                     <p>{t('results.emission')}</p>
-                    <p>{emissionResults.emission.toFixed(2)} kgCO₂e</p>
+                    <p>{formatNumber(emissionResults.emission)} kgCO₂e</p>
                   </div>
                   {sourceRating && (
                     <div>
@@ -267,15 +268,15 @@ const EmissionSource = ({
                     <div>
                       <p>{t('results.confiance')}</p>
                       <p>
-                        [{emissionResults.confidenceInterval[0].toFixed(2)};{' '}
-                        {emissionResults.confidenceInterval[1].toFixed(2)}]
+                        [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
+                        {formatNumber(emissionResults.confidenceInterval[1])}]
                       </p>
                     </div>
                   )}
                   {emissionResults.alpha !== null && (
                     <div>
                       <p>{t('results.alpha')}</p>
-                      <p>{emissionResults.alpha.toFixed(2)}</p>
+                      <p>{formatNumber(emissionResults.alpha)}</p>
                     </div>
                   )}
                 </div>
