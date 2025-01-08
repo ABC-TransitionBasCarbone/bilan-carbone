@@ -11,6 +11,7 @@ import {
   ChangeStudyDatesCommandValidation,
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
+  SitesCommand,
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StudyRole } from '@prisma/client'
@@ -18,8 +19,7 @@ import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import EditSites from '../organization/Sites'
+import { useForm, UseFormReturn } from 'react-hook-form'
 import DeleteStudySite from './DeleteStudySites'
 import styles from './StudyPerimeter.module.css'
 
@@ -144,28 +144,21 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
           })}
         </p>
       )}
-      {isEditing ? (
-        <>
-          <EditSites sites={sites} form={siteForm} />
-          <div className="mt1 justify-between">
-            <Button data-testid="cancel-edit-study-sites" onClick={() => setIsEditing(false)}>
-              {t('cancelEditSites')}
-            </Button>
-            <Button data-testid="confirm-edit-study-sites" disabled={disabledUpdateButton} onClick={onSitesSubmit}>
-              {t('validSites')}
-            </Button>
-          </div>
-        </>
-      ) : (
-        <>
-          <Sites studyId={study.id} sites={study.sites.map((site) => ({ ...site, name: site.site.name }))} />
-          <div className="mt1">
-            <Button data-testid="edit-study-sites" onClick={() => setIsEditing(true)}>
-              {t('editSites')}
-            </Button>
-          </div>
-        </>
-      )}
+      <Sites
+        form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
+        sites={isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
+        withSelection
+      />
+      <div className={classNames('mt1', { 'justify-between': isEditing })}>
+        <Button data-testid="cancel-edit-study-sites" onClick={() => setIsEditing(!isEditing)}>
+          {t(isEditing ? 'cancelEditSites' : 'editSites')}
+        </Button>
+        {isEditing && (
+          <Button data-testid="confirm-edit-study-sites" disabled={disabledUpdateButton} onClick={onSitesSubmit}>
+            {t('validSites')}
+          </Button>
+        )}
+      </div>
       <DeleteStudySite
         open={open}
         confirmDeletion={updateStudySites}

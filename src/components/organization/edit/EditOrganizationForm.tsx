@@ -10,13 +10,14 @@ import {
   UpdateOrganizationCommandValidation,
 } from '@/services/serverFunctions/organization.command'
 import { findStudiesWithSites } from '@/services/serverFunctions/study'
+import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, UseFormReturn } from 'react-hook-form'
 import Sites from '../Sites'
 
 interface Props {
@@ -75,7 +76,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
         name="name"
         label={t('name')}
       />
-      <Sites sites={sites} form={form} />
+      <Sites form={form as unknown as UseFormReturn<SitesCommand>} sites={sites} withSelection={false} />
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}
       </Button>

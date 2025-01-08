@@ -1,7 +1,6 @@
 'use client'
 
-import { OrganizationWithSites } from '@/db/user'
-import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
+import { SitesCommand } from '@/services/serverFunctions/study.command'
 import { formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -11,16 +10,17 @@ import { useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../base/Button'
+import { FormCheckbox } from '../form/Checkbox'
 import { FormTextField } from '../form/TextField'
 import styles from './Sites.module.css'
 
 interface Props {
-  sites: OrganizationWithSites['sites']
-  form?: UseFormReturn<UpdateOrganizationCommand>
-  studyId?: string
+  form?: UseFormReturn<SitesCommand>
+  sites: SitesCommand['sites']
+  withSelection: boolean
 }
 
-const Sites = ({ sites, form }: Props) => {
+const Sites = ({ sites, form, withSelection }: Props) => {
   const t = useTranslations('organization.sites')
 
   const columns = useMemo(() => {
@@ -31,13 +31,27 @@ const Sites = ({ sites, form }: Props) => {
         accessorKey: 'name',
         cell: ({ row, getValue }) =>
           form ? (
-            <FormTextField
-              data-testid="edit-site-name"
-              className="w100"
-              control={form.control}
-              translation={t}
-              name={`sites.${row.index}.name`}
-            />
+            <>
+              {withSelection ? (
+                <div className={classNames(styles.name, 'align-center')}>
+                  <FormCheckbox
+                    control={form.control}
+                    translation={t}
+                    name={`sites.${row.index}.selected`}
+                    data-testid="organization-sites-checkbox"
+                  />
+                  {getValue<string>()}
+                </div>
+              ) : (
+                <FormTextField
+                  data-testid="edit-site-name"
+                  className="w100"
+                  control={form.control}
+                  translation={t}
+                  name={`sites.${row.index}.name`}
+                />
+              )}
+            </>
           ) : (
             getValue<string>()
           ),
@@ -86,8 +100,8 @@ const Sites = ({ sites, form }: Props) => {
             `${formatNumber(getValue<number>() / 1000)}`
           ),
       },
-    ] as ColumnDef<OrganizationWithSites['sites'][0]>[]
-    if (form) {
+    ] as ColumnDef<SitesCommand['sites'][0]>[]
+    if (form && !withSelection) {
       columns.push({
         id: 'delete',
         header: t('actions'),
@@ -124,9 +138,9 @@ const Sites = ({ sites, form }: Props) => {
     <p className="title-h3">{t('noSites')}</p>
   ) : (
     <div className={styles.container}>
-      {form && (
+      {form && !withSelection && (
         <Button
-          onClick={() => form.setValue('sites', [...sites, { id: uuidv4(), name: '', etp: 0, ca: 0 }])}
+          onClick={() => form.setValue('sites', [...sites, { id: uuidv4(), name: '', etp: 0, ca: 0, selected: false }])}
           className={styles.addButton}
           data-testid="add-site-button"
         >
