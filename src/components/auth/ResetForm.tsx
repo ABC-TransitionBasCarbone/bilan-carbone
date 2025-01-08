@@ -7,7 +7,7 @@ import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { FormEvent, useEffect, useState } from 'react'
 import Button from '../base/Button'
-import ResetAlreadyUsed from '../pages/ResetAlreadyUsed'
+import ResetLinkAlreadyUsed from '../pages/ResetLinkAlreadyUsed'
 import authStyles from './Auth.module.css'
 
 interface Props {
@@ -33,13 +33,13 @@ const ResetForm = ({ user, token }: Props) => {
   const [password, setPassword] = useState('')
   const [resetLinkAlreadyUsed, setResetLinkAlreadyUsed] = useState(false)
 
+  if (resetLinkAlreadyUsed) {
+    return <ResetLinkAlreadyUsed />
+  }
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     await reset(email, password, token)
-  }
-
-  if (resetLinkAlreadyUsed) {
-    return <ResetAlreadyUsed />
   }
 
   return (

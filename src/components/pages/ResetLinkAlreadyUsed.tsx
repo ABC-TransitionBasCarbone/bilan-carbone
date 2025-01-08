@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import Block from '../base/Block'
 
-const ResetAlreadyUsed = () => {
+const ResetLinkAlreadyUsed = () => {
   const t = useTranslations('login.form')
   return (
     <Block title={t('expired')} as="h1">
@@ -13,4 +13,4 @@ const ResetAlreadyUsed = () => {
   )
 }
 
-export default ResetAlreadyUsed
+export default ResetLinkAlreadyUsed
