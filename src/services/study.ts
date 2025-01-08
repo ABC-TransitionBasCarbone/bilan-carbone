@@ -1,5 +1,6 @@
+import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { Level, SubPost } from '@prisma/client'
+import { ExportRule, Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { EmissionFactorWithMetaData } from './emissionFactors'
@@ -11,7 +12,6 @@ import { computeBegesResult } from './results/beges'
 import { computeResultsByPost } from './results/consolidated'
 import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
-import { getInfosForBeges } from './serverFunctions/study'
 import {
   getEmissionSourcesGlobalUncertainty,
   getQualityRating,
@@ -294,6 +294,8 @@ export const downloadStudyEmissionSources = async (
 export const formatConsolidatedStudyResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
+  tStudy: ReturnType<typeof useTranslations>,
+  tExport: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
 ) => {
@@ -303,7 +305,7 @@ export const formatConsolidatedStudyResultsForExport = (
     const resultList = computeResultsByPost(study, tPost, site.id, true)
 
     dataForExport.push([site.name])
-    dataForExport.push(['Poste', 'Incertitude', 'Valeur'])
+    dataForExport.push([tStudy('post'), tStudy('uncertainty'), tStudy('value')])
 
     for (const result of resultList) {
       dataForExport.push([
@@ -317,16 +319,18 @@ export const formatConsolidatedStudyResultsForExport = (
   }
 
   return {
-    name: 'Consolidé',
+    name: tExport('consolidated'),
     data: dataForExport,
     options: {},
   }
 }
 
-export const formatBegesStudyResultsForExport = async (
+export const formatBegesStudyResultsForExport = (
   study: FullStudy,
+  rules: ExportRule[],
+  emissionFactorsWithParts: EmissionFactorWithParts[],
   siteList: { name: string; id: string }[],
-  // tPost: ReturnType<typeof useTranslations>,
+  tExport: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tBeges: ReturnType<typeof useTranslations>,
 ) => {
@@ -334,12 +338,6 @@ export const formatBegesStudyResultsForExport = async (
   const dataForExport = []
 
   const sheetOptions: { '!merges': object[] } = { '!merges': [] }
-
-  const ids = study.emissionSources
-    .map((emissionSource) => emissionSource.emissionFactor?.id)
-    .filter((id) => id !== undefined)
-
-  const { rules, emissionFactorsWithParts } = await getInfosForBeges(ids)
 
   for (let i = 0; i < siteList.length; i++) {
     const site = siteList[i]
@@ -356,17 +354,17 @@ export const formatBegesStudyResultsForExport = async (
     )
 
     dataForExport.push([site.name])
-    dataForExport.push(['Règle', '', 'Emissions de GES'])
+    dataForExport.push([tBeges('rule'), '', tBeges('ges')])
     dataForExport.push([
-      'Catégories',
-      "Poste d'émission",
+      tBeges('category.title'),
+      tBeges('post.title'),
       'CO2',
       'CH4',
       'N2O',
-      'Autres gaz',
-      'Total',
+      tBeges('other'),
+      tBeges('total'),
       'CO2b',
-      'Incertitudes',
+      tBeges('uncertainty'),
     ])
 
     for (const result of resultList) {
@@ -397,11 +395,15 @@ export const formatBegesStudyResultsForExport = async (
     dataForExport.push([])
   }
 
-  return { name: 'BEGES', data: dataForExport, options: sheetOptions }
+  return { name: tExport('Beges'), data: dataForExport, options: sheetOptions }
 }
 
 export const downloadStudyResults = async (
   study: FullStudy,
+  rules: ExportRule[],
+  emissionFactorsWithParts: EmissionFactorWithParts[],
+  tStudy: ReturnType<typeof useTranslations>,
+  tExport: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tOrga: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
@@ -414,9 +416,11 @@ export const downloadStudyResults = async (
     ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
   ]
 
-  data.push(formatConsolidatedStudyResultsForExport(study, siteList, tPost, tQuality))
+  data.push(formatConsolidatedStudyResultsForExport(study, siteList, tStudy, tExport, tPost, tQuality))
 
-  data.push(await formatBegesStudyResultsForExport(study, siteList, tQuality, tBeges))
+  data.push(
+    formatBegesStudyResultsForExport(study, rules, emissionFactorsWithParts, siteList, tExport, tQuality, tBeges),
+  )
 
   const buffer = await prepareExcel(data)
 

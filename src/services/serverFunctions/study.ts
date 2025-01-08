@@ -2,8 +2,6 @@
 
 import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
-import { getEmissionFactorsWithPartsInIds } from '@/db/emissionFactors'
-import { getExportRules } from '@/db/exportRule'
 import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
 import {
   createContributorOnStudy,
@@ -367,10 +365,4 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   if (bucketDelete) {
     deleteDocument(document.id)
   }
-}
-
-export const getInfosForBeges = async (ids: string[]) => {
-  const [rules, emissionFactorsWithParts] = await Promise.all([getExportRules(), getEmissionFactorsWithPartsInIds(ids)])
-
-  return { rules, emissionFactorsWithParts }
 }

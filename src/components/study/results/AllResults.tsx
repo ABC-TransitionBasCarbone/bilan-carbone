@@ -34,6 +34,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const exports = useMemo(() => study.exports, [study.exports])
   const { site, setSite } = useStudySite(study, true)
 
+  const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
+
   return (
     <>
       <div className={classNames(styles.select, 'flex')}>
@@ -62,7 +64,21 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
             ))}
           </Select>
         </FormControl>
-        <Button onClick={() => downloadStudyResults(study, tPost, tOrga, tQuality, tBeges)}>
+        <Button
+          onClick={() =>
+            downloadStudyResults(
+              study,
+              begesRules,
+              emissionFactorsWithParts,
+              t,
+              tExport,
+              tPost,
+              tOrga,
+              tQuality,
+              tBeges,
+            )
+          }
+        >
           <DownloadIcon />
         </Button>
         <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
