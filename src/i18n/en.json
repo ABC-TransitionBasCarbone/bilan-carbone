@@ -240,7 +240,7 @@
         "create": "Add person",
         "validation": {
           "email": "Please enter a valid email",
-          "Required": "Please select a post"
+          "post": "Please select a post"
         }
       },
       "contributorsTable": {

@@ -119,7 +119,7 @@ export const NewStudyContributorCommandValidation = z.object({
     })
     .email('email')
     .trim(),
-  post: z.union([z.nativeEnum(Post), z.literal('all')], { required_error: 'post' }),
+  post: z.union([z.nativeEnum(Post, { required_error: 'post' }), z.literal('all', { required_error: 'post' })]),
   subPost: z.union([z.nativeEnum(SubPost), z.literal('all')]),
 })
 
