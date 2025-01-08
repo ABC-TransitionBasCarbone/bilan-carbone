@@ -7,10 +7,15 @@ import {
   Import,
   Level,
   PrismaClient,
+  StudyRole,
   SubPost,
   Unit,
   User,
 } from '@prisma/client'
+
+const studyId = '91bb3826-2be7-4d56-bb9b-363f4d9af62f'
+const siteId = 'c3f2b8d4-7a0c-4b3f-8c5b-5b5e7b6f3e3b'
+const studySiteId = 'ca3e68bd-dee6-400a-b3cb-b3e11725282e'
 
 export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
   if (!creator.organizationId) {
@@ -21,7 +26,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
 
   await prisma.site.create({
     data: {
-      id: 'c3f2b8d4-7a0c-4b3f-8c5b-5b5e7b6f3e3b',
+      id: siteId,
       name: 'Bourges',
       organizationId: creator.organizationId,
       etp: 35,
@@ -61,7 +66,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
 
   await prisma.study.create({
     data: {
-      id: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
+      id: studyId,
       name: 'BC V8.10',
       startDate: new Date('2025-01-01'),
       endDate: new Date('2025-12-31'),
@@ -75,8 +80,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         createMany: {
           data: [
             {
-              id: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
-              siteId: 'c3f2b8d4-7a0c-4b3f-8c5b-5b5e7b6f3e3b',
+              id: studySiteId,
+              siteId,
               etp: 35,
               ca: 1_000_000,
             },
@@ -86,11 +91,19 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
     },
   })
 
+  await prisma.userOnStudy.create({
+    data: {
+      role: StudyRole.Validator,
+      userId: creator.id,
+      studyId,
+    },
+  })
+
   await prisma.studyEmissionSource.createMany({
     data: [
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Fioul domestique, France continentale, Base Carbone',
@@ -100,8 +113,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '14087')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Plaquettes forestières sèches (25% humidité), France continentale, Base Carbone',
@@ -111,8 +124,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34943')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: '2022 - mix moyen, France continentale, Base Carbone',
@@ -122,8 +135,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '42513')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'photovoltaïque - fabrication Europe, France continentale, Base Carbone',
@@ -133,8 +146,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34721')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'R22 (HCFC-22), Base Carbone',
@@ -144,8 +157,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '43119')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Action sociale, France continentale, Base Carbone',
@@ -155,8 +168,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25029')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Activités des organisations associatives, France continentale, Base Carbone',
@@ -166,8 +179,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25032')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Assurance, services bancaires, conseil et honoraires, France continentale, Base Carbone',
@@ -177,8 +190,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24997')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Courrier, France continentale, Base Carbone',
@@ -188,8 +201,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24998')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Enseignement, France continentale, Base Carbone',
@@ -199,8 +212,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25026')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Hébergement et restauration, France continentale, Base Carbone',
@@ -210,8 +223,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25000')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Machines et équipements, France continentale, Base Carbone',
@@ -221,8 +234,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25022')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Meubles et autres biens manufacturés, France continentale, Base Carbone',
@@ -232,8 +245,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25017')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Produits chimiques, France continentale, Base Carbone',
@@ -243,8 +256,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25018')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: "Réparation et installation de machines et d'équipements, France continentale, Base Carbone",
@@ -254,8 +267,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25004')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Services (imprimerie, publicité, architecture et ingénierie, maintenance multi-technique des bâtimen, France continentale, Base Carbone',
@@ -265,8 +278,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25001')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Télécommunications, France continentale, Base Carbone',
@@ -276,8 +289,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24999')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Transport terrestre, France continentale, Base Carbone',
@@ -287,8 +300,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '25005')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Acier ou fer blanc, France continentale, Base Carbone',
@@ -298,8 +311,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '26729')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Acier ou fer blanc, France continentale, Base Carbone - Fin de vie',
@@ -309,8 +322,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34462')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Films plastiques PET (pas recyclable), France continentale, Base Carbone',
@@ -320,8 +333,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20835')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Films plastiques PET (pas recyclable), France continentale, Base Carbone - Fin de vie',
@@ -331,8 +344,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34496')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Bois courte durée de vie (ameublement…) fabrication, France continentale, Base Carbone',
@@ -342,8 +355,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20908')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Bois courte durée de vie (ameublement…) fabrication, France continentale, Base Carbone - Fin de vie',
@@ -353,8 +366,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34678')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Papier Moyen, Hors utilisation et fin de vie, France continentale, Base Carbone',
@@ -364,8 +377,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24309')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Papier Moyen, Hors utilisation et fin de vie, France continentale, Base Carbone - Fin de vie',
@@ -375,8 +388,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: papier.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Carton - Fin de vie moyenne filière - impacts, France continentale, Base Carbone',
@@ -386,8 +399,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34486')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Papier/fin de vie moyenne, France continentale, Base Carbone',
@@ -397,8 +410,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '22024')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Plastique souple PET pétrosourcé - Fin de vie moyenne filière - Impacts, France continentale, Base Carbone',
@@ -408,8 +421,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34512')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Déchets non dangereux en mélange (DIB) - Fin de vie moyenne - Impacts, France continentale, Base Carbone',
@@ -419,8 +432,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34682')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Articulé, 34 à 40 T, diesel routier, 7% de biodiesel, France continentale, Base Carbone',
@@ -430,8 +443,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28041')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Articulé, 34 à 40 T, diesel routier, 7% de biodiesel, France continentale, Base Carbone',
@@ -441,8 +454,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28041')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Rigide, 12 à 20 T, diesel routier, 7% biodiesel, France continentale, Base Carbone',
@@ -452,8 +465,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28033')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Europe - Afrique, France continentale, Base Carbone',
@@ -463,8 +476,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28205')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Europe - Amérique du Sud et Centrale, France continentale, Base Carbone',
@@ -474,8 +487,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28207')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Europe du Nord - Amérique du Nord, façade atlantique, France continentale, Base Carbone',
@@ -485,8 +498,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28218')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Europe - Océanie, France continentale, Base Carbone',
@@ -496,8 +509,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28211')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Intra Méditerranée, France continentale, Base Carbone',
@@ -507,8 +520,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28225')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Asie - Europe du Nord, France continentale, Base Carbone',
@@ -518,8 +531,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28203')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture - motorisation essence - 2018, France continentale, Base Carbone',
@@ -529,8 +542,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27965')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture - motorisation gazole - 2018, France continentale, Base Carbone',
@@ -540,8 +553,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27966')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture particulière - cœur de gamme - véhicule compact - électrique, France continentale, Base Carbone',
@@ -551,8 +564,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28007')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Autobus moyen - agglomération de 100 000 à 250 000 habitants, France continentale, Base Carbone',
@@ -562,8 +575,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27999')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Métro, tramway, trolleybus - 2018 - Agglomération de 100 000 à 250 000 habitants, France continentale, Base Carbone',
@@ -573,8 +586,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28150')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'TER - 2021 - traction moyenne, France continentale, Base Carbone',
@@ -584,8 +597,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '37141')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture - motorisation essence - 2018, France continentale, Base Carbone',
@@ -595,8 +608,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27965')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture - motorisation gazole - 2018, France continentale, Base Carbone',
@@ -606,8 +619,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27966')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture particulière - cœur de gamme - véhicule compact - électrique, France continentale, Base Carbone',
@@ -617,8 +630,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28007')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Intercités - 2019, France continentale, Base Carbone',
@@ -628,8 +641,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28144')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Avion passagers, court courrier, avec trainées, France continentale, Base Carbone',
@@ -639,8 +652,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '28130')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Bâtiment industriel, structure métallique, France continentale, Base Carbone',
@@ -651,8 +664,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20731')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Parking, classique - bitume, France continentale, Base Carbone',
@@ -663,8 +676,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '26011')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Machines, France continentale, Base Carbone',
@@ -675,8 +688,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20906')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Mobilier, France continentale, Base Carbone',
@@ -687,8 +700,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20907')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Ordinateur portable, France continentale, Base Carbone',
@@ -699,8 +712,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27002')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Ordinateur fixe - bureautique, France continentale, Base Carbone',
@@ -711,8 +724,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27003')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: "Imprimante jet d'encre, France continentale, Base Carbone",
@@ -723,8 +736,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '27025')?.id,
       },
       {
-        studyId: '91bb3826-2be7-4d56-bb9b-363f4d9af62f',
-        siteId: 'ca3e68bd-dee6-400a-b3cb-b3e11725282e',
+        studyId,
+        siteId: studySiteId,
         validated: true,
         reliability: 5,
         name: 'Photocopieurs, Monde, Base Carbone',
