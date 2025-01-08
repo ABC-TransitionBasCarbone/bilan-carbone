@@ -6,25 +6,26 @@ import styles from './ResultsContainer.module.css'
 interface Props {
   study: FullStudy
   site: string
+  withDependencies?: boolean
 }
 
-const ResultsContainerForStudy = ({ study, site }: Props) => {
+const StudyResultsContainerSummary = ({ study, site, withDependencies }: Props) => {
   return (
     <Box>
-      <h2 className={styles.studyName}>{study.name}</h2>
+      {withDependencies === undefined && <h2 className={styles.studyName}>{study.name}</h2>}
       <div className={styles.container}>
         <div className={styles.graph}>
-          <Result study={study} by="Post" site={site} />
+          <Result study={study} by="Post" site={site} withDependenciesGlobal={withDependencies} />
         </div>
         <div className={styles.separatorContainer}>
           <div className={styles.separator} />
         </div>
         <div className={styles.graph}>
-          <Result study={study} by="SubPost" site={site} />
+          <Result study={study} by="SubPost" site={site} withDependenciesGlobal={withDependencies} />
         </div>
       </div>
     </Box>
   )
 }
 
-export default ResultsContainerForStudy
+export default StudyResultsContainerSummary

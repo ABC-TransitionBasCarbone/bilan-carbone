@@ -16,7 +16,7 @@ export default function useStudySite(study: FullStudy | StudyWithoutDetail, allo
       setSite(defaultSite)
     }
     setReady(true)
-  }, [])
+  }, [study])
 
   useEffect(() => {
     if (ready) {

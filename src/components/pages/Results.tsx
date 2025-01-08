@@ -4,7 +4,7 @@ import { ExportRule } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
-import ResultsTables from '../study/results/ResultsTables'
+import AllResults from '../study/results/AllResults'
 
 interface Props {
   study: FullStudy
@@ -26,7 +26,7 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts }: Props) => {
         ]}
       />
       <Block title={tStudyNav('results')} as="h1">
-        <ResultsTables study={study} rules={rules} emissionFactorsWithParts={emissionFactorsWithParts} />
+        <AllResults study={study} rules={rules} emissionFactorsWithParts={emissionFactorsWithParts} />
       </Block>
     </>
   )

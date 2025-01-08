@@ -9,8 +9,8 @@ import { useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
-import ConsolidatedResultsTable from './consolidated/ConsolidatedResultsTable'
-import DependanciesSwitch from './DependanciesSwitch'
+import ConsolidatedResults from './consolidated/ConsolidatedResults'
+import DependenciesSwitch from './DependenciesSwitch'
 import styles from './ResultsTables.module.css'
 
 interface Props {
@@ -19,11 +19,11 @@ interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
 }
 
-const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
+const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const t = useTranslations('study.results')
   const tExport = useTranslations('exports')
 
-  const [withDependencies, setWithDependancies] = useState(true)
+  const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
   const exports = useMemo(() => study.exports.map((e) => e.type), [study.exports])
   const { site, setSite } = useStudySite(study, true)
@@ -51,11 +51,11 @@ const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
             ))}
           </Select>
         </FormControl>
-        <DependanciesSwitch withDependencies={withDependencies} setWithDependancies={setWithDependancies} />
+        <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
-          <ConsolidatedResultsTable study={study} site={site} withDependencies={withDependencies} />
+          <ConsolidatedResults study={study} site={site} withDependencies={withDependencies} />
         )}
         {type === Export.Beges && (
           <BegesResultsTable
@@ -71,4 +71,4 @@ const ResultsTables = ({ study, rules, emissionFactorsWithParts }: Props) => {
   )
 }
 
-export default ResultsTables
+export default AllResults

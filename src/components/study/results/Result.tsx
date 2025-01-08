@@ -12,13 +12,14 @@ import Chart from 'chart.js/auto'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import DependanciesSwitch from './DependanciesSwitch'
+import DependenciesSwitch from './DependenciesSwitch'
 import styles from './Result.module.css'
 
 interface Props {
   study: FullStudy
   by: 'Post' | 'SubPost'
   site: string
+  withDependenciesGlobal?: boolean
 }
 
 const postXAxisList = [
@@ -34,7 +35,7 @@ const postXAxisList = [
   Post.FinDeVie,
 ]
 
-const Result = ({ study, by, site }: Props) => {
+const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
   const tCaracterisations = useTranslations('categorisations')
@@ -46,7 +47,15 @@ const Result = ({ study, by, site }: Props) => {
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
-  const [withDependencies, setWithDependancies] = useState(true)
+  const [withDependencies, setWithDependencies] = useState(
+    withDependenciesGlobal === undefined ? true : withDependenciesGlobal,
+  )
+
+  useEffect(() => {
+    if (withDependenciesGlobal !== undefined) {
+      setWithDependencies(withDependenciesGlobal)
+    }
+  }, [withDependenciesGlobal])
 
   const selectorOptions = Object.values(Post)
 
@@ -129,7 +138,9 @@ const Result = ({ study, by, site }: Props) => {
     <>
       <div className={classNames(styles.header, 'align-center', 'mb1')}>
         <h3>{t(`by${by}`)}</h3>
-        <DependanciesSwitch withDependencies={withDependencies} setWithDependancies={setWithDependancies} />
+        {withDependenciesGlobal === undefined && (
+          <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
+        )}
       </div>
       {by === 'SubPost' && (
         <div className="flex mb1">
