@@ -79,7 +79,7 @@ const getRulePost = (rule: ExportRule, caracterisation: EmissionSourceCaracteris
       return rule.notHeldSimpleRent
     case EmissionSourceCaracterisation.NotHeldOther:
       return rule.notHeldOther
-    case EmissionSourceCaracterisation.HelpProcedeed:
+    case EmissionSourceCaracterisation.HeldProcedeed:
       return rule.heldProcedeed
     case EmissionSourceCaracterisation.HeldFugitive:
       return rule.heldFugitive
