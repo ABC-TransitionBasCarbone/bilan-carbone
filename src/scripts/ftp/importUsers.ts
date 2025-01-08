@@ -22,7 +22,7 @@ export const getUsersFromFTP = async () => {
   const parseStream = parse({ delimiter: ';', columns: true, bom: true })
     .on('data', (value) => {
       if (users.length % 10 === 0) {
-        console.log(`Processed ${users.length} lines...`)
+        console.log(`Procedeed ${users.length} lines...`)
       }
       const email = value['User Email']
 

@@ -17,7 +17,16 @@
     "NotOperatedSupported": "Non opéré, supporté",
     "NotOperatedNotSupported": "Non opéré, non supporté",
     "Rented": "Mis en location",
-    "FinalClient": "Par le client final ou un intermédiaire"
+    "FinalClient": "Par le client final ou un intermédiaire",
+    "Held": "Détenu",
+    "NotHeldSimpleRent": "Non détenu location simple",
+    "NotHeldOther": "Non détenu, autre",
+    "HeldProcedeed": "Détenue, procédés",
+    "HeldFugitive": "Détenue, fugitives",
+    "NotHeldSupported": "Non détenu, supporté",
+    "NotHeldNotSupported": "Non détenue, non supporté",
+    "UsedByIntermediary": "Utilisé par un intermédiaire",
+    "LandUse": "Utilisation des terres, changement d’affectation des terres et foresterie (UTCATF)"
   },
   "beges": {
     "rule": "Règle",

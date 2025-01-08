@@ -73,6 +73,22 @@ const getRulePost = (rule: ExportRule, caracterisation: EmissionSourceCaracteris
       return rule.rented
     case EmissionSourceCaracterisation.FinalClient:
       return rule.finalClient
+    case EmissionSourceCaracterisation.Held:
+      return rule.held
+    case EmissionSourceCaracterisation.NotHeldSimpleRent:
+      return rule.notHeldSimpleRent
+    case EmissionSourceCaracterisation.NotHeldOther:
+      return rule.notHeldOther
+    case EmissionSourceCaracterisation.HelpProcedeed:
+      return rule.heldProcedeed
+    case EmissionSourceCaracterisation.HeldFugitive:
+      return rule.heldFugitive
+    case EmissionSourceCaracterisation.NotHeldSupported:
+      return rule.notHeldSupported
+    case EmissionSourceCaracterisation.NotHeldNotSupported:
+      return rule.notHeldNotSupported
+    case EmissionSourceCaracterisation.UsedByIntermediary:
+      return rule.usedByIntermediary
   }
 }
 
