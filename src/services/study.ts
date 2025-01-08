@@ -2,7 +2,6 @@ import { FullStudy } from '@/db/study'
 import { Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
-import xlsx from 'node-xlsx'
 import { EmissionFactorWithMetaData } from './emissionFactors'
 import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
@@ -10,6 +9,7 @@ import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
 import { computeResultsByPost } from './results/consolidated'
 import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
+import { prepareExcel } from './serverFunctions/file'
 import {
   getEmissionSourcesGlobalUncertainty,
   getQualityRating,
@@ -288,10 +288,11 @@ export const downloadStudyEmissionSources = async (
   )
   downloadCSV(csvContent, fileName)
 }
-export const downloadStudyResults = (
+export const downloadStudyResults = async (
   study: FullStudy,
   tPost: ReturnType<typeof useTranslations>,
   tOrga: ReturnType<typeof useTranslations>,
+  tQuality: ReturnType<typeof useTranslations>,
 ) => {
   const data = []
 
@@ -304,12 +305,25 @@ export const downloadStudyResults = (
   for (const exp of exportList) {
     const dataForExport = []
     for (const site of siteList) {
+      const resultList = computeResultsByPost(study, tPost, site.id, true)
+
       dataForExport.push([site.name])
-      dataForExport.push(computeResultsByPost(study, tPost, site.id, true))
+      dataForExport.push(['Poste', 'Incertitude', 'Valeur'])
+
+      for (const result of resultList) {
+        dataForExport.push([
+          tPost(result.post) ?? '',
+          result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
+          result.value ?? '',
+        ])
+      }
+
       dataForExport.push([])
     }
     data.push({ name: exp.type, data: dataForExport, options: {} })
   }
+  console.log(data)
+  const buffer = await prepareExcel(data)
 
-  const buffer = xlsx.build(data)
+  download([buffer], `${study.name}_results.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 }
