@@ -63,7 +63,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
         cell: ({ row, getValue }) =>
           form ? (
             <FormTextField
-              data-testid="edit-site-etp"
+              data-testid="organization-sites-etp"
               type="number"
               className="w100"
               control={form.control}
@@ -85,7 +85,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
         cell: ({ row, getValue }) =>
           form ? (
             <FormTextField
-              data-testid="edit-site-ca"
+              data-testid="organization-sites-ca"
               type="number"
               className="w100"
               control={form.control}
