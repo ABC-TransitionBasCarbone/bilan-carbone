@@ -321,7 +321,7 @@ export const formatConsolidatedStudyResultsForExport = (
   return {
     name: tExport('consolidated'),
     data: dataForExport,
-    options: {},
+    options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
   }
 }
 
@@ -337,7 +337,20 @@ export const formatBegesStudyResultsForExport = (
   const lengthOfBeges = 33
   const dataForExport = []
 
-  const sheetOptions: { '!merges': object[] } = { '!merges': [] }
+  const sheetOptions: { '!merges': object[]; '!cols': object[] } = {
+    '!merges': [],
+    '!cols': [
+      { wch: 50 },
+      { wch: 60 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 20 },
+    ],
+  }
 
   for (let i = 0; i < siteList.length; i++) {
     const site = siteList[i]
