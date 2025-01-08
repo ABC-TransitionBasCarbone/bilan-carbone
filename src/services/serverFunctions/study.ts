@@ -52,6 +52,8 @@ import {
   NewStudyRightCommand,
 } from './study.command'
 import { sendInvitation } from './user'
+import { getExportRules } from '@/db/exportRule'
+import { getEmissionFactorsWithPartsInIds } from '@/db/emissionFactors'
 
 export const createStudyCommand = async ({
   organizationId,
@@ -365,4 +367,10 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   if (bucketDelete) {
     deleteDocument(document.id)
   }
+}
+
+export const getInfosForBeges = async (ids: string[]) => {
+  const [rules, emissionFactorsWithParts] = await Promise.all([getExportRules(), getEmissionFactorsWithPartsInIds(ids)])
+
+  return { rules, emissionFactorsWithParts }
 }

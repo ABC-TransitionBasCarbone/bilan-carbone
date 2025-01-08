@@ -7,9 +7,11 @@ import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
+import { computeBegesResult } from './results/beges'
 import { computeResultsByPost } from './results/consolidated'
 import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
+import { getInfosForBeges } from './serverFunctions/study'
 import {
   getEmissionSourcesGlobalUncertainty,
   getQualityRating,
@@ -317,11 +319,76 @@ export const formatConsolidatedStudyResultsForExport = (
   return dataForExport
 }
 
+export const formatBegesStudyResultsForExport = async (
+  study: FullStudy,
+  siteList: { name: string; id: string }[],
+  // tPost: ReturnType<typeof useTranslations>,
+  tQuality: ReturnType<typeof useTranslations>,
+  tBeges: ReturnType<typeof useTranslations>,
+) => {
+  const dataForExport = []
+
+  const ids = study.emissionSources
+    .map((emissionSource) => emissionSource.emissionFactor?.id)
+    .filter((id) => id !== undefined)
+
+  const { rules, emissionFactorsWithParts } = await getInfosForBeges(ids)
+
+  for (const site of siteList) {
+    const resultList = computeBegesResult(study, rules, emissionFactorsWithParts, site.id, true)
+
+    console.log(resultList)
+    dataForExport.push([site.name])
+    dataForExport.push(['Règle', '', 'Emissions de GES'])
+    dataForExport.push([
+      'Catégories',
+      "Poste d'émission",
+      'CO2',
+      'CH4',
+      'N2O',
+      'Autres gaz',
+      'Total',
+      'CO2b',
+      'Incertitudes',
+    ])
+
+    for (const result of resultList) {
+      const category = result.rule.split('.')[0]
+      const rule = result.rule
+      let post
+      if (rule === 'total') {
+        post = tBeges('total')
+      } else if (result.rule.includes('.total')) {
+        post = tBeges('subTotal')
+      } else {
+        post = `${rule}. ${tBeges(`post.${rule}`)}`
+      }
+
+      dataForExport.push([
+        category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
+        post,
+        result.co2,
+        result.ch4,
+        result.n2o,
+        result.other,
+        result.total,
+        result.co2b,
+        result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
+      ])
+    }
+
+    dataForExport.push([])
+  }
+
+  return dataForExport
+}
+
 export const downloadStudyResults = async (
   study: FullStudy,
   tPost: ReturnType<typeof useTranslations>,
   tOrga: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
+  tBeges: ReturnType<typeof useTranslations>,
 ) => {
   const data = []
 
@@ -336,7 +403,12 @@ export const downloadStudyResults = async (
     options: {},
   })
 
-  console.log(data)
+  data.push({
+    name: 'BEGES',
+    data: await formatBegesStudyResultsForExport(study, siteList, tQuality, tBeges),
+    options: {},
+  })
+
   const buffer = await prepareExcel(data)
 
   download([buffer], `${study.name}_results.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

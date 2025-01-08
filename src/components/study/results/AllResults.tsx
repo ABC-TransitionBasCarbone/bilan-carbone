@@ -27,6 +27,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
+  const tBeges = useTranslations('beges')
 
   const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
@@ -61,7 +62,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
             ))}
           </Select>
         </FormControl>
-        <Button onClick={() => downloadStudyResults(study, tPost, tOrga, tQuality)}>
+        <Button onClick={() => downloadStudyResults(study, tPost, tOrga, tQuality, tBeges)}>
           <DownloadIcon />
         </Button>
         <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
