@@ -2,7 +2,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { Export, ExportRule } from '@prisma/client'
+import { ControlMode, Export, ExportRule } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -25,7 +25,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
 
   const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
-  const exports = useMemo(() => study.exports.map((e) => e.type), [study.exports])
+  const exports = useMemo(() => study.exports, [study.exports])
   const { site, setSite } = useStudySite(study, true)
 
   return (
@@ -44,9 +44,14 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
             disabled={exports.length === 0}
           >
             <MenuItem value="consolidated">{tExport('consolidated')}</MenuItem>
-            {exports.map((type) => (
-              <MenuItem key={type} value={type} disabled={type !== Export.Beges}>
-                {tExport(type)}
+            {exports.map((exportItem) => (
+              <MenuItem
+                key={exportItem.type}
+                value={exportItem.type}
+                disabled={exportItem.type !== Export.Beges || exportItem.control !== ControlMode.Operational}
+              >
+                {tExport(exportItem.type)}
+                {exportItem.control !== ControlMode.Operational && <em>&nbsp;(à venir)</em>}
               </MenuItem>
             ))}
           </Select>
