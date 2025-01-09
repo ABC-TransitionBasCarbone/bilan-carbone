@@ -192,6 +192,10 @@ export const canReadStudyDetail = async (user: User, study: FullStudy) => {
     return false
   }
 
+  if (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId))) {
+    return true
+  }
+
   const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
   if (!userRightsOnStudy) {
     return false
