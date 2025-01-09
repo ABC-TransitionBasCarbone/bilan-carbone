@@ -137,9 +137,8 @@ describe('Create study emission source', () => {
 
     cy.login('bc-contributor@yopmail.com', 'password')
     cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
-    cy.getByTestId('not-found-page').should('exist')
+    cy.url().should('eq', `${Cypress.config().baseUrl}/etudes/${studyId}/contributeur`)
 
-    cy.visit(`/etudes/${studyId}`)
     cy.getByTestId('subpost').first().click()
     cy.getByTestId('new-emission-source').should('not.exist')
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
