@@ -1,36 +1,11 @@
-import NotFound from '@/components/pages/NotFound'
+import withAuth from '@/components/hoc/withAuth'
+import { StudyProps } from '@/components/hoc/withStudy'
+import withStudyDetails from '@/components/hoc/withStudyDetails'
 import ResultsPage from '@/components/pages/Results'
 import { getEmissionFactorsWithPartsInIds } from '@/db/emissionFactors'
 import { getExportRules } from '@/db/exportRule'
-import { getStudyById } from '@/db/study'
-import { auth } from '@/services/auth'
-import { canReadStudyDetail } from '@/services/permissions/study'
-import { UUID } from 'crypto'
 
-interface Props {
-  params: Promise<{
-    id: UUID
-  }>
-}
-const ResultatsPages = async (props: Props) => {
-  const session = await auth()
-
-  const params = await props.params
-  const id = params.id
-  if (!id || !session) {
-    return <NotFound />
-  }
-
-  const study = await getStudyById(id, session.user.organizationId)
-
-  if (!study) {
-    return <NotFound />
-  }
-
-  if (!(await canReadStudyDetail(session.user, study))) {
-    return <NotFound />
-  }
-
+const ResultatsPages = async ({ study }: StudyProps) => {
   const ids = study.emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((id) => id !== undefined)
@@ -39,4 +14,4 @@ const ResultatsPages = async (props: Props) => {
   return <ResultsPage study={study} rules={rules} emissionFactorsWithParts={emissionFactorsWithParts} />
 }
 
-export default ResultatsPages
+export default withAuth(withStudyDetails(ResultatsPages))

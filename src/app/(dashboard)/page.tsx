@@ -1,18 +1,10 @@
 import Block from '@/components/base/Block'
+import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import UserView from '@/components/home/UserView'
-import { auth } from '@/services/auth'
 
 export const revalidate = 0
 
-const Home = async () => {
-  const session = await auth()
-
-  if (!session) {
-    return null
-  }
-
-  const { user } = session
-
+const Home = async ({ user }: UserProps) => {
   return (
     <>
       <Block>
@@ -22,4 +14,4 @@ const Home = async () => {
   )
 }
 
-export default Home
+export default withAuth(Home)

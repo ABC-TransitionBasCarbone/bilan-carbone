@@ -1,42 +1,21 @@
+import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import withStudy, { StudyProps } from '@/components/hoc/withStudy'
 import NotFound from '@/components/pages/NotFound'
 import StudyContributorPage from '@/components/pages/StudyContributor'
-import { getStudyById } from '@/db/study'
-import { auth } from '@/services/auth'
 import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
-import { UUID } from 'crypto'
 import { redirect } from 'next/navigation'
 
-interface Props {
-  params: Promise<{
-    id: UUID
-  }>
-}
-
-const StudyView = async (props: Props) => {
-  const params = await props.params
-  const session = await auth()
-
-  const id = params.id
-  if (!id || !session) {
+const StudyView = async ({ user, study }: StudyProps & UserProps) => {
+  if (!(await canReadStudy(user, study))) {
     return <NotFound />
   }
 
-  const study = await getStudyById(id, session.user.organizationId)
-
-  if (!study) {
-    return <NotFound />
-  }
-
-  if (!(await canReadStudy(session.user, study))) {
-    return <NotFound />
-  }
-
-  if (await canReadStudyDetail(session.user, study)) {
+  if (await canReadStudyDetail(user, study)) {
     return redirect(`/etudes/${study.id}`)
   }
 
-  const studyWithoutDetail = filterStudyDetail(session.user, study)
-  return <StudyContributorPage study={studyWithoutDetail} user={session.user} />
+  const studyWithoutDetail = filterStudyDetail(user, study)
+  return <StudyContributorPage study={studyWithoutDetail} user={user} />
 }
 
-export default StudyView
+export default withAuth(withStudy(StudyView))

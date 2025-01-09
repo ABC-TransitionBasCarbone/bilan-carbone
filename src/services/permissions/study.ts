@@ -15,10 +15,8 @@ export const canReadStudy = async (
     return false
   }
 
-  if (study.isPublic) {
-    if (await checkOrganization(user.organizationId, study.organizationId)) {
-      return true
-    }
+  if (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId))) {
+    return true
   }
 
   let allowedStudiesId: string[]
@@ -192,12 +190,6 @@ export const canReadStudyDetail = async (user: User, study: FullStudy) => {
   const studyRight = await canReadStudy(user, study)
   if (!studyRight) {
     return false
-  }
-
-  if (study.isPublic) {
-    if (await checkOrganization(user.organizationId, study.organizationId)) {
-      return true
-    }
   }
 
   const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)

@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import InputFileUpload from '../base/InputFileUpload'
 
-const AdminPage = () => {
+const SuperAdminPage = () => {
   const t = useTranslations('admin')
 
   return (
@@ -14,4 +14,4 @@ const AdminPage = () => {
   )
 }
 
-export default AdminPage
+export default SuperAdminPage

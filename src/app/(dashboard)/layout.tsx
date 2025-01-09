@@ -1,24 +1,19 @@
+import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import Navbar from '@/components/navbar/Navbar'
-import { auth } from '@/services/auth'
 import classNames from 'classnames'
-import styles from './styles.module.css'
+import styles from './layout.module.css'
 
 interface Props {
   children: React.ReactNode
 }
 
-const NavLayout = async ({ children }: Props) => {
-  const session = await auth()
-
-  if (!session) {
-    return null
-  }
+const NavLayout = async ({ children, user }: Props & UserProps) => {
   return (
     <div className="flex-col h100">
-      <Navbar user={session.user} />
+      <Navbar user={user} />
       <main className={classNames(styles.content)}>{children}</main>
     </div>
   )
 }
 
-export default NavLayout
+export default withAuth(NavLayout)

@@ -1,38 +1,12 @@
-import NotFound from '@/components/pages/NotFound'
+import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import { StudyProps } from '@/components/hoc/withStudy'
+import withStudyDetails from '@/components/hoc/withStudyDetails'
 import StudyRightsPage from '@/components/pages/StudyRights'
-import { getStudyById } from '@/db/study'
-import { auth } from '@/services/auth'
-import { canReadStudyDetail } from '@/services/permissions/study'
-import { UUID } from 'crypto'
-
-interface Props {
-  params: Promise<{
-    id: UUID
-  }>
-}
 
 export const revalidate = 0
 
-const StudyRights = async (props: Props) => {
-  const params = await props.params
-  const session = await auth()
-
-  const id = params.id
-  if (!id || !session) {
-    return <NotFound />
-  }
-
-  const study = await getStudyById(id, session.user.organizationId)
-
-  if (!study) {
-    return <NotFound />
-  }
-
-  if (!(await canReadStudyDetail(session.user, study))) {
-    return <NotFound />
-  }
-
-  return <StudyRightsPage study={study} user={session.user} />
+const StudyRights = async (props: StudyProps & UserProps) => {
+  return <StudyRightsPage study={props.study} user={props.user} />
 }
 
-export default StudyRights
+export default withAuth(withStudyDetails(StudyRights))

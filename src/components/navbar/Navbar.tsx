@@ -39,7 +39,7 @@ const Navbar = ({ user }: Props) => {
 
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
           {user.role === Role.SUPER_ADMIN && (
-            <Link className={styles.link} href="/admin">
+            <Link className={styles.link} href="/super-admin">
               {t('admin')}
             </Link>
           )}

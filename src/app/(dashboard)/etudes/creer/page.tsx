@@ -1,20 +1,19 @@
+import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import NewStudyPage from '@/components/pages/NewStudy'
 import { getOrganizationUsers } from '@/db/organization'
 import { getUserOrganizations } from '@/db/user'
-import { auth } from '@/services/auth'
 
-const NewStudy = async () => {
-  const session = await auth()
-  if (!session || !session.user.organizationId) {
+const NewStudy = async ({ user }: UserProps) => {
+  if (!user.organizationId) {
     return null
   }
 
   const [organizations, users] = await Promise.all([
-    getUserOrganizations(session.user.email),
-    getOrganizationUsers(session.user.organizationId),
+    getUserOrganizations(user.email),
+    getOrganizationUsers(user.organizationId),
   ])
 
-  return <NewStudyPage organizations={organizations} user={session.user} usersEmail={users.map((user) => user.email)} />
+  return <NewStudyPage organizations={organizations} user={user} usersEmail={users.map((user) => user.email)} />
 }
 
-export default NewStudy
+export default withAuth(NewStudy)

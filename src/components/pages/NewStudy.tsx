@@ -17,9 +17,10 @@ interface Props {
   user: User
   usersEmail: string[]
   organizations: OrganizationWithSites[]
+  defaultOrganization?: OrganizationWithSites
 }
 
-const NewStudyPage = ({ organizations, user, usersEmail }: Props) => {
+const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization }: Props) => {
   const [organization, setOrganization] = useState<OrganizationWithSites>()
   const tNav = useTranslations('nav')
 
@@ -32,8 +33,12 @@ const NewStudyPage = ({ organizations, user, usersEmail }: Props) => {
       validator: '',
       isPublic: 'true',
       startDate: dayjs().toISOString(),
-      organizationId: organizations[0]?.id || '',
-      sites: organizations[0]?.sites.map((site) => ({ ...site, selected: false })) || [],
+      organizationId: (defaultOrganization ?? organizations[0])?.id || '',
+      sites:
+        (defaultOrganization ?? organizations[0])?.sites.map((site) => ({
+          ...site,
+          selected: false,
+        })) || [],
       exports: {
         [Export.Beges]: false,
         [Export.GHGP]: false,
