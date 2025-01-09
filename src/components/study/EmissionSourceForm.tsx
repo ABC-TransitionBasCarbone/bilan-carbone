@@ -38,6 +38,16 @@ const EmissionSourceForm = ({
   const tCategorisations = useTranslations('categorisations')
   const [error, setError] = useState('')
 
+  const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (Number(event.target.value) > 0) {
+      setError('')
+      update('value', Number(event.target.value))
+    } else {
+      setError(`${t('form.sign')}`)
+      event.target.value = ''
+    }
+  }
+
   return (
     <>
       <div className={classNames(styles.row, 'flex')}>
@@ -90,10 +100,7 @@ const EmissionSourceForm = ({
             type="number"
             data-testid="emission-source-value-da"
             defaultValue={emissionSource.value}
-            onBlur={(event) => (
-              Number(event.target.value) <= 0 && (setError(`${t('form.sign')}`), (event.target.value = '')),
-              update('value', Number(event.target.value))
-            )}
+            onBlur={(event) => handleUpdate(event)}
             label={`${t('form.value')} *`}
             helperText={error}
             error={!!error}
