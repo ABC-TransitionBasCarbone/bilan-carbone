@@ -1,3 +1,5 @@
+import withAuth from '@/components/hoc/withAuth'
+import WithStudyDetails from '@/components/hoc/withStudyDetails'
 import StudyNavbar from '@/components/studyNavbar/StudyNavbar'
 import { UUID } from 'crypto'
 import styles from './layout.module.css'
@@ -22,4 +24,4 @@ const NavLayout = async ({ children, params }: Props) => {
   )
 }
 
-export default NavLayout
+export default withAuth(WithStudyDetails(NavLayout))
