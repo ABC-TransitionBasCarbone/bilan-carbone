@@ -97,3 +97,9 @@ export const hasUserToValidateInOrganization = async (organizationId: string | n
         where: { organizationId, isValidated: false },
       })
     : 0
+
+export const updateProfile = (userId: string, data: Prisma.UserUpdateInput) =>
+  prismaClient.user.update({
+    where: { id: userId },
+    data,
+  })

@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       return url || baseUrl
     },
-    async jwt({ token, user }) {
+    async jwt({ session, token, trigger, user }) {
       if (user) {
         return {
           ...token,
@@ -32,6 +32,9 @@ export const authOptions: NextAuthOptions = {
           organizationId: user.organizationId,
           level: user.level,
         }
+      }
+      if (trigger === 'update') {
+        return { ...token, firstName: session.firstName, lastName: session.lastName }
       }
       return token
     },

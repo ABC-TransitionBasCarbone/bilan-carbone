@@ -6,6 +6,7 @@ import {
   changeUserRole,
   deleteUser,
   getUserByEmail,
+  updateProfile,
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
@@ -22,7 +23,7 @@ import {
 } from '../email/email'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
-import { AddMemberCommand } from './user.command'
+import { AddMemberCommand, EditProfileCommand } from './user.command'
 
 const updateUserResetToken = async (email: string) => {
   const resetToken = Math.random().toString(36)
@@ -166,4 +167,12 @@ export const changeRole = async (email: string, role: Role) => {
     return NOT_AUTHORIZED
   }
   await changeUserRole(email, role)
+}
+
+export const updateUserProfile = async (command: EditProfileCommand) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return NOT_AUTHORIZED
+  }
+  await updateProfile(session.user.id, command)
 }

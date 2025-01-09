@@ -133,7 +133,15 @@
   "profile": {
     "title": "Mon profil",
     "legalNotices": "Mentions légales",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "cancelUpdate": "Annuler",
+    "update": "Mettre à jour",
+    "validation": {
+      "firstName": "1 caractère minimum",
+      "lastName": "1 caractère minimum"
+    }
   },
   "admin": {
     "title": "Administration du BC+",
