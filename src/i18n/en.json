@@ -133,7 +133,15 @@
   "profile": {
     "title": "My profile",
     "legalNotices": "Legal notices",
-    "logout": "Log out"
+    "logout": "Log out",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "cancelUpdate": "Cancel",
+    "update": "Update",
+    "validation": {
+      "firstName": "1 character minimum",
+      "lastName": "1 character minimum"
+    }
   },
   "admin": {
     "title": "Administration",

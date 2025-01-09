@@ -25,3 +25,20 @@ export const AddMemberCommandValidation = z.object({
 })
 
 export type AddMemberCommand = z.infer<typeof AddMemberCommandValidation>
+
+export const EditProfileCommandValidation = z.object({
+  firstName: z
+    .string({
+      required_error: 'firstName',
+    })
+    .trim()
+    .min(1, 'firstName'),
+  lastName: z
+    .string({
+      required_error: 'lastName',
+    })
+    .trim()
+    .min(1, 'lastName'),
+})
+
+export type EditProfileCommand = z.infer<typeof EditProfileCommandValidation>
