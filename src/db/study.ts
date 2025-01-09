@@ -91,7 +91,7 @@ const fullStudyInclude = {
       },
     },
   },
-  exports: { select: { type: true } },
+  exports: { select: { type: true, control: true } },
 } satisfies Prisma.StudyInclude
 
 const normalizeAllowedUsers = (

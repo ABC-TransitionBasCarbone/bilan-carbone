@@ -34,8 +34,9 @@ const ExportCheckbox = ({ id, values, setValues }: Props) => {
               disabled={!values[id]}
             >
               {Object.keys(ControlMode).map((key) => (
-                <MenuItem key={key} value={key}>
+                <MenuItem key={key} value={key} disabled={key !== ControlMode.Operational}>
                   {t(key)}
+                  {key !== ControlMode.Operational && <em>&nbsp;(à venir)</em>}
                 </MenuItem>
               ))}
             </Select>
