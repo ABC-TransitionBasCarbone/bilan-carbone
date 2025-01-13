@@ -2383,7 +2383,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '20841',
     '20845',
   ],
-  [SubPost.PapiersCartons]: ['26737', '26738', '20647', '20587', '24309', '26739', '26740', '24295'],
+  [SubPost.PapiersCartons]: ['26737', '26738', '20647', '20587', '24309', '26739', '26740', '24295', '20908'],
   [SubPost.MateriauxDeConstruction]: [
     '20697',
     '20695',

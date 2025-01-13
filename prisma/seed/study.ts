@@ -50,6 +50,10 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       importedFrom: Import.Manual,
       organizationId: creator.organizationId,
       status: EmissionFactorStatus.Valid,
+      co2b: 345,
+      co2f: 34,
+      ch4f: 284,
+      n2o: 2,
       totalCo2: 320,
       reliability: 5,
       importedId: '1',
@@ -351,7 +355,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Bois courte durée de vie (ameublement…) fabrication, France continentale, Base Carbone',
         subPost: SubPost.PapiersCartons,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        value: 3,
+        value: 2.6,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20908')?.id,
       },
       {
@@ -362,7 +366,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Bois courte durée de vie (ameublement…) fabrication, France continentale, Base Carbone - Fin de vie',
         subPost: SubPost.TraitementDesEmballagesEnFinDeVie,
         caracterisation: EmissionSourceCaracterisation.FinalClient,
-        value: 3,
+        value: 2.6,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34678')?.id,
       },
       {
@@ -373,7 +377,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Papier Moyen, Hors utilisation et fin de vie, France continentale, Base Carbone',
         subPost: SubPost.PapiersCartons,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        value: 3000,
+        value: 2500,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24309')?.id,
       },
       {
@@ -384,7 +388,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         name: 'Papier Moyen, Hors utilisation et fin de vie, France continentale, Base Carbone - Fin de vie',
         subPost: SubPost.TraitementDesEmballagesEnFinDeVie,
         caracterisation: EmissionSourceCaracterisation.FinalClient,
-        value: 3,
+        value: 2.5,
         emissionFactorId: papier.id,
       },
       {
