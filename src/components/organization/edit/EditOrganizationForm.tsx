@@ -9,8 +9,11 @@ import {
   UpdateOrganizationCommand,
   UpdateOrganizationCommandValidation,
 } from '@/services/serverFunctions/organization.command'
+import { findStudiesWithSites } from '@/services/serverFunctions/study'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -23,7 +26,9 @@ interface Props {
 const EditOrganizationForm = ({ organization }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
+  const tStudySites = useTranslations('organization.studySites')
   const [error, setError] = useState('')
+  const [sitesOnError, setSitesOnError] = useState<AsyncReturnType<typeof findStudiesWithSites>>([])
 
   const form = useForm<UpdateOrganizationCommand>({
     resolver: zodResolver(UpdateOrganizationCommandValidation),
@@ -37,12 +42,21 @@ const EditOrganizationForm = ({ organization }: Props) => {
   })
 
   const onSubmit = async (command: UpdateOrganizationCommand) => {
-    const result = await updateOrganizationCommand(command)
-    if (result) {
-      setError(result)
+    setSitesOnError([])
+    const deletedSiteIds = organization.sites
+      .filter((site) => !command.sites.find((s) => s.id === site.id))
+      .map((site) => site.id)
+    const deletedSitesOnStudies = await findStudiesWithSites(deletedSiteIds)
+    if (deletedSitesOnStudies.length > 0) {
+      setSitesOnError(deletedSitesOnStudies)
     } else {
-      router.push(`/organisations/${organization.id}`)
-      router.refresh()
+      const result = await updateOrganizationCommand(command)
+      if (result) {
+        setError(result)
+      } else {
+        router.push(`/organisations/${organization.id}`)
+        router.refresh()
+      }
     }
   }
 
@@ -61,6 +75,32 @@ const EditOrganizationForm = ({ organization }: Props) => {
         {t('edit')}
       </Button>
       {error && <p>{error}</p>}
+      <Dialog
+        open={sitesOnError.length > 0}
+        aria-labelledby="delete-site-with-studies-dialog-title"
+        aria-describedby="delete-site-with-studies-dialog-description"
+      >
+        <DialogTitle id="delete-site-with-studies-dialog-title">{tStudySites('title')}</DialogTitle>
+        <DialogContent>
+          <div id="delete-site-with-studies-dialog-description" className="flex-col">
+            {tStudySites('description')}
+            <ul>
+              {sitesOnError.map((studySite) => (
+                <li key={studySite.id}>
+                  {tStudySites.rich('existingSite', {
+                    name: () =>
+                      `${studySite.site.name}${studySite.site.organization.isCR ? ` (${studySite.site.organization.name})` : ''}`,
+                    link: () => <Link href={`/etudes/${studySite.studyId}/perimetre`}>{studySite.study.name}</Link>,
+                  })}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSitesOnError([])}>{tStudySites('close')}</Button>
+        </DialogActions>
+      </Dialog>
     </Form>
   )
 }
