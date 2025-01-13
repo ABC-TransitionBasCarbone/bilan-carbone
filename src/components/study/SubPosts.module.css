@@ -1,0 +1,17 @@
+.subPosts {
+  gap: 1rem;
+}
+
+.count {
+  font-size: 0.875rem;
+  color: var(--neutral-50);
+}
+
+.contributors {
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.download {
+  height: 3rem;
+}

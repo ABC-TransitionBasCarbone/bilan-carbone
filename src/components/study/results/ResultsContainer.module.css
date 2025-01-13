@@ -1,0 +1,37 @@
+.studyName {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.container {
+  position: relative;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: space-between;
+  @media screen and (max-width: 60rem) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.separatorContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  @media screen and (max-width: 60rem) {
+    display: none;
+  }
+}
+
+.separator {
+  width: 1px;
+  height: 80%;
+  background-color: var(--neutral-30);
+}
+
+.graph {
+  width: calc(50% - 1rem);
+  @media screen and (max-width: 60rem) {
+    width: 100%;
+  }
+}

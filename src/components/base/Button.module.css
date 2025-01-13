@@ -1,0 +1,15 @@
+.button {
+  background-color: var(--primary-40) !important;
+  color: var(--neutral-00) !important;
+  width: fit-content !important;
+  border-radius: 0.25rem !important;
+  text-transform: unset !important;
+
+  &:hover {
+    background-color: var(--primary-60) !important;
+  }
+
+  &:disabled {
+    background-color: var(--neutral-30) !important;
+  }
+}

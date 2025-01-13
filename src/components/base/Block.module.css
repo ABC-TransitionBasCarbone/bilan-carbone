@@ -1,0 +1,49 @@
+.header {
+  gap: 2rem;
+}
+
+.title {
+  color: var(--neutral-100);
+  gap: 1rem;
+}
+
+.description {
+  margin-top: 0.25rem;
+}
+
+.block {
+  margin: auto;
+  padding-top: 3rem;
+}
+
+.content {
+  position: relative;
+}
+
+.children {
+  padding-bottom: 2rem;
+}
+
+.withMargin {
+  margin-top: 2rem;
+}
+
+.bigIcon {
+  height: 2rem;
+  svg {
+    height: 2rem;
+    width: auto;
+  }
+}
+
+.icon {
+  height: 1.5rem;
+  svg {
+    height: 1.5rem;
+    width: auto;
+  }
+}
+
+.actions {
+  gap: 1rem;
+}

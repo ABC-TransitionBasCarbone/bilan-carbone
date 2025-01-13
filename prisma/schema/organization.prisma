@@ -1,0 +1,36 @@
+model Organization {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  name  String
+  siret String?
+  isCR  Boolean @map("is_cr")
+
+  users     User[]
+  sites     Site[]
+  studies   Study[]
+  emissions EmissionFactor[]
+
+  parentId String?        @map("parent_id")
+  parent   Organization?  @relation("childOrganizations", fields: [parentId], references: [id])
+  childs   Organization[] @relation("childOrganizations")
+
+  @@map("organizations")
+}
+
+model Site {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  name String
+  etp  Int    @default(0)
+  ca   Float  @default(0)
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
+  studies        StudySite[]
+
+  @@map("sites")
+}

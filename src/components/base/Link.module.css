@@ -1,0 +1,7 @@
+.link {
+  color: var(--primary-40);
+
+  &:hover {
+    color: var(--primary-60);
+  }
+}

@@ -1,0 +1,18 @@
+.members {
+  width: fit-content;
+  gap: 1rem;
+}
+
+.line {
+  gap: 3rem;
+}
+
+.email {
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+.invitation {
+  font-size: 0.875rem;
+  color: var(--neutral-50);
+}

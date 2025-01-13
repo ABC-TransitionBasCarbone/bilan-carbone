@@ -1,0 +1,211 @@
+enum EmissionFactorPartType {
+  CarburantAmontCombustion
+  Amont
+  Intrants
+  Combustion
+  TransportEtDistribution
+  Energie
+  Fabrication
+  Traitement
+  Collecte
+  Autre
+  Amortissement
+  Incineration
+  EmissionsFugitives
+  Fuites
+  Transport
+  CombustionALaCentrale
+  Pertes
+}
+
+enum Import {
+  BaseEmpreinte
+  Legifrance
+  NegaOctet
+  Manual
+}
+
+enum EmissionFactorStatus {
+  Archived
+  Valid
+}
+
+enum SubPost {
+  // Energies
+  CombustiblesFossiles
+  CombustiblesOrganiques
+  ReseauxDeChaleurEtDeVapeur
+  ReseauxDeFroid
+  Electricite
+
+  // AutresEmissionsNonEnergetiques
+  Agriculture
+  EmissionsLieesAuChangementDAffectationDesSolsCas
+  EmissionsLieesALaProductionDeFroid
+  EmissionsLieesAuxProcedesIndustriels
+  AutresEmissionsNonEnergetiques
+
+  // IntrantsBiensEtMatieres
+  MetauxPlastiquesEtVerre
+  PapiersCartons
+  MateriauxDeConstruction
+  ProduitsChimiquesEtHydrogene
+  NourritureRepasBoissons
+  MatiereDestineeAuxEmballages
+  AutresIntrants
+  BiensEtMatieresEnApprocheMonetaire
+
+  // IntrantsServices
+  AchatsDeServices
+  UsagesNumeriques
+  ServicesEnApprocheMonetaire
+
+  // DechetsDirects
+  DechetsDEmballagesEtPlastiques
+  DechetsOrganiques
+  DechetsOrduresMenageres
+  DechetsDangereux
+  DechetsBatiments
+  DechetsFuitesOuEmissionsNonEnergetiques
+  EauxUsees
+
+  //Fret
+  FretEntrant
+  FretInterne
+  FretSortant
+
+  // Deplacements
+  DeplacementsDomicileTravail
+  DeplacementsDesEmployesDansLeCadreDuTravail
+  DeplacementsVisiteurs
+
+  // Immobilisations
+  Batiments
+  AutresInfrastructures
+  Equipements
+  Informatique
+
+  // UtilisationEtDependance
+  UtilisationEnResponsabilite
+  UtilisationEnDependance
+  InvestissementsFinanciersRealises
+
+  // FinDeVie
+  ConsommationDEnergieEnFinDeVie
+  TraitementDesDechetsEnFinDeVie
+  FuitesOuEmissionsNonEnergetiques
+  TraitementDesEmballagesEnFinDeVie
+}
+
+model EmissionFactorImportVersion {
+  id        String   @id @default(uuid())
+  internId  String   @map("intern_id")
+  source    Import
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  emissionFactors EmissionFactor[]
+  Study           Study[]
+
+  @@unique([source, internId])
+  @@map("emission_factor_import_version")
+}
+
+model EmissionFactor {
+  id                  String               @id @default(uuid())
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @default(now()) @map("updated_at")
+  emissionFactorParts EmissionFactorPart[]
+
+  oldBCId String? @map("old_bc_id")
+
+  versionId String?                      @map("version_id")
+  version   EmissionFactorImportVersion? @relation(fields: [versionId], references: [id])
+
+  importedFrom   Import        @map("imported_from")
+  importedId     String?       @map("imported_id")
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  status   EmissionFactorStatus
+  metaData EmissionFactorMetaData[]
+  source   String?
+  location String?
+
+  reliability                  Int?
+  technicalRepresentativeness  Int? @map("technical_representativeness")
+  geographicRepresentativeness Int? @map("geographic_representativeness")
+  temporalRepresentativeness   Int? @map("temporal_representativeness")
+  completeness                 Int? @map("completeness")
+
+  totalCo2 Float  @map("total_co2")
+  co2f     Float?
+  ch4f     Float?
+  ch4b     Float?
+  n2o      Float?
+  co2b     Float?
+  sf6      Float?
+  hfc      Float?
+  pfc      Float?
+  otherGES Float? @map("other_ges")
+  unit     Unit?
+
+  subPosts            SubPost[]             @map("sub_posts")
+  studyEmissionSource StudyEmissionSource[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("emission_factors")
+}
+
+model EmissionFactorMetaData {
+  emissionFactor   EmissionFactor @relation(fields: [emissionFactorId], references: [id])
+  emissionFactorId String         @map("emission_factor_id")
+  language         String
+
+  title     String?
+  attribute String?
+  frontiere String?
+  tag       String?
+  location  String?
+  comment   String?
+
+  @@id([emissionFactorId, language])
+  @@map("emission_metadata")
+}
+
+model EmissionFactorPart {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  oldBCId String? @map("old_bc_id")
+
+  emissionFactorId String                       @map("emission_factor_id")
+  emissionFactor   EmissionFactor               @relation(fields: [emissionFactorId], references: [id])
+  metaData         EmissionFactorPartMetaData[]
+  type             EmissionFactorPartType
+
+  totalCo2 Float  @map("total_co2")
+  co2f     Float?
+  ch4f     Float?
+  ch4b     Float?
+  n2o      Float?
+  co2b     Float?
+  sf6      Float?
+  hfc      Float?
+  pfc      Float?
+  otherGES Float? @map("other_ges")
+
+  @@map("emission_factor_parts")
+}
+
+model EmissionFactorPartMetaData {
+  emissionFactorPart   EmissionFactorPart @relation(fields: [emissionFactorPartId], references: [id])
+  emissionFactorPartId String             @map("emission_post_id")
+  title                String
+  language             String
+
+  @@id([emissionFactorPartId, language])
+  @@map("emission_factor_part_metadata")
+}

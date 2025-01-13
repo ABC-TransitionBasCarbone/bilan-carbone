@@ -1,0 +1,116 @@
+.container {
+  &:not(:last-child) {
+    border-bottom: solid 1px var(--neutral-30);
+  }
+}
+
+.editIcon {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  display: none;
+  color: var(--neutral-50);
+}
+
+.line {
+  position: relative;
+  cursor: pointer;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  padding: 1rem 3.5rem 1rem 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  &:hover {
+    background-color: var(--primary-10);
+
+    .editIcon {
+      display: block;
+    }
+  }
+}
+
+.infosLeft,
+.infosRight {
+  gap: 0.25rem;
+}
+
+.infosRight {
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.status {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--neutral-50);
+}
+
+@keyframes grid-expand {
+  0% {
+    grid-template-rows: 0fr;
+  }
+  100% {
+    grid-template-rows: 1fr;
+  }
+}
+
+.detail {
+  height: 0;
+  overflow: hidden;
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.displayed {
+  min-height: 0;
+  height: auto;
+}
+
+.detailContent {
+  border-top: solid 1px var(--neutral-20);
+  margin: -0.25rem 0 0.5rem 0;
+  padding: 1rem;
+}
+
+.row {
+  justify-content: space-between;
+  gap: 1rem;
+  > div {
+    flex: 1;
+  }
+
+  @media screen and (max-width: 60rem) {
+    flex-direction: column;
+  }
+
+  &:not(:first-child) {
+    margin-top: 1rem;
+  }
+}
+
+.inputWithUnit {
+  position: relative;
+  width: min-content;
+  max-width: 15rem;
+  input {
+    width: 13.25rem;
+  }
+}
+
+.unit {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+}
+
+.results {
+  margin-top: 2rem;
+}
+
+.delete {
+  justify-content: flex-end;
+}

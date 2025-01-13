@@ -1,0 +1,26 @@
+.flowButtons {
+  gap: 1rem;
+}
+
+.flowUploadButton {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+}
+
+.flowImage {
+  max-width: 100%;
+  height: auto;
+  max-height: 30rem;
+  object-fit: contain;
+}
+
+.error {
+  color: var(--error);
+}

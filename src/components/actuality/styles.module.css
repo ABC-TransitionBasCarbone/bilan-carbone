@@ -1,0 +1,25 @@
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  gap: 1rem;
+  color: var(--primary-60);
+}
+
+.header {
+  font-weight: bold;
+  gap: 1.5rem;
+}
+
+.actualities {
+  gap: 1rem;
+}
+
+.text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.date {
+  color: var(--neutral-50);
+  font-size: 0.875rem;
+}

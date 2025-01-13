@@ -1,0 +1,70 @@
+.selector {
+  width: 10rem;
+}
+
+.pageInput {
+  min-width: 5rem;
+}
+
+.filters {
+  gap: 1rem;
+}
+
+.searchInput {
+  input {
+    min-width: 20rem;
+  }
+}
+
+.pagination {
+  gap: 0.5rem;
+}
+
+.importFrom {
+  height: 1.25rem;
+  width: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+
+  svg {
+    font-size: 1.25rem !important;
+  }
+}
+
+.line {
+  &:hover {
+    border-color: var(--neutral-40);
+    &:nth-child(even) {
+      background: var(--neutral-10);
+    }
+    &:nth-child(odd) {
+      background: var(--neutral-30);
+    }
+  }
+}
+
+.cell {
+  padding: 0;
+}
+
+.cellDiv,
+.cellButton {
+  padding: 0.5rem;
+  background-color: transparent;
+  width: 100%;
+  border: none;
+  text-align: inherit;
+  display: block;
+  font-size: 1rem;
+}
+
+.cellButton {
+  cursor: pointer;
+}
+
+.detail {
+  background-color: var(--neutral-00);
+  padding: 1rem;
+}

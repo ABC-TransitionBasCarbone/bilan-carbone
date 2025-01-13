@@ -1,0 +1,10 @@
+.container {
+  height: 3.5rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.select {
+  width: 10rem;
+}

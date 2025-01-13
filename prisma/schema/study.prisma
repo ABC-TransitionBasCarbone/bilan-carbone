@@ -1,0 +1,180 @@
+enum Export {
+  Beges
+  GHGP
+  ISO14069
+}
+
+enum ControlMode {
+  CapitalShare
+  Financial
+  Operational
+}
+
+enum Level {
+  Initial
+  Standard
+  Advanced
+}
+
+enum StudyRole {
+  Validator
+  Editor
+  Reader
+}
+
+enum EmissionSourceCaracterisation {
+  Operated
+  NotOperated
+  OperatedProcedeed
+  OperatedFugitive
+  NotOperatedSupported
+  NotOperatedNotSupported
+  Rented
+  FinalClient
+}
+
+model Study {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  createdById String @map("created_by_id")
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  name      String
+  isPublic  Boolean       @map("is_public")
+  startDate DateTime      @map("start_date") @db.Date
+  endDate   DateTime      @map("end_date") @db.Date
+  level     Level
+  exports   StudyExport[]
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
+
+  versionId String                      @map("version_id")
+  version   EmissionFactorImportVersion @relation(fields: [versionId], references: [id])
+
+  allowedUsers    UserOnStudy[]
+  emissionSources StudyEmissionSource[]
+  contributors    Contributors[]
+  sites           StudySite[]
+  flows           Document[]
+
+  @@map("studies")
+}
+
+model StudyExport {
+  study   Study       @relation(fields: [studyId], references: [id])
+  studyId String      @map("study_id")
+  type    Export
+  control ControlMode
+
+  @@id([studyId, type])
+  @@map("study_exports")
+}
+
+model UserOnStudy {
+  study   Study  @relation(fields: [studyId], references: [id])
+  studyId String @map("study_id")
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @map("user_id")
+
+  role StudyRole
+
+  @@id([studyId, userId])
+  @@map("users_on_study")
+}
+
+model Contributors {
+  study   Study  @relation(fields: [studyId], references: [id])
+  studyId String @map("study_id")
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+
+  subPost SubPost
+
+  @@id([studyId, userId, subPost])
+  @@map("contributors")
+}
+
+enum EmissionSourceType {
+  Physical
+  Accounting
+  Extrapolated
+  Statistical
+  Approched
+}
+
+model StudyEmissionSource {
+  id        String   @id @default(uuid())
+  study     Study    @relation(fields: [studyId], references: [id])
+  studyId   String   @map("study_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  subPost         SubPost
+  name            String
+  tag             String?
+  caracterisation EmissionSourceCaracterisation?
+
+  emissionFactorId String?         @map("emission_factor_id")
+  emissionFactor   EmissionFactor? @relation(fields: [emissionFactorId], references: [id])
+
+  siteId String    @map("site_id")
+  site   StudySite @relation(fields: [siteId], references: [id])
+
+  value                        Float?
+  reliability                  Int?
+  technicalRepresentativeness  Int?                @map("technical_representativeness")
+  geographicRepresentativeness Int?                @map("geographic_representativeness")
+  temporalRepresentativeness   Int?                @map("temporal_representativeness")
+  completeness                 Int?                @map("completeness")
+  source                       String?
+  type                         EmissionSourceType?
+  comment                      String?
+  validated                    Boolean?
+
+  depreciationPeriod Int? @map("depreciation_period")
+
+  contributorId String? @map("contributor_id")
+  contributor   User?   @relation(fields: [contributorId], references: [id])
+
+  @@map("study_emission_sources")
+}
+
+model ExportRule {
+  id String @id @default(uuid())
+
+  export  Export
+  subPost SubPost                 @map("sub_post")
+  type    EmissionFactorPartType?
+
+  // BEGES Controle opérationnel
+  operated                String?
+  notOperated             String? @map("not_operated")
+  operatedProcedeed       String? @map("operated_procedeed")
+  operatedFugitive        String? @map("operated_fugitive")
+  notOperatedSupported    String? @map("not_operated_supported")
+  notOperatedNotSupported String? @map("not_operated_not_supported")
+  rented                  String?
+  finalClient             String? @map("final_client")
+
+  @@unique([export, subPost, type])
+  @@map("export_rules")
+}
+
+model StudySite {
+  id String @id @default(uuid())
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  siteId String @map("site_id")
+  site   Site   @relation(fields: [siteId], references: [id])
+
+  etp                 Int
+  ca                  Float
+  StudyEmissionSource StudyEmissionSource[]
+
+  @@map("study_sites")
+}

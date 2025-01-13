@@ -1,0 +1,17 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": ["*/.json", "*/.yml"],
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ],
+  "printWidth": 120,
+  "plugins": ["prettier-plugin-organize-imports"]
+}

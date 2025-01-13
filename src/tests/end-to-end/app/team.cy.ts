@@ -1,0 +1,109 @@
+import { Role } from '@prisma/client'
+
+describe('Team', () => {
+  beforeEach(() => {
+    cy.exec('npx prisma db seed')
+
+    cy.intercept('POST', '/api/auth/callback/credentials').as('login')
+    cy.intercept('POST', '/api/auth/signout').as('logout')
+    cy.intercept('POST', '/equipe/ajouter').as('new-member')
+  })
+
+  it('should change a member role', () => {
+    cy.login('bc-admin-1@yopmail.com', 'password-1')
+    cy.visit('/equipe')
+
+    cy.getByTestId('team-table-line').eq(0).contains('bc-admin-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('have.value', Role.ADMIN)
+        cy.get('input').should('be.disabled')
+      })
+
+    cy.getByTestId('team-table-line').eq(3).contains('bc-super_admin-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line')
+      .eq(3)
+      .within(() => {
+        cy.get('input').should('have.value', Role.SUPER_ADMIN)
+        cy.get('input').should('be.disabled')
+      })
+
+    cy.getByTestId('team-table-line').eq(1).contains('bc-default-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line')
+      .eq(1)
+      .within(() => {
+        cy.get('input').should('have.value', Role.DEFAULT)
+        cy.get('.MuiSelect-select').click()
+      })
+    cy.get('[data-value="GESTIONNAIRE"]').click()
+
+    cy.reload()
+
+    cy.getByTestId('team-table-line').eq(1).contains('bc-default-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line')
+      .eq(1)
+      .within(() => {
+        cy.get('input').should('have.value', Role.GESTIONNAIRE)
+      })
+  })
+
+  it('should add a new member', () => {
+    cy.login('bc-admin-1@yopmail.com', 'password-1')
+    cy.visit('/equipe')
+
+    cy.getByTestId('pending-invitation').should('not.exist')
+    cy.getByTestId('add-member-link').click()
+
+    cy.getByTestId('new-member-firstName').type('User')
+    cy.getByTestId('new-member-lastName').type('Test')
+    cy.getByTestId('new-member-email').type('user-test-1@test.fr')
+    cy.getByTestId('new-member-level').click()
+    cy.get('[data-value="Initial"]').click()
+    cy.getByTestId('new-member-role').click()
+    cy.get('[data-value="GESTIONNAIRE"]').click()
+
+    cy.getByTestId('new-member-create-button').click()
+    cy.wait('@new-member')
+
+    cy.url().should('eq', `${Cypress.config().baseUrl}/equipe`)
+    cy.getByTestId('pending-invitation').contains('user-test-1@test.fr').should('exist')
+
+    cy.visit('http://localhost:1080')
+    cy.get('.email-item-link')
+      .first()
+      .invoke('attr', 'href')
+      .then((link) => {
+        const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
+        cy.visit(hmtlUrl)
+        cy.url().should('include', hmtlUrl)
+
+        cy.get('a')
+          .invoke('attr', 'href')
+          .then((link) => cy.visit(link as string))
+      })
+
+    cy.wait('@logout')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('user-test-1@test.fr')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('test1')
+
+    cy.getByTestId('reset-button').click()
+
+    cy.url().should('include', '/login')
+
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('user-test-1@test.fr')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('test1')
+    cy.getByTestId('login-button').click()
+
+    cy.wait('@login')
+    cy.url().should('not.include', '/login')
+  })
+})
