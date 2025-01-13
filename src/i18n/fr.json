@@ -729,7 +729,6 @@
     "form": {
       "validate": "Validée",
       "name": "Nom",
-      "tag": "Tag",
       "caracterisation": "Caractérisation",
       "emissionFactor": "Facteur d'émission",
       "value": "Valeur donnée d'activité",

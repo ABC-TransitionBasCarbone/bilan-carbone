@@ -58,13 +58,6 @@ const EmissionSourceForm = ({
           onBlur={(event) => update('name', event.target.value)}
           label={`${t('form.name')} *`}
         />
-        <TextField
-          disabled={!canEdit}
-          defaultValue={emissionSource.tag}
-          data-testid="emission-source-tag"
-          onBlur={(event) => update('tag', event.target.value)}
-          label={t('form.tag')}
-        />
         {caracterisations.length > 0 && (
           <FormControl>
             <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')}${mandatoryCaracterisation ? ' *' : ''}`}</InputLabel>

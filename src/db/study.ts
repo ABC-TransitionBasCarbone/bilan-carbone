@@ -16,7 +16,6 @@ const fullStudyInclude = {
       subPost: true,
       name: true,
       caracterisation: true,
-      tag: true,
       value: true,
       reliability: true,
       technicalRepresentativeness: true,
