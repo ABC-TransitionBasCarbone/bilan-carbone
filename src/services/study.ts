@@ -431,7 +431,7 @@ export const downloadStudyResults = async (
 
   data.push(formatConsolidatedStudyResultsForExport(study, siteList, tStudy, tExport, tPost, tQuality))
 
-  if (study.exports.find((exp) => exp.type === Export.Beges)) {
+  if (study.exports.some((exp) => exp.type === Export.Beges)) {
     data.push(
       formatBegesStudyResultsForExport(study, rules, emissionFactorsWithParts, siteList, tExport, tQuality, tBeges),
     )
