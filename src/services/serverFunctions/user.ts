@@ -30,7 +30,7 @@ const updateUserResetToken = async (email: string) => {
   const payload = {
     email,
     resetToken,
-    exp: Math.round(Date.now() / 1000) + 60 * 60 * 24 * 7, // 7 days expiration
+    exp: Math.round(Date.now() / 1000) + 24 * 60 * 60, // 24 hours expiration
   }
 
   await updateUserResetTokenForEmail(email, resetToken)
@@ -53,43 +53,43 @@ export const sendInvitation = async (
   if (newUser) {
     return role
       ? sendUserOnStudyInvitationEmail(
-          email,
-          study.name,
-          study.id,
-          organization.name,
-          `${user.firstName} ${user.lastName}`,
-          newUser.firstName,
-          role,
-        )
+        email,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+        newUser.firstName,
+        role,
+      )
       : sendContributorInvitationEmail(
-          email,
-          study.name,
-          study.id,
-          organization.name,
-          `${user.firstName} ${user.lastName}`,
-          newUser.firstName,
-        )
+        email,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+        newUser.firstName,
+      )
   }
 
   const token = await updateUserResetToken(email)
   return role
     ? sendNewUserOnStudyInvitationEmail(
-        email,
-        token,
-        study.name,
-        study.id,
-        organization.name,
-        `${user.firstName} ${user.lastName}`,
-        role,
-      )
+      email,
+      token,
+      study.name,
+      study.id,
+      organization.name,
+      `${user.firstName} ${user.lastName}`,
+      role,
+    )
     : sendNewContributorInvitationEmail(
-        email,
-        token,
-        study.name,
-        study.id,
-        organization.name,
-        `${user.firstName} ${user.lastName}`,
-      )
+      email,
+      token,
+      study.name,
+      study.id,
+      organization.name,
+      `${user.firstName} ${user.lastName}`,
+    )
 }
 
 export const addMember = async (member: AddMemberCommand) => {
