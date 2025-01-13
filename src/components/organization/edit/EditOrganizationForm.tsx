@@ -11,7 +11,7 @@ import {
 } from '@/services/serverFunctions/organization.command'
 import { findStudiesWithSites } from '@/services/serverFunctions/study'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -23,21 +23,12 @@ interface Props {
   organization: OrganizationWithSites
 }
 
-interface SiteOnError {
-  id: string
-  studyId: string
-  siteName: string
-  studyName: string
-  organizationName: string
-  fromCROrga: boolean
-}
-
 const EditOrganizationForm = ({ organization }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
   const tStudySites = useTranslations('organization.studySites')
   const [error, setError] = useState('')
-  const [sitesOnError, setSitesOnError] = useState<SiteOnError[]>([])
+  const [sitesOnError, setSitesOnError] = useState<AsyncReturnType<typeof findStudiesWithSites>>([])
 
   const form = useForm<UpdateOrganizationCommand>({
     resolver: zodResolver(UpdateOrganizationCommandValidation),
@@ -57,16 +48,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
       .map((site) => site.id)
     const deletedSitesOnStudies = await findStudiesWithSites(deletedSiteIds)
     if (deletedSitesOnStudies.length > 0) {
-      setSitesOnError(
-        deletedSitesOnStudies.map((studySite) => ({
-          id: studySite.id,
-          studyId: studySite.studyId,
-          siteName: studySite.site.name,
-          studyName: studySite.study.name,
-          organizationName: studySite.site.organization.name,
-          fromCROrga: studySite.site.organization.isCR,
-        })),
-      )
+      setSitesOnError(deletedSitesOnStudies)
     } else {
       const result = await updateOrganizationCommand(command)
       if (result) {
@@ -100,17 +82,20 @@ const EditOrganizationForm = ({ organization }: Props) => {
       >
         <DialogTitle id="delete-site-with-studies-dialog-title">{tStudySites('title')}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="delete-site-with-studies-dialog-description" className="flex-col">
+          <div id="delete-site-with-studies-dialog-description" className="flex-col">
             {tStudySites('description')}
-            {sitesOnError.map((studySite) => (
-              <span key={studySite.id}>
-                {tStudySites.rich('existingSite', {
-                  n: () => `${studySite.siteName}${studySite.fromCROrga ? ` (${studySite.organizationName})` : ''}`,
-                  l: () => <Link href={`/etudes/${studySite.studyId}/perimetre`}>{studySite.studyName}</Link>,
-                })}
-              </span>
-            ))}
-          </DialogContentText>
+            <ul>
+              {sitesOnError.map((studySite) => (
+                <li key={studySite.id}>
+                  {tStudySites.rich('existingSite', {
+                    name: () =>
+                      `${studySite.site.name}${studySite.site.organization.isCR ? ` (${studySite.site.organization.name})` : ''}`,
+                    link: () => <Link href={`/etudes/${studySite.studyId}/perimetre`}>{studySite.study.name}</Link>,
+                  })}
+                </li>
+              ))}
+            </ul>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSitesOnError([])}>{tStudySites('close')}</Button>

@@ -697,7 +697,7 @@
       "title": "Vous ne pouvez pas supprimer ces sites",
       "description": "Des études existent avec les sites suivants. Vous devez d'abord les supprimer des études concernées avant de pouvoir les supprimer de votre organisation.",
       "close": "Fermer",
-      "existingSite": "<n></n> : <l></l>"
+      "existingSite": "<name></name> : <link></link>"
     }
   },
   "emissionSource": {
