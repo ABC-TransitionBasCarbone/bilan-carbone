@@ -184,31 +184,31 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
 
+export const getStudySites = (studyId: string) => prismaClient.studySite.findMany({ where: { studyId } })
+
 export const updateStudySites = async (
   studyId: string,
   newStudySites: Prisma.StudySiteCreateManyInput[],
-  deletedSites: string[],
-  updatedSites: Prisma.StudySiteCreateManyInput[],
+  deletedSiteIds: string[],
 ) => {
   return prismaClient.$transaction(async (transaction) => {
     const promises = []
-    if (deletedSites.length) {
-      const deletedSiteIds = (
-        await transaction.studySite.findMany({ where: { studyId, siteId: { in: deletedSites } } })
-      ).map((site) => site.id)
+    if (deletedSiteIds.length) {
       await transaction.studyEmissionSource.deleteMany({ where: { studyId, siteId: { in: deletedSiteIds } } })
-      promises.push(transaction.studySite.deleteMany({ where: { id: { in: deletedSiteIds } } }))
+      promises.push(transaction.studySite.deleteMany({ where: { id: { in: deletedSiteIds }, studyId } }))
     }
     if (newStudySites.length) {
-      promises.push(transaction.studySite.createMany({ data: newStudySites }))
-    }
-    if (updatedSites.length) {
-      updatedSites.forEach((studySite) => {
-        const data = { ca: studySite.ca, etp: studySite.etp }
-        const where = { studyId, siteId: studySite.siteId }
-        promises.push(transaction.studySite.updateMany({ where, data }))
+      newStudySites.forEach((studySite) => {
+        promises.push(
+          transaction.studySite.upsert({
+            where: { id: studySite.id },
+            update: { ca: studySite.ca, etp: studySite.etp },
+            create: studySite,
+          }),
+        )
       })
     }
+
     return Promise.all(promises)
   })
 }

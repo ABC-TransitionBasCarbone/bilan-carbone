@@ -5,7 +5,7 @@ import { FormDatePicker } from '@/components/form/DatePicker'
 import Sites from '@/components/organization/Sites'
 import { FullStudy } from '@/db/study'
 import { OrganizationWithSites } from '@/db/user'
-import { changeStudyDates, changeStudySites, hasEmissionSources } from '@/services/serverFunctions/study'
+import { changeStudyDates, changeStudySites, hasActivityData } from '@/services/serverFunctions/study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyDatesCommandValidation,
@@ -86,10 +86,8 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
       const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
       return existingStudySite && !site.selected
     })
-    const hasActivityData = await Promise.all(
-      deletedSites.map((site) => hasEmissionSources(study.id, site.id, organization.id)),
-    )
-    if (hasActivityData.some((data) => data)) {
+    const hasActivity = await hasActivityData(study.id, deletedSites, organization.id)
+    if (hasActivity.some((data) => data)) {
       setOpen(true)
       setDeleting(deletedSites.length)
       return
@@ -100,9 +98,8 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   const updateStudySites = async () => {
     setOpen(false)
     const command = siteForm.getValues()
-    const existingSiteIds = study.sites.map((studySite) => studySite.site.id)
 
-    const result = await changeStudySites(study.id, existingSiteIds, command)
+    const result = await changeStudySites(study.id, command)
     if (result) {
       setError(result)
     } else {

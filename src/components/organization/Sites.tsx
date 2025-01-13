@@ -17,7 +17,7 @@ import styles from './Sites.module.css'
 interface Props {
   form?: UseFormReturn<SitesCommand>
   sites: SitesCommand['sites']
-  withSelection: boolean
+  withSelection?: boolean
 }
 
 const Sites = ({ sites, form, withSelection }: Props) => {
