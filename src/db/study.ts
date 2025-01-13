@@ -193,3 +193,25 @@ export const createContributorOnStudy = (
     data: subPosts.map((subPost) => ({ ...data, userId, subPost })),
     skipDuplicates: true,
   })
+
+export const getStudiesFromSites = async (siteIds: string[]) =>
+  prismaClient.studySite.findMany({
+    where: {
+      siteId: {
+        in: siteIds,
+      },
+    },
+    include: {
+      study: {
+        select: { name: true },
+      },
+      site: {
+        select: {
+          name: true,
+          organization: {
+            select: { isCR: true, name: true },
+          },
+        },
+      },
+    },
+  })

@@ -8,6 +8,7 @@ import {
   createStudy,
   createUserOnStudy,
   FullStudy,
+  getStudiesFromSites,
   getStudyById,
   updateStudy,
   updateUserOnStudy,
@@ -366,3 +367,5 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
     deleteDocument(document.id)
   }
 }
+
+export const findStudiesWithSites = async (siteIds: string[]) => getStudiesFromSites(siteIds)
