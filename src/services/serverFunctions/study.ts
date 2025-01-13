@@ -10,11 +10,12 @@ import {
   FullStudy,
   getStudiesFromSites,
   getStudyById,
+  getStudySites,
   updateStudy,
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
+import { addUser, getUserByEmail } from '@/db/user'
 import {
   ControlMode,
   User as DBUser,
@@ -129,16 +130,19 @@ export const createStudyCommand = async ({
     },
     sites: {
       createMany: {
-        data: studySites.map((site) => {
-          const organizationSite = organization.sites.find(
-            (organizationSite) => organizationSite.id === site.id,
-          ) as OrganizationWithSites['sites'][0]
-          return {
-            siteId: site.id,
-            etp: site.etp || organizationSite.etp,
-            ca: site.ca ? site.ca * 1000 : organizationSite.ca,
-          }
-        }),
+        data: studySites
+          .map((site) => {
+            const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === site.id)
+            if (!organizationSite) {
+              return undefined
+            }
+            return {
+              siteId: site.id,
+              etp: site.etp || organizationSite.etp,
+              ca: site.ca ? site.ca * 1000 : organizationSite.ca,
+            }
+          })
+          .filter((site) => site !== undefined),
       },
     },
   } satisfies Prisma.StudyCreateInput
@@ -205,8 +209,19 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
   await updateStudy(studyId, command)
 }
 
-export const hasEmissionSources = async (studyId: string, siteId: string, organizationId: string) => {
+export const hasActivityData = async (
+  studyId: string,
+  deletedSites: ChangeStudySitesCommand['sites'],
+  organizationId: string,
+) => {
   const study = await getStudyById(studyId, organizationId)
+  if (!study) {
+    return [false]
+  }
+  return await Promise.all(deletedSites.map((site) => hasEmissionSources(study, site.id)))
+}
+
+export const hasEmissionSources = async (study: FullStudy, siteId: string) => {
   if (!study) {
     return false
   }
@@ -224,11 +239,7 @@ export const hasEmissionSources = async (studyId: string, siteId: string, organi
   return true
 }
 
-export const changeStudySites = async (
-  studyId: string,
-  existingSiteIds: string[],
-  { organizationId, ...command }: ChangeStudySitesCommand,
-) => {
+export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) => {
   const organization = await getOrganizationWithSitesById(organizationId)
 
   if (!organization) {
@@ -238,11 +249,13 @@ export const changeStudySites = async (
   const selectedSites = command.sites
     .filter((site) => site.selected)
     .map((site) => {
-      const organizationSite = organization.sites.find(
-        (organizationSite) => organizationSite.id === site.id,
-      ) as OrganizationWithSites['sites'][0]
+      const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === site.id)
+      if (!organizationSite) {
+        return undefined
+      }
       return { studyId, siteId: site.id, etp: site.etp || organizationSite.etp, ca: site.ca || organizationSite.ca }
     })
+    .filter((site) => site !== undefined)
   if (
     selectedSites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.siteId))
   ) {
@@ -258,12 +271,15 @@ export const changeStudySites = async (
     return NOT_AUTHORIZED
   }
 
-  const deletedSites = existingSiteIds.filter(
-    (siteId) => !selectedSites.find((studySite) => studySite.siteId === siteId),
-  )
-  const addedSites = selectedSites.filter((studySite) => !existingSiteIds.includes(studySite.siteId))
-  const updatedSites = selectedSites.filter((studySite) => existingSiteIds.includes(studySite.siteId))
-  await updateStudySites(studyId, addedSites, deletedSites, updatedSites)
+  const existingSites = await getStudySites(studyId)
+  const deletedSiteIds = existingSites
+    .filter((existingStudySite) => !selectedSites.find((studySite) => studySite.siteId === existingStudySite.siteId))
+    .map((studySite) => studySite.id)
+  const newSites = selectedSites.map((studySite) => ({
+    ...studySite,
+    id: existingSites.find((existingStudySite) => existingStudySite.siteId === studySite.siteId)?.id || '',
+  }))
+  await updateStudySites(studyId, newSites, deletedSiteIds)
 }
 
 const getOrCreateUserAndSendStudyInvite = async (
