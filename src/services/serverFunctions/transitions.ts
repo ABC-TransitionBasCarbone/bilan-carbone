@@ -145,6 +145,8 @@ export const downloadOrganizations = async (file: File) => {
         organizationId: getOrganizationId(organization.parentId, oldUserOrganizationId, userOrganizationId),
         name: organization.entityName,
       }))
+      // Sauf celles qui n'ont pas de parent (car supprimées dans l'ancien BC+)
+      .filter((site) => organizationsToCreate.some((organization) => organization.id === site.organizationId))
       .filter((site) => site.organizationId !== userOrganizationId)
     if (sitesToCreate.length > 0) {
       await transaction.site.createMany({ data: sitesToCreate })
