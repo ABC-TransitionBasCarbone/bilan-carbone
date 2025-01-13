@@ -72,7 +72,11 @@ const PostInfography = ({ post, data, studyId }: Props) => {
         ? 0
         : (data.numberOfValidatedEmissionSource / data.numberOfEmissionSource) * 100
     const { dark, light } = colors[postColor]
-    return `linear-gradient(to right, ${dark} 0%, ${dark} ${percent}%, ${light} ${percent}%, ${light} 100%)`
+    return percent === 100
+      ? dark
+      : percent === 0
+        ? light
+        : `linear-gradient(to right, ${dark} 0%, ${dark} ${percent}%, ${light} ${percent}%, ${light} 100%)`
   }, [data, postColor])
 
   const subPosts = useMemo(() => {
