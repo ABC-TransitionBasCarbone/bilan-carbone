@@ -1,5 +1,6 @@
+import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { Level, SubPost } from '@prisma/client'
+import { ExportRule, Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { EmissionFactorWithMetaData } from './emissionFactors'
@@ -7,7 +8,10 @@ import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
+import { computeBegesResult } from './results/beges'
+import { computeResultsByPost } from './results/consolidated'
 import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
+import { prepareExcel } from './serverFunctions/file'
 import {
   getEmissionSourcesGlobalUncertainty,
   getQualityRating,
@@ -285,4 +289,153 @@ export const downloadStudyEmissionSources = async (
     'Study',
   )
   downloadCSV(csvContent, fileName)
+}
+
+export const formatConsolidatedStudyResultsForExport = (
+  study: FullStudy,
+  siteList: { name: string; id: string }[],
+  tStudy: ReturnType<typeof useTranslations>,
+  tExport: ReturnType<typeof useTranslations>,
+  tPost: ReturnType<typeof useTranslations>,
+  tQuality: ReturnType<typeof useTranslations>,
+) => {
+  const dataForExport = []
+
+  for (const site of siteList) {
+    const resultList = computeResultsByPost(study, tPost, site.id, true)
+
+    dataForExport.push([site.name])
+    dataForExport.push([tStudy('post'), tStudy('uncertainty'), tStudy('value')])
+
+    for (const result of resultList) {
+      dataForExport.push([
+        tPost(result.post) ?? '',
+        result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
+        result.value ?? '',
+      ])
+    }
+
+    dataForExport.push([])
+  }
+
+  return {
+    name: tExport('consolidated'),
+    data: dataForExport,
+    options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
+  }
+}
+
+export const formatBegesStudyResultsForExport = (
+  study: FullStudy,
+  rules: ExportRule[],
+  emissionFactorsWithParts: EmissionFactorWithParts[],
+  siteList: { name: string; id: string }[],
+  tExport: ReturnType<typeof useTranslations>,
+  tQuality: ReturnType<typeof useTranslations>,
+  tBeges: ReturnType<typeof useTranslations>,
+) => {
+  const lengthOfBeges = 33
+  const dataForExport = []
+
+  const sheetOptions: { '!merges': object[]; '!cols': object[] } = {
+    '!merges': [],
+    '!cols': [
+      { wch: 50 },
+      { wch: 60 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 20 },
+    ],
+  }
+
+  for (let i = 0; i < siteList.length; i++) {
+    const site = siteList[i]
+    const resultList = computeBegesResult(study, rules, emissionFactorsWithParts, site.id, true)
+
+    // Merge cells
+    sheetOptions['!merges'].push(
+      { s: { c: 0, r: 3 + i * lengthOfBeges }, e: { c: 0, r: 8 + i * lengthOfBeges } },
+      { s: { c: 0, r: 9 + i * lengthOfBeges }, e: { c: 0, r: 11 + i * lengthOfBeges } },
+      { s: { c: 0, r: 12 + i * lengthOfBeges }, e: { c: 0, r: 17 + i * lengthOfBeges } },
+      { s: { c: 0, r: 18 + i * lengthOfBeges }, e: { c: 0, r: 23 + i * lengthOfBeges } },
+      { s: { c: 0, r: 24 + i * lengthOfBeges }, e: { c: 0, r: 28 + i * lengthOfBeges } },
+      { s: { c: 0, r: 29 + i * lengthOfBeges }, e: { c: 0, r: 30 + i * lengthOfBeges } },
+    )
+
+    dataForExport.push([site.name])
+    dataForExport.push([tBeges('rule'), '', tBeges('ges')])
+    dataForExport.push([
+      tBeges('category.title'),
+      tBeges('post.title'),
+      'CO2',
+      'CH4',
+      'N2O',
+      tBeges('other'),
+      tBeges('total'),
+      'CO2b',
+      tBeges('uncertainty'),
+    ])
+
+    for (const result of resultList) {
+      const category = result.rule.split('.')[0]
+      const rule = result.rule
+      let post
+      if (rule === 'total') {
+        post = tBeges('total')
+      } else if (result.rule.includes('.total')) {
+        post = tBeges('subTotal')
+      } else {
+        post = `${rule}. ${tBeges(`post.${rule}`)}`
+      }
+
+      dataForExport.push([
+        category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
+        post,
+        result.co2,
+        result.ch4,
+        result.n2o,
+        result.other,
+        result.total,
+        result.co2b,
+        result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
+      ])
+    }
+
+    dataForExport.push([])
+  }
+
+  return { name: tExport('Beges'), data: dataForExport, options: sheetOptions }
+}
+
+export const downloadStudyResults = async (
+  study: FullStudy,
+  rules: ExportRule[],
+  emissionFactorsWithParts: EmissionFactorWithParts[],
+  tStudy: ReturnType<typeof useTranslations>,
+  tExport: ReturnType<typeof useTranslations>,
+  tPost: ReturnType<typeof useTranslations>,
+  tOrga: ReturnType<typeof useTranslations>,
+  tQuality: ReturnType<typeof useTranslations>,
+  tBeges: ReturnType<typeof useTranslations>,
+) => {
+  const data = []
+
+  const siteList = [
+    { name: tOrga('allSites'), id: 'all' },
+    ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
+  ]
+
+  data.push(formatConsolidatedStudyResultsForExport(study, siteList, tStudy, tExport, tPost, tQuality))
+
+  data.push(
+    formatBegesStudyResultsForExport(study, rules, emissionFactorsWithParts, siteList, tExport, tQuality, tBeges),
+  )
+
+  const buffer = await prepareExcel(data)
+
+  download([buffer], `${study.name}_results.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 }
