@@ -93,7 +93,7 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site, withD
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.id} data-testid="beges-results-table-row">
               {row.getVisibleCells().map((cell) => {
                 const rule = row.original.rule.split('.')
                 return cell.column.id !== 'category' || rule[1] === '1' || rule[0] === 'total' ? (
