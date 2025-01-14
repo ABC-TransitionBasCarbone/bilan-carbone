@@ -49,6 +49,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
             onChange={(event) => {
               setType(event.target.value as Export | 'consolidated')
             }}
+            data-testid="result-type-select"
             disabled={exports.length === 0}
           >
             <MenuItem value="consolidated">{tExport('consolidated')}</MenuItem>
