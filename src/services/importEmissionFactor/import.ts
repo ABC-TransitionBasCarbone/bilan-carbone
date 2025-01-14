@@ -12,12 +12,12 @@ export const getEmissionFactorImportVersion = async (
 ) => {
   const existingVersion = await transaction.emissionFactorImportVersion.findFirst({ where: { internId: id } })
   if (existingVersion) {
-    return { success: false, id: existingVersion.id }
+    return existingVersion.id
   }
   const newVersion = await transaction.emissionFactorImportVersion.create({
     data: { name, source, internId: id },
   })
-  return { success: true, id: newVersion.id }
+  return newVersion.id
 }
 
 export type ImportEmissionFactor = {
@@ -232,6 +232,27 @@ const getGases = (emissionFactor: ImportEmissionFactor) => {
   return gases
 }
 
+export const getEmissionFactorMetadata = (emissionFactor: ImportEmissionFactor) => [
+  {
+    language: 'fr',
+    title: escapeTranslation(emissionFactor.Nom_base_français),
+    attribute: escapeTranslation(emissionFactor.Nom_attribut_français),
+    frontiere: escapeTranslation(emissionFactor.Nom_frontière_français),
+    tag: escapeTranslation(emissionFactor.Tags_français),
+    location: escapeTranslation(emissionFactor['Sous-localisation_géographique_français']),
+    comment: escapeTranslation(emissionFactor.Commentaire_français),
+  },
+  {
+    language: 'en',
+    title: escapeTranslation(emissionFactor.Nom_base_anglais),
+    attribute: escapeTranslation(emissionFactor.Nom_attribut_anglais),
+    frontiere: escapeTranslation(emissionFactor.Nom_frontière_anglais),
+    tag: escapeTranslation(emissionFactor.Tags_anglais),
+    location: escapeTranslation(emissionFactor['Sous-localisation_géographique_anglais']),
+    comment: escapeTranslation(emissionFactor.Commentaire_anglais),
+  },
+]
+
 export const mapEmissionFactors = (
   emissionFactor: ImportEmissionFactor,
   importedFrom: Import,
@@ -255,26 +276,7 @@ export const mapEmissionFactors = (
   subPosts: getSubPost(emissionFactor),
   metaData: {
     createMany: {
-      data: [
-        {
-          language: 'fr',
-          title: escapeTranslation(emissionFactor.Nom_base_français),
-          attribute: escapeTranslation(emissionFactor.Nom_attribut_français),
-          frontiere: escapeTranslation(emissionFactor.Nom_frontière_français),
-          tag: escapeTranslation(emissionFactor.Tags_français),
-          location: escapeTranslation(emissionFactor['Sous-localisation_géographique_français']),
-          comment: escapeTranslation(emissionFactor.Commentaire_français),
-        },
-        {
-          language: 'en',
-          title: escapeTranslation(emissionFactor.Nom_base_anglais),
-          attribute: escapeTranslation(emissionFactor.Nom_attribut_anglais),
-          frontiere: escapeTranslation(emissionFactor.Nom_frontière_anglais),
-          tag: escapeTranslation(emissionFactor.Tags_anglais),
-          location: escapeTranslation(emissionFactor['Sous-localisation_géographique_anglais']),
-          comment: escapeTranslation(emissionFactor.Commentaire_anglais),
-        },
-      ],
+      data: getEmissionFactorMetadata(emissionFactor),
     },
   },
 })
