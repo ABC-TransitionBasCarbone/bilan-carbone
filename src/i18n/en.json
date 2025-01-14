@@ -735,7 +735,6 @@
     "form": {
       "validate": "Validated",
       "name": "Name",
-      "tag": "Tag",
       "caracterisation": "Characterization",
       "emissionFactor": "Emission factor",
       "value": "Activity value",

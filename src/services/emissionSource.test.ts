@@ -20,7 +20,6 @@ const defaultEmissionSource = {
   name: 'name',
   source: null,
   subPost: SubPost.AchatsDeServices,
-  tag: null,
   type: null,
   validated: null,
   value: 12,
