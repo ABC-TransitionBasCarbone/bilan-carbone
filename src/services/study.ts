@@ -1,6 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { ExportRule, Level, SubPost } from '@prisma/client'
+import { Export, ExportRule, Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { EmissionFactorWithMetaData } from './emissionFactors'
@@ -431,9 +431,11 @@ export const downloadStudyResults = async (
 
   data.push(formatConsolidatedStudyResultsForExport(study, siteList, tStudy, tExport, tPost, tQuality))
 
-  data.push(
-    formatBegesStudyResultsForExport(study, rules, emissionFactorsWithParts, siteList, tExport, tQuality, tBeges),
-  )
+  if (study.exports.some((exp) => exp.type === Export.Beges)) {
+    data.push(
+      formatBegesStudyResultsForExport(study, rules, emissionFactorsWithParts, siteList, tExport, tQuality, tBeges),
+    )
+  }
 
   const buffer = await prepareExcel(data)
 
