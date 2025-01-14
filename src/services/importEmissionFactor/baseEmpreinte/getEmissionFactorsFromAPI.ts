@@ -1,3 +1,4 @@
+import { HOUR, TIME_IN_MS } from '@/utils/time'
 import { Import } from '@prisma/client'
 import axios, { AxiosResponse } from 'axios'
 import { prismaClient } from '../../../db/client'
@@ -54,6 +55,6 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
       await saveEmissionFactorsParts(transaction, parts)
       await cleanImport(transaction, emissionFactorImportVersion.id)
     },
-    { timeout: 60 * 60 * 1000 },
+    { timeout: HOUR * TIME_IN_MS },
   )
 }

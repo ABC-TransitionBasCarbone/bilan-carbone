@@ -2,6 +2,7 @@ import NewPasswordForm from '@/components/auth/NewPasswordForm'
 import { getUserByEmail, updateUserResetTokenForEmail } from '@/db/user'
 import { auth } from '@/services/auth'
 import { sendResetPassword } from '@/services/email/email'
+import { HOUR, TIME_IN_MS } from '@/utils/time'
 import jwt from 'jsonwebtoken'
 import { redirect } from 'next/navigation'
 
@@ -19,7 +20,7 @@ const NewPasswordPage = async () => {
       const payload = {
         email,
         resetToken,
-        exp: Math.round(Date.now() / 1000) + 60 * 60, // 1 hour expiration
+        exp: Math.round(Date.now() / TIME_IN_MS) + HOUR, // 1 hour expiration
       }
 
       const token = jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)

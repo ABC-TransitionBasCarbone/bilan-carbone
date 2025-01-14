@@ -1,3 +1,4 @@
+import { MIN, TIME_IN_MS } from '@/utils/time'
 import { Import, Prisma } from '@prisma/client'
 import { parse } from 'csv-parse'
 import fs from 'fs'
@@ -124,6 +125,6 @@ export const getEmissionFactorsFromCSV = async (
           })
       })
     },
-    { timeout: 10 * 60 * 1000 },
+    { timeout: 10 * MIN * TIME_IN_MS },
   )
 }
