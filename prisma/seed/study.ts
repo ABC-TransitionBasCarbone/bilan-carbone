@@ -353,7 +353,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
         validated: true,
         reliability: 5,
         name: 'Bois courte durée de vie (ameublement…) fabrication, France continentale, Base Carbone',
-        subPost: SubPost.PapiersCartons,
+        subPost: SubPost.AutresIntrants,
         caracterisation: EmissionSourceCaracterisation.Operated,
         value: 2.6,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20908')?.id,
