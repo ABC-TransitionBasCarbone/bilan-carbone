@@ -10,6 +10,7 @@ import {
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
+import { DAY, TIME_IN_MS } from '@/utils/time'
 import { User as DBUser, Organization, Role } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
@@ -30,7 +31,7 @@ const updateUserResetToken = async (email: string) => {
   const payload = {
     email,
     resetToken,
-    exp: Math.round(Date.now() / 1000) + 24 * 60 * 60, // 24 hours expiration
+    exp: Math.round(Date.now() / TIME_IN_MS) + DAY, // 24 hours expiration
   }
 
   await updateUserResetTokenForEmail(email, resetToken)
