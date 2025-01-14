@@ -1,7 +1,7 @@
-import { HOUR, TIME_IN_MS } from '@/utils/time'
 import { Import } from '@prisma/client'
 import axios, { AxiosResponse } from 'axios'
 import { prismaClient } from '../../../db/client'
+import { HOUR, TIME_IN_MS } from '../../../utils/time'
 import {
   cleanImport,
   getEmissionFactorImportVersion,
@@ -24,15 +24,12 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
 
   await prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersion = await getEmissionFactorImportVersion(
+      const emissionFactorImportVersionId = await getEmissionFactorImportVersion(
         transaction,
         name,
         Import.BaseEmpreinte,
         fileName,
       )
-      if (!emissionFactorImportVersion.success) {
-        return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
-      }
 
       let parts: ImportEmissionFactor[] = []
       let url: string | undefined =
@@ -46,14 +43,14 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
         )
         const data = emissionFactors.data.results
           .filter((emissionFactor) => emissionFactor.Type_Ligne !== 'Poste')
-          .map((emissionFactor) => mapBaseEmpreinteEmissionFactors(emissionFactor, emissionFactorImportVersion.id))
+          .map((emissionFactor) => mapBaseEmpreinteEmissionFactors(emissionFactor, emissionFactorImportVersionId))
 
         await Promise.all(data.map((data) => transaction.emissionFactor.create({ data })))
         url = emissionFactors.data.next
       }
 
       await saveEmissionFactorsParts(transaction, parts)
-      await cleanImport(transaction, emissionFactorImportVersion.id)
+      await cleanImport(transaction, emissionFactorImportVersionId)
     },
     { timeout: HOUR * TIME_IN_MS },
   )

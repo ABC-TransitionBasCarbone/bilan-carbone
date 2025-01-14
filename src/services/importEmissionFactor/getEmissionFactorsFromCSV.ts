@@ -1,12 +1,13 @@
-import { MIN, TIME_IN_MS } from '@/utils/time'
 import { Import, Prisma } from '@prisma/client'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import path from 'path'
 import { prismaClient } from '../../db/client'
+import { MIN, TIME_IN_MS } from '../../utils/time'
 import {
   cleanImport,
   getEmissionFactorImportVersion,
+  getEmissionFactorMetadata,
   ImportEmissionFactor,
   requiredColumns,
   saveEmissionFactorsParts,
@@ -49,15 +50,12 @@ export const getEmissionFactorsFromCSV = async (
 ) => {
   await prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersion = await getEmissionFactorImportVersion(
+      const emissionFactorImportVersionId = await getEmissionFactorImportVersion(
         transaction,
         name,
         importFrom,
         path.basename(file),
       )
-      if (!emissionFactorImportVersion.success) {
-        return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
-      }
 
       console.log('Parse file...')
       const emissionFactors: ImportEmissionFactor[] = []
@@ -111,12 +109,44 @@ export const getEmissionFactorsFromCSV = async (
               if (i % 500 === 0) {
                 console.log(`${i}/${emissionFactors.length}...`)
               }
-              const data = mapFunction(emissionFactor, emissionFactorImportVersion.id)
-              await transaction.emissionFactor.create({ data })
+              const existingEmissionFactor = await transaction.emissionFactor.findUnique({
+                where: {
+                  importedId_versionId: {
+                    importedId: emissionFactor["Identifiant_de_l'élément"],
+                    versionId: emissionFactorImportVersionId,
+                  },
+                },
+                select: { id: true },
+              })
+              const existingEmissionFactorId = existingEmissionFactor?.id
+              const data = mapFunction(emissionFactor, emissionFactorImportVersionId)
+              if (!existingEmissionFactorId) {
+                await transaction.emissionFactor.create({ data })
+              } else {
+                const newMetaData = getEmissionFactorMetadata(emissionFactor).map((metaData) =>
+                  transaction.emissionFactorMetaData.upsert({
+                    where: {
+                      emissionFactorId_language: {
+                        emissionFactorId: existingEmissionFactorId,
+                        language: metaData.language,
+                      },
+                    },
+                    create: { ...metaData, emissionFactorId: existingEmissionFactorId },
+                    update: metaData,
+                  }),
+                )
+                await Promise.all([
+                  transaction.emissionFactor.update({
+                    where: { id: existingEmissionFactorId },
+                    data: { ...data, metaData: undefined },
+                  }),
+                  ...newMetaData,
+                ])
+              }
             }
             console.log(`Save ${parts.length} emission factors parts...`)
             await saveEmissionFactorsParts(transaction, parts)
-            await cleanImport(transaction, emissionFactorImportVersion.id)
+            await cleanImport(transaction, emissionFactorImportVersionId)
             console.log('Done')
             resolve()
           })
