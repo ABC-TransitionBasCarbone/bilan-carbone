@@ -4,6 +4,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { BegesLine, computeBegesResult, rulesSpans } from '@/services/results/beges'
 import { getStandardDeviationRating } from '@/services/uncertainty'
+import { formatNumber } from '@/utils/number'
 import { ExportRule } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -49,12 +50,20 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site, withD
         {
           header: t('ges'),
           columns: [
-            { header: 'CO2', accessorKey: 'co2' },
-            { header: 'CH4', accessorKey: 'ch4' },
-            { header: 'N20', accessorKey: 'n2o' },
-            { header: t('other'), accessorKey: 'other' },
-            { header: t('total'), accessorKey: 'total' },
-            { header: 'CO2b', accessorKey: 'co2b' },
+            { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            {
+              header: t('other'),
+              accessorKey: 'other',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / 1000),
+            },
+            {
+              header: t('total'),
+              accessorKey: 'total',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / 1000),
+            },
+            { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
             {
               header: t('uncertainty'),
               accessorFn: ({ uncertainty }) =>
