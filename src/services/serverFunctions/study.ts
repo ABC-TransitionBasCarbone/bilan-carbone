@@ -254,7 +254,12 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
       if (!organizationSite) {
         return undefined
       }
-      return { studyId, siteId: site.id, etp: site.etp || organizationSite.etp, ca: site.ca || organizationSite.ca }
+      return {
+        studyId,
+        siteId: site.id,
+        etp: site.etp || organizationSite.etp,
+        ca: site.ca * 1000 || organizationSite.ca,
+      }
     })
     .filter((site) => site !== undefined)
   if (

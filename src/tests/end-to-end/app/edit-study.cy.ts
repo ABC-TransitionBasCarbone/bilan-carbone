@@ -49,7 +49,7 @@ describe('Edit study', () => {
         .first()
         .within(() => {
           cy.get('td').eq(1).contains('1')
-          cy.get('td').eq(2).contains('1€')
+          cy.get('td').eq(2).contains('1')
         })
       cy.get('tr').should('have.length', 1)
     })
@@ -103,7 +103,7 @@ describe('Edit study', () => {
         .first()
         .within(() => {
           cy.get('td').eq(1).contains('2')
-          cy.get('td').eq(2).contains('2€')
+          cy.get('td').eq(2).contains('2')
         })
       cy.get('tr').should('have.length', 1)
     })
