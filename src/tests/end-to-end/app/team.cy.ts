@@ -89,7 +89,10 @@ describe('Team', () => {
       .type('user-test-1@test.fr')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
-      .type('test1')
+      .type('Password-1')
+    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('Password-1')
 
     cy.getByTestId('reset-button').click()
 
@@ -100,7 +103,7 @@ describe('Team', () => {
       .type('user-test-1@test.fr')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
-      .type('test1')
+      .type('Password-1')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')

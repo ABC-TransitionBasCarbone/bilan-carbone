@@ -104,14 +104,25 @@
   "login": {
     "welcome": "Welcome",
     "form": {
+      "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
       "login": "Log in",
       "email": "Email",
       "password": "Password",
+      "confirmPassword": "Confirm password",
+      "hidePassword": "Hide password",
+      "showPassword": "Show password",
+      "notMatching": "Passwords do not match",
+      "passwordLength": "Password should have at least 8 characters",
+      "passwordUppercase": "Password should have at least one upper case letter",
+      "passwordLowercase": "Password should have at least one lower case letter",
+      "passwordSpecialChar": "Password should have at least one special character",
+      "passwordDigit": "Password should have at least one digit",
       "forgotPassword": "Forgot password",
       "reset": "Reset",
       "error": "Please check your email and your password",
       "expired": "This password reset link has expired",
-      "backToHome": "Back to home"
+      "backToHome": "Back to home",
+      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us at the email address"
     }
   },
   "navigation": {
