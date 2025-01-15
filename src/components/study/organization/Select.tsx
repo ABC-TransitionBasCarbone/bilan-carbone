@@ -33,7 +33,7 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
     if (organization) {
       form.setValue(
         'sites',
-        organization.sites.map((site) => ({ ...site, selected: false })),
+        organization.sites.map((site) => ({ ...site, ca: site.ca ? site.ca / 1000 : 0, selected: false })),
       )
     } else {
       form.setValue('sites', [])

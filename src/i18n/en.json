@@ -683,7 +683,7 @@
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "etp": "Employees",
-      "ca": "Turnover",
+      "ca": "Turnover (k€)",
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",

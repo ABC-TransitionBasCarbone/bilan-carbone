@@ -82,7 +82,7 @@ const Sites = ({ sites, form }: Props) => {
               }}
             />
           ) : (
-            `${formatNumber(getValue<number>())}€`
+            `${formatNumber(getValue<number>() / 1000)}`
           ),
       },
     ] as ColumnDef<OrganizationWithSites['sites'][0]>[]

@@ -39,7 +39,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
     defaultValues: {
       organizationId: organization.id,
       name: organization.name,
-      sites: organization.sites,
+      sites: organization.sites.map((site) => ({ ...site, ca: site.ca ? site.ca / 1000 : 0 })),
     },
   })
 

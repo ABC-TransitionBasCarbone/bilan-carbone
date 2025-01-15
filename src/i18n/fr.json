@@ -683,7 +683,7 @@
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "etp": "Employés",
-      "ca": "Chiffre d'affaire",
+      "ca": "Chiffre d'affaire (k€)",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",
