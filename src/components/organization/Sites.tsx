@@ -7,21 +7,25 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../base/Button'
 import { FormCheckbox } from '../form/Checkbox'
 import { FormTextField } from '../form/TextField'
 import styles from './Sites.module.css'
 
-interface Props {
-  form?: UseFormReturn<SitesCommand>
+interface Props<T extends SitesCommand> {
+  form?: UseFormReturn<T>
   sites: SitesCommand['sites']
   withSelection?: boolean
 }
 
-const Sites = ({ sites, form, withSelection }: Props) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>) => {
   const t = useTranslations('organization.sites')
+
+  const control = form?.control as Control<SitesCommand>
+  const setValue = form?.setValue as UseFormSetValue<SitesCommand>
+  const getValues = form?.getValues as UseFormGetValues<SitesCommand>
 
   const columns = useMemo(() => {
     const columns = [
@@ -35,7 +39,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
               {withSelection ? (
                 <div className={classNames(styles.name, 'align-center')}>
                   <FormCheckbox
-                    control={form.control}
+                    control={control}
                     translation={t}
                     name={`sites.${row.index}.selected`}
                     data-testid="organization-sites-checkbox"
@@ -46,7 +50,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
                 <FormTextField
                   data-testid="edit-site-name"
                   className="w100"
-                  control={form.control}
+                  control={control}
                   translation={t}
                   name={`sites.${row.index}.name`}
                 />
@@ -66,7 +70,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
               data-testid="organization-sites-etp"
               type="number"
               className="w100"
-              control={form.control}
+              control={control}
               translation={t}
               name={`sites.${row.index}.etp`}
               slotProps={{
@@ -88,7 +92,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
               data-testid="organization-sites-ca"
               type="number"
               className="w100"
-              control={form.control}
+              control={control}
               translation={t}
               name={`sites.${row.index}.ca`}
               slotProps={{
@@ -114,9 +118,9 @@ const Sites = ({ sites, form, withSelection }: Props) => {
               aria-label={t('delete')}
               onClick={() => {
                 const id = getValue<string>()
-                form.setValue(
+                setValue(
                   'sites',
-                  form.getValues('sites').filter((site) => site.id !== id),
+                  getValues('sites').filter((site) => site.id !== id),
                 )
               }}
             >
@@ -140,7 +144,7 @@ const Sites = ({ sites, form, withSelection }: Props) => {
     <div className={styles.container}>
       {form && !withSelection && (
         <Button
-          onClick={() => form.setValue('sites', [...sites, { id: uuidv4(), name: '', etp: 0, ca: 0, selected: false }])}
+          onClick={() => setValue('sites', [...sites, { id: uuidv4(), name: '', etp: 0, ca: 0, selected: false }])}
           className={styles.addButton}
           data-testid="add-site-button"
         >
