@@ -11,7 +11,6 @@ import {
   ChangeStudyDatesCommandValidation,
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
-  SitesCommand,
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StudyRole } from '@prisma/client'
@@ -19,7 +18,7 @@ import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm, UseFormReturn } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import DeleteStudySite from './DeleteStudySites'
 import styles from './StudyPerimeter.module.css'
 
@@ -142,7 +141,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         </p>
       )}
       <Sites
-        form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
+        form={isEditing ? siteForm : undefined}
         sites={isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
         withSelection
       />

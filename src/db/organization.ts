@@ -30,7 +30,7 @@ export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrg
     ...sites.map((site) =>
       prismaClient.site.upsert({
         where: { id: site.id },
-        create: { organizationId, ...site, ca: site.ca * 1000 },
+        create: { id: site.id, organizationId, name: site.name, etp: site.etp, ca: site.ca * 1000 },
         update: { name: site.name, etp: site.etp, ca: site.ca * 1000 },
       }),
     ),
