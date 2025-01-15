@@ -77,7 +77,10 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   const disabledUpdateButton = isEditing && sites.every((site) => !site.selected)
 
   useEffect(() => {
-    siteForm.setValue('sites', siteList)
+    siteForm.setValue(
+      'sites',
+      siteList.map((site) => ({ ...site, ca: site.ca / 1000 })),
+    )
   }, [siteList, isEditing])
 
   const onSitesSubmit = async () => {
