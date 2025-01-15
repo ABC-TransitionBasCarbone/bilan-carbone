@@ -216,9 +216,10 @@ export const hasActivityData = async (
 ) => {
   const study = await getStudyById(studyId, organizationId)
   if (!study) {
-    return [false]
+    return false
   }
-  return await Promise.all(deletedSites.map((site) => hasEmissionSources(study, site.id)))
+  const emissionSources = await Promise.all(deletedSites.map((site) => hasEmissionSources(study, site.id)))
+  return emissionSources.some((emissionSource) => emissionSource)
 }
 
 export const hasEmissionSources = async (study: FullStudy, siteId: string) => {
