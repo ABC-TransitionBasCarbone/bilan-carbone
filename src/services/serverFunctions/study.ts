@@ -130,7 +130,11 @@ export const createStudyCommand = async ({
           const organizationSite = organization.sites.find(
             (organizationSite) => organizationSite.id === site.id,
           ) as OrganizationWithSites['sites'][0]
-          return { siteId: site.id, etp: site.etp || organizationSite.etp, ca: site.ca || organizationSite.ca }
+          return {
+            siteId: site.id,
+            etp: site.etp || organizationSite.etp,
+            ca: site.ca ? site.ca * 1000 : organizationSite.ca,
+          }
         }),
       },
     },

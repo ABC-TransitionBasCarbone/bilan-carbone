@@ -30,8 +30,8 @@ export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrg
     ...sites.map((site) =>
       prismaClient.site.upsert({
         where: { id: site.id },
-        create: { organizationId, ...site },
-        update: { name: site.name, etp: site.etp, ca: site.ca },
+        create: { organizationId, ...site, ca: site.ca * 1000 },
+        update: { name: site.name, etp: site.etp, ca: site.ca * 1000 },
       }),
     ),
     prismaClient.site.deleteMany({ where: { organizationId, id: { notIn: sites.map((site) => site.id) } } }),

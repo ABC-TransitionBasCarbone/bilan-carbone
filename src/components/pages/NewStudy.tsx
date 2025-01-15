@@ -37,6 +37,7 @@ const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization }: 
       sites:
         (defaultOrganization ?? organizations[0])?.sites.map((site) => ({
           ...site,
+          ca: site.ca ? site.ca / 1000 : 0,
           selected: false,
         })) || [],
       exports: {
