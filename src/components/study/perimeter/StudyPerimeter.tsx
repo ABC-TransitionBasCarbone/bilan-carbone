@@ -82,23 +82,21 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
 
   const onSitesSubmit = async () => {
     const deletedSites = sites.filter((site) => {
-      const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
-      return existingStudySite && !site.selected
+      return !site.selected && study.sites.some((studySite) => studySite.site.id === site.id)
     })
     const hasActivity = await hasActivityData(study.id, deletedSites, organization.id)
-    if (hasActivity.some((data) => data)) {
+    if (hasActivity) {
       setOpen(true)
       setDeleting(deletedSites.length)
-      return
+    } else {
+      updateStudySites()
     }
-    updateStudySites()
   }
 
   const updateStudySites = async () => {
     setOpen(false)
-    const command = siteForm.getValues()
 
-    const result = await changeStudySites(study.id, command)
+    const result = await changeStudySites(study.id, siteForm.getValues())
     if (result) {
       setError(result)
     } else {
