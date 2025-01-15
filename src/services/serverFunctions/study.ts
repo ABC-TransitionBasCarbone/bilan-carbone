@@ -368,4 +368,39 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   }
 }
 
-export const findStudiesWithSites = async (siteIds: string[]) => getStudiesFromSites(siteIds)
+const hasAccessToStudy = (userId: string, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) =>
+  study.isPublic ||
+  study.allowedUsers.some((allowedUser) => allowedUser.userId === userId) ||
+  study.contributors.some((contributor) => contributor.userId === userId)
+
+export const findStudiesWithSites = async (siteIds: string[]) => {
+  const [session, studySites] = await Promise.all([auth(), getStudiesFromSites(siteIds)])
+
+  const userId = session?.user?.id
+
+  const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
+  const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site'> & { count: number })[] =
+    []
+
+  studySites.forEach((studySite) => {
+    if (userId && hasAccessToStudy(userId, studySite.study)) {
+      authorizedStudySites.push(studySite)
+    } else {
+      const targetedSite = unauthorizedStudySites.find(
+        (unauthorizedStudySite) =>
+          unauthorizedStudySite.site.name === studySite.site.name &&
+          unauthorizedStudySite.site.organization.id === studySite.site.organization.id,
+      )
+      if (!targetedSite) {
+        unauthorizedStudySites.push({ site: studySite.site, count: 1 })
+      } else {
+        targetedSite.count++
+      }
+    }
+  })
+
+  return {
+    authorizedStudySites,
+    unauthorizedStudySites,
+  }
+}

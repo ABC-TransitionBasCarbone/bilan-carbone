@@ -697,7 +697,8 @@
       "title": "You cannot delete these sites",
       "description": "Studies exist with the following sites. Please delete them from the concerned studies before you can delete them from your organization.",
       "close": "Close",
-      "existingSite": "<name></name>: <link></link>"
+      "existingSite": "<name></name>: <link></link>",
+      "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other {#  studies}} you do not have access to"
     }
   },
   "emissionSource": {

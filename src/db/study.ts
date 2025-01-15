@@ -202,13 +202,18 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
     },
     include: {
       study: {
-        select: { name: true },
+        select: {
+          name: true,
+          isPublic: true,
+          allowedUsers: { select: { userId: true } },
+          contributors: { select: { userId: true } },
+        },
       },
       site: {
         select: {
           name: true,
           organization: {
-            select: { isCR: true, name: true },
+            select: { id: true, isCR: true, name: true },
           },
         },
       },
