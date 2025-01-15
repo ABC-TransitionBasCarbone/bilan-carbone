@@ -305,6 +305,18 @@ export const saveEmissionFactorsParts = async (
       throw new Error('No emission factor found for ' + part["Identifiant_de_l'élément"])
     }
 
+    const existingEmissionFactorPartId = (
+      await transaction.emissionFactorPart.findUnique({
+        where: {
+          emissionFactorId_type: {
+            emissionFactorId: emissionFactor.id,
+            type: getType(part.Type_poste),
+          },
+        },
+        select: { id: true },
+      })
+    )?.id
+
     const metaData = []
     if (part.Nom_poste_français) {
       metaData.push({ title: part.Nom_poste_français, language: 'fr' })
@@ -320,7 +332,29 @@ export const saveEmissionFactorsParts = async (
       metaData: metaData.length > 0 ? { createMany: { data: metaData } } : undefined,
     } satisfies Prisma.EmissionFactorPartCreateInput
 
-    await transaction.emissionFactorPart.create({ data })
+    if (!existingEmissionFactorPartId) {
+      await transaction.emissionFactorPart.create({ data })
+    } else {
+      const newMetaData = metaData.map((metaData) =>
+        transaction.emissionFactorPartMetaData.upsert({
+          where: {
+            emissionFactorPartId_language: {
+              emissionFactorPartId: existingEmissionFactorPartId,
+              language: metaData.language,
+            },
+          },
+          create: { ...metaData, emissionFactorPartId: existingEmissionFactorPartId },
+          update: metaData,
+        }),
+      )
+      await Promise.all([
+        transaction.emissionFactorPart.update({
+          where: { id: existingEmissionFactorPartId },
+          data: { ...data, metaData: undefined },
+        }),
+        ...newMetaData,
+      ])
+    }
   }
 }
 
@@ -341,21 +375,29 @@ export const cleanImport = async (transaction: Prisma.TransactionClient, version
     if (emissionFactor.importedId) {
       const additionalPart = additionalParts[emissionFactor.importedId]
       if (additionalPart) {
-        await transaction.emissionFactorPart.create({
-          data: {
-            emissionFactor: { connect: { id: emissionFactor.id } },
-            type: additionalPart,
-            co2f: emissionFactor.co2f,
-            ch4f: emissionFactor.ch4f,
-            ch4b: emissionFactor.ch4b,
-            n2o: emissionFactor.n2o,
-            co2b: emissionFactor.co2b,
-            sf6: emissionFactor.sf6,
-            hfc: emissionFactor.hfc,
-            pfc: emissionFactor.pfc,
-            otherGES: emissionFactor.otherGES,
-            totalCo2: emissionFactor.totalCo2,
+        const data = {
+          emissionFactor: { connect: { id: emissionFactor.id } },
+          type: additionalPart,
+          co2f: emissionFactor.co2f,
+          ch4f: emissionFactor.ch4f,
+          ch4b: emissionFactor.ch4b,
+          n2o: emissionFactor.n2o,
+          co2b: emissionFactor.co2b,
+          sf6: emissionFactor.sf6,
+          hfc: emissionFactor.hfc,
+          pfc: emissionFactor.pfc,
+          otherGES: emissionFactor.otherGES,
+          totalCo2: emissionFactor.totalCo2,
+        }
+        await transaction.emissionFactorPart.upsert({
+          where: {
+            emissionFactorId_type: {
+              emissionFactorId: emissionFactor.id,
+              type: additionalPart,
+            },
           },
+          create: data,
+          update: data,
         })
       }
     }
