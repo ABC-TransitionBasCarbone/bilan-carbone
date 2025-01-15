@@ -104,7 +104,7 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              tooltip: { callbacks: { label: (context) => `${formatNumber(context.raw as number)} kgCO₂e` } },
+              tooltip: { callbacks: { label: (context) => `${formatNumber((context.raw as number) / 1000)} tCO₂e` } },
               legend: { display: false },
             },
             scales: {

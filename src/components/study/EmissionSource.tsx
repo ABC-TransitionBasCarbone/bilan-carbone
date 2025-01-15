@@ -177,7 +177,8 @@ const EmissionSource = ({
               <>
                 <p>
                   {selectedFactor.metaData?.title}
-                  {selectedFactor.location ? ` - ${selectedFactor.location}` : ''} - {selectedFactor.totalCo2} kgCO₂e/
+                  {selectedFactor.location ? ` - ${selectedFactor.location}` : ''} - {selectedFactor.totalCo2 / 1000}{' '}
+                  tCO₂e/
                   {tUnits(selectedFactor.unit)}
                 </p>
                 {selectedFactorQualityRating && (
@@ -190,7 +191,7 @@ const EmissionSource = ({
           </div>
           {emissionResults && (
             <div className="flex-col">
-              <p data-testid="emission-source-value">{`${formatNumber(emissionResults.emission)} kgCO₂e`}</p>
+              <p data-testid="emission-source-value">{`${formatNumber(emissionResults.emission / 1000)} tCO₂e`}</p>
               {emissionResults.standardDeviation && (
                 <p className={styles.status} data-testid="emission-source-quality">
                   {tQuality('name')}{' '}
@@ -257,7 +258,7 @@ const EmissionSource = ({
                 <div className={classNames(styles.row, 'flex')}>
                   <div>
                     <p>{t('results.emission')}</p>
-                    <p>{formatNumber(emissionResults.emission)} kgCO₂e</p>
+                    <p>{formatNumber(emissionResults.emission / 1000)} tCO₂e</p>
                   </div>
                   {sourceRating && (
                     <div>

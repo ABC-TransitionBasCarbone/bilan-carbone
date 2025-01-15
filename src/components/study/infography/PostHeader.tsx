@@ -21,7 +21,7 @@ export const PostHeader = ({ post, mainPost, emissionValue }: Props) => {
         <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
         <span>{t(post)}</span>
       </div>
-      <span>{formatNumber(emissionValue || 0)} kgCO2e</span>
+      <span>{formatNumber((emissionValue || 0) / 1000)} tCO₂e</span>
     </div>
   )
 }

@@ -272,7 +272,7 @@
     "results": {
       "type": "Type",
       "post": "Post",
-      "value": "Emissions (kgCO₂e)",
+      "value": "Emissions (tCO₂e)",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies"
