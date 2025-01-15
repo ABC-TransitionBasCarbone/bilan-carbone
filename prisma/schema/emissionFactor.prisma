@@ -155,6 +155,7 @@ model EmissionFactor {
 
   @@index([organizationId])
   @@index([status])
+  @@unique([importedId, versionId])
   @@map("emission_factors")
 }
 
@@ -197,6 +198,7 @@ model EmissionFactorPart {
   pfc      Float?
   otherGES Float? @map("other_ges")
 
+  @@unique([emissionFactorId, type])
   @@map("emission_factor_parts")
 }
 
