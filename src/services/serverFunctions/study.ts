@@ -368,15 +368,10 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   }
 }
 
-type UnauthorizedStudySites = {
-  siteName: string
-  count: number
-  organization: {
-    id: string
-    isCR: boolean
-    name: string
-  }
-}
+const hasAccessToStudy = (userId: string, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) =>
+  study.isPublic ||
+  study.allowedUsers.some((allowedUser) => allowedUser.userId === userId) ||
+  study.contributors.some((contributor) => contributor.userId === userId)
 
 export const findStudiesWithSites = async (siteIds: string[]) => {
   const [session, studySites] = await Promise.all([auth(), getStudiesFromSites(siteIds)])
@@ -384,27 +379,20 @@ export const findStudiesWithSites = async (siteIds: string[]) => {
   const userId = session?.user?.id
 
   const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
-  const unauthorizedStudySites: UnauthorizedStudySites[] = []
+  const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site'> & { count: number })[] =
+    []
 
   studySites.forEach((studySite) => {
-    if (
-      studySite.study.isPublic ||
-      studySite.study.allowedUsers.some((user) => user.userId === userId) ||
-      studySite.study.contributors.some((user) => user.userId === userId)
-    ) {
+    if (userId && hasAccessToStudy(userId, studySite.study)) {
       authorizedStudySites.push(studySite)
     } else {
       const targetedSite = unauthorizedStudySites.find(
         (unauthorizedStudySite) =>
-          unauthorizedStudySite.siteName === studySite.site.name &&
-          unauthorizedStudySite.organization.id === studySite.site.organization.id,
+          unauthorizedStudySite.site.name === studySite.site.name &&
+          unauthorizedStudySite.site.organization.id === studySite.site.organization.id,
       )
       if (!targetedSite) {
-        unauthorizedStudySites.push({
-          siteName: studySite.site.name,
-          count: 1,
-          organization: studySite.site.organization,
-        })
+        unauthorizedStudySites.push({ site: studySite.site, count: 1 })
       } else {
         targetedSite.count++
       }

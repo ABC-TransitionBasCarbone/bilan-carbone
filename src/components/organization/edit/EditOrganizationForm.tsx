@@ -23,12 +23,14 @@ interface Props {
   organization: OrganizationWithSites
 }
 
+const emptySitesOnError = { authorizedStudySites: [], unauthorizedStudySites: [] }
+
 const EditOrganizationForm = ({ organization }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
   const tStudySites = useTranslations('organization.studySites')
   const [error, setError] = useState('')
-  const [sitesOnError, setSitesOnError] = useState<AsyncReturnType<typeof findStudiesWithSites> | undefined>(undefined)
+  const [sitesOnError, setSitesOnError] = useState<AsyncReturnType<typeof findStudiesWithSites>>(emptySitesOnError)
 
   const form = useForm<UpdateOrganizationCommand>({
     resolver: zodResolver(UpdateOrganizationCommandValidation),
@@ -42,7 +44,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
   })
 
   const onSubmit = async (command: UpdateOrganizationCommand) => {
-    setSitesOnError(undefined)
+    setSitesOnError(emptySitesOnError)
     const deletedSiteIds = organization.sites
       .filter((site) => !command.sites.find((s) => s.id === site.id))
       .map((site) => site.id)
@@ -79,7 +81,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
       </Button>
       {error && <p>{error}</p>}
       <Dialog
-        open={sitesOnError !== undefined}
+        open={!!sitesOnError.authorizedStudySites.length || !!sitesOnError.unauthorizedStudySites.length}
         aria-labelledby="delete-site-with-studies-dialog-title"
         aria-describedby="delete-site-with-studies-dialog-description"
       >
@@ -100,9 +102,9 @@ const EditOrganizationForm = ({ organization }: Props) => {
                 ))}
               {sitesOnError &&
                 sitesOnError.unauthorizedStudySites.map((studySite) => (
-                  <li key={studySite.siteName}>
+                  <li key={studySite.site.name}>
                     {tStudySites('existingUnauthorizedSite', {
-                      name: `${studySite.siteName}${studySite.organization.isCR ? ` (${studySite.organization.name})` : ''}`,
+                      name: `${studySite.site.name}${studySite.site.organization.isCR ? ` (${studySite.site.organization.name})` : ''}`,
                       count: studySite.count,
                     })}
                   </li>
@@ -111,7 +113,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setSitesOnError(undefined)}>{tStudySites('close')}</Button>
+          <Button onClick={() => setSitesOnError(emptySitesOnError)}>{tStudySites('close')}</Button>
         </DialogActions>
       </Dialog>
     </Form>
