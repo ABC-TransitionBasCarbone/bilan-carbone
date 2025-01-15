@@ -174,9 +174,6 @@ export const computeBegesResult = (
 
       // l'incertitude est globale, peu importe
       const uncertainty = getStandardDeviation(emissionSource)
-      if (!uncertainty) {
-        return
-      }
 
       if (emissionFactor.emissionFactorParts.length === 0) {
         // Pas de decomposition => on ventile selon la regle par default
