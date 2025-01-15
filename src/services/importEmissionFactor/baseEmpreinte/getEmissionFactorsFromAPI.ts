@@ -24,12 +24,16 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
 
   await prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersionId = await getEmissionFactorImportVersion(
+      const emissionFactorImportVersion = await getEmissionFactorImportVersion(
         transaction,
         name,
         Import.BaseEmpreinte,
         fileName,
       )
+
+      if (emissionFactorImportVersion.existing) {
+        return console.error('Emission factors already imported with id : ', emissionFactorImportVersion.id)
+      }
 
       let parts: ImportEmissionFactor[] = []
       let url: string | undefined =
@@ -43,14 +47,14 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
         )
         const data = emissionFactors.data.results
           .filter((emissionFactor) => emissionFactor.Type_Ligne !== 'Poste')
-          .map((emissionFactor) => mapBaseEmpreinteEmissionFactors(emissionFactor, emissionFactorImportVersionId))
+          .map((emissionFactor) => mapBaseEmpreinteEmissionFactors(emissionFactor, emissionFactorImportVersion.id))
 
         await Promise.all(data.map((data) => transaction.emissionFactor.create({ data })))
         url = emissionFactors.data.next
       }
 
       await saveEmissionFactorsParts(transaction, parts)
-      await cleanImport(transaction, emissionFactorImportVersionId)
+      await cleanImport(transaction, emissionFactorImportVersion.id)
     },
     { timeout: HOUR * TIME_IN_MS },
   )

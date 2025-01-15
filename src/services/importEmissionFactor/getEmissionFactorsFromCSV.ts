@@ -50,7 +50,7 @@ export const getEmissionFactorsFromCSV = async (
 ) => {
   await prismaClient.$transaction(
     async (transaction) => {
-      const emissionFactorImportVersionId = await getEmissionFactorImportVersion(
+      const emissionFactorImportVersion = await getEmissionFactorImportVersion(
         transaction,
         name,
         importFrom,
@@ -113,13 +113,13 @@ export const getEmissionFactorsFromCSV = async (
                 where: {
                   importedId_versionId: {
                     importedId: emissionFactor["Identifiant_de_l'élément"],
-                    versionId: emissionFactorImportVersionId,
+                    versionId: emissionFactorImportVersion.id,
                   },
                 },
                 select: { id: true },
               })
               const existingEmissionFactorId = existingEmissionFactor?.id
-              const data = mapFunction(emissionFactor, emissionFactorImportVersionId)
+              const data = mapFunction(emissionFactor, emissionFactorImportVersion.id)
               if (!existingEmissionFactorId) {
                 await transaction.emissionFactor.create({ data })
               } else {
@@ -146,7 +146,7 @@ export const getEmissionFactorsFromCSV = async (
             }
             console.log(`Save ${parts.length} emission factors parts...`)
             await saveEmissionFactorsParts(transaction, parts)
-            await cleanImport(transaction, emissionFactorImportVersionId)
+            await cleanImport(transaction, emissionFactorImportVersion.id)
             console.log('Done')
             resolve()
           })

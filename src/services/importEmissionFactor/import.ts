@@ -12,12 +12,12 @@ export const getEmissionFactorImportVersion = async (
 ) => {
   const existingVersion = await transaction.emissionFactorImportVersion.findFirst({ where: { internId: id } })
   if (existingVersion) {
-    return existingVersion.id
+    return { existing: true, id: existingVersion.id }
   }
   const newVersion = await transaction.emissionFactorImportVersion.create({
     data: { name, source, internId: id },
   })
-  return newVersion.id
+  return { existing: false, id: newVersion.id }
 }
 
 export type ImportEmissionFactor = {
