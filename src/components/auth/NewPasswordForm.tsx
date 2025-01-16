@@ -4,8 +4,7 @@ import { TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
-import Button from '../base/Button'
-import Spinner from '../base/Spinner'
+import LoadingButton from '../base/LoadingButton'
 import authStyles from './Auth.module.css'
 
 interface Props {
@@ -43,9 +42,9 @@ const NewPasswordForm = ({ reset }: Props) => {
         value={email}
         onChange={(event) => setEmail(event.target.value)}
       />
-      <Button type="submit" data-testid="reset-button" disabled={submitting}>
-        {submitting ? <Spinner /> : <>{t('reset')}</>}
-      </Button>
+      <LoadingButton type="submit" data-testid="reset-button" disabled={submitting} loading={submitting}>
+        {t('reset')}
+      </LoadingButton>
     </form>
   )
 }

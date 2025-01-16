@@ -10,8 +10,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import Button from '../base/Button'
-import Spinner from '../base/Spinner'
+import LoadingButton from '../base/LoadingButton'
 import ResetLinkAlreadyUsed from '../pages/ResetLinkAlreadyUsed'
 import authStyles from './Auth.module.css'
 
@@ -140,9 +139,9 @@ const ResetForm = ({ user, token }: Props) => {
           </Link>
         </p>
       )}
-      <Button type="submit" data-testid="reset-button" disabled={submitting}>
-        {submitting ? <Spinner /> : <>{t('reset')}</>}
-      </Button>
+      <LoadingButton type="submit" data-testid="reset-button" disabled={submitting} loading={submitting}>
+        {t('reset')}
+      </LoadingButton>
     </form>
   )
 }

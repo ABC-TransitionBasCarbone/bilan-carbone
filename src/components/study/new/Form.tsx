@@ -1,8 +1,7 @@
 'use client'
 import Block from '@/components/base/Block'
-import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
-import Spinner from '@/components/base/Spinner'
+import LoadingButton from '@/components/base/LoadingButton'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormRadio } from '@/components/form/Radio'
@@ -106,9 +105,14 @@ const NewStudyForm = ({ user, usersEmail, form }: Props) => {
             </FormControl>
           )}
         />
-        <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-study-create-button">
-          {form.formState.isSubmitting ? <Spinner /> : <>{t('create')}</>}
-        </Button>
+        <LoadingButton
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          loading={form.formState.isSubmitting}
+          data-testid="new-study-create-button"
+        >
+          {t('create')}
+        </LoadingButton>
         {error && <p>{t(`error.${error}`)}</p>}
       </Form>
     </Block>

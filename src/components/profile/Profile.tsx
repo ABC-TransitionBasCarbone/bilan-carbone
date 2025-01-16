@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
-import Spinner from '../base/Spinner'
+import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import styles from './Profile.module.css'
 
@@ -87,15 +87,16 @@ const Profile = () => {
                 >
                   <CloseIcon />
                 </Button>
-                <Button
+                <LoadingButton
                   type="submit"
                   disabled={form.formState.isSubmitting}
+                  loading={form.formState.isSubmitting}
                   data-testid="update-profile"
-                  aria-label={t('update')}
-                  title={t('update')}
+                  aria-label={t(form.formState.isSubmitting ? 'updating' : 'update')}
+                  title={t(form.formState.isSubmitting ? 'updating' : 'update')}
                 >
-                  {form.formState.isSubmitting ? <Spinner /> : <DoneIcon />}
-                </Button>
+                  <DoneIcon />
+                </LoadingButton>
               </div>
               {error && <p>{t(error)}</p>}
             </Form>

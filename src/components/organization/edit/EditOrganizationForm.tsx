@@ -2,7 +2,7 @@
 
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
-import Spinner from '@/components/base/Spinner'
+import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
 import { OrganizationWithSites } from '@/db/user'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
@@ -77,9 +77,14 @@ const EditOrganizationForm = ({ organization }: Props) => {
         label={t('name')}
       />
       <Sites form={form} sites={sites} />
-      <Button type="submit" disabled={form.formState.isSubmitting} data-testid="edit-organization-button">
-        {form.formState.isSubmitting ? <Spinner /> : <>{t('edit')}</>}
-      </Button>
+      <LoadingButton
+        type="submit"
+        disabled={form.formState.isSubmitting}
+        loading={form.formState.isSubmitting}
+        data-testid="edit-organization-button"
+      >
+        {t('edit')}
+      </LoadingButton>
       {error && <p>{error}</p>}
       <Dialog
         open={!!sitesOnError.authorizedStudySites.length || !!sitesOnError.unauthorizedStudySites.length}

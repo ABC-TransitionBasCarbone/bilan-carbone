@@ -1,7 +1,7 @@
-.light {
-  color: var(--neutral-00);
+.spinner {
+  color: var(--neutral-00) !important;
 }
 
-.dark {
-  color: var(--primary-60);
+.hidden {
+  display: none !important;
 }

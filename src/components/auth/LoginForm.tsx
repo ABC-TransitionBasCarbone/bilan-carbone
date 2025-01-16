@@ -6,8 +6,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
-import Button from '../base/Button'
-import Spinner from '../base/Spinner'
+import LoadingButton from '../base/LoadingButton'
 import authStyles from './Auth.module.css'
 import styles from './LoginForm.module.css'
 
@@ -67,9 +66,9 @@ const LoginForm = () => {
       >
         {t('forgotPassword')}
       </Link>
-      <Button data-testid="login-button" type="submit" disabled={submitting}>
-        {submitting ? <Spinner /> : <>{t('login')}</>}
-      </Button>
+      <LoadingButton data-testid="login-button" type="submit" disabled={submitting} loading={submitting}>
+        {t('login')}
+      </LoadingButton>
     </form>
   )
 }
