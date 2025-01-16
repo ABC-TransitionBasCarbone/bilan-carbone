@@ -34,8 +34,6 @@ export const FormDatePicker = <T extends FieldValues>({
           onChange={(date) => {
             if (date && date.isValid()) {
               onChange(date.toISOString())
-            } else {
-              onChange('')
             }
           }}
           value={value ? dayjs(value) : null}
