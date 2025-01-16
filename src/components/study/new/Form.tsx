@@ -2,6 +2,7 @@
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import Spinner from '@/components/base/Spinner'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormRadio } from '@/components/form/Radio'
@@ -106,7 +107,7 @@ const NewStudyForm = ({ user, usersEmail, form }: Props) => {
           )}
         />
         <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-study-create-button">
-          {t('create')}
+          {form.formState.isSubmitting ? <Spinner /> : <>{t('create')}</>}
         </Button>
         {error && <p>{t(`error.${error}`)}</p>}
       </Form>

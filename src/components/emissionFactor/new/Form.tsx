@@ -2,6 +2,7 @@
 
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import Spinner from '@/components/base/Spinner'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { defaultGazValues } from '@/constants/emissions'
@@ -107,7 +108,7 @@ const NewEmissionFactorForm = () => {
       <Posts form={form} />
       <FormTextField control={form.control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-emission-create-button">
-        {t('create')}
+        {form.formState.isSubmitting ? <Spinner /> : <>{t('create')}</>}
       </Button>
       {error && <p>{error}</p>}
     </Form>

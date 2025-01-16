@@ -3,6 +3,7 @@
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import Spinner from '@/components/base/Spinner'
 import { FormTextField } from '@/components/form/TextField'
 import { createOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
@@ -50,7 +51,7 @@ const NewOrganizationForm = () => {
           label={t('name')}
         />
         <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-organization-create-button">
-          {t('create')}
+          {form.formState.isSubmitting ? <Spinner /> : <>{t('create')}</>}
         </Button>
         {error && <p>{error}</p>}
       </Form>

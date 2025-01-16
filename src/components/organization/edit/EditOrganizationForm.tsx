@@ -2,6 +2,7 @@
 
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import Spinner from '@/components/base/Spinner'
 import { FormTextField } from '@/components/form/TextField'
 import { OrganizationWithSites } from '@/db/user'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
@@ -77,7 +78,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
       />
       <Sites form={form} sites={sites} />
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="edit-organization-button">
-        {t('edit')}
+        {form.formState.isSubmitting ? <Spinner /> : <>{t('edit')}</>}
       </Button>
       {error && <p>{error}</p>}
       <Dialog

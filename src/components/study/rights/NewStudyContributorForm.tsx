@@ -2,6 +2,7 @@
 
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import Spinner from '@/components/base/Spinner'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { FullStudy } from '@/db/study'
@@ -99,7 +100,7 @@ const NewStudyContributorForm = ({ study }: Props) => {
         </FormSelect>
       )}
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="study-contributor-create-button">
-        {t('create')}
+        {form.formState.isSubmitting ? <Spinner /> : <>{t('create')}</>}
       </Button>
       {error && <p>{error}</p>}
     </Form>
