@@ -32,7 +32,7 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
         .reduce((acc, current) => acc + current, 0)
       form.setValue('totalCo2', total)
     }
-  }, [form, detailedGES, ...emissionFactorValues])
+  }, [form, hasParts, detailedGES, ...emissionFactorValues])
 
   const emissionFactorPartsValues = form.watch(
     // @ts-expect-error cannot force type
