@@ -54,6 +54,11 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-validated').should('exist')
     cy.getByTestId('emission-source-result').should('have.text', 'Résultats :Émission :50,62 tCO₂e')
 
+    cy.get('body').then(($body) => {
+      if ($body.find('[data-testid="emission-source-quality-select"]').length) {
+        cy.getByTestId('emission-source-quality-expand-button').click()
+      }
+    })
     cy.getByTestId('emission-source-reliability').click()
     cy.get('[data-value="4"]').click()
     cy.getByTestId('emission-source-My emission source name').within(() => {
@@ -61,6 +66,7 @@ describe('Create study emission source', () => {
       cy.getByTestId('emission-source-value').should('have.text', '50,62 tCO₂e')
       cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Très bonne')
     })
+    cy.getByTestId('emission-source-quality-expand-button').should('not.exist')
     cy.getByTestId('emission-source-result').should(
       'have.text',
       'Résultats :Émission :50,62 tCO₂eQualité :Très bonneIntervalle de confiance à 95% :[48 019,73; 53 352,64]Alpha :0,05',

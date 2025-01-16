@@ -775,6 +775,9 @@
       "geographicRepresentativeness": "Geographic representativeness",
       "temporalRepresentativeness": "Temporal representativeness",
       "completeness": "Completeness",
+      "quality": "Quality",
+      "expand": "Expand qualities",
+      "shrink": "Shrink qualities",
       "comment": "Comments"
     },
     "emissionFactorDialog": {
