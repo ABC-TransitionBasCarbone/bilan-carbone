@@ -104,14 +104,25 @@
   "login": {
     "welcome": "Bienvenue",
     "form": {
+      "resetTitle": "Vous avez demandé de créer ou réinitialiser votre mot de passe. Rentrez les informations demandées ci-dessous pour confirmer votre création de compte ou réinitialisation de mot de passe.",
       "login": "Se connecter",
       "email": "Email",
       "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "hidePassword": "Cacher le mot de passe",
+      "showPassword": "Montrer le mot de passe",
+      "notMatching": "Les mots de passe ne correspondent pas",
+      "passwordLength": "Le mot de passe doit avoir au moins 8 caractères",
+      "passwordUppercase": "Le mot de passe doit avoir au moins une majuscule",
+      "passwordLowercase": "Le mot de passe doit avoir au moins une minuscule",
+      "passwordSpecialChar": "Le mot de passe doit avoir au moins un caractère spécial",
+      "passwordDigit": "Le mot de passe doit avoir au moins un chiffre",
       "forgotPassword": "Mot de passe oublié",
       "reset": "Réinitialiser",
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",
-      "backToHome": "Retour a l'accueil"
+      "backToHome": "Retour a l'accueil",
+      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous sur l'adresse email"
     }
   },
   "navigation": {

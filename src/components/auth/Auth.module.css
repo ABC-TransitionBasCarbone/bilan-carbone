@@ -7,3 +7,19 @@
 .input {
   width: 100%;
 }
+
+.red,
+.green {
+  font-size: 0.75rem;
+  a {
+    font-size: 0.75rem;
+  }
+}
+
+.green {
+  color: var(--success);
+}
+
+.red {
+  color: var(--error);
+}
