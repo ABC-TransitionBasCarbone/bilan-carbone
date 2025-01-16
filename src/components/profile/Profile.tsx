@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
+import Spinner from '../base/Spinner'
 import { FormTextField } from '../form/TextField'
 import styles from './Profile.module.css'
 
@@ -93,7 +94,7 @@ const Profile = () => {
                   aria-label={t('update')}
                   title={t('update')}
                 >
-                  <DoneIcon />
+                  {form.formState.isSubmitting ? <Spinner size={1} /> : <DoneIcon />}
                 </Button>
               </div>
               {error && <p>{t(error)}</p>}

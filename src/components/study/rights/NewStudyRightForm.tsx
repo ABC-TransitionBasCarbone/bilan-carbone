@@ -2,6 +2,7 @@
 
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import Spinner from '@/components/base/Spinner'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
 import { getOrganizationUsers } from '@/db/organization'
@@ -135,7 +136,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
           ))}
         </FormSelect>
         <Button type="submit" disabled={form.formState.isSubmitting} data-testid="study-rights-create-button">
-          {t('create')}
+          {form.formState.isSubmitting ? <Spinner size={1} /> : <>{t('create')}</>}
         </Button>
         {error && <p>{error}</p>}
       </Form>

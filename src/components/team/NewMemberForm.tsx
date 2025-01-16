@@ -12,6 +12,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Spinner from '../base/Spinner'
 import { FormSelect } from '../form/Select'
 
 const NewMemberForm = () => {
@@ -86,7 +87,7 @@ const NewMemberForm = () => {
           ))}
       </FormSelect>
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-member-create-button">
-        {t('create')}
+        {form.formState.isSubmitting ? <Spinner size={1} /> : <>{t('create')}</>}
       </Button>
       {error && <p>{error}</p>}
     </Form>

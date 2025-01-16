@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 import Button from '../base/Button'
+import Spinner from '../base/Spinner'
 import authStyles from './Auth.module.css'
 
 interface Props {
@@ -13,11 +14,14 @@ interface Props {
 
 const NewPasswordForm = ({ reset }: Props) => {
   const t = useTranslations('login.form')
+  const [submitting, setSubmitting] = useState(false)
   const [email, setEmail] = useState('')
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setSubmitting(true)
     await reset(email)
+    setSubmitting(false)
   }
 
   const searchParams = useSearchParams()
@@ -39,8 +43,8 @@ const NewPasswordForm = ({ reset }: Props) => {
         value={email}
         onChange={(event) => setEmail(event.target.value)}
       />
-      <Button type="submit" data-testid="reset-button">
-        {t('reset')}
+      <Button type="submit" data-testid="reset-button" disabled={submitting}>
+        {submitting ? <Spinner size={1} /> : <>{t('reset')}</>}
       </Button>
     </form>
   )
