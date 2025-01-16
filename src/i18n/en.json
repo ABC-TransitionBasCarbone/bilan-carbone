@@ -155,12 +155,13 @@
       "homepage": "Homepage",
       "framing": "Framing",
       "scope": "Scope",
-      "mobilisation": "mobilisation",
+      "mobilisation": "Mobilisation",
       "accounting": "Accounting",
       "dataEntry": "Data entry",
       "results": "Results",
       "transitionPlan": "Transition plan",
-      "menu": "Open the study navigation menu"
+      "menu": "Open the study navigation menu",
+      "comming": "comming"
     },
     "new": {
       "title": "Information about the new study",
@@ -189,7 +190,8 @@
       "error": {
         "default": "Something went wrong ...",
         "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support"
-      }
+      },
+      "comming": "comming"
     },
     "post": {
       "displayInfography": "Display all posts",
@@ -275,7 +277,8 @@
       "value": "Emissions (tCO₂e)",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
-      "withoutDependencies": "Without dependencies"
+      "withoutDependencies": "Without dependencies",
+      "comming": "comming"
     },
     "export": {
       "activityDataComment": "Activity data comment",

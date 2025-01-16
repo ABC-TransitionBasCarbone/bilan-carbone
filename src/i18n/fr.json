@@ -160,7 +160,8 @@
       "dataEntry": "Saisie des données",
       "results": "Résultats",
       "transitionPlan": "Plan de transition",
-      "menu": "Ouvrir le menu de navigation de l'étude"
+      "menu": "Ouvrir le menu de navigation de l'étude",
+      "comming": "à venir"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -189,7 +190,8 @@
       "error": {
         "default": "Une erreur s'est produite ...",
         "noActiveVersion_BaseEmpreinte": "Aucune version active de Base Empreinte. Veuillez contacter le support."
-      }
+      },
+      "comming": "à venir"
     },
     "post": {
       "displayInfography": "Voir les différents postes",
@@ -275,7 +277,8 @@
       "value": "Émissions (tCO₂e)",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec les dépendances",
-      "withoutDependencies": "Sans les dépendances"
+      "withoutDependencies": "Sans les dépendances",
+      "comming": "à venir"
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",

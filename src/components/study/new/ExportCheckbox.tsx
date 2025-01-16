@@ -17,15 +17,20 @@ const ExportCheckbox = ({ id, values, setValues }: Props) => {
   return (
     <div className={styles.container}>
       <FormControlLabel
-        control={<Checkbox />}
-        label={tExport(id)}
+        control={<Checkbox disabled={id !== Export.Beges} />}
+        label={
+          <span>
+            {tExport(id)}
+            {id !== Export.Beges && <em> ({t('comming')})</em>}
+          </span>
+        }
         value={!!values[id]}
         onChange={(_, checked) => setValues({ ...values, [id]: checked ? ControlMode.Operational : false })}
       />
       {values[id] && (
         <div className={styles.select}>
           <FormControl fullWidth>
-            <InputLabel id={`${id}-label`}>{t('control')}</InputLabel>
+            <InputLabel id={`${id}-label`}>{t('control')} </InputLabel>
             <Select
               value={values[id]}
               onChange={(event) => setValues({ ...values, [id]: event.target.value as ControlMode })}
@@ -36,7 +41,7 @@ const ExportCheckbox = ({ id, values, setValues }: Props) => {
               {Object.keys(ControlMode).map((key) => (
                 <MenuItem key={key} value={key} disabled={key !== ControlMode.Operational}>
                   {t(key)}
-                  {key !== ControlMode.Operational && <em>&nbsp;(à venir)</em>}
+                  {key !== ControlMode.Operational && <em> ({t('comming')})</em>}
                 </MenuItem>
               ))}
             </Select>

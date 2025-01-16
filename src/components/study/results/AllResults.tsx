@@ -60,7 +60,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
                 disabled={exportItem.type !== Export.Beges || exportItem.control !== ControlMode.Operational}
               >
                 {tExport(exportItem.type)}
-                {exportItem.control !== ControlMode.Operational && <em>&nbsp;(à venir)</em>}
+                {(exportItem.type !== Export.Beges || exportItem.control !== ControlMode.Operational) && (
+                  <em> ({t('comming')})</em>
+                )}
               </MenuItem>
             ))}
           </Select>

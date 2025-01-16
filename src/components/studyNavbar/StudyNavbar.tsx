@@ -62,7 +62,7 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         </Link>
         <Divider />
         <button className={classNames(styles.link, styles.disabled)} onClick={() => setOpen(false)}>
-          {t('mobilisation')} (<em>à venir</em>)
+          {t('mobilisation')} (<em>{t('comming')}</em>)
         </button>
         <Divider />
         <div>
@@ -100,7 +100,7 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         </div>
         <Divider />
         <button className={classNames(styles.button, styles.disabled)} onClick={() => setOpen(false)}>
-          {t('transitionPlan')} (<em>à venir</em>)
+          {t('transitionPlan')} (<em>{t('comming')}</em>)
         </button>
       </Drawer>
     </>
