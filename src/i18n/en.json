@@ -809,5 +809,8 @@
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",
     "noFileSelected": "No file selected"
+  },
+  "spinner": {
+    "loading": "Loading"
   }
 }

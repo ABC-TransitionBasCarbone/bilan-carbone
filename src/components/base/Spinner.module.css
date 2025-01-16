@@ -1,0 +1,7 @@
+.light {
+  color: var(--neutral-00);
+}
+
+.dark {
+  color: var(--primary-60);
+}
