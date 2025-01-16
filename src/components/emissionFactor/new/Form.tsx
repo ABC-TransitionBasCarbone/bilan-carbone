@@ -46,14 +46,10 @@ const NewEmissionFactorForm = () => {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    form.clearErrors()
-    const command = form.getValues()
-    const isValid = CreateEmissionFactorCommandValidation.safeParse({
-      ...command,
-      parts: hasParts ? command.parts.slice(0, partsCount) : [],
-    })
-    if (isValid.success) {
-      const result = await createEmissionFactorCommand(isValid.data)
+
+    form.setValue('parts', hasParts ? form.getValues('parts').slice(0, partsCount) : [])
+    form.handleSubmit(async (data) => {
+      const result = await createEmissionFactorCommand(data)
 
       if (result) {
         setError(result)
@@ -61,18 +57,10 @@ const NewEmissionFactorForm = () => {
         router.push('/facteurs-d-emission')
         router.refresh()
       }
-    } else {
-      isValid.error.errors.forEach((error) => {
-        form.setError(error.path.join('.') as keyof CreateEmissionFactorCommand, {
-          type: 'manual',
-          message: error.message,
-        })
-      })
-    }
+    })()
   }
 
   const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [tUnit])
-
   return (
     <Form onSubmit={onSubmit}>
       <FormTextField
