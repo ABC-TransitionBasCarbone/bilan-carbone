@@ -5,21 +5,16 @@ import { canBeValidated } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 import { canReadStudy } from './study'
 
-export const canCreateEmissionSource = async (
+const hasStudyBasicRights = async (
   user: User,
   emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'siteId'> & { emissionFactorId?: string | null },
-  study?: FullStudy,
+  study: FullStudy,
 ) => {
-  const dbStudy = study || (await getStudyById(emissionSource.studyId, user.organizationId))
-  if (!dbStudy) {
+  if (!(await canReadStudy(user, study))) {
     return false
   }
 
-  if (!(await canReadStudy(user, dbStudy))) {
-    return false
-  }
-
-  if (!dbStudy.sites.find((site) => site.id === emissionSource.siteId)) {
+  if (!study.sites.find((site) => site.id === emissionSource.siteId)) {
     return false
   }
 
@@ -30,19 +25,25 @@ export const canCreateEmissionSource = async (
     }
   }
 
-  const rights = dbStudy.allowedUsers.find((right) => right.user.email === user.email)
+  const rights = study.allowedUsers.find((right) => right.user.email === user.email)
   if (rights && rights.role !== StudyRole.Reader) {
     return true
   }
 
-  const contributor = dbStudy.contributors.find(
-    (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
-  )
-
-  if (contributor) {
-    return true
-  }
   return false
+}
+
+export const canCreateEmissionSource = async (
+  user: User,
+  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'siteId'> & { emissionFactorId?: string | null },
+  study?: FullStudy,
+) => {
+  const dbStudy = study || (await getStudyById(emissionSource.studyId, user.organizationId))
+  if (!dbStudy) {
+    return false
+  }
+
+  return hasStudyBasicRights(user, emissionSource, dbStudy)
 }
 
 export const canUpdateEmissionSource = async (
@@ -51,9 +52,15 @@ export const canUpdateEmissionSource = async (
   change: Partial<StudyEmissionSource>,
   study: FullStudy,
 ) => {
-  const canCreate = await canCreateEmissionSource(user, emissionSource, study)
-  if (!canCreate) {
-    return false
+  const hasBasicRights = await hasStudyBasicRights(user, emissionSource, study)
+  if (!hasBasicRights) {
+    const contributor = study.contributors.find(
+      (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
+    )
+
+    if (!contributor) {
+      return false
+    }
   }
 
   if (emissionSource.validated && change.validated !== false) {
