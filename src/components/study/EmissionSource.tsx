@@ -14,7 +14,7 @@ import { getQualityRating, getStandardDeviationRating } from '@/services/uncerta
 import { formatNumber } from '@/utils/number'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormControlLabel, Switch } from '@mui/material'
-import { EmissionSourceCaracterisation, StudyRole } from '@prisma/client'
+import { EmissionSourceCaracterisation, Level, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -243,6 +243,7 @@ const EmissionSource = ({
               />
             ) : (
               <EmissionSourceForm
+                advanced={study.level === Level.Advanced}
                 canEdit={canEdit}
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}

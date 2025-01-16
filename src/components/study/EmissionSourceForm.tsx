@@ -9,12 +9,13 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Path } from 'react-hook-form'
-import QualitySelect from '../form/QualitySelect'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
+import QualitySelectGroup from './QualitySelectGroup'
 
 interface Props {
+  advanced?: boolean
   emissionSource: FullStudy['emissionSources'][0]
   canEdit: boolean | null
   emissionFactors: EmissionFactorWithMetaData[]
@@ -25,6 +26,7 @@ interface Props {
 }
 
 const EmissionSourceForm = ({
+  advanced,
   emissionSource,
   canEdit,
   update,
@@ -147,48 +149,7 @@ const EmissionSourceForm = ({
           <div className={styles.unit}>{t('form.years')}</div>
         </div>
       )}
-      <div className={classNames(styles.row, 'flex')}>
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-reliability"
-          id="reliability"
-          value={emissionSource.reliability || ''}
-          onChange={(event) => update('reliability', Number(event.target.value))}
-          label={t('form.reliability')}
-        />
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-technicalRepresentativeness"
-          id="technicalRepresentativeness"
-          value={emissionSource.technicalRepresentativeness || ''}
-          onChange={(event) => update('technicalRepresentativeness', Number(event.target.value))}
-          label={t('form.technicalRepresentativeness')}
-        />
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-geographicRepresentativeness"
-          id="geographicRepresentativeness"
-          value={emissionSource.geographicRepresentativeness || ''}
-          onChange={(event) => update('geographicRepresentativeness', Number(event.target.value))}
-          label={t('form.geographicRepresentativeness')}
-        />
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-temporalRepresentativeness"
-          id="temporalRepresentativeness"
-          value={emissionSource.temporalRepresentativeness || ''}
-          onChange={(event) => update('temporalRepresentativeness', Number(event.target.value))}
-          label={t('form.temporalRepresentativeness')}
-        />
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-completeness"
-          id="completeness"
-          value={emissionSource.completeness || ''}
-          onChange={(event) => update('completeness', Number(event.target.value))}
-          label={t('form.completeness')}
-        />
-      </div>
+      <QualitySelectGroup canEdit={canEdit} emissionSource={emissionSource} update={update} advanced={advanced} />
       <div className={classNames(styles.row, 'flex')}>
         <TextField
           disabled={!canEdit}
