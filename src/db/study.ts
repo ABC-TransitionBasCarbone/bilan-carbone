@@ -114,16 +114,18 @@ const normalizeAllowedUsers = (
         }
   })
 
-export const getMainStudy = async (organizationId: string) => {
-  const study = await prismaClient.study.findFirst({
-    where: { organizationId },
+export const getOrganizationStudiesOrderedByStartDate = async (organizationId: string) => {
+  const studies = await prismaClient.study.findMany({
+    where: {
+      organizationId,
+    },
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
-  if (!study) {
-    return null
-  }
-  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId) }
+  return studies.map((study) => ({
+    ...study,
+    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId),
+  }))
 }
 
 export const getStudiesByUser = async (user: User) => {

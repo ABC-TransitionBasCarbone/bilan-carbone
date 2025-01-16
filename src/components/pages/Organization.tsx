@@ -23,11 +23,9 @@ const OrganizationPage = ({ organizations, user }: Props) => {
         links={[{ label: tNav('home'), link: '/' }]}
       />
       <OrganizationInfo organization={organizations[0]} user={user} />
-      <Block>
-        <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={organizations[0].id} />
-        </Suspense>
-      </Block>
+      <Suspense>
+        <ResultsContainerForUser user={user} mainStudyOrganizationId={organizations[0].id} />
+      </Suspense>
       <Block>
         <Studies user={user} organizationId={organizations[0].id} />
       </Block>

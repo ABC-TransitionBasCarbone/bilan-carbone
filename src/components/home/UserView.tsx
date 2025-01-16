@@ -30,9 +30,7 @@ const UserView = async ({ user }: Props) => {
       )}
       {user.organizationId && (
         <Suspense>
-          <Block>
-            <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
-          </Block>
+          <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
         </Suspense>
       )}
       <Block>
