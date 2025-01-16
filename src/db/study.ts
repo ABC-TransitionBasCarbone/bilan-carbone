@@ -85,6 +85,7 @@ const fullStudyInclude = {
       ca: true,
       site: {
         select: {
+          id: true,
           name: true,
         },
       },
@@ -182,6 +183,35 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
+
+export const getStudySites = (studyId: string) => prismaClient.studySite.findMany({ where: { studyId } })
+
+export const updateStudySites = async (
+  studyId: string,
+  newStudySites: Prisma.StudySiteCreateManyInput[],
+  deletedSiteIds: string[],
+) => {
+  return prismaClient.$transaction(async (transaction) => {
+    const promises = []
+    if (deletedSiteIds.length) {
+      await transaction.studyEmissionSource.deleteMany({ where: { studyId, siteId: { in: deletedSiteIds } } })
+      promises.push(transaction.studySite.deleteMany({ where: { id: { in: deletedSiteIds }, studyId } }))
+    }
+    if (newStudySites.length) {
+      newStudySites.forEach((studySite) => {
+        promises.push(
+          transaction.studySite.upsert({
+            where: { id: studySite.id },
+            update: { ca: studySite.ca, etp: studySite.etp },
+            create: studySite,
+          }),
+        )
+      })
+    }
+
+    return Promise.all(promises)
+  })
+}
 
 export const createContributorOnStudy = (
   userId: string,

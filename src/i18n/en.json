@@ -79,7 +79,7 @@
     "home": "Home",
     "newOrganization": "Add an Organization",
     "newStudy": "Add a New Study",
-    "studyPermimeter": "Perimeter",
+    "studyPerimeter": "Perimeter",
     "newStudyContributor": "Add a contributor",
     "newStudyRight": "Add a Person",
     "notFound": "Page not found",
@@ -280,7 +280,18 @@
     },
     "perimeter": {
       "dates": "from {startDate} to {endDate}",
-      "title": "Permiter on study : {name}"
+      "title": "Perimeter on study: {name}",
+      "save": "Save",
+      "editSites": "Edit sites list",
+      "cancelEditSites": "Cancel modification",
+      "validSites": "Validate changes",
+      "deleteDialog": {
+        "accept": "Yes",
+        "decline": "No",
+        "delete": "Delete",
+        "description": "{count, plural, =1 {It contains} other {Some of them contain}} emission sources. All registered data will be definitively lost.",
+        "title": "Are you sure you want to delete {count, plural, =1 {this site} other {these sites}} ?"
+      }
     },
     "results": {
       "type": "Type",
@@ -701,6 +712,7 @@
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",
+      "update": "Update list",
       "validation": {
         "name": "Please enter a name",
         "etp": "Please enter a number of employees",

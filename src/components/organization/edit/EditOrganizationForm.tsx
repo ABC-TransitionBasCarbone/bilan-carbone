@@ -75,7 +75,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
         name="name"
         label={t('name')}
       />
-      <Sites sites={sites} form={form} />
+      <Sites form={form} sites={sites} />
       <Button type="submit" disabled={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}
       </Button>

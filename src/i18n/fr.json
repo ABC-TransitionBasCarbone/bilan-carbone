@@ -79,7 +79,7 @@
     "home": "Accueil",
     "newOrganization": "Ajouter une nouvelle organisation",
     "newStudy": "Ajouter une nouvelle étude",
-    "studyPermimeter": "Périmètre",
+    "studyPerimeter": "Périmètre",
     "newStudyContributor": "Ajouter un contributeur",
     "newStudyRight": "Ajouter une personne",
     "notFound": "Page non trouvée",
@@ -280,7 +280,18 @@
     },
     "perimeter": {
       "dates": "Du {startDate} au {endDate}",
-      "title": "Périmètre de l'étude : {name}"
+      "title": "Périmètre de l'étude : {name}",
+      "save": "Modifier",
+      "editSites": "Modifier la liste de sites",
+      "cancelEditSites": "Annuler la modification",
+      "validSites": "Valider les changements",
+      "deleteDialog": {
+        "accept": "Oui",
+        "decline": "Non",
+        "delete": "Supprimer",
+        "description": "{count, plural, =1 {Il contient} other {Certains contiennent}} des sources d'emission. Toutes les données renseignées seront definitivement perdues.",
+        "title": "Êtes-vous sûr de vouloir supprimer {count, plural, =1 {ce site} other {ces sites}} ?"
+      }
     },
     "results": {
       "type": "Type",
@@ -701,6 +712,7 @@
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",
+      "update": "Modifier la liste",
       "validation": {
         "name": "Veuillez renseigner un nom",
         "etp": "Veuillez renseigner un nombre d'employés",

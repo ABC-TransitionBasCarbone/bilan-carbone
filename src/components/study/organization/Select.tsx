@@ -4,13 +4,13 @@ import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import LinkButton from '@/components/base/LinkButton'
 import { FormSelect } from '@/components/form/Select'
+import Sites from '@/components/organization/Sites'
 import { OrganizationWithSites } from '@/db/user'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { FormHelperText, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import Sites from './Sites'
 
 interface Props {
   organizations: OrganizationWithSites[]
@@ -62,7 +62,7 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
       {organization &&
         (organization.sites.length > 0 ? (
           <>
-            <Sites form={form} sites={sites} />
+            <Sites form={form} sites={sites} withSelection />
             <div className="mt2">
               <Button
                 data-testid="new-study-organization-button"
