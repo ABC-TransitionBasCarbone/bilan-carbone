@@ -1,0 +1,19 @@
+.spinner {
+  border-style: solid;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1.5s linear infinite;
+}
+
+.light {
+  border-color: var(--neutral-00) var(--neutral-00) var(--neutral-00) transparent;
+}
+.dark {
+  border-color: var(--primary-60) var(--primary-60) var(--primary-60) transparent;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
