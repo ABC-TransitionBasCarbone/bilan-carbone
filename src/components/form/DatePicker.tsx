@@ -1,6 +1,9 @@
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
+
+dayjs.extend(utc)
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
@@ -33,7 +36,7 @@ export const FormDatePicker = <T extends FieldValues>({
           }}
           onChange={(date) => {
             if (date && date.isValid()) {
-              onChange(date.toISOString())
+              onChange(date.utc(true).format())
             }
           }}
           value={value ? dayjs(value) : null}
