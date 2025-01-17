@@ -3,16 +3,17 @@ import { gazKeys } from '@/constants/emissions'
 import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { FieldPath, UseFormReturn } from 'react-hook-form'
+import { Control, FieldPath, UseFormReturn } from 'react-hook-form'
 import styles from './DetailedGESFields.module.css'
 
-interface DetailedGESFieldsProps {
-  form: UseFormReturn<CreateEmissionFactorCommand>
+interface Props<T extends CreateEmissionFactorCommand> {
+  form: UseFormReturn<T>
   index?: number
 }
 
-const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
+const DetailedGESFields = <T extends CreateEmissionFactorCommand>({ form, index }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
+  const control = form.control as Control<CreateEmissionFactorCommand>
   const getName = (gaz: string) =>
     `${index !== undefined ? `parts.${index}.` : ''}${gaz}` as FieldPath<CreateEmissionFactorCommand>
   const getTestId = (gaz: string) => `new-emission-${index !== undefined ? `part-${index}-` : ''}${gaz}`
@@ -22,7 +23,7 @@ const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
         <FormTextField
           key={getName(gaz)}
           data-testid={getTestId(gaz)}
-          control={form.control}
+          control={control}
           translation={t}
           slotProps={{
             htmlInput: { min: 0 },

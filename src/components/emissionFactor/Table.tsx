@@ -1,9 +1,12 @@
 'use client'
 
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { canUpdateEmissionFactor } from '@/services/serverFunctions/emissionFactor'
 import { formatNumber } from '@/utils/number'
+import DeleteIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import EditIcon from '@mui/icons-material/Edit'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'
 import InventoryIcon from '@mui/icons-material/Inventory'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -40,6 +43,7 @@ import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import EmissionFactorDetails from './EmissionFactorDetails'
 import styles from './Table.module.css'
+import EditEmissionFactorModal from './edit/EditEmissionFactorModal'
 
 const fuseOptions = {
   keys: [
@@ -79,7 +83,9 @@ const locationFuseOptions = {
   isCaseSensitive: false,
 }
 
-const sources = Object.values(Import).map((source) => source)
+const sources = Object.values(Import)
+  .filter((source) => source === Import.Manual)
+  .map((source) => source)
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
@@ -89,10 +95,20 @@ interface Props {
 const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
+  const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
+  const [targetedEmission, setTargetedEmission] = useState('')
   const [filter, setFilter] = useState('')
   const [displayArchived, setDisplayArchived] = useState(false)
   const [locationFilter, setLocationFilter] = useState('')
   const [filteredSources, setSources] = useState<Import[]>(sources)
+
+  const editEmissionFactor = async (emissionFactorId: string, action: 'edit' | 'delete') => {
+    if (!(await canUpdateEmissionFactor(emissionFactorId))) {
+      return
+    }
+    setTargetedEmission(emissionFactorId)
+    setAction(action)
+  }
 
   const columns = useMemo(() => {
     const columnsToReturn = [
@@ -148,7 +164,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
       {
         header: t('source'),
         accessorKey: 'importedFrom',
-        cell: ({ getValue }) => {
+        cell: ({ getValue, row }) => {
           const importedFrom = getValue<Import>()
           switch (importedFrom) {
             case Import.BaseEmpreinte:
@@ -182,6 +198,24 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
                 <span className={classNames(styles.importFrom, 'flex-cc')}>
                   <HomeWorkIcon />
                   {t('importedFrom.manual')}
+                  {!selectEmissionFactor && (
+                    <>
+                      <EditIcon
+                        color="info"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          editEmissionFactor(row.original.id, 'edit')
+                        }}
+                      />
+                      <DeleteIcon
+                        color="error"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          editEmissionFactor(row.original.id, 'delete')
+                        }}
+                      />
+                    </>
+                  )}
                 </span>
               )
           }
@@ -422,6 +456,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
           total: table.getRowCount().toLocaleString(),
         })}
       </div>
+      <EditEmissionFactorModal emissionFactorId={targetedEmission} action={action} setAction={setAction} />
     </>
   )
 }

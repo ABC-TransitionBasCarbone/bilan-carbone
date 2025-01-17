@@ -7,16 +7,20 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 
-interface Props {
-  form: UseFormReturn<CreateEmissionFactorCommand>
+interface Props<T extends CreateEmissionFactorCommand> {
+  post?: Post
+  form: UseFormReturn<T>
 }
 
-const Posts = ({ form }: Props) => {
+const Posts = <T extends CreateEmissionFactorCommand>({ form, post: initalPost }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
-  const [post, setPost] = useState<Post>()
+  const [post, setPost] = useState<Post | undefined>(initalPost)
+
+  const control = form.control as Control<CreateEmissionFactorCommand>
+  const setValue = form.setValue as UseFormSetValue<CreateEmissionFactorCommand>
 
   const posts = useMemo(() => Object.keys(Post).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
   const subPosts = useMemo<SubPost[]>(
@@ -35,7 +39,7 @@ const Posts = ({ form }: Props) => {
           value={post || ''}
           onChange={(event) => {
             // @ts-expect-error: Force undefined to trigger error if not filled
-            form.setValue('subPost', undefined)
+            setValue('subPost', undefined)
             setPost(event.target.value as Post)
           }}
         >
@@ -48,7 +52,7 @@ const Posts = ({ form }: Props) => {
       </FormControl>
       <FormSelect
         data-testid="new-emission-subPost"
-        control={form.control}
+        control={control}
         translation={t}
         label={t('subPost')}
         name="subPost"

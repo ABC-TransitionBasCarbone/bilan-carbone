@@ -56,3 +56,12 @@ export const CreateEmissionFactorCommandValidation = z.intersection(
 )
 
 export type CreateEmissionFactorCommand = z.infer<typeof CreateEmissionFactorCommandValidation>
+
+export const UpdateEmissionFactorCommandValidation = z.intersection(
+  z.object({
+    id: z.string(),
+  }),
+  CreateEmissionFactorCommandValidation,
+)
+
+export type UpdateEmissionFactorCommand = z.infer<typeof UpdateEmissionFactorCommandValidation>
