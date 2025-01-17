@@ -1,4 +1,5 @@
 import Button from '@/components/base/Button'
+import { deleteEmissionFactor } from '@/services/serverFunctions/emissionFactor'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -14,11 +15,12 @@ const EditEmissionFactorModal = ({ emissionFactorId, action, setAction }: Props)
   const router = useRouter()
   const onCancel = () => setAction(undefined)
   const onConfirm = () => {
-    console.log('emissionFactorId : ', emissionFactorId)
     if (action === 'edit') {
       router.push(`/facteurs-d-emission/${emissionFactorId}/modifier`)
     } else if (action === 'delete') {
-      console.log('delete emissionFactorId : ', emissionFactorId)
+      deleteEmissionFactor(emissionFactorId)
+      setAction(undefined)
+      router.refresh()
     }
   }
 

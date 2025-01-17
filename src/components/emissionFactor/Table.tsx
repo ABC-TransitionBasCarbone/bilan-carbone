@@ -1,7 +1,7 @@
 'use client'
 
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import { canUpdateEmissionFactor } from '@/services/serverFunctions/emissionFactor'
+import { canEditEmissionFactor } from '@/services/serverFunctions/emissionFactor'
 import { formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
@@ -104,7 +104,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
   const [filteredSources, setSources] = useState<Import[]>(sources)
 
   const editEmissionFactor = async (emissionFactorId: string, action: 'edit' | 'delete') => {
-    if (!(await canUpdateEmissionFactor(emissionFactorId))) {
+    if (!(await canEditEmissionFactor(emissionFactorId))) {
       return
     }
     setTargetedEmission(emissionFactorId)
@@ -259,13 +259,13 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
       return locationFuse.search(locationFilter).map(({ item }) => item)
     }
     return searchResults
-  }, [filter, locationFilter])
+  }, [emissionFactors, filter, locationFilter])
 
   const data = useMemo(() => {
     return searchedEmissionFactors
       .filter((emissionFactor) => filteredSources.includes(emissionFactor.importedFrom))
       .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived)
-  }, [searchedEmissionFactors, filteredSources, displayArchived])
+  }, [emissionFactors, searchedEmissionFactors, filteredSources, displayArchived])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
