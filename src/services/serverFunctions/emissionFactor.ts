@@ -40,7 +40,7 @@ export const getDetailedEmissionFactor = async (id: string) => {
   return { success: true, emissionFactor: emissionFactor }
 }
 
-export const canUpdateEmissionFactor = async (id: string) => {
+export const canEditEmissionFactor = async (id: string) => {
   const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorById(id)])
 
   if (!emissionFactor || !session) {
@@ -120,28 +120,19 @@ export const updateEmissionFactorCommand = async ({
   subPost,
   ...command
 }: UpdateEmissionFactorCommand) => {
-  const session = await auth()
-  const local = await getLocale()
-  if (!session || !session.user) {
+  if (!canEditEmissionFactor(id)) {
     return NOT_AUTHORIZED
   }
 
-  const user = await getUserByEmail(session.user.email)
+  const [session, local] = await Promise.all([auth(), getLocale()])
 
-  if (!user || !user.organizationId) {
-    return NOT_AUTHORIZED
-  }
-
-  if (!canCreateEmissionFactor()) {
-    return NOT_AUTHORIZED
-  }
   await prismaClient.$transaction(async (transaction) => {
     await updateEmissionFactor(transaction, id, {
       ...command,
       importedFrom: Import.Manual,
       status: EmissionFactorStatus.Valid,
       reliability: 5,
-      organization: { connect: { id: user.organizationId as string } },
+      organization: { connect: { id: session?.user.organizationId as string } },
       unit: unit as Unit,
       subPosts: [subPost],
     })
@@ -175,5 +166,28 @@ export const updateEmissionFactorCommand = async ({
         }),
       ),
     )
+  })
+}
+
+export const deleteEmissionFactor = async (id: string) => {
+  if (!canEditEmissionFactor(id)) {
+    return NOT_AUTHORIZED
+  }
+
+  await prismaClient.$transaction(async (transaction) => {
+    const emissionFactorParts = await transaction.emissionFactorPart.findMany({ where: { emissionFactorId: id } })
+    await transaction.emissionFactorPartMetaData.deleteMany({
+      where: { emissionFactorPartId: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
+    })
+
+    await Promise.all([
+      transaction.studyEmissionSource.deleteMany({ where: { emissionFactorId: id } }),
+      transaction.emissionFactorMetaData.deleteMany({ where: { emissionFactorId: id } }),
+      transaction.emissionFactorPart.deleteMany({
+        where: { id: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
+      }),
+    ])
+
+    await transaction.emissionFactor.delete({ where: { id } })
   })
 }
