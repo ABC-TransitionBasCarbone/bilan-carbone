@@ -46,16 +46,22 @@ const EmissionFactorForm = <T extends CreateEmissionFactorCommand>({
 
   return (
     <>
-      <FormTextField data-testid="new-emission-name" control={control} translation={t} name="name" label={t('name')} />
+      <FormTextField
+        data-testid="emission-factor-name"
+        control={control}
+        translation={t}
+        name="name"
+        label={t('name')}
+      />
       <FormTextField control={control} translation={t} name="attribute" label={t('attribute')} />
       <FormTextField
-        data-testid="new-emission-source"
+        data-testid="emission-factor-source"
         control={control}
         translation={t}
         name="source"
         label={t('source')}
       />
-      <FormSelect data-testid="new-emission-unit" control={control} translation={t} label={t('unit')} name="unit">
+      <FormSelect data-testid="emission-factor-unit" control={control} translation={t} label={t('unit')} name="unit">
         {units.map((unit) => (
           <MenuItem key={unit} value={unit}>
             {tUnit(unit)}
@@ -78,7 +84,7 @@ const EmissionFactorForm = <T extends CreateEmissionFactorCommand>({
             {t('cancel')}
           </LinkButton>
         )}
-        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-emission-create-button">
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="emission-factor-valid-button">
           {t(button)}
         </LoadingButton>
       </div>

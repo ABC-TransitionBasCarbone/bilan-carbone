@@ -202,6 +202,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
                   {!selectEmissionFactor && userOrganizationId === row.original.organizationId && (
                     <>
                       <EditIcon
+                        data-testid="edit-emission-factor-button"
                         color="info"
                         onClick={(e) => {
                           e.stopPropagation()
@@ -209,6 +210,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
                         }}
                       />
                       <DeleteIcon
+                        data-testid="delete-emission-factor-button"
                         color="error"
                         onClick={(e) => {
                           e.stopPropagation()

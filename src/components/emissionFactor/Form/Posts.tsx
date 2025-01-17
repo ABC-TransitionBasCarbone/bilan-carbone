@@ -34,7 +34,7 @@ const Posts = <T extends CreateEmissionFactorCommand>({ form, post: initalPost }
         <InputLabel id="post-select-label">{t('post')}</InputLabel>
         <Select
           label={t('post')}
-          data-testid="new-emission-post"
+          data-testid="emission-factor-post"
           labelId="post-select-label"
           value={post || ''}
           onChange={(event) => {
@@ -51,7 +51,7 @@ const Posts = <T extends CreateEmissionFactorCommand>({ form, post: initalPost }
         </Select>
       </FormControl>
       <FormSelect
-        data-testid="new-emission-subPost"
+        data-testid="emission-factor-subPost"
         control={control}
         translation={t}
         label={t('subPost')}

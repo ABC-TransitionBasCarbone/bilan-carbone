@@ -114,7 +114,7 @@ const DetailedGES = <T extends CreateEmissionFactorCommand>({
               <Switch
                 checked={detailedGES}
                 onChange={(event) => setDetailedGES(event.target.checked)}
-                data-testid="new-emission-detailed-switch"
+                data-testid="emission-factor-detailed-switch"
               />
             }
             label={t(detailedGES ? 'yes' : 'no')}
@@ -129,7 +129,7 @@ const DetailedGES = <T extends CreateEmissionFactorCommand>({
               <Switch
                 checked={hasParts}
                 onChange={(event) => setHasParts(event.target.checked)}
-                data-testid="new-emission-multiple-switch"
+                data-testid="emission-factor-multiple-switch"
               />
             }
             label={t(hasParts ? 'yes' : 'no')}
@@ -145,7 +145,7 @@ const DetailedGES = <T extends CreateEmissionFactorCommand>({
                 type="number"
                 value={partsCount < 0 ? '' : partsCount}
                 onChange={(e) => updateEmissionFactorPartsCount(e.target.value)}
-                data-testid="new-emission-parts-count"
+                data-testid="emission-factor-parts-count"
                 slotProps={{
                   htmlInput: { min: 1, max: maxParts },
                   input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
@@ -173,7 +173,7 @@ const DetailedGES = <T extends CreateEmissionFactorCommand>({
       )}
       <FormTextField
         disabled={detailedGES || hasParts}
-        data-testid="new-emission-totalCo2"
+        data-testid="emission-factor-totalCo2"
         control={control}
         translation={t}
         slotProps={{
