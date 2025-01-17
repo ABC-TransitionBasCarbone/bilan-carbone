@@ -32,7 +32,7 @@ const EmissionFactorPartForm = <T extends CreateEmissionFactorCommand>({
     (form as UseFormReturn<CreateEmissionFactorCommand>).watch(`parts.${index}.name`) || `${t('part')} ${index + 1}`
 
   return (
-    <div className="flex">
+    <div data-testid="emission-part-row" className="flex">
       <Accordion className="grow">
         <AccordionSummary
           id={`emission-part-${index}-summary`}
@@ -49,7 +49,7 @@ const EmissionFactorPartForm = <T extends CreateEmissionFactorCommand>({
         <AccordionDetails className={classNames(styles.accordionDetails, 'flex-col')}>
           <div className={classNames(styles.accordionDetailsHeader, 'flex')}>
             <FormTextField
-              data-testid={`new-emission-part-${index}-name`}
+              data-testid={`emission-factor-part-${index}-name`}
               control={control}
               translation={t}
               type="string"
@@ -57,7 +57,7 @@ const EmissionFactorPartForm = <T extends CreateEmissionFactorCommand>({
               label={t('name')}
             />
             <FormTextField
-              data-testid={`new-emission-part-${index}-type`}
+              data-testid={`emission-factor-part-${index}-type`}
               control={control}
               translation={t}
               type="string"
@@ -69,7 +69,7 @@ const EmissionFactorPartForm = <T extends CreateEmissionFactorCommand>({
           {detailedGES && <DetailedGESFields form={form} index={index} />}
           <FormTextField
             disabled={detailedGES}
-            data-testid={`new-emission-part-${index}-totalCo2`}
+            data-testid={`emission-factor-part-${index}-totalCo2`}
             control={control}
             translation={t}
             slotProps={{
@@ -84,7 +84,11 @@ const EmissionFactorPartForm = <T extends CreateEmissionFactorCommand>({
         </AccordionDetails>
       </Accordion>
       <div className={classNames(styles.deleteBtn, 'flex ml1')}>
-        <Button onClick={() => deletePart(index)} disabled={partsCount < 2}>
+        <Button
+          data-testid={`delete-emission-part-${index}`}
+          onClick={() => deletePart(index)}
+          disabled={partsCount < 2}
+        >
           <CloseIcon />
         </Button>
       </div>

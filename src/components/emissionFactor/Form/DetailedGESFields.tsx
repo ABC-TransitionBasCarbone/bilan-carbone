@@ -16,7 +16,7 @@ const DetailedGESFields = <T extends CreateEmissionFactorCommand>({ form, index 
   const control = form.control as Control<CreateEmissionFactorCommand>
   const getName = (gaz: string) =>
     `${index !== undefined ? `parts.${index}.` : ''}${gaz}` as FieldPath<CreateEmissionFactorCommand>
-  const getTestId = (gaz: string) => `new-emission-${index !== undefined ? `part-${index}-` : ''}${gaz}`
+  const getTestId = (gaz: string) => `emission-factor-${index !== undefined ? `part-${index}-` : ''}${gaz}`
   return (
     <div className={classNames(styles.gases, 'flex')}>
       {gazKeys.map((gaz) => (
