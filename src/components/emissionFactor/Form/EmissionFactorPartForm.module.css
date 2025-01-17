@@ -5,3 +5,7 @@
 .accordionDetailsHeader {
   gap: 1rem;
 }
+
+.deleteBtn {
+  height: 3rem;
+}

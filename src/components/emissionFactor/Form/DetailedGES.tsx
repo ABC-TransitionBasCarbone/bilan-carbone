@@ -93,6 +93,16 @@ const DetailedGES = <T extends CreateEmissionFactorCommand>({
     }
   }
 
+  const deletePart = (i: number) => {
+    if (partsCount > 1) {
+      const parts = getValues('parts')
+      const [element] = parts.splice(i, 1)
+      parts.splice(partsCount - 1, 0, element)
+      setValue('parts', parts)
+      setPartsCount(partsCount - 1)
+    }
+  }
+
   return (
     <>
       <div className={classNames(styles.questions, 'flex')}>
@@ -119,9 +129,7 @@ const DetailedGES = <T extends CreateEmissionFactorCommand>({
             control={
               <Switch
                 checked={hasParts}
-                onChange={(event) => {
-                  setHasParts(event.target.checked)
-                }}
+                onChange={(event) => setHasParts(event.target.checked)}
                 data-testid="new-emission-multiple-switch"
               />
             }
@@ -156,6 +164,8 @@ const DetailedGES = <T extends CreateEmissionFactorCommand>({
               detailedGES={detailedGES}
               form={form}
               index={index}
+              partsCount={partsCount}
+              deletePart={deletePart}
             />
           ))}
         </>
