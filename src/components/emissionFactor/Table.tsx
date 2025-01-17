@@ -90,9 +90,10 @@ const sources = Object.values(Import)
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
+  userOrganizationId?: string
 }
 
-const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) => {
+const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrganizationId }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
@@ -198,7 +199,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor }: Props) 
                 <span className={classNames(styles.importFrom, 'flex-cc')}>
                   <HomeWorkIcon />
                   {t('importedFrom.manual')}
-                  {!selectEmissionFactor && (
+                  {!selectEmissionFactor && userOrganizationId === row.original.organizationId && (
                     <>
                       <EditIcon
                         color="info"
