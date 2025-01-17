@@ -10,6 +10,7 @@ const selectEmissionFactor = {
   source: true,
   unit: true,
   importedFrom: true,
+  organizationId: true,
   reliability: true,
   technicalRepresentativeness: true,
   geographicRepresentativeness: true,
@@ -88,6 +89,16 @@ export const createEmissionFactor = (emissionFactor: Prisma.EmissionFactorCreate
     data: emissionFactor,
   })
 
+export const updateEmissionFactor = (
+  transaction: Prisma.TransactionClient,
+  id: string,
+  emissionFactor: Prisma.EmissionFactorUpdateInput,
+) =>
+  transaction.emissionFactor.update({
+    where: { id },
+    data: emissionFactor,
+  })
+
 const gazColumns = {
   ch4b: true,
   ch4f: true,
@@ -104,6 +115,7 @@ export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
   prismaClient.emissionFactor.findMany({
     select: {
       id: true,
+      organizationId: true,
       ...gazColumns,
       reliability: true,
       technicalRepresentativeness: true,
@@ -121,3 +133,23 @@ export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
   })
 
 export type EmissionFactorWithParts = AsyncReturnType<typeof getEmissionFactorsWithPartsInIds>[0]
+
+export const getEmissionFactorDetailsById = async (id: string) =>
+  prismaClient.emissionFactor.findUnique({
+    where: { id },
+    select: {
+      ...selectEmissionFactor,
+      ...gazColumns,
+      organizationId: true,
+      emissionFactorParts: {
+        select: {
+          ...gazColumns,
+          type: true,
+          metaData: {
+            select: { title: true, language: true },
+          },
+        },
+      },
+    },
+  })
+export type DetailedEmissionFactor = AsyncReturnType<typeof getEmissionFactorDetailsById>

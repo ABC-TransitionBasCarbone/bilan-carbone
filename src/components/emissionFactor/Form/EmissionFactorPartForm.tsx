@@ -4,20 +4,22 @@ import ExpandIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormReturn } from 'react-hook-form'
 import DetailedGESFields from './DetailedGESFields'
 import styles from './EmissionFactorPartForm.module.css'
 
-interface DetailedGESFieldsProps {
-  form: UseFormReturn<CreateEmissionFactorCommand>
+interface Props<T extends CreateEmissionFactorCommand> {
+  form: UseFormReturn<T>
   detailedGES: boolean
   index: number
 }
 
-const EmissionFactorPartForm = ({ detailedGES, form, index }: DetailedGESFieldsProps) => {
+const EmissionFactorPartForm = <T extends CreateEmissionFactorCommand>({ detailedGES, form, index }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
 
-  const header = form.watch(`parts.${index}.name`) || `${t('part')} ${index + 1}`
+  const control = form.control as Control<CreateEmissionFactorCommand>
+  const header =
+    (form as UseFormReturn<CreateEmissionFactorCommand>).watch(`parts.${index}.name`) || `${t('part')} ${index + 1}`
 
   return (
     <Accordion>
@@ -37,7 +39,7 @@ const EmissionFactorPartForm = ({ detailedGES, form, index }: DetailedGESFieldsP
         <div className={classNames(styles.accordionDetailsHeader, 'flex')}>
           <FormTextField
             data-testid={`new-emission-part-${index}-name`}
-            control={form.control}
+            control={control}
             translation={t}
             type="string"
             name={`parts.${index}.name`}
@@ -45,7 +47,7 @@ const EmissionFactorPartForm = ({ detailedGES, form, index }: DetailedGESFieldsP
           />
           <FormTextField
             data-testid={`new-emission-part-${index}-type`}
-            control={form.control}
+            control={control}
             translation={t}
             type="string"
             name={`parts.${index}.type`}
@@ -57,7 +59,7 @@ const EmissionFactorPartForm = ({ detailedGES, form, index }: DetailedGESFieldsP
         <FormTextField
           disabled={detailedGES}
           data-testid={`new-emission-part-${index}-totalCo2`}
-          control={form.control}
+          control={control}
           translation={t}
           slotProps={{
             htmlInput: { min: 0 },

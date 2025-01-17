@@ -7,30 +7,45 @@ import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from './DetailedGES.module.css'
 import DetailedGESFields from './DetailedGESFields'
 import EmissionFactorPartForm from './EmissionFactorPartForm'
 
-interface Props {
-  form: UseFormReturn<CreateEmissionFactorCommand>
+interface Props<T extends CreateEmissionFactorCommand> {
+  form: UseFormReturn<T>
+  initialDetailedGES?: boolean
   hasParts: boolean
   setHasParts: (value: boolean) => void
   partsCount: number
   setPartsCount: (value: number) => void
 }
 
-const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }: Props) => {
+const DetailedGES = <T extends CreateEmissionFactorCommand>({
+  form,
+  initialDetailedGES,
+  hasParts,
+  setHasParts,
+  partsCount,
+  setPartsCount,
+}: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
-  const [detailedGES, setDetailedGES] = useState(false)
+  const [detailedGES, setDetailedGES] = useState<boolean>(initialDetailedGES || false)
 
-  const emissionFactorValues = form.watch(gazKeys.filter((key) => !key.endsWith('b')))
+  const control = form.control as Control<CreateEmissionFactorCommand>
+  const setValue = form.setValue as UseFormSetValue<CreateEmissionFactorCommand>
+  const getValues = form.getValues as UseFormGetValues<CreateEmissionFactorCommand>
+
+  const emissionFactorValues = (form as UseFormReturn<CreateEmissionFactorCommand>).watch(
+    gazKeys.filter((key) => !key.endsWith('b')),
+  )
+
   useEffect(() => {
     if (detailedGES && !hasParts) {
       const total = emissionFactorValues
         .filter((value) => value !== undefined)
         .reduce((acc, current) => acc + current, 0)
-      form.setValue('totalCo2', total)
+      setValue('totalCo2', total)
     }
   }, [form, hasParts, detailedGES, ...emissionFactorValues])
 
@@ -40,16 +55,16 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
   )
   useEffect(() => {
     if (hasParts && detailedGES) {
-      const values = form.getValues('parts')
+      const values = getValues('parts')
       const emissionFactors = values.filter((_, index) => index < partsCount)
 
       let totalCo2 = 0
       emissionFactors.forEach((part, index) => {
         const partTotalCo2 = gazKeys.filter((key) => !key.endsWith('b')).reduce((acc, gaz) => acc + part[gaz], 0)
         totalCo2 += partTotalCo2
-        form.setValue(`parts.${index}.totalCo2`, partTotalCo2)
+        setValue(`parts.${index}.totalCo2`, partTotalCo2)
       })
-      form.setValue('totalCo2', totalCo2)
+      setValue('totalCo2', totalCo2)
     }
   }, [detailedGES, form, partsCount, hasParts, ...emissionFactorPartsValues])
 
@@ -59,9 +74,9 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
   )
   useEffect(() => {
     if (hasParts && !detailedGES) {
-      const values = form.getValues('parts')
+      const values = getValues('parts')
       const emissionFactors = values.filter((_, index) => index < partsCount)
-      form.setValue(
+      setValue(
         'totalCo2',
         emissionFactors.reduce((acc, current) => acc + current.totalCo2, 0 as number),
       )
@@ -149,7 +164,7 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
       <FormTextField
         disabled={detailedGES || hasParts}
         data-testid="new-emission-totalCo2"
-        control={form.control}
+        control={control}
         translation={t}
         slotProps={{
           htmlInput: { min: 0 },

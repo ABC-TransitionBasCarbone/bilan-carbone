@@ -9,7 +9,6 @@ import {
   maxParts,
 } from '@/services/serverFunctions/emissionFactor.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -17,7 +16,6 @@ import EmissionFactorForm from '../Form/EmissionFactorForm'
 
 const NewEmissionFactorForm = () => {
   const router = useRouter()
-  const t = useTranslations('emissionFactors.create')
   const [error, setError] = useState('')
   const [hasParts, setHasParts] = useState(false)
   const [partsCount, setPartsCount] = useState(1)
@@ -58,11 +56,11 @@ const NewEmissionFactorForm = () => {
       <EmissionFactorForm
         form={form}
         error={error}
-        t={t}
         hasParts={hasParts}
         setHasParts={setHasParts}
         partsCount={partsCount}
         setPartsCount={setPartsCount}
+        button="create"
       />
     </Form>
   )
