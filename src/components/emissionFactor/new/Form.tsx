@@ -2,8 +2,8 @@
 import Form from '@/components/base/Form'
 import { createEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
-  CreateEmissionFactorCommand,
-  CreateEmissionFactorCommandValidation,
+  EmissionFactorCommand,
+  EmissionFactorCommandValidation,
   maxParts,
 } from '@/services/serverFunctions/emissionFactor.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,8 +18,8 @@ const NewEmissionFactorForm = () => {
   const [hasParts, setHasParts] = useState(false)
   const [partsCount, setPartsCount] = useState(1)
 
-  const form = useForm<CreateEmissionFactorCommand>({
-    resolver: zodResolver(CreateEmissionFactorCommandValidation),
+  const form = useForm<EmissionFactorCommand>({
+    resolver: zodResolver(EmissionFactorCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {

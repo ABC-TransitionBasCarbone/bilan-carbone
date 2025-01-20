@@ -2,7 +2,7 @@
 
 import { FormTextField } from '@/components/form/TextField'
 import { gazKeys } from '@/constants/emissions'
-import { CreateEmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
+import { EmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -12,7 +12,7 @@ import styles from './DetailedGES.module.css'
 import DetailedGESFields from './DetailedGESFields'
 import EmissionFactorPartForm from './EmissionFactorPartForm'
 
-interface Props<T extends CreateEmissionFactorCommand> {
+interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
   initialDetailedGES?: boolean
   hasParts: boolean
@@ -21,7 +21,7 @@ interface Props<T extends CreateEmissionFactorCommand> {
   setPartsCount: (value: number) => void
 }
 
-const DetailedGES = <T extends CreateEmissionFactorCommand>({
+const DetailedGES = <T extends EmissionFactorCommand>({
   form,
   initialDetailedGES,
   hasParts,
@@ -32,11 +32,11 @@ const DetailedGES = <T extends CreateEmissionFactorCommand>({
   const t = useTranslations('emissionFactors.create')
   const [detailedGES, setDetailedGES] = useState<boolean>(initialDetailedGES || false)
 
-  const control = form.control as Control<CreateEmissionFactorCommand>
-  const setValue = form.setValue as UseFormSetValue<CreateEmissionFactorCommand>
-  const getValues = form.getValues as UseFormGetValues<CreateEmissionFactorCommand>
+  const control = form.control as Control<EmissionFactorCommand>
+  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
+  const getValues = form.getValues as UseFormGetValues<EmissionFactorCommand>
 
-  const emissionFactorValues = (form as UseFormReturn<CreateEmissionFactorCommand>).watch(
+  const emissionFactorValues = (form as UseFormReturn<EmissionFactorCommand>).watch(
     gazKeys.filter((key) => !key.endsWith('b')),
   )
 

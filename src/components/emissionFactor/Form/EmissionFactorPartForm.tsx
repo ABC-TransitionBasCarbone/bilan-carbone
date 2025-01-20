@@ -1,6 +1,6 @@
 import Button from '@/components/base/Button'
 import { FormTextField } from '@/components/form/TextField'
-import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import CloseIcon from '@mui/icons-material/Close'
 import ExpandIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
@@ -10,7 +10,7 @@ import { Control, UseFormReturn } from 'react-hook-form'
 import DetailedGESFields from './DetailedGESFields'
 import styles from './EmissionFactorPartForm.module.css'
 
-interface Props<T extends CreateEmissionFactorCommand> {
+interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
   detailedGES: boolean
   deletePart: (i: number) => void
@@ -18,7 +18,7 @@ interface Props<T extends CreateEmissionFactorCommand> {
   index: number
 }
 
-const EmissionFactorPartForm = <T extends CreateEmissionFactorCommand>({
+const EmissionFactorPartForm = <T extends EmissionFactorCommand>({
   detailedGES,
   form,
   deletePart,
@@ -27,9 +27,9 @@ const EmissionFactorPartForm = <T extends CreateEmissionFactorCommand>({
 }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
 
-  const control = form.control as Control<CreateEmissionFactorCommand>
+  const control = form.control as Control<EmissionFactorCommand>
   const header =
-    (form as UseFormReturn<CreateEmissionFactorCommand>).watch(`parts.${index}.name`) || `${t('part')} ${index + 1}`
+    (form as UseFormReturn<EmissionFactorCommand>).watch(`parts.${index}.name`) || `${t('part')} ${index + 1}`
 
   return (
     <div data-testid="emission-part-row" className="flex">

@@ -14,7 +14,7 @@ import { auth } from '../auth'
 import { getEmissionFactors, getEmissionFactorsByIds } from '../emissionFactors'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
-import { CreateEmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
+import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
 export const getEmissionsFactor = async () => {
   const locale = await getLocale()
@@ -57,7 +57,7 @@ export const createEmissionFactorCommand = async ({
   parts,
   subPost,
   ...command
-}: CreateEmissionFactorCommand) => {
+}: EmissionFactorCommand) => {
   const session = await auth()
   const local = await getLocale()
   if (!session || !session.user) {
