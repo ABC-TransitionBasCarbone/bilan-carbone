@@ -203,7 +203,7 @@ export const updateStudySites = async (
       newStudySites.forEach((studySite) => {
         promises.push(
           transaction.studySite.upsert({
-            where: { id: studySite.id },
+            where: { studyId_siteId: { studyId, siteId: studySite.siteId } },
             update: { ca: studySite.ca, etp: studySite.etp },
             create: studySite,
           }),
