@@ -15,7 +15,7 @@ interface Props {
 const StudyContributionPage = ({ study }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
-  const { site, setSite } = useStudySite(study)
+  const { studySite, setSite } = useStudySite(study)
   return (
     <>
       <Breadcrumbs
@@ -27,9 +27,9 @@ const StudyContributionPage = ({ study }: Props) => {
       />
       <Block title={tStudyNav('dataEntry')} as="h1">
         <div className="mb1">
-          <SelectStudySite study={study} site={site} setSite={setSite} />
+          <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
         </div>
-        <AllPostsInfography study={study} site={site} />
+        <AllPostsInfography study={study} studySite={studySite} />
       </Block>
     </>
   )

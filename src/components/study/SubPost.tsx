@@ -32,7 +32,7 @@ interface Props {
   userRoleOnStudy: StudyRole | null
   emissionFactors: EmissionFactorWithMetaData[]
   emissionSources: FullStudy['emissionSources']
-  site: string
+  studySite: string
 }
 
 const SubPost = ({
@@ -43,7 +43,7 @@ const SubPost = ({
   userRoleOnStudy,
   emissionFactors,
   emissionSources,
-  site,
+  studySite,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tExport = useTranslations('study.export')
@@ -112,7 +112,12 @@ const SubPost = ({
           )}
           {!withoutDetail && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader && (
             <div className="mt2">
-              <NewEmissionSource study={study} subPost={subPost} caracterisations={caracterisations} site={site} />
+              <NewEmissionSource
+                study={study}
+                subPost={subPost}
+                caracterisations={caracterisations}
+                studySite={studySite}
+              />
             </div>
           )}
         </AccordionDetails>

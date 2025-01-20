@@ -25,7 +25,7 @@ type StudyWithoutDetailProps = {
 interface Props {
   post: Post
   user: User
-  site: string
+  studySite: string
   emissionSources: FullStudy['emissionSources']
 }
 
@@ -35,7 +35,7 @@ const SubPosts = ({
   user,
   withoutDetail,
   emissionSources,
-  site,
+  studySite,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const subPosts = useMemo(() => subPostsByPost[post], [post])
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorWithMetaData[]>([])
@@ -67,7 +67,7 @@ const SubPosts = ({
           subPost={subPost}
           key={subPost}
           userRoleOnStudy={userRoleOnStudy}
-          site={site}
+          studySite={studySite}
           {...(withoutDetail ? { study, withoutDetail: true } : { study, withoutDetail: false })}
         />
       ))}

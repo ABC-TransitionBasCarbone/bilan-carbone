@@ -299,7 +299,7 @@ const users = async () => {
             studyId: study.id,
             name: faker.lorem.words({ min: 2, max: 5 }),
             subPost: subPost as SubPost,
-            siteId: faker.helpers.arrayElement(study.sites).id,
+            studySiteId: faker.helpers.arrayElement(study.sites).id,
           })),
         ),
       })

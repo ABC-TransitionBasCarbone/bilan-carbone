@@ -21,19 +21,21 @@ interface Props {
 const StudyContributionPage = ({ study, user }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
-  const { site, setSite } = useStudySite(study)
+  const { studySite, setSite } = useStudySite(study)
 
   const emissionSources = useMemo(
     () =>
-      study.emissionSources.filter((emissionSource) => emissionSource.site.id === site) as FullStudy['emissionSources'],
-    [study, site],
+      study.emissionSources.filter(
+        (emissionSource) => emissionSource.studySite.id === studySite,
+      ) as FullStudy['emissionSources'],
+    [study, studySite],
   )
 
   return (
     <>
       <Breadcrumbs current={study.name} links={[{ label: tNav('home'), link: '/' }]} />
       <Block title={study.name} as="h1">
-        <SelectStudySite study={study} site={site} setSite={setSite} />
+        <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
       </Block>
 
       <Block />
@@ -50,7 +52,7 @@ const StudyContributionPage = ({ study, user }: Props) => {
               user={user}
               withoutDetail
               emissionSources={emissionSources}
-              site={site}
+              studySite={studySite}
             />
           </Block>
         ))}

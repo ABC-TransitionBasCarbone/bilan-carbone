@@ -136,14 +136,14 @@ export const computeBegesResult = (
   study: FullStudy,
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
-  site: string,
+  studySite: string,
   withDependencies: boolean,
 ) => {
   const results: Record<string, Omit<BegesLine, 'rule'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
     {},
   )
-  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, site)
+  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 
   siteEmissionSources
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))

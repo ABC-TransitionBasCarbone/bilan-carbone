@@ -6,13 +6,13 @@ import styles from './StudyPostInfography.module.css'
 
 interface Props {
   study: FullStudy
-  site: string
+  studySite: string
 }
 
-const StudyPostInfography = ({ study, site }: Props) => {
+const StudyPostInfography = ({ study, studySite }: Props) => {
   return (
     <div className={styles.infography} id="study-post-infography">
-      <AllPostsInfography study={study} site={site} />
+      <AllPostsInfography study={study} studySite={studySite} />
     </div>
   )
 }

@@ -13,10 +13,10 @@ import SelectStudySite from './site/SelectStudySite'
 
 interface Props {
   study: FullStudy
-  site: string
+  studySite: string
   setSite: Dispatch<SetStateAction<string>>
 }
-const StudyDetailsHeader = ({ study, site, setSite }: Props) => {
+const StudyDetailsHeader = ({ study, studySite, setSite }: Props) => {
   const format = useFormatter()
   const t = useTranslations('study.export')
   const tCaracterisations = useTranslations('categorisations')
@@ -57,7 +57,7 @@ const StudyDetailsHeader = ({ study, site, setSite }: Props) => {
         </div>
       }
     >
-      <SelectStudySite study={study} allowAll site={site} setSite={setSite} />
+      <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
     </Block>
   )
 }

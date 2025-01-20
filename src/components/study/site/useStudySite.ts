@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 
 export default function useStudySite(study: FullStudy | StudyWithoutDetail, allowAll?: boolean) {
   const [ready, setReady] = useState(false)
-  const [site, setSite] = useState('all')
+  const [studySite, setSite] = useState('all')
 
   useEffect(() => {
     const defaultSite = window.localStorage.getItem(`studySite-${study.id}`) || 'all'
@@ -20,12 +20,12 @@ export default function useStudySite(study: FullStudy | StudyWithoutDetail, allo
 
   useEffect(() => {
     if (ready) {
-      window.localStorage.setItem(`studySite-${study.id}`, site)
+      window.localStorage.setItem(`studySite-${study.id}`, studySite)
     }
-  }, [site])
+  }, [studySite])
 
   return {
-    site,
+    studySite,
     setSite,
   }
 }

@@ -17,7 +17,7 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props)
 
   return study ? (
     <Block>
-      <StudyResultsContainerSummary study={study} site="all" />
+      <StudyResultsContainerSummary study={study} studySite="all" />
     </Block>
   ) : null
 }

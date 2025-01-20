@@ -19,7 +19,7 @@ import styles from './Result.module.css'
 interface Props {
   study: FullStudy
   by: 'Post' | 'SubPost'
-  site: string
+  studySite: string
   withDependenciesGlobal?: boolean
 }
 
@@ -36,7 +36,7 @@ const postXAxisList = [
   Post.FinDeVie,
 ]
 
-const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
+const Result = ({ study, by, studySite, withDependenciesGlobal }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
   const tCaracterisations = useTranslations('categorisations')
@@ -69,7 +69,7 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
   )
 
   const yData = useMemo(() => {
-    const computedResults = computeResultsByPost(study, tPost, site, withDependencies)
+    const computedResults = computeResultsByPost(study, tPost, studySite, withDependencies)
     if (by === 'Post') {
       if (computedResults.every((post) => post.value === 0)) {
         return []
@@ -86,7 +86,7 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
         .filter((subPost) => withDependencies || subPost !== SubPost.UtilisationEnDependance)
         .map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
     }
-  }, [post, by, site, withDependencies])
+  }, [post, by, studySite, withDependencies])
 
   useEffect(() => {
     if (canvasRef.current) {
