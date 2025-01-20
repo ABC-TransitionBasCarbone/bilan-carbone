@@ -89,6 +89,8 @@ const getRulePost = (rule: ExportRule, caracterisation: EmissionSourceCaracteris
       return rule.notHeldNotSupported
     case EmissionSourceCaracterisation.UsedByIntermediary:
       return rule.usedByIntermediary
+    case EmissionSourceCaracterisation.LandUse:
+      return rule.landUse
   }
 }
 
