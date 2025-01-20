@@ -83,9 +83,7 @@ const locationFuseOptions = {
   isCaseSensitive: false,
 }
 
-const sources = Object.values(Import)
-  .filter((source) => source === Import.Manual)
-  .map((source) => source)
+const sources = Object.values(Import).map((source) => source)
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
@@ -201,22 +199,18 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
                   {t('importedFrom.manual')}
                   {!selectEmissionFactor && userOrganizationId === row.original.organizationId && (
                     <>
-                      <EditIcon
-                        data-testid="edit-emission-factor-button"
-                        color="info"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          editEmissionFactor(row.original.id, 'edit')
-                        }}
-                      />
-                      <DeleteIcon
-                        data-testid="delete-emission-factor-button"
-                        color="error"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          editEmissionFactor(row.original.id, 'delete')
-                        }}
-                      />
+                      {(['edit', 'delete'] as const).map((action) => (
+                        <div
+                          key={action}
+                          data-testid={`${action}-emission-factor-button`}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            editEmissionFactor(row.original.id, action)
+                          }}
+                        >
+                          {action === 'edit' ? <EditIcon color="info" /> : <DeleteIcon color="error" />}
+                        </div>
+                      ))}
                     </>
                   )}
                 </span>

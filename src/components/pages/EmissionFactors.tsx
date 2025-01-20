@@ -4,7 +4,11 @@ import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
 
-const EmissionFactorsPage = () => {
+interface Props {
+  userOrganizationId: string | null
+}
+
+const EmissionFactorsPage = ({ userOrganizationId }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors')
   return (
@@ -18,7 +22,7 @@ const EmissionFactorsPage = () => {
         ]}
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors />
+          <EmissionFactors userOrganizationId={userOrganizationId} />
         </Suspense>
       </Block>
     </>

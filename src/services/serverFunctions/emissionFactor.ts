@@ -30,14 +30,14 @@ export const getDetailedEmissionFactor = async (id: string) => {
   const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorDetailsById(id)])
 
   if (!emissionFactor || !session) {
-    return { success: false }
+    return null
   }
 
   if (!emissionFactor.organizationId || emissionFactor.organizationId !== session.user.organizationId) {
-    return { success: false }
+    return null
   }
 
-  return { success: true, emissionFactor: emissionFactor }
+  return emissionFactor
 }
 
 export const canEditEmissionFactor = async (id: string) => {
