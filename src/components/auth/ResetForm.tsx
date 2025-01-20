@@ -139,7 +139,7 @@ const ResetForm = ({ user, token }: Props) => {
           </Link>
         </p>
       )}
-      <LoadingButton type="submit" data-testid="reset-button" disabled={submitting} loading={submitting}>
+      <LoadingButton type="submit" data-testid="reset-button" loading={submitting}>
         {t('reset')}
       </LoadingButton>
     </form>

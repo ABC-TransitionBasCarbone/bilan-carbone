@@ -66,7 +66,7 @@ const LoginForm = () => {
       >
         {t('forgotPassword')}
       </Link>
-      <LoadingButton data-testid="login-button" type="submit" disabled={submitting} loading={submitting}>
+      <LoadingButton data-testid="login-button" type="submit" loading={submitting}>
         {t('login')}
       </LoadingButton>
     </form>

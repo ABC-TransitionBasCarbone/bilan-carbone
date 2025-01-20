@@ -77,12 +77,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
         label={t('name')}
       />
       <Sites form={form} sites={sites} />
-      <LoadingButton
-        type="submit"
-        disabled={form.formState.isSubmitting}
-        loading={form.formState.isSubmitting}
-        data-testid="edit-organization-button"
-      >
+      <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}
       </LoadingButton>
       {error && <p>{error}</p>}

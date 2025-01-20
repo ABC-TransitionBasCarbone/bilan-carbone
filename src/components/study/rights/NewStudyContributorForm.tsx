@@ -98,12 +98,7 @@ const NewStudyContributorForm = ({ study }: Props) => {
             ))}
         </FormSelect>
       )}
-      <LoadingButton
-        type="submit"
-        disabled={form.formState.isSubmitting}
-        loading={form.formState.isSubmitting}
-        data-testid="study-contributor-create-button"
-      >
+      <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-contributor-create-button">
         {t('create')}
       </LoadingButton>
       {error && <p>{error}</p>}

@@ -42,7 +42,7 @@ const NewPasswordForm = ({ reset }: Props) => {
         value={email}
         onChange={(event) => setEmail(event.target.value)}
       />
-      <LoadingButton type="submit" data-testid="reset-button" disabled={submitting} loading={submitting}>
+      <LoadingButton type="submit" data-testid="reset-button" loading={submitting}>
         {t('reset')}
       </LoadingButton>
     </form>

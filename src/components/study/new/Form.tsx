@@ -105,12 +105,7 @@ const NewStudyForm = ({ user, usersEmail, form }: Props) => {
             </FormControl>
           )}
         />
-        <LoadingButton
-          type="submit"
-          disabled={form.formState.isSubmitting}
-          loading={form.formState.isSubmitting}
-          data-testid="new-study-create-button"
-        >
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
           {t('create')}
         </LoadingButton>
         {error && <p>{t(`error.${error}`)}</p>}

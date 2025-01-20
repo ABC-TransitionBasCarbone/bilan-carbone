@@ -49,12 +49,7 @@ const NewOrganizationForm = () => {
           name="name"
           label={t('name')}
         />
-        <LoadingButton
-          type="submit"
-          disabled={form.formState.isSubmitting}
-          loading={form.formState.isSubmitting}
-          data-testid="new-organization-create-button"
-        >
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-organization-create-button">
           {t('create')}
         </LoadingButton>
         {error && <p>{error}</p>}

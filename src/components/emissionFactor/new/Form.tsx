@@ -106,12 +106,7 @@ const NewEmissionFactorForm = () => {
       />
       <Posts form={form} />
       <FormTextField control={form.control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
-      <LoadingButton
-        type="submit"
-        disabled={form.formState.isSubmitting}
-        loading={form.formState.isSubmitting}
-        data-testid="new-emission-create-button"
-      >
+      <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-emission-create-button">
         {t('create')}
       </LoadingButton>
       {error && <p>{error}</p>}

@@ -134,12 +134,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
             </MenuItem>
           ))}
         </FormSelect>
-        <LoadingButton
-          type="submit"
-          disabled={form.formState.isSubmitting}
-          loading={form.formState.isSubmitting}
-          data-testid="study-rights-create-button"
-        >
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-rights-create-button">
           {t('create')}
         </LoadingButton>
         {error && <p>{error}</p>}

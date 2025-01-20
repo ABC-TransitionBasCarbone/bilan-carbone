@@ -85,12 +85,7 @@ const NewMemberForm = () => {
             </MenuItem>
           ))}
       </FormSelect>
-      <LoadingButton
-        type="submit"
-        disabled={form.formState.isSubmitting}
-        loading={form.formState.isSubmitting}
-        data-testid="new-member-create-button"
-      >
+      <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-member-create-button">
         {t('create')}
       </LoadingButton>
       {error && <p>{error}</p>}

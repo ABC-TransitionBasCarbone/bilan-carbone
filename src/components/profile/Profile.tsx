@@ -89,11 +89,11 @@ const Profile = () => {
                 </Button>
                 <LoadingButton
                   type="submit"
-                  disabled={form.formState.isSubmitting}
                   loading={form.formState.isSubmitting}
                   data-testid="update-profile"
                   aria-label={t(form.formState.isSubmitting ? 'updating' : 'update')}
                   title={t(form.formState.isSubmitting ? 'updating' : 'update')}
+                  iconButton
                 >
                   <DoneIcon />
                 </LoadingButton>
