@@ -176,5 +176,6 @@ model StudySite {
   ca                  Float
   StudyEmissionSource StudyEmissionSource[]
 
+  @@unique([studyId, siteId])
   @@map("study_sites")
 }

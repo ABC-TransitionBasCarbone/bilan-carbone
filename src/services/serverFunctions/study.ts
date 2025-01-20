@@ -281,11 +281,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
   const deletedSiteIds = existingSites
     .filter((existingStudySite) => !selectedSites.find((studySite) => studySite.siteId === existingStudySite.siteId))
     .map((studySite) => studySite.id)
-  const newSites = selectedSites.map((studySite) => ({
-    ...studySite,
-    id: existingSites.find((existingStudySite) => existingStudySite.siteId === studySite.siteId)?.id || '',
-  }))
-  await updateStudySites(studyId, newSites, deletedSiteIds)
+  await updateStudySites(studyId, selectedSites, deletedSiteIds)
 }
 
 const getOrCreateUserAndSendStudyInvite = async (
