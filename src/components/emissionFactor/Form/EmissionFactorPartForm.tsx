@@ -83,7 +83,7 @@ const EmissionFactorPartForm = <T extends CreateEmissionFactorCommand>({
           />
         </AccordionDetails>
       </Accordion>
-      <div className={classNames(styles.deleteBtn, 'flex ml1')}>
+      <div className={classNames(styles.deleteButton, 'flex ml1')}>
         <Button
           data-testid={`delete-emission-part-${index}`}
           onClick={() => deletePart(index)}

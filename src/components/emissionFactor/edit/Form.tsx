@@ -6,7 +6,6 @@ import { DetailedEmissionFactor } from '@/db/emissionFactors'
 import { Post, subPostsByPost } from '@/services/posts'
 import { updateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
-  CreateEmissionFactorCommand,
   maxParts,
   UpdateEmissionFactorCommand,
   UpdateEmissionFactorCommandValidation,
@@ -82,28 +81,17 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    form.clearErrors()
-    const command = form.getValues()
-    const isValid = UpdateEmissionFactorCommandValidation.safeParse({
-      ...command,
-      parts: hasParts ? command.parts.slice(0, partsCount) : [],
-    })
-    if (isValid.success) {
-      const result = await updateEmissionFactorCommand(isValid.data)
+    form.setValue('parts', hasParts ? form.getValues('parts').slice(0, partsCount) : [])
+    form.handleSubmit(async (data) => {
+      const result = await updateEmissionFactorCommand(data)
+
       if (result) {
         setError(result)
       } else {
         router.push('/facteurs-d-emission')
         router.refresh()
       }
-    } else {
-      isValid.error.errors.forEach((error) => {
-        form.setError(error.path.join('.') as keyof CreateEmissionFactorCommand, {
-          type: 'manual',
-          message: error.message,
-        })
-      })
-    }
+    })()
   }
 
   return (

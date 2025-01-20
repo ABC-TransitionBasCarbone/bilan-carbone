@@ -9,12 +9,12 @@ interface Props {
 
 const EditEmissionFactor = async (props: Props) => {
   const params = await props.params
-  const result = await getDetailedEmissionFactor(params.id)
+  const emissionFactor = await getDetailedEmissionFactor(params.id)
 
-  if (!result.success || !result.emissionFactor) {
+  if (!emissionFactor) {
     return <NotFound />
   }
-  return <EditEmissionFactorPage emissionFactor={result.emissionFactor} />
+  return <EditEmissionFactorPage emissionFactor={emissionFactor} />
 }
 
 export default withAuth(EditEmissionFactor)

@@ -1,16 +1,23 @@
 'use server'
 
 import { getLocale } from '@/i18n/locale'
-import { auth } from '@/services/auth'
 import { getEmissionFactors } from '@/services/emissionFactors'
+import NotFound from '../pages/NotFound'
 import EmissionFactorsTable from './Table'
 
-const EmissionFactors = async () => {
+interface Props {
+  userOrganizationId: string | null
+}
+
+const EmissionFactors = async ({ userOrganizationId }: Props) => {
   const locale = await getLocale()
   const emissionFactors = await getEmissionFactors(locale)
-  const userOrganizationId = (await auth())?.user.organizationId
 
-  return <EmissionFactorsTable emissionFactors={emissionFactors} userOrganizationId={userOrganizationId as string} />
+  if (!userOrganizationId) {
+    return <NotFound />
+  }
+
+  return <EmissionFactorsTable emissionFactors={emissionFactors} userOrganizationId={userOrganizationId} />
 }
 
 export default EmissionFactors
