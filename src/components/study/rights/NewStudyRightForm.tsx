@@ -1,7 +1,7 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import LoadingButton from '@/components/base/LoadingButton'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
 import { getOrganizationUsers } from '@/db/organization'
@@ -134,9 +134,9 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
             </MenuItem>
           ))}
         </FormSelect>
-        <Button type="submit" disabled={form.formState.isSubmitting} data-testid="study-rights-create-button">
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-rights-create-button">
           {t('create')}
-        </Button>
+        </LoadingButton>
         {error && <p>{error}</p>}
       </Form>
       <NewStudyRightDialog

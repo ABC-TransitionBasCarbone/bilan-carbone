@@ -1,7 +1,7 @@
 'use client'
 import Block from '@/components/base/Block'
-import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import LoadingButton from '@/components/base/LoadingButton'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormRadio } from '@/components/form/Radio'
@@ -105,9 +105,9 @@ const NewStudyForm = ({ user, usersEmail, form }: Props) => {
             </FormControl>
           )}
         />
-        <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-study-create-button">
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
           {t('create')}
-        </Button>
+        </LoadingButton>
         {error && <p>{t(`error.${error}`)}</p>}
       </Form>
     </Block>
