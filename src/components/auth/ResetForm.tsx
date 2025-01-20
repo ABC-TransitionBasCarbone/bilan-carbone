@@ -136,7 +136,11 @@ const ResetForm = ({ user, token }: Props) => {
           </Link>
         </p>
       )}
-      <Button type="submit" data-testid="reset-button">
+      <Button
+        type="submit"
+        data-testid="reset-button"
+        disabled={password !== confirmPassword || Object.values(passwordValidation).some((rule) => !rule)}
+      >
         {t('reset')}
       </Button>
     </form>
