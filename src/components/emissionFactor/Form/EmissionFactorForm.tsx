@@ -5,7 +5,7 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { Post } from '@/services/posts'
-import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { MenuItem } from '@mui/material'
 import { Unit } from '@prisma/client'
 import classNames from 'classnames'
@@ -15,7 +15,7 @@ import { Control, UseFormReturn } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
 import Posts from './Posts'
 
-interface Props<T extends CreateEmissionFactorCommand> {
+interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
   post?: Post
   detailedGES?: boolean
@@ -27,7 +27,7 @@ interface Props<T extends CreateEmissionFactorCommand> {
   button: 'create' | 'update'
 }
 
-const EmissionFactorForm = <T extends CreateEmissionFactorCommand>({
+const EmissionFactorForm = <T extends EmissionFactorCommand>({
   form,
   post,
   detailedGES,
@@ -42,7 +42,7 @@ const EmissionFactorForm = <T extends CreateEmissionFactorCommand>({
   const tUnit = useTranslations('units')
   const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [tUnit])
 
-  const control = form.control as Control<CreateEmissionFactorCommand>
+  const control = form.control as Control<EmissionFactorCommand>
 
   return (
     <>

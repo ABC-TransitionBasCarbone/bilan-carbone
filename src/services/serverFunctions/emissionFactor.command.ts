@@ -15,7 +15,7 @@ const GESschema = z.object({
   otherGES: z.number().min(0, 'otherGES').default(0),
 })
 
-export const CreateEmissionFactorCommandValidation = z.intersection(
+export const EmissionFactorCommandValidation = z.intersection(
   GESschema,
   z.object({
     name: z
@@ -55,13 +55,13 @@ export const CreateEmissionFactorCommandValidation = z.intersection(
   }),
 )
 
-export type CreateEmissionFactorCommand = z.infer<typeof CreateEmissionFactorCommandValidation>
+export type EmissionFactorCommand = z.infer<typeof EmissionFactorCommandValidation>
 
 export const UpdateEmissionFactorCommandValidation = z.intersection(
   z.object({
     id: z.string(),
   }),
-  CreateEmissionFactorCommandValidation,
+  EmissionFactorCommandValidation,
 )
 
 export type UpdateEmissionFactorCommand = z.infer<typeof UpdateEmissionFactorCommandValidation>
