@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import Button from '../base/Button'
+import LoadingButton from '../base/LoadingButton'
 import ResetLinkAlreadyUsed from '../pages/ResetLinkAlreadyUsed'
 import authStyles from './Auth.module.css'
 
@@ -40,6 +40,7 @@ const ResetForm = ({ user, token }: Props) => {
   const [resetLinkAlreadyUsed, setResetLinkAlreadyUsed] = useState(false)
   const [showPassword1, setShowPassword1] = useState(false)
   const [showPassword2, setShowPassword2] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(false)
 
   const passwordValidation = useMemo(() => computePasswordValidation(password), [password])
@@ -50,12 +51,14 @@ const ResetForm = ({ user, token }: Props) => {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setSubmitting(true)
     setError(false)
     const result = await reset(email, password, token)
     if (result) {
       router.push('/login')
     } else {
       setError(true)
+      setSubmitting(false)
     }
   }
 
@@ -136,13 +139,14 @@ const ResetForm = ({ user, token }: Props) => {
           </Link>
         </p>
       )}
-      <Button
+      <LoadingButton
         type="submit"
         data-testid="reset-button"
+        loading={submitting}
         disabled={password !== confirmPassword || Object.values(passwordValidation).some((rule) => !rule)}
       >
         {t('reset')}
-      </Button>
+      </LoadingButton>
     </form>
   )
 }

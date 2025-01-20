@@ -4,7 +4,7 @@ import { TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
-import Button from '../base/Button'
+import LoadingButton from '../base/LoadingButton'
 import authStyles from './Auth.module.css'
 
 interface Props {
@@ -13,11 +13,14 @@ interface Props {
 
 const NewPasswordForm = ({ reset }: Props) => {
   const t = useTranslations('login.form')
+  const [submitting, setSubmitting] = useState(false)
   const [email, setEmail] = useState('')
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setSubmitting(true)
     await reset(email)
+    setSubmitting(false)
   }
 
   const searchParams = useSearchParams()
@@ -39,9 +42,9 @@ const NewPasswordForm = ({ reset }: Props) => {
         value={email}
         onChange={(event) => setEmail(event.target.value)}
       />
-      <Button type="submit" data-testid="reset-button">
+      <LoadingButton type="submit" data-testid="reset-button" loading={submitting}>
         {t('reset')}
-      </Button>
+      </LoadingButton>
     </form>
   )
 }

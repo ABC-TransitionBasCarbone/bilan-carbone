@@ -1,0 +1,9 @@
+.spinner {
+  color: var(--neutral-00) !important;
+}
+
+.hidden {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}

@@ -149,6 +149,7 @@
     "lastName": "Last Name",
     "cancelUpdate": "Cancel",
     "update": "Update",
+    "updating": "Updating",
     "validation": {
       "firstName": "1 character minimum",
       "lastName": "1 character minimum"
@@ -812,5 +813,8 @@
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",
     "noFileSelected": "No file selected"
+  },
+  "spinner": {
+    "loading": "Loading"
   }
 }

@@ -34,7 +34,7 @@ const QualitySelectGroup = ({ advanced, canEdit, emissionSource, update }: Props
   const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
 
   return (
-    <div className={classNames(styles.row, 'flex')}>
+    <div className={classNames(styles.row, 'flex', { [styles.shrinked]: !expanded && canShrink })}>
       {expanded || !canShrink ? (
         <>
           <QualitySelect
@@ -80,6 +80,7 @@ const QualitySelectGroup = ({ advanced, canEdit, emissionSource, update }: Props
         </>
       ) : (
         <QualitySelect
+          formControlClassName={styles.small}
           disabled={!canEdit}
           data-testid="emission-source-quality-select"
           id="completeness"

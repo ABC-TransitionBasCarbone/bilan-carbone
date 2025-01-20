@@ -1,7 +1,7 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import LoadingButton from '@/components/base/LoadingButton'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { FullStudy } from '@/db/study'
@@ -98,9 +98,9 @@ const NewStudyContributorForm = ({ study }: Props) => {
             ))}
         </FormSelect>
       )}
-      <Button type="submit" disabled={form.formState.isSubmitting} data-testid="study-contributor-create-button">
+      <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-contributor-create-button">
         {t('create')}
-      </Button>
+      </LoadingButton>
       {error && <p>{error}</p>}
     </Form>
   )

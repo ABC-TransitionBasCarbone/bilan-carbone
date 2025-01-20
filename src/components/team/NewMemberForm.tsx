@@ -1,6 +1,5 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
 import { FormTextField } from '@/components/form/TextField'
 import { addMember } from '@/services/serverFunctions/user'
@@ -12,6 +11,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import LoadingButton from '../base/LoadingButton'
 import { FormSelect } from '../form/Select'
 
 const NewMemberForm = () => {
@@ -85,9 +85,9 @@ const NewMemberForm = () => {
             </MenuItem>
           ))}
       </FormSelect>
-      <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-member-create-button">
+      <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-member-create-button">
         {t('create')}
-      </Button>
+      </LoadingButton>
       {error && <p>{error}</p>}
     </Form>
   )
