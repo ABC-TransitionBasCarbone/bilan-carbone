@@ -139,7 +139,12 @@ const ResetForm = ({ user, token }: Props) => {
           </Link>
         </p>
       )}
-      <LoadingButton type="submit" data-testid="reset-button" loading={submitting}>
+      <LoadingButton
+        type="submit"
+        data-testid="reset-button"
+        loading={submitting}
+        disabled={password !== confirmPassword || Object.values(passwordValidation).some((rule) => !rule)}
+      >
         {t('reset')}
       </LoadingButton>
     </form>
