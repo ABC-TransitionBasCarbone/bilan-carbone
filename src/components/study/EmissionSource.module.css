@@ -91,6 +91,14 @@
   }
 }
 
+.shrinked {
+  justify-content: flex-start;
+}
+
+.small {
+  max-width: 15rem;
+}
+
 .inputWithUnit {
   position: relative;
   width: min-content;
