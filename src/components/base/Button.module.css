@@ -13,3 +13,10 @@
     background-color: var(--neutral-30) !important;
   }
 }
+
+.error {
+  background-color: orange !important;
+  &:hover {
+    background-color: var(--error-60) !important;
+  }
+}
