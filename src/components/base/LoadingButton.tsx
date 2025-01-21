@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import Button from './Button'
 import styles from './LoadingButton.module.css'
 
-interface Props {
+export interface Props {
   children: React.ReactNode
   loading: boolean
   iconButton?: boolean
