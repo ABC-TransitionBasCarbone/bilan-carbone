@@ -110,63 +110,18 @@ export const createEmissionFactorCommand = async ({
   )
 }
 
-export const updateEmissionFactorCommand = async ({
-  id,
-  name,
-  unit,
-  attribute,
-  comment,
-  parts,
-  subPost,
-  ...command
-}: UpdateEmissionFactorCommand) => {
-  if (!canEditEmissionFactor(id)) {
+export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorCommand) => {
+  if (!canEditEmissionFactor(command.id)) {
     return NOT_AUTHORIZED
   }
 
   const [session, local] = await Promise.all([auth(), getLocale()])
 
-  await prismaClient.$transaction(async (transaction) => {
-    await updateEmissionFactor(transaction, id, {
-      ...command,
-      importedFrom: Import.Manual,
-      status: EmissionFactorStatus.Valid,
-      reliability: 5,
-      organization: { connect: { id: session?.user.organizationId as string } },
-      unit: unit as Unit,
-      subPosts: [subPost],
-    })
+  if (!session) {
+    return NOT_AUTHORIZED
+  }
 
-    await transaction.emissionFactorMetaData.upsert({
-      where: {
-        emissionFactorId_language: { emissionFactorId: id, language: local },
-      },
-      create: { emissionFactorId: id, language: local, title: name, attribute, comment },
-      update: { language: local, title: name, attribute, comment },
-    })
-    const emissionFactorParts = await transaction.emissionFactorPart.findMany({
-      where: { emissionFactorId: id },
-      select: { id: true },
-    })
-    const emissionFactorPartIds = emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id)
-    await transaction.emissionFactorPartMetaData.deleteMany({
-      where: { emissionFactorPartId: { in: emissionFactorPartIds } },
-    })
-    await transaction.emissionFactorPart.deleteMany({ where: { id: { in: emissionFactorPartIds } } })
-    await Promise.all(
-      parts.map(({ name, ...part }) =>
-        prismaClient.emissionFactorPart.create({
-          data: {
-            emissionFactorId: id,
-            ...part,
-            metaData: {
-              create: { language: local, title: name },
-            },
-          },
-        }),
-      ),
-    )
-  })
+  await updateEmissionFactor(session, local, command)
 }
 
 export const deleteEmissionFactor = async (id: string) => {
