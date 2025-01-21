@@ -433,9 +433,7 @@ export const addFlowToStudy = async (studyId: string, file: File) => {
   if (!allowedUserId) {
     return NOT_AUTHORIZED
   }
-  console.log('upload to bucket')
   const butcketUploadResult = await uploadFileToBucket(file)
-  console.log('butcketUploadResult : ', butcketUploadResult)
   await createDocument({
     name: file.name,
     type: file.type,

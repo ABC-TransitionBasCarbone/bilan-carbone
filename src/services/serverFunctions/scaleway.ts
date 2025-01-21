@@ -22,8 +22,11 @@ const s3 = new S3Client({
 
 export const uploadFileToBucket = async (file: File) => {
   const bucketFileKey = uuidv4()
+  console.log('bucketFileKey : ', bucketFileKey)
   const fileContent = await file.arrayBuffer()
+  console.log('fileContent : ', fileContent)
   const buffer = Buffer.from(fileContent)
+  console.log('fileContent : ', fileContent)
 
   const params = {
     Bucket: bucketName,
@@ -31,6 +34,7 @@ export const uploadFileToBucket = async (file: File) => {
     Body: buffer,
     ContentType: file.type,
   }
+  console.log('params : ', params)
 
   const data = await s3.send(new PutObjectCommand(params))
   return { key: bucketFileKey, ETag: data.ETag || '' }
