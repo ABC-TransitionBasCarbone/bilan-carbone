@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@/components/base/Button'
+import LoadingButton from '@/components/base/LoadingButton'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
@@ -44,6 +44,7 @@ const Result = ({ study, by, studySite, withDependenciesGlobal }: Props) => {
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
   const [dynamicHeight, setDynamicHeight] = useState(0)
+  const [downloading, setDownloading] = useState(false)
   const [post, setPost] = useState<Post>(Object.values(Post)[0])
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -124,15 +125,17 @@ const Result = ({ study, by, studySite, withDependenciesGlobal }: Props) => {
     }
   }, [xAxis, yData])
 
-  const downloadResults = () => {
+  const downloadResults = async () => {
+    setDownloading(true)
     if (by === 'Post') {
-      downloadStudyEmissionSources(study, tExport, tCaracterisations, tPost, tQuality, tUnit)
+      await downloadStudyEmissionSources(study, tExport, tCaracterisations, tPost, tQuality, tUnit)
     } else {
       const emissionSources = study.emissionSources.filter((emissionSource) =>
         subPostsByPost[post].includes(emissionSource.subPost),
       )
-      downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit)
+      await downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit)
     }
+    setDownloading(false)
   }
 
   return (
@@ -152,9 +155,14 @@ const Result = ({ study, by, studySite, withDependenciesGlobal }: Props) => {
               </MenuItem>
             ))}
           </Select>
-          <Button disabled={!yData.find((data) => data !== 0)} onClick={downloadResults}>
+          <LoadingButton
+            disabled={!yData.find((data) => data !== 0)}
+            loading={downloading}
+            onClick={downloadResults}
+            iconButton
+          >
             <DownloadIcon />
-          </Button>
+          </LoadingButton>
         </div>
       )}
       <div style={{ height: dynamicHeight }}>

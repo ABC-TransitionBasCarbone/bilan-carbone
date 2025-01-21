@@ -10,8 +10,8 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
-import Button from '../base/Button'
+import { useMemo, useState } from 'react'
+import LoadingButton from '../base/LoadingButton'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
 import styles from './SubPosts.module.css'
@@ -51,6 +51,7 @@ const SubPost = ({
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
+  const [downloading, setDownloading] = useState(false)
 
   const subPostEmissionFactors = useMemo(() => {
     return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost))
@@ -124,11 +125,12 @@ const SubPost = ({
       </Accordion>
       {!withoutDetail && (
         <div className={classNames(styles.download, 'flex ml1')}>
-          <Button
+          <LoadingButton
             aria-label={tExport('downloadSubPost', { name: subPost })}
             title={tExport('downloadSubPost', { name: subPost })}
-            onClick={() => {
-              downloadStudySubPosts(
+            onClick={async () => {
+              setDownloading(true)
+              await downloadStudySubPosts(
                 study as FullStudy,
                 post,
                 subPost,
@@ -140,11 +142,14 @@ const SubPost = ({
                 tQuality,
                 tUnit,
               )
+              setDownloading(false)
             }}
             disabled={emissionSources.length === 0}
+            loading={downloading}
+            iconButton
           >
             <DownloadIcon />
-          </Button>
+          </LoadingButton>
         </div>
       )}
     </div>
