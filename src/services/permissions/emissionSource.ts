@@ -7,14 +7,16 @@ import { canReadStudy } from './study'
 
 const hasStudyBasicRights = async (
   user: User,
-  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'siteId'> & { emissionFactorId?: string | null },
+  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
+    emissionFactorId?: string | null
+  },
   study: FullStudy,
 ) => {
   if (!(await canReadStudy(user, study))) {
     return false
   }
 
-  if (!study.sites.find((site) => site.id === emissionSource.siteId)) {
+  if (!study.sites.find((site) => site.id === emissionSource.studySiteId)) {
     return false
   }
 
@@ -35,7 +37,9 @@ const hasStudyBasicRights = async (
 
 export const canCreateEmissionSource = async (
   user: User,
-  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'siteId'> & { emissionFactorId?: string | null },
+  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
+    emissionFactorId?: string | null
+  },
   study?: FullStudy,
 ) => {
   const dbStudy = study || (await getStudyById(emissionSource.studyId, user.organizationId))

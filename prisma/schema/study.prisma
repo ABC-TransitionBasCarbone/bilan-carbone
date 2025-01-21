@@ -89,7 +89,7 @@ model Contributors {
   study   Study  @relation(fields: [studyId], references: [id])
   studyId String @map("study_id")
   user    User   @relation(fields: [userId], references: [id])
-  userId  String
+  userId  String @map("user_id")
 
   subPost SubPost
 
@@ -112,7 +112,7 @@ model StudyEmissionSource {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
-  subPost         SubPost
+  subPost         SubPost                        @map("sub_post")
   name            String
   tag             String?
   caracterisation EmissionSourceCaracterisation?
@@ -120,8 +120,8 @@ model StudyEmissionSource {
   emissionFactorId String?         @map("emission_factor_id")
   emissionFactor   EmissionFactor? @relation(fields: [emissionFactorId], references: [id])
 
-  siteId String    @map("site_id")
-  site   StudySite @relation(fields: [siteId], references: [id])
+  studySiteId String    @map("study_site_id")
+  studySite   StudySite @relation(fields: [studySiteId], references: [id])
 
   value                        Float?
   reliability                  Int?

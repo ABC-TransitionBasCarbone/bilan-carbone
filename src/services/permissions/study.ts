@@ -180,7 +180,7 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
         source: emissionSource.source,
         type: emissionSource.type,
         caracterisation: emissionSource.caracterisation,
-        site: emissionSource.site,
+        studySite: emissionSource.studySite,
         depreciationPeriod: emissionSource.depreciationPeriod,
       })),
     exports: study.exports,

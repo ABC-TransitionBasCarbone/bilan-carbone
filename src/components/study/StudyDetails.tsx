@@ -11,13 +11,13 @@ interface Props {
 }
 
 const StudyDetails = ({ study }: Props) => {
-  const { site, setSite } = useStudySite(study, true)
+  const { studySite, setSite } = useStudySite(study, true)
 
   return (
     <>
-      <StudyDetailsHeader study={study} site={site} setSite={setSite} />
+      <StudyDetailsHeader study={study} studySite={studySite} setSite={setSite} />
       <Block>
-        <StudyResultsContainerSummary study={study} site={site} />
+        <StudyResultsContainerSummary study={study} studySite={studySite} />
       </Block>
     </>
   )
