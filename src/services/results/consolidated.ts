@@ -30,10 +30,10 @@ const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: 
 export const computeResultsByPost = (
   study: FullStudy,
   tPost: (key: string) => string,
-  site: string,
+  studySite: string,
   withDependencies: boolean,
 ) => {
-  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, site)
+  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 
   const postInfos = Object.values(Post)
     .sort((a, b) => tPost(a).localeCompare(tPost(b)))

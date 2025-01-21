@@ -9,11 +9,11 @@ import { Dispatch, SetStateAction } from 'react'
 interface Props {
   study: FullStudy | StudyWithoutDetail
   allowAll?: boolean
-  site: string
+  studySite: string
   setSite: Dispatch<SetStateAction<string>>
 }
 
-const SelectStudySite = ({ study, allowAll, site, setSite }: Props) => {
+const SelectStudySite = ({ study, allowAll, studySite, setSite }: Props) => {
   const t = useTranslations('study.organization')
 
   return (
@@ -22,7 +22,7 @@ const SelectStudySite = ({ study, allowAll, site, setSite }: Props) => {
       <Select
         labelId="study-site-select"
         label={t('site')}
-        value={site === 'all' && !allowAll ? '' : site}
+        value={studySite === 'all' && !allowAll ? '' : studySite}
         onChange={(event) => setSite(event.target.value)}
         disabled={study.sites.length === 1 && !allowAll}
       >

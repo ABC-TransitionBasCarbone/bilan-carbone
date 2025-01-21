@@ -232,7 +232,7 @@ export const hasEmissionSources = async (study: FullStudy, siteId: string) => {
     return false
   }
 
-  const emissionSources = study.emissionSources.find((emissionSource) => emissionSource.site.id === studySite.id)
+  const emissionSources = study.emissionSources.find((emissionSource) => emissionSource.studySite.id === studySite.id)
   if (!emissionSources) {
     return false
   }

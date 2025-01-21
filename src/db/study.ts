@@ -27,7 +27,7 @@ const fullStudyInclude = {
       comment: true,
       validated: true,
       depreciationPeriod: true,
-      site: {
+      studySite: {
         select: {
           id: true,
         },
@@ -196,7 +196,7 @@ export const updateStudySites = async (
   return prismaClient.$transaction(async (transaction) => {
     const promises = []
     if (deletedSiteIds.length) {
-      await transaction.studyEmissionSource.deleteMany({ where: { studyId, siteId: { in: deletedSiteIds } } })
+      await transaction.studyEmissionSource.deleteMany({ where: { studyId, studySiteId: { in: deletedSiteIds } } })
       promises.push(transaction.studySite.deleteMany({ where: { id: { in: deletedSiteIds }, studyId } }))
     }
     if (newStudySites.length) {
