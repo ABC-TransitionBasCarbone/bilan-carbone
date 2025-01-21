@@ -13,11 +13,17 @@ interface Props {
 
 const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props) => {
   const studies = await getOrganizationStudiesOrderedByStartDate(mainStudyOrganizationId)
-  const study = studies.find((study) => canReadStudy(user, study))
-
-  return study ? (
+  let mainStudy = null
+  for (const study of studies) {
+    const result = await canReadStudy(user, study)
+    if (result) {
+      mainStudy = study
+      break
+    }
+  }
+  return mainStudy ? (
     <Block>
-      <StudyResultsContainerSummary study={study} studySite="all" />
+      <StudyResultsContainerSummary study={mainStudy} studySite="all" />
     </Block>
   ) : null
 }
