@@ -49,8 +49,6 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
       return
     }
 
-    console.log('add flow : ', file)
-
     const result = await addFlowToStudy(study.id, file)
     if (result) {
       setError(t(result))
