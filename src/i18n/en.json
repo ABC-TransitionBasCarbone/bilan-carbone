@@ -473,6 +473,8 @@
       "location": "Location",
       "locationSearch": "Search a location",
       "Manual": "Manual",
+      "edit": "Edit emission factor",
+      "delete": "Delete emission factor",
       "name": "Name",
       "none": "None",
       "no": "No",

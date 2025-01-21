@@ -68,3 +68,7 @@
   background-color: var(--neutral-00);
   padding: 1rem;
 }
+
+.editButton {
+  min-width: 0 !important;
+}

@@ -19,6 +19,7 @@ import {
   InputLabel,
   ListItemText,
   MenuItem,
+  Button as MuiButton,
   OutlinedInput,
   Select,
   SelectChangeEvent,
@@ -199,18 +200,30 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
                   {t('importedFrom.manual')}
                   {!selectEmissionFactor && userOrganizationId === row.original.organizationId && (
                     <>
-                      {(['edit', 'delete'] as const).map((action) => (
-                        <div
-                          key={action}
-                          data-testid={`${action}-emission-factor-button`}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            editEmissionFactor(row.original.id, action)
-                          }}
-                        >
-                          {action === 'edit' ? <EditIcon color="info" /> : <DeleteIcon color="error" />}
-                        </div>
-                      ))}
+                      <MuiButton
+                        aria-label={t('edit')}
+                        title={t('edit')}
+                        className={styles.editButton}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          editEmissionFactor(row.original.id, 'edit')
+                        }}
+                        data-testid={`edit-emission-factor-button`}
+                      >
+                        <EditIcon color="info" />
+                      </MuiButton>
+                      <MuiButton
+                        aria-label={t('delete')}
+                        title={t('delete')}
+                        className={styles.editButton}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          editEmissionFactor(row.original.id, 'delete')
+                        }}
+                        data-testid={`delete-emission-factor-button`}
+                      >
+                        <DeleteIcon color="error" />
+                      </MuiButton>
                     </>
                   )}
                 </span>
@@ -374,14 +387,14 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
                     {cell.column.id === 'actions' ? (
                       <div className={styles.cellDiv}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
                     ) : (
-                      <button
+                      <div
                         className={styles.cellButton}
                         onClick={() => {
                           row.toggleExpanded()
                         }}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </button>
+                      </div>
                     )}
                   </td>
                 ))}

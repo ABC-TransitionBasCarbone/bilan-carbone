@@ -473,6 +473,8 @@
       "location": "Localisation",
       "locationSearch": "Rechercher une localisation",
       "Manual": "Manuelle",
+      "edit": "Éditer le facteur d'émissions",
+      "delete": "Supprimer facteur d'émissions",
       "name": "Nom",
       "none": "Aucune",
       "no": "Non",
