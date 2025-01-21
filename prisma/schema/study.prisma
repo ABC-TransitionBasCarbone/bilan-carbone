@@ -23,14 +23,12 @@ enum StudyRole {
 }
 
 enum EmissionSourceCaracterisation {
-  // Operational
   Operated
   NotOperated
   OperatedProcedeed
   OperatedFugitive
   NotOperatedSupported
   NotOperatedNotSupported
-  // Financial
   Rented
   FinalClient
   Held
