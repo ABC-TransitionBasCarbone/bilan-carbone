@@ -181,7 +181,7 @@ const getType = (value: string) => {
   }
 }
 
-const getEmissionQuality = (uncertainty?: number) => {
+export const getEmissionQuality = (uncertainty?: number) => {
   if (!uncertainty) {
     return null
   } else if (uncertainty < 5) {
