@@ -9,7 +9,7 @@
     background-color: var(--primary-60) !important;
   }
 
-  &.disabled,
+  &[aria-disabled='true'],
   &:disabled {
     background-color: var(--neutral-30) !important;
   }
