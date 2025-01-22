@@ -168,6 +168,17 @@ export const getStudyById = async (id: string, organizationId: string | null) =>
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
+export const getStudyNameById = async (id: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id },
+    select: { name: true },
+  })
+  if (!study) {
+    return null
+  }
+  return study.name
+}
+
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
   prismaClient.userOnStudy.create({
     data: right,
@@ -215,6 +226,19 @@ export const updateStudySites = async (
     }
 
     return Promise.all(promises)
+  })
+}
+
+export const deleteStudy = async (id: string) => {
+  return prismaClient.$transaction(async (transaction) => {
+    await Promise.all([
+      transaction.userOnStudy.deleteMany({ where: { studyId: id } }),
+      transaction.studyEmissionSource.deleteMany({ where: { studyId: id } }),
+      transaction.contributors.deleteMany({ where: { studyId: id } }),
+      transaction.studySite.deleteMany({ where: { studyId: id } }),
+      transaction.document.deleteMany({ where: { studyId: id } }),
+    ])
+    await transaction.study.delete({ where: { id } })
   })
 }
 

@@ -151,6 +151,41 @@ export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
   return true
 }
 
+export const canDeleteStudy = async (studyId: string) => {
+  const session = await auth()
+
+  if (!session) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, session.user.organizationId)
+  if (!study) {
+    return false
+  }
+
+  if (study.createdById === session.user.id) {
+    return true
+  }
+
+  if (
+    study.allowedUsers.some(
+      (allowedUser) => allowedUser.role === StudyRole.Validator && allowedUser.user.email === session.user.email,
+    )
+  ) {
+    return true
+  }
+
+  if (
+    study.isPublic &&
+    study.organizationId === session.user.organizationId &&
+    (session.user.role === Role.ADMIN || session.user.role === Role.SUPER_ADMIN)
+  ) {
+    return true
+  }
+
+  return false
+}
+
 export const filterStudyDetail = (user: User, study: FullStudy) => {
   const availableSubPosts = study.contributors
     .filter((contributor) => contributor.user.email === user.email)

@@ -7,9 +7,11 @@ import {
   createContributorOnStudy,
   createStudy,
   createUserOnStudy,
+  deleteStudy,
   FullStudy,
   getStudiesFromSites,
   getStudyById,
+  getStudyNameById,
   getStudySites,
   updateStudy,
   updateStudySites,
@@ -43,6 +45,7 @@ import {
   canChangePublicStatus,
   canChangeSites,
   canCreateStudy,
+  canDeleteStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
 import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
@@ -53,6 +56,7 @@ import {
   ChangeStudyPublicStatusCommand,
   ChangeStudySitesCommand,
   CreateStudyCommand,
+  DeleteStudyCommand,
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
@@ -421,6 +425,21 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
   } else {
     await createContributorOnStudy(userId, [subPost], command)
   }
+}
+
+export const deleteStudyCommand = async ({ id, name }: DeleteStudyCommand) => {
+  if (!(await canDeleteStudy(id))) {
+    return NOT_AUTHORIZED
+  }
+  const studyName = await getStudyNameById(id)
+  if (!studyName) {
+    return NOT_AUTHORIZED
+  }
+
+  if (studyName.toLowerCase() !== name.toLowerCase()) {
+    return 'wrongName'
+  }
+  await deleteStudy(id)
 }
 
 export const addFlowToStudy = async (studyId: string, file: File) => {

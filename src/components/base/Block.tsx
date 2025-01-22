@@ -8,7 +8,7 @@ import Button from './Button'
 import LinkButton from './LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
 
-interface Props {
+export interface Props {
   children?: ReactNode
   title?: string
   icon?: ReactNode

@@ -354,6 +354,16 @@
       "notAuthorized": "Action not authorized",
       "removeFlow": "Remove flow",
       "Not authorized": "You are not allowed to do this action"
+    },
+    "delete": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "delete": "Delete the study",
+      "content": "Are you sure you want to delete this study ? All its data will be definitely deleted and it won't be possible to recover it. If it is the case, please write the study name in the field right below.",
+      "name": "Study name",
+      "Not authorized": "You are not allowed to do this action",
+      "title": "Study deletion",
+      "wrongName": "Name does not match"
     }
   },
   "emissionFactors": {
