@@ -182,8 +182,10 @@ const getType = (value: string) => {
 }
 
 export const getEmissionQuality = (uncertainty?: number) => {
-  if (!uncertainty) {
-    return null
+  // Si l'incertitude n'est pas defini => Moyenne
+  // Si elle est négative ou = 0 => Très bonne
+  if (uncertainty === undefined) {
+    return 3
   } else if (uncertainty < 5) {
     return 5
   } else if (uncertainty < 20) {
