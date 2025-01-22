@@ -232,7 +232,8 @@
       "next": "Next",
       "select": "Organization",
       "validation": {
-        "sites": "Please select at least one site concerned by the study"
+        "sites": "Please select at least one site concerned by the study",
+        "etpCa": "Please enter a strictly positiv value for every selected sites employees and turnover"
       }
     },
     "role": {
