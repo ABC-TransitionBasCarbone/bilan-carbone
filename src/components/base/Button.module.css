@@ -9,13 +9,13 @@
     background-color: var(--primary-60) !important;
   }
 
+  &.disabled,
   &:disabled {
     background-color: var(--neutral-30) !important;
   }
 }
-
 .error {
-  background-color: orange !important;
+  background-color: var(--error-40) !important;
   &:hover {
     background-color: var(--error-60) !important;
   }
