@@ -9,3 +9,7 @@
 .deleteButton {
   height: 3rem;
 }
+
+.typeSelector {
+  min-width: 15rem;
+}

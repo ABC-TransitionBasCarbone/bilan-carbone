@@ -522,6 +522,25 @@
         "confirm": "Confirmer",
         "close": "Annuler"
       }
+    },
+    "type": {
+      "CarburantAmontCombustion": "Fuel, upstream, combustion",
+      "Amont": "Upstream",
+      "Intrants": "Inputs",
+      "Combustion": "Combustion",
+      "TransportEtDistribution": "Transport and distribution",
+      "Energie": "Energy",
+      "Fabrication": "Manufacturing",
+      "Traitement": "Processing",
+      "Collecte": "Collection",
+      "Autre": "Other",
+      "Amortissement": "Depreciation",
+      "Incineration": "Incineration",
+      "EmissionsFugitives": "Fugitive emissions",
+      "Fuites": "Leaks",
+      "Transport": "Transport",
+      "CombustionALaCentrale": "Combustion at the plant",
+      "Pertes": "Losses"
     }
   },
   "level": {
