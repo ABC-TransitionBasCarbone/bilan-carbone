@@ -12,12 +12,21 @@
   "categorisations": {
     "Operated": "Operated",
     "NotOperated": "Not operated",
-    "OperatedProcedeed": "Operated, processed",
+    "OperatedProcedeed": "Operated, procedeed",
     "OperatedFugitive": "Operated, fugitive",
     "NotOperatedSupported": "Not operated, supported",
     "NotOperatedNotSupported": "Not operated, not supported",
     "Rented": "Rented",
-    "FinalClient": "By the final client or an intermediary"
+    "FinalClient": "By the final client or an intermediary",
+    "Held": "Held",
+    "NotHeldSimpleRent": "Not held, simple rent",
+    "NotHeldOther": "Not held, other",
+    "HeldProcedeed": "Held, procedeed",
+    "HeldFugitive": "Held, fugitive",
+    "NotHeldSupported": "Not held, supported",
+    "NotHeldNotSupported": "Not held, not supported",
+    "UsedByIntermediary": "Used by an intermediary",
+    "LandUse": "Land use, land-use change, and forestry (LULUCF)"
   },
   "beges": {
     "rule": "Rule",
@@ -655,7 +664,7 @@
     "TON_VIABLE_MEAT": "ton of net commercially viable meat",
     "TON_KM_PRODUCED": "ton.km",
     "TON_PRODUCTED": "ton produced",
-    "TON_PROCESSED": "ton processed",
+    "TON_PROCESSED": "ton Procedeed",
     "UNIT": "unit",
     "IMPORTED_UNIT_PIECE_SHRUB_POT": "Imported unit (shrub in pot)",
     "VEHICLE_YEAR": "vehicle/year",
