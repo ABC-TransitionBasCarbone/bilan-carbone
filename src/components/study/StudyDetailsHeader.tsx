@@ -63,7 +63,14 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
   }
 
   const deleteAction: BlockProps['actions'] = canDeleteStudy
-    ? [{ actionType: 'button', onClick: () => setDeleting(true), children: tStudyDelete('delete') }]
+    ? [
+        {
+          actionType: 'button',
+          'data-testid': 'delete-study',
+          onClick: () => setDeleting(true),
+          children: tStudyDelete('delete'),
+        },
+      ]
     : []
 
   return (
@@ -112,13 +119,18 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
                 name="name"
                 label={tStudyDelete('name')}
                 translation={tStudyDelete}
+                data-testid="delete-study-name-field"
               />
             </div>
-            {error && <p className={styles.error}>{tStudyDelete(error)}</p>}
+            {error && (
+              <p data-testid="study-deletion-error" className={styles.error}>
+                {tStudyDelete(error)}
+              </p>
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setDeleting(false)}>{tStudyDelete('cancel')}</Button>
-            <LoadingButton type="submit" loading={form.formState.isSubmitting}>
+            <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="confirm-study-deletion">
               {tStudyDelete('confirm')}
             </LoadingButton>
           </DialogActions>

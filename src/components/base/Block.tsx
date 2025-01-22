@@ -18,7 +18,7 @@ export interface Props {
   ['data-testid']?: string
   description?: ReactNode
   actions?: (
-    | (ButtonProps & { actionType: 'button' })
+    | (ButtonProps & { actionType: 'button'; 'data-testid'?: string })
     | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton' })
     // No idea why i have to add data-testid here :/
     | (LinkProps & AnchorHTMLAttributes<HTMLAnchorElement> & { actionType: 'link'; 'data-testid'?: string })
