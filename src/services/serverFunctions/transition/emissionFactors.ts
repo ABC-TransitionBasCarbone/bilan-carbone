@@ -3,6 +3,13 @@ import { getEmissionQuality } from '@/services/importEmissionFactor/import'
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma } from '@prisma/client'
 import { v4 } from 'uuid'
 
+const getStringValue = (value: string | number) => {
+  const stringValue = value ? value.toString() : ''
+  return stringValue.toLocaleLowerCase() === 'null' || stringValue.toLocaleLowerCase() === 'undefined'
+    ? ''
+    : stringValue
+}
+
 export const uploadEmissionFactors = async (
   transaction: Prisma.TransactionClient,
   data: (string | number)[][],
@@ -24,24 +31,24 @@ export const uploadEmissionFactors = async (
         metaData.push({
           emissionFactorId: id,
           language: 'fr',
-          title: row[indexes['EF_VAL_LIB']] as string,
-          attribute: row[indexes['EF_VAL_CARAC']] as string,
-          frontiere: row[indexes['EF_VAL_COMPLEMENT']] as string,
-          comment: `${row[indexes['Commentaires']]} ${row[indexes['DateValidité']]}`,
-          location: `${row[indexes['NOM_PAYS']]} ${row[indexes['NOM_REGION']]} ${row[indexes['NOM_DEPARTEMENT']]}`,
+          title: getStringValue(row[indexes['EF_VAL_LIB']]),
+          attribute: getStringValue(row[indexes['EF_VAL_CARAC']]),
+          frontiere: getStringValue(row[indexes['EF_VAL_COMPLEMENT']]),
+          comment: `${getStringValue(row[indexes['Commentaires']])} ${getStringValue(row[indexes['DateValidité']])}`,
+          location: `${getStringValue(row[indexes['NOM_PAYS']])} ${getStringValue(row[indexes['NOM_REGION']])} ${getStringValue(row[indexes['NOM_DEPARTEMENT']])}`,
         })
 
         return {
           id,
           importedFrom: Import.Manual,
           status: EmissionFactorStatus.Valid,
-          oldBCId: row[indexes['EFV_GUID']] as string,
+          oldBCId: getStringValue(row[indexes['EFV_GUID']]),
           reliability: getEmissionQuality(row[indexes['Incertitude']] as number),
           technicalRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
           geographicRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
           temporalRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
           completeness: getEmissionQuality(row[indexes['Incertitude']] as number),
-          unit: unitsMatrix[row[indexes['Unité_Nom']] as string],
+          unit: unitsMatrix[getStringValue(row[indexes['Unité_Nom']])],
           totalCo2: row[indexes['Total_CO2e']] as number,
           co2f: row[indexes['CO2f']] as number,
           ch4f: row[indexes['CH4F']] as number,
@@ -52,8 +59,8 @@ export const uploadEmissionFactors = async (
           hfc: row[indexes['HFC']] as number,
           pfc: row[indexes['PFC']] as number,
           otherGES: (row[indexes['Autre_gaz']] as number) + (row[indexes['NF3']] as number),
-          source: row[indexes['Source_Nom']] as string,
-          location: row[indexes['NOM_CONTINENT']] as string,
+          source: getStringValue(row[indexes['Source_Nom']]),
+          location: getStringValue(row[indexes['NOM_CONTINENT']]),
         }
       }),
   })
@@ -88,7 +95,7 @@ export const uploadEmissionFactors = async (
     }
   > = {}
   emissionFactorPartsToCreate.forEach((row) => {
-    const guid = row[indexes['GUID']] as string
+    const guid = getStringValue(row[indexes['GUID']])
     if (!sumByGuid[guid]) {
       sumByGuid[guid] = { totalCo2: 0, co2f: 0, ch4f: 0, ch4b: 0, n2o: 0, co2b: 0, sf6: 0, hfc: 0, pfc: 0, otherGES: 0 }
     }
@@ -125,20 +132,20 @@ export const uploadEmissionFactors = async (
   const partsMetaData = [] as Prisma.EmissionFactorPartMetaDataCreateManyInput[]
   await transaction.emissionFactorPart.createMany({
     data: emissionFactorPartsToCreate
-      .filter((row) => inconsistentGuids.some(([key]) => key === (row[indexes['GUID']] as string)))
+      .filter((row) => inconsistentGuids.some(([key]) => key === getStringValue(row[indexes['GUID']])))
       .map((row) => {
         const id = v4()
 
         partsMetaData.push({
           language: 'fr',
-          title: row[indexes['EF_VAL_LIB']] as string,
+          title: getStringValue(row[indexes['EF_VAL_LIB']]),
           emissionFactorPartId: id,
         })
         return {
           id,
           emissionFactorId: allEmissionFactors.find((ef) => ef.oldBCId === row[indexes['GUID']])?.id as string,
           type: EmissionFactorPartType.Amont,
-          oldBCId: row[indexes['EFV_GUID']] as string,
+          oldBCId: getStringValue(row[indexes['EFV_GUID']]),
           reliability: getEmissionQuality(row[indexes['Incertitude']] as number),
           technicalRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
           geographicRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
@@ -154,8 +161,8 @@ export const uploadEmissionFactors = async (
           hfc: row[indexes['HFC']] as number,
           pfc: row[indexes['PFC']] as number,
           otherGES: (row[indexes['Autre_gaz']] as number) + (row[indexes['NF3']] as number),
-          source: row[indexes['Source_Nom']] as string,
-          location: row[indexes['NOM_CONTINENT']] as string,
+          source: getStringValue(row[indexes['Source_Nom']]),
+          location: getStringValue(row[indexes['NOM_CONTINENT']]),
         }
       }),
   })
