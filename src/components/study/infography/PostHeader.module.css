@@ -1,4 +1,5 @@
 .header {
+  position: relative;
   padding: 1rem;
   gap: 0.5rem;
   color: var(--neutral-00);
@@ -22,16 +23,17 @@
   }
 }
 
+.content {
+  position: relative;
+  text-align: center;
+}
+
 .title {
   width: 100%;
   text-transform: uppercase;
   justify-content: center;
   text-align: center;
   gap: 0.5rem;
-}
-
-.progress {
-  align-self: center;
 }
 
 .icon {
@@ -41,4 +43,11 @@
   @media screen and (max-width: 50rem) {
     display: none;
   }
+}
+
+.progress {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

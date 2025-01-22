@@ -66,18 +66,13 @@ const PostInfography = ({ post, data, studyId }: Props) => {
 
   const postColor = useMemo(() => (mainPost ? postColors[mainPost] : 'green'), [mainPost])
 
-  const background = useMemo(() => {
+  const percent = useMemo(() => {
     const percent =
       !data || data.numberOfEmissionSource === 0
         ? 0
         : (data.numberOfValidatedEmissionSource / data.numberOfEmissionSource) * 100
-    const { dark, light } = colors[postColor]
-    return percent === 100
-      ? dark
-      : percent === 0
-        ? light
-        : `linear-gradient(to right, ${dark} 0%, ${dark} ${percent}%, ${light} ${percent}%, ${light} 100%)`
-  }, [data, postColor])
+    return percent
+  }, [data])
 
   const subPosts = useMemo(() => {
     if (Object.keys(Post).includes(post)) {
@@ -110,11 +105,15 @@ const PostInfography = ({ post, data, studyId }: Props) => {
         }}
         href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
         className={classNames(styles[postColor], styles.link, { [styles.displayChildren]: displayChildren })}
-        style={{
-          background,
-        }}
+        style={{ backgroundColor: colors[postColor].light }}
       >
-        <PostHeader post={post} mainPost={mainPost} emissionValue={data?.value} />
+        <PostHeader
+          post={post}
+          mainPost={mainPost}
+          emissionValue={data?.value}
+          percent={percent}
+          color={colors[postColor].dark}
+        />
         <div className={styles.subPostsContainer} ref={ref}>
           {subPosts && (
             <div className={classNames(styles[postColor], styles.subPosts, 'flex')}>
