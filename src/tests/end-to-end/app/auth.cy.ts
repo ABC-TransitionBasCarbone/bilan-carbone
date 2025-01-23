@@ -55,18 +55,20 @@ describe('Authentication', () => {
     cy.url().should('include', '/login')
 
     cy.visit('http://localhost:1080')
-    cy.get('.email-item-link')
-      .first()
-      .invoke('attr', 'href')
-      .then((link) => {
-        const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
-        cy.visit(hmtlUrl)
-        cy.url().should('include', hmtlUrl)
+    cy.origin('http://localhost:1080', () => {
+      cy.get('.email-item-link')
+        .first()
+        .invoke('attr', 'href')
+        .then((link) => {
+          const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
+          cy.visit(hmtlUrl)
+          cy.url().should('include', hmtlUrl)
 
-        cy.get('a')
-          .invoke('attr', 'href')
-          .then((link) => cy.visit(link as string))
-      })
+          cy.get('a')
+            .invoke('attr', 'href')
+            .then((link) => cy.visit(link as string))
+        })
+    })
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
