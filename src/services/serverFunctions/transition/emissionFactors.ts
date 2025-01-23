@@ -94,6 +94,7 @@ export const uploadEmissionFactors = async (
       otherGES: number
     }
   > = {}
+
   emissionFactorPartsToCreate.forEach((row) => {
     const guid = getStringValue(row[indexes['GUID']])
     if (!sumByGuid[guid]) {
@@ -132,7 +133,7 @@ export const uploadEmissionFactors = async (
   const partsMetaData = [] as Prisma.EmissionFactorPartMetaDataCreateManyInput[]
   await transaction.emissionFactorPart.createMany({
     data: emissionFactorPartsToCreate
-      .filter((row) => inconsistentGuids.some(([key]) => key === getStringValue(row[indexes['GUID']])))
+      .filter((row) => inconsistentGuids.every(([key]) => key !== getStringValue(row[indexes['GUID']])))
       .map((row) => {
         const id = v4()
 
