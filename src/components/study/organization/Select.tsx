@@ -40,6 +40,18 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
     }
   }, [organization])
 
+  const next = () => {
+    if (!sites.some((site) => site.selected)) {
+      setError(t('validation.sites'))
+    } else {
+      if (sites.filter((site) => site.selected).some((site) => site.etp <= 0 || site.ca <= 0)) {
+        setError(t('validation.etpCa'))
+      } else {
+        selectOrganization(organization)
+      }
+    }
+  }
+
   return (
     <Block title={t('title')} as="h1" data-testid="new-study-organization-title">
       {organizations.length === 1 ? (
@@ -64,16 +76,7 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
           <>
             <Sites form={form} sites={sites} withSelection />
             <div className="mt2">
-              <Button
-                data-testid="new-study-organization-button"
-                onClick={() => {
-                  if (sites.some((site) => site.selected)) {
-                    selectOrganization(organization)
-                  } else {
-                    setError(t('validation.sites'))
-                  }
-                }}
-              >
+              <Button data-testid="new-study-organization-button" onClick={next}>
                 {t('next')}
               </Button>
               {error && <FormHelperText error>{error}</FormHelperText>}

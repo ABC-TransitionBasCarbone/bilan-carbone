@@ -232,7 +232,8 @@
       "next": "Suivant",
       "select": "Organisation",
       "validation": {
-        "sites": "Veuillez selectionner au moins un site concerné par l'étude"
+        "sites": "Veuillez selectionner au moins un site concerné par l'étude",
+        "etpCa": "Veuillez rentrer un ETP et un CA strictement positif pour chacun des sites selectionnés"
       }
     },
     "role": {
