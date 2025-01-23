@@ -7,9 +7,18 @@ import { getConfidenceInterval, getQualityStandardDeviation } from './uncertaint
 export const getEmissionSourceCompletion = (
   emissionSource: Pick<
     StudyEmissionSource,
-    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost' | 'depreciationPeriod'
+    | 'name'
+    | 'type'
+    | 'value'
+    | 'emissionFactorId'
+    | 'caracterisation'
+    | 'subPost'
+    | 'depreciationPeriod'
+    | 'hectare'
+    | 'duration'
   >,
   study: FullStudy | StudyWithoutDetail,
+  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][0]['emissionFactor'],
 ) => {
   const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
   const caracterisations = caracterisationsBySubPost[emissionSource.subPost]
@@ -19,17 +28,36 @@ export const getEmissionSourceCompletion = (
   if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)) {
     mandatoryFields.push('depreciationPeriod')
   }
+
+  if (
+    emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
+    emissionFactor &&
+    emissionFactor.unit === 'HA_YEAR'
+  ) {
+    mandatoryFields.push('hectare')
+    mandatoryFields.push('duration')
+  }
+
   return mandatoryFields.reduce((acc, field) => acc + (emissionSource[field] ? 1 : 0), 0) / mandatoryFields.length
 }
 
 export const canBeValidated = (
   emissionSource: Pick<
     StudyEmissionSource,
-    'name' | 'type' | 'value' | 'emissionFactorId' | 'caracterisation' | 'subPost' | 'depreciationPeriod'
+    | 'name'
+    | 'type'
+    | 'value'
+    | 'emissionFactorId'
+    | 'caracterisation'
+    | 'subPost'
+    | 'depreciationPeriod'
+    | 'hectare'
+    | 'duration'
   >,
   study: FullStudy | StudyWithoutDetail,
+  emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][0]['emissionFactor'],
 ) => {
-  return getEmissionSourceCompletion(emissionSource, study) === 1
+  return getEmissionSourceCompletion(emissionSource, study, emissionFactor) === 1
 }
 
 export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {

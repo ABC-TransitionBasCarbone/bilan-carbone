@@ -66,6 +66,7 @@ export const updateEmissionSource = async ({
   const isContributor = study.contributors.some(
     (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
   )
+
   await updateEmissionSourceOnStudy(
     emissionSourceId,
     isContributor ? { ...data, contributor: { connect: { id: user.id } } } : data,

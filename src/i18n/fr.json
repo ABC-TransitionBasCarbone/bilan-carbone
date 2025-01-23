@@ -780,6 +780,8 @@
       "source": "Source",
       "type": "Type",
       "depreciationPeriod": "Durée d'amortissement",
+      "hectare": "Hectare",
+      "duration": "Durée",
       "years": "ans",
       "reliability": "Fiabilité",
       "technicalRepresentativeness": "Représentativité technique",

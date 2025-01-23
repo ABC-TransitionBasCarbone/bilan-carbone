@@ -182,6 +182,8 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
         caracterisation: emissionSource.caracterisation,
         studySite: emissionSource.studySite,
         depreciationPeriod: emissionSource.depreciationPeriod,
+        hectare: emissionSource.hectare,
+        duration: emissionSource.duration,
       })),
     exports: study.exports,
     contributors: undefined,

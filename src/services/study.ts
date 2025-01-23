@@ -54,7 +54,7 @@ export const getEmissionSourceStatus = (
     return EmissionSourcesStatus.Valid
   }
 
-  if (canBeValidated(emissionSource, study)) {
+  if (canBeValidated(emissionSource, study, emissionSource.emissionFactor)) {
     return EmissionSourcesStatus.ToVerify
   }
 
