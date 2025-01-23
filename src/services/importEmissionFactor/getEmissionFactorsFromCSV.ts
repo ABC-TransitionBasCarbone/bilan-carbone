@@ -1,9 +1,9 @@
-import { MIN, TIME_IN_MS } from '@/utils/time'
 import { Import, Prisma } from '@prisma/client'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import path from 'path'
 import { prismaClient } from '../../db/client'
+import { MIN, TIME_IN_MS } from '../../utils/time'
 import {
   cleanImport,
   getEmissionFactorImportVersion,
