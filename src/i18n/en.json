@@ -780,6 +780,8 @@
       "source": "Source",
       "type": "Type",
       "depreciationPeriod": "Depreciation per",
+      "hectare": "Hectare",
+      "duration": "Duration",
       "years": "years",
       "reliability": "Reliability",
       "technicalRepresentativeness": "Technical representativeness",

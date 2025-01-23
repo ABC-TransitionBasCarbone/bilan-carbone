@@ -27,6 +27,8 @@ const fullStudyInclude = {
       comment: true,
       validated: true,
       depreciationPeriod: true,
+      hectare: true,
+      duration: true,
       studySite: {
         select: {
           id: true,

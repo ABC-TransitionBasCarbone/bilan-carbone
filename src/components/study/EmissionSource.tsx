@@ -147,7 +147,11 @@ const EmissionSource = ({
           <p data-testid="emission-source-status" className={classNames(styles.status, 'align-center')}>
             {t(`status.${status}`)}
             {(status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor) && (
-              <> - {formatNumber(getEmissionSourceCompletion(emissionSource, study) * 100)}%</>
+              <>
+                {' '}
+                -{' '}
+                {formatNumber(getEmissionSourceCompletion(emissionSource, study, emissionSource.emissionFactor) * 100)}%
+              </>
             )}
             {loading && (
               <>

@@ -4,7 +4,7 @@ import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { Post, subPostsByPost } from '@/services/posts'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, EmissionSourceType } from '@prisma/client'
+import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
@@ -138,7 +138,6 @@ const EmissionSourceForm = ({
             disabled={!canEdit}
             type="number"
             defaultValue={emissionSource.depreciationPeriod}
-            className={styles.depreciationPeriod}
             onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
             label={`${t('form.depreciationPeriod')} *`}
             slotProps={{
@@ -149,6 +148,34 @@ const EmissionSourceForm = ({
           <div className={styles.unit}>{t('form.years')}</div>
         </div>
       )}
+      {emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
+        emissionSource.emissionFactor &&
+        emissionSource.emissionFactor.unit === Unit.HA_YEAR && (
+          <div className={classNames(styles.row, 'flex')}>
+            <TextField
+              disabled={!canEdit}
+              type="number"
+              defaultValue={emissionSource.hectare}
+              onBlur={(event) => update('hectare', Number(event.target.value))}
+              label={`${t('form.hectare')} *`}
+              slotProps={{
+                inputLabel: { shrink: true },
+                input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+              }}
+            />
+            <TextField
+              disabled={!canEdit}
+              type="number"
+              defaultValue={emissionSource.duration}
+              onBlur={(event) => update('duration', Number(event.target.value))}
+              label={`${t('form.duration')} *`}
+              slotProps={{
+                inputLabel: { shrink: true },
+                input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+              }}
+            />
+          </div>
+        )}
       <QualitySelectGroup canEdit={canEdit} emissionSource={emissionSource} update={update} advanced={advanced} />
       <div className={classNames(styles.row, 'flex')}>
         <TextField

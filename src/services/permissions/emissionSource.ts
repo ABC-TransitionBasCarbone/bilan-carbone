@@ -77,8 +77,11 @@ export const canUpdateEmissionSource = async (
       return false
     }
 
-    if (change.validated === true && !canBeValidated({ ...emissionSource, ...change }, study)) {
-      return false
+    if (change.validated === true && emissionSource.emissionFactorId) {
+      const emissionFactor = await getEmissionFactorById(emissionSource.emissionFactorId)
+      if (!canBeValidated({ ...emissionSource, ...change }, study, emissionFactor)) {
+        return false
+      }
     }
   }
 
