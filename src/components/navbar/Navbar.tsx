@@ -45,9 +45,6 @@ const Navbar = ({ user }: Props) => {
           >
             {t('organization')}
           </div>
-          <Link className={styles.link} href="/transition">
-            {t('transition')}
-          </Link>
         </div>
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
           {user.role === Role.SUPER_ADMIN && (

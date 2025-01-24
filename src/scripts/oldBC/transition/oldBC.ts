@@ -1,9 +1,5 @@
-'use server'
-import { prismaClient } from '@/db/client'
-import { getTranslations } from 'next-intl/server'
 import xlsx from 'node-xlsx'
-import { auth } from '../../auth'
-import { NOT_AUTHORIZED } from '../../permissions/check'
+import { prismaClient } from '../../../db/client'
 import { uploadEmissionFactors } from './emissionFactors'
 import { uploadOrganizations } from './organizations'
 
@@ -53,10 +49,11 @@ const requiredEmissionFactorsColumns = [
 ]
 
 const getColumnsIndex = async (organizationHeaders: string[], emissionFactorHeaders: string[]) => {
-  const t = await getTranslations('transition')
-
   if (requiredOrganizationsColumns.length > organizationHeaders.length) {
-    return { success: false, error: `${t('requiredHeaders')} ${requiredOrganizationsColumns.join(', ')}` }
+    return {
+      success: false,
+      error: `Les colonnes suivantes sont obligatoires : ${requiredOrganizationsColumns.join(', ')}`,
+    }
   }
   const missingHeaders: string[] = []
   const indexes = { organizations: {} as Record<string, number>, emissionFactors: {} as Record<string, number> }
@@ -70,7 +67,10 @@ const getColumnsIndex = async (organizationHeaders: string[], emissionFactorHead
   })
 
   if (missingHeaders.length > 0) {
-    return { success: false, error: `${t('missingOrganizationsHeaders')} ${missingHeaders.join(', ')}` }
+    return {
+      success: false,
+      error: `Colonnes manquantes dans la feuille 'Organisations' : ${missingHeaders.join(', ')}`,
+    }
   }
 
   requiredEmissionFactorsColumns.forEach((header) => {
@@ -83,34 +83,31 @@ const getColumnsIndex = async (organizationHeaders: string[], emissionFactorHead
   })
 
   if (missingHeaders.length > 0) {
-    return { success: false, error: `${t('missingEmissionFactorsHeaders')} ${missingHeaders.join(', ')}` }
+    return {
+      success: false,
+      error: `Colonnes manquantes dans la feuille 'Facteurs d'émissions' : ${missingHeaders.join(', ')}`,
+    }
   }
   return { success: true, indexes }
 }
 
-export const uploadOldBCInformations = async (file: File) => {
-  const session = await auth()
-  const t = await getTranslations('transition')
+export const uploadOldBCInformations = async (file: string, organizationId: string) => {
+  const workSheetsFromFile = xlsx.parse(file)
 
-  if (!session || !session.user) {
-    return NOT_AUTHORIZED
-  }
-
-  const userOrganizationId = session.user.organizationId
-  if (!userOrganizationId) {
-    return NOT_AUTHORIZED
-  }
-
-  const workSheetsFromFile = xlsx.parse(await file.arrayBuffer())
   const organizationsSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Organisations')
   const emissionFactorsSheet = workSheetsFromFile.find((sheet) => sheet.name === "Facteurs d'émissions")
+
   if (!organizationsSheet || !emissionFactorsSheet) {
-    return t('missingSheets')
+    console.log(
+      "Veuillez verifier que le fichier contient une feuille 'Organisations' et une feuille 'Facteurs d'émissions'",
+    )
+    return
   }
 
   const { success, error, indexes } = await getColumnsIndex(organizationsSheet.data[0], emissionFactorsSheet.data[0])
   if (!success || !indexes) {
-    return error
+    console.log(error)
+    return
   }
 
   let hasOrganizationsWarning = false
@@ -120,7 +117,7 @@ export const uploadOldBCInformations = async (file: File) => {
       transaction,
       organizationsSheet.data,
       indexes.organizations,
-      userOrganizationId,
+      organizationId,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
@@ -129,5 +126,14 @@ export const uploadOldBCInformations = async (file: File) => {
     )
   })
 
-  return `${hasOrganizationsWarning ? t('existingOrganizations') : ''} ${hasEmissionFactorsWarning ? t('existingEmissionFactors') : ''}`
+  if (hasOrganizationsWarning) {
+    console.log(
+      'Attention, certaines organisations (basé sur le SIRET, ou le nom) existent déjà. Ces dernières ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
+    )
+  }
+  if (hasEmissionFactorsWarning) {
+    console.log(
+      "Attention, certains facteurs d'emissions ont des sommes inconsistentes et ont été ignorées. Veuillez verifier que toutes vos données sont correctes.",
+    )
+  }
 }

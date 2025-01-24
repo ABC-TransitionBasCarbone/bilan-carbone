@@ -1,5 +1,5 @@
-import { prismaClient } from '@/db/client'
 import { Prisma } from '@prisma/client'
+import { prismaClient } from '../../../db/client'
 
 const getOrganizationId = (id: string, oldUserOrganizationId: string, userOrganizationId: string) => {
   // Si l'id que je recherche est l'ancienne id principale, je la remplace par le nouveau
