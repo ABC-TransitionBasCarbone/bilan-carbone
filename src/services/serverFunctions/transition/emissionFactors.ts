@@ -134,6 +134,7 @@ export const uploadEmissionFactors = async (
   await transaction.emissionFactorPart.createMany({
     data: emissionFactorPartsToCreate
       .filter((row) => inconsistentGuids.every(([key]) => key !== getStringValue(row[indexes['GUID']])))
+      .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row[indexes['GUID']]))
       .map((row) => {
         const id = v4()
 
