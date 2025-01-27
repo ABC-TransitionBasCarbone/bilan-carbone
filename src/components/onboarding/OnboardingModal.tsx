@@ -1,10 +1,16 @@
-import { OnboardingCommand } from '@/services/serverFunctions/user.command'
+import { NOT_AUTHORIZED } from '@/services/permissions/check'
+import { onboardOrganizationCommand } from '@/services/serverFunctions/organization'
+import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
+import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
 import MobileStepper from '@mui/material/MobileStepper'
+import { Organization, Role } from '@prisma/client'
 import classNames from 'classnames'
+import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { UseFormReturn } from 'react-hook-form'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
 import styles from './Onboarding.module.css'
@@ -13,18 +19,54 @@ import Step2 from './OnboardingStep2'
 
 interface Props {
   open: boolean
-  activeStep: number
-  steps: number
-  previousStep: () => void
-  form: UseFormReturn<OnboardingCommand>
   onClose: () => void
-  onValidate: () => void
+  organization: Organization
 }
 
-const OnboardingModal = ({ open, activeStep, form, steps, previousStep, onClose, onValidate }: Props) => {
+const OnboardingModal = ({ open, onClose, organization }: Props) => {
   const t = useTranslations('onboarding')
+  const { data: session, update } = useSession()
+
+  const [activeStep, setActiveStep] = useState(0)
+  const steps = 2
   const Step = activeStep === 0 ? Step1 : Step2
   const buttonLabel = activeStep === steps - 1 ? 'validate' : 'next'
+
+  const form = useForm<OnboardingCommand>({
+    resolver: zodResolver(OnboardingCommandValidation),
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      organizationId: organization.id,
+      companyName: organization.name || '',
+      role: Role.ADMIN,
+      collaborators: [{ email: '' }],
+    },
+  })
+
+  const previousStep = () => setActiveStep(activeStep > 1 ? activeStep - 1 : 0)
+
+  const onValidate = async () => {
+    if (activeStep < steps - 1) {
+      setActiveStep(activeStep + 1)
+    } else {
+      const values = form.getValues()
+      values.collaborators = (values.collaborators || []).filter(
+        (collaborator) => collaborator.email || collaborator.role,
+      )
+      const isValid = OnboardingCommandValidation.safeParse(values)
+      if (isValid.success) {
+        const result = await onboardOrganizationCommand(isValid.data)
+        if (result === NOT_AUTHORIZED) {
+          onClose()
+        } else {
+          await update({ ...session?.user, role: result })
+          onClose()
+        }
+      }
+    }
+  }
+
   return (
     <Dialog open={open} aria-labelledby="onboarding-dialog-title" aria-describedby="onboarding-dialog-description">
       <div className={styles.modal}>

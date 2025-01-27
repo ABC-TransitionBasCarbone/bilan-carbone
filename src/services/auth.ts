@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
         }
       }
       if (trigger === 'update') {
-        return { ...token, firstName: session.firstName, lastName: session.lastName }
+        return { ...token, firstName: session.firstName, lastName: session.lastName, role: session.role }
       }
       return token
     },

@@ -49,7 +49,7 @@ const Profile = () => {
       setError(result)
     } else {
       setEditing(false)
-      await update(form.getValues())
+      await update({ ...session.user, ...form.getValues() })
     }
   }
 

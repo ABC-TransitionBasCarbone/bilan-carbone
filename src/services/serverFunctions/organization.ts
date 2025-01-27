@@ -94,4 +94,5 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
     }
   }
   await onboardOrganization(session.user.id, { ...command, collaborators })
+  return command.role
 }
