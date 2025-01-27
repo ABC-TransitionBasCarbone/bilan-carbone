@@ -1,6 +1,6 @@
 import * as dbUserModule from '@/db/user'
 import { expect } from '@jest/globals'
-import { Level, Prisma } from '@prisma/client'
+import { Level, Prisma, Role } from '@prisma/client'
 import { User } from 'next-auth'
 import * as organizationModule from './organization'
 import { canCreateStudy } from './study'
@@ -14,7 +14,8 @@ const mockedUser = {
   firstName: 'Mocke',
   lastName: 'User',
   organizationId: mockedOrganizationId,
-  role: 'ADMIN',
+  role: Role.ADMIN,
+  level: Level.Initial,
 }
 const mockedDbUser = {
   ...mockedUser,
@@ -28,6 +29,7 @@ const mockedStudy = {
   startDate: '2025-01-01T00:00:00.000Z',
   endDate: '2025-01-01T00:00:00Z',
   isPublic: true,
+  level: Level.Initial,
   exports: { createMany: { data: [] } },
   createdBy: { connect: { id: mockedUserId } },
   organization: { connect: { id: mockedOrganizationId } },
@@ -40,9 +42,8 @@ const mockedStudy = {
   },
 }
 
-const getMockedLeveledUser = (level: Level) => ({ ...mockedUser, level })
-const getMockedLeveledDbUser = (level: Level) => ({ ...mockedDbUser, level })
-const getMockedLeveledStudy = (level: Level) => ({ ...mockedStudy, level })
+const getMockedDbUser = (props: Partial<User>): User => ({ ...mockedDbUser, ...props })
+const getMockedStudy = (props: Partial<Prisma.StudyCreateInput>) => ({ ...mockedStudy, ...props })
 
 // mocked called function
 jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
@@ -56,6 +57,10 @@ jest.mock('../serverFunctions/emissionFactor', () => ({ getEmissionFactorByIds: 
 const mockGetUserByEmail = dbUserModule.getUserByEmail as jest.Mock
 const mockCheckOrganization = organizationModule.checkOrganization as jest.Mock
 
+const advancedStudy = getMockedStudy({ level: Level.Advanced }) as Prisma.StudyCreateInput
+const standardStudy = getMockedStudy({ level: Level.Standard }) as Prisma.StudyCreateInput
+const initialStudy = getMockedStudy({ level: Level.Initial }) as Prisma.StudyCreateInput
+
 describe('Study permissions service', () => {
   describe('canCreateStudy', () => {
     beforeEach(() => {
@@ -65,81 +70,63 @@ describe('Study permissions service', () => {
 
     describe('"Advanced" level user', () => {
       beforeEach(() => {
-        mockGetUserByEmail.mockResolvedValue(getMockedLeveledDbUser(Level.Advanced))
+        mockGetUserByEmail.mockResolvedValue(getMockedDbUser({ level: Level.Advanced }))
       })
 
       it('User should be able to create an "Advanced" study', async () => {
-        const study = getMockedLeveledStudy(Level.Advanced) as Prisma.StudyCreateInput
-        const user = getMockedLeveledUser(Level.Advanced) as User
-        const result = await canCreateStudy(user, study, mockedOrganizationId)
+        const result = await canCreateStudy(mockedUser, advancedStudy, mockedOrganizationId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create a "Standard" study', async () => {
-        const study = getMockedLeveledStudy(Level.Standard) as Prisma.StudyCreateInput
-        const user = getMockedLeveledUser(Level.Advanced) as User
-        const result = await canCreateStudy(user, study, mockedOrganizationId)
+        const result = await canCreateStudy(mockedUser, standardStudy, mockedOrganizationId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create an "Initial" study', async () => {
-        const study = getMockedLeveledStudy(Level.Advanced) as Prisma.StudyCreateInput
-        const user = getMockedLeveledUser(Level.Advanced) as User
-        const result = await canCreateStudy(user, study, mockedOrganizationId)
+        const result = await canCreateStudy(mockedUser, initialStudy, mockedOrganizationId)
         expect(result).toBe(true)
       })
     })
 
     describe('"Standard" level user', () => {
       beforeEach(() => {
-        mockGetUserByEmail.mockResolvedValue(getMockedLeveledDbUser(Level.Standard))
+        mockGetUserByEmail.mockResolvedValue(getMockedDbUser({ level: Level.Standard }))
       })
 
       it('User should not be able to create an "Advanced" study', async () => {
-        const study = getMockedLeveledStudy(Level.Advanced) as Prisma.StudyCreateInput
-        const user = getMockedLeveledUser(Level.Standard) as User
-        const result = await canCreateStudy(user, study, mockedOrganizationId)
+        const result = await canCreateStudy(mockedUser, advancedStudy, mockedOrganizationId)
         expect(result).toBe(false)
       })
 
       it('User should be able to create a "Standard" study', async () => {
-        const study = getMockedLeveledStudy(Level.Standard) as Prisma.StudyCreateInput
-        const user = getMockedLeveledUser(Level.Standard) as User
-        const result = await canCreateStudy(user, study, mockedOrganizationId)
+        const result = await canCreateStudy(mockedUser, standardStudy, mockedOrganizationId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create an "Initial" study', async () => {
-        const study = getMockedLeveledStudy(Level.Initial) as Prisma.StudyCreateInput
-        const user = getMockedLeveledUser(Level.Standard) as User
-        const result = await canCreateStudy(user, study, mockedOrganizationId)
+        const result = await canCreateStudy(mockedUser, initialStudy, mockedOrganizationId)
         expect(result).toBe(true)
       })
     })
 
     describe('"Initial" level user', () => {
       beforeEach(() => {
-        mockGetUserByEmail.mockResolvedValue(getMockedLeveledDbUser(Level.Initial))
+        mockGetUserByEmail.mockResolvedValue(getMockedDbUser({ level: Level.Initial }))
       })
 
       it('User should not be able to create an "Advanced" study', async () => {
-        const study = getMockedLeveledStudy(Level.Advanced) as Prisma.StudyCreateInput
-        const user = getMockedLeveledUser(Level.Initial) as User
-        const result = await canCreateStudy(user, study, mockedOrganizationId)
+        const result = await canCreateStudy(mockedUser, advancedStudy, mockedOrganizationId)
         expect(result).toBe(false)
       })
 
       it('User should not be able to create a "Standard" study', async () => {
-        const study = getMockedLeveledStudy(Level.Standard) as Prisma.StudyCreateInput
-        const user = getMockedLeveledUser(Level.Initial) as User
-        const result = await canCreateStudy(user, study, mockedOrganizationId)
+        const result = await canCreateStudy(mockedUser, standardStudy, mockedOrganizationId)
         expect(result).toBe(false)
       })
 
       it('User should be able to create an "Initial" study', async () => {
-        const study = getMockedLeveledStudy(Level.Initial) as Prisma.StudyCreateInput
-        const user = getMockedLeveledUser(Level.Initial) as User
-        const result = await canCreateStudy(user, study, mockedOrganizationId)
+        const result = await canCreateStudy(mockedUser, initialStudy, mockedOrganizationId)
         expect(result).toBe(true)
       })
     })
