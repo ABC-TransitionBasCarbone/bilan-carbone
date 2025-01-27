@@ -524,7 +524,7 @@
       }
     },
     "type": {
-      "CarburantAmontCombustion": "Carburant, amont, combustion",
+      "CarburantAmontCombustion": "Carburant (amont/combustion)",
       "Amont": "Amont",
       "Intrants": "Intrants",
       "Combustion": "Combustion",

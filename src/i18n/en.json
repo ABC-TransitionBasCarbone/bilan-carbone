@@ -524,7 +524,7 @@
       }
     },
     "type": {
-      "CarburantAmontCombustion": "Fuel, upstream, combustion",
+      "CarburantAmontCombustion": "Fuel (upstream/combustion)",
       "Amont": "Upstream",
       "Intrants": "Inputs",
       "Combustion": "Combustion",
