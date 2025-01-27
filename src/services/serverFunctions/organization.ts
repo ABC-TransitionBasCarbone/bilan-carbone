@@ -1,11 +1,19 @@
 'use server'
 
-import { createOrganization, updateOrganization } from '@/db/organization'
-import { Prisma } from '@prisma/client'
+import {
+  createOrganization,
+  getOrganizationUsers,
+  getRawOrganizationById,
+  onboardOrganization,
+  updateOrganization,
+} from '@/db/organization'
+import { getUserByEmail } from '@/db/user'
+import { Prisma, Role } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateOrganization, canUpdateOrganization } from '../permissions/organization'
 import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
+import { OnboardingCommand } from './user.command'
 
 export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,
@@ -45,4 +53,45 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
   }
 
   await updateOrganization(command)
+}
+
+export const onboardOrganizationCommand = async (command: OnboardingCommand) => {
+  const session = await auth()
+  const organizationId = session?.user.organizationId
+
+  if (!session || !organizationId || organizationId !== command.organizationId) {
+    return NOT_AUTHORIZED
+  }
+
+  const organization = await getRawOrganizationById(command.organizationId)
+
+  if (!organization || organization?.onboarded) {
+    return NOT_AUTHORIZED
+  }
+
+  if (command.role !== Role.ADMIN) {
+    const users = (await getOrganizationUsers(organizationId)) || []
+    if (!users.some((collaborator) => collaborator.role === Role.ADMIN)) {
+      command.role = Role.ADMIN
+    }
+  }
+
+  // filter double email
+  const addedEmails = new Set<string>()
+  let collaborators = (command.collaborators || []).filter((collaborator) => {
+    if (addedEmails.has(collaborator.email || '')) {
+      return false
+    }
+    addedEmails.add(collaborator.email || '')
+    return true
+  })
+
+  // filter existing users
+  for (const collaborator of collaborators) {
+    const existingUser = await getUserByEmail(collaborator.email || '')
+    if (existingUser) {
+      collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
+    }
+  }
+  await onboardOrganization(session.user.id, { ...command, collaborators })
 }

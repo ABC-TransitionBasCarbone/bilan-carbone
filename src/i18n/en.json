@@ -865,5 +865,31 @@
   },
   "spinner": {
     "loading": "Loading"
+  },
+  "onboarding": {
+    "title-0": "Welcome to BC+! Before you start, please set up your organization",
+    "titleDescription-0": "We’ve pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization’s name now, or at any time in BC+ via the \"Organization\" section.",
+    "title-1": "Manage your team",
+    "titleDescription-1": "You can already add your team members! You’ll still be able to add new people later via the \"Team\" section.",
+    "previous": "Previous",
+    "next": "Next",
+    "validate": "Validate",
+    "step1": {
+      "name": "Name of my organization",
+      "role": "My role within the organization",
+      "roleDescription": "As the first BC+ user in your organization, we have assigned you the role of administrator. An organization must always have at least one administrator, so you’ll only be able to change your role after adding another administrator via the \"Team\" section."
+    },
+    "step2": {
+      "addCollaborator": "Add a collaborator",
+      "email": "Email address",
+      "role": "Role",
+      "adminDescription": "Can invite and manage new users",
+      "collaboratorDescription": "Can view information from a study",
+      "validation": {
+        "email": "Invalid email address",
+        "requiredEmail": "Email is required",
+        "requiredRole": "Role is required"
+      }
+    }
   }
 }

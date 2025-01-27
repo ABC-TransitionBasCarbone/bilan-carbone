@@ -4,6 +4,7 @@ import { User } from 'next-auth'
 import { Suspense } from 'react'
 import Actualities from '../actuality/Actualities'
 import Block from '../base/Block'
+import Onboarding from '../onboarding/Onboarding'
 import Organizations from '../organization/OrganizationsContainer'
 import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Studies from '../study/StudiesContainer'
@@ -38,6 +39,7 @@ const UserView = async ({ user }: Props) => {
           {isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}
         </div>
       </Block>
+      <Onboarding organization={organizations[0]} />
     </>
   )
 }
