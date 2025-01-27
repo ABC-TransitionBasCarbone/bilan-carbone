@@ -95,6 +95,29 @@ const users = async () => {
     }),
   ])
 
+  const unOnboardedOrganization = await prisma.organization.create({
+    data: {
+      name: faker.company.name(),
+      siret: faker.finance.accountNumber(14),
+      isCR: false,
+      onboarded: false,
+    },
+  })
+  const onboardingPassword = await signPassword(`onboarding`)
+  await prisma.user.create({
+    data: {
+      email: `onboarding@yopmail.com`,
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      organizationId: unOnboardedOrganization.id,
+      password: onboardingPassword,
+      level: Level.Initial,
+      role: Role.DEFAULT,
+      isActive: true,
+      isValidated: true,
+    },
+  })
+
   const organizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 10 }).map((_, index) => ({
       name: faker.company.name(),
