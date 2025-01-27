@@ -100,6 +100,7 @@ const users = async () => {
       name: faker.company.name(),
       siret: faker.finance.accountNumber(14),
       isCR: index % 2 === 0,
+      onboarded: true,
     })),
   })
 
@@ -111,6 +112,7 @@ const users = async () => {
       name: faker.company.name(),
       parentId: faker.helpers.arrayElement(crOrganizations).id,
       isCR: false,
+      onboarded: true,
     })),
   })
 

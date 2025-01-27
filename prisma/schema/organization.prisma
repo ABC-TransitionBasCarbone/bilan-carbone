@@ -3,9 +3,10 @@ model Organization {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
-  name  String
-  siret String?
-  isCR  Boolean @map("is_cr")
+  name      String
+  siret     String?
+  isCR      Boolean @map("is_cr")
+  onboarded Boolean @default(false)
 
   users     User[]
   sites     Site[]
