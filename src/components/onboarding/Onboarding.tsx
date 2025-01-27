@@ -5,7 +5,8 @@ import { onboardOrganizationCommand } from '@/services/serverFunctions/organizat
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Organization, Role } from '@prisma/client'
-import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import OnboardingModal from './OnboardingModal'
 
@@ -14,9 +15,17 @@ interface Props {
 }
 
 const Onboarding = ({ organization }: Props) => {
-  const [open, setOpen] = useState(!organization.onboarded)
+  const [open, setOpen] = useState(false)
   const [step, setStep] = useState(0)
   const steps = 2
+
+  const searchParams = useSearchParams()
+  const onboarding = searchParams.get('onboarding')
+  useEffect(() => {
+    if (onboarding !== null && !organization.onboarded) {
+      setOpen(true)
+    }
+  }, [onboarding])
 
   const form = useForm<OnboardingCommand>({
     resolver: zodResolver(OnboardingCommandValidation),

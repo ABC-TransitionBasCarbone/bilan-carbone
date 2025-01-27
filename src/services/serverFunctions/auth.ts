@@ -1,4 +1,5 @@
 'use server'
+import { getRawOrganizationById } from '@/db/organization'
 import { getUserByEmail, updateUserPasswordForEmail } from '@/db/user'
 import jwt from 'jsonwebtoken'
 import { computePasswordValidation } from '../utils'
@@ -29,4 +30,13 @@ export const reset = async (email: string, password: string, token: string) => {
     }
   }
   return false
+}
+
+export const getLoginUrl = async (email: string) => {
+  const user = await getUserByEmail(email)
+  if (!user) {
+    return '/'
+  }
+  const organization = await getRawOrganizationById(user.organizationId)
+  return !organization || organization.onboarded ? '/' : '/?onboarding'
 }
