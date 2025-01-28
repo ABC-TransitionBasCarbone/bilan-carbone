@@ -52,8 +52,8 @@ export const filterAllowedStudies = async (user: User, studies: Study[]) => {
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateStudy = async (user: User, study: Prisma.StudyCreateInput, organizationId: string) => {
-  const dbUser = await getUserByEmail(user.email)
+export const canCreateStudy = async (userEmail: string, study: Prisma.StudyCreateInput, organizationId: string) => {
+  const dbUser = await getUserByEmail(userEmail)
 
   if (!dbUser) {
     return false
