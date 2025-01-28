@@ -1,8 +1,8 @@
 'use client'
 
+import { setOnboardedOrganization } from '@/services/serverFunctions/organization'
 import { Organization } from '@prisma/client'
 import { SessionProvider } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import OnboardingModal from './OnboardingModal'
 
@@ -11,15 +11,11 @@ interface Props {
 }
 
 const Onboarding = ({ organization }: Props) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
-  const searchParams = useSearchParams()
-  const onboarding = searchParams.get('onboarding')
   useEffect(() => {
-    if (onboarding !== null && !organization.onboarded) {
-      setOpen(true)
-    }
-  }, [onboarding])
+    setOnboardedOrganization(organization.id)
+  }, [])
 
   const onClose = () => setOpen(false)
 

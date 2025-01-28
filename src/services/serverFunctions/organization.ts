@@ -2,13 +2,13 @@
 
 import {
   createOrganization,
-  getOrganizationUsers,
   getRawOrganizationById,
   onboardOrganization,
+  setOnboarded,
   updateOrganization,
 } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
-import { Prisma, Role } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateOrganization, canUpdateOrganization } from '../permissions/organization'
@@ -55,6 +55,17 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
   await updateOrganization(command)
 }
 
+export const setOnboardedOrganization = async (organizationId: string) => {
+  const session = await auth()
+  const userOrganizationId = session?.user.organizationId
+
+  if (!session || !userOrganizationId || userOrganizationId !== organizationId) {
+    return NOT_AUTHORIZED
+  }
+
+  await setOnboarded(organizationId)
+}
+
 export const onboardOrganizationCommand = async (command: OnboardingCommand) => {
   const session = await auth()
   const organizationId = session?.user.organizationId
@@ -69,12 +80,7 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
     return NOT_AUTHORIZED
   }
 
-  if (command.role !== Role.ADMIN) {
-    const users = (await getOrganizationUsers(organizationId)) || []
-    if (!users.some((collaborator) => collaborator.role === Role.ADMIN)) {
-      command.role = Role.ADMIN
-    }
-  }
+  console.log('command : ', command.collaborators || [])
 
   // filter double email
   const addedEmails = new Set<string>()

@@ -1,8 +1,15 @@
-.modal {
+.dialog {
+  min-width: 34rem;
+  width: 60%;
+  max-width: 60rem !important;
+  margin: 0 !important;
+}
+
+.container {
   padding: 2rem;
 }
 
-.dot {
+.stepperDots {
   width: 6rem !important;
   height: 0.8rem !important;
   border-radius: 0.4rem !important;
@@ -28,6 +35,13 @@
   font-weight: bold;
 }
 
+.roleLabel {
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: var(--background);
+  width: fit-content;
+}
+
 .role {
   min-width: 14rem;
 }
@@ -47,9 +61,4 @@
 
 .deleteButton {
   height: 3.5rem;
-}
-
-.noSpacing {
-  margin: 0 !important;
-  padding: 0 !important;
 }

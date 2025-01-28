@@ -1,6 +1,5 @@
 'use client'
 
-import { getLoginUrl } from '@/services/serverFunctions/auth'
 import { TextField } from '@mui/material'
 import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
@@ -33,7 +32,7 @@ const LoginForm = () => {
       setSubmitting(false)
       setError(t('error'))
     } else {
-      router.push(await getLoginUrl(email))
+      router.push('/')
     }
   }
 

@@ -45,6 +45,12 @@ export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrg
     }),
   ])
 
+export const setOnboarded = (organizationId: string) =>
+  prismaClient.organization.update({
+    where: { id: organizationId },
+    data: { onboarded: true },
+  })
+
 export const onboardOrganization = async (
   userId: string,
   { organizationId, companyName, role, collaborators = [] }: OnboardingCommand,
@@ -66,7 +72,7 @@ export const onboardOrganization = async (
     await Promise.all([
       transaction.organization.update({
         where: { id: organizationId },
-        data: { name: companyName, onboarded: true },
+        data: { name: companyName },
       }),
       transaction.user.update({
         where: { id: userId },

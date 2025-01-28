@@ -28,9 +28,9 @@ const OnboardingModal = ({ open, onClose, organization }: Props) => {
   const { data: session, update } = useSession()
 
   const [activeStep, setActiveStep] = useState(0)
-  const steps = 2
+  const stepCount = 2
   const Step = activeStep === 0 ? Step1 : Step2
-  const buttonLabel = activeStep === steps - 1 ? 'validate' : 'next'
+  const buttonLabel = activeStep === stepCount - 1 ? 'validate' : 'next'
 
   const form = useForm<OnboardingCommand>({
     resolver: zodResolver(OnboardingCommandValidation),
@@ -44,10 +44,10 @@ const OnboardingModal = ({ open, onClose, organization }: Props) => {
     },
   })
 
-  const previousStep = () => setActiveStep(activeStep > 1 ? activeStep - 1 : 0)
+  const goToPreviousStep = () => setActiveStep(activeStep > 1 ? activeStep - 1 : 0)
 
   const onValidate = async () => {
-    if (activeStep < steps - 1) {
+    if (activeStep < stepCount - 1) {
       setActiveStep(activeStep + 1)
     } else {
       const values = form.getValues()
@@ -68,37 +68,42 @@ const OnboardingModal = ({ open, onClose, organization }: Props) => {
   }
 
   return (
-    <Dialog open={open} aria-labelledby="onboarding-dialog-title" aria-describedby="onboarding-dialog-description">
-      <div className={styles.modal}>
+    <Dialog
+      open={open}
+      aria-labelledby="onboarding-dialog-title"
+      aria-describedby="onboarding-dialog-description"
+      classes={{ paper: styles.dialog }}
+    >
+      <div className={styles.container}>
         <Form onSubmit={form.handleSubmit(onValidate)}>
           <div className="justify-end">
             <MUIButton className={styles.closeIcon} onClick={onClose}>
               <CloseIcon />
             </MUIButton>
           </div>
-          <DialogTitle className={styles.noSpacing}>
+          <DialogTitle className="noSpacing">
             <>
               <MobileStepper
                 className="mb2"
-                classes={{ dot: styles.dot, dotActive: styles.active }}
+                classes={{ dot: styles.stepperDots, dotActive: styles.active }}
                 style={{ padding: 0 }}
                 variant="dots"
-                steps={steps}
+                steps={stepCount}
                 position="static"
                 activeStep={activeStep}
-                sx={{ maxWidth: 400, flexGrow: 1 }}
-                nextButton={<></>}
-                backButton={<></>}
+                sx={{ flexGrow: 1 }}
+                nextButton={null}
+                backButton={null}
               />
               <p className={classNames(styles.stepTitle, 'mb2')}>{t(`title-${activeStep}`)}</p>
               <p>{t(`titleDescription-${activeStep}`)}</p>
             </>
           </DialogTitle>
-          <DialogContent className={styles.noSpacing}>
+          <DialogContent className="noSpacing">
             <Step form={form} />
           </DialogContent>
-          <DialogActions className={styles.noSpacing}>
-            {activeStep > 0 && <Button onClick={previousStep}>{t('previous')}</Button>}
+          <DialogActions className="noSpacing">
+            {activeStep > 0 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
             <Button type="submit">{t(buttonLabel)}</Button>
           </DialogActions>
         </Form>
