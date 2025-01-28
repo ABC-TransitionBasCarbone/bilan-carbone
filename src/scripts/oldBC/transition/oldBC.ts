@@ -91,7 +91,13 @@ const getColumnsIndex = async (organizationHeaders: string[], emissionFactorHead
   return { success: true, indexes }
 }
 
-export const uploadOldBCInformations = async (file: string, organizationId: string) => {
+export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
+  const user = await prismaClient.user.findUnique({ where: { email } })
+  if (!user || user.organizationId !== organizationId) {
+    console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
+    return
+  }
+
   const workSheetsFromFile = xlsx.parse(file)
 
   const organizationsSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Organisations')
