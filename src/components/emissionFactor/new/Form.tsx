@@ -1,10 +1,8 @@
 'use client'
-
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { defaultGazValues } from '@/constants/emissions'
 import { createEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
   CreateEmissionFactorCommand,
@@ -37,9 +35,8 @@ const NewEmissionFactorForm = () => {
       name: '',
       attribute: '',
       source: '',
-      ...defaultGazValues,
       totalCo2: 0,
-      parts: Array.from({ length: maxParts }, () => ({ name: '', ...defaultGazValues, totalCo2: 0 })),
+      parts: Array.from({ length: maxParts }, () => ({ name: '', totalCo2: 0 })),
       comment: '',
     },
   })

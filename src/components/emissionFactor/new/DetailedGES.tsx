@@ -29,7 +29,7 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
     if (detailedGES && !hasParts) {
       const total = emissionFactorValues
         .filter((value) => value !== undefined)
-        .reduce((acc, current) => acc + current, 0)
+        .reduce((acc, current) => acc + (current || 0), 0)
       form.setValue('totalCo2', total)
     }
   }, [form, hasParts, detailedGES, ...emissionFactorValues])
@@ -38,6 +38,7 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
     // @ts-expect-error cannot force type
     Array.from({ length: maxParts }).flatMap((_, index) => gazKeys.map((key) => `parts.${index}.${key}`)),
   )
+
   useEffect(() => {
     if (hasParts && detailedGES) {
       const values = form.getValues('parts')
@@ -45,7 +46,7 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
 
       let totalCo2 = 0
       emissionFactors.forEach((part, index) => {
-        const partTotalCo2 = gazKeys.filter((key) => !key.endsWith('b')).reduce((acc, gaz) => acc + part[gaz], 0)
+        const partTotalCo2 = gazKeys.filter((key) => !key.endsWith('b')).reduce((acc, gaz) => acc + (part[gaz] || 0), 0)
         totalCo2 += partTotalCo2
         form.setValue(`parts.${index}.totalCo2`, partTotalCo2)
       })
