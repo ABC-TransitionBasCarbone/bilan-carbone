@@ -147,7 +147,7 @@ export const createStudyCommand = async ({
     },
   } satisfies Prisma.StudyCreateInput
 
-  if (!(await canCreateStudy(session.user, study, organizationId))) {
+  if (!(await canCreateStudy(session.user.email, study, organizationId))) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 
