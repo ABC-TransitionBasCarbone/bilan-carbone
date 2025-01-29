@@ -71,7 +71,7 @@ const LoginForm = () => {
       </LoadingButton>
       <div>
         {t('firstConnection')}
-        <Link className="ml-2" href="/activation" prefetch={false}>
+        <Link data-testid="activation-button" className="ml-2" href="/activation" prefetch={false}>
           {t('activate')}
         </Link>
       </div>

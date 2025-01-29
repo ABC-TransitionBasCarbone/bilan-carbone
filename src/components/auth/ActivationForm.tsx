@@ -37,17 +37,18 @@ const ActivationForm = () => {
       <p>{t('description')}</p>
       <TextField
         className={authStyles.input}
-        required
+        data-testid="activation-email"
         label={t('email')}
         type="email"
         value={email}
         onChange={(event) => setEmail(event.target.value)}
+        required
       />
-      <LoadingButton type="submit" loading={submitting}>
+      <LoadingButton data-testid="activation-button" type="submit" loading={submitting}>
         {t('validate')}
       </LoadingButton>
       {error && (
-        <p className={styles.error}>
+        <p className={styles.error} data-testid="activation-form-error">
           {t.rich(error, {
             link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
           })}
