@@ -57,7 +57,7 @@ const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization }: 
           defaultOrganization && defaultOrganization.isCR
             ? {
                 label: defaultOrganization.name,
-                link: `/organization/${defaultOrganization.id}`,
+                link: `/organisations/${defaultOrganization.id}`,
               }
             : undefined,
         ].filter((link) => link !== undefined)}
