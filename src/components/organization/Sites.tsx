@@ -1,7 +1,6 @@
 'use client'
-
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import { formatNumber } from '@/utils/number'
+import { displayCA, formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
@@ -101,7 +100,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               }}
             />
           ) : (
-            `${formatNumber(getValue<number>() / 1000)}`
+            `${formatNumber(displayCA(getValue<number>(), 1000))}`
           ),
       },
     ] as ColumnDef<SitesCommand['sites'][0]>[]
