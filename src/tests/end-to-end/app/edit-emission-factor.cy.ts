@@ -29,7 +29,8 @@ describe('Edit emission factor', () => {
 
     cy.getByTestId('emission-part-0-expand').click()
     cy.getByTestId('emission-factor-part-0-name').type('My first part')
-    cy.getByTestId('emission-factor-part-0-type').type('Amont')
+    cy.getByTestId('emission-factor-part-0-type').click()
+    cy.get('[data-value="Amont"]').click()
     cy.getByTestId('emission-factor-part-0-co2f').type('1')
     cy.getByTestId('emission-factor-part-0-ch4f').type('2')
     cy.getByTestId('emission-factor-part-0-ch4b').type('3')
@@ -42,7 +43,8 @@ describe('Edit emission factor', () => {
 
     cy.getByTestId('emission-part-1-expand').click()
     cy.getByTestId('emission-factor-part-1-name').type('My second part')
-    cy.getByTestId('emission-factor-part-1-type').type('Combustion')
+    cy.getByTestId('emission-factor-part-1-type').click()
+    cy.get('[data-value="Combustion"]').click()
     cy.getByTestId('emission-factor-part-1-co2f').type('2')
     cy.getByTestId('emission-factor-part-1-ch4f').type('3')
     cy.getByTestId('emission-factor-part-1-ch4b').type('4')

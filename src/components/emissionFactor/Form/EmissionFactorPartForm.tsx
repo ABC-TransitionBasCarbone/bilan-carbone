@@ -1,11 +1,14 @@
 import Button from '@/components/base/Button'
+import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import CloseIcon from '@mui/icons-material/Close'
 import ExpandIcon from '@mui/icons-material/ExpandMore'
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, MenuItem } from '@mui/material'
+import { EmissionFactorPartType } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import { Control, UseFormReturn } from 'react-hook-form'
 import DetailedGESFields from './DetailedGESFields'
 import styles from './EmissionFactorPartForm.module.css'
@@ -26,6 +29,11 @@ const EmissionFactorPartForm = <T extends EmissionFactorCommand>({
   index,
 }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
+  const tType = useTranslations('emissionFactors.type')
+  const types = useMemo(
+    () => Object.values(EmissionFactorPartType).sort((a, b) => tType(a).localeCompare(tType(b))),
+    [tType],
+  )
 
   const control = form.control as Control<EmissionFactorCommand>
   const header =
@@ -56,14 +64,20 @@ const EmissionFactorPartForm = <T extends EmissionFactorCommand>({
               name={`parts.${index}.name`}
               label={t('name')}
             />
-            <FormTextField
+            <FormSelect
               data-testid={`emission-factor-part-${index}-type`}
+              className={styles.typeSelector}
               control={control}
               translation={t}
-              type="string"
               name={`parts.${index}.type`}
               label={t('partType')}
-            />
+            >
+              {types.map((type) => (
+                <MenuItem key={type} value={type}>
+                  {tType(type)}
+                </MenuItem>
+              ))}
+            </FormSelect>
           </div>
 
           {detailedGES && <DetailedGESFields form={form} index={index} />}

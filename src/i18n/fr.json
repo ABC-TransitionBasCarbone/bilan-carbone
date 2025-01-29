@@ -522,6 +522,25 @@
         "confirm": "Confirmer",
         "close": "Annuler"
       }
+    },
+    "type": {
+      "CarburantAmontCombustion": "Carburant (amont/combustion)",
+      "Amont": "Amont",
+      "Intrants": "Intrants",
+      "Combustion": "Combustion",
+      "TransportEtDistribution": "Transport et distribution",
+      "Energie": "Energie",
+      "Fabrication": "Fabrication",
+      "Traitement": "Traitement",
+      "Collecte": "Collecte",
+      "Autre": "Autre",
+      "Amortissement": "Amortissement",
+      "Incineration": "Incineration",
+      "EmissionsFugitives": "Emissions fugitives",
+      "Fuites": "Fuites",
+      "Transport": "Transport",
+      "CombustionALaCentrale": "Combustion à la centrale",
+      "Pertes": "Pertes"
     }
   },
   "level": {

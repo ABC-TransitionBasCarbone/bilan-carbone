@@ -130,19 +130,22 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('emission-part-0-expand').click()
     cy.getByTestId('emission-factor-part-0-name').type('My first part')
-    cy.getByTestId('emission-factor-part-0-type').type('Amont')
+    cy.getByTestId('emission-factor-part-0-type').click()
+    cy.get('[data-value="Amont"]').click()
     cy.getByTestId('emission-factor-part-0-totalCo2').should('be.visible')
     cy.getByTestId('emission-factor-part-0-totalCo2').type('3')
 
     cy.getByTestId('emission-part-1-expand').click()
     cy.getByTestId('emission-factor-part-1-name').type('My second part')
-    cy.getByTestId('emission-factor-part-1-type').type('Combustion')
+    cy.getByTestId('emission-factor-part-1-type').click()
+    cy.get('[data-value="Combustion"]').click()
     cy.getByTestId('emission-factor-part-1-totalCo2').should('be.visible')
     cy.getByTestId('emission-factor-part-1-totalCo2').type('6')
 
     cy.getByTestId('emission-part-2-expand').click()
     cy.getByTestId('emission-factor-part-2-name').type('My first part')
-    cy.getByTestId('emission-factor-part-2-type').type('Incineration')
+    cy.getByTestId('emission-factor-part-2-type').click()
+    cy.get('[data-value="Incineration"]').click()
     cy.getByTestId('emission-factor-part-2-totalCo2').should('be.visible')
     cy.getByTestId('emission-factor-part-2-totalCo2').type('12')
 
@@ -200,7 +203,8 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('emission-part-0-expand').click()
     cy.getByTestId('emission-factor-part-0-name').type('My first part')
-    cy.getByTestId('emission-factor-part-0-type').type('Amont')
+    cy.getByTestId('emission-factor-part-0-type').click()
+    cy.get('[data-value="Amont"]').click()
     cy.getByTestId('emission-factor-part-0-co2f').should('exist')
     cy.getByTestId('emission-factor-part-0-co2f').type('1')
     cy.getByTestId('emission-factor-part-0-ch4f').should('exist')
@@ -222,7 +226,8 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('emission-part-1-expand').click()
     cy.getByTestId('emission-factor-part-1-name').type('My second part')
-    cy.getByTestId('emission-factor-part-1-type').type('Combustion')
+    cy.getByTestId('emission-factor-part-1-type').click()
+    cy.get('[data-value="Combustion"]').click()
     cy.getByTestId('emission-factor-part-1-co2f').should('exist')
     cy.getByTestId('emission-factor-part-1-co2f').type('2')
     cy.getByTestId('emission-factor-part-1-ch4f').should('exist')
@@ -361,13 +366,15 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('emission-part-0-expand').click()
     cy.getByTestId('emission-factor-part-0-name').type('My first part')
-    cy.getByTestId('emission-factor-part-0-type').type('Amont')
+    cy.getByTestId('emission-factor-part-0-type').click()
+    cy.get('[data-value="Amont"]').click()
     cy.getByTestId('emission-factor-part-0-totalCo2').should('be.visible')
     cy.getByTestId('emission-factor-part-0-totalCo2').type('3')
 
     cy.getByTestId('emission-part-1-expand').click()
     cy.getByTestId('emission-factor-part-1-name').type('My second part')
-    cy.getByTestId('emission-factor-part-1-type').type('Combustion')
+    cy.getByTestId('emission-factor-part-1-type').click()
+    cy.get('[data-value="Combustion"]').click()
     cy.getByTestId('emission-factor-part-1-totalCo2').should('be.visible')
     cy.getByTestId('emission-factor-part-1-totalCo2').type('6')
 

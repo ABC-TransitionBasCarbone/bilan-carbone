@@ -1,7 +1,7 @@
 'use client'
 
 import Form from '@/components/base/Form'
-import { defaultGazValues, gazKeys } from '@/constants/emissions'
+import { gazKeys } from '@/constants/emissions'
 import { DetailedEmissionFactor } from '@/db/emissionFactors'
 import { Post, subPostsByPost } from '@/services/posts'
 import { updateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
@@ -43,7 +43,7 @@ const buildParts = (emissionFactor: EmissionFactor, partsCount: number) =>
         totalCo2: part.totalCo2 || getGazTotalValue(part),
       }
     }
-    return { name: '', ...defaultGazValues, totalCo2: 0 }
+    return { name: '', totalCo2: 0 }
   })
 
 const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
