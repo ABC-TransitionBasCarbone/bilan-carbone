@@ -69,6 +69,12 @@ const LoginForm = () => {
       <LoadingButton data-testid="login-button" type="submit" loading={submitting}>
         {t('login')}
       </LoadingButton>
+      <div>
+        {t('firstConnection')}
+        <Link className="ml-2" href="/activation" prefetch={false}>
+          {t('activate')}
+        </Link>
+      </div>
     </form>
   )
 }

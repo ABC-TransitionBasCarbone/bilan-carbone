@@ -10,12 +10,13 @@ import {
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
-import { DAY, TIME_IN_MS } from '@/utils/time'
+import { DAY, HOUR, TIME_IN_MS } from '@/utils/time'
 import { User as DBUser, Organization, Role } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
 import { auth } from '../auth'
 import {
+  sendActivationEmail,
   sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
@@ -26,12 +27,12 @@ import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 import { AddMemberCommand, EditProfileCommand } from './user.command'
 
-const updateUserResetToken = async (email: string) => {
+const updateUserResetToken = async (email: string, duration: number) => {
   const resetToken = Math.random().toString(36)
   const payload = {
     email,
     resetToken,
-    exp: Math.round(Date.now() / TIME_IN_MS) + DAY, // 24 hours expiration
+    exp: Math.round(Date.now() / TIME_IN_MS) + duration,
   }
 
   await updateUserResetTokenForEmail(email, resetToken)
@@ -39,7 +40,7 @@ const updateUserResetToken = async (email: string) => {
 }
 
 export const sendNewUser = async (email: string) => {
-  const token = await updateUserResetToken(email)
+  const token = await updateUserResetToken(email, 1 * DAY)
   return sendNewUserEmail(email, token)
 }
 
@@ -72,7 +73,7 @@ export const sendInvitation = async (
         )
   }
 
-  const token = await updateUserResetToken(email)
+  const token = await updateUserResetToken(email, 1 * DAY)
   return role
     ? sendNewUserOnStudyInvitationEmail(
         email,
@@ -91,6 +92,11 @@ export const sendInvitation = async (
         organization.name,
         `${user.firstName} ${user.lastName}`,
       )
+}
+
+export const sendActivation = async (email: string) => {
+  const token = await updateUserResetToken(email, 1 * HOUR)
+  return sendActivationEmail(email, token)
 }
 
 export const addMember = async (member: AddMemberCommand) => {
@@ -176,4 +182,13 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
     return NOT_AUTHORIZED
   }
   await updateProfile(session.user.id, command)
+}
+
+export const activateEmail = async (email: string) => {
+  const user = await getUserByEmail(email)
+  if (!user || !user.level || user.isActive || user.isValidated) {
+    return NOT_AUTHORIZED
+  }
+  await validateUser(email)
+  await sendActivation(email)
 }
