@@ -12,7 +12,18 @@ const StudyPage = ({ study }: Props) => {
 
   return (
     <>
-      <Breadcrumbs current={study.name} links={[{ label: tNav('home'), link: '/' }]} />
+      <Breadcrumbs
+        current={study.name}
+        links={[
+          { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organization/${study.organization.id}`,
+              }
+            : undefined,
+        ].filter((link) => link !== undefined)}
+      />
       <StudyDetails study={study} />
     </>
   )

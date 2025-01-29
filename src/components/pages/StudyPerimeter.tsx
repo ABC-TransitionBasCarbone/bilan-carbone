@@ -32,8 +32,14 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
         current={tNav('studyPerimeter')}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organization/${study.organization.id}`,
+              }
+            : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
         <StudyPerimeter study={study} organization={organization} userRoleOnStudy={userRoleOnStudy} />
