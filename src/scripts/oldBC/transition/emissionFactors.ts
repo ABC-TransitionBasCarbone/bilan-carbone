@@ -78,7 +78,8 @@ export const uploadEmissionFactors = async (
     .filter((row) => !row[indexes['FE_BCPlus']])
     .filter((row) => row[indexes['EF_TYPE']] !== 'Consolidé')
     .filter((row) => existingEmissionFactorParts.every((ef) => ef.oldBCId !== row[indexes['EFV_GUID']]))
-    .filter((row) => allEmissionFactors.every((ef) => ef.oldBCId !== row[indexes['GUID']]))
+    .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row[indexes['GUID']]))
+
   const sumByGuid: Record<
     string,
     {
@@ -114,7 +115,7 @@ export const uploadEmissionFactors = async (
   })
 
   const inconsistentGuids = Object.entries(sumByGuid).filter(([guid, sum]) => {
-    const emissionFactor = existingEmissionFactors.find((ef) => ef.oldBCId === guid)
+    const emissionFactor = allEmissionFactors.find((ef) => ef.oldBCId === guid)
     return (
       emissionFactor &&
       (emissionFactor.totalCo2 !== sum.totalCo2 ||
