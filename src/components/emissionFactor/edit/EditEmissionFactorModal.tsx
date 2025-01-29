@@ -1,8 +1,10 @@
 import Button from '@/components/base/Button'
+import LoadingButton from '@/components/base/LoadingButton'
 import { deleteEmissionFactor } from '@/services/serverFunctions/emissionFactor'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 interface Props {
   emissionFactorId: string
@@ -12,13 +14,16 @@ interface Props {
 
 const EditEmissionFactorModal = ({ emissionFactorId, action, setAction }: Props) => {
   const t = useTranslations('emissionFactors.edit.modal')
+  const [deleting, setDeleting] = useState(false)
   const router = useRouter()
   const onCancel = () => setAction(undefined)
   const onConfirm = () => {
     if (action === 'edit') {
       router.push(`/facteurs-d-emission/${emissionFactorId}/modifier`)
     } else if (action === 'delete') {
+      setDeleting(true)
       deleteEmissionFactor(emissionFactorId)
+      setDeleting(false)
       setAction(undefined)
       router.refresh()
     }
@@ -35,9 +40,9 @@ const EditEmissionFactorModal = ({ emissionFactorId, action, setAction }: Props)
         <Button data-testid={`${label}-cancel`} onClick={onCancel}>
           {t('close')}
         </Button>
-        <Button data-testid={`${label}-confirm`} onClick={onConfirm}>
+        <LoadingButton data-testid={`${label}-confirm`} onClick={onConfirm} loading={deleting}>
           {t('confirm')}
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )
