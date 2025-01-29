@@ -21,8 +21,8 @@ interface Props {
 
 const ResetForm = ({ user, token }: Props) => {
   useEffect(() => {
-    checkToken(token).then((resetAlreadyUsed) => {
-      setResetLinkAlreadyUsed(resetAlreadyUsed)
+    checkToken(token).then((invalidtoken) => {
+      setInvalidResetLink(invalidtoken)
     })
   }, [])
 
@@ -37,7 +37,7 @@ const ResetForm = ({ user, token }: Props) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [resetLinkAlreadyUsed, setResetLinkAlreadyUsed] = useState(false)
+  const [invalidResetLink, setInvalidResetLink] = useState(false)
   const [showPassword1, setShowPassword1] = useState(false)
   const [showPassword2, setShowPassword2] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -45,7 +45,7 @@ const ResetForm = ({ user, token }: Props) => {
 
   const passwordValidation = useMemo(() => computePasswordValidation(password), [password])
 
-  if (resetLinkAlreadyUsed) {
+  if (invalidResetLink) {
     return <ResetLinkAlreadyUsed />
   }
 
