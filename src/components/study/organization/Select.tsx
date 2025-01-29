@@ -1,5 +1,4 @@
 'use client'
-
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import LinkButton from '@/components/base/LinkButton'
@@ -7,6 +6,7 @@ import { FormSelect } from '@/components/form/Select'
 import Sites from '@/components/organization/Sites'
 import { OrganizationWithSites } from '@/db/user'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
+import { displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
@@ -33,7 +33,11 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
     if (organization) {
       form.setValue(
         'sites',
-        organization.sites.map((site) => ({ ...site, ca: site.ca ? site.ca / 1000 : 0, selected: false })),
+        organization.sites.map((site) => ({
+          ...site,
+          ca: site.ca ? displayCA(site.ca, 1000) : 0,
+          selected: false,
+        })),
       )
     } else {
       form.setValue('sites', [])

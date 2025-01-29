@@ -1,5 +1,4 @@
 'use client'
-
 import Button from '@/components/base/Button'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import Sites from '@/components/organization/Sites'
@@ -12,6 +11,7 @@ import {
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
 } from '@/services/serverFunctions/study.command'
+import { displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
@@ -79,7 +79,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   useEffect(() => {
     siteForm.setValue(
       'sites',
-      siteList.map((site) => ({ ...site, ca: site.ca / 1000 })),
+      siteList.map((site) => ({ ...site, ca: displayCA(site.ca, 1000) })),
     )
   }, [siteList, isEditing])
 
