@@ -48,7 +48,11 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
     if (!sites.some((site) => site.selected)) {
       setError(t('validation.sites'))
     } else {
-      if (sites.filter((site) => site.selected).some((site) => site.etp <= 0 || site.ca <= 0)) {
+      if (
+        sites
+          .filter((site) => site.selected)
+          .some((site) => Number.isNaN(site.etp) || site.etp <= 0 || Number.isNaN(site.ca) || site.ca <= 0)
+      ) {
         setError(t('validation.etpCa'))
       } else {
         selectOrganization(organization)
