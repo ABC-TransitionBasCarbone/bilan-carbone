@@ -22,5 +22,8 @@
   --header-height: 4rem;
 
   --success: #13ab27;
+
   --error: #ff0000;
+  --error-40: #e50000;
+  --error-60: #990000;
 }

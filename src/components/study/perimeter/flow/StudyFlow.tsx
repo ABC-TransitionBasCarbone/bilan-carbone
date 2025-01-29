@@ -1,13 +1,13 @@
 'use client'
 
-import Button from '@/components/base/Button'
+import LoadingButton from '@/components/base/LoadingButton'
 import { FullStudy } from '@/db/study'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { addFlowToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
-import { InputLabel, Button as MUIButton } from '@mui/material'
+import { InputLabel } from '@mui/material'
 import { Document } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -31,6 +31,9 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
 
   const router = useRouter()
   const [error, setError] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const [downloading, setDownloading] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [selectedFlow, setSelectedFlow] = useState<Document | undefined>(initialDocument)
 
   useEffect(() => {
@@ -49,7 +52,9 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
       return
     }
 
+    setUploading(true)
     const result = await addFlowToStudy(study.id, file)
+    setUploading(false)
     if (result) {
       setError(t(result))
       return
@@ -61,8 +66,10 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     if (!selectedFlow) {
       return
     }
+    setDownloading(true)
     const url = await getDocumentUrl(selectedFlow, study.id)
     downloadFromUrl(url, selectedFlow.name)
+    setDownloading(false)
   }
 
   const removeDocument = async () => {
@@ -70,7 +77,9 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     if (!selectedFlow) {
       return
     }
+    setDeleting(true)
     const result = await deleteFlowFromStudy(selectedFlow, study.id)
+    setDeleting(false)
     if (result) {
       setError(t(result))
       return
@@ -86,11 +95,12 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
         canAddFlow
           ? [
               {
-                actionType: 'button',
+                actionType: 'loadingButton',
                 component: 'label',
                 role: undefined,
                 variant: 'contained',
                 tabIndex: -1,
+                loading: uploading,
                 children: (
                   <div className="align-center">
                     {t('add')}
@@ -116,24 +126,27 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
             <InputLabel id="flow-selector-label">{t('flowSelector')}</InputLabel>
             <div className={classNames(styles.flowButtons, 'flex grow')}>
               <FlowSelector documents={documents} selectedFlow={selectedFlow} setSelectedFlow={setSelectedFlow} />
-              <Button
+              <LoadingButton
                 aria-label={t('download')}
                 title={t('download')}
                 data-testid="flow-mapping-download"
                 onClick={downloadDocument}
+                loading={downloading}
+                iconButton
               >
                 <DownloadIcon />
-              </Button>
-              <MUIButton
+              </LoadingButton>
+              <LoadingButton
+                aria-label={t('removeFlow')}
+                title={t('removeFlow')}
                 data-testid="flow-mapping-delete"
                 onClick={removeDocument}
-                variant="contained"
+                loading={deleting}
+                iconButton
                 color="error"
-                title={t('removeFlow')}
-                aria-label={t('removeFlow')}
               >
                 <DeleteIcon />
-              </MUIButton>
+              </LoadingButton>
             </div>
           </div>
           <StudyFlowViewer selectedFlow={selectedFlow} studyId={study.id} />

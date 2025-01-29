@@ -9,7 +9,14 @@
     background-color: var(--primary-60) !important;
   }
 
+  &[aria-disabled='true'],
   &:disabled {
     background-color: var(--neutral-30) !important;
+  }
+}
+.error {
+  background-color: var(--error-40) !important;
+  &:hover {
+    background-color: var(--error-60) !important;
   }
 }

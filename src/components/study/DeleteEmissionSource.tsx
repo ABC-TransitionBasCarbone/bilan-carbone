@@ -4,14 +4,7 @@ import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { deleteEmissionSource } from '@/services/serverFunctions/emissionSource'
 import DeleteIcon from '@mui/icons-material/Delete'
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button as MUIButton,
-} from '@mui/material'
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
@@ -56,7 +49,7 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <MUIButton
+      <Button
         data-testid="emission-source-delete"
         onClick={() => setOpen(true)}
         variant="contained"
@@ -65,7 +58,7 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
         title={t('delete')}
       >
         <DeleteIcon />
-      </MUIButton>
+      </Button>
     </>
   )
 }
