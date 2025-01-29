@@ -23,9 +23,15 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
         current={tNav('newStudyRight')}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organization/${study.organization.id}`,
+              }
+            : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
           { label: tNav('studyRights'), link: `/etudes/${study.id}/cadrage` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
         <NewStudyRightForm study={study} user={user} users={filteredUsers} />

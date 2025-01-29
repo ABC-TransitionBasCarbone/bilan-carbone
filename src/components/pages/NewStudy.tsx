@@ -50,7 +50,18 @@ const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization }: 
 
   return (
     <>
-      <Breadcrumbs current={tNav('newStudy')} links={[{ label: tNav('home'), link: '/' }]} />
+      <Breadcrumbs
+        current={tNav('newStudy')}
+        links={[
+          { label: tNav('home'), link: '/' },
+          defaultOrganization && defaultOrganization.isCR
+            ? {
+                label: defaultOrganization.name,
+                link: `/organization/${defaultOrganization.id}`,
+              }
+            : undefined,
+        ].filter((link) => link !== undefined)}
+      />
       {organization ? (
         <NewStudyForm user={user} usersEmail={usersEmail} form={form} />
       ) : (
