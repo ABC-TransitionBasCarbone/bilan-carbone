@@ -25,7 +25,7 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts }: Props) => {
           study.organization.isCR
             ? {
                 label: study.organization.name,
-                link: `/organization/${study.organization.id}`,
+                link: `/organisations/${study.organization.id}`,
               }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },

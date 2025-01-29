@@ -25,7 +25,7 @@ const StudyContributionPage = ({ study }: Props) => {
           study.organization.isCR
             ? {
                 label: study.organization.name,
-                link: `/organization/${study.organization.id}`,
+                link: `/organisations/${study.organization.id}`,
               }
             : undefined,
 
