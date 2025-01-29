@@ -142,9 +142,13 @@
     "admin": "Admin",
     "profile": "Profile",
     "study": "Study",
-    "team": "Team",
-    "organization": "Organization",
-    "transition": "BC+ transition"
+    "organization": "My organization",
+    "transition": "BC+ transition",
+    "logout": "Log out",
+    "methodology": "Methodology",
+    "organizations": "My carbon assessments",
+    "team": "My team",
+    "information": "Global informations"
   },
   "results": {
     "byPost": "Results by post",
@@ -153,7 +157,6 @@
   "profile": {
     "title": "My profile",
     "legalNotices": "Legal notices",
-    "logout": "Log out",
     "firstName": "First Name",
     "lastName": "Last Name",
     "cancelUpdate": "Cancel",

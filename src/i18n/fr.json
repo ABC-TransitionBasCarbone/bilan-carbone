@@ -142,9 +142,13 @@
     "home": "Accueil",
     "profile": "Profil",
     "study": "Étude",
-    "team": "Équipe",
-    "organization": "Organisation",
-    "transition": "Transition BC+"
+    "organization": "Mon organisation",
+    "transition": "Transition BC+",
+    "logout": "Se déconnecter",
+    "methodology": "Méthodologie",
+    "organizations": "Mes bilans carbone",
+    "team": "Mon équipe",
+    "information": "Informations générales"
   },
   "results": {
     "byPost": "Résultats par poste",
@@ -153,7 +157,6 @@
   "profile": {
     "title": "Mon profil",
     "legalNotices": "Mentions légales",
-    "logout": "Se déconnecter",
     "firstName": "Prénom",
     "lastName": "Nom",
     "cancelUpdate": "Annuler",
