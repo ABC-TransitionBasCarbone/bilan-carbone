@@ -420,6 +420,8 @@
     "create": {
       "title": "Ajouter un facteur d'émission",
       "create": "Ajouter le facteur d'émission",
+      "update": "Mettre à jour",
+      "cancel": "Annuler",
       "name": "Nom",
       "attribute": "Détails",
       "unit": "Unité",
@@ -471,6 +473,8 @@
       "location": "Localisation",
       "locationSearch": "Rechercher une localisation",
       "Manual": "Manuelle",
+      "edit": "Éditer le facteur d'émissions",
+      "delete": "Supprimer facteur d'émissions",
       "name": "Nom",
       "none": "Aucune",
       "no": "Non",
@@ -507,6 +511,36 @@
       "geographicRepresentativeness": "Représentativité géographique :",
       "temporalRepresentativeness": "Représentativité temporelle :",
       "completeness": "Complétude :"
+    },
+    "edit": {
+      "title": "Modifier le facteur d'émissions ({name})",
+      "modal": {
+        "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
+        "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
+        "title": "Modifier un facteur d’émission",
+        "description": "Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées. Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
+        "confirm": "Confirmer",
+        "close": "Annuler"
+      }
+    },
+    "type": {
+      "CarburantAmontCombustion": "Carburant (amont/combustion)",
+      "Amont": "Amont",
+      "Intrants": "Intrants",
+      "Combustion": "Combustion",
+      "TransportEtDistribution": "Transport et distribution",
+      "Energie": "Energie",
+      "Fabrication": "Fabrication",
+      "Traitement": "Traitement",
+      "Collecte": "Collecte",
+      "Autre": "Autre",
+      "Amortissement": "Amortissement",
+      "Incineration": "Incineration",
+      "EmissionsFugitives": "Emissions fugitives",
+      "Fuites": "Fuites",
+      "Transport": "Transport",
+      "CombustionALaCentrale": "Combustion à la centrale",
+      "Pertes": "Pertes"
     }
   },
   "level": {

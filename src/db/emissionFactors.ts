@@ -1,4 +1,6 @@
-import { type Prisma } from '@prisma/client'
+import { UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
+import { Session } from 'next-auth'
 import { unstable_cache } from 'next/cache'
 import { prismaClient } from './client'
 
@@ -10,6 +12,7 @@ const selectEmissionFactor = {
   source: true,
   unit: true,
   importedFrom: true,
+  organizationId: true,
   reliability: true,
   technicalRepresentativeness: true,
   geographicRepresentativeness: true,
@@ -88,6 +91,57 @@ export const createEmissionFactor = (emissionFactor: Prisma.EmissionFactorCreate
     data: emissionFactor,
   })
 
+export const updateEmissionFactor = async (
+  session: Session,
+  local: string,
+  { id, name, unit, attribute, comment, parts, subPost, ...command }: UpdateEmissionFactorCommand,
+) => {
+  const emissionFactor = {
+    ...command,
+    importedFrom: Import.Manual,
+    status: EmissionFactorStatus.Valid,
+    reliability: 5,
+    organization: { connect: { id: session?.user.organizationId as string } },
+    unit: unit as Unit,
+    subPosts: [subPost],
+  }
+  await prismaClient.$transaction(async (transaction) => {
+    await transaction.emissionFactor.update({
+      where: { id },
+      data: emissionFactor,
+    })
+    await transaction.emissionFactorMetaData.upsert({
+      where: {
+        emissionFactorId_language: { emissionFactorId: id, language: local },
+      },
+      create: { emissionFactorId: id, language: local, title: name, attribute, comment },
+      update: { language: local, title: name, attribute, comment },
+    })
+    const emissionFactorParts = await transaction.emissionFactorPart.findMany({
+      where: { emissionFactorId: id },
+      select: { id: true },
+    })
+    const emissionFactorPartIds = emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id)
+    await transaction.emissionFactorPartMetaData.deleteMany({
+      where: { emissionFactorPartId: { in: emissionFactorPartIds } },
+    })
+    await transaction.emissionFactorPart.deleteMany({ where: { id: { in: emissionFactorPartIds } } })
+    await Promise.all(
+      parts.map(({ name, ...part }) =>
+        prismaClient.emissionFactorPart.create({
+          data: {
+            emissionFactorId: id,
+            ...part,
+            metaData: {
+              create: { language: local, title: name },
+            },
+          },
+        }),
+      ),
+    )
+  })
+}
+
 const gazColumns = {
   ch4b: true,
   ch4f: true,
@@ -104,6 +158,7 @@ export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
   prismaClient.emissionFactor.findMany({
     select: {
       id: true,
+      organizationId: true,
       ...gazColumns,
       reliability: true,
       technicalRepresentativeness: true,
@@ -121,3 +176,23 @@ export const getEmissionFactorsWithPartsInIds = async (ids: string[]) =>
   })
 
 export type EmissionFactorWithParts = AsyncReturnType<typeof getEmissionFactorsWithPartsInIds>[0]
+
+export const getEmissionFactorDetailsById = async (id: string) =>
+  prismaClient.emissionFactor.findUnique({
+    where: { id },
+    select: {
+      ...selectEmissionFactor,
+      ...gazColumns,
+      organizationId: true,
+      emissionFactorParts: {
+        select: {
+          ...gazColumns,
+          type: true,
+          metaData: {
+            select: { title: true, language: true },
+          },
+        },
+      },
+    },
+  })
+export type DetailedEmissionFactor = AsyncReturnType<typeof getEmissionFactorDetailsById>

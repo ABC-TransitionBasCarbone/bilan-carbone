@@ -2,35 +2,50 @@
 
 import { FormTextField } from '@/components/form/TextField'
 import { gazKeys } from '@/constants/emissions'
-import { CreateEmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
+import { EmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from './DetailedGES.module.css'
 import DetailedGESFields from './DetailedGESFields'
 import EmissionFactorPartForm from './EmissionFactorPartForm'
 
-interface Props {
-  form: UseFormReturn<CreateEmissionFactorCommand>
+interface Props<T extends EmissionFactorCommand> {
+  form: UseFormReturn<T>
+  initialDetailedGES?: boolean
   hasParts: boolean
   setHasParts: (value: boolean) => void
   partsCount: number
   setPartsCount: (value: number) => void
 }
 
-const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }: Props) => {
+const DetailedGES = <T extends EmissionFactorCommand>({
+  form,
+  initialDetailedGES,
+  hasParts,
+  setHasParts,
+  partsCount,
+  setPartsCount,
+}: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
-  const [detailedGES, setDetailedGES] = useState(false)
+  const [detailedGES, setDetailedGES] = useState<boolean>(initialDetailedGES || false)
 
-  const emissionFactorValues = form.watch(gazKeys.filter((key) => !key.endsWith('b')))
+  const control = form.control as Control<EmissionFactorCommand>
+  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
+  const getValues = form.getValues as UseFormGetValues<EmissionFactorCommand>
+
+  const emissionFactorValues = (form as UseFormReturn<EmissionFactorCommand>).watch(
+    gazKeys.filter((key) => !key.endsWith('b')),
+  )
+
   useEffect(() => {
     if (detailedGES && !hasParts) {
       const total = emissionFactorValues
         .filter((value) => value !== undefined)
         .reduce((acc, current) => acc + (current || 0), 0)
-      form.setValue('totalCo2', total)
+      setValue('totalCo2', total)
     }
   }, [form, hasParts, detailedGES, ...emissionFactorValues])
 
@@ -41,16 +56,16 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
 
   useEffect(() => {
     if (hasParts && detailedGES) {
-      const values = form.getValues('parts')
+      const values = getValues('parts')
       const emissionFactors = values.filter((_, index) => index < partsCount)
 
       let totalCo2 = 0
       emissionFactors.forEach((part, index) => {
         const partTotalCo2 = gazKeys.filter((key) => !key.endsWith('b')).reduce((acc, gaz) => acc + (part[gaz] || 0), 0)
         totalCo2 += partTotalCo2
-        form.setValue(`parts.${index}.totalCo2`, partTotalCo2)
+        setValue(`parts.${index}.totalCo2`, partTotalCo2)
       })
-      form.setValue('totalCo2', totalCo2)
+      setValue('totalCo2', totalCo2)
     }
   }, [detailedGES, form, partsCount, hasParts, ...emissionFactorPartsValues])
 
@@ -60,9 +75,9 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
   )
   useEffect(() => {
     if (hasParts && !detailedGES) {
-      const values = form.getValues('parts')
+      const values = getValues('parts')
       const emissionFactors = values.filter((_, index) => index < partsCount)
-      form.setValue(
+      setValue(
         'totalCo2',
         emissionFactors.reduce((acc, current) => acc + current.totalCo2, 0 as number),
       )
@@ -78,6 +93,16 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
     }
   }
 
+  const deletePart = (i: number) => {
+    if (partsCount > 1) {
+      const parts = getValues('parts')
+      const [element] = parts.splice(i, 1)
+      parts.splice(partsCount - 1, 0, element)
+      setValue('parts', parts)
+      setPartsCount(partsCount - 1)
+    }
+  }
+
   return (
     <>
       <div className={classNames(styles.questions, 'flex')}>
@@ -90,7 +115,7 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
               <Switch
                 checked={detailedGES}
                 onChange={(event) => setDetailedGES(event.target.checked)}
-                data-testid="new-emission-detailed-switch"
+                data-testid="emission-factor-detailed-switch"
               />
             }
             label={t(detailedGES ? 'yes' : 'no')}
@@ -104,10 +129,8 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
             control={
               <Switch
                 checked={hasParts}
-                onChange={(event) => {
-                  setHasParts(event.target.checked)
-                }}
-                data-testid="new-emission-multiple-switch"
+                onChange={(event) => setHasParts(event.target.checked)}
+                data-testid="emission-factor-multiple-switch"
               />
             }
             label={t(hasParts ? 'yes' : 'no')}
@@ -123,7 +146,7 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
                 type="number"
                 value={partsCount < 0 ? '' : partsCount}
                 onChange={(e) => updateEmissionFactorPartsCount(e.target.value)}
-                data-testid="new-emission-parts-count"
+                data-testid="emission-factor-parts-count"
                 slotProps={{
                   htmlInput: { min: 1, max: maxParts },
                   input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
@@ -141,6 +164,8 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
               detailedGES={detailedGES}
               form={form}
               index={index}
+              partsCount={partsCount}
+              deletePart={deletePart}
             />
           ))}
         </>
@@ -149,8 +174,8 @@ const DetailedGES = ({ form, hasParts, setHasParts, partsCount, setPartsCount }:
       )}
       <FormTextField
         disabled={detailedGES || hasParts}
-        data-testid="new-emission-totalCo2"
-        control={form.control}
+        data-testid="emission-factor-totalCo2"
+        control={control}
         translation={t}
         slotProps={{
           htmlInput: { min: 0 },
