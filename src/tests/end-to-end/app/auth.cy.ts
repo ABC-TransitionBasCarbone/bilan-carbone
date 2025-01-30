@@ -156,10 +156,15 @@ describe('Authentication', () => {
     cy.getByTestId('activation-form-error').should('be.visible')
 
     cy.getByTestId('activation-email').type('m')
+    cy.getByTestId('activation-success').should('not.exist')
     cy.getByTestId('activation-button').click()
 
     cy.wait('@activate')
-    cy.url().should('include', '/login')
+
+    cy.getByTestId('activation-success').should('be.visible')
+    cy.getByTestId('activation-email').should('not.exist')
+    cy.getByTestId('activation-button').should('not.exist')
+    cy.getByTestId('activation-form-error').should('not.exist')
 
     cy.visit('http://localhost:1080')
     cy.origin('http://localhost:1080', () => {

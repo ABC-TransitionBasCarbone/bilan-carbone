@@ -140,7 +140,8 @@
     "description": "Please use the same email you used when joining the Association for Low Carbon Transition.",
     "email": "Email to activate your account",
     "validate": "Validate",
-    "Not authorized": "You are not a member or have not completed the training. If you believe this is an error, please contact <link>support</link>."
+    "Not authorized": "You are not a member or have not completed the training. If you believe this is an error, please contact <link>support</link>.",
+    "success": "You have successfully activated your account ! You will receive an email to initialize your password."
   },
   "navigation": {
     "factors": "Emission factors",

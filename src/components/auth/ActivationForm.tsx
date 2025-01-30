@@ -4,7 +4,6 @@ import { activateEmail } from '@/services/serverFunctions/user'
 import { TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import LoadingButton from '../base/LoadingButton'
 import styles from './ActivationForm.module.css'
@@ -14,10 +13,10 @@ const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 
 const ActivationForm = () => {
   const t = useTranslations('activation')
-  const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -28,8 +27,12 @@ const ActivationForm = () => {
     if (result) {
       setError(result)
     } else {
-      router.push('/login')
+      setSuccess(true)
     }
+  }
+
+  if (success) {
+    return <p data-testid="activation-success">{t('success')}</p>
   }
 
   return (
@@ -42,9 +45,10 @@ const ActivationForm = () => {
         type="email"
         value={email}
         onChange={(event) => setEmail(event.target.value)}
+        disabled={success}
         required
       />
-      <LoadingButton data-testid="activation-button" type="submit" loading={submitting}>
+      <LoadingButton data-testid="activation-button" type="submit" disabled={success} loading={submitting}>
         {t('validate')}
       </LoadingButton>
       {error && (
