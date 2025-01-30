@@ -15,6 +15,7 @@ export const uploadOrganizations = async (
   indexes: Record<string, number>,
   userOrganizationId: string,
 ) => {
+  console.log('Import des organisations...')
   const organizations = data
     .slice(1)
     .map((row) => ({
@@ -62,9 +63,11 @@ export const uploadOrganizations = async (
         ),
     )
     .filter((organization) => organization.mainEntity === 1)
+
   // Je crée toutes les organisations sauf la mienne
   const organizationsToCreate = newOrganizations.filter((organization) => organization.userOrga !== 1)
   if (organizationsToCreate.length > 0) {
+    console.log(`Import de ${organizationsToCreate.length} organisations`)
     await transaction.organization.createMany({
       data: organizationsToCreate.map((organization) => ({
         parentId: userOrganizationId,
@@ -77,6 +80,7 @@ export const uploadOrganizations = async (
   }
 
   if (newOrganizations.length > 0) {
+    console.log(`Ajout de ${newOrganizations.length} sites par défaut`)
     // Et pour toutes les organisations j'ajoute un site par defaut
     await transaction.site.createMany({
       data: newOrganizations.map((organization) => ({
@@ -97,8 +101,12 @@ export const uploadOrganizations = async (
     .filter((site) => organizationsToCreate.some((organization) => organization.id === site.organizationId))
     .filter((site) => site.organizationId !== userOrganizationId)
   if (sitesToCreate.length > 0) {
+    console.log(`Import de ${sitesToCreate.length} sites`)
     await transaction.site.createMany({ data: sitesToCreate })
   }
 
+  if (existingOrganizations.length > 0) {
+    console.log(`${existingOrganizations.length} organisations ignorées car déjà existantes`)
+  }
   return existingOrganizations.length > 0
 }
