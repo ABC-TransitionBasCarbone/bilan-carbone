@@ -45,6 +45,8 @@ const fullStudyInclude = {
           geographicRepresentativeness: true,
           temporalRepresentativeness: true,
           completeness: true,
+          importedFrom: true,
+          importedId: true,
         },
       },
       contributor: {
