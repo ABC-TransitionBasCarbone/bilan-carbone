@@ -38,7 +38,7 @@ const OnboardingStep = ({ form }: Props) => {
           <span>{t('email')}</span>
           <div className={classNames(styles.collaborator, 'flex')}>
             <div className="grow">
-              <FormTextField control={form.control} name={`collaborators.${index}.email`} translation={t} />
+              <FormTextField control={form.control} name={`collaborators.${index}.email`} translation={t} fullWidth />
             </div>
             <div className="grow">
               <FormSelect
@@ -52,6 +52,7 @@ const OnboardingStep = ({ form }: Props) => {
                   anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
                   transformOrigin: { vertical: 'top', horizontal: 'left' },
                 }}
+                fullWidth
               >
                 <MenuItem key={Role.ADMIN} value={Role.ADMIN} className={classNames(styles.roleItem, 'flex-col')}>
                   <span className={styles.roleTitle}>{tRole(Role.ADMIN)}</span>
