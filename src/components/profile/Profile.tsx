@@ -1,4 +1,3 @@
-import Logout from '@/components/auth/Logout'
 import LocaleSelector from '@/components/navbar/LocaleSelector'
 import { updateUserProfile } from '@/services/serverFunctions/user'
 import { EditProfileCommand, EditProfileCommandValidation } from '@/services/serverFunctions/user.command'
@@ -112,9 +111,6 @@ const Profile = () => {
           )}
         </div>
         <div className="mb1">{session.user.email}</div>
-        <div className="mb1">
-          <Logout />
-        </div>
         <div className="mb1">
           <Link data-testid="legal-notices-link" href="/mentions-legales">
             {t('legalNotices')}

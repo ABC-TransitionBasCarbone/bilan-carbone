@@ -20,7 +20,6 @@ const UserView = async ({ user }: Props) => {
     hasUserToValidateInOrganization(user.organizationId),
   ])
   const isCR = organizations.find((organization) => organization.id === user.organizationId)?.isCR
-
   return (
     <>
       {!!hasUserToValidate && (user.role === Role.ADMIN || user.role === Role.GESTIONNAIRE) && (
