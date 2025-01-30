@@ -8,6 +8,7 @@ import {
   updateOrganization,
 } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
+import { uniqBy } from '@/utils/array'
 import { Prisma } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -80,17 +81,8 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
     return NOT_AUTHORIZED
   }
 
-  console.log('command : ', command.collaborators || [])
-
-  // filter double email
-  const addedEmails = new Set<string>()
-  let collaborators = (command.collaborators || []).filter((collaborator) => {
-    if (addedEmails.has(collaborator.email || '')) {
-      return false
-    }
-    addedEmails.add(collaborator.email || '')
-    return true
-  })
+  // filter duplicatd email
+  let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'email')
 
   // filter existing users
   for (const collaborator of collaborators) {
