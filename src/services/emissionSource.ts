@@ -1,7 +1,8 @@
 import { FullStudy } from '@/db/study'
-import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, Import, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
+import { wasteEmissionFactors } from './serverFunctions/wasteEmissionFactors'
 import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
 
 export const getEmissionSourceCompletion = (
@@ -100,11 +101,13 @@ const getEmissionSourceEmission = (
     emission = emission / emissionSource.depreciationPeriod
   }
 
-  if (wasteImpact) {
-    const name = emissionSource.name.toLowerCase()
-    if (name.endsWith(' - fin de vie moyenne') || name.endsWith(' - recyclage')) {
-      emission = emissionSource.emissionFactor.totalCo2 * wasteImpact
-    }
+  if (
+    wasteImpact &&
+    emissionSource.emissionFactor.importedFrom === Import.BaseEmpreinte &&
+    emissionSource.emissionFactor.importedId &&
+    wasteEmissionFactors[emissionSource.emissionFactor.importedId]
+  ) {
+    emission = emissionSource.value * wasteImpact
   }
   return emission
 }
