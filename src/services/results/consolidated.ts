@@ -46,7 +46,7 @@ export const computeResultsByPost = (
 
           return {
             post: subPost,
-            value: getEmissionSourcesTotalCo2(validatedEmissionSources),
+            value: getEmissionSourcesTotalCo2(validatedEmissionSources, study.wasteImpact),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: validatedEmissionSources.length,
             uncertainty: sumEmissionSourcesUncertainty(validatedEmissionSources),
