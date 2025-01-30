@@ -33,11 +33,6 @@
   justify-content: space-between;
 }
 
-.justify-end {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .align-center {
   display: flex;
   align-items: center;

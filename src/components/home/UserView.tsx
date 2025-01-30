@@ -4,7 +4,9 @@ import { User } from 'next-auth'
 import { Suspense } from 'react'
 import Actualities from '../actuality/Actualities'
 import Block from '../base/Block'
+import Onboarding from '../onboarding/Onboarding'
 import Organizations from '../organization/OrganizationsContainer'
+import NotFound from '../pages/NotFound'
 import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Studies from '../study/StudiesContainer'
 import UserToValidate from './UserToValidate'
@@ -19,7 +21,14 @@ const UserView = async ({ user }: Props) => {
     getUserOrganizations(user.email),
     hasUserToValidateInOrganization(user.organizationId),
   ])
-  const isCR = organizations.find((organization) => organization.id === user.organizationId)?.isCR
+
+  const userOrganization = organizations.find((organization) => organization.id === user.organizationId)
+  if (!userOrganization) {
+    return <NotFound />
+  }
+
+  const isCR = userOrganization.isCR
+
   return (
     <>
       {!!hasUserToValidate && (user.role === Role.ADMIN || user.role === Role.GESTIONNAIRE) && (
@@ -38,6 +47,7 @@ const UserView = async ({ user }: Props) => {
           {isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}
         </div>
       </Block>
+      {!userOrganization.onboarded && <Onboarding organization={userOrganization} />}
     </>
   )
 }

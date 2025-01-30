@@ -4,14 +4,29 @@
   width: fit-content !important;
   border-radius: 0.25rem !important;
   text-transform: unset !important;
+  border: 1px solid var(--primary-40) !important;
 
   &:hover {
     background-color: var(--primary-60) !important;
+    border-color: var(--primary-60) !important;
   }
 
   &[aria-disabled='true'],
   &:disabled {
     background-color: var(--neutral-30) !important;
+    border-color: var(--neutral-30) !important;
+  }
+}
+
+.secondary {
+  background-color: var(--neutral-00) !important;
+  color: var(--primary-40) !important;
+  border-color: var(--primary-40) !important;
+
+  &:hover {
+    background-color: var(--neutral-00) !important;
+    color: var(--primary-60) !important;
+    border-color: var(--primary-60) !important;
   }
 }
 .error {

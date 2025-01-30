@@ -875,5 +875,31 @@
   },
   "spinner": {
     "loading": "Chargement"
+  },
+  "onboarding": {
+    "title-0": "Bienvenue sur le BC+ ! Avant de commencer, veuillez configurer votre organisation",
+    "titleDescription-0": "Nous avons pré-rempli certaines informations concernant votre organisation (association, entreprise, ...) suite à votre adhésion à l'ABC. Vous pouvez modifier le nom de votre organisation maintenant, ou à tout moment dans le BC+ via la rubrique \"Organisation\".",
+    "title-1": "Gestion de votre équipe",
+    "titleDescription-1": "Vous pouvez d'ores et déjà ajouter vos collaborateurs au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Équipe\"",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "validate": "Valider",
+    "step1": {
+      "name": "Nom de mon organisation",
+      "role": "Mon rôle au sein de l'organisation",
+      "roleDescription": "Comme vous êtes le premier utilisateur du BC+ au sein de votre organisation, nous vous avons attribué le rôle d'administrateur. Une organisation doit toujours avoir au moins un administrateur, vous ne pourrez donc modifier votre rôle qu'après avoir ajouté un autre administrateur via la rubrique \"Équipe\""
+    },
+    "step2": {
+      "addCollaborator": "Ajouter un collaborateur",
+      "email": "Adresse email",
+      "role": "Rôle",
+      "adminDescription": "Peut inviter et gérer de nouveaux utilisateurs",
+      "collaboratorDescription": "Peut consulter les informations d'un bilan",
+      "validation": {
+        "email": "Adresse email invalide",
+        "requiredEmail": "E-mail obligatoire",
+        "requiredRole": "Rôle obligatoire"
+      }
+    }
   }
 }

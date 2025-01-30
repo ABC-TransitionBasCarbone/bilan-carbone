@@ -34,7 +34,12 @@ export const authOptions: NextAuthOptions = {
         }
       }
       if (trigger === 'update') {
-        return { ...token, firstName: session.firstName, lastName: session.lastName }
+        if (session.forceRefresh || session.role || session.level) {
+          const dbUser = await getUserByEmail(token.email || '')
+          session.role = dbUser ? dbUser.role : token.role
+          session.level = dbUser ? dbUser.level : token.level
+        }
+        return { ...token, ...session }
       }
       return token
     },
