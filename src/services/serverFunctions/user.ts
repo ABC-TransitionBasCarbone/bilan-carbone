@@ -198,7 +198,7 @@ export const activateEmail = async (email: string) => {
 export const getUserSettings = async () => {
   const session = await auth()
   if (!session || !session.user) {
-    return NOT_AUTHORIZED
+    return null
   }
   return getUserApplicationSettings(session.user.id)
 }
