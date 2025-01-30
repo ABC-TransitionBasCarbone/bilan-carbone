@@ -45,15 +45,15 @@ export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrg
     }),
   ])
 
-export const setOnboarded = (organizationId: string) =>
+export const setOnboarded = (organizationId: string, userId: string) =>
   prismaClient.organization.update({
     where: { id: organizationId },
-    data: { onboarded: true },
+    data: { onboarded: true, onboarderId: userId },
   })
 
 export const onboardOrganization = async (
   userId: string,
-  { organizationId, companyName, role, collaborators = [] }: OnboardingCommand,
+  { organizationId, companyName, collaborators = [] }: OnboardingCommand,
 ) => {
   await prismaClient.$transaction(async (transaction) => {
     const newCollaborators = []
@@ -76,7 +76,7 @@ export const onboardOrganization = async (
       }),
       transaction.user.update({
         where: { id: userId },
-        data: { role },
+        data: { role: Role.ADMIN },
       }),
       transaction.user.createMany({ data: newCollaborators }),
     ])

@@ -3,10 +3,12 @@ model Organization {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
-  name      String
-  siret     String?
-  isCR      Boolean @map("is_cr")
-  onboarded Boolean @default(false)
+  name        String
+  siret       String?
+  isCR        Boolean @map("is_cr")
+  onboarded   Boolean @default(false)
+  onboarderId String? @map("onboarder_id")
+  onboarder   User?   @relation("organizationOnboarder", fields: [onboarderId], references: [id])
 
   users     User[]
   sites     Site[]

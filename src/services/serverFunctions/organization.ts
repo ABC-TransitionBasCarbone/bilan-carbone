@@ -64,7 +64,7 @@ export const setOnboardedOrganization = async (organizationId: string) => {
     return NOT_AUTHORIZED
   }
 
-  await setOnboarded(organizationId)
+  await setOnboarded(organizationId, session.user.id)
 }
 
 export const onboardOrganizationCommand = async (command: OnboardingCommand) => {
@@ -77,7 +77,7 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
 
   const organization = await getRawOrganizationById(command.organizationId)
 
-  if (!organization || organization?.onboarded) {
+  if (!organization || organization.onboarderId !== session.user.id) {
     return NOT_AUTHORIZED
   }
 
@@ -92,5 +92,4 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
     }
   }
   await onboardOrganization(session.user.id, { ...command, collaborators })
-  return command.role
 }
