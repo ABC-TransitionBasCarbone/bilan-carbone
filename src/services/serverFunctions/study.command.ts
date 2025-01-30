@@ -146,3 +146,9 @@ export const NewStudyContributorCommandValidation = z.object({
 })
 
 export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>
+
+export const DeleteStudyCommandValidation = z.object({
+  id: z.string(),
+  name: z.string(),
+})
+export type DeleteStudyCommand = z.infer<typeof DeleteStudyCommandValidation>

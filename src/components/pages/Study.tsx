@@ -1,5 +1,8 @@
+'use server'
+
 import { FullStudy } from '@/db/study'
-import { useTranslations } from 'next-intl'
+import { canDeleteStudy } from '@/services/permissions/study'
+import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyDetails from '../study/StudyDetails'
 
@@ -7,8 +10,9 @@ interface Props {
   study: FullStudy
 }
 
-const StudyPage = ({ study }: Props) => {
-  const tNav = useTranslations('nav')
+const StudyPage = async ({ study }: Props) => {
+  const tNav = await getTranslations('nav')
+  const canDelete = await canDeleteStudy(study.id)
 
   return (
     <>
@@ -24,7 +28,7 @@ const StudyPage = ({ study }: Props) => {
             : undefined,
         ].filter((link) => link !== undefined)}
       />
-      <StudyDetails study={study} />
+      <StudyDetails study={study} canDeleteStudy={canDelete} />
     </>
   )
 }

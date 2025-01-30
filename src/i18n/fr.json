@@ -357,6 +357,16 @@
       "notAuthorized": "Action non authorisée",
       "removeFlow": "Supprimer le flux",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+    },
+    "delete": {
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "delete": "Supprimer l'étude",
+      "content": "Êtes vous sur de vouloir supprimer cette étude ? Toutes ses données seront supprimées définitivement et seront impossible à récupérées. Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
+      "name": "Nom de l'étude",
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+      "title": "Suppression d'une étude",
+      "wrongName": "Le nom ne matche pas"
     }
   },
   "emissionFactors": {
