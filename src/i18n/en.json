@@ -156,6 +156,7 @@
     "logout": "Log out",
     "methodology": "Methodology",
     "organizations": "My carbon assessments",
+    "settings": "Settings",
     "team": "My team",
     "information": "Global informations"
   },
@@ -175,6 +176,13 @@
       "firstName": "1 character minimum",
       "lastName": "1 character minimum"
     }
+  },
+  "settings": {
+    "title": "My application settings",
+    "validate": "Save",
+    "validatedEmissionSourcesOnly": "Only display the validated emission sources",
+    "yes": "Yes",
+    "no": "No"
   },
   "admin": {
     "title": "Administration",
