@@ -14,6 +14,7 @@ export const uploadEmissionFactors = async (
   transaction: Prisma.TransactionClient,
   data: (string | number)[][],
   indexes: Record<string, number>,
+  organizationId: string,
 ) => {
   console.log("Import des facteurs d'émissions...")
 
@@ -48,6 +49,7 @@ export const uploadEmissionFactors = async (
 
       return {
         id,
+        organizationId,
         importedFrom: Import.Manual,
         status: EmissionFactorStatus.Valid,
         oldBCId: getStringValue(row[indexes['EFV_GUID']]),
