@@ -1,4 +1,4 @@
-import { getUserByEmail } from '@/db/user'
+import { getUserByEmail, getUserByEmailWithSensibleInformations } from '@/db/user'
 import { Level, Role } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
@@ -70,7 +70,7 @@ export const authOptions: NextAuthOptions = {
         if (!credentials) {
           return null
         }
-        const user = await getUserByEmail(credentials.email)
+        const user = await getUserByEmailWithSensibleInformations(credentials.email)
         if (!user || !user.password || !user.isValidated) {
           return null
         }
