@@ -4,6 +4,23 @@ import { Prisma, Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 
+export const getUserByEmailWithSensibleInformations = (email: string) =>
+  prismaClient.user.findUnique({
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      role: true,
+      email: true,
+      organizationId: true,
+      level: true,
+      password: true,
+      resetToken: true,
+      isValidated: true,
+    },
+    where: { email },
+  })
+
 export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
 
 export const getUserByEmailWithAllowedStudies = (email: string) =>
