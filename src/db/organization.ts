@@ -29,13 +29,13 @@ export const createOrganization = (organization: Prisma.OrganizationCreateInput)
     data: organization,
   })
 
-export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrganizationCommand) =>
+export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrganizationCommand, caUnit: number) =>
   prismaClient.$transaction([
     ...sites.map((site) =>
       prismaClient.site.upsert({
         where: { id: site.id },
-        create: { id: site.id, organizationId, name: site.name, etp: site.etp, ca: site.ca * 1000 },
-        update: { name: site.name, etp: site.etp, ca: site.ca * 1000 },
+        create: { id: site.id, organizationId, name: site.name, etp: site.etp, ca: site.ca * caUnit },
+        update: { name: site.name, etp: site.etp, ca: site.ca * caUnit },
       }),
     ),
     prismaClient.site.deleteMany({ where: { organizationId, id: { notIn: sites.map((site) => site.id) } } }),

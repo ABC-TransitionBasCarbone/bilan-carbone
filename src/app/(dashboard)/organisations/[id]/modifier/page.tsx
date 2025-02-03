@@ -26,7 +26,7 @@ const OrganizationView = async (props: Props & UserProps) => {
     return <NotFound />
   }
 
-  return <EditOrganizationPage organization={organization} />
+  return <EditOrganizationPage organization={organization} user={props.user} />
 }
 
 export default withAuth(OrganizationView)

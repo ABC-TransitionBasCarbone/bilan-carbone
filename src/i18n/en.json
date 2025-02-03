@@ -181,7 +181,13 @@
     "validate": "Save",
     "validatedEmissionSourcesOnly": "Only display the validated emission sources",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "caUnit": {
+      "label": "Site's turnover unit",
+      "U": "€",
+      "K": "k€",
+      "M": "M€"
+    }
   },
   "admin": {
     "title": "Administration",
@@ -782,7 +788,7 @@
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "etp": "Employees",
-      "ca": "Turnover (k€)",
+      "ca": "Turnover ({unit})",
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",

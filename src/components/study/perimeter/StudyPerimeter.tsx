@@ -11,7 +11,8 @@ import {
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
 } from '@/services/serverFunctions/study.command'
-import { displayCA } from '@/utils/number'
+import { getUserSettings } from '@/services/serverFunctions/user'
+import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
@@ -35,8 +36,20 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   const [open, setOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [deleting, setDeleting] = useState(0)
+  const [caUnit, setCAUnit] = useState(defaultCAUnit)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const caUnit = (await getUserSettings())?.caUnit
+    if (caUnit !== undefined) {
+      setCAUnit(CA_UNIT_VALUES[caUnit])
+    }
+  }
 
   const form = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),
@@ -79,9 +92,9 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   useEffect(() => {
     siteForm.setValue(
       'sites',
-      siteList.map((site) => ({ ...site, ca: displayCA(site.ca, 1000) })),
+      siteList.map((site) => ({ ...site, ca: displayCA(site.ca, caUnit) })),
     )
-  }, [siteList, isEditing])
+  }, [siteList, isEditing, caUnit])
 
   const onSitesSubmit = async () => {
     const deletedSites = sites.filter((site) => {
