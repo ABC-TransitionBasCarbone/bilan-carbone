@@ -383,7 +383,7 @@
       "name": "Study name",
       "Not authorized": "You are not allowed to do this action",
       "title": "Study deletion",
-      "wrongName": "Name does not match"
+      "wrongName": "Study name does not match"
     }
   },
   "emissionFactors": {

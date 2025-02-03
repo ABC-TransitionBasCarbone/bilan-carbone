@@ -383,7 +383,7 @@
       "name": "Nom de l'étude",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "title": "Suppression d'une étude",
-      "wrongName": "Le nom ne matche pas"
+      "wrongName": "Le nom de l'étude ne correspond pas"
     }
   },
   "emissionFactors": {

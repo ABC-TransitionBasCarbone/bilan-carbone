@@ -36,7 +36,7 @@ describe('Delete study', () => {
     cy.getByTestId('study-deletion-error').should('not.exist')
     cy.getByTestId('confirm-study-deletion').click()
     cy.getByTestId('study-deletion-error').should('be.visible')
-    cy.getByTestId('study-deletion-error').should('have.text', 'Le nom ne matche pas')
+    cy.getByTestId('study-deletion-error').should('have.text', "Le nom de l'étude ne correspond pas")
 
     cy.getByTestId('delete-study-name-field').type('e')
 
