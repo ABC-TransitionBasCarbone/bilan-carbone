@@ -1,11 +1,11 @@
-import { Prisma, Role } from '@prisma/client'
 import { AccessOptions, Client } from 'basic-ftp'
-import { parse } from 'csv-parse'
 import dotenv from 'dotenv'
-import { prismaClient } from '../../db/client'
+import fs from 'fs'
+import path from 'path'
 
 export const getUsersFromFTP = async () => {
   const client = new Client()
+  client.ftp.verbose = true
 
   const accessOptions = {
     host: process.env.FTP_HOST,
@@ -17,47 +17,40 @@ export const getUsersFromFTP = async () => {
   await client.access(accessOptions)
 
   const fileName = process.env.FTP_FILE_NAME || ''
+  const filePath = process.env.FTP_FILE_PATH || ''
+  const fullPath = path.join(filePath, fileName)
 
-  const users: Prisma.UserCreateManyInput[] = []
-  const parseStream = parse({ delimiter: ';', columns: true, bom: true })
-    .on('data', (value) => {
-      if (users.length % 10 === 0) {
-        console.log(`Processed ${users.length} lines...`)
-      }
-      const email = value['User Email']
+  // Validate file name
+  const invalidChars = /[<>:"/\\|?*\x00-\x1F]/g
+  if (invalidChars.test(fileName)) {
+    console.error(`File name ${fileName} contains invalid characters`)
+    client.close()
+    return
+  }
 
-      users.push({
-        email,
-        role: Role.DEFAULT,
-        firstName: email,
-        lastName: email,
-        isActive: false,
-        isValidated: false,
-        organizationId: value['SIRET'],
-      })
-    })
-    .on('end', async () => {
-      console.log('Parsing complete, saving users to database...')
 
-      for (const user of users) {
-        if (user.organizationId) {
-          const result = await prismaClient.organization.findFirst({
-            where: { siret: { startsWith: user.organizationId } },
-          })
-          user.organizationId = result?.id
-        }
-      }
+  console.log(await client.list())
 
-      await prismaClient.user.createMany({ data: users, skipDuplicates: true })
-      console.log(`Done! ${users.length} users imported.`)
-    })
-    .on('error', (err) => {
-      console.error('Error during parsing:', err)
-      client.close()
-    })
+  // Check if the file exists and is a regular file
+  const fileList = await client.list(filePath)
+  const file = fileList.find(f => f.name === fileName)
+  if (!file) {
+    console.error(`File ${fileName} does not exist at path ${filePath}`)
+    client.close()
+    return
+  }
+  if (file.type === 0) {
+    console.error(`File ${fileName} is not a regular file`)
+    client.close()
+    return
+  }
+  const writableStream = fs.createWriteStream(file.name)
 
-  console.log('Downloading file...')
-  await client.downloadTo(parseStream, fileName)
+  await client.uploadFrom("README.md", "README_FTP.md")
+
+  await client.downloadTo("C:/Users/RomainCABC/Documents/git/bcplus2/bilan-carbone/src/scripts/ftp/" + fileName, fullPath)
+  // const test = await client.downloadTo(writableStream, "README_FTP.md")
+  // console.log(test)
   client.close()
 }
 
