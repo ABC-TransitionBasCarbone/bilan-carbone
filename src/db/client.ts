@@ -20,42 +20,45 @@ const deleteUserValue = async (args: any, query: any) => {
   return user
 }
 
-export const prismaClient =
-  globalForPrisma.prismaClient ??
-  (new PrismaClient().$extends({
-    query: {
-      user: {
-        async findFirst({ args, query }) {
-          return deleteUserValue(args, query)
-        },
-        async findFirstOrThrow({ args, query }) {
-          return deleteUserValue(args, query)
-        },
-        async findUnique({ args, query }) {
-          return deleteUserValue(args, query)
-        },
-        async findUniqueOrThrow({ args, query }) {
-          return deleteUserValue(args, query)
-        },
-        async findMany({ args, query }) {
-          const users = await query(args)
-          if (!args || !args.select) {
-            const select = args.select
-            return users.map((user) => {
-              if (!select || !select.password) {
-                user.password = ''
+const newPrismaClient =
+  process.env.NODE_ENV === 'test'
+    ? new PrismaClient()
+    : (new PrismaClient().$extends({
+        query: {
+          user: {
+            async findFirst({ args, query }) {
+              return deleteUserValue(args, query)
+            },
+            async findFirstOrThrow({ args, query }) {
+              return deleteUserValue(args, query)
+            },
+            async findUnique({ args, query }) {
+              return deleteUserValue(args, query)
+            },
+            async findUniqueOrThrow({ args, query }) {
+              return deleteUserValue(args, query)
+            },
+            async findMany({ args, query }) {
+              const users = await query(args)
+              if (!args || !args.select) {
+                const select = args.select
+                return users.map((user) => {
+                  if (!select || !select.password) {
+                    user.password = ''
+                  }
+                  if (!select || !select.resetToken) {
+                    user.resetToken = ''
+                  }
+                  return user
+                })
               }
-              if (!select || !select.resetToken) {
-                user.resetToken = ''
-              }
-              return user
-            })
-          }
-          return users
+              return users
+            },
+          },
         },
-      },
-    },
-  }) as PrismaClient)
+      }) as PrismaClient)
+
+export const prismaClient = globalForPrisma.prismaClient ?? newPrismaClient
 
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prismaClient = prismaClient
