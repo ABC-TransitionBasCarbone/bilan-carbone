@@ -119,7 +119,7 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
           : undefined
       }
     >
-      {error && <div className={classNames(styles.error, 'mb1')}>{error}</div>}
+      {error && <div className="error mb1">{error}</div>}
       {selectedFlow ? (
         <div className="flex-col">
           <div className="flex-col mb1">

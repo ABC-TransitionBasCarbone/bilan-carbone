@@ -4,6 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
+import SettingsIcon from '@mui/icons-material/Settings'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -62,6 +63,9 @@ const Navbar = ({ user }: Props) => {
             aria-label={t('help')}
           >
             <HelpOutlineIcon />
+          </Link>
+          <Link className={classNames(styles.link, 'align-center')} aria-label={t('settings')} href="/parametres">
+            <SettingsIcon />
           </Link>
           <Link className={classNames(styles.link, 'align-center')} aria-label={t('profile')} href="/profil">
             <AccountCircleIcon />

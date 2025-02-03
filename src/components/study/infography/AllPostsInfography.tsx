@@ -1,10 +1,11 @@
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './AllPostsInfography.module.css'
 import PostInfography from './PostInfography'
 
@@ -15,8 +16,23 @@ interface Props {
 
 const AllPostsInfography = ({ study, studySite }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
+  const [validatedOnly, setValidatedOnly] = useState(true)
 
-  const data = useMemo(() => computeResultsByPost(study, tPost, studySite, true), [study, tPost, studySite])
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
+    if (validatedOnlySetting !== undefined) {
+      setValidatedOnly(validatedOnlySetting)
+    }
+  }
+
+  const data = useMemo(
+    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
+    [study, tPost, studySite, validatedOnly],
+  )
   const findSubPost = (subPost: SubPost) => {
     const post = data.find((post) => post.subPosts.find((sb) => sb.post === subPost))
     const foundSubPost = post?.subPosts.find((sb) => sb.post === subPost)

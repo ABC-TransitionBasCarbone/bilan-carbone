@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 import LoadingButton from '../base/LoadingButton'
-import styles from './ActivationForm.module.css'
 import authStyles from './Auth.module.css'
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
@@ -52,7 +51,7 @@ const ActivationForm = () => {
         {t('validate')}
       </LoadingButton>
       {error && (
-        <p className={styles.error} data-testid="activation-form-error">
+        <p className="error" data-testid="activation-form-error">
           {t.rich(error, {
             link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
           })}

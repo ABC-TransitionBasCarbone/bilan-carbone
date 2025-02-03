@@ -156,6 +156,7 @@ export const computeBegesResult = (
   emissionFactorsWithParts: EmissionFactorWithParts[],
   studySite: string,
   withDependencies: boolean,
+  validatedOnly: boolean = true,
 ) => {
   const results: Record<string, Omit<BegesLine, 'rule'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
@@ -166,7 +167,11 @@ export const computeBegesResult = (
   siteEmissionSources
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .forEach((emissionSource) => {
-      if (emissionSource.emissionFactor === null || !emissionSource.value || !emissionSource.validated) {
+      if (
+        emissionSource.emissionFactor === null ||
+        !emissionSource.value ||
+        (validatedOnly && !emissionSource.validated)
+      ) {
         return
       }
 

@@ -103,3 +103,12 @@ export const updateProfile = (userId: string, data: Prisma.UserUpdateInput) =>
     where: { id: userId },
     data,
   })
+
+export const getUserApplicationSettings = (userId: string) =>
+  prismaClient.userApplicationSettings.upsert({ where: { userId }, update: {}, create: { userId } })
+
+export const updateUserApplicationSettings = (userId: string, data: Prisma.UserApplicationSettingsUpdateInput) =>
+  prismaClient.userApplicationSettings.update({
+    where: { userId },
+    data,
+  })

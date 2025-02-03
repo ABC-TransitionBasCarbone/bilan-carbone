@@ -72,3 +72,9 @@ export const OnboardingCommandValidation = z.object({
     .optional(),
 })
 export type OnboardingCommand = z.infer<typeof OnboardingCommandValidation>
+
+export const EditSettingsCommandValidation = z.object({
+  validatedEmissionSourcesOnly: z.boolean(),
+})
+
+export type EditSettingsCommand = z.infer<typeof EditSettingsCommandValidation>

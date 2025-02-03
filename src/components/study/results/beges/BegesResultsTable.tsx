@@ -3,12 +3,13 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { BegesLine, computeBegesResult, rulesSpans } from '@/services/results/beges'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { ExportRule } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
   study: FullStudy
@@ -21,6 +22,18 @@ interface Props {
 const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, withDependencies }: Props) => {
   const t = useTranslations('beges')
   const tQuality = useTranslations('quality')
+  const [validatedOnly, setValidatedOnly] = useState(true)
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
+    if (validatedOnlySetting !== undefined) {
+      setValidatedOnly(validatedOnlySetting)
+    }
+  }
 
   const columns = useMemo(
     () =>
@@ -76,8 +89,8 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
   )
 
   const data = useMemo(
-    () => computeBegesResult(study, rules, emissionFactorsWithParts, studySite, withDependencies),
-    [study, rules, emissionFactorsWithParts, studySite, withDependencies],
+    () => computeBegesResult(study, rules, emissionFactorsWithParts, studySite, withDependencies, validatedOnly),
+    [study, rules, emissionFactorsWithParts, studySite, withDependencies, validatedOnly],
   )
 
   const table = useReactTable({

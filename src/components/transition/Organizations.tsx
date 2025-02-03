@@ -2,7 +2,6 @@
 
 import { maxAllowedFileSize, MB } from '@/services/file'
 import { downloadOrganizations } from '@/services/serverFunctions/transitions'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import LoadingButton from '../base/LoadingButton'
@@ -58,7 +57,7 @@ const OrganizationsTransition = () => {
         <input type="file" className={styles.input} onChange={download} value="" accept=".xlsx" />
       </LoadingButton>
       {success && <p className="mt1">{t('success')}</p>}
-      {error && <p className={classNames(styles.error, 'mt1')}>{error}</p>}
+      {error && <p className="error mt1">{error}</p>}
     </>
   )
 }

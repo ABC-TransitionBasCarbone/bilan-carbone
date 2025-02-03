@@ -156,6 +156,7 @@
     "logout": "Se déconnecter",
     "methodology": "Méthodologie",
     "organizations": "Mes bilans carbone",
+    "settings": "Paramètres",
     "team": "Mon équipe",
     "information": "Informations générales"
   },
@@ -175,6 +176,13 @@
       "firstName": "1 caractère minimum",
       "lastName": "1 caractère minimum"
     }
+  },
+  "settings": {
+    "title": "Mes paramètres d'application",
+    "validate": "Sauvegarder",
+    "validatedEmissionSourcesOnly": "Afficher uniquement les sources d'emissions validées",
+    "yes": "Oui",
+    "no": "Non"
   },
   "admin": {
     "title": "Administration du BC+",
