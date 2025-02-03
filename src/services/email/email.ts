@@ -36,6 +36,11 @@ export const sendNewUserEmail = async (toEmail: string, token: string) => {
   return send([toEmail], 'Vous avez été invité au BC+', html)
 }
 
+export const sendActivationEmail = async (toEmail: string, token: string) => {
+  const html = await getHtml('activate-account', { link: `${process.env.NEXTAUTH_URL}/reset-password/${token}` })
+  return send([toEmail], 'Vous avez activé votre compte sur le BC+', html)
+}
+
 export const sendUserOnStudyInvitationEmail = async (
   toEmail: string,
   studyName: string,

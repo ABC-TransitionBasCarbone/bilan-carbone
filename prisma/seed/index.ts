@@ -230,6 +230,18 @@ const users = async () => {
     data: { source: Import.BaseEmpreinte, name: '1', internId: 'Base_Carbone_V1.csv' },
   })
 
+  await prisma.user.create({
+    data: {
+      email: 'to-activate@yopmail.com',
+      firstName: 'User',
+      lastName: 'ToActivate',
+      role: Role.ADMIN,
+      level: Level.Initial,
+      isActive: false,
+      isValidated: false,
+    },
+  })
+
   const subPosts = Object.keys(SubPost)
   const studies = await Promise.all(
     Array.from({ length: 20 }).map(() => {

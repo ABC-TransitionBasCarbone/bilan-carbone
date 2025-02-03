@@ -113,6 +113,8 @@
   "login": {
     "welcome": "Bienvenue",
     "form": {
+      "activate": "Activer mon compte",
+      "firstConnection": "Première connexion ?",
       "resetTitle": "Vous avez demandé de créer ou réinitialiser votre mot de passe. Rentrez les informations demandées ci-dessous pour confirmer votre création de compte ou réinitialisation de mot de passe.",
       "login": "Se connecter",
       "email": "Email",
@@ -133,6 +135,13 @@
       "backToHome": "Retour a l'accueil",
       "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous sur l'adresse email"
     }
+  },
+  "activation": {
+    "description": "Merci d'utiliser le même e-mail que vous avez utilisé lors de votre adhésion à l'Association pour la Transition Bas Carbone",
+    "email": "Mail pour activer votre compte",
+    "validate": "Valider",
+    "Not authorized": "Vous n'êtes pas adhérent ou pas formé. Si vous pensez qu'il s'agit d'une erreur, merci de contacter le <link>support</link>.",
+    "success": "Vous avez activé votre compte avec succès ! Vous allez recevoir un e-mail pour initialiser votre mot de passe."
   },
   "navigation": {
     "factors": "Facteurs d'émission",

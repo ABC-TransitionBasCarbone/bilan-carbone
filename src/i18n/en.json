@@ -113,6 +113,8 @@
   "login": {
     "welcome": "Welcome",
     "form": {
+      "activate": "Activate my account",
+      "firstConnection": "First connection ?",
       "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
       "login": "Log in",
       "email": "Email",
@@ -133,6 +135,13 @@
       "backToHome": "Back to home",
       "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us at the email address"
     }
+  },
+  "activation": {
+    "description": "Please use the same email you used when joining the Association for Low Carbon Transition.",
+    "email": "Email to activate your account",
+    "validate": "Validate",
+    "Not authorized": "You are not a member or have not completed the training. If you believe this is an error, please contact <link>support</link>.",
+    "success": "You have successfully activated your account ! You will receive an email to initialize your password."
   },
   "navigation": {
     "factors": "Emission factors",
