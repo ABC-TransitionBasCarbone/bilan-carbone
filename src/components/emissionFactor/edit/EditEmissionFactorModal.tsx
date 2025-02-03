@@ -17,12 +17,12 @@ const EditEmissionFactorModal = ({ emissionFactorId, action, setAction }: Props)
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
   const onCancel = () => setAction(undefined)
-  const onConfirm = () => {
+  const onConfirm = async () => {
     if (action === 'edit') {
       router.push(`/facteurs-d-emission/${emissionFactorId}/modifier`)
     } else if (action === 'delete') {
       setDeleting(true)
-      deleteEmissionFactor(emissionFactorId)
+      await deleteEmissionFactor(emissionFactorId)
       setDeleting(false)
       setAction(undefined)
       router.refresh()
