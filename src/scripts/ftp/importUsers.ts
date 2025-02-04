@@ -30,7 +30,7 @@ const getUsersFromFTP = async () => {
 
   const users: Prisma.UserCreateManyInput[] = []
 
-  for (let [i, value] of values.entries()) {
+  for (const [i, value] of values.entries()) {
     i % 50 === 0 && console.log(`${i} users modified.`)
     const login = value['User_Login']
     const email = value['User_Email']
