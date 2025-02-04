@@ -20,8 +20,9 @@ const getUsersFromFTP = async () => {
   const writableStream = fs.createWriteStream(fileName)
 
   await client.downloadTo(writableStream, fileName)
-  console.log(`JSON fetched.`)
-
+  const fileList = await client.list()
+  const file = fileList.find((f) => f.name === fileName)
+  const fileDate = new Date(file?.rawModifiedAt || Date.now())
   client.close()
 
   const data = await fs.promises.readFile(fileName, 'utf-8')
@@ -31,7 +32,9 @@ const getUsersFromFTP = async () => {
   const users: Prisma.UserCreateManyInput[] = []
 
   for (const [i, value] of values.entries()) {
-    i % 50 === 0 && console.log(`${i} users modified.`)
+    if (i % 50 === 0) {
+      console.log(`${i} users created or modified.`)
+    }
     const login = value['User_Login']
     const email = value['User_Email']
     const siret = value['SIRET']
@@ -42,6 +45,7 @@ const getUsersFromFTP = async () => {
       lastName: '',
       isActive: false,
       isValidated: false,
+      createdAt: fileDate,
     }
 
     if (siret) {
@@ -55,6 +59,7 @@ const getUsersFromFTP = async () => {
             siret,
             name,
             isCR: false,
+            createdAt: fileDate,
           },
         })
       }
