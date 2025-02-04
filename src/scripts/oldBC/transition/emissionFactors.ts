@@ -34,7 +34,8 @@ export const uploadEmissionFactors = async (
     .filter((row) => existingEmissionFactors.every((ef) => ef.oldBCId !== row[indexes['EFV_GUID']]))
 
   console.log(`${emissionFactorsToCreate.length} facteurs d'émissions à importer`)
-  await transaction.emissionFactor.createMany({
+
+  const createdEmissionFactor = await transaction.emissionFactor.createMany({
     data: emissionFactorsToCreate.map((row) => {
       const id = v4()
       metaData.push({
@@ -75,7 +76,11 @@ export const uploadEmissionFactors = async (
     }),
   })
 
-  await transaction.emissionFactorMetaData.createMany({ data: metaData })
+  console.log(createdEmissionFactor.count, "facteurs d'émissions importés")
+
+  const createdMetadata = await transaction.emissionFactorMetaData.createMany({ data: metaData })
+
+  console.log(createdMetadata.count, "métadonnées de facteurs d'émissions importées")
 
   const existingEmissionFactorParts = await transaction.emissionFactorPart.findMany({
     where: { oldBCId: { in: ids } },
@@ -151,7 +156,8 @@ export const uploadEmissionFactors = async (
 
   const partsMetaData = [] as Prisma.EmissionFactorPartMetaDataCreateManyInput[]
   console.log(`${filteredEmissionFactorPartsToCreate.length} composantes à importer`)
-  await transaction.emissionFactorPart.createMany({
+
+  const createdEmissionFactorPart = await transaction.emissionFactorPart.createMany({
     data: filteredEmissionFactorPartsToCreate.map((row) => {
       const id = v4()
 
@@ -185,7 +191,11 @@ export const uploadEmissionFactors = async (
       }
     }),
   })
-  await transaction.emissionFactorPartMetaData.createMany({ data: partsMetaData })
+
+  console.log(createdEmissionFactorPart.count, 'composantes importées')
+  const createdEmissionFactorMetadata = await transaction.emissionFactorPartMetaData.createMany({ data: partsMetaData })
+
+  console.log(createdEmissionFactorMetadata.count, 'métadonnées de composantes importées')
 
   return inconsistentGuids.length > 0
 }
