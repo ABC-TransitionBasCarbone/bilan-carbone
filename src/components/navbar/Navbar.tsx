@@ -36,14 +36,19 @@ const Navbar = ({ user }: Props) => {
             <span className={styles.big}>{t('factors')}</span>
             <span className={styles.small}>{t('fe')}</span>
           </Link>
-          <div
-            className={styles.link}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => setShowSubMenu(!showSubMenu)}
-          >
-            {t('organization')}
-          </div>
+          {user.organizationId && (
+            <div
+              className={styles.link}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={() => setShowSubMenu(!showSubMenu)}
+            >
+              {t('organization')}
+            </div>
+          )}
+          <Link className={styles.link} href="/transition">
+            {t('transition')}
+          </Link>
         </div>
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
           {user.role === Role.SUPER_ADMIN && (
