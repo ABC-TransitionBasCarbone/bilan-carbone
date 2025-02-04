@@ -1,11 +1,10 @@
 import { AccessOptions, Client } from 'basic-ftp'
 import dotenv from 'dotenv'
 import fs from 'fs'
-import { Writable } from 'stream'
+import { prismaClient } from '../../db/client'
+import { Prisma, Role } from '@prisma/client'
 
-
-
-export const getUsersFromFTP = async () => {
+const getUsersFromFTP = async () => {
   const client = new Client()
 
   const accessOptions = {
@@ -18,21 +17,54 @@ export const getUsersFromFTP = async () => {
   await client.access(accessOptions)
 
   const fileName = process.env.FTP_FILE_NAME || ''
-
   const writableStream = fs.createWriteStream(fileName)
 
-  const test = await client.downloadTo(writableStream, fileName)
-
-  writableStream.on("data", (chunk) => {
-    console.log("chunk : ", chunk)
-    console.log(`Received ${chunk.length} bytes of data.`)
-  })
-
-  writableStream.on('end', () => {
-    console.log('No more data.');
-  });
+  await client.downloadTo(writableStream, fileName)
+  console.log(`JSON fetched.`)
 
   client.close()
+
+  const data = await fs.promises.readFile(fileName, 'utf-8')
+  const values = JSON.parse(data)
+  console.log(`Users parsed.`)
+
+  const users: Prisma.UserCreateManyInput[] = []
+
+  for (let [i, value] of values.entries()) {
+    i % 50 === 0 && console.log(`${i} users modified.`)
+    const login = value['User_Login']
+    const email = value['User_Email']
+    const siret = value['SIRET']
+    const user: Prisma.UserCreateManyInput = {
+      email,
+      role: Role.DEFAULT,
+      firstName: login,
+      lastName: "",
+      isActive: false,
+      isValidated: false
+    }
+
+    if (siret) {
+      let organisation = await prismaClient.organization.findFirst({
+        where: { siret: { startsWith: siret } },
+      })
+      if (!organisation) {
+        const name = value['Company_Name']
+        organisation = await prismaClient.organization.create({
+          data: {
+            siret,
+            name,
+            isCR: false
+          }
+        })
+      }
+      user.organizationId = organisation.id
+    }
+    users.push(user)
+  }
+
+  await prismaClient.user.createMany({ data: users, skipDuplicates: true })
+  console.log(`Users ${users.length} created or modified.`)
 }
 
 dotenv.config()
