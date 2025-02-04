@@ -1,8 +1,8 @@
+import { Prisma, Role } from '@prisma/client'
 import { AccessOptions, Client } from 'basic-ftp'
 import dotenv from 'dotenv'
 import fs from 'fs'
 import { prismaClient } from '../../db/client'
-import { Prisma, Role } from '@prisma/client'
 
 const getUsersFromFTP = async () => {
   const client = new Client()
@@ -39,9 +39,9 @@ const getUsersFromFTP = async () => {
       email,
       role: Role.DEFAULT,
       firstName: login,
-      lastName: "",
+      lastName: '',
       isActive: false,
-      isValidated: false
+      isValidated: false,
     }
 
     if (siret) {
@@ -54,8 +54,8 @@ const getUsersFromFTP = async () => {
           data: {
             siret,
             name,
-            isCR: false
-          }
+            isCR: false,
+          },
         })
       }
       user.organizationId = organisation.id
