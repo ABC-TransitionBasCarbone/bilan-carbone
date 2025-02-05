@@ -27,13 +27,13 @@ const getUsersFromFTP = async () => {
 
   const data = await fs.promises.readFile(fileName, 'utf-8')
   const values = JSON.parse(data)
-  console.log(`Users parsed.`)
+  console.log(`Users parsed : ${values.length} rows`)
 
   const users: Prisma.UserCreateManyInput[] = []
 
   for (const [i, value] of values.entries()) {
     if (i % 50 === 0) {
-      console.log(`${i} users created or modified.`)
+      console.log(`${i}/${values.length}`)
     }
     const login = value['User_Login']
     const email = value['User_Email']
@@ -62,14 +62,15 @@ const getUsersFromFTP = async () => {
             createdAt: fileDate,
           },
         })
+        user.role = Role.GESTIONNAIRE
       }
       user.organizationId = organisation.id
     }
     users.push(user)
   }
 
-  await prismaClient.user.createMany({ data: users, skipDuplicates: true })
-  console.log(`Users ${users.length} created or modified.`)
+  const created = await prismaClient.user.createMany({ data: users, skipDuplicates: true })
+  console.log(`${created} users created.`)
 }
 
 dotenv.config()
