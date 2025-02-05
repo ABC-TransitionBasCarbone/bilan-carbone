@@ -150,7 +150,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
         >
           {t('create')}
         </LoadingButton>
-        {error && <p>{error}</p>}
+        {error && <p data-testid="study-rights-create-error">{error}</p>}
       </Form>
       <NewStudyRightDialog
         otherOrganization={otherOrganization}

@@ -1,9 +1,11 @@
 import dayjs from 'dayjs'
 
 describe('Delete study', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
+  })
 
+  beforeEach(() => {
     cy.intercept('POST', '/etudes/creer').as('create')
     cy.intercept('POST', '/etudes/*').as('delete')
   })
@@ -16,7 +18,7 @@ describe('Delete study', () => {
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').type('My study to delete')
-    cy.getByTestId('new-validator-name').click()
+    cy.getByTestId('new-validator-name').type('bc-default-0@yopmail.com')
     cy.get('[data-option-index="0"]').click()
 
     cy.getByTestId('new-study-endDate').within(() => {

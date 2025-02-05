@@ -283,7 +283,7 @@ const users = async () => {
 
   const defaultUser = users.find((user) => user.email === 'bc-default-0@yopmail.com') as User
   const reader = users.find((user) => user.email === 'bc-default-1@yopmail.com') as User
-  const editor = users.find((user) => user.email === 'bc-admin-0@yopmail.com') as User
+  const editor = users.find((user) => user.email === 'bc-gestionnaire-0@yopmail.com') as User
   const organizationSites = sites.filter((site) => site.organizationId === defaultUser.organizationId)
 
   studies.push(
