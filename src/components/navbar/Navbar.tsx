@@ -2,7 +2,6 @@
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { Role } from '@prisma/client'
@@ -66,15 +65,6 @@ const Navbar = ({ user }: Props) => {
           </Link>
           <Link className={classNames(styles.link, 'align-center')} aria-label={t('profile')} href="/profil">
             <AccountCircleIcon />
-          </Link>
-          <Link
-            className={classNames(styles.link, 'align-center')}
-            aria-label={t('methodology')}
-            target="_blank"
-            rel="noreferrer noopener"
-            href="https://www.bilancarbone-methode.com/"
-          >
-            <MenuBookIcon />
           </Link>
           <button
             className={classNames(styles.link, 'align-center')}

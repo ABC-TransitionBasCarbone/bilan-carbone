@@ -799,6 +799,10 @@
       "close": "Fermer",
       "existingSite": "<name></name> : <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 étude à laquelle} other {#  études auxquelles}} vous n'avez pas accès"
+    },
+    "card": {
+      "method": "Consulter la méthodologie Bilan Carbone ®",
+      "update": "Modifier mes informations"
     }
   },
   "emissionSource": {

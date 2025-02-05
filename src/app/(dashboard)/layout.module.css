@@ -2,3 +2,7 @@
   margin-top: var(--header-height);
   overflow-y: auto;
 }
+
+.withOrganizationCard {
+  margin-top: calc(var(--header-height) + var(--organization-height));
+}

@@ -1,4 +1,3 @@
-import LocaleSelector from '@/components/navbar/LocaleSelector'
 import { updateUserProfile } from '@/services/serverFunctions/user'
 import { EditProfileCommand, EditProfileCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,6 +14,7 @@ import Button from '../base/Button'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
+import LocaleSelector from './LocaleSelector'
 import styles from './Profile.module.css'
 
 const Profile = () => {

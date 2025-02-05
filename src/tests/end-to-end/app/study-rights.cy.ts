@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-describe('Create study', () => {
+describe('Study Rights', () => {
   beforeEach(() => {
     cy.intercept('POST', '/etudes/*/cadrage/ajouter').as('create')
     cy.intercept('POST', '/etudes/*/cadrage').as('update')
@@ -13,7 +13,9 @@ describe('Create study', () => {
     cy.getByTestId('organization-sites-checkbox').first().click()
     cy.getByTestId('new-study-organization-button').click()
 
-    cy.getByTestId('new-study-name').should('be.visible').type('Study with rights')
+    cy.getByTestId('new-study-name').scrollIntoView()
+    cy.getByTestId('new-study-name').should('be.visible')
+    cy.getByTestId('new-study-name').type('Study with rights')
     cy.getByTestId('new-validator-name').click()
     cy.get('[data-option-index="0"]').click()
 
