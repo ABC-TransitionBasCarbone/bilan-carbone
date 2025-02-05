@@ -95,8 +95,7 @@
     "organization": "Organization",
     "edit": "Edit",
     "studyRights": "Rights",
-    "team": "Team",
-    "transition": "BC+ transition"
+    "team": "Team"
   },
   "actuality": {
     "title": "News",
@@ -876,15 +875,6 @@
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
     "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m>.</p>"
-  },
-  "transition": {
-    "organizations": "Organizations",
-    "organizationsUpload": "Import my organizations",
-    "requiredHeaders": "The following columns are mandatory:",
-    "missingHeaders": "Missing headers:",
-    "loading": "Loading document...",
-    "success": "File successfully imported, please check the information created",
-    "existingOrganizations": "Please note that some organizations (based on SIRET, or name) already exist. These have been ignored. Please check that all your data is correct."
   },
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",
