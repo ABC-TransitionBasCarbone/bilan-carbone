@@ -29,4 +29,14 @@
   --error: #ff0000;
   --error-40: #e50000;
   --error-60: #990000;
+
+  --greyscale-200: #dbe3ea;
+  --greyscale-300: #c4d1dd;
+  --greyscale-400: #acbbcd;
+  --greyscale-500: #8a9bb7;
+  --greyscale-600: #7f8dac;
+  --greyscale-700: #6c7896;
+  --greyscale-800: #59637a;
+  --greyscale-900: #4c5363;
+  --greyscale-950: #2c303a;
 }

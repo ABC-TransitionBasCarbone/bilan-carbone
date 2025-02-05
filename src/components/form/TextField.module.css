@@ -1,0 +1,9 @@
+.label {
+    color: black;
+    margin-bottom: 0.5rem !important;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}

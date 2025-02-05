@@ -52,6 +52,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         translation={t}
         name="name"
         label={t('name')}
+        placeholder={t('namePlaceholder')}
       />
       <FormTextField control={control} translation={t} name="attribute" label={t('attribute')} />
       <FormTextField
