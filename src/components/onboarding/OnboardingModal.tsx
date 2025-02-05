@@ -4,11 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
 import MobileStepper from '@mui/material/MobileStepper'
-import { Organization } from '@prisma/client'
+import { Organization, Role } from '@prisma/client'
 import classNames from 'classnames'
+import { User } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
@@ -19,10 +20,11 @@ import Step2 from './OnboardingStep2'
 interface Props {
   open: boolean
   onClose: () => void
+  user: User
   organization: Organization
 }
 
-const OnboardingModal = ({ open, onClose, organization }: Props) => {
+const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const t = useTranslations('onboarding')
   const { update } = useSession()
 
@@ -31,11 +33,14 @@ const OnboardingModal = ({ open, onClose, organization }: Props) => {
   const Step = activeStep === 0 ? Step1 : Step2
   const buttonLabel = activeStep === stepCount - 1 ? 'validate' : 'next'
 
+  const newRole = useMemo(() => (user.level ? Role.ADMIN : Role.GESTIONNAIRE), [user])
+
   const form = useForm<OnboardingCommand>({
     resolver: zodResolver(OnboardingCommandValidation),
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues: {
+      role: newRole,
       organizationId: organization.id,
       companyName: organization.name || '',
       collaborators: [{ email: '' }],

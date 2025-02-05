@@ -1,12 +1,16 @@
 'use client'
 import { TeamMember } from '@/db/user'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import Block from '../base/Block'
+import Button from '../base/Button'
 import SelectRole from './SelectRole'
+import styles from './TeamTable.module.css'
 
 interface Props {
   user: User
@@ -17,6 +21,7 @@ const TeamTable = ({ user, team }: Props) => {
   const t = useTranslations('team.table')
   const tLevel = useTranslations('level')
   const tRole = useTranslations('role')
+  const [displayRoles, setDisplayRoles] = useState(false)
 
   const columns = useMemo(() => {
     const columns: ColumnDef<TeamMember>[] = [
@@ -55,6 +60,14 @@ const TeamTable = ({ user, team }: Props) => {
   return (
     <Block
       title={t('title')}
+      icon={
+        <HelpOutlineIcon
+          className={styles.helpIcon}
+          onClick={() => setDisplayRoles(!displayRoles)}
+          aria-label={tRole('guide')}
+          titleAccess={tRole('guide')}
+        />
+      }
       id="team-table-title"
       actions={
         user.role !== Role.DEFAULT
@@ -91,6 +104,25 @@ const TeamTable = ({ user, team }: Props) => {
           ))}
         </tbody>
       </table>
+      <Dialog
+        open={displayRoles}
+        aria-labelledby={`organization-roles-title`}
+        aria-describedby={`organization-roles-description`}
+      >
+        <DialogTitle id={`organization-roles-title`}>{tRole('guide')}</DialogTitle>
+        <DialogContent>
+          {Object.keys(Role).map((role) => (
+            <p key={role} className="mb-2">
+              <b>{tRole(role)} :</b> {tRole(`${role}_description`)}
+            </p>
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button data-testid={`organization-roles-cancel`} onClick={() => setDisplayRoles(false)}>
+            {tRole('close')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Block>
   )
 }

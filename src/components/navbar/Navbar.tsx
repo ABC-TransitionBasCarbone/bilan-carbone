@@ -1,5 +1,6 @@
 'use client'
 
+import { isAdmin } from '@/services/permissions/user'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
@@ -52,7 +53,7 @@ const Navbar = ({ user }: Props) => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  {user.role === Role.ADMIN && (
+                  {isAdmin(user.role) && (
                     <Link href={`/organisations/${user.organizationId}/modifier`} className={styles.link}>
                       {t('information')}
                     </Link>

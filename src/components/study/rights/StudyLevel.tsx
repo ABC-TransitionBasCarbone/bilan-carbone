@@ -2,12 +2,13 @@
 
 import { FormSelect } from '@/components/form/Select'
 import { FullStudy } from '@/db/study'
+import { isAdministratorOnStudy } from '@/services/permissions/study'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { Level, Role, StudyRole } from '@prisma/client'
+import { Level, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -53,7 +54,7 @@ const StudyLevel = ({ user, study, userRoleOnStudy }: Props) => {
   const allowedLevels = useMemo(() => getAllowedLevels(user.level), [user])
   return (
     <div className="pb2">
-      {user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role === StudyRole.Validator) ? (
+      {isAdministratorOnStudy(user, study) || (userRoleOnStudy && userRoleOnStudy.role === StudyRole.Validator) ? (
         <>
           <FormSelect
             className={styles.select}

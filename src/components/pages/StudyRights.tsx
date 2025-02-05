@@ -1,5 +1,6 @@
 import { FullStudy } from '@/db/study'
-import { Role, StudyRole } from '@prisma/client'
+import { isAdministratorOnStudy } from '@/services/permissions/study'
+import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -43,7 +44,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
       <Block
         title={t('contributors')}
         actions={
-          user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
+          isAdministratorOnStudy(user, study) || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
             ? [
                 {
                   actionType: 'link',

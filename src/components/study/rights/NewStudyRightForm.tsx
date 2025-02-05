@@ -6,12 +6,13 @@ import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
 import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
+import { isAdmin } from '@/services/permissions/user'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
 import { checkLevel } from '@/services/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { Role, StudyRole } from '@prisma/client'
+import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -31,6 +32,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   const tRole = useTranslations('study.role')
 
   const [error, setError] = useState('')
+  const [disabled, setDisabled] = useState(false)
   const [readerOnly, setReaderOnly] = useState(false)
   const [otherOrganization, setOtherOrganization] = useState(false)
 
@@ -45,14 +47,20 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   })
 
   const onEmailChange = (_: SyntheticEvent, value: string | null) => {
+    setDisabled(false)
     form.setValue('email', value || '')
     if (value) {
       const organizationUser = users.find((user) => user.email === value)
-      if (!organizationUser || checkLevel(organizationUser.level, study.level)) {
-        setReaderOnly(false)
+      if (organizationUser && isAdmin(organizationUser.role)) {
+        setDisabled(true)
+        setError(t('validation.adminValidator'))
       } else {
-        setReaderOnly(true)
-        form.setValue('role', StudyRole.Reader)
+        if (!organizationUser || checkLevel(organizationUser.level, study.level)) {
+          setReaderOnly(false)
+        } else {
+          setReaderOnly(true)
+          form.setValue('role', StudyRole.Reader)
+        }
       }
     }
   }
@@ -93,7 +101,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          (user.role === Role.ADMIN ||
+          (isAdmin(user.role) ||
             (userRoleOnStudy && userRoleOnStudy.role === StudyRole.Validator) ||
             role !== StudyRole.Validator) &&
           (!readerOnly || role === StudyRole.Reader),
@@ -134,7 +142,12 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
             </MenuItem>
           ))}
         </FormSelect>
-        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-rights-create-button">
+        <LoadingButton
+          type="submit"
+          loading={form.formState.isSubmitting}
+          disabled={disabled}
+          data-testid="study-rights-create-button"
+        >
           {t('create')}
         </LoadingButton>
         {error && <p>{error}</p>}

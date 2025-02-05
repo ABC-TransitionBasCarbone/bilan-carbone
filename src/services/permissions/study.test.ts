@@ -2,7 +2,7 @@ import * as dbStudyModule from '@/db/study'
 import * as dbUserModule from '@/db/user'
 import { getMockedDbUser, getMockedStudy, mockedOrganizationId } from '@/tests/utils/models'
 import { expect } from '@jest/globals'
-import { Level } from '@prisma/client'
+import { Level, Role } from '@prisma/client'
 import * as authModule from '../auth'
 import * as organizationModule from './organization'
 import { canCreateStudy, canDeleteStudy } from './study'
@@ -155,7 +155,7 @@ describe('Study permissions service', () => {
     it('Organization Admin can delete public study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(true))
       mockAuth.mockResolvedValue({
-        user: { id: 'mocked-user-admin-id', organizationId: mockedOrganizationId, role: 'ADMIN' },
+        user: { id: 'mocked-user-admin-id', organizationId: mockedOrganizationId, role: Role.ADMIN },
       })
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
@@ -164,7 +164,7 @@ describe('Study permissions service', () => {
     it('Organization Super-Admin can delete public study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(true))
       mockAuth.mockResolvedValue({
-        user: { id: 'mocked-user-super-admin-id', organizationId: mockedOrganizationId, role: 'SUPER_ADMIN' },
+        user: { id: 'mocked-user-super-admin-id', organizationId: mockedOrganizationId, role: Role.SUPER_ADMIN },
       })
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
@@ -196,22 +196,22 @@ describe('Study permissions service', () => {
       expect(result).toBe(false)
     })
 
-    it('Organization Admin cannot delete private study', async () => {
+    it('Organization Admin can delete private study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(false))
       mockAuth.mockResolvedValue({
-        user: { id: 'mocked-user-admin-id', organizationId: mockedOrganizationId, role: 'ADMIN' },
+        user: { id: 'mocked-user-admin-id', organizationId: mockedOrganizationId, role: Role.ADMIN },
       })
       const result = await canDeleteStudy(mockedStudyId)
-      expect(result).toBe(false)
+      expect(result).toBe(true)
     })
 
-    it('Organization Super-Admin cannot delete private study', async () => {
+    it('Organization Super-Admin can delete private study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(false))
       mockAuth.mockResolvedValue({
-        user: { id: 'mocked-user-super-admin-id', organizationId: mockedOrganizationId, role: 'SUPER_ADMIN' },
+        user: { id: 'mocked-user-super-admin-id', organizationId: mockedOrganizationId, role: Role.SUPER_ADMIN },
       })
       const result = await canDeleteStudy(mockedStudyId)
-      expect(result).toBe(false)
+      expect(result).toBe(true)
     })
 
     it('Other organization user cannot delete public study', async () => {
@@ -220,7 +220,7 @@ describe('Study permissions service', () => {
         user: {
           id: 'mocked-other-organization-super-admin-user-id',
           organizationId: 'mocked-other-organization-id',
-          role: 'SUPER_ADMIN',
+          role: Role.SUPER_ADMIN,
         },
       })
       const result = await canDeleteStudy(mockedStudyId)
@@ -233,7 +233,7 @@ describe('Study permissions service', () => {
         user: {
           id: 'mocked-other-organization-super-admin-user-id',
           organizationId: 'mocked-other-organization-id',
-          role: 'SUPER_ADMIN',
+          role: Role.SUPER_ADMIN,
         },
       })
       const result = await canDeleteStudy(mockedStudyId)

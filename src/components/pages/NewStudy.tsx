@@ -1,6 +1,7 @@
 'use client'
 import NewStudyForm from '@/components/study/new/Form'
 import SelectOrganization from '@/components/study/organization/Select'
+import { getOrganizationUsers } from '@/db/organization'
 import { OrganizationWithSites } from '@/db/user'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { displayCA } from '@/utils/number'
@@ -15,13 +16,13 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 interface Props {
   user: User
-  usersEmail: string[]
+  users: Awaited<ReturnType<typeof getOrganizationUsers>>
   organizations: OrganizationWithSites[]
   defaultOrganization?: OrganizationWithSites
   caUnit: number
 }
 
-const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization, caUnit }: Props) => {
+const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit }: Props) => {
   const [organization, setOrganization] = useState<OrganizationWithSites>()
   const tNav = useTranslations('nav')
 
@@ -64,7 +65,7 @@ const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization, ca
         ].filter((link) => link !== undefined)}
       />
       {organization ? (
-        <NewStudyForm user={user} usersEmail={usersEmail} form={form} />
+        <NewStudyForm user={user} users={users} form={form} />
       ) : (
         <SelectOrganization organizations={organizations} selectOrganization={setOrganization} form={form} />
       )}
