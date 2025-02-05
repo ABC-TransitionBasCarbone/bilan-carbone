@@ -1,8 +1,6 @@
 import { Typography } from '@mui/material'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
-import classNames from 'classnames'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
-import styles from './TextField.module.css'
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
@@ -23,10 +21,9 @@ export const FormTextField = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <div className={classNames(styles.content)}>
-          <Typography className={classNames(styles.label)}>{label}</Typography>
+        <div className="inputContainer">
+          <Typography className="inputLabel">{label}</Typography>
           <TextField
-            className={classNames(styles.input)}
             {...textFieldProps}
             helperText={error && error.message ? translation('validation.' + error.message) : null}
             error={!!error}

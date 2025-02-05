@@ -1,5 +1,6 @@
-import { FormControl, FormHelperText, InputLabel, Select, SelectProps } from '@mui/material'
+import { FormControl, FormHelperText, SelectProps } from '@mui/material'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
+import { Select } from '../base/Select'
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
@@ -19,15 +20,8 @@ export const FormSelect = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <FormControl error={!!error} fullWidth={selectProps.fullWidth}>
-          <InputLabel id={`${name}-select-label}`}>{label}</InputLabel>
-          <Select
-            {...selectProps}
-            label={label}
-            labelId={`${name}-select-label}`}
-            value={value || ''}
-            onChange={onChange}
-          />
+        <FormControl error={!!error} fullWidth={selectProps.fullWidth} className="inputContainer">
+          <Select name={name} label={label} value={value} onChange={onChange} {...selectProps} />
           {error && error.message && <FormHelperText>{translation('validation.' + error.message)}</FormHelperText>}
         </FormControl>
       )}
