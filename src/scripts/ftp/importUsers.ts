@@ -37,7 +37,7 @@ const getUsersFromFTP = async () => {
     }
     const login = value['User_Login']
     const email = value['User_Email']
-    const siret = value['SIRET']
+    const siretOrSiren = value['SIRET']
     const user: Prisma.UserCreateManyInput = {
       email,
       role: Role.DEFAULT,
@@ -48,15 +48,15 @@ const getUsersFromFTP = async () => {
       createdAt: fileDate,
     }
 
-    if (siret) {
+    if (siretOrSiren) {
       let organisation = await prismaClient.organization.findFirst({
-        where: { siret: { startsWith: siret } },
+        where: { siret: { startsWith: siretOrSiren } },
       })
       if (!organisation) {
         const name = value['Company_Name']
         organisation = await prismaClient.organization.create({
           data: {
-            siret,
+            siret: siretOrSiren,
             name,
             isCR: false,
             createdAt: fileDate,
