@@ -1,6 +1,7 @@
 'use server'
 
-import { getMainStudy } from '@/db/study'
+import Block from '@/components/base/Block'
+import { getOrganizationStudiesOrderedByStartDate } from '@/db/study'
 import { canReadStudy } from '@/services/permissions/study'
 import { User } from 'next-auth'
 import StudyResultsContainerSummary from './StudyResultsContainerSummary'
@@ -11,10 +12,20 @@ interface Props {
 }
 
 const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props) => {
-  const study = await getMainStudy(mainStudyOrganizationId)
-  const showResults = study && (await canReadStudy(user, study))
-
-  return showResults ? <StudyResultsContainerSummary study={study} site="all" /> : null
+  const studies = await getOrganizationStudiesOrderedByStartDate(mainStudyOrganizationId)
+  let mainStudy = null
+  for (const study of studies) {
+    const result = await canReadStudy(user, study)
+    if (result) {
+      mainStudy = study
+      break
+    }
+  }
+  return mainStudy ? (
+    <Block>
+      <StudyResultsContainerSummary study={mainStudy} studySite="all" />
+    </Block>
+  ) : null
 }
 
 export default ResultsContainerForUser

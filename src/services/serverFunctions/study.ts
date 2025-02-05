@@ -7,12 +7,17 @@ import {
   createContributorOnStudy,
   createStudy,
   createUserOnStudy,
+  deleteStudy,
   FullStudy,
+  getStudiesFromSites,
   getStudyById,
+  getStudyNameById,
+  getStudySites,
   updateStudy,
+  updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserByEmail, OrganizationWithSites } from '@/db/user'
+import { addUser, getUserByEmail } from '@/db/user'
 import {
   ControlMode,
   User as DBUser,
@@ -38,7 +43,9 @@ import {
   canChangeDates,
   canChangeLevel,
   canChangePublicStatus,
+  canChangeSites,
   canCreateStudy,
+  canDeleteStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
 import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
@@ -47,7 +54,9 @@ import {
   ChangeStudyDatesCommand,
   ChangeStudyLevelCommand,
   ChangeStudyPublicStatusCommand,
+  ChangeStudySitesCommand,
   CreateStudyCommand,
+  DeleteStudyCommand,
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
@@ -125,17 +134,24 @@ export const createStudyCommand = async ({
     },
     sites: {
       createMany: {
-        data: studySites.map((site) => {
-          const organizationSite = organization.sites.find(
-            (organizationSite) => organizationSite.id === site.id,
-          ) as OrganizationWithSites['sites'][0]
-          return { siteId: site.id, etp: site.etp || organizationSite.etp, ca: site.ca || organizationSite.ca }
-        }),
+        data: studySites
+          .map((site) => {
+            const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === site.id)
+            if (!organizationSite) {
+              return undefined
+            }
+            return {
+              siteId: site.id,
+              etp: site.etp || organizationSite.etp,
+              ca: site.ca ? site.ca * 1000 : organizationSite.ca,
+            }
+          })
+          .filter((site) => site !== undefined),
       },
     },
   } satisfies Prisma.StudyCreateInput
 
-  if (!(await canCreateStudy(session.user, study, organizationId))) {
+  if (!(await canCreateStudy(session.user.email, study, organizationId))) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 
@@ -195,6 +211,81 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
     return NOT_AUTHORIZED
   }
   await updateStudy(studyId, command)
+}
+
+export const hasActivityData = async (
+  studyId: string,
+  deletedSites: ChangeStudySitesCommand['sites'],
+  organizationId: string,
+) => {
+  const study = await getStudyById(studyId, organizationId)
+  if (!study) {
+    return false
+  }
+  const emissionSources = await Promise.all(deletedSites.map((site) => hasEmissionSources(study, site.id)))
+  return emissionSources.some((emissionSource) => emissionSource)
+}
+
+export const hasEmissionSources = async (study: FullStudy, siteId: string) => {
+  if (!study) {
+    return false
+  }
+
+  const studySite = study.sites.find((site) => site.site.id === siteId)
+  if (!studySite) {
+    return false
+  }
+
+  const emissionSources = study.emissionSources.find((emissionSource) => emissionSource.studySite.id === studySite.id)
+  if (!emissionSources) {
+    return false
+  }
+
+  return true
+}
+
+export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) => {
+  const organization = await getOrganizationWithSitesById(organizationId)
+
+  if (!organization) {
+    return NOT_AUTHORIZED
+  }
+
+  const selectedSites = command.sites
+    .filter((site) => site.selected)
+    .map((site) => {
+      const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === site.id)
+      if (!organizationSite) {
+        return undefined
+      }
+      return {
+        studyId,
+        siteId: site.id,
+        etp: site.etp || organizationSite.etp,
+        ca: site.ca * 1000 || organizationSite.ca,
+      }
+    })
+    .filter((site) => site !== undefined)
+  if (
+    selectedSites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.siteId))
+  ) {
+    return NOT_AUTHORIZED
+  }
+
+  const informations = await getStudyRightsInformations(studyId)
+  if (informations === null) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!canChangeSites(informations.user, informations.studyWithRights)) {
+    return NOT_AUTHORIZED
+  }
+
+  const existingSites = await getStudySites(studyId)
+  const deletedSiteIds = existingSites
+    .filter((existingStudySite) => !selectedSites.find((studySite) => studySite.siteId === existingStudySite.siteId))
+    .map((studySite) => studySite.id)
+  await updateStudySites(studyId, selectedSites, deletedSiteIds)
 }
 
 const getOrCreateUserAndSendStudyInvite = async (
@@ -336,6 +427,21 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
   }
 }
 
+export const deleteStudyCommand = async ({ id, name }: DeleteStudyCommand) => {
+  if (!(await canDeleteStudy(id))) {
+    return NOT_AUTHORIZED
+  }
+  const studyName = await getStudyNameById(id)
+  if (!studyName) {
+    return NOT_AUTHORIZED
+  }
+
+  if (studyName.toLowerCase() !== name.toLowerCase()) {
+    return 'wrongName'
+  }
+  await deleteStudy(id)
+}
+
 export const addFlowToStudy = async (studyId: string, file: File) => {
   const session = await auth()
   const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
@@ -364,5 +470,42 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   const bucketDelete = await deleteFileFromBucket(document.bucketKey)
   if (bucketDelete) {
     deleteDocument(document.id)
+  }
+}
+
+const hasAccessToStudy = (userId: string, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) =>
+  study.isPublic ||
+  study.allowedUsers.some((allowedUser) => allowedUser.userId === userId) ||
+  study.contributors.some((contributor) => contributor.userId === userId)
+
+export const findStudiesWithSites = async (siteIds: string[]) => {
+  const [session, studySites] = await Promise.all([auth(), getStudiesFromSites(siteIds)])
+
+  const userId = session?.user?.id
+
+  const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
+  const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site'> & { count: number })[] =
+    []
+
+  studySites.forEach((studySite) => {
+    if (userId && hasAccessToStudy(userId, studySite.study)) {
+      authorizedStudySites.push(studySite)
+    } else {
+      const targetedSite = unauthorizedStudySites.find(
+        (unauthorizedStudySite) =>
+          unauthorizedStudySite.site.name === studySite.site.name &&
+          unauthorizedStudySite.site.organization.id === studySite.site.organization.id,
+      )
+      if (!targetedSite) {
+        unauthorizedStudySites.push({ site: studySite.site, count: 1 })
+      } else {
+        targetedSite.count++
+      }
+    }
+  })
+
+  return {
+    authorizedStudySites,
+    unauthorizedStudySites,
   }
 }

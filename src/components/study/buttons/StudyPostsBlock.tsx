@@ -5,7 +5,7 @@ import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useTranslations } from 'next-intl'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import PostIcon from '../infography/icons/PostIcon'
 
 interface Props {
@@ -18,6 +18,7 @@ interface Props {
 }
 
 const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources }: Props) => {
+  const [downloading, setDownloading] = useState(false)
   const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('study.export')
   const tPost = useTranslations('emissionFactors.post')
@@ -32,14 +33,18 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
       iconPosition="before"
       actions={[
         {
-          actionType: 'button',
-          onClick: () =>
-            downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit),
+          actionType: 'loadingButton',
+          onClick: async () => {
+            setDownloading(true)
+            await downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit)
+            setDownloading(false)
+          },
           disabled: emissionSources.length === 0,
+          loading: downloading,
           children: (
             <>
               {tExport('download')}
-              <DownloadIcon />
+              {!downloading && <DownloadIcon />}
             </>
           ),
         },

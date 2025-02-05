@@ -32,6 +32,7 @@ const users = async () => {
   await prisma.emissionFactorImportVersion.deleteMany()
 
   await prisma.site.deleteMany()
+  await prisma.userApplicationSettings.deleteMany()
   await prisma.user.deleteMany()
 
   await prisma.organization.deleteMany()
@@ -95,11 +96,35 @@ const users = async () => {
     }),
   ])
 
+  const unOnboardedOrganization = await prisma.organization.create({
+    data: {
+      name: faker.company.name(),
+      siret: faker.finance.accountNumber(14),
+      isCR: false,
+      onboarded: false,
+    },
+  })
+  const onboardingPassword = await signPassword(`onboarding`)
+  await prisma.user.create({
+    data: {
+      email: `onboarding@yopmail.com`,
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      organizationId: unOnboardedOrganization.id,
+      password: onboardingPassword,
+      level: Level.Initial,
+      role: Role.DEFAULT,
+      isActive: true,
+      isValidated: true,
+    },
+  })
+
   const organizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 10 }).map((_, index) => ({
       name: faker.company.name(),
       siret: faker.finance.accountNumber(14),
       isCR: index % 2 === 0,
+      onboarded: true,
     })),
   })
 
@@ -111,6 +136,7 @@ const users = async () => {
       name: faker.company.name(),
       parentId: faker.helpers.arrayElement(crOrganizations).id,
       isCR: false,
+      onboarded: true,
     })),
   })
 
@@ -203,6 +229,18 @@ const users = async () => {
   })
   const emissionFactorsImportVersion = await prisma.emissionFactorImportVersion.create({
     data: { source: Import.BaseEmpreinte, name: '1', internId: 'Base_Carbone_V1.csv' },
+  })
+
+  await prisma.user.create({
+    data: {
+      email: 'to-activate@yopmail.com',
+      firstName: 'User',
+      lastName: 'ToActivate',
+      role: Role.ADMIN,
+      level: Level.Initial,
+      isActive: false,
+      isValidated: false,
+    },
   })
 
   const subPosts = Object.keys(SubPost)
@@ -299,7 +337,7 @@ const users = async () => {
             studyId: study.id,
             name: faker.lorem.words({ min: 2, max: 5 }),
             subPost: subPost as SubPost,
-            siteId: faker.helpers.arrayElement(study.sites).id,
+            studySiteId: faker.helpers.arrayElement(study.sites).id,
           })),
         ),
       })

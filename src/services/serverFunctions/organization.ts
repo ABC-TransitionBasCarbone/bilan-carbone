@@ -1,11 +1,20 @@
 'use server'
 
-import { createOrganization, updateOrganization } from '@/db/organization'
+import {
+  createOrganization,
+  getRawOrganizationById,
+  onboardOrganization,
+  setOnboarded,
+  updateOrganization,
+} from '@/db/organization'
+import { getUserByEmail } from '@/db/user'
+import { uniqBy } from '@/utils/array'
 import { Prisma } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateOrganization, canUpdateOrganization } from '../permissions/organization'
 import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
+import { OnboardingCommand } from './user.command'
 
 export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,
@@ -45,4 +54,42 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
   }
 
   await updateOrganization(command)
+}
+
+export const setOnboardedOrganization = async (organizationId: string) => {
+  const session = await auth()
+  const userOrganizationId = session?.user.organizationId
+
+  if (!session || !userOrganizationId || userOrganizationId !== organizationId) {
+    return NOT_AUTHORIZED
+  }
+
+  await setOnboarded(organizationId, session.user.id)
+}
+
+export const onboardOrganizationCommand = async (command: OnboardingCommand) => {
+  const session = await auth()
+  const organizationId = session?.user.organizationId
+
+  if (!session || !organizationId || organizationId !== command.organizationId) {
+    return NOT_AUTHORIZED
+  }
+
+  const organization = await getRawOrganizationById(command.organizationId)
+
+  if (!organization || organization.onboarderId !== session.user.id) {
+    return NOT_AUTHORIZED
+  }
+
+  // filter duplicatd email
+  let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'email')
+
+  // filter existing users
+  for (const collaborator of collaborators) {
+    const existingUser = await getUserByEmail(collaborator.email || '')
+    if (existingUser) {
+      collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
+    }
+  }
+  await onboardOrganization(session.user.id, { ...command, collaborators })
 }

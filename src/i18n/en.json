@@ -12,12 +12,21 @@
   "categorisations": {
     "Operated": "Operated",
     "NotOperated": "Not operated",
-    "OperatedProcedeed": "Operated, processed",
+    "OperatedProcedeed": "Operated, procedeed",
     "OperatedFugitive": "Operated, fugitive",
     "NotOperatedSupported": "Not operated, supported",
     "NotOperatedNotSupported": "Not operated, not supported",
     "Rented": "Rented",
-    "FinalClient": "By the final client or an intermediary"
+    "FinalClient": "By the final client or an intermediary",
+    "Held": "Held",
+    "NotHeldSimpleRent": "Not held, simple rent",
+    "NotHeldOther": "Not held, other",
+    "HeldProcedeed": "Held, procedeed",
+    "HeldFugitive": "Held, fugitive",
+    "NotHeldSupported": "Not held, supported",
+    "NotHeldNotSupported": "Not held, not supported",
+    "UsedByIntermediary": "Used by an intermediary",
+    "LandUse": "Land use, land-use change, and forestry (LULUCF)"
   },
   "beges": {
     "rule": "Rule",
@@ -71,7 +80,7 @@
     "other": "Other gases",
     "total": "Total",
     "uncertainty": "Uncertainty",
-    "ges": "GHG emissions"
+    "ges": "GHG emissions (tCO₂e)"
   },
   "nav": {
     "backToHome": "Back to home",
@@ -79,15 +88,14 @@
     "home": "Home",
     "newOrganization": "Add an Organization",
     "newStudy": "Add a New Study",
-    "studyPermimeter": "Perimeter",
+    "studyPerimeter": "Perimeter",
     "newStudyContributor": "Add a contributor",
     "newStudyRight": "Add a Person",
     "notFound": "Page not found",
     "organization": "Organization",
     "edit": "Edit",
     "studyRights": "Rights",
-    "team": "Team",
-    "transition": "BC+ transition"
+    "team": "Team"
   },
   "actuality": {
     "title": "News",
@@ -104,15 +112,35 @@
   "login": {
     "welcome": "Welcome",
     "form": {
+      "activate": "Activate my account",
+      "firstConnection": "First connection ?",
+      "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
       "login": "Log in",
       "email": "Email",
       "password": "Password",
+      "confirmPassword": "Confirm password",
+      "hidePassword": "Hide password",
+      "showPassword": "Show password",
+      "notMatching": "Passwords do not match",
+      "passwordLength": "Password should have at least 8 characters",
+      "passwordUppercase": "Password should have at least one upper case letter",
+      "passwordLowercase": "Password should have at least one lower case letter",
+      "passwordSpecialChar": "Password should have at least one special character",
+      "passwordDigit": "Password should have at least one digit",
       "forgotPassword": "Forgot password",
       "reset": "Reset",
       "error": "Please check your email and your password",
       "expired": "This password reset link has expired",
-      "backToHome": "Back to home"
+      "backToHome": "Back to home",
+      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us at the email address"
     }
+  },
+  "activation": {
+    "description": "Please use the same email you used when joining the Association for Low Carbon Transition.",
+    "email": "Email to activate your account",
+    "validate": "Validate",
+    "Not authorized": "You are not a member or have not completed the training. If you believe this is an error, please contact <link>support</link>.",
+    "success": "You have successfully activated your account ! You will receive an email to initialize your password."
   },
   "navigation": {
     "factors": "Emission factors",
@@ -122,9 +150,14 @@
     "admin": "Admin",
     "profile": "Profile",
     "study": "Study",
-    "team": "Team",
-    "organization": "Organization",
-    "transition": "BC+ transition"
+    "organization": "My organization",
+    "transition": "BC+ transition",
+    "logout": "Log out",
+    "methodology": "Methodology",
+    "organizations": "My carbon assessments",
+    "settings": "Settings",
+    "team": "My team",
+    "information": "Global informations"
   },
   "results": {
     "byPost": "Results by post",
@@ -133,15 +166,22 @@
   "profile": {
     "title": "My profile",
     "legalNotices": "Legal notices",
-    "logout": "Log out",
     "firstName": "First Name",
     "lastName": "Last Name",
     "cancelUpdate": "Cancel",
     "update": "Update",
+    "updating": "Updating",
     "validation": {
       "firstName": "1 character minimum",
       "lastName": "1 character minimum"
     }
+  },
+  "settings": {
+    "title": "My application settings",
+    "validate": "Save",
+    "validatedEmissionSourcesOnly": "Only display the validated emission sources",
+    "yes": "Yes",
+    "no": "No"
   },
   "admin": {
     "title": "Administration",
@@ -155,12 +195,13 @@
       "homepage": "Homepage",
       "framing": "Framing",
       "scope": "Scope",
-      "mobilisation": "mobilisation",
+      "mobilisation": "Mobilisation",
       "accounting": "Accounting",
       "dataEntry": "Data entry",
       "results": "Results",
       "transitionPlan": "Transition plan",
-      "menu": "Open the study navigation menu"
+      "menu": "Open the study navigation menu",
+      "comming": "comming"
     },
     "new": {
       "title": "Information about the new study",
@@ -189,7 +230,8 @@
       "error": {
         "default": "Something went wrong ...",
         "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support"
-      }
+      },
+      "comming": "comming"
     },
     "post": {
       "displayInfography": "Display all posts",
@@ -209,7 +251,8 @@
       "next": "Next",
       "select": "Organization",
       "validation": {
-        "sites": "Please select at least one site concerned by the study"
+        "sites": "Please select at least one site concerned by the study",
+        "etpCa": "Please enter a strictly positiv value for every selected sites employees and turnover"
       }
     },
     "role": {
@@ -267,15 +310,27 @@
     },
     "perimeter": {
       "dates": "from {startDate} to {endDate}",
-      "title": "Permiter on study : {name}"
+      "title": "Perimeter on study: {name}",
+      "save": "Save",
+      "editSites": "Edit sites list",
+      "cancelEditSites": "Cancel modification",
+      "validSites": "Validate changes",
+      "deleteDialog": {
+        "accept": "Yes",
+        "decline": "No",
+        "delete": "Delete",
+        "description": "{count, plural, =1 {It contains} other {Some of them contain}} emission sources. All registered data will be definitively lost.",
+        "title": "Are you sure you want to delete {count, plural, =1 {this site} other {these sites}} ?"
+      }
     },
     "results": {
       "type": "Type",
       "post": "Post",
-      "value": "Emissions (kgCO₂e)",
+      "value": "Emissions (tCO₂e)",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
-      "withoutDependencies": "Without dependencies"
+      "withoutDependencies": "Without dependencies",
+      "comming": "comming"
     },
     "export": {
       "activityDataComment": "Activity data comment",
@@ -318,6 +373,16 @@
       "notAuthorized": "Action not authorized",
       "removeFlow": "Remove flow",
       "Not authorized": "You are not allowed to do this action"
+    },
+    "delete": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "delete": "Delete the study",
+      "content": "Are you sure you want to delete this study ? All its data will be definitely deleted and it won't be possible to recover it. If it is the case, please write the study name in the field right below.",
+      "name": "Study name",
+      "Not authorized": "You are not allowed to do this action",
+      "title": "Study deletion",
+      "wrongName": "Study name does not match"
     }
   },
   "emissionFactors": {
@@ -384,6 +449,8 @@
     "create": {
       "title": "Add an emission factor",
       "create": "Add emission factor",
+      "update": "Update",
+      "cancel": "Cancel",
       "name": "Name",
       "attribute": "Details",
       "unit": "Unit",
@@ -393,16 +460,16 @@
       "multiple": "Disaggregated emission factor",
       "yes": "Yes",
       "no": "No",
-      "totalCo2": "Total CO₂ emission",
-      "co2f": "CO2f",
-      "ch4f": "CH4f",
-      "ch4b": "CH4b",
-      "n2o": "N2O",
-      "co2b": "CO2b",
-      "sf6": "SF6",
-      "hfc": "HFC",
-      "pfc": "PFC",
-      "otherGES": "Other gases",
+      "totalCo2": "Total CO₂ emission (in kgCO₂e)",
+      "co2f": "CO2f (in kgCO₂e)",
+      "ch4f": "CH4f (in kgCO₂e)",
+      "ch4b": "CH4b (in kgCO₂e)",
+      "n2o": "N2O (in kgCO₂e)",
+      "co2b": "CO2b (in kgCO₂e)",
+      "sf6": "SF6 (in kgCO₂e)",
+      "hfc": "HFC (in kgCO₂e)",
+      "pfc": "PFC (in kgCO₂e)",
+      "otherGES": "Other gases (in kgCO₂e)",
       "part": "Part",
       "post": "Post",
       "missingPost": "Please select a post",
@@ -435,6 +502,8 @@
       "location": "Location",
       "locationSearch": "Search a location",
       "Manual": "Manual",
+      "edit": "Edit emission factor",
+      "delete": "Delete emission factor",
       "name": "Name",
       "none": "None",
       "no": "No",
@@ -471,6 +540,36 @@
       "temporalRepresentativeness": "Temporal representativeness:",
       "completeness": "Completeness:",
       "yes": "Yes"
+    },
+    "edit": {
+      "title": "Modifier le facteur d'émissions ({name})",
+      "modal": {
+        "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
+        "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
+        "title": "Modifier un facteur d’émission",
+        "description": "Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées. Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
+        "confirm": "Confirmer",
+        "close": "Annuler"
+      }
+    },
+    "type": {
+      "CarburantAmontCombustion": "Fuel (upstream/combustion)",
+      "Amont": "Upstream",
+      "Intrants": "Inputs",
+      "Combustion": "Combustion",
+      "TransportEtDistribution": "Transport and distribution",
+      "Energie": "Energy",
+      "Fabrication": "Manufacturing",
+      "Traitement": "Processing",
+      "Collecte": "Collection",
+      "Autre": "Other",
+      "Amortissement": "Depreciation",
+      "Incineration": "Incineration",
+      "EmissionsFugitives": "Fugitive emissions",
+      "Fuites": "Leaks",
+      "Transport": "Transport",
+      "CombustionALaCentrale": "Combustion at the plant",
+      "Pertes": "Losses"
     }
   },
   "level": {
@@ -629,7 +728,7 @@
     "TON_VIABLE_MEAT": "ton of net commercially viable meat",
     "TON_KM_PRODUCED": "ton.km",
     "TON_PRODUCTED": "ton produced",
-    "TON_PROCESSED": "ton processed",
+    "TON_PROCESSED": "ton Procedeed",
     "UNIT": "unit",
     "IMPORTED_UNIT_PIECE_SHRUB_POT": "Imported unit (shrub in pot)",
     "VEHICLE_YEAR": "vehicle/year",
@@ -683,15 +782,23 @@
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
       "etp": "Employees",
-      "ca": "Turnover",
+      "ca": "Turnover (k€)",
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",
+      "update": "Update list",
       "validation": {
         "name": "Please enter a name",
         "etp": "Please enter a number of employees",
         "ca": "Please enter a turnover"
       }
+    },
+    "studySites": {
+      "title": "You cannot delete these sites",
+      "description": "Studies exist with the following sites. Please delete them from the concerned studies before you can delete them from your organization.",
+      "close": "Close",
+      "existingSite": "<name></name>: <link></link>",
+      "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other {#  studies}} you do not have access to"
     }
   },
   "emissionSource": {
@@ -729,7 +836,6 @@
     "form": {
       "validate": "Validated",
       "name": "Name",
-      "tag": "Tag",
       "caracterisation": "Characterization",
       "emissionFactor": "Emission factor",
       "value": "Activity value",
@@ -737,12 +843,17 @@
       "source": "Source",
       "type": "Type",
       "depreciationPeriod": "Depreciation per",
+      "hectare": "Hectare",
+      "duration": "Duration",
       "years": "years",
       "reliability": "Reliability",
       "technicalRepresentativeness": "Technical representativeness",
       "geographicRepresentativeness": "Geographic representativeness",
       "temporalRepresentativeness": "Temporal representativeness",
       "completeness": "Completeness",
+      "quality": "Quality",
+      "expand": "Expand qualities",
+      "shrink": "Shrink qualities",
       "comment": "Comments"
     },
     "emissionFactorDialog": {
@@ -765,17 +876,37 @@
     "error": "Something went wrong ...",
     "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m>.</p>"
   },
-  "transition": {
-    "organizations": "Organizations",
-    "organizationsUpload": "Import my organizations",
-    "requiredHeaders": "The following columns are mandatory:",
-    "missingHeaders": "Missing headers:",
-    "loading": "Loading document...",
-    "success": "File successfully imported, please check the information created",
-    "existingOrganizations": "Please note that some organizations (based on SIRET, or name) already exist. These have been ignored. Please check that all your data is correct."
-  },
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",
     "noFileSelected": "No file selected"
+  },
+  "spinner": {
+    "loading": "Loading"
+  },
+  "onboarding": {
+    "title-0": "Welcome to BC+! Before you start, please set up your organization",
+    "titleDescription-0": "We’ve pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization’s name now, or at any time in BC+ via the \"Organization\" section.",
+    "title-1": "Manage your team",
+    "titleDescription-1": "You can already add your team members! You’ll still be able to add new people later via the \"Team\" section.",
+    "previous": "Previous",
+    "next": "Next",
+    "validate": "Validate",
+    "step1": {
+      "name": "Name of my organization",
+      "role": "My role within the organization",
+      "roleDescription": "As the first BC+ user in your organization, we have assigned you the role of administrator. An organization must always have at least one administrator, so you’ll only be able to change your role after adding another administrator via the \"Team\" section."
+    },
+    "step2": {
+      "addCollaborator": "Add a collaborator",
+      "email": "Email address",
+      "role": "Role",
+      "adminDescription": "Can invite and manage new users",
+      "collaboratorDescription": "Can view information from a study",
+      "validation": {
+        "email": "Invalid email address",
+        "requiredEmail": "Email is required",
+        "requiredRole": "Role is required"
+      }
+    }
   }
 }

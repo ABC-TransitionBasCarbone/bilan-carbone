@@ -1,0 +1,64 @@
+.dialog {
+  min-width: 34rem;
+  width: 60%;
+  max-width: 60rem !important;
+  margin: 0 !important;
+}
+
+.container {
+  padding: 2rem;
+}
+
+.stepperDots {
+  width: 6rem !important;
+  height: 0.8rem !important;
+  border-radius: 0.4rem !important;
+  background-color: var(--neutral-20) !important;
+
+  &.active {
+    background-color: var(--primary-40) !important;
+  }
+}
+
+.closeIcon {
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+
+.stepTitle {
+  font-weight: bold;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.field {
+  font-weight: bold;
+}
+
+.roleLabel {
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: var(--background);
+  width: fit-content;
+}
+
+.role {
+  min-width: 14rem;
+}
+
+.roleItem {
+  display: flex;
+  align-items: flex-start !important;
+}
+
+.roleTitle {
+  font-weight: bold;
+}
+
+.collaborator {
+  gap: 1rem;
+}
+
+.deleteButton {
+  height: 3.5rem;
+}

@@ -3,7 +3,15 @@ import classNames from 'classnames'
 import styles from './Button.module.css'
 
 const Button = ({ className, ...rest }: ButtonProps) => {
-  return <ButtonMUI className={classNames(styles.button, className)} {...rest} />
+  return (
+    <ButtonMUI
+      className={classNames(styles.button, className, {
+        [styles.secondary]: rest.color === 'secondary',
+        [styles.error]: rest.color === 'error',
+      })}
+      {...rest}
+    />
+  )
 }
 
 export default Button

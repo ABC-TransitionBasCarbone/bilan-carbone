@@ -70,18 +70,20 @@ describe('Team', () => {
     cy.getByTestId('pending-invitation').contains('user-test-1@test.fr').should('exist')
 
     cy.visit('http://localhost:1080')
-    cy.get('.email-item-link')
-      .first()
-      .invoke('attr', 'href')
-      .then((link) => {
-        const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
-        cy.visit(hmtlUrl)
-        cy.url().should('include', hmtlUrl)
+    cy.origin('http://localhost:1080', () => {
+      cy.get('.email-item-link')
+        .first()
+        .invoke('attr', 'href')
+        .then((link) => {
+          const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
+          cy.visit(hmtlUrl)
+          cy.url().should('include', hmtlUrl)
 
-        cy.get('a')
-          .invoke('attr', 'href')
-          .then((link) => cy.visit(link as string))
-      })
+          cy.get('a')
+            .invoke('attr', 'href')
+            .then((link) => cy.visit(link as string))
+        })
+    })
 
     cy.wait('@logout')
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
@@ -89,7 +91,10 @@ describe('Team', () => {
       .type('user-test-1@test.fr')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
-      .type('test1')
+      .type('Password-1')
+    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .type('Password-1')
 
     cy.getByTestId('reset-button').click()
 
@@ -100,7 +105,7 @@ describe('Team', () => {
       .type('user-test-1@test.fr')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
-      .type('test1')
+      .type('Password-1')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')

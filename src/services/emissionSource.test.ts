@@ -17,10 +17,11 @@ const defaultEmissionSource = {
     geographicRepresentativeness: null,
     completeness: null,
   },
+  site: { id: 'siteId' },
+  emissionFactorId: 'emissionFactor',
   name: 'name',
   source: null,
   subPost: SubPost.AchatsDeServices,
-  tag: null,
   type: null,
   validated: null,
   value: 12,
@@ -30,6 +31,7 @@ const defaultEmissionSource = {
   geographicRepresentativeness: 4,
   completeness: null,
   contributor: null,
+  depreciationPeriod: null,
 } satisfies FullStudy['emissionSources'][0]
 
 describe('emissionSource Service', () => {

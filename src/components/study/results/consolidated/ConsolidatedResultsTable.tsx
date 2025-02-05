@@ -2,6 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -9,19 +10,31 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './ConsolidatedResultsTable.module.css'
 
 interface Props {
   study: FullStudy
-  site: string
+  studySite: string
   withDependencies: boolean
 }
 
-const ConsolidatedResultsTable = ({ study, site, withDependencies }: Props) => {
+const ConsolidatedResultsTable = ({ study, studySite, withDependencies }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
+  const [validatedOnly, setValidatedOnly] = useState(true)
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
+    if (validatedOnlySetting !== undefined) {
+      setValidatedOnly(validatedOnlySetting)
+    }
+  }
 
   const columns = useMemo(
     () =>
@@ -57,15 +70,15 @@ const ConsolidatedResultsTable = ({ study, site, withDependencies }: Props) => {
         {
           header: t('value'),
           accessorKey: 'value',
-          cell: ({ getValue }) => <p className={styles.number}>{formatNumber(getValue<number>())}</p>,
+          cell: ({ getValue }) => <p className={styles.number}>{formatNumber(getValue<number>() / 1000)}</p>,
         },
       ] as ColumnDef<ResultsByPost>[],
     [t, tPost, tQuality],
   )
 
   const data = useMemo(
-    () => computeResultsByPost(study, tPost, site, withDependencies),
-    [study, tPost, site, withDependencies],
+    () => computeResultsByPost(study, tPost, studySite, withDependencies, validatedOnly),
+    [study, tPost, studySite, withDependencies, validatedOnly],
   )
 
   const table = useReactTable({
@@ -92,7 +105,7 @@ const ConsolidatedResultsTable = ({ study, site, withDependencies }: Props) => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.id} data-testid="consolidated-results-table-row">
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
               ))}

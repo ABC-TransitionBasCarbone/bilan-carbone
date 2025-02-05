@@ -14,7 +14,7 @@ import { getQualityRating, getStandardDeviationRating } from '@/services/uncerta
 import { formatNumber } from '@/utils/number'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormControlLabel, Switch } from '@mui/material'
-import { EmissionSourceCaracterisation, StudyRole } from '@prisma/client'
+import { EmissionSourceCaracterisation, Level, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -147,7 +147,11 @@ const EmissionSource = ({
           <p data-testid="emission-source-status" className={classNames(styles.status, 'align-center')}>
             {t(`status.${status}`)}
             {(status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor) && (
-              <> - {formatNumber(getEmissionSourceCompletion(emissionSource, study) * 100)}%</>
+              <>
+                {' '}
+                -{' '}
+                {formatNumber(getEmissionSourceCompletion(emissionSource, study, emissionSource.emissionFactor) * 100)}%
+              </>
             )}
             {loading && (
               <>
@@ -177,7 +181,8 @@ const EmissionSource = ({
               <>
                 <p>
                   {selectedFactor.metaData?.title}
-                  {selectedFactor.location ? ` - ${selectedFactor.location}` : ''} - {selectedFactor.totalCo2} kgCO₂e/
+                  {selectedFactor.location ? ` - ${selectedFactor.location}` : ''} - {selectedFactor.totalCo2 / 1000}{' '}
+                  tCO₂e/
                   {tUnits(selectedFactor.unit)}
                 </p>
                 {selectedFactorQualityRating && (
@@ -190,7 +195,7 @@ const EmissionSource = ({
           </div>
           {emissionResults && (
             <div className="flex-col">
-              <p data-testid="emission-source-value">{`${formatNumber(emissionResults.emission)} kgCO₂e`}</p>
+              <p data-testid="emission-source-value">{`${formatNumber(emissionResults.emission / 1000)} tCO₂e`}</p>
               {emissionResults.standardDeviation && (
                 <p className={styles.status} data-testid="emission-source-quality">
                   {tQuality('name')}{' '}
@@ -242,6 +247,7 @@ const EmissionSource = ({
               />
             ) : (
               <EmissionSourceForm
+                advanced={study.level === Level.Advanced}
                 canEdit={canEdit}
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
@@ -257,7 +263,7 @@ const EmissionSource = ({
                 <div className={classNames(styles.row, 'flex')}>
                   <div>
                     <p>{t('results.emission')}</p>
-                    <p>{formatNumber(emissionResults.emission)} kgCO₂e</p>
+                    <p>{formatNumber(emissionResults.emission / 1000)} tCO₂e</p>
                   </div>
                   {sourceRating && (
                     <div>

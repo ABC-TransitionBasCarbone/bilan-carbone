@@ -44,9 +44,15 @@ jobs:
         run: yarn start &
       - name: Launch unit tests
         run: yarn run test
+      - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
       - name: Launch e2e tests
         run: yarn run cypress
-      - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: /home/runner/work/bilan-carbone/bilan-carbone/cypress/screenshots
       - name: Lighthouse Check
         uses: foo-software/lighthouse-check-action@master
         id: lighthouseCheck

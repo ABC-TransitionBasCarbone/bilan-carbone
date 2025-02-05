@@ -3,50 +3,59 @@ import dayjs from 'dayjs'
 import z from 'zod'
 import { Post } from '../posts'
 
-export const CreateStudyCommandValidation = z
-  .object({
-    organizationId: z.string(),
-    name: z
-      .string({
-        required_error: 'name',
-      })
-      .trim()
-      .min(1, 'name'),
-    validator: z
-      .string({
-        required_error: 'validator',
-        invalid_type_error: 'validator',
-      })
-      .email('validator')
-      .trim(),
-    startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
-      const date = dayjs(val)
-      return date.isValid()
-    }, 'startDate'),
-    endDate: z.string({ required_error: 'endDate' }).refine((val) => {
-      const date = dayjs(val)
-      return date.isValid()
-    }, 'endDate'),
-    level: z.nativeEnum(Level, { required_error: 'level' }),
-    isPublic: z.string(),
-    exports: z.object({
-      [Export.Beges]: z.nativeEnum(ControlMode).or(z.literal(false)),
-      [Export.GHGP]: z.nativeEnum(ControlMode).or(z.literal(false)),
-      [Export.ISO14069]: z.nativeEnum(ControlMode).or(z.literal(false)),
+export const SitesCommandValidation = z.object({
+  sites: z.array(
+    z.object({
+      id: z.string(),
+      name: z
+        .string({
+          required_error: 'name',
+        })
+        .trim()
+        .min(1, 'name'),
+      etp: z.number({ required_error: 'etp', invalid_type_error: 'etp' }).int('etp').min(0, { message: 'etp' }),
+      ca: z.number({ required_error: 'ca', invalid_type_error: 'ca' }).min(0, { message: 'ca' }),
+      selected: z.boolean().optional(),
     }),
-    sites: z
-      .array(
-        z.object({
-          id: z.string(),
-          selected: z.boolean(),
-          etp: z.number().optional(),
-          ca: z.number().optional(),
-        }),
-      )
-      .refine((sites) => {
-        return sites.some((site) => site.selected)
-      }, 'sites'),
-  })
+  ),
+})
+export type SitesCommand = z.infer<typeof SitesCommandValidation>
+
+export const CreateStudyCommandValidation = z
+  .intersection(
+    z.object({
+      organizationId: z.string(),
+      name: z
+        .string({
+          required_error: 'name',
+        })
+        .trim()
+        .min(1, 'name'),
+      validator: z
+        .string({
+          required_error: 'validator',
+          invalid_type_error: 'validator',
+        })
+        .email('validator')
+        .trim(),
+      startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
+        const date = dayjs(val)
+        return date.isValid()
+      }, 'startDate'),
+      endDate: z.string({ required_error: 'endDate' }).refine((val) => {
+        const date = dayjs(val)
+        return date.isValid()
+      }, 'endDate'),
+      level: z.nativeEnum(Level, { required_error: 'level' }),
+      isPublic: z.string(),
+      exports: z.object({
+        [Export.Beges]: z.nativeEnum(ControlMode).or(z.literal(false)),
+        [Export.GHGP]: z.nativeEnum(ControlMode).or(z.literal(false)),
+        [Export.ISO14069]: z.nativeEnum(ControlMode).or(z.literal(false)),
+      }),
+    }),
+    SitesCommandValidation,
+  )
   .refine(
     (data) => {
       return dayjs(data.endDate).isAfter(dayjs(data.startDate))
@@ -56,8 +65,21 @@ export const CreateStudyCommandValidation = z
       path: ['endDate'],
     },
   )
+  .refine(({ sites }) => {
+    return sites.some((site) => site.selected)
+  }, 'sites')
 
 export type CreateStudyCommand = z.infer<typeof CreateStudyCommandValidation>
+
+export const ChangeStudySitesCommandValidation = z
+  .intersection(
+    z.object({
+      organizationId: z.string(),
+    }),
+    SitesCommandValidation,
+  )
+  .refine(({ sites }) => sites.some((site) => site.selected), 'sites')
+export type ChangeStudySitesCommand = z.infer<typeof ChangeStudySitesCommandValidation>
 
 export const ChangeStudyPublicStatusCommandValidation = z.object({
   studyId: z.string(),
@@ -124,3 +146,9 @@ export const NewStudyContributorCommandValidation = z.object({
 })
 
 export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>
+
+export const DeleteStudyCommandValidation = z.object({
+  id: z.string(),
+  name: z.string(),
+})
+export type DeleteStudyCommand = z.infer<typeof DeleteStudyCommandValidation>

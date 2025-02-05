@@ -47,6 +47,7 @@ export default [
     },
 
     rules: {
+      'no-irregular-whitespace': 'off',
       'mocha/no-exclusive-tests': 'error',
       'mocha/no-mocha-arrows': 'off',
       'react/no-unescaped-entities': 'off',

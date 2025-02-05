@@ -19,7 +19,7 @@ export const FormSelect = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <FormControl error={!!error}>
+        <FormControl error={!!error} fullWidth={selectProps.fullWidth}>
           <InputLabel id={`${name}-select-label}`}>{label}</InputLabel>
           <Select
             {...selectProps}

@@ -2,6 +2,7 @@
 
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
+import { OrganizationWithSites } from '@/db/user'
 import { canAddFlowToStudy } from '@/services/permissions/study'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -12,10 +13,11 @@ import StudyPerimeter from '../study/perimeter/StudyPerimeter'
 
 interface Props {
   study: FullStudy
+  organization: OrganizationWithSites
   user: User
 }
 
-const StudyPerimeterPage = async ({ study, user }: Props) => {
+const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.perimeter')
   const documents = await getDocumentsForStudy(study.id)
@@ -27,14 +29,20 @@ const StudyPerimeterPage = async ({ study, user }: Props) => {
   return (
     <>
       <Breadcrumbs
-        current={tNav('studyPermimeter')}
+        current={tNav('studyPerimeter')}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organisations/${study.organization.id}`,
+              }
+            : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <StudyPerimeter study={study} userRoleOnStudy={userRoleOnStudy} />
+        <StudyPerimeter study={study} organization={organization} userRoleOnStudy={userRoleOnStudy} />
       </Block>
       <StudyFlow
         canAddFlow={canAddFlow}

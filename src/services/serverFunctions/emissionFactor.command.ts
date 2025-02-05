@@ -4,18 +4,18 @@ import z from 'zod'
 export const maxParts = 5
 
 const GESschema = z.object({
-  co2f: z.number().min(0, 'co2f').default(0),
-  ch4f: z.number().min(0, 'ch4f').default(0),
-  ch4b: z.number().min(0, 'ch4b').default(0),
-  n2o: z.number().min(0, 'n2o').default(0),
-  co2b: z.number().min(0, 'co2b').default(0),
-  sf6: z.number().min(0, 'sf6').default(0),
-  hfc: z.number().min(0, 'hfc').default(0),
-  pfc: z.number().min(0, 'pfc').default(0),
-  otherGES: z.number().min(0, 'otherGES').default(0),
+  co2f: z.nan().or(z.number().min(0, 'co2f')).optional(),
+  ch4f: z.nan().or(z.number().min(0, 'ch4f')).optional(),
+  ch4b: z.nan().or(z.number().min(0, 'ch4b')).optional(),
+  n2o: z.nan().or(z.number().min(0, 'n2o')).optional(),
+  co2b: z.nan().or(z.number().min(0, 'co2b')).optional(),
+  sf6: z.nan().or(z.number().min(0, 'sf6')).optional(),
+  hfc: z.nan().or(z.number().min(0, 'hfc')).optional(),
+  pfc: z.nan().or(z.number().min(0, 'pfc')).optional(),
+  otherGES: z.nan().or(z.number().min(0, 'otherGES')).optional(),
 })
 
-export const CreateEmissionFactorCommandValidation = z.intersection(
+export const EmissionFactorCommandValidation = z.intersection(
   GESschema,
   z.object({
     name: z
@@ -55,4 +55,13 @@ export const CreateEmissionFactorCommandValidation = z.intersection(
   }),
 )
 
-export type CreateEmissionFactorCommand = z.infer<typeof CreateEmissionFactorCommandValidation>
+export type EmissionFactorCommand = z.infer<typeof EmissionFactorCommandValidation>
+
+export const UpdateEmissionFactorCommandValidation = z.intersection(
+  z.object({
+    id: z.string(),
+  }),
+  EmissionFactorCommandValidation,
+)
+
+export type UpdateEmissionFactorCommand = z.infer<typeof UpdateEmissionFactorCommandValidation>

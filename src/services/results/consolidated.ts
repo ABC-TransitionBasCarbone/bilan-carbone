@@ -30,10 +30,11 @@ const computeUncertainty = (uncertaintyToReduce: { value: number; uncertainty?: 
 export const computeResultsByPost = (
   study: FullStudy,
   tPost: (key: string) => string,
-  site: string,
+  studySite: string,
   withDependencies: boolean,
+  validatedOnly: boolean = true,
 ) => {
-  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, site)
+  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 
   const postInfos = Object.values(Post)
     .sort((a, b) => tPost(a).localeCompare(tPost(b)))
@@ -42,11 +43,13 @@ export const computeResultsByPost = (
         .filter((subPost) => filterWithDependencies(subPost, withDependencies))
         .map((subPost) => {
           const emissionSources = siteEmissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
-          const validatedEmissionSources = emissionSources.filter((emissionSource) => emissionSource.validated)
+          const validatedEmissionSources = emissionSources.filter(
+            (emissionSource) => !validatedOnly || emissionSource.validated,
+          )
 
           return {
             post: subPost,
-            value: getEmissionSourcesTotalCo2(validatedEmissionSources),
+            value: getEmissionSourcesTotalCo2(validatedEmissionSources, study.wasteImpact),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: validatedEmissionSources.length,
             uncertainty: sumEmissionSourcesUncertainty(validatedEmissionSources),

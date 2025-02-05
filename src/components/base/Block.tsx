@@ -6,8 +6,9 @@ import { AnchorHTMLAttributes, ReactNode } from 'react'
 import styles from './Block.module.css'
 import Button from './Button'
 import LinkButton from './LinkButton'
+import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
 
-interface Props {
+export interface Props {
   children?: ReactNode
   title?: string
   icon?: ReactNode
@@ -17,7 +18,8 @@ interface Props {
   ['data-testid']?: string
   description?: ReactNode
   actions?: (
-    | (ButtonProps & { actionType: 'button' })
+    | (ButtonProps & { actionType: 'button'; 'data-testid'?: string })
+    | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton' })
     // No idea why i have to add data-testid here :/
     | (LinkProps & AnchorHTMLAttributes<HTMLAnchorElement> & { actionType: 'link'; 'data-testid'?: string })
   )[]
@@ -57,6 +59,8 @@ const Block = ({
               {actions.map(({ actionType, ...action }, index) =>
                 actionType === 'button' ? (
                   <Button key={index} {...(action as ButtonProps)} />
+                ) : actionType === 'loadingButton' ? (
+                  <LoadingButton key={index} {...(action as LoadingButtonProps)} />
                 ) : (
                   <LinkButton key={index} {...(action as LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>)} />
                 ),

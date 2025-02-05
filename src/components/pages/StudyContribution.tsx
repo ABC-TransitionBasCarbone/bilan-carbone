@@ -15,21 +15,28 @@ interface Props {
 const StudyContributionPage = ({ study }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
-  const { site, setSite } = useStudySite(study)
+  const { studySite, setSite } = useStudySite(study)
   return (
     <>
       <Breadcrumbs
         current={tStudyNav('dataEntry')}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organisations/${study.organization.id}`,
+              }
+            : undefined,
+
           { label: study.name, link: `/etudes/${study.id}` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={tStudyNav('dataEntry')} as="h1">
         <div className="mb1">
-          <SelectStudySite study={study} site={site} setSite={setSite} />
+          <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
         </div>
-        <AllPostsInfography study={study} site={site} />
+        <AllPostsInfography study={study} studySite={studySite} />
       </Block>
     </>
   )

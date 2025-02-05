@@ -73,6 +73,24 @@ const getRulePost = (rule: ExportRule, caracterisation: EmissionSourceCaracteris
       return rule.rented
     case EmissionSourceCaracterisation.FinalClient:
       return rule.finalClient
+    case EmissionSourceCaracterisation.Held:
+      return rule.held
+    case EmissionSourceCaracterisation.NotHeldSimpleRent:
+      return rule.notHeldSimpleRent
+    case EmissionSourceCaracterisation.NotHeldOther:
+      return rule.notHeldOther
+    case EmissionSourceCaracterisation.HeldProcedeed:
+      return rule.heldProcedeed
+    case EmissionSourceCaracterisation.HeldFugitive:
+      return rule.heldFugitive
+    case EmissionSourceCaracterisation.NotHeldSupported:
+      return rule.notHeldSupported
+    case EmissionSourceCaracterisation.NotHeldNotSupported:
+      return rule.notHeldNotSupported
+    case EmissionSourceCaracterisation.UsedByIntermediary:
+      return rule.usedByIntermediary
+    case EmissionSourceCaracterisation.LandUse:
+      return rule.landUse
   }
 }
 
@@ -136,19 +154,24 @@ export const computeBegesResult = (
   study: FullStudy,
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
-  site: string,
+  studySite: string,
   withDependencies: boolean,
+  validatedOnly: boolean = true,
 ) => {
   const results: Record<string, Omit<BegesLine, 'rule'>[]> = allRules.reduce(
     (acc, rule) => ({ ...acc, [rule]: [] }),
     {},
   )
-  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, site)
+  const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 
   siteEmissionSources
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .forEach((emissionSource) => {
-      if (emissionSource.emissionFactor === null || !emissionSource.value || !emissionSource.validated) {
+      if (
+        emissionSource.emissionFactor === null ||
+        !emissionSource.value ||
+        (validatedOnly && !emissionSource.validated)
+      ) {
         return
       }
 
@@ -174,9 +197,6 @@ export const computeBegesResult = (
 
       // l'incertitude est globale, peu importe
       const uncertainty = getStandardDeviation(emissionSource)
-      if (!uncertainty) {
-        return
-      }
 
       if (emissionFactor.emissionFactorParts.length === 0) {
         // Pas de decomposition => on ventile selon la regle par default

@@ -32,14 +32,14 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
   const exports = useMemo(() => study.exports, [study.exports])
-  const { site, setSite } = useStudySite(study, true)
+  const { studySite, setSite } = useStudySite(study, true)
 
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
 
   return (
     <>
       <div className={classNames(styles.select, 'flex')}>
-        <SelectStudySite study={study} allowAll site={site} setSite={setSite} />
+        <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
         <FormControl>
           <InputLabel id="result-type-selector-label">{t('type')}</InputLabel>
           <Select
@@ -49,6 +49,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
             onChange={(event) => {
               setType(event.target.value as Export | 'consolidated')
             }}
+            data-testid="result-type-select"
             disabled={exports.length === 0}
           >
             <MenuItem value="consolidated">{tExport('consolidated')}</MenuItem>
@@ -59,7 +60,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
                 disabled={exportItem.type !== Export.Beges || exportItem.control !== ControlMode.Operational}
               >
                 {tExport(exportItem.type)}
-                {exportItem.control !== ControlMode.Operational && <em>&nbsp;(à venir)</em>}
+                {(exportItem.type !== Export.Beges || exportItem.control !== ControlMode.Operational) && (
+                  <em> ({t('comming')})</em>
+                )}
               </MenuItem>
             ))}
           </Select>
@@ -85,14 +88,14 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
-          <ConsolidatedResults study={study} site={site} withDependencies={withDependencies} />
+          <ConsolidatedResults study={study} studySite={studySite} withDependencies={withDependencies} />
         )}
         {type === Export.Beges && (
           <BegesResultsTable
             study={study}
             rules={rules.filter((rule) => rule.export === Export.Beges)}
             emissionFactorsWithParts={emissionFactorsWithParts}
-            site={site}
+            studySite={studySite}
             withDependencies={withDependencies}
           />
         )}

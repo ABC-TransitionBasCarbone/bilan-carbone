@@ -18,9 +18,15 @@ const NewStudyContributorPage = async ({ study }: Props) => {
         current={tNav('newStudyContributor')}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organisations/${study.organization.id}`,
+              }
+            : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
           { label: tNav('studyRights'), link: `/etudes/${study.id}/cadrage` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
         <NewStudyContributorForm study={study} />

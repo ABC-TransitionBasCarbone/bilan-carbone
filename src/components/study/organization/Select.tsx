@@ -1,16 +1,16 @@
 'use client'
-
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import LinkButton from '@/components/base/LinkButton'
 import { FormSelect } from '@/components/form/Select'
+import Sites from '@/components/organization/Sites'
 import { OrganizationWithSites } from '@/db/user'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
+import { displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import Sites from './Sites'
 
 interface Props {
   organizations: OrganizationWithSites[]
@@ -33,12 +33,32 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
     if (organization) {
       form.setValue(
         'sites',
-        organization.sites.map((site) => ({ ...site, selected: false })),
+        organization.sites.map((site) => ({
+          ...site,
+          ca: site.ca ? displayCA(site.ca, 1000) : 0,
+          selected: false,
+        })),
       )
     } else {
       form.setValue('sites', [])
     }
   }, [organization])
+
+  const next = () => {
+    if (!sites.some((site) => site.selected)) {
+      setError(t('validation.sites'))
+    } else {
+      if (
+        sites
+          .filter((site) => site.selected)
+          .some((site) => Number.isNaN(site.etp) || site.etp <= 0 || Number.isNaN(site.ca) || site.ca <= 0)
+      ) {
+        setError(t('validation.etpCa'))
+      } else {
+        selectOrganization(organization)
+      }
+    }
+  }
 
   return (
     <Block title={t('title')} as="h1" data-testid="new-study-organization-title">
@@ -62,18 +82,9 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
       {organization &&
         (organization.sites.length > 0 ? (
           <>
-            <Sites form={form} sites={sites} />
+            <Sites form={form} sites={sites} withSelection />
             <div className="mt2">
-              <Button
-                data-testid="new-study-organization-button"
-                onClick={() => {
-                  if (sites.some((site) => site.selected)) {
-                    selectOrganization(organization)
-                  } else {
-                    setError(t('validation.sites'))
-                  }
-                }}
-              >
+              <Button data-testid="new-study-organization-button" onClick={next}>
                 {t('next')}
               </Button>
               {error && <FormHelperText error>{error}</FormHelperText>}

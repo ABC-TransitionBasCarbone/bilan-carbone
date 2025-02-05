@@ -50,6 +50,10 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       importedFrom: Import.Manual,
       organizationId: creator.organizationId,
       status: EmissionFactorStatus.Valid,
+      co2b: 345,
+      co2f: 34,
+      ch4f: 284,
+      n2o: 2,
       totalCo2: 320,
       reliability: 5,
       importedId: '1',
@@ -103,7 +107,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
     data: [
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Fioul domestique, France continentale, Base Carbone',
@@ -114,7 +118,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Plaquettes forestières sèches (25% humidité), France continentale, Base Carbone',
@@ -125,7 +129,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: '2022 - mix moyen, France continentale, Base Carbone',
@@ -136,7 +140,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'photovoltaïque - fabrication Europe, France continentale, Base Carbone',
@@ -147,7 +151,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'R22 (HCFC-22), Base Carbone',
@@ -158,7 +162,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Action sociale, France continentale, Base Carbone',
@@ -169,7 +173,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Activités des organisations associatives, France continentale, Base Carbone',
@@ -180,7 +184,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Assurance, services bancaires, conseil et honoraires, France continentale, Base Carbone',
@@ -191,7 +195,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Courrier, France continentale, Base Carbone',
@@ -202,7 +206,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Enseignement, France continentale, Base Carbone',
@@ -213,7 +217,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Hébergement et restauration, France continentale, Base Carbone',
@@ -224,7 +228,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Machines et équipements, France continentale, Base Carbone',
@@ -235,7 +239,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Meubles et autres biens manufacturés, France continentale, Base Carbone',
@@ -246,7 +250,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Produits chimiques, France continentale, Base Carbone',
@@ -257,7 +261,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: "Réparation et installation de machines et d'équipements, France continentale, Base Carbone",
@@ -268,7 +272,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Services (imprimerie, publicité, architecture et ingénierie, maintenance multi-technique des bâtimen, France continentale, Base Carbone',
@@ -279,7 +283,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Télécommunications, France continentale, Base Carbone',
@@ -290,7 +294,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Transport terrestre, France continentale, Base Carbone',
@@ -301,7 +305,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Acier ou fer blanc, France continentale, Base Carbone',
@@ -312,7 +316,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Acier ou fer blanc, France continentale, Base Carbone - Fin de vie',
@@ -323,7 +327,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Films plastiques PET (pas recyclable), France continentale, Base Carbone',
@@ -334,7 +338,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Films plastiques PET (pas recyclable), France continentale, Base Carbone - Fin de vie',
@@ -345,51 +349,51 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Bois courte durée de vie (ameublement…) fabrication, France continentale, Base Carbone',
-        subPost: SubPost.PapiersCartons,
+        subPost: SubPost.AutresIntrants,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        value: 3,
+        value: 2.6,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '20908')?.id,
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Bois courte durée de vie (ameublement…) fabrication, France continentale, Base Carbone - Fin de vie',
         subPost: SubPost.TraitementDesEmballagesEnFinDeVie,
         caracterisation: EmissionSourceCaracterisation.FinalClient,
-        value: 3,
+        value: 2.6,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '34678')?.id,
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Papier Moyen, Hors utilisation et fin de vie, France continentale, Base Carbone',
         subPost: SubPost.PapiersCartons,
         caracterisation: EmissionSourceCaracterisation.Operated,
-        value: 3000,
+        value: 2500,
         emissionFactorId: emissionFactors.find((emissionFactor) => emissionFactor.importedId === '24309')?.id,
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Papier Moyen, Hors utilisation et fin de vie, France continentale, Base Carbone - Fin de vie',
         subPost: SubPost.TraitementDesEmballagesEnFinDeVie,
         caracterisation: EmissionSourceCaracterisation.FinalClient,
-        value: 3,
+        value: 2.5,
         emissionFactorId: papier.id,
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Carton - Fin de vie moyenne filière - impacts, France continentale, Base Carbone',
@@ -400,7 +404,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Papier/fin de vie moyenne, France continentale, Base Carbone',
@@ -411,7 +415,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Plastique souple PET pétrosourcé - Fin de vie moyenne filière - Impacts, France continentale, Base Carbone',
@@ -422,7 +426,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Déchets non dangereux en mélange (DIB) - Fin de vie moyenne - Impacts, France continentale, Base Carbone',
@@ -433,7 +437,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Articulé, 34 à 40 T, diesel routier, 7% de biodiesel, France continentale, Base Carbone',
@@ -444,7 +448,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Articulé, 34 à 40 T, diesel routier, 7% de biodiesel, France continentale, Base Carbone',
@@ -455,7 +459,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Rigide, 12 à 20 T, diesel routier, 7% biodiesel, France continentale, Base Carbone',
@@ -466,7 +470,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Europe - Afrique, France continentale, Base Carbone',
@@ -477,7 +481,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Europe - Amérique du Sud et Centrale, France continentale, Base Carbone',
@@ -488,7 +492,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Europe du Nord - Amérique du Nord, façade atlantique, France continentale, Base Carbone',
@@ -499,7 +503,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Europe - Océanie, France continentale, Base Carbone',
@@ -510,7 +514,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Intra Méditerranée, France continentale, Base Carbone',
@@ -521,7 +525,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Porte-conteneurs, Dry, Asie - Europe du Nord, France continentale, Base Carbone',
@@ -532,7 +536,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture - motorisation essence - 2018, France continentale, Base Carbone',
@@ -543,7 +547,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture - motorisation gazole - 2018, France continentale, Base Carbone',
@@ -554,7 +558,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture particulière - cœur de gamme - véhicule compact - électrique, France continentale, Base Carbone',
@@ -565,7 +569,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Autobus moyen - agglomération de 100 000 à 250 000 habitants, France continentale, Base Carbone',
@@ -576,7 +580,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Métro, tramway, trolleybus - 2018 - Agglomération de 100 000 à 250 000 habitants, France continentale, Base Carbone',
@@ -587,7 +591,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'TER - 2021 - traction moyenne, France continentale, Base Carbone',
@@ -598,7 +602,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture - motorisation essence - 2018, France continentale, Base Carbone',
@@ -609,7 +613,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture - motorisation gazole - 2018, France continentale, Base Carbone',
@@ -620,7 +624,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Voiture particulière - cœur de gamme - véhicule compact - électrique, France continentale, Base Carbone',
@@ -631,7 +635,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Intercités - 2019, France continentale, Base Carbone',
@@ -642,7 +646,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Avion passagers, court courrier, avec trainées, France continentale, Base Carbone',
@@ -653,7 +657,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Bâtiment industriel, structure métallique, France continentale, Base Carbone',
@@ -665,7 +669,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Parking, classique - bitume, France continentale, Base Carbone',
@@ -677,7 +681,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Machines, France continentale, Base Carbone',
@@ -689,7 +693,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Mobilier, France continentale, Base Carbone',
@@ -701,7 +705,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Ordinateur portable, France continentale, Base Carbone',
@@ -713,7 +717,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Ordinateur fixe - bureautique, France continentale, Base Carbone',
@@ -725,7 +729,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: "Imprimante jet d'encre, France continentale, Base Carbone",
@@ -737,7 +741,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
       {
         studyId,
-        siteId: studySiteId,
+        studySiteId,
         validated: true,
         reliability: 5,
         name: 'Photocopieurs, Monde, Base Carbone',

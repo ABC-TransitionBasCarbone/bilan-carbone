@@ -18,6 +18,11 @@
   justify-content: center;
 }
 
+.justify-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .justify-around {
   display: flex;
   justify-content: space-around;
@@ -26,11 +31,6 @@
 .justify-between {
   display: flex;
   justify-content: space-between;
-}
-
-.justify-end {
-  display: flex;
-  justify-content: flex-end;
 }
 
 .align-center {

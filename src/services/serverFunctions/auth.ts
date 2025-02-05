@@ -1,16 +1,25 @@
 'use server'
-
-import { getUserByEmail, updateUserPasswordForEmail } from '@/db/user'
+import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
 import jwt from 'jsonwebtoken'
-import { redirect } from 'next/navigation'
+import { computePasswordValidation } from '../utils'
 
 export const checkToken = async (token: string) => {
-  const tokenValues = jwt.verify(token, process.env.NEXTAUTH_SECRET as string) as {
-    email: string
-    resetToken: string
+  try {
+    const tokenValues = jwt.verify(token, process.env.NEXTAUTH_SECRET as string) as {
+      email: string
+      resetToken: string
+    }
+
+    const user = await getUserByEmailWithSensibleInformations(tokenValues.email)
+    return !user?.resetToken
+  } catch (error) {
+    // Le token est expiré
+    if (error instanceof jwt.TokenExpiredError) {
+      return true
+    }
+    // Autres erreurs (token invalide, etc.)
+    return true
   }
-  const user = await getUserByEmail(tokenValues.email)
-  return !user?.resetToken
 }
 
 export const reset = async (email: string, password: string, token: string) => {
@@ -20,10 +29,14 @@ export const reset = async (email: string, password: string, token: string) => {
   }
 
   if (tokenValues && tokenValues.email === email) {
-    const user = await getUserByEmail(email)
+    const user = await getUserByEmailWithSensibleInformations(email)
     if (user && user.resetToken && user.resetToken === tokenValues.resetToken) {
-      await updateUserPasswordForEmail(email, password)
+      const passwordValidation = computePasswordValidation(password)
+      if (Object.values(passwordValidation).every((value) => value)) {
+        await updateUserPasswordForEmail(email, password)
+        return true
+      }
     }
   }
-  return redirect('/login')
+  return false
 }

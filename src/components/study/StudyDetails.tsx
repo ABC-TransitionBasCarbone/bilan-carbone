@@ -7,17 +7,18 @@ import useStudySite from './site/useStudySite'
 import StudyDetailsHeader from './StudyDetailsHeader'
 
 interface Props {
+  canDeleteStudy?: boolean
   study: FullStudy
 }
 
-const StudyDetails = ({ study }: Props) => {
-  const { site, setSite } = useStudySite(study, true)
+const StudyDetails = ({ canDeleteStudy, study }: Props) => {
+  const { studySite, setSite } = useStudySite(study, true)
 
   return (
     <>
-      <StudyDetailsHeader study={study} site={site} setSite={setSite} />
+      <StudyDetailsHeader study={study} canDeleteStudy={canDeleteStudy} studySite={studySite} setSite={setSite} />
       <Block>
-        <StudyResultsContainerSummary study={study} site={site} />
+        <StudyResultsContainerSummary study={study} studySite={studySite} />
       </Block>
     </>
   )

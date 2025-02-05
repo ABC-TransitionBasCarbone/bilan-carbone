@@ -5,3 +5,11 @@
 .accordionDetailsHeader {
   gap: 1rem;
 }
+
+.deleteButton {
+  height: 3rem;
+}
+
+.typeSelector {
+  min-width: 15rem;
+}

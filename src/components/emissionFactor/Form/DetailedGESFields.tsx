@@ -1,28 +1,29 @@
 import { FormTextField } from '@/components/form/TextField'
 import { gazKeys } from '@/constants/emissions'
-import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { FieldPath, UseFormReturn } from 'react-hook-form'
+import { Control, FieldPath, UseFormReturn } from 'react-hook-form'
 import styles from './DetailedGESFields.module.css'
 
-interface DetailedGESFieldsProps {
-  form: UseFormReturn<CreateEmissionFactorCommand>
+interface Props<T extends EmissionFactorCommand> {
+  form: UseFormReturn<T>
   index?: number
 }
 
-const DetailedGESFields = ({ form, index }: DetailedGESFieldsProps) => {
+const DetailedGESFields = <T extends EmissionFactorCommand>({ form, index }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
+  const control = form.control as Control<EmissionFactorCommand>
   const getName = (gaz: string) =>
-    `${index !== undefined ? `parts.${index}.` : ''}${gaz}` as FieldPath<CreateEmissionFactorCommand>
-  const getTestId = (gaz: string) => `new-emission-${index !== undefined ? `part-${index}-` : ''}${gaz}`
+    `${index !== undefined ? `parts.${index}.` : ''}${gaz}` as FieldPath<EmissionFactorCommand>
+  const getTestId = (gaz: string) => `emission-factor-${index !== undefined ? `part-${index}-` : ''}${gaz}`
   return (
     <div className={classNames(styles.gases, 'flex')}>
       {gazKeys.map((gaz) => (
         <FormTextField
           key={getName(gaz)}
           data-testid={getTestId(gaz)}
-          control={form.control}
+          control={control}
           translation={t}
           slotProps={{
             htmlInput: { min: 0 },

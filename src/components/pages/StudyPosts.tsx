@@ -1,5 +1,4 @@
 'use client'
-
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { User } from 'next-auth'
@@ -23,14 +22,15 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
-  const { site, setSite } = useStudySite(study)
+  const { studySite, setSite } = useStudySite(study)
 
   const emissionSources = useMemo(
     () =>
       study.emissionSources.filter(
-        (emissionSource) => subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.site.id === site,
+        (emissionSource) =>
+          subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.id === studySite,
       ) as FullStudy['emissionSources'],
-    [study, post, site],
+    [study, post, studySite],
   )
 
   return (
@@ -39,11 +39,18 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
         current={tPost(post)}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organisations/${study.organization.id}`,
+              }
+            : undefined,
+
           { label: study.name, link: `/etudes/${study.id}` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={study.name} as="h1">
-        <SelectStudySite study={study} site={site} setSite={setSite} />
+        <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
       </Block>
       <StudyPostsBlock
         post={post}
@@ -52,13 +59,13 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
         setDisplay={setShowInfography}
         emissionSources={emissionSources}
       >
-        {showInfography && <StudyPostInfography study={study} site={site} />}
+        {showInfography && <StudyPostInfography study={study} studySite={studySite} />}
         <SubPosts
           post={post}
           study={study}
           user={user}
           withoutDetail={false}
-          site={site}
+          studySite={studySite}
           emissionSources={emissionSources}
         />
       </StudyPostsBlock>

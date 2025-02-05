@@ -2,21 +2,25 @@
 
 import { FormSelect } from '@/components/form/Select'
 import { Post, subPostsByPost } from '@/services/posts'
-import { CreateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 
-interface Props {
-  form: UseFormReturn<CreateEmissionFactorCommand>
+interface Props<T extends EmissionFactorCommand> {
+  post?: Post
+  form: UseFormReturn<T>
 }
 
-const Posts = ({ form }: Props) => {
+const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
-  const [post, setPost] = useState<Post>()
+  const [post, setPost] = useState<Post | undefined>(initalPost)
+
+  const control = form.control as Control<EmissionFactorCommand>
+  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
   const posts = useMemo(() => Object.keys(Post).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
   const subPosts = useMemo<SubPost[]>(
@@ -30,12 +34,12 @@ const Posts = ({ form }: Props) => {
         <InputLabel id="post-select-label">{t('post')}</InputLabel>
         <Select
           label={t('post')}
-          data-testid="new-emission-post"
+          data-testid="emission-factor-post"
           labelId="post-select-label"
           value={post || ''}
           onChange={(event) => {
             // @ts-expect-error: Force undefined to trigger error if not filled
-            form.setValue('subPost', undefined)
+            setValue('subPost', undefined)
             setPost(event.target.value as Post)
           }}
         >
@@ -47,8 +51,8 @@ const Posts = ({ form }: Props) => {
         </Select>
       </FormControl>
       <FormSelect
-        data-testid="new-emission-subPost"
-        control={form.control}
+        data-testid="emission-factor-subPost"
+        control={control}
         translation={t}
         label={t('subPost')}
         name="subPost"

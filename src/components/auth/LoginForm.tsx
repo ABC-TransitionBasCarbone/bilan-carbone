@@ -6,13 +6,14 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
-import Button from '../base/Button'
+import LoadingButton from '../base/LoadingButton'
 import authStyles from './Auth.module.css'
 import styles from './LoginForm.module.css'
 
 const LoginForm = () => {
   const t = useTranslations('login.form')
   const router = useRouter()
+  const [submitting, setSubmitting] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -20,6 +21,7 @@ const LoginForm = () => {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
+    setSubmitting(true)
     const result = await signIn('credentials', {
       email,
       password,
@@ -27,6 +29,7 @@ const LoginForm = () => {
     })
 
     if (result?.error) {
+      setSubmitting(false)
       setError(t('error'))
     } else {
       router.push('/')
@@ -63,9 +66,15 @@ const LoginForm = () => {
       >
         {t('forgotPassword')}
       </Link>
-      <Button data-testid="login-button" type="submit">
+      <LoadingButton data-testid="login-button" type="submit" loading={submitting}>
         {t('login')}
-      </Button>
+      </LoadingButton>
+      <div>
+        {t('firstConnection')}
+        <Link data-testid="activation-button" className="ml-2" href="/activation" prefetch={false}>
+          {t('activate')}
+        </Link>
+      </div>
     </form>
   )
 }

@@ -16,7 +16,6 @@ const fullStudyInclude = {
       subPost: true,
       name: true,
       caracterisation: true,
-      tag: true,
       value: true,
       reliability: true,
       technicalRepresentativeness: true,
@@ -28,7 +27,9 @@ const fullStudyInclude = {
       comment: true,
       validated: true,
       depreciationPeriod: true,
-      site: {
+      hectare: true,
+      duration: true,
+      studySite: {
         select: {
           id: true,
         },
@@ -44,6 +45,8 @@ const fullStudyInclude = {
           geographicRepresentativeness: true,
           temporalRepresentativeness: true,
           completeness: true,
+          importedFrom: true,
+          importedId: true,
         },
       },
       contributor: {
@@ -86,12 +89,14 @@ const fullStudyInclude = {
       ca: true,
       site: {
         select: {
+          id: true,
           name: true,
         },
       },
     },
   },
   exports: { select: { type: true, control: true } },
+  organization: { select: { id: true, name: true, isCR: true } },
 } satisfies Prisma.StudyInclude
 
 const normalizeAllowedUsers = (
@@ -114,16 +119,18 @@ const normalizeAllowedUsers = (
         }
   })
 
-export const getMainStudy = async (organizationId: string) => {
-  const study = await prismaClient.study.findFirst({
-    where: { organizationId },
+export const getOrganizationStudiesOrderedByStartDate = async (organizationId: string) => {
+  const studies = await prismaClient.study.findMany({
+    where: {
+      organizationId,
+    },
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
-  if (!study) {
-    return null
-  }
-  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId) }
+  return studies.map((study) => ({
+    ...study,
+    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId),
+  }))
 }
 
 export const getStudiesByUser = async (user: User) => {
@@ -163,6 +170,17 @@ export const getStudyById = async (id: string, organizationId: string | null) =>
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
+export const getStudyNameById = async (id: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id },
+    select: { name: true },
+  })
+  if (!study) {
+    return null
+  }
+  return study.name
+}
+
 export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
   prismaClient.userOnStudy.create({
     data: right,
@@ -184,6 +202,48 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
 
+export const getStudySites = (studyId: string) => prismaClient.studySite.findMany({ where: { studyId } })
+
+export const updateStudySites = async (
+  studyId: string,
+  newStudySites: Prisma.StudySiteCreateManyInput[],
+  deletedSiteIds: string[],
+) => {
+  return prismaClient.$transaction(async (transaction) => {
+    const promises = []
+    if (deletedSiteIds.length) {
+      await transaction.studyEmissionSource.deleteMany({ where: { studyId, studySiteId: { in: deletedSiteIds } } })
+      promises.push(transaction.studySite.deleteMany({ where: { id: { in: deletedSiteIds }, studyId } }))
+    }
+    if (newStudySites.length) {
+      newStudySites.forEach((studySite) => {
+        promises.push(
+          transaction.studySite.upsert({
+            where: { studyId_siteId: { studyId, siteId: studySite.siteId } },
+            update: { ca: studySite.ca, etp: studySite.etp },
+            create: studySite,
+          }),
+        )
+      })
+    }
+
+    return Promise.all(promises)
+  })
+}
+
+export const deleteStudy = async (id: string) => {
+  return prismaClient.$transaction(async (transaction) => {
+    await Promise.all([
+      transaction.userOnStudy.deleteMany({ where: { studyId: id } }),
+      transaction.studyEmissionSource.deleteMany({ where: { studyId: id } }),
+      transaction.contributors.deleteMany({ where: { studyId: id } }),
+      transaction.studySite.deleteMany({ where: { studyId: id } }),
+      transaction.document.deleteMany({ where: { studyId: id } }),
+    ])
+    await transaction.study.delete({ where: { id } })
+  })
+}
+
 export const createContributorOnStudy = (
   userId: string,
   subPosts: SubPost[],
@@ -192,4 +252,31 @@ export const createContributorOnStudy = (
   prismaClient.contributors.createMany({
     data: subPosts.map((subPost) => ({ ...data, userId, subPost })),
     skipDuplicates: true,
+  })
+
+export const getStudiesFromSites = async (siteIds: string[]) =>
+  prismaClient.studySite.findMany({
+    where: {
+      siteId: {
+        in: siteIds,
+      },
+    },
+    include: {
+      study: {
+        select: {
+          name: true,
+          isPublic: true,
+          allowedUsers: { select: { userId: true } },
+          contributors: { select: { userId: true } },
+        },
+      },
+      site: {
+        select: {
+          name: true,
+          organization: {
+            select: { id: true, isCR: true, name: true },
+          },
+        },
+      },
+    },
   })

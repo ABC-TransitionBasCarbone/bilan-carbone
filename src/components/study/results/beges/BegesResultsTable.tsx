@@ -3,23 +3,37 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { BegesLine, computeBegesResult, rulesSpans } from '@/services/results/beges'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
+import { formatNumber } from '@/utils/number'
 import { ExportRule } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
   study: FullStudy
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
-  site: string
+  studySite: string
   withDependencies: boolean
 }
 
-const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site, withDependencies }: Props) => {
+const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, withDependencies }: Props) => {
   const t = useTranslations('beges')
   const tQuality = useTranslations('quality')
+  const [validatedOnly, setValidatedOnly] = useState(true)
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
+    if (validatedOnlySetting !== undefined) {
+      setValidatedOnly(validatedOnlySetting)
+    }
+  }
 
   const columns = useMemo(
     () =>
@@ -49,12 +63,20 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site, withD
         {
           header: t('ges'),
           columns: [
-            { header: 'CO2', accessorKey: 'co2' },
-            { header: 'CH4', accessorKey: 'ch4' },
-            { header: 'N20', accessorKey: 'n2o' },
-            { header: t('other'), accessorKey: 'other' },
-            { header: t('total'), accessorKey: 'total' },
-            { header: 'CO2b', accessorKey: 'co2b' },
+            { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            {
+              header: t('other'),
+              accessorKey: 'other',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / 1000),
+            },
+            {
+              header: t('total'),
+              accessorKey: 'total',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / 1000),
+            },
+            { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
             {
               header: t('uncertainty'),
               accessorFn: ({ uncertainty }) =>
@@ -67,8 +89,8 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site, withD
   )
 
   const data = useMemo(
-    () => computeBegesResult(study, rules, emissionFactorsWithParts, site, withDependencies),
-    [study, rules, emissionFactorsWithParts, site, withDependencies],
+    () => computeBegesResult(study, rules, emissionFactorsWithParts, studySite, withDependencies, validatedOnly),
+    [study, rules, emissionFactorsWithParts, studySite, withDependencies, validatedOnly],
   )
 
   const table = useReactTable({
@@ -93,7 +115,7 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, site, withD
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.id} data-testid="beges-results-table-row">
               {row.getVisibleCells().map((cell) => {
                 const rule = row.original.rule.split('.')
                 return cell.column.id !== 'category' || rule[1] === '1' || rule[0] === 'total' ? (

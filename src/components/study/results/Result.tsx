@@ -1,9 +1,10 @@
 'use client'
 
-import Button from '@/components/base/Button'
+import LoadingButton from '@/components/base/LoadingButton'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { downloadStudyEmissionSources, downloadStudyPost } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -19,7 +20,7 @@ import styles from './Result.module.css'
 interface Props {
   study: FullStudy
   by: 'Post' | 'SubPost'
-  site: string
+  studySite: string
   withDependenciesGlobal?: boolean
 }
 
@@ -36,7 +37,7 @@ const postXAxisList = [
   Post.FinDeVie,
 ]
 
-const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
+const Result = ({ study, by, studySite, withDependenciesGlobal }: Props) => {
   const t = useTranslations('results')
   const tExport = useTranslations('study.export')
   const tCaracterisations = useTranslations('categorisations')
@@ -44,6 +45,7 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
   const [dynamicHeight, setDynamicHeight] = useState(0)
+  const [downloading, setDownloading] = useState(false)
   const [post, setPost] = useState<Post>(Object.values(Post)[0])
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -51,6 +53,18 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
   const [withDependencies, setWithDependencies] = useState(
     withDependenciesGlobal === undefined ? true : withDependenciesGlobal,
   )
+  const [validatedOnly, setValidatedOnly] = useState(true)
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
+    if (validatedOnlySetting !== undefined) {
+      setValidatedOnly(validatedOnlySetting)
+    }
+  }
 
   useEffect(() => {
     if (withDependenciesGlobal !== undefined) {
@@ -69,7 +83,7 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
   )
 
   const yData = useMemo(() => {
-    const computedResults = computeResultsByPost(study, tPost, site, withDependencies)
+    const computedResults = computeResultsByPost(study, tPost, studySite, withDependencies, validatedOnly)
     if (by === 'Post') {
       if (computedResults.every((post) => post.value === 0)) {
         return []
@@ -86,7 +100,7 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
         .filter((subPost) => withDependencies || subPost !== SubPost.UtilisationEnDependance)
         .map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
     }
-  }, [post, by, site, withDependencies])
+  }, [post, by, studySite, withDependencies, validatedOnly])
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -104,7 +118,7 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              tooltip: { callbacks: { label: (context) => `${formatNumber(context.raw as number)} kgCO₂e` } },
+              tooltip: { callbacks: { label: (context) => `${formatNumber((context.raw as number) / 1000)} tCO₂e` } },
               legend: { display: false },
             },
             scales: {
@@ -124,15 +138,17 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
     }
   }, [xAxis, yData])
 
-  const downloadResults = () => {
+  const downloadResults = async () => {
+    setDownloading(true)
     if (by === 'Post') {
-      downloadStudyEmissionSources(study, tExport, tCaracterisations, tPost, tQuality, tUnit)
+      await downloadStudyEmissionSources(study, tExport, tCaracterisations, tPost, tQuality, tUnit)
     } else {
       const emissionSources = study.emissionSources.filter((emissionSource) =>
         subPostsByPost[post].includes(emissionSource.subPost),
       )
-      downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit)
+      await downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit)
     }
+    setDownloading(false)
   }
 
   return (
@@ -152,9 +168,14 @@ const Result = ({ study, by, site, withDependenciesGlobal }: Props) => {
               </MenuItem>
             ))}
           </Select>
-          <Button disabled={!yData.find((data) => data !== 0)} onClick={downloadResults}>
+          <LoadingButton
+            disabled={!yData.find((data) => data !== 0)}
+            loading={downloading}
+            onClick={downloadResults}
+            iconButton
+          >
             <DownloadIcon />
-          </Button>
+          </LoadingButton>
         </div>
       )}
       <div style={{ height: dynamicHeight }}>

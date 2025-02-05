@@ -1,26 +1,30 @@
 'use client'
-
-import { OrganizationWithSites } from '@/db/user'
-import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
-import { formatNumber } from '@/utils/number'
+import { SitesCommand } from '@/services/serverFunctions/study.command'
+import { displayCA, formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../base/Button'
+import { FormCheckbox } from '../form/Checkbox'
 import { FormTextField } from '../form/TextField'
 import styles from './Sites.module.css'
 
-interface Props {
-  sites: OrganizationWithSites['sites']
-  form?: UseFormReturn<UpdateOrganizationCommand>
+interface Props<T extends SitesCommand> {
+  form?: UseFormReturn<T>
+  sites: SitesCommand['sites']
+  withSelection?: boolean
 }
 
-const Sites = ({ sites, form }: Props) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>) => {
   const t = useTranslations('organization.sites')
+
+  const control = form?.control as Control<SitesCommand>
+  const setValue = form?.setValue as UseFormSetValue<SitesCommand>
+  const getValues = form?.getValues as UseFormGetValues<SitesCommand>
 
   const columns = useMemo(() => {
     const columns = [
@@ -30,13 +34,27 @@ const Sites = ({ sites, form }: Props) => {
         accessorKey: 'name',
         cell: ({ row, getValue }) =>
           form ? (
-            <FormTextField
-              data-testid="edit-site-name"
-              className="w100"
-              control={form.control}
-              translation={t}
-              name={`sites.${row.index}.name`}
-            />
+            <>
+              {withSelection ? (
+                <div className={classNames(styles.name, 'align-center')}>
+                  <FormCheckbox
+                    control={control}
+                    translation={t}
+                    name={`sites.${row.index}.selected`}
+                    data-testid="organization-sites-checkbox"
+                  />
+                  {getValue<string>()}
+                </div>
+              ) : (
+                <FormTextField
+                  data-testid="edit-site-name"
+                  className="w100"
+                  control={control}
+                  translation={t}
+                  name={`sites.${row.index}.name`}
+                />
+              )}
+            </>
           ) : (
             getValue<string>()
           ),
@@ -48,10 +66,10 @@ const Sites = ({ sites, form }: Props) => {
         cell: ({ row, getValue }) =>
           form ? (
             <FormTextField
-              data-testid="edit-site-etp"
+              data-testid="organization-sites-etp"
               type="number"
               className="w100"
-              control={form.control}
+              control={control}
               translation={t}
               name={`sites.${row.index}.etp`}
               slotProps={{
@@ -70,10 +88,10 @@ const Sites = ({ sites, form }: Props) => {
         cell: ({ row, getValue }) =>
           form ? (
             <FormTextField
-              data-testid="edit-site-ca"
+              data-testid="organization-sites-ca"
               type="number"
               className="w100"
-              control={form.control}
+              control={control}
               translation={t}
               name={`sites.${row.index}.ca`}
               slotProps={{
@@ -82,11 +100,11 @@ const Sites = ({ sites, form }: Props) => {
               }}
             />
           ) : (
-            `${formatNumber(getValue<number>())}€`
+            `${formatNumber(displayCA(getValue<number>(), 1000))}`
           ),
       },
-    ] as ColumnDef<OrganizationWithSites['sites'][0]>[]
-    if (form) {
+    ] as ColumnDef<SitesCommand['sites'][0]>[]
+    if (form && !withSelection) {
       columns.push({
         id: 'delete',
         header: t('actions'),
@@ -99,9 +117,9 @@ const Sites = ({ sites, form }: Props) => {
               aria-label={t('delete')}
               onClick={() => {
                 const id = getValue<string>()
-                form.setValue(
+                setValue(
                   'sites',
-                  form.getValues('sites').filter((site) => site.id !== id),
+                  getValues('sites').filter((site) => site.id !== id),
                 )
               }}
             >
@@ -123,9 +141,9 @@ const Sites = ({ sites, form }: Props) => {
     <p className="title-h3">{t('noSites')}</p>
   ) : (
     <div className={styles.container}>
-      {form && (
+      {form && !withSelection && (
         <Button
-          onClick={() => form.setValue('sites', [...sites, { id: uuidv4(), name: '', etp: 0, ca: 0 }])}
+          onClick={() => setValue('sites', [...sites, { id: uuidv4(), name: '', etp: 0, ca: 0, selected: false }])}
           className={styles.addButton}
           data-testid="add-site-button"
         >
@@ -145,7 +163,7 @@ const Sites = ({ sites, form }: Props) => {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody data-testid="sites-table-body">
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (

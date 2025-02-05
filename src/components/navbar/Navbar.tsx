@@ -1,11 +1,18 @@
+'use client'
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
+import SettingsIcon from '@mui/icons-material/Settings'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
+import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
 import styles from './Navbar.module.css'
 
 interface Props {
@@ -14,6 +21,10 @@ interface Props {
 
 const Navbar = ({ user }: Props) => {
   const t = useTranslations('navigation')
+  const [showSubMenu, setShowSubMenu] = useState(false)
+
+  const handleMouseEnter = () => setShowSubMenu(true)
+  const handleMouseLeave = () => setShowSubMenu(false)
 
   return (
     <nav className={classNames(styles.navbar, 'w100')}>
@@ -26,17 +37,15 @@ const Navbar = ({ user }: Props) => {
             <span className={styles.big}>{t('factors')}</span>
             <span className={styles.small}>{t('fe')}</span>
           </Link>
-          <Link className={styles.link} href="/organisations">
+          <div
+            className={styles.link}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => setShowSubMenu(!showSubMenu)}
+          >
             {t('organization')}
-          </Link>
-          <Link className={styles.link} href="/equipe">
-            {t('team')}
-          </Link>
-          <Link className={styles.link} href="/transition">
-            {t('transition')}
-          </Link>
+          </div>
         </div>
-
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
           {user.role === Role.SUPER_ADMIN && (
             <Link className={styles.link} href="/super-admin">
@@ -51,14 +60,51 @@ const Navbar = ({ user }: Props) => {
             aria-label={t('help')}
           >
             <HelpOutlineIcon />
-            <span className={styles.big}>{t('help')}</span>
+          </Link>
+          <Link className={classNames(styles.link, 'align-center')} aria-label={t('settings')} href="/parametres">
+            <SettingsIcon />
           </Link>
           <Link className={classNames(styles.link, 'align-center')} aria-label={t('profile')} href="/profil">
             <AccountCircleIcon />
-            <span className={styles.big}>{t('profile')}</span>
           </Link>
+          <Link
+            className={classNames(styles.link, 'align-center')}
+            aria-label={t('methodology')}
+            target="_blank"
+            rel="noreferrer noopener"
+            href="https://www.bilancarbone-methode.com/"
+          >
+            <MenuBookIcon />
+          </Link>
+          <button
+            className={classNames(styles.link, 'align-center')}
+            title={t('logout')}
+            aria-label={t('logout')}
+            onClick={() => signOut()}
+          >
+            <PowerSettingsNewIcon />
+          </button>
         </div>
       </div>
+      {showSubMenu && (
+        <div
+          className={classNames(styles.subMenu, 'flex-cc')}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {user.role === Role.ADMIN && (
+            <Link href={`/organisations/${user.organizationId}/modifier`} className={styles.link}>
+              {t('information')}
+            </Link>
+          )}
+          <Link href="/equipe" className={styles.link}>
+            {t('team')}
+          </Link>
+          <Link href="/organisations" className={styles.link}>
+            {t('organizations')}
+          </Link>
+        </div>
+      )}
     </nav>
   )
 }

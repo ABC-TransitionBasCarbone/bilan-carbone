@@ -1,6 +1,12 @@
 describe('Authentication', () => {
+  before(() => {
+    cy.exec('npx prisma db seed')
+  })
+
   beforeEach(() => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
+    cy.intercept('POST', '/reset-password/*').as('reset-password')
+    cy.intercept('POST', '/activation').as('activate')
   })
 
   it('does not authenticate with wrong password', () => {
@@ -55,28 +61,34 @@ describe('Authentication', () => {
     cy.url().should('include', '/login')
 
     cy.visit('http://localhost:1080')
-    cy.get('.email-item-link')
-      .first()
-      .invoke('attr', 'href')
-      .then((link) => {
-        const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
-        cy.visit(hmtlUrl)
-        cy.url().should('include', hmtlUrl)
+    cy.origin('http://localhost:1080', () => {
+      cy.get('.email-item-link')
+        .first()
+        .invoke('attr', 'href')
+        .then((link) => {
+          const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
+          cy.visit(hmtlUrl)
+          cy.url().should('include', hmtlUrl)
 
-        cy.get('a')
-          .invoke('attr', 'href')
-          .then((link) => cy.visit(link as string))
-      })
+          cy.get('a')
+            .invoke('attr', 'href')
+            .then((link) => cy.visit(link as string))
+        })
+    })
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
+    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-2@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('test2')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('new-Password-2')
+    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
+    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('new-Password-2')
 
     cy.getByTestId('reset-button').click()
 
+    cy.wait('@reset-password')
     cy.url().should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
@@ -95,7 +107,7 @@ describe('Authentication', () => {
     )
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').clear()
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('test2')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('new-Password-2')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
@@ -116,5 +128,73 @@ describe('Authentication', () => {
 
     cy.visit('/')
     cy.url().should('include', '/login')
+  })
+
+  it('does activate account', () => {
+    cy.visit('/')
+    cy.url().should('include', '/login')
+
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('to-activate@yopmail.com')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('password-1')
+    cy.getByTestId('login-button').click()
+
+    cy.wait('@login')
+
+    cy.visit('/')
+    cy.url().should('include', '/login')
+
+    cy.getByTestId('activation-button').should('be.visible')
+    cy.getByTestId('activation-button').click()
+    cy.url().should('include', '/activation')
+
+    cy.getByTestId('activation-email').should('be.visible')
+    cy.getByTestId('activation-button').should('be.visible')
+
+    cy.getByTestId('activation-email').type('to-activate@yopmail.co')
+    cy.getByTestId('activation-form-error').should('not.exist')
+    cy.getByTestId('activation-button').click()
+    cy.getByTestId('activation-form-error').should('be.visible')
+
+    cy.getByTestId('activation-email').type('m')
+    cy.getByTestId('activation-success').should('not.exist')
+    cy.getByTestId('activation-button').click()
+
+    cy.wait('@activate')
+
+    cy.getByTestId('activation-success').should('be.visible')
+    cy.getByTestId('activation-email').should('not.exist')
+    cy.getByTestId('activation-button').should('not.exist')
+    cy.getByTestId('activation-form-error').should('not.exist')
+
+    cy.visit('http://localhost:1080')
+    cy.origin('http://localhost:1080', () => {
+      cy.get('.email-item-link')
+        .first()
+        .invoke('attr', 'href')
+        .then((link) => {
+          const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
+          cy.visit(hmtlUrl)
+          cy.url().should('include', hmtlUrl)
+
+          cy.get('a')
+            .invoke('attr', 'href')
+            .then((link) => cy.visit(link as string))
+        })
+    })
+
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('to-activate@yopmail.com')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
+    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
+
+    cy.getByTestId('reset-button').click()
+    cy.wait('@reset-password')
+    cy.url().should('include', '/login')
+
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('to-activate@yopmail.com')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
+    cy.getByTestId('login-button').click()
+
+    cy.wait('@login')
+    cy.url().should('not.include', '/login')
   })
 })

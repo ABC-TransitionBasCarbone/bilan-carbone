@@ -52,8 +52,8 @@ export const filterAllowedStudies = async (user: User, studies: Study[]) => {
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateStudy = async (user: User, study: Prisma.StudyCreateInput, organizationId: string) => {
-  const dbUser = await getUserByEmail(user.email)
+export const canCreateStudy = async (userEmail: string, study: Prisma.StudyCreateInput, organizationId: string) => {
+  const dbUser = await getUserByEmail(userEmail)
 
   if (!dbUser) {
     return false
@@ -88,6 +88,10 @@ export const canChangePublicStatus = async (user: User, study: FullStudy) => {
 }
 
 export const canChangeDates = async (user: User, study: FullStudy) => {
+  return canChangeStudyValues(user, study)
+}
+
+export const canChangeSites = async (user: User, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
@@ -147,6 +151,41 @@ export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
   return true
 }
 
+export const canDeleteStudy = async (studyId: string) => {
+  const session = await auth()
+
+  if (!session) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, session.user.organizationId)
+  if (!study) {
+    return false
+  }
+
+  if (study.createdById === session.user.id) {
+    return true
+  }
+
+  if (
+    study.allowedUsers.some(
+      (allowedUser) => allowedUser.role === StudyRole.Validator && allowedUser.user.email === session.user.email,
+    )
+  ) {
+    return true
+  }
+
+  if (
+    study.isPublic &&
+    study.organizationId === session.user.organizationId &&
+    (session.user.role === Role.ADMIN || session.user.role === Role.SUPER_ADMIN)
+  ) {
+    return true
+  }
+
+  return false
+}
+
 export const filterStudyDetail = (user: User, study: FullStudy) => {
   const availableSubPosts = study.contributors
     .filter((contributor) => contributor.user.email === user.email)
@@ -176,8 +215,10 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
         source: emissionSource.source,
         type: emissionSource.type,
         caracterisation: emissionSource.caracterisation,
-        site: emissionSource.site,
+        studySite: emissionSource.studySite,
         depreciationPeriod: emissionSource.depreciationPeriod,
+        hectare: emissionSource.hectare,
+        duration: emissionSource.duration,
       })),
     exports: study.exports,
     contributors: undefined,

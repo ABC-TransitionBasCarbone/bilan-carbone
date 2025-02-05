@@ -1,8 +1,8 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
+import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
 import { createOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
@@ -49,9 +49,9 @@ const NewOrganizationForm = () => {
           name="name"
           label={t('name')}
         />
-        <Button type="submit" disabled={form.formState.isSubmitting} data-testid="new-organization-create-button">
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-organization-create-button">
           {t('create')}
-        </Button>
+        </LoadingButton>
         {error && <p>{error}</p>}
       </Form>
     </Block>

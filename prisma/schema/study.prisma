@@ -31,6 +31,15 @@ enum EmissionSourceCaracterisation {
   NotOperatedNotSupported
   Rented
   FinalClient
+  Held
+  NotHeldSimpleRent
+  NotHeldOther
+  HeldProcedeed
+  HeldFugitive
+  NotHeldSupported
+  NotHeldNotSupported
+  UsedByIntermediary
+  LandUse
 }
 
 model Study {
@@ -53,6 +62,8 @@ model Study {
 
   versionId String                      @map("version_id")
   version   EmissionFactorImportVersion @relation(fields: [versionId], references: [id])
+
+  wasteImpact Float @default(41) @map("waste_impact")
 
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
@@ -89,7 +100,7 @@ model Contributors {
   study   Study  @relation(fields: [studyId], references: [id])
   studyId String @map("study_id")
   user    User   @relation(fields: [userId], references: [id])
-  userId  String
+  userId  String @map("user_id")
 
   subPost SubPost
 
@@ -112,7 +123,7 @@ model StudyEmissionSource {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
-  subPost         SubPost
+  subPost         SubPost                        @map("sub_post")
   name            String
   tag             String?
   caracterisation EmissionSourceCaracterisation?
@@ -120,8 +131,8 @@ model StudyEmissionSource {
   emissionFactorId String?         @map("emission_factor_id")
   emissionFactor   EmissionFactor? @relation(fields: [emissionFactorId], references: [id])
 
-  siteId String    @map("site_id")
-  site   StudySite @relation(fields: [siteId], references: [id])
+  studySiteId String    @map("study_site_id")
+  studySite   StudySite @relation(fields: [studySiteId], references: [id])
 
   value                        Float?
   reliability                  Int?
@@ -133,8 +144,11 @@ model StudyEmissionSource {
   type                         EmissionSourceType?
   comment                      String?
   validated                    Boolean?
+  recycledPart                 Int?                @map("recycled_part")
 
   depreciationPeriod Int? @map("depreciation_period")
+  duration           Int? @default(20)
+  hectare            Int?
 
   contributorId String? @map("contributor_id")
   contributor   User?   @relation(fields: [contributorId], references: [id])
@@ -158,6 +172,15 @@ model ExportRule {
   notOperatedNotSupported String? @map("not_operated_not_supported")
   rented                  String?
   finalClient             String? @map("final_client")
+  held                    String?
+  notHeldSimpleRent       String? @map("not_held_simple_rent")
+  notHeldOther            String? @map("not_held_other")
+  heldProcedeed           String? @map("held_procedeed")
+  heldFugitive            String? @map("held_fugitive")
+  notHeldSupported        String? @map("not_held_supported")
+  notHeldNotSupported     String? @map("not_held_not_supported")
+  usedByIntermediary      String? @map("used_by_intermediary")
+  landUse                 String? @map("land_use")
 
   @@unique([export, subPost, type])
   @@map("export_rules")
@@ -176,5 +199,6 @@ model StudySite {
   ca                  Float
   StudyEmissionSource StudyEmissionSource[]
 
+  @@unique([studyId, siteId])
   @@map("study_sites")
 }

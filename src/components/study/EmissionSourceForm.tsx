@@ -4,17 +4,18 @@ import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { Post, subPostsByPost } from '@/services/posts'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, EmissionSourceType } from '@prisma/client'
+import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Path } from 'react-hook-form'
-import QualitySelect from '../form/QualitySelect'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
+import QualitySelectGroup from './QualitySelectGroup'
 
 interface Props {
+  advanced?: boolean
   emissionSource: FullStudy['emissionSources'][0]
   canEdit: boolean | null
   emissionFactors: EmissionFactorWithMetaData[]
@@ -25,6 +26,7 @@ interface Props {
 }
 
 const EmissionSourceForm = ({
+  advanced,
   emissionSource,
   canEdit,
   update,
@@ -48,6 +50,17 @@ const EmissionSourceForm = ({
     }
   }
 
+  const isCAS =
+    emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
+    emissionSource.emissionFactor &&
+    emissionSource.emissionFactor.unit === Unit.HA_YEAR
+
+  useEffect(() => {
+    if (isCAS) {
+      update('value', (emissionSource.hectare || 0) * (emissionSource.duration || 0))
+    }
+  }, [emissionSource.hectare, emissionSource.duration])
+
   return (
     <>
       <div className={classNames(styles.row, 'flex')}>
@@ -57,13 +70,6 @@ const EmissionSourceForm = ({
           data-testid="emission-source-name"
           onBlur={(event) => update('name', event.target.value)}
           label={`${t('form.name')} *`}
-        />
-        <TextField
-          disabled={!canEdit}
-          defaultValue={emissionSource.tag}
-          data-testid="emission-source-tag"
-          onBlur={(event) => update('tag', event.target.value)}
-          label={t('form.tag')}
         />
         {caracterisations.length > 0 && (
           <FormControl>
@@ -94,24 +100,26 @@ const EmissionSourceForm = ({
         />
       </div>
       <div className={classNames(styles.row, 'flex')}>
-        <div className={styles.inputWithUnit}>
-          <TextField
-            disabled={!canEdit}
-            type="number"
-            data-testid="emission-source-value-da"
-            defaultValue={emissionSource.value}
-            onBlur={(event) => handleUpdate(event)}
-            label={`${t('form.value')} *`}
-            helperText={error}
-            error={!!error}
-            slotProps={{
-              htmlInput: { min: 0 },
-              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-              inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
-            }}
-          />
-          {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
-        </div>
+        {!isCAS && (
+          <div className={styles.inputWithUnit}>
+            <TextField
+              disabled={!canEdit}
+              type="number"
+              data-testid="emission-source-value-da"
+              value={emissionSource.value}
+              onBlur={(event) => handleUpdate(event)}
+              label={`${t('form.value')} *`}
+              helperText={error}
+              error={!!error}
+              slotProps={{
+                htmlInput: { min: 0 },
+                input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
+              }}
+            />
+            {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
+          </div>
+        )}
         <TextField
           disabled={!canEdit}
           data-testid="emission-source-source"
@@ -143,7 +151,6 @@ const EmissionSourceForm = ({
             disabled={!canEdit}
             type="number"
             defaultValue={emissionSource.depreciationPeriod}
-            className={styles.depreciationPeriod}
             onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
             label={`${t('form.depreciationPeriod')} *`}
             slotProps={{
@@ -154,48 +161,33 @@ const EmissionSourceForm = ({
           <div className={styles.unit}>{t('form.years')}</div>
         </div>
       )}
-      <div className={classNames(styles.row, 'flex')}>
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-reliability"
-          id="reliability"
-          value={emissionSource.reliability || ''}
-          onChange={(event) => update('reliability', Number(event.target.value))}
-          label={t('form.reliability')}
-        />
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-technicalRepresentativeness"
-          id="technicalRepresentativeness"
-          value={emissionSource.technicalRepresentativeness || ''}
-          onChange={(event) => update('technicalRepresentativeness', Number(event.target.value))}
-          label={t('form.technicalRepresentativeness')}
-        />
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-geographicRepresentativeness"
-          id="geographicRepresentativeness"
-          value={emissionSource.geographicRepresentativeness || ''}
-          onChange={(event) => update('geographicRepresentativeness', Number(event.target.value))}
-          label={t('form.geographicRepresentativeness')}
-        />
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-temporalRepresentativeness"
-          id="temporalRepresentativeness"
-          value={emissionSource.temporalRepresentativeness || ''}
-          onChange={(event) => update('temporalRepresentativeness', Number(event.target.value))}
-          label={t('form.temporalRepresentativeness')}
-        />
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-completeness"
-          id="completeness"
-          value={emissionSource.completeness || ''}
-          onChange={(event) => update('completeness', Number(event.target.value))}
-          label={t('form.completeness')}
-        />
-      </div>
+      {isCAS && (
+        <div className={classNames(styles.row, 'flex')}>
+          <TextField
+            disabled={!canEdit}
+            type="number"
+            defaultValue={emissionSource.hectare}
+            onBlur={(event) => update('hectare', Number(event.target.value))}
+            label={`${t('form.hectare')} *`}
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+            }}
+          />
+          <TextField
+            disabled={!canEdit}
+            type="number"
+            defaultValue={emissionSource.duration}
+            onBlur={(event) => update('duration', Number(event.target.value))}
+            label={`${t('form.duration')} *`}
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+            }}
+          />
+        </div>
+      )}
+      <QualitySelectGroup canEdit={canEdit} emissionSource={emissionSource} update={update} advanced={advanced} />
       <div className={classNames(styles.row, 'flex')}>
         <TextField
           disabled={!canEdit}
