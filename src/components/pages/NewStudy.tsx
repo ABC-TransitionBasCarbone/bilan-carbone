@@ -18,9 +18,10 @@ interface Props {
   usersEmail: string[]
   organizations: OrganizationWithSites[]
   defaultOrganization?: OrganizationWithSites
+  caUnit: number
 }
 
-const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization }: Props) => {
+const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization, caUnit }: Props) => {
   const [organization, setOrganization] = useState<OrganizationWithSites>()
   const tNav = useTranslations('nav')
 
@@ -37,7 +38,7 @@ const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization }: 
       sites:
         (defaultOrganization ?? organizations[0])?.sites.map((site) => ({
           ...site,
-          ca: site.ca ? displayCA(site.ca, 1000) : 0,
+          ca: site.ca ? displayCA(site.ca, caUnit) : 0,
           selected: false,
         })) || [],
       exports: {

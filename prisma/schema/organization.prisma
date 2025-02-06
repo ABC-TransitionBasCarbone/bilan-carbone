@@ -1,3 +1,9 @@
+enum SiteCAUnit {
+  U // Unit (1)
+  K // Kilo (1000)
+  M // Million (1000000)
+}
+
 model Organization {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")

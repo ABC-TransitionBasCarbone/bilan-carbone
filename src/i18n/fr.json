@@ -181,7 +181,13 @@
     "validate": "Sauvegarder",
     "validatedEmissionSourcesOnly": "Afficher uniquement les sources d'emissions validées",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "caUnit": {
+      "label": "Unité des chiffres d'affaire des sites",
+      "U": "€",
+      "K": "k€",
+      "M": "M€"
+    }
   },
   "admin": {
     "title": "Administration du BC+",
@@ -782,7 +788,7 @@
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "etp": "Employés",
-      "ca": "Chiffre d'affaire (k€)",
+      "ca": "Chiffre d'affaire ({unit})",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",

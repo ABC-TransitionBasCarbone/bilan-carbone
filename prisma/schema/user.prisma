@@ -38,6 +38,7 @@ model UserApplicationSettings {
   userId                       String  @unique @map("user_id")
   user                         User?   @relation(fields: [userId], references: [id])
   validatedEmissionSourcesOnly Boolean @default(true) @map("validated_emission_sources_only")
+  caUnit                       SiteCAUnit @default(K) @map("ca_unit")
 
-	@@map("user_application_settings")
+  @@map("user_application_settings")
 }

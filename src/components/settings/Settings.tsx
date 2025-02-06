@@ -3,13 +3,15 @@
 import { updateUserSettings } from '@/services/serverFunctions/user'
 import { EditSettingsCommand, EditSettingsCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
-import { UserApplicationSettings } from '@prisma/client'
+import { FormControl, FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
+import { SiteCAUnit, UserApplicationSettings } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
+import { FormSelect } from '../form/Select'
+import styles from './Settings.module.css'
 
 interface Props {
   userSettings: UserApplicationSettings
@@ -17,6 +19,7 @@ interface Props {
 
 const Settings = ({ userSettings }: Props) => {
   const t = useTranslations('settings')
+  const tUnit = useTranslations('settings.caUnit')
   const [error, setError] = useState('')
 
   const form = useForm<EditSettingsCommand>({
@@ -25,6 +28,7 @@ const Settings = ({ userSettings }: Props) => {
     reValidateMode: 'onChange',
     defaultValues: {
       validatedEmissionSourcesOnly: userSettings.validatedEmissionSourcesOnly,
+      caUnit: userSettings.caUnit,
     },
   })
 
@@ -60,6 +64,20 @@ const Settings = ({ userSettings }: Props) => {
               )}
             />
           </FormControl>
+
+          <FormSelect
+            className={styles.selector}
+            control={form.control}
+            translation={t}
+            name="caUnit"
+            label={tUnit('label')}
+          >
+            {Object.keys(SiteCAUnit).map((scale) => (
+              <MenuItem key={scale} value={scale}>
+                {tUnit(scale)}
+              </MenuItem>
+            ))}
+          </FormSelect>
           <LoadingButton
             type="submit"
             disabled={!form.formState.isDirty}
