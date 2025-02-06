@@ -138,4 +138,3 @@ dist
 .DS_Store
 
 cypress/screenshots
-package.json.local
