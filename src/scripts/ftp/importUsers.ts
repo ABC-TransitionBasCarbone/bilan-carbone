@@ -34,19 +34,18 @@ const getUsersFromFTP = async () => {
     if (i % 50 === 0) {
       console.log(`${i}/${values.length}`)
     }
-    const login = value['User_Login']
     const email = value['User_Email']
     const siretOrSiren = value['SIRET']
     const sessionCodeTraining = value['Session_Code']
     const user: Prisma.UserCreateManyInput = {
       email,
       role: Role.DEFAULT,
-      firstName: login,
+      firstName: '',
       lastName: '',
       isActive: false,
       isValidated: false,
       createdAt: fileDate,
-      level: Level.Initial
+      level: Level.Initial,
     }
 
     if (sessionCodeTraining) {
