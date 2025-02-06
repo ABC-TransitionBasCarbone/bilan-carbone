@@ -264,15 +264,18 @@
     "role": {
       "Validator": "Validateur",
       "Editor": "Éditeur",
-      "Reader": "Lecteur"
+      "Reader": "Lecteur",
+      "guide": "Guide des rôles",
+      "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émissions qui ont été renseignées par les validateurs, éditeurs et contributeurs.",
+      "Editor_description": "A tous les droits sur l'étude à l'exception de la validation des sources d'émissions.",
+      "Reader_description": "Peut uniquement accéder en lecture à l'étude et exporter les informations de celle-ci.",
+      "close": "Fermer"
     },
     "title": "Étude",
     "rights": {
-      "contributors": "Contributeurs",
       "isPublic": "L'étude est publique",
       "isPrivate": "L'étude est privée",
       "title": "Cadrage de l'étude : {name}",
-      "newContributorLink": "Ajouter un contributeur",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",
@@ -306,7 +309,14 @@
       "contributorsTable": {
         "email": "Email",
         "post": "Poste",
-        "subPosts": "Sous postes"
+        "subPosts": "Sous postes",
+        "title": "Contributeurs",
+        "newContributorLink": "Ajouter un contributeur",
+        "role": {
+          "information": "Informations",
+          "description": "Un contributeur peut renseigner les informations pour les sources d'émission du ou des postes que vous lui avez confiés.",
+          "close": "Fermer"
+        }
       },
       "table": {
         "email": "Email",

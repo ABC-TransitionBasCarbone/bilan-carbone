@@ -1,7 +1,5 @@
 import { FullStudy } from '@/db/study'
-import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { getUserRoleOnStudy } from '@/utils/study'
-import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -47,23 +45,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
         <StudyPublicStatus study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
       </Block>
       <StudyRightsTable study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
-      <Block
-        title={t('contributors')}
-        actions={
-          isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
-            ? [
-                {
-                  actionType: 'link',
-                  href: `/etudes/${study.id}/cadrage/ajouter-contributeur`,
-                  'data-testid': 'study-rights-add-contributor',
-                  children: t('newContributorLink'),
-                },
-              ]
-            : undefined
-        }
-      >
-        <StudyContributorsTable study={study} />
-      </Block>
+      <StudyContributorsTable study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
     </>
   )
 }

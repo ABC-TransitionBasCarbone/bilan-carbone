@@ -1,6 +1,6 @@
 'use client'
+import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/user'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -10,7 +10,6 @@ import { useMemo, useState } from 'react'
 import Block from '../base/Block'
 import Button from '../base/Button'
 import SelectRole from './SelectRole'
-import styles from './TeamTable.module.css'
 
 interface Props {
   user: User
@@ -59,52 +58,47 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   })
 
   return (
-    <Block
-      title={t('title')}
-      icon={
-        <HelpOutlineIcon
-          className={styles.helpIcon}
-          onClick={() => setDisplayRoles(!displayRoles)}
-          aria-label={tRole('guide')}
-          titleAccess={tRole('guide')}
-        />
-      }
-      id="team-table-title"
-      actions={
-        user.role !== Role.DEFAULT
-          ? [
-              {
-                actionType: 'link',
-                href: '/equipe/ajouter',
-                'data-testid': 'add-member-link',
-                children: t('newUser'),
-              },
-            ]
-          : undefined
-      }
-    >
-      <table aria-labelledby="team-table-title">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} data-testid="team-table-line">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <>
+      <Block
+        title={t('title')}
+        icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tRole('guide')} />}
+        id="team-table-title"
+        actions={
+          user.role !== Role.DEFAULT
+            ? [
+                {
+                  actionType: 'link',
+                  href: '/equipe/ajouter',
+                  'data-testid': 'add-member-link',
+                  children: t('newUser'),
+                },
+              ]
+            : undefined
+        }
+      >
+        <table aria-labelledby="team-table-title">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} data-testid="team-table-line">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Block>
       <Dialog
         open={displayRoles}
         aria-labelledby={`organization-roles-title`}
@@ -121,12 +115,12 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             ))}
         </DialogContent>
         <DialogActions>
-          <Button data-testid={`organization-roles-cancel`} onClick={() => setDisplayRoles(false)}>
+          <Button data-testid="organization-roles-close" onClick={() => setDisplayRoles(false)}>
             {tRole('close')}
           </Button>
         </DialogActions>
       </Dialog>
-    </Block>
+    </>
   )
 }
 
