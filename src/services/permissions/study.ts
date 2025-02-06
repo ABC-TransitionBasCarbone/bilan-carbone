@@ -8,7 +8,7 @@ import { checkLevel } from '../study'
 import { checkOrganization } from './organization'
 import { isAdmin } from './user'
 
-export const isAdministratorOnStudy = (user: User, study: Pick<Study, 'organizationId'>) =>
+export const isAdminOnStudyOrga = (user: User, study: Pick<Study, 'organizationId'>) =>
   user.organizationId === study.organizationId && isAdmin(user.role)
 
 export const canReadStudy = async (
@@ -20,8 +20,8 @@ export const canReadStudy = async (
   }
 
   if (
-    (study.isPublic || isAdministratorOnStudy(user, study)) &&
-    (await checkOrganization(user.organizationId, study.organizationId))
+    isAdminOnStudyOrga(user, study) ||
+    (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId)))
   ) {
     return true
   }
@@ -78,7 +78,7 @@ export const canCreateStudy = async (userEmail: string, study: Prisma.StudyCreat
 }
 
 const canChangeStudyValues = async (user: User, study: FullStudy) => {
-  if (isAdministratorOnStudy(user, study)) {
+  if (isAdminOnStudyOrga(user, study)) {
     return true
   }
 
@@ -129,7 +129,7 @@ export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStud
     return false
   }
 
-  if (isAdministratorOnStudy(user, study)) {
+  if (isAdminOnStudyOrga(user, study)) {
     return true
   }
 
@@ -146,7 +146,7 @@ export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStud
 }
 
 export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
-  if (isAdministratorOnStudy(user, study)) {
+  if (isAdminOnStudyOrga(user, study)) {
     return true
   }
 
@@ -182,7 +182,7 @@ export const canDeleteStudy = async (studyId: string) => {
     return true
   }
 
-  if (isAdministratorOnStudy(session.user, study)) {
+  if (isAdminOnStudyOrga(session.user, study)) {
     return true
   }
 
@@ -236,7 +236,10 @@ export const canReadStudyDetail = async (user: User, study: FullStudy) => {
     return false
   }
 
-  if ((study.isPublic || isAdmin(user.role)) && (await checkOrganization(user.organizationId, study.organizationId))) {
+  if (
+    isAdminOnStudyOrga(user, study) ||
+    (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId)))
+  ) {
     return true
   }
 

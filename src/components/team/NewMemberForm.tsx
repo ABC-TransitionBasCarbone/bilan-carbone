@@ -2,7 +2,6 @@
 
 import Form from '@/components/base/Form'
 import { FormTextField } from '@/components/form/TextField'
-import { isAdmin } from '@/services/permissions/user'
 import { addMember } from '@/services/serverFunctions/user'
 import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -79,7 +78,7 @@ const NewMemberForm = () => {
       </FormSelect>
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="new-member-role">
         {Object.keys(Role)
-          .filter((role) => !isAdmin(role as Role))
+          .filter((role) => role !== Role.SUPER_ADMIN)
           .map((key) => (
             <MenuItem key={key} value={key}>
               {tRole(key)}

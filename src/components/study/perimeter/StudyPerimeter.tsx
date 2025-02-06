@@ -26,7 +26,7 @@ import styles from './StudyPerimeter.module.css'
 interface Props {
   study: FullStudy
   organization: OrganizationWithSites
-  userRoleOnStudy?: FullStudy['allowedUsers'][0]
+  userRoleOnStudy: StudyRole
 }
 
 const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
@@ -135,7 +135,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
 
   return (
     <>
-      {userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader ? (
+      {userRoleOnStudy !== StudyRole.Reader ? (
         <div className={classNames(styles.dates, 'flex')}>
           <FormDatePicker control={form.control} translation={tForm} name="startDate" label={tForm('start')} />
           <FormDatePicker

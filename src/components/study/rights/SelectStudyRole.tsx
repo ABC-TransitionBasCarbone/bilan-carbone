@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { isAdministratorOnStudy } from '@/services/permissions/study'
+import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { changeStudyRole } from '@/services/serverFunctions/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Level, StudyRole } from '@prisma/client'
@@ -45,7 +45,7 @@ const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, studyOrganization
       user.email === rowUser.email ||
       (currentRole === StudyRole.Validator &&
         userRole !== StudyRole.Validator &&
-        !isAdministratorOnStudy(user, { organizationId: studyOrganizationId })) ||
+        !isAdminOnStudyOrga(user, { organizationId: studyOrganizationId })) ||
       rowUser.readerOnly,
     [currentRole, rowUser, studyLevel, user, userRole],
   )
@@ -59,7 +59,7 @@ const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, studyOrganization
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          isAdministratorOnStudy(user, { organizationId: studyOrganizationId }) ||
+          isAdminOnStudyOrga(user, { organizationId: studyOrganizationId }) ||
           userRole === StudyRole.Validator ||
           isDisabled ||
           role !== StudyRole.Validator,

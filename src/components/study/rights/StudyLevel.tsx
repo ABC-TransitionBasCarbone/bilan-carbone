@@ -2,7 +2,7 @@
 
 import { FormSelect } from '@/components/form/Select'
 import { FullStudy } from '@/db/study'
-import { isAdministratorOnStudy } from '@/services/permissions/study'
+import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
@@ -18,7 +18,7 @@ import styles from './StudyPublicStatus.module.css'
 interface Props {
   user: User
   study: FullStudy
-  userRoleOnStudy?: FullStudy['allowedUsers'][0]
+  userRoleOnStudy?: StudyRole
 }
 
 const StudyLevel = ({ user, study, userRoleOnStudy }: Props) => {
@@ -54,7 +54,7 @@ const StudyLevel = ({ user, study, userRoleOnStudy }: Props) => {
   const allowedLevels = useMemo(() => getAllowedLevels(user.level), [user])
   return (
     <div className="pb2">
-      {isAdministratorOnStudy(user, study) || (userRoleOnStudy && userRoleOnStudy.role === StudyRole.Validator) ? (
+      {isAdminOnStudyOrga(user, study) || userRoleOnStudy === StudyRole.Validator ? (
         <>
           <FormSelect
             className={styles.select}

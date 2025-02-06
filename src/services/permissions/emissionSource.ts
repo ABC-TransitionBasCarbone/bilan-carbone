@@ -3,7 +3,7 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { StudyEmissionSource, StudyRole, User } from '@prisma/client'
 import { canBeValidated } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
-import { canReadStudy, isAdministratorOnStudy } from './study'
+import { canReadStudy, isAdminOnStudyOrga } from './study'
 
 const hasStudyBasicRights = async (
   user: User,
@@ -27,7 +27,7 @@ const hasStudyBasicRights = async (
     }
   }
 
-  if (isAdministratorOnStudy(user, study)) {
+  if (isAdminOnStudyOrga(user, study)) {
     return true
   }
 

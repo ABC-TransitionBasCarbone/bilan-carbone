@@ -10,6 +10,7 @@ import { isAdmin } from '@/services/permissions/user'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
 import { checkLevel } from '@/services/study'
+import { getUserRoleOnStudy } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { StudyRole } from '@prisma/client'
@@ -84,9 +85,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
     }
   }
 
-  const userRoleOnStudy = useMemo(() => {
-    return study.allowedUsers.find((right) => right.user.email === user.email)
-  }, [user, study])
+  const userRoleOnStudy = useMemo(() => getUserRoleOnStudy(user, study), [user, study])
 
   const usersOptions = useMemo(
     () =>
@@ -101,9 +100,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          (isAdmin(user.role) ||
-            (userRoleOnStudy && userRoleOnStudy.role === StudyRole.Validator) ||
-            role !== StudyRole.Validator) &&
+          (userRoleOnStudy === StudyRole.Validator || role !== StudyRole.Validator) &&
           (!readerOnly || role === StudyRole.Reader),
       ),
     [readerOnly],

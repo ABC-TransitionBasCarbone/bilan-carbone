@@ -2,10 +2,11 @@
 
 import { FullStudy } from '@/db/study'
 import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import { isAdministratorOnStudy, StudyWithoutDetail } from '@/services/permissions/study'
+import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { getEmissionsFactor } from '@/services/serverFunctions/emissionFactor'
-import { EmissionFactorStatus, StudyRole } from '@prisma/client'
+import { getUserRoleOnStudy } from '@/utils/study'
+import { EmissionFactorStatus } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useEffect, useMemo, useState } from 'react'
@@ -53,11 +54,7 @@ const SubPosts = ({
     if (withoutDetail) {
       return null
     }
-    if (isAdministratorOnStudy(user, study)) {
-      return StudyRole.Validator
-    }
-    const right = study.allowedUsers.find((right) => right.user.email === user.email)
-    return right ? right.role : null
+    return getUserRoleOnStudy(user, study)
   }, [study, user, withoutDetail])
 
   return (
