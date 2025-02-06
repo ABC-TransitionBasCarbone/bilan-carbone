@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       return url || baseUrl
     },
-    async jwt({ session, token, trigger, user }) {
+    async jwt({ token, trigger, user }) {
       if (user) {
         return {
           ...token,
@@ -34,12 +34,18 @@ export const authOptions: NextAuthOptions = {
         }
       }
       if (trigger === 'update') {
-        if (session.forceRefresh || session.role || session.level) {
-          const dbUser = await getUserByEmail(token.email || '')
-          session.role = dbUser ? dbUser.role : token.role
-          session.level = dbUser ? dbUser.level : token.level
-        }
-        return { ...token, ...session }
+        const dbUser = await getUserByEmail(token.email || '')
+        return dbUser
+          ? {
+              ...token,
+              id: dbUser.id,
+              firstName: dbUser.firstName,
+              lastName: dbUser.lastName,
+              role: dbUser.role,
+              organizationId: dbUser.organizationId,
+              level: dbUser.level,
+            }
+          : token
       }
       return token
     },

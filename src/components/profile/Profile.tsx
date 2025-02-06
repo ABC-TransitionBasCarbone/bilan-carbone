@@ -18,7 +18,7 @@ import LocaleSelector from './LocaleSelector'
 import styles from './Profile.module.css'
 
 const Profile = () => {
-  const { data: session, update } = useSession()
+  const { data: session, update: updateSession } = useSession()
 
   const t = useTranslations('profile')
   const [editing, setEditing] = useState(false)
@@ -38,7 +38,7 @@ const Profile = () => {
     form.reset({ firstName: session?.user.firstName, lastName: session?.user.lastName })
   }, [session])
 
-  if (!session || !update) {
+  if (!session) {
     return null
   }
 
@@ -49,7 +49,7 @@ const Profile = () => {
       setError(result)
     } else {
       setEditing(false)
-      await update(form.getValues())
+      await updateSession()
     }
   }
 

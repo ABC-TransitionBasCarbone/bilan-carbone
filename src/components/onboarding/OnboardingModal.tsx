@@ -26,7 +26,7 @@ interface Props {
 
 const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const t = useTranslations('onboarding')
-  const { update } = useSession()
+  const { update: updateSession } = useSession()
 
   const [activeStep, setActiveStep] = useState(0)
   const stepCount = 2
@@ -62,7 +62,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
         if (result) {
           onClose()
         } else {
-          await update({ forceRefresh: true })
+          await updateSession()
           onClose()
         }
       }
