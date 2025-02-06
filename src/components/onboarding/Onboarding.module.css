@@ -57,6 +57,8 @@
 
 .collaborator {
   gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
 }
 
 .deleteButton {

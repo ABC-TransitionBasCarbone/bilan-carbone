@@ -3,9 +3,11 @@ import { Select as MUISelect, SelectProps, Typography } from '@mui/material'
 export const Select = ({ name, label, value, onChange, ...selectProps }: SelectProps) => {
   return (
     <>
-      <Typography id={`${name}-select-label}`} className="inputLabel">
-        {label}
-      </Typography>
+      {label && (
+        <Typography id={`${name}-select-label}`} className="inputLabel">
+          {label}
+        </Typography>
+      )}
       <MUISelect
         {...selectProps}
         labelId={`${name}-select-label}`}

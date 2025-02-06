@@ -7,7 +7,7 @@ interface Props<T extends FieldValues> {
   name: FieldPath<T>
   control: Control<T>
   translation: (slug: string) => string
-  label: string
+  label?: string
   icon?: React.ReactNode
 }
 
@@ -25,14 +25,16 @@ export const FormTextField = <T extends FieldValues>({
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <div className="inputContainer">
-          {icon ? (
-            <div className="align-center mb-2" style={{ fontWeight: 'bold' }}>
-              {icon}
-              <span className="ml-2">{label}</span>
-            </div>
-          ) : (
-            <Typography className="inputLabel">{label}</Typography>
-          )}
+          {label ? (
+            icon ? (
+              <div className="align-center mb-2" style={{ fontWeight: 'bold' }}>
+                {icon}
+                <span className="ml-2">{label}</span>
+              </div>
+            ) : (
+              <Typography className="inputLabel">{label}</Typography>
+            )
+          ) : null}
           <TextField
             {...textFieldProps}
             helperText={error && error.message ? translation('validation.' + error.message) : null}

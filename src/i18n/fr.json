@@ -910,6 +910,7 @@
     "step2": {
       "addCollaborator": "Ajouter un collaborateur",
       "email": "Adresse email",
+      "emailLabel": "Ajouter une adresse email ici",
       "role": "Rôle",
       "adminDescription": "Peut inviter et gérer de nouveaux utilisateurs",
       "collaboratorDescription": "Peut consulter les informations d'un bilan",
