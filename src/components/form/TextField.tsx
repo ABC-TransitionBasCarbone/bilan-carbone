@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
+import React from 'react'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 
 interface Props<T extends FieldValues> {
@@ -7,6 +8,7 @@ interface Props<T extends FieldValues> {
   control: Control<T>
   translation: (slug: string) => string
   label: string
+  icon?: React.ReactNode
 }
 
 export const FormTextField = <T extends FieldValues>({
@@ -14,6 +16,7 @@ export const FormTextField = <T extends FieldValues>({
   control,
   translation,
   label,
+  icon,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   return (
@@ -22,7 +25,14 @@ export const FormTextField = <T extends FieldValues>({
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <div className="inputContainer">
-          <Typography className="inputLabel">{label}</Typography>
+          {icon ? (
+            <div className="align-center mb-2" style={{ fontWeight: 'bold' }}>
+              {icon}
+              <span className="ml-2">{label}</span>
+            </div>
+          ) : (
+            <Typography className="inputLabel">{label}</Typography>
+          )}
           <TextField
             {...textFieldProps}
             helperText={error && error.message ? translation('validation.' + error.message) : null}
