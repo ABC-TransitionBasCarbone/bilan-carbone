@@ -19,15 +19,17 @@ const StudiesContainer = ({ user, organizationId }: Props) => {
       <div data-testid="studies-title" className={classNames(styles.title, 'flex-cc pb1')}>
         <NewspaperIcon /> <h2>{t('myStudies')}</h2>
       </div>
-      <div className={classNames(styles.button, 'w100 flex')}>
-        <LinkButton
-          data-testid="new-study"
-          className="mb1"
-          href={`${organizationId ? `/organisations/${organizationId}` : ''}/etudes/creer`}
-        >
-          {t('create')}
-        </LinkButton>
-      </div>
+      {(user.organizationId || organizationId) && (
+        <div className={classNames(styles.button, 'w100 flex')}>
+          <LinkButton
+            data-testid="new-study"
+            className="mb1"
+            href={`${organizationId ? `/organisations/${organizationId}` : ''}/etudes/creer`}
+          >
+            {t('create')}
+          </LinkButton>
+        </div>
+      )}
       <Studies user={user} organizationId={organizationId} />
     </Box>
   )

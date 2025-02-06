@@ -89,7 +89,7 @@ const sources = Object.values(Import).map((source) => source)
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
-  userOrganizationId?: string
+  userOrganizationId?: string | null
 }
 
 const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrganizationId }: Props) => {

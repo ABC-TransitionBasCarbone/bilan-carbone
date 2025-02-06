@@ -56,12 +56,14 @@ const getCachedDefaultEmissionFactors = unstable_cache(() => {
   return getDefaultEmissionFactors()
 })
 
-export const getAllEmissionFactors = async (organizationId: string) => {
-  const organizationEmissionFactor = await prismaClient.emissionFactor.findMany({
-    where: { organizationId },
-    select: selectEmissionFactor,
-    orderBy: { createdAt: 'desc' },
-  })
+export const getAllEmissionFactors = async (organizationId: string | null) => {
+  const organizationEmissionFactor = organizationId
+    ? await prismaClient.emissionFactor.findMany({
+        where: { organizationId },
+        select: selectEmissionFactor,
+        orderBy: { createdAt: 'desc' },
+      })
+    : []
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
     ? getDefaultEmissionFactors()
     : getCachedDefaultEmissionFactors())

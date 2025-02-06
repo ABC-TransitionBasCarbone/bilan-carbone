@@ -36,14 +36,37 @@ const Navbar = ({ user }: Props) => {
             <span className={styles.big}>{t('factors')}</span>
             <span className={styles.small}>{t('fe')}</span>
           </Link>
-          <div
-            className={styles.link}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => setShowSubMenu(!showSubMenu)}
-          >
-            {t('organization')}
-          </div>
+          {user.organizationId && (
+            <div className="flex-col">
+              <div
+                className={styles.link}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onClick={() => setShowSubMenu(!showSubMenu)}
+              >
+                {t('organization')}
+              </div>
+              {showSubMenu && (
+                <div
+                  className={classNames(styles.subMenu, 'flex-cc')}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {user.role === Role.ADMIN && (
+                    <Link href={`/organisations/${user.organizationId}/modifier`} className={styles.link}>
+                      {t('information')}
+                    </Link>
+                  )}
+                  <Link href="/equipe" className={styles.link}>
+                    {t('team')}
+                  </Link>
+                  <Link href="/organisations" className={styles.link}>
+                    {t('organizations')}
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
           {user.role === Role.SUPER_ADMIN && (
@@ -76,25 +99,6 @@ const Navbar = ({ user }: Props) => {
           </button>
         </div>
       </div>
-      {showSubMenu && (
-        <div
-          className={classNames(styles.subMenu, 'flex-cc')}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          {user.role === Role.ADMIN && (
-            <Link href={`/organisations/${user.organizationId}/modifier`} className={styles.link}>
-              {t('information')}
-            </Link>
-          )}
-          <Link href="/equipe" className={styles.link}>
-            {t('team')}
-          </Link>
-          <Link href="/organisations" className={styles.link}>
-            {t('organizations')}
-          </Link>
-        </div>
-      )}
     </nav>
   )
 }
