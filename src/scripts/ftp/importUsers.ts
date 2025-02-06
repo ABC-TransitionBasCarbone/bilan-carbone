@@ -1,4 +1,4 @@
-import { Prisma, Role } from '@prisma/client'
+import { Level, Prisma, Role } from '@prisma/client'
 import { AccessOptions, Client } from 'basic-ftp'
 import dotenv from 'dotenv'
 import fs from 'fs'
@@ -30,14 +30,14 @@ const getUsersFromFTP = async () => {
   console.log(`Users parsed : ${values.length} rows`)
 
   const users: Prisma.UserCreateManyInput[] = []
-
-  for (const [i, value] of values.entries()) {
+  for (const [i, value] of values) {
     if (i % 50 === 0) {
       console.log(`${i}/${values.length}`)
     }
     const login = value['User_Login']
     const email = value['User_Email']
     const siretOrSiren = value['SIRET']
+    const sessionCodeTraining = value['Session_Code']
     const user: Prisma.UserCreateManyInput = {
       email,
       role: Role.DEFAULT,
@@ -46,6 +46,11 @@ const getUsersFromFTP = async () => {
       isActive: false,
       isValidated: false,
       createdAt: fileDate,
+      level: Level.Initial
+    }
+
+    if (sessionCodeTraining) {
+      user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Standard
     }
 
     if (siretOrSiren) {
@@ -54,14 +59,17 @@ const getUsersFromFTP = async () => {
       })
       if (!organisation) {
         const name = value['Company_Name']
+        const purchasedProducts = value['Purchased_Products']
+
         organisation = await prismaClient.organization.create({
           data: {
             siret: siretOrSiren,
             name,
-            isCR: false,
+            isCR: purchasedProducts.includes('conseil'), // TODO: check if licence exploitation is CR
             createdAt: fileDate,
           },
         })
+
         user.role = Role.GESTIONNAIRE
       }
       user.organizationId = organisation.id
