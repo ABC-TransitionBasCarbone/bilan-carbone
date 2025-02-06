@@ -4,19 +4,18 @@ import PersonIcon from '@mui/icons-material/Person'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { FormTextField } from '../form/TextField'
 import styles from './Onboarding.module.css'
 
 interface Props {
   form: UseFormReturn<OnboardingCommand>
+  role: Role
 }
 
-const OnboardingStep = ({ form }: Props) => {
+const OnboardingStep = ({ form, role }: Props) => {
   const t = useTranslations('onboarding.step1')
   const tRole = useTranslations('role')
-  const role = useMemo(() => form.getValues().role, [form])
   return (
     <>
       <div className="mb1">

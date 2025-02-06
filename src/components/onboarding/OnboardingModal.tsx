@@ -40,7 +40,6 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues: {
-      role: newRole,
       organizationId: organization.id,
       companyName: organization.name || '',
       collaborators: [{ email: '' }],
@@ -103,7 +102,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
             </>
           </DialogTitle>
           <DialogContent className="noSpacing">
-            <Step form={form} />
+            <Step form={form} role={newRole} />
           </DialogContent>
           <DialogActions className="noSpacing">
             {activeStep > 0 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
