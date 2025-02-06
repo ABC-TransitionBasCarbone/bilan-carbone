@@ -63,6 +63,14 @@ const OnboardingStep = ({ form }: Props) => {
                 <span className={styles.roleTitle}>{tRole(Role.ADMIN)}</span>
                 <span>{t('adminDescription')}</span>
               </MenuItem>
+              <MenuItem
+                key={Role.GESTIONNAIRE}
+                value={Role.GESTIONNAIRE}
+                className={classNames(styles.roleItem, 'flex-col')}
+              >
+                <span className={styles.roleTitle}>{tRole(Role.GESTIONNAIRE)}</span>
+                <span>{t('gestionnaireDescription')}</span>
+              </MenuItem>
               <MenuItem key={Role.DEFAULT} value={Role.DEFAULT} className={classNames(styles.roleItem, 'flex-col')}>
                 <span className={styles.roleTitle}>{tRole(Role.DEFAULT)}</span>
                 <span>{t('collaboratorDescription')}</span>
