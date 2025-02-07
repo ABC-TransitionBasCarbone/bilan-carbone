@@ -4,6 +4,7 @@
   position: fixed;
   top: var(--header-height);
   height: var(--organization-height);
+  border: var(--border);
 }
 
 .gapped {

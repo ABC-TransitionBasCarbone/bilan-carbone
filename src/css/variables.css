@@ -17,12 +17,12 @@
   --primary-80: #272768;
 
   --border: 2px solid rgba(27, 91, 245, 0.1);
-  --background: #fbfcfc;
+  --background: rgba(56, 128, 255, 0.05);
 
   --header-height: 3.5rem;
 
   --organization-height: 6rem;
-  --organization-card-bg: #eef6ff;
+  --organization-card-bg: #ebf2ff;
 
   --success: #13ab27;
 

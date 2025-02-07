@@ -1,4 +1,3 @@
-import { Typography } from '@mui/material'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import React from 'react'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
@@ -27,12 +26,12 @@ export const FormTextField = <T extends FieldValues>({
         <div className="inputContainer">
           {label ? (
             icon ? (
-              <div className="align-center mb-2" style={{ fontWeight: 'bold' }}>
+              <div className="align-center mb-2">
                 {icon}
-                <span className="ml-2">{label}</span>
+                <span className="ml-2 inputLabel bold">{label}</span>
               </div>
             ) : (
-              <Typography className="inputLabel">{label}</Typography>
+              <span className="inputLabel bold">{label}</span>
             )
           ) : null}
           <TextField
