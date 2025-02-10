@@ -22,7 +22,7 @@
     "legifrance:froid:import": "ts-node src/scripts/legifrance/getEmissionFactors.ts -n 1 -f src/scripts/legifrance/reseaux_froid.csv -r froid",
     "legifrance:chaud:import": "ts-node src/scripts/legifrance/getEmissionFactors.ts -n 1 -f src/scripts/legifrance/reseaux_chaud.csv -r chaud",
     "actualities:import": "ts-node src/scripts/actuality/add.ts -f src/scripts/actuality/actualities.csv",
-    "FE:import": "ts-node src/scripts/baseEmpreinte/getEmissionFactors.ts -n 23.4"
+    "FE:import": "ts-node src/scripts/baseEmpreinte/getEmissionFactors.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed/index.ts"
