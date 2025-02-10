@@ -15,9 +15,10 @@ import styles from './TeamTable.module.css'
 interface Props {
   user: User
   team: TeamMember[]
+  crOrga: boolean
 }
 
-const TeamTable = ({ user, team }: Props) => {
+const TeamTable = ({ user, team, crOrga }: Props) => {
   const t = useTranslations('team.table')
   const tLevel = useTranslations('level')
   const tRole = useTranslations('role')
@@ -111,11 +112,13 @@ const TeamTable = ({ user, team }: Props) => {
       >
         <DialogTitle id={`organization-roles-title`}>{tRole('guide')}</DialogTitle>
         <DialogContent>
-          {Object.keys(Role).map((role) => (
-            <p key={role} className="mb-2">
-              <b>{tRole(role)} :</b> {tRole(`${role}_description`)}
-            </p>
-          ))}
+          {Object.keys(Role)
+            .filter((role) => role !== Role.SUPER_ADMIN)
+            .map((role) => (
+              <p key={role} className="mb-2">
+                <b>{tRole(role)} :</b> {tRole(`${role}_description${crOrga ? '_CR' : ''}`)}
+              </p>
+            ))}
         </DialogContent>
         <DialogActions>
           <Button data-testid={`organization-roles-cancel`} onClick={() => setDisplayRoles(false)}>
