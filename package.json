@@ -16,7 +16,7 @@
     "test:watch": "jest --watch",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
-    "seed:import": "prisma db seed -- -i 23.4",
+    "seed:import": "prisma db seed -- -i",
     "user:import": "ts-node src/scripts/ftp/importUsers.ts",
     "negaOctet:import": "ts-node src/scripts/negaOctet/getEmissionFactors.ts -n 1 -f src/scripts/negaOctet/negaoctet.csv",
     "legifrance:froid:import": "ts-node src/scripts/legifrance/getEmissionFactors.ts -n 1 -f src/scripts/legifrance/reseaux_froid.csv -r froid",
