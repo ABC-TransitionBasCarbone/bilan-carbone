@@ -16,7 +16,8 @@ const getUsersFromFTP = async () => {
 
   await client.access(accessOptions)
 
-  const fileName = process.env.FTP_FILE_NAME || ''
+  const folderPath = process.env.FTP_FILE_PATH || ''
+  const fileName = `${folderPath}/${process.env.FTP_FILE_NAME || ''}`
   const writableStream = fs.createWriteStream(fileName)
 
   await client.downloadTo(writableStream, fileName)
@@ -36,27 +37,27 @@ const getUsersFromFTP = async () => {
     const siretOrSiren = value['SIRET']
     const sessionCodeTraining = value['Session_Code']
 
-    // TODO : remove this condition when we the script is tested
     if (!email.includes('abc-transitionbascarbone.fr')) {
       continue // Skip non-ABC users
     }
+
     console.log(`Processing ${email}`)
     if (i % 50 === 0) {
       console.log(`${i}/${values.length}`)
     }
     const user: Prisma.UserCreateManyInput = {
       email,
-      role: Role.DEFAULT,
+      role: Role.GESTIONNAIRE,
       firstName: '',
       lastName: '',
       isActive: false,
       isValidated: false,
-      level: Level.Initial,
       importedFileDate: fileDate,
     }
 
     if (sessionCodeTraining) {
-      user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Standard
+      user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Initial
+      user.role = Role.ADMIN
     }
 
     if (siretOrSiren) {
@@ -75,8 +76,6 @@ const getUsersFromFTP = async () => {
             importedFileDate: fileDate,
           },
         })
-
-        user.role = Role.GESTIONNAIRE
       }
       user.organizationId = organisation.id
     }
