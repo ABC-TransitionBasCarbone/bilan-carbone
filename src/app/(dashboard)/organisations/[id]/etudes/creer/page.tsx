@@ -29,7 +29,7 @@ const NewStudyInOrganization = async (props: Props & UserProps) => {
     <NewStudyPage
       organizations={organizations}
       user={props.user}
-      usersEmail={users.map((user) => user.email)}
+      users={users}
       defaultOrganization={organizations.find((organization) => organization.id === id)}
       caUnit={caUnit}
     />

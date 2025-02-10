@@ -1,5 +1,7 @@
 import { FullStudy } from '@/db/study'
-import { Role, StudyRole } from '@prisma/client'
+import { isAdminOnStudyOrga } from '@/services/permissions/study'
+import { getUserRoleOnStudy } from '@/utils/study'
+import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -8,6 +10,7 @@ import StudyContributorsTable from '../study/rights/StudyContributorsTable'
 import StudyLevel from '../study/rights/StudyLevel'
 import StudyPublicStatus from '../study/rights/StudyPublicStatus'
 import StudyRightsTable from '../study/rights/StudyRightsTable'
+import NotFound from './NotFound'
 
 interface Props {
   study: FullStudy
@@ -18,7 +21,11 @@ const StudyRightsPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.rights')
 
-  const userRoleOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
+  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+
+  if (!userRoleOnStudy) {
+    return <NotFound />
+  }
 
   return (
     <>
@@ -43,7 +50,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
       <Block
         title={t('contributors')}
         actions={
-          user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
+          isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
             ? [
                 {
                   actionType: 'link',

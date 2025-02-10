@@ -2,7 +2,8 @@
 
 import Block from '@/components/base/Block'
 import { FullStudy } from '@/db/study'
-import { Role, StudyRole } from '@prisma/client'
+import { isAdminOnStudyOrga } from '@/services/permissions/study'
+import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -12,7 +13,7 @@ import SelectStudyRole from './SelectStudyRole'
 interface Props {
   user: User
   study: FullStudy
-  userRoleOnStudy?: FullStudy['allowedUsers'][0]
+  userRoleOnStudy?: StudyRole
 }
 
 const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
@@ -26,7 +27,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
         accessorKey: 'user.email',
       },
     ]
-    if (user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)) {
+    if (isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader) {
       columns.push({
         header: t('role'),
         accessorKey: 'role',
@@ -35,7 +36,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
           return (
             <SelectStudyRole
               user={user}
-              userRole={userRoleOnStudy?.role}
+              userRole={userRoleOnStudy}
               currentRole={role}
               rowUser={context.row.original.user}
               studyId={study.id}
@@ -64,7 +65,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
     <Block
       title={t('title')}
       actions={
-        user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
+        isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
           ? [
               {
                 actionType: 'link',

@@ -1,6 +1,8 @@
 import { User as DbUser, Prisma, Role } from '@prisma/client'
 import { User } from 'next-auth'
 
+export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
+
 export const findUserInfo = (user: User) =>
   ({
     select: {
@@ -71,7 +73,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (user.role === Role.ADMIN && user.organizationId !== member.organizationId) {
+  if (isAdmin(user.role) && user.organizationId !== member.organizationId) {
     return false
   }
 

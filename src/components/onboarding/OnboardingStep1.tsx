@@ -10,9 +10,10 @@ import styles from './Onboarding.module.css'
 
 interface Props {
   form: UseFormReturn<OnboardingCommand>
+  role: Role
 }
 
-const OnboardingStep = ({ form }: Props) => {
+const OnboardingStep = ({ form, role }: Props) => {
   const t = useTranslations('onboarding.step1')
   const tRole = useTranslations('role')
   return (
@@ -29,9 +30,12 @@ const OnboardingStep = ({ form }: Props) => {
           <PersonIcon />
           <span className="ml-2">{t('role')}</span>
         </div>
-        <div className={styles.roleLabel}>{tRole(Role.ADMIN)}</div>
-
-        <p className="mt1">{t('roleDescription')}</p>
+        <div className={styles.roleLabel}>{tRole(role)}</div>
+        {role === Role.ADMIN ? (
+          <p className="mt1">{t('adminDescription')}</p>
+        ) : (
+          <p className="mt1">{t('gestionnaireDescription')}</p>
+        )}
       </div>
     </>
   )

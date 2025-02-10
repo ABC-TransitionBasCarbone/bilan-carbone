@@ -56,6 +56,11 @@ export const onboardOrganization = async (
   { organizationId, companyName, collaborators = [] }: OnboardingCommand,
 ) => {
   await prismaClient.$transaction(async (transaction) => {
+    const dbUser = await prismaClient.user.findUnique({ where: { id: userId } })
+    if (!dbUser) {
+      return
+    }
+    const role = !dbUser.level ? Role.ADMIN : Role.GESTIONNAIRE
     const newCollaborators = []
     for (const collaborator of collaborators) {
       newCollaborators.push({
@@ -76,7 +81,7 @@ export const onboardOrganization = async (
       }),
       transaction.user.update({
         where: { id: userId },
-        data: { role: Role.ADMIN },
+        data: { role },
       }),
       transaction.user.createMany({ data: newCollaborators }),
     ])

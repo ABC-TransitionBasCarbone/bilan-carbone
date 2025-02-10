@@ -231,7 +231,7 @@
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
-        "level": "Veuillez selectionner le type de Bilan Carbone"
+        "level": "Veuillez selectionner le type de Bilan Carbone ®"
       },
       "error": {
         "default": "Une erreur s'est produite ...",
@@ -281,7 +281,8 @@
         "validation": {
           "email": "Veuillez utiliser un email valide",
           "emailRequired": "Veuillez entrer un email",
-          "role": "Veuillez sélectionner un droit"
+          "role": "Veuillez sélectionner un droit",
+          "adminValidator": "Cette personne est administrateur et est donc déjà validateur pour toutes les études de ce compte"
         },
         "dialog": {
           "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
@@ -587,7 +588,13 @@
     "SUPER_ADMIN": "Administrateur Global",
     "ADMIN": "Administrateur",
     "GESTIONNAIRE": "Gestionnaire",
-    "DEFAULT": "Collaborateur"
+    "DEFAULT": "Collaborateur",
+    "SUPER_ADMIN_description": "",
+    "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des clients et des études (qu'elles soient publiques ou privées).",
+    "GESTIONNAIRE_description": "",
+    "DEFAULT_description": "",
+    "close": "Fermer",
+    "guide": "Guide des rôles"
   },
   "team": {
     "title": "Mon organisation",
@@ -904,13 +911,14 @@
     "step1": {
       "name": "Nom de mon organisation",
       "role": "Mon rôle au sein de l'organisation",
-      "roleDescription": "Comme vous êtes le premier utilisateur du BC+ au sein de votre organisation, nous vous avons attribué le rôle d'administrateur. Une organisation doit toujours avoir au moins un administrateur, vous ne pourrez donc modifier votre rôle qu'après avoir ajouté un autre administrateur via la rubrique \"Équipe\""
+      "adminDescription": "Vous avez été formé au Bilan Carbone ® : Le rôle qui vous a été attribué est celui d'administrateur de votre organisation.",
+      "gestionnaireDescription": "Vous n'avez pas été formé au Bilan Carbone ® : Le rôle qui vous a été attribué est celui de gestionnaire de votre organisation."
     },
     "step2": {
       "addCollaborator": "Ajouter un collaborateur",
       "email": "Adresse email",
       "role": "Rôle",
-      "adminDescription": "Peut inviter et gérer de nouveaux utilisateurs",
+      "adminDescription": "Possède l'ensemble des droits existants",
       "collaboratorDescription": "Peut consulter les informations d'un bilan",
       "validation": {
         "email": "Adresse email invalide",

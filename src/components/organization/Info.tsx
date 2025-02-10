@@ -1,5 +1,5 @@
 import { OrganizationWithSites } from '@/db/user'
-import { Role } from '@prisma/client'
+import { isAdmin } from '@/services/permissions/user'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
@@ -17,7 +17,7 @@ const OrganizationInfo = ({ organization, user }: Props) => {
       as="h1"
       title={t('myOrganization')}
       actions={
-        user.role === Role.ADMIN
+        isAdmin(user.role)
           ? [
               {
                 actionType: 'link',

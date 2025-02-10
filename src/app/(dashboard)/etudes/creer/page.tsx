@@ -18,14 +18,7 @@ const NewStudy = async ({ user }: UserProps) => {
   const userCAUnit = (await getUserSettings())?.caUnit
   const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
-  return (
-    <NewStudyPage
-      organizations={organizations}
-      user={user}
-      usersEmail={users.map((user) => user.email)}
-      caUnit={caUnit}
-    />
-  )
+  return <NewStudyPage organizations={organizations} user={user} users={users} caUnit={caUnit} />
 }
 
 export default withAuth(NewStudy)

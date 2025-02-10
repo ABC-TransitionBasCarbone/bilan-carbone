@@ -5,6 +5,7 @@ import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { getEmissionsFactor } from '@/services/serverFunctions/emissionFactor'
+import { getUserRoleOnStudy } from '@/utils/study'
 import { EmissionFactorStatus } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -53,8 +54,7 @@ const SubPosts = ({
     if (withoutDetail) {
       return null
     }
-    const right = study.allowedUsers.find((right) => right.user.email === user.email)
-    return right ? right.role : null
+    return getUserRoleOnStudy(user, study)
   }, [study, user, withoutDetail])
 
   return (
