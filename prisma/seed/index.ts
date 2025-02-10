@@ -104,7 +104,7 @@ const users = async () => {
       onboarded: false,
     },
   })
-  const onboardingPassword = await signPassword(`onboarding`)
+  const onboardingPassword = await signPassword(`onboarding1234`)
   await prisma.user.create({
     data: {
       email: `onboarding@yopmail.com`,
