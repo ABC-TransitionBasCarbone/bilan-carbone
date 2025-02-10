@@ -47,7 +47,7 @@ const selectEmissionFactor = {
 
 const getDefaultEmissionFactors = () =>
   prismaClient.emissionFactor.findMany({
-    where: { organizationId: null },
+    where: { organizationId: null, subPosts: { isEmpty: false } },
     select: selectEmissionFactor,
     orderBy: { createdAt: 'desc' },
   })
