@@ -12,10 +12,10 @@ export const getOrganizationById = (id: string | null) =>
 export const getOrganizationUsers = (id: string | null) =>
   id
     ? prismaClient.user.findMany({
-        select: { email: true, firstName: true, lastName: true, level: true, role: true },
-        where: { organizationId: id, isActive: true },
-        orderBy: { email: 'asc' },
-      })
+      select: { email: true, firstName: true, lastName: true, level: true, role: true },
+      where: { organizationId: id, isActive: true },
+      orderBy: { email: 'asc' },
+    })
     : []
 
 export const getOrganizationWithSitesById = (id: string) =>
@@ -71,6 +71,7 @@ export const onboardOrganization = async (
         isActive: false,
         isValidated: true,
         organizationId,
+        importedFileDate: new Date(),
       })
     }
 
