@@ -30,13 +30,20 @@ const getUsersFromFTP = async () => {
   console.log(`Users parsed : ${values.length} rows`)
 
   const users: Prisma.UserCreateManyInput[] = []
-  for (const [i, value] of values) {
-    if (i % 50 === 0) {
-      console.log(`${i}/${values.length}`)
+  for (let i = 0; i < values.length; i++) {
+    const value = values[i];
+    const email = value['User_Email'];
+    const siretOrSiren = value['SIRET'];
+    const sessionCodeTraining = value['Session_Code'];
+
+    // TODO : remove this condition when we the script is tested 
+    if (!email.includes('abc-transitionbascarbone.fr')) {
+      continue; // Skip non-ABC users
     }
-    const email = value['User_Email']
-    const siretOrSiren = value['SIRET']
-    const sessionCodeTraining = value['Session_Code']
+    console.log(`Processing ${email}`);
+    if (i % 50 === 0) {
+      console.log(`${i}/${values.length}`);
+    }
     const user: Prisma.UserCreateManyInput = {
       email,
       role: Role.DEFAULT,
@@ -44,40 +51,44 @@ const getUsersFromFTP = async () => {
       lastName: '',
       isActive: false,
       isValidated: false,
-      createdAt: fileDate,
       level: Level.Initial,
-    }
+      importedFileDate: fileDate,
+    };
 
     if (sessionCodeTraining) {
-      user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Standard
+      user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Standard;
     }
 
     if (siretOrSiren) {
       let organisation = await prismaClient.organization.findFirst({
         where: { siret: { startsWith: siretOrSiren } },
-      })
+      });
       if (!organisation) {
-        const name = value['Company_Name']
-        const purchasedProducts = value['Purchased_Products']
+        const name = value['Company_Name'];
+        const purchasedProducts = value['Purchased_Products'];
 
         organisation = await prismaClient.organization.create({
           data: {
             siret: siretOrSiren,
             name,
-            isCR: purchasedProducts.includes('conseil'), // TODO: check if licence exploitation is CR
-            createdAt: fileDate,
+            isCR: ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts),
+            importedFileDate: fileDate,
           },
-        })
+        });
 
-        user.role = Role.GESTIONNAIRE
+        user.role = Role.GESTIONNAIRE;
       }
-      user.organizationId = organisation.id
+      user.organizationId = organisation.id;
     }
-    users.push(user)
+    users.push(user);
   }
 
-  const created = await prismaClient.user.createMany({ data: users, skipDuplicates: true })
-  console.log(`${created} users created.`)
+  const created = await prismaClient.user.createMany({
+    data: users,
+    skipDuplicates: true,
+  })
+
+  console.log(`${created.count} users created`)
 }
 
 dotenv.config()
