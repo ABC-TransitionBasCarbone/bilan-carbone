@@ -3,6 +3,7 @@ import { parse } from 'csv-parse'
 import fs from 'fs'
 import path from 'path'
 import { prismaClient } from '../../db/client'
+import { getEncoding } from '../../utils/csv'
 import { MIN, TIME_IN_MS } from '../../utils/time'
 import {
   cleanImport,
@@ -63,13 +64,6 @@ export const getEmissionFactorsFromCSV = async (
       const emissionFactors: ImportEmissionFactor[] = []
       const parts: ImportEmissionFactor[] = []
 
-      const buffer = fs.readFileSync(file, { encoding: 'binary' })
-      /**
-       * https://www.w3schools.com/charsets/ref_html_8859.asp
-       * \xE8 and \xE9 are the hexadecimal codes for "è" (232) and "é" (233) in Latin-1 (ISO-8859-1).
-       */
-      const encoding = buffer.includes('\xE9') || buffer.includes('\xE8') ? 'latin1' : 'utf-8'
-
       await new Promise<void>((resolve, reject) => {
         fs.createReadStream(file)
           .pipe(
@@ -80,7 +74,7 @@ export const getEmissionFactorsFromCSV = async (
                 return formattedHeader
               },
               delimiter: ';',
-              encoding,
+              encoding: getEncoding(file),
               cast: (value, context) => {
                 if (value === '') {
                   return undefined

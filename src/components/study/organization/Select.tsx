@@ -1,5 +1,4 @@
 'use client'
-
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import LinkButton from '@/components/base/LinkButton'
@@ -7,6 +6,8 @@ import { FormSelect } from '@/components/form/Select'
 import Sites from '@/components/organization/Sites'
 import { OrganizationWithSites } from '@/db/user'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
+import { getUserSettings } from '@/services/serverFunctions/user'
+import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
@@ -21,6 +22,7 @@ interface Props {
 const SelectOrganization = ({ organizations, selectOrganization, form }: Props) => {
   const t = useTranslations('study.organization')
   const [error, setError] = useState('')
+  const [caUnit, setCAUnit] = useState(defaultCAUnit)
   const sites = form.watch('sites')
   const organizationId = form.watch('organizationId')
 
@@ -30,21 +32,40 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
   )
 
   useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  useEffect(() => {
     if (organization) {
       form.setValue(
         'sites',
-        organization.sites.map((site) => ({ ...site, ca: site.ca ? site.ca / 1000 : 0, selected: false })),
+        organization.sites.map((site) => ({
+          ...site,
+          ca: site.ca ? displayCA(site.ca, caUnit) : 0,
+          selected: false,
+        })),
       )
     } else {
       form.setValue('sites', [])
     }
-  }, [organization])
+  }, [organization, caUnit])
+
+  const applyUserSettings = async () => {
+    const caUnit = (await getUserSettings())?.caUnit
+    if (caUnit !== undefined) {
+      setCAUnit(CA_UNIT_VALUES[caUnit])
+    }
+  }
 
   const next = () => {
     if (!sites.some((site) => site.selected)) {
       setError(t('validation.sites'))
     } else {
-      if (sites.filter((site) => site.selected).some((site) => site.etp <= 0 || site.ca <= 0)) {
+      if (
+        sites
+          .filter((site) => site.selected)
+          .some((site) => Number.isNaN(site.etp) || site.etp <= 0 || Number.isNaN(site.ca) || site.ca <= 0)
+      ) {
         setError(t('validation.etpCa'))
       } else {
         selectOrganization(organization)

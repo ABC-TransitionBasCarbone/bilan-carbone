@@ -1,9 +1,10 @@
 'use client'
-
 import NewStudyForm from '@/components/study/new/Form'
 import SelectOrganization from '@/components/study/organization/Select'
+import { getOrganizationUsers } from '@/db/organization'
 import { OrganizationWithSites } from '@/db/user'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
+import { displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Export } from '@prisma/client'
 import dayjs from 'dayjs'
@@ -15,12 +16,13 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 interface Props {
   user: User
-  usersEmail: string[]
+  users: Awaited<ReturnType<typeof getOrganizationUsers>>
   organizations: OrganizationWithSites[]
   defaultOrganization?: OrganizationWithSites
+  caUnit: number
 }
 
-const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization }: Props) => {
+const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit }: Props) => {
   const [organization, setOrganization] = useState<OrganizationWithSites>()
   const tNav = useTranslations('nav')
 
@@ -37,7 +39,7 @@ const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization }: 
       sites:
         (defaultOrganization ?? organizations[0])?.sites.map((site) => ({
           ...site,
-          ca: site.ca ? site.ca / 1000 : 0,
+          ca: site.ca ? displayCA(site.ca, caUnit) : 0,
           selected: false,
         })) || [],
       exports: {
@@ -50,9 +52,20 @@ const NewStudyPage = ({ organizations, user, usersEmail, defaultOrganization }: 
 
   return (
     <>
-      <Breadcrumbs current={tNav('newStudy')} links={[{ label: tNav('home'), link: '/' }]} />
+      <Breadcrumbs
+        current={tNav('newStudy')}
+        links={[
+          { label: tNav('home'), link: '/' },
+          defaultOrganization && defaultOrganization.isCR
+            ? {
+                label: defaultOrganization.name,
+                link: `/organisations/${defaultOrganization.id}`,
+              }
+            : undefined,
+        ].filter((link) => link !== undefined)}
+      />
       {organization ? (
-        <NewStudyForm user={user} usersEmail={usersEmail} form={form} />
+        <NewStudyForm user={user} users={users} form={form} />
       ) : (
         <SelectOrganization organizations={organizations} selectOrganization={setOrganization} form={form} />
       )}

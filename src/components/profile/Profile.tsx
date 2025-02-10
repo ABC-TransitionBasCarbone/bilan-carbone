@@ -1,5 +1,3 @@
-import Logout from '@/components/auth/Logout'
-import LocaleSelector from '@/components/navbar/LocaleSelector'
 import { updateUserProfile } from '@/services/serverFunctions/user'
 import { EditProfileCommand, EditProfileCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,6 +14,7 @@ import Button from '../base/Button'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
+import LocaleSelector from './LocaleSelector'
 import styles from './Profile.module.css'
 
 const Profile = () => {
@@ -112,9 +111,6 @@ const Profile = () => {
           )}
         </div>
         <div className="mb1">{session.user.email}</div>
-        <div className="mb1">
-          <Logout />
-        </div>
         <div className="mb1">
           <Link data-testid="legal-notices-link" href="/mentions-legales">
             {t('legalNotices')}

@@ -7,15 +7,18 @@ import {
   createContributorOnStudy,
   createStudy,
   createUserOnStudy,
+  deleteStudy,
   FullStudy,
   getStudiesFromSites,
   getStudyById,
+  getStudyNameById,
   getStudySites,
   updateStudy,
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserByEmail } from '@/db/user'
+import { addUser, getUserApplicationSettings, getUserByEmail } from '@/db/user'
+import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import {
   ControlMode,
   User as DBUser,
@@ -43,6 +46,7 @@ import {
   canChangePublicStatus,
   canChangeSites,
   canCreateStudy,
+  canDeleteStudy,
 } from '../permissions/study'
 import { subPostsByPost } from '../posts'
 import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
@@ -53,6 +57,7 @@ import {
   ChangeStudyPublicStatusCommand,
   ChangeStudySitesCommand,
   CreateStudyCommand,
+  DeleteStudyCommand,
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
@@ -109,6 +114,9 @@ export const createStudyCommand = async ({
     return { success: false, message: NOT_AUTHORIZED }
   }
 
+  const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
+  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
+
   const study = {
     ...command,
     createdBy: { connect: { id: session.user.id } },
@@ -139,7 +147,7 @@ export const createStudyCommand = async ({
             return {
               siteId: site.id,
               etp: site.etp || organizationSite.etp,
-              ca: site.ca ? site.ca * 1000 : organizationSite.ca,
+              ca: site.ca ? site.ca * caUnit : organizationSite.ca,
             }
           })
           .filter((site) => site !== undefined),
@@ -241,11 +249,14 @@ export const hasEmissionSources = async (study: FullStudy, siteId: string) => {
 }
 
 export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) => {
-  const organization = await getOrganizationWithSitesById(organizationId)
+  const [organization, session] = await Promise.all([getOrganizationWithSitesById(organizationId), auth()])
 
-  if (!organization) {
+  if (!organization || !session) {
     return NOT_AUTHORIZED
   }
+
+  const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
+  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
   const selectedSites = command.sites
     .filter((site) => site.selected)
@@ -258,7 +269,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
         studyId,
         siteId: site.id,
         etp: site.etp || organizationSite.etp,
-        ca: site.ca * 1000 || organizationSite.ca,
+        ca: site.ca * caUnit || organizationSite.ca,
       }
     })
     .filter((site) => site !== undefined)
@@ -421,6 +432,21 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
   } else {
     await createContributorOnStudy(userId, [subPost], command)
   }
+}
+
+export const deleteStudyCommand = async ({ id, name }: DeleteStudyCommand) => {
+  if (!(await canDeleteStudy(id))) {
+    return NOT_AUTHORIZED
+  }
+  const studyName = await getStudyNameById(id)
+  if (!studyName) {
+    return NOT_AUTHORIZED
+  }
+
+  if (studyName.toLowerCase() !== name.toLowerCase()) {
+    return 'wrongName'
+  }
+  await deleteStudy(id)
 }
 
 export const addFlowToStudy = async (studyId: string, file: File) => {

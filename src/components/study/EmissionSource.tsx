@@ -61,8 +61,8 @@ const EmissionSource = ({
   const [display, setDisplay] = useState(false)
 
   const detailId = `${emissionSource.id}-detail`
-  const canEdit = !emissionSource.validated && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
-  const canValidate = userRoleOnStudy && userRoleOnStudy === StudyRole.Validator
+  const canEdit = !emissionSource.validated && userRoleOnStudy !== StudyRole.Reader
+  const canValidate = userRoleOnStudy === StudyRole.Validator
 
   const update = useCallback(
     async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => {

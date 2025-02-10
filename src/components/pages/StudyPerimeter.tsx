@@ -4,6 +4,7 @@ import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { OrganizationWithSites } from '@/db/user'
 import { canAddFlowToStudy } from '@/services/permissions/study'
+import { getUserRoleOnStudy } from '@/utils/study'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -22,7 +23,11 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
   const t = await getTranslations('study.perimeter')
   const documents = await getDocumentsForStudy(study.id)
 
-  const userRoleOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
+  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+
+  if (!userRoleOnStudy) {
+    return null
+  }
 
   const canAddFlow = await canAddFlowToStudy(study.id)
 
@@ -32,8 +37,14 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
         current={tNav('studyPerimeter')}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organisations/${study.organization.id}`,
+              }
+            : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
         <StudyPerimeter study={study} organization={organization} userRoleOnStudy={userRoleOnStudy} />

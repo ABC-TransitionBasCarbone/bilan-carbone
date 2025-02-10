@@ -1,5 +1,4 @@
 'use client'
-
 import Button from '@/components/base/Button'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import Sites from '@/components/organization/Sites'
@@ -12,6 +11,8 @@ import {
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
 } from '@/services/serverFunctions/study.command'
+import { getUserSettings } from '@/services/serverFunctions/user'
+import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
@@ -25,7 +26,7 @@ import styles from './StudyPerimeter.module.css'
 interface Props {
   study: FullStudy
   organization: OrganizationWithSites
-  userRoleOnStudy?: FullStudy['allowedUsers'][0]
+  userRoleOnStudy: StudyRole
 }
 
 const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
@@ -35,8 +36,20 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   const [open, setOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [deleting, setDeleting] = useState(0)
+  const [caUnit, setCAUnit] = useState(defaultCAUnit)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const caUnit = (await getUserSettings())?.caUnit
+    if (caUnit !== undefined) {
+      setCAUnit(CA_UNIT_VALUES[caUnit])
+    }
+  }
 
   const form = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),
@@ -79,9 +92,9 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   useEffect(() => {
     siteForm.setValue(
       'sites',
-      siteList.map((site) => ({ ...site, ca: site.ca / 1000 })),
+      siteList.map((site) => ({ ...site, ca: displayCA(site.ca, caUnit) })),
     )
-  }, [siteList, isEditing])
+  }, [siteList, isEditing, caUnit])
 
   const onSitesSubmit = async () => {
     const deletedSites = sites.filter((site) => {
@@ -122,7 +135,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
 
   return (
     <>
-      {userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader ? (
+      {userRoleOnStudy !== StudyRole.Reader ? (
         <div className={classNames(styles.dates, 'flex')}>
           <FormDatePicker control={form.control} translation={tForm} name="startDate" label={tForm('start')} />
           <FormDatePicker

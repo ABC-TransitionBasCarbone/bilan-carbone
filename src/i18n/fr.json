@@ -95,8 +95,7 @@
     "organization": "Organisation",
     "edit": "Modifier",
     "studyRights": "Cadrage",
-    "team": "Équipe",
-    "transition": "Transition BC+"
+    "team": "Équipe"
   },
   "actuality": {
     "title": "Actualités",
@@ -113,6 +112,8 @@
   "login": {
     "welcome": "Bienvenue",
     "form": {
+      "activate": "Activer mon compte",
+      "firstConnection": "Première connexion ?",
       "resetTitle": "Vous avez demandé de créer ou réinitialiser votre mot de passe. Rentrez les informations demandées ci-dessous pour confirmer votre création de compte ou réinitialisation de mot de passe.",
       "login": "Se connecter",
       "email": "Email",
@@ -134,6 +135,13 @@
       "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous sur l'adresse email"
     }
   },
+  "activation": {
+    "description": "Merci d'utiliser le même e-mail que vous avez utilisé lors de votre adhésion à l'Association pour la Transition Bas Carbone",
+    "email": "Mail pour activer votre compte",
+    "validate": "Valider",
+    "Not authorized": "Vous n'êtes pas adhérent ou pas formé. Si vous pensez qu'il s'agit d'une erreur, merci de contacter le <link>support</link>.",
+    "success": "Vous avez activé votre compte avec succès ! Vous allez recevoir un e-mail pour initialiser votre mot de passe."
+  },
   "navigation": {
     "factors": "Facteurs d'émission",
     "fe": "FE",
@@ -142,9 +150,14 @@
     "home": "Accueil",
     "profile": "Profil",
     "study": "Étude",
-    "team": "Équipe",
-    "organization": "Organisation",
-    "transition": "Transition BC+"
+    "organization": "Mon organisation",
+    "transition": "Transition BC+",
+    "logout": "Se déconnecter",
+    "methodology": "Méthodologie",
+    "organizations": "Mes bilans carbone",
+    "settings": "Paramètres",
+    "team": "Mon équipe",
+    "information": "Informations générales"
   },
   "results": {
     "byPost": "Résultats par poste",
@@ -153,7 +166,6 @@
   "profile": {
     "title": "Mon profil",
     "legalNotices": "Mentions légales",
-    "logout": "Se déconnecter",
     "firstName": "Prénom",
     "lastName": "Nom",
     "cancelUpdate": "Annuler",
@@ -162,6 +174,19 @@
     "validation": {
       "firstName": "1 caractère minimum",
       "lastName": "1 caractère minimum"
+    }
+  },
+  "settings": {
+    "title": "Mes paramètres d'application",
+    "validate": "Sauvegarder",
+    "validatedEmissionSourcesOnly": "Afficher uniquement les sources d'emissions validées",
+    "yes": "Oui",
+    "no": "Non",
+    "caUnit": {
+      "label": "Unité des chiffres d'affaire des sites",
+      "U": "€",
+      "K": "k€",
+      "M": "M€"
     }
   },
   "admin": {
@@ -206,7 +231,7 @@
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
-        "level": "Veuillez selectionner le type de Bilan Carbone"
+        "level": "Veuillez selectionner le type de Bilan Carbone ®"
       },
       "error": {
         "default": "Une erreur s'est produite ...",
@@ -256,7 +281,8 @@
         "validation": {
           "email": "Veuillez utiliser un email valide",
           "emailRequired": "Veuillez entrer un email",
-          "role": "Veuillez sélectionner un droit"
+          "role": "Veuillez sélectionner un droit",
+          "adminValidator": "Cette personne est administrateur et est donc déjà validateur pour toutes les études de ce compte"
         },
         "dialog": {
           "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
@@ -354,6 +380,16 @@
       "notAuthorized": "Action non authorisée",
       "removeFlow": "Supprimer le flux",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+    },
+    "delete": {
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "delete": "Supprimer l'étude",
+      "content": "Êtes vous sur de vouloir supprimer cette étude ? Toutes ses données seront supprimées définitivement et seront impossible à récupérées. Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
+      "name": "Nom de l'étude",
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+      "title": "Suppression d'une étude",
+      "wrongName": "Le nom de l'étude ne correspond pas"
     }
   },
   "emissionFactors": {
@@ -381,7 +417,7 @@
       "EmissionsLieesAuChangementDAffectationDesSolsCas": "Émissions liées au changement d'affectation des sols (CAS)",
       "EmissionsLieesALaProductionDeFroid": "Émissions liées à la production de froid",
       "EmissionsLieesAuxProcedesIndustriels": "Émissions liées aux procédés industriels",
-      "MetauxPlastiquesEtVerre": "Metaux, plastiques et verre",
+      "MetauxPlastiquesEtVerre": "Métaux, plastiques et verre",
       "PapiersCartons": "Papiers cartons",
       "MateriauxDeConstruction": "Matériaux de construction",
       "ProduitsChimiquesEtHydrogene": "Produits chimiques et hydrogène",
@@ -420,6 +456,8 @@
     "create": {
       "title": "Ajouter un facteur d'émission",
       "create": "Ajouter le facteur d'émission",
+      "update": "Mettre à jour",
+      "cancel": "Annuler",
       "name": "Nom",
       "attribute": "Détails",
       "unit": "Unité",
@@ -471,6 +509,8 @@
       "location": "Localisation",
       "locationSearch": "Rechercher une localisation",
       "Manual": "Manuelle",
+      "edit": "Éditer le facteur d'émissions",
+      "delete": "Supprimer facteur d'émissions",
       "name": "Nom",
       "none": "Aucune",
       "no": "Non",
@@ -507,6 +547,36 @@
       "geographicRepresentativeness": "Représentativité géographique :",
       "temporalRepresentativeness": "Représentativité temporelle :",
       "completeness": "Complétude :"
+    },
+    "edit": {
+      "title": "Modifier le facteur d'émissions ({name})",
+      "modal": {
+        "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
+        "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
+        "title": "Modifier un facteur d’émission",
+        "description": "Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées. Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
+        "confirm": "Confirmer",
+        "close": "Annuler"
+      }
+    },
+    "type": {
+      "CarburantAmontCombustion": "Carburant (amont/combustion)",
+      "Amont": "Amont",
+      "Intrants": "Intrants",
+      "Combustion": "Combustion",
+      "TransportEtDistribution": "Transport et distribution",
+      "Energie": "Energie",
+      "Fabrication": "Fabrication",
+      "Traitement": "Traitement",
+      "Collecte": "Collecte",
+      "Autre": "Autre",
+      "Amortissement": "Amortissement",
+      "Incineration": "Incineration",
+      "EmissionsFugitives": "Emissions fugitives",
+      "Fuites": "Fuites",
+      "Transport": "Transport",
+      "CombustionALaCentrale": "Combustion à la centrale",
+      "Pertes": "Pertes"
     }
   },
   "level": {
@@ -518,7 +588,13 @@
     "SUPER_ADMIN": "Administrateur Global",
     "ADMIN": "Administrateur",
     "GESTIONNAIRE": "Gestionnaire",
-    "DEFAULT": "Collaborateur"
+    "DEFAULT": "Collaborateur",
+    "SUPER_ADMIN_description": "",
+    "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des clients et des études (qu'elles soient publiques ou privées).",
+    "GESTIONNAIRE_description": "",
+    "DEFAULT_description": "",
+    "close": "Fermer",
+    "guide": "Guide des rôles"
   },
   "team": {
     "title": "Mon organisation",
@@ -719,7 +795,7 @@
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
       "etp": "Employés",
-      "ca": "Chiffre d'affaire (k€)",
+      "ca": "Chiffre d'affaire ({unit})",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",
@@ -736,6 +812,10 @@
       "close": "Fermer",
       "existingSite": "<name></name> : <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 étude à laquelle} other {#  études auxquelles}} vous n'avez pas accès"
+    },
+    "card": {
+      "method": "Consulter la méthodologie Bilan Carbone ®",
+      "update": "Modifier mes informations"
     }
   },
   "emissionSource": {
@@ -813,20 +893,38 @@
     "error": "Une erreur s'est produite...",
     "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m>.</p>"
   },
-  "transition": {
-    "organizations": "Organisations",
-    "organizationsUpload": "Importer mes organisations",
-    "requiredHeaders": "Les colonnes suivantes sont obligatoires :",
-    "missingHeaders": "Colonnes manquantes :",
-    "loading": "Chargement du fichier en cours...",
-    "success": "Fichier correctement importé, veuillez vérifier les informations créees",
-    "existingOrganizations": "Attention, certaines organisations (basé sur le SIRET, ou le nom) existent déjà. Ces dernières ont été ignorées. Veuillez verifier que toutes vos données sont correctes."
-  },
   "upload": {
     "fileTooBig": "Fichier trop gros (taille maximale {size} MB)",
     "noFileSelected": "Aucun fichier selectionné"
   },
   "spinner": {
     "loading": "Chargement"
+  },
+  "onboarding": {
+    "title-0": "Bienvenue sur le BC+ ! Avant de commencer, veuillez configurer votre organisation",
+    "titleDescription-0": "Nous avons pré-rempli certaines informations concernant votre organisation (association, entreprise, ...) suite à votre adhésion à l'ABC. Vous pouvez modifier le nom de votre organisation maintenant, ou à tout moment dans le BC+ via la rubrique \"Organisation\".",
+    "title-1": "Gestion de votre équipe",
+    "titleDescription-1": "Vous pouvez d'ores et déjà ajouter vos collaborateurs au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Équipe\"",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "validate": "Valider",
+    "step1": {
+      "name": "Nom de mon organisation",
+      "role": "Mon rôle au sein de l'organisation",
+      "adminDescription": "Vous avez été formé au Bilan Carbone ® : Le rôle qui vous a été attribué est celui d'administrateur de votre organisation.",
+      "gestionnaireDescription": "Vous n'avez pas été formé au Bilan Carbone ® : Le rôle qui vous a été attribué est celui de gestionnaire de votre organisation."
+    },
+    "step2": {
+      "addCollaborator": "Ajouter un collaborateur",
+      "email": "Adresse email",
+      "role": "Rôle",
+      "adminDescription": "Possède l'ensemble des droits existants",
+      "collaboratorDescription": "Peut consulter les informations d'un bilan",
+      "validation": {
+        "email": "Adresse email invalide",
+        "requiredEmail": "E-mail obligatoire",
+        "requiredRole": "Rôle obligatoire"
+      }
+    }
   }
 }

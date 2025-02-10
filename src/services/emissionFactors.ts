@@ -4,7 +4,7 @@ import { sortAlphabetically } from './utils'
 
 export const getEmissionFactors = async (locale: string) => {
   const session = await auth()
-  if (!session || !session.user.organizationId) {
+  if (!session || !session.user) {
     return []
   }
 

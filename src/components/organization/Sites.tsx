@@ -1,12 +1,14 @@
 'use client'
 
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import { formatNumber } from '@/utils/number'
+import { getUserSettings } from '@/services/serverFunctions/user'
+import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { SiteCAUnit } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../base/Button'
@@ -22,10 +24,25 @@ interface Props<T extends SitesCommand> {
 
 const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>) => {
   const t = useTranslations('organization.sites')
+  const tUnit = useTranslations('settings.caUnit')
+  const [caUnit, setCAUnit] = useState<SiteCAUnit>(SiteCAUnit.K)
 
   const control = form?.control as Control<SitesCommand>
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
   const getValues = form?.getValues as UseFormGetValues<SitesCommand>
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const caUnit = (await getUserSettings())?.caUnit
+    if (caUnit !== undefined) {
+      setCAUnit(caUnit)
+    }
+  }
+
+  const headerCAUnit = useMemo(() => tUnit(caUnit), [caUnit])
 
   const columns = useMemo(() => {
     const columns = [
@@ -84,7 +101,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
       },
       {
         id: 'ca',
-        header: t('ca'),
+        header: t('ca', { unit: headerCAUnit }),
         accessorKey: 'ca',
         cell: ({ row, getValue }) =>
           form ? (
@@ -101,7 +118,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               }}
             />
           ) : (
-            `${formatNumber(getValue<number>() / 1000)}`
+            `${formatNumber(displayCA(getValue<number>(), CA_UNIT_VALUES[caUnit]))}`
           ),
       },
     ] as ColumnDef<SitesCommand['sites'][0]>[]
@@ -131,7 +148,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
       })
     }
     return columns
-  }, [t, form])
+  }, [t, form, headerCAUnit])
 
   const table = useReactTable({
     columns,

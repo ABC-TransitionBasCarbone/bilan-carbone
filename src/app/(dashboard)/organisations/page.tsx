@@ -1,14 +1,14 @@
+import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import NotFound from '@/components/pages/NotFound'
 import OrganizationPage from '@/components/pages/Organization'
 import { getUserOrganizations } from '@/db/user'
-import { auth } from '@/services/auth'
 
-const Organisation = async () => {
-  const session = await auth()
-  if (!session || !session.user) {
-    return null
+const Organisation = async ({ user }: UserProps) => {
+  if (!user.organizationId) {
+    return <NotFound />
   }
-  const organizations = await getUserOrganizations(session.user.email)
-  return <OrganizationPage organizations={organizations} user={session.user} />
+  const organizations = await getUserOrganizations(user.email)
+  return <OrganizationPage organizations={organizations} user={user} />
 }
 
-export default Organisation
+export default withAuth(Organisation)

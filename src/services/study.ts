@@ -12,6 +12,7 @@ import { computeBegesResult } from './results/beges'
 import { computeResultsByPost } from './results/consolidated'
 import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
+import { getUserSettings } from './serverFunctions/user'
 import {
   getEmissionSourcesGlobalUncertainty,
   getQualityRating,
@@ -298,11 +299,12 @@ export const formatConsolidatedStudyResultsForExport = (
   tExport: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
+  validatedEmissionSourcesOnly?: boolean,
 ) => {
   const dataForExport = []
 
   for (const site of siteList) {
-    const resultList = computeResultsByPost(study, tPost, site.id, true)
+    const resultList = computeResultsByPost(study, tPost, site.id, true, validatedEmissionSourcesOnly)
 
     dataForExport.push([site.name])
     dataForExport.push([tStudy('post'), tStudy('uncertainty'), tStudy('value')])
@@ -333,6 +335,7 @@ export const formatBegesStudyResultsForExport = (
   tExport: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tBeges: ReturnType<typeof useTranslations>,
+  validatedEmissionSourcesOnly?: boolean,
 ) => {
   const lengthOfBeges = 33
   const dataForExport = []
@@ -354,7 +357,14 @@ export const formatBegesStudyResultsForExport = (
 
   for (let i = 0; i < siteList.length; i++) {
     const site = siteList[i]
-    const resultList = computeBegesResult(study, rules, emissionFactorsWithParts, site.id, true)
+    const resultList = computeBegesResult(
+      study,
+      rules,
+      emissionFactorsWithParts,
+      site.id,
+      true,
+      validatedEmissionSourcesOnly,
+    )
 
     // Merge cells
     sheetOptions['!merges'].push(
@@ -429,11 +439,32 @@ export const downloadStudyResults = async (
     ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
   ]
 
-  data.push(formatConsolidatedStudyResultsForExport(study, siteList, tStudy, tExport, tPost, tQuality))
+  const validatedEmissionSourcesOnly = (await getUserSettings())?.validatedEmissionSourcesOnly
+
+  data.push(
+    formatConsolidatedStudyResultsForExport(
+      study,
+      siteList,
+      tStudy,
+      tExport,
+      tPost,
+      tQuality,
+      validatedEmissionSourcesOnly,
+    ),
+  )
 
   if (study.exports.some((exp) => exp.type === Export.Beges)) {
     data.push(
-      formatBegesStudyResultsForExport(study, rules, emissionFactorsWithParts, siteList, tExport, tQuality, tBeges),
+      formatBegesStudyResultsForExport(
+        study,
+        rules,
+        emissionFactorsWithParts,
+        siteList,
+        tExport,
+        tQuality,
+        tBeges,
+        validatedEmissionSourcesOnly,
+      ),
     )
   }
 

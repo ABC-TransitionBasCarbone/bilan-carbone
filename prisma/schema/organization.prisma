@@ -1,12 +1,21 @@
+enum SiteCAUnit {
+  U // Unit (1)
+  K // Kilo (1000)
+  M // Million (1000000)
+}
+
 model Organization {
   id               String   @id @default(uuid())
   createdAt        DateTime @default(now()) @map("created_at")
   updatedAt        DateTime @default(now()) @map("updated_at")
   importedFileDate DateTime @default(now()) @map("imported_file_date")
 
-  name  String
-  siret String?
-  isCR  Boolean @map("is_cr")
+  name        String
+  siret       String?
+  isCR        Boolean @map("is_cr")
+  onboarded   Boolean @default(false)
+  onboarderId String? @map("onboarder_id")
+  onboarder   User?   @relation("organizationOnboarder", fields: [onboarderId], references: [id])
 
   users     User[]
   sites     Site[]

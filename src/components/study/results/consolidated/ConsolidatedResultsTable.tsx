@@ -2,6 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -9,7 +10,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './ConsolidatedResultsTable.module.css'
 
 interface Props {
@@ -22,6 +23,18 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies }: Props)
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
+  const [validatedOnly, setValidatedOnly] = useState(true)
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
+    if (validatedOnlySetting !== undefined) {
+      setValidatedOnly(validatedOnlySetting)
+    }
+  }
 
   const columns = useMemo(
     () =>
@@ -64,8 +77,8 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies }: Props)
   )
 
   const data = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, withDependencies),
-    [study, tPost, studySite, withDependencies],
+    () => computeResultsByPost(study, tPost, studySite, withDependencies, validatedOnly),
+    [study, tPost, studySite, withDependencies, validatedOnly],
   )
 
   const table = useReactTable({

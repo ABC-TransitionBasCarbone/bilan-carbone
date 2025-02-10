@@ -1,7 +1,12 @@
 'use server'
 
 import { prismaClient } from '@/db/client'
-import { createEmissionFactor } from '@/db/emissionFactors'
+import {
+  createEmissionFactor,
+  getEmissionFactorById,
+  getEmissionFactorDetailsById,
+  updateEmissionFactor,
+} from '@/db/emissionFactors'
 import { getUserByEmail } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
@@ -9,7 +14,7 @@ import { auth } from '../auth'
 import { getEmissionFactors, getEmissionFactorsByIds } from '../emissionFactors'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
-import { CreateEmissionFactorCommand } from './emissionFactor.command'
+import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
 export const getEmissionsFactor = async () => {
   const locale = await getLocale()
@@ -21,6 +26,29 @@ export const getEmissionFactorByIds = async (ids: string[]) => {
   return getEmissionFactorsByIds(ids, locale)
 }
 
+export const getDetailedEmissionFactor = async (id: string) => {
+  const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorDetailsById(id)])
+
+  if (!emissionFactor || !session) {
+    return null
+  }
+
+  if (!emissionFactor.organizationId || emissionFactor.organizationId !== session.user.organizationId) {
+    return null
+  }
+
+  return emissionFactor
+}
+
+export const canEditEmissionFactor = async (id: string) => {
+  const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorById(id)])
+
+  if (!emissionFactor || !session) {
+    return false
+  }
+  return emissionFactor.organizationId === session.user.organizationId
+}
+
 export const createEmissionFactorCommand = async ({
   name,
   unit,
@@ -29,7 +57,7 @@ export const createEmissionFactorCommand = async ({
   parts,
   subPost,
   ...command
-}: CreateEmissionFactorCommand) => {
+}: EmissionFactorCommand) => {
   const session = await auth()
   const local = await getLocale()
   if (!session || !session.user) {
@@ -80,4 +108,41 @@ export const createEmissionFactorCommand = async ({
       }),
     ),
   )
+}
+
+export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorCommand) => {
+  if (!canEditEmissionFactor(command.id)) {
+    return NOT_AUTHORIZED
+  }
+
+  const [session, local] = await Promise.all([auth(), getLocale()])
+
+  if (!session) {
+    return NOT_AUTHORIZED
+  }
+
+  await updateEmissionFactor(session, local, command)
+}
+
+export const deleteEmissionFactor = async (id: string) => {
+  if (!canEditEmissionFactor(id)) {
+    return NOT_AUTHORIZED
+  }
+
+  await prismaClient.$transaction(async (transaction) => {
+    const emissionFactorParts = await transaction.emissionFactorPart.findMany({ where: { emissionFactorId: id } })
+    await transaction.emissionFactorPartMetaData.deleteMany({
+      where: { emissionFactorPartId: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
+    })
+
+    await Promise.all([
+      transaction.studyEmissionSource.deleteMany({ where: { emissionFactorId: id } }),
+      transaction.emissionFactorMetaData.deleteMany({ where: { emissionFactorId: id } }),
+      transaction.emissionFactorPart.deleteMany({
+        where: { id: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
+      }),
+    ])
+
+    await transaction.emissionFactor.delete({ where: { id } })
+  })
 }

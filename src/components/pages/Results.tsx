@@ -22,8 +22,14 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts }: Props) => {
         current={tStudyNav('results')}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organisations/${study.organization.id}`,
+              }
+            : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={tStudyNav('results')} as="h1">
         <AllResults study={study} rules={rules} emissionFactorsWithParts={emissionFactorsWithParts} />

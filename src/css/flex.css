@@ -33,14 +33,19 @@
   justify-content: space-between;
 }
 
-.justify-end {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .align-center {
   display: flex;
   align-items: center;
+}
+
+.align-start {
+  display: flex;
+  align-items: flex-start;
+}
+
+.align-end {
+  display: flex;
+  align-items: flex-end;
 }
 
 .wrap {

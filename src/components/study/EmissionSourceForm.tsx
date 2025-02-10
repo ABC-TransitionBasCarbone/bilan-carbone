@@ -7,7 +7,7 @@ import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/mater
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Path } from 'react-hook-form'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
@@ -50,6 +50,17 @@ const EmissionSourceForm = ({
     }
   }
 
+  const isCAS =
+    emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
+    emissionSource.emissionFactor &&
+    emissionSource.emissionFactor.unit === Unit.HA_YEAR
+
+  useEffect(() => {
+    if (isCAS) {
+      update('value', (emissionSource.hectare || 0) * (emissionSource.duration || 0))
+    }
+  }, [emissionSource.hectare, emissionSource.duration])
+
   return (
     <>
       <div className={classNames(styles.row, 'flex')}>
@@ -89,24 +100,26 @@ const EmissionSourceForm = ({
         />
       </div>
       <div className={classNames(styles.row, 'flex')}>
-        <div className={styles.inputWithUnit}>
-          <TextField
-            disabled={!canEdit}
-            type="number"
-            data-testid="emission-source-value-da"
-            defaultValue={emissionSource.value}
-            onBlur={(event) => handleUpdate(event)}
-            label={`${t('form.value')} *`}
-            helperText={error}
-            error={!!error}
-            slotProps={{
-              htmlInput: { min: 0 },
-              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-              inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
-            }}
-          />
-          {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
-        </div>
+        {!isCAS && (
+          <div className={styles.inputWithUnit}>
+            <TextField
+              disabled={!canEdit}
+              type="number"
+              data-testid="emission-source-value-da"
+              value={emissionSource.value}
+              onBlur={(event) => handleUpdate(event)}
+              label={`${t('form.value')} *`}
+              helperText={error}
+              error={!!error}
+              slotProps={{
+                htmlInput: { min: 0 },
+                input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
+              }}
+            />
+            {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
+          </div>
+        )}
         <TextField
           disabled={!canEdit}
           data-testid="emission-source-source"
@@ -148,34 +161,32 @@ const EmissionSourceForm = ({
           <div className={styles.unit}>{t('form.years')}</div>
         </div>
       )}
-      {emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
-        emissionSource.emissionFactor &&
-        emissionSource.emissionFactor.unit === Unit.HA_YEAR && (
-          <div className={classNames(styles.row, 'flex')}>
-            <TextField
-              disabled={!canEdit}
-              type="number"
-              defaultValue={emissionSource.hectare}
-              onBlur={(event) => update('hectare', Number(event.target.value))}
-              label={`${t('form.hectare')} *`}
-              slotProps={{
-                inputLabel: { shrink: true },
-                input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-              }}
-            />
-            <TextField
-              disabled={!canEdit}
-              type="number"
-              defaultValue={emissionSource.duration}
-              onBlur={(event) => update('duration', Number(event.target.value))}
-              label={`${t('form.duration')} *`}
-              slotProps={{
-                inputLabel: { shrink: true },
-                input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-              }}
-            />
-          </div>
-        )}
+      {isCAS && (
+        <div className={classNames(styles.row, 'flex')}>
+          <TextField
+            disabled={!canEdit}
+            type="number"
+            defaultValue={emissionSource.hectare}
+            onBlur={(event) => update('hectare', Number(event.target.value))}
+            label={`${t('form.hectare')} *`}
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+            }}
+          />
+          <TextField
+            disabled={!canEdit}
+            type="number"
+            defaultValue={emissionSource.duration}
+            onBlur={(event) => update('duration', Number(event.target.value))}
+            label={`${t('form.duration')} *`}
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+            }}
+          />
+        </div>
+      )}
       <QualitySelectGroup canEdit={canEdit} emissionSource={emissionSource} update={update} advanced={advanced} />
       <div className={classNames(styles.row, 'flex')}>
         <TextField

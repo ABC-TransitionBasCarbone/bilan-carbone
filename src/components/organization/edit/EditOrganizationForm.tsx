@@ -11,6 +11,7 @@ import {
   UpdateOrganizationCommandValidation,
 } from '@/services/serverFunctions/organization.command'
 import { findStudiesWithSites } from '@/services/serverFunctions/study'
+import { displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -22,11 +23,12 @@ import Sites from '../Sites'
 
 interface Props {
   organization: OrganizationWithSites
+  caUnit: number
 }
 
 const emptySitesOnError = { authorizedStudySites: [], unauthorizedStudySites: [] }
 
-const EditOrganizationForm = ({ organization }: Props) => {
+const EditOrganizationForm = ({ organization, caUnit }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
   const tStudySites = useTranslations('organization.studySites')
@@ -40,7 +42,7 @@ const EditOrganizationForm = ({ organization }: Props) => {
     defaultValues: {
       organizationId: organization.id,
       name: organization.name,
-      sites: organization.sites.map((site) => ({ ...site, ca: site.ca ? site.ca / 1000 : 0 })),
+      sites: organization.sites.map((site) => ({ ...site, ca: site.ca ? displayCA(site.ca, caUnit) : 0 })),
     },
   })
 

@@ -2,7 +2,7 @@ import { getToken } from 'next-auth/jwt'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-const publicRoutes = ['/login', '/reset-password']
+const publicRoutes = ['/login', '/reset-password', '/activation']
 
 export async function middleware(req: NextRequest) {
   if (!publicRoutes.find((route) => req.nextUrl.pathname.startsWith(route))) {

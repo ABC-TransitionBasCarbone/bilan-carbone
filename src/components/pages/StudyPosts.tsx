@@ -1,5 +1,4 @@
 'use client'
-
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { User } from 'next-auth'
@@ -40,8 +39,15 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
         current={tPost(post)}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organisations/${study.organization.id}`,
+              }
+            : undefined,
+
           { label: study.name, link: `/etudes/${study.id}` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={study.name} as="h1">
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} />

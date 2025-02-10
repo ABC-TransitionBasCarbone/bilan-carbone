@@ -1,9 +1,11 @@
 import dayjs from 'dayjs'
 
 describe('Create study', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
+  })
 
+  beforeEach(() => {
     cy.intercept('POST', '/etudes/creer').as('create')
   })
 
@@ -20,7 +22,7 @@ describe('Create study', () => {
 
     cy.getByTestId('new-study-name').type('My new study')
     cy.getByTestId('new-validator-name').click()
-    cy.get('[data-option-index="0"]').click()
+    cy.get('[data-option-index="1"]').click()
 
     cy.getByTestId('new-study-endDate').within(() => {
       cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
@@ -44,7 +46,7 @@ describe('Create study', () => {
 
     cy.getByTestId('new-study-name').type('My new study')
     cy.getByTestId('new-validator-name').click()
-    cy.get('[data-option-index="0"]').click()
+    cy.get('[data-option-index="1"]').click()
 
     cy.getByTestId('new-study-endDate').within(() => {
       cy.get('input').type(dayjs().add(1, 'y').format('MM/DD/YYYY'))

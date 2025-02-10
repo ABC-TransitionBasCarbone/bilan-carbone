@@ -97,7 +97,7 @@ describe('Create study emission source', () => {
 
     // Editor can add source, edit but not validate
     cy.logout()
-    cy.login('bc-admin-0@yopmail.com', 'password-0')
+    cy.login('bc-gestionnaire-0@yopmail.com', 'password-0')
     cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('subpost').first().click()
     cy.getByTestId('new-emission-source').should('exist')

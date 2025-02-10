@@ -2,6 +2,7 @@
 
 import { FormRadio } from '@/components/form/Radio'
 import { FullStudy } from '@/db/study'
+import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
 import {
   ChangeStudyPublicStatusCommand,
@@ -9,7 +10,7 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControlLabel, Radio } from '@mui/material'
-import { Role, StudyRole } from '@prisma/client'
+import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -19,7 +20,7 @@ import styles from './StudyPublicStatus.module.css'
 interface Props {
   user: User
   study: FullStudy
-  userRoleOnStudy?: FullStudy['allowedUsers'][0]
+  userRoleOnStudy?: StudyRole
 }
 
 const StudyPublicStatus = ({ user, study, userRoleOnStudy }: Props) => {
@@ -51,7 +52,7 @@ const StudyPublicStatus = ({ user, study, userRoleOnStudy }: Props) => {
     }
   }, [isPublic, study, form])
 
-  return user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader) ? (
+  return isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader ? (
     <>
       <FormRadio control={form.control} translation={tForm} name="isPublic" row label={tForm('isPublicTitle')}>
         <FormControlLabel value="true" control={<Radio />} label={tForm('public')} />

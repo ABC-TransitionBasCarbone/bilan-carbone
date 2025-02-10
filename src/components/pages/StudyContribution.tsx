@@ -22,8 +22,15 @@ const StudyContributionPage = ({ study }: Props) => {
         current={tStudyNav('dataEntry')}
         links={[
           { label: tNav('home'), link: '/' },
+          study.organization.isCR
+            ? {
+                label: study.organization.name,
+                link: `/organisations/${study.organization.id}`,
+              }
+            : undefined,
+
           { label: study.name, link: `/etudes/${study.id}` },
-        ]}
+        ].filter((link) => link !== undefined)}
       />
       <Block title={tStudyNav('dataEntry')} as="h1">
         <div className="mb1">

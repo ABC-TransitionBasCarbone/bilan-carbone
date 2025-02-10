@@ -2,11 +2,11 @@
 
 import { TeamMember } from '@/db/user'
 import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
-import { Button as MUIButton } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import Button from '../base/Button'
+import { useState } from 'react'
+import LoadingButton from '../base/LoadingButton'
 import styles from './InvitationsActions.module.css'
 
 interface Props {
@@ -15,31 +15,38 @@ interface Props {
 
 const PendingInvitationsActions = ({ member }: Props) => {
   const t = useTranslations('team')
+  const [sending, setSending] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const router = useRouter()
   return (
     <div className={classNames(styles.buttons, 'flex')}>
-      <Button
+      <LoadingButton
+        loading={sending}
         onClick={async () => {
+          setSending(true)
           const result = await resendInvitation(member.email)
+          setSending(false)
           if (!result) {
             router.refresh()
           }
         }}
       >
         {t('resend')}
-      </Button>
-      <MUIButton
-        variant="contained"
+      </LoadingButton>
+      <LoadingButton
         color="error"
+        loading={deleting}
         onClick={async () => {
+          setDeleting(true)
           const result = await deleteMember(member.email)
+          setDeleting(false)
           if (!result) {
             router.refresh()
           }
         }}
       >
         {t('delete')}
-      </MUIButton>
+      </LoadingButton>
     </div>
   )
 }

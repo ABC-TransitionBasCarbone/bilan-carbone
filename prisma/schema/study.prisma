@@ -63,6 +63,8 @@ model Study {
   versionId String                      @map("version_id")
   version   EmissionFactorImportVersion @relation(fields: [versionId], references: [id])
 
+  wasteImpact Float @default(41) @map("waste_impact")
+
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
   contributors    Contributors[]

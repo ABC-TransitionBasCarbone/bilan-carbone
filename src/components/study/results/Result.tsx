@@ -4,6 +4,7 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { downloadStudyEmissionSources, downloadStudyPost } from '@/services/study'
 import { formatNumber } from '@/utils/number'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -52,6 +53,18 @@ const Result = ({ study, by, studySite, withDependenciesGlobal }: Props) => {
   const [withDependencies, setWithDependencies] = useState(
     withDependenciesGlobal === undefined ? true : withDependenciesGlobal,
   )
+  const [validatedOnly, setValidatedOnly] = useState(true)
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
+    if (validatedOnlySetting !== undefined) {
+      setValidatedOnly(validatedOnlySetting)
+    }
+  }
 
   useEffect(() => {
     if (withDependenciesGlobal !== undefined) {
@@ -70,7 +83,7 @@ const Result = ({ study, by, studySite, withDependenciesGlobal }: Props) => {
   )
 
   const yData = useMemo(() => {
-    const computedResults = computeResultsByPost(study, tPost, studySite, withDependencies)
+    const computedResults = computeResultsByPost(study, tPost, studySite, withDependencies, validatedOnly)
     if (by === 'Post') {
       if (computedResults.every((post) => post.value === 0)) {
         return []
@@ -87,7 +100,7 @@ const Result = ({ study, by, studySite, withDependenciesGlobal }: Props) => {
         .filter((subPost) => withDependencies || subPost !== SubPost.UtilisationEnDependance)
         .map((subPost) => subPosts.find((subPostResult) => subPostResult.post === subPost)?.value || 0)
     }
-  }, [post, by, studySite, withDependencies])
+  }, [post, by, studySite, withDependencies, validatedOnly])
 
   useEffect(() => {
     if (canvasRef.current) {

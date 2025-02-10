@@ -5,7 +5,14 @@ const globalForPrisma = global as unknown as {
   prismaClient: PrismaClient | undefined
 }
 
-export const prismaClient = globalForPrisma.prismaClient ?? new PrismaClient()
+// https://www.prisma.io/docs/orm/prisma-client/queries/excluding-fields
+const defaultPrismaClient = new PrismaClient({
+  omit: {
+    user: { password: true, resetToken: true },
+  },
+}) as PrismaClient
+
+export const prismaClient = globalForPrisma.prismaClient ?? defaultPrismaClient
 
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prismaClient = prismaClient

@@ -1,9 +1,11 @@
 import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
+import { isAdmin } from '@/services/permissions/user'
 import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { Suspense } from 'react'
 import Actualities from '../actuality/Actualities'
 import Block from '../base/Block'
+import Onboarding from '../onboarding/Onboarding'
 import Organizations from '../organization/OrganizationsContainer'
 import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Studies from '../study/StudiesContainer'
@@ -19,11 +21,13 @@ const UserView = async ({ user }: Props) => {
     getUserOrganizations(user.email),
     hasUserToValidateInOrganization(user.organizationId),
   ])
-  const isCR = organizations.find((organization) => organization.id === user.organizationId)?.isCR
+
+  const userOrganization = organizations.find((organization) => organization.id === user.organizationId)
+  const isCR = userOrganization?.isCR
 
   return (
     <>
-      {!!hasUserToValidate && (user.role === Role.ADMIN || user.role === Role.GESTIONNAIRE) && (
+      {!!hasUserToValidate && (isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
         <div className="main-container">
           <UserToValidate />
         </div>
@@ -39,6 +43,7 @@ const UserView = async ({ user }: Props) => {
           {isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}
         </div>
       </Block>
+      {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
     </>
   )
 }

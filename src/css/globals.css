@@ -112,3 +112,12 @@ table {
     border-bottom-right-radius: 0.25rem;
   }
 }
+
+.noSpacing {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.error {
+  color: var(--error);
+}
