@@ -121,3 +121,17 @@ table {
 .error {
   color: var(--error);
 }
+
+.inputLabel {
+  color: black;
+  margin-bottom: 0.5rem !important;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.bold {
+  font-weight: 400;
+}

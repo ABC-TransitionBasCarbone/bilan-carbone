@@ -459,6 +459,7 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "name": "Nom",
+      "namePlaceholder": "Donnez un nom à votre facteur d'émission",
       "attribute": "Détails",
       "unit": "Unité",
       "source": "Source",
@@ -917,6 +918,7 @@
     "step2": {
       "addCollaborator": "Ajouter un collaborateur",
       "email": "Adresse email",
+      "emailLabel": "Ajouter une adresse email ici",
       "role": "Rôle",
       "adminDescription": "Possède l'ensemble des droits existants",
       "collaboratorDescription": "Peut consulter les informations d'un bilan",

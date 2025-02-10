@@ -459,6 +459,7 @@
       "update": "Update",
       "cancel": "Cancel",
       "name": "Name",
+      "namePlaceholder": "Give a name to your emission Factor",
       "attribute": "Details",
       "unit": "Unit",
       "source": "Source",
@@ -917,6 +918,7 @@
     "step2": {
       "addCollaborator": "Add a collaborator",
       "email": "Email address",
+      "emailLabel": "Enter a mail address",
       "role": "Role",
       "adminDescription": "Has all existing rights",
       "collaboratorDescription": "Can view information from a study",

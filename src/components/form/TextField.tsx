@@ -5,12 +5,16 @@ interface Props<T extends FieldValues> {
   name: FieldPath<T>
   control: Control<T>
   translation: (slug: string) => string
+  label?: string
+  icon?: React.ReactNode
 }
 
 export const FormTextField = <T extends FieldValues>({
   name,
   control,
   translation,
+  label,
+  icon,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   return (
@@ -18,20 +22,37 @@ export const FormTextField = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <TextField
-          {...textFieldProps}
-          helperText={error && error.message ? translation('validation.' + error.message) : null}
-          error={!!error}
-          onChange={
-            textFieldProps.type === 'number'
-              ? (event) => {
-                  onChange(parseFloat(event.target.value))
-                }
-              : onChange
-          }
-          value={textFieldProps.type === 'number' && Number.isNaN(value) ? '' : value}
-          slotProps={{ input: { onWheel: (event) => (event.target as HTMLInputElement).blur() } }}
-        />
+        <div className="inputContainer">
+          {label ? (
+            icon ? (
+              <div className="align-center mb-2">
+                {icon}
+                <span className="ml-2 inputLabel bold">{label}</span>
+              </div>
+            ) : (
+              <span className="inputLabel bold">{label}</span>
+            )
+          ) : null}
+          <TextField
+            {...textFieldProps}
+            helperText={error && error.message ? translation('validation.' + error.message) : null}
+            error={!!error}
+            onChange={
+              textFieldProps.type === 'number'
+                ? (event) => {
+                    onChange(parseFloat(event.target.value))
+                  }
+                : onChange
+            }
+            value={textFieldProps.type === 'number' && Number.isNaN(value) ? '' : value}
+            slotProps={{
+              input: {
+                onWheel: (event) => (event.target as HTMLInputElement).blur(),
+                sx: { borderRadius: '12px', borderColor: 'var(--color-grey-400)', color: 'var(--color-grey-950)' },
+              },
+            }}
+          />
+        </div>
       )}
     />
   )

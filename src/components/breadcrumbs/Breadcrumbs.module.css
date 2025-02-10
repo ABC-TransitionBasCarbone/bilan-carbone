@@ -1,7 +1,7 @@
 .container {
   border-radius: 0 0 1rem 1rem;
   border: var(--border);
-  background: var(--neutral-10);
+  background: var(--organization-card-bg);
   flex-wrap: wrap;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;

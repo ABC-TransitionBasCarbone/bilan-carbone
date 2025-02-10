@@ -19,11 +19,14 @@ const OnboardingStep = ({ form, role }: Props) => {
   return (
     <>
       <div className="mb1">
-        <div className={classNames(styles.field, 'align-center mb-2')}>
-          <HomeIcon />
-          <span className="ml-2">{t('name')}</span>
-        </div>
-        <FormTextField className="w100" control={form.control} name="companyName" translation={t} />
+        <FormTextField
+          className="w100"
+          control={form.control}
+          name="companyName"
+          translation={t}
+          label={t('name')}
+          icon={<HomeIcon />}
+        />
       </div>
       <div>
         <div className={classNames(styles.field, 'align-center mb-2')}>
