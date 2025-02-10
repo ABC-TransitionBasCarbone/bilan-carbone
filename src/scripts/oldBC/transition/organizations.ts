@@ -75,6 +75,7 @@ export const uploadOrganizations = async (
         siret: organization.siret as string,
         name: organization.name as string,
         isCR: false,
+        importedFileDate: new Date(),
       })),
     })
   }
