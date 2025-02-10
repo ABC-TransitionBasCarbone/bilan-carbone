@@ -16,8 +16,8 @@ const getUsersFromFTP = async () => {
 
   await client.access(accessOptions)
 
-  const folderPath = process.env.FTP_FILE_PATH || ''
-  const fileName = `${folderPath}/${process.env.FTP_FILE_NAME || ''}`
+  const folderPath = process.env.FTP_FILE_PATH + '/'
+  const fileName = `${folderPath + process.env.FTP_FILE_NAME}`
   const writableStream = fs.createWriteStream(fileName)
 
   await client.downloadTo(writableStream, fileName)
@@ -36,10 +36,6 @@ const getUsersFromFTP = async () => {
     const email = value['User_Email']
     const siretOrSiren = value['SIRET']
     const sessionCodeTraining = value['Session_Code']
-
-    if (!email.includes('abc-transitionbascarbone.fr')) {
-      continue // Skip non-ABC users
-    }
 
     console.log(`Processing ${email}`)
     if (i % 50 === 0) {
