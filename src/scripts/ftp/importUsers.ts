@@ -31,18 +31,18 @@ const getUsersFromFTP = async () => {
 
   const users: Prisma.UserCreateManyInput[] = []
   for (let i = 0; i < values.length; i++) {
-    const value = values[i];
-    const email = value['User_Email'];
-    const siretOrSiren = value['SIRET'];
-    const sessionCodeTraining = value['Session_Code'];
+    const value = values[i]
+    const email = value['User_Email']
+    const siretOrSiren = value['SIRET']
+    const sessionCodeTraining = value['Session_Code']
 
-    // TODO : remove this condition when we the script is tested 
+    // TODO : remove this condition when we the script is tested
     if (!email.includes('abc-transitionbascarbone.fr')) {
-      continue; // Skip non-ABC users
+      continue // Skip non-ABC users
     }
-    console.log(`Processing ${email}`);
+    console.log(`Processing ${email}`)
     if (i % 50 === 0) {
-      console.log(`${i}/${values.length}`);
+      console.log(`${i}/${values.length}`)
     }
     const user: Prisma.UserCreateManyInput = {
       email,
@@ -53,19 +53,19 @@ const getUsersFromFTP = async () => {
       isValidated: false,
       level: Level.Initial,
       importedFileDate: fileDate,
-    };
+    }
 
     if (sessionCodeTraining) {
-      user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Standard;
+      user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Standard
     }
 
     if (siretOrSiren) {
       let organisation = await prismaClient.organization.findFirst({
         where: { siret: { startsWith: siretOrSiren } },
-      });
+      })
       if (!organisation) {
-        const name = value['Company_Name'];
-        const purchasedProducts = value['Purchased_Products'];
+        const name = value['Company_Name']
+        const purchasedProducts = value['Purchased_Products']
 
         organisation = await prismaClient.organization.create({
           data: {
@@ -74,13 +74,13 @@ const getUsersFromFTP = async () => {
             isCR: ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts),
             importedFileDate: fileDate,
           },
-        });
+        })
 
-        user.role = Role.GESTIONNAIRE;
+        user.role = Role.GESTIONNAIRE
       }
-      user.organizationId = organisation.id;
+      user.organizationId = organisation.id
     }
-    users.push(user);
+    users.push(user)
   }
 
   const created = await prismaClient.user.createMany({
