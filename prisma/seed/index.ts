@@ -102,7 +102,6 @@ const users = async () => {
       siret: faker.finance.accountNumber(14),
       isCR: false,
       onboarded: false,
-      importedFileDate: new Date(),
     },
   })
   const onboardingPassword = await signPassword(`onboarding`)
@@ -117,7 +116,6 @@ const users = async () => {
       role: Role.DEFAULT,
       isActive: true,
       isValidated: true,
-      importedFileDate: new Date(),
     },
   })
 
@@ -127,7 +125,6 @@ const users = async () => {
       siret: faker.finance.accountNumber(14),
       isCR: index % 2 === 0,
       onboarded: true,
-      importedFileDate: new Date(),
     })),
   })
 
@@ -140,7 +137,6 @@ const users = async () => {
       parentId: faker.helpers.arrayElement(crOrganizations).id,
       isCR: false,
       onboarded: true,
-      importedFileDate: new Date(),
     })),
   })
 
@@ -172,7 +168,6 @@ const users = async () => {
             role: role as Role,
             isActive: true,
             isValidated: true,
-            importedFileDate: new Date(),
           }
         }),
         ...Array.from({ length: 3 }).map(async (_, index) => {
@@ -187,7 +182,6 @@ const users = async () => {
             role: role as Role,
             isActive: true,
             isValidated: true,
-            importedFileDate: new Date(),
           }
         }),
       ]),
@@ -203,7 +197,6 @@ const users = async () => {
           role: Role.DEFAULT,
           isActive: false,
           isValidated: false,
-          importedFileDate: new Date(),
         }
       }),
     ]),
@@ -220,7 +213,6 @@ const users = async () => {
         role: Role.DEFAULT,
         isActive: true,
         isValidated: true,
-        importedFileDate: new Date(),
       },
       {
         email: 'untrained@yopmail.com',
@@ -232,7 +224,6 @@ const users = async () => {
         role: Role.DEFAULT,
         isActive: true,
         isValidated: true,
-        importedFileDate: new Date(),
       },
     ],
   })
@@ -249,7 +240,6 @@ const users = async () => {
       level: Level.Initial,
       isActive: false,
       isValidated: false,
-      importedFileDate: new Date(),
     },
   })
 

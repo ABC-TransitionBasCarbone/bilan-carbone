@@ -112,6 +112,7 @@ export const addMember = async (member: AddMemberCommand) => {
     isActive: false,
     isValidated: true,
     organization: { connect: { id: session.user.organizationId } },
+    importedFileDate: new Date(),
   }
 
   if (!canAddMember(session.user, newMember, session.user.organizationId)) {

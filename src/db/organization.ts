@@ -71,7 +71,6 @@ export const onboardOrganization = async (
         isActive: false,
         isValidated: true,
         organizationId,
-        importedFileDate: new Date(),
       })
     }
 
