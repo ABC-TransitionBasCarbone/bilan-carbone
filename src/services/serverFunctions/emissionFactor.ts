@@ -9,16 +9,18 @@ import {
   getEmissionFactorDetailsById,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
+import { getStudyById } from '@/db/study'
 import { getUserByEmail } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
+import { canReadStudy } from '../permissions/study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
-export const getEmissionFactors = async () => {
+export const getEmissionFactors = async (studyId?: string) => {
   const session = await auth()
   if (!session || !session.user) {
     return []
@@ -26,7 +28,19 @@ export const getEmissionFactors = async () => {
 
   const locale = await getLocale()
 
-  const emissionFactors = await getAllEmissionFactors(session.user.organizationId)
+  let orga
+  if (studyId && (await canReadStudy(session.user, studyId))) {
+    const study = await getStudyById(studyId, session.user.organizationId)
+    if (!study) {
+      return []
+    }
+
+    orga = study.organization.id
+  } else {
+    orga = session.user.organizationId
+  }
+
+  const emissionFactors = await getAllEmissionFactors(orga)
 
   return emissionFactors
     .map((emissionFactor) => ({

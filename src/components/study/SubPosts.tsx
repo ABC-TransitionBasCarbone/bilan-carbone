@@ -41,7 +41,7 @@ const SubPosts = ({
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorWithMetaData[]>([])
   useEffect(() => {
     const fetchData = async () => {
-      const emissionFactors = await getEmissionFactors()
+      const emissionFactors = await getEmissionFactors(study.id)
       setEmissionFactors(
         emissionFactors.filter((emissionFactor) => emissionFactor.status !== EmissionFactorStatus.Archived),
       )

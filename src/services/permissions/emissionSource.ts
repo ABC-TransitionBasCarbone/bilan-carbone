@@ -12,7 +12,7 @@ const hasStudyBasicRights = async (
   },
   study: FullStudy,
 ) => {
-  if (!(await canReadStudy(user, study))) {
+  if (!(await canReadStudy(user, study.id))) {
     return false
   }
 

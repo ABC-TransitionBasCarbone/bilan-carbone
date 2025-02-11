@@ -15,7 +15,7 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props)
   const studies = await getOrganizationStudiesOrderedByStartDate(mainStudyOrganizationId)
   let mainStudy = null
   for (const study of studies) {
-    const result = await canReadStudy(user, study)
+    const result = await canReadStudy(user, study.id)
     if (result) {
       mainStudy = study
       break
