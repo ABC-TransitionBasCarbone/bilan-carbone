@@ -5,19 +5,19 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 Run this import scripts in the production environnement (change the value of the FE:import version):
 
 Importer les facteurs d'emissions de negaoctet :
-`npx ts-node src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToNegaOctetCSVFile}`
+`npx ts-node src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileNegaOctet}`
 
 Importer les facteurs d'emissions de legifrance froid :
-`npx ts-node src/scripts/legifrance/getEmissionFactors.ts -n 1 -f src/scripts/legifrance/reseaux_froid.csv -r froid`
+`npx ts-node src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileLegifranceCold} -r froid`
 
 Importer les facteurs d'emissions de legifrance chaud :
-`npx ts-node src/scripts/legifrance/getEmissionFactors.ts -n 1 -f src/scripts/legifrance/reseaux_chaud.csv -r chaud`
+`npx ts-node src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileLegifranceHot} -r chaud`
 
 Importer les facteurs d'emissions de la base empreinte :
-`npx ts-node src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${baseEmpreinteVersion}"`
+`npx ts-node src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte}"`
 
 Importer les actualités depuis un CSV :
-`npx ts-node src/scripts/actuality/add.ts -f ${pathToActualityCSVFile}`
+`npx ts-node src/scripts/actuality/add.ts -f ${pathToCSVFileActuality}`
 
 ## Prisma
 
