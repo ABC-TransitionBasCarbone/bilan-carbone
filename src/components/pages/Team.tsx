@@ -10,9 +10,10 @@ import Team from '../team/TeamTable'
 interface Props {
   user: User
   team: TeamMember[]
+  crOrga?: boolean
 }
 
-const TeamPage = ({ user, team }: Props) => {
+const TeamPage = ({ user, team, crOrga = false }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('team')
 
@@ -22,7 +23,7 @@ const TeamPage = ({ user, team }: Props) => {
       <Block title={t('title')} as="h1" />
       <InvitationsToValidate team={team.filter((member) => !member.isValidated)} user={user} />
       <PendingInvitations team={team.filter((member) => !member.isActive && member.isValidated)} user={user} />
-      <Team team={team.filter((member) => member.isActive)} user={user} />
+      <Team team={team.filter((member) => member.isActive)} user={user} crOrga={crOrga} />
     </>
   )
 }

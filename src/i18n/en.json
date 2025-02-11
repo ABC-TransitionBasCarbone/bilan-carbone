@@ -590,10 +590,12 @@
     "ADMIN": "Administrator",
     "GESTIONNAIRE": "Manager",
     "DEFAULT": "Collaborator",
-    "SUPER_ADMIN_description": "",
-    "ADMIN_description": "An administrator has full rights to the organisation's account and to all clients and studies (whether public or private).",
-    "GESTIONNAIRE_description": "",
+    "ADMIN_description": "An administrator has full rights to the organisation's account and to all studies (whether public or private).",
+    "ADMIN_description_CR": "An administrator has full rights to the organisation's account and to all clients and studies (whether public or private).",
+    "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies.",
+    "GESTIONNAIRE_description_CR": "A manager has full rights over the organisation's account, but no rights over customers or studies.",
     "DEFAULT_description": "",
+    "DEFAULT_description_CR": "",
     "close": "Close",
     "guide": "Roles guide"
   },
@@ -918,10 +920,11 @@
     "step2": {
       "addCollaborator": "Add a collaborator",
       "email": "Email address",
-      "emailLabel": "Enter a mail address",
+      "emailPlaceholder": "Enter a mail address",
       "role": "Role",
       "adminDescription": "Has all existing rights",
       "collaboratorDescription": "Can view information from a study",
+      "gestionnaireDescription": "Manages the organisation's account but does not have access to studies",
       "validation": {
         "email": "Invalid email address",
         "requiredEmail": "Email is required",

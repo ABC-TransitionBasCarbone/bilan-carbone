@@ -590,10 +590,12 @@
     "ADMIN": "Administrateur",
     "GESTIONNAIRE": "Gestionnaire",
     "DEFAULT": "Collaborateur",
-    "SUPER_ADMIN_description": "",
-    "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des clients et des études (qu'elles soient publiques ou privées).",
-    "GESTIONNAIRE_description": "",
+    "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études (qu'elles soient publiques ou privées).",
+    "ADMIN_description_CR": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des clients et des études (qu'elles soient publiques ou privées).",
+    "GESTIONNAIRE_description": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit sur les études.",
+    "GESTIONNAIRE_description_CR": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit sur les clients et les études.",
     "DEFAULT_description": "",
+    "DEFAULT_description_CR": "",
     "close": "Fermer",
     "guide": "Guide des rôles"
   },
@@ -918,10 +920,11 @@
     "step2": {
       "addCollaborator": "Ajouter un collaborateur",
       "email": "Adresse email",
-      "emailLabel": "Ajouter une adresse email ici",
+      "emailPlaceholder": "Ajouter une adresse email ici",
       "role": "Rôle",
       "adminDescription": "Possède l'ensemble des droits existants",
       "collaboratorDescription": "Peut consulter les informations d'un bilan",
+      "gestionnaireDescription": "Gère le compte de l'organisation mais n'a pas accès aux études",
       "validation": {
         "email": "Adresse email invalide",
         "requiredEmail": "E-mail obligatoire",
