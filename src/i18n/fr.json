@@ -856,6 +856,14 @@
     "advancedSearch": "Recherche avancée",
     "noResults": "Rechercher avec plus de filtres",
     "seeMore": "...Voir plus et rechercher avec plus de filtres",
+    "glossary": {
+      "title": "Glossaire",
+      "type": "Type",
+      "typeDescription": "Le type de données est une dénomination introduite par la nouvelle méthode Bilan Carbone®, qui vient en complément du calcul des incertitudes. Pour plus d'informations sur les différents types de données, nous vous invitons à consulter <link>cette page</link>.",
+      "quality": "Qualité",
+      "qualityDescription": "Les incertitudes sont dorénavant calculées grâce à des notes qualitatives apportées sur la qualité du facteur d'émission et la qualité de la donnée d'activité. Les notes associées au facteur d'émission sont directement issues des bases de données, mais celles liées à la donnée d'activité doivent être saisies. Pour plus d'informations sur l'attribution des notes, nous vous invitons à consulter <link>cette page</link>.",
+      "close": "Fermer"
+    },
     "deleteDialog": {
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",

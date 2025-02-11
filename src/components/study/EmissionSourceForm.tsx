@@ -7,8 +7,11 @@ import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/mater
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useEffect, useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
+import Help from '../base/HelpIcon'
+import Modal from '../base/Modal'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
@@ -38,6 +41,8 @@ const EmissionSourceForm = ({
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tCategorisations = useTranslations('categorisations')
+  const tGlossary = useTranslations('emissionSource.glossary')
+  const [glossary, setGlossary] = useState('')
   const [error, setError] = useState('')
 
   const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -60,6 +65,17 @@ const EmissionSourceForm = ({
       update('value', (emissionSource.hectare || 0) * (emissionSource.duration || 0))
     }
   }, [emissionSource.hectare, emissionSource.duration])
+
+  const glossaryLink = useMemo(() => {
+    switch (glossary) {
+      case 'type':
+        return 'https://www.bilancarbone-methode.com/4-comptabilisation/4.2-methode-de-collecte-des-donnees-dactivite#les-differents-types-de-donnees-dactivite'
+      case 'quality':
+        return 'https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative'
+      default:
+        return ''
+    }
+  }, [glossary])
 
   return (
     <>
@@ -128,21 +144,27 @@ const EmissionSourceForm = ({
           label={t('form.source')}
         />
         <FormControl>
-          <InputLabel id={'type-label'}>{`${t('form.type')} *`}</InputLabel>
-          <Select
-            disabled={!canEdit}
-            data-testid="emission-source-type"
-            value={emissionSource.type || ''}
-            onChange={(event) => update('type', event.target.value)}
-            label={`${t('form.type')} *`}
-            labelId={'type-label'}
-          >
-            {Object.keys(EmissionSourceType).map((value) => (
-              <MenuItem key={value} value={value}>
-                {t(`type.${value}`)}
-              </MenuItem>
-            ))}
-          </Select>
+          <div className="flex">
+            <div className="grow">
+              <InputLabel id={'type-label'}>{`${t('form.type')} *`}</InputLabel>
+              <Select
+                disabled={!canEdit}
+                data-testid="emission-source-type"
+                value={emissionSource.type || ''}
+                onChange={(event) => update('type', event.target.value)}
+                label={`${t('form.type')} *`}
+                labelId={'type-label'}
+                fullWidth
+              >
+                {Object.keys(EmissionSourceType).map((value) => (
+                  <MenuItem key={value} value={value}>
+                    {t(`type.${value}`)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+            <Help className="ml1" onClick={() => setGlossary('type')} label={tGlossary('title')} />
+          </div>
         </FormControl>
       </div>
       {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
@@ -187,7 +209,13 @@ const EmissionSourceForm = ({
           />
         </div>
       )}
-      <QualitySelectGroup canEdit={canEdit} emissionSource={emissionSource} update={update} advanced={advanced} />
+      <QualitySelectGroup
+        canEdit={canEdit}
+        emissionSource={emissionSource}
+        update={update}
+        advanced={advanced}
+        setGlossary={setGlossary}
+      />
       <div className={classNames(styles.row, 'flex')}>
         <TextField
           disabled={!canEdit}
@@ -201,6 +229,26 @@ const EmissionSourceForm = ({
         <div className={classNames(styles.delete, 'mt1', 'w100', 'flex')}>
           <DeleteEmissionSource emissionSource={emissionSource} />
         </div>
+      )}
+
+      {glossary !== '' && (
+        <Modal
+          open
+          label="emission-source-glossary"
+          title={tGlossary(glossary)}
+          onClose={() => setGlossary('')}
+          actions={[{ actionType: 'button', onClick: () => setGlossary(''), children: tGlossary('close') }]}
+        >
+          <p className="mb-2">
+            {tGlossary.rich(`${glossary}Description`, {
+              link: (children) => (
+                <Link href={glossaryLink} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
+            })}
+          </p>
+        </Modal>
       )}
     </>
   )

@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Path } from 'react-hook-form'
 import Button from '../base/Button'
+import Help from '../base/HelpIcon'
 import QualitySelect from '../form/QualitySelect'
 import styles from './EmissionSource.module.css'
 interface Props {
@@ -16,10 +17,12 @@ interface Props {
   canEdit: boolean | null
   emissionSource: FullStudy['emissionSources'][0]
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
+  setGlossary: (key: string) => void
 }
 
-const QualitySelectGroup = ({ advanced, canEdit, emissionSource, update }: Props) => {
+const QualitySelectGroup = ({ advanced, canEdit, emissionSource, update, setGlossary }: Props) => {
   const t = useTranslations('emissionSource')
+  const tGlossary = useTranslations('emissionSource.glossary')
 
   const [expanded, setExpanded] = useState(advanced)
   const qualities = [
@@ -95,6 +98,7 @@ const QualitySelectGroup = ({ advanced, canEdit, emissionSource, update }: Props
           label={t('form.quality')}
         />
       )}
+      <Help onClick={() => setGlossary('quality')} label={tGlossary('title')} />
       {!advanced && canShrink && (
         <Button
           data-testid="emission-source-quality-expand-button"
