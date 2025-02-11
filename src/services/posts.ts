@@ -51,7 +51,7 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
   [Post.Fret]: [SubPost.FretEntrant, SubPost.FretInterne, SubPost.FretSortant],
   [Post.Deplacements]: [
     SubPost.DeplacementsDomicileTravail,
-    SubPost.DeplacementsDesEmployesDansLeCadreDuTravail,
+    SubPost.DeplacementsProfessionnels,
     SubPost.DeplacementsVisiteurs,
   ],
   [Post.Immobilisations]: [SubPost.Batiments, SubPost.AutresInfrastructures, SubPost.Equipements, SubPost.Informatique],

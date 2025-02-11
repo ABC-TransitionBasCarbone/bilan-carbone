@@ -512,7 +512,7 @@ export const begesRules = [
     notHeldNotSupported: '3.3',
   },
   {
-    subPost: SubPost.DeplacementsDesEmployesDansLeCadreDuTravail,
+    subPost: SubPost.DeplacementsProfessionnels,
     operated: '1.2',
     notOperated: '3.5',
     held: '1.2',
@@ -520,7 +520,7 @@ export const begesRules = [
     notHeldNotSupported: '3.5',
   },
   {
-    subPost: SubPost.DeplacementsDesEmployesDansLeCadreDuTravail,
+    subPost: SubPost.DeplacementsProfessionnels,
     type: EmissionFactorPartType.Amont,
     operated: '4.1',
     notOperated: '3.5',
@@ -529,7 +529,7 @@ export const begesRules = [
     notHeldNotSupported: '3.5',
   },
   {
-    subPost: SubPost.DeplacementsDesEmployesDansLeCadreDuTravail,
+    subPost: SubPost.DeplacementsProfessionnels,
     type: EmissionFactorPartType.Combustion,
     operated: '1.2',
     notOperated: '3.5',
@@ -538,7 +538,7 @@ export const begesRules = [
     notHeldNotSupported: '3.5',
   },
   {
-    subPost: SubPost.DeplacementsDesEmployesDansLeCadreDuTravail,
+    subPost: SubPost.DeplacementsProfessionnels,
     type: EmissionFactorPartType.CombustionALaCentrale,
     operated: '2.1',
     notOperated: '3.5',
@@ -547,7 +547,7 @@ export const begesRules = [
     notHeldNotSupported: '3.5',
   },
   {
-    subPost: SubPost.DeplacementsDesEmployesDansLeCadreDuTravail,
+    subPost: SubPost.DeplacementsProfessionnels,
     type: EmissionFactorPartType.EmissionsFugitives,
     operated: '1.4',
     notOperated: '3.5',
@@ -556,7 +556,7 @@ export const begesRules = [
     notHeldNotSupported: '3.5',
   },
   {
-    subPost: SubPost.DeplacementsDesEmployesDansLeCadreDuTravail,
+    subPost: SubPost.DeplacementsProfessionnels,
     type: EmissionFactorPartType.Fabrication,
     operated: '4.2',
     notOperated: '3.5',

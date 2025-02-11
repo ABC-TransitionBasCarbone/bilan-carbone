@@ -233,7 +233,7 @@ export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracteris
     EmissionSourceCaracterisation.Operated,
     EmissionSourceCaracterisation.NotOperated,
   ],
-  [SubPost.DeplacementsDesEmployesDansLeCadreDuTravail]: [
+  [SubPost.DeplacementsProfessionnels]: [
     EmissionSourceCaracterisation.Operated,
     EmissionSourceCaracterisation.NotOperated,
   ],

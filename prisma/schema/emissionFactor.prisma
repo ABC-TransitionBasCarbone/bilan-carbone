@@ -76,7 +76,7 @@ enum SubPost {
 
   // Deplacements
   DeplacementsDomicileTravail
-  DeplacementsDesEmployesDansLeCadreDuTravail
+  DeplacementsProfessionnels
   DeplacementsVisiteurs
 
   // Immobilisations
