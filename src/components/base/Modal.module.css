@@ -1,0 +1,19 @@
+.dialog {
+  min-width: 34rem;
+  width: 60%;
+  max-width: 60rem !important;
+  margin: 0 !important;
+}
+
+.container {
+  padding: 1rem;
+}
+
+.closeIcon {
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+
+.actions {
+  gap: 1rem;
+}
