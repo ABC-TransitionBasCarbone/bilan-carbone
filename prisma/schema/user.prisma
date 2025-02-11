@@ -6,9 +6,10 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  id               String    @id @default(uuid())
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @map("updated_at")
+  importedFileDate DateTime? @map("imported_file_date")
 
   organization           Organization?  @relation(fields: [organizationId], references: [id])
   onboardedOrganizations Organization[] @relation("organizationOnboarder")
@@ -34,10 +35,10 @@ model User {
 }
 
 model UserApplicationSettings {
-  id                           String  @id @default(uuid())
-  userId                       String  @unique @map("user_id")
-  user                         User?   @relation(fields: [userId], references: [id])
-  validatedEmissionSourcesOnly Boolean @default(true) @map("validated_emission_sources_only")
+  id                           String     @id @default(uuid())
+  userId                       String     @unique @map("user_id")
+  user                         User?      @relation(fields: [userId], references: [id])
+  validatedEmissionSourcesOnly Boolean    @default(true) @map("validated_emission_sources_only")
   caUnit                       SiteCAUnit @default(K) @map("ca_unit")
 
   @@map("user_application_settings")

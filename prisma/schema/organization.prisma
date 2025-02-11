@@ -5,9 +5,10 @@ enum SiteCAUnit {
 }
 
 model Organization {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  id               String    @id @default(uuid())
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @map("updated_at")
+  importedFileDate DateTime? @map("imported_file_date")
 
   name        String
   siret       String?
