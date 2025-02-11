@@ -32,6 +32,9 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
   return (
     <>
       <FormControl>
+        <div className="mb-2 align-center">
+          <span className="inputLabel bold">{t('post')}</span>
+        </div>
         <Select
           label={t('post')}
           name="Post"

@@ -1,13 +1,8 @@
 import { Select as MUISelect, SelectProps } from '@mui/material'
 
-export const Select = ({ name, label, value, onChange, ...selectProps }: SelectProps) => {
+export const Select = ({ name, value, onChange, ...selectProps }: SelectProps) => {
   return (
     <>
-      {label && (
-        <span id={`${name}-select-label}`} className="inputLabel bold">
-          {label}
-        </span>
-      )}
       <MUISelect
         {...selectProps}
         labelId={`${name}-select-label}`}

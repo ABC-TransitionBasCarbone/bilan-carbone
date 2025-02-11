@@ -1,5 +1,7 @@
 import TextField, { TextFieldProps } from '@mui/material/TextField'
+import classNames from 'classnames'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
+import styles from './Form.module.css'
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
@@ -7,6 +9,7 @@ interface Props<T extends FieldValues> {
   translation: (slug: string) => string
   label?: string
   icon?: React.ReactNode
+  iconPosition?: 'before' | 'after'
 }
 
 export const FormTextField = <T extends FieldValues>({
@@ -15,8 +18,10 @@ export const FormTextField = <T extends FieldValues>({
   translation,
   label,
   icon,
+  iconPosition = 'before',
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
+  const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
   return (
     <Controller
       name={name}
@@ -24,14 +29,11 @@ export const FormTextField = <T extends FieldValues>({
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <div className="inputContainer">
           {label ? (
-            icon ? (
-              <div className="align-center mb-2">
-                {icon}
-                <span className="ml-2 inputLabel bold">{label}</span>
-              </div>
-            ) : (
+            <div className={classNames(styles.gapped, 'mb-2 align-center')}>
+              {iconPosition === 'before' && iconDiv}
               <span className="inputLabel bold">{label}</span>
-            )
+              {iconPosition === 'after' && iconDiv}
+            </div>
           ) : null}
           <TextField
             {...textFieldProps}
@@ -48,7 +50,7 @@ export const FormTextField = <T extends FieldValues>({
             slotProps={{
               input: {
                 onWheel: (event) => (event.target as HTMLInputElement).blur(),
-                sx: { borderRadius: '12px', borderColor: 'var(--color-grey-400)', color: 'var(--color-grey-950)' },
+                sx: { borderRadius: '0.75rem', borderColor: 'var(--color-grey-400)', color: 'var(--color-grey-950)' },
               },
             }}
           />

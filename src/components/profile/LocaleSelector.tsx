@@ -19,7 +19,6 @@ const LocaleSelector = () => {
   return (
     <>
       <InputLabel id="local-selector-label">{t('selector')}</InputLabel>
-
       <Select
         value={locale}
         aria-labelledby="local-selector-label"

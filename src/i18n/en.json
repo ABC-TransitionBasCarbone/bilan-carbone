@@ -225,6 +225,20 @@
       "private": "Private",
       "public": "Public",
       "create": "Create study",
+      "glossary": {
+        "title": "Glossaire",
+        "validatorEmail": "Validator email",
+        "validatorEmailDescription": "For each Bilan Carbone ®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu (link to the parameters menu).",
+        "type": "Type of Bilan Carbone ® assessment",
+        "typeDescription": "The new version of the Bilan Carbone ® method introduces three levels of maturity for organisations' Bilan Carbone ®. For more details, please consult <link>this page</link>.",
+        "visibility": "Visibility of the study",
+        "visibilityDescription": "By default, the results are returned in Bilan Carbone ® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "exports": "Exports",
+        "exportsDescription": "By default, the results are returned in Bilan Carbone ® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "control": "Control mode",
+        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the items and sub-items within the Bilan Carbone ® method) the emissions will be broken down. Depending on the control mode selected, the characterisations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
+        "close": "Close"
+      },
       "validation": {
         "name": "Please provide a name",
         "validator": "Please select a validator",
