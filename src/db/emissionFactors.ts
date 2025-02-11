@@ -66,9 +66,11 @@ export const getAllEmissionFactors = async (organizationId: string | null) => {
         orderBy: { createdAt: 'desc' },
       })
     : []
+
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
     ? getDefaultEmissionFactors()
     : getCachedDefaultEmissionFactors())
+
   return organizationEmissionFactor.concat(defaultEmissionFactors)
 }
 

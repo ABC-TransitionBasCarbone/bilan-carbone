@@ -9,6 +9,7 @@ const ResultatsPages = async ({ study }: StudyProps) => {
   const ids = study.emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((id) => id !== undefined)
+
   const [rules, emissionFactorsWithParts] = await Promise.all([getExportRules(), getEmissionFactorsWithPartsInIds(ids)])
 
   return <ResultsPage study={study} rules={rules} emissionFactorsWithParts={emissionFactorsWithParts} />

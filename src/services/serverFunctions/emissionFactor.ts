@@ -45,7 +45,9 @@ export const getEmissionFactorsByIds = async (ids: string[]) => {
   if (!session || !session.user.organizationId) {
     return []
   }
+
   const emissionFactors = await getAllEmissionFactorsByIds(ids, session.user.organizationId)
+
   return emissionFactors
     .map((emissionFactor) => ({
       ...emissionFactor,
