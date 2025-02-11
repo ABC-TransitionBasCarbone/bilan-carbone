@@ -70,6 +70,7 @@ const EmissionSource = ({
         if (value === emissionSource[key as keyof typeof emissionSource]) {
           return
         }
+        setError('')
         setLoading(true)
         try {
           const command = {
