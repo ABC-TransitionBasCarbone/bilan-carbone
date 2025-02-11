@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react'
 import Block from '../base/Block'
 import Button from '../base/Button'
 import SelectRole from './SelectRole'
+import styles from './TeamTable.module.css'
 
 interface Props {
   user: User
@@ -61,7 +62,10 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     <>
       <Block
         title={t('title')}
-        icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tRole('guide')} />}
+        icon={
+          <HelpIcon className={styles.helpIcon} onClick={() => setDisplayRoles(!displayRoles)} label={tRole('guide')} />
+        }
+        expIcon
         id="team-table-title"
         actions={
           user.role !== Role.DEFAULT

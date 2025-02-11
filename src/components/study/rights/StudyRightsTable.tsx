@@ -12,6 +12,7 @@ import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import SelectStudyRole from './SelectStudyRole'
+import styles from './StudyRights.module.css'
 
 interface Props {
   user: User
@@ -69,7 +70,14 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
     <>
       <Block
         title={t('title')}
-        icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tStudyRole('guide')} />}
+        icon={
+          <HelpIcon
+            className={styles.helpIcon}
+            onClick={() => setDisplayRoles(!displayRoles)}
+            label={tStudyRole('guide')}
+          />
+        }
+        expIcon
         actions={
           isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
             ? [

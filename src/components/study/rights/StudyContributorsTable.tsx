@@ -12,6 +12,7 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
+import styles from './StudyRights.module.css'
 
 interface Props {
   study: FullStudy
@@ -91,7 +92,14 @@ const StudyContributorsTable = ({ study, user, userRoleOnStudy }: Props) => {
     <>
       <Block
         title={t('title')}
-        icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tRole('information')} />}
+        icon={
+          <HelpIcon
+            className={styles.helpIcon}
+            onClick={() => setDisplayRoles(!displayRoles)}
+            label={tRole('information')}
+          />
+        }
+        expIcon
         actions={
           isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
             ? [
