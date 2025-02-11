@@ -2,8 +2,7 @@ import { onboardOrganizationCommand } from '@/services/serverFunctions/organizat
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
-import MobileStepper from '@mui/material/MobileStepper'
+import { Dialog, DialogActions, DialogContent, DialogTitle, MobileStepper, Button as MUIButton } from '@mui/material'
 import { Organization, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -69,6 +68,27 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     }
   }
 
+  const Title = (
+    <>
+      <MobileStepper
+        className="mb2"
+        classes={{ dot: styles.stepperDots, dotActive: styles.active }}
+        style={{ padding: 0 }}
+        variant="dots"
+        steps={stepCount}
+        position="static"
+        activeStep={activeStep}
+        sx={{ flexGrow: 1 }}
+        nextButton={null}
+        backButton={null}
+      />
+      <p className={classNames(styles.stepTitle, 'mb2')}>{t(`title-${activeStep}`)}</p>
+      <p>{t(`titleDescription-${activeStep}`)}</p>
+    </>
+  )
+  // const previousAction: ModaleProps['actions'] =
+  //   activeStep > 0 ? [{ actionType: 'button', onClick: goToPreviousStep, children: t('previous') }] : []
+
   return (
     <Dialog
       open={open}
@@ -83,24 +103,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
               <CloseIcon />
             </MUIButton>
           </div>
-          <DialogTitle className="noSpacing">
-            <>
-              <MobileStepper
-                className="mb2"
-                classes={{ dot: styles.stepperDots, dotActive: styles.active }}
-                style={{ padding: 0 }}
-                variant="dots"
-                steps={stepCount}
-                position="static"
-                activeStep={activeStep}
-                sx={{ flexGrow: 1 }}
-                nextButton={null}
-                backButton={null}
-              />
-              <p className={classNames(styles.stepTitle, 'mb2')}>{t(`title-${activeStep}`)}</p>
-              <p>{t(`titleDescription-${activeStep}`)}</p>
-            </>
-          </DialogTitle>
+          <DialogTitle className="noSpacing">{Title}</DialogTitle>
           <DialogContent className="noSpacing">
             <Step form={form} role={newRole} isCr={organization.isCR} />
           </DialogContent>
@@ -113,5 +116,14 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     </Dialog>
   )
 }
+//  <Modale
+// 	open={open}
+// 	label="onboarding"
+// 	title={Title}
+// 	onClose={onClose}
+// 	actions={[...previousAction, { actionType: 'submit', children: t(buttonLabel) }]}
+// >
+// 	<Step form={form} role={newRole} />
+// </Modale>
 
 export default OnboardingModal

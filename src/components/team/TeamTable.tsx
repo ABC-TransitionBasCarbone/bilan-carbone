@@ -1,14 +1,13 @@
 'use client'
 import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/user'
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import Block from '../base/Block'
-import Button from '../base/Button'
+import Modal from '../base/Modal'
 import SelectRole from './SelectRole'
 import styles from './TeamTable.module.css'
 
@@ -103,27 +102,28 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
           </tbody>
         </table>
       </Block>
-      <Dialog
+      <Modal
         open={displayRoles}
-        aria-labelledby={`organization-roles-title`}
-        aria-describedby={`organization-roles-description`}
+        label="organization-roles"
+        title={tRole('guide')}
+        onClose={() => setDisplayRoles(false)}
+        actions={[
+          {
+            actionType: 'button',
+            ['data-testid']: 'organization-roles-cancel',
+            onClick: () => setDisplayRoles(false),
+            children: tRole('close'),
+          },
+        ]}
       >
-        <DialogTitle id={`organization-roles-title`}>{tRole('guide')}</DialogTitle>
-        <DialogContent>
-          {Object.keys(Role)
-            .filter((role) => role !== Role.SUPER_ADMIN)
-            .map((role) => (
-              <p key={role} className="mb-2">
-                <b>{tRole(role)} :</b> {tRole(`${role}_description${crOrga ? '_CR' : ''}`)}
-              </p>
-            ))}
-        </DialogContent>
-        <DialogActions>
-          <Button data-testid="organization-roles-close" onClick={() => setDisplayRoles(false)}>
-            {tRole('close')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {Object.keys(Role)
+          .filter((role) => role !== Role.SUPER_ADMIN)
+          .map((role) => (
+            <p key={role} className="mb-2">
+              <b>{tRole(role)} :</b> {tRole(`${role}_description${crOrga ? '_CR' : ''}`)}
+            </p>
+          ))}
+      </Modal>
     </>
   )
 }

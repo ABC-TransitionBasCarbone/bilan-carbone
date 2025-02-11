@@ -4,10 +4,10 @@ import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { deleteEmissionSource } from '@/services/serverFunctions/emissionSource'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
+import Modal from '../base/Modal'
 
 interface Props {
   emissionSource: FullStudy['emissionSources'][0]
@@ -31,24 +31,24 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
 
   return (
     <>
-      <Dialog
+      <Modal
         open={open}
-        aria-labelledby="delete-emission-source-dialog-title"
-        aria-describedby="delete-emission-source-dialog-description"
+        label="delete-emission-source"
+        title={t('title')}
+        onClose={() => setOpen(false)}
+        actions={[
+          { actionType: 'button', children: t('decline'), onClick: () => setOpen(false) },
+          {
+            actionType: 'button',
+            disabled,
+            children: t('accept'),
+            onClick: onAccept,
+            ['data-testid']: 'delete-emission-source-dialog-accept',
+          },
+        ]}
       >
-        <DialogTitle id="delete-emission-source-dialog-title">{t('title')}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="delete-emission-source-dialog-description">{t('description')}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button disabled={disabled} onClick={() => setOpen(false)}>
-            {t('decline')}
-          </Button>
-          <Button disabled={disabled} onClick={onAccept} data-testid="delete-emission-source-dialog-accept">
-            {t('accept')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {t('description')}
+      </Modal>
       <Button
         data-testid="emission-source-delete"
         onClick={() => setOpen(true)}

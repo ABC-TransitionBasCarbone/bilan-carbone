@@ -18,7 +18,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { SyntheticEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import NewStudyRightDialog from './NewStudyRightDialog'
+import NewStudyRightModal from './NewStudyRightModal'
 
 interface Props {
   study: FullStudy
@@ -136,7 +136,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
         </LoadingButton>
         {error && <p data-testid="study-rights-create-error">{error}</p>}
       </Form>
-      <NewStudyRightDialog
+      <NewStudyRightModal
         otherOrganization={otherOrganization}
         rightsWarning={form.getValues().role !== StudyRole.Reader}
         decline={() => setOtherOrganization(false)}
