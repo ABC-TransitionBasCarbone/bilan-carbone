@@ -594,8 +594,8 @@
     "ADMIN_description_CR": "An administrator has full rights to the organisation's account and to all clients and studies (whether public or private).",
     "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies.",
     "GESTIONNAIRE_description_CR": "A manager has full rights over the organisation's account, but no rights over customers or studies.",
-    "DEFAULT_description": "",
-    "DEFAULT_description_CR": "",
+    "DEFAULT_description": "A collaborator is a person trained in the Bilan Carbone ® method. They have no rights to the organisation's account but can create studies. They only have access to public studies and private studies to which they have been added.",
+    "DEFAULT_description_CR": "A collaborator is a person trained in the Bilan Carbone ® method. They have no rights to the organisation's account but can create clients and studies. They only have access to public studies and private studies to which they have been added.",
     "close": "Close",
     "guide": "Roles guide"
   },
@@ -817,7 +817,7 @@
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other {#  studies}} you do not have access to"
     },
     "card": {
-      "method": "Consult the Bilan Carbone ® methodology",
+      "method": "Consult the Bilan Carbone ® method",
       "update": "Update my information"
     }
   },
@@ -914,8 +914,8 @@
     "step1": {
       "name": "Name of my organization",
       "role": "My role within the organization",
-      "adminDescription": "You have been trained to the Bilan Carbone ® methodology : Thus, your have been attribued to the Admin role",
-      "gestionnaireDescription": "You have not been trained to the Bilan Carbone ® methodology : Thus, your have been attribued to the Gestionnaire role"
+      "adminDescription": "You have been trained to the Bilan Carbone ® method : Thus, your have been attribued to the Admin role",
+      "gestionnaireDescription": "You have not been trained to the Bilan Carbone ® method : Thus, your have been attribued to the Gestionnaire role"
     },
     "step2": {
       "addCollaborator": "Add a collaborator",
@@ -923,7 +923,8 @@
       "emailPlaceholder": "Enter a mail address",
       "role": "Role",
       "adminDescription": "Has all existing rights",
-      "collaboratorDescription": "Can view information from a study",
+      "collaboratorDescription": "Create and complete Bilan Carbone ®",
+      "crCollaboratorDescription": "Create clients and realize their Bilan Carbone ®",
       "gestionnaireDescription": "Manages the organisation's account but does not have access to studies",
       "validation": {
         "email": "Invalid email address",

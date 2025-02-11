@@ -13,9 +13,10 @@ import styles from './Onboarding.module.css'
 
 interface Props {
   form: UseFormReturn<OnboardingCommand>
+  isCr: boolean
 }
 
-const OnboardingStep = ({ form }: Props) => {
+const OnboardingStep = ({ form, isCr }: Props) => {
   const t = useTranslations('onboarding.step2')
   const tRole = useTranslations('role')
   const collaborators = useWatch(form).collaborators?.length || 0
@@ -29,6 +30,17 @@ const OnboardingStep = ({ form }: Props) => {
     const collaborators = form.getValues().collaborators || []
     collaborators.splice(index, 1)
     form.setValue('collaborators', collaborators)
+  }
+
+  const getDescription = (role: Role) => {
+    switch (role) {
+      case Role.ADMIN:
+        return 'adminDescription'
+      case Role.GESTIONNAIRE:
+        return 'gestionnaireDescription'
+      default:
+        return isCr ? 'crCollaboratorDescription' : 'collaboratorDescription'
+    }
   }
 
   return (
@@ -59,22 +71,14 @@ const OnboardingStep = ({ form }: Props) => {
               }}
               fullWidth
             >
-              <MenuItem key={Role.ADMIN} value={Role.ADMIN} className={classNames(styles.roleItem, 'flex-col')}>
-                <span className={styles.roleTitle}>{tRole(Role.ADMIN)}</span>
-                <span>{t('adminDescription')}</span>
-              </MenuItem>
-              <MenuItem
-                key={Role.GESTIONNAIRE}
-                value={Role.GESTIONNAIRE}
-                className={classNames(styles.roleItem, 'flex-col')}
-              >
-                <span className={styles.roleTitle}>{tRole(Role.GESTIONNAIRE)}</span>
-                <span>{t('gestionnaireDescription')}</span>
-              </MenuItem>
-              <MenuItem key={Role.DEFAULT} value={Role.DEFAULT} className={classNames(styles.roleItem, 'flex-col')}>
-                <span className={styles.roleTitle}>{tRole(Role.DEFAULT)}</span>
-                <span>{t('collaboratorDescription')}</span>
-              </MenuItem>
+              {Object.values(Role)
+                .filter((role) => role !== Role.SUPER_ADMIN)
+                .map((role) => (
+                  <MenuItem key={role} value={role} className={classNames(styles.roleItem, 'flex-col')}>
+                    <span className={styles.roleTitle}>{tRole(role)}</span>
+                    <span>{t(getDescription(role))}</span>
+                  </MenuItem>
+                ))}
             </FormSelect>
           </div>
           <div>
