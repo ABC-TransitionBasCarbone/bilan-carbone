@@ -1,4 +1,4 @@
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import CloseIcon from '@mui/icons-material/Close'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
 import { useTranslations } from 'next-intl'

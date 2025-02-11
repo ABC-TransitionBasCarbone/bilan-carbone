@@ -3,6 +3,8 @@
 import { prismaClient } from '@/db/client'
 import {
   createEmissionFactor,
+  getAllEmissionFactors,
+  getAllEmissionFactorsByIds,
   getEmissionFactorById,
   getEmissionFactorDetailsById,
   updateEmissionFactor,
@@ -11,19 +13,45 @@ import { getUserByEmail } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { auth } from '../auth'
-import { getEmissionFactors, getEmissionFactorsByIds } from '../emissionFactors'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
+import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
-export const getEmissionsFactor = async () => {
-  const locale = await getLocale()
-  return getEmissionFactors(locale)
-}
+export const getEmissionFactors = async () => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return []
+  }
 
-export const getEmissionFactorByIds = async (ids: string[]) => {
   const locale = await getLocale()
-  return getEmissionFactorsByIds(ids, locale)
+
+  const emissionFactors = await getAllEmissionFactors(session.user.organizationId)
+
+  return emissionFactors
+    .map((emissionFactor) => ({
+      ...emissionFactor,
+      metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
+    }))
+    .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
+}
+export type EmissionFactorWithMetaData = AsyncReturnType<typeof getEmissionFactors>[0]
+
+export const getEmissionFactorsByIds = async (ids: string[]) => {
+  const locale = await getLocale()
+
+  const session = await auth()
+
+  if (!session || !session.user.organizationId) {
+    return []
+  }
+  const emissionFactors = await getAllEmissionFactorsByIds(ids, session.user.organizationId)
+  return emissionFactors
+    .map((emissionFactor) => ({
+      ...emissionFactor,
+      metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
+    }))
+    .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
 }
 
 export const getDetailedEmissionFactor = async (id: string) => {

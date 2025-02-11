@@ -1,3 +1,5 @@
+'use server'
+
 import { prismaClient } from './client'
 
-export const getExportRules = () => prismaClient.exportRule.findMany()
+export const getExportRules = async () => prismaClient.exportRule.findMany()

@@ -1,9 +1,9 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { getEmissionResults, getEmissionSourceCompletion } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import {
   UpdateEmissionSourceCommand,

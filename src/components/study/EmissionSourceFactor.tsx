@@ -1,4 +1,4 @@
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { getQualityRating } from '@/services/uncertainty'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'

@@ -1,10 +1,12 @@
+'use server'
+
 import { checkLevel } from '@/services/study'
 import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 import { getUserOrganizations } from './user'
 
-export const createStudy = (study: Prisma.StudyCreateInput) =>
+export const createStudy = async (study: Prisma.StudyCreateInput) =>
   prismaClient.study.create({
     data: study,
   })
@@ -186,7 +188,7 @@ export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
     data: right,
   })
 
-export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRole) =>
+export const updateUserOnStudy = async (userId: string, studyId: string, role: StudyRole) =>
   prismaClient.userOnStudy.update({
     where: {
       studyId_userId: {
@@ -199,10 +201,10 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
     },
   })
 
-export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
+export const updateStudy = async (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
 
-export const getStudySites = (studyId: string) => prismaClient.studySite.findMany({ where: { studyId } })
+export const getStudySites = async (studyId: string) => prismaClient.studySite.findMany({ where: { studyId } })
 
 export const updateStudySites = async (
   studyId: string,
@@ -244,7 +246,7 @@ export const deleteStudy = async (id: string) => {
   })
 }
 
-export const createContributorOnStudy = (
+export const createContributorOnStudy = async (
   userId: string,
   subPosts: SubPost[],
   data: Omit<Prisma.ContributorsCreateManyInput, 'userId' | 'subPost'>,

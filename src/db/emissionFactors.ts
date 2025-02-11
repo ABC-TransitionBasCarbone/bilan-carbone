@@ -1,3 +1,5 @@
+'use server'
+
 import { UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
@@ -45,7 +47,7 @@ const selectEmissionFactor = {
   },
 } as Prisma.EmissionFactorSelect
 
-const getDefaultEmissionFactors = () =>
+const getDefaultEmissionFactors = async () =>
   prismaClient.emissionFactor.findMany({
     where: { organizationId: null, subPosts: { isEmpty: false } },
     select: selectEmissionFactor,
@@ -70,7 +72,7 @@ export const getAllEmissionFactors = async (organizationId: string | null) => {
   return organizationEmissionFactor.concat(defaultEmissionFactors)
 }
 
-export const getEmissionFactorById = (id: string) =>
+export const getEmissionFactorById = async (id: string) =>
   prismaClient.emissionFactor.findUnique({
     where: {
       id,
@@ -78,7 +80,7 @@ export const getEmissionFactorById = (id: string) =>
     select: selectEmissionFactor,
   })
 
-export const getAllEmissionFactorsByIds = (ids: string[], organizationId: string) =>
+export const getAllEmissionFactorsByIds = async (ids: string[], organizationId: string) =>
   prismaClient.emissionFactor.findMany({
     where: {
       id: { in: ids },
@@ -88,7 +90,7 @@ export const getAllEmissionFactorsByIds = (ids: string[], organizationId: string
     orderBy: { createdAt: 'desc' },
   })
 
-export const createEmissionFactor = (emissionFactor: Prisma.EmissionFactorCreateInput) =>
+export const createEmissionFactor = async (emissionFactor: Prisma.EmissionFactorCreateInput) =>
   prismaClient.emissionFactor.create({
     data: emissionFactor,
   })

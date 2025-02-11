@@ -3,14 +3,13 @@ import { FullStudy } from '@/db/study'
 import { Export, ExportRule, Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
-import { EmissionFactorWithMetaData } from './emissionFactors'
 import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
 import { computeBegesResult } from './results/beges'
 import { computeResultsByPost } from './results/consolidated'
-import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
+import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
 import {
@@ -249,7 +248,7 @@ export const downloadStudyPost = async (
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
-  const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
+  const emissionFactors = await getEmissionFactorsByIds(emissionFactorIds)
   const fileName = getFileName(study, post)
   const csvContent = getEmissionSourcesCSVContent(
     emissionSources,
@@ -277,7 +276,7 @@ export const downloadStudyEmissionSources = async (
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
-  const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
+  const emissionFactors = await getEmissionFactorsByIds(emissionFactorIds)
   const fileName = getFileName(study)
   const csvContent = getEmissionSourcesCSVContent(
     emissionSources,
