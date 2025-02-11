@@ -1,19 +1,31 @@
 'use client'
 
+import Block from '@/components/base/Block'
+import Button from '@/components/base/Button'
+import HelpIcon from '@/components/base/HelpIcon'
 import { FullStudy } from '@/db/study'
+import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import styles from './StudyRights.module.css'
 
 interface Props {
   study: FullStudy
+  user: User
+  userRoleOnStudy?: StudyRole
 }
 
 const allPosts = Object.values(Post)
-const StudyContributorsTable = ({ study }: Props) => {
+const StudyContributorsTable = ({ study, user, userRoleOnStudy }: Props) => {
   const t = useTranslations('study.rights.contributorsTable')
+  const tRole = useTranslations('study.rights.contributorsTable.role')
   const tPost = useTranslations('emissionFactors.post')
+  const [displayRoles, setDisplayRoles] = useState(false)
 
   // Complexe method to simplify the display on the table...
   const data = useMemo(
@@ -77,28 +89,69 @@ const StudyContributorsTable = ({ study }: Props) => {
   })
 
   return (
-    <table aria-labelledby="study-rights-table-title">
-      <thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <th key={header.id}>
-                {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-              </th>
+    <>
+      <Block
+        title={t('title')}
+        icon={
+          <HelpIcon
+            className={styles.helpIcon}
+            onClick={() => setDisplayRoles(!displayRoles)}
+            label={tRole('information')}
+          />
+        }
+        expIcon
+        actions={
+          isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
+            ? [
+                {
+                  actionType: 'link',
+                  href: `/etudes/${study.id}/cadrage/ajouter-contributeur`,
+                  'data-testid': 'study-rights-add-contributor',
+                  children: t('newContributorLink'),
+                },
+              ]
+            : undefined
+        }
+      >
+        <table aria-labelledby="study-rights-table-title" className="mb2">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
+                ))}
+              </tr>
             ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} data-testid="study-contributors-table-line">
-            {row.getVisibleCells().map((cell) => (
-              <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} data-testid="study-contributors-table-line">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                ))}
+              </tr>
             ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+          </tbody>
+        </table>
+      </Block>
+      <Dialog
+        open={displayRoles}
+        aria-labelledby="study-contributor-role-title"
+        aria-describedby="study-contributor-role-description"
+      >
+        <DialogTitle id="study-contributor-role-title">{tRole('information')}</DialogTitle>
+        <DialogContent>
+          <p className="mb-2">{tRole('description')}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button data-testid="study-contributor-role-close" onClick={() => setDisplayRoles(false)}>
+            {tRole('close')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 

@@ -264,15 +264,18 @@
     "role": {
       "Validator": "Validator",
       "Editor": "Editor",
-      "Reader": "Reader"
+      "Reader": "Reader",
+      "guide": "Roles guide",
+      "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",
+      "Editor_description": "Has all rights to the study except for validation of emission sources.",
+      "Reader_description": "Can only read the study and export its information.",
+      "close": "Close"
     },
     "title": "Study",
     "rights": {
-      "contributors": "Contributors",
       "isPublic": "The study is public",
       "isPrivate": "The study is private",
       "title": "Rights on study : {name}",
-      "newContributorLink": "Add a contributor",
       "new": {
         "title": "Add a person to the study: {name}",
         "email": "Email",
@@ -306,7 +309,14 @@
       "contributorsTable": {
         "email": "Email",
         "post": "Post",
-        "subPosts": "Sub posts"
+        "subPosts": "Sub posts",
+        "title": "Contributors",
+        "newContributorLink": "Add a contributor",
+        "role": {
+          "information": "Information",
+          "description": "A contributor can fill in the information for the emission sources of the job(s) that you have entrusted to him/her.",
+          "close": "Close"
+        }
       },
       "table": {
         "email": "Email",

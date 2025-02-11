@@ -44,6 +44,10 @@
   }
 }
 
+.exp {
+  align-self: flex-start;
+}
+
 .actions {
   gap: 1rem;
 }
