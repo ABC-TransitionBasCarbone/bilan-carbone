@@ -188,7 +188,7 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
 
 export const activateEmail = async (email: string) => {
   const user = await getUserByEmail(email)
-  if (!user || !user.level || user.isActive || user.isValidated) {
+  if (!user || user.isActive || user.isValidated) {
     return NOT_AUTHORIZED
   }
   await validateUser(email)
