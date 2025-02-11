@@ -806,12 +806,20 @@
       "title": "Les sites de l'organisation concernés par l'étude",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
-      "etp": "Employés",
+      "etp": "Nombre d'Équivalents Temps Plein",
       "ca": "Chiffre d'affaire ({unit})",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",
       "update": "Modifier la liste",
+      "glossary": {
+        "title": "Glossaire",
+        "etp": "Nombre d'Équivalent Temps Plein",
+        "etpDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO2e/ETP).",
+        "ca": "Chiffre d'Affaire ({unit})",
+        "caDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO2e/{unit} CA).",
+        "close": "Fermer"
+      },
       "validation": {
         "name": "Veuillez renseigner un nom",
         "etp": "Veuillez renseigner un nombre d'employés",

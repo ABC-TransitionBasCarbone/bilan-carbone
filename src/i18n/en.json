@@ -806,12 +806,20 @@
       "title": "The organization's sites concerned by this study",
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
-      "etp": "Employees",
+      "etp": "Number of Full Time Equivalents",
       "ca": "Turnover ({unit})",
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",
       "update": "Update list",
+      "glossary": {
+        "title": "Glossary",
+        "etp": "Number of Full Time Equivalents",
+        "etpDescription": "This data will eventually be used to calculate carbon intensities (kgCO2e/FTE).",
+        "ca": "Turnover ({unit})",
+        "caDescription": "These data will eventually be used to calculate carbon intensities (kgCO2e/{unit} Turnover).",
+        "close": "Close"
+      },
       "validation": {
         "name": "Please enter a name",
         "etp": "Please enter a number of employees",

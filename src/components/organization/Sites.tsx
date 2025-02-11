@@ -12,6 +12,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../base/Button'
+import Help from '../base/HelpIcon'
+import Modal from '../base/Modal'
 import { FormCheckbox } from '../form/Checkbox'
 import { FormTextField } from '../form/TextField'
 import styles from './Sites.module.css'
@@ -24,8 +26,10 @@ interface Props<T extends SitesCommand> {
 
 const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>) => {
   const t = useTranslations('organization.sites')
+  const tGlossary = useTranslations('organization.sites.glossary')
   const tUnit = useTranslations('settings.caUnit')
   const [caUnit, setCAUnit] = useState<SiteCAUnit>(SiteCAUnit.K)
+  const [showGlossary, setShowGlossary] = useState(false)
 
   const control = form?.control as Control<SitesCommand>
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
@@ -169,7 +173,10 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
         </Button>
       )}
       <table className="mt1">
-        <caption>{t('title')}</caption>
+        <caption>
+          {t('title')}
+          <Help className="ml-4" onClick={() => setShowGlossary(!showGlossary)} label={tGlossary('title')} />
+        </caption>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -191,6 +198,20 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
           ))}
         </tbody>
       </table>
+      <Modal
+        open={showGlossary}
+        label="organization-sites"
+        title={tGlossary('title')}
+        onClose={() => setShowGlossary(false)}
+        actions={[{ actionType: 'button', onClick: () => setShowGlossary(false), children: tGlossary('close') }]}
+      >
+        <p className="mb-2">
+          <b>{tGlossary('etp')} :</b> {tGlossary('etpDescription')}
+        </p>
+        <p className="mb-2">
+          <b>{tGlossary('ca', { unit: headerCAUnit })} :</b> {tGlossary('caDescription', { unit: headerCAUnit })}
+        </p>
+      </Modal>
     </div>
   )
 }
