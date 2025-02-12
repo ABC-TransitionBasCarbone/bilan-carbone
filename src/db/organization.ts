@@ -1,5 +1,3 @@
-'use server'
-
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { Prisma, Role } from '@prisma/client'

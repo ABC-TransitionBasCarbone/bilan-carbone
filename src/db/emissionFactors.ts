@@ -1,5 +1,3 @@
-'use server'
-
 import { UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'

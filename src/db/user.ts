@@ -1,5 +1,3 @@
-'use server'
-
 import { signPassword } from '@/services/auth'
 import { findUserInfo } from '@/services/permissions/user'
 import { Prisma, Role } from '@prisma/client'

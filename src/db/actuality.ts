@@ -1,5 +1,3 @@
-'use server'
-
 import { prismaClient } from './client'
 
 export const getAllActualities = async () =>

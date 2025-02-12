@@ -1,5 +1,3 @@
-'use server'
-
 import { checkLevel } from '@/services/study'
 import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'

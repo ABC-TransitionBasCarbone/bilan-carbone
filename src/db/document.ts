@@ -1,5 +1,3 @@
-'use server'
-
 import { prismaClient } from '@/db/client'
 import { Prisma } from '@prisma/client'
 
