@@ -29,7 +29,10 @@ export const getEmissionFactors = async (studyId?: string) => {
   const locale = await getLocale()
 
   let emissionFactorOrganization
-  if (studyId && (await canReadStudy(session.user, studyId))) {
+  if (studyId) {
+    if (!(await canReadStudy(session.user, studyId))) {
+      return []
+    }
     emissionFactorOrganization = await getStudyParentOrganization(studyId, session.user.organizationId)
   } else {
     emissionFactorOrganization = session.user.organizationId
