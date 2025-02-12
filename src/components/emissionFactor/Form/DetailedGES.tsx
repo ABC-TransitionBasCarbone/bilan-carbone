@@ -1,5 +1,7 @@
 'use client'
 
+import HelpIcon from '@/components/base/HelpIcon'
+import Modal from '@/components/base/Modal'
 import { FormTextField } from '@/components/form/TextField'
 import { gazKeys } from '@/constants/emissions'
 import { EmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
@@ -11,6 +13,7 @@ import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react
 import styles from './DetailedGES.module.css'
 import DetailedGESFields from './DetailedGESFields'
 import EmissionFactorPartForm from './EmissionFactorPartForm'
+import EmissionFactorFormDescription from './GlossaryDescriptions'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
@@ -30,7 +33,9 @@ const DetailedGES = <T extends EmissionFactorCommand>({
   setPartsCount,
 }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
+  const tGlossary = useTranslations('emissionFactors.create.glossary')
   const [detailedGES, setDetailedGES] = useState<boolean>(initialDetailedGES || false)
+  const [glossary, setGlossary] = useState('')
 
   const control = form.control as Control<EmissionFactorCommand>
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
@@ -107,8 +112,9 @@ const DetailedGES = <T extends EmissionFactorCommand>({
     <>
       <div className={classNames(styles.questions, 'flex')}>
         <div className={styles.selector}>
-          <FormLabel id="defailedGES-radio-group-label" component="legend">
+          <FormLabel id="defailedGES-radio-group-label" component="legend" className="align-center">
             {t('detailedGES')}
+            <HelpIcon className="ml-2" onClick={() => setGlossary('detailedGES')} label={tGlossary('title')} />
           </FormLabel>
           <FormControlLabel
             control={
@@ -122,8 +128,9 @@ const DetailedGES = <T extends EmissionFactorCommand>({
           />
         </div>
         <div className={styles.selector}>
-          <FormLabel id="multiple-emssions-radio-group-label" component="legend">
+          <FormLabel id="multiple-emssions-radio-group-label" component="legend" className="align-center">
             {t('multiple')}
+            <HelpIcon className="ml-2" onClick={() => setGlossary('multiple')} label={tGlossary('title')} />
           </FormLabel>
           <FormControlLabel
             control={
@@ -139,8 +146,9 @@ const DetailedGES = <T extends EmissionFactorCommand>({
         <div className={styles.input}>
           {hasParts && (
             <>
-              <FormLabel id="sub-parts-count-label" component="legend">
+              <FormLabel id="sub-parts-count-label" component="legend" className="align-center">
                 {t('subPartsCount')}
+                <HelpIcon className="ml-2" onClick={() => setGlossary('subPartsCount')} label={tGlossary('title')} />
               </FormLabel>
               <TextField
                 type="number"
@@ -186,6 +194,17 @@ const DetailedGES = <T extends EmissionFactorCommand>({
         name="totalCo2"
         label={t('totalCo2')}
       />
+      {glossary !== '' && (
+        <Modal
+          open
+          label="create-emission-factor-glossary"
+          title={tGlossary(glossary)}
+          onClose={() => setGlossary('')}
+          actions={[{ actionType: 'button', onClick: () => setGlossary(''), children: tGlossary('close') }]}
+        >
+          <EmissionFactorFormDescription field={glossary} />
+        </Modal>
+      )}
     </>
   )
 }

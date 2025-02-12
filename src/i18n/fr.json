@@ -486,7 +486,7 @@
       "attribute": "Détails",
       "unit": "Unité",
       "source": "Source",
-      "detailedGES": "Décomposition des GES ?",
+      "detailedGES": "Décomposition des GES",
       "multiple": "Facteur d'émission désagrégé",
       "subPartsCount": "Nombre de composantes",
       "partType": "Type de composante",
@@ -507,6 +507,22 @@
       "missingPost": "Veuillez selectionner un poste",
       "subPost": "Sous Poste",
       "comment": "Commentaires",
+      "glossary": {
+        "title": "Glossaire",
+        "detailedGES": "Décomposition des GES",
+        "detailedGESDescription": "Si vous connaissez la part d'émission due aux différents GES pour votre facteur d'émission, vous pouvez la renseigner via cette fonctionnalité. La méthode Bilan Carbone® n'utilise pas cette décomposition, car connaître la répartition des émissions sur les différents GES complexifie les résultats sans apporter d'informations utiles à la construction du plan de transition. Cette décomposition des émissions sur les différents GES sert en revanche dans le cas où vous souhaitez obtenir les différents exports proposés par le BC+.",
+        "multiple": "Facteur d'émission désagrégé",
+        "multipleDescription": {
+          "introduction": "Certains facteurs d'émission possèdent des composantes, c'est-à-dire qu'ils sont constitués de différents émissions dues à des activités différentes. Par exemple, les facteurs d'émission pour l'électricité en France sont classiquement découpés en trois composantes :",
+          "upstream": "<b>L'amont</b>, qui tient compte des émissions liées à la construction des infrastructures de production de l'électricité et de son transport sur le réseau.",
+          "combustion": "<b>La combustion à la centrale</b>, qui tient compte des émissions liées à la production de l'électricité en elle-même (combustion de charbon, ...).",
+          "loss": "<b>Les pertes</b>, qui tiennent compte de la déperdition sous forme de chaleur lors du transport de l'électricité sur le réseau.",
+          "conclusion": "Cette désagrégation n'est pas utilisée au sein de la méthode Bilan Carbone®, mais permet de ventiler les émissions des différentes composantes au sein des catégories pour les exports (pour le Bilan GES règlementaire, en reprenant le même exemple, et si la source d'émission est \"Opérée\", les émissions \"amont\", \"combustion à la centrale\" et \"pertes\" sont respectivement ventilées au sein des catégories 4.1, 1.2, 4.1). <b>Nous vous recommandons très fortement de ne pas utiliser cette fonctionnalité si vous ne maîtrisez pas les affectations au sein du Bilan GES règlementaire.</b>"
+        },
+        "subPartsCount": "Nombre de composantes",
+        "subPartsCountDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel votre facteur d'émission sera sélectionnable.",
+        "close": "Fermer"
+      },
       "validation": {
         "name": "Veuillez renseigner un nom",
         "nameMaxLength": "64 caractères maximum",
