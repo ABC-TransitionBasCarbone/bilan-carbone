@@ -3,13 +3,13 @@ import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { Prisma, Role } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getRawOrganizationById = async (id: string | null) =>
+export const getRawOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id } }) : null
 
-export const getOrganizationById = async (id: string | null) =>
+export const getOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
 
-export const getOrganizationUsers = async (id: string | null) =>
+export const getOrganizationUsers = (id: string | null) =>
   id
     ? prismaClient.user.findMany({
         select: { email: true, firstName: true, lastName: true, level: true, role: true },
@@ -18,21 +18,18 @@ export const getOrganizationUsers = async (id: string | null) =>
       })
     : []
 
-export const getOrganizationWithSitesById = async (id: string) =>
+export const getOrganizationWithSitesById = (id: string) =>
   prismaClient.organization.findUnique({
     where: { id },
     include: { sites: { select: { name: true, etp: true, ca: true, id: true }, orderBy: { createdAt: 'asc' } } },
   })
 
-export const createOrganization = async (organization: Prisma.OrganizationCreateInput) =>
+export const createOrganization = (organization: Prisma.OrganizationCreateInput) =>
   prismaClient.organization.create({
     data: organization,
   })
 
-export const updateOrganization = async (
-  { organizationId, sites, ...data }: UpdateOrganizationCommand,
-  caUnit: number,
-) =>
+export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrganizationCommand, caUnit: number) =>
   prismaClient.$transaction([
     ...sites.map((site) =>
       prismaClient.site.upsert({
@@ -48,7 +45,7 @@ export const updateOrganization = async (
     }),
   ])
 
-export const setOnboarded = async (organizationId: string, userId: string) =>
+export const setOnboarded = (organizationId: string, userId: string) =>
   prismaClient.organization.update({
     where: { id: organizationId },
     data: { onboarded: true, onboarderId: userId },

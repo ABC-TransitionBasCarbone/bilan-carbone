@@ -45,7 +45,7 @@ const selectEmissionFactor = {
   },
 } as Prisma.EmissionFactorSelect
 
-const getDefaultEmissionFactors = async () =>
+const getDefaultEmissionFactors = () =>
   prismaClient.emissionFactor.findMany({
     where: { organizationId: null, subPosts: { isEmpty: false } },
     select: selectEmissionFactor,
@@ -72,7 +72,7 @@ export const getAllEmissionFactors = async (organizationId: string | null) => {
   return organizationEmissionFactor.concat(defaultEmissionFactors)
 }
 
-export const getEmissionFactorById = async (id: string) =>
+export const getEmissionFactorById = (id: string) =>
   prismaClient.emissionFactor.findUnique({
     where: {
       id,
@@ -80,7 +80,7 @@ export const getEmissionFactorById = async (id: string) =>
     select: selectEmissionFactor,
   })
 
-export const getAllEmissionFactorsByIds = async (ids: string[], organizationId: string) =>
+export const getAllEmissionFactorsByIds = (ids: string[], organizationId: string) =>
   prismaClient.emissionFactor.findMany({
     where: {
       id: { in: ids },
@@ -90,7 +90,7 @@ export const getAllEmissionFactorsByIds = async (ids: string[], organizationId: 
     orderBy: { createdAt: 'desc' },
   })
 
-export const createEmissionFactor = async (emissionFactor: Prisma.EmissionFactorCreateInput) =>
+export const createEmissionFactor = (emissionFactor: Prisma.EmissionFactorCreateInput) =>
   prismaClient.emissionFactor.create({
     data: emissionFactor,
   })

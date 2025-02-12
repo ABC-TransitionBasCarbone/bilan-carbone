@@ -4,7 +4,7 @@ import { Prisma, Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 
-export const getUserByEmailWithSensibleInformations = async (email: string) =>
+export const getUserByEmailWithSensibleInformations = (email: string) =>
   prismaClient.user.findUnique({
     select: {
       id: true,
@@ -21,12 +21,12 @@ export const getUserByEmailWithSensibleInformations = async (email: string) =>
     where: { email },
   })
 
-export const getUserByEmail = async (email: string) => prismaClient.user.findUnique({ where: { email } })
+export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
 
-export const getUserById = async (id: string) =>
+export const getUserById = (id: string) =>
   prismaClient.user.findUnique({ where: { id }, select: { organizationId: true } })
 
-export const getUserByEmailWithAllowedStudies = async (email: string) =>
+export const getUserByEmailWithAllowedStudies = (email: string) =>
   prismaClient.user.findUnique({ where: { email }, include: { allowedStudies: true, contributors: true } })
 
 export type UserWithAllowedStudies = AsyncReturnType<typeof getUserByEmailWithAllowedStudies>
@@ -85,27 +85,27 @@ export const getUserOrganizations = async (email: string) => {
 
 export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]
 
-export const getUserFromUserOrganization = async (user: User) =>
+export const getUserFromUserOrganization = (user: User) =>
   prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
 export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
 
-export const addUser = async (user: Prisma.UserCreateInput) =>
+export const addUser = (user: Prisma.UserCreateInput) =>
   prismaClient.user.create({
     data: user,
   })
 
-export const deleteUser = async (email: string) =>
+export const deleteUser = (email: string) =>
   prismaClient.user.delete({
     where: { email },
   })
 
-export const validateUser = async (email: string) =>
+export const validateUser = (email: string) =>
   prismaClient.user.update({
     where: { email },
     data: { isValidated: true, updatedAt: new Date() },
   })
 
-export const changeUserRole = async (email: string, role: Role) =>
+export const changeUserRole = (email: string, role: Role) =>
   prismaClient.user.update({
     data: { role, updatedAt: new Date() },
     where: { email },
@@ -118,16 +118,16 @@ export const hasUserToValidateInOrganization = async (organizationId: string | n
       })
     : 0
 
-export const updateProfile = async (userId: string, data: Prisma.UserUpdateInput) =>
+export const updateProfile = (userId: string, data: Prisma.UserUpdateInput) =>
   prismaClient.user.update({
     where: { id: userId },
     data,
   })
 
-export const getUserApplicationSettings = async (userId: string) =>
+export const getUserApplicationSettings = (userId: string) =>
   prismaClient.userApplicationSettings.upsert({ where: { userId }, update: {}, create: { userId } })
 
-export const updateUserApplicationSettings = async (userId: string, data: Prisma.UserApplicationSettingsUpdateInput) =>
+export const updateUserApplicationSettings = (userId: string, data: Prisma.UserApplicationSettingsUpdateInput) =>
   prismaClient.userApplicationSettings.update({
     where: { userId },
     data,

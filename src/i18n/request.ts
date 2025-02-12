@@ -1,5 +1,3 @@
-'use server'
-
 import { getRequestConfig } from 'next-intl/server'
 import { getLocale } from './locale'
 

@@ -1,3 +1,3 @@
 import { prismaClient } from './client'
 
-export const getExportRules = async () => prismaClient.exportRule.findMany()
+export const getExportRules = () => prismaClient.exportRule.findMany()
