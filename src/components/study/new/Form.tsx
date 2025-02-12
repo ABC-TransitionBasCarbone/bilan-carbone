@@ -3,12 +3,12 @@
 import Block from '@/components/base/Block'
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
-import Modal from '@/components/base/Modal'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormRadio } from '@/components/form/Radio'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { getOrganizationUsers } from '@/db/organization'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
@@ -153,14 +153,8 @@ const NewStudyForm = ({ user, users, form }: Props) => {
         </LoadingButton>
         {error && <p>{t(`error.${error}`)}</p>}
       </Form>
-      {glossary !== '' && (
-        <Modal
-          open
-          label="new-study-glossary"
-          title={tGlossary(glossary)}
-          onClose={() => setGlossary('')}
-          actions={[{ actionType: 'button', onClick: () => setGlossary(''), children: tGlossary('close') }]}
-        >
+      {glossary && (
+        <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
@@ -174,7 +168,7 @@ const NewStudyForm = ({ user, users, form }: Props) => {
               ),
             })}
           </p>
-        </Modal>
+        </GlossaryModal>
       )}
     </Block>
   )

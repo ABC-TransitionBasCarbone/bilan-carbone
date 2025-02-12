@@ -1,8 +1,8 @@
 'use client'
 
 import HelpIcon from '@/components/base/HelpIcon'
-import Modal from '@/components/base/Modal'
 import { FormTextField } from '@/components/form/TextField'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { gazKeys } from '@/constants/emissions'
 import { EmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
@@ -194,17 +194,9 @@ const DetailedGES = <T extends EmissionFactorCommand>({
         name="totalCo2"
         label={t('totalCo2')}
       />
-      {glossary !== '' && (
-        <Modal
-          open
-          label="create-emission-factor-glossary"
-          title={tGlossary(glossary)}
-          onClose={() => setGlossary('')}
-          actions={[{ actionType: 'button', onClick: () => setGlossary(''), children: tGlossary('close') }]}
-        >
-          <EmissionFactorFormDescription field={glossary} />
-        </Modal>
-      )}
+      <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="create-emission-factor" t={tGlossary}>
+        <EmissionFactorFormDescription field={glossary} />
+      </GlossaryModal>
     </>
   )
 }

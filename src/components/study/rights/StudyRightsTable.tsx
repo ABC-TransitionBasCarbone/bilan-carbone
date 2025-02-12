@@ -2,7 +2,7 @@
 
 import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
-import Modal from '@/components/base/Modal'
+import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { StudyRole } from '@prisma/client'

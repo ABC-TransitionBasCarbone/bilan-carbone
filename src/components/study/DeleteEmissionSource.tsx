@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
-import Modal from '../base/Modal'
+import Modal from '../modals/Modal'
 
 interface Props {
   emissionSource: FullStudy['emissionSources'][0]

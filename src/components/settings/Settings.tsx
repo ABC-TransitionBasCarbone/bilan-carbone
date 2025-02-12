@@ -9,10 +9,10 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import Form from '../base/Form'
-import GlossaryModal from '../base/GlossaryModal'
 import HelpIcon from '../base/HelpIcon'
 import LoadingButton from '../base/LoadingButton'
 import { FormSelect } from '../form/Select'
+import GlossaryModal from '../modals/GlossaryModal'
 import styles from './Settings.module.css'
 
 interface Props {
@@ -98,7 +98,14 @@ const Settings = ({ userSettings }: Props) => {
         </Form>
       </div>
       {error && <p className="error">{t(error)}</p>}
-      <GlossaryModal glossary={glossary} setGlossary={setGlossary} label="user-application-settings" t={tGlossary} />
+      <GlossaryModal
+        glossary={glossary}
+        onClose={() => setGlossary('')}
+        label="user-application-settings"
+        t={tGlossary}
+      >
+        {tGlossary(`${glossary}Description`)}
+      </GlossaryModal>
     </>
   )
 }

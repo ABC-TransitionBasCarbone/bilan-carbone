@@ -1,7 +1,7 @@
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { useTranslations } from 'next-intl'
-import Modal from '../base/Modal'
 import EmissionFactorsTable from '../emissionFactor/Table'
+import Modal from '../modals/Modal'
 
 interface Props {
   close: () => void

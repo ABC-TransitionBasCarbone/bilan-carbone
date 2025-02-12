@@ -7,7 +7,7 @@ import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import Block from '../base/Block'
-import Modal from '../base/Modal'
+import Modal from '../modals/Modal'
 import SelectRole from './SelectRole'
 import styles from './TeamTable.module.css'
 

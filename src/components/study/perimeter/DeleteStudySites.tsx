@@ -1,6 +1,6 @@
 'use client'
 
-import Modal from '@/components/base/Modal'
+import Modal from '@/components/modals/Modal'
 import { useTranslations } from 'next-intl'
 
 interface Props {

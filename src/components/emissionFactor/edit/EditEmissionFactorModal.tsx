@@ -1,4 +1,4 @@
-import Modal from '@/components/base/Modal'
+import Modal from '@/components/modals/Modal'
 import { deleteEmissionFactor } from '@/services/serverFunctions/emissionFactor'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

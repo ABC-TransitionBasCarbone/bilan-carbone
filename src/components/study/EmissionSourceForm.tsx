@@ -10,8 +10,8 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
-import Help from '../base/HelpIcon'
-import Modal from '../base/Modal'
+import HelpIcon from '../base/HelpIcon'
+import GlossaryModal from '../modals/GlossaryModal'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
@@ -163,7 +163,7 @@ const EmissionSourceForm = ({
                 ))}
               </Select>
             </div>
-            <Help className="ml1" onClick={() => setGlossary('type')} label={tGlossary('title')} />
+            <HelpIcon className="ml1" onClick={() => setGlossary('type')} label={tGlossary('title')} />
           </div>
         </FormControl>
       </div>
@@ -230,15 +230,8 @@ const EmissionSourceForm = ({
           <DeleteEmissionSource emissionSource={emissionSource} />
         </div>
       )}
-
-      {glossary !== '' && (
-        <Modal
-          open
-          label="emission-source-glossary"
-          title={tGlossary(glossary)}
-          onClose={() => setGlossary('')}
-          actions={[{ actionType: 'button', onClick: () => setGlossary(''), children: tGlossary('close') }]}
-        >
+      {glossary && (
+        <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
@@ -248,7 +241,7 @@ const EmissionSourceForm = ({
               ),
             })}
           </p>
-        </Modal>
+        </GlossaryModal>
       )}
     </>
   )

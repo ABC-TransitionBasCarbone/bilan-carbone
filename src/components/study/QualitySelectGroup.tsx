@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Path } from 'react-hook-form'
 import Button from '../base/Button'
-import Help from '../base/HelpIcon'
+import HelpIcon from '../base/HelpIcon'
 import QualitySelect from '../form/QualitySelect'
 import styles from './EmissionSource.module.css'
 interface Props {
@@ -98,7 +98,7 @@ const QualitySelectGroup = ({ advanced, canEdit, emissionSource, update, setGlos
           label={t('form.quality')}
         />
       )}
-      <Help onClick={() => setGlossary('quality')} label={tGlossary('title')} />
+      <HelpIcon onClick={() => setGlossary('quality')} label={tGlossary('title')} />
       {!advanced && canShrink && (
         <Button
           data-testid="emission-source-quality-expand-button"

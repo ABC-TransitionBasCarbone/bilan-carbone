@@ -3,21 +3,22 @@ import Modal from './Modal'
 
 interface Props {
   glossary: string
-  setGlossary: (string: string) => void
   label: string
   t: ReturnType<typeof useTranslations>
+  onClose: () => void
+  children: React.ReactNode
 }
 
-const GlossaryModal = ({ glossary, setGlossary, label, t }: Props) =>
+const GlossaryModal = ({ glossary, onClose, label, t, children }: Props) =>
   glossary && (
     <Modal
       open
       label={`${label}-glossary`}
       title={t(glossary)}
-      onClose={() => setGlossary('')}
-      actions={[{ actionType: 'button', onClick: () => setGlossary(''), children: t('close') }]}
+      onClose={onClose}
+      actions={[{ actionType: 'button', onClick: onClose, children: t('close') }]}
     >
-      {t(`${glossary}Description`)}
+      {children}
     </Modal>
   )
 

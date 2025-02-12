@@ -2,8 +2,8 @@
 
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
-import Modal from '@/components/base/Modal'
 import { FormTextField } from '@/components/form/TextField'
+import Modal from '@/components/modals/Modal'
 import { OrganizationWithSites } from '@/db/user'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {

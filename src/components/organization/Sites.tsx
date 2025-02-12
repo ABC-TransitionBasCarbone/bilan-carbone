@@ -13,9 +13,9 @@ import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../base/Button'
 import Help from '../base/HelpIcon'
-import Modal from '../base/Modal'
 import { FormCheckbox } from '../form/Checkbox'
 import { FormTextField } from '../form/TextField'
+import GlossaryModal from '../modals/GlossaryModal'
 import styles from './Sites.module.css'
 
 interface Props<T extends SitesCommand> {
@@ -198,12 +198,11 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
           ))}
         </tbody>
       </table>
-      <Modal
-        open={showGlossary}
-        label="organization-sites"
-        title={tGlossary('title')}
+      <GlossaryModal
+        glossary={showGlossary ? 'title' : ''}
         onClose={() => setShowGlossary(false)}
-        actions={[{ actionType: 'button', onClick: () => setShowGlossary(false), children: tGlossary('close') }]}
+        label="create-emission-factor"
+        t={tGlossary}
       >
         <p className="mb-2">
           <b>{tGlossary('etp')} :</b> {tGlossary('etpDescription')}
@@ -211,7 +210,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
         <p className="mb-2">
           <b>{tGlossary('ca', { unit: headerCAUnit })} :</b> {tGlossary('caDescription', { unit: headerCAUnit })}
         </p>
-      </Modal>
+      </GlossaryModal>
     </div>
   )
 }
