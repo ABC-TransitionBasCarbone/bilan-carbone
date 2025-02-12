@@ -9,6 +9,8 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import Form from '../base/Form'
+import GlossaryModal from '../base/GlossaryModal'
+import HelpIcon from '../base/HelpIcon'
 import LoadingButton from '../base/LoadingButton'
 import { FormSelect } from '../form/Select'
 import styles from './Settings.module.css'
@@ -19,8 +21,10 @@ interface Props {
 
 const Settings = ({ userSettings }: Props) => {
   const t = useTranslations('settings')
+  const tGlossary = useTranslations('settings.glossary')
   const tUnit = useTranslations('settings.caUnit')
   const [error, setError] = useState('')
+  const [glossary, setGlossary] = useState('')
 
   const form = useForm<EditSettingsCommand>({
     resolver: zodResolver(EditSettingsCommandValidation),
@@ -46,7 +50,10 @@ const Settings = ({ userSettings }: Props) => {
       <div className="mb1">
         <Form onSubmit={form.handleSubmit(onSubmit)}>
           <FormControl>
-            <FormLabel>{t('validatedEmissionSourcesOnly')}</FormLabel>
+            <div className="align-center">
+              <FormLabel>{t('validatedEmissionSourcesOnly')}</FormLabel>
+              <HelpIcon className="ml-4" onClick={() => setGlossary('exports')} label={tGlossary('title')} />
+            </div>
             <Controller
               name="validatedEmissionSourcesOnly"
               control={form.control}
@@ -55,11 +62,11 @@ const Settings = ({ userSettings }: Props) => {
                   control={
                     <Switch
                       {...field}
-                      checked={field.value}
-                      onChange={(event) => field.onChange(event.target.checked)}
+                      checked={!field.value}
+                      onChange={(event) => field.onChange(!event.target.checked)}
                     />
                   }
-                  label={t(field.value ? 'yes' : 'no')}
+                  label={t(field.value ? 'no' : 'yes')}
                 />
               )}
             />
@@ -71,6 +78,8 @@ const Settings = ({ userSettings }: Props) => {
             translation={t}
             name="caUnit"
             label={tUnit('label')}
+            icon={<HelpIcon className="ml-4" onClick={() => setGlossary('caUnits')} label={tGlossary('title')} />}
+            iconPosition="after"
           >
             {Object.keys(SiteCAUnit).map((scale) => (
               <MenuItem key={scale} value={scale}>
@@ -89,6 +98,7 @@ const Settings = ({ userSettings }: Props) => {
         </Form>
       </div>
       {error && <p className="error">{t(error)}</p>}
+      <GlossaryModal glossary={glossary} setGlossary={setGlossary} label="user-application-settings" t={tGlossary} />
     </>
   )
 }

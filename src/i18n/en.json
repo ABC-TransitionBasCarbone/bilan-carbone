@@ -179,9 +179,17 @@
   "settings": {
     "title": "My application settings",
     "validate": "Save",
-    "validatedEmissionSourcesOnly": "Only display the validated emission sources",
+    "validatedEmissionSourcesOnly": "Taking into account emissions not validated in Bilans Carbone® assessments",
     "yes": "Yes",
     "no": "No",
+    "glossary": {
+      "title": "Glossary",
+      "exports": "Take into account emissions that have not been validated",
+      "exportsDescription": "Within a Bilan Carbone®, you can choose to display all the emissions you have entered, or only those that have been validated by a validator.",
+      "caUnits": "Turnover figures",
+      "caUnitsDescription": "Specify the unit you wish to use for turnover figures.",
+      "close": "Close"
+    },
     "caUnit": {
       "label": "Site's turnover unit",
       "U": "€",

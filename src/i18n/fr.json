@@ -179,9 +179,17 @@
   "settings": {
     "title": "Mes paramètres d'application",
     "validate": "Sauvegarder",
-    "validatedEmissionSourcesOnly": "Afficher uniquement les sources d'emissions validées",
+    "validatedEmissionSourcesOnly": "Prendre en compte les émissions non validées dans les Bilans Carbone®",
     "yes": "Oui",
     "no": "Non",
+    "glossary": {
+      "title": "Glossaire",
+      "exports": "Prendre en compte les émissions non validées",
+      "exportsDescription": "Au sein d'un Bilan Carbone®, vous pouvez choisir d'afficher toutes les émissions que vous avez renseignées, ou bien uniquement celles qui ont été validées par un validateur.",
+      "caUnits": "Unité des chiffres d'affaire",
+      "caUnitsDescription": "Précisez l'unité que vous souhaitez utiliser pour les chiffres d'affaire.",
+      "close": "Fermer"
+    },
     "caUnit": {
       "label": "Unité des chiffres d'affaire des sites",
       "U": "€",
