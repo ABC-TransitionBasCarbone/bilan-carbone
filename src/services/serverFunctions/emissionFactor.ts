@@ -9,14 +9,14 @@ import {
   getEmissionFactorDetailsById,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
-import { getStudyById } from '@/db/study'
-import { getUserByEmail, getUserById } from '@/db/user'
+import { getUserByEmail } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
 import { canReadStudy } from '../permissions/study'
+import { getStudyParentOrganization } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
@@ -30,23 +30,13 @@ export const getEmissionFactors = async (studyId?: string) => {
 
   let emissionFactorOrganization
   if (studyId && (await canReadStudy(session.user, studyId))) {
-    const study = await getStudyById(studyId, session.user.organizationId)
-    if (!study) {
-      return []
-    }
-
-    const creator = await getUserById(study.createdById)
-    if (!creator || !creator.organizationId) {
-      return []
-    }
-
-    emissionFactorOrganization = creator.organizationId
+    emissionFactorOrganization = await getStudyParentOrganization(studyId, session.user.organizationId)
   } else {
     emissionFactorOrganization = session.user.organizationId
   }
 
   const emissionFactors = await getAllEmissionFactors(emissionFactorOrganization)
-
+  console.log(studyId, session.user.organizationId, emissionFactorOrganization)
   return emissionFactors
     .map((emissionFactor) => ({
       ...emissionFactor,
@@ -56,23 +46,32 @@ export const getEmissionFactors = async (studyId?: string) => {
 }
 export type EmissionFactorWithMetaData = AsyncReturnType<typeof getEmissionFactors>[0]
 
-export const getEmissionFactorsByIds = async (ids: string[]) => {
-  const locale = await getLocale()
+export const getEmissionFactorsByIds = async (ids: string[], studyId: string) => {
+  try {
+    const locale = await getLocale()
 
-  const session = await auth()
+    const session = await auth()
 
-  if (!session || !session.user.organizationId) {
+    if (!session || !session.user.organizationId || !(await canReadStudy(session.user, studyId))) {
+      return []
+    }
+
+    const emissionFactorOrganization = (await getStudyParentOrganization(
+      studyId,
+      session.user.organizationId,
+    )) as string
+
+    const emissionFactors = await getAllEmissionFactorsByIds(ids, emissionFactorOrganization)
+
+    return emissionFactors
+      .map((emissionFactor) => ({
+        ...emissionFactor,
+        metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
+      }))
+      .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
+  } catch {
     return []
   }
-
-  const emissionFactors = await getAllEmissionFactorsByIds(ids, session.user.organizationId)
-
-  return emissionFactors
-    .map((emissionFactor) => ({
-      ...emissionFactor,
-      metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
-    }))
-    .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
 }
 
 export const getDetailedEmissionFactor = async (id: string) => {
