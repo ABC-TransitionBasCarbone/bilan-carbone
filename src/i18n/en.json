@@ -449,7 +449,7 @@
       "FretInterne": "Internal freight",
       "FretSortant": "Outgoing freight",
       "DeplacementsDomicileTravail": "Home-to-work travel",
-      "DeplacementsDesEmployesDansLeCadreDuTravail": "Employee travel in the context of work",
+      "DeplacementsProfessionnels": "Employee travel in the context of work",
       "DeplacementsVisiteurs": "Visitor travel",
       "Batiments": "Buildings",
       "AutresInfrastructures": "Other infrastructures",
