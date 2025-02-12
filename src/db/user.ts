@@ -25,6 +25,9 @@ export const getUserByEmailWithSensibleInformations = async (email: string) =>
 
 export const getUserByEmail = async (email: string) => prismaClient.user.findUnique({ where: { email } })
 
+export const getUserById = async (id: string) =>
+  prismaClient.user.findUnique({ where: { id }, select: { organizationId: true } })
+
 export const getUserByEmailWithAllowedStudies = async (email: string) =>
   prismaClient.user.findUnique({ where: { email }, include: { allowedStudies: true, contributors: true } })
 

@@ -10,7 +10,7 @@ import {
   updateEmissionFactor,
 } from '@/db/emissionFactors'
 import { getStudyById } from '@/db/study'
-import { getUserByEmail } from '@/db/user'
+import { getUserByEmail, getUserById } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { auth } from '../auth'
@@ -35,7 +35,12 @@ export const getEmissionFactors = async (studyId?: string) => {
       return []
     }
 
-    orga = study.organization.id
+    const creator = await getUserById(study.createdById)
+    if (!creator || !creator.organizationId) {
+      return []
+    }
+
+    orga = creator.organizationId
   } else {
     orga = session.user.organizationId
   }
