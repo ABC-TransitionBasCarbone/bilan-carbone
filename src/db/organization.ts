@@ -60,7 +60,7 @@ export const onboardOrganization = async (
     if (!dbUser) {
       return
     }
-    const role = !dbUser.level ? Role.ADMIN : Role.GESTIONNAIRE
+    const role = dbUser.level ? Role.ADMIN : Role.GESTIONNAIRE
     const newCollaborators = []
     for (const collaborator of collaborators) {
       newCollaborators.push({
