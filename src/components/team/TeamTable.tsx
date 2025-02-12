@@ -9,7 +9,6 @@ import { useMemo, useState } from 'react'
 import Block from '../base/Block'
 import Modal from '../modals/Modal'
 import SelectRole from './SelectRole'
-import styles from './TeamTable.module.css'
 
 interface Props {
   user: User
@@ -61,9 +60,8 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     <>
       <Block
         title={t('title')}
-        icon={
-          <HelpIcon className={styles.helpIcon} onClick={() => setDisplayRoles(!displayRoles)} label={tRole('guide')} />
-        }
+        icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tRole('guide')} />}
+        iconPosition="after"
         expIcon
         id="team-table-title"
         actions={

@@ -1,6 +1,6 @@
 import TextField, { TextFieldProps } from '@mui/material/TextField'
-import classNames from 'classnames'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
+import IconLabel from '../base/IconLabel'
 import styles from './Form.module.css'
 
 interface Props<T extends FieldValues> {
@@ -29,11 +29,9 @@ export const FormTextField = <T extends FieldValues>({
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <div className="inputContainer">
           {label ? (
-            <div className={classNames(styles.gapped, 'mb-2 align-center')}>
-              {iconPosition === 'before' && iconDiv}
+            <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
               <span className="inputLabel bold">{label}</span>
-              {iconPosition === 'after' && iconDiv}
-            </div>
+            </IconLabel>
           ) : null}
           <TextField
             {...textFieldProps}

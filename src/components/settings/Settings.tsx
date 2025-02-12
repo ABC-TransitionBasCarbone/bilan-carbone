@@ -98,14 +98,16 @@ const Settings = ({ userSettings }: Props) => {
         </Form>
       </div>
       {error && <p className="error">{t(error)}</p>}
-      <GlossaryModal
-        glossary={glossary}
-        onClose={() => setGlossary('')}
-        label="user-application-settings"
-        t={tGlossary}
-      >
-        {tGlossary(`${glossary}Description`)}
-      </GlossaryModal>
+      {glossary && (
+        <GlossaryModal
+          glossary={glossary}
+          onClose={() => setGlossary('')}
+          label="user-application-settings"
+          t={tGlossary}
+        >
+          {tGlossary(`${glossary}Description`)}
+        </GlossaryModal>
+      )}
     </>
   )
 }

@@ -86,8 +86,6 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
       <p>{t(`titleDescription-${activeStep}`)}</p>
     </>
   )
-  // const previousAction: ModaleProps['actions'] =
-  //   activeStep > 0 ? [{ actionType: 'button', onClick: goToPreviousStep, children: t('previous') }] : []
 
   return (
     <Dialog
@@ -116,14 +114,5 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     </Dialog>
   )
 }
-//  <Modale
-// 	open={open}
-// 	label="onboarding"
-// 	title={Title}
-// 	onClose={onClose}
-// 	actions={[...previousAction, { actionType: 'submit', children: t(buttonLabel) }]}
-// >
-// 	<Step form={form} role={newRole} />
-// </Modale>
 
 export default OnboardingModal

@@ -1,6 +1,6 @@
 import { Autocomplete, AutocompleteProps, TextField } from '@mui/material'
-import classNames from 'classnames'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
+import IconLabel from '../base/IconLabel'
 import styles from './Form.module.css'
 
 type Option = { label: string; value: string }
@@ -33,11 +33,9 @@ export const FormAutocomplete = <T extends FieldValues>({
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <div className="inputContainer">
           {label ? (
-            <div className={classNames(styles.gapped, 'mb-2 align-center')}>
-              {iconPosition === 'before' && iconDiv}
+            <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
               <span className="inputLabel bold">{label}</span>
-              {iconPosition === 'after' && iconDiv}
-            </div>
+            </IconLabel>
           ) : null}
           <Autocomplete
             {...autocompleteProps}

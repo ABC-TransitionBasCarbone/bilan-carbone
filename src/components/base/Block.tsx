@@ -5,6 +5,7 @@ import { LinkProps } from 'next/link'
 import { AnchorHTMLAttributes, ReactNode } from 'react'
 import styles from './Block.module.css'
 import Button from './Button'
+import IconLabel from './IconLabel'
 import LinkButton from './LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
 
@@ -44,13 +45,11 @@ const Block = ({
     <div className={classNames(as === 'h1' ? styles.bigIcon : styles.icon, { [styles.exp]: expIcon })}>{icon}</div>
   ) : null
   const titleDiv = (
-    <div className={classNames(styles.title, 'align-center')}>
-      {iconPosition === 'before' && iconDiv}
+    <IconLabel icon={iconDiv} iconPosition={iconPosition} className={styles.title}>
       <Title id={id} data-testid={dataTestId}>
         {title}
       </Title>
-      {iconPosition !== 'before' && iconDiv}
-    </div>
+    </IconLabel>
   )
 
   return (

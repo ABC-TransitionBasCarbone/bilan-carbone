@@ -14,7 +14,7 @@ const EmissionFactorFormDescription = ({ field }: Props) => {
     return (
       <div>
         <p className="mb-2">{t('multipleDescription.introduction')}</p>
-        <ul className={styles.subPostList}>
+        <ul className={styles.subPartslist}>
           <li className="mb-2">{t.rich('multipleDescription.upstream', { b: (children) => <b>{children}</b> })}</li>
           <li className="mb-2">{t.rich('multipleDescription.combustion', { b: (children) => <b>{children}</b> })}</li>
           <li className="mb-2">{t.rich('multipleDescription.loss', { b: (children) => <b>{children}</b> })}</li>

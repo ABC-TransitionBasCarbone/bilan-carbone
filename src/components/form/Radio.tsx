@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, FormLabel, RadioGroup, RadioGroupProps } from '@mui/material'
-import classNames from 'classnames'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
+import IconLabel from '../base/IconLabel'
 import styles from './Form.module.css'
 
 interface Props<T extends FieldValues> {
@@ -30,11 +30,9 @@ export const FormRadio = <T extends FieldValues>({
         <FormControl error={!!error} component="fieldset">
           {label ? (
             <FormLabel id={`${name}-radio-group-label`} component="legend">
-              <div className={classNames(styles.gapped, 'mb-2 align-center')}>
-                {iconPosition === 'before' && iconDiv}
+              <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
                 <span className="inputLabel bold">{label}</span>
-                {iconPosition === 'after' && iconDiv}
-              </div>
+              </IconLabel>
             </FormLabel>
           ) : null}
           <RadioGroup

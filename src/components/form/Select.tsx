@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, SelectProps } from '@mui/material'
-import classNames from 'classnames'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
+import IconLabel from '../base/IconLabel'
 import { Select } from '../base/Select'
 import styles from './Form.module.css'
 
@@ -29,11 +29,9 @@ export const FormSelect = <T extends FieldValues>({
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <FormControl error={!!error} fullWidth={selectProps.fullWidth} className="inputContainer">
           {label ? (
-            <div className={classNames(styles.gapped, 'mb-2 align-center')}>
-              {iconPosition === 'before' && iconDiv}
+            <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
               <span className="inputLabel bold">{label}</span>
-              {iconPosition === 'after' && iconDiv}
-            </div>
+            </IconLabel>
           ) : null}
           <Select name={name} value={value} onChange={onChange} {...selectProps} />
           {error && error.message && <FormHelperText>{translation('validation.' + error.message)}</FormHelperText>}

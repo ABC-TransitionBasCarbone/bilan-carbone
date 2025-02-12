@@ -36,7 +36,6 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
           <span className="inputLabel bold">{t('post')}</span>
         </div>
         <Select
-          label={t('post')}
           name="Post"
           data-testid="emission-factor-post"
           labelId="post-select-label"
