@@ -10,13 +10,13 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { version } from '../../../package.json'
 import Button from '../base/Button'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import LocaleSelector from './LocaleSelector'
 import styles from './Profile.module.css'
-
 const Profile = () => {
   const { data: session, update: updateSession } = useSession()
 
@@ -116,6 +116,7 @@ const Profile = () => {
             {t('legalNotices')}
           </Link>
         </div>
+        {version && <div className="mb1">Version du BC+ : {version}</div>}
       </div>
       <div>
         <div className="flex-col justify-end">
