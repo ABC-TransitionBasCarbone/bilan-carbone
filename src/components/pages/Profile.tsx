@@ -3,11 +3,11 @@
 import { SessionProvider } from 'next-auth/react'
 import Profile from '../profile/Profile'
 
-export interface ProfilePageProps {
+export interface Props {
   version: string
 }
 
-const ProfilePage = ({ version }: ProfilePageProps) => {
+const ProfilePage = ({ version }: Props) => {
   return (
     <SessionProvider>
       <Profile version={version} />

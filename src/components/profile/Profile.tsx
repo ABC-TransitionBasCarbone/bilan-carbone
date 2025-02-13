@@ -14,10 +14,14 @@ import Button from '../base/Button'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
-import { ProfilePageProps } from '../pages/Profile'
 import LocaleSelector from './LocaleSelector'
 import styles from './Profile.module.css'
-const Profile = ({ version }: ProfilePageProps) => {
+
+export interface Props {
+  version: string
+}
+
+const Profile = ({ version }: Props) => {
   const { data: session, update: updateSession } = useSession()
 
   const t = useTranslations('profile')
