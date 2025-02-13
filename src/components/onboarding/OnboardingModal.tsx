@@ -90,8 +90,8 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   return (
     <Dialog
       open={open}
-      aria-labelledby="onboarding-dialog-title"
-      aria-describedby="onboarding-dialog-description"
+      aria-labelledby="onboarding-modale-title"
+      aria-describedby="onboarding-modale-description"
       classes={{ paper: styles.dialog }}
     >
       <div className={styles.container}>

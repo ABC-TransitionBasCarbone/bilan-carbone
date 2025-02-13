@@ -91,7 +91,7 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
           { actionType: 'button', onClick: () => setSitesOnError(emptySitesOnError), children: tStudySites('close') },
         ]}
       >
-        <div id="delete-site-with-studies-dialog-description" className="flex-col">
+        <div id="delete-site-with-studies-modale-description" className="flex-col">
           {tStudySites('description')}
           <ul>
             {sitesOnError &&

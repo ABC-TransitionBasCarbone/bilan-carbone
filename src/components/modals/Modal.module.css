@@ -1,12 +1,11 @@
-.dialog {
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   min-width: 34rem;
   width: 60%;
   max-width: 60rem !important;
-  margin: 0 !important;
-}
-
-.container {
-  padding: 1rem;
 }
 
 .closeIcon {

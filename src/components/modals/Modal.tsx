@@ -1,10 +1,10 @@
 import Button from '@/components/base/Button'
-import { ClickAwayListener } from '@mui/base/ClickAwayListener'
 import CloseIcon from '@mui/icons-material/Close'
-import { ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
+import { ButtonProps, Button as MUIButton, Modal as MUIModal, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { LinkProps } from 'next/link'
 import { AnchorHTMLAttributes } from 'react'
+import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from '../base/LoadingButton'
 import styles from './Modal.module.css'
@@ -24,39 +24,37 @@ export interface Props {
 }
 
 const Modal = ({ label, open, onClose, title, children, actions }: Props) => (
-  <Dialog
+  <MUIModal
     open={open}
-    aria-labelledby={`${label}-dialog-title`}
-    aria-describedby={`${label}-dialog-description`}
-    classes={{ paper: styles.dialog }}
+    onClose={onClose}
+    aria-labelledby={`${label}-modale-title`}
+    aria-describedby={`${label}-modale-description`}
   >
-    <ClickAwayListener onClickAway={onClose}>
-      <div className={styles.container}>
-        <div className="justify-end">
-          <MUIButton className={styles.closeIcon} onClick={onClose}>
-            <CloseIcon />
-          </MUIButton>
-        </div>
-        <DialogTitle id={`${label}-dialog-title`}>{title}</DialogTitle>
-        <DialogContent>{children}</DialogContent>
-        <DialogActions>
-          {actions && (
-            <div className={classNames(styles.actions, 'flex')}>
-              {actions.map(({ actionType, ...action }, index) =>
-                actionType === 'button' || actionType === 'submit' ? (
-                  <Button key={index} type={actionType} {...(action as ButtonProps)} />
-                ) : actionType === 'loadingButton' ? (
-                  <LoadingButton key={index} {...(action as LoadingButtonProps)} />
-                ) : (
-                  <LinkButton key={index} {...(action as LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>)} />
-                ),
-              )}
-            </div>
-          )}
-        </DialogActions>
+    <Box className={styles.box}>
+      <div className="justify-end">
+        <MUIButton className={styles.closeIcon} onClick={onClose}>
+          <CloseIcon />
+        </MUIButton>
       </div>
-    </ClickAwayListener>
-  </Dialog>
+      <Typography id={`${label}-modale-title`} variant="h6" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+        {title}
+      </Typography>
+      <Typography id={`${label}-modale-description`}>{children}</Typography>
+      {actions && (
+        <div className={classNames(styles.actions, 'justify-end')}>
+          {actions.map(({ actionType, ...action }, index) =>
+            actionType === 'button' || actionType === 'submit' ? (
+              <Button key={index} type={actionType} {...(action as ButtonProps)} />
+            ) : actionType === 'loadingButton' ? (
+              <LoadingButton key={index} {...(action as LoadingButtonProps)} />
+            ) : (
+              <LinkButton key={index} {...(action as LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>)} />
+            ),
+          )}
+        </div>
+      )}
+    </Box>
+  </MUIModal>
 )
 
 export default Modal

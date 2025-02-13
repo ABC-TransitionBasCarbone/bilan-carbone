@@ -109,8 +109,8 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
       <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
       <Dialog open={deleting} aria-labelledby="delete-study-title" aria-describedby="delete-study-description">
         <Form onSubmit={form.handleSubmit(onDelete)}>
-          <DialogTitle id="delete-study-dialog-title">{tStudyDelete('title')}</DialogTitle>
-          <DialogContent id="delete-study-dialog-content">
+          <DialogTitle id="delete-study-modale-title">{tStudyDelete('title')}</DialogTitle>
+          <DialogContent id="delete-study-modale-content">
             {tStudyDelete('content')}
             <div className="flex mt1">
               <FormTextField

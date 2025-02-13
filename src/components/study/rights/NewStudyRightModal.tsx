@@ -21,13 +21,13 @@ const NewStudyRightModal = ({ otherOrganization, rightsWarning, decline, accept 
           {
             actionType: 'button',
             onClick: decline,
-            ['data-testid']: 'new-study-right-dialog-decline',
+            ['data-testid']: 'new-study-right-modale-decline',
             children: t('decline'),
           },
           {
             actionType: 'button',
             onClick: accept,
-            ['data-testid']: 'new-study-right-dialog-accept',
+            ['data-testid']: 'new-study-right-modale-accept',
             children: t('accept'),
           },
         ]}

@@ -31,8 +31,8 @@ describe('Delete study', () => {
     cy.wait('@create')
 
     cy.getByTestId('delete-study').click()
-    cy.get('#delete-study-dialog-title').should('be.visible')
-    cy.get('#delete-study-dialog-content').should('be.visible')
+    cy.get('#delete-study-modale-title').should('be.visible')
+    cy.get('#delete-study-modale-content').should('be.visible')
 
     cy.getByTestId('delete-study-name-field').type('my study to delet')
     cy.getByTestId('study-deletion-error').should('not.exist')
