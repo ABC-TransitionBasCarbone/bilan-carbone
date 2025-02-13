@@ -1,8 +1,5 @@
 import dayjs from 'dayjs'
 
-const studyAdminText =
-  'Cette personne est administrateur et est donc déjà validateur pour toutes les études de ce compte'
-
 describe('Study Rights', () => {
   before(() => {
     cy.exec('npx prisma db seed')
@@ -114,6 +111,16 @@ describe('Study Rights', () => {
     cy.wait('@create')
     cy.getByTestId('study-rights-table-line').eq(2).contains('bc-default-2@yopmail.comÉditeur')
 
+    cy.getByTestId('study-rights-change-button').click()
+    cy.getByTestId('study-rights-email').type('bc-admin-2@yopmail.com')
+    cy.getByTestId('study-rights-role').click()
+    cy.get('[data-value="Editor"]').click()
+
+    cy.getByTestId('study-rights-create-button').click()
+    cy.getByTestId('new-study-right-dialog-accept').click()
+    cy.wait('@create')
+    cy.getByTestId('study-rights-table-line').eq(1).contains('bc-admin-2@yopmail.comÉditeur')
+
     // Organization's user without rights
     cy.getByTestId('study-rights-change-button').click()
     cy.getByTestId('study-rights-email').click()
@@ -132,7 +139,7 @@ describe('Study Rights', () => {
     })
     cy.getByTestId('study-rights-create-button').click()
     cy.wait('@create')
-    cy.getByTestId('study-rights-table-line').eq(5).contains('untrained@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line').eq(6).contains('untrained@yopmail.comLecteur')
 
     // Organization's user with rights
     cy.getByTestId('study-rights-change-button').click()
@@ -142,31 +149,31 @@ describe('Study Rights', () => {
     cy.get('[data-value="Validator"]').click()
     cy.getByTestId('study-rights-create-button').click()
     cy.wait('@create')
-    cy.getByTestId('study-rights-table-line').eq(2).contains('bc-default-1@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line').eq(3).contains('bc-default-1@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line')
-      .eq(2)
+      .eq(3)
       .within(() => cy.get('input').should('not.be.disabled'))
 
     // Rights management
     // cannot edit its own rights
-    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comÉditeur')
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line')
       .eq(0)
       .within(() => {
         cy.get('input').should('be.disabled')
       })
     // cannot edit external or untrained user's rights
-    cy.getByTestId('study-rights-table-line').eq(1).contains('bc-default-0@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line').eq(2).contains('bc-default-0@yopmail.comLecteur')
     cy.getByTestId('study-rights-table-line')
-      .eq(1)
+      .eq(2)
       .within(() => cy.get('input').should('be.disabled'))
-    cy.getByTestId('study-rights-table-line').eq(5).contains('external@yopmail.comLecteur')
-    cy.getByTestId('study-rights-table-line')
-      .eq(5)
-      .within(() => cy.get('input').should('be.disabled'))
-    cy.getByTestId('study-rights-table-line').eq(6).contains('untrained@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line').eq(6).contains('external@yopmail.comLecteur')
     cy.getByTestId('study-rights-table-line')
       .eq(6)
+      .within(() => cy.get('input').should('be.disabled'))
+    cy.getByTestId('study-rights-table-line').eq(7).contains('untrained@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line')
+      .eq(7)
       .within(() => cy.get('input').should('be.disabled'))
     // Validators can edit other people's rights
     // TODO : investigate why edition may be in error
@@ -190,15 +197,15 @@ describe('Study Rights', () => {
     cy.getByTestId('study-rights-change-button').should('exist')
     cy.getByTestId('select-study-role').should('exist')
 
-    cy.getByTestId('study-rights-table-line').eq(2).contains('bc-default-1@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line').eq(3).contains('bc-default-1@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line')
-      .eq(2)
+      .eq(3)
       .within(() => cy.get('input').should('be.disabled'))
 
     // Editors can't select validator's rights
-    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comÉditeur')
+    cy.getByTestId('study-rights-table-line').eq(1).contains('bc-admin-2@yopmail.comÉditeur')
     cy.getByTestId('study-rights-table-line')
-      .eq(0)
+      .eq(1)
       .within(() => {
         cy.get('input').should('not.be.disabled')
         cy.get('.MuiSelect-select').click()
@@ -227,16 +234,16 @@ describe('Study Rights', () => {
     cy.getByTestId('select-study-role').should('not.exist')
   })
 
-  it('admin user cannot be added to a study', () => {
-    cy.login()
+  it('admin user default role is validator', () => {
+    cy.login('bc-admin-0@yopmail.com', 'password-0')
 
     cy.getByTestId('new-study').click()
     cy.getByTestId('organization-sites-checkbox').first().click()
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').scrollIntoView()
-    cy.getByTestId('new-study-name').should('be.visible').type('Study without admins')
-    cy.getByTestId('new-validator-name').type('bc-admin-0@yopmail.com')
+    cy.getByTestId('new-study-name').should('be.visible').type('Study from admin')
+    cy.getByTestId('new-validator-name').type('bc-default-0@yopmail.com')
     cy.get('[data-option-index="0"]').click()
 
     cy.getByTestId('new-study-endDate').within(() => {
@@ -244,32 +251,40 @@ describe('Study Rights', () => {
     })
     cy.getByTestId('new-study-level').click()
     cy.get('[data-value="Initial"]').click()
-    cy.getByTestId('new-study-create-button').should('be.disabled')
-    cy.getByTestId('validator-autocomplete-helper-text').should('have.text', studyAdminText)
 
-    cy.getByTestId('new-validator-name').within(() => {
-      cy.get('input').clear()
-    })
-    cy.getByTestId('new-validator-name').type('bc-default-0@yopmail.com')
-    cy.get('[data-option-index="0"]').click()
     cy.getByTestId('new-study-create-button').click()
     cy.wait('@createStudy')
 
     cy.getByTestId('study-cadrage-link').click()
-    cy.getByTestId('study-rights-change-button').click()
 
-    cy.getByTestId('study-rights-role').click()
-    cy.get('[data-value="Validator"]').click()
+    cy.getByTestId('study-rights-table-line').eq(1).contains('bc-default-0@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-0@yopmail.comValidateur')
+  })
 
-    cy.getByTestId('study-rights-email').click()
-    cy.contains('[data-option-index]', 'bc-admin-0@yopmail.com').click()
+  it('non admin user default role is editor', () => {
+    cy.login()
 
-    cy.getByTestId('study-rights-create-button').should('be.disabled')
-    cy.getByTestId('study-rights-create-error').should('have.text', studyAdminText)
+    cy.getByTestId('new-study').click()
+    cy.getByTestId('organization-sites-checkbox').first().click()
+    cy.getByTestId('new-study-organization-button').click()
 
-    cy.getByTestId('study-rights-email').click()
-    cy.contains('[data-option-index]', 'bc-gestionnaire-0@yopmail.com').click()
+    cy.getByTestId('new-study-name').scrollIntoView()
+    cy.getByTestId('new-study-name').should('be.visible').type('Study from non admin')
+    cy.getByTestId('new-validator-name').type('bc-gestionnaire-0@yopmail.com')
+    cy.get('[data-option-index="0"]').click()
 
-    cy.getByTestId('study-rights-create-button').should('not.be.disabled')
+    cy.getByTestId('new-study-endDate').within(() => {
+      cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
+    })
+    cy.getByTestId('new-study-level').click()
+    cy.get('[data-value="Initial"]').click()
+
+    cy.getByTestId('new-study-create-button').click()
+    cy.wait('@createStudy')
+
+    cy.getByTestId('study-cadrage-link').click()
+
+    cy.getByTestId('study-rights-table-line').eq(1).contains('bc-gestionnaire-0@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-default-0@yopmail.comÉditeur')
   })
 })
