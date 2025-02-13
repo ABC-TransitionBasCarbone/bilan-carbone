@@ -1,6 +1,7 @@
 import { getDocumentById } from '@/db/document'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
+import { getUserRoleOnStudy } from '@/utils/study'
 import { User as DbUser, Level, Prisma, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { auth } from '../auth'
@@ -262,7 +263,7 @@ const canAccessStudyFlow = async (studyId: string) => {
   }
 
   const study = await getStudyById(studyId, session.user.organizationId)
-  if (!study || !study.allowedUsers.some((right) => right.user.email === session.user.email)) {
+  if (!study || !getUserRoleOnStudy(session.user, study)) {
     return false
   }
 

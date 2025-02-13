@@ -477,7 +477,7 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   }
   const bucketDelete = await deleteFileFromBucket(document.bucketKey)
   if (bucketDelete) {
-    deleteDocument(document.id)
+    await deleteDocument(document.id)
   }
 }
 
