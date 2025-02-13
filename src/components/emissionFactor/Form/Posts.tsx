@@ -32,9 +32,6 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
   return (
     <>
       <FormControl>
-        <div className="mb-2 align-center">
-          <span className="inputLabel bold">{t('post')}</span>
-        </div>
         <Select
           name="Post"
           data-testid="emission-factor-post"
@@ -45,6 +42,7 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
             setValue('subPost', undefined)
             setPost(event.target.value as Post)
           }}
+          label={t('post')}
         >
           {posts.map((post) => (
             <MenuItem key={post} value={post}>
