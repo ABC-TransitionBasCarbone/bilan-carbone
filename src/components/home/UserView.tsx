@@ -2,13 +2,11 @@ import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user
 import { isAdmin } from '@/services/permissions/user'
 import { Role } from '@prisma/client'
 import { User } from 'next-auth'
-import { Suspense } from 'react'
 import Actualities from '../actuality/ActualitiesCards'
 import Block from '../base/Block'
 import Onboarding from '../onboarding/Onboarding'
-import Organizations from '../organization/OrganizationsContainer'
-import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Studies from '../study/StudiesContainer'
+import CRClientsList from './CRClientsList'
 import UserToValidate from './UserToValidate'
 
 interface Props {
@@ -31,15 +29,16 @@ const UserView = async ({ user }: Props) => {
           <UserToValidate />
         </div>
       )}
-      {user.organizationId && (
+      <Block>{isCR ? <CRClientsList organizations={organizations} /> : null}</Block>
+      {/* {user.organizationId && (
         <Suspense>
           <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
         </Suspense>
-      )}
+      )} */}
       <Block>
         <Actualities />
       </Block>
-      <Block>{isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}</Block>
+      <Block>{isCR ? null : <Studies user={user} />}</Block>
       {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
     </>
   )

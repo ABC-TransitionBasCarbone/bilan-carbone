@@ -836,6 +836,8 @@
     "myOrganizations": "My Organizations",
     "name": "Name: ",
     "title": "Organization",
+    "createFirstClient": "Create my first client",
+    "firstClientMessage": "We invite you to create your first client and then create your first Bilan Carbone®.",
     "form": {
       "create": "Create organization",
       "editTitle": "Edit my organization",
