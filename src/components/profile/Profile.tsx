@@ -116,7 +116,7 @@ const Profile = ({ version }: ProfilePageProps) => {
             {t('legalNotices')}
           </Link>
         </div>
-        {version && <div className="mb1">Version du BC+ : {version}</div>}
+        <div className="mb1">{t('version') + version}</div>
       </div>
       <div>
         <div className="flex-col justify-end">

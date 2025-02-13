@@ -171,6 +171,7 @@
     "cancelUpdate": "Annuler",
     "update": "Mettre à jour",
     "updating": "Mise à jour",
+    "version": "Version du BC+ : ",
     "validation": {
       "firstName": "1 caractère minimum",
       "lastName": "1 caractère minimum"
