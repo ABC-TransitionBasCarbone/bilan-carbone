@@ -128,7 +128,7 @@ const DetailedGES = <T extends EmissionFactorCommand>({
           />
         </div>
         <div className={styles.selector}>
-          <FormLabel id="multiple-emssions-radio-group-label" component="legend" className="align-center">
+          <FormLabel id="multiple-emssions-radio-group-label" component="legend" className="inputLabel align-center">
             {t('multiple')}
             <HelpIcon className="ml-2" onClick={() => setGlossary('multiple')} label={tGlossary('title')} />
           </FormLabel>
@@ -146,7 +146,7 @@ const DetailedGES = <T extends EmissionFactorCommand>({
         <div className={styles.input}>
           {hasParts && (
             <>
-              <FormLabel id="sub-parts-count-label" component="legend" className="align-center">
+              <FormLabel id="sub-parts-count-label" component="legend" className="inputLabel align-center">
                 {t('subPartsCount')}
                 <HelpIcon className="ml-2" onClick={() => setGlossary('subPartsCount')} label={tGlossary('title')} />
               </FormLabel>

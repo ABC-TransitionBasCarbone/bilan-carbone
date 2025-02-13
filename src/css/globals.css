@@ -123,7 +123,7 @@ table {
 }
 
 .inputLabel {
-  color: black;
+  color: black !important;
 }
 
 .inputContainer {
