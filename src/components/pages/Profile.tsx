@@ -3,7 +3,7 @@
 import { SessionProvider } from 'next-auth/react'
 import Profile from '../profile/Profile'
 
-export interface Props {
+interface Props {
   version: string
 }
 

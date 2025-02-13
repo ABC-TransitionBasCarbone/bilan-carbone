@@ -17,7 +17,7 @@ import { FormTextField } from '../form/TextField'
 import LocaleSelector from './LocaleSelector'
 import styles from './Profile.module.css'
 
-export interface Props {
+interface Props {
   version: string
 }
 
@@ -120,7 +120,7 @@ const Profile = ({ version }: Props) => {
             {t('legalNotices')}
           </Link>
         </div>
-        <div className="mb1">{t('version') + version}</div>
+        <span className="mb1">{t('version') + version}</span>
       </div>
       <div>
         <div className="flex-col justify-end">
