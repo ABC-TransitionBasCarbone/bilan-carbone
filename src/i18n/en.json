@@ -98,8 +98,10 @@
     "team": "Team"
   },
   "actuality": {
-    "title": "News",
-    "noItems": "No news at the moment"
+    "title": "BC+ actualities",
+    "noItems": "No news at the moment",
+    "seeLess": "See less",
+    "seeMore": "See more"
   },
   "legalNotices": {
     "profile": "Return to profile"

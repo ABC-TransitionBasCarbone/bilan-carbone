@@ -98,8 +98,10 @@
     "team": "Équipe"
   },
   "actuality": {
-    "title": "Actualités",
-    "noItems": "Aucune actualité pour le moment"
+    "title": "Les actualités du BC+",
+    "noItems": "Aucune actualité pour le moment",
+    "seeLess": "Voir moins",
+    "seeMore": "Voir plus"
   },
   "legalNotices": {
     "profile": "Retour au profil"
