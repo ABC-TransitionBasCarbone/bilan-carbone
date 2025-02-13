@@ -284,8 +284,7 @@
         "validation": {
           "email": "Veuillez utiliser un email valide",
           "emailRequired": "Veuillez entrer un email",
-          "role": "Veuillez sélectionner un droit",
-          "adminValidator": "Cette personne est administrateur et est donc déjà validateur pour toutes les études de ce compte"
+          "role": "Veuillez sélectionner un droit"
         },
         "dialog": {
           "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",

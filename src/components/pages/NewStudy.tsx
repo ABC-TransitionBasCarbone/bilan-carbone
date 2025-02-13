@@ -32,7 +32,7 @@ const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit 
     reValidateMode: 'onChange',
     defaultValues: {
       name: '',
-      validator: '',
+      validator: user.email,
       isPublic: 'true',
       startDate: dayjs().toISOString(),
       organizationId: (defaultOrganization ?? organizations[0])?.id || '',

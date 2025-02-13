@@ -1,4 +1,5 @@
 'use client'
+
 import Block from '@/components/base/Block'
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
@@ -8,7 +9,6 @@ import { FormRadio } from '@/components/form/Radio'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { getOrganizationUsers } from '@/db/organization'
-import { isAdmin } from '@/services/permissions/user'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
@@ -17,7 +17,7 @@ import { Export } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { SyntheticEvent, useState } from 'react'
+import { useState } from 'react'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import ExportCheckbox from './ExportCheckbox'
 import styles from './Form.module.css'
@@ -32,19 +32,7 @@ const NewStudyForm = ({ user, users, form }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.new')
   const tLevel = useTranslations('level')
-  const tRights = useTranslations('study.rights.new')
   const [error, setError] = useState('')
-  const [disabled, setDisabled] = useState(false)
-
-  const onValidatorChange = async (_: SyntheticEvent, value: string | null) => {
-    setDisabled(false)
-    if (value) {
-      const targetUser = users.find((user) => user.email === value)
-      if (targetUser && isAdmin(targetUser.role)) {
-        setDisabled(true)
-      }
-    }
-  }
 
   const onSubmit = async (command: CreateStudyCommand) => {
     const result = await createStudyCommand(command)
@@ -73,8 +61,6 @@ const NewStudyForm = ({ user, users, form }: Props) => {
           options={users.map((user) => user.email)}
           name="validator"
           label={t('validator')}
-          onInputChange={onValidatorChange}
-          helperText={disabled ? tRights('validation.adminValidator') : ''}
         />
         <div className={styles.dates}>
           <FormDatePicker control={form.control} translation={t} name="startDate" label={t('start')} />
@@ -121,12 +107,7 @@ const NewStudyForm = ({ user, users, form }: Props) => {
             </FormControl>
           )}
         />
-        <LoadingButton
-          type="submit"
-          disabled={disabled}
-          loading={form.formState.isSubmitting}
-          data-testid="new-study-create-button"
-        >
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
           {t('create')}
         </LoadingButton>
         {error && <p>{t(`error.${error}`)}</p>}

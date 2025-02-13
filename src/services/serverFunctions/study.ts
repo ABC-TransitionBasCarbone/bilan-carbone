@@ -48,6 +48,7 @@ import {
   canCreateStudy,
   canDeleteStudy,
 } from '../permissions/study'
+import { isAdmin } from '../permissions/user'
 import { subPostsByPost } from '../posts'
 import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
@@ -87,7 +88,7 @@ export const createStudyCommand = async ({
     }
 
     rights.push({
-      role: StudyRole.Editor,
+      role: isAdmin(session.user.role) ? StudyRole.Validator : StudyRole.Editor,
       userId: session.user.id,
     })
     rights.push({
@@ -476,7 +477,7 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   }
   const bucketDelete = await deleteFileFromBucket(document.bucketKey)
   if (bucketDelete) {
-    deleteDocument(document.id)
+    await deleteDocument(document.id)
   }
 }
 

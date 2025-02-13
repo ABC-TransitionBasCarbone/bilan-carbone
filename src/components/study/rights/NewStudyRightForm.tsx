@@ -6,7 +6,6 @@ import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
 import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
-import { isAdmin } from '@/services/permissions/user'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
 import { checkLevel } from '@/services/study'
@@ -33,7 +32,6 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   const tRole = useTranslations('study.role')
 
   const [error, setError] = useState('')
-  const [disabled, setDisabled] = useState(false)
   const [readerOnly, setReaderOnly] = useState(false)
   const [otherOrganization, setOtherOrganization] = useState(false)
 
@@ -48,20 +46,14 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   })
 
   const onEmailChange = (_: SyntheticEvent, value: string | null) => {
-    setDisabled(false)
     form.setValue('email', value || '')
     if (value) {
       const organizationUser = users.find((user) => user.email === value)
-      if (organizationUser && isAdmin(organizationUser.role)) {
-        setDisabled(true)
-        setError(t('validation.adminValidator'))
+      if (!organizationUser || checkLevel(organizationUser.level, study.level)) {
+        setReaderOnly(false)
       } else {
-        if (!organizationUser || checkLevel(organizationUser.level, study.level)) {
-          setReaderOnly(false)
-        } else {
-          setReaderOnly(true)
-          form.setValue('role', StudyRole.Reader)
-        }
+        setReaderOnly(true)
+        form.setValue('role', StudyRole.Reader)
       }
     }
   }
@@ -139,12 +131,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
             </MenuItem>
           ))}
         </FormSelect>
-        <LoadingButton
-          type="submit"
-          loading={form.formState.isSubmitting}
-          disabled={disabled}
-          data-testid="study-rights-create-button"
-        >
+        <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-rights-create-button">
           {t('create')}
         </LoadingButton>
         {error && <p data-testid="study-rights-create-error">{error}</p>}
