@@ -1,18 +1,16 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
+import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import styles from './StudyRights.module.css'
 
 interface Props {
   study: FullStudy
@@ -92,14 +90,9 @@ const StudyContributorsTable = ({ study, user, userRoleOnStudy }: Props) => {
     <>
       <Block
         title={t('title')}
-        icon={
-          <HelpIcon
-            className={styles.helpIcon}
-            onClick={() => setDisplayRoles(!displayRoles)}
-            label={tRole('information')}
-          />
-        }
+        icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tRole('information')} />}
         expIcon
+        iconPosition="after"
         actions={
           isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
             ? [
@@ -136,21 +129,15 @@ const StudyContributorsTable = ({ study, user, userRoleOnStudy }: Props) => {
           </tbody>
         </table>
       </Block>
-      <Dialog
+      <Modal
         open={displayRoles}
-        aria-labelledby="study-contributor-role-title"
-        aria-describedby="study-contributor-role-description"
+        label="study-contributor"
+        title={tRole('information')}
+        onClose={() => setDisplayRoles(false)}
+        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tRole('close') }]}
       >
-        <DialogTitle id="study-contributor-role-title">{tRole('information')}</DialogTitle>
-        <DialogContent>
-          <p className="mb-2">{tRole('description')}</p>
-        </DialogContent>
-        <DialogActions>
-          <Button data-testid="study-contributor-role-close" onClick={() => setDisplayRoles(false)}>
-            {tRole('close')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <p className="mb-2">{tRole('description')}</p>
+      </Modal>
     </>
   )
 }

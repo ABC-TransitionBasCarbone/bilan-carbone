@@ -1,9 +1,9 @@
 'use client'
 
-import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
+import Modal from '@/components/modals/Modal'
 import { OrganizationWithSites } from '@/db/user'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
@@ -13,7 +13,6 @@ import {
 import { findStudiesWithSites } from '@/services/serverFunctions/study'
 import { displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -83,42 +82,40 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
         {t('edit')}
       </LoadingButton>
       {error && <p>{error}</p>}
-      <Dialog
+      <Modal
         open={!!sitesOnError.authorizedStudySites.length || !!sitesOnError.unauthorizedStudySites.length}
-        aria-labelledby="delete-site-with-studies-dialog-title"
-        aria-describedby="delete-site-with-studies-dialog-description"
+        label="delete-site-with-studies"
+        title={t('title')}
+        onClose={() => setSitesOnError(emptySitesOnError)}
+        actions={[
+          { actionType: 'button', onClick: () => setSitesOnError(emptySitesOnError), children: tStudySites('close') },
+        ]}
       >
-        <DialogTitle id="delete-site-with-studies-dialog-title">{tStudySites('title')}</DialogTitle>
-        <DialogContent>
-          <div id="delete-site-with-studies-dialog-description" className="flex-col">
-            {tStudySites('description')}
-            <ul>
-              {sitesOnError &&
-                sitesOnError.authorizedStudySites.map((studySite) => (
-                  <li key={studySite.id}>
-                    {tStudySites.rich('existingSite', {
-                      name: () =>
-                        `${studySite.site.name}${studySite.site.organization.isCR ? ` (${studySite.site.organization.name})` : ''}`,
-                      link: () => <Link href={`/etudes/${studySite.studyId}/perimetre`}>{studySite.study.name}</Link>,
-                    })}
-                  </li>
-                ))}
-              {sitesOnError &&
-                sitesOnError.unauthorizedStudySites.map((studySite) => (
-                  <li key={studySite.site.name}>
-                    {tStudySites('existingUnauthorizedSite', {
-                      name: `${studySite.site.name}${studySite.site.organization.isCR ? ` (${studySite.site.organization.name})` : ''}`,
-                      count: studySite.count,
-                    })}
-                  </li>
-                ))}
-            </ul>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setSitesOnError(emptySitesOnError)}>{tStudySites('close')}</Button>
-        </DialogActions>
-      </Dialog>
+        <div id="delete-site-with-studies-modale-description" className="flex-col">
+          {tStudySites('description')}
+          <ul>
+            {sitesOnError &&
+              sitesOnError.authorizedStudySites.map((studySite) => (
+                <li key={studySite.id}>
+                  {tStudySites.rich('existingSite', {
+                    name: () =>
+                      `${studySite.site.name}${studySite.site.organization.isCR ? ` (${studySite.site.organization.name})` : ''}`,
+                    link: () => <Link href={`/etudes/${studySite.studyId}/perimetre`}>{studySite.study.name}</Link>,
+                  })}
+                </li>
+              ))}
+            {sitesOnError &&
+              sitesOnError.unauthorizedStudySites.map((studySite) => (
+                <li key={studySite.site.name}>
+                  {tStudySites('existingUnauthorizedSite', {
+                    name: `${studySite.site.name}${studySite.site.organization.isCR ? ` (${studySite.site.organization.name})` : ''}`,
+                    count: studySite.count,
+                  })}
+                </li>
+              ))}
+          </ul>
+        </div>
+      </Modal>
     </Form>
   )
 }

@@ -1,12 +1,18 @@
 import { Select as MUISelect, SelectProps } from '@mui/material'
+import IconLabel from './IconLabel'
 
-export const Select = ({ name, label, value, onChange, ...selectProps }: SelectProps) => {
+interface Props {
+  icon?: React.ReactNode
+  iconPosition?: 'before' | 'after'
+}
+
+export const Select = ({ name, value, onChange, label, icon, iconPosition, ...selectProps }: Props & SelectProps) => {
   return (
     <>
       {label && (
-        <span id={`${name}-select-label}`} className="inputLabel bold">
-          {label}
-        </span>
+        <IconLabel icon={icon} iconPosition={iconPosition} className="mb-2">
+          <span className="inputLabel bold">{label}</span>
+        </IconLabel>
       )}
       <MUISelect
         {...selectProps}

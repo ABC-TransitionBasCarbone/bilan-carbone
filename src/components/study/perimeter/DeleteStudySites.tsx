@@ -1,7 +1,6 @@
 'use client'
 
-import Button from '@/components/base/Button'
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import Modal from '@/components/modals/Modal'
 import { useTranslations } from 'next-intl'
 
 interface Props {
@@ -16,24 +15,23 @@ const DeleteStudySite = ({ open, confirmDeletion, cancelDeletion, deleting }: Pr
 
   return (
     <>
-      <Dialog
+      <Modal
         open={open}
-        aria-labelledby="delete-study-site-dialog-title"
-        aria-describedby="delete-study-site-dialog-description"
+        label="delete-study-site"
+        title={t('title', { count: deleting })}
+        onClose={cancelDeletion}
+        actions={[
+          { actionType: 'button', onClick: cancelDeletion, children: t('decline') },
+          {
+            actionType: 'button',
+            onClick: confirmDeletion,
+            children: t('accept'),
+            ['data-testid']: 'delete-study-site-modale-accept',
+          },
+        ]}
       >
-        <DialogTitle id="delete-study-site-dialog-title">{t('title', { count: deleting })}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="delete-study-site-dialog-description">
-            {t('description', { count: deleting })}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={cancelDeletion}>{t('decline')}</Button>
-          <Button onClick={confirmDeletion} data-testid="delete-study-site-dialog-accept">
-            {t('accept')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {t('description', { count: deleting })}
+      </Modal>
     </>
   )
 }

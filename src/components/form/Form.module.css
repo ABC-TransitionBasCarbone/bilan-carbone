@@ -1,0 +1,11 @@
+.gapped {
+  gap: 0.25em;
+}
+
+.icon {
+  height: 1.5rem;
+  svg {
+    height: 1.5rem;
+    width: auto;
+  }
+}

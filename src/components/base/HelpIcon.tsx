@@ -8,7 +8,7 @@ interface Props {
   label: string
 }
 
-const Help = ({ className, onClick, label }: Props) => (
+const HelpIcon = ({ className, onClick, label }: Props) => (
   <HelpOutlineIcon
     className={classNames(styles.helpIcon, className)}
     onClick={onClick}
@@ -17,4 +17,4 @@ const Help = ({ className, onClick, label }: Props) => (
   />
 )
 
-export default Help
+export default HelpIcon

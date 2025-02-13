@@ -1,18 +1,16 @@
 'use client'
 
 import Block from '@/components/base/Block'
-import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
+import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import SelectStudyRole from './SelectStudyRole'
-import styles from './StudyRights.module.css'
 
 interface Props {
   user: User
@@ -70,13 +68,8 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
     <>
       <Block
         title={t('title')}
-        icon={
-          <HelpIcon
-            className={styles.helpIcon}
-            onClick={() => setDisplayRoles(!displayRoles)}
-            label={tStudyRole('guide')}
-          />
-        }
+        icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tStudyRole('guide')} />}
+        iconPosition="after"
         expIcon
         actions={
           isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
@@ -114,21 +107,19 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
           </tbody>
         </table>
       </Block>
-      <Dialog open={displayRoles} aria-labelledby="study-roles-title" aria-describedby="study-roles-description">
-        <DialogTitle id="study-roles-title">{tStudyRole('guide')}</DialogTitle>
-        <DialogContent>
-          {Object.keys(StudyRole).map((role) => (
-            <p key={role} className="mb-2">
-              <b>{tStudyRole(role)} :</b> {tStudyRole(`${role}_description`)}
-            </p>
-          ))}
-        </DialogContent>
-        <DialogActions>
-          <Button data-testid="study-roles-close" onClick={() => setDisplayRoles(false)}>
-            {tStudyRole('close')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Modal
+        open={displayRoles}
+        label="study-roles"
+        title={tStudyRole('guide')}
+        onClose={() => setDisplayRoles(false)}
+        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tStudyRole('close') }]}
+      >
+        {Object.keys(StudyRole).map((role) => (
+          <p key={role} className="mb-2">
+            <b>{tStudyRole(role)} :</b> {tStudyRole(`${role}_description`)}
+          </p>
+        ))}
+      </Modal>
     </>
   )
 }

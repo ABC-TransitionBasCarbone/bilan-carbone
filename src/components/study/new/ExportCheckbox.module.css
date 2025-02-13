@@ -5,6 +5,11 @@
   align-items: center;
 }
 
-.select {
-  width: 10rem;
+.checkbox {
+  padding-left: 0 !important;
+}
+
+.field {
+  width: 15rem;
+  margin: 0 !important;
 }

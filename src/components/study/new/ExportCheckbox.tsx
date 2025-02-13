@@ -1,4 +1,5 @@
-import { Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select } from '@mui/material'
+import { Select } from '@/components/base/Select'
+import { Checkbox, FormControl, FormControlLabel, MenuItem } from '@mui/material'
 import { ControlMode, Export } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction } from 'react'
@@ -17,7 +18,8 @@ const ExportCheckbox = ({ id, values, setValues }: Props) => {
   return (
     <div className={styles.container}>
       <FormControlLabel
-        control={<Checkbox disabled={id !== Export.Beges} />}
+        className={styles.field}
+        control={<Checkbox className={styles.checkbox} disabled={id !== Export.Beges} />}
         label={
           <span>
             {tExport(id)}
@@ -28,15 +30,11 @@ const ExportCheckbox = ({ id, values, setValues }: Props) => {
         onChange={(_, checked) => setValues({ ...values, [id]: checked ? ControlMode.Operational : false })}
       />
       {values[id] && (
-        <div className={styles.select}>
+        <div className={styles.field}>
           <FormControl fullWidth>
-            <InputLabel id={`${id}-label`}>{t('control')} </InputLabel>
             <Select
               value={values[id]}
               onChange={(event) => setValues({ ...values, [id]: event.target.value as ControlMode })}
-              label={t('control')}
-              labelId={`${id}-label`}
-              disabled={!values[id]}
             >
               {Object.keys(ControlMode).map((key) => (
                 <MenuItem key={key} value={key} disabled={key !== ControlMode.Operational}>
