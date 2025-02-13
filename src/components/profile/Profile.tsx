@@ -17,7 +17,11 @@ import { FormTextField } from '../form/TextField'
 import LocaleSelector from './LocaleSelector'
 import styles from './Profile.module.css'
 
-const Profile = () => {
+interface Props {
+  version: string
+}
+
+const Profile = ({ version }: Props) => {
   const { data: session, update: updateSession } = useSession()
 
   const t = useTranslations('profile')
@@ -116,6 +120,7 @@ const Profile = () => {
             {t('legalNotices')}
           </Link>
         </div>
+        <span className="mb1">{t('version') + version}</span>
       </div>
       <div>
         <div className="flex-col justify-end">
