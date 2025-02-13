@@ -1,7 +1,6 @@
 'use server'
 
-import { getLocale } from '@/i18n/locale'
-import { getEmissionFactors } from '@/services/emissionFactors'
+import { getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import EmissionFactorsTable from './Table'
 
 interface Props {
@@ -9,8 +8,7 @@ interface Props {
 }
 
 const EmissionFactors = async ({ userOrganizationId }: Props) => {
-  const locale = await getLocale()
-  const emissionFactors = await getEmissionFactors(locale)
+  const emissionFactors = await getEmissionFactors()
 
   return <EmissionFactorsTable emissionFactors={emissionFactors} userOrganizationId={userOrganizationId} />
 }

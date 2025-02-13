@@ -1,6 +1,6 @@
 import { gazKeys } from '@/constants/emissions'
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { subPostsByPost } from '@/services/posts'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getQualityRating, qualityKeys } from '@/services/uncertainty'
 import { Import } from '@prisma/client'
 import classNames from 'classnames'

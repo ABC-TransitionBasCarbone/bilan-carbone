@@ -1,8 +1,8 @@
 import { FullStudy } from '@/db/study'
 import { EmissionSourceCaracterisation, Import, StudyEmissionSource, SubPost } from '@prisma/client'
+import { wasteEmissionFactors } from '../constants/wasteEmissionFactors'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
-import { wasteEmissionFactors } from './serverFunctions/wasteEmissionFactors'
 import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
 
 export const getEmissionSourceCompletion = (

@@ -11,11 +11,14 @@ import { isAdmin } from './user'
 export const isAdminOnStudyOrga = (user: User, study: Pick<Study, 'organizationId'>) =>
   user.organizationId === study.organizationId && isAdmin(user.role)
 
-export const canReadStudy = async (
-  user: User | UserWithAllowedStudies,
-  study: Pick<Study, 'id' | 'organizationId' | 'isPublic'>,
-) => {
+export const canReadStudy = async (user: User | UserWithAllowedStudies, studyId: string) => {
   if (!user) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, user.organizationId)
+
+  if (!study) {
     return false
   }
 
@@ -54,7 +57,7 @@ export const filterAllowedStudies = async (user: User, studies: Study[]) => {
   const userWithAllowedStudies = await getUserByEmailWithAllowedStudies(user.email)
 
   const allowedStudies = await Promise.all(
-    studies.map(async (study) => ((await canReadStudy(userWithAllowedStudies, study)) ? study : null)),
+    studies.map(async (study) => ((await canReadStudy(userWithAllowedStudies, study.id)) ? study : null)),
   )
   return allowedStudies.filter((study) => study !== null)
 }
@@ -231,7 +234,7 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
 export type StudyWithoutDetail = ReturnType<typeof filterStudyDetail>
 
 export const canReadStudyDetail = async (user: User, study: FullStudy) => {
-  const studyRight = await canReadStudy(user, study)
+  const studyRight = await canReadStudy(user, study.id)
   if (!studyRight) {
     return false
   }

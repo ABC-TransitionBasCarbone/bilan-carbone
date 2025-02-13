@@ -1,10 +1,9 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { getEmissionsFactor } from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { getUserRoleOnStudy } from '@/utils/study'
 import { EmissionFactorStatus } from '@prisma/client'
 import classNames from 'classnames'
@@ -42,7 +41,7 @@ const SubPosts = ({
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorWithMetaData[]>([])
   useEffect(() => {
     const fetchData = async () => {
-      const emissionFactors = await getEmissionsFactor()
+      const emissionFactors = await getEmissionFactors(study.id)
       setEmissionFactors(
         emissionFactors.filter((emissionFactor) => emissionFactor.status !== EmissionFactorStatus.Archived),
       )

@@ -1,7 +1,7 @@
 'use client'
 import { FullStudy } from '@/db/study'
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { Post, subPostsByPost } from '@/services/posts'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'

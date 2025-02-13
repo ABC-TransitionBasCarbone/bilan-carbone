@@ -28,7 +28,7 @@ const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserProps 
     }
 
     if (!(await canReadStudyDetail(props.user, study))) {
-      if (!(await canReadStudy(props.user, study))) {
+      if (!(await canReadStudy(props.user, study.id))) {
         return <NotFound />
       }
       return redirect(`/etudes/${study.id}/contributeur`)
