@@ -284,8 +284,7 @@
         "validation": {
           "email": "Please use a valid email",
           "emailRequired": "Please enter an email",
-          "role": "Please select a role",
-          "adminValidator": "This person est administrator thus it is already validator of all the studies of this organization"
+          "role": "Please select a role"
         },
         "dialog": {
           "title": "Are you sure you want to add this person to your study?",

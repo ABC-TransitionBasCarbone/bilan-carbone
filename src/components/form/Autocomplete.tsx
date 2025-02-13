@@ -28,6 +28,7 @@ export const FormAutocomplete = <T extends FieldValues>({
           {...autocompleteProps}
           onChange={(_, option) => onChange(typeof option === 'string' ? option : option?.value)}
           value={value}
+          clearIcon={null}
           renderInput={(params) => (
             <TextField
               {...params}
