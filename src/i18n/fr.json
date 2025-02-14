@@ -140,7 +140,7 @@
     "email": "Mail pour activer votre compte",
     "validate": "Valider",
     "Not authorized": "Vous n'êtes pas adhérent ou pas formé. Si vous pensez qu'il s'agit d'une erreur, merci de contacter le <link>support</link>.",
-    "success": "Vous avez activé votre compte avec succès ! Vous allez recevoir un e-mail pour initialiser votre mot de passe."
+    "success": "Vous allez recevoir un mail pour finaliser l'activation de votre compte."
   },
   "navigation": {
     "factors": "Facteurs d'émission",

@@ -31,13 +31,21 @@ export const sendResetPassword = async (toEmail: string, token: string) => {
   return send([toEmail], 'Mot de passe oublié', html)
 }
 
-export const sendNewUserEmail = async (toEmail: string, token: string) => {
-  const html = await getHtml('new-user', { link: `${process.env.NEXTAUTH_URL}/reset-password/${token}` })
+export const sendNewUserEmail = async (toEmail: string, token: string, creatorName: string, userName: string) => {
+  const html = await getHtml('new-user', {
+    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    userName,
+    creatorName,
+  })
   return send([toEmail], 'Vous avez été invité au BC+', html)
 }
 
 export const sendActivationEmail = async (toEmail: string, token: string) => {
-  const html = await getHtml('activate-account', { link: `${process.env.NEXTAUTH_URL}/reset-password/${token}` })
+  const html = await getHtml('activate-account', {
+    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+  })
   return send([toEmail], 'Vous avez activé votre compte sur le BC+', html)
 }
 
