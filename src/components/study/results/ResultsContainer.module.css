@@ -1,12 +1,8 @@
 .studyName {
   text-align: center;
   gap: 0.5rem;
-  color: green;
-}
-
-.studyLink {
+  color: var(--green-500);
   text-decoration: none;
-  color: green;
 }
 
 .container {
