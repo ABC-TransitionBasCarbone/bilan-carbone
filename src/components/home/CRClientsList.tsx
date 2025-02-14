@@ -3,7 +3,6 @@ import { Organization } from '@prisma/client'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
-import Block from '../base/Block'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import Organizations from '../organization/Organizations'
@@ -15,9 +14,7 @@ interface Props {
 const CRClientsList = async ({ organizations }: Props) => {
   const t = await getTranslations('organization')
   return organizations.length ? (
-    <Block>
-      <Organizations organizations={organizations} />
-    </Block>
+    <Organizations organizations={organizations} />
   ) : (
     <div className="justify-center">
       <Box className={classNames(styles.firstClientCard, 'flex-col align-center')}>
