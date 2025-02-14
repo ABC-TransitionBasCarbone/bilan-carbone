@@ -208,6 +208,8 @@
   "study": {
     "create": "New study",
     "myStudies": "My studies",
+    "createFirstStudy": "Create my first Bilan Carbone®",
+    "firstStudyMessage": "It's time to get started! We invite you to create your first bilan.",
     "navigation": {
       "homepage": "Homepage",
       "framing": "Framing",

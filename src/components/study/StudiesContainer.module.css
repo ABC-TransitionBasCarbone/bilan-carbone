@@ -1,10 +1,4 @@
-.title {
-  font-size: 1.5rem;
-  font-weight: bold;
+.firstStudyCard {
+  width: 24rem;
   gap: 1rem;
-  color: var(--primary-60);
-}
-
-.button {
-  justify-content: flex-end;
 }

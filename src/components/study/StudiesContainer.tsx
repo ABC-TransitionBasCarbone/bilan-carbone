@@ -1,37 +1,41 @@
-import NewspaperIcon from '@mui/icons-material/Newspaper'
+import { getStudiesByUser, getStudiesByUserAndOrganization } from '@/db/study'
+import { filterAllowedStudies } from '@/services/permissions/study'
+import AddIcon from '@mui/icons-material/Add'
 import classNames from 'classnames'
 import { User } from 'next-auth'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
+import Image from 'next/image'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
-
 interface Props {
   user: User
   organizationId?: string
 }
 
-const StudiesContainer = ({ user, organizationId }: Props) => {
-  const t = useTranslations('study')
-  return (
-    <Box data-testid="home-studies" className="flex-col grow">
-      <div data-testid="studies-title" className={classNames(styles.title, 'flex-cc pb1')}>
-        <NewspaperIcon /> <h2>{t('myStudies')}</h2>
-      </div>
-      {(user.organizationId || organizationId) && (
-        <div className={classNames(styles.button, 'w100 flex')}>
-          <LinkButton
-            data-testid="new-study"
-            className="mb1"
-            href={`${organizationId ? `/organisations/${organizationId}` : ''}/etudes/creer`}
-          >
-            {t('create')}
-          </LinkButton>
-        </div>
-      )}
-      <Studies user={user} organizationId={organizationId} />
-    </Box>
+const StudiesContainer = async ({ user, organizationId }: Props) => {
+  const t = await getTranslations('study')
+
+  const studies = organizationId
+    ? await getStudiesByUserAndOrganization(user, organizationId)
+    : await getStudiesByUser(user)
+  const allowedStudies = await filterAllowedStudies(user, studies)
+
+  return allowedStudies.length ? (
+    <Studies studies={allowedStudies} />
+  ) : (
+    <div className="justify-center">
+      <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
+        <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />
+        <h5>{t('createFirstStudy')}</h5>
+        <p>{t('firstStudyMessage')}</p>
+        <LinkButton data-testid="new-organization" className="mb1" href="/etudes/creer">
+          <AddIcon />
+          {t('createFirstStudy')}
+        </LinkButton>
+      </Box>
+    </div>
   )
 }
 

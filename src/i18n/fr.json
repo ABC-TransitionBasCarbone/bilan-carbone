@@ -208,6 +208,8 @@
   "study": {
     "create": "Nouvelle étude",
     "myStudies": "Mes études",
+    "createFirstStudy": "Créer mon premier Bilan Carbone®",
+    "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitions à créer votre premier bilan.",
     "navigation": {
       "homepage": "Accueil",
       "framing": "Cadrage",
