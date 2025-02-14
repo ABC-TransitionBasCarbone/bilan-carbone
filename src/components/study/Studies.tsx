@@ -19,10 +19,12 @@ const Studies = async ({ studies }: Props) => {
   return (
     <Block
       title={t('myStudies')}
+      data-testid="home-studies"
       actions={[
         {
           actionType: 'link',
           href: '/etudes/creer',
+          ['data-testid']: 'new-study',
           children: (
             <>
               <AddIcon />
@@ -32,7 +34,7 @@ const Studies = async ({ studies }: Props) => {
         },
       ]}
     >
-      <Box data-testid="home-studies" className="flex-col grow">
+      <Box className="flex-col grow">
         {studies.length && (
           <ul className={classNames(styles.list, 'flex-col')}>
             {studies.map((study) => (

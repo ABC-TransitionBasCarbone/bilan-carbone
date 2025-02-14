@@ -14,8 +14,7 @@ describe('Home page', () => {
 
     cy.getByTestId('home-studies').scrollIntoView()
     cy.getByTestId('home-studies').should('be.visible')
-    cy.getByTestId('studies-title').should('be.visible')
-    cy.getByTestId('studies-title').contains('Mes études')
+    cy.getByTestId('home-studies').contains('Mes Bilan Carbone®')
   })
 
   it('Should display the list of actualities as a CR user', () => {
