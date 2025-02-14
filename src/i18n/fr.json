@@ -4,7 +4,7 @@
   },
   "exports": {
     "title": "Exports :",
-    "consolidated": "Bilan Carbone ®",
+    "consolidated": "Bilan Carbone®",
     "Beges": "Bilan GES Reglementaire",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069"
@@ -226,7 +226,7 @@
       "validator": "Email du validateur",
       "start": "Début",
       "end": "Fin",
-      "level": "Type de Bilan Carbone ®",
+      "level": "Type de Bilan Carbone®",
       "exports": "Exports",
       "control": "Mode de contrôle",
       "CapitalShare": "Part de capital",
@@ -239,15 +239,15 @@
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Email du validateur",
-        "validatorEmailDescription": "Pour chaque Bilan Carbone ®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\" (lien vers le menu paramètre).",
-        "type": "Type de Bilan Carbone ®",
-        "typeDescription": "La nouvelle version de la méthode Bilan Carbone ® introduit trois niveaux de maturité pour les Bilan Carbone ® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
+        "validatorEmailDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\" (lien vers le menu paramètre).",
+        "type": "Type de Bilan Carbone®",
+        "typeDescription": "La nouvelle version de la méthode Bilan Carbone® introduit trois niveaux de maturité pour les Bilan Carbone® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
         "visibility": "Visibilité de l'étude",
-        "visibilityDescription": "Les résultats sont par défaut restitués au format Bilan Carbone ®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
+        "visibilityDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
         "exports": "Exports",
-        "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone ®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
+        "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
         "control": "Mode de contrôle",
-        "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone ®) les émissions vont se ventiler. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émissions varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
+        "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone®) les émissions vont se ventiler. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émissions varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
         "close": "Fermer"
       },
       "validation": {
@@ -256,7 +256,7 @@
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
-        "level": "Veuillez selectionner le type de Bilan Carbone ®"
+        "level": "Veuillez selectionner le type de Bilan Carbone®"
       },
       "error": {
         "default": "Une erreur s'est produite ...",
@@ -644,8 +644,8 @@
     "ADMIN_description_CR": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des clients et des études (qu'elles soient publiques ou privées).",
     "GESTIONNAIRE_description": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit sur les études.",
     "GESTIONNAIRE_description_CR": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit sur les clients et les études.",
-    "DEFAULT_description": "Un collaborateur est une personne formée à la méthode Bilan Carbone ®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
-    "DEFAULT_description_CR": "Un collaborateur est une personne formée à la méthode Bilan Carbone ®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
+    "DEFAULT_description": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
+    "DEFAULT_description_CR": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
     "close": "Fermer",
     "guide": "Guide des rôles"
   },
@@ -879,7 +879,7 @@
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 étude à laquelle} other {#  études auxquelles}} vous n'avez pas accès"
     },
     "card": {
-      "method": "Consulter la méthodologie Bilan Carbone ®",
+      "method": "Consulter la méthodologie Bilan Carbone®",
       "update": "Modifier mes informations"
     }
   },
@@ -984,8 +984,8 @@
     "step1": {
       "name": "Nom de mon organisation",
       "role": "Mon rôle au sein de l'organisation",
-      "adminDescription": "Vous avez été formé au Bilan Carbone ® : Le rôle qui vous a été attribué est celui d'administrateur de votre organisation.",
-      "gestionnaireDescription": "Vous n'avez pas été formé au Bilan Carbone ® : Le rôle qui vous a été attribué est celui de gestionnaire de votre organisation."
+      "adminDescription": "Vous avez été formé au Bilan Carbone® : Le rôle qui vous a été attribué est celui d'administrateur de votre organisation.",
+      "gestionnaireDescription": "Vous n'avez pas été formé au Bilan Carbone® : Le rôle qui vous a été attribué est celui de gestionnaire de votre organisation."
     },
     "step2": {
       "addCollaborator": "Ajouter un collaborateur",
@@ -993,8 +993,8 @@
       "emailPlaceholder": "Ajouter une adresse email ici",
       "role": "Rôle",
       "adminDescription": "Possède l'ensemble des droits existants",
-      "collaboratorDescription": "Créé et complète des Bilan Carbone ®",
-      "crCollaboratorDescription": "Créé des clients et réalise leur Bilan Carbone ®",
+      "collaboratorDescription": "Créé et complète des Bilan Carbone®",
+      "crCollaboratorDescription": "Créé des clients et réalise leur Bilan Carbone®",
       "gestionnaireDescription": "Gère le compte de l'organisation mais n'a pas accès aux études",
       "validation": {
         "email": "Adresse email invalide",

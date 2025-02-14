@@ -78,7 +78,7 @@ const LegalNotices = () => {
           </a>
           .
         </p>
-        <div className={styles.section}>La marque Bilan Carbone ®</div>
+        <div className={styles.section}>La marque Bilan Carbone®</div>
         <p>
           La marque Bilan Carbone® est une marque déposée en France depuis le 2 décembre 2003, enregistrée sous le
           numéro 3260464.
