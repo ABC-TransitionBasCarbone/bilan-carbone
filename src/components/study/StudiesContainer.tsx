@@ -24,7 +24,7 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
 
   return studies.length ? (
     <>
-      {user.organizationId && (
+      {user.organizationId && !organizationId && (
         <Suspense>
           <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
         </Suspense>
