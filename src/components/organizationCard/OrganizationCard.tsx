@@ -37,6 +37,7 @@ const OrganizationCard = ({ user, organizations }: Props) => {
         <div>
           <LinkButton
             className="align-end"
+            color="secondary"
             target="_blank"
             rel="noreferrer noopener"
             href="https://www.bilancarbone-methode.com/"
