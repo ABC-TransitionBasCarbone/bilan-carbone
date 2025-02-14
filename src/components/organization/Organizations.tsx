@@ -46,10 +46,12 @@ const Organizations = ({ organizations }: Props) => {
   return (
     <Block
       title={t('myOrganizations')}
+      data-testid="home-organizations"
       actions={[
         {
           actionType: 'link',
           href: '/organisations/creer',
+          ['data-testid']: 'new-organization',
           children: t('create'),
         },
       ]}
