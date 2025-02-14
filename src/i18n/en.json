@@ -211,6 +211,8 @@
     "createFirstStudy": "Create my first Bilan Carbone®",
     "seeResults": "See results",
     "firstStudyMessage": "It's time to get started! We invite you to create your first bilan.",
+    "validatedSources": "<data>{validated} / {total}</data> Validated emissions sources",
+    "see": "See my Bilan Carbone®",
     "navigation": {
       "homepage": "Homepage",
       "framing": "Framing",

@@ -3,11 +3,10 @@
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { Study } from '@prisma/client'
-import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
-import Link from '../base/Link'
 import styles from './Studies.module.css'
+import StudyCard from './StudyCard'
 
 interface Props {
   studies: Study[]
@@ -27,6 +26,7 @@ const Studies = async ({ studies, canAddStudy }: Props) => {
               {
                 actionType: 'link',
                 href: '/etudes/creer',
+                color: 'secondary',
                 ['data-testid']: 'new-study',
                 children: (
                   <>
@@ -41,13 +41,9 @@ const Studies = async ({ studies, canAddStudy }: Props) => {
     >
       <Box className="flex-col grow">
         {studies.length && (
-          <ul className={classNames(styles.list, 'flex-col')}>
+          <ul className={styles.grid}>
             {studies.map((study) => (
-              <li key={study.id}>
-                <Link href={`/etudes/${study.id}`} data-testid="study" className={styles.link}>
-                  {study.name}
-                </Link>
-              </li>
+              <StudyCard key={study.id} study={study} />
             ))}
           </ul>
         )}

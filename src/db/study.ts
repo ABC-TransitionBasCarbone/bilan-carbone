@@ -283,3 +283,18 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
       },
     },
   })
+
+export const getStudyValidatedEmissionsSources = async (studyId: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id: studyId },
+    select: { emissionSources: { select: { validated: true } } },
+  })
+
+  if (!study) {
+    return null
+  }
+  return {
+    total: study.emissionSources.length,
+    validated: study.emissionSources.filter((emissionSource) => emissionSource.validated).length,
+  }
+}

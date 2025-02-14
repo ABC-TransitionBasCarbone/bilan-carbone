@@ -1,0 +1,18 @@
+.card {
+  background-color: var(--organization-card-bg);
+  gap: 1rem;
+}
+
+.studyName {
+  text-decoration: none;
+  color: var(--green-500);
+  gap: 1rem;
+}
+
+.validated {
+  color: var(--orange-500);
+
+  &.success {
+    color: var(--green-500);
+  }
+}

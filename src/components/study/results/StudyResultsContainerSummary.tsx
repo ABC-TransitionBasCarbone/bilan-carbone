@@ -21,8 +21,8 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, withDepende
       {withDependencies === undefined && showTitle && (
         <div className="justify-between mb1">
           <div className={classNames(styles.studyName, 'align-center')}>
-            <Leaf />
-            <Link className={styles.studyLink} href={`/etudes/${study.id}`}>
+            <Link className={classNames(styles.studyName, 'align-center')} href={`/etudes/${study.id}`}>
+              <Leaf />
               {study.name}
             </Link>
           </div>
