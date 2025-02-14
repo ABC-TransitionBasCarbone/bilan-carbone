@@ -1,5 +1,6 @@
 'use server'
 
+import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
@@ -14,8 +15,23 @@ interface Props {
 
 const Studies = async ({ studies }: Props) => {
   const t = await getTranslations('study')
+
   return (
-    <Block title={t('myStudies')}>
+    <Block
+      title={t('myStudies')}
+      actions={[
+        {
+          actionType: 'link',
+          href: '/etudes/creer',
+          children: (
+            <>
+              <AddIcon />
+              {t('create')}
+            </>
+          ),
+        },
+      ]}
+    >
       <Box data-testid="home-studies" className="flex-col grow">
         {studies.length && (
           <ul className={classNames(styles.list, 'flex-col')}>

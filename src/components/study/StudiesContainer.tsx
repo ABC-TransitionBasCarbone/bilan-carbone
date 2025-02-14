@@ -5,8 +5,10 @@ import classNames from 'classnames'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
+import { Suspense } from 'react'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
+import ResultsContainerForUser from './results/ResultsContainerForUser'
 import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
 interface Props {
@@ -23,7 +25,14 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
   const allowedStudies = await filterAllowedStudies(user, studies)
 
   return allowedStudies.length ? (
-    <Studies studies={allowedStudies} />
+    <>
+      {user.organizationId && (
+        <Suspense>
+          <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
+        </Suspense>
+      )}
+      <Studies studies={allowedStudies} />
+    </>
   ) : (
     <div className="justify-center">
       <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>

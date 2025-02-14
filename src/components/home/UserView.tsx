@@ -35,11 +35,6 @@ const UserView = async ({ user }: Props) => {
       ) : (
         <Studies user={user} />
       )}
-      {/* {user.organizationId && (
-        <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
-        </Suspense>
-      )} */}
       <Actualities />
       {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
     </>
