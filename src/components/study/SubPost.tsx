@@ -1,17 +1,12 @@
 import { FullStudy } from '@/db/study'
 import { caracterisationsBySubPost } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
-import { Post } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
-import { downloadStudySubPosts } from '@/services/study'
-import DownloadIcon from '@mui/icons-material/Download'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
-import LoadingButton from '../base/LoadingButton'
+import { useMemo } from 'react'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
 import styles from './SubPosts.module.css'
@@ -27,7 +22,6 @@ type StudyWithoutDetailProps = {
 }
 
 interface Props {
-  post: Post
   subPost: SubPostEnum
   userRoleOnStudy: StudyRole | null
   emissionFactors: EmissionFactorWithMetaData[]
@@ -36,7 +30,6 @@ interface Props {
 }
 
 const SubPost = ({
-  post,
   subPost,
   withoutDetail,
   study,
@@ -46,12 +39,7 @@ const SubPost = ({
   studySite,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
-  const tExport = useTranslations('study.export')
-  const tCaracterisations = useTranslations('categorisations')
   const tPost = useTranslations('emissionFactors.post')
-  const tQuality = useTranslations('quality')
-  const tUnit = useTranslations('units')
-  const [downloading, setDownloading] = useState(false)
 
   const subPostEmissionFactors = useMemo(() => {
     return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost))
@@ -123,35 +111,6 @@ const SubPost = ({
           )}
         </AccordionDetails>
       </Accordion>
-      {!withoutDetail && (
-        <div className={classNames(styles.download, 'flex ml1')}>
-          <LoadingButton
-            aria-label={tExport('downloadSubPost', { name: subPost })}
-            title={tExport('downloadSubPost', { name: subPost })}
-            onClick={async () => {
-              setDownloading(true)
-              await downloadStudySubPosts(
-                study as FullStudy,
-                post,
-                subPost,
-                emissionSources,
-                subPostEmissionFactors,
-                tExport,
-                tCaracterisations,
-                tPost,
-                tQuality,
-                tUnit,
-              )
-              setDownloading(false)
-            }}
-            disabled={emissionSources.length === 0}
-            loading={downloading}
-            iconButton
-          >
-            <DownloadIcon />
-          </LoadingButton>
-        </div>
-      )}
     </div>
   )
 }

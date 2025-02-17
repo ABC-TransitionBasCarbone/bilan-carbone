@@ -62,7 +62,6 @@ const SubPosts = ({
         <SubPost
           emissionFactors={emissionFactors}
           emissionSources={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)}
-          post={post}
           subPost={subPost}
           key={subPost}
           userRoleOnStudy={userRoleOnStudy}
