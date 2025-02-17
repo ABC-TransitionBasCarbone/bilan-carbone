@@ -5,6 +5,13 @@
   align-items: stretch;
 }
 
+.hideSubRows {
+  grid-template-rows: 1fr;
+  grid-auto-rows: 0;
+  row-gap: 0;
+  overflow: hidden;
+}
+
 .link {
   font-size: 1.25rem;
 }

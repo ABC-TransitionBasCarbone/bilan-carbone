@@ -9,20 +9,18 @@ interface Props {
   organization: Organization
 }
 
-const OrganizationCard = ({ organization }: Props) => {
-  return (
-    <li data-testid="organization" className="flex">
-      <Box className={classNames(styles.card, 'flex grow')}>
-        <Link
-          href={`/organisations/${organization.id}`}
-          className={classNames(styles.link, 'flex-col align-center grow')}
-        >
-          <CorporateFareIcon />
-          <p className="grow align-center text-center bold">{organization.name}</p>
-        </Link>
-      </Box>
-    </li>
-  )
-}
+const OrganizationCard = ({ organization }: Props) => (
+  <li data-testid="organization" className="flex">
+    <Box className={classNames(styles.card, 'flex grow')}>
+      <Link
+        href={`/organisations/${organization.id}`}
+        className={classNames(styles.link, 'flex-col align-center grow')}
+      >
+        <CorporateFareIcon />
+        <p className="grow align-center text-center bold">{organization.name}</p>
+      </Link>
+    </Box>
+  </li>
+)
 
 export default OrganizationCard
