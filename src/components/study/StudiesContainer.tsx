@@ -13,9 +13,10 @@ import styles from './StudiesContainer.module.css'
 interface Props {
   user: User
   organizationId?: string
+  helpIcon?: boolean
 }
 
-const StudiesContainer = async ({ user, organizationId }: Props) => {
+const StudiesContainer = async ({ user, organizationId, helpIcon }: Props) => {
   const t = await getTranslations('study')
 
   const studies = organizationId
@@ -29,7 +30,7 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
           <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
         </Suspense>
       )}
-      <Studies studies={studies} canAddStudy={!!user.organizationId} />
+      <Studies studies={studies} canAddStudy={!!user.organizationId} helpIcon={helpIcon} />
     </>
   ) : user.organizationId ? (
     <div className="justify-center">
