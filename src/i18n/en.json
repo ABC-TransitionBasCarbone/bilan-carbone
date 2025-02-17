@@ -215,6 +215,7 @@
     "validatedOnly": "Validated emission sources",
     "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
     "close": "Close",
+    "selectSite": "Before filling in the details, choose a site",
     "see": "See my Bilan Carbone®",
     "navigation": {
       "homepage": "Homepage",
