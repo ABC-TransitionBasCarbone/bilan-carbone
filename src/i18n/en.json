@@ -211,6 +211,10 @@
     "seeResults": "See results",
     "firstStudyMessage": "It's time to get started! We invite you to create your first bilan.",
     "validatedSources": "<data>{validated} / {total}</data> Validated emissions sources",
+    "information": "Information",
+    "validatedOnly": "Validated emission sources",
+    "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
+    "close": "Close",
     "see": "See my Bilan Carbone®",
     "navigation": {
       "homepage": "Homepage",

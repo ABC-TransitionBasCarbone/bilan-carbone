@@ -4,6 +4,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { Study } from '@prisma/client'
 import { getTranslations } from 'next-intl/server'
+import { Suspense } from 'react'
 import Block from '../base/Block'
 import styles from './Studies.module.css'
 import StudyCard from './StudyCard'
@@ -11,9 +12,10 @@ import StudyCard from './StudyCard'
 interface Props {
   studies: Study[]
   canAddStudy: boolean
+  helpIcon?: boolean
 }
 
-const Studies = async ({ studies, canAddStudy }: Props) => {
+const Studies = async ({ studies, canAddStudy, helpIcon }: Props) => {
   const t = await getTranslations('study')
 
   return (
@@ -43,7 +45,9 @@ const Studies = async ({ studies, canAddStudy }: Props) => {
         {studies.length && (
           <ul className={styles.grid}>
             {studies.map((study) => (
-              <StudyCard key={study.id} study={study} />
+              <Suspense key={study.id}>
+                <StudyCard study={study} helpIcon={helpIcon} />
+              </Suspense>
             ))}
           </ul>
         )}

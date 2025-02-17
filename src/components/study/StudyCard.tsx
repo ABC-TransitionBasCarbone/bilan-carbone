@@ -6,13 +6,15 @@ import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
+import GlossaryIconModal from '../modals/GlossaryIconModal'
 import styles from './StudyCard.module.css'
 
 interface Props {
   study: Study
+  helpIcon?: boolean
 }
 
-const StudyCard = async ({ study }: Props) => {
+const StudyCard = async ({ study, helpIcon }: Props) => {
   const t = await getTranslations('study')
   const values = await getStudyValidatedEmissionsSources(study.id)
 
@@ -32,14 +34,27 @@ const StudyCard = async ({ study }: Props) => {
           {study.name}
         </div>
         <Box>
-          <p className="mb1">
+          <p className="mb1 align-center">
             {t.rich('validatedSources', {
               validated: values.validated,
               total: values.total,
               data: (children) => (
-                <span className={classNames(styles.validated, { [styles.success]: percent === 100 })}>{children}</span>
+                <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
+                  {children}
+                </span>
               ),
             })}
+            {helpIcon && (
+              <GlossaryIconModal
+                title="validatedOnly"
+                className="ml-2"
+                iconLabel="information"
+                label="study-card"
+                tModal="study"
+              >
+                {t('validatedOnlyDescription')}
+              </GlossaryIconModal>
+            )}
           </p>
           <LinearProgress
             variant="determinate"
