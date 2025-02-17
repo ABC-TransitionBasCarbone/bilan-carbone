@@ -31,7 +31,9 @@
 }
 .error {
   background-color: var(--error-40) !important;
+  border-color: var(--error-40) !important;
   &:hover {
     background-color: var(--error-60) !important;
+    border-color: var(--error-60) !important;
   }
 }

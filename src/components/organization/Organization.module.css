@@ -1,0 +1,9 @@
+.card {
+  background-color: var(--organization-card-bg);
+}
+
+.link {
+  text-decoration: none;
+  color: var(--primary-60);
+  gap: 1rem;
+}

@@ -98,8 +98,10 @@
     "team": "Team"
   },
   "actuality": {
-    "title": "News",
-    "noItems": "No news at the moment"
+    "title": "BC+ actualities",
+    "noItems": "No news at the moment",
+    "seeLess": "See less",
+    "seeMore": "See more"
   },
   "legalNotices": {
     "profile": "Return to profile"
@@ -237,15 +239,15 @@
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Validator email",
-        "validatorEmailDescription": "For each Bilan Carbone ®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu (link to the parameters menu).",
-        "type": "Type of Bilan Carbone ® assessment",
-        "typeDescription": "The new version of the Bilan Carbone ® method introduces three levels of maturity for organisations' Bilan Carbone ®. For more details, please consult <link>this page</link>.",
+        "validatorEmailDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu (link to the parameters menu).",
+        "type": "Type of Bilan Carbone® assessment",
+        "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for organisations' Bilan Carbone®. For more details, please consult <link>this page</link>.",
         "visibility": "Visibility of the study",
-        "visibilityDescription": "By default, the results are returned in Bilan Carbone ® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "visibilityDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
         "exports": "Exports",
-        "exportsDescription": "By default, the results are returned in Bilan Carbone ® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
         "control": "Control mode",
-        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the items and sub-items within the Bilan Carbone ® method) the emissions will be broken down. Depending on the control mode selected, the characterisations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
+        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the items and sub-items within the Bilan Carbone® method) the emissions will be broken down. Depending on the control mode selected, the characterisations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
         "close": "Close"
       },
       "validation": {
@@ -642,8 +644,8 @@
     "ADMIN_description_CR": "An administrator has full rights to the organisation's account and to all clients and studies (whether public or private).",
     "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies.",
     "GESTIONNAIRE_description_CR": "A manager has full rights over the organisation's account, but no rights over customers or studies.",
-    "DEFAULT_description": "A collaborator is a person trained in the Bilan Carbone ® method. They have no rights to the organisation's account but can create studies. They only have access to public studies and private studies to which they have been added.",
-    "DEFAULT_description_CR": "A collaborator is a person trained in the Bilan Carbone ® method. They have no rights to the organisation's account but can create clients and studies. They only have access to public studies and private studies to which they have been added.",
+    "DEFAULT_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They only have access to public studies and private studies to which they have been added.",
+    "DEFAULT_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to public studies and private studies to which they have been added.",
     "close": "Close",
     "guide": "Roles guide"
   },
@@ -831,9 +833,13 @@
     "create": "New Organization",
     "modify": "Modify",
     "myOrganization": "My Organization:",
-    "myOrganizations": "My Organizations",
+    "myOrganizations": "My current clients",
+    "seeLess": "See less",
+    "seeMore": "See more",
     "name": "Name: ",
     "title": "Organization",
+    "createFirstClient": "Create my first client",
+    "firstClientMessage": "We invite you to create your first client and then create your first Bilan Carbone®.",
     "form": {
       "create": "Create organization",
       "editTitle": "Edit my organization",
@@ -873,7 +879,7 @@
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other {#  studies}} you do not have access to"
     },
     "card": {
-      "method": "Consult the Bilan Carbone ® method",
+      "method": "Consult the Bilan Carbone® method",
       "update": "Update my information"
     }
   },
@@ -884,7 +890,7 @@
     "glossary": {
       "title": "Glossary",
       "type": "Type",
-      "typeDescription": "The type of data is a denomination introduced by the new Bilan Carbone ® method, which complements the calculation of uncertainties. For more information on the different types of data, please consult <link>this page</link>.",
+      "typeDescription": "The type of data is a denomination introduced by the new Bilan Carbone® method, which complements the calculation of uncertainties. For more information on the different types of data, please consult <link>this page</link>.",
       "quality": "Quality",
       "qualityDescription": "Uncertainties are now calculated using qualitative notes on the quality of the emission factor and the quality of the activity data. The scores for the emission factor are taken directly from the databases, but those for the activity data must be entered. For more information on how scores are awarded, please consult <link>this page</link>.",
       "close": "Fermer"
@@ -978,8 +984,8 @@
     "step1": {
       "name": "Name of my organization",
       "role": "My role within the organization",
-      "adminDescription": "You have been trained to the Bilan Carbone ® method : Thus, your have been attribued to the Admin role",
-      "gestionnaireDescription": "You have not been trained to the Bilan Carbone ® method : Thus, your have been attribued to the Gestionnaire role"
+      "adminDescription": "You have been trained to the Bilan Carbone® method : Thus, your have been attribued to the Admin role",
+      "gestionnaireDescription": "You have not been trained to the Bilan Carbone® method : Thus, your have been attribued to the Gestionnaire role"
     },
     "step2": {
       "addCollaborator": "Add a collaborator",
@@ -987,8 +993,8 @@
       "emailPlaceholder": "Enter a mail address",
       "role": "Role",
       "adminDescription": "Has all existing rights",
-      "collaboratorDescription": "Create and complete Bilan Carbone ®",
-      "crCollaboratorDescription": "Create clients and realize their Bilan Carbone ®",
+      "collaboratorDescription": "Create and complete Bilan Carbone®",
+      "crCollaboratorDescription": "Create clients and realize their Bilan Carbone®",
       "gestionnaireDescription": "Manages the organisation's account but does not have access to studies",
       "validation": {
         "email": "Invalid email address",
