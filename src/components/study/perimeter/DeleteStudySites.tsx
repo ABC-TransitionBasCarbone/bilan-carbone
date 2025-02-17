@@ -30,7 +30,10 @@ const DeleteStudySite = ({ open, confirmDeletion, cancelDeletion, deleting }: Pr
           },
         ]}
       >
-        {t('description', { count: deleting })}
+        {t.rich('description', {
+          count: deleting,
+          warning: (children) => <span className="warningForUser">{children}</span>,
+        })}
       </Modal>
     </>
   )

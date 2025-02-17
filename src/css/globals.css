@@ -138,3 +138,7 @@ table {
 .text-center {
   text-align: center;
 }
+
+.warningForUser {
+  color: var(--error-700);  
+}

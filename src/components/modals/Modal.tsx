@@ -39,7 +39,7 @@ const Modal = ({ label, open, onClose, title, children, actions }: Props) => (
       <Typography id={`${label}-modale-title`} variant="h6" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
         {title}
       </Typography>
-      <Typography id={`${label}-modale-description`}>{children}</Typography>
+      <div id={`${label}-modale-description`}>{children}</div>
       {actions && (
         <div className={classNames(styles.actions, 'justify-end')}>
           {actions.map(({ actionType, ...action }, index) =>

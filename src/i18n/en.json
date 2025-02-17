@@ -313,7 +313,7 @@
         },
         "dialog": {
           "title": "Are you sure you want to add this person to your study?",
-          "otherOrganization": "They are not within your organization.",
+          "otherOrganization": "<warning>They are not within your organization.</warning>",
           "rightsWarning": "If they do not match the necessary conditions for this role, you will only be able to give them access to this study only with READ or contribution rights. An email will be sent to them to give access to the study.",
           "accept": "Yes",
           "decline": "No"
@@ -360,7 +360,7 @@
         "accept": "Yes",
         "decline": "No",
         "delete": "Delete",
-        "description": "{count, plural, =1 {It contains} other {Some of them contain}} emission sources. All registered data will be definitively lost.",
+        "description": "{count, plural, =1 {It contains} other {Some of them contain}} emission sources. <warning>All registered data will be definitively lost.</warning>",
         "title": "Are you sure you want to delete {count, plural, =1 {this site} other {these sites}} ?"
       }
     },
@@ -419,7 +419,7 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "delete": "Delete the study",
-      "content": "Are you sure you want to delete this study ? All its data will be definitely deleted and it won't be possible to recover it. If it is the case, please write the study name in the field right below.",
+      "content": "Are you sure you want to delete this study ? <warning>All its data will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the study name in the field right below.",
       "name": "Study name",
       "Not authorized": "You are not allowed to do this action",
       "title": "Study deletion",
@@ -600,14 +600,14 @@
       "yes": "Yes"
     },
     "edit": {
-      "title": "Modifier le facteur d'émissions ({name})",
+      "title": "Edit the emission factor ({name})",
       "modal": {
-        "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
-        "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
-        "title": "Modifier un facteur d’émission",
-        "description": "Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées. Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
-        "confirm": "Confirmer",
-        "close": "Annuler"
+        "confirm-edition": "Are you sure you want to edit this emission factor",
+        "confirm-deletion": "Are you sure you want to delete this emission factor",
+        "title": "Edit the emission factor",
+        "description": "<warning>If you've used this emission factor in a study, the changes will be applied to all the emission sources that use it.</warning> If you want to create a new version, create a new one.",
+        "confirm": "Confirm",
+        "close": "Cancel"
       }
     },
     "type": {
@@ -873,7 +873,7 @@
     },
     "studySites": {
       "title": "You cannot delete these sites",
-      "description": "Studies exist with the following sites. Please delete them from the concerned studies before you can delete them from your organization.",
+      "description": "Studies exist with the following sites. <warning>Please delete them from the concerned studies before you can delete them from your organization.</warning>",
       "close": "Close",
       "existingSite": "<name></name>: <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other {#  studies}} you do not have access to"
@@ -898,7 +898,7 @@
     "deleteDialog": {
       "delete": "Delete this emission source",
       "title": "Are you sur you want to delete this emission source?",
-      "description": "All data entered will be permanently lost, and any contributors will no longer have access to this emission source.",
+      "description": "<warning>All data entered will be permanently lost,</warning> and any contributors will no longer have access to this emission source.",
       "accept": "Yes",
       "decline": "No"
     },

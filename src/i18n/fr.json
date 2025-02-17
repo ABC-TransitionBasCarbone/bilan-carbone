@@ -313,8 +313,8 @@
         },
         "dialog": {
           "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
-          "otherOrganization": "Elle ne fait pas partie de votre organisation.",
-          "rightsWarning": "Si elle ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle, vous ne pourrez donc lui donner un accès qu'à cette étude et avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
+          "otherOrganization": "<warning>Elle ne fait pas partie de votre organisation.</warning>",
+          "rightsWarning": "Si elle ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle, vous ne pourrez donc lui donner un accès qu'à cette étude avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
           "accept": "Oui",
           "decline": "Non"
         }
@@ -360,7 +360,7 @@
         "accept": "Oui",
         "decline": "Non",
         "delete": "Supprimer",
-        "description": "{count, plural, =1 {Il contient} other {Certains contiennent}} des sources d'emission. Toutes les données renseignées seront definitivement perdues.",
+        "description": "{count, plural, =1 {Il contient} other {Certains contiennent}} des sources d'emission. <warning>Toutes les données renseignées seront definitivement perdues.</warning>",
         "title": "Êtes-vous sûr de vouloir supprimer {count, plural, =1 {ce site} other {ces sites}} ?"
       }
     },
@@ -419,7 +419,7 @@
       "cancel": "Annuler",
       "confirm": "Confirmer",
       "delete": "Supprimer l'étude",
-      "content": "Êtes vous sur de vouloir supprimer cette étude ? Toutes ses données seront supprimées définitivement et seront impossible à récupérées. Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
+      "content": "Êtes vous sur de vouloir supprimer cette étude ? <warning>Toutes ses données seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
       "name": "Nom de l'étude",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "title": "Suppression d'une étude",
@@ -605,7 +605,7 @@
         "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
         "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
         "title": "Modifier un facteur d’émission",
-        "description": "Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées. Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
+        "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
         "confirm": "Confirmer",
         "close": "Annuler"
       }
@@ -873,7 +873,7 @@
     },
     "studySites": {
       "title": "Vous ne pouvez pas supprimer ces sites",
-      "description": "Des études existent avec les sites suivants. Vous devez d'abord les supprimer des études concernées avant de pouvoir les supprimer de votre organisation.",
+      "description": "Des études existent avec les sites suivants. <warning>Vous devez d'abord les supprimer des études concernées avant de pouvoir les supprimer de votre organisation.</warning>",
       "close": "Fermer",
       "existingSite": "<name></name> : <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 étude à laquelle} other {#  études auxquelles}} vous n'avez pas accès"
@@ -898,7 +898,7 @@
     "deleteDialog": {
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
-      "description": "Toutes les données renseignées seront définitivement perdues, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
+      "description": "<warning>Toutes les données renseignées seront définitivement perdues</warning>, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
       "accept": "Oui",
       "decline": "Non"
     },
