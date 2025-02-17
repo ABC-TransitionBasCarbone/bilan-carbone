@@ -11,28 +11,33 @@ import styles from './Studies.module.css'
 
 interface Props {
   studies: Study[]
+  canAddStudy: boolean
 }
 
-const Studies = async ({ studies }: Props) => {
+const Studies = async ({ studies, canAddStudy }: Props) => {
   const t = await getTranslations('study')
 
   return (
     <Block
       title={t('myStudies')}
       data-testid="home-studies"
-      actions={[
-        {
-          actionType: 'link',
-          href: '/etudes/creer',
-          ['data-testid']: 'new-study',
-          children: (
-            <>
-              <AddIcon />
-              {t('create')}
-            </>
-          ),
-        },
-      ]}
+      actions={
+        canAddStudy
+          ? [
+              {
+                actionType: 'link',
+                href: '/etudes/creer',
+                ['data-testid']: 'new-study',
+                children: (
+                  <>
+                    <AddIcon />
+                    {t('create')}
+                  </>
+                ),
+              },
+            ]
+          : undefined
+      }
     >
       <Box className="flex-col grow">
         {studies.length && (

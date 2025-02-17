@@ -29,9 +29,9 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
           <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
         </Suspense>
       )}
-      <Studies studies={studies} />
+      <Studies studies={studies} canAddStudy={!!user.organizationId} />
     </>
-  ) : (
+  ) : user.organizationId ? (
     <div className="justify-center">
       <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
         <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />
@@ -43,7 +43,7 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
         </LinkButton>
       </Box>
     </div>
-  )
+  ) : null
 }
 
 export default StudiesContainer
