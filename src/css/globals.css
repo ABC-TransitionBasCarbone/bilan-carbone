@@ -139,6 +139,6 @@ table {
   text-align: center;
 }
 
-.warningForUser {
+.userWarning {
   color: var(--error-700);  
 }
