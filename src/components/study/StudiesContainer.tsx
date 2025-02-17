@@ -1,5 +1,4 @@
-import { getStudiesByUser, getStudiesByUserAndOrganization } from '@/db/study'
-import { filterAllowedStudies } from '@/services/permissions/study'
+import { getAllowedStudiesByUser, getAllowedStudiesByUserAndOrganization } from '@/db/study'
 import AddIcon from '@mui/icons-material/Add'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -20,18 +19,17 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
   const t = await getTranslations('study')
 
   const studies = organizationId
-    ? await getStudiesByUserAndOrganization(user, organizationId)
-    : await getStudiesByUser(user)
-  const allowedStudies = await filterAllowedStudies(user, studies)
+    ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
+    : await getAllowedStudiesByUser(user)
 
-  return allowedStudies.length ? (
+  return studies.length ? (
     <>
       {user.organizationId && (
         <Suspense>
           <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
         </Suspense>
       )}
-      <Studies studies={allowedStudies} />
+      <Studies studies={studies} />
     </>
   ) : (
     <div className="justify-center">

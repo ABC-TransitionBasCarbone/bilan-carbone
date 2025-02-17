@@ -1,3 +1,4 @@
+import { filterAllowedStudies } from '@/services/permissions/study'
 import { checkLevel } from '@/services/study'
 import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
@@ -133,12 +134,12 @@ export const getOrganizationStudiesOrderedByStartDate = async (organizationId: s
   }))
 }
 
-export const getStudiesByUser = async (user: User) => {
+export const getAllowedStudiesByUser = async (user: User) => {
   const userOrganizations = await getUserOrganizations(user.email)
 
   // Be carefull: study on this query is shown to a lot of user
   // Never display sensitive data here (like emission source)
-  return prismaClient.study.findMany({
+  const studies = await prismaClient.study.findMany({
     where: {
       OR: [
         { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
@@ -147,15 +148,17 @@ export const getStudiesByUser = async (user: User) => {
       ],
     },
   })
+  return filterAllowedStudies(user, studies)
 }
 
-export const getStudiesByUserAndOrganization = async (user: User, organizationId: string) => {
-  return prismaClient.study.findMany({
+export const getAllowedStudiesByUserAndOrganization = async (user: User, organizationId: string) => {
+  const studies = await prismaClient.study.findMany({
     where: {
       organizationId,
       OR: [{ allowedUsers: { some: { userId: user.id } } }, { contributors: { some: { userId: user.id } } }],
     },
   })
+  return filterAllowedStudies(user, studies)
 }
 
 export const getStudyById = async (id: string, organizationId: string | null) => {
