@@ -41,9 +41,9 @@ const updateUserResetToken = async (email: string, duration: number) => {
   return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
 }
 
-export const sendNewUser = async (email: string) => {
+export const sendNewUser = async (email: string, user: User, newUserName: string) => {
   const token = await updateUserResetToken(email, 1 * DAY)
-  return sendNewUserEmail(email, token)
+  return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName)
 }
 
 export const sendInvitation = async (
@@ -121,7 +121,7 @@ export const addMember = async (member: AddMemberCommand) => {
 
   //TODO: que fait on si l'utilisateur existe déjà ?
   await addUser(newMember)
-  await sendNewUser(member.email)
+  await sendNewUser(member.email, session.user, member.firstName)
 }
 
 export const validateMember = async (email: string) => {
@@ -136,7 +136,7 @@ export const validateMember = async (email: string) => {
   }
 
   await validateUser(email)
-  await sendNewUser(member.email)
+  await sendNewUser(member.email, session.user, member.firstName)
 }
 
 export const resendInvitation = async (email: string) => {
@@ -150,7 +150,7 @@ export const resendInvitation = async (email: string) => {
     return NOT_AUTHORIZED
   }
 
-  await sendNewUser(member.email)
+  await sendNewUser(member.email, session.user, member.firstName)
 }
 
 export const deleteMember = async (email: string) => {
