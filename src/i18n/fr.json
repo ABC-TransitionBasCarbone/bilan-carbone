@@ -251,7 +251,7 @@
         "type": "Type de Bilan Carbone®",
         "typeDescription": "La nouvelle version de la méthode Bilan Carbone® introduit trois niveaux de maturité pour les Bilan Carbone® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
         "visibility": "Visibilité de l'étude",
-        "visibilityDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
+        "visibilityDescription": "Choisissez si votre étude doit être publique, c'est à dire accessible à tous vos collègues renseigné sur la page Mon organisation > mon equipe (lien vers la page), ou privé, c'est à dire uniquement accessible aux personnes que vous rajouterez dans la page cadrage de votre étude. Les admins de votre organisation ont accès à toutes les études qu'elles soient publiques ou privées.",
         "exports": "Exports",
         "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
         "control": "Mode de contrôle",

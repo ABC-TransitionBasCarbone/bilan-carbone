@@ -251,7 +251,7 @@
         "type": "Type of Bilan Carbone® assessment",
         "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for organisations' Bilan Carbone®. For more details, please consult <link>this page</link>.",
         "visibility": "Visibility of the study",
-        "visibilityDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "visibilityDescription": "Choose whether your study should be public, i.e. accessible to all your colleagues entered on the My organisation > my team page (link to the page), or private, i.e. only accessible to the people you add on the study framework page. Your organisation's admins have access to all studies, whether public or private.",
         "exports": "Exports",
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
         "control": "Control mode",
