@@ -162,8 +162,7 @@
     "information": "Global informations"
   },
   "results": {
-    "byPost": "Results by post",
-    "bySubPost": "Results by sub post"
+    "unit": "kgCo2e"
   },
   "profile": {
     "title": "My profile",

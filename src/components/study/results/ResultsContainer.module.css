@@ -16,19 +16,33 @@
   }
 }
 
-.separatorContainer {
-  position: relative;
-  display: flex;
-  align-items: center;
+.selector {
+  flex-direction: column;
+  padding: 2rem 6rem;
   @media screen and (max-width: 60rem) {
-    display: none;
+    flex-direction: row;
+    padding: 2rem 0;
+    gap: 1rem;
   }
 }
 
-.separator {
-  width: 1px;
-  height: 80%;
-  background-color: var(--neutral-30);
+.card {
+  gap: 2rem;
+  cursor: pointer;
+  padding-right: 3rem;
+  padding-left: 3rem;
+
+  &.selected {
+    border-color: var(--primary-40);
+  }
+}
+
+.hidden {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
 }
 
 .graph {
