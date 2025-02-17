@@ -129,7 +129,7 @@
       "passwordLowercase": "Password should have at least one lower case letter",
       "passwordSpecialChar": "Password should have at least one special character",
       "passwordDigit": "Password should have at least one digit",
-      "forgotPassword": "Forgot password",
+      "forgotPassword": "Forgot password ?",
       "reset": "Reset",
       "error": "Please check your email and your password",
       "expired": "This password reset link has expired",

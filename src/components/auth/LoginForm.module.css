@@ -1,4 +1,9 @@
 .link {
   text-align: right;
-  font-size: 0.875rem;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.activation {
+  align-self: center
 }

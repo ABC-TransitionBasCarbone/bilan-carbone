@@ -112,7 +112,9 @@
     "selector": "Langue du site"
   },
   "login": {
-    "welcome": "Bienvenue",
+    "welcome": "Bienvenue sur le Bilan Carbone® +",
+    "explaination": "La solution de comptabilité carbone de l’Association pour la transition Bas Carbone, dédiée à l’ensemble de nos adhérents Conseil et Recherche, Entreprises et Collectivités Territoriales",
+    "question": "Une question ? Contactez-nous à <link>support@abc-transitionbascarbone.fr</link>",
     "form": {
       "activate": "Activer mon compte",
       "firstConnection": "Première connexion ?",
@@ -129,7 +131,7 @@
       "passwordLowercase": "Le mot de passe doit avoir au moins une minuscule",
       "passwordSpecialChar": "Le mot de passe doit avoir au moins un caractère spécial",
       "passwordDigit": "Le mot de passe doit avoir au moins un chiffre",
-      "forgotPassword": "Mot de passe oublié",
+      "forgotPassword": "Mot de passe oublié ?",
       "reset": "Réinitialiser",
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",

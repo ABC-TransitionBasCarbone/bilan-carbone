@@ -7,3 +7,7 @@
   width: 0;
   overflow: hidden;
 }
+
+.full {
+  width: 100% !important
+}
