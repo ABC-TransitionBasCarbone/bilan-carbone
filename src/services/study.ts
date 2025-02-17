@@ -211,31 +211,6 @@ const getEmissionSourcesCSVContent = (
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
 }
 
-export const downloadStudySubPosts = async (
-  study: FullStudy,
-  post: string,
-  subPost: SubPost,
-  emissionSources: FullStudy['emissionSources'],
-  emissionFactors: EmissionFactorWithMetaData[],
-  t: ReturnType<typeof useTranslations>,
-  tCaracterisations: ReturnType<typeof useTranslations>,
-  tPost: ReturnType<typeof useTranslations>,
-  tQuality: ReturnType<typeof useTranslations>,
-  tUnit: ReturnType<typeof useTranslations>,
-) => {
-  const fileName = getFileName(study, post, subPost)
-  const csvContent = getEmissionSourcesCSVContent(
-    emissionSources,
-    emissionFactors,
-    t,
-    tCaracterisations,
-    tPost,
-    tQuality,
-    tUnit,
-  )
-  downloadCSV(csvContent, fileName)
-}
-
 export const downloadStudyPost = async (
   study: FullStudy,
   emissionSources: FullStudy['emissionSources'],
