@@ -216,6 +216,7 @@
     "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
     "withDependencies": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the dependency sub-component, as the organisation is generally not in a position to act easily on this sub-component. On the other hand, this sub-component remains crucial for understanding the risks to which the organisation is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
     "close": "Close",
+    "selectSite": "Before filling in the details, choose a site",
     "see": "See my Bilan Carbone®",
     "navigation": {
       "homepage": "Homepage",
