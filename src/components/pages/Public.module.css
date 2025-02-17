@@ -1,3 +1,11 @@
+.root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .logo {
   position: absolute;
   left: 0;
@@ -9,32 +17,46 @@
 
 .container {
   position: absolute;
-  top: 40vh;
-  transform: translateY(-10rem);
-  width: 100%;
+  width: 75%;
+  max-width: 1000px;
+  border: var(--border-dark);
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: row;
 }
 
 .loginForm {
-  margin: auto;
-  padding: 2rem;
-  width: 300px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 2rem
 }
 
 .welcome {
-  background-color: var(--primary-80);
-  border-radius: 0.5rem;
-  text-align: center;
-  margin-bottom: 1rem;
-
-  h1 {
-    color: var(--neutral-00);
-    font-size: 1.25rem;
-    font-weight: 700;
-  }
+  display: flex;
+  justify-content: flex-end;
 }
 
 .welcomeLogo {
-  margin-top: 0.5rem;
   height: auto;
-  max-width: 100%;
+  width: 50%;
+  align-items: end;
+}
+
+.info {
+  background-color: var(--primary-60);
+  border-radius: 1rem 0 0 1rem;
+  padding: 2rem;
+  color: white;
+  text-align: center;
+  flex: 1;
+}
+
+.image {
+  height: auto;
+  width: 100%;
+}
+
+.title {
+  margin-bottom: 1rem !important;
 }

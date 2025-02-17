@@ -66,10 +66,12 @@ const LoginForm = () => {
       >
         {t('forgotPassword')}
       </Link>
-      <LoadingButton data-testid="login-button" type="submit" loading={submitting}>
-        {t('login')}
-      </LoadingButton>
       <div>
+        <LoadingButton data-testid="login-button" type="submit" loading={submitting} fullWidth>
+          {t('login')}
+        </LoadingButton>
+      </div>
+      <div className={styles.activation}>
         {t('firstConnection')}
         <Link data-testid="activation-button" className="ml-2" href="/activation" prefetch={false}>
           {t('activate')}

@@ -8,12 +8,13 @@ export interface Props {
   children: React.ReactNode
   loading: boolean
   iconButton?: boolean
+  fullWidth?: boolean
 }
 
-const LoadingButton = ({ children, loading, disabled, iconButton, ...rest }: Props & ButtonProps) => {
+const LoadingButton = ({ children, loading, disabled, iconButton, fullWidth, ...rest }: Props & ButtonProps) => {
   const t = useTranslations('spinner')
   return (
-    <Button disabled={disabled || loading} {...rest}>
+    <Button disabled={disabled || loading} {...rest} {...(fullWidth && { className: classNames(styles.full) })}>
       {(!loading || !iconButton) && <>{children}</>}
       {loading && (
         <>

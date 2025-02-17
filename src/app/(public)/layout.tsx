@@ -7,7 +7,7 @@ interface Props {
 
 const PublicLayout = ({ children }: Props) => {
   return (
-    <main>
+    <main style={{ height: '100%' }}>
       <PublicPage>{children}</PublicPage>
     </main>
   )
