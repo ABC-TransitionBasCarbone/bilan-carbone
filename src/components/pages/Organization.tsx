@@ -17,7 +17,7 @@ const OrganizationPage = ({ organizations, user }: Props) => {
     <>
       <Breadcrumbs current={organizations[0].name} links={[{ label: tNav('home'), link: '/' }]} />
       <OrganizationInfo organization={organizations[0]} user={user} />
-      <Studies user={user} organizationId={organizations[0].id} helpIcon />
+      <Studies user={user} organizationId={organizations[0].id} />
     </>
   )
 }

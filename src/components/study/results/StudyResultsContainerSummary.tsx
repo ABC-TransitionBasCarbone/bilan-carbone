@@ -1,7 +1,9 @@
 'use client'
 
 import Box from '@/components/base/Box'
+import HelpIcon from '@/components/base/HelpIcon'
 import LinkButton from '@/components/base/LinkButton'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
@@ -28,6 +30,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResults = useTranslations('results')
+  const [glossaryOpen, setGlossaryOpen] = useState(false)
   const [withDep, setWithDependencies] = useState(!!withDependencies)
 
   const allComputedResults = useMemo(
@@ -95,7 +98,10 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               <h3>
                 {withDepValue} {tResults('unit')}
               </h3>
-              <span>{t('results.withDependencies')}</span>
+              <span className="align-center">
+                {t('results.withDependencies')}
+                <HelpIcon className="ml-4" onClick={() => setGlossaryOpen(!glossaryOpen)} label={t('information')} />
+              </span>
             </Box>
           </label>
           <label>
@@ -119,6 +125,24 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
           <Result studySite={studySite} computedResults={computedResults} />
         </div>
       </div>
+      <GlossaryModal
+        glossary={glossaryOpen ? 'results.withDependencies' : ''}
+        onClose={() => setGlossaryOpen(false)}
+        label="withDependencies"
+        t={t}
+      >
+        {t.rich('withDependencies', {
+          link: (children) => (
+            <Link
+              href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              {children}
+            </Link>
+          ),
+        })}
+      </GlossaryModal>
     </>
   )
 }
