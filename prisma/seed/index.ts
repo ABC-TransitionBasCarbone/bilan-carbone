@@ -104,7 +104,7 @@ const users = async () => {
       onboarded: false,
     },
   })
-  const onboardingPassword = await signPassword(`onboarding1234`)
+  const onboardingPassword = await signPassword('onboarding1234')
   await prisma.user.create({
     data: {
       email: 'onboarding@yopmail.com',
@@ -116,6 +116,18 @@ const users = async () => {
       role: Role.DEFAULT,
       isActive: true,
       isValidated: true,
+    },
+  })
+
+  await prisma.user.create({
+    data: {
+      email: 'onboardingnottrained@yopmail.com',
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      organizationId: unOnboardedOrganization.id,
+      role: Role.GESTIONNAIRE,
+      isActive: false,
+      isValidated: false,
     },
   })
 
@@ -148,6 +160,18 @@ const users = async () => {
       isCR: index % 2 === 0,
       onboarded: true,
     })),
+  })
+
+  await prisma.user.create({
+    data: {
+      email: 'onboardednotrained@yopmail.com',
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      organizationId: organizations[0].id,
+      role: Role.GESTIONNAIRE,
+      isActive: false,
+      isValidated: false,
+    },
   })
 
   const crOrganizations = organizations.filter((organization) => organization.isCR)
