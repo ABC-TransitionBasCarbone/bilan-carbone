@@ -215,6 +215,7 @@
     "information": "Informations",
     "validatedOnly": "Sources d'émission validées",
     "validatedOnlyDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
+    "withDependencies": "La nouvelle méthode Bilan Carbone® introduit le concept de responsabilité et de dépendance. Il est fortement recommandé de restituer les résultats du Bilan Carbone® avec et sans le sous-poste dépendance, car l'organisation n'est généralement pas en mesure d'agir aisément sur ce sous-poste. En revanche, celui-ci reste capital pour comprendre les risques auxquels sont soumis l'organisation, notamment si elle est dépendante de secteurs ou d'activités très carbonés. Le résultat final à retenir doit inclure la dépendance. Pour plus d'information sur ces nouveaux concepts, nous vous invitons à consulter <link>cette page</link>.",
     "close": "Fermer",
     "navigation": {
       "homepage": "Accueil",
@@ -247,7 +248,7 @@
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Email du validateur",
-        "validatorEmailDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\" (lien vers le menu paramètre).",
+        "validatorEmailDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
         "type": "Type de Bilan Carbone®",
         "typeDescription": "La nouvelle version de la méthode Bilan Carbone® introduit trois niveaux de maturité pour les Bilan Carbone® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
         "visibility": "Visibilité de l'étude",

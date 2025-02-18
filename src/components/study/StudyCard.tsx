@@ -11,10 +11,9 @@ import styles from './StudyCard.module.css'
 
 interface Props {
   study: Study
-  helpIcon?: boolean
 }
 
-const StudyCard = async ({ study, helpIcon }: Props) => {
+const StudyCard = async ({ study }: Props) => {
   const t = await getTranslations('study')
   const values = await getStudyValidatedEmissionsSources(study.id)
 
@@ -44,17 +43,15 @@ const StudyCard = async ({ study, helpIcon }: Props) => {
                 </span>
               ),
             })}
-            {helpIcon && (
-              <GlossaryIconModal
-                title="validatedOnly"
-                className="ml-2"
-                iconLabel="information"
-                label="study-card"
-                tModal="study"
-              >
-                {t('validatedOnlyDescription')}
-              </GlossaryIconModal>
-            )}
+            <GlossaryIconModal
+              title="validatedOnly"
+              className="ml-2"
+              iconLabel="information"
+              label="study-card"
+              tModal="study"
+            >
+              {t('validatedOnlyDescription')}
+            </GlossaryIconModal>
           </p>
           <LinearProgress
             variant="determinate"

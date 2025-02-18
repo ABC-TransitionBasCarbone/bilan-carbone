@@ -13,10 +13,9 @@ import styles from './StudiesContainer.module.css'
 interface Props {
   user: User
   organizationId: string | null
-  helpIcon?: boolean
 }
 
-const StudiesContainer = async ({ user, organizationId, helpIcon }: Props) => {
+const StudiesContainer = async ({ user, organizationId }: Props) => {
   const t = await getTranslations('study')
 
   const studies = organizationId

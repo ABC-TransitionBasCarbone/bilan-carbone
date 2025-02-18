@@ -12,10 +12,9 @@ import StudyCard from './StudyCard'
 interface Props {
   studies: Study[]
   canAddStudy: boolean
-  helpIcon?: boolean
 }
 
-const Studies = async ({ studies, canAddStudy, helpIcon }: Props) => {
+const Studies = async ({ studies, canAddStudy }: Props) => {
   const t = await getTranslations('study')
 
   return (
@@ -46,7 +45,7 @@ const Studies = async ({ studies, canAddStudy, helpIcon }: Props) => {
           <ul className={styles.grid}>
             {studies.map((study) => (
               <Suspense key={study.id}>
-                <StudyCard study={study} helpIcon={helpIcon} />
+                <StudyCard study={study} />
               </Suspense>
             ))}
           </ul>
