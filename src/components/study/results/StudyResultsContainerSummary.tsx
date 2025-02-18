@@ -30,6 +30,22 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   const tResults = useTranslations('results')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
 
+  const allComputedResults = useMemo(
+    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
+    [validatedOnly],
+  )
+
+  const computedResults = useMemo(
+    () =>
+      allComputedResults
+        .map((post) => ({
+          ...post,
+          subPosts: post.subPosts.filter((subPost) => filterWithDependencies(subPost.post as SubPost, withDep)),
+        }))
+        .map((post) => ({ ...post, value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0) })),
+    [allComputedResults, withDep],
+  )
+
   const [withDepValue, withoutDepValue] = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, studySite, true, validatedOnly)
     return computedResults
@@ -45,7 +61,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
         },
         [0, 0],
       )
-      .map((value) => formatNumber(value * 1000))
+      .map((value) => formatNumber(value))
   }, [validatedOnly])
 
   return (
@@ -100,7 +116,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
           </label>
         </fieldset>
         <div className={styles.graph}>
-          <Result study={study} studySite={studySite} withDependenciesGlobal={withDep} />
+          <Result studySite={studySite} computedResults={computedResults} />
         </div>
       </div>
     </>

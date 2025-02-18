@@ -1,21 +1,16 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
-import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
+import { ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { formatNumber } from '@/utils/number'
 import Chart from 'chart.js/auto'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import DependenciesSwitch from './DependenciesSwitch'
-import styles from './Result.module.css'
 
 interface Props {
-  study: FullStudy
   studySite: string
-  withDependenciesGlobal?: boolean
+  computedResults: ResultsByPost[]
 }
 
 const postXAxisList = [
@@ -31,15 +26,11 @@ const postXAxisList = [
   Post.FinDeVie,
 ]
 
-const Result = ({ study, studySite, withDependenciesGlobal }: Props) => {
+const Result = ({ studySite, computedResults }: Props) => {
   const t = useTranslations('emissionFactors.post')
   const [dynamicHeight, setDynamicHeight] = useState(0)
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-
-  const [withDependencies, setWithDependencies] = useState(
-    withDependenciesGlobal === undefined ? true : withDependenciesGlobal,
-  )
   const [validatedOnly, setValidatedOnly] = useState(true)
 
   useEffect(() => {
@@ -53,21 +44,14 @@ const Result = ({ study, studySite, withDependenciesGlobal }: Props) => {
     }
   }
 
-  useEffect(() => {
-    if (withDependenciesGlobal !== undefined) {
-      setWithDependencies(withDependenciesGlobal)
-    }
-  }, [withDependenciesGlobal])
-
-  const xAxis = useMemo(() => postXAxisList, [withDependencies])
+  const xAxis = useMemo(() => postXAxisList, [])
 
   const yData = useMemo(() => {
-    const computedResults = computeResultsByPost(study, t, studySite, withDependencies, validatedOnly)
     if (computedResults.every((post) => post.value === 0)) {
       return []
     }
     return xAxis.map((post) => (computedResults.find((postResult) => postResult.post === post) as ResultsByPost).value)
-  }, [studySite, withDependencies, validatedOnly])
+  }, [studySite, validatedOnly, computedResults])
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -105,16 +89,9 @@ const Result = ({ study, studySite, withDependenciesGlobal }: Props) => {
   }, [xAxis, yData])
 
   return (
-    <>
-      <div className={classNames(styles.header, 'align-center', 'mb1')}>
-        {withDependenciesGlobal === undefined && (
-          <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
-        )}
-      </div>
-      <div style={{ height: dynamicHeight }}>
-        <canvas data-testid={`study-Post-chart`} ref={canvasRef} />
-      </div>
-    </>
+    <div style={{ height: dynamicHeight }}>
+      <canvas data-testid={`study-Post-chart`} ref={canvasRef} />
+    </div>
   )
 }
 

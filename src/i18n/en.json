@@ -162,7 +162,7 @@
     "information": "Global informations"
   },
   "results": {
-    "unit": "kgCo2e"
+    "unit": "tCo2e"
   },
   "profile": {
     "title": "My profile",

@@ -12,7 +12,7 @@ import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
 interface Props {
   user: User
-  organizationId?: string
+  organizationId: string | null
   helpIcon?: boolean
 }
 
@@ -25,9 +25,9 @@ const StudiesContainer = async ({ user, organizationId, helpIcon }: Props) => {
 
   return studies.length ? (
     <>
-      {user.organizationId && !organizationId && (
+      {organizationId && (
         <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
+          <ResultsContainerForUser user={user} mainStudyOrganizationId={organizationId} />
         </Suspense>
       )}
       <Studies studies={studies} canAddStudy={!!user.organizationId} helpIcon={helpIcon} />
