@@ -11,6 +11,7 @@ import {
   UpdateOrganizationCommandValidation,
 } from '@/services/serverFunctions/organization.command'
 import { findStudiesWithSites } from '@/services/serverFunctions/study'
+import { handleWarningText } from '@/utils/components'
 import { displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
@@ -92,7 +93,7 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
         ]}
       >
         <div id="delete-site-with-studies-modale-description" className="flex-col">
-          {tStudySites('description')}
+          {handleWarningText(tStudySites, 'description')}
           <ul>
             {sitesOnError &&
               sitesOnError.authorizedStudySites.map((studySite) => (

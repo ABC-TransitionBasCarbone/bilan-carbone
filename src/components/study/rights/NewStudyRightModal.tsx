@@ -1,4 +1,5 @@
 import Modal from '@/components/modals/Modal'
+import { handleWarningText } from '@/utils/components'
 import { useTranslations } from 'next-intl'
 
 interface Props {
@@ -33,7 +34,7 @@ const NewStudyRightModal = ({ otherOrganization, rightsWarning, decline, accept 
         ]}
       >
         <div id="new-study-right-other-organization-warning">
-          {t('otherOrganization')}
+          {handleWarningText(t, 'otherOrganization')}
           {rightsWarning && ` ${t('rightsWarning')}`}
         </div>
       </Modal>
