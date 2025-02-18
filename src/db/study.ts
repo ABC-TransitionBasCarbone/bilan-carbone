@@ -158,7 +158,13 @@ export const getAllowedStudiesByUserAndOrganization = async (user: User, organiz
       organizationId,
       ...(isAdminOnOrga(user, organizationId)
         ? {}
-        : { OR: [{ allowedUsers: { some: { userId: user.id } } }, { contributors: { some: { userId: user.id } } }] }),
+        : {
+            OR: [
+              { allowedUsers: { some: { userId: user.id } } },
+              { contributors: { some: { userId: user.id } } },
+              { isPublic: true, organizationId: user.organizationId as string },
+            ],
+          }),
     },
   })
   return filterAllowedStudies(user, studies)
