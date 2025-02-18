@@ -104,18 +104,10 @@ const users = async () => {
       onboarded: false,
     },
   })
-  const boardedOrganization = await prisma.organization.create({
-    data: {
-      name: faker.company.name(),
-      siret: faker.finance.accountNumber(14),
-      isCR: false,
-      onboarded: true,
-    },
-  })
-  const onboardingPassword = await signPassword(`onboarding1234`)
+  const onboardingPassword = await signPassword('onboarding1234')
   await prisma.user.create({
     data: {
-      email: `onboarding@yopmail.com`,
+      email: 'onboarding@yopmail.com',
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       organizationId: unOnboardedOrganization.id,
@@ -129,27 +121,13 @@ const users = async () => {
 
   await prisma.user.create({
     data: {
-      email: `onboardingnottrained@yopmail.com`,
+      email: 'onboardingnottrained@yopmail.com',
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       organizationId: unOnboardedOrganization.id,
-      password: onboardingPassword,
       role: Role.GESTIONNAIRE,
-      isActive: true,
-      isValidated: true,
-    },
-  })
-
-  await prisma.user.create({
-    data: {
-      email: `onboardednotrained@yopmail.com`,
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      organizationId: boardedOrganization.id,
-      password: onboardingPassword,
-      role: Role.GESTIONNAIRE,
-      isActive: true,
-      isValidated: true,
+      isActive: false,
+      isValidated: false,
     },
   })
 
@@ -160,6 +138,18 @@ const users = async () => {
       isCR: index % 2 === 0,
       onboarded: true,
     })),
+  })
+
+  await prisma.user.create({
+    data: {
+      email: 'onboardednotrained@yopmail.com',
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      organizationId: organizations[0].id,
+      role: Role.GESTIONNAIRE,
+      isActive: false,
+      isValidated: false,
+    },
   })
 
   const crOrganizations = organizations.filter((organization) => organization.isCR)
