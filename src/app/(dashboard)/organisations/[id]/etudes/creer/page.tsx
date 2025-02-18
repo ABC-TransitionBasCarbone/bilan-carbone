@@ -13,7 +13,7 @@ const NewStudyInOrganization = async (props: Props & UserProps) => {
   const params = await props.params
 
   const id = params.id
-  if (!id || !props.user.organizationId) {
+  if (!id || !props.user.organizationId || !props.user.level) {
     return <NotFound />
   }
 
