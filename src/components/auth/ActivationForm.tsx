@@ -2,6 +2,7 @@
 
 import { activateEmail } from '@/services/serverFunctions/user'
 import { TextField } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -50,7 +51,7 @@ const ActivationForm = () => {
   }
 
   return (
-    <form onSubmit={onSubmit} className={authStyles.form}>
+    <form onSubmit={onSubmit} className={classNames(authStyles.form, authStyles.small)}>
       <p>{t('description')}</p>
       <TextField
         className={authStyles.input}

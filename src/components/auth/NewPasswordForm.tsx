@@ -1,6 +1,7 @@
 'use client'
 
 import { TextField } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
@@ -32,7 +33,7 @@ const NewPasswordForm = ({ reset }: Props) => {
   }, [searchParams])
 
   return (
-    <form onSubmit={onSubmit} className={authStyles.form}>
+    <form onSubmit={onSubmit} className={classNames(authStyles.form, authStyles.small)}>
       <TextField
         data-testid="input-email"
         className={authStyles.input}
