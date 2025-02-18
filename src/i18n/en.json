@@ -206,8 +206,11 @@
     "uploadButton": "Import emission factors"
   },
   "study": {
-    "create": "New study",
-    "myStudies": "My studies",
+    "create": "Add a Bilan Carbone®",
+    "myStudies": "My Bilan Carbone®",
+    "createFirstStudy": "Create my first Bilan Carbone®",
+    "seeResults": "See results",
+    "firstStudyMessage": "It's time to get started! We invite you to create your first bilan.",
     "navigation": {
       "homepage": "Homepage",
       "framing": "Framing",

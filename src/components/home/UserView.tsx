@@ -3,7 +3,6 @@ import { isAdmin } from '@/services/permissions/user'
 import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import Actualities from '../actuality/ActualitiesCards'
-import Block from '../base/Block'
 import Onboarding from '../onboarding/Onboarding'
 import Studies from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
@@ -25,7 +24,7 @@ const UserView = async ({ user }: Props) => {
   return (
     <>
       {!!hasUserToValidate && (isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
-        <div className="main-container">
+        <div className="main-container mb1">
           <UserToValidate />
         </div>
       )}
@@ -33,14 +32,10 @@ const UserView = async ({ user }: Props) => {
         <CRClientsList
           organizations={organizations.filter((organization) => organization.id !== user.organizationId)}
         />
-      ) : null}
-      {/* {user.organizationId && (
-        <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
-        </Suspense>
-      )} */}
+      ) : (
+        <Studies user={user} />
+      )}
       <Actualities />
-      <Block>{isCR ? null : <Studies user={user} />}</Block>
       {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
     </>
   )
