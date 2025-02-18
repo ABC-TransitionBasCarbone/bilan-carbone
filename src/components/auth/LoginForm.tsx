@@ -1,6 +1,7 @@
 'use client'
 
 import { TextField } from '@mui/material'
+import classNames from 'classnames'
 import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -37,7 +38,7 @@ const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={onSubmit} className={authStyles.form}>
+    <form onSubmit={onSubmit} className={classNames(authStyles.form, authStyles.medium)}>
       <TextField
         data-testid="input-email"
         className={authStyles.input}

@@ -5,6 +5,18 @@
   margin-top: 30%;
 }
 
+.small {
+  margin-top: 30%;
+}
+
+.medium {
+  margin-top: 25%;
+}
+
+.big {
+  margin-top: 10%;
+}
+
 .input {
   width: 100%;
 }

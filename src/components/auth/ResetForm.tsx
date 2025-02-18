@@ -4,6 +4,7 @@ import { computePasswordValidation } from '@/services/utils'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { IconButton, InputAdornment, TextField } from '@mui/material'
+import classNames from 'classnames'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
@@ -63,7 +64,7 @@ const ResetForm = ({ user, token }: Props) => {
   }
 
   return (
-    <form onSubmit={onSubmit} className={authStyles.form}>
+    <form onSubmit={onSubmit} className={classNames(authStyles.form, authStyles.big)}>
       <p>{t('resetTitle')}</p>
       <TextField
         data-testid="input-email"
