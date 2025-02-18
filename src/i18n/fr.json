@@ -294,6 +294,7 @@
       "Editor": "Éditeur",
       "Reader": "Lecteur",
       "guide": "Guide des rôles",
+      "introduction": "Depuis cette page, vous pouvez gérer les membres de votre équipe impliqués dans ce Bilan Carbone®. Dans tous les cas, les administrateurs de votre organisation ont accès à toutes vos études en tant que validateur. Si votre étude est publique, les membres de votre organisation (collaborateurs, gestionnaires) y ont automatiquement accès en lecture. Vous pouvez également ajouter des personnes externes à votre organisation via ce menu.",
       "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émissions qui ont été renseignées par les validateurs, éditeurs et contributeurs.",
       "Editor_description": "A tous les droits sur l'étude à l'exception de la validation des sources d'émissions.",
       "Reader_description": "Peut uniquement accéder en lecture à l'étude et exporter les informations de celle-ci.",
@@ -341,7 +342,7 @@
         "newContributorLink": "Ajouter un contributeur",
         "role": {
           "information": "Informations",
-          "description": "Un contributeur peut renseigner les informations pour les sources d'émission du ou des postes que vous lui avez confiés.",
+          "description": "Vous pouvez ici gérer les contributeurs de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émissions que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des contributeurs, n'hésitez pas à aller voir notre <link>FAQ</link>",
           "close": "Fermer"
         }
       },
