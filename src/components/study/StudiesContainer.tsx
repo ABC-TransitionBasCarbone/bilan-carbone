@@ -22,6 +22,8 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
     ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
     : await getAllowedStudiesByUser(user)
 
+  const canCreateStudy = !!user.level && !!user.organizationId
+
   return studies.length ? (
     <>
       {user.organizationId && (
@@ -29,9 +31,9 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
           <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
         </Suspense>
       )}
-      <Studies studies={studies} canAddStudy={!!user.organizationId} />
+      <Studies studies={studies} canAddStudy={canCreateStudy} />
     </>
-  ) : user.organizationId ? (
+  ) : canCreateStudy ? (
     <div className="justify-center">
       <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
         <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />

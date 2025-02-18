@@ -7,7 +7,7 @@ import { getUserSettings } from '@/services/serverFunctions/user'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 
 const NewStudy = async ({ user }: UserProps) => {
-  if (!user.organizationId) {
+  if (!user.organizationId || !user.level) {
     return <NotFound />
   }
 
