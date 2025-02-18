@@ -4,7 +4,8 @@ import { activateEmail } from '@/services/serverFunctions/user'
 import { TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { FormEvent, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { FormEvent, useEffect, useState } from 'react'
 import LoadingButton from '../base/LoadingButton'
 import authStyles from './Auth.module.css'
 
@@ -17,11 +18,25 @@ const ActivationForm = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const email = searchParams.get('email')
+    if (email) {
+      setEmail(email)
+      activate(email)
+    }
+  }, [searchParams])
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    activate(email)
+  }
+
+  const activate = async (emailToActivate: string) => {
     setError('')
     setSubmitting(true)
-    const result = await activateEmail(email)
+    const result = await activateEmail(emailToActivate)
     setSubmitting(false)
     if (result) {
       setError(result)

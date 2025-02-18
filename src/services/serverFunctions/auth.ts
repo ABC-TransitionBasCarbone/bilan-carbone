@@ -23,6 +23,11 @@ export const checkToken = async (token: string) => {
   }
 }
 
+export const hasEmptyPassword = async (email: string) => {
+  const user = await getUserByEmailWithSensibleInformations(email)
+  return !user?.password
+}
+
 export const reset = async (email: string, password: string, token: string) => {
   const tokenValues = jwt.verify(token, process.env.NEXTAUTH_SECRET as string) as {
     email: string

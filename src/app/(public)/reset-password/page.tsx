@@ -2,6 +2,7 @@ import NewPasswordForm from '@/components/auth/NewPasswordForm'
 import { getUserByEmail, updateUserResetTokenForEmail } from '@/db/user'
 import { auth } from '@/services/auth'
 import { sendResetPassword } from '@/services/email/email'
+import { hasEmptyPassword } from '@/services/serverFunctions/auth'
 import { HOUR, TIME_IN_MS } from '@/utils/time'
 import jwt from 'jsonwebtoken'
 import { redirect } from 'next/navigation'
@@ -14,6 +15,9 @@ const NewPasswordPage = async () => {
 
   const reset = async (email: string) => {
     'use server'
+    if (await hasEmptyPassword(email)) {
+      return redirect(`/activation?email=${email}`)
+    }
     const user = await getUserByEmail(email)
     if (user) {
       const resetToken = Math.random().toString(36)
