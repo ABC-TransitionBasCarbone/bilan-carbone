@@ -114,10 +114,11 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
         onClose={() => setDisplayRoles(false)}
         actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tStudyRole('close') }]}
       >
+        <span className="block mb-2">{tStudyRole('introduction')}</span>
         {Object.keys(StudyRole).map((role) => (
-          <p key={role} className="mb-2">
+          <span key={role} className="block mb-2">
             <b>{tStudyRole(role)} :</b> {tStudyRole(`${role}_description`)}
-          </p>
+          </span>
         ))}
       </Modal>
     </>

@@ -294,6 +294,7 @@
       "Editor": "Editor",
       "Reader": "Reader",
       "guide": "Roles guide",
+      "introduction": "From this page, you can manage the members of your team involved in the Bilan Carbone®. In all cases, the administrators of your organisation have access to all your studies as validators. If your study is public, members of your organisation (employees, managers) automatically have read access to it. You can also add people from outside your organisation via this menu.",
       "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",
       "Editor_description": "Has all rights to the study except for validation of emission sources.",
       "Reader_description": "Can only read the study and export its information.",
@@ -341,7 +342,7 @@
         "newContributorLink": "Add a contributor",
         "role": {
           "information": "Information",
-          "description": "A contributor can fill in the information for the emission sources of the job(s) that you have entrusted to him/her.",
+          "description": "Here you can manage the contributors to your study. They will have access to certain items and sub-items (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>.",
           "close": "Close"
         }
       },

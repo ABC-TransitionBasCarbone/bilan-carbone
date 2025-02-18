@@ -10,6 +10,7 @@ import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useMemo, useState } from 'react'
 
 interface Props {
@@ -136,7 +137,15 @@ const StudyContributorsTable = ({ study, user, userRoleOnStudy }: Props) => {
         onClose={() => setDisplayRoles(false)}
         actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tRole('close') }]}
       >
-        <p className="mb-2">{tRole('description')}</p>
+        <p className="mb-2">
+          {tRole.rich('description', {
+            link: (children) => (
+              <Link href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''} target="_blank" rel="noreferrer noopener">
+                {children}
+              </Link>
+            ),
+          })}
+        </p>
       </Modal>
     </>
   )
