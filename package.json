@@ -17,7 +17,7 @@
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "seed:import": "prisma db seed -- -i",
-    "user:import": "ts-node src/scripts/ftp/importUsers.ts"
+    "user:import": "ts-node --transpile-only src/scripts/ftp/importUsers.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed/index.ts"
@@ -63,6 +63,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-hook-form": "^7.54.2",
+    "ts-node": "^10.9.2",
     "uuid": "^11.0.5",
     "zod": "^3.24.1"
   },
@@ -99,7 +100,6 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "prisma": "^6.2.1",
     "ts-jest": "^29.2.5",
-    "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5"
   }

@@ -3,6 +3,7 @@
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
 import { deleteEmissionSource } from '@/services/serverFunctions/emissionSource'
+import { handleWarningText } from '@/utils/components'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -47,7 +48,7 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
           },
         ]}
       >
-        {t('description')}
+        {handleWarningText(t, 'description')}
       </Modal>
       <Button
         data-testid="emission-source-delete"

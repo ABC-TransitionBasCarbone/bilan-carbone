@@ -39,7 +39,7 @@ export const getEmissionFactors = async (studyId?: string) => {
   }
 
   const emissionFactors = await getAllEmissionFactors(emissionFactorOrganization)
-  console.log(studyId, session.user.organizationId, emissionFactorOrganization)
+
   return emissionFactors
     .map((emissionFactor) => ({
       ...emissionFactor,

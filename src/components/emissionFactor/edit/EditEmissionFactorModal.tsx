@@ -1,5 +1,6 @@
 import Modal from '@/components/modals/Modal'
 import { deleteEmissionFactor } from '@/services/serverFunctions/emissionFactor'
+import { handleWarningText } from '@/utils/components'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -49,7 +50,7 @@ const EditEmissionFactorModal = ({ emissionFactorId, action, setAction }: Props)
         },
       ]}
     >
-      {t('description')}
+      {handleWarningText(t, 'description')}
     </Modal>
   )
 }

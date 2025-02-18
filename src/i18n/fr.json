@@ -4,7 +4,7 @@
   },
   "exports": {
     "title": "Exports :",
-    "consolidated": "Bilan Carbone ®",
+    "consolidated": "Bilan Carbone®",
     "Beges": "Bilan GES Reglementaire",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069"
@@ -98,8 +98,10 @@
     "team": "Équipe"
   },
   "actuality": {
-    "title": "Actualités",
-    "noItems": "Aucune actualité pour le moment"
+    "title": "Les actualités du BC+",
+    "noItems": "Aucune actualité pour le moment",
+    "seeLess": "Voir moins",
+    "seeMore": "Voir plus"
   },
   "legalNotices": {
     "profile": "Retour au profil"
@@ -204,8 +206,11 @@
     "uploadButton": "Importer un fichier CSV de l'ADEME"
   },
   "study": {
-    "create": "Nouvelle étude",
-    "myStudies": "Mes études",
+    "create": "Ajouter un Bilan Carbone®",
+    "myStudies": "Mes Bilan Carbone®",
+    "createFirstStudy": "Créer mon premier Bilan Carbone®",
+    "seeResults": "Voir les résultats",
+    "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre premier bilan.",
     "navigation": {
       "homepage": "Accueil",
       "framing": "Cadrage",
@@ -224,7 +229,7 @@
       "validator": "Email du validateur",
       "start": "Début",
       "end": "Fin",
-      "level": "Type de Bilan Carbone ®",
+      "level": "Type de Bilan Carbone®",
       "exports": "Exports",
       "control": "Mode de contrôle",
       "CapitalShare": "Part de capital",
@@ -237,15 +242,15 @@
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Email du validateur",
-        "validatorEmailDescription": "Pour chaque Bilan Carbone ®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\" (lien vers le menu paramètre).",
-        "type": "Type de Bilan Carbone ®",
-        "typeDescription": "La nouvelle version de la méthode Bilan Carbone ® introduit trois niveaux de maturité pour les Bilan Carbone ® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
+        "validatorEmailDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\" (lien vers le menu paramètre).",
+        "type": "Type de Bilan Carbone®",
+        "typeDescription": "La nouvelle version de la méthode Bilan Carbone® introduit trois niveaux de maturité pour les Bilan Carbone® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
         "visibility": "Visibilité de l'étude",
-        "visibilityDescription": "Les résultats sont par défaut restitués au format Bilan Carbone ®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
+        "visibilityDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
         "exports": "Exports",
-        "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone ®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
+        "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
         "control": "Mode de contrôle",
-        "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone ®) les émissions vont se ventiler. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émissions varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
+        "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone®) les émissions vont se ventiler. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émissions varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
         "close": "Fermer"
       },
       "validation": {
@@ -254,7 +259,7 @@
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
-        "level": "Veuillez selectionner le type de Bilan Carbone ®"
+        "level": "Veuillez selectionner le type de Bilan Carbone®"
       },
       "error": {
         "default": "Une erreur s'est produite ...",
@@ -311,8 +316,8 @@
         },
         "dialog": {
           "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
-          "otherOrganization": "Elle ne fait pas partie de votre organisation.",
-          "rightsWarning": "Si elle ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle, vous ne pourrez donc lui donner un accès qu'à cette étude et avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
+          "otherOrganization": "<warning>Elle ne fait pas partie de votre organisation.</warning>",
+          "rightsWarning": "Si elle ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle, vous ne pourrez donc lui donner un accès qu'à cette étude avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
           "accept": "Oui",
           "decline": "Non"
         }
@@ -358,7 +363,7 @@
         "accept": "Oui",
         "decline": "Non",
         "delete": "Supprimer",
-        "description": "{count, plural, =1 {Il contient} other {Certains contiennent}} des sources d'emission. Toutes les données renseignées seront definitivement perdues.",
+        "description": "{count, plural, =1 {Il contient} other {Certains contiennent}} des sources d'emission. <warning>Toutes les données renseignées seront definitivement perdues.</warning>",
         "title": "Êtes-vous sûr de vouloir supprimer {count, plural, =1 {ce site} other {ces sites}} ?"
       }
     },
@@ -417,7 +422,7 @@
       "cancel": "Annuler",
       "confirm": "Confirmer",
       "delete": "Supprimer l'étude",
-      "content": "Êtes vous sur de vouloir supprimer cette étude ? Toutes ses données seront supprimées définitivement et seront impossible à récupérées. Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
+      "content": "Êtes vous sur de vouloir supprimer cette étude ? <warning>Toutes ses données seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
       "name": "Nom de l'étude",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "title": "Suppression d'une étude",
@@ -603,7 +608,7 @@
         "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
         "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
         "title": "Modifier un facteur d’émission",
-        "description": "Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées. Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
+        "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
         "confirm": "Confirmer",
         "close": "Annuler"
       }
@@ -642,8 +647,8 @@
     "ADMIN_description_CR": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des clients et des études (qu'elles soient publiques ou privées).",
     "GESTIONNAIRE_description": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit sur les études.",
     "GESTIONNAIRE_description_CR": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit sur les clients et les études.",
-    "DEFAULT_description": "Un collaborateur est une personne formée à la méthode Bilan Carbone ®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
-    "DEFAULT_description_CR": "Un collaborateur est une personne formée à la méthode Bilan Carbone ®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
+    "DEFAULT_description": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
+    "DEFAULT_description_CR": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
     "close": "Fermer",
     "guide": "Guide des rôles"
   },
@@ -831,9 +836,13 @@
     "create": "Nouvelle Organisation",
     "modify": "Modifier",
     "myOrganization": "Mon organisation :",
-    "myOrganizations": "Mes organisations",
+    "myOrganizations": "Mes clients actuels",
+    "seeLess": "Voir moins",
+    "seeMore": "Voir plus",
     "name": "Nom : ",
     "title": "Organisation",
+    "createFirstClient": "Créer mon premier client",
+    "firstClientMessage": "Nous vous invitons à créer votre premier client puis à créer votre premier Bilan Carbone®",
     "form": {
       "create": "Créer l'organisation",
       "editTitle": "Modifier mon organisation",
@@ -867,13 +876,13 @@
     },
     "studySites": {
       "title": "Vous ne pouvez pas supprimer ces sites",
-      "description": "Des études existent avec les sites suivants. Vous devez d'abord les supprimer des études concernées avant de pouvoir les supprimer de votre organisation.",
+      "description": "Des études existent avec les sites suivants. <warning>Vous devez d'abord les supprimer des études concernées avant de pouvoir les supprimer de votre organisation.</warning>",
       "close": "Fermer",
       "existingSite": "<name></name> : <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 étude à laquelle} other {#  études auxquelles}} vous n'avez pas accès"
     },
     "card": {
-      "method": "Consulter la méthodologie Bilan Carbone ®",
+      "method": "Consulter la méthodologie Bilan Carbone®",
       "update": "Modifier mes informations"
     }
   },
@@ -892,7 +901,7 @@
     "deleteDialog": {
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
-      "description": "Toutes les données renseignées seront définitivement perdues, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
+      "description": "<warning>Toutes les données renseignées seront définitivement perdues</warning>, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
       "accept": "Oui",
       "decline": "Non"
     },
@@ -978,8 +987,8 @@
     "step1": {
       "name": "Nom de mon organisation",
       "role": "Mon rôle au sein de l'organisation",
-      "adminDescription": "Vous avez été formé au Bilan Carbone ® : Le rôle qui vous a été attribué est celui d'administrateur de votre organisation.",
-      "gestionnaireDescription": "Vous n'avez pas été formé au Bilan Carbone ® : Le rôle qui vous a été attribué est celui de gestionnaire de votre organisation."
+      "adminDescription": "Vous avez été formé au Bilan Carbone® : Le rôle qui vous a été attribué est celui d'administrateur de votre organisation.",
+      "gestionnaireDescription": "Vous n'avez pas été formé au Bilan Carbone® : Le rôle qui vous a été attribué est celui de gestionnaire de votre organisation."
     },
     "step2": {
       "addCollaborator": "Ajouter un collaborateur",
@@ -987,8 +996,8 @@
       "emailPlaceholder": "Ajouter une adresse email ici",
       "role": "Rôle",
       "adminDescription": "Possède l'ensemble des droits existants",
-      "collaboratorDescription": "Créé et complète des Bilan Carbone ®",
-      "crCollaboratorDescription": "Créé des clients et réalise leur Bilan Carbone ®",
+      "collaboratorDescription": "Créé et complète des Bilan Carbone®",
+      "crCollaboratorDescription": "Créé des clients et réalise leur Bilan Carbone®",
       "gestionnaireDescription": "Gère le compte de l'organisation mais n'a pas accès aux études",
       "validation": {
         "email": "Adresse email invalide",

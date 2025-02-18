@@ -21,11 +21,9 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props)
       break
     }
   }
-  return mainStudy ? (
-    <Block>
-      <StudyResultsContainerSummary study={mainStudy} studySite="all" />
-    </Block>
-  ) : null
+  return (
+    <Block>{mainStudy ? <StudyResultsContainerSummary study={mainStudy} studySite="all" showTitle /> : null}</Block>
+  )
 }
 
 export default ResultsContainerForUser

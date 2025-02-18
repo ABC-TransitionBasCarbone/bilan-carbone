@@ -4,8 +4,7 @@ describe('Home page', () => {
 
     cy.getByTestId('home-actualities').scrollIntoView()
     cy.getByTestId('home-actualities').should('be.visible')
-    cy.getByTestId('actualities-title').should('be.visible')
-    cy.getByTestId('actualities-title').contains('Actualités')
+    cy.getByTestId('home-actualities').contains('Les actualités du BC+')
 
     cy.getByTestId('actuality').should('have.length.gt', 0)
   })
@@ -15,8 +14,7 @@ describe('Home page', () => {
 
     cy.getByTestId('home-studies').scrollIntoView()
     cy.getByTestId('home-studies').should('be.visible')
-    cy.getByTestId('studies-title').should('be.visible')
-    cy.getByTestId('studies-title').contains('Mes études')
+    cy.getByTestId('home-studies').contains('Mes Bilan Carbone®')
   })
 
   it('Should display the list of actualities as a CR user', () => {
@@ -24,10 +22,9 @@ describe('Home page', () => {
 
     cy.getByTestId('home-actualities').scrollIntoView()
     cy.getByTestId('home-actualities').should('be.visible')
-    cy.getByTestId('actualities-title').should('be.visible')
-    cy.getByTestId('actualities-title').contains('Actualités')
+    cy.getByTestId('home-actualities').contains('Les actualités du BC+')
 
-    cy.getByTestId('actuality').should('have.length.gt', 0)
+    cy.getByTestId('actuality').should('have.length', 3)
   })
 
   it('Should display the list of organizations as a CR user', () => {
@@ -35,7 +32,6 @@ describe('Home page', () => {
 
     cy.getByTestId('home-organizations').scrollIntoView()
     cy.getByTestId('home-organizations').should('be.visible')
-    cy.getByTestId('organizations-title').should('be.visible')
-    cy.getByTestId('organizations-title').contains('Mes organisations')
+    cy.getByTestId('home-organizations').contains('Mes clients actuels')
   })
 })

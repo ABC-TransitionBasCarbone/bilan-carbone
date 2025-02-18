@@ -1,33 +1,58 @@
 'use server'
 
-import { getStudiesByUser, getStudiesByUserAndOrganization } from '@/db/study'
-import { filterAllowedStudies } from '@/services/permissions/study'
+import AddIcon from '@mui/icons-material/Add'
+import { Box } from '@mui/material'
+import { Study } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { getTranslations } from 'next-intl/server'
+import Block from '../base/Block'
 import Link from '../base/Link'
 import styles from './Studies.module.css'
 
 interface Props {
-  user: User
-  organizationId?: string
+  studies: Study[]
+  canAddStudy: boolean
 }
 
-const Studies = async ({ user, organizationId }: Props) => {
-  const studies = organizationId
-    ? await getStudiesByUserAndOrganization(user, organizationId)
-    : await getStudiesByUser(user)
-  const allowedStudies = await filterAllowedStudies(user, studies)
+const Studies = async ({ studies, canAddStudy }: Props) => {
+  const t = await getTranslations('study')
 
   return (
-    <ul className={classNames(styles.list, 'flex-col')}>
-      {allowedStudies.map((study) => (
-        <li key={study.id}>
-          <Link href={`/etudes/${study.id}`} data-testid="study" className={styles.link}>
-            {study.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <Block
+      title={t('myStudies')}
+      data-testid="home-studies"
+      actions={
+        canAddStudy
+          ? [
+              {
+                actionType: 'link',
+                href: '/etudes/creer',
+                ['data-testid']: 'new-study',
+                children: (
+                  <>
+                    <AddIcon />
+                    {t('create')}
+                  </>
+                ),
+              },
+            ]
+          : undefined
+      }
+    >
+      <Box className="flex-col grow">
+        {studies.length && (
+          <ul className={classNames(styles.list, 'flex-col')}>
+            {studies.map((study) => (
+              <li key={study.id}>
+                <Link href={`/etudes/${study.id}`} data-testid="study" className={styles.link}>
+                  {study.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Box>
+    </Block>
   )
 }
 

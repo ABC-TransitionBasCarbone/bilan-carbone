@@ -61,3 +61,7 @@
 .grow {
   flex: 1;
 }
+
+.grid {
+  display: grid;
+}

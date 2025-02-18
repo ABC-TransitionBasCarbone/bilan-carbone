@@ -13,7 +13,7 @@ describe('Delete study', () => {
   it('should be able to delete a study', () => {
     cy.login()
 
-    cy.getByTestId('new-study').click()
+    cy.visit('/etudes/creer')
     cy.getByTestId('organization-sites-checkbox').first().click()
     cy.getByTestId('new-study-organization-button').click()
 

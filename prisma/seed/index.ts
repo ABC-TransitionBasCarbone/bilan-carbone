@@ -131,6 +131,28 @@ const users = async () => {
     },
   })
 
+  const clientLessPassword = await signPassword(`client1234`)
+  const clientLessOrganization = await prisma.organization.create({
+    data: {
+      name: faker.company.name(),
+      siret: faker.finance.accountNumber(14),
+      isCR: true,
+      onboarded: true,
+    },
+  })
+  await prisma.user.create({
+    data: {
+      email: 'clientless@yopmail.com',
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      organizationId: clientLessOrganization.id,
+      password: clientLessPassword,
+      role: Role.DEFAULT,
+      isActive: true,
+      isValidated: true,
+    },
+  })
+
   const organizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 10 }).map((_, index) => ({
       name: faker.company.name(),
