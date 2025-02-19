@@ -3,7 +3,6 @@
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -37,7 +36,7 @@ const NewPasswordForm = ({ reset }: Props) => {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSubmitting(true)
-    if (!form.getValues().email) {
+    if (!form.formState.isValid) {
       setErrorMessage('emailRequired')
       setSubmitting(false)
     } else {

@@ -48,8 +48,7 @@ const ActivationForm = () => {
   const activate = async (emailToActivate: string) => {
     setErrorMessage('')
     setSubmitting(true)
-    const email = emailToActivate ?? form.getValues().email
-    if (email) {
+    if (form.formState.isValid) {
       const result = await activateEmail(emailToActivate ?? form.getValues().email)
       setSubmitting(false)
       if (result) {
