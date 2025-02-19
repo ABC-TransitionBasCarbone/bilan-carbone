@@ -6,7 +6,7 @@ describe('Authentication', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
     cy.intercept('POST', '/reset-password/*').as('reset-password')
-    cy.intercept('POST', '/activation').as('activate')
+    cy.intercept('POST', '/activation?email=').as('activate')
   })
 
   it('does not authenticate with wrong password', () => {
