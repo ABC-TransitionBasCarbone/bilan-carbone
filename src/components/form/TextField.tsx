@@ -46,7 +46,7 @@ export const FormTextField = <T extends FieldValues>({
                   }
                 : onChange
             }
-            value={textFieldProps.type === 'number' && Number.isNaN(value) ? '' : value}
+            value={(textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined ? '' : value}
             slotProps={{
               input: {
                 onWheel: (event) => (event.target as HTMLInputElement).blur(),

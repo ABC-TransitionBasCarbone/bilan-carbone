@@ -23,33 +23,39 @@ const NewPasswordForm = ({ reset }: Props) => {
   const t = useTranslations('login.form')
   const [errorMessage, setErrorMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const searchParams = useSearchParams()
 
-  const form = useForm<EmailCommand>({
+  const {
+    control,
+    getValues,
+    formState: { isValid },
+    setValue,
+  } = useForm<EmailCommand>({
     resolver: zodResolver(EmailCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
-      email: '',
+      email: searchParams.get('email') ?? '',
     },
   })
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSubmitting(true)
-    if (!form.formState.isValid) {
+
+    if (!isValid) {
       setErrorMessage('emailRequired')
       setSubmitting(false)
     } else {
-      await reset(form.getValues().email)
+      await reset(getValues().email)
       setSubmitting(false)
     }
   }
 
-  const searchParams = useSearchParams()
   useEffect(() => {
     const email = searchParams.get('email')
     if (email) {
-      form.setValue('email', email)
+      setValue('email', email)
     }
   }, [searchParams])
 
@@ -57,7 +63,7 @@ const NewPasswordForm = ({ reset }: Props) => {
     <Form onSubmit={onSubmit} className={authStyles.small}>
       <FormControl className={authStyles.form}>
         <FormTextField
-          control={form.control}
+          control={control}
           className={authStyles.input}
           label={t('email')}
           placeholder={t('emailPlaceholder')}

@@ -27,29 +27,37 @@ const ActivationForm = () => {
   useEffect(() => {
     const email = searchParams.get('email')
     if (email) {
+      setValue('email', email)
       activate(email)
     }
   }, [searchParams])
 
-  const form = useForm<EmailCommand>({
+  const {
+    control,
+    getValues,
+    setValue,
+    trigger,
+    formState: { isValid },
+  } = useForm<EmailCommand>({
     resolver: zodResolver(EmailCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
-      email: '',
+      email: searchParams.get('email') ?? '',
     },
   })
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    activate(form.getValues().email)
+    activate(getValues().email)
   }
 
   const activate = async (emailToActivate: string) => {
     setErrorMessage('')
     setSubmitting(true)
-    if (form.formState.isValid) {
-      const result = await activateEmail(emailToActivate ?? form.getValues().email)
+
+    if (isValid || emailToActivate) {
+      const result = await activateEmail(emailToActivate ?? getValues().email)
       setSubmitting(false)
       if (result) {
         setErrorMessage(result)
@@ -70,7 +78,7 @@ const ActivationForm = () => {
       <FormControl className={authStyles.form}>
         <p>{t('description')}</p>
         <FormTextField
-          control={form.control}
+          control={control}
           translation={t}
           name="email"
           className={authStyles.input}
