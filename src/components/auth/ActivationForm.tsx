@@ -4,7 +4,6 @@ import { activateEmail } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -68,8 +67,8 @@ const ActivationForm = () => {
     return <p data-testid="activation-success">{t('success')}</p>
   }
   return (
-    <Form onSubmit={onSubmit} className={classNames(authStyles.small)}>
-      <FormControl className={classNames(authStyles.form)}>
+    <Form onSubmit={onSubmit} className={authStyles.small}>
+      <FormControl className={authStyles.form}>
         <p>{t('description')}</p>
         <FormTextField
           control={form.control}

@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { FormControl, IconButton, InputAdornment } from '@mui/material'
-import classNames from 'classnames'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
@@ -96,8 +95,8 @@ const ResetForm = ({ user, token }: Props) => {
   }
 
   return (
-    <Form onSubmit={onSubmit} className={classNames(authStyles.big)}>
-      <FormControl className={classNames(authStyles.form)}>
+    <Form onSubmit={onSubmit} className="mt1">
+      <FormControl className={authStyles.form}>
         <p>{t('resetTitle')}</p>
         <FormTextField
           control={control}
