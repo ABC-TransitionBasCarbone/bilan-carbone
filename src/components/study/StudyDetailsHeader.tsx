@@ -39,6 +39,7 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
+  const tResults = useTranslations('results')
 
   const router = useRouter()
 
@@ -82,7 +83,8 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
       actions={[
         {
           actionType: 'button',
-          onClick: () => downloadStudyEmissionSources(study, tStudyExport, tCaracterisations, tPost, tQuality, tUnit),
+          onClick: () =>
+            downloadStudyEmissionSources(study, tStudyExport, tCaracterisations, tPost, tQuality, tUnit, tResults),
           disabled: study.emissionSources.length === 0,
           children: (
             <>
