@@ -32,7 +32,7 @@ const Navbar = ({ user }: Props) => {
       <div className="main-container px-2 align-center justify-between grow h100">
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
           <Link href="/" aria-label={t('home')} title={t('home')}>
-            <Image src="/logos/logo_bc_2025_noir.png" width={200} height={48} alt="" className={styles.logo} />
+            <Image src="/logos/logo_BC_2025_blanc.png" width={200} height={48} alt="" className={styles.logo} />
           </Link>
           <Link className={styles.link} href="/facteurs-d-emission">
             <span className={styles.big}>{t('factors')}</span>

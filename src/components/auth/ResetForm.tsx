@@ -20,6 +20,8 @@ import { FormTextField } from '../form/TextField'
 import ResetLinkAlreadyUsed from '../pages/ResetLinkAlreadyUsed'
 import authStyles from './Auth.module.css'
 
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
+
 interface Props {
   user?: User
   token: string
@@ -52,6 +54,7 @@ const ResetForm = ({ user, token }: Props) => {
   })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const { getValues, control, watch } = useForm<ResetPasswordCommand>({
     resolver: zodResolver(ResetPasswordCommandValidation),
@@ -77,12 +80,18 @@ const ResetForm = ({ user, token }: Props) => {
     setSubmitting(true)
     setError(false)
     const { email, password } = getValues()
-    const result = await reset(email, password, token)
-    if (result) {
-      router.push('/login')
-    } else {
-      setError(true)
+
+    if (!email || !password) {
+      setErrorMessage('emailAndPasswordRequired')
       setSubmitting(false)
+    } else {
+      const result = await reset(email, password, token)
+      if (result) {
+        router.push('/login')
+      } else {
+        setError(true)
+        setSubmitting(false)
+      }
     }
   }
 
@@ -162,6 +171,7 @@ const ResetForm = ({ user, token }: Props) => {
           </p>
         )}
         <LoadingButton
+          fullWidth
           type="submit"
           data-testid="reset-button"
           loading={submitting}
@@ -172,6 +182,13 @@ const ResetForm = ({ user, token }: Props) => {
         >
           {t('reset')}
         </LoadingButton>
+        {errorMessage && (
+          <p className="error" data-testid="activation-form-error">
+            {t.rich(errorMessage, {
+              link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+            })}
+          </p>
+        )}
       </FormControl>
     </Form>
   )

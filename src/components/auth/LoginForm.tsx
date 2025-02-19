@@ -10,7 +10,7 @@ import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
@@ -18,14 +18,17 @@ import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 import styles from './LoginForm.module.css'
 
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
+
 const LoginForm = () => {
   const t = useTranslations('login.form')
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
 
-  const form = useForm<LoginCommand>({
+  const { getValues, control, watch } = useForm<LoginCommand>({
     resolver: zodResolver(LoginCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
@@ -35,18 +38,31 @@ const LoginForm = () => {
     },
   })
 
+  useEffect(() => {
+    const { unsubscribe } = watch((values) => setEmail(values.email ?? ''))
+
+    return () => unsubscribe()
+  }, [watch])
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setError('')
+    setErrorMessage('')
     setSubmitting(true)
+
+    if (!getValues().email || !getValues().password) {
+      setErrorMessage('emailAndPasswordRequired')
+      setSubmitting(false)
+      return
+    }
+
     const result = await signIn('credentials', {
-      ...form.getValues(),
+      ...getValues(),
       redirect: false,
     })
 
     if (result?.error) {
       setSubmitting(false)
-      setError(t('error'))
+      setErrorMessage('error')
     } else {
       router.push('/')
     }
@@ -57,7 +73,7 @@ const LoginForm = () => {
       <FormControl className={classNames(authStyles.form)}>
         <FormTextField
           className="grow"
-          control={form.control}
+          control={control}
           name="email"
           label={t('email')}
           placeholder={t('emailPlaceholder')}
@@ -66,7 +82,7 @@ const LoginForm = () => {
         />
         <FormTextField
           className={classNames(authStyles.input, 'grow')}
-          control={form.control}
+          control={control}
           name="password"
           label={t('password')}
           placeholder={t('passwordPlaceholder')}
@@ -84,13 +100,13 @@ const LoginForm = () => {
           iconPosition="after"
           data-testid="input-password"
           type={showPassword ? 'text' : 'password'}
-          helperText={error}
-          error={!!error}
+          helperText={errorMessage}
+          error={!!errorMessage}
         />
         <Link
           data-testid="reset-password-link"
           className={styles.link}
-          href={`/reset-password?email=${form.getValues().email}`}
+          href={`/reset-password?email=${email}`}
           prefetch={false}
         >
           {t('forgotPassword')}
@@ -100,9 +116,16 @@ const LoginForm = () => {
             {t('login')}
           </LoadingButton>
         </div>
+        {errorMessage && (
+          <p className="error" data-testid="activation-form-error">
+            {t.rich(errorMessage, {
+              link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+            })}
+          </p>
+        )}
         <div className={styles.activation}>
           {t('firstConnection')}
-          <Link data-testid="activation-button" className="ml-2" href="/activation" prefetch={false}>
+          <Link data-testid="activation-button" className="ml-2" href={`/activation?email=${email}`} prefetch={false}>
             {t('activate')}
           </Link>
         </div>
