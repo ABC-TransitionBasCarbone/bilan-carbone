@@ -9,6 +9,12 @@ export const getRawOrganizationById = (id: string | null) =>
 export const getOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
 
+export const hasOrganizationActiveUser = (id: string | null) =>
+  !!prismaClient.user.findFirst({
+    select: { id: true },
+    where: { organizationId: id, isActive: true },
+  })
+
 export const getOrganizationUsers = (id: string | null) =>
   id
     ? prismaClient.user.findMany({
