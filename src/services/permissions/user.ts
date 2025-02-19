@@ -81,5 +81,9 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
+  if (!user.level && newRole !== Role.GESTIONNAIRE) {
+    return false
+  }
+
   return true
 }
