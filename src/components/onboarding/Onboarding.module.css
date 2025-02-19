@@ -31,8 +31,8 @@
   line-height: 2rem;
 }
 
-.field {
-  font-weight: bold;
+.fields {
+  gap: 0.5rem;
 }
 
 .roleLabel {

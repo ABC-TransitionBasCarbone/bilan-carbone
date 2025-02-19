@@ -995,6 +995,9 @@
     "step1": {
       "name": "Nom de mon organisation",
       "role": "Mon rôle au sein de l'organisation",
+      "information": "Mes informations",
+      "firstName": "Prénom",
+      "lastName": "Nom",
       "adminDescription": "Vous avez été formé au Bilan Carbone® : Le rôle qui vous a été attribué est celui d'administrateur de votre organisation.",
       "gestionnaireDescription": "Vous n'avez pas été formé au Bilan Carbone® : Le rôle qui vous a été attribué est celui de gestionnaire de votre organisation."
     },

@@ -45,6 +45,8 @@ export type EditProfileCommand = z.infer<typeof EditProfileCommandValidation>
 
 export const OnboardingCommandValidation = z.object({
   organizationId: z.string(),
+  firstName: z.string({ required_error: 'firstName' }),
+  lastName: z.string({ required_error: 'lastName' }),
   companyName: z.string({ required_error: 'companyName' }),
   collaborators: z
     .array(
