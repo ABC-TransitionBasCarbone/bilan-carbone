@@ -113,8 +113,8 @@
   },
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® +",
-    "explaination": "La solution de comptabilité carbone de l’Association pour la transition Bas Carbone, dédiée à l’ensemble de nos adhérents Conseil et Recherche, Entreprises et Collectivités Territoriales",
-    "question": "Une question ? Contactez-nous à <link>support@abc-transitionbascarbone.fr</link>",
+    "explaination": "L'outil dédié à l’application de la méthode Bilan Carbone®, développé par l’Association pour la transition Bas Carbone (ABC), et accessible à l’ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
+    "question": "Une question ? <link>Contactez-nous</link>",
     "form": {
       "activate": "Activer mon compte",
       "firstConnection": "Première connexion ?",
