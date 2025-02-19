@@ -20,6 +20,7 @@ const EmissionSourceFactorModal = ({ close, open, emissionFactors, selectEmissio
         title={t('title')}
         onClose={close}
         actions={[{ actionType: 'button', onClick: close, children: t('cancel') }]}
+        wide
       >
         <EmissionFactorsTable emissionFactors={emissionFactors} selectEmissionFactor={selectEmissionFactor} />
       </Modal>
