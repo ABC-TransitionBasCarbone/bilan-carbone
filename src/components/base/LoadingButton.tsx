@@ -14,7 +14,7 @@ export interface Props {
 const LoadingButton = ({ children, loading, disabled, iconButton, fullWidth, ...rest }: Props & ButtonProps) => {
   const t = useTranslations('spinner')
   return (
-    <Button disabled={disabled || loading} {...rest} {...(fullWidth && { className: classNames(styles.full) })}>
+    <Button disabled={disabled || loading} {...rest} {...(fullWidth && { fullWidth: true })}>
       {(!loading || !iconButton) && <>{children}</>}
       {loading && (
         <>
