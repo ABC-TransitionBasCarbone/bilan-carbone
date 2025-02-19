@@ -121,7 +121,9 @@
       "resetTitle": "Vous avez demandé de créer ou réinitialiser votre mot de passe. Rentrez les informations demandées ci-dessous pour confirmer votre création de compte ou réinitialisation de mot de passe.",
       "login": "Se connecter",
       "email": "Email",
+      "emailPlaceholder": "Renseignez votre adresse email",
       "password": "Mot de passe",
+      "passwordPlaceholder": "Renseignez votre mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
       "hidePassword": "Cacher le mot de passe",
       "showPassword": "Montrer le mot de passe",
@@ -141,7 +143,9 @@
   },
   "activation": {
     "description": "Merci d'utiliser le même e-mail que vous avez utilisé lors de votre adhésion à l'Association pour la Transition Bas Carbone",
-    "email": "Mail pour activer votre compte",
+    "email": "Email",
+    "emailPlaceholder": "Email utilisée lors de votre formation",
+    "emailRequired": "Veuillez entrer un email",
     "validate": "Valider",
     "Not authorized": "Vous n'êtes pas adhérent ou pas formé. Si vous pensez qu'il s'agit d'une erreur, merci de contacter le <link>support</link>.",
     "success": "Vous allez recevoir un mail pour finaliser l'activation de votre compte."

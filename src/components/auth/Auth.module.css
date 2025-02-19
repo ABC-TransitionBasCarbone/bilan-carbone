@@ -1,7 +1,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
   margin-top: 30%;
 }
 
@@ -10,11 +10,11 @@
 }
 
 .medium {
-  margin-top: 25%;
+  margin-top: 20%;
 }
 
 .big {
-  margin-top: 10%;
+  margin-top: 1rem;
 }
 
 .input {
