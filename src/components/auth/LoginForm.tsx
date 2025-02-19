@@ -2,7 +2,9 @@
 
 import { LoginCommand, LoginCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FormControl } from '@mui/material'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { FormControl, IconButton, InputAdornment } from '@mui/material'
 import classNames from 'classnames'
 import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
@@ -21,6 +23,7 @@ const LoginForm = () => {
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<LoginCommand>({
     resolver: zodResolver(LoginCommandValidation),
@@ -50,13 +53,14 @@ const LoginForm = () => {
   }
 
   return (
-    <Form onSubmit={onSubmit} className={classNames(authStyles.form, authStyles.medium)}>
-      <FormControl>
+    <Form onSubmit={onSubmit} className={classNames(authStyles.medium)}>
+      <FormControl className={classNames(authStyles.form)}>
         <FormTextField
           className="grow"
           control={form.control}
           name="email"
           label={t('email')}
+          placeholder={t('emailPlaceholder')}
           translation={t}
           data-testid="input-email"
         />
@@ -65,9 +69,21 @@ const LoginForm = () => {
           control={form.control}
           name="password"
           label={t('password')}
+          placeholder={t('passwordPlaceholder')}
           translation={t}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label={showPassword ? t('hidePassword') : t('showPassword')}
+                onClick={() => setShowPassword((show) => !show)}
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
+          iconPosition="after"
           data-testid="input-password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           helperText={error}
           error={!!error}
         />

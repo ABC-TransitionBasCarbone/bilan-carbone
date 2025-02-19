@@ -22,7 +22,11 @@ const PublicPage = ({ children }: Props) => {
             <Image src="/logos/monogramme_BC_noir.png" alt="logo" width={400} height={400} className={styles.image} />
             <p>
               {t.rich('question', {
-                link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+                link: (children) => (
+                  <Link href={`mailto:${contactMail}`} style={{ color: 'white' }}>
+                    {children}
+                  </Link>
+                ),
               })}
             </p>
           </div>

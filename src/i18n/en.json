@@ -119,7 +119,9 @@
       "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
       "login": "Log in",
       "email": "Email",
+      "emailPlaceholder": "Enter a mail address",
       "password": "Password",
+      "passwordPlaceholder": "Enter your password",
       "confirmPassword": "Confirm password",
       "hidePassword": "Hide password",
       "showPassword": "Show password",
@@ -139,7 +141,9 @@
   },
   "activation": {
     "description": "Please use the same email you used when joining the Association for Low Carbon Transition.",
-    "email": "Email to activate your account",
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Veuillez entrer un email",
     "validate": "Validate",
     "Not authorized": "You are not a member or have not completed the training. If you believe this is an error, please contact <link>support</link>.",
     "success": "You will receive an email to finish your account validation."
