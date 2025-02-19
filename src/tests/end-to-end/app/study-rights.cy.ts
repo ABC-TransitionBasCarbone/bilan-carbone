@@ -6,7 +6,6 @@ describe('Study Rights', () => {
   })
 
   beforeEach(() => {
-    cy.intercept('POST', '/etudes/creer').as('createStudy')
     cy.intercept('POST', '/etudes/*/cadrage/ajouter').as('create')
     cy.intercept('POST', '/etudes/*/cadrage').as('update')
   })
@@ -237,7 +236,6 @@ describe('Study Rights', () => {
     cy.get('[data-value="Initial"]').click()
 
     cy.getByTestId('new-study-create-button').click()
-    cy.wait('@createStudy')
 
     cy.getByTestId('study-cadrage-link').click()
 
@@ -264,7 +262,6 @@ describe('Study Rights', () => {
     cy.get('[data-value="Initial"]').click()
 
     cy.getByTestId('new-study-create-button').click()
-    cy.wait('@createStudy')
 
     cy.getByTestId('study-cadrage-link').click()
 
