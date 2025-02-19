@@ -1,6 +1,7 @@
 'use client'
 import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/user'
+import { isAdmin } from '@/services/permissions/user'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
@@ -32,20 +33,15 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       { header: t('email'), accessorKey: 'email' },
       { header: t('level'), accessorFn: (member: TeamMember) => tLevel(member.level) },
     ]
-    switch (user.role) {
-      case Role.ADMIN:
-        columns.push({
-          header: t('role'),
-          accessorKey: 'role',
-          cell: (context) => {
-            const role = context.getValue() as Role
-            return <SelectRole user={user} currentRole={role} email={context.row.original.email} />
-          },
-        })
-        break
-      case Role.GESTIONNAIRE:
-        columns.push({ header: t('role'), accessorFn: (member: TeamMember) => tRole(member.role) })
-        break
+    if (isAdmin(user.role) || user.role === Role.GESTIONNAIRE) {
+      columns.push({
+        header: t('role'),
+        accessorKey: 'role',
+        cell: (context) => {
+          const role = context.getValue() as Role
+          return <SelectRole user={user} currentRole={role} email={context.row.original.email} />
+        },
+      })
     }
     return columns
   }, [t, tLevel, tRole, user])

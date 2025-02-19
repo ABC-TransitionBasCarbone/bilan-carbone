@@ -54,7 +54,7 @@ const Navbar = ({ user }: Props) => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  {isAdmin(user.role) && (
+                  {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
                     <Link href={`/organisations/${user.organizationId}/modifier`} className={styles.link}>
                       {t('information')}
                     </Link>
