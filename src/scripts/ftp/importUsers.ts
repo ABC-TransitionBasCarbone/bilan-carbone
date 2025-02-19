@@ -34,8 +34,18 @@ const getUsersFromFTP = async () => {
   for (let i = 0; i < values.length; i++) {
     const value = values[i]
     const email = value['User_Email']
+    const firstName = value['Firstname']
+    const lastName = value['Lastname']
     const siretOrSiren = value['SIRET']
     const sessionCodeTraining = value['Session_Code']
+
+    const membershipYear = value['Membership_Year']
+    const currentYear = new Date().getFullYear()
+
+    if (membershipYear && !membershipYear.include(currentYear)) {
+      console.log(`Skipping ${email} because membership year is ${membershipYear}`)
+      continue
+    }
 
     console.log(`Processing ${email}`)
     if (i % 50 === 0) {
@@ -43,9 +53,9 @@ const getUsersFromFTP = async () => {
     }
     const user: Prisma.UserCreateManyInput = {
       email,
+      firstName,
+      lastName,
       role: Role.GESTIONNAIRE,
-      firstName: '',
-      lastName: '',
       isActive: false,
       isValidated: false,
       importedFileDate: fileDate,
