@@ -135,8 +135,8 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          (emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0) || '0',
-          'kgCO₂e',
+          ((emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0)) / 1000 || '0',
+          'tCO₂e',
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
@@ -198,7 +198,7 @@ const getEmissionSourcesCSVContent = (
   const emptyFieldsCount = type === 'Study' ? 3 : type === 'Post' ? 2 : 1
   const emptyFields = (count: number) => Array(count).fill('')
 
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources) / 1000
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
   const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
@@ -206,7 +206,12 @@ const getEmissionSourcesCSVContent = (
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
   const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources)
-  const uncertaintyRow = [t('uncertainty'), ...emptyFields(emptyFieldsCount), uncertainty[0], uncertainty[1]].join(';')
+  const uncertaintyRow = [
+    t('uncertainty'),
+    ...emptyFields(emptyFieldsCount),
+    uncertainty[0] / 1000,
+    uncertainty[1] / 1000,
+  ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
 }
@@ -294,7 +299,7 @@ export const formatConsolidatedStudyResultsForExport = (
       dataForExport.push([
         tPost(result.post) ?? '',
         result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
-        result.value ?? '',
+        (result.value ?? 0) / 1000,
       ])
     }
 
@@ -386,12 +391,12 @@ export const formatBegesStudyResultsForExport = (
       dataForExport.push([
         category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
         post,
-        result.co2,
-        result.ch4,
-        result.n2o,
-        result.other,
-        result.total,
-        result.co2b,
+        result.co2 / 1000,
+        result.ch4 / 1000,
+        result.n2o / 1000,
+        result.other / 1000,
+        result.total / 1000,
+        result.co2b / 1000,
         result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
       ])
     }
