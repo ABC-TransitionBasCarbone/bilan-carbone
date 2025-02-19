@@ -136,14 +136,16 @@
       "error": "Please check your email and your password",
       "expired": "This password reset link has expired",
       "backToHome": "Back to home",
-      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us at the email address"
+      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us at the email address",
+      "emailRequired": "Please enter an email",
+      "emailAndPasswordRequired": "Please enter an email and a password"
     }
   },
   "activation": {
     "description": "Please use the same email you used when joining the Association for Low Carbon Transition.",
     "email": "Email",
     "emailPlaceholder": "Email used during your training",
-    "emailRequired": "Veuillez entrer un email",
+    "emailRequired": "Please enter an email",
     "validate": "Validate",
     "Not authorized": "You are not a member or have not completed the training. If you believe this is an error, please contact <link>support</link>.",
     "success": "You will receive an email to finish your account validation."

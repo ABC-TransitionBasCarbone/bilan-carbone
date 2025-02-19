@@ -20,7 +20,7 @@ const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const ActivationForm = () => {
   const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [success, setSuccess] = useState(false)
 
   const searchParams = useSearchParams()
@@ -47,20 +47,20 @@ const ActivationForm = () => {
   }
 
   const activate = async (emailToActivate: string) => {
-    setError('')
+    setErrorMessage('')
     setSubmitting(true)
     const email = emailToActivate ?? form.getValues().email
     if (email) {
       const result = await activateEmail(emailToActivate ?? form.getValues().email)
       setSubmitting(false)
       if (result) {
-        setError(result)
+        setErrorMessage(result)
       } else {
         setSuccess(true)
       }
     } else {
       setSubmitting(false)
-      setError('emailRequired')
+      setErrorMessage('emailRequired')
     }
   }
 
@@ -80,12 +80,12 @@ const ActivationForm = () => {
           placeholder={t('emailPlaceholder')}
           data-testid="activation-email"
         />
-        <LoadingButton data-testid="activation-button" type="submit" loading={submitting}>
+        <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
           {t('validate')}
         </LoadingButton>
-        {error && (
+        {errorMessage && (
           <p className="error" data-testid="activation-form-error">
-            {t.rich(error, {
+            {t.rich(errorMessage, {
               link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
             })}
           </p>
