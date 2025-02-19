@@ -53,7 +53,7 @@ export const setOnboarded = (organizationId: string, userId: string) =>
 
 export const onboardOrganization = async (
   userId: string,
-  { organizationId, companyName, collaborators = [] }: OnboardingCommand,
+  { organizationId, companyName, firstName, lastName, collaborators = [] }: OnboardingCommand,
 ) => {
   await prismaClient.$transaction(async (transaction) => {
     const dbUser = await prismaClient.user.findUnique({ where: { id: userId } })
@@ -81,7 +81,7 @@ export const onboardOrganization = async (
       }),
       transaction.user.update({
         where: { id: userId },
-        data: { role },
+        data: { firstName, lastName, role },
       }),
       transaction.user.createMany({ data: newCollaborators }),
     ])

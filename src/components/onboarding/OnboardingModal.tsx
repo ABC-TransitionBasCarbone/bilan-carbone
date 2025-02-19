@@ -40,6 +40,8 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     reValidateMode: 'onBlur',
     defaultValues: {
       organizationId: organization.id,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
       companyName: organization.name || '',
       collaborators: [{ email: '' }],
     },
