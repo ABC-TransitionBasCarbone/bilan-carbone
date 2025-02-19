@@ -84,7 +84,9 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
         >
           <DownloadIcon />
         </Button>
-        <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
+        {type !== 'consolidated' && (
+          <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
+        )}
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
