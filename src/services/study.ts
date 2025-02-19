@@ -84,6 +84,7 @@ const getEmissionSourcesRows = (
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
+  tResults: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
 ) => {
   const initCols = []
@@ -136,7 +137,7 @@ const getEmissionSourcesRows = (
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
           ((emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0)) / 1000 || '0',
-          'tCO₂e',
+          tResults('unit'),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
@@ -182,6 +183,7 @@ const getEmissionSourcesCSVContent = (
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
+  tResults: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
 ) => {
   const { columns, rows } = getEmissionSourcesRows(
@@ -192,6 +194,7 @@ const getEmissionSourcesCSVContent = (
     tPost,
     tQuality,
     tUnit,
+    tResults,
     type,
   )
 
@@ -225,6 +228,7 @@ export const downloadStudyPost = async (
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
+  tResults: ReturnType<typeof useTranslations>,
 ) => {
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
@@ -241,6 +245,7 @@ export const downloadStudyPost = async (
     tPost,
     tQuality,
     tUnit,
+    tResults,
     'Post',
   )
 
@@ -254,6 +259,7 @@ export const downloadStudyEmissionSources = async (
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
+  tResults: ReturnType<typeof useTranslations>,
 ) => {
   const emissionSources = study.emissionSources.sort((a, b) => a.subPost.localeCompare(b.subPost))
 
@@ -272,6 +278,7 @@ export const downloadStudyEmissionSources = async (
     tPost,
     tQuality,
     tUnit,
+    tResults,
     'Study',
   )
 
