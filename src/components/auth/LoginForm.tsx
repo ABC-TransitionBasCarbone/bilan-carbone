@@ -28,7 +28,12 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
 
-  const { getValues, control, watch, formState } = useForm<LoginCommand>({
+  const {
+    getValues,
+    control,
+    watch,
+    formState: { isValid },
+  } = useForm<LoginCommand>({
     resolver: zodResolver(LoginCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
@@ -49,7 +54,7 @@ const LoginForm = () => {
     setErrorMessage('')
     setSubmitting(true)
 
-    if (!formState.isValid) {
+    if (!isValid) {
       setErrorMessage('emailAndPasswordRequired')
       setSubmitting(false)
       return
