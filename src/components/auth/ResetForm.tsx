@@ -55,7 +55,7 @@ const ResetForm = ({ user, token }: Props) => {
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const { getValues, control, watch } = useForm<ResetPasswordCommand>({
+  const { getValues, control, watch, formState } = useForm<ResetPasswordCommand>({
     resolver: zodResolver(ResetPasswordCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
@@ -78,12 +78,12 @@ const ResetForm = ({ user, token }: Props) => {
     e.preventDefault()
     setSubmitting(true)
     setError(false)
-    const { email, password } = getValues()
 
-    if (!email || !password) {
+    if (!formState.isValid) {
       setErrorMessage('emailAndPasswordRequired')
       setSubmitting(false)
     } else {
+      const { email, password } = getValues()
       const result = await reset(email, password, token)
       if (result) {
         router.push('/login')
