@@ -98,8 +98,10 @@
     "team": "Équipe"
   },
   "actuality": {
-    "title": "Actualités",
-    "noItems": "Aucune actualité pour le moment"
+    "title": "Les actualités du BC+",
+    "noItems": "Aucune actualité pour le moment",
+    "seeLess": "Voir moins",
+    "seeMore": "Voir plus"
   },
   "legalNotices": {
     "profile": "Retour au profil"
@@ -140,7 +142,7 @@
     "email": "Mail pour activer votre compte",
     "validate": "Valider",
     "Not authorized": "Vous n'êtes pas adhérent ou pas formé. Si vous pensez qu'il s'agit d'une erreur, merci de contacter le <link>support</link>.",
-    "success": "Vous avez activé votre compte avec succès ! Vous allez recevoir un e-mail pour initialiser votre mot de passe."
+    "success": "Vous allez recevoir un mail pour finaliser l'activation de votre compte."
   },
   "navigation": {
     "factors": "Facteurs d'émission",
@@ -171,6 +173,7 @@
     "cancelUpdate": "Annuler",
     "update": "Mettre à jour",
     "updating": "Mise à jour",
+    "version": "Version du BC+ : ",
     "validation": {
       "firstName": "1 caractère minimum",
       "lastName": "1 caractère minimum"
@@ -179,9 +182,23 @@
   "settings": {
     "title": "Mes paramètres d'application",
     "validate": "Sauvegarder",
-    "validatedEmissionSourcesOnly": "Afficher uniquement les sources d'emissions validées",
+    "validatedEmissionSourcesOnly": "Prendre en compte les émissions non validées dans les Bilans Carbone®",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "glossary": {
+      "title": "Glossaire",
+      "exports": "Prendre en compte les émissions non validées",
+      "exportsDescription": "Au sein d'un Bilan Carbone®, vous pouvez choisir d'afficher toutes les émissions que vous avez renseignées, ou bien uniquement celles qui ont été validées par un validateur.",
+      "caUnits": "Unité des chiffres d'affaire",
+      "caUnitsDescription": "Précisez l'unité que vous souhaitez utiliser pour les chiffres d'affaire.",
+      "close": "Fermer"
+    },
+    "caUnit": {
+      "label": "Unité des chiffres d'affaire des sites",
+      "U": "€",
+      "K": "k€",
+      "M": "M€"
+    }
   },
   "admin": {
     "title": "Administration du BC+",
@@ -189,8 +206,11 @@
     "uploadButton": "Importer un fichier CSV de l'ADEME"
   },
   "study": {
-    "create": "Nouvelle étude",
-    "myStudies": "Mes études",
+    "create": "Ajouter un Bilan Carbone®",
+    "myStudies": "Mes Bilan Carbone®",
+    "createFirstStudy": "Créer mon premier Bilan Carbone®",
+    "seeResults": "Voir les résultats",
+    "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre premier bilan.",
     "navigation": {
       "homepage": "Accueil",
       "framing": "Cadrage",
@@ -219,13 +239,27 @@
       "private": "Privée",
       "public": "Publique",
       "create": "Créer l'étude",
+      "glossary": {
+        "title": "Glossaire",
+        "validatorEmail": "Email du validateur",
+        "validatorEmailDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\" (lien vers le menu paramètre).",
+        "type": "Type de Bilan Carbone®",
+        "typeDescription": "La nouvelle version de la méthode Bilan Carbone® introduit trois niveaux de maturité pour les Bilan Carbone® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
+        "visibility": "Visibilité de l'étude",
+        "visibilityDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
+        "exports": "Exports",
+        "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
+        "control": "Mode de contrôle",
+        "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone®) les émissions vont se ventiler. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émissions varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
+        "close": "Fermer"
+      },
       "validation": {
         "name": "Veuillez renseigner un nom",
         "validator": "Veuillez selectionner un validateur",
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
-        "level": "Veuillez selectionner le type de Bilan Carbone"
+        "level": "Veuillez selectionner le type de Bilan Carbone®"
       },
       "error": {
         "default": "Une erreur s'est produite ...",
@@ -258,15 +292,19 @@
     "role": {
       "Validator": "Validateur",
       "Editor": "Éditeur",
-      "Reader": "Lecteur"
+      "Reader": "Lecteur",
+      "guide": "Guide des rôles",
+      "introduction": "Depuis cette page, vous pouvez gérer les membres de votre équipe impliqués dans ce Bilan Carbone®. Dans tous les cas, les administrateurs de votre organisation ont accès à toutes vos études en tant que validateur. Si votre étude est publique, les membres de votre organisation (collaborateurs, gestionnaires) y ont automatiquement accès en lecture. Vous pouvez également ajouter des personnes externes à votre organisation via ce menu.",
+      "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émissions qui ont été renseignées par les validateurs, éditeurs et contributeurs.",
+      "Editor_description": "A tous les droits sur l'étude à l'exception de la validation des sources d'émissions.",
+      "Reader_description": "Peut uniquement accéder en lecture à l'étude et exporter les informations de celle-ci.",
+      "close": "Fermer"
     },
     "title": "Étude",
     "rights": {
-      "contributors": "Contributeurs",
       "isPublic": "L'étude est publique",
       "isPrivate": "L'étude est privée",
       "title": "Cadrage de l'étude : {name}",
-      "newContributorLink": "Ajouter un contributeur",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",
@@ -279,8 +317,8 @@
         },
         "dialog": {
           "title": "Êtes-vous sûr de vouloir ajouter cette personne à votre étude ?",
-          "otherOrganization": "Elle ne fait pas partie de votre organisation.",
-          "rightsWarning": "Si elle ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle, vous ne pourrez donc lui donner un accès qu'à cette étude et avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
+          "otherOrganization": "<warning>Elle ne fait pas partie de votre organisation.</warning>",
+          "rightsWarning": "Si elle ne réunit pas les conditions nécessaires pour l'ajouter avec ce rôle, vous ne pourrez donc lui donner un accès qu'à cette étude avec les droits de LECTURE ou de contribution. Un mail lui sera envoyé pour lui donner accès à l'étude.",
           "accept": "Oui",
           "decline": "Non"
         }
@@ -299,7 +337,14 @@
       "contributorsTable": {
         "email": "Email",
         "post": "Poste",
-        "subPosts": "Sous postes"
+        "subPosts": "Sous postes",
+        "title": "Contributeurs",
+        "newContributorLink": "Ajouter un contributeur",
+        "role": {
+          "information": "Informations",
+          "description": "Vous pouvez ici gérer les contributeurs de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émissions que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des contributeurs, n'hésitez pas à aller voir notre <link>FAQ</link>",
+          "close": "Fermer"
+        }
       },
       "table": {
         "email": "Email",
@@ -319,7 +364,7 @@
         "accept": "Oui",
         "decline": "Non",
         "delete": "Supprimer",
-        "description": "{count, plural, =1 {Il contient} other {Certains contiennent}} des sources d'emission. Toutes les données renseignées seront definitivement perdues.",
+        "description": "{count, plural, =1 {Il contient} other {Certains contiennent}} des sources d'emission. <warning>Toutes les données renseignées seront definitivement perdues.</warning>",
         "title": "Êtes-vous sûr de vouloir supprimer {count, plural, =1 {ce site} other {ces sites}} ?"
       }
     },
@@ -378,7 +423,7 @@
       "cancel": "Annuler",
       "confirm": "Confirmer",
       "delete": "Supprimer l'étude",
-      "content": "Êtes vous sur de vouloir supprimer cette étude ? Toutes ses données seront supprimées définitivement et seront impossible à récupérées. Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
+      "content": "Êtes vous sur de vouloir supprimer cette étude ? <warning>Toutes ses données seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
       "name": "Nom de l'étude",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "title": "Suppression d'une étude",
@@ -432,7 +477,7 @@
       "FretInterne": "Fret interne",
       "FretSortant": "Fret sortant",
       "DeplacementsDomicileTravail": "Déplacements domicile travail",
-      "DeplacementsDesEmployesDansLeCadreDuTravail": "Déplacements des employés dans le cadre du travail",
+      "DeplacementsProfessionnels": "Déplacements professionnels",
       "DeplacementsVisiteurs": "Déplacements visiteurs",
       "Batiments": "Bâtiments",
       "AutresInfrastructures": "Autres infrastructures",
@@ -452,10 +497,11 @@
       "update": "Mettre à jour",
       "cancel": "Annuler",
       "name": "Nom",
+      "namePlaceholder": "Donnez un nom à votre facteur d'émission",
       "attribute": "Détails",
       "unit": "Unité",
       "source": "Source",
-      "detailedGES": "Décomposition des GES ?",
+      "detailedGES": "Décomposition des GES",
       "multiple": "Facteur d'émission désagrégé",
       "subPartsCount": "Nombre de composantes",
       "partType": "Type de composante",
@@ -476,6 +522,22 @@
       "missingPost": "Veuillez selectionner un poste",
       "subPost": "Sous Poste",
       "comment": "Commentaires",
+      "glossary": {
+        "title": "Glossaire",
+        "detailedGES": "Décomposition des GES",
+        "detailedGESDescription": "Si vous connaissez la part d'émission due aux différents GES pour votre facteur d'émission, vous pouvez la renseigner via cette fonctionnalité. La méthode Bilan Carbone® n'utilise pas cette décomposition, car connaître la répartition des émissions sur les différents GES complexifie les résultats sans apporter d'informations utiles à la construction du plan de transition. Cette décomposition des émissions sur les différents GES sert en revanche dans le cas où vous souhaitez obtenir les différents exports proposés par le BC+.",
+        "multiple": "Facteur d'émission désagrégé",
+        "multipleDescription": {
+          "introduction": "Certains facteurs d'émission possèdent des composantes, c'est-à-dire qu'ils sont constitués de différents émissions dues à des activités différentes. Par exemple, les facteurs d'émission pour l'électricité en France sont classiquement découpés en trois composantes :",
+          "upstream": "<b>L'amont</b>, qui tient compte des émissions liées à la construction des infrastructures de production de l'électricité et de son transport sur le réseau.",
+          "combustion": "<b>La combustion à la centrale</b>, qui tient compte des émissions liées à la production de l'électricité en elle-même (combustion de charbon, ...).",
+          "loss": "<b>Les pertes</b>, qui tiennent compte de la déperdition sous forme de chaleur lors du transport de l'électricité sur le réseau.",
+          "conclusion": "Cette désagrégation n'est pas utilisée au sein de la méthode Bilan Carbone®, mais permet de ventiler les émissions des différentes composantes au sein des catégories pour les exports (pour le Bilan GES règlementaire, en reprenant le même exemple, et si la source d'émission est \"Opérée\", les émissions \"amont\", \"combustion à la centrale\" et \"pertes\" sont respectivement ventilées au sein des catégories 4.1, 1.2, 4.1). <b>Nous vous recommandons très fortement de ne pas utiliser cette fonctionnalité si vous ne maîtrisez pas les affectations au sein du Bilan GES règlementaire.</b>"
+        },
+        "subPartsCount": "Nombre de composantes",
+        "subPartsCountDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel votre facteur d'émission sera sélectionnable.",
+        "close": "Fermer"
+      },
       "validation": {
         "name": "Veuillez renseigner un nom",
         "nameMaxLength": "64 caractères maximum",
@@ -547,7 +609,7 @@
         "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
         "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
         "title": "Modifier un facteur d’émission",
-        "description": "Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées. Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
+        "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
         "confirm": "Confirmer",
         "close": "Annuler"
       }
@@ -581,7 +643,15 @@
     "SUPER_ADMIN": "Administrateur Global",
     "ADMIN": "Administrateur",
     "GESTIONNAIRE": "Gestionnaire",
-    "DEFAULT": "Collaborateur"
+    "DEFAULT": "Collaborateur",
+    "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études (qu'elles soient publiques ou privées).",
+    "ADMIN_description_CR": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des clients et des études (qu'elles soient publiques ou privées).",
+    "GESTIONNAIRE_description": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit sur les études.",
+    "GESTIONNAIRE_description_CR": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit sur les clients et les études.",
+    "DEFAULT_description": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
+    "DEFAULT_description_CR": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
+    "close": "Fermer",
+    "guide": "Guide des rôles"
   },
   "team": {
     "title": "Mon organisation",
@@ -767,9 +837,13 @@
     "create": "Nouvelle Organisation",
     "modify": "Modifier",
     "myOrganization": "Mon organisation :",
-    "myOrganizations": "Mes organisations",
+    "myOrganizations": "Mes clients actuels",
+    "seeLess": "Voir moins",
+    "seeMore": "Voir plus",
     "name": "Nom : ",
     "title": "Organisation",
+    "createFirstClient": "Créer mon premier client",
+    "firstClientMessage": "Nous vous invitons à créer votre premier client puis à créer votre premier Bilan Carbone®",
     "form": {
       "create": "Créer l'organisation",
       "editTitle": "Modifier mon organisation",
@@ -781,12 +855,20 @@
       "title": "Les sites de l'organisation concernés par l'étude",
       "noSites": "Il n'y a pas de sites configurés sur l'organisation",
       "name": "Nom",
-      "etp": "Employés",
-      "ca": "Chiffre d'affaire (k€)",
+      "etp": "Nombre d'Équivalents Temps Plein",
+      "ca": "Chiffre d'affaire ({unit})",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",
       "update": "Modifier la liste",
+      "glossary": {
+        "title": "Glossaire",
+        "etp": "Nombre d'Équivalent Temps Plein",
+        "etpDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO2e/ETP).",
+        "ca": "Chiffre d'Affaire ({unit})",
+        "caDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO2e/{unit} CA).",
+        "close": "Fermer"
+      },
       "validation": {
         "name": "Veuillez renseigner un nom",
         "etp": "Veuillez renseigner un nombre d'employés",
@@ -795,20 +877,32 @@
     },
     "studySites": {
       "title": "Vous ne pouvez pas supprimer ces sites",
-      "description": "Des études existent avec les sites suivants. Vous devez d'abord les supprimer des études concernées avant de pouvoir les supprimer de votre organisation.",
+      "description": "Des études existent avec les sites suivants. <warning>Vous devez d'abord les supprimer des études concernées avant de pouvoir les supprimer de votre organisation.</warning>",
       "close": "Fermer",
       "existingSite": "<name></name> : <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 étude à laquelle} other {#  études auxquelles}} vous n'avez pas accès"
+    },
+    "card": {
+      "method": "Consulter la méthodologie Bilan Carbone®",
+      "update": "Modifier mes informations"
     }
   },
   "emissionSource": {
     "advancedSearch": "Recherche avancée",
     "noResults": "Rechercher avec plus de filtres",
     "seeMore": "...Voir plus et rechercher avec plus de filtres",
+    "glossary": {
+      "title": "Glossaire",
+      "type": "Type",
+      "typeDescription": "Le type de données est une dénomination introduite par la nouvelle méthode Bilan Carbone®, qui vient en complément du calcul des incertitudes. Pour plus d'informations sur les différents types de données, nous vous invitons à consulter <link>cette page</link>.",
+      "quality": "Qualité",
+      "qualityDescription": "Les incertitudes sont dorénavant calculées grâce à des notes qualitatives apportées sur la qualité du facteur d'émission et la qualité de la donnée d'activité. Les notes associées au facteur d'émission sont directement issues des bases de données, mais celles liées à la donnée d'activité doivent être saisies. Pour plus d'informations sur l'attribution des notes, nous vous invitons à consulter <link>cette page</link>.",
+      "close": "Fermer"
+    },
     "deleteDialog": {
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
-      "description": "Toutes les données renseignées seront définitivement perdues, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
+      "description": "<warning>Toutes les données renseignées seront définitivement perdues</warning>, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
       "accept": "Oui",
       "decline": "Non"
     },
@@ -894,14 +988,18 @@
     "step1": {
       "name": "Nom de mon organisation",
       "role": "Mon rôle au sein de l'organisation",
-      "roleDescription": "Comme vous êtes le premier utilisateur du BC+ au sein de votre organisation, nous vous avons attribué le rôle d'administrateur. Une organisation doit toujours avoir au moins un administrateur, vous ne pourrez donc modifier votre rôle qu'après avoir ajouté un autre administrateur via la rubrique \"Équipe\""
+      "adminDescription": "Vous avez été formé au Bilan Carbone® : Le rôle qui vous a été attribué est celui d'administrateur de votre organisation.",
+      "gestionnaireDescription": "Vous n'avez pas été formé au Bilan Carbone® : Le rôle qui vous a été attribué est celui de gestionnaire de votre organisation."
     },
     "step2": {
       "addCollaborator": "Ajouter un collaborateur",
       "email": "Adresse email",
+      "emailPlaceholder": "Ajouter une adresse email ici",
       "role": "Rôle",
-      "adminDescription": "Peut inviter et gérer de nouveaux utilisateurs",
-      "collaboratorDescription": "Peut consulter les informations d'un bilan",
+      "adminDescription": "Possède l'ensemble des droits existants",
+      "collaboratorDescription": "Créé et complète des Bilan Carbone®",
+      "crCollaboratorDescription": "Créé des clients et réalise leur Bilan Carbone®",
+      "gestionnaireDescription": "Gère le compte de l'organisation mais n'a pas accès aux études",
       "validation": {
         "email": "Adresse email invalide",
         "requiredEmail": "E-mail obligatoire",

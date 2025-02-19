@@ -16,8 +16,10 @@ const defaultEmissionSource = {
     temporalRepresentativeness: 1,
     geographicRepresentativeness: null,
     completeness: null,
+    importedFrom: 'BaseEmpreinte',
+    importedId: '123',
   },
-  site: { id: 'siteId' },
+  studySite: { id: 'siteId' },
   emissionFactorId: 'emissionFactor',
   name: 'name',
   source: null,
@@ -32,6 +34,8 @@ const defaultEmissionSource = {
   completeness: null,
   contributor: null,
   depreciationPeriod: null,
+  duration: null,
+  hectare: null,
 } satisfies FullStudy['emissionSources'][0]
 
 describe('emissionSource Service', () => {

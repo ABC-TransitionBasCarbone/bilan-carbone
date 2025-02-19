@@ -1,9 +1,9 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { getEmissionResults, getEmissionSourceCompletion } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import {
   UpdateEmissionSourceCommand,
@@ -61,8 +61,8 @@ const EmissionSource = ({
   const [display, setDisplay] = useState(false)
 
   const detailId = `${emissionSource.id}-detail`
-  const canEdit = !emissionSource.validated && userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
-  const canValidate = userRoleOnStudy && userRoleOnStudy === StudyRole.Validator
+  const canEdit = !emissionSource.validated && userRoleOnStudy !== StudyRole.Reader
+  const canValidate = userRoleOnStudy === StudyRole.Validator
 
   const update = useCallback(
     async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => {
@@ -70,6 +70,7 @@ const EmissionSource = ({
         if (value === emissionSource[key as keyof typeof emissionSource]) {
           return
         }
+        setError('')
         setLoading(true)
         try {
           const command = {

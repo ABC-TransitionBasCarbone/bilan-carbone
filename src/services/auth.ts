@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import { DAY } from '../utils/time'
 
 export const signPassword = async (password: string) => {
   const salt = await bcrypt.genSalt(10)
@@ -13,6 +14,7 @@ export const signPassword = async (password: string) => {
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
+    maxAge: DAY * 7,
   },
   pages: {
     signIn: '/login',
@@ -21,7 +23,7 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       return url || baseUrl
     },
-    async jwt({ session, token, trigger, user }) {
+    async jwt({ token, trigger, user }) {
       if (user) {
         return {
           ...token,
@@ -34,12 +36,18 @@ export const authOptions: NextAuthOptions = {
         }
       }
       if (trigger === 'update') {
-        if (session.forceRefresh || session.role || session.level) {
-          const dbUser = await getUserByEmail(token.email || '')
-          session.role = dbUser ? dbUser.role : token.role
-          session.level = dbUser ? dbUser.level : token.level
-        }
-        return { ...token, ...session }
+        const dbUser = await getUserByEmail(token.email || '')
+        return dbUser
+          ? {
+              ...token,
+              id: dbUser.id,
+              firstName: dbUser.firstName,
+              lastName: dbUser.lastName,
+              role: dbUser.role,
+              organizationId: dbUser.organizationId,
+              level: dbUser.level,
+            }
+          : token
       }
       return token
     },

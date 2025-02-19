@@ -2,13 +2,13 @@ import { onboardOrganizationCommand } from '@/services/serverFunctions/organizat
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
-import MobileStepper from '@mui/material/MobileStepper'
-import { Organization } from '@prisma/client'
+import { Dialog, DialogActions, DialogContent, DialogTitle, MobileStepper, Button as MUIButton } from '@mui/material'
+import { Organization, Role } from '@prisma/client'
 import classNames from 'classnames'
+import { User } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
@@ -19,17 +19,20 @@ import Step2 from './OnboardingStep2'
 interface Props {
   open: boolean
   onClose: () => void
+  user: User
   organization: Organization
 }
 
-const OnboardingModal = ({ open, onClose, organization }: Props) => {
+const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const t = useTranslations('onboarding')
-  const { update } = useSession()
+  const { update: updateSession } = useSession()
 
   const [activeStep, setActiveStep] = useState(0)
   const stepCount = 2
   const Step = activeStep === 0 ? Step1 : Step2
   const buttonLabel = activeStep === stepCount - 1 ? 'validate' : 'next'
+
+  const newRole = useMemo(() => (user.level ? Role.ADMIN : Role.GESTIONNAIRE), [user])
 
   const form = useForm<OnboardingCommand>({
     resolver: zodResolver(OnboardingCommandValidation),
@@ -58,18 +61,37 @@ const OnboardingModal = ({ open, onClose, organization }: Props) => {
         if (result) {
           onClose()
         } else {
-          await update({ forceRefresh: true })
+          await updateSession()
           onClose()
         }
       }
     }
   }
 
+  const Title = (
+    <>
+      <MobileStepper
+        className="mb2"
+        classes={{ dot: styles.stepperDots, dotActive: styles.active }}
+        style={{ padding: 0 }}
+        variant="dots"
+        steps={stepCount}
+        position="static"
+        activeStep={activeStep}
+        sx={{ flexGrow: 1 }}
+        nextButton={null}
+        backButton={null}
+      />
+      <p className={classNames(styles.stepTitle, 'mb2')}>{t(`title-${activeStep}`)}</p>
+      <p>{t(`titleDescription-${activeStep}`)}</p>
+    </>
+  )
+
   return (
     <Dialog
       open={open}
-      aria-labelledby="onboarding-dialog-title"
-      aria-describedby="onboarding-dialog-description"
+      aria-labelledby="onboarding-modale-title"
+      aria-describedby="onboarding-modale-description"
       classes={{ paper: styles.dialog }}
     >
       <div className={styles.container}>
@@ -79,26 +101,9 @@ const OnboardingModal = ({ open, onClose, organization }: Props) => {
               <CloseIcon />
             </MUIButton>
           </div>
-          <DialogTitle className="noSpacing">
-            <>
-              <MobileStepper
-                className="mb2"
-                classes={{ dot: styles.stepperDots, dotActive: styles.active }}
-                style={{ padding: 0 }}
-                variant="dots"
-                steps={stepCount}
-                position="static"
-                activeStep={activeStep}
-                sx={{ flexGrow: 1 }}
-                nextButton={null}
-                backButton={null}
-              />
-              <p className={classNames(styles.stepTitle, 'mb2')}>{t(`title-${activeStep}`)}</p>
-              <p>{t(`titleDescription-${activeStep}`)}</p>
-            </>
-          </DialogTitle>
+          <DialogTitle className="noSpacing">{Title}</DialogTitle>
           <DialogContent className="noSpacing">
-            <Step form={form} />
+            <Step form={form} role={newRole} isCr={organization.isCR} />
           </DialogContent>
           <DialogActions className="noSpacing">
             {activeStep > 0 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}

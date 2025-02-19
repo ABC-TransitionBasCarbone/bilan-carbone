@@ -69,8 +69,8 @@ describe('Edit emission factor', () => {
     })
 
     cy.getByTestId('edit-emission-factor-button').first().click()
-    cy.get('#edit-emission-factor-dialog-title').should('be.visible')
-    cy.getByTestId('edit-emission-factor-dialog-confirm').click()
+    cy.get('#edit-emission-factor-modale-title').should('be.visible')
+    cy.getByTestId('edit-emission-factor-confirm').click()
     const uuidRegex = /\/facteurs-d-emission\/[0-9a-fA-F-]{36}\/modifier/
     cy.url().should('match', uuidRegex)
 
@@ -149,8 +149,8 @@ describe('Edit emission factor', () => {
     cy.getByTestId('cell-emission-name').should('have.length', 1)
 
     cy.getByTestId('delete-emission-factor-button').first().click()
-    cy.get('#delete-emission-factor-dialog-title').should('be.visible')
-    cy.getByTestId('delete-emission-factor-dialog-confirm').click()
+    cy.get('#delete-emission-factor-modale-title').should('be.visible')
+    cy.getByTestId('delete-emission-factor-confirm').click()
 
     cy.getByTestId('cell-emission-name').should('have.length', 0)
   })

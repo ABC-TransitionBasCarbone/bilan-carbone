@@ -41,9 +41,9 @@ const updateUserResetToken = async (email: string, duration: number) => {
   return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
 }
 
-export const sendNewUser = async (email: string) => {
+export const sendNewUser = async (email: string, user: User, newUserName: string) => {
   const token = await updateUserResetToken(email, 1 * DAY)
-  return sendNewUserEmail(email, token)
+  return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName)
 }
 
 export const sendInvitation = async (
@@ -112,6 +112,7 @@ export const addMember = async (member: AddMemberCommand) => {
     isActive: false,
     isValidated: true,
     organization: { connect: { id: session.user.organizationId } },
+    importedFileDate: new Date(),
   }
 
   if (!canAddMember(session.user, newMember, session.user.organizationId)) {
@@ -120,7 +121,7 @@ export const addMember = async (member: AddMemberCommand) => {
 
   //TODO: que fait on si l'utilisateur existe déjà ?
   await addUser(newMember)
-  await sendNewUser(member.email)
+  await sendNewUser(member.email, session.user, member.firstName)
 }
 
 export const validateMember = async (email: string) => {
@@ -135,7 +136,7 @@ export const validateMember = async (email: string) => {
   }
 
   await validateUser(email)
-  await sendNewUser(member.email)
+  await sendNewUser(member.email, session.user, member.firstName)
 }
 
 export const resendInvitation = async (email: string) => {
@@ -149,7 +150,7 @@ export const resendInvitation = async (email: string) => {
     return NOT_AUTHORIZED
   }
 
-  await sendNewUser(member.email)
+  await sendNewUser(member.email, session.user, member.firstName)
 }
 
 export const deleteMember = async (email: string) => {
@@ -188,7 +189,7 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
 
 export const activateEmail = async (email: string) => {
   const user = await getUserByEmail(email)
-  if (!user || !user.level || user.isActive || user.isValidated) {
+  if (!user || user.isActive) {
     return NOT_AUTHORIZED
   }
   await validateUser(email)

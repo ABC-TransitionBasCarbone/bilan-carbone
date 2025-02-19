@@ -3,6 +3,11 @@
   gap: 1rem;
 }
 
+.exportsLabel {
+  width: 15rem;
+  margin-right: calc(2rem);
+}
+
 .exports {
   display: flex;
   flex-direction: column;

@@ -1,21 +1,32 @@
 import { getDocumentById } from '@/db/document'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { User as DbUser, Level, Prisma, Role, Study, StudyRole } from '@prisma/client'
+import { getUserRoleOnStudy } from '@/utils/study'
+import { User as DbUser, Level, Prisma, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { auth } from '../auth'
 import { checkLevel } from '../study'
 import { checkOrganization } from './organization'
+import { isAdmin } from './user'
 
-export const canReadStudy = async (
-  user: User | UserWithAllowedStudies,
-  study: Pick<Study, 'id' | 'organizationId' | 'isPublic'>,
-) => {
+export const isAdminOnStudyOrga = (user: User, study: Pick<Study, 'organizationId'>) =>
+  user.organizationId === study.organizationId && isAdmin(user.role)
+
+export const canReadStudy = async (user: User | UserWithAllowedStudies, studyId: string) => {
   if (!user) {
     return false
   }
 
-  if (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId))) {
+  const study = await getStudyById(studyId, user.organizationId)
+
+  if (!study) {
+    return false
+  }
+
+  if (
+    isAdminOnStudyOrga(user, study) ||
+    (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId)))
+  ) {
     return true
   }
 
@@ -47,7 +58,7 @@ export const filterAllowedStudies = async (user: User, studies: Study[]) => {
   const userWithAllowedStudies = await getUserByEmailWithAllowedStudies(user.email)
 
   const allowedStudies = await Promise.all(
-    studies.map(async (study) => ((await canReadStudy(userWithAllowedStudies, study)) ? study : null)),
+    studies.map(async (study) => ((await canReadStudy(userWithAllowedStudies, study.id)) ? study : null)),
   )
   return allowedStudies.filter((study) => study !== null)
 }
@@ -71,7 +82,7 @@ export const canCreateStudy = async (userEmail: string, study: Prisma.StudyCreat
 }
 
 const canChangeStudyValues = async (user: User, study: FullStudy) => {
-  if (user.role === Role.ADMIN) {
+  if (isAdminOnStudyOrga(user, study)) {
     return true
   }
 
@@ -122,7 +133,7 @@ export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStud
     return false
   }
 
-  if (user.role === Role.ADMIN) {
+  if (isAdminOnStudyOrga(user, study)) {
     return true
   }
 
@@ -139,7 +150,7 @@ export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStud
 }
 
 export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
-  if (user.role === Role.ADMIN) {
+  if (isAdminOnStudyOrga(user, study)) {
     return true
   }
 
@@ -175,11 +186,7 @@ export const canDeleteStudy = async (studyId: string) => {
     return true
   }
 
-  if (
-    study.isPublic &&
-    study.organizationId === session.user.organizationId &&
-    (session.user.role === Role.ADMIN || session.user.role === Role.SUPER_ADMIN)
-  ) {
+  if (isAdminOnStudyOrga(session.user, study)) {
     return true
   }
 
@@ -228,12 +235,15 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
 export type StudyWithoutDetail = ReturnType<typeof filterStudyDetail>
 
 export const canReadStudyDetail = async (user: User, study: FullStudy) => {
-  const studyRight = await canReadStudy(user, study)
+  const studyRight = await canReadStudy(user, study.id)
   if (!studyRight) {
     return false
   }
 
-  if (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId))) {
+  if (
+    isAdminOnStudyOrga(user, study) ||
+    (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId)))
+  ) {
     return true
   }
 
@@ -253,7 +263,7 @@ const canAccessStudyFlow = async (studyId: string) => {
   }
 
   const study = await getStudyById(studyId, session.user.organizationId)
-  if (!study || !study.allowedUsers.some((right) => right.user.email === session.user.email)) {
+  if (!study || !getUserRoleOnStudy(session.user, study)) {
     return false
   }
 

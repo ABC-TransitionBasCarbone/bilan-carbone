@@ -5,6 +5,7 @@ import { FullStudy } from '@/db/study'
 import { deleteStudyCommand } from '@/services/serverFunctions/study'
 import { DeleteStudyCommand, DeleteStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { downloadStudyEmissionSources } from '@/services/study'
+import { handleWarningText } from '@/utils/components'
 import { zodResolver } from '@hookform/resolvers/zod'
 import DownloadIcon from '@mui/icons-material/Download'
 import LockIcon from '@mui/icons-material/Lock'
@@ -109,9 +110,9 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
       <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
       <Dialog open={deleting} aria-labelledby="delete-study-title" aria-describedby="delete-study-description">
         <Form onSubmit={form.handleSubmit(onDelete)}>
-          <DialogTitle id="delete-study-dialog-title">{tStudyDelete('title')}</DialogTitle>
-          <DialogContent id="delete-study-dialog-content">
-            {tStudyDelete('content')}
+          <DialogTitle id="delete-study-modale-title">{tStudyDelete('title')}</DialogTitle>
+          <DialogContent id="delete-study-modale-content">
+            {handleWarningText(tStudyDelete, 'content')}
             <div className="flex mt1">
               <FormTextField
                 className="grow"

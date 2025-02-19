@@ -1,0 +1,12 @@
+.organizationCard {
+  background-color: var(--organization-card-bg);
+  z-index: 100;
+  position: fixed;
+  top: var(--header-height);
+  height: var(--organization-height);
+  border: var(--border);
+}
+
+.gapped {
+  gap: 0.5rem;
+}

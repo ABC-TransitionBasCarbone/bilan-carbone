@@ -15,7 +15,7 @@ describe('Create study', () => {
 
     cy.getByTestId('emission-source-My temp emission source').click()
     cy.getByTestId('emission-source-delete').click()
-    cy.getByTestId('delete-emission-source-dialog-accept').click()
+    cy.getByTestId('delete-emission-source-modale-accept').click()
 
     cy.getByTestId('emission-source-My temp emission source').should('not.exist')
   })

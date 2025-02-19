@@ -1,4 +1,4 @@
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { getQualityRating } from '@/services/uncertainty'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
 import DebouncedInput from '../base/DebouncedInput'
 import styles from './EmissionSourceFactor.module.css'
-import EmissionSourceFactorDialog from './EmissionSourceFactorDialog'
+import EmissionSourceFactorModal from './EmissionSourceFactorModal'
 const fuseOptions = {
   keys: [
     {
@@ -152,7 +152,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
         </div>
       )}
       {advancedSearch && (
-        <EmissionSourceFactorDialog
+        <EmissionSourceFactorModal
           open={advancedSearch}
           close={() => setAdvancedSearch(false)}
           emissionFactors={emissionFactors}

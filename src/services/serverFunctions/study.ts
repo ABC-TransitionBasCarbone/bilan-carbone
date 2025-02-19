@@ -17,7 +17,8 @@ import {
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserByEmail } from '@/db/user'
+import { addUser, getUserApplicationSettings, getUserByEmail } from '@/db/user'
+import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import {
   ControlMode,
   User as DBUser,
@@ -47,6 +48,7 @@ import {
   canCreateStudy,
   canDeleteStudy,
 } from '../permissions/study'
+import { isAdmin } from '../permissions/user'
 import { subPostsByPost } from '../posts'
 import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
@@ -86,7 +88,7 @@ export const createStudyCommand = async ({
     }
 
     rights.push({
-      role: StudyRole.Editor,
+      role: isAdmin(session.user.role) ? StudyRole.Validator : StudyRole.Editor,
       userId: session.user.id,
     })
     rights.push({
@@ -112,6 +114,9 @@ export const createStudyCommand = async ({
   if (studySites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.id))) {
     return { success: false, message: NOT_AUTHORIZED }
   }
+
+  const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
+  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
   const study = {
     ...command,
@@ -143,7 +148,7 @@ export const createStudyCommand = async ({
             return {
               siteId: site.id,
               etp: site.etp || organizationSite.etp,
-              ca: site.ca ? site.ca * 1000 : organizationSite.ca,
+              ca: site.ca ? site.ca * caUnit : organizationSite.ca,
             }
           })
           .filter((site) => site !== undefined),
@@ -245,11 +250,14 @@ export const hasEmissionSources = async (study: FullStudy, siteId: string) => {
 }
 
 export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) => {
-  const organization = await getOrganizationWithSitesById(organizationId)
+  const [organization, session] = await Promise.all([getOrganizationWithSitesById(organizationId), auth()])
 
-  if (!organization) {
+  if (!organization || !session) {
     return NOT_AUTHORIZED
   }
+
+  const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
+  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
   const selectedSites = command.sites
     .filter((site) => site.selected)
@@ -262,7 +270,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
         studyId,
         siteId: site.id,
         etp: site.etp || organizationSite.etp,
-        ca: site.ca * 1000 || organizationSite.ca,
+        ca: site.ca * caUnit || organizationSite.ca,
       }
     })
     .filter((site) => site !== undefined)
@@ -469,7 +477,7 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   }
   const bucketDelete = await deleteFileFromBucket(document.bucketKey)
   if (bucketDelete) {
-    deleteDocument(document.id)
+    await deleteDocument(document.id)
   }
 }
 

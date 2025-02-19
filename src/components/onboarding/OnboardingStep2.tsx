@@ -13,9 +13,10 @@ import styles from './Onboarding.module.css'
 
 interface Props {
   form: UseFormReturn<OnboardingCommand>
+  isCr: boolean
 }
 
-const OnboardingStep = ({ form }: Props) => {
+const OnboardingStep = ({ form, isCr }: Props) => {
   const t = useTranslations('onboarding.step2')
   const tRole = useTranslations('role')
   const collaborators = useWatch(form).collaborators?.length || 0
@@ -31,53 +32,66 @@ const OnboardingStep = ({ form }: Props) => {
     form.setValue('collaborators', collaborators)
   }
 
+  const getDescription = (role: Role) => {
+    switch (role) {
+      case Role.ADMIN:
+        return 'adminDescription'
+      case Role.GESTIONNAIRE:
+        return 'gestionnaireDescription'
+      default:
+        return isCr ? 'crCollaboratorDescription' : 'collaboratorDescription'
+    }
+  }
+
   return (
     <>
       {Array.from({ length: collaborators }).map((_, index) => (
-        <div key={`collaborator-${index}`}>
-          <span>{t('email')}</span>
-          <div className={classNames(styles.collaborator, 'flex')}>
-            <div className="grow">
-              <FormTextField control={form.control} name={`collaborators.${index}.email`} translation={t} fullWidth />
-            </div>
-            <div className="grow">
-              <FormSelect
-                data-testid="onboarding-user-role"
-                className={styles.role}
-                control={form.control}
-                translation={t}
-                name={`collaborators.${index}.role`}
-                renderValue={tRole}
-                MenuProps={{
-                  anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
-                  transformOrigin: { vertical: 'top', horizontal: 'left' },
-                }}
-                fullWidth
-              >
-                <MenuItem key={Role.ADMIN} value={Role.ADMIN} className={classNames(styles.roleItem, 'flex-col')}>
-                  <span className={styles.roleTitle}>{tRole(Role.ADMIN)}</span>
-                  <span>{t('adminDescription')}</span>
-                </MenuItem>
-                <MenuItem key={Role.DEFAULT} value={Role.DEFAULT} className={classNames(styles.roleItem, 'flex-col')}>
-                  <span className={styles.roleTitle}>{tRole(Role.DEFAULT)}</span>
-                  <span>{t('collaboratorDescription')}</span>
-                </MenuItem>
-              </FormSelect>
-            </div>
-            <div>
-              <Button className={styles.deleteButton} onClick={() => removeCollaborator(index)}>
-                <DeleteIcon />
-              </Button>
-            </div>
+        <div key={`collaborator-${index}`} className={classNames(styles.collaborator, 'flex')}>
+          <div className="grow">
+            <FormTextField
+              control={form.control}
+              name={`collaborators.${index}.email`}
+              translation={t}
+              fullWidth
+              {...(index === 0 && { label: t('email') })}
+              placeholder={t('emailPlaceholder')}
+            />
+          </div>
+          <div className="grow">
+            <FormSelect
+              data-testid="onboarding-user-role"
+              className={styles.role}
+              control={form.control}
+              translation={t}
+              name={`collaborators.${index}.role`}
+              renderValue={tRole}
+              MenuProps={{
+                anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
+                transformOrigin: { vertical: 'top', horizontal: 'left' },
+              }}
+              fullWidth
+            >
+              {Object.values(Role)
+                .filter((role) => role !== Role.SUPER_ADMIN)
+                .map((role) => (
+                  <MenuItem key={role} value={role} className={classNames(styles.roleItem, 'flex-col')}>
+                    <span className={styles.roleTitle}>{tRole(role)}</span>
+                    <span>{t(getDescription(role))}</span>
+                  </MenuItem>
+                ))}
+            </FormSelect>
+          </div>
+          <div>
+            <Button className={styles.deleteButton} onClick={() => removeCollaborator(index)}>
+              <DeleteIcon />
+            </Button>
           </div>
         </div>
       ))}
-      <div className="mt1">
-        <Button color="secondary" onClick={addCollaborator}>
-          <AddIcon />
-          {t('addCollaborator')}
-        </Button>
-      </div>
+      <Button color="secondary" onClick={addCollaborator}>
+        <AddIcon />
+        {t('addCollaborator')}
+      </Button>
     </>
   )
 }

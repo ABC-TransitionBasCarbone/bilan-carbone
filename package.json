@@ -1,6 +1,6 @@
 {
   "name": "bilan-carbone",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "private": true,
   "engines": {
     "node": ">22.0.0",
@@ -17,7 +17,7 @@
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "seed:import": "prisma db seed -- -i",
-    "user:import": "ts-node src/scripts/ftp/importUsers.ts"
+    "user:import": "ts-node --transpile-only src/scripts/ftp/importUsers.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed/index.ts"
@@ -28,7 +28,7 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@hookform/resolvers": "^3.10.0",
+    "@hookform/resolvers": "^4.0.0",
     "@mui/icons-material": "^6.4.1",
     "@mui/material": "^6.4.1",
     "@mui/material-nextjs": "^6.3.1",
@@ -49,7 +49,7 @@
     "file-type": "^20.0.0",
     "fuse.js": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
-    "next": "15.1.6",
+    "next": "15.1.7",
     "next-auth": "^4.24.11",
     "next-intl": "^3.26.3",
     "node-xlsx": "^0.24.0",
@@ -63,6 +63,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-hook-form": "^7.54.2",
+    "ts-node": "^10.9.2",
     "uuid": "^11.0.5",
     "zod": "^3.24.1"
   },
@@ -80,13 +81,14 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22",
     "@types/nodemailer": "^6.4.17",
-    "@types/react": "19.0.7",
+    "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "cypress": "^14.0.0",
+    "esbuild": "^0.25.0",
     "eslint": "^9",
-    "eslint-config-next": "15.1.6",
+    "eslint-config-next": "15.1.7",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-cypress": "^4.1.0",
     "eslint-plugin-mocha": "^10.5.0",
@@ -98,7 +100,6 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "prisma": "^6.2.1",
     "ts-jest": "^29.2.5",
-    "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5"
   }

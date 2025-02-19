@@ -98,8 +98,10 @@
     "team": "Team"
   },
   "actuality": {
-    "title": "News",
-    "noItems": "No news at the moment"
+    "title": "BC+ actualities",
+    "noItems": "No news at the moment",
+    "seeLess": "See less",
+    "seeMore": "See more"
   },
   "legalNotices": {
     "profile": "Return to profile"
@@ -140,7 +142,7 @@
     "email": "Email to activate your account",
     "validate": "Validate",
     "Not authorized": "You are not a member or have not completed the training. If you believe this is an error, please contact <link>support</link>.",
-    "success": "You have successfully activated your account ! You will receive an email to initialize your password."
+    "success": "You will receive an email to finish your account validation."
   },
   "navigation": {
     "factors": "Emission factors",
@@ -171,6 +173,7 @@
     "cancelUpdate": "Cancel",
     "update": "Update",
     "updating": "Updating",
+    "version": "BC+ version: ",
     "validation": {
       "firstName": "1 character minimum",
       "lastName": "1 character minimum"
@@ -179,9 +182,23 @@
   "settings": {
     "title": "My application settings",
     "validate": "Save",
-    "validatedEmissionSourcesOnly": "Only display the validated emission sources",
+    "validatedEmissionSourcesOnly": "Taking into account emissions not validated in Bilans Carbone® assessments",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "glossary": {
+      "title": "Glossary",
+      "exports": "Take into account emissions that have not been validated",
+      "exportsDescription": "Within a Bilan Carbone®, you can choose to display all the emissions you have entered, or only those that have been validated by a validator.",
+      "caUnits": "Turnover figures",
+      "caUnitsDescription": "Specify the unit you wish to use for turnover figures.",
+      "close": "Close"
+    },
+    "caUnit": {
+      "label": "Site's turnover unit",
+      "U": "€",
+      "K": "k€",
+      "M": "M€"
+    }
   },
   "admin": {
     "title": "Administration",
@@ -189,8 +206,11 @@
     "uploadButton": "Import emission factors"
   },
   "study": {
-    "create": "New study",
-    "myStudies": "My studies",
+    "create": "Add a Bilan Carbone®",
+    "myStudies": "My Bilan Carbone®",
+    "createFirstStudy": "Create my first Bilan Carbone®",
+    "seeResults": "See results",
+    "firstStudyMessage": "It's time to get started! We invite you to create your first bilan.",
     "navigation": {
       "homepage": "Homepage",
       "framing": "Framing",
@@ -219,6 +239,20 @@
       "private": "Private",
       "public": "Public",
       "create": "Create study",
+      "glossary": {
+        "title": "Glossaire",
+        "validatorEmail": "Validator email",
+        "validatorEmailDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu (link to the parameters menu).",
+        "type": "Type of Bilan Carbone® assessment",
+        "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for organisations' Bilan Carbone®. For more details, please consult <link>this page</link>.",
+        "visibility": "Visibility of the study",
+        "visibilityDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "exports": "Exports",
+        "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "control": "Control mode",
+        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the items and sub-items within the Bilan Carbone® method) the emissions will be broken down. Depending on the control mode selected, the characterisations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
+        "close": "Close"
+      },
       "validation": {
         "name": "Please provide a name",
         "validator": "Please select a validator",
@@ -258,15 +292,19 @@
     "role": {
       "Validator": "Validator",
       "Editor": "Editor",
-      "Reader": "Reader"
+      "Reader": "Reader",
+      "guide": "Roles guide",
+      "introduction": "From this page, you can manage the members of your team involved in the Bilan Carbone®. In all cases, the administrators of your organisation have access to all your studies as validators. If your study is public, members of your organisation (employees, managers) automatically have read access to it. You can also add people from outside your organisation via this menu.",
+      "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",
+      "Editor_description": "Has all rights to the study except for validation of emission sources.",
+      "Reader_description": "Can only read the study and export its information.",
+      "close": "Close"
     },
     "title": "Study",
     "rights": {
-      "contributors": "Contributors",
       "isPublic": "The study is public",
       "isPrivate": "The study is private",
       "title": "Rights on study : {name}",
-      "newContributorLink": "Add a contributor",
       "new": {
         "title": "Add a person to the study: {name}",
         "email": "Email",
@@ -279,7 +317,7 @@
         },
         "dialog": {
           "title": "Are you sure you want to add this person to your study?",
-          "otherOrganization": "They are not within your organization.",
+          "otherOrganization": "<warning>They are not within your organization.</warning>",
           "rightsWarning": "If they do not match the necessary conditions for this role, you will only be able to give them access to this study only with READ or contribution rights. An email will be sent to them to give access to the study.",
           "accept": "Yes",
           "decline": "No"
@@ -299,7 +337,14 @@
       "contributorsTable": {
         "email": "Email",
         "post": "Post",
-        "subPosts": "Sub posts"
+        "subPosts": "Sub posts",
+        "title": "Contributors",
+        "newContributorLink": "Add a contributor",
+        "role": {
+          "information": "Information",
+          "description": "Here you can manage the contributors to your study. They will have access to certain items and sub-items (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>.",
+          "close": "Close"
+        }
       },
       "table": {
         "email": "Email",
@@ -319,7 +364,7 @@
         "accept": "Yes",
         "decline": "No",
         "delete": "Delete",
-        "description": "{count, plural, =1 {It contains} other {Some of them contain}} emission sources. All registered data will be definitively lost.",
+        "description": "{count, plural, =1 {It contains} other {Some of them contain}} emission sources. <warning>All registered data will be definitively lost.</warning>",
         "title": "Are you sure you want to delete {count, plural, =1 {this site} other {these sites}} ?"
       }
     },
@@ -378,7 +423,7 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "delete": "Delete the study",
-      "content": "Are you sure you want to delete this study ? All its data will be definitely deleted and it won't be possible to recover it. If it is the case, please write the study name in the field right below.",
+      "content": "Are you sure you want to delete this study ? <warning>All its data will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the study name in the field right below.",
       "name": "Study name",
       "Not authorized": "You are not allowed to do this action",
       "title": "Study deletion",
@@ -432,7 +477,7 @@
       "FretInterne": "Internal freight",
       "FretSortant": "Outgoing freight",
       "DeplacementsDomicileTravail": "Home-to-work travel",
-      "DeplacementsDesEmployesDansLeCadreDuTravail": "Employee travel in the context of work",
+      "DeplacementsProfessionnels": "Employee travel in the context of work",
       "DeplacementsVisiteurs": "Visitor travel",
       "Batiments": "Buildings",
       "AutresInfrastructures": "Other infrastructures",
@@ -452,10 +497,11 @@
       "update": "Update",
       "cancel": "Cancel",
       "name": "Name",
+      "namePlaceholder": "Give a name to your emission Factor",
       "attribute": "Details",
       "unit": "Unit",
       "source": "Source",
-      "detailedGES": "Breakdown of GHG?",
+      "detailedGES": "Breakdown of GHG",
       "subPartsCount": "Number of parts",
       "multiple": "Disaggregated emission factor",
       "yes": "Yes",
@@ -476,6 +522,22 @@
       "subPost": "Sub Post",
       "partType": "Part type",
       "comment": "Comments",
+      "glossary": {
+        "title": "Glossary",
+        "detailedGES": "Breakdown of GHG",
+        "detailedGESDescription": "If you know the proportion of emissions due to the different GHGs for your emission factor, you can enter it using this function. The Bilan Carbone® method does not use this breakdown, as knowing the distribution of emissions across the different GHGs complicates the results without providing any useful information for building the transition plan. However, this breakdown of emissions by GHG is useful if you wish to obtain the various exports offered by BC+.",
+        "multiple": "Disaggregated emission factor",
+        "multipleDescription": {
+          "introduction": "Some emission factors have components, i.e. they are made up of different emissions from different activities. For example, emission factors for electricity in France are classically broken down into three components:",
+          "upstream": "<b>Upstream</b>, which takes into account emissions linked to the construction of electricity generation infrastructure and its transmission to the grid.",
+          "combustion": "<Combustion at the power station</b>, which takes into account emissions linked to the production of electricity itself (coal combustion, etc.).",
+          "loss": "<b>Losses</b>, which take account of losses in the form of heat during the transmission of electricity on the network.",
+          "conclusion": "This disaggregation is not used in the Bilan Carbone® method, but is used to break down the emissions of the various components within the categories for exports (for the regulatory GHG balance, using the same example, and if the source of emissions is \"Operated\", \"upstream\" emissions, \"combustion at the power plant\" and \"losses\" are broken down within categories 4.1, 1.2 and 4.1 respectively).. <b>We strongly recommend that you do not use this function if you are not familiar with the allocations within the regulatory GHG balance.</b>"
+        },
+        "subPartsCount": "Number of parts",
+        "subPartsCountDescription": "You must choose the item(s) and sub-item(s) within which your emission factor will be selectable.",
+        "close": "Close"
+      },
       "validation": {
         "name": "Please provide a name",
         "nameMaxLength": "maximum 64 characters",
@@ -542,14 +604,14 @@
       "yes": "Yes"
     },
     "edit": {
-      "title": "Modifier le facteur d'émissions ({name})",
+      "title": "Edit the emission factor ({name})",
       "modal": {
-        "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
-        "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
-        "title": "Modifier un facteur d’émission",
-        "description": "Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées. Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
-        "confirm": "Confirmer",
-        "close": "Annuler"
+        "confirm-edition": "Are you sure you want to edit this emission factor",
+        "confirm-deletion": "Are you sure you want to delete this emission factor",
+        "title": "Edit the emission factor",
+        "description": "<warning>If you've used this emission factor in a study, the changes will be applied to all the emission sources that use it.</warning> If you want to create a new version, create a new one.",
+        "confirm": "Confirm",
+        "close": "Cancel"
       }
     },
     "type": {
@@ -581,7 +643,15 @@
     "SUPER_ADMIN": "Global Administrator",
     "ADMIN": "Administrator",
     "GESTIONNAIRE": "Manager",
-    "DEFAULT": "Collaborator"
+    "DEFAULT": "Collaborator",
+    "ADMIN_description": "An administrator has full rights to the organisation's account and to all studies (whether public or private).",
+    "ADMIN_description_CR": "An administrator has full rights to the organisation's account and to all clients and studies (whether public or private).",
+    "GESTIONNAIRE_description": "A manager has full rights over the organisation's account, but no rights over studies.",
+    "GESTIONNAIRE_description_CR": "A manager has full rights over the organisation's account, but no rights over customers or studies.",
+    "DEFAULT_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They only have access to public studies and private studies to which they have been added.",
+    "DEFAULT_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to public studies and private studies to which they have been added.",
+    "close": "Close",
+    "guide": "Roles guide"
   },
   "team": {
     "title": "My Organization",
@@ -767,9 +837,13 @@
     "create": "New Organization",
     "modify": "Modify",
     "myOrganization": "My Organization:",
-    "myOrganizations": "My Organizations",
+    "myOrganizations": "My current clients",
+    "seeLess": "See less",
+    "seeMore": "See more",
     "name": "Name: ",
     "title": "Organization",
+    "createFirstClient": "Create my first client",
+    "firstClientMessage": "We invite you to create your first client and then create your first Bilan Carbone®.",
     "form": {
       "create": "Create organization",
       "editTitle": "Edit my organization",
@@ -781,12 +855,20 @@
       "title": "The organization's sites concerned by this study",
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
-      "etp": "Employees",
-      "ca": "Turnover (k€)",
+      "etp": "Number of Full Time Equivalents",
+      "ca": "Turnover ({unit})",
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",
       "update": "Update list",
+      "glossary": {
+        "title": "Glossary",
+        "etp": "Number of Full Time Equivalents",
+        "etpDescription": "This data will eventually be used to calculate carbon intensities (kgCO2e/FTE).",
+        "ca": "Turnover ({unit})",
+        "caDescription": "These data will eventually be used to calculate carbon intensities (kgCO2e/{unit} Turnover).",
+        "close": "Close"
+      },
       "validation": {
         "name": "Please enter a name",
         "etp": "Please enter a number of employees",
@@ -795,20 +877,32 @@
     },
     "studySites": {
       "title": "You cannot delete these sites",
-      "description": "Studies exist with the following sites. Please delete them from the concerned studies before you can delete them from your organization.",
+      "description": "Studies exist with the following sites. <warning>Please delete them from the concerned studies before you can delete them from your organization.</warning>",
       "close": "Close",
       "existingSite": "<name></name>: <link></link>",
       "existingUnauthorizedSite": "{name} : {count, plural,  =1 {1 study} other {#  studies}} you do not have access to"
+    },
+    "card": {
+      "method": "Consult the Bilan Carbone® method",
+      "update": "Update my information"
     }
   },
   "emissionSource": {
     "advancedSearch": "Advanced search",
     "noResults": "Search with more filters",
     "seeMore": "...See more and search with more filters",
+    "glossary": {
+      "title": "Glossary",
+      "type": "Type",
+      "typeDescription": "The type of data is a denomination introduced by the new Bilan Carbone® method, which complements the calculation of uncertainties. For more information on the different types of data, please consult <link>this page</link>.",
+      "quality": "Quality",
+      "qualityDescription": "Uncertainties are now calculated using qualitative notes on the quality of the emission factor and the quality of the activity data. The scores for the emission factor are taken directly from the databases, but those for the activity data must be entered. For more information on how scores are awarded, please consult <link>this page</link>.",
+      "close": "Fermer"
+    },
     "deleteDialog": {
       "delete": "Delete this emission source",
       "title": "Are you sur you want to delete this emission source?",
-      "description": "All data entered will be permanently lost, and any contributors will no longer have access to this emission source.",
+      "description": "<warning>All data entered will be permanently lost,</warning> and any contributors will no longer have access to this emission source.",
       "accept": "Yes",
       "decline": "No"
     },
@@ -894,14 +988,18 @@
     "step1": {
       "name": "Name of my organization",
       "role": "My role within the organization",
-      "roleDescription": "As the first BC+ user in your organization, we have assigned you the role of administrator. An organization must always have at least one administrator, so you’ll only be able to change your role after adding another administrator via the \"Team\" section."
+      "adminDescription": "You have been trained to the Bilan Carbone® method : Thus, your have been attribued to the Admin role",
+      "gestionnaireDescription": "You have not been trained to the Bilan Carbone® method : Thus, your have been attribued to the Gestionnaire role"
     },
     "step2": {
       "addCollaborator": "Add a collaborator",
       "email": "Email address",
+      "emailPlaceholder": "Enter a mail address",
       "role": "Role",
-      "adminDescription": "Can invite and manage new users",
-      "collaboratorDescription": "Can view information from a study",
+      "adminDescription": "Has all existing rights",
+      "collaboratorDescription": "Create and complete Bilan Carbone®",
+      "crCollaboratorDescription": "Create clients and realize their Bilan Carbone®",
+      "gestionnaireDescription": "Manages the organisation's account but does not have access to studies",
       "validation": {
         "email": "Invalid email address",
         "requiredEmail": "Email is required",

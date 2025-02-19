@@ -3,7 +3,7 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { StudyEmissionSource, StudyRole, User } from '@prisma/client'
 import { canBeValidated } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
-import { canReadStudy } from './study'
+import { canReadStudy, isAdminOnStudyOrga } from './study'
 
 const hasStudyBasicRights = async (
   user: User,
@@ -12,7 +12,7 @@ const hasStudyBasicRights = async (
   },
   study: FullStudy,
 ) => {
-  if (!(await canReadStudy(user, study))) {
+  if (!(await canReadStudy(user, study.id))) {
     return false
   }
 
@@ -25,6 +25,10 @@ const hasStudyBasicRights = async (
     if (!emissionFactor || !emissionFactor.subPosts.includes(emissionSource.subPost)) {
       return false
     }
+  }
+
+  if (isAdminOnStudyOrga(user, study)) {
+    return true
   }
 
   const rights = study.allowedUsers.find((right) => right.user.email === user.email)
@@ -73,7 +77,7 @@ export const canUpdateEmissionSource = async (
 
   if (change.validated !== undefined) {
     const rights = study.allowedUsers.find((right) => right.user.email === user.email)
-    if (!rights || rights.role !== StudyRole.Validator) {
+    if (!isAdminOnStudyOrga(user, study) && (!rights || rights.role !== StudyRole.Validator)) {
       return false
     }
 

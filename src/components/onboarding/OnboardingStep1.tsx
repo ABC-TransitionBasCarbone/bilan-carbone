@@ -10,28 +10,35 @@ import styles from './Onboarding.module.css'
 
 interface Props {
   form: UseFormReturn<OnboardingCommand>
+  role: Role
 }
 
-const OnboardingStep = ({ form }: Props) => {
+const OnboardingStep = ({ form, role }: Props) => {
   const t = useTranslations('onboarding.step1')
   const tRole = useTranslations('role')
   return (
     <>
       <div className="mb1">
-        <div className={classNames(styles.field, 'align-center mb-2')}>
-          <HomeIcon />
-          <span className="ml-2">{t('name')}</span>
-        </div>
-        <FormTextField className="w100" control={form.control} name="companyName" translation={t} />
+        <FormTextField
+          className="w100"
+          control={form.control}
+          name="companyName"
+          translation={t}
+          label={t('name')}
+          icon={<HomeIcon />}
+        />
       </div>
       <div>
         <div className={classNames(styles.field, 'align-center mb-2')}>
           <PersonIcon />
           <span className="ml-2">{t('role')}</span>
         </div>
-        <div className={styles.roleLabel}>{tRole(Role.ADMIN)}</div>
-
-        <p className="mt1">{t('roleDescription')}</p>
+        <div className={styles.roleLabel}>{tRole(role)}</div>
+        {role === Role.ADMIN ? (
+          <p className="mt1">{t('adminDescription')}</p>
+        ) : (
+          <p className="mt1">{t('gestionnaireDescription')}</p>
+        )}
       </div>
     </>
   )

@@ -9,15 +9,16 @@ import { FullStudy } from '@/db/study'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
 import { checkLevel } from '@/services/study'
+import { getUserRoleOnStudy } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { Role, StudyRole } from '@prisma/client'
+import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { SyntheticEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import NewStudyRightDialog from './NewStudyRightDialog'
+import NewStudyRightModal from './NewStudyRightModal'
 
 interface Props {
   study: FullStudy
@@ -76,9 +77,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
     }
   }
 
-  const userRoleOnStudy = useMemo(() => {
-    return study.allowedUsers.find((right) => right.user.email === user.email)
-  }, [user, study])
+  const userRoleOnStudy = useMemo(() => getUserRoleOnStudy(user, study), [user, study])
 
   const usersOptions = useMemo(
     () =>
@@ -93,9 +92,7 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          (user.role === Role.ADMIN ||
-            (userRoleOnStudy && userRoleOnStudy.role === StudyRole.Validator) ||
-            role !== StudyRole.Validator) &&
+          (userRoleOnStudy === StudyRole.Validator || role !== StudyRole.Validator) &&
           (!readerOnly || role === StudyRole.Reader),
       ),
     [readerOnly],
@@ -137,9 +134,9 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-rights-create-button">
           {t('create')}
         </LoadingButton>
-        {error && <p>{error}</p>}
+        {error && <p data-testid="study-rights-create-error">{error}</p>}
       </Form>
-      <NewStudyRightDialog
+      <NewStudyRightModal
         otherOrganization={otherOrganization}
         rightsWarning={form.getValues().role !== StudyRole.Reader}
         decline={() => setOtherOrganization(false)}

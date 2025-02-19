@@ -1,25 +1,44 @@
-'use server'
+'use client'
 
 import { Organization } from '@prisma/client'
 import classNames from 'classnames'
-import Link from '../base/Link'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
+import Block from '../base/Block'
+import Button from '../base/Button'
+import OrganizationCard from './Organization'
 import styles from './Organizations.module.css'
 
 interface Props {
   organizations: Organization[]
 }
 
-const Organizations = async ({ organizations }: Props) => {
+const Organizations = ({ organizations }: Props) => {
+  const t = useTranslations('organization')
+  const [showAll, setShowAll] = useState(false)
+
   return (
-    <ul className={classNames(styles.list, 'flex-col')}>
-      {organizations.map((organization) => (
-        <li key={organization.id}>
-          <Link href={`/organisations/${organization.id}`} data-testid="organization" className={styles.link}>
-            {organization.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <Block
+      title={t('myOrganizations')}
+      data-testid="home-organizations"
+      actions={[
+        {
+          actionType: 'link',
+          href: '/organisations/creer',
+          ['data-testid']: 'new-organization',
+          children: t('create'),
+        },
+      ]}
+    >
+      <ul id="organization-grid" className={classNames(styles.grid, 'mb1', { [styles.hideSubRows]: !showAll })}>
+        {organizations.map((organization) => (
+          <OrganizationCard key={organization.id} organization={organization} />
+        ))}
+      </ul>
+      <Button onClick={() => setShowAll(!showAll)} color="secondary">
+        {t(showAll ? 'seeLess' : 'seeMore')}
+      </Button>
+    </Block>
   )
 }
 

@@ -1,7 +1,6 @@
 'use client'
 
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
-import { canEditEmissionFactor } from '@/services/serverFunctions/emissionFactor'
+import { canEditEmissionFactor, EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
@@ -89,7 +88,7 @@ const sources = Object.values(Import).map((source) => source)
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
-  userOrganizationId?: string
+  userOrganizationId?: string | null
 }
 
 const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrganizationId }: Props) => {

@@ -1,4 +1,5 @@
 'use server'
+
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
 import jwt from 'jsonwebtoken'
 import { computePasswordValidation } from '../utils'
@@ -20,6 +21,11 @@ export const checkToken = async (token: string) => {
     // Autres erreurs (token invalide, etc.)
     return true
   }
+}
+
+export const hasEmptyPassword = async (email: string) => {
+  const user = await getUserByEmailWithSensibleInformations(email)
+  return !user?.password
 }
 
 export const reset = async (email: string, password: string, token: string) => {

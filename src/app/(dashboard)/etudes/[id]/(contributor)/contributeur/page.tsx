@@ -6,7 +6,7 @@ import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/
 import { redirect } from 'next/navigation'
 
 const StudyView = async ({ user, study }: StudyProps & UserProps) => {
-  if (!(await canReadStudy(user, study))) {
+  if (!(await canReadStudy(user, study.id))) {
     return <NotFound />
   }
 

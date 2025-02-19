@@ -1,16 +1,12 @@
 import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
+import { isAdmin } from '@/services/permissions/user'
 import { Role } from '@prisma/client'
 import { User } from 'next-auth'
-import { Suspense } from 'react'
-import Actualities from '../actuality/Actualities'
-import Block from '../base/Block'
+import Actualities from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
-import Organizations from '../organization/OrganizationsContainer'
-import NotFound from '../pages/NotFound'
-import ResultsContainerForUser from '../study/results/ResultsContainerForUser'
 import Studies from '../study/StudiesContainer'
+import CRClientsList from './CRClientsList'
 import UserToValidate from './UserToValidate'
-import styles from './UserView.module.css'
 
 interface Props {
   user: User
@@ -23,31 +19,24 @@ const UserView = async ({ user }: Props) => {
   ])
 
   const userOrganization = organizations.find((organization) => organization.id === user.organizationId)
-  if (!userOrganization) {
-    return <NotFound />
-  }
-
-  const isCR = userOrganization.isCR
+  const isCR = userOrganization?.isCR
 
   return (
     <>
-      {!!hasUserToValidate && (user.role === Role.ADMIN || user.role === Role.GESTIONNAIRE) && (
-        <div className="main-container">
+      {!!hasUserToValidate && (isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+        <div className="main-container mb1">
           <UserToValidate />
         </div>
       )}
-      {user.organizationId && (
-        <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
-        </Suspense>
+      {isCR ? (
+        <CRClientsList
+          organizations={organizations.filter((organization) => organization.id !== user.organizationId)}
+        />
+      ) : (
+        <Studies user={user} />
       )}
-      <Block>
-        <div className={styles.container}>
-          <Actualities />
-          {isCR ? <Organizations organizations={organizations} /> : <Studies user={user} />}
-        </div>
-      </Block>
-      {!userOrganization.onboarded && <Onboarding organization={userOrganization} />}
+      <Actualities />
+      {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
     </>
   )
 }

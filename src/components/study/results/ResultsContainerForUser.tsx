@@ -15,17 +15,15 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props)
   const studies = await getOrganizationStudiesOrderedByStartDate(mainStudyOrganizationId)
   let mainStudy = null
   for (const study of studies) {
-    const result = await canReadStudy(user, study)
+    const result = await canReadStudy(user, study.id)
     if (result) {
       mainStudy = study
       break
     }
   }
-  return mainStudy ? (
-    <Block>
-      <StudyResultsContainerSummary study={mainStudy} studySite="all" />
-    </Block>
-  ) : null
+  return (
+    <Block>{mainStudy ? <StudyResultsContainerSummary study={mainStudy} studySite="all" showTitle /> : null}</Block>
+  )
 }
 
 export default ResultsContainerForUser

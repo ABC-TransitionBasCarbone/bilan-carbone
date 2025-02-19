@@ -1,16 +1,15 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { FullStudy } from '@/db/study'
+import { FullStudy, getStudyById } from '@/db/study'
 import { Export, ExportRule, Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
-import { EmissionFactorWithMetaData } from './emissionFactors'
 import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
 import { computeBegesResult } from './results/beges'
 import { computeResultsByPost } from './results/consolidated'
-import { getEmissionFactorByIds } from './serverFunctions/emissionFactor'
+import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
 import { getUserSettings } from './serverFunctions/user'
 import {
@@ -130,11 +129,12 @@ const getEmissionSourcesRows = (
         initCols.push(tPost(emissionSource.subPost))
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
+
       return initCols
         .concat([
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
-          tCaracterisations(emissionSource.caracterisation || ''),
+          emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
           (emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0) || '0',
           'kgCO₂e',
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
@@ -249,7 +249,9 @@ export const downloadStudyPost = async (
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
-  const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
+
+  const emissionFactors = await getEmissionFactorsByIds(emissionFactorIds, study.id)
+
   const fileName = getFileName(study, post)
   const csvContent = getEmissionSourcesCSVContent(
     emissionSources,
@@ -261,6 +263,7 @@ export const downloadStudyPost = async (
     tUnit,
     'Post',
   )
+
   downloadCSV(csvContent, fileName)
 }
 
@@ -277,7 +280,9 @@ export const downloadStudyEmissionSources = async (
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
-  const emissionFactors = await getEmissionFactorByIds(emissionFactorIds)
+
+  const emissionFactors = await getEmissionFactorsByIds(emissionFactorIds, study.id)
+
   const fileName = getFileName(study)
   const csvContent = getEmissionSourcesCSVContent(
     emissionSources,
@@ -289,6 +294,7 @@ export const downloadStudyEmissionSources = async (
     tUnit,
     'Study',
   )
+
   downloadCSV(csvContent, fileName)
 }
 
@@ -471,4 +477,13 @@ export const downloadStudyResults = async (
   const buffer = await prepareExcel(data)
 
   download([buffer], `${study.name}_results.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+}
+
+export const getStudyParentOrganization = async (studyId: string, userOrganizationId: string | null) => {
+  const study = await getStudyById(studyId, userOrganizationId)
+  if (!study) {
+    throw Error("Study doesn't exist")
+  }
+
+  return study.organization.parentId || study.organization.id
 }

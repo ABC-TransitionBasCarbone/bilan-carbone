@@ -1,8 +1,8 @@
 'use client'
 
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { TextField } from '@mui/material'
 import classNames from 'classnames'

@@ -1,23 +1,27 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import HelpIcon from '@/components/base/HelpIcon'
+import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
-import { Role, StudyRole } from '@prisma/client'
+import { isAdminOnStudyOrga } from '@/services/permissions/study'
+import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import SelectStudyRole from './SelectStudyRole'
 
 interface Props {
   user: User
   study: FullStudy
-  userRoleOnStudy?: FullStudy['allowedUsers'][0]
+  userRoleOnStudy?: StudyRole
 }
 
 const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
   const t = useTranslations('study.rights.table')
   const tStudyRole = useTranslations('study.role')
+  const [displayRoles, setDisplayRoles] = useState(false)
 
   const columns = useMemo(() => {
     const columns: ColumnDef<FullStudy['allowedUsers'][0]>[] = [
@@ -26,7 +30,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
         accessorKey: 'user.email',
       },
     ]
-    if (user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)) {
+    if (isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader) {
       columns.push({
         header: t('role'),
         accessorKey: 'role',
@@ -35,7 +39,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
           return (
             <SelectStudyRole
               user={user}
-              userRole={userRoleOnStudy?.role}
+              userRole={userRoleOnStudy}
               currentRole={role}
               rowUser={context.row.original.user}
               studyId={study.id}
@@ -61,44 +65,63 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
   })
 
   return (
-    <Block
-      title={t('title')}
-      actions={
-        user.role === Role.ADMIN || (userRoleOnStudy && userRoleOnStudy.role !== StudyRole.Reader)
-          ? [
-              {
-                actionType: 'link',
-                href: `/etudes/${study.id}/cadrage/ajouter`,
-                'data-testid': 'study-rights-change-button',
-                children: t('newRightLink'),
-              },
-            ]
-          : undefined
-      }
-    >
-      <table aria-labelledby="study-rights-table-title">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} data-testid="study-rights-table-line">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Block>
+    <>
+      <Block
+        title={t('title')}
+        icon={<HelpIcon onClick={() => setDisplayRoles(!displayRoles)} label={tStudyRole('guide')} />}
+        iconPosition="after"
+        expIcon
+        actions={
+          isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
+            ? [
+                {
+                  actionType: 'link',
+                  href: `/etudes/${study.id}/cadrage/ajouter`,
+                  'data-testid': 'study-rights-change-button',
+                  children: t('newRightLink'),
+                },
+              ]
+            : undefined
+        }
+      >
+        <table aria-labelledby="study-rights-table-title">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} data-testid="study-rights-table-line">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Block>
+      <Modal
+        open={displayRoles}
+        label="study-roles"
+        title={tStudyRole('guide')}
+        onClose={() => setDisplayRoles(false)}
+        actions={[{ actionType: 'button', onClick: () => setDisplayRoles(false), children: tStudyRole('close') }]}
+      >
+        <span className="block mb-2">{tStudyRole('introduction')}</span>
+        {Object.keys(StudyRole).map((role) => (
+          <span key={role} className="block mb-2">
+            <b>{tStudyRole(role)} :</b> {tStudyRole(`${role}_description`)}
+          </span>
+        ))}
+      </Modal>
+    </>
   )
 }
 

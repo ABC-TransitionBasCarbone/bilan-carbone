@@ -1,9 +1,9 @@
-import { getEncoding } from '@/utils/csv'
 import { Import, Prisma } from '@prisma/client'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import path from 'path'
 import { prismaClient } from '../../db/client'
+import { getEncoding } from '../../utils/csv'
 import { MIN, TIME_IN_MS } from '../../utils/time'
 import {
   cleanImport,

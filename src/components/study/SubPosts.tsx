@@ -1,10 +1,10 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { EmissionFactorWithMetaData } from '@/services/emissionFactors'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { getEmissionsFactor } from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
+import { getUserRoleOnStudy } from '@/utils/study'
 import { EmissionFactorStatus } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -41,7 +41,7 @@ const SubPosts = ({
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorWithMetaData[]>([])
   useEffect(() => {
     const fetchData = async () => {
-      const emissionFactors = await getEmissionsFactor()
+      const emissionFactors = await getEmissionFactors(study.id)
       setEmissionFactors(
         emissionFactors.filter((emissionFactor) => emissionFactor.status !== EmissionFactorStatus.Archived),
       )
@@ -53,8 +53,7 @@ const SubPosts = ({
     if (withoutDetail) {
       return null
     }
-    const right = study.allowedUsers.find((right) => right.user.email === user.email)
-    return right ? right.role : null
+    return getUserRoleOnStudy(user, study)
   }, [study, user, withoutDetail])
 
   return (

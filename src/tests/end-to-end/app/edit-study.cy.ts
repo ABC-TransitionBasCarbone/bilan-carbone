@@ -10,7 +10,7 @@ describe('Edit study', () => {
     cy.intercept('POST', '/etudes/*/perimetre').as('update')
     cy.login()
 
-    cy.getByTestId('new-study').click()
+    cy.visit('/etudes/creer')
     cy.getByTestId('organization-sites-checkbox').eq(1).click()
     cy.getByTestId('organization-sites-etp')
       .eq(1)

@@ -1,9 +1,10 @@
 'use client'
 
+import { Select } from '@/components/base/Select'
 import { FormSelect } from '@/components/form/Select'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { FormControl, MenuItem } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -31,9 +32,8 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
   return (
     <>
       <FormControl>
-        <InputLabel id="post-select-label">{t('post')}</InputLabel>
         <Select
-          label={t('post')}
+          name="Post"
           data-testid="emission-factor-post"
           labelId="post-select-label"
           value={post || ''}
@@ -42,6 +42,7 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
             setValue('subPost', undefined)
             setPost(event.target.value as Post)
           }}
+          label={t('post')}
         >
           {posts.map((post) => (
             <MenuItem key={post} value={post}>

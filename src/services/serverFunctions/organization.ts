@@ -7,8 +7,9 @@ import {
   setOnboarded,
   updateOrganization,
 } from '@/db/organization'
-import { getUserByEmail } from '@/db/user'
+import { getUserApplicationSettings, getUserByEmail } from '@/db/user'
 import { uniqBy } from '@/utils/array'
+import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { Prisma } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -53,7 +54,10 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     return NOT_AUTHORIZED
   }
 
-  await updateOrganization(command)
+  const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
+  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
+
+  await updateOrganization(command, caUnit)
 }
 
 export const setOnboardedOrganization = async (organizationId: string) => {

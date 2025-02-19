@@ -1,4 +1,3 @@
-import LocaleSelector from '@/components/navbar/LocaleSelector'
 import { updateUserProfile } from '@/services/serverFunctions/user'
 import { EditProfileCommand, EditProfileCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,10 +14,15 @@ import Button from '../base/Button'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
+import LocaleSelector from './LocaleSelector'
 import styles from './Profile.module.css'
 
-const Profile = () => {
-  const { data: session, update } = useSession()
+interface Props {
+  version: string
+}
+
+const Profile = ({ version }: Props) => {
+  const { data: session, update: updateSession } = useSession()
 
   const t = useTranslations('profile')
   const [editing, setEditing] = useState(false)
@@ -38,7 +42,7 @@ const Profile = () => {
     form.reset({ firstName: session?.user.firstName, lastName: session?.user.lastName })
   }, [session])
 
-  if (!session || !update) {
+  if (!session) {
     return null
   }
 
@@ -49,7 +53,7 @@ const Profile = () => {
       setError(result)
     } else {
       setEditing(false)
-      await update(form.getValues())
+      await updateSession()
     }
   }
 
@@ -116,6 +120,7 @@ const Profile = () => {
             {t('legalNotices')}
           </Link>
         </div>
+        <span className="mb1">{t('version') + version}</span>
       </div>
       <div>
         <div className="flex-col justify-end">

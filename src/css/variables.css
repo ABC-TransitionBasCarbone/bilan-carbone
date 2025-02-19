@@ -16,14 +16,28 @@
   --primary-60: #002978;
   --primary-80: #272768;
 
-  --background: #f9ead4;
-  --border: 2px solid #e0d2be;
+  --border: 2px solid rgba(27, 91, 245, 0.1);
+  --background: rgba(56, 128, 255, 0.05);
 
   --header-height: 3.5rem;
+
+  --organization-height: 6rem;
+  --organization-card-bg: #ebf2ff;
 
   --success: #13ab27;
 
   --error: #ff0000;
   --error-40: #e50000;
   --error-60: #990000;
+  --error-700: #e04949;
+
+  --greyscale-200: #dbe3ea;
+  --greyscale-300: #c4d1dd;
+  --greyscale-400: #acbbcd;
+  --greyscale-500: #8a9bb7;
+  --greyscale-600: #7f8dac;
+  --greyscale-700: #6c7896;
+  --greyscale-800: #59637a;
+  --greyscale-900: #4c5363;
+  --greyscale-950: #2c303a;
 }

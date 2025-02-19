@@ -78,7 +78,7 @@ const NewMemberForm = () => {
       </FormSelect>
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="new-member-role">
         {Object.keys(Role)
-          .filter((role) => role !== Role.SUPER_ADMIN && role !== Role.ADMIN)
+          .filter((role) => role !== Role.SUPER_ADMIN)
           .map((key) => (
             <MenuItem key={key} value={key}>
               {tRole(key)}

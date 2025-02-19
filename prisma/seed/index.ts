@@ -104,15 +104,49 @@ const users = async () => {
       onboarded: false,
     },
   })
-  const onboardingPassword = await signPassword(`onboarding`)
+  const onboardingPassword = await signPassword('onboarding1234')
   await prisma.user.create({
     data: {
-      email: `onboarding@yopmail.com`,
+      email: 'onboarding@yopmail.com',
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       organizationId: unOnboardedOrganization.id,
       password: onboardingPassword,
       level: Level.Initial,
+      role: Role.DEFAULT,
+      isActive: true,
+      isValidated: true,
+    },
+  })
+
+  await prisma.user.create({
+    data: {
+      email: 'onboardingnottrained@yopmail.com',
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      organizationId: unOnboardedOrganization.id,
+      role: Role.GESTIONNAIRE,
+      isActive: false,
+      isValidated: false,
+    },
+  })
+
+  const clientLessPassword = await signPassword(`client1234`)
+  const clientLessOrganization = await prisma.organization.create({
+    data: {
+      name: faker.company.name(),
+      siret: faker.finance.accountNumber(14),
+      isCR: true,
+      onboarded: true,
+    },
+  })
+  await prisma.user.create({
+    data: {
+      email: 'clientless@yopmail.com',
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      organizationId: clientLessOrganization.id,
+      password: clientLessPassword,
       role: Role.DEFAULT,
       isActive: true,
       isValidated: true,
@@ -126,6 +160,18 @@ const users = async () => {
       isCR: index % 2 === 0,
       onboarded: true,
     })),
+  })
+
+  await prisma.user.create({
+    data: {
+      email: 'onboardednotrained@yopmail.com',
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      organizationId: organizations[0].id,
+      role: Role.GESTIONNAIRE,
+      isActive: false,
+      isValidated: false,
+    },
   })
 
   const crOrganizations = organizations.filter((organization) => organization.isCR)
@@ -283,7 +329,7 @@ const users = async () => {
 
   const defaultUser = users.find((user) => user.email === 'bc-default-0@yopmail.com') as User
   const reader = users.find((user) => user.email === 'bc-default-1@yopmail.com') as User
-  const editor = users.find((user) => user.email === 'bc-admin-0@yopmail.com') as User
+  const editor = users.find((user) => user.email === 'bc-gestionnaire-0@yopmail.com') as User
   const organizationSites = sites.filter((site) => site.organizationId === defaultUser.organizationId)
 
   studies.push(

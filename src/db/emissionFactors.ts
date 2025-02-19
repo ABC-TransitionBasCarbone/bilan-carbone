@@ -1,8 +1,9 @@
 import { UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
-import { unstable_cache } from 'next/cache'
 import { prismaClient } from './client'
+
+let cachedEmissionFactors: AsyncReturnType<typeof getDefaultEmissionFactors> = []
 
 const selectEmissionFactor = {
   id: true,
@@ -47,24 +48,33 @@ const selectEmissionFactor = {
 
 const getDefaultEmissionFactors = () =>
   prismaClient.emissionFactor.findMany({
-    where: { organizationId: null },
+    where: { organizationId: null, subPosts: { isEmpty: false } },
     select: selectEmissionFactor,
     orderBy: { createdAt: 'desc' },
   })
 
-const getCachedDefaultEmissionFactors = unstable_cache(() => {
-  return getDefaultEmissionFactors()
-})
+const getCachedDefaultEmissionFactors = async () => {
+  if (cachedEmissionFactors.length) {
+    return cachedEmissionFactors
+  }
+  const emissionFactors = await getDefaultEmissionFactors()
+  cachedEmissionFactors = emissionFactors
+  return emissionFactors
+}
 
-export const getAllEmissionFactors = async (organizationId: string) => {
-  const organizationEmissionFactor = await prismaClient.emissionFactor.findMany({
-    where: { organizationId },
-    select: selectEmissionFactor,
-    orderBy: { createdAt: 'desc' },
-  })
+export const getAllEmissionFactors = async (organizationId: string | null) => {
+  const organizationEmissionFactor = organizationId
+    ? await prismaClient.emissionFactor.findMany({
+        where: { organizationId },
+        select: selectEmissionFactor,
+        orderBy: { createdAt: 'desc' },
+      })
+    : []
+
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
     ? getDefaultEmissionFactors()
     : getCachedDefaultEmissionFactors())
+
   return organizationEmissionFactor.concat(defaultEmissionFactors)
 }
 

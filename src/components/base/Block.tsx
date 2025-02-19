@@ -5,6 +5,7 @@ import { LinkProps } from 'next/link'
 import { AnchorHTMLAttributes, ReactNode } from 'react'
 import styles from './Block.module.css'
 import Button from './Button'
+import IconLabel from './IconLabel'
 import LinkButton from './LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
 
@@ -12,6 +13,7 @@ export interface Props {
   children?: ReactNode
   title?: string
   icon?: ReactNode
+  expIcon?: boolean
   iconPosition?: 'before' | 'after'
   as?: 'h1'
   id?: string
@@ -35,18 +37,19 @@ const Block = ({
   'data-testid': dataTestId,
   description,
   actions,
+  expIcon,
   ...rest
 }: Props) => {
   const Title = as === 'h1' ? 'h1' : 'h2'
-  const iconDiv = icon ? <div className={as === 'h1' ? styles.bigIcon : styles.icon}>{icon}</div> : null
+  const iconDiv = icon ? (
+    <div className={classNames(as === 'h1' ? styles.bigIcon : styles.icon, { [styles.exp]: expIcon })}>{icon}</div>
+  ) : null
   const titleDiv = (
-    <div className={classNames(styles.title, 'align-center')}>
-      {iconPosition === 'before' && iconDiv}
+    <IconLabel icon={iconDiv} iconPosition={iconPosition} className={styles.title}>
       <Title id={id} data-testid={dataTestId}>
         {title}
       </Title>
-      {iconPosition !== 'before' && iconDiv}
-    </div>
+    </IconLabel>
   )
 
   return (
