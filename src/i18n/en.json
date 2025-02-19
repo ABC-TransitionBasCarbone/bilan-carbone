@@ -995,6 +995,9 @@
     "step1": {
       "name": "Name of my organization",
       "role": "My role within the organization",
+      "information": "My information",
+      "firstName": "Firstname",
+      "lastName": "Lastname",
       "adminDescription": "You have been trained to the Bilan Carbone® method : Thus, your have been attribued to the Admin role",
       "gestionnaireDescription": "You have not been trained to the Bilan Carbone® method : Thus, your have been attribued to the Gestionnaire role"
     },
