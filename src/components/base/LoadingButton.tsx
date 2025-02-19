@@ -11,10 +11,10 @@ export interface Props {
   fullWidth?: boolean
 }
 
-const LoadingButton = ({ children, loading, disabled, iconButton, fullWidth, ...rest }: Props & ButtonProps) => {
+const LoadingButton = ({ children, loading, disabled, iconButton, ...rest }: Props & ButtonProps) => {
   const t = useTranslations('spinner')
   return (
-    <Button disabled={disabled || loading} {...rest} {...(fullWidth && { fullWidth: true })}>
+    <Button disabled={disabled || loading} {...rest}>
       {(!loading || !iconButton) && <>{children}</>}
       {loading && (
         <>

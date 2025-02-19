@@ -55,8 +55,8 @@ const NewPasswordForm = ({ reset }: Props) => {
   }, [searchParams])
 
   return (
-    <Form onSubmit={onSubmit} className={classNames(authStyles.small)}>
-      <FormControl className={classNames(authStyles.form)}>
+    <Form onSubmit={onSubmit} className={authStyles.small}>
+      <FormControl className={authStyles.form}>
         <FormTextField
           control={form.control}
           className={authStyles.input}

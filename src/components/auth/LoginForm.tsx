@@ -69,8 +69,8 @@ const LoginForm = () => {
   }
 
   return (
-    <Form onSubmit={onSubmit} className={classNames(authStyles.medium)}>
-      <FormControl className={classNames(authStyles.form)}>
+    <Form onSubmit={onSubmit} className={authStyles.medium}>
+      <FormControl className={authStyles.form}>
         <FormTextField
           className="grow"
           control={control}

@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,12 +15,18 @@ const PublicPage = ({ children }: Props) => {
 
   return (
     <>
-      <div className={styles.root}>
-        <div className={styles.container}>
-          <div className={styles.info}>
+      <div className="w100 h100 flex-cc">
+        <div className={classNames(styles.container, 'flex-row')}>
+          <div className={classNames(styles.info, 'grow p2 text-center')}>
             <p className="title-h4 mb1">{t('welcome')}</p>
             <p>{t('explaination')}</p>
-            <Image src="/logos/monogramme_BC_noir.png" alt="logo" width={400} height={400} className={styles.image} />
+            <Image
+              src="/logos/monogramme_BC_noir.png"
+              alt="logo"
+              width={400}
+              height={400}
+              className={classNames(styles.image, 'w100')}
+            />
             <p>
               {t.rich('question', {
                 link: (children) => (
@@ -30,8 +37,8 @@ const PublicPage = ({ children }: Props) => {
               })}
             </p>
           </div>
-          <div className={styles.loginForm}>
-            <div className={styles.welcome}>
+          <div className={classNames(styles.loginForm, 'grow', 'flex-col')}>
+            <div className="justify-end">
               <Image
                 className={styles.welcomeLogo}
                 src="/logos/logo_BC_2025_noir.png"
