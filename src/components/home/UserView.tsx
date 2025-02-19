@@ -33,7 +33,7 @@ const UserView = async ({ user }: Props) => {
           organizations={organizations.filter((organization) => organization.id !== user.organizationId)}
         />
       ) : (
-        <Studies user={user} />
+        <Studies user={user} organizationId={user.organizationId} />
       )}
       <Actualities />
       {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}

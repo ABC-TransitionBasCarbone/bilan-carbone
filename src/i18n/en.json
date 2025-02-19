@@ -162,8 +162,7 @@
     "information": "Global informations"
   },
   "results": {
-    "byPost": "Results by post",
-    "bySubPost": "Results by sub post"
+    "unit": "tCo2e"
   },
   "profile": {
     "title": "My profile",
@@ -211,6 +210,13 @@
     "createFirstStudy": "Create my first Bilan Carbone®",
     "seeResults": "See results",
     "firstStudyMessage": "It's time to get started! We invite you to create your first bilan.",
+    "validatedSources": "<data>{validated} / {total}</data> Validated emissions sources",
+    "information": "Information",
+    "validatedOnly": "Validated emission sources",
+    "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
+    "withDependencies": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the dependency sub-component, as the organisation is generally not in a position to act easily on this sub-component. On the other hand, this sub-component remains crucial for understanding the risks to which the organisation is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
+    "close": "Close",
+    "see": "See my Bilan Carbone®",
     "navigation": {
       "homepage": "Homepage",
       "framing": "Framing",
@@ -242,11 +248,11 @@
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Validator email",
-        "validatorEmailDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu (link to the parameters menu).",
+        "validatorEmailDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu.",
         "type": "Type of Bilan Carbone® assessment",
         "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for organisations' Bilan Carbone®. For more details, please consult <link>this page</link>.",
         "visibility": "Visibility of the study",
-        "visibilityDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "visibilityDescription": "Choose whether your study should be public, i.e. accessible to all your colleagues entered on the My organisation > my team page (link to the page), or private, i.e. only accessible to the people you add on the study framework page. Your organisation's admins have access to all studies, whether public or private.",
         "exports": "Exports",
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
         "control": "Control mode",
