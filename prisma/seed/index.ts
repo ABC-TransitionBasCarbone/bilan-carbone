@@ -102,7 +102,7 @@ const users = async () => {
       siret: faker.finance.accountNumber(14),
       isCR: false,
       onboarded: false,
-      activedLicence: false
+      activedLicence: false,
     },
   })
   const onboardingPassword = await signPassword('onboarding1234')
