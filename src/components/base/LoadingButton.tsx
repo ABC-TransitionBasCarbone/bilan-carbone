@@ -8,7 +8,6 @@ export interface Props {
   children: React.ReactNode
   loading: boolean
   iconButton?: boolean
-  fullWidth?: boolean
 }
 
 const LoadingButton = ({ children, loading, disabled, iconButton, ...rest }: Props & ButtonProps) => {

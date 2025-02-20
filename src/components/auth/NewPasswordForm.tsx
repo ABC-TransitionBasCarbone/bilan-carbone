@@ -44,6 +44,8 @@ const NewPasswordForm = ({ reset }: Props) => {
     setSubmitting(true)
 
     if (!isValid) {
+      const test = EmailCommandValidation.safeParse(getValues())
+      console.log(test)
       setErrorMessage('emailRequired')
       setSubmitting(false)
     } else {
@@ -60,7 +62,7 @@ const NewPasswordForm = ({ reset }: Props) => {
   }, [searchParams])
 
   return (
-    <Form onSubmit={onSubmit} className={authStyles.small}>
+    <Form onSubmit={onSubmit} className="grow justify-center">
       <FormControl className={authStyles.form}>
         <FormTextField
           control={control}

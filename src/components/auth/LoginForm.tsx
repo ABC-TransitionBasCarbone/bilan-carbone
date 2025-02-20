@@ -74,7 +74,7 @@ const LoginForm = () => {
   }
 
   return (
-    <Form onSubmit={onSubmit} className={authStyles.medium}>
+    <Form onSubmit={onSubmit} className="grow justify-center">
       <FormControl className={authStyles.form}>
         <FormTextField
           className="grow"

@@ -10,7 +10,7 @@
 .container {
   position: absolute;
   width: 75%;
-  max-width: 1000px;
+  max-width: 62rem;
 }
 
 .loginForm {
@@ -22,7 +22,6 @@
 .welcomeLogo {
   height: auto;
   width: 50%;
-  align-items: end;
 }
 
 .info {
