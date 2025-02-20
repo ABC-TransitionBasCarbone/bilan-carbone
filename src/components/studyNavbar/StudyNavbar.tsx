@@ -44,12 +44,16 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         onBlur={() => setOpen(false)}
         variant="persistent"
       >
-        <Link className={styles.link} href={`/etudes/${studyId}`} onClick={() => setOpen(false)}>
+        <Link
+          className={classNames(styles.link, { [styles.active]: pathName === `/etudes/${studyId}` })}
+          href={`/etudes/${studyId}`}
+          onClick={() => setOpen(false)}
+        >
           {t('homepage')}
         </Link>
         <Divider />
         <Link
-          className={styles.link}
+          className={classNames(styles.link, { [styles.active]: pathName.includes('cadrage') })}
           href={`/etudes/${studyId}/cadrage`}
           onClick={() => setOpen(false)}
           data-testid="study-cadrage-link"
@@ -58,7 +62,7 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         </Link>
         <Divider />
         <Link
-          className={styles.link}
+          className={classNames(styles.link, { [styles.active]: pathName.includes('perimetre') })}
           href={`/etudes/${studyId}/perimetre`}
           onClick={() => setOpen(false)}
           data-testid="study-perimetre-link"
@@ -72,7 +76,12 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         <Divider />
         <div>
           <button
-            className={classNames(styles.button, styles.openable, 'align-center')}
+            className={classNames(
+              styles.button,
+              styles.openable,
+              { [styles.active]: pathName.includes('comptabilisation') },
+              'align-center',
+            )}
             onClick={() => setOpenAccountingDetails((prev) => !prev)}
           >
             {openAccountingDetails ? (
@@ -86,7 +95,11 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
             <>
               <Divider />
               <Link
-                className={classNames(styles.link, styles.childrenLink)}
+                className={classNames(
+                  styles.link,
+                  { [styles.active]: pathName.includes('saisie') },
+                  styles.childrenLink,
+                )}
                 href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees`}
                 onClick={() => setOpen(false)}
               >
@@ -94,7 +107,11 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
               </Link>
               <Divider />
               <Link
-                className={classNames(styles.link, styles.childrenLink)}
+                className={classNames(
+                  styles.link,
+                  { [styles.active]: pathName.includes('resultats') },
+                  styles.childrenLink,
+                )}
                 href={`/etudes/${studyId}/comptabilisation/resultats`}
                 onClick={() => setOpen(false)}
               >
