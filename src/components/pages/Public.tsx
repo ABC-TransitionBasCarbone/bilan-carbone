@@ -37,10 +37,10 @@ const PublicPage = ({ children }: Props) => {
               })}
             </p>
           </div>
-          <div className={classNames(styles.loginForm, 'grow', 'flex-col')}>
+          <div className={classNames(styles.loginForm, 'grow flex-col')}>
             <div className="justify-end">
               <Image
-                className={styles.welcomeLogo}
+                className={classNames(styles.welcomeLogo, 'align-end')}
                 src="/logos/logo_BC_2025_noir.png"
                 alt="logo"
                 width={278}

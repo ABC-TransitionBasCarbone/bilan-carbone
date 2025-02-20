@@ -36,7 +36,6 @@ const ActivationForm = () => {
     control,
     getValues,
     setValue,
-    trigger,
     formState: { isValid },
   } = useForm<EmailCommand>({
     resolver: zodResolver(EmailCommandValidation),
@@ -74,7 +73,7 @@ const ActivationForm = () => {
     return <p data-testid="activation-success">{t('success')}</p>
   }
   return (
-    <Form onSubmit={onSubmit} className={authStyles.small}>
+    <Form onSubmit={onSubmit} className="grow justify-center">
       <FormControl className={authStyles.form}>
         <p>{t('description')}</p>
         <FormTextField
