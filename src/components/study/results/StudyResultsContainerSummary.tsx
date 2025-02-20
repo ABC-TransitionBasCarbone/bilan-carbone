@@ -131,17 +131,19 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
         label="withDependencies"
         t={t}
       >
-        {t.rich('withDependencies', {
-          link: (children) => (
-            <Link
-              href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              {children}
-            </Link>
-          ),
-        })}
+        <span>
+          {t.rich('withDependencies', {
+            link: (children) => (
+              <Link
+                href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {children}
+              </Link>
+            ),
+          })}
+        </span>
       </GlossaryModal>
     </>
   )

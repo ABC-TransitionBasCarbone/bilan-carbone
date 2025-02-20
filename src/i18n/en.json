@@ -214,7 +214,7 @@
     "information": "Information",
     "validatedOnly": "Validated emission sources",
     "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
-    "withDependencies": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the dependency sub-component, as the organisation is generally not in a position to act easily on this sub-component. On the other hand, this sub-component remains crucial for understanding the risks to which the organisation is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
+    "withDependencies": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the \"Use in dependence\" sub-post, as the organisation is generally not in a position to act easily on this sub-post. On the other hand, this sub-component remains crucial for understanding the risks to which the organisation is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
     "close": "Close",
     "selectSite": "Before filling in the details, choose a site",
     "see": "See my Bilan Carbone®",
@@ -541,8 +541,8 @@
           "loss": "<b>Losses</b>, which take account of losses in the form of heat during the transmission of electricity on the network.",
           "conclusion": "This disaggregation is not used in the Bilan Carbone® method, but is used to break down the emissions of the various components within the categories for exports (for the regulatory GHG balance, using the same example, and if the source of emissions is \"Operated\", \"upstream\" emissions, \"combustion at the power plant\" and \"losses\" are broken down within categories 4.1, 1.2 and 4.1 respectively).. <b>We strongly recommend that you do not use this function if you are not familiar with the allocations within the regulatory GHG balance.</b>"
         },
-        "subPartsCount": "Number of parts",
-        "subPartsCountDescription": "You must choose the item(s) and sub-item(s) within which your emission factor will be selectable.",
+        "post": "Post",
+        "postDescription": "You must choose the item(s) and sub-item(s) within which your emission factor will be selectable.",
         "close": "Close"
       },
       "validation": {
