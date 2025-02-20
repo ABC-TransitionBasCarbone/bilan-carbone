@@ -63,17 +63,17 @@
 }
 
 .green {
-  border-color: #469478;
+  border-color: var(--post-green-dark);
 }
 
 .darkBlue {
-  border-color: #0c2155;
+  border-color: var(--post-darkBlue-dark);
 }
 
 .blue {
-  border-color: #2c6498;
+  border-color: var(--post-blue-dark);
 }
 
 .orange {
-  border-color: #c88938;
+  border-color: var(--post-orange-dark);
 }
