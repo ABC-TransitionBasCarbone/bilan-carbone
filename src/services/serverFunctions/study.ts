@@ -30,6 +30,7 @@ import {
   Role,
   StudyRole,
   SubPost,
+  UserStatus,
 } from '@prisma/client'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -310,13 +311,14 @@ const getOrCreateUserAndSendStudyInvite = async (
   if (!existingUser) {
     const newUser = await addUser({
       email: email,
-      isActive: true,
-      isValidated: true,
+      status: UserStatus.VALIDATED,
       role: Role.DEFAULT,
       firstName: '',
       lastName: '',
     })
+
     await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '')
+
     userId = newUser.id
   } else {
     if (existingUser.organizationId !== organization.id) {

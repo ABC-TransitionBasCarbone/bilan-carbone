@@ -15,7 +15,7 @@ import {
   validateUser,
 } from '@/db/user'
 import { DAY, HOUR, TIME_IN_MS } from '@/utils/time'
-import { User as DBUser, Organization, Role } from '@prisma/client'
+import { User as DBUser, Organization, Role, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
 import { auth } from '../auth'
@@ -114,8 +114,7 @@ export const addMember = async (member: AddMemberCommand) => {
 
   const newMember = {
     ...member,
-    isActive: false,
-    isValidated: true,
+    status: UserStatus.VALIDATED,
     organization: { connect: { id: session.user.organizationId } },
     importedFileDate: new Date(),
   }
@@ -215,9 +214,10 @@ export const resetPassword = async (email: string) => {
 export const activateEmail = async (email: string, fromReset: boolean = false) => {
   const user = await getUserByEmail(email)
   // TODO ajouter un check sur le fait que l'orga a une licence active
-  if (!user || user.isActive || !user.organizationId) {
+  if (!user || !user.organizationId || user.status === UserStatus.ACTIVE || user.status === UserStatus.VALIDATED) {
     return NOT_AUTHORIZED
   }
+
   if (await hasActiveUserInOrganization(user.organizationId)) {
     const users = await getUserFromUserOrganization(user)
     await sendActivationRequest(

@@ -1,4 +1,4 @@
-import { Level, Prisma, Role } from '@prisma/client'
+import { Level, Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 
 export const mockedUserId = 'mocked-user-id'
@@ -17,8 +17,7 @@ const mockedDbUser = {
   ...mockedUser,
   createdAt: '2025-01-01T00:00:00.000Z',
   updatedAt: '2025-01-01T00:00:00.000Z',
-  isActive: true,
-  isValidated: true,
+  status: UserStatus.ACTIVE,
 }
 const mockedStudy = {
   name: 'Mocked Study',
