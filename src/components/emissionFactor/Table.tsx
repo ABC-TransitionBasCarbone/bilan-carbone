@@ -405,7 +405,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
               ]
               if (row.getIsExpanded()) {
                 lines.push(
-                  <tr key={`todo${row.id}`}>
+                  <tr key={row.id}>
                     <td colSpan={columns.length} className={styles.detail}>
                       <EmissionFactorDetails emissionFactor={row.original} />
                     </td>
