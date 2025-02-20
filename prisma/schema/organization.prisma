@@ -10,12 +10,13 @@ model Organization {
   updatedAt        DateTime  @default(now()) @map("updated_at")
   importedFileDate DateTime? @map("imported_file_date")
 
-  name        String
-  siret       String?
-  isCR        Boolean @map("is_cr")
-  onboarded   Boolean @default(false)
-  onboarderId String? @map("onboarder_id")
-  onboarder   User?   @relation("organizationOnboarder", fields: [onboarderId], references: [id])
+  name           String
+  siret          String?
+  isCR           Boolean @map("is_cr")
+  activedLicence Boolean @map("actived_licence")
+  onboarded      Boolean @default(false)
+  onboarderId    String? @map("onboarder_id")
+  onboarder      User?   @relation("organizationOnboarder", fields: [onboarderId], references: [id])
 
   users     User[]
   sites     Site[]
