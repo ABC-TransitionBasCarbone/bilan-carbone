@@ -8,6 +8,7 @@ import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
@@ -26,6 +27,7 @@ interface Props {
 const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const t = useTranslations('onboarding')
   const { update: updateSession } = useSession()
+  const router = useRouter()
 
   const [activeStep, setActiveStep] = useState(0)
   const stepCount = 2
@@ -65,6 +67,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
         } else {
           await updateSession()
           onClose()
+          router.refresh()
         }
       }
     }
