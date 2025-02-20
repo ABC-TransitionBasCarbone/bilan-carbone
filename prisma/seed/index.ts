@@ -290,6 +290,7 @@ const users = async () => {
       level: Level.Initial,
       isActive: false,
       isValidated: false,
+      organizationId: organizations[0].id,
     },
   })
 
