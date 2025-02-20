@@ -209,7 +209,7 @@ export const resetPassword = async (email: string) => {
   }
 }
 
-export const activateEmail = async (email: string, fromReset: boolean) => {
+export const activateEmail = async (email: string, fromReset: boolean = false) => {
   const user = await getUserByEmail(email)
   if (!user || user.isActive) {
     return NOT_AUTHORIZED
