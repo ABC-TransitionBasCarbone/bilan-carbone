@@ -13,7 +13,7 @@ import styles from './StudiesContainer.module.css'
 
 interface Props {
   user: User
-  organizationId: string | null
+  organizationId?: string
 }
 
 const StudiesContainer = async ({ user, organizationId }: Props) => {
@@ -26,12 +26,13 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
   const creationUrl = organizationId ? `/organisations/${organizationId}/etudes/creer` : '/etudes/creer'
 
   const canCreateStudy = !!user.level && !!user.organizationId
+  const mainStudyOrganizationId = organizationId ?? user.organizationId
 
   return studies.length ? (
     <>
-      {organizationId && (
+      {mainStudyOrganizationId && (
         <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={organizationId} />
+          <ResultsContainerForUser user={user} mainStudyOrganizationId={mainStudyOrganizationId} />
         </Suspense>
       )}
       <Studies studies={studies} canAddStudy={canCreateStudy} creationUrl={creationUrl} />
