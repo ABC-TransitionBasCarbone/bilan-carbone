@@ -73,6 +73,7 @@ const getUsersFromFTP = async () => {
             name,
             isCR: ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts),
             importedFileDate: fileDate,
+            activedLicence: true,
           },
         })
       }
