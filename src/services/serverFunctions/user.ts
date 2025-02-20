@@ -1,6 +1,5 @@
 'use server'
 
-import { hasOrganizationActiveUser } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
   addUser,
@@ -190,8 +189,7 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
 
 export const activateEmail = async (email: string) => {
   const user = await getUserByEmail(email)
-
-  if (!user || user.isActive || !hasOrganizationActiveUser(user?.organizationId)) {
+  if (!user || user.isActive) {
     return NOT_AUTHORIZED
   }
   await validateUser(email)
