@@ -45,7 +45,7 @@ const getUsersFromFTP = async () => {
     const membershipYear = value['Membership_Year']
     const currentYear = new Date().getFullYear()
 
-    if (membershipYear && !membershipYear.include(currentYear)) {
+    if (membershipYear && !membershipYear.includes(currentYear)) {
       console.log(`Skipping ${email} because membership year is ${membershipYear}`)
       continue
     }
@@ -90,6 +90,7 @@ const getUsersFromFTP = async () => {
             isCR: ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts),
             importedFileDate: fileDate,
             onboarderId: user.id,
+            activedLicence: true,
           },
         })
       }
