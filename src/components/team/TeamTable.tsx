@@ -31,7 +31,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       },
       { header: t('lastName'), accessorKey: 'lastName' },
       { header: t('email'), accessorKey: 'email' },
-      { header: t('level'), accessorFn: (member: TeamMember) => tLevel(member.level) },
+      { header: t('level'), accessorFn: (member: TeamMember) => (member.level ? tLevel(member.level) : '') },
     ]
     if (isAdmin(user.role) || user.role === Role.GESTIONNAIRE) {
       columns.push({
@@ -39,7 +39,14 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         accessorKey: 'role',
         cell: (context) => {
           const role = context.getValue() as Role
-          return <SelectRole user={user} currentRole={role} email={context.row.original.email} />
+          return (
+            <SelectRole
+              currentUserEmail={user.email}
+              currentRole={role}
+              email={context.row.original.email}
+              level={context.row.original.level}
+            />
+          )
         },
       })
     }

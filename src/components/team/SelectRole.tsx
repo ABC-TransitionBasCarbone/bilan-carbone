@@ -2,19 +2,19 @@
 
 import { changeRole } from '@/services/serverFunctions/user'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import { Role } from '@prisma/client'
-import { User } from 'next-auth'
+import { Level, Role } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import styles from './SelectRole.module.css'
 
 interface Props {
-  user: User
-  email: string
+  currentUserEmail: string
   currentRole: Role
+  email: string
+  level: Level | null
 }
 
-const SelectRole = ({ user, email, currentRole }: Props) => {
+const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
   const t = useTranslations('role')
   const [role, setRole] = useState(currentRole)
   useEffect(() => {
@@ -35,13 +35,14 @@ const SelectRole = ({ user, email, currentRole }: Props) => {
       className={styles.select}
       value={role}
       onChange={selectNewRole}
-      disabled={user.email === email || currentRole === Role.SUPER_ADMIN}
+      disabled={currentUserEmail === email || !level || currentRole === Role.SUPER_ADMIN}
     >
       <MenuItem value={Role.SUPER_ADMIN} className={styles.hidden} aria-hidden="true">
         {t(Role.SUPER_ADMIN)}
       </MenuItem>
       {Object.keys(Role)
         .filter((role) => role !== Role.SUPER_ADMIN)
+        .filter((role) => level || role === Role.GESTIONNAIRE)
         .map((role) => (
           <MenuItem key={role} value={role}>
             {t(role)}
