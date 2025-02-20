@@ -102,6 +102,7 @@ const users = async () => {
       siret: faker.finance.accountNumber(14),
       isCR: false,
       onboarded: false,
+      activatedLicence: false,
     },
   })
   const onboardingPassword = await signPassword('onboarding1234')
@@ -138,6 +139,7 @@ const users = async () => {
       siret: faker.finance.accountNumber(14),
       isCR: true,
       onboarded: true,
+      activatedLicence: true,
     },
   })
   await prisma.user.create({
@@ -159,6 +161,7 @@ const users = async () => {
       siret: faker.finance.accountNumber(14),
       isCR: index % 2 === 0,
       onboarded: true,
+      activatedLicence: true,
     })),
   })
 
@@ -183,6 +186,7 @@ const users = async () => {
       parentId: faker.helpers.arrayElement(crOrganizations).id,
       isCR: false,
       onboarded: true,
+      activatedLicence: true,
     })),
   })
 
