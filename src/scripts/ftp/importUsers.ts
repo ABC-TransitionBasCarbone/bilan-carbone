@@ -52,7 +52,7 @@ const getUsersFromFTP = async () => {
       console.log(`${i}/${values.length}`)
     }
 
-    let dbUser = (await prismaClient.user.findUnique({
+    const dbUser = (await prismaClient.user.findUnique({
       where: { email },
     })) as Prisma.UserCreateManyInput
 
