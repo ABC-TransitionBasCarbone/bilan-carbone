@@ -28,7 +28,6 @@ const ActivationForm = () => {
     const email = searchParams.get('email')
     if (email) {
       setValue('email', email)
-      activate(email)
     }
   }, [searchParams])
 
@@ -48,15 +47,15 @@ const ActivationForm = () => {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    activate(getValues().email)
+    activate()
   }
 
-  const activate = async (emailToActivate: string) => {
+  const activate = async () => {
     setErrorMessage('')
     setSubmitting(true)
 
-    if (isValid || emailToActivate) {
-      const result = await activateEmail(emailToActivate ?? getValues().email)
+    if (isValid) {
+      const result = await activateEmail(getValues().email)
       setSubmitting(false)
       if (result) {
         setErrorMessage(result)
