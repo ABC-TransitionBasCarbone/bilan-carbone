@@ -28,7 +28,7 @@ export const createOrganizationCommand = async (
   const organization = {
     ...command,
     isCR: false,
-    activedLicence: true,
+    activatedLicence: true,
     parent: { connect: { id: session.user.organizationId } },
   } satisfies Prisma.OrganizationCreateInput
 
