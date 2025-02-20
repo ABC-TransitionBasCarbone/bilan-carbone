@@ -57,6 +57,15 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
   return send([toEmail], 'Vous avez activé votre compte sur le BC+', html)
 }
 
+export const sendActivationRequest = async (toEmailList: string[], emailToActivate: string, userToActivate: string) => {
+  const html = await getHtml('activation-request', {
+    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    emailToActivate,
+    userToActivate,
+  })
+  return send(toEmailList, "Demande d'accès à votre organisation BC+", html)
+}
+
 export const sendUserOnStudyInvitationEmail = async (
   toEmail: string,
   studyName: string,

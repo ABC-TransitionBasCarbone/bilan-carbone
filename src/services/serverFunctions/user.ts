@@ -7,6 +7,8 @@ import {
   deleteUser,
   getUserApplicationSettings,
   getUserByEmail,
+  getUserFromUserOrganization,
+  hasActiveUserInOrganization,
   updateProfile,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
@@ -19,6 +21,7 @@ import { User } from 'next-auth'
 import { auth } from '../auth'
 import {
   sendActivationEmail,
+  sendActivationRequest,
   sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
@@ -26,7 +29,7 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '../email/email'
-import { NOT_AUTHORIZED } from '../permissions/check'
+import { NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 import { hasEmptyPassword } from './auth'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
@@ -211,11 +214,22 @@ export const resetPassword = async (email: string) => {
 
 export const activateEmail = async (email: string, fromReset: boolean = false) => {
   const user = await getUserByEmail(email)
-  if (!user || user.isActive) {
+  // TODO ajouter un check sur le fait que l'orga a une licence active
+  if (!user || user.isActive || !user.organizationId) {
     return NOT_AUTHORIZED
   }
-  await validateUser(email)
-  await sendActivation(email, fromReset)
+  if (await hasActiveUserInOrganization(user.organizationId)) {
+    const users = await getUserFromUserOrganization(user)
+    await sendActivationRequest(
+      users.filter((u) => u.role === Role.GESTIONNAIRE || u.role === Role.ADMIN).map((u) => u.email),
+      email,
+      `${user.firstName} ${user.lastName}`,
+    )
+    return REQUEST_SENT
+  } else {
+    await validateUser(email)
+    await sendActivation(email, fromReset)
+  }
 }
 
 export const getUserSettings = async () => {

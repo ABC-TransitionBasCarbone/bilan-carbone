@@ -85,9 +85,13 @@ export const getUserOrganizations = async (email: string) => {
 
 export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]
 
-export const getUserFromUserOrganization = (user: User) =>
-  prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
+export const getUserFromUserOrganization = (user: User) => {
+  return prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
+}
 export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
+
+export const getOnlyActiveUsersForOrganization = (organizationId: string) =>
+  prismaClient.user.findMany({ where: { organizationId, isActive: true, isValidated: true } })
 
 export const addUser = (user: Prisma.UserCreateInput) =>
   prismaClient.user.create({
@@ -117,6 +121,11 @@ export const hasUserToValidateInOrganization = async (organizationId: string | n
         where: { organizationId, isValidated: false },
       })
     : 0
+
+export const hasActiveUserInOrganization = async (organizationId: string) =>
+  prismaClient.user.count({
+    where: { organizationId, isValidated: true },
+  })
 
 export const updateProfile = (userId: string, data: Prisma.UserUpdateInput) =>
   prismaClient.user.update({
