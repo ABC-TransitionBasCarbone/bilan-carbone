@@ -148,7 +148,6 @@ const DetailedGES = <T extends EmissionFactorCommand>({
             <>
               <FormLabel id="sub-parts-count-label" component="legend" className="inputLabel align-center">
                 {t('subPartsCount')}
-                <HelpIcon className="ml-2" onClick={() => setGlossary('subPartsCount')} label={tGlossary('title')} />
               </FormLabel>
               <TextField
                 type="number"
