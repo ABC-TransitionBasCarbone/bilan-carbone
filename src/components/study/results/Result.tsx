@@ -27,7 +27,8 @@ const postXAxisList = [
 ]
 
 const Result = ({ studySite, computedResults }: Props) => {
-  const t = useTranslations('emissionFactors.post')
+  const t = useTranslations('results')
+  const tPost = useTranslations('emissionFactors.post')
   const [dynamicHeight, setDynamicHeight] = useState(0)
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -60,9 +61,13 @@ const Result = ({ studySite, computedResults }: Props) => {
         chartRef.current = new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: xAxis.map((post) => t(post)),
+            labels: xAxis.map((post) => tPost(post)),
             datasets: [
-              { data: yData, backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary-40') },
+              {
+                data: yData,
+                backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary-40'),
+                label: t('unit'),
+              },
             ],
           },
           options: {
@@ -70,7 +75,7 @@ const Result = ({ studySite, computedResults }: Props) => {
             maintainAspectRatio: false,
             plugins: {
               tooltip: { callbacks: { label: (context) => `${formatNumber((context.raw as number) / 1000)} tCO₂e` } },
-              legend: { display: false },
+              legend: { display: true },
             },
             scales: {
               x: { afterUpdate: ({ height }) => setDynamicHeight(370 + (height || 0)) },
