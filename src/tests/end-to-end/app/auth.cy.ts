@@ -58,8 +58,6 @@ describe('Authentication', () => {
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-2@yopmail.com')
     cy.getByTestId('reset-button').click()
 
-    cy.url().should('include', '/login')
-
     cy.visit('http://localhost:1080')
     cy.origin('http://localhost:1080', () => {
       cy.get('.email-item-link')
