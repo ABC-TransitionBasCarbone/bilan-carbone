@@ -1,7 +1,5 @@
 'use client'
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import MenuIcon from '@mui/icons-material/Menu'
 import { Divider, Drawer, IconButton } from '@mui/material'
 import classNames from 'classnames'
@@ -9,21 +7,15 @@ import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styles from './StudyNavbar.module.css'
-
-const uuid = /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
 const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
   const pathName = usePathname()
 
   const t = useTranslations('study.navigation')
-  const [open, setOpen] = useState<boolean>(false)
-  const [openAccountingDetails, setOpenAccountingDetails] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(true)
 
-  useEffect(() => {
-    setOpen(pathName.match(uuid) !== null)
-  }, [pathName])
   return (
     <>
       <div className={styles.toolbarContainer}>
@@ -41,13 +33,11 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         className={open ? styles.opened : ''}
         open={open}
         PaperProps={{ className: styles.studyNavbarContainer }}
-        onBlur={() => setOpen(false)}
         variant="persistent"
       >
         <Link
           className={classNames(styles.link, { [styles.active]: pathName === `/etudes/${studyId}` })}
           href={`/etudes/${studyId}`}
-          onClick={() => setOpen(false)}
         >
           {t('homepage')}
         </Link>
@@ -55,7 +45,6 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         <Link
           className={classNames(styles.link, { [styles.active]: pathName.includes('cadrage') })}
           href={`/etudes/${studyId}/cadrage`}
-          onClick={() => setOpen(false)}
           data-testid="study-cadrage-link"
         >
           {t('framing')}
@@ -64,7 +53,6 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         <Link
           className={classNames(styles.link, { [styles.active]: pathName.includes('perimetre') })}
           href={`/etudes/${studyId}/perimetre`}
-          onClick={() => setOpen(false)}
           data-testid="study-perimetre-link"
         >
           {t('scope')}
@@ -75,53 +63,37 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
         </button>
         <Divider />
         <div>
-          <button
+          <div
             className={classNames(
-              styles.button,
-              styles.openable,
+              styles.section,
               { [styles.active]: pathName.includes('comptabilisation') },
               'align-center',
             )}
-            onClick={() => setOpenAccountingDetails((prev) => !prev)}
           >
-            {openAccountingDetails ? (
-              <KeyboardArrowDownIcon className={styles.icon} />
-            ) : (
-              <KeyboardArrowRightIcon className={styles.icon} />
-            )}
             {t('accounting')}
-          </button>
-          {openAccountingDetails && (
-            <>
-              <Divider />
-              <Link
-                className={classNames(
-                  styles.link,
-                  { [styles.active]: pathName.includes('saisie') },
-                  styles.childrenLink,
-                )}
-                href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees`}
-                onClick={() => setOpen(false)}
-              >
-                {t('dataEntry')}
-              </Link>
-              <Divider />
-              <Link
-                className={classNames(
-                  styles.link,
-                  { [styles.active]: pathName.includes('resultats') },
-                  styles.childrenLink,
-                )}
-                href={`/etudes/${studyId}/comptabilisation/resultats`}
-                onClick={() => setOpen(false)}
-              >
-                {t('results')}
-              </Link>
-            </>
-          )}
+          </div>
+
+          <Divider />
+          <Link
+            className={classNames(styles.link, { [styles.active]: pathName.includes('saisie') }, styles.childrenLink)}
+            href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees`}
+          >
+            {t('dataEntry')}
+          </Link>
+          <Divider />
+          <Link
+            className={classNames(
+              styles.link,
+              { [styles.active]: pathName.includes('resultats') },
+              styles.childrenLink,
+            )}
+            href={`/etudes/${studyId}/comptabilisation/resultats`}
+          >
+            {t('results')}
+          </Link>
         </div>
         <Divider />
-        <button className={classNames(styles.button, styles.disabled)} onClick={() => setOpen(false)}>
+        <button className={classNames(styles.button, styles.disabled)}>
           {t('transitionPlan')} (<em>{t('comming')}</em>)
         </button>
       </Drawer>

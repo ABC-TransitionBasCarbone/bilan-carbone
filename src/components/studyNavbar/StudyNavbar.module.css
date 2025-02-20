@@ -45,10 +45,15 @@
 
 .button,
 .link {
+  cursor: pointer;
+}
+
+.button,
+.link,
+.section {
   background-color: var(--neutral-00);
   width: 100%;
   border: none;
-  cursor: pointer;
   color: var(--primary-80);
   padding: 1rem;
   text-decoration: none;
@@ -66,11 +71,6 @@
   display: flex;
   flex-direction: column;
   padding-left: 2rem;
-}
-
-.openable {
-  margin-left: -1rem;
-  width: calc(100% + 1rem);
 }
 
 .icon {
