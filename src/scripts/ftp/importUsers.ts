@@ -1,4 +1,4 @@
-import { Level, Prisma, Role } from '@prisma/client'
+import { Level, Prisma, Role, UserStatus } from '@prisma/client'
 import { AccessOptions, Client } from 'basic-ftp'
 import dotenv from 'dotenv'
 import fs from 'fs'
@@ -52,8 +52,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     firstName,
     lastName,
     role: Role.DEFAULT,
-    isActive: false,
-    isValidated: false,
+    status: UserStatus.IMPORTED,
     importedFileDate,
   }
 
