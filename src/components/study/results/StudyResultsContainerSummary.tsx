@@ -5,7 +5,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import LinkButton from '@/components/base/LinkButton'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { Post } from '@/services/posts'
+import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
@@ -51,20 +51,20 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
 
   const [withDepValue, withoutDepValue] = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, studySite, true, validatedOnly)
-    return computedResults
-      .reduce(
-        (res, post) => {
-          if (post.post !== Post.UtilisationEtDependance) {
-            return res.map((value) => value + post.value)
-          }
-          const filteredValue = post.subPosts
-            .filter((subPost) => filterWithDependencies(subPost.post as SubPost, false))
-            .reduce((value, subPost) => value + subPost.value, 0)
-          return [res[0] + post.value, res[1] + filteredValue]
-        },
-        [0, 0],
-      )
-      .map((value) => formatNumber(value))
+    const total = computedResults.find((result) => result.post === 'total')?.value || 0
+
+    const dependenciesSubPost = SubPost.UtilisationEnDependance
+
+    const dependenciesPost = Object.keys(subPostsByPost).find((key) =>
+      subPostsByPost[key as Post].includes(dependenciesSubPost),
+    )
+
+    const dependenciesValue =
+      computedResults
+        .find((result) => result.post === dependenciesPost)
+        ?.subPosts.find((subPost) => subPost.post === dependenciesSubPost)?.value || 0
+
+    return [total, total - dependenciesValue].map((value) => formatNumber(value / 1000))
   }, [validatedOnly])
 
   return (
