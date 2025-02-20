@@ -1,5 +1,6 @@
 'use client'
 
+import { resetPassword } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
@@ -15,13 +16,10 @@ import authStyles from './Auth.module.css'
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 
-interface Props {
-  reset: (email: string) => Promise<void>
-}
-
-const NewPasswordForm = ({ reset }: Props) => {
+const NewPasswordForm = () => {
   const t = useTranslations('login.form')
   const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const searchParams = useSearchParams()
 
@@ -42,15 +40,16 @@ const NewPasswordForm = ({ reset }: Props) => {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSubmitting(true)
+    setMessage('')
+    setErrorMessage('')
 
     if (!isValid) {
-      const test = EmailCommandValidation.safeParse(getValues())
-      console.log(test)
       setErrorMessage('emailRequired')
       setSubmitting(false)
     } else {
-      await reset(getValues().email)
+      await resetPassword(getValues().email)
       setSubmitting(false)
+      setMessage('emailSent')
     }
   }
 
@@ -83,6 +82,7 @@ const NewPasswordForm = ({ reset }: Props) => {
             })}
           </p>
         )}
+        {message && <p>{t(message)}</p>}
       </FormControl>
     </Form>
   )

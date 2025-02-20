@@ -41,11 +41,19 @@ export const sendNewUserEmail = async (toEmail: string, token: string, creatorNa
   return send([toEmail], 'Vous avez été invité au BC+', html)
 }
 
-export const sendActivationEmail = async (toEmail: string, token: string) => {
-  const html = await getHtml('activate-account', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
-    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
-  })
+export const sendActivationEmail = async (toEmail: string, token: string, fromReset: boolean) => {
+  let html
+  if (fromReset) {
+    html = await getHtml('activate-account-from-reset', {
+      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+      support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    })
+  } else {
+    html = await getHtml('activate-account', {
+      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+      support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    })
+  }
   return send([toEmail], 'Vous avez activé votre compte sur le BC+', html)
 }
 
