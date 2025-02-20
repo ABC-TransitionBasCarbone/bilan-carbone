@@ -117,7 +117,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
         header: t('name'),
         accessorFn: (emissionFactor) =>
           emissionFactor.metaData
-            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}`
+            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}${emissionFactor.metaData.location ? ` - ${emissionFactor.metaData.location}` : ''}`
             : '',
         cell: ({ getValue, row }) => (
           <div className="align-center">
