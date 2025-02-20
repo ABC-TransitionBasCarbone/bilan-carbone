@@ -23,6 +23,8 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
     ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
     : await getAllowedStudiesByUser(user)
 
+  const creationUrl = organizationId ? `/organisations/${organizationId}/etudes/creer` : '/etudes/creer'
+
   const canCreateStudy = !!user.level && !!user.organizationId
 
   return studies.length ? (
@@ -32,7 +34,7 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
           <ResultsContainerForUser user={user} mainStudyOrganizationId={organizationId} />
         </Suspense>
       )}
-      <Studies studies={studies} canAddStudy={canCreateStudy} />
+      <Studies studies={studies} canAddStudy={canCreateStudy} creationUrl={creationUrl} />
     </>
   ) : canCreateStudy ? (
     <div className="justify-center">
@@ -43,7 +45,7 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
         <LinkButton
           data-testid="new-organization"
           className={classNames(styles.linkButton, 'w100 justify-center mb1')}
-          href="/etudes/creer"
+          href={creationUrl}
         >
           <AddIcon />
           {t('createFirstStudy')}
