@@ -81,3 +81,24 @@ export const EditSettingsCommandValidation = z.object({
 })
 
 export type EditSettingsCommand = z.infer<typeof EditSettingsCommandValidation>
+
+export const LoginCommandValidation = z.object({
+  email: z.string({ required_error: 'email' }).email('email').trim(),
+  password: z.string({ required_error: 'password' }),
+})
+
+export type LoginCommand = z.infer<typeof LoginCommandValidation>
+
+export const EmailCommandValidation = z.object({
+  email: z.string({ required_error: 'email' }).email('email').trim(),
+})
+
+export type EmailCommand = z.infer<typeof EmailCommandValidation>
+
+export const ResetPasswordCommandValidation = z.object({
+  email: z.string({ required_error: 'email' }).email('email').trim(),
+  password: z.string({ required_error: 'password' }),
+  confirmPassword: z.string({ required_error: 'password' }),
+})
+
+export type ResetPasswordCommand = z.infer<typeof ResetPasswordCommandValidation>

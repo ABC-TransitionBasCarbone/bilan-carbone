@@ -1,51 +1,90 @@
 'use client'
 
-import { TextField } from '@mui/material'
+import { resetPassword } from '@/services/serverFunctions/user'
+import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
+import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
-interface Props {
-  reset: (email: string) => Promise<void>
-}
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 
-const NewPasswordForm = ({ reset }: Props) => {
+const NewPasswordForm = () => {
   const t = useTranslations('login.form')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [email, setEmail] = useState('')
+  const searchParams = useSearchParams()
+
+  const {
+    control,
+    getValues,
+    formState: { isValid },
+    setValue,
+  } = useForm<EmailCommand>({
+    resolver: zodResolver(EmailCommandValidation),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      email: searchParams.get('email') ?? '',
+    },
+  })
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSubmitting(true)
-    await reset(email)
-    setSubmitting(false)
+    setMessage('')
+    setErrorMessage('')
+
+    if (!isValid) {
+      setErrorMessage('emailRequired')
+      setSubmitting(false)
+    } else {
+      await resetPassword(getValues().email)
+      setSubmitting(false)
+      setMessage('emailSent')
+    }
   }
 
-  const searchParams = useSearchParams()
   useEffect(() => {
     const email = searchParams.get('email')
     if (email) {
-      setEmail(email)
+      setValue('email', email)
     }
   }, [searchParams])
 
   return (
-    <form onSubmit={onSubmit} className={authStyles.form}>
-      <TextField
-        data-testid="input-email"
-        className={authStyles.input}
-        required
-        label={t('email')}
-        type="email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-      />
-      <LoadingButton type="submit" data-testid="reset-button" loading={submitting}>
-        {t('reset')}
-      </LoadingButton>
-    </form>
+    <Form onSubmit={onSubmit} className="grow justify-center">
+      <FormControl className={authStyles.form}>
+        <FormTextField
+          control={control}
+          className={authStyles.input}
+          label={t('email')}
+          placeholder={t('emailPlaceholder')}
+          name="email"
+          translation={t}
+          data-testid="input-email"
+        />
+        <LoadingButton type="submit" data-testid="reset-button" loading={submitting} fullWidth>
+          {t('reset')}
+        </LoadingButton>
+        {errorMessage && (
+          <p className="error" data-testid="activation-form-error">
+            {t.rich(errorMessage, {
+              link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+            })}
+          </p>
+        )}
+        {message && <p>{t(message)}</p>}
+      </FormControl>
+    </Form>
   )
 }
 

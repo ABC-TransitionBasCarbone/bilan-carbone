@@ -10,6 +10,7 @@ interface Props<T extends FieldValues> {
   label?: string
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
+  endAdornment?: React.ReactNode
 }
 
 export const FormTextField = <T extends FieldValues>({
@@ -19,6 +20,7 @@ export const FormTextField = <T extends FieldValues>({
   label,
   icon,
   iconPosition = 'before',
+  endAdornment,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -44,11 +46,12 @@ export const FormTextField = <T extends FieldValues>({
                   }
                 : onChange
             }
-            value={textFieldProps.type === 'number' && Number.isNaN(value) ? '' : value}
+            value={(textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined ? '' : value}
             slotProps={{
               input: {
                 onWheel: (event) => (event.target as HTMLInputElement).blur(),
                 sx: { borderRadius: '0.75rem', borderColor: 'var(--color-grey-400)', color: 'var(--color-grey-950)' },
+                endAdornment,
               },
             }}
           />

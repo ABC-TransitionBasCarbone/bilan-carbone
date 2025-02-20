@@ -17,6 +17,7 @@
   --primary-80: #272768;
 
   --border: 2px solid rgba(27, 91, 245, 0.1);
+  --border-dark: 2px solid var(--primary-60);
   --background: rgba(56, 128, 255, 0.05);
 
   --header-height: 3.5rem;

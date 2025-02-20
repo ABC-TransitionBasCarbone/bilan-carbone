@@ -1,12 +1,17 @@
 'use client'
 
 import { activateEmail } from '@/services/serverFunctions/user'
-import { TextField } from '@mui/material'
+import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
+import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
@@ -14,8 +19,7 @@ const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const ActivationForm = () => {
   const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [success, setSuccess] = useState(false)
 
   const searchParams = useSearchParams()
@@ -23,56 +27,75 @@ const ActivationForm = () => {
   useEffect(() => {
     const email = searchParams.get('email')
     if (email) {
-      setEmail(email)
-      activate(email)
+      setValue('email', email)
     }
   }, [searchParams])
 
+  const {
+    control,
+    getValues,
+    setValue,
+    formState: { isValid },
+  } = useForm<EmailCommand>({
+    resolver: zodResolver(EmailCommandValidation),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      email: searchParams.get('email') ?? '',
+    },
+  })
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    activate(email)
+    activate()
   }
 
-  const activate = async (emailToActivate: string) => {
-    setError('')
+  const activate = async () => {
+    setErrorMessage('')
     setSubmitting(true)
-    const result = await activateEmail(emailToActivate)
-    setSubmitting(false)
-    if (result) {
-      setError(result)
+
+    if (isValid) {
+      const result = await activateEmail(getValues().email)
+      setSubmitting(false)
+      if (result) {
+        setErrorMessage(result)
+      } else {
+        setSuccess(true)
+      }
     } else {
-      setSuccess(true)
+      setSubmitting(false)
+      setErrorMessage('emailRequired')
     }
   }
 
   if (success) {
     return <p data-testid="activation-success">{t('success')}</p>
   }
-
   return (
-    <form onSubmit={onSubmit} className={authStyles.form}>
-      <p>{t('description')}</p>
-      <TextField
-        className={authStyles.input}
-        data-testid="activation-email"
-        label={t('email')}
-        type="email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        disabled={success}
-        required
-      />
-      <LoadingButton data-testid="activation-button" type="submit" disabled={success} loading={submitting}>
-        {t('validate')}
-      </LoadingButton>
-      {error && (
-        <p className="error" data-testid="activation-form-error">
-          {t.rich(error, {
-            link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-          })}
-        </p>
-      )}
-    </form>
+    <Form onSubmit={onSubmit} className="grow justify-center">
+      <FormControl className={authStyles.form}>
+        <p>{t('description')}</p>
+        <FormTextField
+          control={control}
+          translation={t}
+          name="email"
+          className={authStyles.input}
+          label={t('email')}
+          placeholder={t('emailPlaceholder')}
+          data-testid="activation-email"
+        />
+        <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
+          {t('validate')}
+        </LoadingButton>
+        {errorMessage && (
+          <p className="error" data-testid="activation-form-error">
+            {t.rich(errorMessage, {
+              link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+            })}
+          </p>
+        )}
+      </FormControl>
+    </Form>
   )
 }
 

@@ -112,14 +112,18 @@
     "selector": "Langue du site"
   },
   "login": {
-    "welcome": "Bienvenue",
+    "welcome": "Bienvenue sur le Bilan Carbone® +",
+    "explaination": "L'outil dédié à l’application de la méthode Bilan Carbone®, développé par l’Association pour la transition Bas Carbone (ABC), et accessible à l’ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
+    "question": "Une question ? <link>Contactez-nous</link>",
     "form": {
       "activate": "Activer mon compte",
       "firstConnection": "Première connexion ?",
       "resetTitle": "Vous avez demandé de créer ou réinitialiser votre mot de passe. Rentrez les informations demandées ci-dessous pour confirmer votre création de compte ou réinitialisation de mot de passe.",
       "login": "Se connecter",
       "email": "Email",
+      "emailPlaceholder": "Renseignez votre adresse email",
       "password": "Mot de passe",
+      "passwordPlaceholder": "Renseignez votre mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
       "hidePassword": "Cacher le mot de passe",
       "showPassword": "Montrer le mot de passe",
@@ -129,17 +133,22 @@
       "passwordLowercase": "Le mot de passe doit avoir au moins une minuscule",
       "passwordSpecialChar": "Le mot de passe doit avoir au moins un caractère spécial",
       "passwordDigit": "Le mot de passe doit avoir au moins un chiffre",
-      "forgotPassword": "Mot de passe oublié",
+      "forgotPassword": "Mot de passe oublié ?",
       "reset": "Réinitialiser",
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",
       "backToHome": "Retour a l'accueil",
-      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous sur l'adresse email"
+      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous sur l'adresse email",
+      "emailRequired": "Veuillez entrer un email",
+      "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
+      "emailSent": "Si votre email est correct, vous allez recevoir un mail pour réinitialiser votre mot de passe"
     }
   },
   "activation": {
     "description": "Merci d'utiliser le même e-mail que vous avez utilisé lors de votre adhésion à l'Association pour la Transition Bas Carbone",
-    "email": "Mail pour activer votre compte",
+    "email": "Email",
+    "emailPlaceholder": "Email utilisée lors de votre formation",
+    "emailRequired": "Veuillez entrer un email",
     "validate": "Valider",
     "Not authorized": "Vous n'êtes pas adhérent ou pas formé. Si vous pensez qu'il s'agit d'une erreur, merci de contacter le <link>support</link>.",
     "success": "Vous allez recevoir un mail pour finaliser l'activation de votre compte."
