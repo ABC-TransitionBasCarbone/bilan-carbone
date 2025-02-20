@@ -138,7 +138,7 @@ const users = async () => {
       lastName: faker.person.lastName(),
       organizationId: unOnboardedOrganization.id,
       role: Role.GESTIONNAIRE,
-      status: UserStatus.ACTIVE,
+      status: UserStatus.IMPORTED,
     },
   })
 
