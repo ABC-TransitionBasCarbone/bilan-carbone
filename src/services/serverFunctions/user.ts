@@ -3,12 +3,14 @@
 import { FullStudy } from '@/db/study'
 import {
   addUser,
+  changeStatus,
   changeUserRole,
   deleteUser,
   getUserApplicationSettings,
   getUserByEmail,
   getUserFromUserOrganization,
   hasActiveUserInOrganization,
+  linkUserToOrganization,
   updateProfile,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
@@ -31,7 +33,6 @@ import {
 } from '../email/email'
 import { NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
-import { hasEmptyPassword } from './auth'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
 const updateUserResetToken = async (email: string, duration: number) => {
@@ -112,19 +113,35 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const newMember = {
-    ...member,
-    status: UserStatus.VALIDATED,
-    organization: { connect: { id: session.user.organizationId } },
-    importedFileDate: new Date(),
-  }
-
-  if (!canAddMember(session.user, newMember, session.user.organizationId)) {
+  if (!canAddMember(session.user, member, session.user.organizationId)) {
     return NOT_AUTHORIZED
   }
 
-  //TODO: que fait on si l'utilisateur existe déjà ?
-  await addUser(newMember)
+  const memberExists = await getUserByEmail(member.email)
+
+  if (!memberExists) {
+    const newMember = {
+      ...member,
+      role: Role.DEFAULT,
+      status: UserStatus.VALIDATED,
+      level: null,
+      organizationId: session.user.organizationId,
+    }
+    await addUser(newMember)
+  } else {
+    if (memberExists.status === UserStatus.ACTIVE || memberExists.organizationId !== session.user.organizationId) {
+      return NOT_AUTHORIZED
+    }
+
+    const updateMember = {
+      ...member,
+      status: UserStatus.VALIDATED,
+      level: memberExists.level ? memberExists.level : null,
+      organizationId: session.user.organizationId,
+    }
+    await linkUserToOrganization(updateMember)
+  }
+
   await sendNewUser(member.email, session.user, member.firstName)
 }
 
@@ -193,8 +210,8 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
 
 export const resetPassword = async (email: string) => {
   const user = await getUserByEmail(email)
-  if (await hasEmptyPassword(email)) {
-    await activateEmail(email, true)
+  if (!user || user.status !== UserStatus.ACTIVE) {
+    return activateEmail(email, true)
   } else {
     if (user) {
       const resetToken = Math.random().toString(36)
@@ -225,6 +242,9 @@ export const activateEmail = async (email: string, fromReset: boolean = false) =
       email,
       `${user.firstName} ${user.lastName}`,
     )
+
+    await changeStatus(user.id, UserStatus.PENDING_REQUEST)
+
     return REQUEST_SENT
   } else {
     await validateUser(email)

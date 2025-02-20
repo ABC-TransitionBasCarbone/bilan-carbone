@@ -95,14 +95,20 @@ export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
 export const getOnlyActiveUsersForOrganization = (organizationId: string) =>
   prismaClient.user.findMany({ where: { organizationId, status: UserStatus.ACTIVE } })
 
-export const addUser = (user: Prisma.UserCreateInput) =>
+export const addUser = (user: Prisma.UserCreateInput) => {
+  if (user.role === Role.SUPER_ADMIN) {
+    throw Error('Cannot create a super admin')
+  }
+
   prismaClient.user.create({
     data: user,
   })
+}
 
 export const deleteUser = (email: string) =>
-  prismaClient.user.delete({
+  prismaClient.user.update({
     where: { email },
+    data: { status: UserStatus.IMPORTED, organizationId: null },
   })
 
 export const validateUser = (email: string) =>
@@ -135,6 +141,9 @@ export const updateProfile = (userId: string, data: Prisma.UserUpdateInput) =>
     data,
   })
 
+export const changeStatus = (userId: string, newStatus: UserStatus) =>
+  prismaClient.user.update({ where: { id: userId }, data: { status: newStatus } })
+
 export const getUserApplicationSettings = (userId: string) =>
   prismaClient.userApplicationSettings.upsert({ where: { userId }, update: {}, create: { userId } })
 
@@ -143,3 +152,14 @@ export const updateUserApplicationSettings = (userId: string, data: Prisma.UserA
     where: { userId },
     data,
   })
+
+export const linkUserToOrganization = (user: Prisma.UserCreateInput) => {
+  if (user.role === Role.SUPER_ADMIN) {
+    throw Error('Cannot create a super admin')
+  }
+
+  prismaClient.user.update({
+    where: { email: user.email },
+    data: user,
+  })
+}
