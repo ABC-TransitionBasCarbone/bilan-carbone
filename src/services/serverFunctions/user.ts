@@ -23,10 +23,12 @@ import {
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
   sendNewUserOnStudyInvitationEmail,
+  sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '../email/email'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
+import { hasEmptyPassword } from './auth'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
 const updateUserResetToken = async (email: string, duration: number) => {
@@ -96,9 +98,9 @@ export const sendInvitation = async (
       )
 }
 
-export const sendActivation = async (email: string) => {
+export const sendActivation = async (email: string, fromReset: boolean) => {
   const token = await updateUserResetToken(email, 1 * HOUR)
-  return sendActivationEmail(email, token)
+  return sendActivationEmail(email, token, fromReset)
 }
 
 export const addMember = async (member: AddMemberCommand) => {
@@ -187,13 +189,33 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
   await updateProfile(session.user.id, command)
 }
 
-export const activateEmail = async (email: string) => {
+export const resetPassword = async (email: string) => {
+  const user = await getUserByEmail(email)
+  if (await hasEmptyPassword(email)) {
+    await activateEmail(email, true)
+  } else {
+    if (user) {
+      const resetToken = Math.random().toString(36)
+      const payload = {
+        email,
+        resetToken,
+        exp: Math.round(Date.now() / TIME_IN_MS) + HOUR, // 1 hour expiration
+      }
+
+      const token = jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
+      await updateUserResetTokenForEmail(email, resetToken)
+      await sendResetPassword(email, token)
+    }
+  }
+}
+
+export const activateEmail = async (email: string, fromReset: boolean = false) => {
   const user = await getUserByEmail(email)
   if (!user || user.isActive) {
     return NOT_AUTHORIZED
   }
   await validateUser(email)
-  await sendActivation(email)
+  await sendActivation(email, fromReset)
 }
 
 export const getUserSettings = async () => {

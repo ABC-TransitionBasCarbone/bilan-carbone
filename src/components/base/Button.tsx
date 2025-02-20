@@ -2,13 +2,14 @@ import { Button as ButtonMUI, ButtonProps } from '@mui/material'
 import classNames from 'classnames'
 import styles from './Button.module.css'
 
-const Button = ({ className, ...rest }: ButtonProps) => {
+const Button = ({ className, fullWidth, ...rest }: ButtonProps) => {
   return (
     <ButtonMUI
       className={classNames(styles.button, className, {
         [styles.secondary]: rest.color === 'secondary',
         [styles.error]: rest.color === 'error',
       })}
+      fullWidth={fullWidth}
       {...rest}
     />
   )

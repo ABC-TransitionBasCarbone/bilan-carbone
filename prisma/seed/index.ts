@@ -428,12 +428,14 @@ program
   .option('-i, --import-factors <value>', 'Import BaseCarbone emission factors')
   .parse(process.argv)
 
-main(program.opts())
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+if (process.env.NODE_ENV !== 'production') {
+  main(program.opts())
+    .then(async () => {
+      await prisma.$disconnect()
+    })
+    .catch(async (e) => {
+      console.error(e)
+      await prisma.$disconnect()
+      process.exit(1)
+    })
+}

@@ -69,7 +69,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (user.role === Role.DEFAULT || user.role === Role.GESTIONNAIRE) {
+  if (user.role === Role.DEFAULT) {
     return false
   }
 
@@ -78,6 +78,10 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
   }
 
   if (newRole === Role.SUPER_ADMIN) {
+    return false
+  }
+
+  if (!user.level && newRole !== Role.GESTIONNAIRE) {
     return false
   }
 

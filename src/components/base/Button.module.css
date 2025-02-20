@@ -1,8 +1,8 @@
 .button {
   background-color: var(--primary-40) !important;
   color: var(--neutral-00) !important;
-  width: fit-content !important;
   border-radius: 0.5rem !important;
+  width: fit-content;
   text-transform: unset !important;
   border: 1px solid var(--primary-40) !important;
 

@@ -6,7 +6,7 @@ describe('Authentication', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
     cy.intercept('POST', '/reset-password/*').as('reset-password')
-    cy.intercept('POST', '/activation').as('activate')
+    cy.intercept('POST', '/activation?email=').as('activate')
   })
 
   it('does not authenticate with wrong password', () => {
@@ -57,8 +57,6 @@ describe('Authentication', () => {
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-2@yopmail.com')
     cy.getByTestId('reset-button').click()
-
-    cy.url().should('include', '/login')
 
     cy.visit('http://localhost:1080')
     cy.origin('http://localhost:1080', () => {

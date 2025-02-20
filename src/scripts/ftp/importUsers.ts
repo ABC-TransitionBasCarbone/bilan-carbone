@@ -16,19 +16,22 @@ const getUsersFromFTP = async () => {
 
   await client.access(accessOptions)
 
-  const folderPath = process.env.FTP_FILE_PATH + '/'
-  const fileName = `${folderPath + process.env.FTP_FILE_NAME}`
-  const writableStream = fs.createWriteStream(fileName)
+  const folderPath = process.env.FTP_FILE_PATH || '/'
+  const fileName = process.env.FTP_FILE_NAME || '/'
+  const fullPath = `${folderPath + fileName}`
 
-  await client.downloadTo(writableStream, fileName)
-  const fileList = await client.list()
+  const fileList = await client.list(folderPath)
   const file = fileList.find((f) => f.name === fileName)
   const fileDate = new Date(file?.rawModifiedAt || Date.now())
-  client.close()
+
+  const writableStream = fs.createWriteStream(fileName)
+
+  await client.downloadTo(writableStream, fullPath)
 
   const data = await fs.promises.readFile(fileName, 'utf-8')
   const values = JSON.parse(data)
   console.log(`Users parsed : ${values.length} rows`)
+  client.close()
 
   const users: Prisma.UserCreateManyInput[] = []
   for (let i = 0; i < values.length; i++) {

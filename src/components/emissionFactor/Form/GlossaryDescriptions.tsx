@@ -7,7 +7,7 @@ interface Props {
 
 const EmissionFactorFormDescription = ({ field }: Props) => {
   const t = useTranslations('emissionFactors.create.glossary')
-  if (field === 'detailedGES' || field === 'subPartsCount') {
+  if (field === 'detailedGES') {
     return <p>{t(`${field}Description`)}</p>
   }
   if (field === 'multiple') {

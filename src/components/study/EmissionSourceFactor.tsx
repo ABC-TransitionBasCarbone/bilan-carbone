@@ -112,7 +112,9 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
           <div data-testid="emission-source-factor">
             <p className={styles.header}>
               {selectedFactor.metaData?.title}
-              {selectedFactor.location ? ` - ${selectedFactor.location}` : ''} - {selectedFactor.totalCo2} kgCO₂e/
+              {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
+              {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
+              {selectedFactor.totalCo2} kgCO₂e/
               {tUnits(selectedFactor.unit)}{' '}
               {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
             </p>
@@ -137,6 +139,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
                   result.metaData?.title,
                   result.metaData?.frontiere,
                   result.location,
+                  result.metaData?.location,
                   result.totalCo2,
                 ])}{' '}
                 kgCO₂e/
