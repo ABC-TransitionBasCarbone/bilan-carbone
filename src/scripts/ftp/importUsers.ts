@@ -51,7 +51,13 @@ const getUsersFromFTP = async () => {
     if (i % 50 === 0) {
       console.log(`${i}/${values.length}`)
     }
+
+    let dbUser = (await prismaClient.user.findUnique({
+      where: { email },
+    })) as Prisma.UserCreateManyInput
+
     const user: Prisma.UserCreateManyInput = {
+      ...dbUser,
       email,
       firstName,
       lastName,
@@ -80,11 +86,22 @@ const getUsersFromFTP = async () => {
             name,
             isCR: ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts),
             importedFileDate: fileDate,
+            onboarderId: user.id,
           },
         })
       }
       user.organizationId = organisation.id
     }
+
+    if (user.id) {
+      prismaClient.user.update({
+        where: { id: user.id },
+        data: user,
+      })
+      console.log(`Updating ${email} because already exists`)
+      continue
+    }
+
     users.push(user)
   }
 
