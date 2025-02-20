@@ -5,9 +5,18 @@
 
 .post {
   padding: 1rem;
-  background-color: var(--primary-20);
   border-radius: 1rem;
-  color: white;
+  gap: 0.5rem;
+  border: 2px solid;
+}
+
+.icon {
+  width: auto;
+  height: 1.5rem;
+
+  @media screen and (max-width: 50rem) {
+    display: none;
+  }
 }
 
 .name {
@@ -15,7 +24,7 @@
 }
 
 .role {
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   color: var(--orange-500);
   background-color: var(--orange-200);
   border-radius: 2rem;
@@ -23,10 +32,10 @@
 }
 
 .emissionSources {
-  background-color: var(--orange-200);
+  border: 2px solid var(--orange-500);
 
   &.allValidated {
-    background-color: var(--green-200);
+    border-color: var(--green-500);
   }
 }
 
