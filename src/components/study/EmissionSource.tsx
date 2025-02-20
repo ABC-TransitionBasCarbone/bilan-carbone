@@ -182,8 +182,9 @@ const EmissionSource = ({
               <>
                 <p>
                   {selectedFactor.metaData?.title}
-                  {selectedFactor.location ? ` - ${selectedFactor.location}` : ''} - {selectedFactor.totalCo2 / 1000}{' '}
-                  tCO₂e/
+                  {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
+                  {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
+                  {selectedFactor.totalCo2 / 1000} tCO₂e/
                   {tUnits(selectedFactor.unit)}
                 </p>
                 {selectedFactorQualityRating && (
