@@ -99,9 +99,6 @@ const getUsersFromFTP = async () => {
     const file = fileList.find((f) => f.name === fileName)
     const importedFileDate = new Date(file?.rawModifiedAt || Date.now())
 
-    console.log('file : ', file)
-    console.log('importedFileDate : ', importedFileDate)
-
     const data = await downloadFileFromFTP(client, folderPath, fileName)
     const values = parseUsers(data)
     client.close()
