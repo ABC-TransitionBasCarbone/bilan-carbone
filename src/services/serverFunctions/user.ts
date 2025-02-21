@@ -256,7 +256,7 @@ export const activateEmail = async (email: string, fromReset: boolean = false) =
     await validateUser(email)
     await sendActivation(email, fromReset)
 
-    return { error: true, message: EMAIL_SENT }
+    return { error: false, message: EMAIL_SENT }
   }
 }
 
