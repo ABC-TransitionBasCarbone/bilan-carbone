@@ -27,7 +27,7 @@ describe('Real use case: BC V8_10', () => {
     cy.getByTestId('consolidated-results-table-row')
       .eq(3)
       .within(() => {
-        cy.get('td').eq(0).should('have.text', 'Énergies')
+        cy.get('td').eq(0).should('have.text', 'Énergie')
         cy.get('td').eq(2).should('have.text', '15,79')
       })
     cy.getByTestId('consolidated-results-table-row')
