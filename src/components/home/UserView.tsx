@@ -4,7 +4,7 @@ import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import Actualities from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
-import Studies from '../study/StudiesContainer'
+import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
 import UserToValidate from './UserToValidate'
 
@@ -33,7 +33,7 @@ const UserView = async ({ user }: Props) => {
           organizations={organizations.filter((organization) => organization.id !== user.organizationId)}
         />
       ) : (
-        <Studies user={user} organizationId={user.organizationId} />
+        <StudiesContainer user={user} />
       )}
       <Actualities />
       {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}

@@ -12,9 +12,10 @@ import StudyCard from './StudyCard'
 interface Props {
   studies: Study[]
   canAddStudy: boolean
+  creationUrl: string
 }
 
-const Studies = async ({ studies, canAddStudy }: Props) => {
+const Studies = async ({ studies, canAddStudy, creationUrl }: Props) => {
   const t = await getTranslations('study')
 
   return (
@@ -26,7 +27,7 @@ const Studies = async ({ studies, canAddStudy }: Props) => {
           ? [
               {
                 actionType: 'link',
-                href: '/etudes/creer',
+                href: creationUrl,
                 color: 'secondary',
                 ['data-testid']: 'new-study',
                 children: (

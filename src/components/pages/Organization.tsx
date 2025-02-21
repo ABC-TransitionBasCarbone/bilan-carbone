@@ -3,7 +3,7 @@ import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import OrganizationInfo from '../organization/Info'
-import Studies from '../study/StudiesContainer'
+import StudiesContainer from '../study/StudiesContainer'
 
 interface Props {
   organizations: OrganizationWithSites[]
@@ -17,7 +17,7 @@ const OrganizationPage = ({ organizations, user }: Props) => {
     <>
       <Breadcrumbs current={organizations[0].name} links={[{ label: tNav('home'), link: '/' }]} />
       <OrganizationInfo organization={organizations[0]} user={user} />
-      <Studies user={user} organizationId={organizations[0].id} />
+      <StudiesContainer user={user} organizationId={organizations[0].id} />
     </>
   )
 }
