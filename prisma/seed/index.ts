@@ -133,6 +133,7 @@ const users = async () => {
   await prisma.user.create({
     data: {
       email: 'onboardingnottrained@yopmail.com',
+      password: onboardingPassword,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       organizationId: unOnboardedOrganization.id,
@@ -176,6 +177,7 @@ const users = async () => {
   await prisma.user.create({
     data: {
       email: 'onboardednotrained@yopmail.com',
+      password: onboardingPassword,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       organizationId: organizations[0].id,
