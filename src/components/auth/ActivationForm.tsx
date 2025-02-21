@@ -4,6 +4,7 @@ import { activateEmail } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -19,7 +20,7 @@ const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const ActivationForm = () => {
   const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
 
   const searchParams = useSearchParams()
@@ -51,20 +52,23 @@ const ActivationForm = () => {
   }
 
   const activate = async () => {
-    setErrorMessage('')
+    setMessage('')
     setSubmitting(true)
 
     if (isValid) {
-      const result = await activateEmail(getValues().email)
+      const { error, message } = await activateEmail(getValues().email)
       setSubmitting(false)
-      if (result) {
-        setErrorMessage(result)
+
+      if (error) {
+        setSuccess(false)
+        setMessage(message)
       } else {
         setSuccess(true)
+        setMessage(message)
       }
     } else {
       setSubmitting(false)
-      setErrorMessage('emailRequired')
+      setMessage('emailRequired')
     }
   }
 
@@ -87,9 +91,9 @@ const ActivationForm = () => {
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
           {t('validate')}
         </LoadingButton>
-        {errorMessage && (
-          <p className="error" data-testid="activation-form-error">
-            {t.rich(errorMessage, {
+        {message && (
+          <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-error">
+            {t.rich(message, {
               link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
             })}
           </p>

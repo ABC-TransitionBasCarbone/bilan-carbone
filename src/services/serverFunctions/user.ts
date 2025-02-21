@@ -1,5 +1,6 @@
 'use server'
 
+import { getOrganizationById } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
   addUser,
@@ -31,7 +32,7 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '../email/email'
-import { NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
+import { EMAIL_SENT, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
@@ -233,12 +234,16 @@ export const resetPassword = async (email: string) => {
 
 export const activateEmail = async (email: string, fromReset: boolean = false) => {
   const user = await getUserByEmail(email)
-  // TODO ajouter un check sur le fait que l'orga a une licence active
-  if (!user || !user.organizationId || user.status === UserStatus.ACTIVE || user.status === UserStatus.VALIDATED) {
-    return NOT_AUTHORIZED
+  if (!user || !user.organizationId || user.status === UserStatus.ACTIVE) {
+    return { error: true, message: NOT_AUTHORIZED }
   }
 
-  if (await hasActiveUserInOrganization(user.organizationId)) {
+  const userOrga = await getOrganizationById(user.organizationId)
+  if (!userOrga || !userOrga.activatedLicence) {
+    return { error: true, message: NOT_AUTHORIZED }
+  }
+
+  if ((await hasActiveUserInOrganization(user.organizationId)) && user.status !== UserStatus.VALIDATED) {
     const users = await getUserFromUserOrganization(user)
     await sendActivationRequest(
       users.filter((u) => u.role === Role.GESTIONNAIRE || u.role === Role.ADMIN).map((u) => u.email),
@@ -248,10 +253,12 @@ export const activateEmail = async (email: string, fromReset: boolean = false) =
 
     await changeStatus(user.id, UserStatus.PENDING_REQUEST)
 
-    return REQUEST_SENT
+    return { error: false, message: REQUEST_SENT }
   } else {
     await validateUser(email)
     await sendActivation(email, fromReset)
+
+    return { error: true, message: EMAIL_SENT }
   }
 }
 
