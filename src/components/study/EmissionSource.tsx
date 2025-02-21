@@ -11,6 +11,7 @@ import {
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormControlLabel, Switch } from '@mui/material'
@@ -184,7 +185,7 @@ const EmissionSource = ({
                   {selectedFactor.metaData?.title}
                   {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
                   {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-                  {selectedFactor.totalCo2 / 1000} tCO₂e/
+                  {getEmissionFactorValue(selectedFactor) / 1000} tCO₂e/
                   {tUnits(selectedFactor.unit)}
                 </p>
                 {selectedFactorQualityRating && (
