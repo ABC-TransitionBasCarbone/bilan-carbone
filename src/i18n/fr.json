@@ -151,7 +151,7 @@
     "emailRequired": "Veuillez entrer un email",
     "validate": "Valider",
     "Not authorized": "Vous n'êtes pas adhérent ou pas formé. Si vous pensez qu'il s'agit d'une erreur, merci de contacter le <link>support</link>.",
-    "request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
+    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
     "success": "Vous allez recevoir un mail pour finaliser l'activation de votre compte."
   },
   "navigation": {
@@ -698,6 +698,7 @@
     "role": "Droits",
     "level": "Formation",
     "create": "Inviter l'utilisateur",
+    "Not authorized": "Impossible d'inviter cette utilisateur. Veuillez contacter le <link>support</link> pour plus d'informations.",
     "validation": {
       "email": "Veuillez renseigner un email valide",
       "firstName": "Veuillez renseigner un prénom",
