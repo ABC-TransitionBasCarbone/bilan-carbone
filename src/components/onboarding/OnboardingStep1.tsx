@@ -44,7 +44,9 @@ const OnboardingStep = ({ form, role }: Props) => {
         <div className="mb-2 bold">
           <span>{t('role')}</span>
         </div>
-        <div className={styles.roleLabel}>{tRole(role)}</div>
+        <div data-testid="user-role" className={styles.roleLabel}>
+          {tRole(role)}
+        </div>
         {role === Role.ADMIN ? (
           <p className="mt1">{t('adminDescription')}</p>
         ) : (
