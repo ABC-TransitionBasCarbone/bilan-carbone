@@ -389,7 +389,7 @@
       "post": "Poste",
       "value": "Émissions (tCO₂e)",
       "uncertainty": "Incertitude",
-      "withDependencies": "Avec les dépendances",
+      "withDependencies": "En dépendance",
       "withoutDependencies": "Sans les dépendances",
       "comming": "à venir"
     },
