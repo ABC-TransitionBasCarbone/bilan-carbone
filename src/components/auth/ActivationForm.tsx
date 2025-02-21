@@ -89,7 +89,7 @@ const ActivationForm = () => {
           {t('validate')}
         </LoadingButton>
         {message && (
-          <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-error">
+          <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {t.rich(message, {
               link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
             })}
