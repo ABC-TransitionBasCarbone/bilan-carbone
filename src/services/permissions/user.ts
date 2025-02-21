@@ -9,7 +9,7 @@ export const findUserInfo = (user: User) =>
       email: true,
       firstName: true,
       lastName: true,
-      role: user.role !== Role.DEFAULT,
+      role: true,
       level: true,
       status: true,
       updatedAt: true,
