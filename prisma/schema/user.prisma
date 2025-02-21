@@ -29,7 +29,7 @@ model User {
   email                      String                   @unique
   password                   String?
   resetToken                 String?                  @map("reset_token")
-  status                     UserStatus               @default(IMPORTED)
+  status                     UserStatus
   createdStudies             Study[]
   allowedStudies             UserOnStudy[]
   contributors               Contributors[]

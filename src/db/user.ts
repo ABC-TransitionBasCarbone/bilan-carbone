@@ -85,12 +85,9 @@ export const getUserOrganizations = async (email: string) => {
 
 export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]
 
-export const getUserFromUserOrganization = async (user: User) =>
+export const getUserFromUserOrganization = (user: User) =>
   prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
 export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
-
-export const getOnlyActiveUsersForOrganization = (organizationId: string) =>
-  prismaClient.user.findMany({ where: { organizationId, status: UserStatus.ACTIVE } })
 
 export const addUser = async (user: Prisma.UserCreateInput) => {
   if (user.role === Role.SUPER_ADMIN) {
@@ -127,16 +124,21 @@ export const hasUserToValidateInOrganization = async (organizationId: string | n
       })
     : 0
 
-export const hasActiveUserInOrganization = async (organizationId: string) =>
+export const organizationActiveUsersCount = async (organizationId: string) =>
   prismaClient.user.count({
     where: { organizationId, status: UserStatus.ACTIVE },
   })
 
-export const updateProfile = (userId: string, data: Prisma.UserUpdateInput) =>
-  prismaClient.user.update({
+export const updateUserFromId = async (userId: string, data: Prisma.UserUpdateInput) => {
+  if (data.role && data.role === Role.SUPER_ADMIN) {
+    throw Error('Cannot create a super admin')
+  }
+
+  await prismaClient.user.update({
     where: { id: userId },
     data,
   })
+}
 
 export const changeStatus = (userId: string, newStatus: UserStatus) =>
   prismaClient.user.update({ where: { id: userId }, data: { status: newStatus } })
@@ -149,13 +151,3 @@ export const updateUserApplicationSettings = (userId: string, data: Prisma.UserA
     where: { userId },
     data,
   })
-
-export const linkUserToOrganization = async (user: Prisma.UserCreateInput) => {
-  if (user.role === Role.SUPER_ADMIN) {
-    throw Error('Cannot create a super admin')
-  }
-  await prismaClient.user.update({
-    where: { email: user.email },
-    data: user,
-  })
-}
