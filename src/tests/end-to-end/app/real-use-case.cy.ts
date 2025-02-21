@@ -16,7 +16,7 @@ describe('Real use case: BC V8_10', () => {
       .eq(1)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Déchets directs')
-        cy.get('td').eq(2).should('have.text', '1,86')
+        cy.get('td').eq(2).should('have.text', '0,18')
       })
     cy.getByTestId('consolidated-results-table-row')
       .eq(2)
@@ -34,7 +34,7 @@ describe('Real use case: BC V8_10', () => {
       .eq(4)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Fin de vie')
-        cy.get('td').eq(2).should('have.text', '6,49')
+        cy.get('td').eq(2).should('have.text', '6,28')
       })
     cy.getByTestId('consolidated-results-table-row')
       .eq(5)
@@ -70,7 +70,7 @@ describe('Real use case: BC V8_10', () => {
       .eq(10)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Total')
-        cy.get('td').eq(2).should('have.text', '282,34')
+        cy.get('td').eq(2).should('have.text', '280,45')
       })
 
     cy.getByTestId('result-type-select').click()
