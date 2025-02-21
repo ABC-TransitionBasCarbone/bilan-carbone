@@ -4,7 +4,6 @@ import dotenv from 'dotenv'
 import fs from 'fs'
 import { prismaClient } from '../../db/client'
 
-
 const getFTPClient = async () => {
   const client = new Client()
   const accessOptions: AccessOptions = {
