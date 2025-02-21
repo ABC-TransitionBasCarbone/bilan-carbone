@@ -95,6 +95,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   return (
     <Dialog
       open={open}
+      data-testid="onboarding-modal"
       aria-labelledby="onboarding-modale-title"
       aria-describedby="onboarding-modale-description"
       classes={{ paper: styles.dialog }}

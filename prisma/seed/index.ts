@@ -137,8 +137,8 @@ const users = async () => {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       organizationId: unOnboardedOrganization.id,
-      role: Role.GESTIONNAIRE,
-      status: UserStatus.ACTIVE,
+      role: Role.DEFAULT,
+      status: UserStatus.IMPORTED,
     },
   })
 
@@ -172,18 +172,6 @@ const users = async () => {
       onboarded: true,
       activatedLicence: true,
     })),
-  })
-
-  await prisma.user.create({
-    data: {
-      email: 'onboardednotrained@yopmail.com',
-      password: onboardingPassword,
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      organizationId: organizations[0].id,
-      role: Role.GESTIONNAIRE,
-      status: UserStatus.ACTIVE,
-    },
   })
 
   const crOrganizations = organizations.filter((organization) => organization.isCR)
@@ -274,7 +262,6 @@ const users = async () => {
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         password: await signPassword('password'),
-        level: Level.Initial,
         organizationId: regularOrganizations[1].id,
         role: Role.DEFAULT,
         status: UserStatus.ACTIVE,
@@ -287,13 +274,13 @@ const users = async () => {
 
   await prisma.user.create({
     data: {
-      email: 'to-activate@yopmail.com',
+      email: 'imported@yopmail.com',
       firstName: 'User',
-      lastName: 'ToActivate',
-      role: Role.ADMIN,
+      lastName: 'Imported',
+      role: Role.DEFAULT,
       level: Level.Initial,
       status: UserStatus.IMPORTED,
-      organizationId: organizations[0].id,
+      organizationId: regularOrganizations[0].id,
     },
   })
 
