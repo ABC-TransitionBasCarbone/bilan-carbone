@@ -103,8 +103,12 @@ const getUsersFromFTP = async () => {
     const users: Prisma.UserCreateManyInput[] = []
     for (let i = 0; i < values.length; i++) {
       const user = await processUser(values[i] as Record<string, string>, importedFileDate)
-      user && users.push(user)
-      i % 50 === 0 && console.log(`${i}/${values.length}`)
+      if (user) {
+        users.push(user)
+      }
+      if (i % 50 === 0) {
+        console.log(`${i}/${values.length}`)
+      }
     }
 
     const created = await prismaClient.user.createMany({ data: users, skipDuplicates: true })
