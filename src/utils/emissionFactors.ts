@@ -12,5 +12,6 @@ export const getEmissionFactorValue = (
   ) {
     return wasteImpact
   }
+
   return emissionFactor.totalCo2
 }
