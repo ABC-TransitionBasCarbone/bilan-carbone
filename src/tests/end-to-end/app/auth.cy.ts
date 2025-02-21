@@ -132,8 +132,8 @@ describe('Authentication', () => {
     cy.visit('/')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('to-activate@yopmail.com')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('password-1')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('onboarding@yopmail.com')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('onboarding1234')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
@@ -148,18 +148,21 @@ describe('Authentication', () => {
     cy.getByTestId('activation-email').should('be.visible')
     cy.getByTestId('activation-button').should('be.visible')
 
-    cy.getByTestId('activation-email').type('to-activate@yopmail.co')
-    cy.getByTestId('activation-form-error').should('not.exist')
-    cy.getByTestId('activation-button').click()
-    cy.getByTestId('activation-form-error').should('be.visible')
-
-    cy.getByTestId('activation-email').type('m')
+    cy.getByTestId('activation-email').type('onboarding@yopmail.co')
     cy.getByTestId('activation-form-message').should('not.exist')
     cy.getByTestId('activation-button').click()
 
     cy.wait('@activate')
 
+    cy.getByTestId('activation-form-message').should('be.visible')
+
+    cy.getByTestId('activation-email').type('m')
+    cy.getByTestId('activation-button').click()
     cy.getByTestId('activation-form-message').should('not.exist')
+
+    cy.wait('@activate')
+
+    cy.getByTestId('activation-form-message').should('exist')
 
     cy.visit('http://localhost:1080')
     cy.origin('http://localhost:1080', () => {
@@ -177,7 +180,7 @@ describe('Authentication', () => {
         })
     })
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('to-activate@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('onboarding@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
     cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
 
@@ -185,7 +188,7 @@ describe('Authentication', () => {
     cy.wait('@reset-password')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('to-activate@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('onboarding@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-1')
     cy.getByTestId('login-button').click()
 
