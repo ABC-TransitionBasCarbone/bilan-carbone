@@ -10,10 +10,9 @@ import {
   getUserApplicationSettings,
   getUserByEmail,
   getUserFromUserOrganization,
-  hasActiveUserInOrganization,
-  linkUserToOrganization,
-  updateProfile,
+  organizationActiveUsersCount,
   updateUserApplicationSettings,
+  updateUserFromId,
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
@@ -141,7 +140,7 @@ export const addMember = async (member: AddMemberCommand) => {
       role: memberExists.level ? memberExists.role : Role.DEFAULT,
       organizationId: session.user.organizationId,
     }
-    await linkUserToOrganization(updateMember)
+    await updateUserFromId(memberExists.id, updateMember)
   }
 
   await sendNewUser(member.email, session.user, member.firstName)
@@ -207,7 +206,7 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
-  await updateProfile(session.user.id, command)
+  await updateUserFromId(session.user.id, command)
 }
 
 export const resetPassword = async (email: string) => {
@@ -241,7 +240,7 @@ export const activateEmail = async (email: string, fromReset: boolean = false) =
     return { error: true, message: NOT_AUTHORIZED }
   }
 
-  if ((await hasActiveUserInOrganization(user.organizationId)) && user.status !== UserStatus.VALIDATED) {
+  if ((await organizationActiveUsersCount(user.organizationId)) && user.status !== UserStatus.VALIDATED) {
     const users = await getUserFromUserOrganization(user)
     await sendActivationRequest(
       users.filter((u) => u.role === Role.GESTIONNAIRE || u.role === Role.ADMIN).map((u) => u.email),
