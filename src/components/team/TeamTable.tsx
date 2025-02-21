@@ -51,7 +51,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       })
     }
     return columns
-  }, [t, tLevel, tRole, user])
+  }, [t, tLevel, user])
 
   const table = useReactTable({
     columns,
