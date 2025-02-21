@@ -48,7 +48,7 @@ const getUsersFromFTP = async () => {
 
     const membershipYear = value['Membership_Year']
     const currentYear = new Date().getFullYear()
-    const activatedLicence = membershipYear && !membershipYear.includes(currentYear)
+    const activatedLicence = membershipYear.includes(currentYear)
 
     if (i % 50 === 0) {
       console.log(`${i}/${values.length}`)
@@ -63,7 +63,7 @@ const getUsersFromFTP = async () => {
       email,
       firstName,
       lastName,
-      role: Role.GESTIONNAIRE,
+      role: Role.DEFAULT,
       isActive: false,
       isValidated: false,
       importedFileDate,
