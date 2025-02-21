@@ -138,6 +138,7 @@ export const addMember = async (member: AddMemberCommand) => {
       ...member,
       status: UserStatus.VALIDATED,
       level: memberExists.level ? memberExists.level : null,
+      role: memberExists.level ? memberExists.role : Role.DEFAULT,
       organizationId: session.user.organizationId,
     }
     await linkUserToOrganization(updateMember)
