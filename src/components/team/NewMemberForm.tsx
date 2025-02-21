@@ -6,8 +6,9 @@ import { addMember } from '@/services/serverFunctions/user'
 import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { Level, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -17,7 +18,6 @@ import { FormSelect } from '../form/Select'
 const NewMemberForm = () => {
   const router = useRouter()
   const t = useTranslations('newMember')
-  const tLevel = useTranslations('level')
   const tRole = useTranslations('role')
 
   const [error, setError] = useState('')
@@ -69,13 +69,6 @@ const NewMemberForm = () => {
         name="email"
         label={t('email')}
       />
-      <FormSelect control={form.control} translation={t} name="level" label={t('level')} data-testid="new-member-level">
-        {Object.keys(Level).map((key) => (
-          <MenuItem key={key} value={key}>
-            {tLevel(key)}
-          </MenuItem>
-        ))}
-      </FormSelect>
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="new-member-role">
         {Object.keys(Role)
           .filter((role) => role !== Role.SUPER_ADMIN)
@@ -88,7 +81,13 @@ const NewMemberForm = () => {
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-member-create-button">
         {t('create')}
       </LoadingButton>
-      {error && <p>{error}</p>}
+      {error && (
+        <p className="error">
+          {t.rich(error, {
+            link: (children) => <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>{children}</Link>,
+          })}
+        </p>
+      )}
     </Form>
   )
 }

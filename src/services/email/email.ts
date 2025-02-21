@@ -41,12 +41,29 @@ export const sendNewUserEmail = async (toEmail: string, token: string, creatorNa
   return send([toEmail], 'Vous avez été invité au BC+', html)
 }
 
-export const sendActivationEmail = async (toEmail: string, token: string) => {
-  const html = await getHtml('activate-account', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
-    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
-  })
+export const sendActivationEmail = async (toEmail: string, token: string, fromReset: boolean) => {
+  let html
+  if (fromReset) {
+    html = await getHtml('activate-account-from-reset', {
+      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+      support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    })
+  } else {
+    html = await getHtml('activate-account', {
+      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+      support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    })
+  }
   return send([toEmail], 'Vous avez activé votre compte sur le BC+', html)
+}
+
+export const sendActivationRequest = async (toEmailList: string[], emailToActivate: string, userToActivate: string) => {
+  const html = await getHtml('activation-request', {
+    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    emailToActivate,
+    userToActivate,
+  })
+  return send(toEmailList, "Demande d'accès à votre organisation BC+", html)
 }
 
 export const sendUserOnStudyInvitationEmail = async (

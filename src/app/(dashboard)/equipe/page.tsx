@@ -14,6 +14,7 @@ const Team = async ({ user }: UserProps) => {
     getUserFromUserOrganization(user),
     getOrganizationById(user.organizationId),
   ])
+
   return <TeamPage user={user} team={team} crOrga={organization?.isCR} />
 }
 

@@ -1,6 +1,6 @@
 import { signPassword } from '@/services/auth'
 import { findUserInfo } from '@/services/permissions/user'
-import { Prisma, Role } from '@prisma/client'
+import { Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 
@@ -16,7 +16,7 @@ export const getUserByEmailWithSensibleInformations = (email: string) =>
       level: true,
       password: true,
       resetToken: true,
-      isValidated: true,
+      status: true,
     },
     where: { email },
   })
@@ -38,7 +38,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
     data: {
       resetToken: null,
       password: signedPassword,
-      isActive: true,
+      status: UserStatus.ACTIVE,
       updatedAt: new Date(),
     },
   })
@@ -89,20 +89,21 @@ export const getUserFromUserOrganization = (user: User) =>
   prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
 export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
 
-export const addUser = (user: Prisma.UserCreateInput) =>
+export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
   prismaClient.user.create({
     data: user,
   })
 
-export const deleteUser = (email: string) =>
-  prismaClient.user.delete({
+export const deleteUserFromOrga = (email: string) =>
+  prismaClient.user.update({
     where: { email },
+    data: { status: UserStatus.IMPORTED, organizationId: null },
   })
 
 export const validateUser = (email: string) =>
   prismaClient.user.update({
     where: { email },
-    data: { isValidated: true, updatedAt: new Date() },
+    data: { status: UserStatus.VALIDATED, updatedAt: new Date() },
   })
 
 export const changeUserRole = (email: string, role: Role) =>
@@ -114,15 +115,26 @@ export const changeUserRole = (email: string, role: Role) =>
 export const hasUserToValidateInOrganization = async (organizationId: string | null) =>
   organizationId
     ? prismaClient.user.count({
-        where: { organizationId, isValidated: false },
+        where: { organizationId, status: UserStatus.PENDING_REQUEST },
       })
     : 0
 
-export const updateProfile = (userId: string, data: Prisma.UserUpdateInput) =>
+export const organizationActiveUsersCount = async (organizationId: string) =>
+  prismaClient.user.count({
+    where: { organizationId, status: UserStatus.ACTIVE },
+  })
+
+export const updateUser = (
+  userId: string,
+  data: Partial<Prisma.UserCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
+) =>
   prismaClient.user.update({
     where: { id: userId },
     data,
   })
+
+export const changeStatus = (userId: string, newStatus: UserStatus) =>
+  prismaClient.user.update({ where: { id: userId }, data: { status: newStatus } })
 
 export const getUserApplicationSettings = (userId: string) =>
   prismaClient.userApplicationSettings.upsert({ where: { userId }, update: {}, create: { userId } })

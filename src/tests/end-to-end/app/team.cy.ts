@@ -58,8 +58,6 @@ describe('Team', () => {
     cy.getByTestId('new-member-firstName').type('User')
     cy.getByTestId('new-member-lastName').type('Test')
     cy.getByTestId('new-member-email').type('user-test-1@test.fr')
-    cy.getByTestId('new-member-level').click()
-    cy.get('[data-value="Initial"]').click()
     cy.getByTestId('new-member-role').click()
     cy.get('[data-value="GESTIONNAIRE"]').click()
 

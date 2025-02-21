@@ -17,9 +17,18 @@ const EmissionFactorsPage = ({ userOrganizationId }: Props) => {
       <Block
         title={t('title')}
         as="h1"
-        actions={[
-          { actionType: 'link', href: '/facteurs-d-emission/creer', 'data-testid': 'new-emission', children: t('add') },
-        ]}
+        actions={
+          userOrganizationId
+            ? [
+                {
+                  actionType: 'link',
+                  href: '/facteurs-d-emission/creer',
+                  'data-testid': 'new-emission',
+                  children: t('add'),
+                },
+              ]
+            : undefined
+        }
       >
         <Suspense fallback={t('loading')}>
           <EmissionFactors userOrganizationId={userOrganizationId} />

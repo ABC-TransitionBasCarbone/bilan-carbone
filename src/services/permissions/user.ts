@@ -1,4 +1,4 @@
-import { User as DbUser, Prisma, Role } from '@prisma/client'
+import { User as DbUser, Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 
 export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
@@ -9,15 +9,14 @@ export const findUserInfo = (user: User) =>
       email: true,
       firstName: true,
       lastName: true,
-      role: user.role !== Role.DEFAULT,
+      role: true,
       level: true,
-      isActive: true,
-      isValidated: true,
+      status: true,
       updatedAt: true,
     },
     where:
       user.role === Role.DEFAULT
-        ? { isActive: true, isValidated: true, organizationId: user.organizationId }
+        ? { status: UserStatus.ACTIVE, organizationId: user.organizationId }
         : { organizationId: user.organizationId },
   }) satisfies Prisma.UserFindManyArgs
 
@@ -53,7 +52,7 @@ export const canDeleteMember = (user: User, member: DbUser | null) => {
     return false
   }
 
-  if (member.isValidated && (member.isActive || member.password)) {
+  if (member.status === UserStatus.ACTIVE) {
     return false
   }
 
@@ -69,7 +68,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (user.role === Role.DEFAULT || user.role === Role.GESTIONNAIRE) {
+  if (user.role === Role.DEFAULT) {
     return false
   }
 
@@ -78,6 +77,10 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
   }
 
   if (newRole === Role.SUPER_ADMIN) {
+    return false
+  }
+
+  if (!user.level && newRole !== Role.GESTIONNAIRE) {
     return false
   }
 

@@ -1,5 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { Export, ExportRule, Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -84,6 +85,7 @@ const getEmissionSourcesRows = (
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
+  tResults: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
 ) => {
   const initCols = []
@@ -135,15 +137,15 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          (emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0) || '0',
-          'kgCO₂e',
+          ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) / 1000 || '0',
+          tResults('unit'),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
           getQuality(getQualityRating(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
-          emissionFactor?.totalCo2 || '',
+          emissionFactor ? getEmissionFactorValue(emissionFactor) : '',
           emissionFactor?.unit ? `kgCO₂e/${tUnit(emissionFactor.unit)}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
@@ -182,6 +184,7 @@ const getEmissionSourcesCSVContent = (
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
+  tResults: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
 ) => {
   const { columns, rows } = getEmissionSourcesRows(
@@ -192,13 +195,14 @@ const getEmissionSourcesCSVContent = (
     tPost,
     tQuality,
     tUnit,
+    tResults,
     type,
   )
 
   const emptyFieldsCount = type === 'Study' ? 3 : type === 'Post' ? 2 : 1
   const emptyFields = (count: number) => Array(count).fill('')
 
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources)
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources) / 1000
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
   const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
@@ -206,34 +210,14 @@ const getEmissionSourcesCSVContent = (
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
   const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources)
-  const uncertaintyRow = [t('uncertainty'), ...emptyFields(emptyFieldsCount), uncertainty[0], uncertainty[1]].join(';')
+  const uncertaintyRow = [
+    t('uncertainty'),
+    ...emptyFields(emptyFieldsCount),
+    uncertainty[0] / 1000,
+    uncertainty[1] / 1000,
+  ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
-}
-
-export const downloadStudySubPosts = async (
-  study: FullStudy,
-  post: string,
-  subPost: SubPost,
-  emissionSources: FullStudy['emissionSources'],
-  emissionFactors: EmissionFactorWithMetaData[],
-  t: ReturnType<typeof useTranslations>,
-  tCaracterisations: ReturnType<typeof useTranslations>,
-  tPost: ReturnType<typeof useTranslations>,
-  tQuality: ReturnType<typeof useTranslations>,
-  tUnit: ReturnType<typeof useTranslations>,
-) => {
-  const fileName = getFileName(study, post, subPost)
-  const csvContent = getEmissionSourcesCSVContent(
-    emissionSources,
-    emissionFactors,
-    t,
-    tCaracterisations,
-    tPost,
-    tQuality,
-    tUnit,
-  )
-  downloadCSV(csvContent, fileName)
 }
 
 export const downloadStudyPost = async (
@@ -245,6 +229,7 @@ export const downloadStudyPost = async (
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
+  tResults: ReturnType<typeof useTranslations>,
 ) => {
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
@@ -261,6 +246,7 @@ export const downloadStudyPost = async (
     tPost,
     tQuality,
     tUnit,
+    tResults,
     'Post',
   )
 
@@ -274,6 +260,7 @@ export const downloadStudyEmissionSources = async (
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
+  tResults: ReturnType<typeof useTranslations>,
 ) => {
   const emissionSources = study.emissionSources.sort((a, b) => a.subPost.localeCompare(b.subPost))
 
@@ -292,6 +279,7 @@ export const downloadStudyEmissionSources = async (
     tPost,
     tQuality,
     tUnit,
+    tResults,
     'Study',
   )
 
@@ -319,7 +307,7 @@ export const formatConsolidatedStudyResultsForExport = (
       dataForExport.push([
         tPost(result.post) ?? '',
         result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
-        result.value ?? '',
+        (result.value ?? 0) / 1000,
       ])
     }
 
@@ -411,12 +399,12 @@ export const formatBegesStudyResultsForExport = (
       dataForExport.push([
         category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
         post,
-        result.co2,
-        result.ch4,
-        result.n2o,
-        result.other,
-        result.total,
-        result.co2b,
+        result.co2 / 1000,
+        result.ch4 / 1000,
+        result.n2o / 1000,
+        result.other / 1000,
+        result.total / 1000,
+        result.co2b / 1000,
         result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
       ])
     }

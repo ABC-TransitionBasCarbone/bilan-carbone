@@ -1,0 +1,48 @@
+.card {
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.post {
+  padding: 1rem;
+  border-radius: 1rem;
+  gap: 0.5rem;
+  border: 2px solid;
+}
+
+.icon {
+  width: auto;
+  height: 1.5rem;
+
+  @media screen and (max-width: 50rem) {
+    display: none;
+  }
+}
+
+.name {
+  color: var(--green-500);
+}
+
+.role {
+  padding: 0.5rem 1rem;
+  color: var(--orange-500);
+  background-color: var(--orange-200);
+  border-radius: 2rem;
+  min-width: 5rem;
+}
+
+.emissionSources {
+  border: 2px solid var(--orange-500);
+
+  &.allValidated {
+    border-color: var(--green-500);
+  }
+}
+
+.validated {
+  color: var(--orange-500);
+
+  &.success {
+    color: var(--green-500);
+  }
+}

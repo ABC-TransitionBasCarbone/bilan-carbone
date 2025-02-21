@@ -10,6 +10,7 @@ import LinkButton from '../base/LinkButton'
 import ResultsContainerForUser from './results/ResultsContainerForUser'
 import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
+
 interface Props {
   user: User
   organizationId?: string
@@ -22,16 +23,19 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
     ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
     : await getAllowedStudiesByUser(user)
 
+  const creationUrl = organizationId ? `/organisations/${organizationId}/etudes/creer` : '/etudes/creer'
+
   const canCreateStudy = !!user.level && !!user.organizationId
+  const mainStudyOrganizationId = organizationId ?? user.organizationId
 
   return studies.length ? (
     <>
-      {user.organizationId && (
+      {mainStudyOrganizationId && (
         <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={user.organizationId} />
+          <ResultsContainerForUser user={user} mainStudyOrganizationId={mainStudyOrganizationId} />
         </Suspense>
       )}
-      <Studies studies={studies} canAddStudy={canCreateStudy} />
+      <Studies studies={studies} canAddStudy={canCreateStudy} creationUrl={creationUrl} />
     </>
   ) : canCreateStudy ? (
     <div className="justify-center">
@@ -39,7 +43,11 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
         <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />
         <h5>{t('createFirstStudy')}</h5>
         <p>{t('firstStudyMessage')}</p>
-        <LinkButton data-testid="new-organization" className="mb1" href="/etudes/creer">
+        <LinkButton
+          data-testid="new-organization"
+          className={classNames(styles.linkButton, 'w100 justify-center mb1')}
+          href={creationUrl}
+        >
           <AddIcon />
           {t('createFirstStudy')}
         </LinkButton>

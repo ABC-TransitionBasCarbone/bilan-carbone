@@ -1,5 +1,6 @@
 import { getOrganizationById } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
+import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { UpdateOrganizationCommand } from '../serverFunctions/organization.command'
 
@@ -28,8 +29,6 @@ export const canCreateOrganization = async (user: User) => {
     return false
   }
 
-  // TODO : check potential other rights
-
   return true
 }
 
@@ -44,7 +43,10 @@ export const canUpdateOrganization = async (user: User, command: UpdateOrganizat
     return false
   }
 
-  // TODO : check potential other rights
+  const organization = await getOrganizationById(dbUser.organizationId)
+  if (!organization || (!organization.isCR && user.role === Role.DEFAULT)) {
+    return false
+  }
 
   return true
 }

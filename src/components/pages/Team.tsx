@@ -1,4 +1,5 @@
 import { TeamMember } from '@/db/user'
+import { UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
@@ -21,9 +22,9 @@ const TeamPage = ({ user, team, crOrga = false }: Props) => {
     <>
       <Breadcrumbs current={tNav('team')} links={[{ label: tNav('home'), link: '/' }]} />
       <Block title={t('title')} as="h1" />
-      <InvitationsToValidate team={team.filter((member) => !member.isValidated)} user={user} />
-      <PendingInvitations team={team.filter((member) => !member.isActive && member.isValidated)} user={user} />
-      <Team team={team.filter((member) => member.isActive)} user={user} crOrga={crOrga} />
+      <InvitationsToValidate team={team.filter((member) => member.status === UserStatus.PENDING_REQUEST)} user={user} />
+      <PendingInvitations team={team.filter((member) => member.status === UserStatus.VALIDATED)} user={user} />
+      <Team team={team.filter((member) => member.status === UserStatus.ACTIVE)} user={user} crOrga={crOrga} />
     </>
   )
 }

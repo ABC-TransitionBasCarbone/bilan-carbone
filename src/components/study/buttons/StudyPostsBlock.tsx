@@ -25,6 +25,7 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
   const tQuality = useTranslations('quality')
   const tStudyPost = useTranslations('study.post')
   const tUnit = useTranslations('units')
+  const tResults = useTranslations('results')
 
   return (
     <Block
@@ -36,7 +37,17 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
           actionType: 'loadingButton',
           onClick: async () => {
             setDownloading(true)
-            await downloadStudyPost(study, emissionSources, post, tExport, tCaracterisations, tPost, tQuality, tUnit)
+            await downloadStudyPost(
+              study,
+              emissionSources,
+              post,
+              tExport,
+              tCaracterisations,
+              tPost,
+              tQuality,
+              tUnit,
+              tResults,
+            )
             setDownloading(false)
           },
           disabled: emissionSources.length === 0,

@@ -18,9 +18,9 @@ const InvitationsToValidate = ({ user, team }: Props) => {
 
   return user.role === Role.DEFAULT || team.length === 0 ? null : (
     <Block title={t('toValidate')}>
-      <ul className={classNames(styles.members, 'flex-col')}>
+      <ul data-testid="invitations-to-validate" className={classNames(styles.members, 'flex-col')}>
         {team.map((member) => (
-          <li key={member.email} className={classNames(styles.line, 'align-center')}>
+          <li data-testid="invitation" key={member.email} className={classNames(styles.line, 'align-center')}>
             <p>
               <span className={styles.email}>{member.email}</span>
               <br />

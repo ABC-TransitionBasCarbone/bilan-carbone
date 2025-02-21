@@ -7,7 +7,7 @@ interface Props {
 
 const PublicLayout = ({ children }: Props) => {
   return (
-    <main>
+    <main className="h100">
       <PublicPage>{children}</PublicPage>
     </main>
   )

@@ -1,6 +1,7 @@
 'use client'
 
 import { canEditEmissionFactor, EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
@@ -100,6 +101,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
   const [displayArchived, setDisplayArchived] = useState(false)
   const [locationFilter, setLocationFilter] = useState('')
   const [filteredSources, setSources] = useState<Import[]>(sources)
+  const fromModal = !!selectEmissionFactor
 
   const editEmissionFactor = async (emissionFactorId: string, action: 'edit' | 'delete') => {
     if (!(await canEditEmissionFactor(emissionFactorId))) {
@@ -116,7 +118,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
         header: t('name'),
         accessorFn: (emissionFactor) =>
           emissionFactor.metaData
-            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}`
+            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}${emissionFactor.metaData.location ? ` - ${emissionFactor.metaData.location}` : ''}`
             : '',
         cell: ({ getValue, row }) => (
           <div className="align-center">
@@ -132,7 +134,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatNumber(emissionFactor.totalCo2, 5)} kgCO₂e/${tUnits(emissionFactor.unit)}`,
+          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} kgCO₂e/${tUnits(emissionFactor.unit)}`,
       },
       {
         header: t('location'),
@@ -365,53 +367,57 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
           />
         </FormControl>
       </div>
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.flatMap((row) => {
-            const lines = [
-              <tr key={row.id} className={styles.line}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className={styles.cell} data-testid={`cell-emission-${cell.column.id}`}>
-                    {cell.column.id === 'actions' ? (
-                      <div className={styles.cellDiv}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
-                    ) : (
-                      <div
-                        className={styles.cellButton}
-                        onClick={() => {
-                          row.toggleExpanded()
-                        }}
-                      >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </div>
-                    )}
-                  </td>
+      <div className={classNames({ [styles.modalTable]: fromModal })}>
+        <table>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
                 ))}
-              </tr>,
-            ]
-            if (row.getIsExpanded()) {
-              lines.push(
-                <tr key={`todo${row.id}`}>
-                  <td colSpan={columns.length} className={styles.detail}>
-                    <EmissionFactorDetails emissionFactor={row.original} />
-                  </td>
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.flatMap((row) => {
+              const lines = [
+                <tr key={row.id} className={styles.line}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} data-testid={`cell-emission-${cell.column.id}`}>
+                      {cell.column.id === 'actions' ? (
+                        <div className={styles.cellDiv}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </div>
+                      ) : (
+                        <div
+                          className={styles.cellButton}
+                          onClick={() => {
+                            row.toggleExpanded()
+                          }}
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </div>
+                      )}
+                    </td>
+                  ))}
                 </tr>,
-              )
-            }
-            return lines
-          })}
-        </tbody>
-      </table>
+              ]
+              if (row.getIsExpanded()) {
+                lines.push(
+                  <tr key={row.id}>
+                    <td colSpan={columns.length} className={styles.detail}>
+                      <EmissionFactorDetails emissionFactor={row.original} />
+                    </td>
+                  </tr>,
+                )
+              }
+              return lines
+            })}
+          </tbody>
+        </table>
+      </div>
       <div className={classNames(styles.pagination, 'align-center mt1')}>
         <Button onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()}>
           {'<<'}

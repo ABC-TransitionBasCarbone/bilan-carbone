@@ -1,5 +1,6 @@
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
+import { getUserRoleOnStudy } from '@/utils/study'
 import { StudyEmissionSource, StudyRole, User } from '@prisma/client'
 import { canBeValidated } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
@@ -97,8 +98,8 @@ export const canUpdateEmissionSource = async (
 }
 
 export const canDeleteEmissionSource = async (user: User, study: FullStudy) => {
-  const rights = study.allowedUsers.find((right) => right.user.email === user.email)
-  if (rights && rights.role !== StudyRole.Reader) {
+  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+  if (userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader) {
     return true
   }
 

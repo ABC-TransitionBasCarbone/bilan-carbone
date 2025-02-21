@@ -46,10 +46,7 @@ export const computeResultsByPost = (
           const validatedEmissionSources = emissionSources.filter((emissionSource) => emissionSource.validated)
           return {
             post: subPost,
-            value: getEmissionSourcesTotalCo2(
-              validatedOnly ? validatedEmissionSources : emissionSources,
-              study.wasteImpact,
-            ),
+            value: getEmissionSourcesTotalCo2(validatedOnly ? validatedEmissionSources : emissionSources),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: validatedEmissionSources.length,
             uncertainty: sumEmissionSourcesUncertainty(validatedEmissionSources),

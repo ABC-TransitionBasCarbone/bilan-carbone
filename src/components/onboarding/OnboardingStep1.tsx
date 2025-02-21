@@ -29,11 +29,24 @@ const OnboardingStep = ({ form, role }: Props) => {
         />
       </div>
       <div>
-        <div className={classNames(styles.field, 'align-center mb-2')}>
+        <div className="align-center mb-2 bold">
           <PersonIcon />
-          <span className="ml-2">{t('role')}</span>
+          <span className="ml-2">{t('information')}</span>
         </div>
-        <div className={styles.roleLabel}>{tRole(role)}</div>
+        <div className={classNames(styles.fields, 'flex mb-2')}>
+          <div className="grow">
+            <FormTextField control={form.control} name="firstName" translation={t} label={t('firstName')} />
+          </div>
+          <div className="grow">
+            <FormTextField control={form.control} name="lastName" translation={t} label={t('lastName')} />
+          </div>
+        </div>
+        <div className="mb-2 bold">
+          <span>{t('role')}</span>
+        </div>
+        <div data-testid="user-role" className={styles.roleLabel}>
+          {tRole(role)}
+        </div>
         {role === Role.ADMIN ? (
           <p className="mt1">{t('adminDescription')}</p>
         ) : (

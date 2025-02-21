@@ -2,3 +2,7 @@
   width: 24rem;
   gap: 1rem;
 }
+
+.linkButton {
+  box-sizing: border-box;
+}

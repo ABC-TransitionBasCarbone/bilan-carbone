@@ -1,4 +1,4 @@
-import { Level, Role, SiteCAUnit } from '@prisma/client'
+import { Role, SiteCAUnit } from '@prisma/client'
 import z from 'zod'
 
 export const AddMemberCommandValidation = z.object({
@@ -20,7 +20,6 @@ export const AddMemberCommandValidation = z.object({
     })
     .trim()
     .min(1, 'lastName'),
-  level: z.nativeEnum(Level, { required_error: 'level' }),
   role: z.nativeEnum(Role, { required_error: 'role' }),
 })
 
@@ -45,6 +44,8 @@ export type EditProfileCommand = z.infer<typeof EditProfileCommandValidation>
 
 export const OnboardingCommandValidation = z.object({
   organizationId: z.string(),
+  firstName: z.string({ required_error: 'firstName' }),
+  lastName: z.string({ required_error: 'lastName' }),
   companyName: z.string({ required_error: 'companyName' }),
   collaborators: z
     .array(
@@ -79,3 +80,24 @@ export const EditSettingsCommandValidation = z.object({
 })
 
 export type EditSettingsCommand = z.infer<typeof EditSettingsCommandValidation>
+
+export const LoginCommandValidation = z.object({
+  email: z.string({ required_error: 'email' }).email('email').trim(),
+  password: z.string({ required_error: 'password' }),
+})
+
+export type LoginCommand = z.infer<typeof LoginCommandValidation>
+
+export const EmailCommandValidation = z.object({
+  email: z.string({ required_error: 'email' }).email('email').trim(),
+})
+
+export type EmailCommand = z.infer<typeof EmailCommandValidation>
+
+export const ResetPasswordCommandValidation = z.object({
+  email: z.string({ required_error: 'email' }).email('email').trim(),
+  password: z.string({ required_error: 'password' }),
+  confirmPassword: z.string({ required_error: 'password' }),
+})
+
+export type ResetPasswordCommand = z.infer<typeof ResetPasswordCommandValidation>

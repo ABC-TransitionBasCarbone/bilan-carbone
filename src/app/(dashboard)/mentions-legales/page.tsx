@@ -4,7 +4,6 @@ import Link from 'next/link'
 import styles from './styles.module.css'
 
 const contactMail = process.env.ABC_CONTACT_MAIL
-const privacyPoliticsLink = process.env.ABC_PRIVACY_POLICY_LINK
 
 const LegalNotices = () => {
   const t = useTranslations('legalNotices')
@@ -37,23 +36,23 @@ const LegalNotices = () => {
         </p>
 
         <div className={styles.section}>Hébergeur </div>
-        <p>OVH– 2 rue Kellermann - 59100 Roubaix - France</p>
+        <p>Scalingo - 9 Rue de la Krutenau, 67000 Strasbourg</p>
 
         <div className={styles.section}>Propriétaire du site </div>
         <p>
-          Le présent site est la propriété de l’Institut de Formation Carbone. Le contenu éditorial, textes, images
-          composant le site web sont la propriété de l’Institut de Formation Carbone. Toute représentation totale ou
-          partielle de ce site, par quelques procédés que ce soient, sans autorisation préalable de l’Institut de
-          Formation Carbone, est interdite et constituerait une contrefaçon sanctionnée par les articles L335-2 et
-          suivants du Code de la propriété intellectuelle. Tous les noms de produits ou de sociétés mentionnés dans le
-          site web sont les marques de leurs titulaires.
+          Le présent site est la propriété de l’Association pour la transition bas carbone. Le contenu éditorial,
+          textes, images composant le site web sont la propriété de l’Association pour la transition bas carbone. Toute
+          représentation totale ou partielle de ce site, par quelques procédés que ce soient, sans autorisation
+          préalable de l’Association pour la transition bas carbone, est interdite et constituerait une contrefaçon
+          sanctionnée par les articles L335-2 et suivants du Code de la propriété intellectuelle. Tous les noms de
+          produits ou de sociétés mentionnés dans le site web sont les marques de leurs titulaires.
         </p>
         <p>Responsable de publication : Anna Creti</p>
 
         <div className={styles.section}>Propriété intellectuelle et copyright </div>
         <p>
           L’ensemble des éléments du site (textes, documents…) sont, sauf dispositions contraires, la propriété
-          intellectuelle exclusive de la société Institut de Formation Carbone. Par conséquent, toute reproduction,
+          intellectuelle exclusive de l'Association pour la transition bas carbone. Par conséquent, toute reproduction,
           représentation, transmission, diffusion, partielle ou totale, est interdite selon les termes de l’article L.
           122-4 du CPI sous réserve des exceptions prévues à l’article L. 122-5 du CPI. Toute utilisation de données
           figurant sur ce site nécessite une autorisation préalable et expresse. A défaut, le délit de contrefaçon
@@ -71,12 +70,7 @@ const LegalNotices = () => {
         <div className={styles.section}>Droits d’accès</div>
         <p>
           Conformément au Règlement (UE) 2016/679 relatif à la protection des données à caractère personnel, vous
-          disposez sur vos données des droit d’accès, droit de rectification et du droit d’opposition. Pour en savoir
-          plus, vous pouvez consulter notre{' '}
-          <a data-testid="privacy-link" href={privacyPoliticsLink} target="_blank" rel="noreferrer">
-            politique de protection des données
-          </a>
-          .
+          disposez sur vos données des droit d’accès, droit de rectification et du droit d’opposition.
         </p>
         <div className={styles.section}>La marque Bilan Carbone®</div>
         <p>

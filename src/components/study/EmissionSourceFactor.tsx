@@ -1,6 +1,7 @@
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { getQualityRating } from '@/services/uncertainty'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
 import classNames from 'classnames'
@@ -112,7 +113,9 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
           <div data-testid="emission-source-factor">
             <p className={styles.header}>
               {selectedFactor.metaData?.title}
-              {selectedFactor.location ? ` - ${selectedFactor.location}` : ''} - {selectedFactor.totalCo2} kgCO₂e/
+              {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
+              {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
+              {getEmissionFactorValue(selectedFactor)} kgCO₂e/
               {tUnits(selectedFactor.unit)}{' '}
               {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
             </p>
@@ -137,6 +140,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
                   result.metaData?.title,
                   result.metaData?.frontiere,
                   result.location,
+                  result.metaData?.location,
                   result.totalCo2,
                 ])}{' '}
                 kgCO₂e/

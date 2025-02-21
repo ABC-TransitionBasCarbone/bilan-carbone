@@ -16,12 +16,16 @@ const CRClientsList = async ({ organizations }: Props) => {
   return organizations.length ? (
     <Organizations organizations={organizations} />
   ) : (
-    <div className="justify-center">
+    <div className="justify-center text-center">
       <Box className={classNames(styles.firstClientCard, 'flex-col align-center')}>
         <Image src="/img/CR.png" alt="cr.png" width={177} height={119} />
         <h5>{t('createFirstClient')}</h5>
         <p>{t('firstClientMessage')}</p>
-        <LinkButton data-testid="new-organization" className="mb1" href="/organisations/creer">
+        <LinkButton
+          data-testid="new-organization"
+          className={classNames(styles.linkButton, 'w100 justify-center mb1')}
+          href="/organisations/creer"
+        >
           <AddIcon />
           {t('createFirstClient')}
         </LinkButton>

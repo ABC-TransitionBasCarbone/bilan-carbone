@@ -11,17 +11,18 @@ interface Props {
   allowAll?: boolean
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
+  withLabel?: boolean
 }
 
-const SelectStudySite = ({ study, allowAll, studySite, setSite }: Props) => {
+const SelectStudySite = ({ study, allowAll, studySite, setSite, withLabel = true }: Props) => {
   const t = useTranslations('study.organization')
 
   return (
     <FormControl>
-      <InputLabel id="study-site-select">{t('site')}</InputLabel>
+      {withLabel && <InputLabel id="study-site-select">{t('site')}</InputLabel>}
       <Select
         labelId="study-site-select"
-        label={t('site')}
+        label={withLabel ? t('site') : undefined}
         value={studySite === 'all' && !allowAll ? '' : studySite}
         onChange={(event) => setSite(event.target.value)}
         disabled={study.sites.length === 1 && !allowAll}

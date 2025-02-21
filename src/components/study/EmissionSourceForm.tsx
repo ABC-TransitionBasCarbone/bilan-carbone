@@ -122,7 +122,7 @@ const EmissionSourceForm = ({
               disabled={!canEdit}
               type="number"
               data-testid="emission-source-value-da"
-              value={emissionSource.value}
+              defaultValue={emissionSource.value}
               onBlur={(event) => handleUpdate(event)}
               label={`${t('form.value')} *`}
               helperText={error}

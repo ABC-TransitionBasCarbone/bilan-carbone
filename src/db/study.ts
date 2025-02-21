@@ -1,5 +1,6 @@
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { checkLevel } from '@/services/study'
+import { isAdminOnOrga } from '@/utils/onganization'
 import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
@@ -152,10 +153,23 @@ export const getAllowedStudiesByUser = async (user: User) => {
 }
 
 export const getAllowedStudiesByUserAndOrganization = async (user: User, organizationId: string) => {
+  const childOrganizations = await prismaClient.organization.findMany({
+    where: { parentId: user.organizationId },
+    select: { id: true },
+  })
   const studies = await prismaClient.study.findMany({
     where: {
       organizationId,
-      OR: [{ allowedUsers: { some: { userId: user.id } } }, { contributors: { some: { userId: user.id } } }],
+      ...(isAdminOnOrga(user, organizationId)
+        ? {}
+        : {
+            OR: [
+              { allowedUsers: { some: { userId: user.id } } },
+              { contributors: { some: { userId: user.id } } },
+              { isPublic: true, organizationId: user.organizationId as string },
+              { isPublic: true, organizationId: { in: childOrganizations.map((organization) => organization.id) } },
+            ],
+          }),
     },
   })
   return filterAllowedStudies(user, studies)
@@ -283,3 +297,18 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
       },
     },
   })
+
+export const getStudyValidatedEmissionsSources = async (studyId: string) => {
+  const study = await prismaClient.study.findUnique({
+    where: { id: studyId },
+    select: { emissionSources: { select: { validated: true } } },
+  })
+
+  if (!study) {
+    return null
+  }
+  return {
+    total: study.emissionSources.length,
+    validated: study.emissionSources.filter((emissionSource) => emissionSource.validated).length,
+  }
+}

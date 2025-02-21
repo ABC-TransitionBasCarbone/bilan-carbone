@@ -74,6 +74,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                   control={control}
                   translation={t}
                   name={`sites.${row.index}.name`}
+                  placeholder={t('namePlaceholder')}
                 />
               )}
             </>
@@ -94,6 +95,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               control={control}
               translation={t}
               name={`sites.${row.index}.etp`}
+              placeholder={t('etpPlaceholder')}
               slotProps={{
                 htmlInput: { type: 'number', min: 0 },
                 input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
@@ -116,6 +118,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               control={control}
               translation={t}
               name={`sites.${row.index}.ca`}
+              placeholder={t('caPlaceholder', { unit: headerCAUnit })}
               slotProps={{
                 htmlInput: { type: 'number', min: 0 },
                 input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },

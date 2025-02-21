@@ -1,6 +1,8 @@
 'use client'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
+import { getUserRoleOnStudy } from '@/utils/study'
+import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -9,8 +11,8 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
-import SelectStudySite from '../study/site/SelectStudySite'
 import useStudySite from '../study/site/useStudySite'
+import StudyPostsCard from './StudyPostsCard'
 
 interface Props {
   post: Post
@@ -22,6 +24,7 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
+  const userRole = getUserRoleOnStudy(user, study)
   const { studySite, setSite } = useStudySite(study)
 
   const emissionSources = useMemo(
@@ -49,8 +52,14 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <Block title={study.name} as="h1">
-        <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
+      <Block>
+        <StudyPostsCard
+          study={study}
+          post={post}
+          userRole={userRole as StudyRole}
+          studySite={studySite}
+          setSite={setSite}
+        />
       </Block>
       <StudyPostsBlock
         post={post}

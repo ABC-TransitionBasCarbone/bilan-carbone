@@ -13,6 +13,7 @@ const selectEmissionFactor = {
   source: true,
   unit: true,
   importedFrom: true,
+  importedId: true,
   organizationId: true,
   reliability: true,
   technicalRepresentativeness: true,

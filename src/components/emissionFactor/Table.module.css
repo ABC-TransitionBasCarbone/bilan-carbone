@@ -45,13 +45,8 @@
   }
 }
 
-.cell {
-  padding: 0;
-}
-
 .cellDiv,
 .cellButton {
-  padding: 0.5rem;
   background-color: transparent;
   width: 100%;
   border: none;
@@ -71,4 +66,8 @@
 
 .editButton {
   min-width: 0 !important;
+}
+
+.modalTable {
+  overflow-y: auto;
 }

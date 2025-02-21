@@ -3,3 +3,7 @@
   text-align: center;
   gap: 1rem;
 }
+
+.linkButton {
+  box-sizing: border-box;
+}

@@ -2,6 +2,7 @@
 
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
+import { colors, postColors } from '@/utils/study'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
@@ -15,38 +16,6 @@ interface Props {
   post: Post | SubPost
   data?: ResultsByPost
   studyId: string
-}
-
-const colors: Record<string, { dark: string; light: string }> = {
-  darkBlue: {
-    dark: '#0c2155',
-    light: '#3f5488',
-  },
-  green: {
-    dark: '#469478',
-    light: '#79c7ab',
-  },
-  blue: {
-    dark: '#2c6498',
-    light: '#5e97cb',
-  },
-  orange: {
-    dark: '#c88938',
-    light: '#fbbc6b',
-  },
-}
-
-const postColors: Record<Post, string> = {
-  Energies: 'darkBlue',
-  AutresEmissionsNonEnergetiques: 'darkBlue',
-  DechetsDirects: 'darkBlue',
-  Immobilisations: 'darkBlue',
-  IntrantsBiensEtMatieres: 'blue',
-  IntrantsServices: 'blue',
-  Deplacements: 'green',
-  Fret: 'green',
-  FinDeVie: 'orange',
-  UtilisationEtDependance: 'orange',
 }
 
 const PostInfography = ({ post, data, studyId }: Props) => {

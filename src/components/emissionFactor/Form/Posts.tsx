@@ -1,7 +1,9 @@
 'use client'
 
+import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
 import { FormSelect } from '@/components/form/Select'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FormControl, MenuItem } from '@mui/material'
@@ -17,8 +19,10 @@ interface Props<T extends EmissionFactorCommand> {
 
 const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
+  const tGlossary = useTranslations('emissionFactors.create.glossary')
   const tPost = useTranslations('emissionFactors.post')
   const [post, setPost] = useState<Post | undefined>(initalPost)
+  const [glossary, setGlossary] = useState('')
 
   const control = form.control as Control<EmissionFactorCommand>
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
@@ -43,6 +47,8 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
             setPost(event.target.value as Post)
           }}
           label={t('post')}
+          icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
+          iconPosition="after"
         >
           {posts.map((post) => (
             <MenuItem key={post} value={post}>
@@ -70,6 +76,11 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
           ))
         )}
       </FormSelect>
+      {glossary && (
+        <GlossaryModal glossary={glossary} label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
+          {tGlossary(`${glossary}Description`)}
+        </GlossaryModal>
+      )}
     </>
   )
 }

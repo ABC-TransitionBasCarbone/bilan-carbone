@@ -4,6 +4,7 @@ import { TeamMember } from '@/db/user'
 import { deleteMember, validateMember } from '@/services/serverFunctions/user'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { Role } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -23,10 +24,12 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
   const [validating, setValidating] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
+  const role = member.level ? member.role : Role.GESTIONNAIRE
   return (
     <div className={classNames(styles.buttons, 'flex')}>
-      <SelectRole user={user} email={member.email} currentRole={member.role} />
+      <SelectRole currentUserEmail={user.email} email={member.email} currentRole={role} level={member.level} />
       <LoadingButton
+        data-testid="validate-invitation"
         aria-label={t('resend')}
         title={t('resend')}
         loading={validating}
@@ -43,6 +46,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
         <CheckIcon />
       </LoadingButton>
       <LoadingButton
+        data-testid="delete-invitation"
         aria-label={t('delete')}
         title={t('delete')}
         loading={deleting}

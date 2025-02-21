@@ -113,13 +113,17 @@
   },
   "login": {
     "welcome": "Welcome",
+    "explaination": "The tool dedicated to the application of the Bilan Carbone® method, developed by the Association for the Low Carbon Transition (ABC), and accessible to all of our members: Consulting and Research, Business, Association and Public Sector",
+    "question": "A question ? <link>Contact-us</link>",
     "form": {
       "activate": "Activate my account",
       "firstConnection": "First connection ?",
       "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
       "login": "Log in",
       "email": "Email",
+      "emailPlaceholder": "Enter a mail address",
       "password": "Password",
+      "passwordPlaceholder": "Enter your password",
       "confirmPassword": "Confirm password",
       "hidePassword": "Hide password",
       "showPassword": "Show password",
@@ -129,20 +133,26 @@
       "passwordLowercase": "Password should have at least one lower case letter",
       "passwordSpecialChar": "Password should have at least one special character",
       "passwordDigit": "Password should have at least one digit",
-      "forgotPassword": "Forgot password",
+      "forgotPassword": "Forgot password ?",
       "reset": "Reset",
       "error": "Please check your email and your password",
       "expired": "This password reset link has expired",
       "backToHome": "Back to home",
-      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us at the email address"
+      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us at the email address",
+      "emailRequired": "Please enter an email",
+      "emailAndPasswordRequired": "Please enter an email and a password",
+      "emailSent": "if your email is correct, you will receive an email to reset your password"
     }
   },
   "activation": {
     "description": "Please use the same email you used when joining the Association for Low Carbon Transition.",
-    "email": "Email to activate your account",
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Please enter an email",
     "validate": "Validate",
     "Not authorized": "You are not a member or have not completed the training. If you believe this is an error, please contact <link>support</link>.",
-    "success": "You will receive an email to finish your account validation."
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation."
   },
   "navigation": {
     "factors": "Emission factors",
@@ -162,8 +172,7 @@
     "information": "Global informations"
   },
   "results": {
-    "byPost": "Results by post",
-    "bySubPost": "Results by sub post"
+    "unit": "tCO₂e"
   },
   "profile": {
     "title": "My profile",
@@ -211,6 +220,14 @@
     "createFirstStudy": "Create my first Bilan Carbone®",
     "seeResults": "See results",
     "firstStudyMessage": "It's time to get started! We invite you to create your first bilan.",
+    "validatedSources": "<data>{validated} / {total}</data> Validated emission sources",
+    "information": "Information",
+    "validatedOnly": "Validated emission sources",
+    "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
+    "withDependencies": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the \"Use in dependence\" sub-post, as the organisation is generally not in a position to act easily on this sub-post. On the other hand, this sub-component remains crucial for understanding the risks to which the organisation is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
+    "close": "Close",
+    "selectSite": "Before filling in the details, choose a site",
+    "see": "See my Bilan Carbone®",
     "navigation": {
       "homepage": "Homepage",
       "framing": "Framing",
@@ -229,7 +246,7 @@
       "validator": "Validator email",
       "start": "Start",
       "end": "End",
-      "level": "Type of Carbon Assessment®",
+      "level": "Bilan Carbone® maturity",
       "exports": "Exports",
       "control": "Control mode",
       "CapitalShare": "Capital share",
@@ -242,11 +259,11 @@
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Validator email",
-        "validatorEmailDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu (link to the parameters menu).",
-        "type": "Type of Bilan Carbone® assessment",
+        "validatorEmailDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Parameters\" menu.",
+        "type": "Bilan Carbone® maturity",
         "typeDescription": "The new version of the Bilan Carbone® method introduces three levels of maturity for organisations' Bilan Carbone®. For more details, please consult <link>this page</link>.",
         "visibility": "Visibility of the study",
-        "visibilityDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
+        "visibilityDescription": "Choose whether your study should be public, i.e. accessible to all your colleagues entered on the My organisation > my team page (link to the page), or private, i.e. only accessible to the people you add on the study framework page. Your organisation's admins have access to all studies, whether public or private.",
         "exports": "Exports",
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
         "control": "Control mode",
@@ -410,13 +427,13 @@
       "add": "Add a flow",
       "documentNotFound": "Document not found",
       "download": "Download flow",
-      "invalidFileType": "Invalid file type",
       "flows": "Flows mapping",
-      "flowSelector": "Flux to display",
-      "newFlow": "Add a flow",
-      "noFlows": "No flow to display",
+      "flowSelector": "Mapping to display",
+      "invalidFileType": "Invalid file type",
+      "newFlow": "Add a flow mapping",
+      "noFlows": "No mapping to display",
       "notAuthorized": "Action not authorized",
-      "removeFlow": "Remove flow",
+      "removeFlow": "Remove mapping",
       "Not authorized": "You are not allowed to do this action"
     },
     "delete": {
@@ -436,7 +453,7 @@
       "total": "Total",
       "allPost": "All posts",
       "allSubPost": "All sub posts",
-      "Energies": "Energies",
+      "Energies": "Energy",
       "AutresEmissionsNonEnergetiques": "Other direct emissions",
       "IntrantsBiensEtMatieres": "Goods and materials inputs",
       "IntrantsServices": "Service inputs",
@@ -470,7 +487,7 @@
       "DechetsOrganiques": "Organic waste",
       "DechetsOrduresMenageres": "Household waste",
       "DechetsDangereux": "Hazardous waste",
-      "DechetsBatiments": "Building waste",
+      "DechetsBatiments": "Materials waste",
       "DechetsFuitesOuEmissionsNonEnergetiques": "Leaks or non-energy emissions waste",
       "EauxUsees": "Wastewater",
       "FretEntrant": "Incoming freight",
@@ -534,8 +551,8 @@
           "loss": "<b>Losses</b>, which take account of losses in the form of heat during the transmission of electricity on the network.",
           "conclusion": "This disaggregation is not used in the Bilan Carbone® method, but is used to break down the emissions of the various components within the categories for exports (for the regulatory GHG balance, using the same example, and if the source of emissions is \"Operated\", \"upstream\" emissions, \"combustion at the power plant\" and \"losses\" are broken down within categories 4.1, 1.2 and 4.1 respectively).. <b>We strongly recommend that you do not use this function if you are not familiar with the allocations within the regulatory GHG balance.</b>"
         },
-        "subPartsCount": "Number of parts",
-        "subPartsCountDescription": "You must choose the item(s) and sub-item(s) within which your emission factor will be selectable.",
+        "post": "Post",
+        "postDescription": "You must choose the item(s) and sub-item(s) within which your emission factor will be selectable.",
         "close": "Close"
       },
       "validation": {
@@ -651,7 +668,9 @@
     "DEFAULT_description": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create studies. They only have access to public studies and private studies to which they have been added.",
     "DEFAULT_description_CR": "A collaborator is a person trained in the Bilan Carbone® method. They have no rights to the organisation's account but can create clients and studies. They only have access to public studies and private studies to which they have been added.",
     "close": "Close",
-    "guide": "Roles guide"
+    "guide": "Roles guide",
+    "saved": "New role saved",
+    "Not authorized": "You are not allowed to do this action"
   },
   "team": {
     "title": "My Organization",
@@ -679,6 +698,7 @@
     "role": "Rights",
     "level": "Training",
     "create": "Invite User",
+    "Not authorized": "User invitation not authorized. Please contact <link>the support</link> for more information.",
     "validation": {
       "email": "Please enter a valid email",
       "firstName": "Please enter a first name",
@@ -855,8 +875,11 @@
       "title": "The organization's sites concerned by this study",
       "noSites": "There are no sites configured for the organization",
       "name": "Name",
+      "namePlaceholder": "Site name",
       "etp": "Number of Full Time Equivalents",
+      "etpPlaceholder": "Fill in your FTE for this site here",
       "ca": "Turnover ({unit})",
+      "caPlaceholder": "Fill in your turnover in {unit} for this site here",
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",
@@ -981,13 +1004,16 @@
     "title-0": "Welcome to BC+! Before you start, please set up your organization",
     "titleDescription-0": "We’ve pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization’s name now, or at any time in BC+ via the \"Organization\" section.",
     "title-1": "Manage your team",
-    "titleDescription-1": "You can already add your team members! You’ll still be able to add new people later via the \"Team\" section.",
+    "titleDescription-1": "You can already add your team members! You’ll still be able to add new people later via the \"Team\" section within the \"Organization\" menu.",
     "previous": "Previous",
     "next": "Next",
     "validate": "Validate",
     "step1": {
       "name": "Name of my organization",
       "role": "My role within the organization",
+      "information": "My information",
+      "firstName": "Firstname",
+      "lastName": "Lastname",
       "adminDescription": "You have been trained to the Bilan Carbone® method : Thus, your have been attribued to the Admin role",
       "gestionnaireDescription": "You have not been trained to the Bilan Carbone® method : Thus, your have been attribued to the Gestionnaire role"
     },
