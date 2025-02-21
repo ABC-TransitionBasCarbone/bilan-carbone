@@ -152,7 +152,7 @@
     "validate": "Valider",
     "Not authorized": "Vous n'êtes pas adhérent ou pas formé. Si vous pensez qu'il s'agit d'une erreur, merci de contacter le <link>support</link>.",
     "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
-    "success": "Vous allez recevoir un mail pour finaliser l'activation de votre compte."
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte."
   },
   "navigation": {
     "factors": "Facteurs d'émission",
