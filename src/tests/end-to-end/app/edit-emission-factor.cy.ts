@@ -90,7 +90,7 @@ describe('Edit emission factor', () => {
     cy.getByTestId('emission-factor-parts-count').within(() => {
       cy.get('input').should('have.value', 2)
     })
-    cy.getByTestId('emission-factor-subPost').invoke('text').should('include', 'Électricite')
+    cy.getByTestId('emission-factor-subPost').invoke('text').should('include', 'Électricité')
 
     // edit values
     cy.getByTestId('emission-factor-name').type(' - EDITED')
