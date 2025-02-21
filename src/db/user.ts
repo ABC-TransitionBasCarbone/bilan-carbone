@@ -89,15 +89,10 @@ export const getUserFromUserOrganization = (user: User) =>
   prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
 export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
 
-export const addUser = async (user: Prisma.UserCreateInput) => {
-  if (user.role === Role.SUPER_ADMIN) {
-    throw Error('Cannot create a super admin')
-  }
-
-  return prismaClient.user.create({
+export const addUser = async (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
+  prismaClient.user.create({
     data: user,
   })
-}
 
 export const deleteUser = (email: string) =>
   prismaClient.user.update({
@@ -129,11 +124,10 @@ export const organizationActiveUsersCount = async (organizationId: string) =>
     where: { organizationId, status: UserStatus.ACTIVE },
   })
 
-export const updateUserFromId = async (userId: string, data: Prisma.UserUpdateInput) => {
-  if (data.role && data.role === Role.SUPER_ADMIN) {
-    throw Error('Cannot create a super admin')
-  }
-
+export const updateUser = async (
+  userId: string,
+  data: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> },
+) => {
   await prismaClient.user.update({
     where: { id: userId },
     data,

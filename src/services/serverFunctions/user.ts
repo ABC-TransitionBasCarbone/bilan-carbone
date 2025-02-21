@@ -12,7 +12,7 @@ import {
   getUserFromUserOrganization,
   organizationActiveUsersCount,
   updateUserApplicationSettings,
-  updateUserFromId,
+  updateUser,
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
@@ -140,7 +140,7 @@ export const addMember = async (member: AddMemberCommand) => {
       role: memberExists.level ? memberExists.role : Role.DEFAULT,
       organizationId: session.user.organizationId,
     }
-    await updateUserFromId(memberExists.id, updateMember)
+    await updateUser(memberExists.id, updateMember)
   }
 
   await sendNewUser(member.email, session.user, member.firstName)
@@ -206,7 +206,8 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
-  await updateUserFromId(session.user.id, command)
+
+  await updateUser(session.user.id, command)
 }
 
 export const resetPassword = async (email: string) => {
