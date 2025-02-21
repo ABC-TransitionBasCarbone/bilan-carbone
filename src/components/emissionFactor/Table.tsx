@@ -1,6 +1,7 @@
 'use client'
 
 import { canEditEmissionFactor, EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
@@ -133,7 +134,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatNumber(emissionFactor.totalCo2, 5)} kgCO₂e/${tUnits(emissionFactor.unit)}`,
+          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} kgCO₂e/${tUnits(emissionFactor.unit)}`,
       },
       {
         header: t('location'),
