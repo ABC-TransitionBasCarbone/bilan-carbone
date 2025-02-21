@@ -72,9 +72,6 @@ const ActivationForm = () => {
     }
   }
 
-  if (success) {
-    return <p data-testid="activation-success">{t('success')}</p>
-  }
   return (
     <Form onSubmit={onSubmit} className="grow justify-center">
       <FormControl className={authStyles.form}>
