@@ -37,8 +37,8 @@ const getUsersFromFTP = async () => {
   for (let i = 0; i < values.length; i++) {
     const value = values[i]
     const email = value['User_Email']
-    const firstName = value['Firstname']
-    const lastName = value['Lastname']
+    const firstName = value['Firstname'] || ''
+    const lastName = value['Lastname'] || ''
     const siretOrSiren = value['SIRET']
     const sessionCodeTraining = value['Session_Code']
 
@@ -60,7 +60,7 @@ const getUsersFromFTP = async () => {
     })) as Prisma.UserCreateManyInput
 
     const user: Prisma.UserCreateManyInput = {
-      ...dbUser,
+      id: dbUser?.id,
       email,
       firstName,
       lastName,
@@ -89,17 +89,15 @@ const getUsersFromFTP = async () => {
             name,
             isCR: ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts),
             importedFileDate: fileDate,
-            onboarderId: user.id,
-            activedLicence: true,
           },
         })
       }
       user.organizationId = organisation.id
     }
 
-    if (user.id) {
+    if (dbUser) {
       prismaClient.user.update({
-        where: { id: user.id },
+        where: { id: dbUser.id },
         data: user,
       })
       console.log(`Updating ${email} because already exists`)
