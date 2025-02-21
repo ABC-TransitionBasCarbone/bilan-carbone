@@ -92,12 +92,12 @@ export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
 export const getOnlyActiveUsersForOrganization = (organizationId: string) =>
   prismaClient.user.findMany({ where: { organizationId, status: UserStatus.ACTIVE } })
 
-export const addUser = (user: Prisma.UserCreateInput) => {
+export const addUser = async (user: Prisma.UserCreateInput) => {
   if (user.role === Role.SUPER_ADMIN) {
     throw Error('Cannot create a super admin')
   }
 
-  prismaClient.user.create({
+  return prismaClient.user.create({
     data: user,
   })
 }
