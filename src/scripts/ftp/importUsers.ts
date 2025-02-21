@@ -22,7 +22,7 @@ const getUsersFromFTP = async () => {
 
   const fileList = await client.list(folderPath)
   const file = fileList.find((f) => f.name === fileName)
-  const fileDate = new Date(file?.rawModifiedAt || Date.now())
+  const importedFileDate = new Date(file?.rawModifiedAt || Date.now())
 
   const writableStream = fs.createWriteStream(fileName)
 
@@ -41,16 +41,15 @@ const getUsersFromFTP = async () => {
     const lastName = value['Lastname'] || ''
     const siretOrSiren = value['SIRET']
     const sessionCodeTraining = value['Session_Code']
+    const name = value['Company_Name']
+
+    const purchasedProducts = value['Purchased_Products']
+    const isCR = ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts)
 
     const membershipYear = value['Membership_Year']
     const currentYear = new Date().getFullYear()
+    const activatedLicence = membershipYear && !membershipYear.includes(currentYear)
 
-    if (membershipYear && !membershipYear.includes(currentYear)) {
-      console.log(`Skipping ${email} because membership year is ${membershipYear}`)
-      continue
-    }
-
-    console.log(`Processing ${email}`)
     if (i % 50 === 0) {
       console.log(`${i}/${values.length}`)
     }
@@ -67,7 +66,7 @@ const getUsersFromFTP = async () => {
       role: Role.GESTIONNAIRE,
       isActive: false,
       isValidated: false,
-      importedFileDate: fileDate,
+      importedFileDate,
     }
 
     if (sessionCodeTraining) {
@@ -80,16 +79,13 @@ const getUsersFromFTP = async () => {
         where: { siret: { startsWith: siretOrSiren } },
       })
       if (!organisation) {
-        const name = value['Company_Name']
-        const purchasedProducts = value['Purchased_Products']
-
         organisation = await prismaClient.organization.create({
           data: {
             siret: siretOrSiren,
             name,
-            isCR: ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts),
-            importedFileDate: fileDate,
-            activatedLicence: true,
+            isCR,
+            importedFileDate,
+            activatedLicence,
           },
         })
       }
@@ -101,10 +97,15 @@ const getUsersFromFTP = async () => {
         where: { id: dbUser.id },
         data: user,
       })
+      if (dbUser.organizationId) {
+        prismaClient.organization.update({
+          where: { id: dbUser.organizationId },
+          data: { name, isCR },
+        })
+      }
       console.log(`Updating ${email} because already exists`)
       continue
     }
-
     users.push(user)
   }
 
