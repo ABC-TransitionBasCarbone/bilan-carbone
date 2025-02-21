@@ -35,7 +35,7 @@ const getUsersFromFTP = async () => {
 
   const users: Prisma.UserCreateManyInput[] = []
   for (let i = 0; i < values.length; i++) {
-    const value = values[i]
+    const value = values[i] as Record<string, string>
     const email = value['User_Email']
     const firstName = value['Firstname'] || ''
     const lastName = value['Lastname'] || ''
@@ -47,7 +47,7 @@ const getUsersFromFTP = async () => {
     const isCR = ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts)
 
     const membershipYear = value['Membership_Year']
-    const currentYear = new Date().getFullYear()
+    const currentYear = new Date().getFullYear().toString()
     const activatedLicence = membershipYear.includes(currentYear)
 
     if (i % 50 === 0) {
@@ -75,10 +75,19 @@ const getUsersFromFTP = async () => {
     }
 
     if (siretOrSiren) {
-      let organisation = await prismaClient.organization.findFirst({
-        where: { siret: { startsWith: siretOrSiren } },
-      })
-      if (!organisation) {
+      let organisation = dbUser.organizationId
+        ? await prismaClient.organization.findFirst({
+            where: { id: dbUser.organizationId },
+          })
+        : await prismaClient.organization.findFirst({
+            where: { siret: { startsWith: siretOrSiren } },
+          })
+      if (organisation) {
+        prismaClient.organization.update({
+          where: { id: organisation.id },
+          data: { name, isCR, importedFileDate, activatedLicence },
+        })
+      } else {
         organisation = await prismaClient.organization.create({
           data: {
             siret: siretOrSiren,
@@ -97,12 +106,6 @@ const getUsersFromFTP = async () => {
         where: { id: dbUser.id },
         data: user,
       })
-      if (dbUser.organizationId) {
-        prismaClient.organization.update({
-          where: { id: dbUser.organizationId },
-          data: { name, isCR },
-        })
-      }
       console.log(`Updating ${email} because already exists`)
       continue
     }
