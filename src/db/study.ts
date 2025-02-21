@@ -153,6 +153,10 @@ export const getAllowedStudiesByUser = async (user: User) => {
 }
 
 export const getAllowedStudiesByUserAndOrganization = async (user: User, organizationId: string) => {
+  const childOrganizations = await prismaClient.organization.findMany({
+    where: { parentId: user.organizationId },
+    select: { id: true },
+  })
   const studies = await prismaClient.study.findMany({
     where: {
       organizationId,
@@ -163,6 +167,7 @@ export const getAllowedStudiesByUserAndOrganization = async (user: User, organiz
               { allowedUsers: { some: { userId: user.id } } },
               { contributors: { some: { userId: user.id } } },
               { isPublic: true, organizationId: user.organizationId as string },
+              { isPublic: true, organizationId: { in: childOrganizations.map((organization) => organization.id) } },
             ],
           }),
     },
