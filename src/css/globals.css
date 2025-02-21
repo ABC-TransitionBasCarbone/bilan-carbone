@@ -1,5 +1,10 @@
+@import url('https://fonts.cdnfonts.com/css/gilroy-bold');
+
+* {
+  font-family: 'gilroy-regular', sans-serif !important;
+}
+
 body {
-  font-family: 'Gilroy', sans-serif;
   background: var(--background);
   height: 100vh;
   line-height: 1.25;
