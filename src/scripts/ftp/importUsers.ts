@@ -71,7 +71,6 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       ? await prismaClient.organization.update({
           where: { id: organisation.id },
           data: {
-            name,
             isCR: isCR || organisation.isCR,
             importedFileDate,
             activatedLicence: activatedLicence || organisation.activatedLicence,
@@ -84,7 +83,10 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   }
 
   if (dbUser) {
-    await prismaClient.user.update({ where: { id: dbUser.id }, data: user })
+    await prismaClient.user.update({
+      where: { id: dbUser.id },
+      data: { level: user.level, role: user.role, organizationId: user.organizationId },
+    })
     console.log(`Updating ${email} because already exists`)
     return null
   }
