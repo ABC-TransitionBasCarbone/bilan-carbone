@@ -67,14 +67,17 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       ? await prismaClient.organization.findFirst({ where: { id: dbUser.organizationId } })
       : await prismaClient.organization.findFirst({ where: { siret: { startsWith: siretOrSiren } } })
 
-    organisation = organisation
-      ? await prismaClient.organization.update({
-          where: { id: organisation.id },
-          data: { name, isCR, importedFileDate, activatedLicence },
-        })
-      : await prismaClient.organization.create({
-          data: { siret: siretOrSiren, name, isCR, importedFileDate, activatedLicence },
-        })
+    if (organisation) {
+      await prismaClient.organization.update({
+        where: { id: organisation.id },
+        data: { name, isCR, importedFileDate, activatedLicence: activatedLicence || organisation.activatedLicence },
+      })
+    } else {
+      organisation = await prismaClient.organization.create({
+        data: { siret: siretOrSiren, name, isCR, importedFileDate, activatedLicence },
+      })
+    }
+
     user.organizationId = organisation.id
   }
 
@@ -95,6 +98,9 @@ const getUsersFromFTP = async () => {
     const fileList = await client.list(folderPath)
     const file = fileList.find((f) => f.name === fileName)
     const importedFileDate = new Date(file?.rawModifiedAt || Date.now())
+
+    console.log('file : ', file)
+    console.log('importedFileDate : ', importedFileDate)
 
     const data = await downloadFileFromFTP(client, folderPath, fileName)
     const values = parseUsers(data)
