@@ -89,12 +89,12 @@ export const getUserFromUserOrganization = (user: User) =>
   prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
 export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
 
-export const addUser = async (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
+export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
   prismaClient.user.create({
     data: user,
   })
 
-export const deleteUser = (email: string) =>
+export const deleteUserFromOrga = (email: string) =>
   prismaClient.user.update({
     where: { email },
     data: { status: UserStatus.IMPORTED, organizationId: null },
@@ -124,15 +124,14 @@ export const organizationActiveUsersCount = async (organizationId: string) =>
     where: { organizationId, status: UserStatus.ACTIVE },
   })
 
-export const updateUser = async (
+export const updateUser = (
   userId: string,
-  data: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> },
-) => {
-  await prismaClient.user.update({
+  data: Partial<Prisma.UserCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
+) =>
+  prismaClient.user.update({
     where: { id: userId },
     data,
   })
-}
 
 export const changeStatus = (userId: string, newStatus: UserStatus) =>
   prismaClient.user.update({ where: { id: userId }, data: { status: newStatus } })

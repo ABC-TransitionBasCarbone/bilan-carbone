@@ -6,7 +6,7 @@ import {
   addUser,
   changeStatus,
   changeUserRole,
-  deleteUser,
+  deleteUserFromOrga,
   getUserApplicationSettings,
   getUserByEmail,
   getUserFromUserOrganization,
@@ -109,7 +109,7 @@ export const sendActivation = async (email: string, fromReset: boolean) => {
 
 export const addMember = async (member: AddMemberCommand) => {
   const session = await auth()
-  if (!session || !session.user || !session.user.organizationId) {
+  if (!session || !session.user || !session.user.organizationId || member.role === Role.SUPER_ADMIN) {
     return NOT_AUTHORIZED
   }
 
@@ -118,6 +118,10 @@ export const addMember = async (member: AddMemberCommand) => {
   }
 
   const memberExists = await getUserByEmail(member.email)
+
+  if (memberExists?.role === Role.SUPER_ADMIN) {
+    return NOT_AUTHORIZED
+  }
 
   if (!memberExists) {
     const newMember = {
@@ -185,7 +189,7 @@ export const deleteMember = async (email: string) => {
   if (!canDeleteMember(session.user, userToRemove)) {
     return NOT_AUTHORIZED
   }
-  await deleteUser(email)
+  await deleteUserFromOrga(email)
 }
 
 export const changeRole = async (email: string, role: Role) => {
