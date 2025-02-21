@@ -151,7 +151,8 @@
     "emailRequired": "Please enter an email",
     "validate": "Validate",
     "Not authorized": "You are not a member or have not completed the training. If you believe this is an error, please contact <link>support</link>.",
-    "success": "You will receive an email to finish your account validation."
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation."
   },
   "navigation": {
     "factors": "Emission factors",
@@ -697,6 +698,7 @@
     "role": "Rights",
     "level": "Training",
     "create": "Invite User",
+    "Not authorized": "User invitation not authorized. Please contact <link>the support</link> for more information.",
     "validation": {
       "email": "Please enter a valid email",
       "firstName": "Please enter a first name",

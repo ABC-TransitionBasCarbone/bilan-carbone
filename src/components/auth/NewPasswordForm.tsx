@@ -76,7 +76,7 @@ const NewPasswordForm = () => {
           {t('reset')}
         </LoadingButton>
         {errorMessage && (
-          <p className="error" data-testid="activation-form-error">
+          <p className="error">
             {t.rich(errorMessage, {
               link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
             })}

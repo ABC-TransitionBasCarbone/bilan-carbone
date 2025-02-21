@@ -2,7 +2,18 @@ import { signPassword } from '@/services/auth'
 import { reCreateBegesRules } from '@/services/exportRules/beges'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { faker } from '@faker-js/faker'
-import { EmissionFactorStatus, Import, Level, PrismaClient, Role, StudyRole, SubPost, Unit, User } from '@prisma/client'
+import {
+  EmissionFactorStatus,
+  Import,
+  Level,
+  PrismaClient,
+  Role,
+  StudyRole,
+  SubPost,
+  Unit,
+  User,
+  UserStatus,
+} from '@prisma/client'
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { createRealStudy } from './study'
@@ -102,7 +113,7 @@ const users = async () => {
       siret: faker.finance.accountNumber(14),
       isCR: false,
       onboarded: false,
-      activatedLicence: false,
+      activatedLicence: true,
     },
   })
   const onboardingPassword = await signPassword('onboarding1234')
@@ -115,20 +126,19 @@ const users = async () => {
       password: onboardingPassword,
       level: Level.Initial,
       role: Role.DEFAULT,
-      isActive: true,
-      isValidated: true,
+      status: UserStatus.IMPORTED,
     },
   })
 
   await prisma.user.create({
     data: {
       email: 'onboardingnottrained@yopmail.com',
+      password: onboardingPassword,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       organizationId: unOnboardedOrganization.id,
-      role: Role.GESTIONNAIRE,
-      isActive: false,
-      isValidated: false,
+      role: Role.DEFAULT,
+      status: UserStatus.IMPORTED,
     },
   })
 
@@ -150,8 +160,7 @@ const users = async () => {
       organizationId: clientLessOrganization.id,
       password: clientLessPassword,
       role: Role.DEFAULT,
-      isActive: true,
-      isValidated: true,
+      status: UserStatus.ACTIVE,
     },
   })
 
@@ -163,18 +172,6 @@ const users = async () => {
       onboarded: true,
       activatedLicence: true,
     })),
-  })
-
-  await prisma.user.create({
-    data: {
-      email: 'onboardednotrained@yopmail.com',
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      organizationId: organizations[0].id,
-      role: Role.GESTIONNAIRE,
-      isActive: false,
-      isValidated: false,
-    },
   })
 
   const crOrganizations = organizations.filter((organization) => organization.isCR)
@@ -216,8 +213,7 @@ const users = async () => {
             password,
             level: levels[index % levels.length] as Level,
             role: role as Role,
-            isActive: true,
-            isValidated: true,
+            status: UserStatus.ACTIVE,
           }
         }),
         ...Array.from({ length: 3 }).map(async (_, index) => {
@@ -230,8 +226,7 @@ const users = async () => {
             password,
             level: levels[index % levels.length] as Level,
             role: role as Role,
-            isActive: true,
-            isValidated: true,
+            status: UserStatus.ACTIVE,
           }
         }),
       ]),
@@ -245,8 +240,7 @@ const users = async () => {
           password,
           level: levels[index % levels.length] as Level,
           role: Role.DEFAULT,
-          isActive: false,
-          isValidated: false,
+          status: UserStatus.IMPORTED,
         }
       }),
     ]),
@@ -261,19 +255,16 @@ const users = async () => {
         level: Level.Initial,
         organizationId: organizations[0].id,
         role: Role.DEFAULT,
-        isActive: true,
-        isValidated: true,
+        status: UserStatus.ACTIVE,
       },
       {
         email: 'untrained@yopmail.com',
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         password: await signPassword('password'),
-        level: Level.Initial,
         organizationId: regularOrganizations[1].id,
         role: Role.DEFAULT,
-        isActive: true,
-        isValidated: true,
+        status: UserStatus.ACTIVE,
       },
     ],
   })
@@ -283,20 +274,20 @@ const users = async () => {
 
   await prisma.user.create({
     data: {
-      email: 'to-activate@yopmail.com',
+      email: 'imported@yopmail.com',
       firstName: 'User',
-      lastName: 'ToActivate',
-      role: Role.ADMIN,
+      lastName: 'Imported',
+      role: Role.DEFAULT,
       level: Level.Initial,
-      isActive: false,
-      isValidated: false,
+      status: UserStatus.IMPORTED,
+      organizationId: regularOrganizations[0].id,
     },
   })
 
   const subPosts = Object.keys(SubPost)
   const studies = await Promise.all(
     Array.from({ length: 20 }).map(() => {
-      const creator = faker.helpers.arrayElement(users.filter((user) => user.isValidated))
+      const creator = faker.helpers.arrayElement(users.filter((user) => user.status === UserStatus.ACTIVE))
       const organizationSites = sites.filter((site) => site.organizationId === creator.organizationId)
       return prisma.study.create({
         include: { sites: true },

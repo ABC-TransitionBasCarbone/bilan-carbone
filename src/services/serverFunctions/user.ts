@@ -1,24 +1,29 @@
 'use server'
 
+import { getOrganizationById } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
   addUser,
+  changeStatus,
   changeUserRole,
-  deleteUser,
+  deleteUserFromOrga,
   getUserApplicationSettings,
   getUserByEmail,
-  updateProfile,
+  getUserFromUserOrganization,
+  organizationActiveUsersCount,
+  updateUser,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
 import { DAY, HOUR, TIME_IN_MS } from '@/utils/time'
-import { User as DBUser, Organization, Role } from '@prisma/client'
+import { User as DBUser, Organization, Role, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
 import { auth } from '../auth'
 import {
   sendActivationEmail,
+  sendActivationRequest,
   sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
@@ -26,9 +31,8 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '../email/email'
-import { NOT_AUTHORIZED } from '../permissions/check'
+import { EMAIL_SENT, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
-import { hasEmptyPassword } from './auth'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
 const updateUserResetToken = async (email: string, duration: number) => {
@@ -105,24 +109,44 @@ export const sendActivation = async (email: string, fromReset: boolean) => {
 
 export const addMember = async (member: AddMemberCommand) => {
   const session = await auth()
-  if (!session || !session.user || !session.user.organizationId) {
+  if (!session || !session.user || !session.user.organizationId || member.role === Role.SUPER_ADMIN) {
     return NOT_AUTHORIZED
   }
 
-  const newMember = {
-    ...member,
-    isActive: false,
-    isValidated: true,
-    organization: { connect: { id: session.user.organizationId } },
-    importedFileDate: new Date(),
-  }
-
-  if (!canAddMember(session.user, newMember, session.user.organizationId)) {
+  if (!canAddMember(session.user, member, session.user.organizationId)) {
     return NOT_AUTHORIZED
   }
 
-  //TODO: que fait on si l'utilisateur existe déjà ?
-  await addUser(newMember)
+  const memberExists = await getUserByEmail(member.email)
+
+  if (memberExists?.role === Role.SUPER_ADMIN) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!memberExists) {
+    const newMember = {
+      ...member,
+      role: Role.DEFAULT,
+      status: UserStatus.VALIDATED,
+      level: null,
+      organizationId: session.user.organizationId,
+    }
+    await addUser(newMember)
+  } else {
+    if (memberExists.status === UserStatus.ACTIVE && memberExists.organizationId) {
+      return NOT_AUTHORIZED
+    }
+
+    const updateMember = {
+      ...member,
+      status: UserStatus.VALIDATED,
+      level: memberExists.level ? memberExists.level : null,
+      role: memberExists.level ? memberExists.role : Role.DEFAULT,
+      organizationId: session.user.organizationId,
+    }
+    await updateUser(memberExists.id, updateMember)
+  }
+
   await sendNewUser(member.email, session.user, member.firstName)
 }
 
@@ -165,7 +189,7 @@ export const deleteMember = async (email: string) => {
   if (!canDeleteMember(session.user, userToRemove)) {
     return NOT_AUTHORIZED
   }
-  await deleteUser(email)
+  await deleteUserFromOrga(email)
 }
 
 export const changeRole = async (email: string, role: Role) => {
@@ -186,13 +210,14 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
-  await updateProfile(session.user.id, command)
+
+  await updateUser(session.user.id, command)
 }
 
 export const resetPassword = async (email: string) => {
   const user = await getUserByEmail(email)
-  if (await hasEmptyPassword(email)) {
-    await activateEmail(email, true)
+  if (!user || user.status !== UserStatus.ACTIVE) {
+    return activateEmail(email, true)
   } else {
     if (user) {
       const resetToken = Math.random().toString(36)
@@ -211,11 +236,32 @@ export const resetPassword = async (email: string) => {
 
 export const activateEmail = async (email: string, fromReset: boolean = false) => {
   const user = await getUserByEmail(email)
-  if (!user || user.isActive) {
-    return NOT_AUTHORIZED
+  if (!user || !user.organizationId || user.status === UserStatus.ACTIVE) {
+    return { error: true, message: NOT_AUTHORIZED }
   }
-  await validateUser(email)
-  await sendActivation(email, fromReset)
+
+  const userOrga = await getOrganizationById(user.organizationId)
+  if (!userOrga || !userOrga.activatedLicence) {
+    return { error: true, message: NOT_AUTHORIZED }
+  }
+
+  if ((await organizationActiveUsersCount(user.organizationId)) && user.status !== UserStatus.VALIDATED) {
+    const users = await getUserFromUserOrganization(user)
+    await sendActivationRequest(
+      users.filter((u) => u.role === Role.GESTIONNAIRE || u.role === Role.ADMIN).map((u) => u.email),
+      email,
+      `${user.firstName} ${user.lastName}`,
+    )
+
+    await changeStatus(user.id, UserStatus.PENDING_REQUEST)
+
+    return { error: false, message: REQUEST_SENT }
+  } else {
+    await validateUser(email)
+    await sendActivation(email, fromReset)
+
+    return { error: false, message: EMAIL_SENT }
+  }
 }
 
 export const getUserSettings = async () => {

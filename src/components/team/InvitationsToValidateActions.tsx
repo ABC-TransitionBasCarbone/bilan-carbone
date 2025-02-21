@@ -29,6 +29,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
     <div className={classNames(styles.buttons, 'flex')}>
       <SelectRole currentUserEmail={user.email} email={member.email} currentRole={role} level={member.level} />
       <LoadingButton
+        data-testid="validate-invitation"
         aria-label={t('resend')}
         title={t('resend')}
         loading={validating}
@@ -45,6 +46,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
         <CheckIcon />
       </LoadingButton>
       <LoadingButton
+        data-testid="delete-invitation"
         aria-label={t('delete')}
         title={t('delete')}
         loading={deleting}

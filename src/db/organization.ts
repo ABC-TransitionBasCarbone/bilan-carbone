@@ -1,6 +1,6 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import { Prisma, Role } from '@prisma/client'
+import { Prisma, Role, UserStatus } from '@prisma/client'
 import { prismaClient } from './client'
 
 export const getRawOrganizationById = (id: string | null) =>
@@ -13,7 +13,7 @@ export const getOrganizationUsers = (id: string | null) =>
   id
     ? prismaClient.user.findMany({
         select: { email: true, firstName: true, lastName: true, level: true, role: true },
-        where: { organizationId: id, isActive: true },
+        where: { organizationId: id, status: UserStatus.ACTIVE },
         orderBy: { email: 'asc' },
       })
     : []
@@ -68,8 +68,7 @@ export const onboardOrganization = async (
         lastName: '',
         email: collaborator.email || '',
         role: collaborator.role || Role.DEFAULT,
-        isActive: false,
-        isValidated: true,
+        status: UserStatus.VALIDATED,
         organizationId,
       })
     }
