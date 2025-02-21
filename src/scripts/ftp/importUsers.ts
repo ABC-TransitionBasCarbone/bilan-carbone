@@ -67,16 +67,14 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       ? await prismaClient.organization.findFirst({ where: { id: dbUser.organizationId } })
       : await prismaClient.organization.findFirst({ where: { siret: { startsWith: siretOrSiren } } })
 
-    if (organisation) {
-      await prismaClient.organization.update({
-        where: { id: organisation.id },
-        data: { name, isCR, importedFileDate, activatedLicence },
-      })
-    } else {
-      organisation = await prismaClient.organization.create({
-        data: { siret: siretOrSiren, name, isCR, importedFileDate, activatedLicence },
-      })
-    }
+    organisation = organisation
+      ? await prismaClient.organization.update({
+          where: { id: organisation.id },
+          data: { name, isCR, importedFileDate, activatedLicence },
+        })
+      : await prismaClient.organization.create({
+          data: { siret: siretOrSiren, name, isCR, importedFileDate, activatedLicence },
+        })
     user.organizationId = organisation.id
   }
 
@@ -105,8 +103,8 @@ const getUsersFromFTP = async () => {
     const users: Prisma.UserCreateManyInput[] = []
     for (let i = 0; i < values.length; i++) {
       const user = await processUser(values[i] as Record<string, string>, importedFileDate)
-      if (user) users.push(user)
-      if (i % 50 === 0) console.log(`${i}/${values.length}`)
+      user && users.push(user)
+      i % 50 === 0 && console.log(`${i}/${values.length}`)
     }
 
     const created = await prismaClient.user.createMany({ data: users, skipDuplicates: true })
