@@ -426,13 +426,13 @@
       "add": "Ajouter un flux",
       "documentNotFound": "Document non trouvé",
       "download": "Télécharger le flux",
-      "flows": "Cartographie des fluxs",
-      "flowSelector": "Flux à afficher",
+      "flows": "Cartographies des flux",
+      "flowSelector": "Cartographie à afficher",
       "invalidFileType": "Type de fichier non supporté",
-      "newFlow": "Ajouter un flux",
-      "noFlows": "Aucun flux à afficher",
+      "newFlow": "Ajouter une cartographie des flux",
+      "noFlows": "Aucune cartographie des flux à afficher",
       "notAuthorized": "Action non authorisée",
-      "removeFlow": "Supprimer le flux",
+      "removeFlow": "Supprimer la cartographie",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
     },
     "delete": {

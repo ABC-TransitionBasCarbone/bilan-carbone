@@ -426,13 +426,13 @@
       "add": "Add a flow",
       "documentNotFound": "Document not found",
       "download": "Download flow",
-      "invalidFileType": "Invalid file type",
       "flows": "Flows mapping",
-      "flowSelector": "Flux to display",
-      "newFlow": "Add a flow",
-      "noFlows": "No flow to display",
+      "flowSelector": "Mapping to display",
+      "invalidFileType": "Invalid file type",
+      "newFlow": "Add a flow mapping",
+      "noFlows": "No mapping to display",
       "notAuthorized": "Action not authorized",
-      "removeFlow": "Remove flow",
+      "removeFlow": "Remove mapping",
       "Not authorized": "You are not allowed to do this action"
     },
     "delete": {
