@@ -129,7 +129,10 @@ export const addMember = async (member: AddMemberCommand) => {
     }
     await addUser(newMember)
   } else {
-    if (memberExists.status === UserStatus.ACTIVE || memberExists.organizationId !== session.user.organizationId) {
+    if (
+      memberExists.status === UserStatus.ACTIVE ||
+      (memberExists.organizationId && memberExists.organizationId !== session.user.organizationId)
+    ) {
       return NOT_AUTHORIZED
     }
 

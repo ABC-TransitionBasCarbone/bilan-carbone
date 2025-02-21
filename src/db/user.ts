@@ -85,11 +85,8 @@ export const getUserOrganizations = async (email: string) => {
 
 export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]
 
-export const getUserFromUserOrganization = async (user: User) => {
-  const test = await prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
-  console.log(test)
-  return test
-}
+export const getUserFromUserOrganization = async (user: User) =>
+  prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
 export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
 
 export const getOnlyActiveUsersForOrganization = (organizationId: string) =>
@@ -153,12 +150,11 @@ export const updateUserApplicationSettings = (userId: string, data: Prisma.UserA
     data,
   })
 
-export const linkUserToOrganization = (user: Prisma.UserCreateInput) => {
+export const linkUserToOrganization = async (user: Prisma.UserCreateInput) => {
   if (user.role === Role.SUPER_ADMIN) {
     throw Error('Cannot create a super admin')
   }
-
-  prismaClient.user.update({
+  await prismaClient.user.update({
     where: { email: user.email },
     data: user,
   })

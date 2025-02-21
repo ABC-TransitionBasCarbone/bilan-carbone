@@ -1,4 +1,4 @@
-import { Level, Role, SiteCAUnit } from '@prisma/client'
+import { Role, SiteCAUnit } from '@prisma/client'
 import z from 'zod'
 
 export const AddMemberCommandValidation = z.object({
@@ -20,7 +20,6 @@ export const AddMemberCommandValidation = z.object({
     })
     .trim()
     .min(1, 'lastName'),
-  level: z.nativeEnum(Level, { required_error: 'level' }),
   role: z.nativeEnum(Role, { required_error: 'role' }),
 })
 
