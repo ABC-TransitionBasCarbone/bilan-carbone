@@ -667,7 +667,9 @@
     "DEFAULT_description": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
     "DEFAULT_description_CR": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études. Il n'a accès qu'aux études publiques et aux études privées auxquelles il a été ajoutées",
     "close": "Fermer",
-    "guide": "Guide des rôles"
+    "guide": "Guide des rôles",
+    "saved": "Nouveau rôle sauvegardé",
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
   },
   "team": {
     "title": "Mon organisation",
