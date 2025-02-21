@@ -1,5 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { Export, ExportRule, Level, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -136,7 +137,7 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          ((emissionSource.value || 0) * (emissionFactor?.totalCo2 || 0)) / 1000 || '0',
+          ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) / 1000 || '0',
           tResults('unit'),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
@@ -144,7 +145,7 @@ const getEmissionSourcesRows = (
           getQuality(getQualityRating(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
-          emissionFactor?.totalCo2 || '',
+          emissionFactor ? getEmissionFactorValue(emissionFactor) : '',
           emissionFactor?.unit ? `kgCO₂e/${tUnit(emissionFactor.unit)}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',

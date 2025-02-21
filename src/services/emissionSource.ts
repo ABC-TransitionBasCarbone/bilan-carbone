@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
-import { EmissionSourceCaracterisation, Import, StudyEmissionSource, SubPost } from '@prisma/client'
-import { wasteEmissionFactors } from '../constants/wasteEmissionFactors'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
 import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
@@ -88,27 +88,16 @@ const getAlpha = (emission: number | null, confidenceInterval: number[] | null) 
   return (confidenceInterval[1] - emission) / emission
 }
 
-const getEmissionSourceEmission = (
-  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
-  wasteImpact?: number,
-) => {
+const getEmissionSourceEmission = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
     return null
   }
 
-  let emission = emissionSource.emissionFactor.totalCo2 * emissionSource.value
+  let emission = getEmissionFactorValue(emissionSource.emissionFactor) * emissionSource.value
   if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && emissionSource.depreciationPeriod) {
     emission = emission / emissionSource.depreciationPeriod
   }
 
-  if (
-    wasteImpact &&
-    emissionSource.emissionFactor.importedFrom === Import.BaseEmpreinte &&
-    emissionSource.emissionFactor.importedId &&
-    wasteEmissionFactors[emissionSource.emissionFactor.importedId]
-  ) {
-    emission = emissionSource.value * wasteImpact
-  }
   return emission
 }
 
@@ -156,11 +145,8 @@ export const sumEmissionSourcesUncertainty = (emissionSource: (FullStudy | Study
   return sumStandardDeviations(results)
 }
 
-export const getEmissionSourcesTotalCo2 = (emissionSources: FullStudy['emissionSources'], wasteImpact?: number) =>
-  emissionSources.reduce(
-    (sum, emissionSource) => sum + (getEmissionSourceEmission(emissionSource, wasteImpact) || 0),
-    0,
-  )
+export const getEmissionSourcesTotalCo2 = (emissionSources: FullStudy['emissionSources']) =>
+  emissionSources.reduce((sum, emissionSource) => sum + (getEmissionSourceEmission(emissionSource) || 0), 0)
 
 export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
   [SubPost.CombustiblesFossiles]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
