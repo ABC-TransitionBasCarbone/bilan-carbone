@@ -11,8 +11,8 @@ import {
   getUserByEmail,
   getUserFromUserOrganization,
   organizationActiveUsersCount,
-  updateUserApplicationSettings,
   updateUser,
+  updateUserApplicationSettings,
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
