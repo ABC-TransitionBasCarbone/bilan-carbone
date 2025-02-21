@@ -67,17 +67,19 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       ? await prismaClient.organization.findFirst({ where: { id: dbUser.organizationId } })
       : await prismaClient.organization.findFirst({ where: { siret: { startsWith: siretOrSiren } } })
 
-    if (organisation) {
-      await prismaClient.organization.update({
-        where: { id: organisation.id },
-        data: { name, isCR, importedFileDate, activatedLicence: activatedLicence || organisation.activatedLicence },
-      })
-    } else {
-      organisation = await prismaClient.organization.create({
-        data: { siret: siretOrSiren, name, isCR, importedFileDate, activatedLicence },
-      })
-    }
-
+    organisation = organisation
+      ? await prismaClient.organization.update({
+          where: { id: organisation.id },
+          data: {
+            name,
+            isCR: isCR || organisation.isCR,
+            importedFileDate,
+            activatedLicence: activatedLicence || organisation.activatedLicence,
+          },
+        })
+      : await prismaClient.organization.create({
+          data: { siret: siretOrSiren, name, isCR, importedFileDate, activatedLicence },
+        })
     user.organizationId = organisation.id
   }
 
