@@ -52,7 +52,7 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
         </MenuItem>
         {Object.keys(Role)
           .filter((role) => role !== Role.SUPER_ADMIN)
-          .filter((role) => level || role === Role.GESTIONNAIRE)
+          .filter((role) => level || role === Role.GESTIONNAIRE || role === Role.DEFAULT)
           .map((role) => (
             <MenuItem key={role} value={role}>
               {t(role)}
