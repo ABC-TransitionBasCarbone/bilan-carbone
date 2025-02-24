@@ -15,6 +15,7 @@ import { MenuItem } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { SyntheticEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -134,7 +135,20 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-rights-create-button">
           {t('create')}
         </LoadingButton>
-        {error && <p data-testid="study-rights-create-error">{error}</p>}
+        {error && (
+          <p data-testid="study-rights-create-error">
+            {t.rich(error, {
+              support: (children) => (
+                <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>{children}</Link>
+              ),
+              link: (children) => (
+                <Link href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
+            })}
+          </p>
+        )}
       </Form>
       <NewStudyRightModal
         otherOrganization={otherOrganization}

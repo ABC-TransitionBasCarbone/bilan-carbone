@@ -15,6 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -101,7 +102,18 @@ const NewStudyContributorForm = ({ study }: Props) => {
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-contributor-create-button">
         {t('create')}
       </LoadingButton>
-      {error && <p>{error}</p>}
+      {error && (
+        <p>
+          {t.rich(error, {
+            support: (children) => <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>{children}</Link>,
+            link: (children) => (
+              <Link href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''} target="_blank" rel="noreferrer noopener">
+                {children}
+              </Link>
+            ),
+          })}
+        </p>
+      )}
     </Form>
   )
 }
