@@ -34,7 +34,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <NewStudyRightForm study={study} user={user} users={filteredUsers} />
+        <NewStudyRightForm study={study} user={user} users={filteredUsers} existingUsers={existingUsers} />
       </Block>
     </>
   )

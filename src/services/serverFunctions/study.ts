@@ -358,7 +358,10 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  if (studyWithRights.contributors.some((contributor) => contributor.user.id === existingUser?.id)) {
+  if (
+    studyWithRights.allowedUsers.some((allowedUser) => allowedUser.user.id === existingUser?.id) ||
+    studyWithRights.contributors.some((contributor) => contributor.user.id === existingUser?.id)
+  ) {
     return ALREADY_IN_STUDY
   }
 
