@@ -10,11 +10,9 @@ import { ALREADY_IN_STUDY } from '@/services/permissions/check'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
 import { checkLevel } from '@/services/study'
-import { getUserRoleOnStudy } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { StudyRole } from '@prisma/client'
-import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -24,12 +22,12 @@ import NewStudyRightModal from './NewStudyRightModal'
 
 interface Props {
   study: FullStudy
-  user: User
   users: Awaited<ReturnType<typeof getOrganizationUsers>>
   existingUsers: string[]
+  userRole: StudyRole
 }
 
-const NewStudyRightForm = ({ study, user, users, existingUsers }: Props) => {
+const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
@@ -82,8 +80,6 @@ const NewStudyRightForm = ({ study, user, users, existingUsers }: Props) => {
     }
   }
 
-  const userRoleOnStudy = useMemo(() => getUserRoleOnStudy(user, study), [user, study])
-
   const usersOptions = useMemo(
     () =>
       users.map((user) => ({
@@ -97,7 +93,7 @@ const NewStudyRightForm = ({ study, user, users, existingUsers }: Props) => {
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          (userRoleOnStudy === StudyRole.Validator || role !== StudyRole.Validator) &&
+          (userRole === StudyRole.Validator || role !== StudyRole.Validator) &&
           (!readerOnly || role === StudyRole.Reader),
       ),
     [readerOnly],

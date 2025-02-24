@@ -3,6 +3,7 @@ import withStudy, { StudyProps } from '@/components/hoc/withStudy'
 import NotFound from '@/components/pages/NotFound'
 import StudyContributorPage from '@/components/pages/StudyContributor'
 import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
+import { getUserRoleOnStudy } from '@/utils/study'
 import { redirect } from 'next/navigation'
 
 const StudyView = async ({ user, study }: StudyProps & UserProps) => {
@@ -14,8 +15,10 @@ const StudyView = async ({ user, study }: StudyProps & UserProps) => {
     return redirect(`/etudes/${study.id}`)
   }
 
+  const userRole = await getUserRoleOnStudy(user, study)
+
   const studyWithoutDetail = filterStudyDetail(user, study)
-  return <StudyContributorPage study={studyWithoutDetail} user={user} />
+  return <StudyContributorPage study={studyWithoutDetail} userRole={userRole} />
 }
 
 export default withAuth(withStudy(StudyView))

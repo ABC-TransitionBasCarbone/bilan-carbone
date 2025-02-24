@@ -1,6 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -10,6 +11,7 @@ import useStudySite from '../study/site/useStudySite'
 
 interface Props {
   study: FullStudy
+  userRole: StudyRole
 }
 
 const StudyContributionPage = ({ study }: Props) => {

@@ -1,9 +1,7 @@
 'use client'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { getUserRoleOnStudy } from '@/utils/study'
 import { StudyRole } from '@prisma/client'
-import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import Block from '../base/Block'
@@ -17,14 +15,13 @@ import StudyPostsCard from './StudyPostsCard'
 interface Props {
   post: Post
   study: FullStudy
-  user: User
+  userRole: StudyRole
 }
 
-const StudyPostsPage = ({ post, study, user }: Props) => {
+const StudyPostsPage = ({ post, study, userRole }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
-  const userRole = getUserRoleOnStudy(user, study)
   const { studySite, setSite } = useStudySite(study)
 
   const emissionSources = useMemo(
@@ -72,7 +69,7 @@ const StudyPostsPage = ({ post, study, user }: Props) => {
         <SubPosts
           post={post}
           study={study}
-          user={user}
+          userRole={userRole}
           withoutDetail={false}
           studySite={studySite}
           emissionSources={emissionSources}
