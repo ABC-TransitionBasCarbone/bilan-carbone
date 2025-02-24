@@ -125,7 +125,12 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
   return true
 }
 
-export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStudy: DbUser | null, role: StudyRole) => {
+export const canAddRightOnStudy = async (
+  user: User,
+  study: FullStudy,
+  userToAddOnStudy: DbUser | null,
+  role: StudyRole,
+) => {
   if (userToAddOnStudy && user.id === userToAddOnStudy.id) {
     return false
   }
@@ -134,16 +139,13 @@ export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStud
     return false
   }
 
-  if (isAdminOnStudyOrga(user, study)) {
-    return true
-  }
+  const userRoleOnStudy = await getUserRoleOnStudy(user, study)
 
-  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
-  if (!userRightsOnStudy || userRightsOnStudy.role === StudyRole.Reader) {
+  if (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) {
     return false
   }
 
-  if (role === StudyRole.Validator && userRightsOnStudy.role !== StudyRole.Validator) {
+  if (role === StudyRole.Validator && userRoleOnStudy !== StudyRole.Validator) {
     return false
   }
 

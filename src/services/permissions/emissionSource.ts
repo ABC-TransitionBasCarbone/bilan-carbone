@@ -28,12 +28,8 @@ const hasStudyBasicRights = async (
     }
   }
 
-  if (isAdminOnStudyOrga(user, study)) {
-    return true
-  }
-
-  const rights = study.allowedUsers.find((right) => right.user.email === user.email)
-  if (rights && rights.role !== StudyRole.Reader) {
+  const userRoleOnStudy = await getUserRoleOnStudy(user, study)
+  if (userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader) {
     return true
   }
 
