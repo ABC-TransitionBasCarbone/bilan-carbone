@@ -6,6 +6,7 @@ import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
 import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
+import { ALREADY_IN_STUDY } from '@/services/permissions/check'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
 import { checkLevel } from '@/services/study'
@@ -15,6 +16,7 @@ import { MenuItem } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { SyntheticEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -24,9 +26,10 @@ interface Props {
   study: FullStudy
   user: User
   users: Awaited<ReturnType<typeof getOrganizationUsers>>
+  existingUsers: string[]
 }
 
-const NewStudyRightForm = ({ study, user, users }: Props) => {
+const NewStudyRightForm = ({ study, user, users, existingUsers }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
@@ -72,6 +75,8 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
   const onSubmit = async (command: NewStudyRightCommand) => {
     if (users.some((user) => user.email === command.email)) {
       await saveRight(command)
+    } else if (existingUsers.includes(command.email)) {
+      setError(ALREADY_IN_STUDY)
     } else {
       setOtherOrganization(true)
     }
@@ -134,7 +139,20 @@ const NewStudyRightForm = ({ study, user, users }: Props) => {
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-rights-create-button">
           {t('create')}
         </LoadingButton>
-        {error && <p data-testid="study-rights-create-error">{error}</p>}
+        {error && (
+          <p data-testid="study-rights-create-error">
+            {t.rich(error, {
+              support: (children) => (
+                <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>{children}</Link>
+              ),
+              link: (children) => (
+                <Link href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
+            })}
+          </p>
+        )}
       </Form>
       <NewStudyRightModal
         otherOrganization={otherOrganization}

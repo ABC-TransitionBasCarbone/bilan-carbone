@@ -63,6 +63,7 @@ const fullStudyInclude = {
     select: {
       user: {
         select: {
+          id: true,
           email: true,
           organizationId: true,
         },
@@ -75,6 +76,7 @@ const fullStudyInclude = {
     select: {
       user: {
         select: {
+          id: true,
           email: true,
           organizationId: true,
           level: true,

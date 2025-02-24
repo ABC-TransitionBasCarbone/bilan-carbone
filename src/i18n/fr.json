@@ -216,7 +216,7 @@
   },
   "study": {
     "create": "Ajouter un Bilan Carbone®",
-    "myStudies": "Mes Bilan Carbone®",
+    "myStudies": "Mes Bilans Carbone®",
     "createFirstStudy": "Créer mon premier Bilan Carbone®",
     "seeResults": "Voir les résultats",
     "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre premier bilan.",
@@ -327,6 +327,8 @@
         "email": "Email",
         "role": "Droit",
         "create": "Ajouter la personne",
+        "Already in study": "Cette personne a déjà accès à l'étude.",
+        "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
           "email": "Veuillez utiliser un email valide",
           "emailRequired": "Veuillez entrer un email",
@@ -346,6 +348,8 @@
         "post": "Poste",
         "subPost": "Sous poste",
         "create": "Ajouter la personne",
+        "Already in study": "Cette personne a déjà accès à l'étude.",
+        "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
           "email": "Veuillez renseigner un email valide",
           "post": "Veuillez selectionner un poste"

@@ -36,7 +36,7 @@ import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { auth } from '../auth'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
-import { NOT_AUTHORIZED } from '../permissions/check'
+import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
 import {
   canAccessFlowFromStudy,
   canAddContributorOnStudy,
@@ -358,6 +358,13 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
+  if (
+    studyWithRights.allowedUsers.some((allowedUser) => allowedUser.user.id === existingUser?.id) ||
+    studyWithRights.contributors.some((contributor) => contributor.user.id === existingUser?.id)
+  ) {
+    return ALREADY_IN_STUDY
+  }
+
   const userId = await getOrCreateUserAndSendStudyInvite(
     right.email,
     studyWithRights,
@@ -418,6 +425,10 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
 
   if (!canAddContributorOnStudy(session.user, studyWithRights)) {
     return NOT_AUTHORIZED
+  }
+
+  if (studyWithRights.allowedUsers.some((allowedUser) => allowedUser.user.id === existingUser?.id)) {
+    return ALREADY_IN_STUDY
   }
 
   const userId = await getOrCreateUserAndSendStudyInvite(
