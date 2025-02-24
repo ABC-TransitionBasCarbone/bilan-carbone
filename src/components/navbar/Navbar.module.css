@@ -31,6 +31,12 @@
   &:hover {
     color: var(--primary-20);
   }
+
+  &.notClickable {
+    &:hover {
+      color: var(--neutral-00);
+    }
+  }
 }
 
 .big {
