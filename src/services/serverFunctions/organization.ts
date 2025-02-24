@@ -96,5 +96,6 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
       collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
     }
   }
+
   await onboardOrganization(session.user.id, { ...command, collaborators })
 }
