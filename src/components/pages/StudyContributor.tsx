@@ -18,7 +18,7 @@ interface Props {
   userRole: StudyRole | null
 }
 
-const StudyContributionPage = ({ study, userRole }: Props) => {
+const StudyContributorPage = ({ study, userRole }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
@@ -60,4 +60,4 @@ const StudyContributionPage = ({ study, userRole }: Props) => {
   )
 }
 
-export default StudyContributionPage
+export default StudyContributorPage
