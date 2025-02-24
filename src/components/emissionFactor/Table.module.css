@@ -16,6 +16,12 @@
   }
 }
 
+.hideFiltersButton {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .pagination {
   gap: 0.5rem;
 }

@@ -595,6 +595,8 @@
       "sources": "Sources",
       "status": "Status",
       "value": "Value",
+      "displayFilters": "Display filters",
+      "hideFilters": "Hide filters",
       "importedFrom": {
         "baseEmpreinte": "Base Empreinte logo",
         "legifrance": "Légifrance logo",
@@ -991,7 +993,7 @@
     "Not authorized": "You are not allowed to do this action",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
-    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m>.</p>"
+    "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>"
   },
   "upload": {
     "fileTooBig": "File too big (max size {size} MB)",

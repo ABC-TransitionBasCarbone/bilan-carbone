@@ -1,9 +1,9 @@
-describe('Create study', () => {
+describe('Delete emission source', () => {
   beforeEach(() => {
     cy.exec('npx prisma db seed')
   })
 
-  it('should create an emission source on a study', () => {
+  it('should be able to delete an emission source on a study', () => {
     cy.login()
 
     cy.visit('/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccc779/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres')

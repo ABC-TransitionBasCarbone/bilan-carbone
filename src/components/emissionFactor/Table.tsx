@@ -39,7 +39,7 @@ import {
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
-import { ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
 import EmissionFactorDetails from './EmissionFactorDetails'
@@ -101,7 +101,30 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
   const [displayArchived, setDisplayArchived] = useState(false)
   const [locationFilter, setLocationFilter] = useState('')
   const [filteredSources, setSources] = useState<Import[]>(sources)
+  const [displayHideButton, setDisplayHideButton] = useState(false)
+  const [displayFilters, setDisplayFilters] = useState(true)
+  const filtersRef = useRef<HTMLDivElement>(null)
   const fromModal = !!selectEmissionFactor
+
+  useEffect(() => {
+    const checkWrappedRows = () => {
+      if (filtersRef.current) {
+        let hideButton = true
+        for (let i = 1; i < filtersRef.current.children.length - 1; i++) {
+          const element = filtersRef.current.children[i] as HTMLElement
+          const prevElement = filtersRef.current.children[i - 1] as HTMLElement
+          if (element.offsetLeft <= prevElement.offsetLeft) {
+            hideButton = false
+          }
+        }
+        setDisplayHideButton(hideButton)
+      }
+    }
+
+    checkWrappedRows()
+    window.addEventListener('resize', checkWrappedRows)
+    return () => window.removeEventListener('resize', checkWrappedRows)
+  }, [])
 
   const editEmissionFactor = async (emissionFactorId: string, action: 'edit' | 'delete') => {
     if (!(await canEditEmissionFactor(emissionFactorId))) {
@@ -256,7 +279,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
 
   const fuse = useMemo(() => {
     return new Fuse(emissionFactors, fuseOptions)
-  }, [emissionFactors, columns])
+  }, [emissionFactors])
 
   const searchedEmissionFactors = useMemo(() => {
     if (!filter && !locationFilter) {
@@ -275,7 +298,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
     return searchedEmissionFactors
       .filter((emissionFactor) => filteredSources.includes(emissionFactor.importedFrom))
       .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived)
-  }, [emissionFactors, searchedEmissionFactors, filteredSources, displayArchived])
+  }, [searchedEmissionFactors, filteredSources, displayArchived])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -316,58 +339,69 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
 
   return (
     <>
-      <div className={classNames(styles.filters, 'align-center wrap mb1')}>
-        <DebouncedInput
-          className={styles.searchInput}
-          debounce={200}
-          value={filter}
-          onChange={setFilter}
-          placeholder={t('search')}
-          data-testid="emission-factor-search-input"
-        />
-        <DebouncedInput
-          className={styles.searchInput}
-          debounce={200}
-          value={locationFilter}
-          onChange={setLocationFilter}
-          placeholder={t('locationSearch')}
-        />
-        <FormControl className={styles.selector}>
-          <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>
-          <Select
-            id="emissions-sources-selector"
-            labelId="emissions-sources-selector"
-            value={filteredSources}
-            onChange={selectLocations}
-            input={<OutlinedInput label={t('sources')} />}
-            renderValue={statusSelectorRenderValue}
-            multiple
-          >
-            {sources.map((source, i) => (
-              <MenuItem key={`source-item-${i}`} value={source}>
-                <Checkbox checked={filteredSources.includes(source)} />
-                <ListItemText primary={source} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl className={styles.selector}>
-          <FormLabel id="archived-emissions-factors-radio-group-label" component="legend">
-            {t('displayArchived')}
-          </FormLabel>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={displayArchived}
-                data-testid="archived-emissions-factors-switch"
-                onChange={(event) => setDisplayArchived(event.target.checked)}
+      <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
+        {displayFilters && (
+          <>
+            <DebouncedInput
+              className={styles.searchInput}
+              debounce={200}
+              value={filter}
+              onChange={setFilter}
+              placeholder={t('search')}
+              data-testid="emission-factor-search-input"
+            />
+            <DebouncedInput
+              className={styles.searchInput}
+              debounce={200}
+              value={locationFilter}
+              onChange={setLocationFilter}
+              placeholder={t('locationSearch')}
+            />
+            <FormControl className={styles.selector}>
+              <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>
+              <Select
+                id="emissions-sources-selector"
+                labelId="emissions-sources-selector"
+                value={filteredSources}
+                onChange={selectLocations}
+                input={<OutlinedInput label={t('sources')} />}
+                renderValue={statusSelectorRenderValue}
+                multiple
+              >
+                {sources.map((source, i) => (
+                  <MenuItem key={`source-item-${i}`} value={source}>
+                    <Checkbox checked={filteredSources.includes(source)} />
+                    <ListItemText primary={source} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl className={styles.selector}>
+              <FormLabel id="archived-emissions-factors-radio-group-label" component="legend">
+                {t('displayArchived')}
+              </FormLabel>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={displayArchived}
+                    data-testid="archived-emissions-factors-switch"
+                    onChange={(event) => setDisplayArchived(event.target.checked)}
+                  />
+                }
+                label={t(displayArchived ? 'yes' : 'no')}
               />
-            }
-            label={t(displayArchived ? 'yes' : 'no')}
-          />
-        </FormControl>
+            </FormControl>
+          </>
+        )}
+        {fromModal && (
+          <div className={classNames({ [styles.hideFiltersButton]: displayHideButton })}>
+            <Button color="secondary" onClick={() => setDisplayFilters(!displayFilters)}>
+              {t(displayFilters ? 'hideFilters' : 'displayFilters')}
+            </Button>
+          </div>
+        )}
       </div>
-      <div className={classNames({ [styles.modalTable]: fromModal })}>
+      <div className={classNames('grow', { [styles.modalTable]: fromModal })}>
         <table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (

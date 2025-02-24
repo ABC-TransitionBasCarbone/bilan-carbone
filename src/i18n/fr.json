@@ -448,7 +448,7 @@
     }
   },
   "emissionFactors": {
-    "add": "Ajouter un facteur d'émissions",
+    "add": "Ajouter un facteur d'émission",
     "post": {
       "total": "Total",
       "allPost": "Tous les postes",
@@ -596,6 +596,8 @@
       "status": "Statut",
       "value": "Valeur",
       "yes": "Oui",
+      "displayFilters": "Afficher les filters",
+      "hideFilters": "Cacher les filters",
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
         "legifrance": "Logo de Légifrance",
@@ -991,7 +993,7 @@
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
     "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support.",
     "error": "Une erreur s'est produite...",
-    "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m>.</p>"
+    "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m> ou essayez de vous <logout>reconnecter</logout>.</p>"
   },
   "upload": {
     "fileTooBig": "Fichier trop gros (taille maximale {size} MB)",

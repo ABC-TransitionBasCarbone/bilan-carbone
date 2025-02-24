@@ -9,8 +9,10 @@
   max-height: 80%;
 }
 
-.wideBox {
-  width: auto;
+.big {
+  height: 90%;
+  width: 90%;
+  max-height: 90% !important;
   max-width: 90% !important;
 }
 

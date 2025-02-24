@@ -35,6 +35,8 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
   const getValues = form?.getValues as UseFormGetValues<SitesCommand>
 
+  const newSite = () => ({ id: uuidv4(), name: '', selected: false }) as SitesCommand['sites'][0]
+
   useEffect(() => {
     applyUserSettings()
   }, [])
@@ -162,13 +164,14 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
     data: sites,
     getCoreRowModel: getCoreRowModel(),
   })
+
   return !form && sites.length === 0 ? (
     <p className="title-h3">{t('noSites')}</p>
   ) : (
     <div className={styles.container}>
       {form && !withSelection && (
         <Button
-          onClick={() => setValue('sites', [...sites, { id: uuidv4(), name: '', etp: 0, ca: 0, selected: false }])}
+          onClick={() => setValue('sites', [...sites, newSite()])}
           className={styles.addButton}
           data-testid="add-site-button"
         >
