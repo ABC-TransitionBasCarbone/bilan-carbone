@@ -98,7 +98,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               <h3>
                 {withDepValue} {tResults('unit')}
               </h3>
-              <span className="align-center">
+              <span className="align-center text-center">
                 {t('results.withDependencies')}
                 <HelpIcon className="ml-4" onClick={() => setGlossaryOpen(!glossaryOpen)} label={t('information')} />
               </span>
@@ -117,7 +117,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               <h3>
                 {withoutDepValue} {tResults('unit')}
               </h3>
-              <span>{t('results.withoutDependencies')}</span>
+              <span className="text-center">{t('results.withoutDependencies')}</span>
             </Box>
           </label>
         </fieldset>
