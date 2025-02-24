@@ -424,7 +424,7 @@
     },
     "flow": {
       "loading": "Chargement du document...",
-      "add": "Ajouter un flux",
+      "add": "Ajouter une cartographie des flux",
       "documentNotFound": "Document non trouvé",
       "download": "Télécharger le flux",
       "flows": "Cartographies des flux",

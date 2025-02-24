@@ -424,7 +424,7 @@
     },
     "flow": {
       "loading": "Loading document...",
-      "add": "Add a flow",
+      "add": "Add a flow mapping",
       "documentNotFound": "Document not found",
       "download": "Download flow",
       "flows": "Flows mapping",
