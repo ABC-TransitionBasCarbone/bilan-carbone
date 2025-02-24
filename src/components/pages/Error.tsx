@@ -16,6 +16,7 @@ const Error = () => {
             {process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}
           </Link>
         ),
+        logout: (children) => <Link href="/logout">{children}</Link>,
       })}
     </Block>
   )
