@@ -316,7 +316,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
 
   return (
     <>
-      <div className={classNames(styles.filters, 'align-center wrap mb1')}>
+      <div className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
         <DebouncedInput
           className={styles.searchInput}
           debounce={200}
@@ -367,7 +367,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
           />
         </FormControl>
       </div>
-      <div className={classNames({ [styles.modalTable]: fromModal })}>
+      <div className={classNames('grow', { [styles.modalTable]: fromModal })}>
         <table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
