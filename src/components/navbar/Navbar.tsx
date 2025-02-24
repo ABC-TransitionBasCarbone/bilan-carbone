@@ -41,7 +41,7 @@ const Navbar = ({ user }: Props) => {
           {user.organizationId && (
             <div className="flex-col">
               <div
-                className={styles.link}
+                className={classNames(styles.link, styles.notClickable)}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onClick={() => setShowSubMenu(!showSubMenu)}
