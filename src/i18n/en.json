@@ -595,6 +595,8 @@
       "sources": "Sources",
       "status": "Status",
       "value": "Value",
+      "displayFilters": "Display filters",
+      "hideFilters": "Hide filters",
       "importedFrom": {
         "baseEmpreinte": "Base Empreinte logo",
         "legifrance": "Légifrance logo",

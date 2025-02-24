@@ -596,6 +596,8 @@
       "status": "Statut",
       "value": "Valeur",
       "yes": "Oui",
+      "displayFilters": "Afficher les filters",
+      "hideFilters": "Cacher les filters",
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
         "legifrance": "Logo de Légifrance",
