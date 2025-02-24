@@ -4,10 +4,8 @@ import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
-import { getUserRoleOnStudy } from '@/utils/study'
-import { EmissionFactorStatus } from '@prisma/client'
+import { EmissionFactorStatus, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
 import { useEffect, useMemo, useState } from 'react'
 import SubPost from './SubPost'
 import styles from './SubPosts.module.css'
@@ -24,7 +22,7 @@ type StudyWithoutDetailProps = {
 
 interface Props {
   post: Post
-  user: User
+  userRole: StudyRole | null
   studySite: string
   emissionSources: FullStudy['emissionSources']
 }
@@ -32,7 +30,7 @@ interface Props {
 const SubPosts = ({
   post,
   study,
-  user,
+  userRole,
   withoutDetail,
   emissionSources,
   studySite,
@@ -49,13 +47,6 @@ const SubPosts = ({
     fetchData()
   }, [])
 
-  const userRoleOnStudy = useMemo(() => {
-    if (withoutDetail) {
-      return null
-    }
-    return getUserRoleOnStudy(user, study)
-  }, [study, user, withoutDetail])
-
   return (
     <div className={classNames(styles.subPosts, 'flex-col')}>
       {subPosts.map((subPost) => (
@@ -64,7 +55,7 @@ const SubPosts = ({
           emissionSources={emissionSources.filter((emissionSource) => emissionSource.subPost === subPost)}
           subPost={subPost}
           key={subPost}
-          userRoleOnStudy={userRoleOnStudy}
+          userRoleOnStudy={userRole}
           studySite={studySite}
           {...(withoutDetail ? { study, withoutDetail: true } : { study, withoutDetail: false })}
         />
