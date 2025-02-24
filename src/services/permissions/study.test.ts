@@ -38,6 +38,7 @@ const mockedStudyToDelete = {
     { user: { email: 'mocked-editor-email' }, role: 'Editor' },
     { user: { email: 'mocked-reader-email' }, role: 'Reader' },
   ],
+  organization: { id: mockedOrganizationId, parentId: null },
 }
 
 const getStudyWithPublicStatus = (isPublic: boolean) => ({ ...mockedStudyToDelete, isPublic })
