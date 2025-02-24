@@ -44,12 +44,12 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
           <PostIcon className={styles.icon} post={post} />
           {tPost(post)}
         </div>
-        <div className={classNames(styles.name, 'justify-between align-center')}>
-          <div className="align-center">
+        <div className="justify-between align-center">
+          <div className={classNames(styles.name, 'align-center')}>
             <Leaf />
             <span className="ml-2">{study.name}</span>
           </div>
-          <div className={classNames(styles.role, 'text-center')}>{tRole(userRole)}</div>
+          <div className={classNames(styles.role, 'ml-2 text-center')}>{tRole(userRole)}</div>
         </div>
         <p className="text-center">{t('selectSite')}</p>
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} withLabel={false} />
