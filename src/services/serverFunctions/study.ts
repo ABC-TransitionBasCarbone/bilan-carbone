@@ -37,6 +37,7 @@ import { getTranslations } from 'next-intl/server'
 import { auth } from '../auth'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
+import { checkOrganization } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
   canAddContributorOnStudy,
@@ -359,6 +360,14 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
   }
 
   if (
+    existingUser &&
+    isAdmin(existingUser.role) &&
+    (await checkOrganization(existingUser.organizationId, studyWithRights.organizationId))
+  ) {
+    right.role = StudyRole.Validator
+  }
+
+  if (
     studyWithRights.allowedUsers.some((allowedUser) => allowedUser.user.id === existingUser?.id) ||
     studyWithRights.contributors.some((contributor) => contributor.user.id === existingUser?.id)
   ) {
@@ -397,6 +406,15 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
   }
 
   if (!(await canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole))) {
+    return NOT_AUTHORIZED
+  }
+
+  if (
+    existingUser &&
+    isAdmin(existingUser.role) &&
+    (await checkOrganization(existingUser.organizationId, studyWithRights.organizationId)) &&
+    studyRole !== StudyRole.Validator
+  ) {
     return NOT_AUTHORIZED
   }
 
