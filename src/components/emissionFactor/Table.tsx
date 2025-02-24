@@ -256,7 +256,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
 
   const fuse = useMemo(() => {
     return new Fuse(emissionFactors, fuseOptions)
-  }, [emissionFactors, columns])
+  }, [emissionFactors])
 
   const searchedEmissionFactors = useMemo(() => {
     if (!filter && !locationFilter) {
@@ -275,7 +275,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
     return searchedEmissionFactors
       .filter((emissionFactor) => filteredSources.includes(emissionFactor.importedFrom))
       .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived)
-  }, [emissionFactors, searchedEmissionFactors, filteredSources, displayArchived])
+  }, [searchedEmissionFactors, filteredSources, displayArchived])
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
