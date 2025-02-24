@@ -1,4 +1,4 @@
-describe('Create organization', () => {
+describe('Edit organization', () => {
   beforeEach(() => {
     cy.exec('npx prisma db seed')
 
