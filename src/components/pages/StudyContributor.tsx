@@ -3,7 +3,7 @@
 import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { User } from 'next-auth'
+import { StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import Block from '../base/Block'
@@ -15,10 +15,10 @@ import SubPosts from '../study/SubPosts'
 
 interface Props {
   study: StudyWithoutDetail
-  user: User
+  userRole: StudyRole | null
 }
 
-const StudyContributionPage = ({ study, user }: Props) => {
+const StudyContributionPage = ({ study, userRole }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
@@ -49,10 +49,10 @@ const StudyContributionPage = ({ study, user }: Props) => {
             <SubPosts
               post={post}
               study={study}
-              user={user}
               withoutDetail
               emissionSources={emissionSources}
               studySite={studySite}
+              userRole={userRole}
             />
           </Block>
         ))}

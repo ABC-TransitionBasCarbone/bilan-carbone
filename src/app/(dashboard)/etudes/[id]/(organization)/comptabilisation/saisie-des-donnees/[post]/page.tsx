@@ -4,6 +4,7 @@ import NotFound from '@/components/pages/NotFound'
 import StudyPostsPage from '@/components/pages/StudyPosts'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
+import { getUserRoleOnStudy } from '@/utils/study'
 
 interface Props {
   params: Promise<{
@@ -23,7 +24,12 @@ const StudyPost = async (props: Props & StudyProps & UserProps) => {
     return <NotFound />
   }
 
-  return <StudyPostsPage post={post as Post} study={props.study} user={props.user} />
+  const userRole = await getUserRoleOnStudy(props.user, props.study)
+  if (!userRole) {
+    return <NotFound />
+  }
+
+  return <StudyPostsPage post={post as Post} study={props.study} userRole={userRole} />
 }
 
 export default withAuth(withStudy(StudyPost))

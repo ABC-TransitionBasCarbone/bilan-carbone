@@ -98,7 +98,7 @@ export const canUpdateEmissionSource = async (
 }
 
 export const canDeleteEmissionSource = async (user: User, study: FullStudy) => {
-  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+  const userRoleOnStudy = await getUserRoleOnStudy(user, study)
   if (userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader) {
     return true
   }

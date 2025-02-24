@@ -1,10 +1,12 @@
 import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
+import { getUserRoleOnStudy } from '@/utils/study'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import NewStudyRightForm from '../study/rights/NewStudyRightForm'
+import NotFound from './NotFound'
 
 interface Props {
   study: FullStudy
@@ -15,6 +17,12 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
   const t = await getTranslations('study.rights.new')
 
   const users = await getOrganizationUsers(user.organizationId)
+  const userRole = await getUserRoleOnStudy(user, study)
+
+  if (!userRole) {
+    return <NotFound />
+  }
+
   const existingUsers = study.allowedUsers.map((allowedUser) => allowedUser.user.email)
   const filteredUsers = users.filter((user) => !existingUsers.includes(user.email))
   return (
@@ -34,7 +42,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <NewStudyRightForm study={study} user={user} users={filteredUsers} existingUsers={existingUsers} />
+        <NewStudyRightForm study={study} users={filteredUsers} existingUsers={existingUsers} userRole={userRole} />
       </Block>
     </>
   )

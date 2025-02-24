@@ -264,7 +264,7 @@ const canAccessStudyFlow = async (studyId: string) => {
   }
 
   const study = await getStudyById(studyId, session.user.organizationId)
-  if (!study || !getUserRoleOnStudy(session.user, study)) {
+  if (!study || !(await getUserRoleOnStudy(session.user, study))) {
     return false
   }
 

@@ -19,7 +19,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.rights')
 
-  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+  const userRoleOnStudy = await getUserRoleOnStudy(user, study)
 
   if (!userRoleOnStudy) {
     return <NotFound />

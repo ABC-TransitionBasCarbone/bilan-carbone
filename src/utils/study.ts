@@ -1,14 +1,15 @@
 import { FullStudy } from '@/db/study'
+import { checkOrganization } from '@/services/permissions/organization'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 
-export const getUserRoleOnStudy = (user: User, study: FullStudy) => {
+export const getUserRoleOnStudy = async (user: User, study: FullStudy) => {
   if (isAdminOnStudyOrga(user, study)) {
     return StudyRole.Validator
   }
-  if (study.isPublic && study.organizationId === user.organizationId) {
+  if (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId))) {
     return user.role === Role.DEFAULT ? StudyRole.Editor : StudyRole.Reader
   }
   const right = study.allowedUsers.find((right) => right.user.email === user.email)
