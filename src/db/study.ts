@@ -4,6 +4,7 @@ import { isAdminOnOrga } from '@/utils/onganization'
 import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
+import { getOrganizationById } from './organization'
 import { getUserOrganizations } from './user'
 
 export const createStudy = (study: Prisma.StudyCreateInput) =>
@@ -159,10 +160,16 @@ export const getAllowedStudiesByUserAndOrganization = async (user: User, organiz
     where: { parentId: user.organizationId },
     select: { id: true },
   })
+
+  const userOrga = await getOrganizationById(user.organizationId)
+  if (!userOrga) {
+    return []
+  }
+
   const studies = await prismaClient.study.findMany({
     where: {
       organizationId,
-      ...(isAdminOnOrga(user, organizationId)
+      ...(isAdminOnOrga(user, userOrga)
         ? {}
         : {
             OR: [
