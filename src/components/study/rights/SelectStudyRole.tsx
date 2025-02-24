@@ -4,7 +4,7 @@ import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { changeStudyRole } from '@/services/serverFunctions/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import { Level, StudyRole } from '@prisma/client'
+import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -13,13 +13,11 @@ interface Props {
   user: User
   userRole?: StudyRole
   rowUser: FullStudy['allowedUsers'][0]['user']
-  studyId: string
-  studyLevel: Level
-  studyOrganizationId: string
   currentRole: StudyRole
+  study: FullStudy
 }
 
-const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, studyOrganizationId, currentRole, userRole }: Props) => {
+const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props) => {
   const t = useTranslations('study.role')
   const [role, setRole] = useState(currentRole)
   useEffect(() => {
@@ -30,7 +28,7 @@ const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, studyOrganization
     const newRole = event.target.value as StudyRole
     setRole(newRole)
     if (newRole !== role) {
-      changeStudyRole(studyId, rowUser.email, newRole)
+      changeStudyRole(study.id, rowUser.email, newRole)
     }
   }
 
@@ -43,11 +41,9 @@ const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, studyOrganization
   const isDisabled = useMemo(
     () =>
       user.email === rowUser.email ||
-      (currentRole === StudyRole.Validator &&
-        userRole !== StudyRole.Validator &&
-        !isAdminOnStudyOrga(user, { organizationId: studyOrganizationId })) ||
+      (currentRole === StudyRole.Validator && userRole !== StudyRole.Validator && !isAdminOnStudyOrga(user, study)) ||
       rowUser.readerOnly,
-    [currentRole, rowUser, studyLevel, user, userRole],
+    [currentRole, rowUser, study, user, userRole],
   )
 
   /**
@@ -59,7 +55,7 @@ const SelectStudyRole = ({ user, rowUser, studyId, studyLevel, studyOrganization
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          isAdminOnStudyOrga(user, { organizationId: studyOrganizationId }) ||
+          isAdminOnStudyOrga(user, study) ||
           userRole === StudyRole.Validator ||
           isDisabled ||
           role !== StudyRole.Validator,

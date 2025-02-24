@@ -9,8 +9,9 @@ import { checkLevel } from '../study'
 import { checkOrganization } from './organization'
 import { isAdmin } from './user'
 
-export const isAdminOnStudyOrga = (user: User, study: Pick<Study, 'organizationId'>) =>
-  user.organizationId === study.organizationId && isAdmin(user.role)
+export const isAdminOnStudyOrga = (user: User, study: Pick<FullStudy, 'organizationId' | 'organization'>) =>
+  (user.organizationId === study.organizationId || user.organizationId === study.organization.parentId) &&
+  isAdmin(user.role)
 
 export const canReadStudy = async (user: User | UserWithAllowedStudies, studyId: string) => {
   if (!user) {

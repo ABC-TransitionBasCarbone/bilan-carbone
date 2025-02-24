@@ -862,7 +862,7 @@
   "organization": {
     "create": "New Organization",
     "modify": "Modify",
-    "myOrganization": "My Organization:",
+    "myOrganization": "Organization:",
     "myOrganizations": "My current clients",
     "seeLess": "See less",
     "seeMore": "See more",
