@@ -9,11 +9,16 @@ export const getUserRoleOnStudy = async (user: User, study: FullStudy) => {
   if (isAdminOnStudyOrga(user, study)) {
     return StudyRole.Validator
   }
+
+  const right = study.allowedUsers.find((right) => right.user.email === user.email)
+  if (right) {
+    return right.role
+  }
+
   if (study.isPublic && (await checkOrganization(user.organizationId, study.organizationId))) {
     return user.role === Role.DEFAULT ? StudyRole.Editor : StudyRole.Reader
   }
-  const right = study.allowedUsers.find((right) => right.user.email === user.email)
-  return right ? right.role : null
+  return null
 }
 
 export const colors: Record<string, { dark: string; light: string }> = {
