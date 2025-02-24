@@ -315,7 +315,9 @@
       "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",
       "Editor_description": "Has all rights to the study except for validation of emission sources.",
       "Reader_description": "Can only read the study and export its information.",
-      "close": "Close"
+      "close": "Close",
+      "Not authorized": "You are not allowed to do this action",
+      "saved": "New role saved"
     },
     "title": "Study",
     "rights": {

@@ -315,7 +315,9 @@
       "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émission qui ont été renseignées par les validateurs, éditeurs et contributeurs.",
       "Editor_description": "A tous les droits sur l'étude à l'exception de la validation des sources d'émission.",
       "Reader_description": "Peut uniquement accéder en lecture à l'étude et exporter les informations de celle-ci.",
-      "close": "Fermer"
+      "close": "Fermer",
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+      "saved": "Nouveau rôle sauvegardé"
     },
     "title": "Étude",
     "rights": {

@@ -8,6 +8,10 @@ import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
+import Toast, { ToastColors } from '../../base/Toast'
+
+const emptyToast = { text: '', color: 'info' } as const
+const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
   user: User
@@ -20,15 +24,22 @@ interface Props {
 const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props) => {
   const t = useTranslations('study.role')
   const [role, setRole] = useState(currentRole)
+  const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
+
   useEffect(() => {
     setRole(currentRole)
   }, [currentRole])
 
-  const selectNewRole = (event: SelectChangeEvent<StudyRole>) => {
+  const selectNewRole = async (event: SelectChangeEvent<StudyRole>) => {
     const newRole = event.target.value as StudyRole
     setRole(newRole)
     if (newRole !== role) {
-      changeStudyRole(study.id, rowUser.email, newRole)
+      const result = await changeStudyRole(study.id, rowUser.email, newRole)
+      if (result) {
+        setToast({ text: result, color: 'error' })
+      } else {
+        setToast({ text: 'saved', color: 'success' })
+      }
     }
   }
 
@@ -64,19 +75,31 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
   )
 
   return (
-    <Select
-      className="w100"
-      data-testid="select-study-role"
-      value={role}
-      onChange={selectNewRole}
-      disabled={isDisabled}
-    >
-      {allowedRoles.map((role) => (
-        <MenuItem key={role} value={role}>
-          {t(role)}
-        </MenuItem>
-      ))}
-    </Select>
+    <>
+      <Select
+        className="w100"
+        data-testid="select-study-role"
+        value={role}
+        onChange={selectNewRole}
+        disabled={isDisabled}
+      >
+        {allowedRoles.map((role) => (
+          <MenuItem key={role} value={role}>
+            {t(role)}
+          </MenuItem>
+        ))}
+      </Select>
+      {toast.text && (
+        <Toast
+          position={toastPosition}
+          onClose={() => setToast(emptyToast)}
+          message={t(toast.text)}
+          color={toast.color}
+          toastKey="select-role-toast"
+          open
+        />
+      )}
+    </>
   )
 }
 

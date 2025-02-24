@@ -1,5 +1,6 @@
 import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
+import { isAdmin } from '@/services/permissions/user'
 import { getUserRoleOnStudy } from '@/utils/study'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -24,7 +25,10 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
   }
 
   const existingUsers = study.allowedUsers.map((allowedUser) => allowedUser.user.email)
-  const filteredUsers = users.filter((user) => !existingUsers.includes(user.email))
+  const filteredUsers = users
+    .filter((user) => !existingUsers.includes(user.email))
+    .filter((user) => !isAdmin(user.role))
+
   return (
     <>
       <Breadcrumbs
