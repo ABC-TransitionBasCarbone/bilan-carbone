@@ -448,7 +448,7 @@
     }
   },
   "emissionFactors": {
-    "add": "Ajouter un facteur d'émissions",
+    "add": "Ajouter un facteur d'émission",
     "post": {
       "total": "Total",
       "allPost": "Tous les postes",
