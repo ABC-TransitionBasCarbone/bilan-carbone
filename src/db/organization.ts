@@ -1,4 +1,5 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
+import { sendNewUser } from '@/services/serverFunctions/user'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { Prisma, Role, UserStatus } from '@prisma/client'
 import { prismaClient } from './client'
@@ -84,5 +85,8 @@ export const onboardOrganization = async (
       }),
       transaction.user.createMany({ data: newCollaborators }),
     ])
+    for (const collab of newCollaborators) {
+      sendNewUser(collab.email, dbUser, collab.firstName ?? '')
+    }
   })
 }

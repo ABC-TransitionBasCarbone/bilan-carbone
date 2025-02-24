@@ -13,6 +13,7 @@ import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
+import LoadingButton from '../base/LoadingButton'
 import styles from './Onboarding.module.css'
 import Step1 from './OnboardingStep1'
 import Step2 from './OnboardingStep2'
@@ -30,6 +31,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const router = useRouter()
 
   const [activeStep, setActiveStep] = useState(0)
+  const [loading, setLoading] = useState(false)
   const stepCount = 2
   const Step = activeStep === 0 ? Step1 : Step2
   const buttonLabel = activeStep === stepCount - 1 ? 'validate' : 'next'
@@ -55,6 +57,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     if (activeStep < stepCount - 1) {
       setActiveStep(activeStep + 1)
     } else {
+      setLoading(true)
       const values = form.getValues()
       values.collaborators = (values.collaborators || []).filter(
         (collaborator) => collaborator.email || collaborator.role,
@@ -70,6 +73,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
           router.refresh()
         }
       }
+      setLoading(false)
     }
   }
 
@@ -113,7 +117,9 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
           </DialogContent>
           <DialogActions className="noSpacing">
             {activeStep > 0 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
-            <Button type="submit">{t(buttonLabel)}</Button>
+            <LoadingButton type="submit" loading={loading}>
+              {t(buttonLabel)}
+            </LoadingButton>
           </DialogActions>
         </Form>
       </div>
