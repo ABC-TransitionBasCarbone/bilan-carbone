@@ -15,7 +15,7 @@ export interface Props {
   onClose: () => void
   title: React.ReactNode
   children: React.ReactNode
-  wide?: boolean
+  big?: boolean
   actions?: (
     | (ButtonProps & { actionType: 'button' | 'submit'; 'data-testid'?: string })
     | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton'; 'data-testid'?: string })
@@ -24,14 +24,14 @@ export interface Props {
   )[]
 }
 
-const Modal = ({ label, open, onClose, title, children, actions, wide }: Props) => (
+const Modal = ({ label, open, onClose, title, children, actions, big }: Props) => (
   <MUIModal
     open={open}
     onClose={onClose}
     aria-labelledby={`${label}-modale-title`}
     aria-describedby={`${label}-modale-description`}
   >
-    <Box className={classNames(styles.box, 'flex-col', { [styles.wideBox]: wide })}>
+    <Box className={classNames(styles.box, 'flex-col', { [styles.big]: big })}>
       <div className="justify-end">
         <MUIButton className={styles.closeIcon} onClick={onClose}>
           <CloseIcon />
