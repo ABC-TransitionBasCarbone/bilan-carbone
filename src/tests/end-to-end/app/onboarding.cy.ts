@@ -1,4 +1,4 @@
-describe('Authentication', () => {
+describe('Onboarding', () => {
   beforeEach(() => {
     cy.exec('npx prisma db seed')
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
