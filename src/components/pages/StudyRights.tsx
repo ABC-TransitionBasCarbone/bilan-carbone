@@ -21,7 +21,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
 
   const userRoleOnStudy = getUserRoleOnStudy(user, study)
 
-  const editionDisabled = !userRoleOnStudy || !hasEditionRights(userRoleOnStudy)
+  const editionDisabled = !hasEditionRights(userRoleOnStudy)
 
   if (!userRoleOnStudy) {
     return <NotFound />

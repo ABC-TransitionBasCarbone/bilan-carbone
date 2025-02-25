@@ -54,4 +54,5 @@ export const postColors: Record<Post, string> = {
   [Post.UtilisationEtDependance]: 'orange',
 }
 
-export const hasEditionRights = (userRoleOnStudy: StudyRole) => userRoleOnStudy !== StudyRole.Reader
+export const hasEditionRights = (userRoleOnStudy: StudyRole | null) =>
+  userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
