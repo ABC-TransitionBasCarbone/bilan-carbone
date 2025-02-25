@@ -159,16 +159,21 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         sites={isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
         withSelection
       />
-      <div className={classNames('mt1', { 'justify-between': isEditing })}>
-        <Button data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`} onClick={() => setIsEditing(!isEditing)}>
-          {t(isEditing ? 'cancelEditSites' : 'editSites')}
-        </Button>
-        {isEditing && (
-          <Button data-testid="confirm-edit-study-sites" disabled={disabledUpdateButton} onClick={onSitesSubmit}>
-            {t('validSites')}
+      {userRoleOnStudy !== StudyRole.Reader && (
+        <div className={classNames('mt1', { 'justify-between': isEditing })}>
+          <Button
+            data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`}
+            onClick={() => setIsEditing(!isEditing)}
+          >
+            {t(isEditing ? 'cancelEditSites' : 'editSites')}
           </Button>
-        )}
-      </div>
+          {isEditing && (
+            <Button data-testid="confirm-edit-study-sites" disabled={disabledUpdateButton} onClick={onSitesSubmit}>
+              {t('validSites')}
+            </Button>
+          )}
+        </div>
+      )}
       <DeleteStudySite
         open={open}
         confirmDeletion={updateStudySites}
