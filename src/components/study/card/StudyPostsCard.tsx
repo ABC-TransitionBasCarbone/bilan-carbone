@@ -1,15 +1,15 @@
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { colors, postColors } from '@/utils/study'
-import Leaf from '@mui/icons-material/Spa'
 import { LinearProgress } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useMemo } from 'react'
-import Box from '../base/Box'
-import PostIcon from '../study/infography/icons/PostIcon'
-import SelectStudySite from '../study/site/SelectStudySite'
+import Box from '../../base/Box'
+import PostIcon from '../infography/icons/PostIcon'
+import SelectStudySite from '../site/SelectStudySite'
+import StudyName from './StudyName'
 import styles from './StudyPostsCard.module.css'
 
 interface Props {
@@ -45,10 +45,7 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
           {tPost(post)}
         </div>
         <div className="justify-between align-center">
-          <div className={classNames(styles.name, 'align-center')}>
-            <Leaf />
-            <span className="ml-2">{study.name}</span>
-          </div>
+          <StudyName name={study.name} />
           <div className={classNames(styles.role, 'ml-2 text-center')}>{tRole(userRole)}</div>
         </div>
         <p className="text-center">{t('selectSite')}</p>

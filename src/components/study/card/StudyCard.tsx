@@ -1,13 +1,13 @@
 import { getStudyValidatedEmissionsSources } from '@/db/study'
-import Leaf from '@mui/icons-material/Spa'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
-import Box from '../base/Box'
-import LinkButton from '../base/LinkButton'
-import GlossaryIconModal from '../modals/GlossaryIconModal'
+import Box from '../../base/Box'
+import LinkButton from '../../base/LinkButton'
+import GlossaryIconModal from '../../modals/GlossaryIconModal'
 import styles from './StudyCard.module.css'
+import StudyName from './StudyName'
 
 interface Props {
   study: Study
@@ -28,10 +28,7 @@ const StudyCard = async ({ study }: Props) => {
     <li data-testid="study" className="flex">
       <Box className={classNames(styles.card, 'flex-col grow')}>
         <div className="justify-center">
-          <div className={classNames(styles.studyName, 'align-center')}>
-            <Leaf />
-            {study.name}
-          </div>
+          <StudyName name={study.name} />
         </div>
         <Box>
           <p className="mb1 align-center">
