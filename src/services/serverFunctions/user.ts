@@ -202,6 +202,16 @@ export const changeRole = async (email: string, role: Role) => {
   if (!canChangeRole(session.user, userToChange, role)) {
     return NOT_AUTHORIZED
   }
+
+  const targetUser = await getUserByEmail(email)
+  if (!targetUser || targetUser.organizationId !== session.user.organizationId) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!targetUser.level && role !== Role.GESTIONNAIRE) {
+    return NOT_AUTHORIZED
+  }
+
   await changeUserRole(email, role)
 }
 

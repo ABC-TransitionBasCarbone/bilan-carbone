@@ -45,7 +45,7 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
         className={styles.select}
         value={role}
         onChange={selectNewRole}
-        disabled={currentUserEmail === email || !level || currentRole === Role.SUPER_ADMIN}
+        disabled={currentUserEmail === email || currentRole === Role.SUPER_ADMIN}
       >
         <MenuItem value={Role.SUPER_ADMIN} className={styles.hidden} aria-hidden="true">
           {t(Role.SUPER_ADMIN)}
