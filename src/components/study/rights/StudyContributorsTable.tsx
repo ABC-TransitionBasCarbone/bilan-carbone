@@ -16,7 +16,7 @@ interface Props {
 }
 
 const allPosts = Object.values(Post)
-const StudyContributorsTable = ({ study, disabled = false }: Props) => {
+const StudyContributorsTable = ({ study, disabled }: Props) => {
   const t = useTranslations('study.rights.contributorsTable')
   const tRole = useTranslations('study.rights.contributorsTable.role')
   const tPost = useTranslations('emissionFactors.post')
