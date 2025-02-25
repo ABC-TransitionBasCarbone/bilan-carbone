@@ -27,9 +27,11 @@ const StudyCard = async ({ study }: Props) => {
   return (
     <li data-testid="study" className="flex">
       <Box className={classNames(styles.card, 'flex-col grow')}>
-        <div className={classNames(styles.studyName, 'align-center')}>
-          <Leaf />
-          {study.name}
+        <div className="justify-center">
+          <div className={classNames(styles.studyName, 'align-center')}>
+            <Leaf />
+            {study.name}
+          </div>
         </div>
         <Box>
           <p className="mb1 align-center">
