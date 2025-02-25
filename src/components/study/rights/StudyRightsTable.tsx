@@ -4,7 +4,6 @@ import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
-import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
@@ -15,10 +14,11 @@ import SelectStudyRole from './SelectStudyRole'
 interface Props {
   user: User
   study: FullStudy
+  canAddMember: boolean
   userRoleOnStudy?: StudyRole
 }
 
-const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
+const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props) => {
   const t = useTranslations('study.rights.table')
   const tStudyRole = useTranslations('study.role')
   const [displayRoles, setDisplayRoles] = useState(false)
@@ -30,7 +30,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
         accessorKey: 'user.email',
       },
     ]
-    if (isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader) {
+    if (!canAddMember) {
       columns.push({
         header: t('role'),
         accessorKey: 'role',
@@ -70,7 +70,7 @@ const StudyRightsTable = ({ user, study, userRoleOnStudy }: Props) => {
         iconPosition="after"
         expIcon
         actions={
-          isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
+          !canAddMember
             ? [
                 {
                   actionType: 'link',

@@ -321,8 +321,6 @@
     },
     "title": "Étude",
     "rights": {
-      "isPublic": "L'étude est publique",
-      "isPrivate": "L'étude est privée",
       "title": "Cadrage de l'étude : {name}",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",

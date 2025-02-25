@@ -4,23 +4,19 @@ import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
-import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 
 interface Props {
   study: FullStudy
-  user: User
-  userRoleOnStudy?: StudyRole
+  canAddContributor: boolean
 }
 
 const allPosts = Object.values(Post)
-const StudyContributorsTable = ({ study, user, userRoleOnStudy }: Props) => {
+const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const t = useTranslations('study.rights.contributorsTable')
   const tRole = useTranslations('study.rights.contributorsTable.role')
   const tPost = useTranslations('emissionFactors.post')
@@ -95,7 +91,7 @@ const StudyContributorsTable = ({ study, user, userRoleOnStudy }: Props) => {
         expIcon
         iconPosition="after"
         actions={
-          isAdminOnStudyOrga(user, study) || userRoleOnStudy !== StudyRole.Reader
+          !canAddContributor
             ? [
                 {
                   actionType: 'link',

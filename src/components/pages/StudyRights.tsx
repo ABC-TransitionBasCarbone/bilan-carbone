@@ -1,5 +1,5 @@
 import { FullStudy } from '@/db/study'
-import { getUserRoleOnStudy } from '@/utils/study'
+import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -21,6 +21,8 @@ const StudyRightsPage = async ({ study, user }: Props) => {
 
   const userRoleOnStudy = getUserRoleOnStudy(user, study)
 
+  const editionDisabled = !hasEditionRights(userRoleOnStudy)
+
   if (!userRoleOnStudy) {
     return <NotFound />
   }
@@ -41,11 +43,11 @@ const StudyRightsPage = async ({ study, user }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <StudyLevel study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
-        <StudyPublicStatus study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
+        <StudyLevel study={study} user={user} disabled={editionDisabled} />
+        <StudyPublicStatus study={study} user={user} disabled={editionDisabled} />
       </Block>
-      <StudyRightsTable study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
-      <StudyContributorsTable study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
+      <StudyRightsTable study={study} user={user} canAddMember={editionDisabled} userRoleOnStudy={userRoleOnStudy} />
+      <StudyContributorsTable study={study} canAddContributor={editionDisabled} />
     </>
   )
 }
