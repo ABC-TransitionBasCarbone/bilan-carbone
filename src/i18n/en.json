@@ -321,8 +321,6 @@
     },
     "title": "Study",
     "rights": {
-      "isPublic": "The study is public",
-      "isPrivate": "The study is private",
       "title": "Rights on study : {name}",
       "new": {
         "title": "Add a person to the study: {name}",
