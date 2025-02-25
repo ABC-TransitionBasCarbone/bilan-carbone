@@ -114,7 +114,7 @@
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® +",
     "explaination": "L'outil dédié à l’application de la méthode Bilan Carbone®, développé par l’Association pour la transition Bas Carbone (ABC), et accessible à l’ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
-    "question": "Une question ? Lisez la <link>Faq</link> ou <support>Contactez-nous</support> !",
+    "question": "Une question ? Lisez la <link>FAQ</link> ou <support>contactez-nous</support> !",
     "form": {
       "activate": "Activer mon compte",
       "firstConnection": "Première connexion ?",
@@ -668,7 +668,7 @@
     "GESTIONNAIRE": "Gestionnaire",
     "DEFAULT": "Collaborateur",
     "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées). Il est impossible de changer le rôle d'un admin sur une étude de son organisation.",
-    "ADMIN_description_CR": "Un administrateur possède tous les droits sur le compte et les études (qu'elles soient publiques ou privées) de l'organisation ou de ses clients . Il est impossible de changer le rôle d'un admin sur une étude de son organisation ou d'un de ses clients.",
+    "ADMIN_description_CR": "Un administrateur possède tous les droits sur le compte et les études (qu'elles soient publiques ou privées) de l'organisation ou de ses clients. Il est impossible de changer le rôle d'un admin sur une étude de son organisation ou d'un de ses clients.",
     "GESTIONNAIRE_description": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit spécifique sur les études. Il est donc par défaut lecteur pour tous les Bilans Carbone® publics de son organisation.",
     "GESTIONNAIRE_description_CR": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit spécifique sur les clients et les études. Il est donc par défaut lecteur pour tous les Bilans Carbone® publics de son organisation ou de ses clients.",
     "DEFAULT_description": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études pour son organisation. Il est par défaut éditeur sur tous les Bilans Carbone® publics de son organisation.",
