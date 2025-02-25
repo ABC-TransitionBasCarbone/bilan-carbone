@@ -15,7 +15,7 @@ const StudyView = async ({ user, study }: StudyProps & UserProps) => {
     return redirect(`/etudes/${study.id}`)
   }
 
-  const userRole = await getUserRoleOnStudy(user, study)
+  const userRole = getUserRoleOnStudy(user, study)
 
   const studyWithoutDetail = filterStudyDetail(user, study)
   return <StudyContributorPage study={studyWithoutDetail} userRole={userRole} />

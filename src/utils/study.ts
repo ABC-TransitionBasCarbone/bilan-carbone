@@ -6,7 +6,7 @@ import { Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { isInOrgaOrParent } from './onganization'
 
-export const getUserRoleOnStudy = async (user: User, study: FullStudy) => {
+export const getUserRoleOnStudy = (user: User, study: FullStudy) => {
   if (isAdminOnStudyOrga(user, study)) {
     return StudyRole.Validator
   }

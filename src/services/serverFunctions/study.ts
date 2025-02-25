@@ -355,7 +355,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     right.role = StudyRole.Reader
   }
 
-  if (!(await canAddRightOnStudy(session.user, studyWithRights, existingUser, right.role))) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, right.role)) {
     return NOT_AUTHORIZED
   }
 
@@ -401,7 +401,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
-  if (!(await canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole))) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole)) {
     return NOT_AUTHORIZED
   }
 

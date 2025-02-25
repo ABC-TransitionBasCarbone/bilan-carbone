@@ -18,7 +18,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
   const t = await getTranslations('study.rights.new')
 
   const users = await getOrganizationUsers(user.organizationId)
-  const userRole = await getUserRoleOnStudy(user, study)
+  const userRole = getUserRoleOnStudy(user, study)
 
   if (!userRole) {
     return <NotFound />

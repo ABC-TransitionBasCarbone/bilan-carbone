@@ -124,12 +124,7 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
   return true
 }
 
-export const canAddRightOnStudy = async (
-  user: User,
-  study: FullStudy,
-  userToAddOnStudy: DbUser | null,
-  role: StudyRole,
-) => {
+export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStudy: DbUser | null, role: StudyRole) => {
   if (userToAddOnStudy && user.id === userToAddOnStudy.id) {
     return false
   }
@@ -138,7 +133,7 @@ export const canAddRightOnStudy = async (
     return false
   }
 
-  const userRoleOnStudy = await getUserRoleOnStudy(user, study)
+  const userRoleOnStudy = getUserRoleOnStudy(user, study)
 
   if (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) {
     return false
@@ -265,7 +260,7 @@ const canAccessStudyFlow = async (studyId: string) => {
   }
 
   const study = await getStudyById(studyId, session.user.organizationId)
-  if (!study || !(await getUserRoleOnStudy(session.user, study))) {
+  if (!study || !getUserRoleOnStudy(session.user, study)) {
     return false
   }
 

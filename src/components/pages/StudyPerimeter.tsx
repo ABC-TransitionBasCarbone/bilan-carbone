@@ -24,7 +24,7 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
   const t = await getTranslations('study.perimeter')
   const documents = await getDocumentsForStudy(study.id)
 
-  const userRoleOnStudy = await getUserRoleOnStudy(user, study)
+  const userRoleOnStudy = getUserRoleOnStudy(user, study)
 
   if (!userRoleOnStudy) {
     return null
