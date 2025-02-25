@@ -6,7 +6,11 @@
 .studyName {
   text-decoration: none;
   color: var(--green-500);
+  background-color: var(--green-200);
   gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  width: fit-content;
 }
 
 .validated {
