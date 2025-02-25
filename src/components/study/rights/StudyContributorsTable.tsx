@@ -12,11 +12,11 @@ import { useMemo, useState } from 'react'
 
 interface Props {
   study: FullStudy
-  disabled: boolean
+  canAddContributor: boolean
 }
 
 const allPosts = Object.values(Post)
-const StudyContributorsTable = ({ study, disabled }: Props) => {
+const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const t = useTranslations('study.rights.contributorsTable')
   const tRole = useTranslations('study.rights.contributorsTable.role')
   const tPost = useTranslations('emissionFactors.post')
@@ -91,7 +91,7 @@ const StudyContributorsTable = ({ study, disabled }: Props) => {
         expIcon
         iconPosition="after"
         actions={
-          !disabled
+          !canAddContributor
             ? [
                 {
                   actionType: 'link',

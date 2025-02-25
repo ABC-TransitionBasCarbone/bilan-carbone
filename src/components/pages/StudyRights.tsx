@@ -1,10 +1,7 @@
-'use client'
-
 import { FullStudy } from '@/db/study'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { User } from 'next-auth'
-import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyContributorsTable from '../study/rights/StudyContributorsTable'
@@ -18,13 +15,13 @@ interface Props {
   user: User
 }
 
-const StudyRightsPage = ({ study, user }: Props) => {
-  const tNav = useTranslations('nav')
-  const t = useTranslations('study.rights')
+const StudyRightsPage = async ({ study, user }: Props) => {
+  const tNav = await getTranslations('nav')
+  const t = await getTranslations('study.rights')
 
   const userRoleOnStudy = getUserRoleOnStudy(user, study)
 
-  const editionDisabled = useMemo(() => !userRoleOnStudy || !hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
+  const editionDisabled = !userRoleOnStudy || !hasEditionRights(userRoleOnStudy)
 
   if (!userRoleOnStudy) {
     return <NotFound />
@@ -49,8 +46,8 @@ const StudyRightsPage = ({ study, user }: Props) => {
         <StudyLevel study={study} user={user} disabled={editionDisabled} />
         <StudyPublicStatus study={study} user={user} disabled={editionDisabled} />
       </Block>
-      <StudyRightsTable study={study} user={user} disabled={editionDisabled} userRoleOnStudy={userRoleOnStudy} />
-      <StudyContributorsTable study={study} disabled={editionDisabled} />
+      <StudyRightsTable study={study} user={user} canAddMember={editionDisabled} userRoleOnStudy={userRoleOnStudy} />
+      <StudyContributorsTable study={study} canAddContributor={editionDisabled} />
     </>
   )
 }
