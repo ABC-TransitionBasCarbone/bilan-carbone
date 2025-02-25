@@ -1,6 +1,7 @@
+'use client'
+
 import { FullStudy } from '@/db/study'
-import { getUserRoleOnStudy } from '@/utils/study'
-import { StudyRole } from '@prisma/client'
+import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -21,9 +22,9 @@ const StudyRightsPage = ({ study, user }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('study.rights')
 
-  const userRoleOnStudy = getUserRoleOnStudy(user, study) // attendre la fusion de la PR de Louis
+  const userRoleOnStudy = getUserRoleOnStudy(user, study)
 
-  const editionDisabled = useMemo(() => userRoleOnStudy === StudyRole.Reader, [user, study, userRoleOnStudy])
+  const editionDisabled = useMemo(() => !userRoleOnStudy || !hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
 
   if (!userRoleOnStudy) {
     return <NotFound />
