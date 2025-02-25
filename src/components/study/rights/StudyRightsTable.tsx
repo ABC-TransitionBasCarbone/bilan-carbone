@@ -18,7 +18,7 @@ interface Props {
   userRoleOnStudy?: StudyRole
 }
 
-const StudyRightsTable = ({ user, study, disabled = false, userRoleOnStudy }: Props) => {
+const StudyRightsTable = ({ user, study, disabled, userRoleOnStudy }: Props) => {
   const t = useTranslations('study.rights.table')
   const tStudyRole = useTranslations('study.role')
   const [displayRoles, setDisplayRoles] = useState(false)

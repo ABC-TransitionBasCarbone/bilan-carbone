@@ -20,7 +20,7 @@ interface Props {
   disabled: boolean
 }
 
-const StudyPublicStatus = ({ study, disabled = false }: Props) => {
+const StudyPublicStatus = ({ study, disabled }: Props) => {
   const tForm = useTranslations('study.new')
   const [error, setError] = useState('')
 

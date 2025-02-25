@@ -1,5 +1,4 @@
 import { FullStudy } from '@/db/study'
-import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { getUserRoleOnStudy } from '@/utils/study'
 import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
@@ -24,10 +23,7 @@ const StudyRightsPage = ({ study, user }: Props) => {
 
   const userRoleOnStudy = getUserRoleOnStudy(user, study) // attendre la fusion de la PR de Louis
 
-  const editionDisabled = useMemo(
-    () => !isAdminOnStudyOrga(user, study) && userRoleOnStudy === StudyRole.Reader,
-    [user, study, userRoleOnStudy],
-  )
+  const editionDisabled = useMemo(() => userRoleOnStudy === StudyRole.Reader, [user, study, userRoleOnStudy])
 
   if (!userRoleOnStudy) {
     return <NotFound />
