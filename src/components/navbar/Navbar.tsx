@@ -79,7 +79,7 @@ const Navbar = ({ user }: Props) => {
           <Link
             target="_blank"
             rel="noreferrer noopener"
-            href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}
+            href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''}
             className={classNames(styles.link, 'align-center')}
             aria-label={t('help')}
           >
