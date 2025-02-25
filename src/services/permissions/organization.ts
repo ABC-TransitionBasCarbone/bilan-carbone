@@ -10,7 +10,7 @@ export const isInOrgaOrParentFromId = async (userOrganizationId: string | null, 
     return true
   }
 
-  const organization = await getOrganizationById(userOrganizationId)
+  const organization = await getOrganizationById(organizationId)
   return organization && isInOrgaOrParent(userOrganizationId, organization)
 }
 
