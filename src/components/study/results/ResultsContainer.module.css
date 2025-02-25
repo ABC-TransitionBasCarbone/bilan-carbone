@@ -1,11 +1,5 @@
-.studyName {
-  text-align: center;
-  gap: 0.5rem;
-  color: var(--green-500);
-  background-color: var(--green-200);
+.studyNameLink {
   text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
 }
 
 .container {
