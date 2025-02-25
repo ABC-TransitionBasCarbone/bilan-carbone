@@ -9,6 +9,7 @@ interface Props {
   children: ReactNode
 }
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
+const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
 const PublicPage = ({ children }: Props) => {
   const t = useTranslations('login')
@@ -30,6 +31,11 @@ const PublicPage = ({ children }: Props) => {
             <p>
               {t.rich('question', {
                 link: (children) => (
+                  <Link href={faq} style={{ color: 'white' }} target="_blank" rel="noreferrer noopener">
+                    {children}
+                  </Link>
+                ),
+                support: (children) => (
                   <Link href={`mailto:${contactMail}`} style={{ color: 'white' }}>
                     {children}
                   </Link>
