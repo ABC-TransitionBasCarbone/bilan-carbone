@@ -10,7 +10,7 @@ import { canCreateStudy, canDeleteStudy } from './study'
 // mocked called function
 jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
 jest.mock('@/db/study', () => ({ getStudyById: jest.fn() }))
-jest.mock('./organization', () => ({ checkOrganization: jest.fn() }))
+jest.mock('./organization', () => ({ isInOrgaOrParentFromId: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
@@ -23,7 +23,7 @@ const mockedStudyId = 'mocked-study-id'
 const mockAuth = authModule.auth as jest.Mock
 const mockGetStudyById = dbStudyModule.getStudyById as jest.Mock
 const mockGetUserByEmail = dbUserModule.getUserByEmail as jest.Mock
-const mockCheckOrganization = organizationModule.checkOrganization as jest.Mock
+const mockIsInOrgaOrParentFromId = organizationModule.isInOrgaOrParentFromId as jest.Mock
 
 const advancedStudy = getMockedStudy({ level: Level.Advanced })
 const standardStudy = getMockedStudy({ level: Level.Standard })
@@ -47,7 +47,7 @@ describe('Study permissions service', () => {
   describe('canCreateStudy', () => {
     beforeEach(() => {
       jest.clearAllMocks()
-      mockCheckOrganization.mockResolvedValue(true)
+      mockIsInOrgaOrParentFromId.mockResolvedValue(true)
     })
 
     describe('"Advanced" level user', () => {
