@@ -42,7 +42,6 @@ const updateUserResetToken = async (email: string, duration: number) => {
     resetToken,
     exp: Math.round(Date.now() / TIME_IN_MS) + duration,
   }
-
   await updateUserResetTokenForEmail(email, resetToken)
   return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
 }
