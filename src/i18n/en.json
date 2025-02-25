@@ -114,7 +114,7 @@
   "login": {
     "welcome": "Welcome",
     "explaination": "The tool dedicated to the application of the Bilan Carbone® method, developed by the Association for the Low Carbon Transition (ABC), and accessible to all of our members: Consulting and Research, Business, Association and Public Sector",
-    "question": "A question? Read the <link>FAQ</link> or <support>Contact us</support>!",
+    "question": "A question? Read the <link>FAQ</link> or <support>contact us</support>!",
     "form": {
       "activate": "Activate my account",
       "firstConnection": "First connection ?",
