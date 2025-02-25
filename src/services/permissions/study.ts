@@ -1,17 +1,16 @@
 import { getDocumentById } from '@/db/document'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
+import { isAdminOnOrga } from '@/utils/onganization'
 import { getUserRoleOnStudy } from '@/utils/study'
 import { User as DbUser, Level, Prisma, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { auth } from '../auth'
 import { checkLevel } from '../study'
 import { checkOrganization } from './organization'
-import { isAdmin } from './user'
 
 export const isAdminOnStudyOrga = (user: User, study: Pick<FullStudy, 'organizationId' | 'organization'>) =>
-  (user.organizationId === study.organizationId || user.organizationId === study.organization.parentId) &&
-  isAdmin(user.role)
+  isAdminOnOrga(user, study.organization)
 
 export const canReadStudy = async (user: User | UserWithAllowedStudies, studyId: string) => {
   if (!user) {
