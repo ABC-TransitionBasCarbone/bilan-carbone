@@ -14,11 +14,11 @@ import SelectStudyRole from './SelectStudyRole'
 interface Props {
   user: User
   study: FullStudy
-  disabled: boolean
+  canAddMember: boolean
   userRoleOnStudy?: StudyRole
 }
 
-const StudyRightsTable = ({ user, study, disabled, userRoleOnStudy }: Props) => {
+const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props) => {
   const t = useTranslations('study.rights.table')
   const tStudyRole = useTranslations('study.role')
   const [displayRoles, setDisplayRoles] = useState(false)
@@ -30,7 +30,7 @@ const StudyRightsTable = ({ user, study, disabled, userRoleOnStudy }: Props) => 
         accessorKey: 'user.email',
       },
     ]
-    if (!disabled) {
+    if (!canAddMember) {
       columns.push({
         header: t('role'),
         accessorKey: 'role',
@@ -70,7 +70,7 @@ const StudyRightsTable = ({ user, study, disabled, userRoleOnStudy }: Props) => 
         iconPosition="after"
         expIcon
         actions={
-          !disabled
+          !canAddMember
             ? [
                 {
                   actionType: 'link',
