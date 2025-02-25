@@ -3,9 +3,8 @@
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { OrganizationWithSites } from '@/db/user'
-import { canAddFlowToStudy } from '@/services/permissions/study'
+import { canEditStudyFlows } from '@/services/permissions/study'
 import { getUserRoleOnStudy } from '@/utils/study'
-import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -30,7 +29,7 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
     return null
   }
 
-  const canAddFlow = userRoleOnStudy !== StudyRole.Reader && (await canAddFlowToStudy(study.id))
+  const canAddFlow = await canEditStudyFlows(study.id)
 
   return (
     <>

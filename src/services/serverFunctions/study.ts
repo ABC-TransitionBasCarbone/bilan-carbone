@@ -40,7 +40,6 @@ import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
 import {
   canAccessFlowFromStudy,
   canAddContributorOnStudy,
-  canAddFlowToStudy,
   canAddRightOnStudy,
   canChangeDates,
   canChangeLevel,
@@ -48,6 +47,7 @@ import {
   canChangeSites,
   canCreateStudy,
   canDeleteStudy,
+  canEditStudyFlows,
   isAdminOnStudyOrga,
 } from '../permissions/study'
 import { isAdmin } from '../permissions/user'
@@ -478,7 +478,7 @@ export const addFlowToStudy = async (studyId: string, file: File) => {
   if (!allowedType) {
     return 'invalidFileType'
   }
-  const allowedUserId = await canAddFlowToStudy(studyId)
+  const allowedUserId = await canEditStudyFlows(studyId)
   if (!allowedUserId) {
     return NOT_AUTHORIZED
   }
@@ -494,7 +494,7 @@ export const addFlowToStudy = async (studyId: string, file: File) => {
 }
 
 export const deleteFlowFromStudy = async (document: Document, studyId: string) => {
-  if (!(await canAccessFlowFromStudy(document.id, studyId))) {
+  if (!(await canAccessFlowFromStudy(document.id, studyId)) || !(await canEditStudyFlows(studyId))) {
     return NOT_AUTHORIZED
   }
   const bucketDelete = await deleteFileFromBucket(document.bucketKey)
