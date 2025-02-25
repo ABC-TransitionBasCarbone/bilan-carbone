@@ -1,7 +1,10 @@
 import { FullStudy } from '@/db/study'
+import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { getUserRoleOnStudy } from '@/utils/study'
+import { StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
-import { getTranslations } from 'next-intl/server'
+import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyContributorsTable from '../study/rights/StudyContributorsTable'
@@ -15,11 +18,16 @@ interface Props {
   user: User
 }
 
-const StudyRightsPage = async ({ study, user }: Props) => {
-  const tNav = await getTranslations('nav')
-  const t = await getTranslations('study.rights')
+const StudyRightsPage = ({ study, user }: Props) => {
+  const tNav = useTranslations('nav')
+  const t = useTranslations('study.rights')
 
-  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+  const userRoleOnStudy = getUserRoleOnStudy(user, study) // attendre la fusion de la PR de Louis
+
+  const editionDisabled = useMemo(
+    () => !isAdminOnStudyOrga(user, study) && userRoleOnStudy === StudyRole.Reader,
+    [user, study, userRoleOnStudy],
+  )
 
   if (!userRoleOnStudy) {
     return <NotFound />
@@ -41,11 +49,11 @@ const StudyRightsPage = async ({ study, user }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <StudyLevel study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
-        <StudyPublicStatus study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
+        <StudyLevel study={study} user={user} disabled={editionDisabled} />
+        <StudyPublicStatus study={study} user={user} disabled={editionDisabled} />
       </Block>
-      <StudyRightsTable study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
-      <StudyContributorsTable study={study} user={user} userRoleOnStudy={userRoleOnStudy} />
+      <StudyRightsTable study={study} user={user} disabled={editionDisabled} userRoleOnStudy={userRoleOnStudy} />
+      <StudyContributorsTable study={study} disabled={editionDisabled} />
     </>
   )
 }
