@@ -6,7 +6,7 @@ import StudyContributionPage from '@/components/pages/StudyContribution'
 import { getUserRoleOnStudy } from '@/utils/study'
 
 const DataEntry = async ({ study, user }: StudyProps & UserProps) => {
-  const userRole = await getUserRoleOnStudy(user, study)
+  const userRole = getUserRoleOnStudy(user, study)
   if (!userRole) {
     return <NotFound />
   }

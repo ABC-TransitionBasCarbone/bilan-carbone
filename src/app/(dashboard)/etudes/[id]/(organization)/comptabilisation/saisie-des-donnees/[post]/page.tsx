@@ -24,7 +24,7 @@ const StudyPost = async (props: Props & StudyProps & UserProps) => {
     return <NotFound />
   }
 
-  const userRole = await getUserRoleOnStudy(props.user, props.study)
+  const userRole = getUserRoleOnStudy(props.user, props.study)
   if (!userRole) {
     return <NotFound />
   }
