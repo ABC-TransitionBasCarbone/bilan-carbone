@@ -7,9 +7,9 @@ import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useMemo } from 'react'
-import Box from '../base/Box'
-import PostIcon from '../study/infography/icons/PostIcon'
-import SelectStudySite from '../study/site/SelectStudySite'
+import Box from '../../base/Box'
+import PostIcon from '../infography/icons/PostIcon'
+import SelectStudySite from '../site/SelectStudySite'
 import styles from './StudyPostsCard.module.css'
 
 interface Props {

@@ -4,9 +4,9 @@ import LinearProgress from '@mui/material/LinearProgress'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
-import Box from '../base/Box'
-import LinkButton from '../base/LinkButton'
-import GlossaryIconModal from '../modals/GlossaryIconModal'
+import Box from '../../base/Box'
+import LinkButton from '../../base/LinkButton'
+import GlossaryIconModal from '../../modals/GlossaryIconModal'
 import styles from './StudyCard.module.css'
 
 interface Props {
