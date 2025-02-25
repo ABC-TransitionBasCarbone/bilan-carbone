@@ -34,13 +34,16 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     User_Email: email,
     Firstname: firstName = '',
     Lastname: lastName = '',
-    SIRET: siretOrSiren,
     Session_Code: sessionCodeTraining,
     Company_Name: name,
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
+    Country: country,
   } = value
 
+  let { SIRET: siretOrSiren } = value
+
+  const isFrance = ['FR', 'FRANCE', 'France', ''].includes(country)
   const isCR = ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
 
@@ -62,22 +65,30 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   }
 
   if (siretOrSiren) {
+    if (!isFrance) {
+      siretOrSiren = country + '-' + name
+    }
+
     let organisation = dbUser?.organizationId
       ? await prismaClient.organization.findFirst({ where: { id: dbUser.organizationId } })
       : await prismaClient.organization.findFirst({ where: { siret: { startsWith: siretOrSiren } } })
 
-    organisation = organisation
-      ? await prismaClient.organization.update({
-          where: { id: organisation.id },
-          data: {
-            isCR: isCR || organisation.isCR,
-            importedFileDate,
-            activatedLicence: activatedLicence || organisation.activatedLicence,
-          },
-        })
-      : await prismaClient.organization.create({
-          data: { siret: siretOrSiren, name, isCR, importedFileDate, activatedLicence },
-        })
+    organisation = await prismaClient.organization.upsert({
+      where: { id: organisation?.id || '' },
+      update: {
+        isCR: isCR || organisation?.isCR,
+        importedFileDate,
+        activatedLicence: activatedLicence || organisation?.activatedLicence,
+      },
+      create: {
+        siret: siretOrSiren,
+        name,
+        isCR,
+        importedFileDate,
+        activatedLicence,
+      },
+    })
+
     user.organizationId = organisation.id
   }
 
