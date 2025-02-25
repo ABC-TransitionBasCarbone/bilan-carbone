@@ -1,5 +1,6 @@
 import { getOrganizationById } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
+import { isInOrgaOrParent } from '@/utils/onganization'
 import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { UpdateOrganizationCommand } from '../serverFunctions/organization.command'
@@ -10,11 +11,11 @@ export const checkOrganization = async (userOrganizationId: string | null, organ
   }
 
   const organization = await getOrganizationById(userOrganizationId)
-  if (organization && organization.childs.some((child) => child.id === organizationId)) {
-    return true
+  if (!organization) {
+    return false
   }
 
-  return false
+  return isInOrgaOrParent(userOrganizationId, organization)
 }
 
 export const canCreateOrganization = async (user: User) => {
