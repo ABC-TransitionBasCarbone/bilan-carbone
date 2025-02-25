@@ -252,7 +252,7 @@ export const canReadStudyDetail = async (user: User, study: FullStudy) => {
   return true
 }
 
-const canAccessStudyFlow = async (studyId: string) => {
+const canAccessStudyFlows = async (studyId: string) => {
   const session = await auth()
 
   if (!session || !session.user) {
@@ -267,10 +267,27 @@ const canAccessStudyFlow = async (studyId: string) => {
   return true
 }
 
-export const canAddFlowToStudy = async (studyId: string) => canAccessStudyFlow(studyId)
+export const canEditStudyFlows = async (studyId: string) => {
+  const session = await auth()
+  if (!session) {
+    return false
+  }
+  const study = await getStudyById(studyId, session.user.organizationId)
+
+  if (!study) {
+    return false
+  }
+
+  const userRoleOnStudy = getUserRoleOnStudy(session.user, study)
+  if (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) {
+    return false
+  }
+
+  return true
+}
 
 export const canAccessFlowFromStudy = async (documentId: string, studyId: string) => {
-  if (!(await canAccessStudyFlow(studyId))) {
+  if (!(await canAccessStudyFlows(studyId))) {
     return false
   }
 
