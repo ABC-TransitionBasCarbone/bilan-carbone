@@ -1,7 +1,7 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { sendNewUser } from '@/services/serverFunctions/user'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import { Prisma, Role, UserStatus } from '@prisma/client'
+import { Prisma, Role, User, UserStatus } from '@prisma/client'
 import { prismaClient } from './client'
 
 export const getRawOrganizationById = (id: string | null) =>
@@ -56,24 +56,24 @@ export const onboardOrganization = async (
   userId: string,
   { organizationId, companyName, firstName, lastName, collaborators = [] }: OnboardingCommand,
 ) => {
-  await prismaClient.$transaction(async (transaction) => {
-    const dbUser = await prismaClient.user.findUnique({ where: { id: userId } })
-    if (!dbUser) {
-      return
-    }
-    const role = dbUser.level ? Role.ADMIN : Role.GESTIONNAIRE
-    const newCollaborators = []
-    for (const collaborator of collaborators) {
-      newCollaborators.push({
-        firstName: '',
-        lastName: '',
-        email: collaborator.email || '',
-        role: collaborator.role || Role.DEFAULT,
-        status: UserStatus.VALIDATED,
-        organizationId,
-      })
-    }
+  const dbUser = await prismaClient.user.findUnique({ where: { id: userId } })
+  if (!dbUser) {
+    return
+  }
+  const role = dbUser.level ? Role.ADMIN : Role.GESTIONNAIRE
+  const newCollaborators: Pick<User, 'firstName' | 'lastName' | 'email' | 'role' | 'status' | 'organizationId'>[] = []
+  for (const collaborator of collaborators) {
+    newCollaborators.push({
+      firstName: '',
+      lastName: '',
+      email: collaborator.email || '',
+      role: collaborator.role || Role.DEFAULT,
+      status: UserStatus.VALIDATED,
+      organizationId,
+    })
+  }
 
+  await prismaClient.$transaction(async (transaction) => {
     await Promise.all([
       transaction.organization.update({
         where: { id: organizationId },
@@ -85,8 +85,7 @@ export const onboardOrganization = async (
       }),
       transaction.user.createMany({ data: newCollaborators }),
     ])
-    for (const collab of newCollaborators) {
-      sendNewUser(collab.email, dbUser, collab.firstName ?? '')
-    }
   })
+
+  newCollaborators.forEach((collab) => sendNewUser(collab.email, dbUser, collab.firstName ?? ''))
 }
