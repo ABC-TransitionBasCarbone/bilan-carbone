@@ -48,6 +48,7 @@ import {
   canChangeSites,
   canCreateStudy,
   canDeleteStudy,
+  isAdminOnStudyOrga,
 } from '../permissions/study'
 import { isAdmin } from '../permissions/user'
 import { subPostsByPost } from '../posts'
@@ -358,6 +359,10 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
+  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights)) {
+    right.role = StudyRole.Validator
+  }
+
   if (
     studyWithRights.allowedUsers.some((allowedUser) => allowedUser.user.id === existingUser?.id) ||
     studyWithRights.contributors.some((contributor) => contributor.user.id === existingUser?.id)
@@ -397,6 +402,10 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
   }
 
   if (!(await canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole))) {
+    return NOT_AUTHORIZED
+  }
+
+  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights) && studyRole !== StudyRole.Validator) {
     return NOT_AUTHORIZED
   }
 
