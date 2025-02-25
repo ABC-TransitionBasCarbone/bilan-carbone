@@ -5,17 +5,13 @@ import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { UpdateOrganizationCommand } from '../serverFunctions/organization.command'
 
-export const checkOrganization = async (userOrganizationId: string | null, organizationId: string) => {
+export const isInOrgaOrParentFromId = async (userOrganizationId: string | null, organizationId: string) => {
   if (userOrganizationId === organizationId) {
     return true
   }
 
   const organization = await getOrganizationById(userOrganizationId)
-  if (!organization) {
-    return false
-  }
-
-  return isInOrgaOrParent(userOrganizationId, organization)
+  return organization && isInOrgaOrParent(userOrganizationId, organization)
 }
 
 export const canCreateOrganization = async (user: User) => {
@@ -40,7 +36,7 @@ export const canUpdateOrganization = async (user: User, command: UpdateOrganizat
     return false
   }
 
-  if (!checkOrganization(user.organizationId, command.organizationId)) {
+  if (!isInOrgaOrParentFromId(user.organizationId, command.organizationId)) {
     return false
   }
 

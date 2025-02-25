@@ -7,7 +7,7 @@ import { User as DbUser, Level, Prisma, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { auth } from '../auth'
 import { checkLevel } from '../study'
-import { checkOrganization } from './organization'
+import { isInOrgaOrParentFromId } from './organization'
 
 export const isAdminOnStudyOrga = (user: User, study: Pick<FullStudy, 'organizationId' | 'organization'>) =>
   isAdminOnOrga(user, study.organization)
@@ -74,7 +74,7 @@ export const canCreateStudy = async (userEmail: string, study: Prisma.StudyCreat
     return false
   }
 
-  if (!(await checkOrganization(dbUser.organizationId, organizationId))) {
+  if (!(await isInOrgaOrParentFromId(dbUser.organizationId, organizationId))) {
     return false
   }
 
