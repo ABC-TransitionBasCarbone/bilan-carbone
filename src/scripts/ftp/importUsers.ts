@@ -36,11 +36,10 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     Lastname: lastName = '',
     Session_Code: sessionCodeTraining,
     Company_Name: name,
+    SIRET: siretOrSiren,
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
   } = value
-
-  let { SIRET: siretOrSiren } = value
 
   const isCR = ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
