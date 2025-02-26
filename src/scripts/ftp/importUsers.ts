@@ -41,7 +41,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     Membership_Year: membershipYear,
   } = value
 
-  const isCR = ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts)
+  const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
 
   const dbUser = (await prismaClient.user.findUnique({ where: { email } })) as Prisma.UserCreateManyInput

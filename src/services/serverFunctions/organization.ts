@@ -88,14 +88,18 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
 
   // filter duplicatd email
   let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'email')
+  const existingCollaborators = []
 
   // filter existing users
   for (const collaborator of collaborators) {
     const existingUser = await getUserByEmail(collaborator.email || '')
     if (existingUser) {
       collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
+      if (existingUser.organizationId === organizationId) {
+        existingCollaborators.push(existingUser)
+      }
     }
   }
 
-  await onboardOrganization(session.user.id, { ...command, collaborators })
+  await onboardOrganization(session.user.id, { ...command, collaborators }, existingCollaborators)
 }
