@@ -85,7 +85,7 @@ export const onboardOrganization = async (
         data: { firstName, lastName, role },
       }),
       transaction.user.createMany({ data: newCollaborators }),
-      existingCollaborators.map((collaborator) =>
+      ...existingCollaborators.map((collaborator) =>
         transaction.user.update({
           where: { id: collaborator.id },
           data: {
