@@ -7,7 +7,7 @@ import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 import Block from '../base/Block'
 import styles from './Studies.module.css'
-import StudyCard from './StudyCard'
+import StudyCard from './card/StudyCard'
 
 interface Props {
   studies: Study[]
