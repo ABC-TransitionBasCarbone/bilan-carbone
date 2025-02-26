@@ -38,12 +38,10 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     Company_Name: name,
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
-    Country: country,
   } = value
 
   let { SIRET: siretOrSiren } = value
 
-  const isFrance = ['FR', 'FRANCE', 'France', ''].includes(country)
   const isCR = ['adhérent_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
 
@@ -61,14 +59,9 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   if (sessionCodeTraining) {
     user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Initial
-    user.role = Role.ADMIN
   }
 
   if (siretOrSiren) {
-    if (!isFrance) {
-      siretOrSiren = country + '-' + name
-    }
-
     let organisation = dbUser?.organizationId
       ? await prismaClient.organization.findFirst({ where: { id: dbUser.organizationId } })
       : await prismaClient.organization.findFirst({ where: { siret: { startsWith: siretOrSiren } } })
@@ -95,7 +88,11 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   if (dbUser) {
     await prismaClient.user.update({
       where: { id: dbUser.id },
-      data: { level: user.level, role: user.role, organizationId: user.organizationId },
+      data: {
+        level: user.level,
+        role: dbUser.status === UserStatus.IMPORTED ? user.role : undefined,
+        organizationId: dbUser.status === UserStatus.IMPORTED ? user.organizationId : undefined,
+      },
     })
     console.log(`Updating ${email} because already exists`)
     return null
