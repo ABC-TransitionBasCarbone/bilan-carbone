@@ -91,7 +91,14 @@ const ActivationForm = () => {
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {t.rich(message, {
-              link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              support: (children) => (
+                <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>{children}</Link>
+              ),
+              link: (children) => (
+                <Link href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
             })}
           </p>
         )}
