@@ -55,6 +55,7 @@ export const setOnboarded = (organizationId: string, userId: string) =>
 export const onboardOrganization = async (
   userId: string,
   { organizationId, companyName, firstName, lastName, collaborators = [] }: OnboardingCommand,
+  existingCollaborators: User[],
 ) => {
   const dbUser = await prismaClient.user.findUnique({ where: { id: userId } })
   if (!dbUser) {
@@ -67,7 +68,7 @@ export const onboardOrganization = async (
       firstName: '',
       lastName: '',
       email: collaborator.email || '',
-      role: collaborator.role || Role.DEFAULT,
+      role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       status: UserStatus.VALIDATED,
       organizationId,
     })
@@ -84,8 +85,23 @@ export const onboardOrganization = async (
         data: { firstName, lastName, role },
       }),
       transaction.user.createMany({ data: newCollaborators }),
+      ...existingCollaborators.map((collaborator) =>
+        transaction.user.update({
+          where: { id: collaborator.id },
+          data: {
+            role:
+              collaborator.level || collaborator.role !== Role.ADMIN
+                ? collaborator.role
+                : collaborator.role === Role.ADMIN
+                  ? Role.GESTIONNAIRE
+                  : Role.DEFAULT,
+            status: UserStatus.VALIDATED,
+          },
+        }),
+      ),
     ])
   })
 
-  newCollaborators.forEach((collab) => sendNewUser(collab.email, dbUser, collab.firstName ?? ''))
+  const allCollaborators = [...newCollaborators, ...existingCollaborators]
+  allCollaborators.forEach((collab) => sendNewUser(collab.email, dbUser, collab.firstName ?? ''))
 }
