@@ -34,9 +34,9 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     User_Email: email,
     Firstname: firstName = '',
     Lastname: lastName = '',
-    SIRET: siretOrSiren,
     Session_Code: sessionCodeTraining,
     Company_Name: name,
+    SIRET: siretOrSiren,
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
   } = value
@@ -58,7 +58,6 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   if (sessionCodeTraining) {
     user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Initial
-    user.role = Role.ADMIN
   }
 
   if (siretOrSiren) {
@@ -66,25 +65,33 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       ? await prismaClient.organization.findFirst({ where: { id: dbUser.organizationId } })
       : await prismaClient.organization.findFirst({ where: { siret: { startsWith: siretOrSiren } } })
 
-    organisation = organisation
-      ? await prismaClient.organization.update({
-          where: { id: organisation.id },
-          data: {
-            isCR: isCR || organisation.isCR,
-            importedFileDate,
-            activatedLicence: activatedLicence || organisation.activatedLicence,
-          },
-        })
-      : await prismaClient.organization.create({
-          data: { siret: siretOrSiren, name, isCR, importedFileDate, activatedLicence },
-        })
+    organisation = await prismaClient.organization.upsert({
+      where: { id: organisation?.id || '' },
+      update: {
+        isCR: isCR || organisation?.isCR,
+        importedFileDate,
+        activatedLicence: activatedLicence || organisation?.activatedLicence,
+      },
+      create: {
+        siret: siretOrSiren,
+        name,
+        isCR,
+        importedFileDate,
+        activatedLicence,
+      },
+    })
+
     user.organizationId = organisation.id
   }
 
   if (dbUser) {
     await prismaClient.user.update({
       where: { id: dbUser.id },
-      data: { level: user.level, role: user.role, organizationId: user.organizationId },
+      data: {
+        level: user.level,
+        role: dbUser.status === UserStatus.IMPORTED ? user.role : undefined,
+        organizationId: dbUser.status === UserStatus.IMPORTED ? user.organizationId : undefined,
+      },
     })
     console.log(`Updating ${email} because already exists`)
     return null
