@@ -7,6 +7,9 @@ import { prismaClient } from './client'
 export const getRawOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id } }) : null
 
+export const getOrganizationNameById = (id: string | null) =>
+  id ? prismaClient.organization.findUnique({ where: { id }, select: { id: true, name: true } }) : null
+
 export const getOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
 

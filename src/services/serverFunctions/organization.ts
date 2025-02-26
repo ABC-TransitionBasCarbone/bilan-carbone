@@ -2,6 +2,7 @@
 
 import {
   createOrganization,
+  getOrganizationNameById,
   getRawOrganizationById,
   onboardOrganization,
   setOnboarded,
@@ -15,7 +16,16 @@ import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateOrganization, canUpdateOrganization } from '../permissions/organization'
 import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
+import { fetchStudy } from './study'
 import { OnboardingCommand } from './user.command'
+
+export const fetchStudyOrganization = async (studyId: string | null) => {
+  const study = await fetchStudy(studyId)
+  if (!study) {
+    return null
+  }
+  return getOrganizationNameById(study.organizationId)
+}
 
 export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,

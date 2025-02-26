@@ -19,6 +19,7 @@ import {
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail } from '@/db/user'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
+import { getUserRoleOnStudy } from '@/utils/study'
 import {
   ControlMode,
   User as DBUser,
@@ -65,6 +66,19 @@ import {
   NewStudyRightCommand,
 } from './study.command'
 import { sendInvitation } from './user'
+
+export const fetchStudy = async (studyId: string | null) => {
+  const session = await auth()
+  if (!studyId || !session || !session.user) {
+    return null
+  }
+  const study = await getStudyById(studyId, session.user.organizationId)
+  if (!study || !getUserRoleOnStudy(session.user, study)) {
+    return null
+  }
+
+  return study
+}
 
 export const createStudyCommand = async ({
   organizationId,
