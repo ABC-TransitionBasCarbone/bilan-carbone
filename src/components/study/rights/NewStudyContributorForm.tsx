@@ -24,7 +24,6 @@ interface Props {
   study: FullStudy
 }
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
 const NewStudyContributorForm = ({ study }: Props) => {
