@@ -68,7 +68,7 @@ export const onboardOrganization = async (
       firstName: '',
       lastName: '',
       email: collaborator.email || '',
-      role: Role.DEFAULT,
+      role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       status: UserStatus.VALIDATED,
       organizationId,
     })
@@ -89,7 +89,12 @@ export const onboardOrganization = async (
         transaction.user.update({
           where: { id: collaborator.id },
           data: {
-            role: collaborator.level || role === Role.GESTIONNAIRE ? role : Role.DEFAULT,
+            role:
+              collaborator.level || collaborator.role !== Role.ADMIN
+                ? collaborator.role
+                : collaborator.role === Role.ADMIN
+                  ? Role.GESTIONNAIRE
+                  : Role.DEFAULT,
             status: UserStatus.VALIDATED,
           },
         }),
