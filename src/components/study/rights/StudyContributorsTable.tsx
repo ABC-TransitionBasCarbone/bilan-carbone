@@ -15,6 +15,8 @@ interface Props {
   canAddContributor: boolean
 }
 
+const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
+
 const allPosts = Object.values(Post)
 const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const t = useTranslations('study.rights.contributorsTable')
@@ -136,7 +138,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         <p className="mb-2">
           {tRole.rich('description', {
             link: (children) => (
-              <Link href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''} target="_blank" rel="noreferrer noopener">
+              <Link href={faq} target="_blank" rel="noreferrer noopener">
                 {children}
               </Link>
             ),

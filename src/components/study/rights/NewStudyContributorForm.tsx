@@ -24,6 +24,9 @@ interface Props {
   study: FullStudy
 }
 
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
+const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
+
 const NewStudyContributorForm = ({ study }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.newContributor')
@@ -107,7 +110,7 @@ const NewStudyContributorForm = ({ study }: Props) => {
           {t.rich(error, {
             support: (children) => <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>{children}</Link>,
             link: (children) => (
-              <Link href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''} target="_blank" rel="noreferrer noopener">
+              <Link href={faq} target="_blank" rel="noreferrer noopener">
                 {children}
               </Link>
             ),
