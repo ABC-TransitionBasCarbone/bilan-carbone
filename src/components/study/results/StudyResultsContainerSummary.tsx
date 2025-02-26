@@ -35,7 +35,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
 
   const allComputedResults = useMemo(
     () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
-    [validatedOnly],
+    [studySite, validatedOnly],
   )
 
   const computedResults = useMemo(
@@ -65,7 +65,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
         ?.subPosts.find((subPost) => subPost.post === dependenciesSubPost)?.value || 0
 
     return [total, total - dependenciesValue].map((value) => formatNumber(value / 1000))
-  }, [validatedOnly])
+  }, [studySite, validatedOnly])
 
   return (
     <>
