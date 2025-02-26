@@ -95,7 +95,9 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
     const existingUser = await getUserByEmail(collaborator.email || '')
     if (existingUser) {
       collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
-      existingCollaborators.push(existingUser)
+      if (existingUser.organizationId === organizationId) {
+        existingCollaborators.push(existingUser)
+      }
     }
   }
 
