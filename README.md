@@ -16,6 +16,9 @@ Importer les facteurs d'emissions de legifrance chaud :
 Importer les facteurs d'emissions de la base empreinte :
 `npx ts-node src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte}"`
 
+Créer les règles de gestion du BEGES :
+`npx ts-node src/scripts/exportRules/beges.ts`
+
 Importer les actualités depuis un CSV :
 `npx ts-node src/scripts/actuality/add.ts -f ${pathToCSVFileActuality}`
 
