@@ -88,7 +88,10 @@ export const onboardOrganization = async (
       existingCollaborators.map((collaborator) =>
         transaction.user.update({
           where: { id: collaborator.id },
-          data: { role: collaborator.level ? role : Role.DEFAULT },
+          data: {
+            role: collaborator.level || role === Role.GESTIONNAIRE ? role : Role.DEFAULT,
+            status: UserStatus.VALIDATED,
+          },
         }),
       ),
     ])
