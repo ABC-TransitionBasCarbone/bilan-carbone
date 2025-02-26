@@ -6,14 +6,14 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 import Block from '../base/Block'
 import Button from '../base/Button'
-import OrganizationCard from './Organization'
-import styles from './Organizations.module.css'
+import ClientCard from './CRClient'
+import styles from './CRClients.module.css'
 
 interface Props {
   organizations: Organization[]
 }
 
-const Organizations = ({ organizations }: Props) => {
+const CRClients = ({ organizations }: Props) => {
   const t = useTranslations('organization')
   const [showAll, setShowAll] = useState(false)
   const [hiddenRows, setHiddenRows] = useState(false)
@@ -51,7 +51,7 @@ const Organizations = ({ organizations }: Props) => {
         className={classNames(styles.grid, 'mb1', { [styles.hideSubRows]: !showAll })}
       >
         {organizations.map((organization) => (
-          <OrganizationCard key={organization.id} organization={organization} />
+          <ClientCard key={organization.id} organization={organization} />
         ))}
       </ul>
       {hiddenRows && (
@@ -63,4 +63,4 @@ const Organizations = ({ organizations }: Props) => {
   )
 }
 
-export default Organizations
+export default CRClients
