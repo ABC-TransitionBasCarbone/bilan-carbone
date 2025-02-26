@@ -1,3 +1,4 @@
+import RouteChangeListener from '@/components/RouteChangeListener'
 import '@/css/index.css'
 import Providers from '@/services/providers/Providers'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
@@ -30,6 +31,7 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
       <body>
         <AppRouterCacheProvider>
           <NextIntlClientProvider messages={messages}>
+            <RouteChangeListener />
             <Providers>{children}</Providers>
           </NextIntlClientProvider>
         </AppRouterCacheProvider>
