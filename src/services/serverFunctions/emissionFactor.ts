@@ -106,7 +106,7 @@ export const createEmissionFactorCommand = async ({
   attribute,
   comment,
   parts,
-  subPost,
+  subPosts,
   ...command
 }: EmissionFactorCommand) => {
   const session = await auth()
@@ -125,6 +125,10 @@ export const createEmissionFactorCommand = async ({
     return NOT_AUTHORIZED
   }
 
+  const flattenSubposts = Object.keys(subPosts)
+    .map((post) => subPosts[post].flat())
+    .flat()
+
   const emissionFactor = await createEmissionFactor({
     ...command,
     importedFrom: Import.Manual,
@@ -132,7 +136,7 @@ export const createEmissionFactorCommand = async ({
     reliability: 5,
     organization: { connect: { id: user.organizationId } },
     unit: unit as Unit,
-    subPosts: [subPost],
+    subPosts: flattenSubposts,
     metaData: {
       create: {
         language: local,

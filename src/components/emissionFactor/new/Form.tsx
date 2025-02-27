@@ -35,10 +35,11 @@ const NewEmissionFactorForm = () => {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    console.log('onSubmit', form.getValues())
+
     form.setValue('parts', hasParts ? form.getValues('parts').slice(0, partsCount) : [])
     form.handleSubmit(async (data) => {
       const result = await createEmissionFactorCommand(data)
-
       if (result) {
         setError(result)
       } else {

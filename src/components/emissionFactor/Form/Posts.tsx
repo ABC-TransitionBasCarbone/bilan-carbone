@@ -6,7 +6,7 @@ import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { FormControl, MenuItem } from '@mui/material'
+import { FormControl, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -17,8 +17,8 @@ interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
 }
 
-interface PostSelected {
-  [key: Post]: SubPost[]
+type PostSelected = {
+  [key in Post]: SubPost[]
 }
 
 const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Props<T>) => {
@@ -43,6 +43,20 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
     [subPosts, tPost],
   )
 
+  const handleSelectPost = (event : SelectChangeEvent<unknown>) => {
+    const selectedPost = event.target.value as Post
+    setSelectedSubPosts([])
+    if (post) {
+      // if post is already selected, reset subPosts
+      const currentSubPosts: PostSelected = form.getValues('subPosts') as PostSelected || {}
+      delete currentSubPosts[post]
+      setValue('subPosts', currentSubPosts)
+
+    }
+    setPost(selectedPost)
+  }
+
+
   const handleSelectSubPost = (subPostsArr: string[]) => {
     if (!post) return
     setSelectedSubPosts(subPostsArr as SubPost[])
@@ -60,11 +74,7 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
           data-testid="emission-factor-post"
           labelId="post-select-label"
           value={post || ''}
-          onChange={(event) => {
-            // @ts-expect-error: Force undefined to trigger error if not filled
-            setValue('subPost', undefined)
-            setPost(event.target.value as Post)
-          }}
+          onChange={handleSelectPost}
           label={t('post')}
           icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
           iconPosition="after"

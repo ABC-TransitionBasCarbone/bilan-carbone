@@ -28,7 +28,9 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, post: initalPost
 
   return (
     <div>
-      <button onClick={addPost}>Add Post</button>
+      <button type="button" onClick={addPost}>
+        Add Post
+      </button>
       {posts.map((postObj) => (
         <div key={postObj.id}>
           <Posts form={form} post={postObj.post} />

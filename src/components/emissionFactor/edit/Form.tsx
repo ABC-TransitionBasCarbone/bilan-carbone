@@ -11,6 +11,7 @@ import {
   UpdateEmissionFactorCommandValidation,
 } from '@/services/serverFunctions/emissionFactor.command'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { SubPost } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -52,10 +53,24 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
   const [hasParts, setHasParts] = useState(!!(emissionFactor.emissionFactorParts.length > 0))
   const [partsCount, setPartsCount] = useState(emissionFactor.emissionFactorParts.length || 1)
 
-  const subPost = emissionFactor?.subPosts[0] || undefined
+  const subPosts = emissionFactor?.subPosts[0] || undefined
   let post: Post | undefined = undefined
-  if (subPost) {
-    post = Object.keys(subPostsByPost).find((post) => subPostsByPost[post as Post].includes(subPost)) as Post
+
+  const getPost = (subPost: SubPost) =>
+    Object.keys(subPostsByPost).find((post) => subPostsByPost[post as Post].includes(subPost)) as Post
+
+  const getSubPostObject = () => {
+    const subPostObject: { [key in Post]?: SubPost[] } = {}
+    for (const subPost of emissionFactor.subPosts) {
+      const post = getPost(subPost)
+      if (post) {
+        if (!subPostObject[post]) {
+          subPostObject[post] = []
+        }
+        subPostObject[post]?.push(subPost)
+      }
+    }
+    return subPostObject
   }
 
   const detailedGES =
@@ -71,7 +86,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       attribute: emissionFactor?.metaData[0].attribute || '',
       source: emissionFactor?.source || '',
       unit: emissionFactor?.unit || undefined,
-      subPosts: emissionFactor?.subPosts || [],
+      subPosts: getSubPostObject(),
       ...getGazValues(emissionFactor),
       totalCo2: emissionFactor?.totalCo2 || 0,
       parts: buildParts(emissionFactor, partsCount),
@@ -81,6 +96,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
     form.setValue('parts', hasParts ? form.getValues('parts').slice(0, partsCount) : [])
     form.handleSubmit(async (data) => {
       const result = await updateEmissionFactorCommand(data)
