@@ -13,7 +13,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Control, UseFormReturn } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
-import Posts from './Posts'
+import MultiplePosts from './MultiplePosts'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
@@ -77,7 +77,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         partsCount={partsCount}
         setPartsCount={setPartsCount}
       />
-      <Posts form={form} post={post} />
+      <MultiplePosts form={form} post={post} />
       <FormTextField control={control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (
