@@ -1,6 +1,8 @@
 'use client'
 
+import HelpIcon from '@/components/base/HelpIcon'
 import { FormSelect } from '@/components/form/Select'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
@@ -10,6 +12,7 @@ import { MenuItem } from '@mui/material'
 import { Level } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyPublicStatus.module.css'
@@ -22,8 +25,10 @@ interface Props {
 
 const StudyLevel = ({ user, study, disabled }: Props) => {
   const t = useTranslations('study.new')
+  const tGlossary = useTranslations('study.new.glossary')
   const tLevel = useTranslations('level')
   const [error, setError] = useState('')
+  const [glossary, setGlossary] = useState('')
 
   const form = useForm<ChangeStudyLevelCommand>({
     resolver: zodResolver(ChangeStudyLevelCommandValidation),
@@ -61,6 +66,8 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
           name="level"
           label={t('level')}
           data-testid="study-level"
+          icon={<HelpIcon onClick={() => setGlossary('type')} label={tGlossary('title')} />}
+          iconPosition="after"
           disabled={disabled}
         >
           {Object.values(Level).map((level) => (
@@ -69,6 +76,21 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
             </MenuItem>
           ))}
         </FormSelect>
+        <GlossaryModal label="study-type" glossary={glossary} onClose={() => setGlossary('')} t={tGlossary}>
+          <span>
+            {t.rich('glossary.typeDescription', {
+              link: (children) => (
+                <Link
+                  href="https://www.bilancarbone-methode.com/1-cadrage-de-la-demarche/1.1-definir-son-niveau-de-maturite-bilan-carbone-r"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {children}
+                </Link>
+              ),
+            })}
+          </span>
+        </GlossaryModal>
         {error && <p>{error}</p>}
       </>
     </div>
