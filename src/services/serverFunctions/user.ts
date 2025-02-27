@@ -31,7 +31,7 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '../email/email'
-import { EMAIL_SENT, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
+import { EMAIL_SENT, NO_ORGANIZATION, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
@@ -251,7 +251,7 @@ export const activateEmail = async (email: string, fromReset: boolean = false) =
 
   const userOrga = await getOrganizationById(user.organizationId)
   if (!userOrga || !userOrga.activatedLicence) {
-    return { error: true, message: NOT_AUTHORIZED }
+    return { error: true, message: NO_ORGANIZATION }
   }
 
   if ((await organizationActiveUsersCount(user.organizationId)) && user.status !== UserStatus.VALIDATED) {

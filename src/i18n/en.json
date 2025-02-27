@@ -151,6 +151,7 @@
     "emailRequired": "Please enter an email",
     "validate": "Validate",
     "Not authorized": "You are not authorized. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
+    "No organization": "Your organization does not exist, please fill in your SIRET on the ABC website. Feel free to consult <link>the FAQ</link> or contact <support>support</support> if you think this is an error.",
     "Request sent": "A request has been sent to your colleagues",
     "Email sent": "You will receive an email to finish your account validation."
   },
