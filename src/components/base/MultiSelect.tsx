@@ -5,7 +5,7 @@ interface MultiSelectProps {
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
   options: { label: string; value: string }[]
-  onChange: (value : string[]) => void
+  onChange: (value: string[]) => void
 }
 
 export const MultiSelect = ({
@@ -18,13 +18,12 @@ export const MultiSelect = ({
   iconPosition,
   ...selectProps
 }: MultiSelectProps & SelectProps) => {
-
   const handleChange = (event: SelectChangeEvent<unknown>) => {
     const {
       target: { value },
     } = event
 
-    const selected: string[] = typeof value === 'string' ? (value.split(',') as string[]) : value as string[]
+    const selected: string[] = typeof value === 'string' ? (value.split(',') as string[]) : (value as string[])
     onChange(selected)
   }
   return (

@@ -1,8 +1,8 @@
 'use client'
 
 import HelpIcon from '@/components/base/HelpIcon'
+import { MultiSelect } from '@/components/base/MultiSelect'
 import { Select } from '@/components/base/Select'
-import { FormSelect } from '@/components/form/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
@@ -17,10 +17,15 @@ interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
 }
 
+interface PostSelected {
+  [key: Post]: SubPost[]
+}
+
 const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tGlossary = useTranslations('emissionFactors.create.glossary')
   const tPost = useTranslations('emissionFactors.post')
+  const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>([])
   const [post, setPost] = useState<Post | undefined>(initalPost)
   const [glossary, setGlossary] = useState('')
 
@@ -32,6 +37,20 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
     () => (post ? subPostsByPost[post].sort((a, b) => tPost(a).localeCompare(tPost(b))) : []),
     [post, tPost],
   )
+
+  const translatedSubPosts = useMemo(
+    () => subPosts.map((subP) => ({ label: tPost(subP), value: subP })),
+    [subPosts, tPost],
+  )
+
+  const handleSelectSubPost = (subPostsArr: string[]) => {
+    if (!post) return
+    setSelectedSubPosts(subPostsArr as SubPost[])
+    const currentSubPosts: PostSelected = form.getValues('subPosts') || {}
+    const newSubPosts = { ...currentSubPosts, [post]: subPostsArr }
+    setValue('subPosts', newSubPosts)
+    console.log('new', newSubPosts)
+  }
 
   return (
     <>
@@ -57,25 +76,15 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
           ))}
         </Select>
       </FormControl>
-      <FormSelect
+      <MultiSelect
+        name="subpost"
         data-testid="emission-factor-subPost"
-        control={control}
-        translation={t}
+        labelId="post-select-label"
+        value={selectedSubPosts || []}
+        onChange={handleSelectSubPost}
         label={t('subPost')}
-        name="subPost"
-      >
-        {subPosts.length === 0 ? (
-          <MenuItem value="" disabled>
-            {t('missingPost')}
-          </MenuItem>
-        ) : (
-          subPosts.map((subPost) => (
-            <MenuItem key={subPost} value={subPost}>
-              {tPost(subPost)}
-            </MenuItem>
-          ))
-        )}
-      </FormSelect>
+        options={translatedSubPosts}
+      />
       {glossary && (
         <GlossaryModal glossary={glossary} label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
           {tGlossary(`${glossary}Description`)}
