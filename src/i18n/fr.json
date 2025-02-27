@@ -150,7 +150,7 @@
     "emailPlaceholder": "Email utilisée lors de votre formation",
     "emailRequired": "Veuillez entrer un email",
     "validate": "Valider",
-    "Not authorized": "Vous n'êtes pas adhérent ou pas formé. Si vous pensez qu'il s'agit d'une erreur, merci de contacter le <link>support</link>.",
+    "Not authorized": "Vous n'êtes pas adhérent ou pas formé. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
     "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
     "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte."
   },
