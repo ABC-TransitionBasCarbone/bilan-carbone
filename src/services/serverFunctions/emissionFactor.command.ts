@@ -38,7 +38,7 @@ export const EmissionFactorCommandValidation = z.intersection(
       })
       .min(0, 'totalCo2'),
     attribute: z.string().optional(),
-    subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1)).superRefine((val, ctx) => {
+    subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1), {required_error: "type"}).superRefine((val, ctx) => {
       if (Object.keys(val).length === 0) {
         ctx.addIssue({
           message: 'type',

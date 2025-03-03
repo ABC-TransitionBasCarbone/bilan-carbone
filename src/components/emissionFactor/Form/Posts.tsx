@@ -18,6 +18,7 @@ import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
 
 interface Props<T extends EmissionFactorCommand> {
   post?: Post 
+  postOptions: Post[]
   subPosts?: SubPost[] 
   form: UseFormReturn<T>
   onChange: (updatedPosts: PostObject) => void
@@ -25,7 +26,7 @@ interface Props<T extends EmissionFactorCommand> {
 
 
 
-const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts, post: initialPost, onChange }: Props<T>) => {
+const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts, post: initialPost, postOptions, onChange }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tGlossary = useTranslations('emissionFactors.create.glossary')
   const tPost = useTranslations('emissionFactors.post')
@@ -94,7 +95,8 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
           iconPosition="after"
         >
           {posts.map((post) => (
-            <MenuItem key={post} value={post}>
+            // check if post is in the list already to avoid issues 
+            <MenuItem disabled={!postOptions.includes(post as Post)} key={post} value={post}>
               {tPost(post)}
             </MenuItem>
           ))}

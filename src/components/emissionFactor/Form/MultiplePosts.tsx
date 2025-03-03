@@ -17,24 +17,26 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const [posts, setPosts] = useState<PostObject>({})
-  const postSelection = useMemo(() => Object.keys(Post).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
+  {/* check if post is in the list already to avoid issues */ }
+  const postSelection: Post[] = useMemo(() => Object.keys(Post).sort((a, b) => tPost(a).localeCompare(tPost(b))).filter((p) => (!Object.keys(posts).includes(p))) as Post[], [tPost, posts])
+  
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
 
   useEffect(() => {
-   const postObj = (form.getValues("subPosts") as PostObject) || {}
-    console.log("tmpPosts",  Object.keys(postObj));
+    const postObj = (form.getValues("subPosts") as PostObject) || {}
+    console.log("tmpPosts", Object.keys(postObj));
     setPosts(postObj)
   }, [])
 
-  const handleSelectPost = (event : SelectChangeEvent<unknown>) => {
+  const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as Post
-    const currentSubPosts = {...posts, [selectedPost] : []}
+    const currentSubPosts = { ...posts, [selectedPost]: [] }
     setPosts(currentSubPosts)
     setValue('subPosts', currentSubPosts)
   };
 
-  const handleChange = (posts : PostObject) => {
+  const handleChange = (posts: PostObject) => {
     setPosts(posts)
   };
 
@@ -42,8 +44,8 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
     <div className='flex-col'>
       {/* Real posts/Subpost selection */}
       {Object.keys(posts).map((postKey) => (
-        <Box key={postKey} sx={{mb: 2}}>
-          <Posts onChange={handleChange} form={form} post={postKey as Post} subPosts={posts[postKey as Post]} />
+        <Box key={postKey} sx={{ mb: 2 }}>
+          <Posts postOptions={postSelection} onChange={handleChange} form={form} post={postKey as Post} subPosts={posts[postKey as Post]} />
         </Box>
       ))}
 
@@ -61,18 +63,18 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
             </MenuItem>
           ))}
         </Select>
-        </FormControl>
+      </FormControl>
 
       {/* display error message */}
-    <Controller
-      name={"subPosts" as FieldPath<T>}
-      control={control}
-      render={({fieldState: { error } }) => (
-        <FormControl error={!!error}>
-          {error && error.message && <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>}
-        </FormControl>
-      )}
-    />
+      <Controller
+        name={"subPosts" as FieldPath<T>}
+        control={control}
+        render={({ fieldState: { error } }) => (
+          <FormControl error={!!error}>
+            {error && error.message && <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>}
+          </FormControl>
+        )}
+      />
     </div>
   )
 }
