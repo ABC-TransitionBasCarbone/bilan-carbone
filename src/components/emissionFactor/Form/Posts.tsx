@@ -15,20 +15,21 @@ import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
 
 
 interface Props<T extends EmissionFactorCommand> {
+  post?: Post 
   subPosts?: SubPost[] 
   form: UseFormReturn<T>
-  onChange: (updatedPost: Post) => void
+  onChange: (updatedPosts: PostObject) => void
 }
 
 
 
-const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts, onChange }: Props<T>) => {
+const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts, post: initialPost, onChange }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tGlossary = useTranslations('emissionFactors.create.glossary')
   const tPost = useTranslations('emissionFactors.post')
   const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
   
-  const [post, setPost] = useState<Post | undefined>(getPost(initalSubPosts?.[0]))
+  const [post, setPost] = useState<Post | undefined>(getPost(initalSubPosts?.[0]) || initialPost)
   const [glossary, setGlossary] = useState('')
 
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
@@ -47,14 +48,18 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
   const handleSelectPost = (event : SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as Post
     setSelectedSubPosts([])
+    const currentSubPosts: PostObject = form.getValues('subPosts') as PostObject || {}
     if (post) {
       // if post is already selected, reset subPosts
-      const currentSubPosts: PostObject = form.getValues('subPosts') as PostObject || {}
       delete currentSubPosts[post]
-      setValue('subPosts', currentSubPosts)
 
-    }
+    } 
+    currentSubPosts[selectedPost] = []
+    setValue('subPosts', currentSubPosts)
     setPost(selectedPost)
+    console.log("currentsubpots", currentSubPosts);
+    
+    onChange(currentSubPosts)
   }
 
 
@@ -67,16 +72,11 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
     console.log('new', newSubPosts)
   }
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedPost = { ...post, content: event.target.value }
-    onChange(updatedPost)
-  }
-
   return (
     <>
       <FormControl>
         <Select
-          name="Post"
+          name="subPosts"
           data-testid="emission-factor-post"
           labelId="post-select-label"
           value={post || ''}

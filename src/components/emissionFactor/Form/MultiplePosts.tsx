@@ -1,16 +1,23 @@
 import { Post, PostObject } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { useEffect, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+import { Control, Controller, Field, FieldPath, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import Posts from './Posts'
+import { Select } from '@/components/base/Select'
+import { useTranslations } from 'next-intl'
+import { FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 
 interface Props<T extends EmissionFactorCommand> {
-  post?: PostObject
   form: UseFormReturn<T>
+  control: Control<T>
 }
 
-const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
+const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props<T>) => {
+  const t = useTranslations('emissionFactors.create')
+  const tPost = useTranslations('emissionFactors.post')
   const [posts, setPosts] = useState<PostObject>({})
+  const postSelection = useMemo(() => Object.keys(Post).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
+  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
 
   useEffect(() => {
@@ -20,29 +27,58 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
   }, [])
 
   const addPost = () => {
-    setPosts({...posts, "" : []})
   }
 
-  // const handleChange = (id :number, event) => {
-  //     const newPosts = posts.map(post => {
-  //         if (post.id === id) {
-  //             return { ...post, content: event.target.value };
-  //         }
-  //         return post;
-  //     });
-  //     setPosts(newPosts);
-  // };
+  const handleSelectPost = (event : SelectChangeEvent<unknown>) => {
+    const selectedPost = event.target.value as Post
+    const currentSubPosts = {...posts, [selectedPost] : []}
+    setPosts(currentSubPosts)
+    setValue('subPosts', currentSubPosts)
+  };
+
+  const handleChange = (posts : PostObject) => {
+    setPosts(posts)
+  };
 
   return (
     <div>
-      <button type="button" onClick={addPost}>
+      {/* <button type="button" onClick={addPost}>
         Add Post
-      </button>
+      </button> */}
+
+    <Controller
+      name={"subPosts" as FieldPath<T>}
+      control={control}
+      render={({ fieldState: { error } }) => (
+        <FormControl error={!!error} fullWidth className="inputContainer">
+
       {Object.keys(posts).map((postKey) => (
         <div key={postKey}>
-          <Posts form={form} subPosts={posts[postKey as Post]} />
+          <Posts onChange={handleChange} form={form} post={postKey as Post} subPosts={posts[postKey as Post]} />
         </div>
       ))}
+      
+      <Select
+          name="subPosts"
+          data-testid="emission-factor-post"
+          labelId="post-select-label"
+          value={''}
+          onChange={handleSelectPost}
+          label={t('post')}
+          // icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
+          iconPosition="after"
+        >
+          {postSelection.map((post) => (
+            <MenuItem key={post} value={post}>
+              {tPost(post)}
+            </MenuItem>
+          ))}
+        </Select>
+
+          {error && error.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
+        </FormControl>
+        )}
+      />
     </div>
   )
 }

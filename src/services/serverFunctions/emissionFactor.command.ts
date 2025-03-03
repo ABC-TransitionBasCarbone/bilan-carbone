@@ -38,7 +38,10 @@ export const EmissionFactorCommandValidation = z.intersection(
       })
       .min(0, 'totalCo2'),
     attribute: z.string().optional(),
-    subPosts: z.record(z.array(z.nativeEnum(SubPost, { required_error: 'subPost' }))),
+    subPosts: z.record(z.array(z.nativeEnum(SubPost, { required_error: 'subPost' })).min(1, { message: 'subPost' }), {required_error: 'type'}).refine(
+      (val) => Object.keys(val).length > 0,
+      { message: 'type' }
+    ),
     comment: z.string().optional(),
     parts: z
       .array(
