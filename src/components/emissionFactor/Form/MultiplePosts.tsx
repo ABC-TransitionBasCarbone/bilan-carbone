@@ -5,7 +5,7 @@ import { Control, Controller, Field, FieldPath, UseFormReturn, UseFormSetValue }
 import Posts from './Posts'
 import { Select } from '@/components/base/Select'
 import { useTranslations } from 'next-intl'
-import { FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
+import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
@@ -53,11 +53,11 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
         <FormControl error={!!error} fullWidth className="inputContainer">
 
       {Object.keys(posts).map((postKey) => (
-        <div key={postKey}>
+        <Box key={postKey} sx={{mb: 2}}>
           <Posts onChange={handleChange} form={form} post={postKey as Post} subPosts={posts[postKey as Post]} />
-        </div>
+        </Box>
       ))}
-      
+      <FormControl sx={{width: '50%'}}>
       <Select
           name="subPosts"
           data-testid="emission-factor-post"
@@ -74,6 +74,7 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
             </MenuItem>
           ))}
         </Select>
+        </FormControl>
 
           {error && error.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
         </FormControl>

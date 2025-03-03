@@ -1,5 +1,6 @@
 import { Box, Chip, MenuItem, SelectChangeEvent, SelectProps } from '@mui/material'
 import { Select } from './Select'
+import { useState } from 'react'
 
 interface MultiSelectProps {
   icon?: React.ReactNode
@@ -18,28 +19,24 @@ export const MultiSelect = ({
   iconPosition,
   ...selectProps
 }: MultiSelectProps & SelectProps) => {
+  const [selected, setSelected] = useState<string[]>([])
+
   const handleChange = (event: SelectChangeEvent<unknown>) => {
     const {
       target: { value },
     } = event
 
-    const selected: string[] = typeof value === 'string' ? (value.split(',') as string[]) : (value as string[])
-    onChange(selected)
+    const tmpSelected :string[] = typeof value === 'string' ? (value.split(',') as string[]) : (value as string[])
+    onChange(tmpSelected)
+    setSelected(tmpSelected)
   }
   return (
     <Select
       multiple
       name={name}
       label={label}
-      value={value}
+      value={selected || []}
       onChange={handleChange}
-      renderValue={(selected) => (
-        <Box sx={{ display: 'flex', gap: 0.5 }}>
-          {(selected as string[]).map((val) => (
-            <Chip key={val} label={options.find((option) => option.value === val)?.label || val} />
-          ))}
-        </Box>
-      )}
       {...selectProps}
     >
       {options.map((option) => (

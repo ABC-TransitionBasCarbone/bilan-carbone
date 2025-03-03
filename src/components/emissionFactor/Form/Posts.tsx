@@ -7,7 +7,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import { Post, PostObject, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
-import { FormControl, MenuItem, SelectChangeEvent } from '@mui/material'
+import { Box, FormControl, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -73,8 +73,8 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
   }
 
   return (
-    <>
-      <FormControl>
+    <Box sx={{ display: 'flex', w: '100%', gap: 2 }}>
+      <FormControl sx={{ width: '50%' }}>
         <Select
           name="subPosts"
           data-testid="emission-factor-post"
@@ -92,6 +92,7 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
           ))}
         </Select>
       </FormControl>
+      <FormControl sx={{ width: '50%' }}>
       <MultiSelect
         name="subpost"
         data-testid="emission-factor-subPost"
@@ -101,12 +102,13 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
         label={t('subPost')}
         options={translatedSubPosts}
       />
+      </FormControl>
       {glossary && (
         <GlossaryModal glossary={glossary} label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
           {tGlossary(`${glossary}Description`)}
         </GlossaryModal>
       )}
-    </>
+    </Box>
   )
 }
 
