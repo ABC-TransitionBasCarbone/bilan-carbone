@@ -543,6 +543,7 @@
       "subPost": "Sub Post",
       "partType": "Part type",
       "comment": "Comments",
+      "delete": "Delete",
       "glossary": {
         "title": "Glossary",
         "detailedGES": "Breakdown of GHG",

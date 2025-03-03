@@ -19,7 +19,7 @@ export const MultiSelect = ({
   iconPosition,
   ...selectProps
 }: MultiSelectProps & SelectProps) => {
-  const [selected, setSelected] = useState<string[]>([])
+  const [selected, setSelected] = useState<string[]>(typeof value === 'string' ? (value.split(',') as string[]) : (value as string[]))
 
   const handleChange = (event: SelectChangeEvent<unknown>) => {
     const {

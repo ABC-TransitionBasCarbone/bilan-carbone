@@ -57,7 +57,7 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
           <Posts onChange={handleChange} form={form} post={postKey as Post} subPosts={posts[postKey as Post]} />
         </Box>
       ))}
-      <FormControl sx={{width: '50%'}}>
+      <FormControl sx={{width: '40%'}}>
       <Select
           name="subPosts"
           data-testid="emission-factor-post"

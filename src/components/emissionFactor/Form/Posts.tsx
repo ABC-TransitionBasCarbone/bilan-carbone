@@ -1,6 +1,8 @@
 'use client'
 
+import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
@@ -57,8 +59,14 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
     currentSubPosts[selectedPost] = []
     setValue('subPosts', currentSubPosts)
     setPost(selectedPost)
-    console.log("currentsubpots", currentSubPosts);
-    
+    onChange(currentSubPosts)
+  }
+
+  const handleDelete = () => {
+    if (!post) return
+    const currentSubPosts: PostObject = form.getValues('subPosts') as PostObject || {}
+    delete currentSubPosts[post]
+    setValue('subPosts', currentSubPosts)
     onChange(currentSubPosts)
   }
 
@@ -73,8 +81,8 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
   }
 
   return (
-    <Box sx={{ display: 'flex', w: '100%', gap: 2 }}>
-      <FormControl sx={{ width: '50%' }}>
+    <Box sx={{ display: 'flex', w: '100%', gap: 2, alignItems: "end"}}>
+      <FormControl sx={{ width: '40%' }}>
         <Select
           name="subPosts"
           data-testid="emission-factor-post"
@@ -103,6 +111,15 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
         options={translatedSubPosts}
       />
       </FormControl>
+      <Button
+        sx={{ flex: 1, minHeight: 'fit-content', height: "3.5rem" }}
+        data-testid="delete-site-button"
+        title={t('delete')}
+        aria-label={t('delete')}
+        onClick={handleDelete}>
+        <DeleteIcon />
+      </Button>
+
       {glossary && (
         <GlossaryModal glossary={glossary} label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
           {tGlossary(`${glossary}Description`)}

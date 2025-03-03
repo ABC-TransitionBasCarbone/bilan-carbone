@@ -543,6 +543,7 @@
       "missingPost": "Veuillez selectionner un poste",
       "subPost": "Sous Poste",
       "comment": "Commentaires",
+      "delete": "Supprimer",
       "glossary": {
         "title": "Glossaire",
         "detailedGES": "Décomposition des GES",
