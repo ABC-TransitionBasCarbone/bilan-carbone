@@ -43,39 +43,60 @@ const selectEmissionFactor = {
   },
   version: {
     select: {
+      id: true,
       name: true,
     },
   },
 } as Prisma.EmissionFactorSelect
 
-const getDefaultEmissionFactors = () =>
+const getDefaultEmissionFactors = (versionIds?: string[]) =>
   prismaClient.emissionFactor.findMany({
-    where: { organizationId: null, subPosts: { isEmpty: false } },
+    where: {
+      organizationId: null,
+      subPosts: { isEmpty: false },
+      ...(versionIds && { versionId: { in: versionIds } }),
+    },
     select: selectEmissionFactor,
     orderBy: { createdAt: 'desc' },
   })
 
-const getCachedDefaultEmissionFactors = async () => {
+const filterVersionedEmissionFactor = (
+  emissionFactor: AsyncReturnType<typeof getDefaultEmissionFactors>[0],
+  versionIds?: string[],
+) => !versionIds || (emissionFactor.versionId && versionIds.includes(emissionFactor.versionId))
+
+const getCachedDefaultEmissionFactors = async (versionIds?: string[]) => {
   if (cachedEmissionFactors.length) {
-    return cachedEmissionFactors
+    return cachedEmissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
   }
   const emissionFactors = await getDefaultEmissionFactors()
   cachedEmissionFactors = emissionFactors
-  return emissionFactors
+  return emissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
 }
 
-export const getAllEmissionFactors = async (organizationId: string | null) => {
+export const getAllEmissionFactors = async (organizationId: string | null, studyId?: string) => {
+  let versionIds
+  if (studyId) {
+    const study = await prismaClient.study.findFirst({
+      where: { id: studyId },
+      include: { emissionFactorVersions: true },
+    })
+    if (!study) {
+      return []
+    }
+    versionIds = study.emissionFactorVersions.map((version) => version.importVersionId)
+  }
   const organizationEmissionFactor = organizationId
     ? await prismaClient.emissionFactor.findMany({
-        where: { organizationId },
+        where: { organizationId, ...(versionIds && { versionId: { in: versionIds } }) },
         select: selectEmissionFactor,
         orderBy: { createdAt: 'desc' },
       })
     : []
 
   const defaultEmissionFactors = await (process.env.NO_CACHE === 'true'
-    ? getDefaultEmissionFactors()
-    : getCachedDefaultEmissionFactors())
+    ? getDefaultEmissionFactors(versionIds)
+    : getCachedDefaultEmissionFactors(versionIds))
 
   return organizationEmissionFactor.concat(defaultEmissionFactors)
 }
