@@ -110,6 +110,13 @@ const fullStudyInclude = {
       },
     },
   },
+  emissionFactorVersions: {
+    select: {
+      id: true,
+      importVersionId: true,
+      source: true,
+    },
+  },
   exports: { select: { type: true, control: true } },
   organization: { select: { id: true, name: true, isCR: true, parentId: true } },
 } satisfies Prisma.StudyInclude
