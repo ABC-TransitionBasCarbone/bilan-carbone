@@ -3,7 +3,7 @@
 import Form from '@/components/base/Form'
 import { gazKeys } from '@/constants/emissions'
 import { DetailedEmissionFactor } from '@/db/emissionFactors'
-import { Post, subPostsByPost } from '@/services/posts'
+import { PostObject } from '@/services/posts'
 import { updateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
   maxParts,
@@ -11,11 +11,11 @@ import {
   UpdateEmissionFactorCommandValidation,
 } from '@/services/serverFunctions/emissionFactor.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SubPost } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import EmissionFactorForm from '../Form/EmissionFactorForm'
+import { getPost } from '@/utils/post'
 
 type EmissionFactor = Exclude<DetailedEmissionFactor, null>
 type Part = Exclude<DetailedEmissionFactor, null>['emissionFactorParts'][0]
@@ -53,14 +53,10 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
   const [hasParts, setHasParts] = useState(!!(emissionFactor.emissionFactorParts.length > 0))
   const [partsCount, setPartsCount] = useState(emissionFactor.emissionFactorParts.length || 1)
 
-  const subPosts = emissionFactor?.subPosts[0] || undefined
-  let post: Post | undefined = undefined
 
-  const getPost = (subPost: SubPost) =>
-    Object.keys(subPostsByPost).find((post) => subPostsByPost[post as Post].includes(subPost)) as Post
 
   const getSubPostObject = () => {
-    const subPostObject: { [key in Post]?: SubPost[] } = {}
+    const subPostObject: PostObject = {}
     for (const subPost of emissionFactor.subPosts) {
       const post = getPost(subPost)
       if (post) {
@@ -96,6 +92,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    console.log('onSubmit', form.getValues())
 
     form.setValue('parts', hasParts ? form.getValues('parts').slice(0, partsCount) : [])
     form.handleSubmit(async (data) => {
@@ -115,7 +112,6 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       <EmissionFactorForm
         form={form}
         detailedGES={detailedGES}
-        post={post}
         error={error}
         hasParts={hasParts}
         setHasParts={setHasParts}

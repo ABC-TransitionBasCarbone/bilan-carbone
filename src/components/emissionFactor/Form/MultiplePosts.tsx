@@ -1,19 +1,26 @@
-import { Post } from '@/services/posts'
+import { Post, PostObject } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import Posts from './Posts'
 
 interface Props<T extends EmissionFactorCommand> {
-  post?: Post
+  post?: PostObject
   form: UseFormReturn<T>
 }
 
-const MultiplePosts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Props<T>) => {
-  const [posts, setPosts] = useState<{ id: number; post?: Post }[]>(initalPost ? [{ id: 0, post: initalPost }] : [])
+const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
+  const [posts, setPosts] = useState<PostObject>({})
+
+
+  useEffect(() => {
+   const postObj = (form.getValues("subPosts") as PostObject) || {}
+    console.log("tmpPosts",  Object.keys(postObj));
+    setPosts(postObj)
+  }, [])
 
   const addPost = () => {
-    setPosts([...posts, { id: posts.length + 1 }])
+    setPosts({...posts, "" : []})
   }
 
   // const handleChange = (id :number, event) => {
@@ -31,9 +38,9 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, post: initalPost
       <button type="button" onClick={addPost}>
         Add Post
       </button>
-      {posts.map((postObj) => (
-        <div key={postObj.id}>
-          <Posts form={form} post={postObj.post} />
+      {Object.keys(posts).map((postKey) => (
+        <div key={postKey}>
+          <Posts form={form} subPosts={posts[postKey as Post]} />
         </div>
       ))}
     </div>

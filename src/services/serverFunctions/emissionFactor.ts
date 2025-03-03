@@ -19,6 +19,7 @@ import { canReadStudy } from '../permissions/study'
 import { getStudyParentOrganization } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
+import { flattenSubposts } from '@/utils/post'
 
 export const getEmissionFactors = async (studyId?: string) => {
   const session = await auth()
@@ -125,9 +126,6 @@ export const createEmissionFactorCommand = async ({
     return NOT_AUTHORIZED
   }
 
-  const flattenSubposts = Object.keys(subPosts)
-    .map((post) => subPosts[post].flat())
-    .flat()
 
   const emissionFactor = await createEmissionFactor({
     ...command,
@@ -136,7 +134,7 @@ export const createEmissionFactorCommand = async ({
     reliability: 5,
     organization: { connect: { id: user.organizationId } },
     unit: unit as Unit,
-    subPosts: flattenSubposts,
+    subPosts: flattenSubposts(subPosts),
     metaData: {
       create: {
         language: local,

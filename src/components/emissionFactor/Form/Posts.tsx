@@ -4,32 +4,33 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { Post, subPostsByPost } from '@/services/posts'
+import { Post, PostObject, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { getPost } from '@/utils/post'
 import { FormControl, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { Control, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
+
 
 interface Props<T extends EmissionFactorCommand> {
-  post?: Post
+  subPosts?: SubPost[] 
   form: UseFormReturn<T>
+  onChange: (updatedPost: Post) => void
 }
 
-type PostSelected = {
-  [key in Post]: SubPost[]
-}
 
-const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Props<T>) => {
+
+const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts, onChange }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tGlossary = useTranslations('emissionFactors.create.glossary')
   const tPost = useTranslations('emissionFactors.post')
-  const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>([])
-  const [post, setPost] = useState<Post | undefined>(initalPost)
+  const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
+  
+  const [post, setPost] = useState<Post | undefined>(getPost(initalSubPosts?.[0]))
   const [glossary, setGlossary] = useState('')
 
-  const control = form.control as Control<EmissionFactorCommand>
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
   const posts = useMemo(() => Object.keys(Post).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
@@ -48,7 +49,7 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
     setSelectedSubPosts([])
     if (post) {
       // if post is already selected, reset subPosts
-      const currentSubPosts: PostSelected = form.getValues('subPosts') as PostSelected || {}
+      const currentSubPosts: PostObject = form.getValues('subPosts') as PostObject || {}
       delete currentSubPosts[post]
       setValue('subPosts', currentSubPosts)
 
@@ -60,10 +61,15 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
   const handleSelectSubPost = (subPostsArr: string[]) => {
     if (!post) return
     setSelectedSubPosts(subPostsArr as SubPost[])
-    const currentSubPosts: PostSelected = form.getValues('subPosts') || {}
+    const currentSubPosts: PostObject = form.getValues('subPosts') || {}
     const newSubPosts = { ...currentSubPosts, [post]: subPostsArr }
     setValue('subPosts', newSubPosts)
     console.log('new', newSubPosts)
+  }
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedPost = { ...post, content: event.target.value }
+    onChange(updatedPost)
   }
 
   return (
