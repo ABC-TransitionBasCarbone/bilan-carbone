@@ -141,7 +141,6 @@ export const createStudyCommand = async ({
     ...command,
     createdBy: { connect: { id: session.user.id } },
     organization: { connect: { id: organizationId } },
-    version: { connect: { id: activeVersion.id } },
     isPublic: command.isPublic === 'true',
     allowedUsers: {
       createMany: { data: rights },
