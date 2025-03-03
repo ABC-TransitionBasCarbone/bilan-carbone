@@ -1,16 +1,24 @@
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { checkLevel } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/onganization'
-import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
+import { Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationById } from './organization'
 import { getUserOrganizations } from './user'
 
-export const createStudy = (study: Prisma.StudyCreateInput) =>
-  prismaClient.study.create({
-    data: study,
-  })
+export const createStudy = async (data: Prisma.StudyCreateInput) => {
+  const dbStudy = await prismaClient.study.create({ data })
+  const studyEmissionFactorVersions = []
+  for (const source of Object.values(Import).filter((source) => source !== Import.Manual)) {
+    const lastestImportVersion = await getSourceLastestImportVersionId(source)
+    if (lastestImportVersion) {
+      studyEmissionFactorVersions.push({ studyId: dbStudy.id, source, importVersionId: lastestImportVersion.id })
+    }
+  }
+  await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
+  return dbStudy
+}
 
 const fullStudyInclude = {
   emissionSources: {
@@ -331,3 +339,10 @@ export const getStudyValidatedEmissionsSources = async (studyId: string) => {
     validated: study.emissionSources.filter((emissionSource) => emissionSource.validated).length,
   }
 }
+
+const getSourceLastestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
+  (transaction || prismaClient).emissionFactorImportVersion.findFirst({
+    select: { id: true, source: true },
+    where: { source },
+    orderBy: { createdAt: 'desc' },
+  })

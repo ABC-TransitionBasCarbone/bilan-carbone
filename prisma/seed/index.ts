@@ -1,6 +1,7 @@
 import { signPassword } from '@/services/auth'
 import { reCreateBegesRules } from '@/services/exportRules/beges'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
+import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import { faker } from '@faker-js/faker'
 import {
   EmissionFactorStatus,
@@ -34,6 +35,7 @@ const users = async () => {
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
   await prisma.studyEmissionSource.deleteMany()
+  await prisma.studyEmissionFactorVersion.deleteMany()
   await prisma.contributors.deleteMany()
 
   await prisma.studySite.deleteMany()
@@ -41,7 +43,6 @@ const users = async () => {
   await prisma.study.deleteMany()
 
   await prisma.emissionFactorImportVersion.deleteMany()
-  await prisma.studyEmissionFactorVersion.deleteMany()
 
   await prisma.site.deleteMany()
   await prisma.userApplicationSettings.deleteMany()
@@ -355,6 +356,12 @@ const users = async () => {
         },
       },
     }),
+  )
+
+  await Promise.all(
+    Object.values(Import)
+      .filter((source) => source !== Import.Manual)
+      .map((source) => addSourceToStudies(source, prisma)),
   )
 
   await Promise.all(

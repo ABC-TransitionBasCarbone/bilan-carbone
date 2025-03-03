@@ -1,4 +1,5 @@
 import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromCSV'
+import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import {
   ControlMode,
   EmissionFactorStatus,
@@ -93,6 +94,12 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       },
     },
   })
+
+  await Promise.all(
+    Object.values(Import)
+      .filter((source) => source !== Import.Manual)
+      .map((source) => addSourceToStudies(source, prisma)),
+  )
 
   await prisma.userOnStudy.create({
     data: {
