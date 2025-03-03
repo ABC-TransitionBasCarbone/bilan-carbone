@@ -282,6 +282,7 @@ export const deleteStudy = async (id: string) => {
       transaction.contributors.deleteMany({ where: { studyId: id } }),
       transaction.studySite.deleteMany({ where: { studyId: id } }),
       transaction.document.deleteMany({ where: { studyId: id } }),
+      transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
     ])
     await transaction.study.delete({ where: { id } })
   })
