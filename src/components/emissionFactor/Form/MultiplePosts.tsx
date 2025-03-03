@@ -1,11 +1,12 @@
 import { Post, PostObject } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { useEffect, useMemo, useState } from 'react'
-import { Control, Controller, Field, FieldPath, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import { Control, Controller, FieldPath, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import Posts from './Posts'
-import { Select } from '@/components/base/Select'
 import { useTranslations } from 'next-intl'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
+import { FormSelect } from '@/components/form/Select'
+import { Select } from '@/components/base/Select'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
@@ -26,9 +27,6 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
     setPosts(postObj)
   }, [])
 
-  const addPost = () => {
-  }
-
   const handleSelectPost = (event : SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as Post
     const currentSubPosts = {...posts, [selectedPost] : []}
@@ -41,32 +39,21 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
   };
 
   return (
-    <div>
-      {/* <button type="button" onClick={addPost}>
-        Add Post
-      </button> */}
-
-    <Controller
-      name={"subPosts" as FieldPath<T>}
-      control={control}
-      render={({ fieldState: { error } }) => (
-        <FormControl error={!!error} fullWidth className="inputContainer">
-
+    <div className='flex-col'>
+      {/* Real posts/Subpost selection */}
       {Object.keys(posts).map((postKey) => (
         <Box key={postKey} sx={{mb: 2}}>
           <Posts onChange={handleChange} form={form} post={postKey as Post} subPosts={posts[postKey as Post]} />
         </Box>
       ))}
-      <FormControl sx={{width: '40%'}}>
-      <Select
-          name="subPosts"
-          data-testid="emission-factor-post"
-          labelId="post-select-label"
-          value={''}
+
+      {/* Adding post logic from a select */}
+      <FormControl sx={{ width: '40%' }} error={Object.keys(posts).length === 0}>
+        <Select
+          name={"post"}
           onChange={handleSelectPost}
           label={t('post')}
-          // icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
-          iconPosition="after"
+          fullWidth
         >
           {postSelection.map((post) => (
             <MenuItem key={post} value={post}>
@@ -76,10 +63,16 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
         </Select>
         </FormControl>
 
-          {error && error.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
+      {/* display error message */}
+    <Controller
+      name={"subPosts" as FieldPath<T>}
+      control={control}
+      render={({fieldState: { error } }) => (
+        <FormControl error={!!error}>
+          {error && error.message && <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>}
         </FormControl>
-        )}
-      />
+      )}
+    />
     </div>
   )
 }

@@ -9,7 +9,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import { Post, PostObject, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
-import { Box, FormControl, MenuItem, SelectChangeEvent } from '@mui/material'
+import { Box, FormControl, FormHelperText, MenuItem, OutlinedInput, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -84,7 +84,7 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
     <Box sx={{ display: 'flex', w: '100%', gap: 2, alignItems: "end"}}>
       <FormControl sx={{ width: '40%' }}>
         <Select
-          name="subPosts"
+          name="post"
           data-testid="emission-factor-post"
           labelId="post-select-label"
           value={post || ''}
@@ -100,15 +100,17 @@ const Posts = <T extends EmissionFactorCommand>({ form, subPosts: initalSubPosts
           ))}
         </Select>
       </FormControl>
-      <FormControl sx={{ width: '50%' }}>
+      <FormControl sx={{ width: '50%' }} error={selectedSubPosts?.length === 0}>
       <MultiSelect
-        name="subpost"
+        name="subPosts"
         data-testid="emission-factor-subPost"
         labelId="post-select-label"
         value={selectedSubPosts || []}
         onChange={handleSelectSubPost}
         label={t('subPost')}
         options={translatedSubPosts}
+        placeholder="placeholdertest"
+        translation={tPost}
       />
       </FormControl>
       <Button
