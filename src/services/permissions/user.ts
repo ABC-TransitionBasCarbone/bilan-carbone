@@ -1,3 +1,4 @@
+import { canEditMemberRole } from '@/utils/onganization'
 import { User as DbUser, Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 
@@ -68,7 +69,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (!isAdmin(user.role) && user.role !== Role.GESTIONNAIRE) {
+  if (!canEditMemberRole(user)) {
     return false
   }
 

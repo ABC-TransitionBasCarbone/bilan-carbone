@@ -1,7 +1,7 @@
 'use client'
 import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/user'
-import { isAdmin } from '@/services/permissions/user'
+import { canEditMemberRole } from '@/utils/onganization'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'
@@ -22,7 +22,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const tLevel = useTranslations('level')
   const tRole = useTranslations('role')
   const [displayRoles, setDisplayRoles] = useState(false)
-  const canUpdateTeam = isAdmin(user.role) || user.role === Role.GESTIONNAIRE
+  const canUpdateTeam = canEditMemberRole(user)
 
   const columns = useMemo(() => {
     const columns: ColumnDef<TeamMember>[] = [

@@ -2,9 +2,7 @@ import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import EditOrganizationPage from '@/components/pages/EditOrganization'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationWithSitesById } from '@/db/organization'
-import { isAdmin } from '@/services/permissions/user'
-import { isInOrgaOrParent } from '@/utils/onganization'
-import { Role } from '@prisma/client'
+import { canEditOrganization } from '@/utils/onganization'
 import { UUID } from 'crypto'
 
 interface Props {
@@ -19,12 +17,8 @@ const OrganizationView = async (props: Props & UserProps) => {
     return <NotFound />
   }
 
-  if (!isAdmin(props.user.role) && props.user.role !== Role.GESTIONNAIRE) {
-    return <NotFound />
-  }
-
   const organization = await getOrganizationWithSitesById(id)
-  if (!organization || !isInOrgaOrParent(props.user.organizationId, organization)) {
+  if (!organization || !canEditOrganization(props.user, organization)) {
     return <NotFound />
   }
 
