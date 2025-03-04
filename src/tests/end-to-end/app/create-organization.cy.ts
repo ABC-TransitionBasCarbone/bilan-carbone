@@ -6,7 +6,7 @@ describe('Create organization', () => {
   })
 
   it('should create a child organization as a cr user', () => {
-    cy.login('bc-cr-default-1@yopmail.com', 'password-1')
+    cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
 
     cy.getByTestId('new-organization').click()
 

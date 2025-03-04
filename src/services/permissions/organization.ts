@@ -41,7 +41,7 @@ export const canUpdateOrganization = async (user: User, command: UpdateOrganizat
   }
 
   const organization = await getOrganizationById(dbUser.organizationId)
-  if (!organization || (!organization.isCR && user.role === Role.DEFAULT)) {
+  if (!organization || (!organization.isCR && user.role === Role.COLLABORATOR)) {
     return false
   }
 

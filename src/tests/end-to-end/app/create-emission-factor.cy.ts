@@ -35,7 +35,7 @@ describe('Create emission factor', () => {
     cy.getByTestId('cell-emission-Valeur').first().should('have.text', '12 kgCO₂e/GWh')
 
     cy.logout()
-    cy.login('bc-default-2@yopmail.com', 'password-2')
+    cy.login('bc-collaborator-2@yopmail.com', 'password-2')
     cy.visit('/facteurs-d-emission')
   })
 

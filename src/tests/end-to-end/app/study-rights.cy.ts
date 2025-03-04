@@ -66,7 +66,7 @@ describe('Study Rights', () => {
 
     // Existing user outside of organization without rights
     cy.getByTestId('study-rights-change-button').click()
-    cy.getByTestId('study-rights-email').type('bc-default-0@yopmail.com')
+    cy.getByTestId('study-rights-email').type('bc-collaborator-0@yopmail.com')
     cy.getByTestId('study-rights-role').click()
     cy.get('[data-value="Reader"]').click()
 
@@ -81,18 +81,18 @@ describe('Study Rights', () => {
     cy.get('#new-study-right-other-organization-warning').should('be.visible')
     cy.getByTestId('new-study-right-modale-accept').click()
     cy.wait('@create')
-    cy.getByTestId('study-rights-table-line').eq(1).contains('bc-default-0@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line').eq(1).contains('bc-collaborator-0@yopmail.comLecteur')
 
     // Existing user outside of organization with rights
     cy.getByTestId('study-rights-change-button').click()
-    cy.getByTestId('study-rights-email').type('bc-default-2@yopmail.com')
+    cy.getByTestId('study-rights-email').type('bc-collaborator-2@yopmail.com')
     cy.getByTestId('study-rights-role').click()
     cy.get('[data-value="Editor"]').click()
 
     cy.getByTestId('study-rights-create-button').click()
     cy.getByTestId('new-study-right-modale-accept').click()
     cy.wait('@create')
-    cy.getByTestId('study-rights-table-line').eq(2).contains('bc-default-2@yopmail.comÉditeur')
+    cy.getByTestId('study-rights-table-line').eq(2).contains('bc-collaborator-2@yopmail.comÉditeur')
 
     cy.getByTestId('study-rights-change-button').click()
     cy.getByTestId('study-rights-email').type('bc-admin-2@yopmail.com')
@@ -107,7 +107,7 @@ describe('Study Rights', () => {
     // Organization's user without rights
     cy.getByTestId('study-rights-change-button').click()
     cy.getByTestId('study-rights-email').click()
-    cy.contains('[data-option-index]', 'bc-default-1@yopmail.com').click()
+    cy.contains('[data-option-index]', 'bc-collaborator-1@yopmail.com').click()
     cy.getByTestId('study-rights-role').within(() => {
       cy.get('input').should('have.value', '')
       cy.get('input').should('not.be.disabled')
@@ -127,12 +127,12 @@ describe('Study Rights', () => {
     // Organization's user with rights
     cy.getByTestId('study-rights-change-button').click()
     cy.getByTestId('study-rights-email').click()
-    cy.contains('[data-option-index]', 'bc-default-1@yopmail.com').click()
+    cy.contains('[data-option-index]', 'bc-collaborator-1@yopmail.com').click()
     cy.getByTestId('study-rights-role').click()
     cy.get('[data-value="Validator"]').click()
     cy.getByTestId('study-rights-create-button').click()
     cy.wait('@create')
-    cy.getByTestId('study-rights-table-line').eq(3).contains('bc-default-1@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line').eq(3).contains('bc-collaborator-1@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line')
       .eq(3)
       .within(() => cy.get('input').should('not.be.disabled'))
@@ -146,7 +146,7 @@ describe('Study Rights', () => {
         cy.get('input').should('be.disabled')
       })
     // cannot edit external or untrained user's rights
-    cy.getByTestId('study-rights-table-line').eq(2).contains('bc-default-0@yopmail.comLecteur')
+    cy.getByTestId('study-rights-table-line').eq(2).contains('bc-collaborator-0@yopmail.comLecteur')
     cy.getByTestId('study-rights-table-line')
       .eq(2)
       .within(() => cy.get('input').should('be.disabled'))
@@ -160,7 +160,7 @@ describe('Study Rights', () => {
       .within(() => cy.get('input').should('be.disabled'))
     // Validators can edit other people's rights
     // TODO : investigate why edition may be in error
-    // cy.getByTestId('study-rights-table-line').eq(2).contains('bc-default-1@yopmail.comValidateur')
+    // cy.getByTestId('study-rights-table-line').eq(2).contains('bc-collaborator-1@yopmail.comValidateur')
     // cy.getByTestId('study-rights-table-line')
     //   .eq(2)
     //   .within(() => {
@@ -169,18 +169,18 @@ describe('Study Rights', () => {
     //   })
     // cy.get('[data-value="Editor"]').click()
     // cy.wait('@update')
-    // cy.getByTestId('study-rights-table-line').eq(2).contains('bc-default-1@yopmail.comÉditeur')
+    // cy.getByTestId('study-rights-table-line').eq(2).contains('bc-collaborator-1@yopmail.comÉditeur')
 
     // Editors cannot edit validator's rights
     cy.url().then((link) => {
       cy.logout()
-      cy.login('bc-default-2@yopmail.com', 'password-2')
+      cy.login('bc-collaborator-2@yopmail.com', 'password-2')
       cy.visit(link)
     })
     cy.getByTestId('study-rights-change-button').should('exist')
     cy.getByTestId('select-study-role').should('exist')
 
-    cy.getByTestId('study-rights-table-line').eq(3).contains('bc-default-1@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line').eq(3).contains('bc-collaborator-1@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line')
       .eq(3)
       .within(() => cy.get('input').should('be.disabled'))
@@ -227,7 +227,7 @@ describe('Study Rights', () => {
 
   //   cy.getByTestId('new-study-name').scrollIntoView()
   //   cy.getByTestId('new-study-name').should('be.visible').type('Study from admin')
-  //   cy.getByTestId('new-validator-name').type('bc-default-0@yopmail.com')
+  //   cy.getByTestId('new-validator-name').type('bc-collaborator-0@yopmail.com')
   //   cy.get('[data-option-index="0"]').click()
 
   //   cy.getByTestId('new-study-endDate').within(() => {
@@ -240,7 +240,7 @@ describe('Study Rights', () => {
 
   //   cy.getByTestId('study-cadrage-link').click()
 
-  //   cy.getByTestId('study-rights-table-line').eq(1).contains('bc-default-0@yopmail.comValidateur')
+  //   cy.getByTestId('study-rights-table-line').eq(1).contains('bc-collaborator-0@yopmail.comValidateur')
   //   cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-0@yopmail.comValidateur')
   // })
 
@@ -267,6 +267,6 @@ describe('Study Rights', () => {
   //   cy.getByTestId('study-cadrage-link').click()
 
   //   cy.getByTestId('study-rights-table-line').eq(1).contains('bc-gestionnaire-0@yopmail.comValidateur')
-  //   cy.getByTestId('study-rights-table-line').eq(0).contains('bc-default-0@yopmail.comÉditeur')
+  //   cy.getByTestId('study-rights-table-line').eq(0).contains('bc-collaborator-0@yopmail.comÉditeur')
   // })
 })

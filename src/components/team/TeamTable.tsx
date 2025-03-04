@@ -68,7 +68,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         expIcon
         id="team-table-title"
         actions={
-          user.role !== Role.DEFAULT
+          user.role !== Role.COLLABORATOR
             ? [
                 {
                   actionType: 'link',

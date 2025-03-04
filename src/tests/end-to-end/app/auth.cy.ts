@@ -14,7 +14,9 @@ describe('Authentication', () => {
     cy.url().should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-1@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
+      'bc-collaborator-1@yopmail.com',
+    )
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('test1')
     cy.getByTestId('login-button').click()
@@ -30,7 +32,9 @@ describe('Authentication', () => {
     cy.url().should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-1@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
+      'bc-collaborator-1@yopmail.com',
+    )
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('password-1')
     cy.getByTestId('login-button').click()
@@ -44,18 +48,22 @@ describe('Authentication', () => {
     cy.visit('/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-1@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
+      'bc-collaborator-1@yopmail.com',
+    )
     cy.getByTestId('reset-password-link').click()
 
     cy.url().should('include', '/reset-password')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should(
       'have.value',
-      'bc-default-1@yopmail.com',
+      'bc-collaborator-1@yopmail.com',
     )
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').clear()
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-2@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
+      'bc-collaborator-2@yopmail.com',
+    )
     cy.getByTestId('reset-button').click()
 
     cy.visit('http://localhost:1080')
@@ -78,7 +86,9 @@ describe('Authentication', () => {
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
     cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-2@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
+      'bc-collaborator-2@yopmail.com',
+    )
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('new-Password-2')
     cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
@@ -90,7 +100,9 @@ describe('Authentication', () => {
     cy.url().should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-default-2@yopmail.com')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
+      'bc-collaborator-2@yopmail.com',
+    )
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('password-2')
     cy.getByTestId('login-button').click()
@@ -101,7 +113,7 @@ describe('Authentication', () => {
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should(
       'have.value',
-      'bc-default-2@yopmail.com',
+      'bc-collaborator-2@yopmail.com',
     )
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').clear()

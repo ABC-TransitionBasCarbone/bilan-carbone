@@ -29,7 +29,7 @@ describe('Edit study', () => {
 
     cy.getByTestId('new-study-name').type('My new study')
     cy.getByTestId('new-validator-name').within(() => {
-      cy.get('input').type('bc-default-0@yopmail.com')
+      cy.get('input').type('bc-collaborator-0@yopmail.com')
     })
     cy.get('[data-option-index="0"]').click()
 

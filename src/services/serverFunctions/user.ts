@@ -125,7 +125,7 @@ export const addMember = async (member: AddMemberCommand) => {
   if (!memberExists) {
     const newMember = {
       ...member,
-      role: Role.DEFAULT,
+      role: Role.COLLABORATOR,
       status: UserStatus.VALIDATED,
       level: null,
       organizationId: session.user.organizationId,
@@ -140,7 +140,7 @@ export const addMember = async (member: AddMemberCommand) => {
       ...member,
       status: UserStatus.VALIDATED,
       level: memberExists.level ? memberExists.level : null,
-      role: memberExists.level ? memberExists.role : Role.DEFAULT,
+      role: memberExists.level ? memberExists.role : Role.COLLABORATOR,
       organizationId: session.user.organizationId,
     }
     await updateUser(memberExists.id, updateMember)

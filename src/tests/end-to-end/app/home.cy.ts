@@ -18,7 +18,7 @@ describe('Home page', () => {
   })
 
   it('Should display the list of actualities as a CR user', () => {
-    cy.login('bc-cr-default-1@yopmail.com', 'password-1')
+    cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
 
     cy.getByTestId('home-actualities').scrollIntoView()
     cy.getByTestId('home-actualities').should('be.visible')
@@ -28,7 +28,7 @@ describe('Home page', () => {
   })
 
   it('Should display the list of organizations as a CR user', () => {
-    cy.login('bc-cr-default-1@yopmail.com', 'password-1')
+    cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
 
     cy.getByTestId('home-organizations').scrollIntoView()
     cy.getByTestId('home-organizations').should('be.visible')

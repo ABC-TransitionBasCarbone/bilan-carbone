@@ -190,7 +190,7 @@ describe('Study permissions service', () => {
         user: {
           id: 'mocked-default-user-id',
           organizationId: mockedOrganizationId,
-          role: 'DEFAULT',
+          role: 'COLLABORATOR',
         },
       })
       const result = await canDeleteStudy(mockedStudyId)
