@@ -57,6 +57,7 @@ const Posts = <T extends EmissionFactorCommand>({
     }
     currentSubPosts[selectedPost] = []
     setValue('subPosts', currentSubPosts)
+
     setPost(selectedPost)
     onChange(currentSubPosts)
   }
@@ -79,6 +80,7 @@ const Posts = <T extends EmissionFactorCommand>({
     const currentSubPosts: PostObject = (form.getValues('subPosts' as Path<T>) as PostObject) || {}
     const newSubPosts = { ...currentSubPosts, [post]: subPostsArr }
     setValue('subPosts', newSubPosts)
+    onChange(newSubPosts)
   }
 
   return (
