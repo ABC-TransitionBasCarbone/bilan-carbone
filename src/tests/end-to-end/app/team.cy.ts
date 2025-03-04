@@ -1,12 +1,64 @@
 import { Role } from '@prisma/client'
 
 describe('Team', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
+  })
 
+  beforeEach(() => {
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
     cy.intercept('POST', '/api/auth/signout').as('logout')
     cy.intercept('POST', '/equipe/ajouter').as('new-member')
+  })
+
+  it('admins can edit team member role', () => {
+    cy.login('bc-admin-1@yopmail.com', 'password-1')
+    cy.visit('/equipe')
+    cy.getByTestId('team-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('exist')
+      })
+  })
+
+  it('super-admins can edit team member role', () => {
+    cy.login('bc-super_admin-1@yopmail.com', 'password-1')
+    cy.visit('/equipe')
+    cy.getByTestId('team-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('exist')
+      })
+  })
+
+  it('gestionnaires can edit team member role', () => {
+    cy.login('bc-gestionnaire-1@yopmail.com', 'password-1')
+    cy.visit('/equipe')
+    cy.getByTestId('team-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('exist')
+      })
+  })
+
+  it('collaborators cannot edit team member role', () => {
+    cy.login('bc-collaborator-1@yopmail.com', 'password-1')
+    cy.visit('/equipe')
+    cy.getByTestId('team-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('not.exist')
+      })
+  })
+
+  it('members cannot edit team member role', () => {
+    cy.login('bc-default-1@yopmail.com', 'password-1')
+    cy.visit('/equipe')
+    cy.getByTestId('team-table-line')
+      .eq(0)
+      .within(() => {
+        cy.get('input').should('not.exist')
+      })
   })
 
   it('should change a member role', () => {
@@ -21,9 +73,33 @@ describe('Team', () => {
         cy.get('input').should('be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(3).contains('bc-super_admin-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(1).contains('bc-collaborator-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line')
+      .eq(1)
+      .within(() => {
+        cy.get('input').should('have.value', Role.COLLABORATOR)
+        cy.get('input').should('not.be.disabled')
+      })
+
+    cy.getByTestId('team-table-line').eq(2).contains('bc-default-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line')
+      .eq(2)
+      .within(() => {
+        cy.get('input').should('have.value', Role.DEFAULT)
+        cy.get('input').should('not.be.disabled')
+      })
+
+    cy.getByTestId('team-table-line').eq(3).contains('bc-gestionnaire-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
       .eq(3)
+      .within(() => {
+        cy.get('input').should('have.value', Role.GESTIONNAIRE)
+        cy.get('input').should('not.be.disabled')
+      })
+
+    cy.getByTestId('team-table-line').eq(4).contains('bc-super_admin-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line')
+      .eq(4)
       .within(() => {
         cy.get('input').should('have.value', Role.SUPER_ADMIN)
         cy.get('input').should('be.disabled')
