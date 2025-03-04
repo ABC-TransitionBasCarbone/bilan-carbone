@@ -68,7 +68,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (user.role === Role.COLLABORATOR) {
+  if (!isAdmin(user.role) && user.role !== Role.GESTIONNAIRE) {
     return false
   }
 
@@ -80,7 +80,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (!member.level && newRole !== Role.GESTIONNAIRE) {
+  if (!member.level && newRole !== Role.GESTIONNAIRE && newRole !== Role.DEFAULT) {
     return false
   }
 

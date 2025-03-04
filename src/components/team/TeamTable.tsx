@@ -22,6 +22,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const tLevel = useTranslations('level')
   const tRole = useTranslations('role')
   const [displayRoles, setDisplayRoles] = useState(false)
+  const canUpdateTeam = isAdmin(user.role) || user.role === Role.GESTIONNAIRE
 
   const columns = useMemo(() => {
     const columns: ColumnDef<TeamMember>[] = [
@@ -33,7 +34,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       { header: t('email'), accessorKey: 'email' },
       { header: t('level'), accessorFn: (member: TeamMember) => (member.level ? tLevel(member.level) : '') },
     ]
-    if (isAdmin(user.role) || user.role === Role.GESTIONNAIRE) {
+    if (canUpdateTeam) {
       columns.push({
         header: t('role'),
         accessorKey: 'role',
@@ -68,7 +69,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         expIcon
         id="team-table-title"
         actions={
-          user.role !== Role.COLLABORATOR
+          canUpdateTeam
             ? [
                 {
                   actionType: 'link',

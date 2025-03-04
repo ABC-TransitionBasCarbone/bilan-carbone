@@ -254,7 +254,7 @@ const users = async () => {
         lastName: faker.person.lastName(),
         password: await signPassword('password'),
         organizationId: regularOrganizations[1].id,
-        role: Role.COLLABORATOR,
+        role: Role.DEFAULT,
         status: UserStatus.ACTIVE,
       },
     ],
