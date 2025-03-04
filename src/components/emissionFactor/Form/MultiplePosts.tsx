@@ -11,19 +11,20 @@ import Posts from './Posts'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
-  control: Control<T>
 }
 
-const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props<T>) => {
+const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const tGlossary = useTranslations('emissionFactors.create.glossary')
 
+  const control = form.control as Control<EmissionFactorCommand>
+  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
+
   const [posts, setPosts] = useState<PostObject>({})
   const [glossary, setGlossary] = useState('')
-  {
-    /* check if post is in the list already to avoid issues */
-  }
+
+  // check if post is in the list already to avoid issues
   const postSelection: Post[] = useMemo(
     () =>
       Object.keys(Post)
@@ -31,8 +32,6 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
         .filter((p) => !Object.keys(posts).includes(p)) as Post[],
     [tPost, posts],
   )
-
-  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
   useEffect(() => {
     const postObj = (form.getValues('subPosts' as FieldPath<T>) as PostObject) || {}
