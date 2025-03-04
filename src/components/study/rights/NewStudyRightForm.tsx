@@ -27,6 +27,9 @@ interface Props {
   userRole: StudyRole
 }
 
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
+const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
+
 const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.new')
@@ -138,11 +141,9 @@ const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => 
         {error && (
           <p data-testid="study-rights-create-error">
             {t.rich(error, {
-              support: (children) => (
-                <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>{children}</Link>
-              ),
+              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
               link: (children) => (
-                <Link href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''} target="_blank" rel="noreferrer noopener">
+                <Link href={faq} target="_blank" rel="noreferrer noopener">
                   {children}
                 </Link>
               ),

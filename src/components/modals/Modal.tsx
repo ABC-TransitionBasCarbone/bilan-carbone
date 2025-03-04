@@ -40,7 +40,7 @@ const Modal = ({ label, open, onClose, title, children, actions, big }: Props) =
       <Typography id={`${label}-modale-title`} variant="h6" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
         {title}
       </Typography>
-      <div className={classNames(styles.content, 'flex-col grow')} id={`${label}-modale-description`}>
+      <div className={classNames(styles.content, 'flex-col grow mb1')} id={`${label}-modale-description`}>
         {children}
       </div>
       {actions && (

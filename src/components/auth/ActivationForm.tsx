@@ -16,6 +16,7 @@ import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
+const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
 const ActivationForm = () => {
   const t = useTranslations('activation')
@@ -91,7 +92,12 @@ const ActivationForm = () => {
         {message && (
           <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
             {t.rich(message, {
-              link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
+              link: (children) => (
+                <Link href={faq} target="_blank" rel="noreferrer noopener">
+                  {children}
+                </Link>
+              ),
             })}
           </p>
         )}

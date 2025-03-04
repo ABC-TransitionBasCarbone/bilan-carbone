@@ -8,9 +8,9 @@ import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
+import StudyPostsCard from '../study/card/StudyPostsCard'
 import StudyPostInfography from '../study/infography/StudyPostInfography'
 import useStudySite from '../study/site/useStudySite'
-import StudyPostsCard from './StudyPostsCard'
 
 interface Props {
   post: Post

@@ -1,6 +1,8 @@
 'use client'
 
+import HelpIcon from '@/components/base/HelpIcon'
 import { FormRadio } from '@/components/form/Radio'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
 import {
@@ -22,7 +24,9 @@ interface Props {
 
 const StudyPublicStatus = ({ study, disabled }: Props) => {
   const tForm = useTranslations('study.new')
+  const tGlossary = useTranslations('study.new.glossary')
   const [error, setError] = useState('')
+  const [glossary, setGlossary] = useState('')
 
   const form = useForm<ChangeStudyPublicStatusCommand>({
     resolver: zodResolver(ChangeStudyPublicStatusCommandValidation),
@@ -51,10 +55,21 @@ const StudyPublicStatus = ({ study, disabled }: Props) => {
 
   return (
     <>
-      <FormRadio control={form.control} translation={tForm} name="isPublic" row label={tForm('isPublicTitle')}>
+      <FormRadio
+        control={form.control}
+        translation={tForm}
+        name="isPublic"
+        row
+        label={tForm('isPublicTitle')}
+        icon={<HelpIcon onClick={() => setGlossary('visibility')} label={tGlossary('title')} />}
+        iconPosition="after"
+      >
         <FormControlLabel value="true" control={<Radio />} label={tForm('public')} disabled={disabled} />
         <FormControlLabel value="false" control={<Radio />} label={tForm('private')} disabled={disabled} />
       </FormRadio>
+      <GlossaryModal label="study-status" glossary={glossary} onClose={() => setGlossary('')} t={tGlossary}>
+        <span>{tGlossary('visibilityDescription')}</span>
+      </GlossaryModal>
       {error && <p>{error}</p>}
     </>
   )

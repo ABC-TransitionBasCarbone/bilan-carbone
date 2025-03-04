@@ -9,12 +9,12 @@ import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
-import Leaf from '@mui/icons-material/Spa'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
+import StudyName from '../card/StudyName'
 import Result from './Result'
 import styles from './ResultsContainer.module.css'
 
@@ -71,12 +71,9 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     <>
       {withDependencies === undefined && showTitle && (
         <div className="justify-between mb1">
-          <div className={classNames(styles.studyName, 'align-center')}>
-            <Link className={classNames(styles.studyName, 'align-center')} href={`/etudes/${study.id}`}>
-              <Leaf />
-              {study.name}
-            </Link>
-          </div>
+          <Link className={styles.studyNameLink} href={`/etudes/${study.id}`}>
+            <StudyName name={study.name} />
+          </Link>
           <LinkButton href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</LinkButton>
         </div>
       )}
