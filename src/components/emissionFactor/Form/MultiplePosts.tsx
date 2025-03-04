@@ -69,6 +69,7 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
         <Select
           name={'post'}
           onChange={handleSelectPost}
+          data-testid="emission-factor-post"
           label={t('posts')}
           fullWidth
           icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}

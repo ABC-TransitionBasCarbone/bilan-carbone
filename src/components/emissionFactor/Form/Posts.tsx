@@ -88,7 +88,6 @@ const Posts = <T extends EmissionFactorCommand>({
       <FormControl sx={{ width: '40%' }}>
         <Select
           name="post"
-          data-testid="emission-factor-post"
           labelId="post-select-label"
           value={post || ''}
           onChange={handleSelectPost}

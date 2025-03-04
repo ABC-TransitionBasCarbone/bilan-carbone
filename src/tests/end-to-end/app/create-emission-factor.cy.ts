@@ -21,7 +21,8 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
 
-    cy.getByTestId('emission-factor-valid-button').click()
+    // button might be hidden by the multiselect dropdown
+    cy.getByTestId('emission-factor-valid-button').click({ force: true })
 
     cy.wait('@create')
 
@@ -93,7 +94,8 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
 
-    cy.getByTestId('emission-factor-valid-button').click()
+    // button might be hidden by the multiselect dropdown
+    cy.getByTestId('emission-factor-valid-button').click({ force: true })
 
     cy.wait('@create')
 
@@ -162,7 +164,8 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
 
-    cy.getByTestId('emission-factor-valid-button').click()
+    // button might be hidden by the multiselect dropdown
+    cy.getByTestId('emission-factor-valid-button').click({ force: true })
 
     cy.wait('@create')
 
@@ -257,7 +260,8 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
 
-    cy.getByTestId('emission-factor-valid-button').click()
+    // button might be hidden by the multiselect dropdown
+    cy.getByTestId('emission-factor-valid-button').click({ force: true })
 
     cy.wait('@create')
 
@@ -435,7 +439,8 @@ describe('Create emission factor', () => {
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
 
-    cy.getByTestId('emission-factor-valid-button').click()
+    // button might be hidden by the multiselect dropdown
+    cy.getByTestId('emission-factor-valid-button').click({ force: true })
 
     cy.wait('@create')
 
