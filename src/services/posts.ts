@@ -1,7 +1,7 @@
 import { SubPost } from '@prisma/client'
 
 export type PostObject = {
-  [key in Post | ""]?: SubPost[]
+  [key in Post | '']?: SubPost[]
 }
 
 export enum Post {

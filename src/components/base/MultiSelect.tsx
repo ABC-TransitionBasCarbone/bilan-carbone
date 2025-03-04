@@ -1,6 +1,6 @@
-import {MenuItem, SelectChangeEvent, SelectProps } from '@mui/material'
-import { Select } from './Select'
+import { MenuItem, SelectChangeEvent, SelectProps } from '@mui/material'
 import { useMemo, useState } from 'react'
+import { Select } from './Select'
 
 interface MultiSelectProps {
   icon?: React.ReactNode
@@ -17,13 +17,13 @@ export const MultiSelect = ({
   value,
   onChange,
   options,
-  icon,
-  iconPosition,
   translation,
   placeholder,
   ...selectProps
-}: MultiSelectProps & SelectProps) => {
-  const [selected, setSelected] = useState<string[]>(typeof value === 'string' ? (value.split(',') as string[]) : (value as string[]))
+}: Omit<SelectProps, 'onChange'> & MultiSelectProps) => {
+  const [selected, setSelected] = useState<string[]>(
+    typeof value === 'string' ? (value.split(',') as string[]) : (value as string[]),
+  )
 
   const translatedSelected = useMemo(() => selected.map((v) => translation(v)), [selected, translation])
 
@@ -32,7 +32,7 @@ export const MultiSelect = ({
       target: { value },
     } = event
 
-    const tmpSelected :string[] = typeof value === 'string' ? (value.split(',') as string[]) : (value as string[])
+    const tmpSelected: string[] = typeof value === 'string' ? (value.split(',') as string[]) : (value as string[])
     onChange(tmpSelected)
     setSelected(tmpSelected)
   }
@@ -45,11 +45,10 @@ export const MultiSelect = ({
       onChange={handleChange}
       {...selectProps}
       renderValue={() => {
-
         if (translatedSelected.length === 0) {
-          return <em>{placeholder}</em>;
+          return <em>{placeholder}</em>
         }
-        return translatedSelected.join(', ');
+        return translatedSelected.join(', ')
       }}
     >
       {options.map((option) => (

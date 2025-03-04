@@ -11,6 +11,7 @@ import {
 } from '@/db/emissionFactors'
 import { getUserByEmail } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
+import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -19,7 +20,6 @@ import { canReadStudy } from '../permissions/study'
 import { getStudyParentOrganization } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
-import { flattenSubposts } from '@/utils/post'
 
 export const getEmissionFactors = async (studyId?: string) => {
   const session = await auth()
@@ -125,7 +125,6 @@ export const createEmissionFactorCommand = async ({
   if (!canCreateEmissionFactor()) {
     return NOT_AUTHORIZED
   }
-
 
   const emissionFactor = await createEmissionFactor({
     ...command,

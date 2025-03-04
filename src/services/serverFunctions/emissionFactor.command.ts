@@ -38,11 +38,11 @@ export const EmissionFactorCommandValidation = z.intersection(
       })
       .min(0, 'totalCo2'),
     attribute: z.string().optional(),
-    subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1), {required_error: "type"}).superRefine((val, ctx) => {
+    subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1), { required_error: 'type' }).superRefine((val, ctx) => {
       if (Object.keys(val).length === 0) {
         ctx.addIssue({
           message: 'type',
-          code: z.ZodIssueCode.custom
+          code: z.ZodIssueCode.custom,
         })
         return false
       }
@@ -50,7 +50,7 @@ export const EmissionFactorCommandValidation = z.intersection(
       if (Object.values(val).some((arr) => arr.length === 0)) {
         ctx.addIssue({
           message: 'subPost',
-          code: z.ZodIssueCode.custom
+          code: z.ZodIssueCode.custom,
         })
         return false
       }

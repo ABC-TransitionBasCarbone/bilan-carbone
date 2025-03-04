@@ -1,8 +1,8 @@
 import { UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
-import { flattenSubposts } from '@/utils/post'
 
 let cachedEmissionFactors: AsyncReturnType<typeof getDefaultEmissionFactors> = []
 

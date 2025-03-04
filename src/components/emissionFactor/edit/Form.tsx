@@ -10,12 +10,12 @@ import {
   UpdateEmissionFactorCommand,
   UpdateEmissionFactorCommandValidation,
 } from '@/services/serverFunctions/emissionFactor.command'
+import { getPost } from '@/utils/post'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import EmissionFactorForm from '../Form/EmissionFactorForm'
-import { getPost } from '@/utils/post'
 
 type EmissionFactor = Exclude<DetailedEmissionFactor, null>
 type Part = Exclude<DetailedEmissionFactor, null>['emissionFactorParts'][0]
@@ -52,8 +52,6 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
   const [error, setError] = useState('')
   const [hasParts, setHasParts] = useState(!!(emissionFactor.emissionFactorParts.length > 0))
   const [partsCount, setPartsCount] = useState(emissionFactor.emissionFactorParts.length || 1)
-
-
 
   const getSubPostObject = () => {
     const subPostObject: PostObject = {}
