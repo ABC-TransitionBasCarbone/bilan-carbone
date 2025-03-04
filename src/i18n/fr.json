@@ -914,7 +914,9 @@
     "card": {
       "method": "Consulter la méthodologie Bilan Carbone®",
       "myOrganization": "Mon organisation",
-      "update": "Modifier mes informations"
+      "myClient": "Mon client",
+      "update": "Modifier mes informations",
+      "updateClient": "Modifier mon client"
     }
   },
   "emissionSource": {

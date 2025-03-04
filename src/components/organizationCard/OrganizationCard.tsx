@@ -1,7 +1,7 @@
 'use client'
 
 import { isAdmin } from '@/services/permissions/user'
-import { fetchStudyOrganization } from '@/services/serverFunctions/organization'
+import { getStudyOrganization } from '@/services/serverFunctions/organization'
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -34,8 +34,6 @@ const OrganizationCard = ({ user, organizations }: Props) => {
     [user.role, organizations, defaultOrganization, organization],
   )
 
-  const [canUpdateOrganization, setCanUpdateOrganization] = useState(hasEditionRole)
-
   const { context, contextId } = useAppContextStore()
 
   useEffect(() => {
@@ -45,32 +43,37 @@ const OrganizationCard = ({ user, organizations }: Props) => {
       handleOrganizationContext(contextId)
     } else {
       setOrganization(defaultOrganization)
-      setCanUpdateOrganization(hasEditionRole)
     }
   }, [context, contextId])
 
   const handleStudyContext = async (studyId: string) => {
-    const organization = (await fetchStudyOrganization(studyId)) || defaultOrganization
-    setOrganization(organization)
-    setCanUpdateOrganization(hasEditionRole)
+    const organization = await getStudyOrganization(studyId)
+    setOrganization(organization || undefined)
   }
 
   const handleOrganizationContext = async (organizationId: string) => {
-    const organization = organizations.find((organization) => organization.id === organizationId) || defaultOrganization
+    const organization = organizations.find((organization) => organization.id === organizationId)
     setOrganization(organization)
-    setCanUpdateOrganization(hasEditionRole)
   }
 
   const organizationLink = useMemo(() => {
     const targetOrganization = organization || defaultOrganization
-    return canUpdateOrganization
+    return hasEditionRole
       ? `/organisations/${targetOrganization.id}/modifier`
       : `/organisations/${targetOrganization.id}`
-  }, [organization, defaultOrganization, canUpdateOrganization])
+  }, [organization, defaultOrganization, hasEditionRole])
 
   if (!organization) {
     return null
   }
+
+  const linkLabel = hasEditionRole
+    ? organization.id === defaultOrganization.id
+      ? 'update'
+      : 'updateClient'
+    : organization.id === defaultOrganization.id
+      ? 'myOrganization'
+      : 'myClient'
 
   return (
     <div className={classNames(styles.organizationCard, 'flex w100')}>
@@ -80,7 +83,7 @@ const OrganizationCard = ({ user, organizations }: Props) => {
           <span>{organization.name}</span>
           {hasAccess && (
             <LinkButton color="secondary" href={organizationLink}>
-              {t(canUpdateOrganization ? 'update' : 'myOrganization')}
+              {t(linkLabel)}
             </LinkButton>
           )}
         </div>

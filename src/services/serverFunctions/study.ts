@@ -19,7 +19,7 @@ import {
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail } from '@/db/user'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { getUserRoleOnStudy } from '@/utils/study'
+import { isInOrgaOrParent } from '@/utils/onganization'
 import {
   ControlMode,
   User as DBUser,
@@ -67,13 +67,13 @@ import {
 } from './study.command'
 import { sendInvitation } from './user'
 
-export const fetchStudy = async (studyId: string | null) => {
+export const getStudy = async (studyId: string) => {
   const session = await auth()
   if (!studyId || !session || !session.user) {
     return null
   }
   const study = await getStudyById(studyId, session.user.organizationId)
-  if (!study || !getUserRoleOnStudy(session.user, study)) {
+  if (!study || !hasAccessToStudy(session.user, study)) {
     return null
   }
 
@@ -517,22 +517,21 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   }
 }
 
-const hasAccessToStudy = (userId: string, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) =>
-  study.isPublic ||
-  study.allowedUsers.some((allowedUser) => allowedUser.userId === userId) ||
-  study.contributors.some((contributor) => contributor.userId === userId)
+const hasAccessToStudy = (user: User, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) =>
+  (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization)) ||
+  study.allowedUsers.some((allowedUser) => allowedUser.userId === user.id) ||
+  study.contributors.some((contributor) => contributor.userId === user.id)
 
 export const findStudiesWithSites = async (siteIds: string[]) => {
   const [session, studySites] = await Promise.all([auth(), getStudiesFromSites(siteIds)])
 
-  const userId = session?.user?.id
-
+  const user = session?.user
   const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
   const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site'> & { count: number })[] =
     []
 
   studySites.forEach((studySite) => {
-    if (userId && hasAccessToStudy(userId, studySite.study)) {
+    if (user && hasAccessToStudy(user, studySite.study)) {
       authorizedStudySites.push(studySite)
     } else {
       const targetedSite = unauthorizedStudySites.find(
