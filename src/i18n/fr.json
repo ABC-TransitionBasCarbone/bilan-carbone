@@ -913,7 +913,10 @@
     },
     "card": {
       "method": "Consulter la méthodologie Bilan Carbone®",
-      "update": "Modifier mes informations"
+      "myOrganization": "Mon organisation",
+      "myClient": "Mon client",
+      "update": "Modifier mes informations",
+      "updateClient": "Modifier mon client"
     }
   },
   "emissionSource": {

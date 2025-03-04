@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
-import Organizations from '../organization/Organizations'
+import CRClients from '../organization/CRClients'
 import styles from './CRClientsList.module.css'
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 const CRClientsList = async ({ organizations }: Props) => {
   const t = await getTranslations('organization')
   return organizations.length ? (
-    <Organizations organizations={organizations} />
+    <CRClients organizations={organizations} />
   ) : (
     <div className="justify-center text-center">
       <Box className={classNames(styles.firstClientCard, 'flex-col align-center')}>

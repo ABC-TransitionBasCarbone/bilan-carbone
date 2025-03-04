@@ -2,6 +2,7 @@
 
 import {
   createOrganization,
+  getOrganizationNameById,
   getRawOrganizationById,
   onboardOrganization,
   setOnboarded,
@@ -15,7 +16,23 @@ import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateOrganization, canUpdateOrganization } from '../permissions/organization'
 import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
+import { getStudy } from './study'
 import { OnboardingCommand } from './user.command'
+
+/**
+ *
+ * @param studyId the id of the study whose organisation is being fetched
+ * @returns the id and name of the organization if found, null otherwise
+ * The security and authorization checks are made in the getStudy function
+ * Chloé, if you consider refactoring this function, do not forget to add the security and authorization checks
+ */
+export const getStudyOrganization = async (studyId: string) => {
+  const study = await getStudy(studyId)
+  if (!study) {
+    return null
+  }
+  return getOrganizationNameById(study.organizationId)
+}
 
 export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,

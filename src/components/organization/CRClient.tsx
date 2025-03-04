@@ -3,13 +3,13 @@ import { Organization } from '@prisma/client'
 import classNames from 'classnames'
 import Link from 'next/link'
 import Box from '../base/Box'
-import styles from './Organization.module.css'
+import styles from './CRClient.module.css'
 
 interface Props {
   organization: Organization
 }
 
-const OrganizationCard = ({ organization }: Props) => (
+const CRClient = ({ organization }: Props) => (
   <li data-testid="organization" className="flex">
     <Box className={classNames(styles.card, 'flex grow')}>
       <Link
@@ -23,4 +23,4 @@ const OrganizationCard = ({ organization }: Props) => (
   </li>
 )
 
-export default OrganizationCard
+export default CRClient

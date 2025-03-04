@@ -913,7 +913,10 @@
     },
     "card": {
       "method": "Consult the Bilan Carbone® method",
-      "update": "Update my information"
+      "myOrganization": "My organization",
+      "myClient": "My client",
+      "update": "Update my information",
+      "updateClient": "Update my client"
     }
   },
   "emissionSource": {

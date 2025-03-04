@@ -62,6 +62,7 @@ const fullStudyInclude = {
   },
   contributors: {
     select: {
+      userId: true,
       user: {
         select: {
           id: true,
@@ -75,6 +76,7 @@ const fullStudyInclude = {
   },
   allowedUsers: {
     select: {
+      userId: true,
       user: {
         select: {
           id: true,
@@ -292,8 +294,16 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
         select: {
           name: true,
           isPublic: true,
+          level: true,
           allowedUsers: { select: { userId: true } },
           contributors: { select: { userId: true } },
+          organizationId: true,
+          organization: {
+            select: {
+              id: true,
+              parentId: true,
+            },
+          },
         },
       },
       site: {
