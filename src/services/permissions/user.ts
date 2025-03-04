@@ -15,7 +15,7 @@ export const findUserInfo = (user: User) =>
       updatedAt: true,
     },
     where:
-      user.role === Role.DEFAULT
+      user.role === Role.COLLABORATOR
         ? { status: UserStatus.ACTIVE, organizationId: user.organizationId }
         : { organizationId: user.organizationId },
   }) satisfies Prisma.UserFindManyArgs
@@ -29,7 +29,7 @@ export const canAddMember = (
     return false
   }
 
-  if (user.role === Role.DEFAULT) {
+  if (user.role === Role.COLLABORATOR) {
     return false
   }
 
@@ -48,7 +48,7 @@ export const canDeleteMember = (user: User, member: DbUser | null) => {
     return false
   }
 
-  if (user.role === Role.DEFAULT) {
+  if (user.role === Role.COLLABORATOR) {
     return false
   }
 
@@ -68,7 +68,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (user.role === Role.DEFAULT) {
+  if (user.role === Role.COLLABORATOR) {
     return false
   }
 

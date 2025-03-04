@@ -327,7 +327,7 @@ const getOrCreateUserAndSendStudyInvite = async (
     const newUser = await addUser({
       email: email,
       status: UserStatus.VALIDATED,
-      role: Role.DEFAULT,
+      role: Role.COLLABORATOR,
       firstName: '',
       lastName: '',
     })

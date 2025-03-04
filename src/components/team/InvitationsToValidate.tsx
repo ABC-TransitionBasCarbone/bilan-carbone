@@ -16,7 +16,7 @@ const InvitationsToValidate = ({ user, team }: Props) => {
   const t = useTranslations('team')
   const format = useFormatter()
 
-  return user.role === Role.DEFAULT || team.length === 0 ? null : (
+  return user.role === Role.COLLABORATOR || team.length === 0 ? null : (
     <Block title={t('toValidate')}>
       <ul data-testid="invitations-to-validate" className={classNames(styles.members, 'flex-col')}>
         {team.map((member) => (

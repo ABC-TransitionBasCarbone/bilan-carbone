@@ -125,7 +125,7 @@ const users = async () => {
       organizationId: unOnboardedOrganization.id,
       password: onboardingPassword,
       level: Level.Initial,
-      role: Role.DEFAULT,
+      role: Role.COLLABORATOR,
       status: UserStatus.IMPORTED,
     },
   })
@@ -137,12 +137,11 @@ const users = async () => {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       organizationId: unOnboardedOrganization.id,
-      role: Role.DEFAULT,
+      role: Role.COLLABORATOR,
       status: UserStatus.IMPORTED,
     },
   })
 
-  const clientLessPassword = await signPassword(`client1234`)
   const clientLessOrganization = await prisma.organization.create({
     data: {
       name: faker.company.name(),
@@ -158,8 +157,8 @@ const users = async () => {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       organizationId: clientLessOrganization.id,
-      password: clientLessPassword,
-      role: Role.DEFAULT,
+      password: await signPassword(`client1234`),
+      role: Role.COLLABORATOR,
       status: UserStatus.ACTIVE,
     },
   })
@@ -203,48 +202,40 @@ const users = async () => {
   const users = await prisma.user.createManyAndReturn({
     data: await Promise.all([
       ...Object.keys(Role).flatMap((role) => [
-        ...Array.from({ length: 3 }).map(async (_, index) => {
-          const password = await signPassword(`password-${index}`)
-          return {
-            email: `bc-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
-            firstName: faker.person.firstName(),
-            lastName: faker.person.lastName(),
-            organizationId: regularOrganizations[index % regularOrganizations.length].id,
-            password,
-            level: levels[index % levels.length] as Level,
-            role: role as Role,
-            status: UserStatus.ACTIVE,
-          }
-        }),
-        ...Array.from({ length: 3 }).map(async (_, index) => {
-          const password = await signPassword(`password-${index}`)
-          return {
-            email: `bc-cr-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
-            firstName: faker.person.firstName(),
-            lastName: faker.person.lastName(),
-            organizationId: crOrganizations[index % crOrganizations.length].id,
-            password,
-            level: levels[index % levels.length] as Level,
-            role: role as Role,
-            status: UserStatus.ACTIVE,
-          }
-        }),
-      ]),
-      ...Array.from({ length: 3 }).map(async (_, index) => {
-        const password = await signPassword(`password-${index}`)
-        return {
-          email: `bc-new-${index}@yopmail.com`,
+        ...Array.from({ length: 3 }).map(async (_, index) => ({
+          email: `bc-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
           organizationId: regularOrganizations[index % regularOrganizations.length].id,
-          password,
+          password: await signPassword(`password-${index}`),
           level: levels[index % levels.length] as Level,
-          role: Role.DEFAULT,
-          status: UserStatus.IMPORTED,
-        }
-      }),
+          role: role as Role,
+          status: UserStatus.ACTIVE,
+        })),
+        ...Array.from({ length: 3 }).map(async (_, index) => ({
+          email: `bc-cr-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          organizationId: crOrganizations[index % crOrganizations.length].id,
+          password: await signPassword(`password-${index}`),
+          level: levels[index % levels.length] as Level,
+          role: role as Role,
+          status: UserStatus.ACTIVE,
+        })),
+      ]),
+      ...Array.from({ length: 3 }).map(async (_, index) => ({
+        email: `bc-new-${index}@yopmail.com`,
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        organizationId: regularOrganizations[index % regularOrganizations.length].id,
+        password: await signPassword(`password-${index}`),
+        level: levels[index % levels.length] as Level,
+        role: Role.COLLABORATOR,
+        status: UserStatus.IMPORTED,
+      })),
     ]),
   })
+
   const [contributor] = await prisma.user.createManyAndReturn({
     data: [
       {
@@ -254,7 +245,7 @@ const users = async () => {
         password: await signPassword('password'),
         level: Level.Initial,
         organizationId: organizations[0].id,
-        role: Role.DEFAULT,
+        role: Role.COLLABORATOR,
         status: UserStatus.ACTIVE,
       },
       {
@@ -263,7 +254,7 @@ const users = async () => {
         lastName: faker.person.lastName(),
         password: await signPassword('password'),
         organizationId: regularOrganizations[1].id,
-        role: Role.DEFAULT,
+        role: Role.COLLABORATOR,
         status: UserStatus.ACTIVE,
       },
     ],
@@ -277,7 +268,7 @@ const users = async () => {
       email: 'imported@yopmail.com',
       firstName: 'User',
       lastName: 'Imported',
-      role: Role.DEFAULT,
+      role: Role.COLLABORATOR,
       level: Level.Initial,
       status: UserStatus.IMPORTED,
       organizationId: regularOrganizations[0].id,
@@ -322,8 +313,8 @@ const users = async () => {
     }),
   )
 
-  const defaultUser = users.find((user) => user.email === 'bc-default-0@yopmail.com') as User
-  const reader = users.find((user) => user.email === 'bc-default-1@yopmail.com') as User
+  const defaultUser = users.find((user) => user.email === 'bc-collaborator-0@yopmail.com') as User
+  const reader = users.find((user) => user.email === 'bc-collaborator-1@yopmail.com') as User
   const editor = users.find((user) => user.email === 'bc-gestionnaire-0@yopmail.com') as User
   const organizationSites = sites.filter((site) => site.organizationId === defaultUser.organizationId)
 

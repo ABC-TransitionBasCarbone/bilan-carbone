@@ -29,18 +29,18 @@ describe('Team', () => {
         cy.get('input').should('be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(1).contains('bc-default-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(1).contains('bc-collaborator-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
       .eq(1)
       .within(() => {
-        cy.get('input').should('have.value', Role.DEFAULT)
+        cy.get('input').should('have.value', Role.COLLABORATOR)
         cy.get('.MuiSelect-select').click()
       })
     cy.get('[data-value="GESTIONNAIRE"]').click()
 
     cy.reload()
 
-    cy.getByTestId('team-table-line').eq(1).contains('bc-default-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(1).contains('bc-collaborator-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
       .eq(1)
       .within(() => {

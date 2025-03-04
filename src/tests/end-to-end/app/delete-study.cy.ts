@@ -18,7 +18,7 @@ describe('Delete study', () => {
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').type('My study to delete')
-    cy.getByTestId('new-validator-name').type('bc-default-0@yopmail.com')
+    cy.getByTestId('new-validator-name').type('bc-collaborator-0@yopmail.com')
     cy.get('[data-option-index="0"]').click()
 
     cy.getByTestId('new-study-endDate').within(() => {

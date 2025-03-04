@@ -53,7 +53,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     email,
     firstName,
     lastName,
-    role: Role.DEFAULT,
+    role: Role.COLLABORATOR,
     status: UserStatus.IMPORTED,
     importedFileDate,
   }

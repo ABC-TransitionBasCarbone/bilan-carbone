@@ -120,7 +120,7 @@ describe('Create study emission source', () => {
 
     // Reader can only read
     cy.logout()
-    cy.login('bc-default-1@yopmail.com', 'password-1')
+    cy.login('bc-collaborator-1@yopmail.com', 'password-1')
     cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
     cy.getByTestId('subpost').first().click()
     cy.getByTestId('new-emission-source').should('not.exist')

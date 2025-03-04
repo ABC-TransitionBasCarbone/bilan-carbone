@@ -2,7 +2,7 @@ enum Role {
   ADMIN
   SUPER_ADMIN
   GESTIONNAIRE
-  DEFAULT
+  COLLABORATOR
 }
 
 enum UserStatus {

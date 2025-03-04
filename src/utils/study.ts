@@ -17,7 +17,7 @@ export const getUserRoleOnStudy = (user: User, study: FullStudy) => {
   }
 
   if (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization)) {
-    return user.role === Role.DEFAULT && checkLevel(user.level, study.level) ? StudyRole.Editor : StudyRole.Reader
+    return user.role === Role.COLLABORATOR && checkLevel(user.level, study.level) ? StudyRole.Editor : StudyRole.Reader
   }
   return null
 }
