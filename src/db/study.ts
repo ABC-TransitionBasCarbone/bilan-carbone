@@ -11,9 +11,9 @@ export const createStudy = async (data: Prisma.StudyCreateInput) => {
   const dbStudy = await prismaClient.study.create({ data })
   const studyEmissionFactorVersions = []
   for (const source of Object.values(Import).filter((source) => source !== Import.Manual)) {
-    const lastestImportVersion = await getSourceLastestImportVersionId(source)
-    if (lastestImportVersion) {
-      studyEmissionFactorVersions.push({ studyId: dbStudy.id, source, importVersionId: lastestImportVersion.id })
+    const latestImportVersion = await getSourceLatestImportVersionId(source)
+    if (latestImportVersion) {
+      studyEmissionFactorVersions.push({ studyId: dbStudy.id, source, importVersionId: latestImportVersion.id })
     }
   }
   await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
@@ -348,7 +348,7 @@ export const getStudyValidatedEmissionsSources = async (studyId: string) => {
   }
 }
 
-const getSourceLastestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
+const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
   (transaction || prismaClient).emissionFactorImportVersion.findFirst({
     select: { id: true, source: true },
     where: { source },

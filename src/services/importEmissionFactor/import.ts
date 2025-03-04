@@ -382,7 +382,7 @@ export const cleanImport = async (transaction: Prisma.TransactionClient, version
   }
 }
 
-const getSourceLastestImportVersionId = async (source: Import, transaction: Prisma.TransactionClient) =>
+const getSourceLatestImportVersionId = async (source: Import, transaction: Prisma.TransactionClient) =>
   transaction.emissionFactorImportVersion.findFirst({
     select: { id: true, source: true },
     where: { source },
@@ -392,7 +392,7 @@ const getSourceLastestImportVersionId = async (source: Import, transaction: Pris
 export const addSourceToStudies = async (source: Import, transaction: Prisma.TransactionClient) => {
   const [studies, importVersion] = await Promise.all([
     transaction.study.findMany({ select: { id: true } }),
-    getSourceLastestImportVersionId(source, transaction), // TODO : import from @/db/study
+    getSourceLatestImportVersionId(source, transaction), // TODO : import from @/db/study
   ])
 
   if (studies.length && !!importVersion) {
