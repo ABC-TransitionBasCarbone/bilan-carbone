@@ -1,6 +1,7 @@
 import RouteChangeListener from '@/components/RouteChangeListener'
 import '@/css/index.css'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
+import { getEnvironment } from '@/i18n/environment'
 import Providers from '@/services/providers/Providers'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import type { Metadata } from 'next'
@@ -20,11 +21,13 @@ interface Props {
 const RootLayout = async ({ children }: Readonly<Props>) => {
   const locale = await getLocale()
 
+  const environment = await getEnvironment()
+
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages()
   return (
-    <html lang={locale}>
+    <html lang={locale} className={environment}>
       <Head>
         <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/gilroy-bold" />
       </Head>
