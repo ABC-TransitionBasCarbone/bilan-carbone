@@ -1,7 +1,6 @@
 import { signPassword } from '@/services/auth'
 import { reCreateBegesRules } from '@/services/exportRules/beges'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
-import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import { faker } from '@faker-js/faker'
 import {
   EmissionFactorStatus,
@@ -356,12 +355,6 @@ const users = async () => {
         },
       },
     }),
-  )
-
-  await Promise.all(
-    Object.values(Import)
-      .filter((source) => source !== Import.Manual)
-      .map((source) => addSourceToStudies(source, prisma)),
   )
 
   await Promise.all(
