@@ -60,7 +60,6 @@ describe('Edit emission factor', () => {
     cy.getByTestId('emission-factor-subPost').first().click()
     cy.get('[data-value="Electricite"]').click()
 
-    // button might be hidden by the multiselect dropdown
     cy.getByTestId('emission-factor-valid-button').click({ force: true })
 
     cy.wait('@create')
@@ -123,11 +122,9 @@ describe('Edit emission factor', () => {
 
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Deplacements"]').click()
-    // click on the second subPost
     cy.getByTestId('emission-factor-subPost').eq(1).click()
     cy.get('[data-value="DeplacementsDomicileTravail"]').click()
 
-    // button might be hidden by the multiselect dropdown
     cy.getByTestId('emission-factor-valid-button').click({ force: true })
     cy.wait('@update')
 

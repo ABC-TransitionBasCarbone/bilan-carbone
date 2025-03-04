@@ -51,7 +51,6 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
 
   return (
     <div className="flex-col">
-      {/* Real posts/Subpost selection */}
       {Object.keys(posts).map((postKey) => (
         <Box key={postKey} sx={{ mb: 2 }}>
           <Posts
@@ -64,7 +63,6 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
         </Box>
       ))}
 
-      {/* Adding post logic from a select */}
       <FormControl sx={{ width: '40%' }} error={Object.keys(posts).length === 0}>
         <Select
           name={'post'}
@@ -83,7 +81,6 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
         </Select>
       </FormControl>
 
-      {/* display error message */}
       <Controller
         name={'subPosts' as FieldPath<T>}
         control={control}

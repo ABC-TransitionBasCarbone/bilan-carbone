@@ -52,7 +52,6 @@ const Posts = <T extends EmissionFactorCommand>({
     setSelectedSubPosts([])
     const currentSubPosts: PostObject = (form.getValues('subPosts' as Path<T>) as PostObject) || {}
     if (post) {
-      // if post is already selected, reset subPosts
       delete currentSubPosts[post]
     }
     currentSubPosts[selectedPost] = []
@@ -94,7 +93,6 @@ const Posts = <T extends EmissionFactorCommand>({
           label={t('post')}
         >
           {posts.map((post) => (
-            // check if post is in the list already to avoid issues
             <MenuItem disabled={!postOptions.includes(post as Post)} key={post} value={post}>
               {tPost(post)}
             </MenuItem>
