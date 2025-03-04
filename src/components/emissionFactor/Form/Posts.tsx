@@ -1,10 +1,8 @@
 'use client'
 
 import Button from '@/components/base/Button'
-import HelpIcon from '@/components/base/HelpIcon'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import { Select } from '@/components/base/Select'
-import GlossaryModal from '@/components/modals/GlossaryModal'
 import { Post, PostObject, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
@@ -31,12 +29,10 @@ const Posts = <T extends EmissionFactorCommand>({
   onChange,
 }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
-  const tGlossary = useTranslations('emissionFactors.create.glossary')
   const tPost = useTranslations('emissionFactors.post')
   const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
 
   const [post, setPost] = useState<Post | undefined>(getPost(initalSubPosts?.[0]) || initialPost)
-  const [glossary, setGlossary] = useState('')
 
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
@@ -95,8 +91,6 @@ const Posts = <T extends EmissionFactorCommand>({
           value={post || ''}
           onChange={handleSelectPost}
           label={t('post')}
-          icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
-          iconPosition="after"
         >
           {posts.map((post) => (
             // check if post is in the list already to avoid issues
@@ -128,12 +122,6 @@ const Posts = <T extends EmissionFactorCommand>({
       >
         <DeleteIcon />
       </Button>
-
-      {glossary && (
-        <GlossaryModal glossary={glossary} label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
-          {tGlossary(`${glossary}Description`)}
-        </GlossaryModal>
-      )}
     </Box>
   )
 }

@@ -1,4 +1,6 @@
+import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import { Post, PostObject } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
@@ -15,7 +17,10 @@ interface Props<T extends EmissionFactorCommand> {
 const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
+  const tGlossary = useTranslations('emissionFactors.create.glossary')
+
   const [posts, setPosts] = useState<PostObject>({})
+  const [glossary, setGlossary] = useState('')
   {
     /* check if post is in the list already to avoid issues */
   }
@@ -62,7 +67,14 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
 
       {/* Adding post logic from a select */}
       <FormControl sx={{ width: '40%' }} error={Object.keys(posts).length === 0}>
-        <Select name={'post'} onChange={handleSelectPost} label={t('post')} fullWidth>
+        <Select
+          name={'post'}
+          onChange={handleSelectPost}
+          label={t('posts')}
+          fullWidth
+          icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
+          iconPosition="after"
+        >
           {postSelection.map((post) => (
             <MenuItem key={post} value={post}>
               {tPost(post)}
@@ -81,6 +93,12 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form, control }: Props
           </FormControl>
         )}
       />
+
+      {glossary && (
+        <GlossaryModal glossary={glossary} label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
+          {tGlossary(`${glossary}Description`)}
+        </GlossaryModal>
+      )}
     </div>
   )
 }

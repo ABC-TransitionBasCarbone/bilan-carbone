@@ -540,6 +540,7 @@
       "otherGES": "Autres gaz (en kgCO₂e)",
       "part": "Composante",
       "post": "Poste",
+      "posts": "Postes",
       "missingPost": "Veuillez selectionner un poste",
       "subPost": "Sous Poste",
       "comment": "Commentaires",
