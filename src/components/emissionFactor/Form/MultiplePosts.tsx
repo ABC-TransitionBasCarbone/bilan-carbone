@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import Posts from './Posts'
+import styles from './Posts.module.css'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
@@ -52,7 +53,7 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
   return (
     <div className="flex-col">
       {Object.keys(posts).map((postKey) => (
-        <Box key={postKey} sx={{ mb: 2 }}>
+        <Box key={postKey} className={styles.postContainer}>
           <Posts
             postOptions={postSelection}
             onChange={handleChange}
@@ -63,7 +64,7 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
         </Box>
       ))}
 
-      <FormControl sx={{ width: '40%' }} error={Object.keys(posts).length === 0}>
+      <FormControl className={styles.selectForm} error={Object.keys(posts).length === 0}>
         <Select
           name={'post'}
           onChange={handleSelectPost}

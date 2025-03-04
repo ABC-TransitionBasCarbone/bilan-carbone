@@ -12,6 +12,7 @@ import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import styles from './Posts.module.css'
 
 interface Props<T extends EmissionFactorCommand> {
   post?: Post
@@ -83,8 +84,8 @@ const Posts = <T extends EmissionFactorCommand>({
   }
 
   return (
-    <Box sx={{ display: 'flex', w: '100%', gap: 2, alignItems: 'end' }}>
-      <FormControl sx={{ width: '40%' }}>
+    <Box className="w100 align-end justify-between">
+      <FormControl className={styles.selectForm}>
         <Select
           name="post"
           labelId="post-select-label"
@@ -99,7 +100,7 @@ const Posts = <T extends EmissionFactorCommand>({
           ))}
         </Select>
       </FormControl>
-      <FormControl sx={{ width: '50%' }} error={selectedSubPosts?.length === 0}>
+      <FormControl className={styles.multiSelectForm} error={selectedSubPosts?.length === 0}>
         <MultiSelect
           name="subPosts"
           data-testid="emission-factor-subPost"
@@ -113,7 +114,7 @@ const Posts = <T extends EmissionFactorCommand>({
         />
       </FormControl>
       <Button
-        sx={{ flex: 1, minHeight: 'fit-content', height: '3.5rem' }}
+        className={styles.deleteButton}
         data-testid="delete-site-button"
         title={t('delete')}
         aria-label={t('delete')}
