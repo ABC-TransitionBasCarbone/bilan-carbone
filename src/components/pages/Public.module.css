@@ -25,7 +25,7 @@
 }
 
 .info {
-  background-color: var(--primary-60);
+  background-color: var(--primary-800);
   border: var(--border-dark);
   border-radius: 1rem 0 0 1rem;
   color: white;
