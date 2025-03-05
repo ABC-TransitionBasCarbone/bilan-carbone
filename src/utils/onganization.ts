@@ -18,3 +18,5 @@ export const canEditOrganization = (user: User, organization?: Pick<Organization
 }
 
 export const canEditMemberRole = (user: User) => isAdmin(user.role) || user.role === Role.GESTIONNAIRE
+
+export const isUntrainedRole = (role: Role) => role === Role.GESTIONNAIRE || role === Role.DEFAULT
