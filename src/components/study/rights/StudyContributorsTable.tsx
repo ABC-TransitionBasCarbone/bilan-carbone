@@ -93,7 +93,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         expIcon
         iconPosition="after"
         actions={
-          !canAddContributor
+          canAddContributor
             ? [
                 {
                   actionType: 'link',

@@ -46,8 +46,8 @@ const StudyRightsPage = async ({ study, user }: Props) => {
         <StudyLevel study={study} user={user} disabled={editionDisabled} />
         <StudyPublicStatus study={study} user={user} disabled={editionDisabled} />
       </Block>
-      <StudyRightsTable study={study} user={user} canAddMember={editionDisabled} userRoleOnStudy={userRoleOnStudy} />
-      <StudyContributorsTable study={study} canAddContributor={editionDisabled} />
+      <StudyRightsTable study={study} user={user} canAddMember={!editionDisabled} userRoleOnStudy={userRoleOnStudy} />
+      <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />
     </>
   )
 }

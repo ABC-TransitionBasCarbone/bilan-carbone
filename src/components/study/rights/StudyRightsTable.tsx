@@ -30,7 +30,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
         accessorKey: 'user.email',
       },
     ]
-    if (!canAddMember) {
+    if (canAddMember) {
       columns.push({
         header: t('role'),
         accessorKey: 'role',
@@ -70,7 +70,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
         iconPosition="after"
         expIcon
         actions={
-          !canAddMember
+          canAddMember
             ? [
                 {
                   actionType: 'link',
