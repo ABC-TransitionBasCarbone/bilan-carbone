@@ -59,8 +59,9 @@ describe('Edit emission factor', () => {
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').first().click()
     cy.get('[data-value="Electricite"]').click()
+    cy.get('body').type('{esc}')
 
-    cy.getByTestId('emission-factor-valid-button').click({ force: true })
+    cy.getByTestId('emission-factor-valid-button').click()
 
     cy.wait('@create')
 
@@ -124,8 +125,9 @@ describe('Edit emission factor', () => {
     cy.get('[data-value="Deplacements"]').click()
     cy.getByTestId('emission-factor-subPost').eq(1).click()
     cy.get('[data-value="DeplacementsDomicileTravail"]').click()
+    cy.get('body').type('{esc}')
 
-    cy.getByTestId('emission-factor-valid-button').click({ force: true })
+    cy.getByTestId('emission-factor-valid-button').click()
     cy.wait('@update')
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/facteurs-d-emission`)

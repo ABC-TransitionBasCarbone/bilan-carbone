@@ -20,8 +20,9 @@ describe('Create emission factor', () => {
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
+    cy.get('body').type('{esc}')
 
-    cy.getByTestId('emission-factor-valid-button').click({ force: true })
+    cy.getByTestId('emission-factor-valid-button').click()
 
     cy.wait('@create')
 
@@ -92,8 +93,9 @@ describe('Create emission factor', () => {
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
+    cy.get('body').type('{esc}')
 
-    cy.getByTestId('emission-factor-valid-button').click({ force: true })
+    cy.getByTestId('emission-factor-valid-button').click()
 
     cy.wait('@create')
 
@@ -161,8 +163,9 @@ describe('Create emission factor', () => {
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
+    cy.get('body').type('{esc}')
 
-    cy.getByTestId('emission-factor-valid-button').click({ force: true })
+    cy.getByTestId('emission-factor-valid-button').click()
 
     cy.wait('@create')
 
@@ -256,8 +259,9 @@ describe('Create emission factor', () => {
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
+    cy.get('body').type('{esc}')
 
-    cy.getByTestId('emission-factor-valid-button').click({ force: true })
+    cy.getByTestId('emission-factor-valid-button').click()
 
     cy.wait('@create')
 
@@ -434,8 +438,9 @@ describe('Create emission factor', () => {
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
     cy.get('[data-value="Electricite"]').click()
+    cy.get('body').type('{esc}')
 
-    cy.getByTestId('emission-factor-valid-button').click({ force: true })
+    cy.getByTestId('emission-factor-valid-button').click()
 
     cy.wait('@create')
 
