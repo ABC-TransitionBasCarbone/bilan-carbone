@@ -3,7 +3,7 @@
 import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import { Select } from '@/components/base/Select'
-import { Post, PostObject, subPostsByPost } from '@/services/posts'
+import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -46,7 +46,8 @@ const Posts = <T extends EmissionFactorCommand>({
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as Post
     setSelectedSubPosts([])
-    const currentSubPosts: PostObject = (form.getValues('subPosts' as Path<T>) as PostObject) || {}
+    const currentSubPosts: Record<Post, SubPost[]> =
+      (form.getValues('subPosts' as Path<T>) as Record<Post, SubPost[]>) || {}
     if (post) {
       delete currentSubPosts[post]
     }
@@ -60,7 +61,8 @@ const Posts = <T extends EmissionFactorCommand>({
     if (!post) {
       return
     }
-    const currentSubPosts: PostObject = (form.getValues('subPosts' as Path<T>) as PostObject) || {}
+    const currentSubPosts: Record<Post, SubPost[]> =
+      (form.getValues('subPosts' as Path<T>) as Record<Post, SubPost[]>) || {}
     delete currentSubPosts[post]
     setValue('subPosts', currentSubPosts)
   }
@@ -70,7 +72,8 @@ const Posts = <T extends EmissionFactorCommand>({
       return
     }
     setSelectedSubPosts(subPostsArr as SubPost[])
-    const currentSubPosts: PostObject = (form.getValues('subPosts' as Path<T>) as PostObject) || {}
+    const currentSubPosts: Record<Post, SubPost[]> =
+      (form.getValues('subPosts' as Path<T>) as Record<Post, SubPost[]>) || {}
     const newSubPosts = { ...currentSubPosts, [post]: subPostsArr }
     setValue('subPosts', newSubPosts)
   }

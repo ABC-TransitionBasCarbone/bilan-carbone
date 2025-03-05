@@ -3,7 +3,7 @@
 import Form from '@/components/base/Form'
 import { gazKeys } from '@/constants/emissions'
 import { DetailedEmissionFactor } from '@/db/emissionFactors'
-import { PostObject } from '@/services/posts'
+import { Post } from '@/services/posts'
 import { updateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
   maxParts,
@@ -12,6 +12,7 @@ import {
 } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { SubPost } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -54,14 +55,17 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
   const [partsCount, setPartsCount] = useState(emissionFactor.emissionFactorParts.length || 1)
 
   const subPostObject = useMemo(() => {
-    return emissionFactor.subPosts.reduce<PostObject>((acc, subPost) => {
-      const post = getPost(subPost)
-      if (post) {
-        acc[post] = acc[post] ?? []
-        acc[post].push(subPost)
-      }
-      return acc
-    }, {})
+    return emissionFactor.subPosts.reduce<Record<Post, SubPost[]>>(
+      (acc, subPost) => {
+        const post = getPost(subPost)
+        if (post) {
+          acc[post] = acc[post] ?? []
+          acc[post].push(subPost)
+        }
+        return acc
+      },
+      {} as Record<Post, SubPost[]>,
+    )
   }, [emissionFactor.subPosts])
 
   const detailedGES =

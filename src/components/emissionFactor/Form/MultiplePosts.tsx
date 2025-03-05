@@ -1,9 +1,10 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { Post, PostObject } from '@/services/posts'
+import { Post } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
+import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, UseFormReturn, UseFormSetValue } from 'react-hook-form'
@@ -22,7 +23,7 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
   const control = form.control as Control<EmissionFactorCommand>
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
-  const posts: PostObject = (form.watch('subPosts' as FieldPath<T>) as PostObject) || {}
+  const posts: Record<Post, SubPost[]> = (form.watch('subPosts' as FieldPath<T>) as Record<Post, SubPost[]>) || {}
   const [glossary, setGlossary] = useState('')
 
   const postSelection: Post[] = useMemo(
