@@ -371,7 +371,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
                 {sources.map((source, i) => (
                   <MenuItem key={`source-item-${i}`} value={source}>
                     <Checkbox checked={filteredSources.includes(source)} />
-                    <ListItemText primary={source} />
+                    <ListItemText primary={t(source)} />
                   </MenuItem>
                 ))}
               </Select>
