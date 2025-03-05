@@ -31,6 +31,23 @@
   color: white;
 }
 
+.locales {
+  gap: 0.25rem;
+}
+
+.flag {
+  height: fit-content;
+  border-radius: 0.25rem;
+  padding: 0.125rem;
+  margin: 0.125rem;
+  border: 0;
+}
+
+.selected {
+  margin: 0;
+  border: 0.125rem solid var(--primary-60);
+}
+
 .image {
   height: auto;
 }
