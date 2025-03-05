@@ -65,7 +65,7 @@ const Result = ({ studySite, computedResults }: Props) => {
             datasets: [
               {
                 data: yData,
-                backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary-40'),
+                backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary-500'),
                 label: t('unit'),
               },
             ],
