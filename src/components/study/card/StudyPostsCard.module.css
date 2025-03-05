@@ -21,24 +21,24 @@
 
 .role {
   padding: 0.5rem 1rem;
-  color: var(--orange-500);
-  background-color: var(--orange-200);
+  color: var(--warning-500);
+  background-color: var(--warning-200);
   border-radius: 2rem;
   min-width: 5rem;
 }
 
 .emissionSources {
-  border: 2px solid var(--orange-500);
+  border: 2px solid var(--warning-500);
 
   &.allValidated {
-    border-color: var(--green-500);
+    border-color: var(--success-500);
   }
 }
 
 .validated {
-  color: var(--orange-500);
+  color: var(--warning-500);
 
   &.success {
-    color: var(--green-500);
+    color: var(--success-500);
   }
 }

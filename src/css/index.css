@@ -1,6 +1,6 @@
 @import './reset.css';
+@import './themes/themes.css';
 @import './variables.css';
 @import './globals.css';
 @import './flex.css';
 @import './var.css';
-@import './themes/themes.css';
