@@ -3,6 +3,7 @@
 import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
 import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
+import { getStudyEmissionFactorSources } from '@/db/emissionFactors'
 import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
 import {
   createContributorOnStudy,
@@ -620,4 +621,12 @@ export const deleteStudyContributor = async (contributor: StudyContributorRow, s
     where.subPost = { in: subPosts }
   }
   await prismaClient.contributors.deleteMany({ where })
+}
+
+export const getStudyEmissionFactorImportVersions = async (studyId: string) => {
+  const study = await getStudy(studyId)
+  if (!study) {
+    return []
+  }
+  return getStudyEmissionFactorSources(studyId)
 }

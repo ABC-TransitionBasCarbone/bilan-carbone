@@ -88,7 +88,7 @@ export const getAllEmissionFactors = async (organizationId: string | null, study
   }
   const organizationEmissionFactor = organizationId
     ? await prismaClient.emissionFactor.findMany({
-        where: { organizationId, ...(versionIds && { versionId: { in: versionIds } }) },
+        where: { organizationId },
         select: selectEmissionFactor,
         orderBy: { createdAt: 'desc' },
       })
@@ -229,3 +229,16 @@ export const getEmissionFactorDetailsById = async (id: string) =>
     },
   })
 export type DetailedEmissionFactor = AsyncReturnType<typeof getEmissionFactorDetailsById>
+
+export const getEmissionFactorSources = async () => {
+  return prismaClient.emissionFactorImportVersion.findMany()
+}
+export const getStudyEmissionFactorSources = async (studyId: string) => {
+  const versionIds = (
+    await prismaClient.studyEmissionFactorVersion.findMany({
+      where: { studyId },
+      select: { importVersionId: true },
+    })
+  ).map((studyVersion) => studyVersion.importVersionId)
+  return prismaClient.emissionFactorImportVersion.findMany({ where: { id: { in: versionIds } } })
+}
