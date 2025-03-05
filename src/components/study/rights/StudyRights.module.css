@@ -1,0 +1,4 @@
+.deletionButton {
+  color: var(--error-40);
+  cursor: pointer;
+}

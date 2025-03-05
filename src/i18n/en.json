@@ -357,11 +357,20 @@
         }
       },
       "contributorsTable": {
+        "actions": "Actions",
         "email": "Email",
         "post": "Post",
         "subPosts": "Sub posts",
         "title": "Contributors",
         "newContributorLink": "Add a contributor",
+        "deleting": {
+          "title": "Confirmation",
+          "confirmation": "Are you  sure you want to remove {email} from this study's contributors ?",
+          "yes": "Yes",
+          "no": "No",
+          "Not authorized": "You are not allowed to do this action"
+        },
+
         "role": {
           "information": "Information",
           "description": "Here you can manage the contributors to your study. They will have access to certain items and sub-items (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>.",
