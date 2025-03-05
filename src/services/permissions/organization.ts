@@ -1,7 +1,6 @@
 import { getOrganizationById } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
-import { isInOrgaOrParent } from '@/utils/onganization'
-import { Role } from '@prisma/client'
+import { canEditOrganization, isInOrgaOrParent } from '@/utils/onganization'
 import { User } from 'next-auth'
 import { UpdateOrganizationCommand } from '../serverFunctions/organization.command'
 
@@ -41,7 +40,7 @@ export const canUpdateOrganization = async (user: User, command: UpdateOrganizat
   }
 
   const organization = await getOrganizationById(dbUser.organizationId)
-  if (!organization || (!organization.isCR && user.role === Role.COLLABORATOR)) {
+  if (!organization || !canEditOrganization(user, organization)) {
     return false
   }
 

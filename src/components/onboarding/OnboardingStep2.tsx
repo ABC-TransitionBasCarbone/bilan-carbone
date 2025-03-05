@@ -38,6 +38,8 @@ const OnboardingStep = ({ form, isCr }: Props) => {
         return 'adminDescription'
       case Role.GESTIONNAIRE:
         return 'gestionnaireDescription'
+      case Role.DEFAULT:
+        return 'memberDescription'
       default:
         return isCr ? 'crCollaboratorDescription' : 'collaboratorDescription'
     }

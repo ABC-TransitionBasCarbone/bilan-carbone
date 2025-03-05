@@ -2,7 +2,7 @@ import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import EditOrganizationPage from '@/components/pages/EditOrganization'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationWithSitesById } from '@/db/organization'
-import { isInOrgaOrParent } from '@/utils/onganization'
+import { canEditOrganization } from '@/utils/onganization'
 import { UUID } from 'crypto'
 
 interface Props {
@@ -18,7 +18,7 @@ const OrganizationView = async (props: Props & UserProps) => {
   }
 
   const organization = await getOrganizationWithSitesById(id)
-  if (!organization || !isInOrgaOrParent(props.user.organizationId, organization)) {
+  if (!organization || !canEditOrganization(props.user, organization)) {
     return <NotFound />
   }
 

@@ -1,3 +1,4 @@
+import { canEditMemberRole, isUntrainedRole } from '@/utils/onganization'
 import { User as DbUser, Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 
@@ -68,7 +69,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (user.role === Role.COLLABORATOR) {
+  if (!canEditMemberRole(user)) {
     return false
   }
 
@@ -80,7 +81,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (!member.level && newRole !== Role.GESTIONNAIRE) {
+  if (!member.level && !isUntrainedRole(newRole)) {
     return false
   }
 

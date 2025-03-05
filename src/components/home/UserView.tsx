@@ -1,6 +1,5 @@
 import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
-import { isAdmin } from '@/services/permissions/user'
-import { Role } from '@prisma/client'
+import { canEditMemberRole } from '@/utils/onganization'
 import { User } from 'next-auth'
 import Actualities from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
@@ -23,7 +22,7 @@ const UserView = async ({ user }: Props) => {
 
   return (
     <>
-      {!!hasUserToValidate && (isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+      {!!hasUserToValidate && canEditMemberRole(user) && (
         <div className="main-container mb1">
           <UserToValidate />
         </div>

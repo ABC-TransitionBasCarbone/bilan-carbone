@@ -1,6 +1,7 @@
 'use client'
 
 import { changeRole } from '@/services/serverFunctions/user'
+import { isUntrainedRole } from '@/utils/onganization'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Level, Role } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -52,7 +53,7 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
         </MenuItem>
         {Object.keys(Role)
           .filter((role) => role !== Role.SUPER_ADMIN)
-          .filter((role) => level || role === Role.GESTIONNAIRE)
+          .filter((role) => level || isUntrainedRole(role as Role))
           .map((role) => (
             <MenuItem key={role} value={role}>
               {t(role)}
