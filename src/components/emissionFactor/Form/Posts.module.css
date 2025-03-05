@@ -1,0 +1,16 @@
+.deleteButton {
+  min-height: fit-content;
+  height: 3.5rem;
+}
+
+.multiSelectForm {
+  width: 50%;
+}
+
+.selectForm {
+  width: 40%;
+}
+
+.postContainer {
+  margin-bottom: 0.5rem;
+}

@@ -11,6 +11,7 @@ import {
 } from '@/db/emissionFactors'
 import { getUserByEmail } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
+import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -106,7 +107,7 @@ export const createEmissionFactorCommand = async ({
   attribute,
   comment,
   parts,
-  subPost,
+  subPosts,
   ...command
 }: EmissionFactorCommand) => {
   const session = await auth()
@@ -132,7 +133,7 @@ export const createEmissionFactorCommand = async ({
     reliability: 5,
     organization: { connect: { id: user.organizationId } },
     unit: unit as Unit,
-    subPosts: [subPost],
+    subPosts: flattenSubposts(subPosts),
     metaData: {
       create: {
         language: local,

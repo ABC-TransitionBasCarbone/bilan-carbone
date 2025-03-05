@@ -4,7 +4,6 @@ import LinkButton from '@/components/base/LinkButton'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
-import { Post } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { MenuItem } from '@mui/material'
 import { Unit } from '@prisma/client'
@@ -13,11 +12,10 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Control, UseFormReturn } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
-import Posts from './Posts'
+import MultiplePosts from './MultiplePosts'
 
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
-  post?: Post
   detailedGES?: boolean
   error: string
   hasParts: boolean
@@ -29,7 +27,6 @@ interface Props<T extends EmissionFactorCommand> {
 
 const EmissionFactorForm = <T extends EmissionFactorCommand>({
   form,
-  post,
   detailedGES,
   error,
   hasParts,
@@ -77,7 +74,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         partsCount={partsCount}
         setPartsCount={setPartsCount}
       />
-      <Posts form={form} post={post} />
+      <MultiplePosts form={form} />
       <FormTextField control={control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (

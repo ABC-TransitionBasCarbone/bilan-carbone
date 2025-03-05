@@ -540,10 +540,12 @@
       "otherGES": "Other gases (in kgCO₂e)",
       "part": "Part",
       "post": "Post",
+      "posts": "Posts",
       "missingPost": "Please select a post",
       "subPost": "Sub Post",
       "partType": "Part type",
       "comment": "Comments",
+      "delete": "Delete",
       "glossary": {
         "title": "Glossary",
         "detailedGES": "Breakdown of GHG",
