@@ -25,6 +25,7 @@ interface Props {
 }
 
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 
 const NewStudyContributorForm = ({ study }: Props) => {
   const router = useRouter()
@@ -107,7 +108,7 @@ const NewStudyContributorForm = ({ study }: Props) => {
       {error && (
         <p>
           {t.rich(error, {
-            support: (children) => <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>{children}</Link>,
+            support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
             link: (children) => (
               <Link href={faq} target="_blank" rel="noreferrer noopener">
                 {children}
