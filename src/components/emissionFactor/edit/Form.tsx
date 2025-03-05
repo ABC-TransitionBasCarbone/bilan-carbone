@@ -13,7 +13,7 @@ import {
 import { getPost } from '@/utils/post'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import EmissionFactorForm from '../Form/EmissionFactorForm'
 
@@ -53,19 +53,16 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
   const [hasParts, setHasParts] = useState(!!(emissionFactor.emissionFactorParts.length > 0))
   const [partsCount, setPartsCount] = useState(emissionFactor.emissionFactorParts.length || 1)
 
-  const getSubPostObject = () => {
-    const subPostObject: PostObject = {}
-    for (const subPost of emissionFactor.subPosts) {
+  const subPostObject = useMemo(() => {
+    return emissionFactor.subPosts.reduce<PostObject>((acc, subPost) => {
       const post = getPost(subPost)
       if (post) {
-        if (!subPostObject[post]) {
-          subPostObject[post] = []
-        }
-        subPostObject[post]?.push(subPost)
+        acc[post] = acc[post] ?? []
+        acc[post].push(subPost)
       }
-    }
-    return subPostObject
-  }
+      return acc
+    }, {})
+  }, [emissionFactor.subPosts])
 
   const detailedGES =
     isDecomposed(emissionFactor) || (emissionFactor.emissionFactorParts || []).some((part) => isDecomposed(part))
@@ -80,7 +77,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       attribute: emissionFactor?.metaData[0].attribute || '',
       source: emissionFactor?.source || '',
       unit: emissionFactor?.unit || undefined,
-      subPosts: getSubPostObject(),
+      subPosts: subPostObject,
       ...getGazValues(emissionFactor),
       totalCo2: emissionFactor?.totalCo2 || 0,
       parts: buildParts(emissionFactor, partsCount),

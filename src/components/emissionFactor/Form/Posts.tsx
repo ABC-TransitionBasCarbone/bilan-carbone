@@ -19,7 +19,6 @@ interface Props<T extends EmissionFactorCommand> {
   postOptions: Post[]
   subPosts?: SubPost[]
   form: UseFormReturn<T>
-  onChange: (updatedPosts: PostObject) => void
 }
 
 const Posts = <T extends EmissionFactorCommand>({
@@ -27,7 +26,6 @@ const Posts = <T extends EmissionFactorCommand>({
   subPosts: initalSubPosts,
   post: initialPost,
   postOptions,
-  onChange,
 }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
@@ -43,10 +41,7 @@ const Posts = <T extends EmissionFactorCommand>({
     [post, tPost],
   )
 
-  const translatedSubPosts = useMemo(
-    () => subPosts.map((subP) => ({ label: tPost(subP), value: subP })),
-    [subPosts, tPost],
-  )
+  const translatedSubPosts = useMemo(() => subPosts.map((subP) => ({ label: tPost(subP), value: subP })), [subPosts])
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as Post
@@ -59,7 +54,6 @@ const Posts = <T extends EmissionFactorCommand>({
     setValue('subPosts', currentSubPosts)
 
     setPost(selectedPost)
-    onChange(currentSubPosts)
   }
 
   const handleDelete = () => {
@@ -69,7 +63,6 @@ const Posts = <T extends EmissionFactorCommand>({
     const currentSubPosts: PostObject = (form.getValues('subPosts' as Path<T>) as PostObject) || {}
     delete currentSubPosts[post]
     setValue('subPosts', currentSubPosts)
-    onChange(currentSubPosts)
   }
 
   const handleSelectSubPost = (subPostsArr: string[]) => {
@@ -80,7 +73,6 @@ const Posts = <T extends EmissionFactorCommand>({
     const currentSubPosts: PostObject = (form.getValues('subPosts' as Path<T>) as PostObject) || {}
     const newSubPosts = { ...currentSubPosts, [post]: subPostsArr }
     setValue('subPosts', newSubPosts)
-    onChange(newSubPosts)
   }
 
   return (
@@ -104,7 +96,7 @@ const Posts = <T extends EmissionFactorCommand>({
         <MultiSelect
           name="subPosts"
           data-testid="emission-factor-subPost"
-          labelId="post-select-label"
+          labelId="subpost-select-label"
           value={selectedSubPosts || []}
           onChange={handleSelectSubPost}
           label={t('subPost')}

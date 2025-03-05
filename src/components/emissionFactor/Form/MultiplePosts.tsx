@@ -5,7 +5,7 @@ import { Post, PostObject } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import Posts from './Posts'
 import styles from './Posts.module.css'
@@ -22,45 +22,28 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
   const control = form.control as Control<EmissionFactorCommand>
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
-  const [posts, setPosts] = useState<PostObject>({})
+  const posts: PostObject = (form.watch('subPosts' as FieldPath<T>) as PostObject) || {}
   const [glossary, setGlossary] = useState('')
 
-  // check if post is in the list already to avoid issues
   const postSelection: Post[] = useMemo(
     () =>
       Object.keys(Post)
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
         .filter((p) => !Object.keys(posts).includes(p)) as Post[],
-    [tPost, posts],
+    [posts],
   )
-
-  useEffect(() => {
-    const postObj = (form.getValues('subPosts' as FieldPath<T>) as PostObject) || {}
-    setPosts(postObj)
-  }, [form])
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as Post
     const currentSubPosts = { ...posts, [selectedPost]: [] }
-    setPosts(currentSubPosts)
     setValue('subPosts', currentSubPosts)
-  }
-
-  const handleChange = (posts: PostObject) => {
-    setPosts(posts)
   }
 
   return (
     <div className="flex-col">
       {Object.keys(posts).map((postKey) => (
         <Box key={postKey} className={styles.postContainer}>
-          <Posts
-            postOptions={postSelection}
-            onChange={handleChange}
-            form={form}
-            post={postKey as Post}
-            subPosts={posts[postKey as Post]}
-          />
+          <Posts postOptions={postSelection} form={form} post={postKey as Post} subPosts={posts[postKey as Post]} />
         </Box>
       ))}
 
