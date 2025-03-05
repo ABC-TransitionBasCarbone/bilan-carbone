@@ -32,7 +32,7 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
   )
   const validated = emissionSources.filter((emissionSource) => emissionSource.validated).length
   const percent = Math.floor((validated / emissionSources.length) * 100)
-  const color = emissionSources.length && percent === 100 ? '--green-500' : '--orange-500'
+  const color = emissionSources.length && percent === 100 ? '--success-400' : '--warning-300'
 
   return (
     <div className="justify-center">

@@ -9,11 +9,11 @@
 }
 
 .svg {
-  color: var(--neutral-40);
+  color: var(--neutral-400);
 }
 
 .currentPage {
-  color: var(--neutral-60);
+  color: var(--neutral-600);
   width: max-content;
   font-weight: 500;
 }
@@ -25,9 +25,9 @@
 
 .link {
   width: max-content;
-  color: var(--primary-60) !important;
+  color: var(--primary-800) !important;
 
   &:hover {
-    color: var(--primary-40) !important;
+    color: var(--primary-500) !important;
   }
 }

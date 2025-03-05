@@ -2,7 +2,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   gap: 1rem;
-  color: var(--primary-60);
+  color: var(--primary-800);
 }
 
 .header {
@@ -27,6 +27,6 @@
 }
 
 .date {
-  color: var(--neutral-50);
+  color: var(--neutral-500);
   font-size: 0.875rem;
 }

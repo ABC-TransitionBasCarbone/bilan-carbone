@@ -30,7 +30,7 @@
   padding-left: 3rem;
 
   &.selected {
-    border-color: var(--primary-40);
+    border-color: var(--primary-500);
   }
 }
 

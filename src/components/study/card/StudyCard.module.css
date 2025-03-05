@@ -4,9 +4,9 @@
 }
 
 .validated {
-  color: var(--orange-500);
+  color: var(--warning-300);
 
   &.success {
-    color: var(--green-500);
+    color: var(--success-400);
   }
 }

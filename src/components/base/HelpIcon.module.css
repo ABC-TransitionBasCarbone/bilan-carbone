@@ -1,8 +1,8 @@
 .helpIcon {
   cursor: pointer;
-  color: var(--primary-40);
+  color: var(--primary-500);
 
   &:hover {
-    color: var(--primary-60);
+    color: var(--primary-800);
   }
 }
