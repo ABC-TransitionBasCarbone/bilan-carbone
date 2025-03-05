@@ -58,7 +58,7 @@ const PublicPage = ({ children }: Props) => {
             </p>
           </div>
           <div className={classNames(styles.loginForm, 'grow flex-col')}>
-            <div className="justify-between">
+            <div className={classNames(styles.header, 'justify-between')}>
               <div className={classNames(styles.locales, 'flex')}>
                 {languages.map((language) => (
                   <button

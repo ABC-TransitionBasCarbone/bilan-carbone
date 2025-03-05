@@ -19,6 +19,18 @@
   border-radius: 0 1rem 1rem 0;
 }
 
+.header {
+  @media screen and (max-width: 37rem) {
+    flex-direction: column;
+    .welcomeLogo {
+      width: 100%;
+    }
+    .locales {
+      justify-content: flex-end;
+    }
+  }
+}
+
 .welcomeLogo {
   height: auto;
   width: 50%;
