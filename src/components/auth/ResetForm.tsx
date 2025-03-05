@@ -174,9 +174,7 @@ const ResetForm = ({ user, token }: Props) => {
         {error && (
           <p className={authStyles.red}>
             {t('resetError')}
-            <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>
-              {process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}
-            </Link>
+            <Link href={`mailto:${contactMail}`}>{contactMail}</Link>
           </p>
         )}
         <LoadingButton

@@ -16,7 +16,7 @@ const getHtml = (file: string, data?: Data) => ejs.renderFile(`./src/services/em
 const send = (toEmail: string[], subject: string, html: string) => {
   const mail = {
     to: toEmail.join(','),
-    from: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    from: process.env.MAIL_USER,
     subject,
     html,
     text: html.replace(/<(?:.|\n)*?>/gm, ''),
@@ -34,7 +34,7 @@ export const sendResetPassword = async (toEmail: string, token: string) => {
 export const sendNewUserEmail = async (toEmail: string, token: string, creatorName: string, userName: string) => {
   const html = await getHtml('new-user', {
     link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
-    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    support: process.env.MAIL_USER,
     userName,
     creatorName,
   })
@@ -46,12 +46,12 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
   if (fromReset) {
     html = await getHtml('activate-account-from-reset', {
       link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
-      support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+      support: process.env.MAIL_USER,
     })
   } else {
     html = await getHtml('activate-account', {
       link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
-      support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+      support: process.env.MAIL_USER,
     })
   }
   return send([toEmail], 'Vous avez activé votre compte sur le BC+', html)
@@ -59,7 +59,7 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
 
 export const sendActivationRequest = async (toEmailList: string[], emailToActivate: string, userToActivate: string) => {
   const html = await getHtml('activation-request', {
-    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    support: process.env.MAIL_USER,
     emailToActivate,
     userToActivate,
   })
@@ -103,7 +103,7 @@ export const sendNewUserOnStudyInvitationEmail = async (
     studyLink: `${process.env.NEXTAUTH_URL}/etudes/${studyId}`,
     organizationName,
     creatorName,
-    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    support: process.env.MAIL_USER,
     role,
   })
   return send([toEmail], `Ajout sur l'étude ${studyName}`, html)
@@ -144,7 +144,7 @@ export const sendNewContributorInvitationEmail = async (
     studyLink: `${process.env.NEXTAUTH_URL}/etudes/${studyId}`,
     organizationName,
     creatorName,
-    support: process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL,
+    support: process.env.MAIL_USER,
   })
   return send([toEmail], `Demande de contribution sur l'étude ${studyName}`, html)
 }

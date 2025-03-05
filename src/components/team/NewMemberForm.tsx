@@ -15,6 +15,8 @@ import { useForm } from 'react-hook-form'
 import LoadingButton from '../base/LoadingButton'
 import { FormSelect } from '../form/Select'
 
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
+
 const NewMemberForm = () => {
   const router = useRouter()
   const t = useTranslations('newMember')
@@ -84,7 +86,7 @@ const NewMemberForm = () => {
       {error && (
         <p className="error">
           {t.rich(error, {
-            link: (children) => <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>{children}</Link>,
+            link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
           })}
         </p>
       )}

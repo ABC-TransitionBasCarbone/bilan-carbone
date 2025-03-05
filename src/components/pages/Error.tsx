@@ -4,6 +4,8 @@ import Block from '@/components/base/Block'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
+
 const Error = () => {
   const t = useTranslations('error')
   return (
@@ -11,11 +13,7 @@ const Error = () => {
       {t.rich('contactSupport', {
         p: (children) => <p>{children}</p>,
         link: (children) => <Link href="/">{children}</Link>,
-        m: () => (
-          <Link href={`mailto:${process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}`}>
-            {process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL}
-          </Link>
-        ),
+        m: () => <Link href={`mailto:${contactMail}`}>{contactMail}</Link>,
         logout: (children) => <Link href="/logout">{children}</Link>,
       })}
     </Block>
