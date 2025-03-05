@@ -141,7 +141,8 @@
       "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous sur l'adresse email",
       "emailRequired": "Veuillez entrer un email",
       "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
-      "emailSent": "Si votre email est correct, vous allez recevoir un mail pour réinitialiser votre mot de passe"
+      "emailSent": "Si votre email est correct, vous allez recevoir un mail pour réinitialiser votre mot de passe",
+      "validated": "Votre mot de passe a été réinitialisé, vous allez être redirigé vers la page de <link>connexion</link>."
     }
   },
   "activation": {

@@ -53,6 +53,7 @@ const ResetForm = ({ user, token }: Props) => {
   })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(false)
+  const [validated, setValidated] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
   const {
@@ -91,7 +92,11 @@ const ResetForm = ({ user, token }: Props) => {
       const { email, password } = getValues()
       const result = await reset(email, password, token)
       if (result) {
-        router.push('/login')
+        setSubmitting(false)
+        setValidated(true)
+        setTimeout(() => {
+          router.push('/login')
+        }, 5000)
       } else {
         setError(true)
         setSubmitting(false)
@@ -193,6 +198,7 @@ const ResetForm = ({ user, token }: Props) => {
             })}
           </p>
         )}
+        {validated && <p>{t.rich('validated', { link: (children) => <Link href="/login">{children}</Link> })}</p>}
       </FormControl>
     </Form>
   )
