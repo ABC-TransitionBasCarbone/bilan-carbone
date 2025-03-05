@@ -97,7 +97,7 @@ describe('Authentication', () => {
     cy.getByTestId('reset-button').click()
 
     cy.wait('@reset-password')
-    cy.url().should('include', '/login')
+    cy.url({ timeout: 8000 }).should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
@@ -229,7 +229,7 @@ describe('Authentication', () => {
     cy.getByTestId('reset-button').click()
 
     cy.wait('@reset-password')
-    cy.url().should('include', '/login')
+    cy.url({ timeout: 8000 }).should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('imported@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')

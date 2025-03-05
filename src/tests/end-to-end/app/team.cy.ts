@@ -172,7 +172,7 @@ describe('Team', () => {
 
     cy.getByTestId('reset-button').click()
 
-    cy.url().should('include', '/login')
+    cy.url({ timeout: 8000 }).should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')

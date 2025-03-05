@@ -44,7 +44,7 @@ describe('Onboarding', () => {
     cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
     cy.getByTestId('reset-button').click()
 
-    cy.url().should('include', '/login')
+    cy.url({ timeout: 8000 }).should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('onboarding@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
@@ -102,7 +102,7 @@ describe('Onboarding', () => {
     cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
     cy.getByTestId('reset-button').click()
 
-    cy.url().should('include', '/login')
+    cy.url({ timeout: 8000 }).should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
       'onboardingnottrained@yopmail.com',

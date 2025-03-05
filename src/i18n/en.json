@@ -141,7 +141,8 @@
       "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us at the email address",
       "emailRequired": "Please enter an email",
       "emailAndPasswordRequired": "Please enter an email and a password",
-      "emailSent": "if your email is correct, you will receive an email to reset your password"
+      "emailSent": "if your email is correct, you will receive an email to reset your password",
+      "validated": "Your password has been reset, you will be redirected to the <link>login</link> page."
     }
   },
   "activation": {

@@ -1,8 +1,11 @@
+'use client'
+import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
+import { getLocale, switchLocale } from '@/i18n/locale'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import styles from './Public.module.css'
 
 interface Props {
@@ -13,6 +16,17 @@ const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
 const PublicPage = ({ children }: Props) => {
   const t = useTranslations('login')
+  const tLocale = useTranslations('locale')
+  const [locale, setLocale] = useState<LocaleType>(defaultLocale)
+
+  useEffect(() => {
+    getLocale().then(setLocale)
+  }, [])
+
+  const languages = [
+    { name: tLocale('en'), code: 'GB', target: Locale.EN },
+    { name: tLocale('fr'), code: 'FR', target: Locale.FR },
+  ]
 
   return (
     <>
@@ -44,7 +58,25 @@ const PublicPage = ({ children }: Props) => {
             </p>
           </div>
           <div className={classNames(styles.loginForm, 'grow flex-col')}>
-            <div className="justify-end">
+            <div className={classNames(styles.header, 'justify-between')}>
+              <div className={classNames(styles.locales, 'flex')}>
+                {languages.map((language) => (
+                  <button
+                    key={language.target}
+                    title={language.name}
+                    aria-label={language.name}
+                    className={classNames(styles.flag, 'flex', {
+                      [styles.selected]: language.target === locale,
+                    })}
+                    onClick={() => {
+                      switchLocale(language.target)
+                      setLocale(language.target)
+                    }}
+                  >
+                    <Image alt={language.name} src={`/logos/${language.code}.svg`} width={30} height={20} />
+                  </button>
+                ))}
+              </div>
               <Image
                 className={classNames(styles.welcomeLogo, 'align-end')}
                 src="/logos/logo_BC_2025_noir.png"
