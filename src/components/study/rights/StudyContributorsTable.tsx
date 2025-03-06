@@ -208,12 +208,14 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
               color: 'secondary',
               onClick: () => setToDelete(undefined),
               children: tDeleting('no'),
+              ['data-testid']: 'study-contributor-cancel-deletion',
             },
             {
               actionType: 'loadingButton',
               onClick: () => deleteContributor(contributorToDelete),
               children: tDeleting('yes'),
               loading: deleting,
+              ['data-testid']: 'study-contributor-confirm-deletion',
             },
           ]}
         >

@@ -173,12 +173,14 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
               color: 'secondary',
               onClick: () => setToDelete(undefined),
               children: tDeleting('no'),
+              ['data-testid']: 'study-member-cancel-deletion',
             },
             {
               actionType: 'loadingButton',
               onClick: () => deleteMember(memberToDelete),
               children: tDeleting('yes'),
               loading: deleting,
+              ['data-testid']: 'study-member-confirm-deletion',
             },
           ]}
         >
