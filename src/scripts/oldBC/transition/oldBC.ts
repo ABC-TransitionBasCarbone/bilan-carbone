@@ -48,46 +48,52 @@ const requiredEmissionFactorsColumns = [
   'FE_BCPlus',
 ]
 
-const getColumnsIndex = async (organizationHeaders: string[], emissionFactorHeaders: string[]) => {
-  if (requiredOrganizationsColumns.length > organizationHeaders.length) {
-    return {
-      success: false,
-      error: `Les colonnes suivantes sont obligatoires : ${requiredOrganizationsColumns.join(', ')}`,
-    }
-  }
+const getIndexes = (headers: string[], requiredHeaders: string[], sheetName: string): Record<string, number> => {
   const missingHeaders: string[] = []
+  const indexes = {} as Record<string, number>
+  requiredHeaders.forEach((requiredHeader) => {
+    const index = headers.indexOf(requiredHeader)
+    if (index === -1) {
+      missingHeaders.push(requiredHeader)
+    } else {
+      indexes[requiredHeader] = index
+    }
+  })
+
+  if (missingHeaders.length > 0) {
+    throw new Error(`Colonnes manquantes dans la feuille '${sheetName}' : ${missingHeaders.join(', ')}`)
+  }
+
+  return indexes
+}
+
+const getOrganisationIndexes = (organizationHeaders: string[]): Record<string, number> => {
+  if (requiredOrganizationsColumns.length > organizationHeaders.length) {
+    throw new Error(`Les colonnes suivantes sont obligatoires : ${requiredOrganizationsColumns.join(', ')}`)
+  }
+  return getIndexes(organizationHeaders, requiredOrganizationsColumns, 'Organisations')
+}
+
+const getEmissionFactorsIndexes = (emissionFactorHeaders: string[]): Record<string, number> => {
+  return getIndexes(emissionFactorHeaders, requiredEmissionFactorsColumns, "Facteurs d'émissions")
+}
+
+const getColumnsIndex = async (organizationHeaders: string[], emissionFactorHeaders: string[]) => {
   const indexes = { organizations: {} as Record<string, number>, emissionFactors: {} as Record<string, number> }
-  requiredOrganizationsColumns.forEach((header) => {
-    const index = organizationHeaders.indexOf(header)
-    if (index === -1) {
-      missingHeaders.push(header)
+  try {
+    indexes.organizations = getOrganisationIndexes(organizationHeaders)
+    indexes.emissionFactors = getEmissionFactorsIndexes(emissionFactorHeaders)
+  } catch (error) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        error: error.message,
+      }
     } else {
-      indexes.organizations[header] = index
-    }
-  })
-
-  if (missingHeaders.length > 0) {
-    return {
-      success: false,
-      error: `Colonnes manquantes dans la feuille 'Organisations' : ${missingHeaders.join(', ')}`,
+      throw error
     }
   }
 
-  requiredEmissionFactorsColumns.forEach((header) => {
-    const index = emissionFactorHeaders.indexOf(header)
-    if (index === -1) {
-      missingHeaders.push(header)
-    } else {
-      indexes.emissionFactors[header] = index
-    }
-  })
-
-  if (missingHeaders.length > 0) {
-    return {
-      success: false,
-      error: `Colonnes manquantes dans la feuille 'Facteurs d'émissions' : ${missingHeaders.join(', ')}`,
-    }
-  }
   return { success: true, indexes }
 }
 
