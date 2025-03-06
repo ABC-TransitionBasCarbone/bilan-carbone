@@ -92,18 +92,6 @@ const getStudiesIndexes = (studiesHeaders: string[]): Record<string, number> => 
   return getIndexes(studiesHeaders, requiredStudiesColumns, 'Etudes')
 }
 
-const getColumnsIndex = async (
-  organizationHeaders: string[],
-  emissionFactorHeaders: string[],
-  studiesHeaders: string[],
-) => {
-  return {
-    organizations: getOrganisationIndexes(organizationHeaders),
-    emissionFactors: getEmissionFactorsIndexes(emissionFactorHeaders),
-    studies: getStudiesIndexes(studiesHeaders),
-  }
-}
-
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
   const user = await prismaClient.user.findUnique({ where: { email } })
   if (!user || user.organizationId !== organizationId) {
@@ -124,7 +112,9 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
     return
   }
 
-  const indexes = await getColumnsIndex(organizationsSheet.data[0], emissionFactorsSheet.data[0], studiesSheet.data[0])
+  const organizationsIndexes = getOrganisationIndexes(organizationsSheet.data[0])
+  const emissionFactorsIndexes = getEmissionFactorsIndexes(emissionFactorsSheet.data[0])
+  const studiesIndexes = getStudiesIndexes(studiesSheet.data[0])
 
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
@@ -132,13 +122,13 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
     hasOrganizationsWarning = await uploadOrganizations(
       transaction,
       organizationsSheet.data,
-      indexes.organizations,
+      organizationsIndexes,
       organizationId,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
       emissionFactorsSheet.data,
-      indexes.emissionFactors,
+      emissionFactorsIndexes,
       organizationId,
     )
   })
