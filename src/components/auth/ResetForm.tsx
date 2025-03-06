@@ -184,7 +184,8 @@ const ResetForm = ({ user, token }: Props) => {
           loading={submitting}
           disabled={
             getValues().password !== getValues().confirmPassword ||
-            Object.values(passwordValidation).some((rule) => !rule)
+            Object.values(passwordValidation).some((rule) => !rule) ||
+            validated
           }
         >
           {t('reset')}
