@@ -2,26 +2,41 @@
 
 import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
+import Toast, { ToastColors } from '@/components/base/Toast'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
+import { deleteStudyMember } from '@/services/serverFunctions/study'
+import DeleteIcon from '@mui/icons-material/Cancel'
 import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import SelectStudyRole from './SelectStudyRole'
+import styles from './StudyRights.module.css'
 
 interface Props {
   user: User
   study: FullStudy
   canAddMember: boolean
-  userRoleOnStudy?: StudyRole
+  userRoleOnStudy: StudyRole
 }
+
+const emptyToast = { text: '', color: 'error' } as const
+const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props) => {
   const t = useTranslations('study.rights.table')
+  const tDeleting = useTranslations('study.rights.table.deleting')
   const tStudyRole = useTranslations('study.role')
   const [displayRoles, setDisplayRoles] = useState(false)
+  const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
+  const [memberToDelete, setToDelete] = useState<FullStudy['allowedUsers'][0] | undefined>(undefined)
+  const [deleting, setDeleting] = useState(false)
+
+  const router = useRouter()
 
   const columns = useMemo(() => {
     const columns: ColumnDef<FullStudy['allowedUsers'][0]>[] = [
@@ -47,6 +62,15 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
           )
         },
       })
+      columns.push({
+        header: t('actions'),
+        cell: ({ row }) =>
+          user.id !== row.original.userId && (
+            <div onClick={() => setToDelete(row.original)} className={classNames(styles.deletionButton, 'flex-cc')}>
+              <DeleteIcon />
+            </div>
+          ),
+      })
     } else {
       columns.push({
         header: t('role'),
@@ -61,6 +85,18 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
     data: study.allowedUsers,
     getCoreRowModel: getCoreRowModel(),
   })
+
+  const deleteMember = async (member: FullStudy['allowedUsers'][0]) => {
+    setDeleting(true)
+    const result = await deleteStudyMember(member, study.id)
+    setDeleting(false)
+    setToDelete(undefined)
+    if (result) {
+      setToast({ text: result, color: 'error' })
+    } else {
+      router.refresh()
+    }
+  }
 
   return (
     <>
@@ -119,6 +155,40 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
           </span>
         ))}
       </Modal>
+      {memberToDelete && (
+        <Modal
+          open
+          label="study-member-deletion"
+          title={tDeleting('title')}
+          onClose={() => setToDelete(undefined)}
+          actions={[
+            {
+              actionType: 'button',
+              color: 'secondary',
+              onClick: () => setToDelete(undefined),
+              children: tDeleting('no'),
+            },
+            {
+              actionType: 'loadingButton',
+              onClick: () => deleteMember(memberToDelete),
+              children: tDeleting('yes'),
+              loading: deleting,
+            },
+          ]}
+        >
+          {tDeleting('confirmation', { email: memberToDelete.user.email })}
+        </Modal>
+      )}
+      {toast.text && (
+        <Toast
+          position={toastPosition}
+          onClose={() => setToast(emptyToast)}
+          message={tDeleting(toast.text)}
+          color={toast.color}
+          toastKey="delete-contributor-toast"
+          open
+        />
+      )}
     </>
   )
 }

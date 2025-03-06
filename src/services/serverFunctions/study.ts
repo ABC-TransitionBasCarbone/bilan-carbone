@@ -555,6 +555,18 @@ export const findStudiesWithSites = async (siteIds: string[]) => {
   }
 }
 
+export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], studyId: string) => {
+  const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+  if (!session?.user || !study || !hasEditionRights(getUserRoleOnStudy(session.user, study))) {
+    return NOT_AUTHORIZED
+  }
+
+  const where = {
+    studyId_userId: { studyId, userId: member.userId },
+  }
+  await prismaClient.userOnStudy.delete({ where })
+}
+
 export const deleteStudyContributor = async (contributor: StudyContributorRow, studyId: string) => {
   const [session, study] = await Promise.all([auth(), getStudy(studyId)])
   if (!session?.user || !study || !hasEditionRights(getUserRoleOnStudy(session.user, study))) {

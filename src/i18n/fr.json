@@ -357,7 +357,7 @@
         }
       },
       "contributorsTable": {
-        "actions": "Actions",
+        "actions": " ",
         "email": "Email",
         "post": "Poste",
         "subPosts": "Sous postes",
@@ -377,10 +377,18 @@
         }
       },
       "table": {
+        "actions": " ",
         "email": "Email",
         "role": "Droits",
         "title": "Gestion de l'équipe",
-        "newRightLink": "Ajouter une personne à l'étude"
+        "newRightLink": "Ajouter une personne à l'étude",
+        "deleting": {
+          "title": "Confirmation",
+          "confirmation": "Êtes vous sûr de vouloir supprimer {email} des membres de cette étude ?",
+          "yes": "Oui",
+          "no": "Non",
+          "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+        }
       }
     },
     "perimeter": {

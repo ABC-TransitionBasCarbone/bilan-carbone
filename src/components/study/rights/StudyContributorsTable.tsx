@@ -101,7 +101,6 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
       ? columns.concat([
           {
             header: t('actions'),
-            accessorKey: 'actions',
             cell: ({ row }) => (
               <div onClick={() => setToDelete(row.original)} className={classNames(styles.deletionButton, 'flex-cc')}>
                 <DeleteIcon color="inherit" />
@@ -194,7 +193,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
       {contributorToDelete && (
         <Modal
           open
-          label="study-contributor"
+          label="study-contributor-deletion"
           title={tDeleting('title')}
           onClose={() => setToDelete(undefined)}
           actions={[
