@@ -314,6 +314,20 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
   await updateStudySites(studyId, selectedSites, deletedSiteIds)
 }
 
+export const changeStudyExports = async (studyId: string, type: Export, control: ControlMode | false) => {
+  const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+  if (!session || !session.user || !study) {
+    return NOT_AUTHORIZED
+  }
+  if (!hasEditionRights(getUserRoleOnStudy(session.user, study))) {
+    return NOT_AUTHORIZED
+  }
+  if (control === false) {
+    return prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })
+  }
+  return prismaClient.studyExport.create({ data: { studyId, type, control } })
+}
+
 const getOrCreateUserAndSendStudyInvite = async (
   email: string,
   study: FullStudy,

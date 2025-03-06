@@ -13,18 +13,15 @@ import { getOrganizationUsers } from '@/db/organization'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
-import { FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, MenuItem, Radio } from '@mui/material'
-import { Export } from '@prisma/client'
-import classNames from 'classnames'
+import { FormControlLabel, MenuItem, Radio } from '@mui/material'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
+import { UseFormReturn, useWatch } from 'react-hook-form'
 import HelpIcon from '../../base/HelpIcon'
-import formStyles from '../../form/Form.module.css'
-import ExportCheckbox from './ExportCheckbox'
+import StudyExportsForm from '../perimeter/StudyExportsForm'
 import styles from './Form.module.css'
 
 interface Props {
@@ -111,43 +108,7 @@ const NewStudyForm = ({ user, users, form }: Props) => {
           <FormControlLabel value="true" control={<Radio />} label={t('public')} />
           <FormControlLabel value="false" control={<Radio />} label={t('private')} />
         </FormRadio>
-
-        <Controller
-          name="exports"
-          control={form.control}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <FormControl error={!!error} component="fieldset">
-              <div className="flex mb-2">
-                <FormLabel component="legend" className={styles.exportsLabel}>
-                  <div className={classNames(formStyles.gapped, 'align-center')}>
-                    <span className="inputLabel bold">{t('exports')}</span>
-                    <div className={formStyles.icon}>
-                      {<HelpIcon onClick={() => setGlossary('exports')} label={tGlossary('title')} />}
-                    </div>
-                  </div>
-                </FormLabel>
-                {showControl && (
-                  <FormLabel component="legend">
-                    <div className={classNames(formStyles.gapped, 'align-center')}>
-                      <span className="inputLabel bold">{t('control')}</span>
-                      <div className={formStyles.icon}>
-                        {<HelpIcon onClick={() => setGlossary('control')} label={tGlossary('title')} />}
-                      </div>
-                    </div>
-                  </FormLabel>
-                )}
-              </div>
-              <FormGroup>
-                <div className={styles.exports}>
-                  {Object.keys(Export).map((key) => (
-                    <ExportCheckbox key={key} id={key as Export} values={value} setValues={onChange} />
-                  ))}
-                </div>
-              </FormGroup>
-              {error && error.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
-            </FormControl>
-          )}
-        />
+        <StudyExportsForm form={form} showControl={showControl} setGlossary={setGlossary} t={t} />
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
           {t('create')}
         </LoadingButton>
