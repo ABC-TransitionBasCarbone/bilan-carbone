@@ -2,6 +2,7 @@ import xlsx from 'node-xlsx'
 import { prismaClient } from '../../../db/client'
 import { uploadEmissionFactors } from './emissionFactors'
 import { uploadOrganizations } from './organizations'
+import { uploadStudies } from './studies'
 
 const requiredOrganizationsColumns = [
   'ID_ENTITE',
@@ -118,6 +119,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
 
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
+  let hasStudiesWarning = false
   await prismaClient.$transaction(async (transaction) => {
     hasOrganizationsWarning = await uploadOrganizations(
       transaction,
@@ -131,6 +133,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       emissionFactorsIndexes,
       organizationId,
     )
+    hasStudiesWarning = await uploadStudies(transaction, studiesSheet.data, studiesIndexes)
   })
 
   if (hasOrganizationsWarning) {
@@ -141,6 +144,12 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   if (hasEmissionFactorsWarning) {
     console.log(
       "Attention, certains facteurs d'emissions ont des sommes inconsistentes et ont été ignorées. Veuillez verifier que toutes vos données sont correctes.",
+    )
+  }
+
+  if (hasStudiesWarning) {
+    console.log(
+      'Attention, certaines études ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
     )
   }
 }
