@@ -97,27 +97,11 @@ const getColumnsIndex = async (
   emissionFactorHeaders: string[],
   studiesHeaders: string[],
 ) => {
-  const indexes = {
-    organizations: {} as Record<string, number>,
-    emissionFactors: {} as Record<string, number>,
-    studies: {} as Record<string, number>,
+  return {
+    organizations: getOrganisationIndexes(organizationHeaders),
+    emissionFactors: getEmissionFactorsIndexes(emissionFactorHeaders),
+    studies: getStudiesIndexes(studiesHeaders),
   }
-  try {
-    indexes.organizations = getOrganisationIndexes(organizationHeaders)
-    indexes.emissionFactors = getEmissionFactorsIndexes(emissionFactorHeaders)
-    indexes.studies = getStudiesIndexes(studiesHeaders)
-  } catch (error) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        error: error.message,
-      }
-    } else {
-      throw error
-    }
-  }
-
-  return { success: true, indexes }
 }
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
@@ -140,15 +124,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
     return
   }
 
-  const { success, error, indexes } = await getColumnsIndex(
-    organizationsSheet.data[0],
-    emissionFactorsSheet.data[0],
-    studiesSheet.data[0],
-  )
-  if (!success || !indexes) {
-    console.log(error)
-    return
-  }
+  const indexes = await getColumnsIndex(organizationsSheet.data[0], emissionFactorsSheet.data[0], studiesSheet.data[0])
 
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
