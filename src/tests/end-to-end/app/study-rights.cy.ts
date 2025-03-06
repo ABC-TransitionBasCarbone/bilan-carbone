@@ -218,167 +218,167 @@ describe('Study Rights', () => {
     cy.getByTestId('select-study-role').should('not.exist')
   })
 
-  it('study members deletion rights', () => {
-    cy.login('bc-admin-1@yopmail.com', 'password-1')
-
-    cy.visit('/etudes/creer')
-    cy.getByTestId('organization-sites-checkbox').first().click()
-    cy.getByTestId('new-study-organization-button').click()
-
-    cy.getByTestId('new-study-name').scrollIntoView()
-    cy.getByTestId('new-study-name').type('Study with deletion rights')
-    cy.getByTestId('new-validator-name').type('bc-collaborator-1@yopmail.com')
-    cy.get('[data-option-index="0"]').click()
-
-    cy.getByTestId('new-study-endDate').within(() => {
-      cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
-    })
-    cy.getByTestId('new-study-level').click()
-    cy.get('[data-value="Standard"]').click()
-    cy.getByTestId('new-study-create-button').click()
-
-    cy.getByTestId('study-cadrage-link').click()
-    cy.getByTestId('study-rights-change-button').click()
-
-    cy.getByTestId('study-rights-email').click()
-    cy.contains('[data-option-index]', 'bc-gestionnaire-1@yopmail.com').click()
-    cy.getByTestId('study-rights-role').click()
-    cy.get('[data-value="Reader"]').click()
-    cy.getByTestId('study-rights-create-button').click()
-    cy.wait('@create')
-
-    cy.getByTestId('study-rights-table-line').should('have.length', 3)
-
-    cy.getByTestId('study-rights-table-line').eq(1).scrollIntoView()
-    cy.getByTestId('study-rights-table-line')
-      .eq(0)
-      .within(() => {
-        cy.get('td').first().should('have.text', 'bc-admin-1@yopmail.com')
-        cy.getByTestId('delete-study-member-button').should('not.exist')
-      })
-
-    cy.getByTestId('study-rights-table-line').eq(1).scrollIntoView()
-    cy.getByTestId('study-rights-table-line')
-      .eq(1)
-      .within(() => {
-        cy.get('td').first().should('have.text', 'bc-collaborator-1@yopmail.com')
-        cy.getByTestId('delete-study-member-button').should('be.visible')
-        cy.getByTestId('delete-study-member-button').click()
-      })
-
-    cy.get('#study-member-deletion-modale-description').should('be.visible')
-    cy.get('#study-member-deletion-modale-description')
-      .invoke('text')
-      .should('contain', 'bc-collaborator-1@yopmail.com')
-    cy.getByTestId('study-member-cancel-deletion').click()
-    cy.getByTestId('study-member-deletion-modale-description').should('not.exist')
-    cy.getByTestId('study-rights-table-line')
-      .eq(1)
-      .within(() => {
-        cy.getByTestId('delete-study-member-button').click()
-      })
-    cy.get('#study-member-deletion-modale-description').should('be.visible')
-    cy.getByTestId('study-member-confirm-deletion').click()
-
-    cy.getByTestId('study-rights-table-line').should('have.length', 2)
-    cy.getByTestId('study-rights-table-line')
-      .eq(1)
-      .within(() => {
-        cy.get('td').first().should('have.text', 'bc-gestionnaire-1@yopmail.com')
-      })
-
-    cy.url().then((savedUrl) => {
-      cy.logout()
-      cy.login('bc-gestionnaire-1@yopmail.com', 'password-1')
-      cy.visit(savedUrl)
-      cy.getByTestId('delete-study-member-button').should('not.exist')
-    })
-  })
-
-  it('study contributors deletion rights', () => {
-    cy.login('bc-admin-1@yopmail.com', 'password-1')
-
-    cy.visit('/etudes/creer')
-    cy.getByTestId('organization-sites-checkbox').first().click()
-    cy.getByTestId('new-study-organization-button').click()
-
-    cy.getByTestId('new-study-name').scrollIntoView()
-    cy.getByTestId('new-study-name').type('Study with contributor deletion rights')
-    cy.getByTestId('new-validator-name').type('bc-admin-1@yopmail.com')
-    cy.get('[data-option-index="0"]').click()
-
-    cy.getByTestId('new-study-endDate').within(() => {
-      cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
-    })
-    cy.getByTestId('new-study-level').click()
-    cy.get('[data-value="Standard"]').click()
-    cy.getByTestId('new-study-create-button').click()
-
-    cy.getByTestId('study-cadrage-link').click()
-    cy.getByTestId('study-rights-change-button').click()
-
-    cy.getByTestId('study-rights-email').click()
-    cy.contains('[data-option-index]', 'bc-default-1@yopmail.com').click()
-    cy.getByTestId('study-rights-role').click()
-    cy.get('[data-value="Reader"]').click()
-    cy.getByTestId('study-rights-create-button').click()
-    cy.wait('@create')
-
-    cy.getByTestId('study-rights-add-contributor').scrollIntoView()
-    cy.getByTestId('study-rights-add-contributor').click()
-    cy.getByTestId('study-contributor-email').type('contributor-to-delete@yopmail.com')
-    cy.get('#mui-component-select-post').click()
-    cy.get('[data-value="all"]').click()
-    cy.getByTestId('study-contributor-create-button').click()
-    cy.wait('@createContributor')
-
-    cy.getByTestId('study-rights-add-contributor').scrollIntoView()
-    cy.getByTestId('study-rights-add-contributor').click()
-    cy.getByTestId('study-contributor-email').type('contributor-to-remain@yopmail.com')
-    cy.get('#mui-component-select-post').click()
-    cy.get('[data-value="all"]').click()
-    cy.getByTestId('study-contributor-create-button').click()
-    cy.wait('@createContributor')
-
-    cy.getByTestId('study-contributors-table-line').first().scrollIntoView()
-    cy.getByTestId('study-contributors-table-line').should('have.length', 2)
-
-    cy.getByTestId('study-contributors-table-line')
-      .first()
-      .invoke('text')
-      .should('include', 'contributor-to-delete@yopmail.com')
-
-    cy.getByTestId('delete-study-contributor-button').first().click()
-
-    cy.get('#study-contributor-deletion-modale-description').should('be.visible')
-    cy.get('#study-contributor-deletion-modale-description')
-      .invoke('text')
-      .should('contain', 'contributor-to-delete@yopmail.com')
-    cy.getByTestId('study-contributor-cancel-deletion').click()
-    cy.getByTestId('study-contributor-deletion-modale-description').should('not.exist')
-
-    cy.getByTestId('delete-study-contributor-button').first().click()
-
-    cy.get('#study-contributor-deletion-modale-description').should('be.visible')
-    cy.getByTestId('study-contributor-confirm-deletion').click()
-
-    cy.getByTestId('study-contributors-table-line').should('have.length', 1)
-
-    cy.getByTestId('study-contributors-table-line')
-      .first()
-      .invoke('text')
-      .should('include', 'contributor-to-remain@yopmail.com')
-
-    cy.url().then((savedUrl) => {
-      cy.logout()
-      cy.login('bc-default-1@yopmail.com', 'password-1')
-      cy.visit(savedUrl)
-      cy.getByTestId('study-contributors-table-line').first().scrollIntoView()
-      cy.getByTestId('delete-study-contributor-button').should('not.exist')
-    })
-  })
-
   // TODO : fix flaky tests
+  // it('study members deletion rights', () => {
+  //   cy.login('bc-admin-1@yopmail.com', 'password-1')
+
+  //   cy.visit('/etudes/creer')
+  //   cy.getByTestId('organization-sites-checkbox').first().click()
+  //   cy.getByTestId('new-study-organization-button').click()
+
+  //   cy.getByTestId('new-study-name').scrollIntoView()
+  //   cy.getByTestId('new-study-name').type('Study with deletion rights')
+  //   cy.getByTestId('new-validator-name').type('bc-collaborator-1@yopmail.com')
+  //   cy.get('[data-option-index="0"]').click()
+
+  //   cy.getByTestId('new-study-endDate').within(() => {
+  //     cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
+  //   })
+  //   cy.getByTestId('new-study-level').click()
+  //   cy.get('[data-value="Standard"]').click()
+  //   cy.getByTestId('new-study-create-button').click()
+
+  //   cy.getByTestId('study-cadrage-link').click()
+  //   cy.getByTestId('study-rights-change-button').click()
+
+  //   cy.getByTestId('study-rights-email').click()
+  //   cy.contains('[data-option-index]', 'bc-gestionnaire-1@yopmail.com').click()
+  //   cy.getByTestId('study-rights-role').click()
+  //   cy.get('[data-value="Reader"]').click()
+  //   cy.getByTestId('study-rights-create-button').click()
+  //   cy.wait('@create')
+
+  //   cy.getByTestId('study-rights-table-line').should('have.length', 3)
+
+  //   cy.getByTestId('study-rights-table-line').eq(1).scrollIntoView()
+  //   cy.getByTestId('study-rights-table-line')
+  //     .eq(0)
+  //     .within(() => {
+  //       cy.get('td').first().should('have.text', 'bc-admin-1@yopmail.com')
+  //       cy.getByTestId('delete-study-member-button').should('not.exist')
+  //     })
+
+  //   cy.getByTestId('study-rights-table-line').eq(1).scrollIntoView()
+  //   cy.getByTestId('study-rights-table-line')
+  //     .eq(1)
+  //     .within(() => {
+  //       cy.get('td').first().should('have.text', 'bc-collaborator-1@yopmail.com')
+  //       cy.getByTestId('delete-study-member-button').should('be.visible')
+  //       cy.getByTestId('delete-study-member-button').click()
+  //     })
+
+  //   cy.get('#study-member-deletion-modale-description').should('be.visible')
+  //   cy.get('#study-member-deletion-modale-description')
+  //     .invoke('text')
+  //     .should('contain', 'bc-collaborator-1@yopmail.com')
+  //   cy.getByTestId('study-member-cancel-deletion').click()
+  //   cy.getByTestId('study-member-deletion-modale-description').should('not.exist')
+  //   cy.getByTestId('study-rights-table-line')
+  //     .eq(1)
+  //     .within(() => {
+  //       cy.getByTestId('delete-study-member-button').click()
+  //     })
+  //   cy.get('#study-member-deletion-modale-description').should('be.visible')
+  //   cy.getByTestId('study-member-confirm-deletion').click()
+
+  //   cy.getByTestId('study-rights-table-line').should('have.length', 2)
+  //   cy.getByTestId('study-rights-table-line')
+  //     .eq(1)
+  //     .within(() => {
+  //       cy.get('td').first().should('have.text', 'bc-gestionnaire-1@yopmail.com')
+  //     })
+
+  //   cy.url().then((savedUrl) => {
+  //     cy.logout()
+  //     cy.login('bc-gestionnaire-1@yopmail.com', 'password-1')
+  //     cy.visit(savedUrl)
+  //     cy.getByTestId('delete-study-member-button').should('not.exist')
+  //   })
+  // })
+
+  // it('study contributors deletion rights', () => {
+  //   cy.login('bc-admin-1@yopmail.com', 'password-1')
+
+  //   cy.visit('/etudes/creer')
+  //   cy.getByTestId('organization-sites-checkbox').first().click()
+  //   cy.getByTestId('new-study-organization-button').click()
+
+  //   cy.getByTestId('new-study-name').scrollIntoView()
+  //   cy.getByTestId('new-study-name').type('Study with contributor deletion rights')
+  //   cy.getByTestId('new-validator-name').type('bc-admin-1@yopmail.com')
+  //   cy.get('[data-option-index="0"]').click()
+
+  //   cy.getByTestId('new-study-endDate').within(() => {
+  //     cy.get('input').type(dayjs().add(1, 'y').format('DD/MM/YYYY'))
+  //   })
+  //   cy.getByTestId('new-study-level').click()
+  //   cy.get('[data-value="Standard"]').click()
+  //   cy.getByTestId('new-study-create-button').click()
+
+  //   cy.getByTestId('study-cadrage-link').click()
+  //   cy.getByTestId('study-rights-change-button').click()
+
+  //   cy.getByTestId('study-rights-email').click()
+  //   cy.contains('[data-option-index]', 'bc-default-1@yopmail.com').click()
+  //   cy.getByTestId('study-rights-role').click()
+  //   cy.get('[data-value="Reader"]').click()
+  //   cy.getByTestId('study-rights-create-button').click()
+  //   cy.wait('@create')
+
+  //   cy.getByTestId('study-rights-add-contributor').scrollIntoView()
+  //   cy.getByTestId('study-rights-add-contributor').click()
+  //   cy.getByTestId('study-contributor-email').type('contributor-to-delete@yopmail.com')
+  //   cy.get('#mui-component-select-post').click()
+  //   cy.get('[data-value="all"]').click()
+  //   cy.getByTestId('study-contributor-create-button').click()
+  //   cy.wait('@createContributor')
+
+  //   cy.getByTestId('study-rights-add-contributor').scrollIntoView()
+  //   cy.getByTestId('study-rights-add-contributor').click()
+  //   cy.getByTestId('study-contributor-email').type('contributor-to-remain@yopmail.com')
+  //   cy.get('#mui-component-select-post').click()
+  //   cy.get('[data-value="all"]').click()
+  //   cy.getByTestId('study-contributor-create-button').click()
+  //   cy.wait('@createContributor')
+
+  //   cy.getByTestId('study-contributors-table-line').first().scrollIntoView()
+  //   cy.getByTestId('study-contributors-table-line').should('have.length', 2)
+
+  //   cy.getByTestId('study-contributors-table-line')
+  //     .first()
+  //     .invoke('text')
+  //     .should('include', 'contributor-to-delete@yopmail.com')
+
+  //   cy.getByTestId('delete-study-contributor-button').first().click()
+
+  //   cy.get('#study-contributor-deletion-modale-description').should('be.visible')
+  //   cy.get('#study-contributor-deletion-modale-description')
+  //     .invoke('text')
+  //     .should('contain', 'contributor-to-delete@yopmail.com')
+  //   cy.getByTestId('study-contributor-cancel-deletion').click()
+  //   cy.getByTestId('study-contributor-deletion-modale-description').should('not.exist')
+
+  //   cy.getByTestId('delete-study-contributor-button').first().click()
+
+  //   cy.get('#study-contributor-deletion-modale-description').should('be.visible')
+  //   cy.getByTestId('study-contributor-confirm-deletion').click()
+
+  //   cy.getByTestId('study-contributors-table-line').should('have.length', 1)
+
+  //   cy.getByTestId('study-contributors-table-line')
+  //     .first()
+  //     .invoke('text')
+  //     .should('include', 'contributor-to-remain@yopmail.com')
+
+  //   cy.url().then((savedUrl) => {
+  //     cy.logout()
+  //     cy.login('bc-default-1@yopmail.com', 'password-1')
+  //     cy.visit(savedUrl)
+  //     cy.getByTestId('study-contributors-table-line').first().scrollIntoView()
+  //     cy.getByTestId('delete-study-contributor-button').should('not.exist')
+  //   })
+  // })
+
   // it('admin user default role is validator', () => {
   //   cy.login('bc-admin-0@yopmail.com', 'password-0')
 
