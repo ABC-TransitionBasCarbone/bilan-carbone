@@ -2,12 +2,17 @@
 
 import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
+import Toast, { ToastColors } from '@/components/base/Toast'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
+import { deleteStudyContributor } from '@/services/serverFunctions/study'
+import DeleteIcon from '@mui/icons-material/Cancel'
+import { Button } from '@mui/material'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
 interface Props {
@@ -15,14 +20,30 @@ interface Props {
   canAddContributor: boolean
 }
 
+export interface StudyContributorRow {
+  email: string
+  post: string
+  subPosts: string[]
+  userId: string
+}
+
+const emptyToast = { text: '', color: 'error' } as const
+const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
+
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
 const allPosts = Object.values(Post)
 const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const t = useTranslations('study.rights.contributorsTable')
+  const tDeleting = useTranslations('study.rights.contributorsTable.deleting')
   const tRole = useTranslations('study.rights.contributorsTable.role')
   const tPost = useTranslations('emissionFactors.post')
   const [displayRoles, setDisplayRoles] = useState(false)
+  const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
+  const [contributorToDelete, setToDelete] = useState<StudyContributorRow | undefined>(undefined)
+  const [deleting, setDeleting] = useState(false)
+
+  const router = useRouter()
 
   // Complexe method to simplify the display on the table...
   const data = useMemo(
@@ -32,15 +53,15 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
           (contributor, index) =>
             study.contributors.findIndex((value) => value.user.email === contributor.user.email) === index,
         )
-        .map((contributor) => contributor.user.email)
-        .map((email) => ({
-          email,
+        .map((contributor) => ({ userId: contributor.user.id, email: contributor.user.email }))
+        .map((contributor) => ({
+          ...contributor,
           subPosts: study.contributors
-            .filter((contributor) => contributor.user.email === email)
-            .map((contributor) => contributor.subPost),
+            .filter((studyContributor) => studyContributor.user.id === contributor.userId)
+            .map((studyContributor) => studyContributor.subPost),
         }))
-        .map(({ email, subPosts }) => ({
-          email,
+        .map(({ subPosts, ...contributor }) => ({
+          ...contributor,
           posts: allPosts
             .map((post) => ({
               post,
@@ -48,11 +69,11 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
             }))
             .filter(({ subPosts }) => subPosts.length > 0),
         }))
-        .flatMap(({ email, posts }) =>
+        .flatMap(({ posts, ...contributor }) =>
           posts.length === allPosts.length
-            ? [{ email, post: 'allPost', subPosts: ['allSubPost'] }]
+            ? [{ ...contributor, post: 'allPost', subPosts: ['allSubPost'] }]
             : posts.map(({ post, subPosts }) => ({
-                email,
+                ...contributor,
                 post,
                 subPosts: subPosts.length === subPostsByPost[post].length ? ['allSubPost'] : subPosts,
               })),
@@ -61,7 +82,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   )
 
   const columns = useMemo(() => {
-    const columns: ColumnDef<{ email: string; post: string; subPosts: string[] }>[] = [
+    const columns: ColumnDef<StudyContributorRow>[] = [
       {
         header: t('email'),
         accessorKey: 'email',
@@ -75,8 +96,26 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         accessorFn: ({ subPosts }) => subPosts.map((subPost) => tPost(subPost)).join(', '),
       },
     ]
-    return columns
-  }, [t, tPost])
+    return canAddContributor
+      ? columns.concat([
+          {
+            header: t('actions'),
+            cell: ({ row }) => (
+              <div className="flex-cc">
+                <Button
+                  aria-label={t('delete')}
+                  title={t('delete')}
+                  onClick={() => setToDelete(row.original)}
+                  data-testid={`delete-study-contributor-button`}
+                >
+                  <DeleteIcon color="error" />
+                </Button>
+              </div>
+            ),
+          },
+        ])
+      : columns
+  }, [canAddContributor])
 
   const table = useReactTable({
     columns,
@@ -84,6 +123,18 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     data,
     getCoreRowModel: getCoreRowModel(),
   })
+
+  const deleteContributor = async (contributor: StudyContributorRow) => {
+    setDeleting(true)
+    const result = await deleteStudyContributor(contributor, study.id)
+    setDeleting(false)
+    setToDelete(undefined)
+    if (result) {
+      setToast({ text: result, color: 'error' })
+    } else {
+      router.refresh()
+    }
+  }
 
   return (
     <>
@@ -93,7 +144,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         expIcon
         iconPosition="after"
         actions={
-          !canAddContributor
+          canAddContributor
             ? [
                 {
                   actionType: 'link',
@@ -145,6 +196,42 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
           })}
         </p>
       </Modal>
+      {contributorToDelete && (
+        <Modal
+          open
+          label="study-contributor-deletion"
+          title={tDeleting('title')}
+          onClose={() => setToDelete(undefined)}
+          actions={[
+            {
+              actionType: 'button',
+              color: 'secondary',
+              onClick: () => setToDelete(undefined),
+              children: tDeleting('no'),
+              ['data-testid']: 'study-contributor-cancel-deletion',
+            },
+            {
+              actionType: 'loadingButton',
+              onClick: () => deleteContributor(contributorToDelete),
+              children: tDeleting('yes'),
+              loading: deleting,
+              ['data-testid']: 'study-contributor-confirm-deletion',
+            },
+          ]}
+        >
+          {tDeleting('confirmation', { email: contributorToDelete.email })}
+        </Modal>
+      )}
+      {toast.text && (
+        <Toast
+          position={toastPosition}
+          onClose={() => setToast(emptyToast)}
+          message={tDeleting(toast.text)}
+          color={toast.color}
+          toastKey="delete-contributor-toast"
+          open
+        />
+      )}
     </>
   )
 }

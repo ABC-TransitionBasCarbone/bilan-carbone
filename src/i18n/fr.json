@@ -357,11 +357,20 @@
         }
       },
       "contributorsTable": {
+        "actions": " ",
+        "delete": "Supprimer le contributeur",
         "email": "Email",
         "post": "Poste",
         "subPosts": "Sous postes",
         "title": "Contributeurs",
         "newContributorLink": "Ajouter un contributeur",
+        "deleting": {
+          "title": "Confirmation",
+          "confirmation": "Êtes vous sûr de vouloir supprimer {email} des contributeurs de cette étude ?",
+          "yes": "Oui",
+          "no": "Non",
+          "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+        },
         "role": {
           "information": "Informations",
           "description": "Vous pouvez ici gérer les contributeurs de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des contributeurs, n'hésitez pas à aller voir notre <link>FAQ</link>",
@@ -369,10 +378,19 @@
         }
       },
       "table": {
+        "actions": " ",
+        "delete": "Supprimer le membre",
         "email": "Email",
         "role": "Droits",
         "title": "Gestion de l'équipe",
-        "newRightLink": "Ajouter une personne à l'étude"
+        "newRightLink": "Ajouter une personne à l'étude",
+        "deleting": {
+          "title": "Confirmation",
+          "confirmation": "Êtes vous sûr de vouloir supprimer {email} des membres de cette étude ?",
+          "yes": "Oui",
+          "no": "Non",
+          "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+        }
       }
     },
     "perimeter": {
@@ -457,7 +475,7 @@
     "post": {
       "total": "Total",
       "allPost": "Tous les postes",
-      "allSubPost": "Tout les sous postes",
+      "allSubPost": "Tous les sous postes",
       "Energies": "Énergie",
       "AutresEmissionsNonEnergetiques": "Autres émissions directes",
       "IntrantsBiensEtMatieres": "Intrants biens et matières",

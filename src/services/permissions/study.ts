@@ -151,8 +151,8 @@ export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
     return true
   }
 
-  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
-  if (!userRightsOnStudy || userRightsOnStudy.role === StudyRole.Reader) {
+  const userRightsOnStudy = getUserRoleOnStudy(user, study)
+  if (!userRightsOnStudy || userRightsOnStudy === StudyRole.Reader) {
     return false
   }
 

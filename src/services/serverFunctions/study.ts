@@ -1,5 +1,6 @@
 'use server'
 
+import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
 import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
 import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
@@ -20,6 +21,7 @@ import {
 import { addUser, getUserApplicationSettings, getUserByEmail } from '@/db/user'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { isInOrgaOrParent } from '@/utils/onganization'
+import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import {
   ControlMode,
   User as DBUser,
@@ -52,7 +54,7 @@ import {
   isAdminOnStudyOrga,
 } from '../permissions/study'
 import { isAdmin } from '../permissions/user'
-import { subPostsByPost } from '../posts'
+import { Post, subPostsByPost } from '../posts'
 import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
 import {
@@ -551,4 +553,34 @@ export const findStudiesWithSites = async (siteIds: string[]) => {
     authorizedStudySites,
     unauthorizedStudySites,
   }
+}
+
+export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], studyId: string) => {
+  const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+  if (!session?.user || !study || !hasEditionRights(getUserRoleOnStudy(session.user, study))) {
+    return NOT_AUTHORIZED
+  }
+
+  const where = {
+    studyId_userId: { studyId, userId: member.userId },
+  }
+  await prismaClient.userOnStudy.delete({ where })
+}
+
+export const deleteStudyContributor = async (contributor: StudyContributorRow, studyId: string) => {
+  const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+  if (!session?.user || !study || !hasEditionRights(getUserRoleOnStudy(session.user, study))) {
+    return NOT_AUTHORIZED
+  }
+  const where: Prisma.ContributorsWhereInput = {
+    studyId,
+    userId: contributor.userId,
+  }
+  if (contributor.subPosts[0] !== 'allSubPost') {
+    where.subPost = contributor.subPosts[0] as SubPost
+  } else if (contributor.post !== 'allPost') {
+    const subPosts = subPostsByPost[contributor.post as Post]
+    where.subPost = { in: subPosts }
+  }
+  await prismaClient.contributors.deleteMany({ where })
 }
