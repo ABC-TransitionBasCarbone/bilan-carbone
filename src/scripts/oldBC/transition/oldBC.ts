@@ -48,6 +48,16 @@ const requiredEmissionFactorsColumns = [
   'FE_BCPlus',
 ]
 
+const requiredStudiesColumns = [
+  'IDETUDE',
+  'NOM_ETUDE',
+  'PERIODE_DEBUT',
+  'PERIODE_FIN',
+  'ID_ENTITE',
+  'LIB_REFERENTIEL',
+  'LIBELLE_MODE_CONTROLE',
+]
+
 const getIndexes = (headers: string[], requiredHeaders: string[], sheetName: string): Record<string, number> => {
   const missingHeaders: string[] = []
   const indexes = {} as Record<string, number>
@@ -78,11 +88,24 @@ const getEmissionFactorsIndexes = (emissionFactorHeaders: string[]): Record<stri
   return getIndexes(emissionFactorHeaders, requiredEmissionFactorsColumns, "Facteurs d'émissions")
 }
 
-const getColumnsIndex = async (organizationHeaders: string[], emissionFactorHeaders: string[]) => {
-  const indexes = { organizations: {} as Record<string, number>, emissionFactors: {} as Record<string, number> }
+const getStudiesIndexes = (studiesHeaders: string[]): Record<string, number> => {
+  return getIndexes(studiesHeaders, requiredStudiesColumns, 'Etudes')
+}
+
+const getColumnsIndex = async (
+  organizationHeaders: string[],
+  emissionFactorHeaders: string[],
+  studiesHeaders: string[],
+) => {
+  const indexes = {
+    organizations: {} as Record<string, number>,
+    emissionFactors: {} as Record<string, number>,
+    studies: {} as Record<string, number>,
+  }
   try {
     indexes.organizations = getOrganisationIndexes(organizationHeaders)
     indexes.emissionFactors = getEmissionFactorsIndexes(emissionFactorHeaders)
+    indexes.studies = getStudiesIndexes(studiesHeaders)
   } catch (error) {
     if (error instanceof Error) {
       return {
@@ -117,7 +140,11 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
     return
   }
 
-  const { success, error, indexes } = await getColumnsIndex(organizationsSheet.data[0], emissionFactorsSheet.data[0])
+  const { success, error, indexes } = await getColumnsIndex(
+    organizationsSheet.data[0],
+    emissionFactorsSheet.data[0],
+    studiesSheet.data[0],
+  )
   if (!success || !indexes) {
     console.log(error)
     return
