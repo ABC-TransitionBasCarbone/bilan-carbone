@@ -60,6 +60,7 @@ export type ImportEmissionFactor = {
   Valeur_gaz_supplémentaire_1: number
   Code_gaz_supplémentaire_2: string
   Valeur_gaz_supplémentaire_2: number
+  reseau?: 'froid' | 'chaud'
 }
 
 export const requiredColumns = [
