@@ -29,7 +29,7 @@ import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import DeleteStudySite from './DeleteStudySites'
+import DeleteStudySiteModal from './DeleteStudySiteModal'
 import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
 
@@ -223,7 +223,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         t={t}
         disabled={!hasEditionRights}
       />
-      <DeleteStudySite
+      <DeleteStudySiteModal
         open={open}
         confirmDeletion={updateStudySites}
         cancelDeletion={() => setOpen(false)}
