@@ -7,15 +7,14 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { deleteStudyMember } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Cancel'
+import { Button } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import SelectStudyRole from './SelectStudyRole'
-import styles from './StudyRights.module.css'
 
 interface Props {
   user: User
@@ -66,8 +65,15 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
         header: t('actions'),
         cell: ({ row }) =>
           user.id !== row.original.userId && (
-            <div onClick={() => setToDelete(row.original)} className={classNames(styles.deletionButton, 'flex-cc')}>
-              <DeleteIcon />
+            <div className="flex-cc">
+              <Button
+                aria-label={t('delete')}
+                title={t('delete')}
+                onClick={() => setToDelete(row.original)}
+                data-testid={`delete-study-member-button`}
+              >
+                <DeleteIcon color="error" />
+              </Button>
             </div>
           ),
       })

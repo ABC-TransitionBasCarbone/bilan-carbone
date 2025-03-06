@@ -358,6 +358,7 @@
       },
       "contributorsTable": {
         "actions": " ",
+        "delete": "Remove the contributor",
         "email": "Email",
         "post": "Post",
         "subPosts": "Sub posts",
@@ -378,6 +379,7 @@
       },
       "table": {
         "actions": " ",
+        "delete": "Remove the member",
         "email": "Email",
         "role": "Rights",
         "title": "Team management",

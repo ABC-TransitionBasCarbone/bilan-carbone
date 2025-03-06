@@ -8,13 +8,12 @@ import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Cancel'
+import { Button } from '@mui/material'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import styles from './StudyRights.module.css'
 
 interface Props {
   study: FullStudy
@@ -102,8 +101,15 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
           {
             header: t('actions'),
             cell: ({ row }) => (
-              <div onClick={() => setToDelete(row.original)} className={classNames(styles.deletionButton, 'flex-cc')}>
-                <DeleteIcon color="inherit" />
+              <div className="flex-cc">
+                <Button
+                  aria-label={t('delete')}
+                  title={t('delete')}
+                  onClick={() => setToDelete(row.original)}
+                  data-testid={`delete-study-contributor-button`}
+                >
+                  <DeleteIcon color="error" />
+                </Button>
               </div>
             ),
           },
