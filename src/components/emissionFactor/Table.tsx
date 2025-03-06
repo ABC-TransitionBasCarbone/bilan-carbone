@@ -109,7 +109,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
   const [filter, setFilter] = useState('')
   const [displayArchived, setDisplayArchived] = useState(false)
   const [locationFilter, setLocationFilter] = useState('')
-  const [filteredSources, setSources] = useState(initialSelectedSources)
+  const [filteredSources, setFilteredSources] = useState(initialSelectedSources)
   const [displayHideButton, setDisplayHideButton] = useState(false)
   const [displayFilters, setDisplayFilters] = useState(true)
   const filtersRef = useRef<HTMLDivElement>(null)
@@ -343,7 +343,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
       target: { value },
     } = event
 
-    setSources(value as string[])
+    setFilteredSources(value as string[])
   }
 
   const sortedImportVersions = useMemo(
@@ -471,7 +471,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
               ]
               if (row.getIsExpanded()) {
                 lines.push(
-                  <tr key={row.id}>
+                  <tr key={`${row.id}-details`}>
                     <td colSpan={columns.length} className={styles.detail}>
                       <EmissionFactorDetails emissionFactor={row.original} />
                     </td>
