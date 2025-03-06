@@ -102,10 +102,11 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
 
   const organizationsSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Organisations')
   const emissionFactorsSheet = workSheetsFromFile.find((sheet) => sheet.name === "Facteurs d'émissions")
+  const studiesSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes')
 
-  if (!organizationsSheet || !emissionFactorsSheet) {
+  if (!organizationsSheet || !emissionFactorsSheet || !studiesSheet) {
     console.log(
-      "Veuillez verifier que le fichier contient une feuille 'Organisations' et une feuille 'Facteurs d'émissions'",
+      "Veuillez verifier que le fichier contient une feuille 'Organisations', une feuille 'Facteurs d'émissions, et une feuille 'Etudes'",
     )
     return
   }
