@@ -2,7 +2,7 @@ import xlsx from 'node-xlsx'
 import { prismaClient } from '../../../db/client'
 import { uploadEmissionFactors } from './emissionFactors'
 import { uploadOrganizations } from './organizations'
-import { uploadStudies } from './studies'
+import { RequiredStudiesColumns, uploadStudies } from './studies'
 
 const requiredOrganizationsColumns = [
   'ID_ENTITE',
@@ -49,20 +49,33 @@ const requiredEmissionFactorsColumns = [
   'FE_BCPlus',
 ]
 
-const requiredStudiesColumns = [
-  'IDETUDE',
-  'NOM_ETUDE',
-  'PERIODE_DEBUT',
-  'PERIODE_FIN',
-  'ID_ENTITE',
-  'LIB_REFERENTIEL',
-  'LIBELLE_MODE_CONTROLE',
-]
-
 const getIndexes = (headers: string[], requiredHeaders: string[], sheetName: string): Record<string, number> => {
   const missingHeaders: string[] = []
   const indexes = {} as Record<string, number>
   requiredHeaders.forEach((requiredHeader) => {
+    const index = headers.indexOf(requiredHeader)
+    if (index === -1) {
+      missingHeaders.push(requiredHeader)
+    } else {
+      indexes[requiredHeader] = index
+    }
+  })
+
+  if (missingHeaders.length > 0) {
+    throw new Error(`Colonnes manquantes dans la feuille '${sheetName}' : ${missingHeaders.join(', ')}`)
+  }
+
+  return indexes
+}
+
+const getEnumIndexes = (
+  headers: string[],
+  requiredColumns: Record<string, string>,
+  sheetName: string,
+): Record<string, number> => {
+  const missingHeaders: string[] = []
+  const indexes = {} as Record<string, number>
+  Object.values(requiredColumns).forEach((requiredHeader) => {
     const index = headers.indexOf(requiredHeader)
     if (index === -1) {
       missingHeaders.push(requiredHeader)
@@ -90,7 +103,7 @@ const getEmissionFactorsIndexes = (emissionFactorHeaders: string[]): Record<stri
 }
 
 const getStudiesIndexes = (studiesHeaders: string[]): Record<string, number> => {
-  return getIndexes(studiesHeaders, requiredStudiesColumns, 'Etudes')
+  return getEnumIndexes(studiesHeaders, RequiredStudiesColumns, 'Etudes')
 }
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
