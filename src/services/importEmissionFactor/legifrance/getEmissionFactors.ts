@@ -7,15 +7,19 @@ const subPostByNetworkType = {
   chaud: [SubPost.ReseauxDeChaleurEtDeVapeur],
 }
 
-const getSubPostsFunc = (networkType: 'froid' | 'chaud') => () => subPostByNetworkType[networkType]
+const getSubPostsFunc = (emissionFactor: ImportEmissionFactor) => () => {
+  if (!emissionFactor.reseau || (emissionFactor.reseau !== 'chaud' && emissionFactor.reseau !== 'froid')) {
+    throw new Error(
+      `reseau is not provided for emission factor ${emissionFactor.Nom_base_français} - ${emissionFactor["Identifiant_de_l'élément"]}`,
+    )
+  }
+  return subPostByNetworkType[emissionFactor.reseau]
+}
 
-const mapLegifranceEmissionFactors = (
-  emissionFactor: ImportEmissionFactor,
-  versionId: string,
-  networkType: 'froid' | 'chaud',
-) => mapEmissionFactors(emissionFactor, Import.Legifrance, versionId, getSubPostsFunc(networkType))
+const mapLegifranceEmissionFactors = (emissionFactor: ImportEmissionFactor, versionId: string) =>
+  mapEmissionFactors(emissionFactor, Import.Legifrance, versionId, getSubPostsFunc(emissionFactor))
 
-export const getEmissionFactorsFromCSV = async (name: string, file: string, networkType: 'froid' | 'chaud') =>
-  getEmissionFactors(name, file, Import.NegaOctet, (emissionFactor: ImportEmissionFactor, versionId: string) =>
-    mapLegifranceEmissionFactors(emissionFactor, versionId, networkType),
+export const getEmissionFactorsFromCSV = async (name: string, file: string) =>
+  getEmissionFactors(name, file, Import.Legifrance, (emissionFactor: ImportEmissionFactor, versionId: string) =>
+    mapLegifranceEmissionFactors(emissionFactor, versionId),
   )

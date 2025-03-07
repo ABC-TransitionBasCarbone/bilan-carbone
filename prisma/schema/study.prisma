@@ -60,14 +60,13 @@ model Study {
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
 
-  versionId String                      @map("version_id")
-  version   EmissionFactorImportVersion @relation(fields: [versionId], references: [id])
-
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
   contributors    Contributors[]
   sites           StudySite[]
   flows           Document[]
+
+  emissionFactorVersions StudyEmissionFactorVersion[]
 
   @@map("studies")
 }
@@ -182,6 +181,21 @@ model ExportRule {
 
   @@unique([export, subPost, type])
   @@map("export_rules")
+}
+
+model StudyEmissionFactorVersion {
+  id String @id @default(uuid())
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  importVersionId String                      @map("import_version_id")
+  importVersion   EmissionFactorImportVersion @relation(fields: [importVersionId], references: [id])
+
+  source Import
+
+  @@unique([studyId, source])
+  @@map("study_emission_factor_versions")
 }
 
 model StudySite {

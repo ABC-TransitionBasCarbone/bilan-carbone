@@ -1,5 +1,6 @@
 'use server'
 
+import { getEmissionFactorById } from '@/db/emissionFactors'
 import {
   createEmissionSourceOnStudy,
   deleteEmissionSourceOnStudy,
@@ -49,9 +50,10 @@ export const updateEmissionSource = async ({
     return NOT_AUTHORIZED
   }
 
-  const [user, emissionSource] = await Promise.all([
+  const [user, emissionSource, emissionFactor] = await Promise.all([
     getUserByEmail(session.user.email),
     getEmissionSourceById(emissionSourceId),
+    emissionFactorId ? getEmissionFactorById(emissionFactorId) : undefined,
   ])
   if (!user || !emissionSource) {
     return NOT_AUTHORIZED
@@ -63,6 +65,14 @@ export const updateEmissionSource = async ({
     return NOT_AUTHORIZED
   }
 
+  if (
+    emissionFactor?.version?.id &&
+    !study.emissionFactorVersions
+      .map((emissionFactorVersion) => emissionFactorVersion.importVersionId)
+      .includes(emissionFactor.version.id)
+  ) {
+    return NOT_AUTHORIZED
+  }
   const isContributor = study.contributors.some(
     (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
   )
