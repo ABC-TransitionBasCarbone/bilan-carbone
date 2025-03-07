@@ -1,0 +1,26 @@
+.button {
+  color: var(--neutral-00);
+
+  &:hover {
+    color: var(--primary-20);
+  }
+}
+
+.modal {
+  background-color: #eef6ff !important;
+}
+
+.stepSummary {
+  opacity: 1 !important;
+}
+
+.stepHeader {
+  svg {
+    color: var(--green-500);
+  }
+  gap: 0.5rem;
+}
+
+.validated {
+  color: var(--green-500) !important;
+}
