@@ -1127,6 +1127,24 @@
   },
   "checklist": {
     "title": "Getting started on BC+",
-    "done": "Done"
+    "done": "Done",
+    "CreateAccount": "Create your account",
+    "CreateAccountDetails": "",
+    "AddCollaborator": "Add collaborators",
+    "AddCollaboratorDetails": "Add your colleagues so that they can help you draw up your organization's Bilan Carbone®.",
+    "AddClient": "Create your first client",
+    "AddClientDetails": "Add your first client to start your Bilans Carbone®.",
+    "AddSite": "Add sites",
+    "AddSiteDetails": "Add sites to your <orga>organisation</orga> or to <client>one of your clients</client> so that you can set up emissions for each site. If your organisation or customer has only one site, create an 'All sites' site.",
+    "CreateFirstStudy": "Create your first Bilan Carbone®",
+    "CreateFirstStudyDetails": "Let's get started with your first Bilan Carbone®! Fill in the initial details, such as the date, name...",
+    "CreateFirstEmissionSource": "Create your first emissions source",
+    "CreateFirstEmissionSourceDetails": "Go to the first item/sub-item you wish to enter! Choose your emission factor, enter your activity data and make your first calculations.",
+    "ConsultResults": "Consult your first results",
+    "ConsultResultsDetails": "Now go to the \"Results\" page to view and export your emissions...",
+    "optional": "Optional",
+    "markAsDone": "Mark as done",
+    "go": "Go",
+    "finished": "You're ready to start using BC+! Feel free to consult the <faq>FAQ</faq> or contact us if you need anything."
   }
 }

@@ -6,7 +6,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { CRUserChecklist, Role, UserCheckedStep } from '@prisma/client'
+import { CRUserChecklist, Organization, Role, UserCheckedStep } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
@@ -19,20 +19,23 @@ import styles from './Navbar.module.css'
 
 interface Props {
   user: User
-  isCR: boolean
   userChecklist: UserCheckedStep[]
+  organizations: Organization[]
+  studyId?: string
 }
 
-const Navbar = ({ user, isCR, userChecklist }: Props) => {
+const Navbar = ({ user, userChecklist, organizations, studyId }: Props) => {
   const t = useTranslations('navigation')
   const [showSubMenu, setShowSubMenu] = useState(false)
 
   const handleMouseEnter = () => setShowSubMenu(true)
   const handleMouseLeave = () => setShowSubMenu(false)
 
+  const userOrganization = organizations.find((organization) => organization.id === user.organizationId) as Organization
+
   const completedChecklist = useMemo(
-    () => userChecklist.length === (isCR ? Object.keys(CRUserChecklist).length : 0),
-    [userChecklist, isCR],
+    () => userChecklist.length === (userOrganization.isCR ? Object.keys(CRUserChecklist).length : 0),
+    [userChecklist, userOrganization.isCR],
   )
 
   return (
@@ -84,7 +87,14 @@ const Navbar = ({ user, isCR, userChecklist }: Props) => {
               {t('admin')}
             </Link>
           )}
-          {!completedChecklist && <ChecklistButton isCR={isCR} userChecklist={userChecklist} />}
+          {!completedChecklist && (
+            <ChecklistButton
+              userChecklist={userChecklist}
+              userOrganization={userOrganization}
+              organizations={organizations.filter((organization) => organization.id !== user.organizationId)}
+              studyId={studyId}
+            />
+          )}
           <Link
             target="_blank"
             rel="noreferrer noopener"

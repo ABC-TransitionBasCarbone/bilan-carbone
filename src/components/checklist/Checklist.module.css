@@ -7,7 +7,16 @@
 }
 
 .modal {
-  background-color: #eef6ff !important;
+  background-color: var(--organization-card-bg) !important;
+}
+
+.overflowedModal {
+  overflow-y: scroll;
+}
+
+.optional {
+  color: var(--primary-40);
+  font-style: italic;
 }
 
 .stepSummary {
@@ -15,9 +24,6 @@
 }
 
 .stepHeader {
-  svg {
-    color: var(--green-500);
-  }
   gap: 0.5rem;
 }
 
