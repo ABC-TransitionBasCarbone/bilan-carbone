@@ -1,5 +1,6 @@
 'use server'
 
+import { prismaClient } from '@/db/client'
 import { getOrganizationById } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
@@ -17,7 +18,7 @@ import {
   validateUser,
 } from '@/db/user'
 import { DAY, HOUR, TIME_IN_MS } from '@/utils/time'
-import { User as DBUser, Organization, Role, UserStatus } from '@prisma/client'
+import { CRUserChecklist, User as DBUser, Organization, Role, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
 import { auth } from '../auth'
@@ -290,4 +291,28 @@ export const updateUserSettings = async (command: EditSettingsCommand) => {
     return NOT_AUTHORIZED
   }
   await updateUserApplicationSettings(session.user.id, command)
+}
+
+export const getUserChecklist = async () => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return []
+  }
+  return prismaClient.userCheckedStep.findMany({ where: { userId: session.user.id } })
+}
+
+export const addUserChecklistItem = async (step: CRUserChecklist) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return
+  }
+  const isCR = (await prismaClient.organization.findUnique({ where: { id: session.user.organizationId || '' } }))?.isCR
+  if (!Object.values(isCR ? CRUserChecklist : CRUserChecklist).includes(step)) {
+    return
+  }
+  return prismaClient.userCheckedStep.upsert({
+    where: { userId_step: { userId: session.user.id, step } },
+    update: {},
+    create: { userId: session.user.id, step },
+  })
 }
