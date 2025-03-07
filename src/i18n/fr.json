@@ -1092,10 +1092,10 @@
     "loading": "Chargement"
   },
   "onboarding": {
-    "title-0": "Bienvenue sur le BC+ ! Avant de commencer, veuillez configurer votre organisation",
-    "titleDescription-0": "Nous avons pré-rempli certaines informations concernant votre organisation (association, entreprise, ...) suite à votre adhésion à l'ABC. Vous pouvez modifier le nom de votre organisation maintenant, ou à tout moment dans le BC+ via la rubrique \"Organisation\".",
-    "title-1": "Gestion de votre équipe",
-    "titleDescription-1": "Vous pouvez d'ores et déjà ajouter vos collaborateurs au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Mon équipe\" située dans le menu \"Mon organisation\".",
+    "title-1": "Bienvenue sur le BC+ ! Avant de commencer, veuillez configurer votre organisation",
+    "titleDescription-1": "Nous avons pré-rempli certaines informations concernant votre organisation (association, entreprise, ...) suite à votre adhésion à l'ABC. Vous pouvez modifier le nom de votre organisation maintenant, ou à tout moment dans le BC+ via la rubrique \"Organisation\".",
+    "title-2": "Gestion de votre équipe",
+    "titleDescription-2": "Vous pouvez d'ores et déjà ajouter vos collaborateurs au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Mon équipe\" située dans le menu \"Mon organisation\".",
     "previous": "Précédent",
     "next": "Suivant",
     "validate": "Valider",

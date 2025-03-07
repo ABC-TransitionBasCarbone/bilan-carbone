@@ -1092,10 +1092,10 @@
     "loading": "Loading"
   },
   "onboarding": {
-    "title-0": "Welcome to BC+! Before you start, please set up your organization",
-    "titleDescription-0": "We’ve pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization’s name now, or at any time in BC+ via the \"Organization\" section.",
-    "title-1": "Manage your team",
-    "titleDescription-1": "You can already add your team members! You’ll still be able to add new people later via the \"Team\" section within the \"Organization\" menu.",
+    "title-1": "Welcome to BC+! Before you start, please set up your organization",
+    "titleDescription-1": "We’ve pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization’s name now, or at any time in BC+ via the \"Organization\" section.",
+    "title-2": "Manage your team",
+    "titleDescription-2": "You can already add your team members! You’ll still be able to add new people later via the \"Team\" section within the \"Organization\" menu.",
     "previous": "Previous",
     "next": "Next",
     "validate": "Validate",
