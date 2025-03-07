@@ -6,26 +6,34 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { Role } from '@prisma/client'
+import { CRUserChecklist, Role, UserCheckedStep } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import ChecklistButton from '../checklist/ChecklistButton'
 import styles from './Navbar.module.css'
 
 interface Props {
   user: User
+  isCR: boolean
+  userChecklist: UserCheckedStep[]
 }
 
-const Navbar = ({ user }: Props) => {
+const Navbar = ({ user, isCR, userChecklist }: Props) => {
   const t = useTranslations('navigation')
   const [showSubMenu, setShowSubMenu] = useState(false)
 
   const handleMouseEnter = () => setShowSubMenu(true)
   const handleMouseLeave = () => setShowSubMenu(false)
+
+  const completedChecklist = useMemo(
+    () => userChecklist.length === (isCR ? Object.keys(CRUserChecklist).length : 0),
+    [userChecklist, isCR],
+  )
 
   return (
     <nav className={classNames(styles.navbar, 'w100')}>
@@ -76,6 +84,7 @@ const Navbar = ({ user }: Props) => {
               {t('admin')}
             </Link>
           )}
+          {!completedChecklist && <ChecklistButton isCR={isCR} userChecklist={userChecklist} />}
           <Link
             target="_blank"
             rel="noreferrer noopener"

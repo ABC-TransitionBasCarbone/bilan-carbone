@@ -1124,5 +1124,9 @@
         "requiredRole": "Rôle obligatoire"
       }
     }
+  },
+  "checklist": {
+    "title": "Bien démarrer sur le BC+",
+    "done": "Fait"
   }
 }

@@ -1,15 +1,17 @@
 import { MobileStepper } from '@mui/material'
+import classNames from 'classnames'
 import styles from './Stepper.module.css'
 
 interface Props {
   steps: number
   activeStep: number
   fillValidatedSteps?: boolean
+  className?: string
 }
 
-const Stepper = ({ steps, activeStep, fillValidatedSteps }: Props) => (
+const Stepper = ({ steps, activeStep, fillValidatedSteps, className }: Props) => (
   <MobileStepper
-    className="mb2"
+    className={classNames(className, 'mb2')}
     classes={{ dot: styles.stepperDots, dotActive: styles.active }}
     style={{ padding: 0 }}
     variant="dots"

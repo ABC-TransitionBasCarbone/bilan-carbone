@@ -1124,5 +1124,9 @@
         "requiredRole": "Role is required"
       }
     }
+  },
+  "checklist": {
+    "title": "Getting started on BC+",
+    "done": "Done"
   }
 }
