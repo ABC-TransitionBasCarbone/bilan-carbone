@@ -1,4 +1,5 @@
 import { getLink, isOptionnalStep } from '@/services/checklist'
+import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import ValidatedIcon from '@mui/icons-material/CheckCircle'
 import ToDoIcon from '@mui/icons-material/CheckCircleOutline'
 import ExpandIcon from '@mui/icons-material/ExpandMore'
@@ -7,6 +8,7 @@ import { CRUserChecklist, Organization } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
 import Button from '../base/Button'
 import LinkButton from '../base/LinkButton'
@@ -24,6 +26,12 @@ interface Props {
 const ChecklistItem = ({ step, validated, onClose, organizationId, clients, studyId }: Props) => {
   const t = useTranslations('checklist')
   const link = useMemo(() => getLink(step, studyId), [step, studyId])
+  const router = useRouter()
+
+  const markAsDone = async () => {
+    await addUserChecklistItem(step)
+    router.refresh()
+  }
 
   return (
     <div className="flex mb1">
@@ -37,10 +45,12 @@ const ChecklistItem = ({ step, validated, onClose, organizationId, clients, stud
         }}
       >
         <div>
-          {isOptionnalStep(step) && (
+          {isOptionnalStep(step) && !validated && (
             <div className="grow align-center justify-between px1 pt1">
               <span className={styles.optional}>{t('optional')}</span>
-              <Button color="secondary">{t('markAsDone')}</Button>
+              <Button onClick={markAsDone} color="secondary">
+                {t('markAsDone')}
+              </Button>
             </div>
           )}
           <AccordionSummary
