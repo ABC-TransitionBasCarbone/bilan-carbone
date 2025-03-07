@@ -15,3 +15,20 @@ export const mandatorySteps = (step: CRUserChecklist) => {
       return []
   }
 }
+
+export const getLink = (step: CRUserChecklist, studyId?: string) => {
+  switch (step) {
+    case CRUserChecklist.AddCollaborator:
+      return '/equipe'
+    case CRUserChecklist.AddClient:
+      return '/organisations/creer'
+    case CRUserChecklist.CreateFirstStudy:
+      return '/etudes/creer'
+    case CRUserChecklist.CreateFirstEmissionSource:
+      return studyId ? `/etudes/${studyId}/comptabilisation/saisie-des-donnees` : null
+    case CRUserChecklist.ConsultResults:
+      return studyId ? `/etudes/${studyId}/comptabilisation/resultats` : null
+    default:
+      return null
+  }
+}
