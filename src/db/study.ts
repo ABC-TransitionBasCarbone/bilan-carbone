@@ -1,4 +1,5 @@
 import { filterAllowedStudies } from '@/services/permissions/study'
+import { isAdmin } from '@/services/permissions/user'
 import { checkLevel } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/onganization'
 import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
@@ -148,7 +149,12 @@ export const getAllowedStudiesByUser = async (user: User) => {
   const studies = await prismaClient.study.findMany({
     where: {
       OR: [
-        { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
+        {
+          AND: [
+            { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
+            ...(isAdmin(user.role) ? [] : [{ isPublic: true }]),
+          ],
+        },
         { allowedUsers: { some: { userId: user.id } } },
         { contributors: { some: { userId: user.id } } },
       ],
