@@ -3,16 +3,18 @@
 import Form from '@/components/base/Form'
 import { gazKeys } from '@/constants/emissions'
 import { DetailedEmissionFactor } from '@/db/emissionFactors'
-import { Post, subPostsByPost } from '@/services/posts'
+import { Post } from '@/services/posts'
 import { updateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
   maxParts,
   UpdateEmissionFactorCommand,
   UpdateEmissionFactorCommandValidation,
 } from '@/services/serverFunctions/emissionFactor.command'
+import { getPost } from '@/utils/post'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { SubPost } from '@prisma/client'
 import { useRouter } from 'next/navigation'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import EmissionFactorForm from '../Form/EmissionFactorForm'
 
@@ -52,11 +54,19 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
   const [hasParts, setHasParts] = useState(!!(emissionFactor.emissionFactorParts.length > 0))
   const [partsCount, setPartsCount] = useState(emissionFactor.emissionFactorParts.length || 1)
 
-  const subPost = emissionFactor?.subPosts[0] || undefined
-  let post: Post | undefined = undefined
-  if (subPost) {
-    post = Object.keys(subPostsByPost).find((post) => subPostsByPost[post as Post].includes(subPost)) as Post
-  }
+  const subPostObject = useMemo(() => {
+    return emissionFactor.subPosts.reduce<Record<Post, SubPost[]>>(
+      (acc, subPost) => {
+        const post = getPost(subPost)
+        if (post) {
+          acc[post] = acc[post] ?? []
+          acc[post].push(subPost)
+        }
+        return acc
+      },
+      {} as Record<Post, SubPost[]>,
+    )
+  }, [emissionFactor.subPosts])
 
   const detailedGES =
     isDecomposed(emissionFactor) || (emissionFactor.emissionFactorParts || []).some((part) => isDecomposed(part))
@@ -71,7 +81,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       attribute: emissionFactor?.metaData[0].attribute || '',
       source: emissionFactor?.source || '',
       unit: emissionFactor?.unit || undefined,
-      subPost: emissionFactor?.subPosts[0] || undefined,
+      subPosts: subPostObject,
       ...getGazValues(emissionFactor),
       totalCo2: emissionFactor?.totalCo2 || 0,
       parts: buildParts(emissionFactor, partsCount),
@@ -81,6 +91,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
     form.setValue('parts', hasParts ? form.getValues('parts').slice(0, partsCount) : [])
     form.handleSubmit(async (data) => {
       const result = await updateEmissionFactorCommand(data)
@@ -99,7 +110,6 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       <EmissionFactorForm
         form={form}
         detailedGES={detailedGES}
-        post={post}
         error={error}
         hasParts={hasParts}
         setHasParts={setHasParts}

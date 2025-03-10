@@ -1,4 +1,5 @@
 import { UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
@@ -105,7 +106,7 @@ export const createEmissionFactor = (emissionFactor: Prisma.EmissionFactorCreate
 export const updateEmissionFactor = async (
   session: Session,
   local: string,
-  { id, name, unit, attribute, comment, parts, subPost, ...command }: UpdateEmissionFactorCommand,
+  { id, name, unit, attribute, comment, parts, subPosts, ...command }: UpdateEmissionFactorCommand,
 ) => {
   const emissionFactor = {
     ...command,
@@ -114,7 +115,7 @@ export const updateEmissionFactor = async (
     reliability: 5,
     organization: { connect: { id: session?.user.organizationId as string } },
     unit: unit as Unit,
-    subPosts: [subPost],
+    subPosts: flattenSubposts(subPosts),
   }
   await prismaClient.$transaction(async (transaction) => {
     await transaction.emissionFactor.update({

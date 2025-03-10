@@ -1,30 +1,38 @@
 'use client'
 
-import HelpIcon from '@/components/base/HelpIcon'
+import Button from '@/components/base/Button'
+import { MultiSelect } from '@/components/base/MultiSelect'
 import { Select } from '@/components/base/Select'
-import { FormSelect } from '@/components/form/Select'
-import GlossaryModal from '@/components/modals/GlossaryModal'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { FormControl, MenuItem } from '@mui/material'
+import { getPost } from '@/utils/post'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Box, FormControl, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { Control, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import { Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import styles from './Posts.module.css'
 
 interface Props<T extends EmissionFactorCommand> {
   post?: Post
+  postOptions: Post[]
+  subPosts?: SubPost[]
   form: UseFormReturn<T>
 }
 
-const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Props<T>) => {
+const Posts = <T extends EmissionFactorCommand>({
+  form,
+  subPosts: initalSubPosts,
+  post: initialPost,
+  postOptions,
+}: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
-  const tGlossary = useTranslations('emissionFactors.create.glossary')
   const tPost = useTranslations('emissionFactors.post')
-  const [post, setPost] = useState<Post | undefined>(initalPost)
-  const [glossary, setGlossary] = useState('')
+  const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
 
-  const control = form.control as Control<EmissionFactorCommand>
+  const [post, setPost] = useState<Post | undefined>(getPost(initalSubPosts?.[0]) || initialPost)
+
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
   const posts = useMemo(() => Object.keys(Post).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
@@ -33,55 +41,86 @@ const Posts = <T extends EmissionFactorCommand>({ form, post: initalPost }: Prop
     [post, tPost],
   )
 
+  const translatedSubPosts = useMemo(
+    () => subPosts.map((subPost) => ({ label: tPost(subPost), value: subPost })),
+    [subPosts],
+  )
+
+  const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
+    const selectedPost = event.target.value as Post
+    setSelectedSubPosts([])
+    const currentSubPosts: Record<Post, SubPost[]> =
+      (form.getValues('subPosts' as Path<T>) as Record<Post, SubPost[]>) || {}
+    if (post) {
+      delete currentSubPosts[post]
+    }
+    currentSubPosts[selectedPost] = []
+    setValue('subPosts', currentSubPosts)
+
+    setPost(selectedPost)
+  }
+
+  const handleDelete = () => {
+    if (!post) {
+      return
+    }
+    const currentSubPosts: Record<Post, SubPost[]> =
+      (form.getValues('subPosts' as Path<T>) as Record<Post, SubPost[]>) || {}
+    delete currentSubPosts[post]
+    setValue('subPosts', currentSubPosts)
+  }
+
+  const handleSelectSubPost = (subPostsArr: string[]) => {
+    if (!post) {
+      return
+    }
+    setSelectedSubPosts(subPostsArr as SubPost[])
+    const currentSubPosts: Record<Post, SubPost[]> =
+      (form.getValues('subPosts' as Path<T>) as Record<Post, SubPost[]>) || {}
+    const newSubPosts = { ...currentSubPosts, [post]: subPostsArr }
+    setValue('subPosts', newSubPosts)
+  }
+
   return (
-    <>
-      <FormControl>
+    <Box className="w100 align-end justify-between">
+      <FormControl className={styles.selectForm}>
         <Select
-          name="Post"
-          data-testid="emission-factor-post"
+          name="post"
           labelId="post-select-label"
           value={post || ''}
-          onChange={(event) => {
-            // @ts-expect-error: Force undefined to trigger error if not filled
-            setValue('subPost', undefined)
-            setPost(event.target.value as Post)
-          }}
+          onChange={handleSelectPost}
           label={t('post')}
-          icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
-          iconPosition="after"
         >
           {posts.map((post) => (
-            <MenuItem key={post} value={post}>
+            <MenuItem disabled={!postOptions.includes(post as Post)} key={post} value={post}>
               {tPost(post)}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-      <FormSelect
-        data-testid="emission-factor-subPost"
-        control={control}
-        translation={t}
-        label={t('subPost')}
-        name="subPost"
+      <FormControl className={styles.multiSelectForm} error={selectedSubPosts?.length === 0}>
+        <MultiSelect
+          name="subPosts"
+          data-testid="emission-factor-subPost"
+          labelId="subpost-select-label"
+          value={selectedSubPosts || []}
+          onChange={handleSelectSubPost}
+          label={t('subPost')}
+          options={translatedSubPosts}
+          placeholder="placeholdertest"
+          translation={tPost}
+        />
+      </FormControl>
+      <Button
+        className={styles.deleteButton}
+        data-testid="delete-site-button"
+        title={t('delete')}
+        aria-label={t('delete')}
+        onClick={handleDelete}
       >
-        {subPosts.length === 0 ? (
-          <MenuItem value="" disabled>
-            {t('missingPost')}
-          </MenuItem>
-        ) : (
-          subPosts.map((subPost) => (
-            <MenuItem key={subPost} value={subPost}>
-              {tPost(subPost)}
-            </MenuItem>
-          ))
-        )}
-      </FormSelect>
-      {glossary && (
-        <GlossaryModal glossary={glossary} label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
-          {tGlossary(`${glossary}Description`)}
-        </GlossaryModal>
-      )}
-    </>
+        <DeleteIcon />
+      </Button>
+    </Box>
   )
 }
 
