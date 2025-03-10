@@ -5,16 +5,17 @@ import styles from './InputFileUpload.module.css'
 
 interface Props {
   label: string
+  onChange: (value: FileList) => void
 }
 
-export default function InputFileUpload({ label }: Props) {
+export default function InputFileUpload({ label, onChange }: Props) {
   return (
-    <Button component="label" role={undefined} variant="contained" tabIndex={-1} startIcon={<CloudUploadIcon />}>
+    <Button component="label" variant="contained" tabIndex={-1} startIcon={<CloudUploadIcon />}>
       {label}
       <input
         className={classNames(styles.input)}
         type="file"
-        onChange={(event) => console.log(event.target.files)}
+        onChange={(event) => event.target.files && onChange(event.target.files)}
         multiple
       />
     </Button>
