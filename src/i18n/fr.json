@@ -323,6 +323,7 @@
     "title": "Étude",
     "rights": {
       "title": "Cadrage de l'étude : {name}",
+      "edit": "Renommer l'étude",
       "new": {
         "title": "Ajouter une personne sur l'étude : {name}",
         "email": "Email",

@@ -325,6 +325,7 @@
       "title": "Rights on study : {name}",
       "new": {
         "title": "Add a person to the study: {name}",
+        "edit": "Edit the study name",
         "email": "Email",
         "role": "Role",
         "create": "Add person",
