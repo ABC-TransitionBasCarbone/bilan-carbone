@@ -6,7 +6,6 @@ import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { SiteCAUnit } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
@@ -16,7 +15,6 @@ import Help from '../base/HelpIcon'
 import { FormCheckbox } from '../form/Checkbox'
 import { FormTextField } from '../form/TextField'
 import GlossaryModal from '../modals/GlossaryModal'
-import styles from './Sites.module.css'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
@@ -60,7 +58,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
           form ? (
             <>
               {withSelection ? (
-                <div className={classNames(styles.name, 'align-center')}>
+                <div className="align-center">
                   <FormCheckbox
                     control={control}
                     translation={t}
@@ -137,7 +135,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
         header: t('actions'),
         accessorKey: 'id',
         cell: ({ getValue }) => (
-          <div className={classNames(styles.delete, 'w100 flex-cc')}>
+          <div className="w100 flex-cc">
             <Button
               data-testid="delete-site-button"
               title={t('delete')}
@@ -168,21 +166,21 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
   return !form && sites.length === 0 ? (
     <p className="title-h3">{t('noSites')}</p>
   ) : (
-    <div className={styles.container}>
-      {form && !withSelection && (
-        <Button
-          onClick={() => setValue('sites', [...sites, newSite()])}
-          className={styles.addButton}
-          data-testid="add-site-button"
-        >
-          {t('add')}
-        </Button>
-      )}
+    <div>
+      <div>
+        <div className="justify-between align-center">
+          <p className="title-h3">
+            {t('title')}
+            <Help className="ml-4" onClick={() => setShowGlossary(!showGlossary)} label={tGlossary('title')} />
+          </p>
+          {form && !withSelection && (
+            <Button onClick={() => setValue('sites', [...sites, newSite()])} data-testid="add-site-button">
+              {t('add')}
+            </Button>
+          )}
+        </div>
+      </div>
       <table className="mt1">
-        <caption>
-          {t('title')}
-          <Help className="ml-4" onClick={() => setShowGlossary(!showGlossary)} label={tGlossary('title')} />
-        </caption>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
