@@ -46,6 +46,7 @@ import {
   canAddRightOnStudy,
   canChangeDates,
   canChangeLevel,
+  canChangeName,
   canChangePublicStatus,
   canChangeSites,
   canCreateStudy,
@@ -60,6 +61,7 @@ import { checkLevel } from '../study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyLevelCommand,
+  ChangeStudyNameCommand,
   ChangeStudyPublicStatusCommand,
   ChangeStudySitesCommand,
   CreateStudyCommand,
@@ -234,6 +236,19 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
     return NOT_AUTHORIZED
   }
   await updateStudy(studyId, command)
+}
+
+export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCommand) => {
+  const informations = await getStudyRightsInformations(studyId)
+  if (informations === null) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!canChangeName(informations.user, informations.studyWithRights)) {
+    return NOT_AUTHORIZED
+  }
+
+  await updateStudy(studyId, { name: command.name })
 }
 
 export const hasActivityData = async (
