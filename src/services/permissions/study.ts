@@ -3,14 +3,14 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/onganization'
 import { getUserRoleOnStudy } from '@/utils/study'
-import { User as DbUser, Level, Prisma, Study, StudyRole } from '@prisma/client'
+import { User as DbUser, Level, Organization, Prisma, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { auth } from '../auth'
 import { checkLevel } from '../study'
 import { isInOrgaOrParentFromId } from './organization'
 
-export const isAdminOnStudyOrga = (user: User, study: Pick<FullStudy, 'organizationId' | 'organization'>) =>
-  isAdminOnOrga(user, study.organization)
+export const isAdminOnStudyOrga = (user: User, studyOrganization: Pick<Organization, 'id' | 'parentId'>) =>
+  isAdminOnOrga(user, studyOrganization)
 
 export const canReadStudy = async (user: User | UserWithAllowedStudies, studyId: string) => {
   if (!user) {
@@ -24,7 +24,7 @@ export const canReadStudy = async (user: User | UserWithAllowedStudies, studyId:
   }
 
   if (
-    isAdminOnStudyOrga(user, study) ||
+    isAdminOnStudyOrga(user, study.organization) ||
     (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization))
   ) {
     return true
@@ -82,7 +82,7 @@ export const canCreateStudy = async (userEmail: string, study: Prisma.StudyCreat
 }
 
 const canChangeStudyValues = async (user: User, study: FullStudy) => {
-  if (isAdminOnStudyOrga(user, study)) {
+  if (isAdminOnStudyOrga(user, study.organization)) {
     return true
   }
 
@@ -147,7 +147,7 @@ export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStud
 }
 
 export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
-  if (isAdminOnStudyOrga(user, study)) {
+  if (isAdminOnStudyOrga(user, study.organization)) {
     return true
   }
 
@@ -183,7 +183,7 @@ export const canDeleteStudy = async (studyId: string) => {
     return true
   }
 
-  if (isAdminOnStudyOrga(session.user, study)) {
+  if (isAdminOnStudyOrga(session.user, study.organization)) {
     return true
   }
 
@@ -238,7 +238,7 @@ export const canReadStudyDetail = async (user: User, study: FullStudy) => {
   }
 
   if (
-    isAdminOnStudyOrga(user, study) ||
+    isAdminOnStudyOrga(user, study.organization) ||
     (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization))
   ) {
     return true
