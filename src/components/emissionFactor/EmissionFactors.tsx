@@ -11,7 +11,7 @@ interface Props {
 
 const EmissionFactors = async ({ userOrganizationId }: Props) => {
   const [emissionFactors, importVersions] = await Promise.all([getEmissionFactors(), getEmissionFactorSources()])
-  const manualImport = { id: '', source: Import.Manual, name: '' } as EmissionFactorImportVersion
+  const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
   return (
     <EmissionFactorsTable
       emissionFactors={emissionFactors}

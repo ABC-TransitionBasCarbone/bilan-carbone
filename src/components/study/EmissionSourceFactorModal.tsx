@@ -16,8 +16,10 @@ interface Props {
 
 const EmissionSourceFactorModal = ({ close, open, emissionFactors, selectEmissionFactor }: Props) => {
   const t = useTranslations('emissionSource.emissionFactorDialog')
-  const [emissionFactorVersions, setVersions] = useState<EmissionFactorImportVersion[] | undefined>(undefined)
-  const manualImport = { id: '', source: Import.Manual, name: '' } as EmissionFactorImportVersion
+  const [emissionFactorVersions, setEmissionFactorVersions] = useState<EmissionFactorImportVersion[] | undefined>(
+    undefined,
+  )
+  const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
   const { contextId: studyId } = useAppContextStore()
   useEffect(() => {
     fetchSources(studyId)
@@ -25,7 +27,7 @@ const EmissionSourceFactorModal = ({ close, open, emissionFactors, selectEmissio
 
   const fetchSources = async (studyId: string) => {
     const versions = await getStudyEmissionFactorImportVersions(studyId)
-    setVersions(versions)
+    setEmissionFactorVersions(versions)
   }
 
   return emissionFactorVersions ? (

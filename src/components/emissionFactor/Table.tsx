@@ -306,8 +306,11 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
   const data = useMemo(
     () =>
       searchedEmissionFactors
-        .filter((emissionFactor) => !emissionFactor.version || filteredSources.includes(emissionFactor.version.id)) // filter imported fe
-        .filter((emissionFactor) => emissionFactor.version || filteredSources.includes('')) // filter manual fe
+        .filter(
+          (emissionFactor) =>
+            (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
+            (!emissionFactor.version && filteredSources.includes(Import.Manual)),
+        )
         .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived),
     [searchedEmissionFactors, filteredSources, displayArchived],
   )
@@ -348,13 +351,15 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
 
   const sortedImportVersions = useMemo(
     () =>
-      importVersions.sort((a, b) =>
-        initialSelectedSources.includes(a.id) === initialSelectedSources.includes(b.id)
-          ? `${a.source} ${a.name}`.localeCompare(`${b.source} ${b.name}`)
-          : initialSelectedSources.includes(a.id)
-            ? -1
-            : 1,
-      ),
+      importVersions.sort((a, b) => {
+        if (initialSelectedSources.includes(a.id) === initialSelectedSources.includes(b.id)) {
+          // both are sort selected or not selected : sort by alphabetical order
+          return `${a.source} ${a.name}`.localeCompare(`${b.source} ${b.name}`)
+        } else {
+          // else : sort initially selected first
+          return initialSelectedSources.includes(a.id) ? -1 : 1
+        }
+      }),
     [importVersions],
   )
 
