@@ -400,6 +400,8 @@
       "editSites": "Modifier la liste de sites",
       "cancelEditSites": "Annuler la modification",
       "validSites": "Valider les changements",
+      "exports": "Exports",
+      "control": "Mode de contrôle",
       "deleteDialog": {
         "accept": "Oui",
         "decline": "Non",

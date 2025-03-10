@@ -9,9 +9,10 @@ interface Props {
   id: Export
   values: Record<Export, ControlMode | false>
   setValues: Dispatch<SetStateAction<Record<Export, ControlMode | false>>>
+  disabled?: boolean
 }
 
-const ExportCheckbox = ({ id, values, setValues }: Props) => {
+const ExportCheckbox = ({ id, values, setValues, disabled }: Props) => {
   const t = useTranslations('study.new')
   const tExport = useTranslations('exports')
 
@@ -19,7 +20,9 @@ const ExportCheckbox = ({ id, values, setValues }: Props) => {
     <div className={styles.container}>
       <FormControlLabel
         className={styles.field}
-        control={<Checkbox className={styles.checkbox} disabled={id !== Export.Beges} />}
+        control={
+          <Checkbox checked={!!values[id]} className={styles.checkbox} disabled={id !== Export.Beges || disabled} />
+        }
         label={
           <span>
             {tExport(id)}
@@ -35,6 +38,7 @@ const ExportCheckbox = ({ id, values, setValues }: Props) => {
             <Select
               value={values[id]}
               onChange={(event) => setValues({ ...values, [id]: event.target.value as ControlMode })}
+              disabled={disabled}
             >
               {Object.keys(ControlMode).map((key) => (
                 <MenuItem key={key} value={key} disabled={key !== ControlMode.Operational}>
