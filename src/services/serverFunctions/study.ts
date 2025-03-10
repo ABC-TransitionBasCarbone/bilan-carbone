@@ -20,7 +20,6 @@ import {
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail } from '@/db/user'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { isInOrgaOrParent } from '@/utils/onganization'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import {
   ControlMode,
@@ -537,10 +536,13 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   }
 }
 
-const hasAccessToStudy = (user: User, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) =>
-  (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization)) ||
-  study.allowedUsers.some((allowedUser) => allowedUser.userId === user.id) ||
-  study.contributors.some((contributor) => contributor.userId === user.id)
+const hasAccessToStudy = (user: User, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) => {
+  const allowedUsers = study.allowedUsers.map(({ userId }) => ({ user: { id: userId }, role: StudyRole.Reader }))
+  const studyObject = { ...study, allowedUsers: allowedUsers }
+  return (
+    getUserRoleOnStudy(user, studyObject) || study.contributors.some((contributor) => contributor.userId === user.id)
+  )
+}
 
 export const findStudiesWithSites = async (siteIds: string[]) => {
   const [session, studySites] = await Promise.all([auth(), getStudiesFromSites(siteIds)])
