@@ -71,12 +71,21 @@
   padding: 0.5rem;
 }
 
+.pt1 {
+  padding-top: 1rem;
+}
+
 .pb1 {
   padding-bottom: 1rem;
 }
 
 .pb2 {
   padding-bottom: 2rem;
+}
+
+.px1 {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .px-2 {

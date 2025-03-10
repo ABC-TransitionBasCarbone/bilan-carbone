@@ -9,17 +9,6 @@
   padding: 2rem;
 }
 
-.stepperDots {
-  width: 6rem !important;
-  height: 0.8rem !important;
-  border-radius: 0.4rem !important;
-  background-color: var(--neutral-20) !important;
-
-  &.active {
-    background-color: var(--primary-40) !important;
-  }
-}
-
 .closeIcon {
   padding: 0 !important;
   min-width: 0 !important;
