@@ -375,7 +375,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights)) {
+  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights.organization)) {
     right.role = StudyRole.Validator
   }
 
@@ -421,7 +421,11 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
-  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights) && studyRole !== StudyRole.Validator) {
+  if (
+    existingUser &&
+    isAdminOnStudyOrga(existingUser, studyWithRights.organization) &&
+    studyRole !== StudyRole.Validator
+  ) {
     return NOT_AUTHORIZED
   }
 
