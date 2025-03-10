@@ -1,9 +1,0 @@
-.container {
-  position: relative;
-}
-
-.addButton {
-  position: absolute !important;
-  top: 1.25rem !important;
-  right: 0 !important;
-}
