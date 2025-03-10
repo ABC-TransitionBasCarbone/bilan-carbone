@@ -41,7 +41,10 @@ const Posts = <T extends EmissionFactorCommand>({
     [post, tPost],
   )
 
-  const translatedSubPosts = useMemo(() => subPosts.map((subP) => ({ label: tPost(subP), value: subP })), [subPosts])
+  const translatedSubPosts = useMemo(
+    () => subPosts.map((subPost) => ({ label: tPost(subPost), value: subPost })),
+    [subPosts],
+  )
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as Post
