@@ -1,26 +1,36 @@
 'use client'
 import Button from '@/components/base/Button'
 import { FormDatePicker } from '@/components/form/DatePicker'
+import GlossaryModal from '@/components/modals/GlossaryModal'
 import Sites from '@/components/organization/Sites'
 import { FullStudy } from '@/db/study'
 import { OrganizationWithSites } from '@/db/user'
-import { changeStudyDates, changeStudySites, hasActivityData } from '@/services/serverFunctions/study'
+import {
+  changeStudyDates,
+  changeStudyExports,
+  changeStudySites,
+  hasActivityData,
+} from '@/services/serverFunctions/study'
 import {
   ChangeStudyDatesCommand,
   ChangeStudyDatesCommandValidation,
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
+  StudyExportsCommand,
+  StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
+import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { StudyRole } from '@prisma/client'
+import { ControlMode, Export, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import DeleteStudySite from './DeleteStudySites'
+import { useForm, useWatch } from 'react-hook-form'
+import DeleteStudySiteModal from './DeleteStudySiteModal'
+import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
 
 interface Props {
@@ -32,12 +42,16 @@ interface Props {
 const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   const format = useFormatter()
   const tForm = useTranslations('study.new')
+  const tGlossary = useTranslations('study.new.glossary')
   const t = useTranslations('study.perimeter')
   const [open, setOpen] = useState(false)
+  const [glossary, setGlossary] = useState('')
+  const [exportsValues, setExportsValues] = useState<Record<Export, ControlMode | false> | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
   const [deleting, setDeleting] = useState(0)
   const [caUnit, setCAUnit] = useState(defaultCAUnit)
   const [error, setError] = useState<string | null>(null)
+  const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
   const router = useRouter()
 
   useEffect(() => {
@@ -61,6 +75,23 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
       endDate: study.endDate.toISOString(),
     },
   })
+
+  const exportsForm = useForm<StudyExportsCommand>({
+    resolver: zodResolver(StudyExportsCommandValidation),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      exports: Object.values(Export).reduce(
+        (acc, exportType) => ({
+          ...acc,
+          [exportType]: study.exports.find((studyExport) => studyExport.type === exportType)?.control || false,
+        }),
+        {},
+      ),
+    },
+  })
+  const exportsWatch = useWatch(exportsForm).exports
+  const showControl = useMemo(() => Object.values(exportsWatch || {}).some((value) => value), [exportsWatch])
 
   const siteList = useMemo(
     () =>
@@ -130,12 +161,23 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   }
 
   useEffect(() => {
+    if (exportsValues && exportsForm.getValues().exports) {
+      Object.entries(exportsForm.getValues().exports).forEach(([exportType, value]) => {
+        if (exportsValues[exportType as Export] !== value) {
+          changeStudyExports(study.id, exportType as Export, value)
+        }
+      })
+    }
+    setExportsValues(exportsForm.getValues().exports)
+  }, [exportsWatch])
+
+  useEffect(() => {
     onDateSubmit(form.getValues())
   }, [startDate, endDate])
 
   return (
     <>
-      {userRoleOnStudy !== StudyRole.Reader ? (
+      {hasEditionRole ? (
         <div className={classNames(styles.dates, 'flex')}>
           <FormDatePicker control={form.control} translation={tForm} name="startDate" label={tForm('start')} />
           <FormDatePicker
@@ -159,7 +201,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         sites={isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
         withSelection
       />
-      {userRoleOnStudy !== StudyRole.Reader && (
+      {hasEditionRole && (
         <div className={classNames('mt1', { 'justify-between': isEditing })}>
           <Button
             data-testid={`${isEditing ? 'cancel-' : ''}edit-study-sites`}
@@ -174,12 +216,24 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
           )}
         </div>
       )}
-      <DeleteStudySite
+      <StudyExportsForm
+        form={exportsForm}
+        showControl={showControl}
+        setGlossary={setGlossary}
+        t={t}
+        disabled={!hasEditionRights}
+      />
+      <DeleteStudySiteModal
         open={open}
         confirmDeletion={updateStudySites}
         cancelDeletion={() => setOpen(false)}
         deleting={deleting}
       />
+      {glossary && (
+        <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
+          <p className="mb-2">{tGlossary(`${glossary}Description`)}</p>
+        </GlossaryModal>
+      )}
       {error && <p>{error}</p>}
     </>
   )

@@ -21,39 +21,47 @@ export const SitesCommandValidation = z.object({
 })
 export type SitesCommand = z.infer<typeof SitesCommandValidation>
 
+export const StudyExportsCommandValidation = z.object({
+  exports: z.object({
+    [Export.Beges]: z.nativeEnum(ControlMode).or(z.literal(false)),
+    [Export.GHGP]: z.nativeEnum(ControlMode).or(z.literal(false)),
+    [Export.ISO14069]: z.nativeEnum(ControlMode).or(z.literal(false)),
+  }),
+})
+
+export type StudyExportsCommand = z.infer<typeof StudyExportsCommandValidation>
+
 export const CreateStudyCommandValidation = z
   .intersection(
-    z.object({
-      organizationId: z.string(),
-      name: z
-        .string({
-          required_error: 'name',
-        })
-        .trim()
-        .min(1, 'name'),
-      validator: z
-        .string({
-          required_error: 'validator',
-          invalid_type_error: 'validator',
-        })
-        .email('validator')
-        .trim(),
-      startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
-        const date = dayjs(val)
-        return date.isValid()
-      }, 'startDate'),
-      endDate: z.string({ required_error: 'endDate' }).refine((val) => {
-        const date = dayjs(val)
-        return date.isValid()
-      }, 'endDate'),
-      level: z.nativeEnum(Level, { required_error: 'level' }),
-      isPublic: z.string(),
-      exports: z.object({
-        [Export.Beges]: z.nativeEnum(ControlMode).or(z.literal(false)),
-        [Export.GHGP]: z.nativeEnum(ControlMode).or(z.literal(false)),
-        [Export.ISO14069]: z.nativeEnum(ControlMode).or(z.literal(false)),
+    z.intersection(
+      z.object({
+        organizationId: z.string(),
+        name: z
+          .string({
+            required_error: 'name',
+          })
+          .trim()
+          .min(1, 'name'),
+        validator: z
+          .string({
+            required_error: 'validator',
+            invalid_type_error: 'validator',
+          })
+          .email('validator')
+          .trim(),
+        startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
+          const date = dayjs(val)
+          return date.isValid()
+        }, 'startDate'),
+        endDate: z.string({ required_error: 'endDate' }).refine((val) => {
+          const date = dayjs(val)
+          return date.isValid()
+        }, 'endDate'),
+        level: z.nativeEnum(Level, { required_error: 'level' }),
+        isPublic: z.string(),
       }),
-    }),
+      StudyExportsCommandValidation,
+    ),
     SitesCommandValidation,
   )
   .refine(
