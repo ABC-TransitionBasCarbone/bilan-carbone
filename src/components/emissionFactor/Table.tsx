@@ -221,7 +221,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
               return (
                 <span className={classNames(styles.importFrom, 'flex-cc')}>
                   <HomeWorkIcon />
-                  {t('importedFrom.manual')}
+                  {t('Manual')}
                   {!selectEmissionFactor && userOrganizationId === row.original.organizationId && (
                     <>
                       <MuiButton
