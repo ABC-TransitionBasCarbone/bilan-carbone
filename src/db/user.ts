@@ -115,8 +115,8 @@ export const changeUserRole = (email: string, role: Role) =>
 export const hasUserToValidateInOrganization = async (organizationId: string | null) =>
   organizationId
     ? prismaClient.user.count({
-        where: { organizationId, status: UserStatus.PENDING_REQUEST },
-      })
+      where: { organizationId, status: UserStatus.PENDING_REQUEST },
+    })
     : 0
 
 export const organizationActiveUsersCount = async (organizationId: string) =>
@@ -152,7 +152,6 @@ export const updateUserLevelAndRole = (dbUser: Prisma.UserCreateManyInput, user:
   prismaClient.user.update({
     where: { id: dbUser.id },
     data: {
-      importedFileDate: new Date(),
       level: user.level,
       role: dbUser.status === UserStatus.IMPORTED ? user.role : undefined,
       organizationId: dbUser.status === UserStatus.IMPORTED ? user.organizationId : undefined,
