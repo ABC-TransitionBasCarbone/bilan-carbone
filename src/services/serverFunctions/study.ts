@@ -537,6 +537,9 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
 }
 
 const hasAccessToStudy = (user: User, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) => {
+  // The function does not return the user's role, which is sensitive information.
+  // We don't need to know the role, only whether or not the user has one
+  // We therefore arbitrarily use the "Reader" role
   const allowedUsers = study.allowedUsers.map(({ userId }) => ({ user: { id: userId }, role: StudyRole.Reader }))
   const studyObject = { ...study, allowedUsers: allowedUsers }
   return (
