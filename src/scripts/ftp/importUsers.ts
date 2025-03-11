@@ -22,12 +22,6 @@ const downloadFileFromFTP = async (client: Client, folderPath: string, fileName:
   return fs.promises.readFile(fileName, 'utf-8')
 }
 
-const parseUsers = (data: string) => {
-  const values = JSON.parse(data)
-  console.log(`Users parsed: ${values.length} rows`)
-  return values
-}
-
 const getUsersFromFTP = async () => {
   try {
     const client = await getFTPClient()
@@ -38,7 +32,7 @@ const getUsersFromFTP = async () => {
     const importedFileDate = new Date(file?.rawModifiedAt || Date.now())
 
     const data = await downloadFileFromFTP(client, folderPath, fileName)
-    const values = parseUsers(data)
+    const values = JSON.parse(data)
     client.close()
 
     await processUsers(values, importedFileDate)
