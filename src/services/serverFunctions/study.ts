@@ -20,7 +20,6 @@ import {
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail } from '@/db/user'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { isInOrgaOrParent } from '@/utils/onganization'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import {
   ControlMode,
@@ -389,7 +388,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights)) {
+  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights.organization)) {
     right.role = StudyRole.Validator
   }
 
@@ -435,7 +434,11 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
-  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights) && studyRole !== StudyRole.Validator) {
+  if (
+    existingUser &&
+    isAdminOnStudyOrga(existingUser, studyWithRights.organization) &&
+    studyRole !== StudyRole.Validator
+  ) {
     return NOT_AUTHORIZED
   }
 
@@ -533,10 +536,16 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
   }
 }
 
-const hasAccessToStudy = (user: User, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) =>
-  (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization)) ||
-  study.allowedUsers.some((allowedUser) => allowedUser.userId === user.id) ||
-  study.contributors.some((contributor) => contributor.userId === user.id)
+const hasAccessToStudy = (user: User, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) => {
+  // The function does not return the user's role, which is sensitive information.
+  // We don't need to know the role, only whether or not the user has one
+  // We therefore arbitrarily use the "Reader" role
+  const allowedUsers = study.allowedUsers.map(({ userId }) => ({ user: { id: userId }, role: StudyRole.Reader }))
+  const studyObject = { ...study, allowedUsers: allowedUsers }
+  return (
+    getUserRoleOnStudy(user, studyObject) || study.contributors.some((contributor) => contributor.userId === user.id)
+  )
+}
 
 export const findStudiesWithSites = async (siteIds: string[]) => {
   const [session, studySites] = await Promise.all([auth(), getStudiesFromSites(siteIds)])

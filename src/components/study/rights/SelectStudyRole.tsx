@@ -52,7 +52,9 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
   const isDisabled = useMemo(
     () =>
       user.email === rowUser.email ||
-      (currentRole === StudyRole.Validator && userRole !== StudyRole.Validator && !isAdminOnStudyOrga(user, study)) ||
+      (currentRole === StudyRole.Validator &&
+        userRole !== StudyRole.Validator &&
+        !isAdminOnStudyOrga(user, study.organization)) ||
       rowUser.readerOnly,
     [currentRole, rowUser, study, user, userRole],
   )
@@ -66,7 +68,7 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          isAdminOnStudyOrga(user, study) ||
+          isAdminOnStudyOrga(user, study.organization) ||
           userRole === StudyRole.Validator ||
           isDisabled ||
           role !== StudyRole.Validator,

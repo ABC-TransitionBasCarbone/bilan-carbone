@@ -74,7 +74,7 @@ export const canUpdateEmissionSource = async (
 
   if (change.validated !== undefined) {
     const rights = study.allowedUsers.find((right) => right.user.email === user.email)
-    if (!isAdminOnStudyOrga(user, study) && (!rights || rights.role !== StudyRole.Validator)) {
+    if (!isAdminOnStudyOrga(user, study.organization) && (!rights || rights.role !== StudyRole.Validator)) {
       return false
     }
 
