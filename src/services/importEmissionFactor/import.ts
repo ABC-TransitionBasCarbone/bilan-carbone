@@ -283,6 +283,7 @@ export const mapEmissionFactors = (
 
 export const saveEmissionFactorsParts = async (
   transaction: Prisma.TransactionClient,
+  importVersionId: string,
   parts: ImportEmissionFactor[],
 ) => {
   const emissionFactors = await transaction.emissionFactor.findMany({
@@ -290,6 +291,7 @@ export const saveEmissionFactorsParts = async (
       importedId: {
         in: parts.map((part) => part["Identifiant_de_l'élément"]),
       },
+      versionId: importVersionId,
     },
   })
 
