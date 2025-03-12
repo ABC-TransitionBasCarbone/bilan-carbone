@@ -323,6 +323,7 @@
     "title": "Study",
     "rights": {
       "title": "Rights on study : {name}",
+      "edit": "Edit the study name",
       "new": {
         "title": "Add a person to the study: {name}",
         "email": "Email",
@@ -333,7 +334,8 @@
         "validation": {
           "email": "Please use a valid email",
           "emailRequired": "Please enter an email",
-          "role": "Please select a role"
+          "role": "Please select a role",
+          "name": "Please enter a name"
         },
         "dialog": {
           "title": "Are you sure you want to add this person to your study?",

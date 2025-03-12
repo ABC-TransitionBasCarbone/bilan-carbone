@@ -9,6 +9,11 @@ import IconLabel from './IconLabel'
 import LinkButton from './LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
 
+export type Action =
+  | (ButtonProps & { actionType: 'button'; 'data-testid'?: string })
+  | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton' })
+  | (AnchorHTMLAttributes<HTMLAnchorElement> & { actionType: 'link'; 'data-testid'?: string })
+
 export interface Props {
   children?: ReactNode
   title?: string
@@ -19,12 +24,7 @@ export interface Props {
   id?: string
   ['data-testid']?: string
   description?: ReactNode
-  actions?: (
-    | (ButtonProps & { actionType: 'button'; 'data-testid'?: string })
-    | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton' })
-    // No idea why i have to add data-testid here :/
-    | (LinkProps & AnchorHTMLAttributes<HTMLAnchorElement> & { actionType: 'link'; 'data-testid'?: string })
-  )[]
+  actions?: Action[]
 }
 
 const Block = ({

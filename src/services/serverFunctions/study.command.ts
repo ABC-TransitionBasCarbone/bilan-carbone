@@ -127,6 +127,18 @@ export const ChangeStudyDatesCommandValidation = z
 
 export type ChangeStudyDatesCommand = z.infer<typeof ChangeStudyDatesCommandValidation>
 
+export const ChangeStudyNameValidation = z.object({
+  studyId: z.string(),
+  name: z
+    .string({
+      required_error: 'name',
+    })
+    .trim()
+    .min(1, 'name'),
+})
+
+export type ChangeStudyNameCommand = z.infer<typeof ChangeStudyNameValidation>
+
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),
   email: z
