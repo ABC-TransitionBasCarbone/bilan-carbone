@@ -19,6 +19,9 @@ interface Props {
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
 }
 
+const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
+  [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
+
 const EmissionSourceContributorForm = ({ emissionSource, update, emissionFactors, selectedFactor }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -31,11 +34,13 @@ const EmissionSourceContributorForm = ({ emissionSource, update, emissionFactors
           update={update}
           emissionFactors={emissionFactors}
           selectedFactor={selectedFactor}
+          getDetail={getDetail}
         />
       </div>
       <div className={classNames(styles.row, 'flex')}>
-        <div className={styles.inputWithUnit}>
+        <div className={classNames(styles.inputWithUnit, 'flex')}>
           <TextField
+            className="grow"
             type="number"
             data-testid="emission-source-value-da"
             defaultValue={emissionSource.value}

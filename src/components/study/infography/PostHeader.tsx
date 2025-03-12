@@ -16,6 +16,7 @@ interface Props {
 
 export const PostHeader = ({ post, mainPost, emissionValue, percent, color }: Props) => {
   const t = useTranslations('emissionFactors.post')
+  const tResults = useTranslations('results')
 
   return (
     <div className={classNames(styles.header, 'align-center', 'flex-col')}>
@@ -25,7 +26,9 @@ export const PostHeader = ({ post, mainPost, emissionValue, percent, color }: Pr
           <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
           <span>{t(post)}</span>
         </div>
-        <span>{formatNumber((emissionValue || 0) / 1000)} tCO₂e</span>
+        <span>
+          {formatNumber((emissionValue || 0) / 1000)} {tResults('unit')}
+        </span>
       </div>
     </div>
   )

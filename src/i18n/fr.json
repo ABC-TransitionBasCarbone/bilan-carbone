@@ -291,7 +291,9 @@
       "emissionSource": "{count, plural, =0 {Pas de source d'emission} =1 {1 source d'émission} other {# sources d'émission}}",
       "contributors": "{count, plural, =1 {1 contributeur} other {# contibuteurs}}",
       "contributorsList": "{count, plural, =1 {Contributeur :} other {Contributeurs :}}",
-      "new": "Ajouter une source d'émission..."
+      "label": "Libellé de la source d'émission",
+      "new": "Donnez un titre à votre nouvelle source d'émission",
+      "add": "Ajouter"
     },
     "organization": {
       "site": "Site",
@@ -952,6 +954,15 @@
     "advancedSearch": "Recherche avancée",
     "noResults": "Rechercher avec plus de filtres",
     "seeMore": "...Voir plus et rechercher avec plus de filtres",
+    "delete": "Supprimer la source",
+    "label": "Libellé de la source d'émission",
+    "addPlaceholder": "Donnez un titre à votre nouvelle source d'émission",
+    "createEmissionFactor": "Créer un facteur d'émissions",
+    "saved": "Enregistré",
+    "validate": "Valider les données",
+    "unvalidate": "Éditer les données",
+    "mandartoryFields": "Informations obligatoires",
+    "optionalFields": "Informations optionnelles",
     "glossary": {
       "title": "Glossaire",
       "type": "Type",
@@ -961,6 +972,7 @@
       "close": "Fermer"
     },
     "deleteDialog": {
+      "button": "Supprimer la source",
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
       "description": "<warning>Toutes les données renseignées seront définitivement perdues</warning>, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
@@ -970,7 +982,7 @@
     "saving": "Sauvegarde en cours...",
     "status": {
       "valid": "Validée",
-      "waiting": "En attente",
+      "waiting": "En cours de completion",
       "waitingContributor": "En attente d'un contributeur",
       "toVerify": "À vérifier"
     },

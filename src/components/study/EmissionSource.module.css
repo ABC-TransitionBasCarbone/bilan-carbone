@@ -32,7 +32,11 @@
   }
 }
 
-.infosLeft,
+.subTitle {
+  font-size: 20px;
+}
+
+.gapped,
 .infosRight {
   gap: 0.25rem;
 }
@@ -93,6 +97,9 @@
 
 .shrinked {
   justify-content: flex-start;
+  > div {
+    flex: 1;
+  }
 }
 
 .small {
@@ -101,11 +108,6 @@
 
 .inputWithUnit {
   position: relative;
-  width: min-content;
-  max-width: 15rem;
-  input {
-    width: 13.25rem;
-  }
 }
 
 .unit {
@@ -119,6 +121,23 @@
   margin-top: 2rem;
 }
 
-.delete {
-  justify-content: flex-end;
+.saved {
+  color: var(--green-500);
+  gap: 0.5rem;
+}
+
+.statusLabel {
+  border: 2px solid;
+  &.validated {
+    border-color: var(--green-500);
+    color: var(--green-500);
+  }
+  &.working {
+    border-color: var(--orange-500);
+    color: var(--orange-500);
+  }
+}
+
+.buttons {
+  gap: 1rem;
 }

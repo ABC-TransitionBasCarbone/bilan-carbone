@@ -1,10 +1,12 @@
 import { FullStudy } from '@/db/study'
-import { caracterisationsBySubPost } from '@/services/emissionSource'
+import { caracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { formatNumber } from '@/utils/number'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import EmissionSource from './EmissionSource'
@@ -40,10 +42,17 @@ const SubPost = ({
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tPost = useTranslations('emissionFactors.post')
+  const tUnit = useTranslations('results')
 
-  const subPostEmissionFactors = useMemo(() => {
-    return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost))
-  }, [emissionFactors, subPost])
+  const subPostEmissionFactors = useMemo(
+    () => emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost)),
+    [emissionFactors, subPost],
+  )
+
+  const total = useMemo(
+    () => emissionSources.reduce((sum, emissionSource) => sum + (getEmissionResults(emissionSource)?.emission || 0), 0),
+    [emissionSources],
+  )
 
   const contributors = useMemo(
     () =>
@@ -57,8 +66,8 @@ const SubPost = ({
 
   const caracterisations = useMemo(() => caracterisationsBySubPost[subPost], [subPost])
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
-    <div className="flex">
-      <Accordion className="grow">
+    <div>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={`panel-${subPost}-content`}
@@ -66,7 +75,9 @@ const SubPost = ({
         >
           <p>
             {tPost(subPost)}
-            <span className={styles.count}> - {t('emissionSource', { count: emissionSources.length })}</span>
+            <span className={classNames(styles.value, 'ml1')}>
+              {formatNumber(total / 1000)} {tUnit('unit')}
+            </span>
           </p>
         </AccordionSummary>
         <AccordionDetails id={`panel-${subPost}-content`}>
