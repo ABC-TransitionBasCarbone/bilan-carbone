@@ -1,23 +1,7 @@
 'use server'
 
-import { getOrganizationById } from '@/db/organization'
-import { FullStudy } from '@/db/study'
-import {
-  addUser,
-  changeStatus,
-  changeUserRole,
-  deleteUserFromOrga,
-  getUserApplicationSettings,
-  getUserByEmail,
-  getUserFromUserOrganization,
-  organizationActiveUsersCount,
-  updateUser,
-  updateUserApplicationSettings,
-  updateUserResetTokenForEmail,
-  validateUser,
-} from '@/db/user'
 import { DAY, HOUR, TIME_IN_MS } from '@/utils/time'
-import { User as DBUser, Organization, Role, UserStatus } from '@prisma/client'
+import { User as DBUser, Level, Organization, Prisma, Role, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
 import { auth } from '../auth'
@@ -33,6 +17,29 @@ import {
 } from '../email/email'
 import { EMAIL_SENT, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
+import {
+  getOrganizationById,
+  getRawOrganizationById,
+  getRawOrganizationBySiret,
+  updateOrganizationOnboarder,
+} from './../../db/organization'
+import { FullStudy } from './../../db/study'
+import {
+  addUser,
+  changeStatus,
+  changeUserRole,
+  createUsers,
+  deleteUserFromOrga,
+  getUserApplicationSettings,
+  getUserByEmail,
+  getUserFromUserOrganization,
+  organizationActiveUsersCount,
+  updateUser,
+  updateUserApplicationSettings,
+  updateUserLevelAndRole,
+  updateUserResetTokenForEmail,
+  validateUser,
+} from './../../db/user'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
 const updateUserResetToken = async (email: string, duration: number) => {
@@ -287,4 +294,79 @@ export const updateUserSettings = async (command: EditSettingsCommand) => {
     return NOT_AUTHORIZED
   }
   await updateUserApplicationSettings(session.user.id, command)
+}
+
+const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
+  const {
+    User_Email: email,
+    Firstname: firstName = '',
+    Lastname: lastName = '',
+    Session_Code: sessionCodeTraining,
+    Company_Name: name,
+    SIRET: siret,
+    SIREN: siren,
+    Purchased_Products: purchasedProducts,
+    Membership_Year: membershipYear,
+  } = value
+
+  const siretOrSiren = siret || siren
+  const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
+  const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
+
+  const dbUser = (await getUserByEmail(email)) as Prisma.UserCreateManyInput
+
+  const user: Prisma.UserCreateManyInput = {
+    id: dbUser?.id,
+    email,
+    firstName,
+    lastName,
+    role: Role.COLLABORATOR,
+    status: UserStatus.IMPORTED,
+    importedFileDate,
+  }
+
+  if (sessionCodeTraining) {
+    user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Initial
+  }
+
+  if (siretOrSiren) {
+    let organisation = dbUser?.organizationId
+      ? await getRawOrganizationById(dbUser.organizationId)
+      : await getRawOrganizationBySiret(siretOrSiren)
+
+    organisation = await updateOrganizationOnboarder(
+      name,
+      siretOrSiren,
+      isCR,
+      activatedLicence,
+      importedFileDate,
+      organisation,
+    )
+
+    user.organizationId = organisation.id
+  }
+
+  if (dbUser) {
+    await updateUserLevelAndRole(dbUser, user)
+    console.log(`Updating ${email} because already exists`)
+    return null
+  }
+
+  return user
+}
+
+export const processUsers = async (values: Record<string, string>[], importedFileDate: Date) => {
+  const users: Prisma.UserCreateManyInput[] = []
+  for (let i = 0; i < values.length; i++) {
+    const user = await processUser(values[i] as Record<string, string>, importedFileDate)
+    if (user) {
+      users.push(user)
+    }
+    if (i % 50 === 0) {
+      console.log(`${i}/${values.length}`)
+    }
+  }
+  console.log('users', users)
+  const created = await createUsers(users)
+  console.log(`${created.count} users created`)
 }

@@ -1,7 +1,7 @@
-import { signPassword } from '@/services/auth'
-import { findUserInfo } from '@/services/permissions/user'
 import { Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
+import { signPassword } from './../services/auth'
+import { findUserInfo } from './../services/permissions/user'
 import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
@@ -143,4 +143,17 @@ export const updateUserApplicationSettings = (userId: string, data: Prisma.UserA
   prismaClient.userApplicationSettings.update({
     where: { userId },
     data,
+  })
+
+export const createUsers = (users: Prisma.UserCreateManyInput[]) =>
+  prismaClient.user.createMany({ data: users, skipDuplicates: true })
+
+export const updateUserLevelAndRole = (dbUser: Prisma.UserCreateManyInput, user: Prisma.UserCreateManyInput) =>
+  prismaClient.user.update({
+    where: { id: dbUser.id },
+    data: {
+      level: user.level,
+      role: dbUser.status === UserStatus.IMPORTED ? user.role : undefined,
+      organizationId: dbUser.status === UserStatus.IMPORTED ? user.organizationId : undefined,
+    },
   })

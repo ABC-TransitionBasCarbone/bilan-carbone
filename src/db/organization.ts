@@ -1,8 +1,11 @@
-import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
-import { sendNewUser } from '@/services/serverFunctions/user'
-import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import { Prisma, Role, User, UserStatus } from '@prisma/client'
+import { Organization, Prisma, Role, User, UserStatus } from '@prisma/client'
+import { UpdateOrganizationCommand } from './../services/serverFunctions/organization.command'
+import { sendNewUser } from './../services/serverFunctions/user'
+import { OnboardingCommand } from './../services/serverFunctions/user.command'
 import { prismaClient } from './client'
+
+export const getRawOrganizationBySiret = (siret: string | null) =>
+  siret ? prismaClient.organization.findFirst({ where: { siret: { startsWith: siret } } }) : null
 
 export const getRawOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id } }) : null
@@ -108,3 +111,28 @@ export const onboardOrganization = async (
   const allCollaborators = [...newCollaborators, ...existingCollaborators]
   allCollaborators.forEach((collab) => sendNewUser(collab.email, dbUser, collab.firstName ?? ''))
 }
+
+export const updateOrganizationOnboarder = (
+  name: string,
+  siretOrSiren: string,
+  isCR: boolean,
+  activatedLicence: boolean,
+  importedFileDate: Date,
+  organization: Organization | null,
+) =>
+  prismaClient.organization.upsert({
+    where: { id: organization?.id ?? '' },
+    update: {
+      isCR: isCR || organization?.isCR,
+      importedFileDate,
+      activatedLicence: activatedLicence || organization?.activatedLicence,
+      updatedAt: new Date(),
+    },
+    create: {
+      siret: siretOrSiren,
+      name,
+      isCR,
+      importedFileDate,
+      activatedLicence,
+    },
+  })
