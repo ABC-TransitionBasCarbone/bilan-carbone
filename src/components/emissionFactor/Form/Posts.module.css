@@ -12,5 +12,11 @@
 }
 
 .postContainer {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.errorSubposts {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
 }

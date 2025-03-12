@@ -6,7 +6,7 @@ import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import Posts from './Posts'
 import styles from './Posts.module.css'
@@ -25,6 +25,13 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
 
   const posts: Record<Post, SubPost[]> = (form.watch('subPosts' as FieldPath<T>) as Record<Post, SubPost[]>) || {}
   const [glossary, setGlossary] = useState('')
+
+  useEffect(() => {
+    if (!form.formState.isSubmitted) {
+      return
+    }
+    form.trigger('subPosts' as FieldPath<T>)
+  }, [posts])
 
   const postSelection: Post[] = useMemo(
     () =>
@@ -48,30 +55,29 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
         </Box>
       ))}
 
-      <FormControl className={styles.selectForm} error={Object.keys(posts).length === 0}>
-        <Select
-          name={'post'}
-          onChange={handleSelectPost}
-          data-testid="emission-factor-post"
-          label={t('posts')}
-          fullWidth
-          icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
-          iconPosition="after"
-        >
-          {postSelection.map((post) => (
-            <MenuItem key={post} value={post}>
-              {tPost(post)}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
       <Controller
         name={'subPosts' as FieldPath<T>}
         control={control}
         render={({ fieldState: { error } }) => (
-          <FormControl error={!!error}>
-            {error && error.message && <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>}
+          <FormControl className={styles.selectForm} error={error && Object.keys(posts).length === 0}>
+            <Select
+              name={'post'}
+              onChange={handleSelectPost}
+              data-testid="emission-factor-post"
+              label={t('posts')}
+              fullWidth
+              icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
+              iconPosition="after"
+            >
+              {postSelection.map((post) => (
+                <MenuItem key={post} value={post}>
+                  {tPost(post)}
+                </MenuItem>
+              ))}
+            </Select>
+            {error && error.message && Object.keys(posts).length === 0 && (
+              <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>
+            )}
           </FormControl>
         )}
       />

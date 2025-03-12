@@ -7,11 +7,11 @@ import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Box, FormControl, MenuItem, SelectChangeEvent } from '@mui/material'
+import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
-import { Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import { Control, Controller, FieldPath, Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from './Posts.module.css'
 
 interface Props<T extends EmissionFactorCommand> {
@@ -31,6 +31,7 @@ const Posts = <T extends EmissionFactorCommand>({
   const tPost = useTranslations('emissionFactors.post')
   const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
 
+  const control = form.control as Control<EmissionFactorCommand>
   const [post, setPost] = useState<Post | undefined>(getPost(initalSubPosts?.[0]) || initialPost)
 
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
@@ -98,19 +99,30 @@ const Posts = <T extends EmissionFactorCommand>({
           ))}
         </Select>
       </FormControl>
-      <FormControl className={styles.multiSelectForm} error={selectedSubPosts?.length === 0}>
-        <MultiSelect
-          name="subPosts"
-          data-testid="emission-factor-subPost"
-          labelId="subpost-select-label"
-          value={selectedSubPosts || []}
-          onChange={handleSelectSubPost}
-          label={t('subPost')}
-          options={translatedSubPosts}
-          placeholder="placeholdertest"
-          translation={tPost}
-        />
-      </FormControl>
+      <Controller
+        name={'subPosts' as FieldPath<T>}
+        control={control}
+        render={({ fieldState: { error } }) => (
+          <FormControl className={styles.multiSelectForm} error={error && selectedSubPosts?.length === 0}>
+            <MultiSelect
+              name="subPosts"
+              data-testid="emission-factor-subPost"
+              labelId="subpost-select-label"
+              value={selectedSubPosts || []}
+              onChange={handleSelectSubPost}
+              label={t('subPost')}
+              options={translatedSubPosts}
+              placeholder="placeholdertest"
+              translation={tPost}
+            />
+            {error && error.message && selectedSubPosts?.length === 0 && (
+              <FormHelperText className={styles.errorSubposts} color="red">
+                {t('validation.' + error.message)}
+              </FormHelperText>
+            )}
+          </FormControl>
+        )}
+      />
       <Button
         className={styles.deleteButton}
         data-testid="delete-site-button"
