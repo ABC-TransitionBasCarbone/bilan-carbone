@@ -109,7 +109,7 @@ export const getEmissionFactorsFromCSV = async (
               await transaction.emissionFactor.create({ data })
             }
             console.log(`Save ${parts.length} emission factors parts...`)
-            await saveEmissionFactorsParts(transaction, parts)
+            await saveEmissionFactorsParts(transaction, emissionFactorImportVersion.id, parts)
             await cleanImport(transaction, emissionFactorImportVersion.id)
             console.log('Done')
             resolve()

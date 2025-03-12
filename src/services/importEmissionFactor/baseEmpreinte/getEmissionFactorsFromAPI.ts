@@ -52,7 +52,7 @@ export const getEmissionFactorsFromAPI = async (name: string) => {
         url = emissionFactors.data.next
       }
 
-      await saveEmissionFactorsParts(transaction, parts)
+      await saveEmissionFactorsParts(transaction, emissionFactorImportVersion.id, parts)
       await cleanImport(transaction, emissionFactorImportVersion.id)
     },
     { timeout: HOUR * TIME_IN_MS },
