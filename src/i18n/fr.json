@@ -704,7 +704,8 @@
     "close": "Fermer",
     "guide": "Guide des rôles",
     "saved": "Nouveau rôle sauvegardé",
-    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "More than one": "Il doit y avoir au moins un administrateur ou gestionnaire dans l'organisation"
   },
   "team": {
     "title": "Mon organisation",

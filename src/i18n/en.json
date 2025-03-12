@@ -704,7 +704,8 @@
     "close": "Close",
     "guide": "Roles guide",
     "saved": "New role saved",
-    "Not authorized": "You are not allowed to do this action"
+    "Not authorized": "You are not allowed to do this action",
+    "More than one": "There must be at least one admin or manager in the organization"
   },
   "team": {
     "title": "My Organization",
