@@ -40,7 +40,7 @@ const StudyParams = ({ user, study, disabled }: Props) => {
               className: styles.iconButton,
               'aria-label': t('edit'),
               title: t('edit'),
-              children: <EditIcon color="info" />,
+              children: <EditIcon />,
               onClick: () => setEditTitle(true),
             },
           ],
@@ -84,7 +84,7 @@ const StudyParams = ({ user, study, disabled }: Props) => {
 
   return (
     <>
-      <Block title={t('title', { name: study.name })} as="h1" actions={actions}>
+      <Block title={t('title', { name: study.name })} as="h1" actions={actions} className={styles.blockStudyParams}>
         <StudyLevel study={study} user={user} disabled={disabled} />
         <StudyPublicStatus study={study} user={user} disabled={disabled} />
       </Block>
