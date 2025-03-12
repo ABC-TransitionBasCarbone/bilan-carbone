@@ -3,6 +3,41 @@ import { v4 } from 'uuid'
 import { unitsMatrix } from '../../../services/importEmissionFactor/historyUnits'
 import { getEmissionQuality } from '../../../services/importEmissionFactor/import'
 
+export enum RequiredEmissionFactorsColumns {
+  EFV_GUID = 'EFV_GUID',
+  ID_Source_Ref = 'ID_Source_Ref',
+  GUID = 'GUID',
+  EF_VAL_LIB = 'EF_VAL_LIB',
+  EF_VAL_CARAC = 'EF_VAL_CARAC',
+  EF_VAL_COMPLEMENT = 'EF_VAL_COMPLEMENT',
+  Commentaires = 'Commentaires',
+  DateValidité = 'DateValidité',
+  Incertitude = 'Incertitude',
+  Unité_Nom = 'Unité_Nom',
+  EF_Statut = 'EF_Statut',
+  EF_TYPE = 'EF_TYPE',
+  Total_CO2e = 'Total_CO2e',
+  CO2f = 'CO2f',
+  CH4f = 'CH4f',
+  CH4b = 'CH4b',
+  N2O = 'N2O',
+  HFC = 'HFC',
+  PFC = 'PFC',
+  SF6 = 'SF6',
+  CO2b = 'CO2b',
+  Autre_gaz = 'Autre_gaz',
+  Qualité_TeR = 'Qualité_TeR',
+  Qualité_GR = 'Qualité_GR',
+  Qualité_TiR = 'Qualité_TiR',
+  Qualité_C = 'Qualité_C',
+  Source_Nom = 'Source_Nom',
+  NOM_CONTINENT = 'NOM_CONTINENT',
+  NOM_PAYS = 'NOM_PAYS',
+  NOM_REGION = 'NOM_REGION',
+  NOM_DEPARTEMENT = 'NOM_DEPARTEMENT',
+  FE_BCPlus = 'FE_BCPlus',
+}
+
 const getStringValue = (value: string | number) => {
   const stringValue = value ? value.toString() : ''
   return stringValue.toLocaleLowerCase() === 'null' || stringValue.toLocaleLowerCase() === 'undefined'
@@ -18,7 +53,7 @@ export const uploadEmissionFactors = async (
 ) => {
   console.log("Import des facteurs d'émissions...")
 
-  const ids = data.map((row) => row[indexes['EFV_GUID']] as string)
+  const ids = data.map((row) => row[indexes[RequiredEmissionFactorsColumns.EFV_GUID]] as string)
   const existingEmissionFactors = await transaction.emissionFactor.findMany({
     where: { oldBCId: { in: ids } },
   })
@@ -29,9 +64,11 @@ export const uploadEmissionFactors = async (
 
   const metaData = [] as Prisma.EmissionFactorMetaDataCreateManyInput[]
   const emissionFactorsToCreate = data
-    .filter((row) => !row[indexes['FE_BCPlus']])
-    .filter((row) => row[indexes['EF_TYPE']] === 'Consolidé')
-    .filter((row) => existingEmissionFactors.every((ef) => ef.oldBCId !== row[indexes['EFV_GUID']]))
+    .filter((row) => !row[indexes[RequiredEmissionFactorsColumns.FE_BCPlus]])
+    .filter((row) => row[indexes[RequiredEmissionFactorsColumns.EF_TYPE]] === 'Consolidé')
+    .filter((row) =>
+      existingEmissionFactors.every((ef) => ef.oldBCId !== row[indexes[RequiredEmissionFactorsColumns.EFV_GUID]]),
+    )
 
   console.log(`${emissionFactorsToCreate.length} facteurs d'émissions à importer`)
 
@@ -41,11 +78,11 @@ export const uploadEmissionFactors = async (
       metaData.push({
         emissionFactorId: id,
         language: 'fr',
-        title: getStringValue(row[indexes['EF_VAL_LIB']]),
-        attribute: getStringValue(row[indexes['EF_VAL_CARAC']]),
-        frontiere: getStringValue(row[indexes['EF_VAL_COMPLEMENT']]),
-        comment: `${getStringValue(row[indexes['Commentaires']])} ${getStringValue(row[indexes['DateValidité']])}`,
-        location: `${getStringValue(row[indexes['NOM_PAYS']])} ${getStringValue(row[indexes['NOM_REGION']])} ${getStringValue(row[indexes['NOM_DEPARTEMENT']])}`,
+        title: getStringValue(row[indexes[RequiredEmissionFactorsColumns.EF_VAL_LIB]]),
+        attribute: getStringValue(row[indexes[RequiredEmissionFactorsColumns.EF_VAL_CARAC]]),
+        frontiere: getStringValue(row[indexes[RequiredEmissionFactorsColumns.EF_VAL_COMPLEMENT]]),
+        comment: `${getStringValue(row[indexes[RequiredEmissionFactorsColumns.Commentaires]])} ${getStringValue(row[indexes[RequiredEmissionFactorsColumns.DateValidité]])}`,
+        location: `${getStringValue(row[indexes[RequiredEmissionFactorsColumns.NOM_PAYS]])} ${getStringValue(row[indexes[RequiredEmissionFactorsColumns.NOM_REGION]])} ${getStringValue(row[indexes[RequiredEmissionFactorsColumns.NOM_DEPARTEMENT]])}`,
       })
 
       return {
@@ -53,25 +90,33 @@ export const uploadEmissionFactors = async (
         organizationId,
         importedFrom: Import.Manual,
         status: EmissionFactorStatus.Valid,
-        oldBCId: getStringValue(row[indexes['EFV_GUID']]),
-        reliability: getEmissionQuality(row[indexes['Incertitude']] as number),
-        technicalRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
-        geographicRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
-        temporalRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
-        completeness: getEmissionQuality(row[indexes['Incertitude']] as number),
-        unit: unitsMatrix[getStringValue(row[indexes['Unité_Nom']])],
-        totalCo2: row[indexes['Total_CO2e']] as number,
-        co2f: row[indexes['CO2f']] as number,
-        ch4f: row[indexes['CH4F']] as number,
-        ch4b: row[indexes['CH4B']] as number,
-        n2o: row[indexes['N2O']] as number,
-        co2b: row[indexes['CO2B']] as number,
-        sf6: row[indexes['SF6']] as number,
-        hfc: row[indexes['HFC']] as number,
-        pfc: row[indexes['PFC']] as number,
-        otherGES: (row[indexes['Autre_gaz']] as number) + (row[indexes['NF3']] as number),
-        source: getStringValue(row[indexes['Source_Nom']]),
-        location: getStringValue(row[indexes['NOM_CONTINENT']]),
+        oldBCId: getStringValue(row[indexes[RequiredEmissionFactorsColumns.EFV_GUID]]),
+        reliability: getEmissionQuality(row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number),
+        technicalRepresentativeness: getEmissionQuality(
+          row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number,
+        ),
+        geographicRepresentativeness: getEmissionQuality(
+          row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number,
+        ),
+        temporalRepresentativeness: getEmissionQuality(
+          row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number,
+        ),
+        completeness: getEmissionQuality(row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number),
+        unit: unitsMatrix[getStringValue(row[indexes[RequiredEmissionFactorsColumns.Unité_Nom]])],
+        totalCo2: row[indexes[RequiredEmissionFactorsColumns.Total_CO2e]] as number,
+        co2f: row[indexes[RequiredEmissionFactorsColumns.CO2f]] as number,
+        ch4f: row[indexes[RequiredEmissionFactorsColumns.CH4F]] as number,
+        ch4b: row[indexes[RequiredEmissionFactorsColumns.CH4B]] as number,
+        n2o: row[indexes[RequiredEmissionFactorsColumns.N2O]] as number,
+        co2b: row[indexes[RequiredEmissionFactorsColumns.CO2B]] as number,
+        sf6: row[indexes[RequiredEmissionFactorsColumns.SF6]] as number,
+        hfc: row[indexes[RequiredEmissionFactorsColumns.HFC]] as number,
+        pfc: row[indexes[RequiredEmissionFactorsColumns.PFC]] as number,
+        otherGES:
+          (row[indexes[RequiredEmissionFactorsColumns.Autre_gaz]] as number) +
+          (row[indexes[RequiredEmissionFactorsColumns.NF3]] as number),
+        source: getStringValue(row[indexes[RequiredEmissionFactorsColumns.Source_Nom]]),
+        location: getStringValue(row[indexes[RequiredEmissionFactorsColumns.NOM_CONTINENT]]),
       }
     }),
   })
@@ -90,10 +135,12 @@ export const uploadEmissionFactors = async (
   })
 
   const emissionFactorPartsToCreate = data
-    .filter((row) => !row[indexes['FE_BCPlus']])
-    .filter((row) => row[indexes['EF_TYPE']] !== 'Consolidé')
-    .filter((row) => existingEmissionFactorParts.every((ef) => ef.oldBCId !== row[indexes['EFV_GUID']]))
-    .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row[indexes['GUID']]))
+    .filter((row) => !row[indexes[RequiredEmissionFactorsColumns.FE_BCPlus]])
+    .filter((row) => row[indexes[RequiredEmissionFactorsColumns.EF_TYPE]] !== 'Consolidé')
+    .filter((row) =>
+      existingEmissionFactorParts.every((ef) => ef.oldBCId !== row[indexes[RequiredEmissionFactorsColumns.EFV_GUID]]),
+    )
+    .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row[indexes[RequiredEmissionFactorsColumns.GUID]]))
 
   const sumByGuid: Record<
     string,
@@ -112,21 +159,23 @@ export const uploadEmissionFactors = async (
   > = {}
 
   emissionFactorPartsToCreate.forEach((row) => {
-    const guid = getStringValue(row[indexes['GUID']])
+    const guid = getStringValue(row[indexes[RequiredEmissionFactorsColumns.GUID]])
     if (!sumByGuid[guid]) {
       sumByGuid[guid] = { totalCo2: 0, co2f: 0, ch4f: 0, ch4b: 0, n2o: 0, co2b: 0, sf6: 0, hfc: 0, pfc: 0, otherGES: 0 }
     }
 
-    sumByGuid[guid].totalCo2 += row[indexes['Total_CO2e']] as number
-    sumByGuid[guid].co2f += row[indexes['CO2f']] as number
-    sumByGuid[guid].ch4f += row[indexes['CH4F']] as number
-    sumByGuid[guid].ch4b += row[indexes['CH4B']] as number
-    sumByGuid[guid].n2o += row[indexes['N2O']] as number
-    sumByGuid[guid].co2b += row[indexes['CO2B']] as number
-    sumByGuid[guid].sf6 += row[indexes['SF6']] as number
-    sumByGuid[guid].hfc += row[indexes['HFC']] as number
-    sumByGuid[guid].pfc += row[indexes['PFC']] as number
-    sumByGuid[guid].otherGES += (row[indexes['Autre_gaz']] as number) + (row[indexes['NF3']] as number)
+    sumByGuid[guid].totalCo2 += row[indexes[RequiredEmissionFactorsColumns.Total_CO2e]] as number
+    sumByGuid[guid].co2f += row[indexes[RequiredEmissionFactorsColumns.CO2f]] as number
+    sumByGuid[guid].ch4f += row[indexes[RequiredEmissionFactorsColumns.CH4F]] as number
+    sumByGuid[guid].ch4b += row[indexes[RequiredEmissionFactorsColumns.CH4B]] as number
+    sumByGuid[guid].n2o += row[indexes[RequiredEmissionFactorsColumns.N2O]] as number
+    sumByGuid[guid].co2b += row[indexes[RequiredEmissionFactorsColumns.CO2B]] as number
+    sumByGuid[guid].sf6 += row[indexes[RequiredEmissionFactorsColumns.SF6]] as number
+    sumByGuid[guid].hfc += row[indexes[RequiredEmissionFactorsColumns.HFC]] as number
+    sumByGuid[guid].pfc += row[indexes[RequiredEmissionFactorsColumns.PFC]] as number
+    sumByGuid[guid].otherGES +=
+      (row[indexes[RequiredEmissionFactorsColumns.Autre_gaz]] as number) +
+      (row[indexes[RequiredEmissionFactorsColumns.NF3]] as number)
   })
 
   const inconsistentGuids = Object.entries(sumByGuid).filter(([guid, sum]) => {
@@ -151,8 +200,10 @@ export const uploadEmissionFactors = async (
   }
 
   const filteredEmissionFactorPartsToCreate = emissionFactorPartsToCreate
-    .filter((row) => inconsistentGuids.every(([key]) => key !== getStringValue(row[indexes['GUID']])))
-    .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row[indexes['GUID']]))
+    .filter((row) =>
+      inconsistentGuids.every(([key]) => key !== getStringValue(row[indexes[RequiredEmissionFactorsColumns.GUID]])),
+    )
+    .filter((row) => allEmissionFactors.some((ef) => ef.oldBCId === row[indexes[RequiredEmissionFactorsColumns.GUID]]))
 
   const partsMetaData = [] as Prisma.EmissionFactorPartMetaDataCreateManyInput[]
   console.log(`${filteredEmissionFactorPartsToCreate.length} composantes à importer`)
@@ -163,31 +214,41 @@ export const uploadEmissionFactors = async (
 
       partsMetaData.push({
         language: 'fr',
-        title: getStringValue(row[indexes['EF_VAL_LIB']]),
+        title: getStringValue(row[indexes[RequiredEmissionFactorsColumns.EF_VAL_LIB]]),
         emissionFactorPartId: id,
       })
       return {
         id,
-        emissionFactorId: allEmissionFactors.find((ef) => ef.oldBCId === row[indexes['GUID']])?.id as string,
+        emissionFactorId: allEmissionFactors.find(
+          (ef) => ef.oldBCId === row[indexes[RequiredEmissionFactorsColumns.GUID]],
+        )?.id as string,
         type: EmissionFactorPartType.Amont,
-        oldBCId: getStringValue(row[indexes['EFV_GUID']]),
-        reliability: getEmissionQuality(row[indexes['Incertitude']] as number),
-        technicalRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
-        geographicRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
-        temporalRepresentativeness: getEmissionQuality(row[indexes['Incertitude']] as number),
-        completeness: getEmissionQuality(row[indexes['Incertitude']] as number),
-        totalCo2: row[indexes['Total_CO2e']] as number,
-        co2f: row[indexes['CO2f']] as number,
-        ch4f: row[indexes['CH4F']] as number,
-        ch4b: row[indexes['CH4B']] as number,
-        n2o: row[indexes['N2O']] as number,
-        co2b: row[indexes['CO2B']] as number,
-        sf6: row[indexes['SF6']] as number,
-        hfc: row[indexes['HFC']] as number,
-        pfc: row[indexes['PFC']] as number,
-        otherGES: (row[indexes['Autre_gaz']] as number) + (row[indexes['NF3']] as number),
-        source: getStringValue(row[indexes['Source_Nom']]),
-        location: getStringValue(row[indexes['NOM_CONTINENT']]),
+        oldBCId: getStringValue(row[indexes[RequiredEmissionFactorsColumns.EFV_GUID]]),
+        reliability: getEmissionQuality(row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number),
+        technicalRepresentativeness: getEmissionQuality(
+          row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number,
+        ),
+        geographicRepresentativeness: getEmissionQuality(
+          row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number,
+        ),
+        temporalRepresentativeness: getEmissionQuality(
+          row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number,
+        ),
+        completeness: getEmissionQuality(row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number),
+        totalCo2: row[indexes[RequiredEmissionFactorsColumns.Total_CO2e]] as number,
+        co2f: row[indexes[RequiredEmissionFactorsColumns.CO2f]] as number,
+        ch4f: row[indexes[RequiredEmissionFactorsColumns.CH4F]] as number,
+        ch4b: row[indexes[RequiredEmissionFactorsColumns.CH4B]] as number,
+        n2o: row[indexes[RequiredEmissionFactorsColumns.N2O]] as number,
+        co2b: row[indexes[RequiredEmissionFactorsColumns.CO2B]] as number,
+        sf6: row[indexes[RequiredEmissionFactorsColumns.SF6]] as number,
+        hfc: row[indexes[RequiredEmissionFactorsColumns.HFC]] as number,
+        pfc: row[indexes[RequiredEmissionFactorsColumns.PFC]] as number,
+        otherGES:
+          (row[indexes[RequiredEmissionFactorsColumns.Autre_gaz]] as number) +
+          (row[indexes[RequiredEmissionFactorsColumns.NF3]] as number),
+        source: getStringValue(row[indexes[RequiredEmissionFactorsColumns.Source_Nom]]),
+        location: getStringValue(row[indexes[RequiredEmissionFactorsColumns.NOM_CONTINENT]]),
       }
     }),
   })

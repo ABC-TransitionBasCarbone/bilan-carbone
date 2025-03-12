@@ -1,74 +1,10 @@
 import xlsx from 'node-xlsx'
 import { prismaClient } from '../../../db/client'
-import { uploadEmissionFactors } from './emissionFactors'
-import { uploadOrganizations } from './organizations'
+import { RequiredEmissionFactorsColumns, uploadEmissionFactors } from './emissionFactors'
+import { RequiredOrganizationsColumns, uploadOrganizations } from './organizations'
 import { RequiredStudiesColumns, uploadStudies } from './studies'
 
-const requiredOrganizationsColumns = [
-  'ID_ENTITE',
-  'NOM_ORGANISATION',
-  'NOM_ENTITE',
-  'ENTITE_PRINCIPALE',
-  'SIRET',
-  'ID_ENTITE_MERE',
-  'IS_USER_ORGA',
-]
-
-const requiredEmissionFactorsColumns = [
-  'EFV_GUID',
-  'ID_Source_Ref',
-  'GUID',
-  'EF_VAL_LIB',
-  'EF_VAL_CARAC',
-  'EF_VAL_COMPLEMENT',
-  'Commentaires',
-  'DateValidité',
-  'Incertitude',
-  'Unité_Nom',
-  'EF_Statut',
-  'EF_TYPE',
-  'Total_CO2e',
-  'CO2f',
-  'CH4f',
-  'CH4b',
-  'N2O',
-  'HFC',
-  'PFC',
-  'SF6',
-  'CO2b',
-  'Autre_gaz',
-  'Qualité_TeR',
-  'Qualité_GR',
-  'Qualité_TiR',
-  'Qualité_C',
-  'Source_Nom',
-  'NOM_CONTINENT',
-  'NOM_PAYS',
-  'NOM_REGION',
-  'NOM_DEPARTEMENT',
-  'FE_BCPlus',
-]
-
-const getIndexes = (headers: string[], requiredHeaders: string[], sheetName: string): Record<string, number> => {
-  const missingHeaders: string[] = []
-  const indexes = {} as Record<string, number>
-  requiredHeaders.forEach((requiredHeader) => {
-    const index = headers.indexOf(requiredHeader)
-    if (index === -1) {
-      missingHeaders.push(requiredHeader)
-    } else {
-      indexes[requiredHeader] = index
-    }
-  })
-
-  if (missingHeaders.length > 0) {
-    throw new Error(`Colonnes manquantes dans la feuille '${sheetName}' : ${missingHeaders.join(', ')}`)
-  }
-
-  return indexes
-}
-
-const getEnumIndexes = (
+const getIndexes = (
   headers: string[],
   requiredColumns: Record<string, string>,
   sheetName: string,
@@ -92,18 +28,20 @@ const getEnumIndexes = (
 }
 
 const getOrganisationIndexes = (organizationHeaders: string[]): Record<string, number> => {
-  if (requiredOrganizationsColumns.length > organizationHeaders.length) {
-    throw new Error(`Les colonnes suivantes sont obligatoires : ${requiredOrganizationsColumns.join(', ')}`)
+  if (Object.values(RequiredOrganizationsColumns).length > organizationHeaders.length) {
+    throw new Error(
+      `Les colonnes suivantes sont obligatoires : ${Object.values(RequiredOrganizationsColumns).join(', ')}`,
+    )
   }
-  return getIndexes(organizationHeaders, requiredOrganizationsColumns, 'Organisations')
+  return getIndexes(organizationHeaders, RequiredOrganizationsColumns, 'Organisations')
 }
 
 const getEmissionFactorsIndexes = (emissionFactorHeaders: string[]): Record<string, number> => {
-  return getIndexes(emissionFactorHeaders, requiredEmissionFactorsColumns, "Facteurs d'émissions")
+  return getIndexes(emissionFactorHeaders, RequiredEmissionFactorsColumns, "Facteurs d'émissions")
 }
 
 const getStudiesIndexes = (studiesHeaders: string[]): Record<string, number> => {
-  return getEnumIndexes(studiesHeaders, RequiredStudiesColumns, 'Etudes')
+  return getIndexes(studiesHeaders, RequiredStudiesColumns, 'Etudes')
 }
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
