@@ -24,6 +24,7 @@ export enum RequiredEmissionFactorsColumns {
   HFC = 'HFC',
   PFC = 'PFC',
   SF6 = 'SF6',
+  NF3 = 'NF3',
   CO2b = 'CO2b',
   Autre_gaz = 'Autre_gaz',
   Qualité_TeR = 'Qualité_TeR',
@@ -105,10 +106,10 @@ export const uploadEmissionFactors = async (
         unit: unitsMatrix[getStringValue(row[indexes[RequiredEmissionFactorsColumns.Unité_Nom]])],
         totalCo2: row[indexes[RequiredEmissionFactorsColumns.Total_CO2e]] as number,
         co2f: row[indexes[RequiredEmissionFactorsColumns.CO2f]] as number,
-        ch4f: row[indexes[RequiredEmissionFactorsColumns.CH4F]] as number,
-        ch4b: row[indexes[RequiredEmissionFactorsColumns.CH4B]] as number,
+        ch4f: row[indexes[RequiredEmissionFactorsColumns.CH4f]] as number,
+        ch4b: row[indexes[RequiredEmissionFactorsColumns.CH4b]] as number,
         n2o: row[indexes[RequiredEmissionFactorsColumns.N2O]] as number,
-        co2b: row[indexes[RequiredEmissionFactorsColumns.CO2B]] as number,
+        co2b: row[indexes[RequiredEmissionFactorsColumns.CO2b]] as number,
         sf6: row[indexes[RequiredEmissionFactorsColumns.SF6]] as number,
         hfc: row[indexes[RequiredEmissionFactorsColumns.HFC]] as number,
         pfc: row[indexes[RequiredEmissionFactorsColumns.PFC]] as number,
@@ -166,10 +167,10 @@ export const uploadEmissionFactors = async (
 
     sumByGuid[guid].totalCo2 += row[indexes[RequiredEmissionFactorsColumns.Total_CO2e]] as number
     sumByGuid[guid].co2f += row[indexes[RequiredEmissionFactorsColumns.CO2f]] as number
-    sumByGuid[guid].ch4f += row[indexes[RequiredEmissionFactorsColumns.CH4F]] as number
-    sumByGuid[guid].ch4b += row[indexes[RequiredEmissionFactorsColumns.CH4B]] as number
+    sumByGuid[guid].ch4f += row[indexes[RequiredEmissionFactorsColumns.CH4f]] as number
+    sumByGuid[guid].ch4b += row[indexes[RequiredEmissionFactorsColumns.CH4b]] as number
     sumByGuid[guid].n2o += row[indexes[RequiredEmissionFactorsColumns.N2O]] as number
-    sumByGuid[guid].co2b += row[indexes[RequiredEmissionFactorsColumns.CO2B]] as number
+    sumByGuid[guid].co2b += row[indexes[RequiredEmissionFactorsColumns.CO2b]] as number
     sumByGuid[guid].sf6 += row[indexes[RequiredEmissionFactorsColumns.SF6]] as number
     sumByGuid[guid].hfc += row[indexes[RequiredEmissionFactorsColumns.HFC]] as number
     sumByGuid[guid].pfc += row[indexes[RequiredEmissionFactorsColumns.PFC]] as number
@@ -237,10 +238,10 @@ export const uploadEmissionFactors = async (
         completeness: getEmissionQuality(row[indexes[RequiredEmissionFactorsColumns.Incertitude]] as number),
         totalCo2: row[indexes[RequiredEmissionFactorsColumns.Total_CO2e]] as number,
         co2f: row[indexes[RequiredEmissionFactorsColumns.CO2f]] as number,
-        ch4f: row[indexes[RequiredEmissionFactorsColumns.CH4F]] as number,
-        ch4b: row[indexes[RequiredEmissionFactorsColumns.CH4B]] as number,
+        ch4f: row[indexes[RequiredEmissionFactorsColumns.CH4f]] as number,
+        ch4b: row[indexes[RequiredEmissionFactorsColumns.CH4b]] as number,
         n2o: row[indexes[RequiredEmissionFactorsColumns.N2O]] as number,
-        co2b: row[indexes[RequiredEmissionFactorsColumns.CO2B]] as number,
+        co2b: row[indexes[RequiredEmissionFactorsColumns.CO2b]] as number,
         sf6: row[indexes[RequiredEmissionFactorsColumns.SF6]] as number,
         hfc: row[indexes[RequiredEmissionFactorsColumns.HFC]] as number,
         pfc: row[indexes[RequiredEmissionFactorsColumns.PFC]] as number,
