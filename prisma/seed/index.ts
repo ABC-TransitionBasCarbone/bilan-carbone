@@ -414,7 +414,7 @@ program
   .option('-i, --import-factors <value>', 'Import BaseCarbone emission factors')
   .parse(process.argv)
 
-if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV === 'development') {
   main(program.opts())
     .then(async () => {
       await prisma.$disconnect()
