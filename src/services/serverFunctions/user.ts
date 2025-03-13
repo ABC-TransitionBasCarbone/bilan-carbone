@@ -132,6 +132,7 @@ export const addMember = async (member: AddMemberCommand) => {
       organizationId: session.user.organizationId,
     }
     await addUser(newMember)
+    addUserChecklistItem(CRUserChecklist.AddCollaborator)
   } else {
     if (memberExists.status === UserStatus.ACTIVE && memberExists.organizationId) {
       return NOT_AUTHORIZED

@@ -1,4 +1,4 @@
-import { CRUserChecklist, Organization, UserCheckedStep } from '@prisma/client'
+import { CRUserChecklist, Organization } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo } from 'react'
@@ -11,7 +11,7 @@ const FAQLink = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 interface Props {
   open: boolean
   setOpen: (open: boolean) => void
-  userChecklist: UserCheckedStep[]
+  userChecklist: CRUserChecklist[]
   userOrganization: Organization
   organizations: Organization[]
   studyId?: string
@@ -20,8 +20,8 @@ interface Props {
 const ChecklistDrawer = ({ setOpen, userOrganization, organizations, userChecklist, studyId }: Props) => {
   const t = useTranslations('checklist')
   const steps = useMemo(() => (userOrganization.isCR ? CRUserChecklist : CRUserChecklist), [userOrganization])
-  const finished = useMemo(() => userChecklist.length === Object.values(steps).length, [steps])
-  const isValidated = (step: CRUserChecklist) => userChecklist.some((checked) => checked.step === step)
+  const finished = useMemo(() => userChecklist.length === Object.values(steps).length, [userChecklist, steps])
+  const isValidated = (step: CRUserChecklist) => userChecklist.some((checkedStep) => checkedStep === step)
   return (
     <div>
       <Stepper

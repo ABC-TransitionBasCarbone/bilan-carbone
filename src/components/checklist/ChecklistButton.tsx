@@ -1,11 +1,12 @@
 'use client'
 
+import { getUserChecklist } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Drawer, IconButton } from '@mui/material'
-import { Organization, UserCheckedStep } from '@prisma/client'
+import { CRUserChecklist, Organization, UserCheckedStep } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './Checklist.module.css'
 import ChecklistDrawer from './ChecklistDrawer'
 
@@ -16,9 +17,25 @@ interface Props {
   studyId?: string
 }
 
-const ChecklistButton = ({ userChecklist, userOrganization, organizations, studyId }: Props) => {
+const ChecklistButton = ({ userOrganization, organizations, studyId, userChecklist }: Props) => {
   const t = useTranslations('checklist')
   const [open, setOpen] = useState(false)
+  const [checklist, setChecklist] = useState<CRUserChecklist[]>(userChecklist.map((item) => item.step))
+
+  useEffect(() => {
+    if (open) {
+      getCheckList()
+    }
+  }, [open])
+
+  useEffect(() => {
+    setChecklist(userChecklist.map((item) => item.step))
+  }, [userChecklist])
+
+  const getCheckList = async () => {
+    const checkList = await getUserChecklist()
+    setChecklist(checkList.map((item) => item.step))
+  }
 
   return (
     <div className={styles.checklistButton}>
@@ -41,7 +58,7 @@ const ChecklistButton = ({ userChecklist, userOrganization, organizations, study
         <ChecklistDrawer
           open={open}
           setOpen={setOpen}
-          userChecklist={userChecklist}
+          userChecklist={checklist}
           userOrganization={userOrganization}
           organizations={organizations}
           studyId={studyId}

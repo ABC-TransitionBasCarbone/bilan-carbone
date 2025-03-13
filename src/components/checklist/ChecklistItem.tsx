@@ -9,7 +9,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import Button from '../base/Button'
 import LinkButton from '../base/LinkButton'
 import styles from './Checklist.module.css'
@@ -25,6 +25,7 @@ interface Props {
 
 const ChecklistItem = ({ step, validated, onClose, organizationId, clients, studyId }: Props) => {
   const t = useTranslations('checklist')
+  const [expanded, setExpanded] = useState(false)
   const link = useMemo(() => getLink(step, studyId), [step, studyId])
   const router = useRouter()
 
@@ -38,34 +39,34 @@ const ChecklistItem = ({ step, validated, onClose, organizationId, clients, stud
       <Accordion
         className={classNames(styles.step, 'grow', { [styles.disabledStep]: validated })}
         disabled={validated}
+        onChange={() => setExpanded(!expanded)}
+        expanded={expanded && !validated}
         sx={{
           opacity: 1,
           pointerEvents: 'auto',
           backgroundColor: 'var(--neutral-00) !important',
         }}
       >
-        <div>
-          <AccordionSummary
-            id={`checklist-${step}-summary`}
-            aria-controls={`checklist-${step}`}
-            data-testid={`checklist-${step}-header`}
-            className={styles.stepSummary}
-            expandIcon={
-              validated ? (
-                <b className={styles.validated}>{t('done')}</b>
-              ) : (
-                <div data-testid={`checklist-${step}-expand`}>
-                  <ExpandIcon />
-                </div>
-              )
-            }
-          >
-            <div className={classNames(styles.stepHeader, 'grow align-center', { [styles.validated]: validated })}>
-              {validated ? <ValidatedIcon /> : <ToDoIcon />}
-              {t(step)}
-            </div>
-          </AccordionSummary>
-        </div>
+        <AccordionSummary
+          id={`checklist-${step}-summary`}
+          aria-controls={`checklist-${step}`}
+          data-testid={`checklist-${step}-header`}
+          className={styles.stepSummary}
+          expandIcon={
+            validated ? (
+              <b className={styles.validated}>{t('done')}</b>
+            ) : (
+              <div data-testid={`checklist-${step}-expand`}>
+                <ExpandIcon />
+              </div>
+            )
+          }
+        >
+          <div className={classNames(styles.stepHeader, 'grow align-center', { [styles.validated]: validated })}>
+            {validated ? <ValidatedIcon /> : <ToDoIcon />}
+            {t(step)}
+          </div>
+        </AccordionSummary>
         <AccordionDetails>
           <p>
             {t.rich(`${step}Details`, {

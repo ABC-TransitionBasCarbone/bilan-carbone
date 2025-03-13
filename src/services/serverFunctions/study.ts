@@ -24,6 +24,7 @@ import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import {
   ControlMode,
+  CRUserChecklist,
   User as DBUser,
   Document,
   Export,
@@ -69,7 +70,7 @@ import {
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
-import { sendInvitation } from './user'
+import { addUserChecklistItem, sendInvitation } from './user'
 
 export const getStudy = async (studyId: string) => {
   const session = await auth()
@@ -181,6 +182,7 @@ export const createStudyCommand = async ({
 
   try {
     const createdStudy = await createStudy(study)
+    addUserChecklistItem(CRUserChecklist.CreateFirstStudy)
     return { success: true, id: createdStudy.id }
   } catch (e) {
     console.error(e)
