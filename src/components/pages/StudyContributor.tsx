@@ -3,11 +3,14 @@
 import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
+import { withInfobulle } from '@/utils/post'
 import { StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import Block from '../base/Block'
+import HelpIcon from '../base/HelpIcon'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import GlossaryModal from '../modals/GlossaryModal'
 import PostIcon from '../study/infography/icons/PostIcon'
 import SelectStudySite from '../study/site/SelectStudySite'
 import useStudySite from '../study/site/useStudySite'
@@ -21,6 +24,7 @@ interface Props {
 const StudyContributorPage = ({ study, userRole }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
+  const [glossary, setGlossary] = useState('')
   const { studySite, setSite } = useStudySite(study)
 
   const emissionSources = useMemo(
@@ -40,12 +44,21 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
 
       <Block />
       {Object.values(Post)
-        .filter((post) => {
-          const subPosts = subPostsByPost[post]
-          return study.emissionSources.some((emissionSource) => subPosts.includes(emissionSource.subPost))
-        })
+        .filter((post) =>
+          study.emissionSources.some((emissionSource) => subPostsByPost[post].includes(emissionSource.subPost)),
+        )
         .map((post) => (
-          <Block key={post} title={tPost(post)} icon={<PostIcon post={post} />} iconPosition="before">
+          <Block
+            key={post}
+            title={
+              <>
+                {tPost(post)}{' '}
+                {withInfobulle(post) && <HelpIcon label={tPost('glossary')} onClick={() => setGlossary(post)} />}
+              </>
+            }
+            icon={<PostIcon post={post} />}
+            iconPosition="before"
+          >
             <SubPosts
               post={post}
               study={study}
@@ -53,9 +66,15 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
               emissionSources={emissionSources}
               studySite={studySite}
               userRole={userRole}
+              setGlossary={setGlossary}
             />
           </Block>
         ))}
+      {glossary && (
+        <GlossaryModal glossary={glossary} label="post-glossary" t={tPost} onClose={() => setGlossary('')}>
+          {tPost(`glossaryDescription.${glossary}`)}
+        </GlossaryModal>
+      )}
     </>
   )
 }

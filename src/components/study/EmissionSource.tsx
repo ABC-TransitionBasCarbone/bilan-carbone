@@ -160,12 +160,6 @@ const EmissionSource = ({
                 />
               </>
             )}
-
-            {emissionSource.contributor && (
-              <p data-testid="emission-source-contributor" className={styles.status}>
-                {emissionSource.contributor.email}
-              </p>
-            )}
           </div>
           <div className={classNames(styles.gapped, 'grow align-center')}>
             {/* activity data */}
@@ -228,7 +222,11 @@ const EmissionSource = ({
             </Label>
           </div>
         </div>
-
+        {emissionSource.contributor && (
+          <p data-testid="emission-source-contributor" className={styles.status}>
+            {emissionSource.contributor.email}
+          </p>
+        )}
         <div className={styles.editIcon}>
           <EditIcon />
         </div>

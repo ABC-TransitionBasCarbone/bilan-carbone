@@ -11,7 +11,7 @@ export const flattenSubposts = (subPosts: Record<Post, SubPost[]>) =>
     .map((post) => (subPosts?.[post as Post] || []).flat())
     .flat()
 
-export const withInfobulle: (Post | SubPost)[] = [
+const withInfobulleList: (Post | SubPost)[] = [
   Post.DechetsDirects,
   Post.IntrantsBiensEtMatieres,
   Post.Immobilisations,
@@ -35,3 +35,5 @@ export const withInfobulle: (Post | SubPost)[] = [
   SubPost.UtilisationEnResponsabilite,
   SubPost.UtilisationEnDependance,
 ]
+
+export const withInfobulle = (post: Post | SubPost) => withInfobulleList.includes(post)

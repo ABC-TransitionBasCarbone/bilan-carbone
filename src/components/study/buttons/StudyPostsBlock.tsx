@@ -35,7 +35,7 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
       title={
         <>
           {tPost(post)}
-          {withInfobulle.includes(post) && (
+          {withInfobulle(post) && (
             <HelpIcon className="ml-2" label={tPost('glossary')} onClick={() => setGlossary(post)} />
           )}
         </>

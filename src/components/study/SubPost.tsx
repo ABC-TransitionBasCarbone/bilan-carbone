@@ -79,7 +79,7 @@ const SubPost = ({
         >
           <p>
             {tPost(subPost)}
-            {withInfobulle.includes(subPost) && (
+            {withInfobulle(subPost) && (
               <HelpIcon
                 onClick={(e) => {
                   e.stopPropagation()
