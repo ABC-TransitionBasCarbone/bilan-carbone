@@ -289,6 +289,7 @@ const EmissionSourceForm = ({
             <Button
               color={emissionSource.validated ? 'secondary' : 'primary'}
               onClick={() => update('validated', !emissionSource.validated)}
+              data-testid="emission-source-validate"
             >
               {t(emissionSource.validated ? 'unvalidate' : 'validate')}
             </Button>

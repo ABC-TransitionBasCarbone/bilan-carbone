@@ -144,8 +144,8 @@ const EmissionSource = ({
       >
         <div className={classNames(styles.header, styles.gapped, 'grow justify-between')}>
           <div className="align-center grow">
-            {emissionSource.validated ? (
-              <p>{emissionSource.name}</p>
+            {emissionSource.validated || withoutDetail ? (
+              <p data-testid="validated-emission-source-name">{emissionSource.name}</p>
             ) : (
               <>
                 {!emissionSource.name && <FormLabel component="legend">{t('label')}</FormLabel>}
