@@ -7,4 +7,9 @@
   &.active {
     background-color: var(--primary-40) !important;
   }
+
+  &.small {
+    width: 4rem !important;
+    height: 0.6rem !important;
+  }
 }

@@ -1,10 +1,13 @@
+'use client'
+
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
-import { Button } from '@mui/material'
+import { Drawer, IconButton } from '@mui/material'
 import { Organization, UserCheckedStep } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import styles from './Checklist.module.css'
-import ChecklistModal from './ChecklistModal'
+import ChecklistDrawer from './ChecklistDrawer'
 
 interface Props {
   userChecklist: UserCheckedStep[]
@@ -18,19 +21,33 @@ const ChecklistButton = ({ userChecklist, userOrganization, organizations, study
   const [open, setOpen] = useState(false)
 
   return (
-    <>
-      <Button onClick={() => setOpen(!open)} title={t('title')} aria-label={t('title')}>
-        <CheckCircleOutlineIcon className={styles.button} />
-      </Button>
-      <ChecklistModal
+    <div className={styles.checklistButton}>
+      <IconButton
+        data-testid="checklist-button"
+        className={styles.openDrawerButton}
+        aria-label={t('title')}
+        title={t('title')}
+        onClick={() => setOpen(!open)}
+      >
+        <CheckCircleOutlineIcon />
+      </IconButton>
+      <Drawer
         open={open}
-        setOpen={setOpen}
-        userChecklist={userChecklist}
-        userOrganization={userOrganization}
-        organizations={organizations}
-        studyId={studyId}
-      />
-    </>
+        anchor="right"
+        PaperProps={{ className: classNames(styles.checklistContainer, styles.drawer) }}
+        SlideProps={{ direction: 'left' }}
+        variant="persistent"
+      >
+        <ChecklistDrawer
+          open={open}
+          setOpen={setOpen}
+          userChecklist={userChecklist}
+          userOrganization={userOrganization}
+          organizations={organizations}
+          studyId={studyId}
+        />
+      </Drawer>
+    </div>
   )
 }
 

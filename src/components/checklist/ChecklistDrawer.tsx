@@ -1,10 +1,8 @@
 import { CRUserChecklist, Organization, UserCheckedStep } from '@prisma/client'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo } from 'react'
 import Stepper from '../base/Stepper'
-import Modal from '../modals/Modal'
 import styles from './Checklist.module.css'
 import ChecklistItem from './ChecklistItem'
 
@@ -19,27 +17,21 @@ interface Props {
   studyId?: string
 }
 
-const ChecklistModal = ({ open, setOpen, userOrganization, organizations, userChecklist, studyId }: Props) => {
+const ChecklistDrawer = ({ setOpen, userOrganization, organizations, userChecklist, studyId }: Props) => {
   const t = useTranslations('checklist')
   const steps = useMemo(() => (userOrganization.isCR ? CRUserChecklist : CRUserChecklist), [userOrganization])
   const finished = useMemo(() => userChecklist.length === Object.values(steps).length, [steps])
   const isValidated = (step: CRUserChecklist) => userChecklist.some((checked) => checked.step === step)
-
   return (
-    <Modal
-      className={styles.modal}
-      open={open}
-      onClose={() => setOpen(false)}
-      label="user-checklist"
-      title={t('title')}
-    >
+    <div>
       <Stepper
-        className={styles.modal}
+        className={styles.drawer}
         activeStep={userChecklist.length}
         steps={Object.keys(steps).length}
         fillValidatedSteps
+        small
       />
-      <div className={classNames(styles.overflowedModal, 'flex-col px-2')}>
+      <div className="flex-col px-2">
         {Object.values(steps).map((step: CRUserChecklist) => (
           <ChecklistItem
             key={step}
@@ -63,8 +55,8 @@ const ChecklistModal = ({ open, setOpen, userOrganization, organizations, userCh
           })}
         </p>
       )}
-    </Modal>
+    </div>
   )
 }
 
-export default ChecklistModal
+export default ChecklistDrawer

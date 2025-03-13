@@ -6,37 +6,26 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { CRUserChecklist, Organization, Role, UserCheckedStep } from '@prisma/client'
+import { Role } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
-import ChecklistButton from '../checklist/ChecklistButton'
+import { useState } from 'react'
 import styles from './Navbar.module.css'
 
 interface Props {
   user: User
-  userChecklist: UserCheckedStep[]
-  organizations: Organization[]
-  studyId?: string
 }
 
-const Navbar = ({ user, userChecklist, organizations, studyId }: Props) => {
+const Navbar = ({ user }: Props) => {
   const t = useTranslations('navigation')
   const [showSubMenu, setShowSubMenu] = useState(false)
 
   const handleMouseEnter = () => setShowSubMenu(true)
   const handleMouseLeave = () => setShowSubMenu(false)
-
-  const userOrganization = organizations.find((organization) => organization.id === user.organizationId) as Organization
-
-  const completedChecklist = useMemo(
-    () => userChecklist.length === (userOrganization.isCR ? Object.keys(CRUserChecklist).length : 0),
-    [userChecklist, userOrganization.isCR],
-  )
 
   return (
     <nav className={classNames(styles.navbar, 'w100')}>
@@ -86,14 +75,6 @@ const Navbar = ({ user, userChecklist, organizations, studyId }: Props) => {
             <Link className={styles.link} href="/super-admin">
               {t('admin')}
             </Link>
-          )}
-          {!completedChecklist && (
-            <ChecklistButton
-              userChecklist={userChecklist}
-              userOrganization={userOrganization}
-              organizations={organizations.filter((organization) => organization.id !== user.organizationId)}
-              studyId={studyId}
-            />
           )}
           <Link
             target="_blank"

@@ -7,12 +7,13 @@ interface Props {
   activeStep: number
   fillValidatedSteps?: boolean
   className?: string
+  small?: boolean
 }
 
-const Stepper = ({ steps, activeStep, fillValidatedSteps, className }: Props) => (
+const Stepper = ({ steps, activeStep, fillValidatedSteps, className, small }: Props) => (
   <MobileStepper
     className={classNames(className, 'mb2')}
-    classes={{ dot: styles.stepperDots, dotActive: styles.active }}
+    classes={{ dot: classNames(styles.stepperDots, { [styles.small]: small }), dotActive: styles.active }}
     style={{ padding: 0 }}
     variant="dots"
     steps={steps}
