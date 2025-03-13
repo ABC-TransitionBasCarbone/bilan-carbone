@@ -17,13 +17,14 @@ import styles from './Checklist.module.css'
 interface Props {
   step: CRUserChecklist
   validated: boolean
+  disabled: boolean
   onClose: () => void
   organizationId: string
   clients?: Organization[]
   studyId?: string
 }
 
-const ChecklistItem = ({ step, validated, onClose, organizationId, clients, studyId }: Props) => {
+const ChecklistItem = ({ step, validated, disabled, onClose, organizationId, clients, studyId }: Props) => {
   const t = useTranslations('checklist')
   const [expanded, setExpanded] = useState(false)
   const link = useMemo(() => getLink(step, studyId), [step, studyId])
@@ -37,10 +38,10 @@ const ChecklistItem = ({ step, validated, onClose, organizationId, clients, stud
   return (
     <div className="flex mb1">
       <Accordion
-        className={classNames(styles.step, 'grow', { [styles.disabledStep]: validated })}
-        disabled={validated}
+        className={classNames(styles.step, 'grow', { [styles.disabledStep]: disabled })}
+        disabled={disabled}
         onChange={() => setExpanded(!expanded)}
-        expanded={expanded && !validated}
+        expanded={expanded && !disabled}
         sx={{
           opacity: 1,
           pointerEvents: 'auto',
@@ -55,7 +56,7 @@ const ChecklistItem = ({ step, validated, onClose, organizationId, clients, stud
           expandIcon={
             validated ? (
               <b className={styles.validated}>{t('done')}</b>
-            ) : (
+            ) : disabled ? null : (
               <div data-testid={`checklist-${step}-expand`}>
                 <ExpandIcon />
               </div>

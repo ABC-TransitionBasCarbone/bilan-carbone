@@ -1,3 +1,4 @@
+import { mandatorySteps } from '@/services/checklist'
 import { CRUserChecklist, Organization } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -22,6 +23,8 @@ const ChecklistDrawer = ({ setOpen, userOrganization, organizations, userCheckli
   const steps = useMemo(() => (userOrganization.isCR ? CRUserChecklist : CRUserChecklist), [userOrganization])
   const finished = useMemo(() => userChecklist.length === Object.values(steps).length, [userChecklist, steps])
   const isValidated = (step: CRUserChecklist) => userChecklist.some((checkedStep) => checkedStep === step)
+  const isDisabled = (step: CRUserChecklist) =>
+    mandatorySteps(step).some((mandatoryStep) => !userChecklist.includes(mandatoryStep))
   return (
     <div>
       <Stepper
@@ -37,6 +40,7 @@ const ChecklistDrawer = ({ setOpen, userOrganization, organizations, userCheckli
             key={step}
             step={step}
             validated={isValidated(step)}
+            disabled={isValidated(step) || isDisabled(step)}
             onClose={() => setOpen(false)}
             organizationId={userOrganization.id}
             clients={organizations}
