@@ -3,12 +3,14 @@ import { caracterisationsBySubPost, getEmissionResults } from '@/services/emissi
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { formatNumber } from '@/utils/number'
+import { withInfobulle } from '@/utils/post'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
+import HelpIcon from '../base/HelpIcon'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
 import styles from './SubPosts.module.css'
@@ -29,6 +31,7 @@ interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   emissionSources: FullStudy['emissionSources']
   studySite: string
+  setGlossary: (subPost: string) => void
 }
 
 const SubPost = ({
@@ -39,6 +42,7 @@ const SubPost = ({
   emissionFactors,
   emissionSources,
   studySite,
+  setGlossary,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tPost = useTranslations('emissionFactors.post')
@@ -75,6 +79,15 @@ const SubPost = ({
         >
           <p>
             {tPost(subPost)}
+            {withInfobulle.includes(subPost) && (
+              <HelpIcon
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setGlossary(subPost)
+                }}
+                label={tPost('glossary')}
+              />
+            )}
             <span className={classNames(styles.value, 'ml1')}>
               {formatNumber(total / 1000)} {tUnit('unit')}
             </span>

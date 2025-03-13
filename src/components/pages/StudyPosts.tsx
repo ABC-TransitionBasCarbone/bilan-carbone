@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import GlossaryModal from '../modals/GlossaryModal'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
 import StudyPostsCard from '../study/card/StudyPostsCard'
@@ -23,6 +24,7 @@ const StudyPostsPage = ({ post, study, userRole }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
+  const [glossary, setGlossary] = useState('')
 
   const emissionSources = useMemo(
     () =>
@@ -64,6 +66,7 @@ const StudyPostsPage = ({ post, study, userRole }: Props) => {
         display={showInfography}
         setDisplay={setShowInfography}
         emissionSources={emissionSources}
+        setGlossary={setGlossary}
       >
         {showInfography && <StudyPostInfography study={study} studySite={studySite} />}
         <SubPosts
@@ -73,8 +76,14 @@ const StudyPostsPage = ({ post, study, userRole }: Props) => {
           withoutDetail={false}
           studySite={studySite}
           emissionSources={emissionSources}
+          setGlossary={setGlossary}
         />
       </StudyPostsBlock>
+      {glossary && (
+        <GlossaryModal glossary={glossary} label="post-glossary" t={tPost} onClose={() => setGlossary('')}>
+          {tPost(`glossaryDescription.${glossary}`)}
+        </GlossaryModal>
+      )}
     </>
   )
 }

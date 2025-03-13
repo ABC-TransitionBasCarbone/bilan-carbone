@@ -16,7 +16,7 @@ export type Action =
 
 export interface Props {
   children?: ReactNode
-  title?: string
+  title?: string | ReactNode
   icon?: ReactNode
   expIcon?: boolean
   iconPosition?: 'before' | 'after'
