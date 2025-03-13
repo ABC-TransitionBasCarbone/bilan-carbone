@@ -18,10 +18,10 @@ import {
 import { EMAIL_SENT, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 import {
+  createOrUpdateOrganization,
   getOrganizationById,
   getRawOrganizationById,
   getRawOrganizationBySiret,
-  updateOrganizationOnboarder,
 } from './../../db/organization'
 import { FullStudy } from './../../db/study'
 import {
@@ -36,7 +36,6 @@ import {
   organizationActiveUsersCount,
   updateUser,
   updateUserApplicationSettings,
-  updateUserLevelAndRole,
   updateUserResetTokenForEmail,
   validateUser,
 } from './../../db/user'
@@ -334,20 +333,28 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       ? await getRawOrganizationById(dbUser.organizationId)
       : await getRawOrganizationBySiret(siretOrSiren)
 
-    organisation = await updateOrganizationOnboarder(
-      name,
-      siretOrSiren,
+    organisation = await createOrUpdateOrganization(
+      {
+        id: organisation?.id,
+        name,
+        siret: siretOrSiren,
+      } as Prisma.OrganizationCreateInput,
       isCR,
       activatedLicence,
       importedFileDate,
-      organisation,
     )
 
-    user.organizationId = organisation.id
+    user.organizationId = organisation?.id
   }
 
   if (dbUser) {
-    await updateUserLevelAndRole(dbUser, user)
+    await updateUser(dbUser.id || '', {
+      level: user.level,
+      ...(dbUser.status === UserStatus.IMPORTED && {
+        role: user.role as Exclude<Role, 'SUPER_ADMIN'>,
+        organizationId: user.organizationId,
+      }),
+    })
     console.log(`Updating ${email} because already exists`)
     return null
   }

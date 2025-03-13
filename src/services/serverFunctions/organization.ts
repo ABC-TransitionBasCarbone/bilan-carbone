@@ -1,7 +1,7 @@
 'use server'
 
 import {
-  createOrganization,
+  createOrUpdateOrganization,
   getOrganizationNameById,
   getRawOrganizationById,
   onboardOrganization,
@@ -54,7 +54,11 @@ export const createOrganizationCommand = async (
   }
 
   try {
-    const createdOrganization = await createOrganization(organization)
+    const createdOrganization = await createOrUpdateOrganization(
+      organization,
+      organization.isCR,
+      organization.activatedLicence,
+    )
     return { success: true, id: createdOrganization.id }
   } catch (e) {
     console.error(e)

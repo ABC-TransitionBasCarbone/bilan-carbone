@@ -7,8 +7,8 @@ import InputFileUpload from '../base/InputFileUpload'
 const Admin = () => {
   const t = useTranslations('admin')
 
-  const onChange = (e: FileList) => {
-    Array.from(e).forEach((file) => {
+  const onChange = (files: FileList) => {
+    Array.from(files).forEach((file) => {
       const reader = new FileReader()
       reader.onload = (event) => {
         if (typeof event.target?.result === 'string') {

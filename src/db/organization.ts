@@ -1,4 +1,4 @@
-import { Organization, Prisma, Role, User, UserStatus } from '@prisma/client'
+import { Prisma, Role, User, UserStatus } from '@prisma/client'
 import { UpdateOrganizationCommand } from './../services/serverFunctions/organization.command'
 import { sendNewUser } from './../services/serverFunctions/user'
 import { OnboardingCommand } from './../services/serverFunctions/user.command'
@@ -29,11 +29,6 @@ export const getOrganizationWithSitesById = (id: string) =>
   prismaClient.organization.findUnique({
     where: { id },
     include: { sites: { select: { name: true, etp: true, ca: true, id: true }, orderBy: { createdAt: 'asc' } } },
-  })
-
-export const createOrganization = (organization: Prisma.OrganizationCreateInput) =>
-  prismaClient.organization.create({
-    data: organization,
   })
 
 export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrganizationCommand, caUnit: number) =>
@@ -112,27 +107,25 @@ export const onboardOrganization = async (
   allCollaborators.forEach((collab) => sendNewUser(collab.email, dbUser, collab.firstName ?? ''))
 }
 
-export const updateOrganizationOnboarder = (
-  name: string,
-  siretOrSiren: string,
-  isCR: boolean,
-  activatedLicence: boolean,
-  importedFileDate: Date,
-  organization: Organization | null,
+export const createOrUpdateOrganization = (
+  organization: Prisma.OrganizationCreateInput & { id?: string },
+  isCR?: boolean,
+  activatedLicence?: boolean,
+  importedFileDate?: Date,
 ) =>
   prismaClient.organization.upsert({
-    where: { id: organization?.id ?? '' },
+    where: { id: organization.id ?? '' },
     update: {
-      isCR: isCR || organization?.isCR,
+      ...organization,
+      isCR: isCR || organization.isCR,
       importedFileDate,
-      activatedLicence: activatedLicence || organization?.activatedLicence,
+      activatedLicence: activatedLicence || organization.activatedLicence,
       updatedAt: new Date(),
     },
     create: {
-      siret: siretOrSiren,
-      name,
-      isCR,
+      ...organization,
       importedFileDate,
-      activatedLicence,
+      isCR: isCR || false,
+      activatedLicence: activatedLicence || false,
     },
   })
