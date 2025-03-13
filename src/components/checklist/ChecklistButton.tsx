@@ -20,12 +20,11 @@ interface Props {
 const ChecklistButton = ({ userOrganization, organizations, studyId, userChecklist }: Props) => {
   const t = useTranslations('checklist')
   const [open, setOpen] = useState(false)
+  const [completed, setCompleted] = useState(false)
   const [checklist, setChecklist] = useState<CRUserChecklist[]>(userChecklist.map((item) => item.step))
 
   useEffect(() => {
-    if (open) {
-      getCheckList()
-    }
+    getCheckList()
   }, [open])
 
   useEffect(() => {
@@ -34,7 +33,15 @@ const ChecklistButton = ({ userOrganization, organizations, studyId, userCheckli
 
   const getCheckList = async () => {
     const checkList = await getUserChecklist()
-    setChecklist(checkList.map((item) => item.step))
+    if (checkList.some((item) => item.step === CRUserChecklist.Completed)) {
+      setCompleted(true)
+    } else {
+      setChecklist(checkList.map((item) => item.step))
+    }
+  }
+
+  if (completed) {
+    return null
   }
 
   return (

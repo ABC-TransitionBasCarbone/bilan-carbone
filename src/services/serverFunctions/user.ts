@@ -17,7 +17,7 @@ import {
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
-import { DAY, HOUR, TIME_IN_MS } from '@/utils/time'
+import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
 import { CRUserChecklist, User as DBUser, Organization, Role, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
@@ -308,12 +308,24 @@ export const addUserChecklistItem = async (step: CRUserChecklist) => {
     return
   }
   const isCR = (await prismaClient.organization.findUnique({ where: { id: session.user.organizationId || '' } }))?.isCR
-  if (!Object.values(isCR ? CRUserChecklist : CRUserChecklist).includes(step)) {
+  const checklist = isCR ? CRUserChecklist : CRUserChecklist
+  if (!Object.values(checklist).includes(step)) {
     return
   }
-  return prismaClient.userCheckedStep.upsert({
+  await prismaClient.userCheckedStep.upsert({
     where: { userId_step: { userId: session.user.id, step } },
     update: {},
     create: { userId: session.user.id, step },
   })
+  const userChecklist = await getUserChecklist()
+  if (userChecklist.length === Object.values(checklist).length - 1) {
+    setTimeout(
+      async () => {
+        await prismaClient.userCheckedStep.create({
+          data: { userId: session.user.id, step: CRUserChecklist.Completed },
+        })
+      },
+      1 * MIN * TIME_IN_MS,
+    )
+  }
 }
