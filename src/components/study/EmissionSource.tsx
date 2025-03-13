@@ -132,10 +132,6 @@ const EmissionSource = ({
   const status = useMemo(() => getEmissionSourceStatus(study, emissionSource), [study, emissionSource])
   const sourceRating = useMemo(() => getQualityRating(emissionSource), [emissionSource])
   const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
-  const selectedFactorQualityRating = useMemo(
-    () => (selectedFactor ? getQualityRating(selectedFactor) : null),
-    [selectedFactor],
-  )
 
   return (
     <div className={styles.container}>
@@ -146,14 +142,15 @@ const EmissionSource = ({
         aria-controls={detailId}
         onClick={() => setDisplay(!display)}
       >
-        <div className={classNames(styles.gapped, 'grow justify-between')}>
-          <div>
+        <div className={classNames(styles.header, styles.gapped, 'grow justify-between')}>
+          <div className="align-center grow">
             {emissionSource.validated ? (
               <p>{emissionSource.name}</p>
             ) : (
               <>
                 {!emissionSource.name && <FormLabel component="legend">{t('label')}</FormLabel>}
                 <TextField
+                  className="grow"
                   disabled={!canEdit}
                   defaultValue={emissionSource.name}
                   data-testid="emission-source-name"
@@ -170,7 +167,45 @@ const EmissionSource = ({
               </p>
             )}
           </div>
-          <div data-testid="emission-source-status" className={classNames(styles.status, 'align-center')}>
+          <div className={classNames(styles.gapped, 'grow align-center')}>
+            {/* activity data */}
+            <div className="flex-col justify-center text-center">
+              {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
+                <>
+                  <p>{t('emissionSource')}</p>
+                  <p>
+                    {formatNumber(emissionSource.value, 5)} {selectedFactor && tUnits(selectedFactor.unit)}
+                  </p>
+                </>
+              )}
+            </div>
+            {/* emission factor */}
+            {selectedFactor && (
+              <div className="flex-col justify-center text-center">
+                <p>{t('emissionFactor')}</p>
+                <p>
+                  {formatNumber(getEmissionFactorValue(selectedFactor) / 1000, 5)} {tResults('unit')}/
+                  {tUnits(selectedFactor.unit)}
+                </p>
+              </div>
+            )}
+            {/* result */}
+            {emissionResults && (
+              <div className="flex-col justify-center text-center">
+                <p
+                  className={styles.result}
+                  data-testid="emission-source-value"
+                >{`${formatNumber(emissionResults.emission / 1000)} ${tResults('unit')}`}</p>
+                {emissionResults.standardDeviation && (
+                  <p className={styles.status} data-testid="emission-source-quality">
+                    {tQuality('name')}{' '}
+                    {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+          <div data-testid="emission-source-status" className={classNames(styles.status, 'flex-cc')}>
             {loading && (
               <>
                 {t('saving')} <CircularProgress size="1rem" />
@@ -193,50 +228,7 @@ const EmissionSource = ({
             </Label>
           </div>
         </div>
-        <div className={classNames(styles.infosRight, 'flex')}>
-          <div className="flex-col">
-            {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
-              <>
-                <p>
-                  {formatNumber(emissionSource.value, 5)} {selectedFactor && tUnits(selectedFactor.unit)}
-                </p>
-                {sourceRating && (
-                  <p className={styles.status}>
-                    {tQuality('name')} {tQuality(sourceRating.toString())}
-                  </p>
-                )}
-              </>
-            )}
-          </div>
-          <div className="flex-col">
-            {selectedFactor && (
-              <>
-                <p>
-                  {selectedFactor.metaData?.title}
-                  {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
-                  {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-                  {getEmissionFactorValue(selectedFactor) / 1000} {tResults('unit')}/{tUnits(selectedFactor.unit)}
-                </p>
-                {selectedFactorQualityRating && (
-                  <p className={styles.status}>
-                    {tQuality('name')} {tQuality(selectedFactorQualityRating.toString())}
-                  </p>
-                )}
-              </>
-            )}
-          </div>
-          {emissionResults && (
-            <div className="flex-col">
-              <p data-testid="emission-source-value">{`${formatNumber(emissionResults.emission / 1000)} ${tResults('unit')}`}</p>
-              {emissionResults.standardDeviation && (
-                <p className={styles.status} data-testid="emission-source-quality">
-                  {tQuality('name')}{' '}
-                  {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
+
         <div className={styles.editIcon}>
           <EditIcon />
         </div>

@@ -951,6 +951,8 @@
     }
   },
   "emissionSource": {
+    "emissionSource": "Donnée d'activité :",
+    "emissionFactor": "Facteur d'émission :",
     "advancedSearch": "Recherche avancée",
     "noResults": "Rechercher avec plus de filtres",
     "seeMore": "...Voir plus et rechercher avec plus de filtres",
@@ -982,7 +984,7 @@
     "saving": "Sauvegarde en cours...",
     "status": {
       "valid": "Validée",
-      "waiting": "En cours de completion",
+      "waiting": "En completion",
       "waitingContributor": "En attente d'un contributeur",
       "toVerify": "À vérifier"
     },

@@ -6,6 +6,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { EmissionSourcesStatus } from '@/services/study'
 import { getQualityRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { formatNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
@@ -55,6 +56,7 @@ const EmissionSourceForm = ({
   const tUnits = useTranslations('units')
   const tCategorisations = useTranslations('categorisations')
   const tGlossary = useTranslations('emissionSource.glossary')
+  const tResults = useTranslations('results')
   const tQuality = useTranslations('quality')
   const [glossary, setGlossary] = useState('')
   const [error, setError] = useState('')
@@ -202,7 +204,7 @@ const EmissionSourceForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {getEmissionFactorValue(selectedFactor)} kgCO₂e/
+            {formatNumber(getEmissionFactorValue(selectedFactor) / 1000, 5)} {tResults('unit')}/
             {tUnits(selectedFactor.unit)}{' '}
             {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
           </p>
