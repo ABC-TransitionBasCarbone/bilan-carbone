@@ -4,6 +4,8 @@ import { User } from 'next-auth'
 
 export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
 
+export const canEditSelfRole = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.GESTIONNAIRE
+
 export const findUserInfo = (user: User) =>
   ({
     select: {
@@ -65,7 +67,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (user.id === member.id) {
+  if (user.id === member.id && !canEditSelfRole(user.role)) {
     return false
   }
 

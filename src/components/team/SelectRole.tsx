@@ -1,11 +1,14 @@
 'use client'
 
+import { canEditSelfRole } from '@/services/permissions/user'
 import { changeRole } from '@/services/serverFunctions/user'
 import { isUntrainedRole } from '@/utils/onganization'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Level, Role } from '@prisma/client'
+import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 import Toast, { ToastColors } from '../base/Toast'
 import styles from './SelectRole.module.css'
 
@@ -23,31 +26,37 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
   const t = useTranslations('role')
   const [role, setRole] = useState(currentRole)
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
+
+  const router = useRouter()
+  const { update: updateSession } = useSession()
+
   useEffect(() => {
     setRole(currentRole)
   }, [currentRole])
 
   const selectNewRole = async (event: SelectChangeEvent<Role>) => {
     const newRole = event.target.value as Role
-    setRole(newRole)
     if (newRole !== role) {
       const result = await changeRole(email, newRole)
       if (result) {
         setToast({ text: result, color: 'error' })
       } else {
+        setRole(newRole)
+        updateSession()
         setToast({ text: 'saved', color: 'success' })
+        router.refresh()
       }
     }
   }
 
+  const disabled = useMemo(
+    () => (!canEditSelfRole(currentRole) && currentUserEmail === email) || currentRole === Role.SUPER_ADMIN,
+    [currentUserEmail, email, currentRole],
+  )
+
   return (
     <>
-      <Select
-        className={styles.select}
-        value={role}
-        onChange={selectNewRole}
-        disabled={currentUserEmail === email || currentRole === Role.SUPER_ADMIN}
-      >
+      <Select className={styles.select} value={role} onChange={selectNewRole} disabled={disabled}>
         <MenuItem value={Role.SUPER_ADMIN} className={styles.hidden} aria-hidden="true">
           {t(Role.SUPER_ADMIN)}
         </MenuItem>

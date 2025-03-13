@@ -70,7 +70,7 @@ describe('Team', () => {
       .eq(0)
       .within(() => {
         cy.get('input').should('have.value', Role.ADMIN)
-        cy.get('input').should('be.disabled')
+        cy.get('input').should('not.be.disabled')
       })
 
     cy.getByTestId('team-table-line').eq(1).contains('bc-collaborator-1@yopmail.com').should('exist')
