@@ -95,6 +95,10 @@
   }
 }
 
+.gapped {
+  gap: 1rem;
+}
+
 .shrinked {
   justify-content: flex-start;
   > div {
