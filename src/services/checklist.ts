@@ -1,7 +1,5 @@
 import { CRUserChecklist } from '@prisma/client'
 
-export const isOptionnalStep = (step: CRUserChecklist) => step === CRUserChecklist.AddCollaborator
-
 export const mandatorySteps = (step: CRUserChecklist) => {
   switch (step) {
     case CRUserChecklist.AddSite:

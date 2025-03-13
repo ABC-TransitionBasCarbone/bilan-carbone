@@ -1,4 +1,4 @@
-import { getLink, isOptionnalStep } from '@/services/checklist'
+import { getLink } from '@/services/checklist'
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import ValidatedIcon from '@mui/icons-material/CheckCircle'
 import ToDoIcon from '@mui/icons-material/CheckCircleOutline'
@@ -45,14 +45,6 @@ const ChecklistItem = ({ step, validated, onClose, organizationId, clients, stud
         }}
       >
         <div>
-          {isOptionnalStep(step) && !validated && (
-            <div className="grow align-center justify-between px1 pt1">
-              <span className={styles.optional}>{t('optional')}</span>
-              <Button onClick={markAsDone} color="secondary">
-                {t('markAsDone')}
-              </Button>
-            </div>
-          )}
           <AccordionSummary
             id={`checklist-${step}-summary`}
             aria-controls={`checklist-${step}`}
@@ -90,15 +82,22 @@ const ChecklistItem = ({ step, validated, onClose, organizationId, clients, stud
             })}
           </p>
         </AccordionDetails>
-        {link && (
-          <AccordionActions>
+        <AccordionActions>
+          {!validated && (
+            <div className="justify-end">
+              <Button onClick={markAsDone} color="secondary">
+                {t('markAsDone')}
+              </Button>
+            </div>
+          )}
+          {link && (
             <div className="justify-end">
               <LinkButton onClick={onClose} href={link}>
                 <span className="px-2">{t('go')}</span>
               </LinkButton>
             </div>
-          </AccordionActions>
-        )}
+          )}
+        </AccordionActions>
       </Accordion>
     </div>
   )
