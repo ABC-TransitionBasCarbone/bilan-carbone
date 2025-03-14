@@ -6,8 +6,17 @@ export enum RequiredStudiesColumns {
   startDate = 'PERIODE_DEBUT',
   endDate = 'PERIODE_FIN',
   siteId = 'ID_ENTITE',
-  exportType = 'LIB_REFERENTIEL',
-  exportControl = 'LIBELLE_MODE_CONTROLE',
+}
+
+export enum RequiredStudySitesColumns {
+  id = 'ID_ENTITE',
+  studyId = 'IDETUDE',
+}
+
+export enum RequiredStudyExportsColumns {
+  studyId = 'IDETUDE',
+  type = 'LIB_REFERENTIEL',
+  control = 'LIBELLE_MODE_CONTROLE',
 }
 
 interface Study {
@@ -22,12 +31,16 @@ const parseStudies = (indexes: Record<string, number>, data: (string | number)[]
 
 export const uploadStudies = async (
   transaction: Prisma.TransactionClient,
-  data: (string | number)[][],
-  indexes: Record<string, number>,
+  studiesIndexes: Record<string, number>,
+  studiesData: (string | number)[][],
+  studySitesIndexes: Record<string, number>,
+  studySitesData: (string | number)[][],
+  studyExportsIndexes: Record<string, number>,
+  studyExportsData: (string | number)[][],
 ) => {
   console.log('Import des études...')
 
-  const studies = parseStudies(indexes, data)
+  const studies = parseStudies(studiesIndexes, studiesData)
 
   console.log(studies)
 
