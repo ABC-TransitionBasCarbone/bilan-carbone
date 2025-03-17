@@ -208,6 +208,11 @@
       "U": "€",
       "K": "k€",
       "M": "M€"
+    },
+    "studyResultUnit": {
+      "label": "Unité des résultats des Bilan Carbone®",
+      "K": "kgCO₂e",
+      "T": "tCO₂e"
     }
   },
   "admin": {

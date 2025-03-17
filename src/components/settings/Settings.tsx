@@ -4,7 +4,7 @@ import { updateUserSettings } from '@/services/serverFunctions/user'
 import { EditSettingsCommand, EditSettingsCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl, FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
-import { SiteCAUnit, UserApplicationSettings } from '@prisma/client'
+import { SiteCAUnit, StudyResultUnit, UserApplicationSettings } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -22,7 +22,6 @@ interface Props {
 const Settings = ({ userSettings }: Props) => {
   const t = useTranslations('settings')
   const tGlossary = useTranslations('settings.glossary')
-  const tUnit = useTranslations('settings.caUnit')
   const [error, setError] = useState('')
   const [glossary, setGlossary] = useState('')
 
@@ -33,6 +32,7 @@ const Settings = ({ userSettings }: Props) => {
     defaultValues: {
       validatedEmissionSourcesOnly: userSettings.validatedEmissionSourcesOnly,
       caUnit: userSettings.caUnit,
+      studyUnit: userSettings.studyUnit,
     },
   })
 
@@ -71,19 +71,31 @@ const Settings = ({ userSettings }: Props) => {
               )}
             />
           </FormControl>
-
           <FormSelect
             className={styles.selector}
             control={form.control}
             translation={t}
             name="caUnit"
-            label={tUnit('label')}
+            label={t('caUnit.label')}
             icon={<HelpIcon className="ml-4" onClick={() => setGlossary('caUnits')} label={tGlossary('title')} />}
             iconPosition="after"
           >
             {Object.keys(SiteCAUnit).map((scale) => (
               <MenuItem key={scale} value={scale}>
-                {tUnit(scale)}
+                {t(`caUnit.${scale}`)}
+              </MenuItem>
+            ))}
+          </FormSelect>
+          <FormSelect
+            className={styles.selector}
+            control={form.control}
+            translation={t}
+            name="studyUnit"
+            label={t('studyResultUnit.label')}
+          >
+            {Object.keys(StudyResultUnit).map((unit) => (
+              <MenuItem key={unit} value={unit}>
+                {t(`studyResultUnit.${unit}`)}
               </MenuItem>
             ))}
           </FormSelect>

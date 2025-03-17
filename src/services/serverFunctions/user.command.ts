@@ -1,4 +1,4 @@
-import { Role, SiteCAUnit } from '@prisma/client'
+import { Role, SiteCAUnit, StudyResultUnit } from '@prisma/client'
 import z from 'zod'
 
 export const AddMemberCommandValidation = z.object({
@@ -77,6 +77,7 @@ export type OnboardingCommand = z.infer<typeof OnboardingCommandValidation>
 export const EditSettingsCommandValidation = z.object({
   validatedEmissionSourcesOnly: z.boolean(),
   caUnit: z.nativeEnum(SiteCAUnit),
+  studyUnit: z.nativeEnum(StudyResultUnit),
 })
 
 export type EditSettingsCommand = z.infer<typeof EditSettingsCommandValidation>
