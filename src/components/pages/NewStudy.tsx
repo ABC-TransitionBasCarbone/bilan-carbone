@@ -41,6 +41,8 @@ const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit 
           ...site,
           ca: site.ca ? displayCA(site.ca, caUnit) : 0,
           selected: false,
+          postalCode: site.postalCode ?? '',
+          city: site.city ?? '',
         })) || [],
       exports: {
         [Export.Beges]: false,

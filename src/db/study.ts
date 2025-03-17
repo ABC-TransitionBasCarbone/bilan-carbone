@@ -106,6 +106,8 @@ const fullStudyInclude = {
         select: {
           id: true,
           name: true,
+          postalCode: true,
+          city: true,
         },
       },
     },

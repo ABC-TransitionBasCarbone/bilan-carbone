@@ -5,6 +5,8 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { OrganizationWithSites } from '@/db/user'
+import { ComponentKey } from '@/environments/core/utils/componentList'
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
   UpdateOrganizationCommand,
@@ -19,7 +21,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import Sites from '../Sites'
 
 interface Props {
   organization: OrganizationWithSites
@@ -42,7 +43,12 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
     defaultValues: {
       organizationId: organization.id,
       name: organization.name,
-      sites: organization.sites.map((site) => ({ ...site, ca: site.ca ? displayCA(site.ca, caUnit) : 0 })),
+      sites: organization.sites.map((site) => ({
+        ...site,
+        ca: site.ca ? displayCA(site.ca, caUnit) : 0,
+        postalCode: site.postalCode ?? '',
+        city: site.city ?? '',
+      })),
     },
   })
 
@@ -78,7 +84,7 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
         name="name"
         label={t('name')}
       />
-      <Sites form={form} sites={sites} />
+      <DynamicComponent componentPath={ComponentKey.Sites} sites={sites} form={form} />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}
       </LoadingButton>
