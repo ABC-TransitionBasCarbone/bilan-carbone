@@ -3,7 +3,8 @@
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
-import { formatNumber } from '@/utils/number'
+import { defaultStudyResultUnit, formatNumber, STUDY_UNIT_VALUES } from '@/utils/number'
+import { StudyResultUnit } from '@prisma/client'
 import Chart from 'chart.js/auto'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -27,21 +28,25 @@ const postXAxisList = [
 ]
 
 const Result = ({ studySite, computedResults }: Props) => {
-  const t = useTranslations('results')
   const tPost = useTranslations('emissionFactors.post')
+  const tUnits = useTranslations('settings.studyResultUnit')
   const [dynamicHeight, setDynamicHeight] = useState(0)
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const [validatedOnly, setValidatedOnly] = useState(true)
+  const [resultsUnit, setResultsUnit] = useState<StudyResultUnit>(defaultStudyResultUnit)
 
   useEffect(() => {
     applyUserSettings()
   }, [])
 
   const applyUserSettings = async () => {
-    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
-    if (validatedOnlySetting !== undefined) {
-      setValidatedOnly(validatedOnlySetting)
+    const userSettings = await getUserSettings()
+    if (userSettings?.validatedEmissionSourcesOnly !== undefined) {
+      setValidatedOnly(userSettings.validatedEmissionSourcesOnly)
+    }
+    if (userSettings?.studyUnit) {
+      setResultsUnit(userSettings.studyUnit)
     }
   }
 
@@ -66,7 +71,7 @@ const Result = ({ studySite, computedResults }: Props) => {
               {
                 data: yData,
                 backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary-40'),
-                label: t('unit'),
+                label: tUnits(resultsUnit),
               },
             ],
           },
@@ -74,7 +79,12 @@ const Result = ({ studySite, computedResults }: Props) => {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              tooltip: { callbacks: { label: (context) => `${formatNumber((context.raw as number) / 1000)} tCO₂e` } },
+              tooltip: {
+                callbacks: {
+                  label: (context) =>
+                    `${formatNumber((context.raw as number) / STUDY_UNIT_VALUES[resultsUnit])} ${tUnits(resultsUnit)}`,
+                },
+              },
               legend: { display: true },
             },
             scales: {
@@ -91,7 +101,7 @@ const Result = ({ studySite, computedResults }: Props) => {
         chartRef.current.destroy()
       }
     }
-  }, [xAxis, yData])
+  }, [xAxis, yData, resultsUnit])
 
   return (
     <div style={{ height: dynamicHeight }}>

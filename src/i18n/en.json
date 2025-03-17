@@ -80,7 +80,7 @@
     "other": "Other gases",
     "total": "Total",
     "uncertainty": "Uncertainty",
-    "ges": "GHG emissions (tCO₂e)"
+    "ges": "GHG emissions ({unit})"
   },
   "nav": {
     "backToHome": "Back to home",

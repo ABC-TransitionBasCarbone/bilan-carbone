@@ -1,7 +1,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { ExportRule } from '@prisma/client'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import AllResults from '../study/results/AllResults'
@@ -12,9 +13,10 @@ interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
 }
 
-const ResultsPage = ({ study, rules, emissionFactorsWithParts }: Props) => {
-  const tNav = useTranslations('nav')
-  const tStudyNav = useTranslations('study.navigation')
+const ResultsPage = async ({ study, rules, emissionFactorsWithParts }: Props) => {
+  const tNav = await getTranslations('nav')
+  const tStudyNav = await getTranslations('study.navigation')
+  const userSettings = await getUserSettings()
 
   return (
     <>
@@ -32,7 +34,12 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <Block title={tStudyNav('results')} as="h1">
-        <AllResults study={study} rules={rules} emissionFactorsWithParts={emissionFactorsWithParts} />
+        <AllResults
+          study={study}
+          rules={rules}
+          emissionFactorsWithParts={emissionFactorsWithParts}
+          unit={userSettings?.studyUnit}
+        />
       </Block>
     </>
   )

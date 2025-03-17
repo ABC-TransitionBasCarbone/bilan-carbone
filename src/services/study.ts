@@ -1,7 +1,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { Export, ExportRule, Level, SubPost } from '@prisma/client'
+import { defaultStudyResultUnit, STUDY_UNIT_VALUES } from '@/utils/number'
+import { Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
@@ -86,6 +87,7 @@ const getEmissionSourcesRows = (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResults: ReturnType<typeof useTranslations>,
+  unit: StudyResultUnit,
   type?: 'Post' | 'Study',
 ) => {
   const initCols = []
@@ -137,8 +139,9 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) / 1000 || '0',
-          tResults('unit'),
+          ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) /
+            STUDY_UNIT_VALUES[unit] || '0',
+          tResults(unit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
@@ -185,6 +188,7 @@ const getEmissionSourcesCSVContent = (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResults: ReturnType<typeof useTranslations>,
+  unit: StudyResultUnit,
   type?: 'Post' | 'Study',
 ) => {
   const { columns, rows } = getEmissionSourcesRows(
@@ -196,13 +200,14 @@ const getEmissionSourcesCSVContent = (
     tQuality,
     tUnit,
     tResults,
+    unit,
     type,
   )
 
   const emptyFieldsCount = type === 'Study' ? 3 : type === 'Post' ? 2 : 1
   const emptyFields = (count: number) => Array(count).fill('')
 
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources) / 1000
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources) / STUDY_UNIT_VALUES[unit]
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
   const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
@@ -213,8 +218,8 @@ const getEmissionSourcesCSVContent = (
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
-    uncertainty[0] / 1000,
-    uncertainty[1] / 1000,
+    uncertainty[0] / STUDY_UNIT_VALUES[unit],
+    uncertainty[1] / STUDY_UNIT_VALUES[unit],
   ].join(';')
 
   return [columns, ...rows, totalRow, qualityRow, uncertaintyRow].join('\n')
@@ -230,6 +235,7 @@ export const downloadStudyPost = async (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResults: ReturnType<typeof useTranslations>,
+  unit: StudyResultUnit,
 ) => {
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
@@ -247,6 +253,7 @@ export const downloadStudyPost = async (
     tQuality,
     tUnit,
     tResults,
+    unit,
     'Post',
   )
 
@@ -261,6 +268,7 @@ export const downloadStudyEmissionSources = async (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResults: ReturnType<typeof useTranslations>,
+  unit: StudyResultUnit,
 ) => {
   const emissionSources = study.emissionSources.sort((a, b) => a.subPost.localeCompare(b.subPost))
 
@@ -280,6 +288,7 @@ export const downloadStudyEmissionSources = async (
     tQuality,
     tUnit,
     tResults,
+    unit,
     'Study',
   )
 
@@ -289,10 +298,12 @@ export const downloadStudyEmissionSources = async (
 export const formatConsolidatedStudyResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
+  unit: StudyResultUnit,
   tStudy: ReturnType<typeof useTranslations>,
   tExport: ReturnType<typeof useTranslations>,
   tPost: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
+  tUnits: ReturnType<typeof useTranslations>,
   validatedEmissionSourcesOnly?: boolean,
 ) => {
   const dataForExport = []
@@ -301,13 +312,13 @@ export const formatConsolidatedStudyResultsForExport = (
     const resultList = computeResultsByPost(study, tPost, site.id, true, validatedEmissionSourcesOnly)
 
     dataForExport.push([site.name])
-    dataForExport.push([tStudy('post'), tStudy('uncertainty'), tStudy('value')])
+    dataForExport.push([tStudy('post'), tStudy('uncertainty'), tStudy('value', { unit: tUnits(unit) })])
 
     for (const result of resultList) {
       dataForExport.push([
         tPost(result.post) ?? '',
         result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
-        (result.value ?? 0) / 1000,
+        (result.value ?? 0) / STUDY_UNIT_VALUES[unit],
       ])
     }
 
@@ -326,9 +337,11 @@ export const formatBegesStudyResultsForExport = (
   rules: ExportRule[],
   emissionFactorsWithParts: EmissionFactorWithParts[],
   siteList: { name: string; id: string }[],
+  unit: StudyResultUnit,
   tExport: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tBeges: ReturnType<typeof useTranslations>,
+  tUnits: ReturnType<typeof useTranslations>,
   validatedEmissionSourcesOnly?: boolean,
 ) => {
   const lengthOfBeges = 33
@@ -371,7 +384,7 @@ export const formatBegesStudyResultsForExport = (
     )
 
     dataForExport.push([site.name])
-    dataForExport.push([tBeges('rule'), '', tBeges('ges')])
+    dataForExport.push([tBeges('rule'), '', tBeges('ges', { unit: tUnits(unit) })])
     dataForExport.push([
       tBeges('category.title'),
       tBeges('post.title'),
@@ -399,12 +412,12 @@ export const formatBegesStudyResultsForExport = (
       dataForExport.push([
         category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
         post,
-        result.co2 / 1000,
-        result.ch4 / 1000,
-        result.n2o / 1000,
-        result.other / 1000,
-        result.total / 1000,
-        result.co2b / 1000,
+        result.co2 / STUDY_UNIT_VALUES[unit],
+        result.ch4 / STUDY_UNIT_VALUES[unit],
+        result.n2o / STUDY_UNIT_VALUES[unit],
+        result.other / STUDY_UNIT_VALUES[unit],
+        result.total / STUDY_UNIT_VALUES[unit],
+        result.co2b / STUDY_UNIT_VALUES[unit],
         result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
       ])
     }
@@ -425,6 +438,7 @@ export const downloadStudyResults = async (
   tOrga: ReturnType<typeof useTranslations>,
   tQuality: ReturnType<typeof useTranslations>,
   tBeges: ReturnType<typeof useTranslations>,
+  tUnits: ReturnType<typeof useTranslations>,
 ) => {
   const data = []
 
@@ -433,17 +447,19 @@ export const downloadStudyResults = async (
     ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
   ]
 
-  const validatedEmissionSourcesOnly = (await getUserSettings())?.validatedEmissionSourcesOnly
+  const userSettings = await getUserSettings()
 
   data.push(
     formatConsolidatedStudyResultsForExport(
       study,
       siteList,
+      userSettings?.studyUnit || defaultStudyResultUnit,
       tStudy,
       tExport,
       tPost,
       tQuality,
-      validatedEmissionSourcesOnly,
+      tUnits,
+      userSettings?.validatedEmissionSourcesOnly,
     ),
   )
 
@@ -454,10 +470,12 @@ export const downloadStudyResults = async (
         rules,
         emissionFactorsWithParts,
         siteList,
+        userSettings?.studyUnit || defaultStudyResultUnit,
         tExport,
         tQuality,
         tBeges,
-        validatedEmissionSourcesOnly,
+        tUnits,
+        userSettings?.validatedEmissionSourcesOnly,
       ),
     )
   }

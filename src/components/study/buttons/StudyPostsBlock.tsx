@@ -4,6 +4,7 @@ import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
+import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
 import PostIcon from '../infography/icons/PostIcon'
@@ -15,9 +16,10 @@ interface Props {
   setDisplay: (display: boolean) => void
   children: ReactNode
   emissionSources: FullStudy['emissionSources']
+  unit: StudyResultUnit
 }
 
-const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources }: Props) => {
+const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources, unit }: Props) => {
   const [downloading, setDownloading] = useState(false)
   const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('study.export')
@@ -25,7 +27,7 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
   const tQuality = useTranslations('quality')
   const tStudyPost = useTranslations('study.post')
   const tUnit = useTranslations('units')
-  const tResults = useTranslations('results')
+  const tResults = useTranslations('settings.studyResultUnit')
 
   return (
     <Block
@@ -47,6 +49,7 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
               tQuality,
               tUnit,
               tResults,
+              unit,
             )
             setDownloading(false)
           },

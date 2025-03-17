@@ -5,8 +5,8 @@ import { FullStudy } from '@/db/study'
 import { BegesLine, computeBegesResult, rulesSpans } from '@/services/results/beges'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
-import { formatNumber } from '@/utils/number'
-import { ExportRule } from '@prisma/client'
+import { defaultStudyResultUnit, formatNumber, STUDY_UNIT_VALUES } from '@/utils/number'
+import { ExportRule, StudyResultUnit } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
@@ -21,17 +21,22 @@ interface Props {
 
 const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, withDependencies }: Props) => {
   const t = useTranslations('beges')
+  const tUnits = useTranslations('settings.studyResultUnit')
   const tQuality = useTranslations('quality')
   const [validatedOnly, setValidatedOnly] = useState(true)
+  const [resultsUnit, setResultsUnit] = useState<StudyResultUnit>(defaultStudyResultUnit)
 
   useEffect(() => {
     applyUserSettings()
   }, [])
 
   const applyUserSettings = async () => {
-    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
-    if (validatedOnlySetting !== undefined) {
-      setValidatedOnly(validatedOnlySetting)
+    const userSettings = await getUserSettings()
+    if (userSettings?.validatedEmissionSourcesOnly !== undefined) {
+      setValidatedOnly(userSettings.validatedEmissionSourcesOnly)
+    }
+    if (userSettings?.studyUnit) {
+      setResultsUnit(userSettings.studyUnit)
     }
   }
 
@@ -61,22 +66,38 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
           ],
         },
         {
-          header: t('ges'),
+          header: t('ges', { unit: tUnits(resultsUnit) }),
           columns: [
-            { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
-            { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
-            { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            {
+              header: 'CO2',
+              accessorKey: 'co2',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+            },
+            {
+              header: 'CH4',
+              accessorKey: 'ch4',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+            },
+            {
+              header: 'N20',
+              accessorKey: 'n2o',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+            },
             {
               header: t('other'),
               accessorKey: 'other',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / 1000),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
             },
             {
               header: t('total'),
               accessorKey: 'total',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / 1000),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
             },
-            { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            {
+              header: 'CO2b',
+              accessorKey: 'co2b',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+            },
             {
               header: t('uncertainty'),
               accessorFn: ({ uncertainty }) =>
@@ -85,7 +106,7 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
           ],
         },
       ] as ColumnDef<BegesLine>[],
-    [t, tQuality],
+    [resultsUnit],
   )
 
   const data = useMemo(
@@ -93,11 +114,7 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
     [study, rules, emissionFactorsWithParts, studySite, withDependencies, validatedOnly],
   )
 
-  const table = useReactTable({
-    columns,
-    data,
-    getCoreRowModel: getCoreRowModel(),
-  })
+  const table = useReactTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
   return (
     <>

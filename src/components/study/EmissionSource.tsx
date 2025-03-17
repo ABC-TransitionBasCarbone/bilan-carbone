@@ -9,13 +9,14 @@ import {
   UpdateEmissionSourceCommand,
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { formatNumber } from '@/utils/number'
+import { defaultStudyResultUnit, formatNumber, STUDY_UNIT_VALUES } from '@/utils/number'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormControlLabel, Switch } from '@mui/material'
-import { EmissionSourceCaracterisation, Level, StudyRole } from '@prisma/client'
+import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -58,8 +59,10 @@ const EmissionSource = ({
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tQuality = useTranslations('quality')
+  const tStudyUnits = useTranslations('settings.studyResultUnit')
   const router = useRouter()
   const [display, setDisplay] = useState(false)
+  const [resultsUnit, setResultsUnit] = useState<StudyResultUnit>(defaultStudyResultUnit)
 
   const detailId = `${emissionSource.id}-detail`
   const canEdit = !emissionSource.validated && userRoleOnStudy !== StudyRole.Reader
@@ -115,6 +118,17 @@ const EmissionSource = ({
       }
     }
   }, [display, ref])
+
+  useEffect(() => {
+    applyUserSettings()
+  }, [])
+
+  const applyUserSettings = async () => {
+    const userSettings = await getUserSettings()
+    if (userSettings?.studyUnit) {
+      setResultsUnit(userSettings.studyUnit)
+    }
+  }
 
   const selectedFactor = useMemo(() => {
     if (emissionSource.emissionFactor) {
@@ -185,7 +199,7 @@ const EmissionSource = ({
                   {selectedFactor.metaData?.title}
                   {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
                   {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-                  {getEmissionFactorValue(selectedFactor) / 1000} tCO₂e/
+                  {getEmissionFactorValue(selectedFactor) / STUDY_UNIT_VALUES[resultsUnit]} {tStudyUnits(resultsUnit)}/
                   {tUnits(selectedFactor.unit)}
                 </p>
                 {selectedFactorQualityRating && (
@@ -198,7 +212,7 @@ const EmissionSource = ({
           </div>
           {emissionResults && (
             <div className="flex-col">
-              <p data-testid="emission-source-value">{`${formatNumber(emissionResults.emission / 1000)} tCO₂e`}</p>
+              <p data-testid="emission-source-value">{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[resultsUnit])} ${tStudyUnits(resultsUnit)}`}</p>
               {emissionResults.standardDeviation && (
                 <p className={styles.status} data-testid="emission-source-quality">
                   {tQuality('name')}{' '}
@@ -266,7 +280,10 @@ const EmissionSource = ({
                 <div className={classNames(styles.row, 'flex')}>
                   <div>
                     <p>{t('results.emission')}</p>
-                    <p>{formatNumber(emissionResults.emission / 1000)} tCO₂e</p>
+                    <p>
+                      {formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[resultsUnit])}{' '}
+                      {tStudyUnits(resultsUnit)}
+                    </p>
                   </div>
                   {sourceRating && (
                     <div>

@@ -2,6 +2,7 @@ import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import withStudy, { StudyProps } from '@/components/hoc/withStudy'
 import NotFound from '@/components/pages/NotFound'
 import StudyPostsPage from '@/components/pages/StudyPosts'
+import { getUserApplicationSettings } from '@/db/user'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { getUserRoleOnStudy } from '@/utils/study'
@@ -29,7 +30,9 @@ const StudyPost = async (props: Props & StudyProps & UserProps) => {
     return <NotFound />
   }
 
-  return <StudyPostsPage post={post as Post} study={props.study} userRole={userRole} />
+  const unit = (await getUserApplicationSettings(props.user.id))?.studyUnit
+
+  return <StudyPostsPage post={post as Post} study={props.study} userRole={userRole} unit={unit} />
 }
 
 export default withAuth(withStudy(StudyPost))

@@ -80,7 +80,7 @@
     "other": "Autres gaz",
     "total": "Total",
     "uncertainty": "Incertitude",
-    "ges": "Émissions de GES (tCO₂e)"
+    "ges": "Émissions de GES ({unit})"
   },
   "nav": {
     "backToHome": "Retour a l'accueil",
@@ -420,7 +420,7 @@
     "results": {
       "type": "Type",
       "post": "Poste",
-      "value": "Émissions (tCO₂e)",
+      "value": "Émissions ({unit})",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",

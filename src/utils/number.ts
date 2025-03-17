@@ -1,4 +1,4 @@
-import { SiteCAUnit } from '@prisma/client'
+import { SiteCAUnit, StudyResultUnit } from '@prisma/client'
 import Big from 'big.js'
 
 export const formatNumber = (value: number, dec = 2) =>
@@ -13,3 +13,10 @@ export const CA_UNIT_VALUES: Record<SiteCAUnit, number> = {
 }
 
 export const defaultCAUnit = CA_UNIT_VALUES[SiteCAUnit.K]
+
+export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
+  K: 1,
+  T: 1000,
+}
+
+export const defaultStudyResultUnit = StudyResultUnit.T

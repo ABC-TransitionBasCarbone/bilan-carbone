@@ -33,6 +33,7 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props)
           studySite="all"
           showTitle
           validatedOnly={settings.validatedEmissionSourcesOnly}
+          unit={settings.studyUnit}
         />
       ) : null}
     </Block>

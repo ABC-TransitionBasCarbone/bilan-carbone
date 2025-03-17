@@ -4,7 +4,7 @@ import { FullStudy } from '@/db/study'
 import { downloadStudyResults } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { ControlMode, Export, ExportRule } from '@prisma/client'
+import { ControlMode, Export, ExportRule, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -19,15 +19,17 @@ interface Props {
   study: FullStudy
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
+  unit?: StudyResultUnit
 }
 
-const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
+const AllResults = ({ study, rules, emissionFactorsWithParts, unit }: Props) => {
   const t = useTranslations('study.results')
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
+  const tUnits = useTranslations('settings.studyResultUnit')
 
   const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
@@ -79,6 +81,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
               tOrga,
               tQuality,
               tBeges,
+              tUnits,
             )
           }
         >
@@ -90,7 +93,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
-          <ConsolidatedResults study={study} studySite={studySite} withDependencies={withDependencies} />
+          <ConsolidatedResults study={study} studySite={studySite} withDependencies={withDependencies} unit={unit} />
         )}
         {type === Export.Beges && (
           <BegesResultsTable

@@ -4,9 +4,10 @@ import { FullStudy } from '@/db/study'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
-import { formatNumber } from '@/utils/number'
+import { defaultStudyResultUnit, formatNumber, STUDY_UNIT_VALUES } from '@/utils/number'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { StudyResultUnit } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -23,16 +24,22 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies }: Props)
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
+
+  const tUnits = useTranslations('settings.studyResultUnit')
   const [validatedOnly, setValidatedOnly] = useState(true)
+  const [resultsUnit, setResultsUnit] = useState<StudyResultUnit>(defaultStudyResultUnit)
 
   useEffect(() => {
     applyUserSettings()
   }, [])
 
   const applyUserSettings = async () => {
-    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
-    if (validatedOnlySetting !== undefined) {
-      setValidatedOnly(validatedOnlySetting)
+    const userSettings = await getUserSettings()
+    if (userSettings?.validatedEmissionSourcesOnly !== undefined) {
+      setValidatedOnly(userSettings.validatedEmissionSourcesOnly)
+    }
+    if (userSettings?.studyUnit) {
+      setResultsUnit(userSettings.studyUnit)
     }
   }
 
@@ -68,9 +75,11 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies }: Props)
             uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
         },
         {
-          header: t('value'),
+          header: t('value', { unit: tUnits(resultsUnit) }),
           accessorKey: 'value',
-          cell: ({ getValue }) => <p className={styles.number}>{formatNumber(getValue<number>() / 1000)}</p>,
+          cell: ({ getValue }) => (
+            <p className={styles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit])}</p>
+          ),
         },
       ] as ColumnDef<ResultsByPost>[],
     [t, tPost, tQuality],

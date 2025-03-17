@@ -2,6 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { canDeleteStudy } from '@/services/permissions/study'
+import { getUserSettings } from '@/services/serverFunctions/user'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyDetails from '../study/StudyDetails'
@@ -12,7 +13,7 @@ interface Props {
 
 const StudyPage = async ({ study }: Props) => {
   const tNav = await getTranslations('nav')
-  const canDelete = await canDeleteStudy(study.id)
+  const [canDelete, userSettings] = await Promise.all([canDeleteStudy(study.id), getUserSettings()])
 
   return (
     <>
@@ -28,7 +29,7 @@ const StudyPage = async ({ study }: Props) => {
             : undefined,
         ].filter((link) => link !== undefined)}
       />
-      <StudyDetails study={study} canDeleteStudy={canDelete} />
+      <StudyDetails study={study} canDeleteStudy={canDelete} unit={userSettings?.studyUnit} />
     </>
   )
 }

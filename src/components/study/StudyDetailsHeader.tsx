@@ -11,6 +11,7 @@ import DownloadIcon from '@mui/icons-material/Download'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { StudyResultUnit } from '@prisma/client'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -27,8 +28,9 @@ interface Props {
   canDeleteStudy?: boolean
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
+  unit: StudyResultUnit
 }
-const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props) => {
+const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite, unit }: Props) => {
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState('')
   const format = useFormatter()
@@ -39,7 +41,7 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
   const tPost = useTranslations('emissionFactors.post')
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
-  const tResults = useTranslations('results')
+  const tResults = useTranslations('settings.studyResultUnit')
 
   const router = useRouter()
 
@@ -84,7 +86,16 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
         {
           actionType: 'button',
           onClick: () =>
-            downloadStudyEmissionSources(study, tStudyExport, tCaracterisations, tPost, tQuality, tUnit, tResults),
+            downloadStudyEmissionSources(
+              study,
+              tStudyExport,
+              tCaracterisations,
+              tPost,
+              tQuality,
+              tUnit,
+              tResults,
+              unit,
+            ),
           disabled: study.emissionSources.length === 0,
           children: (
             <>
