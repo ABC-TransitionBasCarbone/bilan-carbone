@@ -946,6 +946,16 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client"
+    },
+    "delete": {
+      "button": "Supprimer l'organisation",
+      "title": "Êtes-vous sûr de vouloir supprimer ce client ?",
+      "content": "Êtes vous sur de vouloir supprimer ce client ? <warning>Toutes ses données et études seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'organisation dans le champs ci-dessous",
+      "name": "Nom du client",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+      "wrongName": "Le nom du client ne correspond pas"
     }
   },
   "emissionSource": {

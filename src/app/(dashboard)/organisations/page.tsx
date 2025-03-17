@@ -8,7 +8,7 @@ const Organisation = async ({ user }: UserProps) => {
     return <NotFound />
   }
   const organizations = await getUserOrganizations(user.email)
-  return <OrganizationPage organizations={organizations} user={user} />
+  return <OrganizationPage organization={organizations[0]} user={user} />
 }
 
 export default withAuth(Organisation)

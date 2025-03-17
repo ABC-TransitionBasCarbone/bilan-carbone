@@ -1,23 +1,30 @@
+'use server'
+
 import { OrganizationWithSites } from '@/db/user'
+import { canDeleteOrganization, canUpdateOrganization } from '@/services/permissions/organization'
 import { User } from 'next-auth'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import OrganizationInfo from '../organization/Info'
 import StudiesContainer from '../study/StudiesContainer'
 
 interface Props {
-  organizations: OrganizationWithSites[]
+  organization: OrganizationWithSites
   user: User
 }
 
-const OrganizationPage = ({ organizations, user }: Props) => {
-  const tNav = useTranslations('nav')
+const OrganizationPage = async ({ organization, user }: Props) => {
+  const tNav = await getTranslations('nav')
+  const [canUpdate, canDelete] = await Promise.all([
+    canUpdateOrganization(user, { ...organization, organizationId: organization.id }),
+    canDeleteOrganization(organization.id),
+  ])
 
   return (
     <>
-      <Breadcrumbs current={organizations[0].name} links={[{ label: tNav('home'), link: '/' }]} />
-      <OrganizationInfo organization={organizations[0]} user={user} />
-      <StudiesContainer user={user} organizationId={organizations[0].id} />
+      <Breadcrumbs current={organization.name} links={[{ label: tNav('home'), link: '/' }]} />
+      <OrganizationInfo organization={organization} canUpdate={canUpdate} canDelete={canDelete} />
+      <StudiesContainer user={user} organizationId={organization.id} />
     </>
   )
 }

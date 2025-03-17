@@ -2,6 +2,7 @@ import { getOrganizationById } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
 import { canEditOrganization, isInOrgaOrParent } from '@/utils/onganization'
 import { User } from 'next-auth'
+import { auth } from '../auth'
 import { UpdateOrganizationCommand } from '../serverFunctions/organization.command'
 
 export const isInOrgaOrParentFromId = async (userOrganizationId: string | null, organizationId: string) => {
@@ -45,4 +46,12 @@ export const canUpdateOrganization = async (user: User, command: UpdateOrganizat
   }
 
   return true
+}
+
+export const canDeleteOrganization = async (organizationId: string) => {
+  const [session, targetOrganization] = await Promise.all([auth(), getOrganizationById(organizationId)])
+  if (!session || !session.user || !targetOrganization) {
+    return false
+  }
+  return targetOrganization.parentId === session.user.organizationId
 }
