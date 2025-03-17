@@ -10,7 +10,6 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface Props {
-  studySite: string
   computedResults: ResultsByPost[]
 }
 
@@ -27,13 +26,12 @@ const postXAxisList = [
   Post.FinDeVie,
 ]
 
-const Result = ({ studySite, computedResults }: Props) => {
+const Result = ({ computedResults }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('settings.studyResultUnit')
   const [dynamicHeight, setDynamicHeight] = useState(0)
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const [validatedOnly, setValidatedOnly] = useState(true)
   const [resultsUnit, setResultsUnit] = useState<StudyResultUnit>(defaultStudyResultUnit)
 
   useEffect(() => {
@@ -41,12 +39,9 @@ const Result = ({ studySite, computedResults }: Props) => {
   }, [])
 
   const applyUserSettings = async () => {
-    const userSettings = await getUserSettings()
-    if (userSettings?.validatedEmissionSourcesOnly !== undefined) {
-      setValidatedOnly(userSettings.validatedEmissionSourcesOnly)
-    }
-    if (userSettings?.studyUnit) {
-      setResultsUnit(userSettings.studyUnit)
+    const studyUnit = (await getUserSettings())?.studyUnit
+    if (studyUnit) {
+      setResultsUnit(studyUnit)
     }
   }
 
@@ -56,8 +51,12 @@ const Result = ({ studySite, computedResults }: Props) => {
     if (computedResults.every((post) => post.value === 0)) {
       return []
     }
-    return xAxis.map((post) => (computedResults.find((postResult) => postResult.post === post) as ResultsByPost).value)
-  }, [studySite, validatedOnly, computedResults])
+    return xAxis.map(
+      (post) =>
+        (computedResults.find((postResult) => postResult.post === post) as ResultsByPost).value /
+        STUDY_UNIT_VALUES[resultsUnit],
+    )
+  }, [computedResults, xAxis, resultsUnit])
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -81,8 +80,7 @@ const Result = ({ studySite, computedResults }: Props) => {
             plugins: {
               tooltip: {
                 callbacks: {
-                  label: (context) =>
-                    `${formatNumber((context.raw as number) / STUDY_UNIT_VALUES[resultsUnit])} ${tUnits(resultsUnit)}`,
+                  label: (context) => `${formatNumber(context.raw as number)} ${tUnits(resultsUnit)}`,
                 },
               },
               legend: { display: true },

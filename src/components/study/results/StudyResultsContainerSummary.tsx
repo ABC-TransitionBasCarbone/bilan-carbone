@@ -43,7 +43,7 @@ const StudyResultsContainerSummary = ({
 
   const allComputedResults = useMemo(
     () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
-    [studySite, validatedOnly],
+    [study, studySite, validatedOnly],
   )
 
   const computedResults = useMemo(
@@ -73,7 +73,7 @@ const StudyResultsContainerSummary = ({
         ?.subPosts.find((subPost) => subPost.post === dependenciesSubPost)?.value || 0
 
     return [total, total - dependenciesValue].map((value) => formatNumber(value / STUDY_UNIT_VALUES[unit]))
-  }, [studySite, validatedOnly, unit])
+  }, [study, studySite, validatedOnly, unit])
 
   return (
     <>
@@ -127,7 +127,7 @@ const StudyResultsContainerSummary = ({
           </label>
         </fieldset>
         <div className={styles.graph}>
-          <Result studySite={studySite} computedResults={computedResults} />
+          <Result computedResults={computedResults} />
         </div>
       </div>
       <GlossaryModal
