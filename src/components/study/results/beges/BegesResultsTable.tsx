@@ -71,32 +71,32 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
             {
               header: 'CO2',
               accessorKey: 'co2',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit], 0),
             },
             {
               header: 'CH4',
               accessorKey: 'ch4',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit], 0),
             },
             {
               header: 'N20',
               accessorKey: 'n2o',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit], 0),
             },
             {
               header: t('other'),
               accessorKey: 'other',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit], 0),
             },
             {
               header: t('total'),
               accessorKey: 'total',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit], 0),
             },
             {
               header: 'CO2b',
               accessorKey: 'co2b',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit]),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[resultsUnit], 0),
             },
             {
               header: t('uncertainty'),

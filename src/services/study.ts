@@ -1,7 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { defaultStudyResultUnit, STUDY_UNIT_VALUES } from '@/utils/number'
+import { defaultStudyResultUnit, formatNumber, STUDY_UNIT_VALUES } from '@/utils/number'
 import { Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -139,8 +139,11 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) /
-            STUDY_UNIT_VALUES[unit] || '0',
+          formatNumber(
+            ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) /
+              STUDY_UNIT_VALUES[unit],
+            0,
+          ) || '0',
           tResults(unit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
@@ -207,7 +210,7 @@ const getEmissionSourcesCSVContent = (
   const emptyFieldsCount = type === 'Study' ? 3 : type === 'Post' ? 2 : 1
   const emptyFields = (count: number) => Array(count).fill('')
 
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources) / STUDY_UNIT_VALUES[unit]
+  const totalEmissions = formatNumber(getEmissionSourcesTotalCo2(emissionSources) / STUDY_UNIT_VALUES[unit], 0)
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
   const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
@@ -318,7 +321,7 @@ export const formatConsolidatedStudyResultsForExport = (
       dataForExport.push([
         tPost(result.post) ?? '',
         result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
-        (result.value ?? 0) / STUDY_UNIT_VALUES[unit],
+        formatNumber((result.value ?? 0) / STUDY_UNIT_VALUES[unit], 0),
       ])
     }
 
@@ -412,12 +415,12 @@ export const formatBegesStudyResultsForExport = (
       dataForExport.push([
         category === 'total' ? '' : `${category}. ${tBeges(`category.${category}`)}`,
         post,
-        result.co2 / STUDY_UNIT_VALUES[unit],
-        result.ch4 / STUDY_UNIT_VALUES[unit],
-        result.n2o / STUDY_UNIT_VALUES[unit],
-        result.other / STUDY_UNIT_VALUES[unit],
-        result.total / STUDY_UNIT_VALUES[unit],
-        result.co2b / STUDY_UNIT_VALUES[unit],
+        formatNumber(result.co2 / STUDY_UNIT_VALUES[unit], 0),
+        formatNumber(result.ch4 / STUDY_UNIT_VALUES[unit], 0),
+        formatNumber(result.n2o / STUDY_UNIT_VALUES[unit], 0),
+        formatNumber(result.other / STUDY_UNIT_VALUES[unit], 0),
+        formatNumber(result.total / STUDY_UNIT_VALUES[unit], 0),
+        formatNumber(result.co2b / STUDY_UNIT_VALUES[unit], 0),
         result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
       ])
     }

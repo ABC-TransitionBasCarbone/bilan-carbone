@@ -72,7 +72,7 @@ const StudyResultsContainerSummary = ({
         .find((result) => result.post === dependenciesPost)
         ?.subPosts.find((subPost) => subPost.post === dependenciesSubPost)?.value || 0
 
-    return [total, total - dependenciesValue].map((value) => formatNumber(value / STUDY_UNIT_VALUES[unit]))
+    return [total, total - dependenciesValue].map((value) => formatNumber(value / STUDY_UNIT_VALUES[unit], 0))
   }, [study, studySite, validatedOnly, unit])
 
   return (

@@ -28,7 +28,7 @@ export const PostHeader = ({ post, mainPost, emissionValue, percent, color, unit
           <span>{t(post)}</span>
         </div>
         <span>
-          {formatNumber((emissionValue || 0) / STUDY_UNIT_VALUES[unit])} {tUnits(unit)}
+          {formatNumber((emissionValue || 0) / STUDY_UNIT_VALUES[unit], 0)} {tUnits(unit)}
         </span>
       </div>
     </div>
