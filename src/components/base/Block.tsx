@@ -25,6 +25,7 @@ export interface Props {
   ['data-testid']?: string
   description?: ReactNode
   actions?: Action[]
+  className?: string
 }
 
 const Block = ({
@@ -38,6 +39,7 @@ const Block = ({
   description,
   actions,
   expIcon,
+  className,
   ...rest
 }: Props) => {
   const Title = as === 'h1' ? 'h1' : 'h2'
@@ -54,7 +56,7 @@ const Block = ({
 
   return (
     <div className={classNames('main-container', styles.block)} {...rest}>
-      <div className={styles.content}>
+      <div className={classNames(styles.content, className)}>
         {actions ? (
           <div className={classNames(styles.header, 'align-center justify-between')}>
             {titleDiv}
