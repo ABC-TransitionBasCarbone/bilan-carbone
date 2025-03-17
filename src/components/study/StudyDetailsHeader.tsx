@@ -3,7 +3,7 @@
 import Form from '@/components/base/Form'
 import { FullStudy } from '@/db/study'
 import { deleteStudyCommand } from '@/services/serverFunctions/study'
-import { DeleteStudyCommand, DeleteStudyCommandValidation } from '@/services/serverFunctions/study.command'
+import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
 import { downloadStudyEmissionSources } from '@/services/study'
 import { handleWarningText } from '@/utils/components'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -43,8 +43,8 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
 
   const router = useRouter()
 
-  const form = useForm<DeleteStudyCommand>({
-    resolver: zodResolver(DeleteStudyCommandValidation),
+  const form = useForm<DeleteCommand>({
+    resolver: zodResolver(DeleteCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {

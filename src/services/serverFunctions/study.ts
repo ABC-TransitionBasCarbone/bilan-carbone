@@ -65,7 +65,7 @@ import {
   ChangeStudyPublicStatusCommand,
   ChangeStudySitesCommand,
   CreateStudyCommand,
-  DeleteStudyCommand,
+  DeleteCommand,
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
@@ -505,7 +505,7 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
   }
 }
 
-export const deleteStudyCommand = async ({ id, name }: DeleteStudyCommand) => {
+export const deleteStudyCommand = async ({ id, name }: DeleteCommand) => {
   if (!(await canDeleteStudy(id))) {
     return NOT_AUTHORIZED
   }
