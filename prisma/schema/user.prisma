@@ -42,11 +42,12 @@ model User {
 }
 
 model UserApplicationSettings {
-  id                           String     @id @default(uuid())
-  userId                       String     @unique @map("user_id")
-  user                         User?      @relation(fields: [userId], references: [id])
-  validatedEmissionSourcesOnly Boolean    @default(true) @map("validated_emission_sources_only")
-  caUnit                       SiteCAUnit @default(K) @map("ca_unit")
+  id                           String          @id @default(uuid())
+  userId                       String          @unique @map("user_id")
+  user                         User?           @relation(fields: [userId], references: [id])
+  validatedEmissionSourcesOnly Boolean         @default(true) @map("validated_emission_sources_only")
+  caUnit                       SiteCAUnit      @default(K) @map("ca_unit")
+  studyUnit                    StudyResultUnit @default(T) @map("study_unit")
 
   @@map("user_application_settings")
 }
