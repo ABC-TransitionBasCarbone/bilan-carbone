@@ -1,0 +1,17 @@
+{
+  "organization": {
+    "sites": {
+      "title": "Les cinemas de l'organisation concernés par l'étude",
+      "noSites": "Il n'y a pas de cinemas configurés sur l'organisation",
+      "name": "Nom",
+      "namePlaceholder": "Nom du cinema",
+      "etp": "Nombre d'Équivalents Temps Plein",
+      "etpPlaceholder": "Entrez votre nombre d'ETP pour ce cinema ici",
+      "ca": "Chiffre d'affaire ({unit})",
+      "caPlaceholder": "Entrez votre CA pour ce cinema en {unit} ici",
+      "actions": "Actions",
+      "delete": "Supprimer",
+      "add": "Ajouter un cinema"
+    }
+  }
+}
