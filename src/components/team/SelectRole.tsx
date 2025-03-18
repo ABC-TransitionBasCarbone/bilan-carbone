@@ -3,6 +3,7 @@
 import { canEditSelfRole } from '@/services/permissions/user'
 import { changeRole } from '@/services/serverFunctions/user'
 import { isUntrainedRole } from '@/utils/onganization'
+import { SEC, TIME_IN_MS } from '@/utils/time'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Level, Role } from '@prisma/client'
 import { useSession } from 'next-auth/react'
@@ -25,7 +26,7 @@ const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
   const t = useTranslations('role')
   const [role, setRole] = useState(currentRole)
-  const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
+  const [toast, setToast] = useState<{ text: string; color: ToastColors; duration?: number }>(emptyToast)
 
   const router = useRouter()
   const { update: updateSession } = useSession()
@@ -41,10 +42,13 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
       if (result) {
         setToast({ text: result, color: 'error' })
       } else {
+        const duration = 3 * SEC * TIME_IN_MS
         setRole(newRole)
-        updateSession()
-        setToast({ text: 'saved', color: 'success' })
-        router.refresh()
+        setToast({ text: 'saved', color: 'success', duration })
+        if (email === currentUserEmail) {
+          updateSession()
+          setTimeout(router.refresh, duration) // wait before refresh to display the toaster
+        }
       }
     }
   }
