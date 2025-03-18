@@ -88,6 +88,7 @@ export const createStudyCommand = async ({
   organizationId,
   validator,
   sites,
+  openingHoursHoliday,
   ...command
 }: CreateStudyCommand): Promise<{ message: string; success: false } | { id: string; success: true }> => {
   const session = await auth()
@@ -138,11 +139,16 @@ export const createStudyCommand = async ({
   const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
   const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
+  const mergedOpeningHours = [...(command.openingHours || []), ...(openingHoursHoliday || [])]
+
   const study = {
     ...command,
     createdBy: { connect: { id: session.user.id } },
     organization: { connect: { id: organizationId } },
     isPublic: command.isPublic === 'true',
+    openingHours: {
+      create: mergedOpeningHours,
+    },
     allowedUsers: {
       createMany: { data: rights },
     },

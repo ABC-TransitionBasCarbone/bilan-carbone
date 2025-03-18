@@ -1,6 +1,7 @@
 import { ControlMode, Export, Level, StudyRole, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
+import { OpeningHoursValidation } from '../hours'
 import { Post } from '../posts'
 
 export const SitesCommandValidation = z.object({
@@ -61,6 +62,12 @@ export const CreateStudyCommandValidation = z
         }, 'endDate'),
         level: z.nativeEnum(Level, { required_error: 'level' }),
         isPublic: z.string(),
+
+        numberOfSessions: z.number().optional(),
+        numberOfTickets: z.number().optional(),
+        numberOfOpenDays: z.number().optional(),
+        openingHours: z.array(OpeningHoursValidation).optional(),
+        openingHoursHoliday: z.array(OpeningHoursValidation).optional(),
       }),
       StudyExportsCommandValidation,
     ),

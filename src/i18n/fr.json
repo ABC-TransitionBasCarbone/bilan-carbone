@@ -256,6 +256,20 @@
       "isPublicTitle": "Visibilité de l'étude",
       "private": "Privée",
       "public": "Publique",
+      "numberOfSessions": "Nombre de séances",
+      "numberOfTickets": "Nombre d'entrées",
+      "numberOfOpenDays": "Nombre de jours d'ouverture",
+      "openingHours": "Horaires d'ouverture",
+      "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
+      "days": {
+        "Monday": "Lundi",
+        "Tuesday": "Mardi",
+        "Wednesday": "Mercredi",
+        "Thursday": "Jeudi",
+        "Friday": "Vendredi",
+        "Saturday": "Samedi",
+        "Sunday": "Dimanche"
+      },
       "create": "Créer l'étude",
       "glossary": {
         "title": "Glossaire",
