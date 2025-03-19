@@ -2,6 +2,7 @@
 
 import { Actuality } from '@prisma/client'
 import classNames from 'classnames'
+import DOMPurify from 'dompurify'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Box from '../base/Box'
@@ -33,7 +34,7 @@ const ActualityRow = ({ actuality }: Props) => {
             day: 'numeric',
           })}
         </p>
-        <p className={styles.text}>{displayText}</p>
+        <p className={styles.text} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(displayText) }} />
 
         {actuality.text.length > maxLength && (
           <div className="mt1">
