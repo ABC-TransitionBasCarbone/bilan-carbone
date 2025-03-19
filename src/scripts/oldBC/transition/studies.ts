@@ -132,7 +132,18 @@ export const uploadStudies = async (
     }
   })
 
-  console.log(studies)
+  const existingStudyIds = await transaction.study.findMany({
+    where: {
+      id: { in: studies.map((study) => study.id) },
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  const newStudies = studies.filter((study) => !existingStudyIds.find((existingStudy) => study.id !== existingStudy.id))
+
+  console.log(newStudies)
 
   return false
 }
