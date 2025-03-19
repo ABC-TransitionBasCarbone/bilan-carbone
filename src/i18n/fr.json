@@ -258,6 +258,7 @@
       "isPublicTitle": "Visibilité de l'étude",
       "private": "Privée",
       "public": "Publique",
+      "resultsUnit": "Unité des resultats de l'étude",
       "create": "Créer l'étude",
       "glossary": {
         "title": "Glossaire",
@@ -423,7 +424,11 @@
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
-      "comming": "à venir"
+      "comming": "à venir",
+      "units": {
+        "K": "kgCO₂e",
+        "T": "tCO₂e"
+      }
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",
