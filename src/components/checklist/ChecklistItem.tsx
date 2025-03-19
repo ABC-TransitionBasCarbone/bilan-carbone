@@ -8,7 +8,6 @@ import { CRUserChecklist, Organization } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import Button from '../base/Button'
 import LinkButton from '../base/LinkButton'
@@ -16,6 +15,7 @@ import styles from './Checklist.module.css'
 
 interface Props {
   step: CRUserChecklist
+  getCheckList: () => void
   validated: boolean
   disabled: boolean
   onClose: () => void
@@ -24,15 +24,23 @@ interface Props {
   studyId?: string
 }
 
-const ChecklistItem = ({ step, validated, disabled, onClose, organizationId, clients, studyId }: Props) => {
+const ChecklistItem = ({
+  step,
+  getCheckList,
+  validated,
+  disabled,
+  onClose,
+  organizationId,
+  clients,
+  studyId,
+}: Props) => {
   const t = useTranslations('checklist')
   const [expanded, setExpanded] = useState(false)
   const link = useMemo(() => getLink(step, studyId), [step, studyId])
-  const router = useRouter()
 
   const markAsDone = async () => {
     await addUserChecklistItem(step)
-    router.refresh()
+    getCheckList()
   }
 
   return (

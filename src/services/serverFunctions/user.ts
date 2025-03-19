@@ -294,7 +294,7 @@ export const updateUserSettings = async (command: EditSettingsCommand) => {
   await updateUserApplicationSettings(session.user.id, command)
 }
 
-export const getUserChecklist = async () => {
+export const getUserCheckedItems = async () => {
   const session = await auth()
   if (!session || !session.user) {
     return []
@@ -317,7 +317,7 @@ export const addUserChecklistItem = async (step: CRUserChecklist) => {
     update: {},
     create: { userId: session.user.id, step },
   })
-  const userChecklist = await getUserChecklist()
+  const userChecklist = await getUserCheckedItems()
   if (userChecklist.length === Object.values(checklist).length - 1) {
     setTimeout(
       async () => {

@@ -4,8 +4,7 @@ import Navbar from '@/components/navbar/Navbar'
 import OrganizationCard from '@/components/organizationCard/OrganizationCard'
 import { getAllowedStudyIdByUser } from '@/db/study'
 import { getUserOrganizations } from '@/db/user'
-import { getUserChecklist } from '@/services/serverFunctions/user'
-import { CRUserChecklist, Organization } from '@prisma/client'
+import { Organization } from '@prisma/client'
 import classNames from 'classnames'
 import styles from './layout.module.css'
 
@@ -14,14 +13,8 @@ interface Props {
 }
 
 const NavLayout = async ({ children, user }: Props & UserProps) => {
-  const [organizations, userChecklist, studyId] = await Promise.all([
-    getUserOrganizations(user.email),
-    getUserChecklist(),
-    getAllowedStudyIdByUser(user),
-  ])
+  const [organizations, studyId] = await Promise.all([getUserOrganizations(user.email), getAllowedStudyIdByUser(user)])
   const userOrganization = organizations.find((organization) => organization.id === user.organizationId) as Organization
-
-  const hasCompleteChecklist = userChecklist.some((item) => item.step === CRUserChecklist.Completed)
 
   return (
     <div className="flex-col h100">
@@ -30,14 +23,7 @@ const NavLayout = async ({ children, user }: Props & UserProps) => {
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: user.organizationId })}>
         {children}
       </main>
-      {!hasCompleteChecklist && (
-        <ChecklistButton
-          userChecklist={userChecklist}
-          userOrganization={userOrganization}
-          organizations={organizations}
-          studyId={studyId}
-        />
-      )}
+      <ChecklistButton userOrganization={userOrganization} organizations={organizations} studyId={studyId} />
     </div>
   )
 }

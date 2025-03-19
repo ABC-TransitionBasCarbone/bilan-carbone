@@ -21,7 +21,7 @@ enum CRUserChecklist {
   CreateFirstStudy
   CreateFirstEmissionSource
   ConsultResults
-	Completed
+  Completed
 }
 
 model User {

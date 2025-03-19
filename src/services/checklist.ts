@@ -1,6 +1,6 @@
 import { CRUserChecklist } from '@prisma/client'
 
-export const mandatorySteps = (step: CRUserChecklist) => {
+export const mandatoryParentSteps = (step: CRUserChecklist) => {
   switch (step) {
     case CRUserChecklist.AddSite:
       return [CRUserChecklist.AddClient]

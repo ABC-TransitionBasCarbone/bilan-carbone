@@ -1,9 +1,9 @@
 'use client'
 
-import { getUserChecklist } from '@/services/serverFunctions/user'
+import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Drawer, IconButton } from '@mui/material'
-import { CRUserChecklist, Organization, UserCheckedStep } from '@prisma/client'
+import { CRUserChecklist, Organization } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -11,28 +11,23 @@ import styles from './Checklist.module.css'
 import ChecklistDrawer from './ChecklistDrawer'
 
 interface Props {
-  userChecklist: UserCheckedStep[]
   userOrganization: Organization
   organizations: Organization[]
   studyId?: string
 }
 
-const ChecklistButton = ({ userOrganization, organizations, studyId, userChecklist }: Props) => {
+const ChecklistButton = ({ userOrganization, organizations, studyId }: Props) => {
   const t = useTranslations('checklist')
   const [open, setOpen] = useState(false)
   const [completed, setCompleted] = useState(false)
-  const [checklist, setChecklist] = useState<CRUserChecklist[]>(userChecklist.map((item) => item.step))
+  const [checklist, setChecklist] = useState<CRUserChecklist[]>([])
 
   useEffect(() => {
     getCheckList()
   }, [open])
 
-  useEffect(() => {
-    setChecklist(userChecklist.map((item) => item.step))
-  }, [userChecklist])
-
   const getCheckList = async () => {
-    const checkList = await getUserChecklist()
+    const checkList = await getUserCheckedItems()
     if (checkList.some((item) => item.step === CRUserChecklist.Completed)) {
       setCompleted(true)
     } else {
@@ -63,8 +58,8 @@ const ChecklistButton = ({ userOrganization, organizations, studyId, userCheckli
         variant="persistent"
       >
         <ChecklistDrawer
-          open={open}
           setOpen={setOpen}
+          getCheckList={getCheckList}
           userChecklist={checklist}
           userOrganization={userOrganization}
           organizations={organizations}

@@ -1,4 +1,4 @@
-import { mandatorySteps } from '@/services/checklist'
+import { mandatoryParentSteps } from '@/services/checklist'
 import { CRUserChecklist, Organization } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -10,21 +10,21 @@ import ChecklistItem from './ChecklistItem'
 const FAQLink = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
 interface Props {
-  open: boolean
   setOpen: (open: boolean) => void
+  getCheckList: () => void
   userChecklist: CRUserChecklist[]
   userOrganization: Organization
   organizations: Organization[]
   studyId?: string
 }
 
-const ChecklistDrawer = ({ setOpen, userOrganization, organizations, userChecklist, studyId }: Props) => {
+const ChecklistDrawer = ({ setOpen, getCheckList, userOrganization, organizations, userChecklist, studyId }: Props) => {
   const t = useTranslations('checklist')
   const steps = useMemo(() => (userOrganization.isCR ? CRUserChecklist : CRUserChecklist), [userOrganization])
   const finished = useMemo(() => userChecklist.length === Object.values(steps).length - 1, [userChecklist, steps])
   const isValidated = (step: CRUserChecklist) => userChecklist.some((checkedStep) => checkedStep === step)
   const isDisabled = (step: CRUserChecklist) =>
-    mandatorySteps(step).some((mandatoryStep) => !userChecklist.includes(mandatoryStep))
+    mandatoryParentSteps(step).some((mandatoryStep) => !userChecklist.includes(mandatoryStep))
   return (
     <div>
       <Stepper
@@ -41,6 +41,7 @@ const ChecklistDrawer = ({ setOpen, userOrganization, organizations, userCheckli
             <ChecklistItem
               key={step}
               step={step}
+              getCheckList={getCheckList}
               validated={isValidated(step)}
               disabled={isValidated(step) || isDisabled(step)}
               onClose={() => setOpen(false)}

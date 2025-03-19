@@ -189,7 +189,10 @@ export const getAllowedStudyIdByUser = async (user: User) => {
         ...(isAllowedOnPublicStudies
           ? [
               {
-                AND: [{ organizationId: { in: organizationIds } }, ...(isAdmin(user.role) ? [] : [{ isPublic: true }])],
+                AND: [
+                  { organizationId: { in: organizationIds } },
+                  ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
+                ],
               },
             ]
           : []),

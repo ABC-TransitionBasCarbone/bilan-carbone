@@ -1,13 +1,18 @@
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
+import { isAdmin } from '@/services/permissions/user'
 import { Post } from '@/services/posts'
 import { checkLevel } from '@/services/study'
 import { Level, Organization, Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { isInOrgaOrParent } from './onganization'
 
-export const getUserRoleOnPublicStudy = (user: User, studyLevel: Level) =>
-  user.role === Role.COLLABORATOR && checkLevel(user.level, studyLevel) ? StudyRole.Editor : StudyRole.Reader
+export const getUserRoleOnPublicStudy = (user: User, studyLevel: Level) => {
+  if (isAdmin(user.role)) {
+    return StudyRole.Validator
+  }
+  return user.role === Role.COLLABORATOR && checkLevel(user.level, studyLevel) ? StudyRole.Editor : StudyRole.Reader
+}
 
 export const getUserRoleOnStudy = (
   user: User,
