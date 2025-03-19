@@ -8,9 +8,10 @@ import { EmissionSourcesStatus } from '@/services/study'
 import { getQualityRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
+import { EmissionSourceCaracterisation, EmissionSourceType, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -40,6 +41,7 @@ interface Props {
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
+  resultsUnit: StudyResultUnit
 }
 
 const EmissionSourceForm = ({
@@ -53,12 +55,13 @@ const EmissionSourceForm = ({
   caracterisations,
   mandatoryCaracterisation,
   status,
+  resultsUnit,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tCategorisations = useTranslations('categorisations')
   const tGlossary = useTranslations('emissionSource.glossary')
-  const tResults = useTranslations('results')
+  const tResultUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
   const [glossary, setGlossary] = useState('')
   const [error, setError] = useState('')
@@ -217,8 +220,8 @@ const EmissionSourceForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatNumber(getEmissionFactorValue(selectedFactor) / 1000, 5)} {tResults('unit')}/
-            {tUnits(selectedFactor.unit)}{' '}
+            {formatNumber(getEmissionFactorValue(selectedFactor) / STUDY_UNIT_VALUES[resultsUnit], 5)}{' '}
+            {tResultUnits(resultsUnit)}/{tUnits(selectedFactor.unit)}{' '}
             {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
           </p>
           {selectedFactor.metaData && (

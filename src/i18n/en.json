@@ -80,7 +80,7 @@
     "other": "Other gases",
     "total": "Total",
     "uncertainty": "Uncertainty",
-    "ges": "GHG emissions (tCO₂e)"
+    "ges": "GHG emissions ({unit})"
   },
   "nav": {
     "backToHome": "Back to home",
@@ -173,9 +173,6 @@
     "settings": "Settings",
     "team": "My team",
     "information": "Global informations"
-  },
-  "results": {
-    "unit": "tCO₂e"
   },
   "profile": {
     "title": "My profile",
@@ -420,7 +417,7 @@
     "results": {
       "type": "Type",
       "post": "Post",
-      "value": "Emissions (tCO₂e)",
+      "value": "Emissions ({unit})",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",

@@ -28,6 +28,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
+  const tUnits = useTranslations('study.results.units')
 
   const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
@@ -79,6 +80,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
               tOrga,
               tQuality,
               tBeges,
+              tUnits,
             )
           }
         >

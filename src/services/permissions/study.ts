@@ -202,6 +202,7 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
     id: study.id,
     name: study.name,
     sites: study.sites,
+    resultsUnit: study.resultsUnit,
     emissionSources: study.emissionSources
       .filter((emissionSource) => availableSubPosts.includes(emissionSource.subPost))
       .map((emissionSource) => ({
