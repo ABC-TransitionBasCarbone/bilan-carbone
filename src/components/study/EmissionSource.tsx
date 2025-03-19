@@ -13,6 +13,7 @@ import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study
 import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
@@ -59,8 +60,8 @@ const EmissionSource = ({
   const [error, setError] = useState('')
   const tError = useTranslations('error')
   const t = useTranslations('emissionSource')
-  const tResults = useTranslations('results')
   const tUnits = useTranslations('units')
+  const tResultstUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
   const router = useRouter()
   const [display, setDisplay] = useState(false)
@@ -178,8 +179,8 @@ const EmissionSource = ({
               <div className="flex-col justify-center text-center">
                 <p>{t('emissionFactor')}</p>
                 <p>
-                  {formatNumber(getEmissionFactorValue(selectedFactor) / 1000, 5)} {tResults('unit')}/
-                  {tUnits(selectedFactor.unit)}
+                  {formatNumber(getEmissionFactorValue(selectedFactor) / STUDY_UNIT_VALUES[study.resultsUnit], 5)} $
+                  {tResultstUnits(study.resultsUnit)}/{tUnits(selectedFactor.unit)}
                 </p>
               </div>
             )}
@@ -189,7 +190,7 @@ const EmissionSource = ({
                 <p
                   className={styles.result}
                   data-testid="emission-source-value"
-                >{`${formatNumber(emissionResults.emission / 1000)} ${tResults('unit')}`}</p>
+                >{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} $${tResultstUnits(study.resultsUnit)}`}</p>
                 {emissionResults.standardDeviation && (
                   <p className={styles.status} data-testid="emission-source-quality">
                     {tQuality('name')}{' '}
@@ -245,6 +246,7 @@ const EmissionSource = ({
                 selectedFactor={selectedFactor}
                 emissionFactors={emissionFactors}
                 update={update}
+                resultsUnit={study.resultsUnit}
               />
             ) : (
               <EmissionSourceForm
@@ -254,6 +256,7 @@ const EmissionSource = ({
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
                 emissionFactors={emissionFactors}
+                resultsUnit={study.resultsUnit}
                 update={update}
                 caracterisations={caracterisations}
                 mandatoryCaracterisation={study.exports.length > 0}
@@ -267,7 +270,8 @@ const EmissionSource = ({
                   <div>
                     <p>{t('results.emission')}</p>
                     <p>
-                      {formatNumber(emissionResults.emission / 1000)} {tResults('unit')}
+                      {formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])}{' '}
+                      {tResultstUnits(study.resultsUnit)}
                     </p>
                   </div>
                   {sourceRating && (

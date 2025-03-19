@@ -4,6 +4,8 @@ import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { formatNumber } from '@/utils/number'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { StudyResultUnit } from '@prisma/client'
 import Chart from 'chart.js/auto'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -11,6 +13,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 interface Props {
   studySite: string
   computedResults: ResultsByPost[]
+  resultsUnit: StudyResultUnit
 }
 
 const postXAxisList = [
@@ -26,10 +29,9 @@ const postXAxisList = [
   Post.FinDeVie,
 ]
 
-const Result = ({ studySite, computedResults }: Props) => {
-  const t = useTranslations('results')
+const Result = ({ studySite, computedResults, resultsUnit }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
-  const tResults = useTranslations('results')
+  const tUnits = useTranslations('study.results.units')
   const [dynamicHeight, setDynamicHeight] = useState(0)
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -52,7 +54,11 @@ const Result = ({ studySite, computedResults }: Props) => {
     if (computedResults.every((post) => post.value === 0)) {
       return []
     }
-    return xAxis.map((post) => (computedResults.find((postResult) => postResult.post === post) as ResultsByPost).value)
+    return xAxis.map(
+      (post) =>
+        (computedResults.find((postResult) => postResult.post === post) as ResultsByPost).value /
+        STUDY_UNIT_VALUES[resultsUnit],
+    )
   }, [studySite, validatedOnly, computedResults])
 
   useEffect(() => {
@@ -67,7 +73,7 @@ const Result = ({ studySite, computedResults }: Props) => {
               {
                 data: yData,
                 backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary-40'),
-                label: t('unit'),
+                label: tUnits(resultsUnit),
               },
             ],
           },
@@ -77,7 +83,8 @@ const Result = ({ studySite, computedResults }: Props) => {
             plugins: {
               tooltip: {
                 callbacks: {
-                  label: (context) => `${formatNumber((context.raw as number) / 1000)} ${tResults('unit')}`,
+                  label: (context) =>
+                    `${formatNumber((context.raw as number) / STUDY_UNIT_VALUES[resultsUnit])} ${tUnits(resultsUnit)}`,
                 },
               },
               legend: { display: true },

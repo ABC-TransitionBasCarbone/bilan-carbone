@@ -5,6 +5,7 @@ import { computeResultsByPost, ResultsByPost } from '@/services/results/consolid
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
@@ -23,6 +24,7 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies }: Props)
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
+  const tUnits = useTranslations('study.results.units')
   const [validatedOnly, setValidatedOnly] = useState(true)
 
   useEffect(() => {
@@ -68,9 +70,11 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies }: Props)
             uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
         },
         {
-          header: t('value'),
+          header: t('value', { unit: tUnits(study.resultsUnit) }),
           accessorKey: 'value',
-          cell: ({ getValue }) => <p className={styles.number}>{formatNumber(getValue<number>() / 1000)}</p>,
+          cell: ({ getValue }) => (
+            <p className={styles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit])}</p>
+          ),
         },
       ] as ColumnDef<ResultsByPost>[],
     [t, tPost, tQuality],

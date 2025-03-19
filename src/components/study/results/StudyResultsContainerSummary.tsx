@@ -9,6 +9,7 @@ import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -29,7 +30,7 @@ interface Props {
 const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
-  const tResults = useTranslations('results')
+  const tResultUnits = useTranslations('study.results.units')
   const [glossaryOpen, setGlossaryOpen] = useState(false)
   const [withDep, setWithDependencies] = useState(!!withDependencies)
 
@@ -64,8 +65,8 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
         .find((result) => result.post === dependenciesPost)
         ?.subPosts.find((subPost) => subPost.post === dependenciesSubPost)?.value || 0
 
-    return [total, total - dependenciesValue].map((value) => formatNumber(value / 1000))
-  }, [studySite, validatedOnly])
+    return [total, total - dependenciesValue].map((value) => formatNumber(value / STUDY_UNIT_VALUES[study.resultsUnit]))
+  }, [study, studySite, validatedOnly])
 
   return (
     <>
@@ -92,8 +93,8 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               className={styles.hidden}
             />
             <Box className={classNames(styles.card, 'flex-col flex-cc m2 px3', { [styles.selected]: withDep })}>
-              <h3>
-                {withDepValue} {tResults('unit')}
+              <h3 className="text-center">
+                {withDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="align-center text-center">
                 {t('results.withDependencies')}
@@ -111,15 +112,15 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               className={styles.hidden}
             />
             <Box className={classNames(styles.card, 'flex-col flex-cc m2 px3', { [styles.selected]: !withDep })}>
-              <h3>
-                {withoutDepValue} {tResults('unit')}
+              <h3 className="text-center">
+                {withoutDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="text-center">{t('results.withoutDependencies')}</span>
             </Box>
           </label>
         </fieldset>
         <div className={styles.graph}>
-          <Result studySite={studySite} computedResults={computedResults} />
+          <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
         </div>
       </div>
       <GlossaryModal
