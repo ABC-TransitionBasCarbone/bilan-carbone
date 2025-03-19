@@ -467,7 +467,7 @@
       "cancel": "Annuler",
       "confirm": "Confirmer",
       "delete": "Supprimer l'étude",
-      "content": "Êtes vous sur de vouloir supprimer cette étude ? <warning>Toutes ses données seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
+      "content": "Êtes vous sur de vouloir supprimer cette étude ? <warning>Toutes ses données seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous :",
       "name": "Nom de l'étude",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "title": "Suppression d'une étude",
@@ -950,12 +950,13 @@
     "delete": {
       "button": "Supprimer l'organisation",
       "title": "Êtes-vous sûr de vouloir supprimer ce client ?",
-      "content": "Êtes vous sur de vouloir supprimer ce client ? <warning>Toutes ses données et études seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'organisation dans le champs ci-dessous",
+      "content": "Êtes vous sur de vouloir supprimer ce client ? <warning>Toutes ses données et études seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'organisation dans le champs ci-dessous:",
       "name": "Nom du client",
       "cancel": "Annuler",
       "confirm": "Confirmer",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
-      "wrongName": "Le nom du client ne correspond pas"
+      "wrongName": "Le nom du client ne correspond pas",
+      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le <support>support</support>."
     }
   },
   "emissionSource": {

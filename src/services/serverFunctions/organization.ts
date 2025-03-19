@@ -2,7 +2,7 @@
 
 import {
   createOrganization,
-  deleteOrganization,
+  deleteClient,
   getOrganizationNameById,
   getRawOrganizationById,
   onboardOrganization,
@@ -70,7 +70,7 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     return NOT_AUTHORIZED
   }
 
-  if (!(await canUpdateOrganization(session.user, command))) {
+  if (!(await canUpdateOrganization(session.user, command.organizationId))) {
     return NOT_AUTHORIZED
   }
 
@@ -92,7 +92,8 @@ export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) => 
   if (organization.name.toLowerCase() !== name.toLowerCase()) {
     return 'wrongName'
   }
-  await deleteOrganization(id)
+
+  return deleteClient(id)
 }
 
 export const setOnboardedOrganization = async (organizationId: string) => {

@@ -110,15 +110,19 @@ export const onboardOrganization = async (
   allCollaborators.forEach((collab) => sendNewUser(collab.email, dbUser, collab.firstName ?? ''))
 }
 
-export const deleteOrganization = async (id: string) => {
+export const deleteClient = async (id: string) => {
+  const [clientUsers, clientChildren, clientEmissionFactors] = await Promise.all([
+    prismaClient.user.findFirst({ where: { organizationId: id } }),
+    prismaClient.organization.findFirst({ where: { parentId: id } }),
+    prismaClient.emissionFactor.findFirst({ where: { organizationId: id } }),
+  ])
+  if (clientUsers || clientChildren || clientEmissionFactors) {
+    return 'unexpectedAssociations'
+  }
   return prismaClient.$transaction(async (transaction) => {
     const studies = await transaction.study.findMany({ where: { organizationId: id } })
     await Promise.all(studies.map((study) => deleteStudy(study.id)))
-    await Promise.all([
-      transaction.site.deleteMany({ where: { organizationId: id } }),
-      transaction.user.deleteMany({ where: { organizationId: id } }),
-      transaction.emissionFactor.deleteMany({ where: { organizationId: id } }),
-    ])
+    await transaction.site.deleteMany({ where: { organizationId: id } })
     await transaction.organization.delete({ where: { id } })
   })
 }

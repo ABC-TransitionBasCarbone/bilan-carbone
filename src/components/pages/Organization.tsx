@@ -16,7 +16,7 @@ interface Props {
 const OrganizationPage = async ({ organization, user }: Props) => {
   const tNav = await getTranslations('nav')
   const [canUpdate, canDelete] = await Promise.all([
-    canUpdateOrganization(user, { ...organization, organizationId: organization.id }),
+    canUpdateOrganization(user, organization.id),
     canDeleteOrganization(organization.id),
   ])
 

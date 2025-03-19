@@ -467,7 +467,7 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "delete": "Delete the study",
-      "content": "Are you sure you want to delete this study ? <warning>All its data will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the study name in the field right below.",
+      "content": "Are you sure you want to delete this study ? <warning>All its data will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the study name in the field right below:",
       "name": "Study name",
       "Not authorized": "You are not allowed to do this action",
       "title": "Study deletion",
@@ -950,12 +950,13 @@
     "delete": {
       "button": "Delete organization",
       "title": "Are you sure you want to delete this client ?",
-      "content": "Are you sure you want to delete this client ? <warning>All its data and studies will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the organization name in the field right below.",
+      "content": "Are you sure you want to delete this client ? <warning>All its data and studies will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the organization name in the field right below:",
       "name": "Organisation's name",
       "cancel": "Cancel",
       "confirm": "Confirm",
       "Not authorized": "You are not allowed to do this action",
-      "wrongName": "client's name does not match"
+      "wrongName": "Client's name does not match",
+      "unexpectedAssociations": "An unexpected event occurred when deleting this client. Please contact <support>support</support>."
     }
   },
   "emissionSource": {

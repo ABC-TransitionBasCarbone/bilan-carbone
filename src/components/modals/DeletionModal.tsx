@@ -2,6 +2,7 @@ import { DeleteCommand } from '@/services/serverFunctions/study.command'
 import { handleWarningText } from '@/utils/components'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { Control, UseFormReturn, useWatch } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
@@ -17,6 +18,8 @@ interface Props<T extends DeleteCommand> {
   t: ReturnType<typeof useTranslations>
   error?: string
 }
+
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 
 const DeletionModal = <T extends DeleteCommand>({ form, type, onDelete, onClose, t, error }: Props<T>) => {
   const control = form.control as Control<DeleteCommand>
@@ -39,7 +42,13 @@ const DeletionModal = <T extends DeleteCommand>({ form, type, onDelete, onClose,
           </div>
           {error && (
             <p data-testid={`${type}-deletion-error`} className={styles.error}>
-              {t(error)}
+              {t.rich(error, {
+                support: (children) => (
+                  <Link className={styles.error} href={`mailto:${contactMail}`}>
+                    {children}
+                  </Link>
+                ),
+              })}
             </p>
           )}
         </DialogContent>

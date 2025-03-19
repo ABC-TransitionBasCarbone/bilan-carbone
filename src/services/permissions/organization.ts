@@ -3,7 +3,6 @@ import { getUserByEmail } from '@/db/user'
 import { canEditOrganization, isInOrgaOrParent } from '@/utils/onganization'
 import { User } from 'next-auth'
 import { auth } from '../auth'
-import { UpdateOrganizationCommand } from '../serverFunctions/organization.command'
 
 export const isInOrgaOrParentFromId = async (userOrganizationId: string | null, organizationId: string) => {
   if (userOrganizationId === organizationId) {
@@ -29,14 +28,14 @@ export const canCreateOrganization = async (user: User) => {
   return true
 }
 
-export const canUpdateOrganization = async (user: User, command: UpdateOrganizationCommand) => {
+export const canUpdateOrganization = async (user: User, organizationId: string) => {
   const dbUser = await getUserByEmail(user.email)
 
   if (!dbUser) {
     return false
   }
 
-  if (!isInOrgaOrParentFromId(user.organizationId, command.organizationId)) {
+  if (!isInOrgaOrParentFromId(user.organizationId, organizationId)) {
     return false
   }
 
