@@ -1,8 +1,9 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 
-import Block, { Action } from '@/components/base/Block'
+import Block from '@/components/base/Block'
+import Button from '@/components/base/Button'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
@@ -30,23 +31,6 @@ const StudyParams = ({ user, study, disabled }: Props) => {
 
   const [editTitle, setEditTitle] = useState(false)
   const [error, setError] = useState('')
-
-  const actions: Action[] = useMemo(
-    () =>
-      disabled
-        ? []
-        : [
-            {
-              actionType: 'button',
-              className: styles.iconButton,
-              'aria-label': t('edit'),
-              title: t('edit'),
-              children: <EditIcon />,
-              onClick: () => setEditTitle(true),
-            },
-          ],
-    [disabled, t],
-  )
 
   const form = useForm<ChangeStudyNameCommand>({
     resolver: zodResolver(ChangeStudyNameValidation),
@@ -85,7 +69,23 @@ const StudyParams = ({ user, study, disabled }: Props) => {
 
   return (
     <>
-      <Block title={t('title', { name: study.name })} as="h1" actions={actions} className={styles.blockStudyParams}>
+      <Block
+        title={t('title', { name: study.name })}
+        as="h1"
+        icon={
+          disabled ? (
+            <></>
+          ) : (
+            <div className="ml1">
+              <Button aria-label={t('edit')} title={t('edit')} onClick={() => setEditTitle(true)}>
+                <EditIcon />
+              </Button>
+            </div>
+          )
+        }
+        iconPosition="after"
+        className={styles.blockStudyParams}
+      >
         <div className="flex pb2">
           <StudyLevel study={study} user={user} disabled={disabled} />
           <StudyResultsUnit study={study} disabled={disabled} />
