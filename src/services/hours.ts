@@ -2,8 +2,9 @@ import { DayOfWeek } from '@prisma/client'
 import { z } from 'zod'
 
 export const OpeningHoursValidation = z.object({
-  day: z.nativeEnum(DayOfWeek, { required_error: 'day' }),
+  id: z.string().optional(),
+  day: z.nativeEnum(DayOfWeek),
   isHoliday: z.boolean().default(false),
-  openHour: z.string().optional(),
-  closeHour: z.string().optional(),
+  openHour: z.string().optional().nullable(),
+  closeHour: z.string().optional().nullable(),
 })

@@ -268,7 +268,10 @@
         "Thursday": "Jeudi",
         "Friday": "Vendredi",
         "Saturday": "Samedi",
-        "Sunday": "Dimanche"
+        "Sunday": "Dimanche",
+        "from": "de",
+        "to": "à",
+        "DifferentHoursHoliday": "Horaires différents pendant les vacances scolaires"
       },
       "create": "Créer l'étude",
       "glossary": {
@@ -407,6 +410,11 @@
           "no": "Non",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
         }
+      },
+      "hours": {
+        "cancelEditOpeningHours": "Annuler la modification",
+        "editOpeningHours": "Modifier les horaires d'ouverture",
+        "validOpeningHours": "Valider les changements"
       }
     },
     "perimeter": {

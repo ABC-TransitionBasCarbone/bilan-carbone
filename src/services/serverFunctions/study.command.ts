@@ -1,4 +1,4 @@
-import { ControlMode, Export, Level, StudyRole, SubPost } from '@prisma/client'
+import { ControlMode, DayOfWeek, Export, Level, StudyRole, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { OpeningHoursValidation } from '../hours'
@@ -66,8 +66,8 @@ export const CreateStudyCommandValidation = z
         numberOfSessions: z.number().optional(),
         numberOfTickets: z.number().optional(),
         numberOfOpenDays: z.number().optional(),
-        openingHours: z.array(OpeningHoursValidation).optional(),
-        openingHoursHoliday: z.array(OpeningHoursValidation).optional(),
+        openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
+        openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
       }),
       StudyExportsCommandValidation,
     ),
@@ -147,6 +147,14 @@ export const ChangeStudyNameValidation = z.object({
 })
 
 export type ChangeStudyNameCommand = z.infer<typeof ChangeStudyNameValidation>
+
+export const ChangeStudyOpeningHoursValidation = z.object({
+  studyId: z.string(),
+  openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
+  openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
+})
+
+export type ChangeStudyOpeningHoursCommand = z.infer<typeof ChangeStudyOpeningHoursValidation>
 
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),

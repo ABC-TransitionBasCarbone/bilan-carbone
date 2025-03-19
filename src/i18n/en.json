@@ -266,7 +266,10 @@
         "Thursday": "Thursday",
         "Friday": "Friday",
         "Saturday": "Saturday",
-        "Sunday": "Sunday"
+        "Sunday": "Sunday",
+        "from": "from",
+        "to": "to",
+        "DifferentHoursHoliday": "Different hours during holidays"
       },
       "private": "Private",
       "public": "Public",
@@ -407,6 +410,11 @@
           "no": "No",
           "Not authorized": "You are not allowed to do this action"
         }
+      },
+      "hours": {
+        "cancelEditOpeningHours": "Cancel modification",
+        "editOpeningHours": "Edit opening hours",
+        "validOpeningHours": "Validate changes"
       }
     },
     "perimeter": {
