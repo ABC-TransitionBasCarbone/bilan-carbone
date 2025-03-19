@@ -169,7 +169,7 @@ const EmissionSource = ({
                 <>
                   <p>{t('emissionSource')}</p>
                   <p>
-                    {formatNumber(emissionSource.value, 5)} {selectedFactor && tUnits(selectedFactor.unit)}
+                    {formatNumber(emissionSource.value, 0)} {selectedFactor && tUnits(selectedFactor.unit)}
                   </p>
                 </>
               )}
@@ -179,7 +179,7 @@ const EmissionSource = ({
               <div className="flex-col justify-center text-center">
                 <p>{t('emissionFactor')}</p>
                 <p>
-                  {formatNumber(getEmissionFactorValue(selectedFactor) / STUDY_UNIT_VALUES[study.resultsUnit], 5)} $
+                  {formatNumber(getEmissionFactorValue(selectedFactor) / STUDY_UNIT_VALUES[study.resultsUnit], 0)}
                   {tResultstUnits(study.resultsUnit)}/{tUnits(selectedFactor.unit)}
                 </p>
               </div>
@@ -190,7 +190,7 @@ const EmissionSource = ({
                 <p
                   className={styles.result}
                   data-testid="emission-source-value"
-                >{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} $${tResultstUnits(study.resultsUnit)}`}</p>
+                >{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit], 0)} ${tResultstUnits(study.resultsUnit)}`}</p>
                 {emissionResults.standardDeviation && (
                   <p className={styles.status} data-testid="emission-source-quality">
                     {tQuality('name')}{' '}
@@ -270,7 +270,7 @@ const EmissionSource = ({
                   <div>
                     <p>{t('results.emission')}</p>
                     <p>
-                      {formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])}{' '}
+                      {formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit], 0)}{' '}
                       {tResultstUnits(study.resultsUnit)}
                     </p>
                   </div>

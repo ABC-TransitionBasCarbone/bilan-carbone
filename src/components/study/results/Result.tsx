@@ -84,7 +84,7 @@ const Result = ({ studySite, computedResults, resultsUnit }: Props) => {
               tooltip: {
                 callbacks: {
                   label: (context) =>
-                    `${formatNumber((context.raw as number) / STUDY_UNIT_VALUES[resultsUnit])} ${tUnits(resultsUnit)}`,
+                    `${formatNumber((context.raw as number) / STUDY_UNIT_VALUES[resultsUnit], 0)} ${tUnits(resultsUnit)}`,
                 },
               },
               legend: { display: true },

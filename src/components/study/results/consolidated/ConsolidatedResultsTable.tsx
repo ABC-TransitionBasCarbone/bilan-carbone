@@ -73,7 +73,9 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies }: Props)
           header: t('value', { unit: tUnits(study.resultsUnit) }),
           accessorKey: 'value',
           cell: ({ getValue }) => (
-            <p className={styles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit])}</p>
+            <p className={styles.number}>
+              {formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit], 0)}
+            </p>
           ),
         },
       ] as ColumnDef<ResultsByPost>[],
