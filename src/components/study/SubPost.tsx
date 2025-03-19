@@ -90,7 +90,7 @@ const SubPost = ({
               />
             )}
             <span className={classNames(styles.value, 'ml1')}>
-              {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
+              {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit], 2)} {tUnits(study.resultsUnit)}
             </span>
           </p>
         </AccordionSummary>
