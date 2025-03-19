@@ -31,8 +31,8 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '../email/email'
-import { EMAIL_SENT, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
-import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
+import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
+import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
 const updateUserResetToken = async (email: string, duration: number) => {
@@ -198,16 +198,19 @@ export const changeRole = async (email: string, role: Role) => {
   }
 
   const userToChange = await getUserByEmail(email)
+
   if (!canChangeRole(session.user, userToChange, role)) {
     return NOT_AUTHORIZED
   }
 
-  const targetUser = await getUserByEmail(email)
-  if (!targetUser || targetUser.organizationId !== session.user.organizationId) {
-    return NOT_AUTHORIZED
+  const team = await getUserFromUserOrganization(session.user)
+  const selfEditRolesCount = team.filter((member) => canEditSelfRole(member.role)).length
+  if (userToChange && selfEditRolesCount === 1 && canEditSelfRole(userToChange.role) && !canEditSelfRole(role)) {
+    return MORE_THAN_ONE
   }
 
-  if (!targetUser.level && role !== Role.GESTIONNAIRE) {
+  const targetUser = await getUserByEmail(email)
+  if (!targetUser || targetUser.organizationId !== session.user.organizationId) {
     return NOT_AUTHORIZED
   }
 

@@ -1,3 +1,7 @@
 .iconButton {
-  background-color: white !important;
+  background-color: var(--primary-40) !important;
+}
+
+.blockStudyParams {
+  width: fit-content;
 }

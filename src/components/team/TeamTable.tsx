@@ -24,8 +24,8 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const [displayRoles, setDisplayRoles] = useState(false)
   const canUpdateTeam = canEditMemberRole(user)
 
-  const columns = useMemo(() => {
-    const columns: ColumnDef<TeamMember>[] = [
+  const columns: ColumnDef<TeamMember>[] = useMemo(
+    () => [
       {
         header: t('firstName'),
         accessorKey: 'firstName',
@@ -33,26 +33,26 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       { header: t('lastName'), accessorKey: 'lastName' },
       { header: t('email'), accessorKey: 'email' },
       { header: t('level'), accessorFn: (member: TeamMember) => (member.level ? tLevel(member.level) : '') },
-    ]
-    if (canUpdateTeam) {
-      columns.push({
+      {
         header: t('role'),
         accessorKey: 'role',
         cell: (context) => {
           const role = context.getValue() as Role
-          return (
+          return canUpdateTeam ? (
             <SelectRole
               currentUserEmail={user.email}
               currentRole={role}
               email={context.row.original.email}
               level={context.row.original.level}
             />
+          ) : (
+            <>{tRole(role)}</>
           )
         },
-      })
-    }
-    return columns
-  }, [t, tLevel, user])
+      },
+    ],
+    [t, user],
+  )
 
   const table = useReactTable({
     columns,
