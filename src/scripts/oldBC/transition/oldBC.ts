@@ -103,6 +103,8 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
     )
     hasStudiesWarning = await uploadStudies(
       transaction,
+      user.id,
+      organizationId,
       studiesIndexes,
       studiesSheet.data,
       studySitesIndexes,
