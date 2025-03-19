@@ -26,7 +26,7 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorStatus, Import } from '@prisma/client'
+import { EmissionFactorImportVersion, EmissionFactorStatus, Import } from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -84,15 +84,24 @@ const locationFuseOptions = {
   isCaseSensitive: false,
 }
 
-const sources = Object.values(Import).map((source) => source)
-
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
+  importVersions: EmissionFactorImportVersion[]
   userOrganizationId?: string | null
 }
 
-const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrganizationId }: Props) => {
+const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrganizationId, importVersions }: Props) => {
+  const initialSelectedSources = importVersions
+    .filter((importVersion) =>
+      importVersion.source === Import.Manual
+        ? true
+        : importVersion.id ===
+          importVersions
+            .filter((version) => version.source === importVersion.source)
+            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id,
+    )
+    .map((importVersion) => importVersion.id)
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
@@ -100,7 +109,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
   const [filter, setFilter] = useState('')
   const [displayArchived, setDisplayArchived] = useState(false)
   const [locationFilter, setLocationFilter] = useState('')
-  const [filteredSources, setSources] = useState<Import[]>(sources)
+  const [filteredSources, setFilteredSources] = useState(initialSelectedSources)
   const [displayHideButton, setDisplayHideButton] = useState(false)
   const [displayFilters, setDisplayFilters] = useState(true)
   const filtersRef = useRef<HTMLDivElement>(null)
@@ -294,11 +303,17 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
     return searchResults
   }, [emissionFactors, filter, locationFilter])
 
-  const data = useMemo(() => {
-    return searchedEmissionFactors
-      .filter((emissionFactor) => filteredSources.includes(emissionFactor.importedFrom))
-      .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived)
-  }, [searchedEmissionFactors, filteredSources, displayArchived])
+  const data = useMemo(
+    () =>
+      searchedEmissionFactors
+        .filter(
+          (emissionFactor) =>
+            (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
+            (!emissionFactor.version && filteredSources.includes(Import.Manual)),
+        )
+        .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived),
+    [searchedEmissionFactors, filteredSources, displayArchived],
+  )
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -331,11 +346,32 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
       target: { value },
     } = event
 
-    setSources(value as Import[])
+    setFilteredSources(value as string[])
   }
 
+  const sortedImportVersions = useMemo(
+    () =>
+      importVersions.sort((a, b) => {
+        if (initialSelectedSources.includes(a.id) === initialSelectedSources.includes(b.id)) {
+          // both are sort selected or not selected : sort by alphabetical order
+          return `${a.source} ${a.name}`.localeCompare(`${b.source} ${b.name}`)
+        } else {
+          // else : sort initially selected first
+          return initialSelectedSources.includes(a.id) ? -1 : 1
+        }
+      }),
+    [importVersions],
+  )
+
   const statusSelectorRenderValue = () =>
-    filteredSources.length === sources.length ? t('all') : filteredSources.map((source) => t(source)).join(', ')
+    filteredSources.length === importVersions.length
+      ? t('all')
+      : filteredSources
+          .map((source) => getEmissionVersionLabel(importVersions.find((importVersion) => importVersion.id === source)))
+          .join(', ')
+
+  const getEmissionVersionLabel = (version?: EmissionFactorImportVersion) =>
+    version ? `${t(version.source)} ${version.name}` : ''
 
   return (
     <>
@@ -368,10 +404,10 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
                 renderValue={statusSelectorRenderValue}
                 multiple
               >
-                {sources.map((source, i) => (
-                  <MenuItem key={`source-item-${i}`} value={source}>
-                    <Checkbox checked={filteredSources.includes(source)} />
-                    <ListItemText primary={t(source)} />
+                {sortedImportVersions.map((importVersion) => (
+                  <MenuItem key={`source-item-${importVersion.id}`} value={importVersion.id}>
+                    <Checkbox checked={filteredSources.includes(importVersion.id)} />
+                    <ListItemText primary={getEmissionVersionLabel(importVersion)} />
                   </MenuItem>
                 ))}
               </Select>
@@ -440,7 +476,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
               ]
               if (row.getIsExpanded()) {
                 lines.push(
-                  <tr key={row.id}>
+                  <tr key={`${row.id}-details`}>
                     <td colSpan={columns.length} className={styles.detail}>
                       <EmissionFactorDetails emissionFactor={row.original} />
                     </td>
