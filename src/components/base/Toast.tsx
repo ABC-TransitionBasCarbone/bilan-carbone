@@ -1,3 +1,4 @@
+import { SEC, TIME_IN_MS } from '@/utils/time'
 import { Snackbar, SnackbarOrigin } from '@mui/material'
 import Alert from '@mui/material/Alert'
 
@@ -21,7 +22,13 @@ const backgrounds: Record<ToastColors, string> = {
 }
 
 const Toast = ({ position, open, onClose, message, color, toastKey, duration }: Props) => (
-  <Snackbar key={toastKey} anchorOrigin={position} open={open} onClose={onClose} autoHideDuration={duration || 5000}>
+  <Snackbar
+    key={toastKey}
+    anchorOrigin={position}
+    open={open}
+    onClose={onClose}
+    autoHideDuration={duration || 5 * SEC * TIME_IN_MS}
+  >
     <Alert onClose={onClose} icon={<></>} sx={{ background: backgrounds[color], color: 'white' }}>
       {message}
     </Alert>

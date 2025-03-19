@@ -214,10 +214,6 @@ export const changeRole = async (email: string, role: Role) => {
     return NOT_AUTHORIZED
   }
 
-  if (!targetUser.level && role !== Role.GESTIONNAIRE) {
-    return NOT_AUTHORIZED
-  }
-
   await changeUserRole(email, role)
 }
 
