@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form'
 import StudyLevel from './StudyLevel'
 import styles from './StudyParams.module.css'
 import StudyPublicStatus from './StudyPublicStatus'
+import StudyResultsUnit from './StudyResultsUnit'
 
 interface Props {
   user: User
@@ -85,7 +86,10 @@ const StudyParams = ({ user, study, disabled }: Props) => {
   return (
     <>
       <Block title={t('title', { name: study.name })} as="h1" actions={actions} className={styles.blockStudyParams}>
-        <StudyLevel study={study} user={user} disabled={disabled} />
+        <div className="flex pb2">
+          <StudyLevel study={study} user={user} disabled={disabled} />
+          <StudyResultsUnit study={study} disabled={disabled} />
+        </div>
         <StudyPublicStatus study={study} user={user} disabled={disabled} />
       </Block>
       <Modal

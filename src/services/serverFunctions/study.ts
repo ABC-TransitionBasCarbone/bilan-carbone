@@ -48,6 +48,7 @@ import {
   canChangeLevel,
   canChangeName,
   canChangePublicStatus,
+  canChangeResultsUnit,
   canChangeSites,
   canCreateStudy,
   canDeleteStudy,
@@ -63,6 +64,7 @@ import {
   ChangeStudyLevelCommand,
   ChangeStudyNameCommand,
   ChangeStudyPublicStatusCommand,
+  ChangeStudyResultsUnitCommand,
   ChangeStudySitesCommand,
   CreateStudyCommand,
   DeleteStudyCommand,
@@ -219,9 +221,22 @@ export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevel
     return NOT_AUTHORIZED
   }
 
-  if (!canChangeLevel(informations.user, informations.studyWithRights, command.level)) {
+  if (!(await canChangeLevel(informations.user, informations.studyWithRights, command.level))) {
     return NOT_AUTHORIZED
   }
+  await updateStudy(studyId, command)
+}
+
+export const changeStudyResultsUnit = async ({ studyId, ...command }: ChangeStudyResultsUnitCommand) => {
+  const informations = await getStudyRightsInformations(studyId)
+  if (informations === null) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!(await canChangeResultsUnit(informations.user, informations.studyWithRights))) {
+    return NOT_AUTHORIZED
+  }
+
   await updateStudy(studyId, command)
 }
 

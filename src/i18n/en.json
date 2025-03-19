@@ -256,6 +256,7 @@
       "isPublicTitle": "Study visibility",
       "private": "Private",
       "public": "Public",
+      "resultsUnit": "Study result's unit",
       "create": "Create study",
       "glossary": {
         "title": "Glossaire",
@@ -421,7 +422,11 @@
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
-      "comming": "comming"
+      "comming": "comming",
+      "units": {
+        "K": "kgCO₂e",
+        "T": "tCO₂e"
+      }
     },
     "export": {
       "activityDataComment": "Activity data comment",
