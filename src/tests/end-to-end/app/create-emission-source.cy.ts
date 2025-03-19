@@ -23,7 +23,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My new emission source').click()
 
     cy.getByTestId('emission-source-result').should('not.exist')
-    cy.getByTestId('emission-source-validate').should('not.exist')
+    cy.getByTestId('emission-source-validate').should('be.disabled')
 
     cy.getByTestId('emission-source-My new emission source').within(() => {
       cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should(
@@ -53,7 +53,7 @@ describe('Create study emission source', () => {
       cy.getByTestId('emission-source-quality').should('not.exist')
     })
     cy.getByTestId('emission-source-result').should('exist')
-    cy.getByTestId('emission-source-validated').should('exist')
+    cy.getByTestId('emission-source-validate').should('not.be.disabled')
     cy.getByTestId('emission-source-result').should('have.text', 'Résultats :Émission :1 008,22 tCO₂e')
 
     cy.get('body').then(($body) => {

@@ -22,6 +22,7 @@ import GlossaryModal from '../modals/GlossaryModal'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
+import emissionFactorStyles from './EmissionSourceFactor.module.css'
 import QualitySelectGroup from './QualitySelectGroup'
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -63,6 +64,17 @@ const EmissionSourceForm = ({
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
 
   const qualityRating = useMemo(() => (selectedFactor ? getQualityRating(selectedFactor) : null), [selectedFactor])
+
+  const qualities = [
+    emissionSource.reliability,
+    emissionSource.technicalRepresentativeness,
+    emissionSource.geographicRepresentativeness,
+    emissionSource.temporalRepresentativeness,
+    emissionSource.completeness,
+  ]
+
+  const defaultQuality = qualities.find((quality) => quality)
+  const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
 
   const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (Number(event.target.value) > 0) {
@@ -200,7 +212,7 @@ const EmissionSourceForm = ({
       </div>
       {selectedFactor ? (
         <div className={styles.row} data-testid="emission-source-factor">
-          <p className={styles.header}>
+          <p className={emissionFactorStyles.header}>
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
@@ -208,7 +220,9 @@ const EmissionSourceForm = ({
             {tUnits(selectedFactor.unit)}{' '}
             {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
           </p>
-          {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
+          {selectedFactor.metaData && (
+            <p className={emissionFactorStyles.detail}>{getDetail(selectedFactor.metaData)}</p>
+          )}
         </div>
       ) : (
         <LinkButton color="secondary" href="/facteurs-d-emission/creer" className="mt-2">
@@ -245,7 +259,7 @@ const EmissionSourceForm = ({
           onBlur={(event) => update('source', event.target.value)}
           label={t('form.source')}
         />
-        {!expandedQuality && (
+        {!expandedQuality && canShrink && (
           <QualitySelectGroup
             canEdit={canEdit}
             emissionSource={emissionSource}
@@ -254,21 +268,23 @@ const EmissionSourceForm = ({
             setGlossary={setGlossary}
             expanded={expandedQuality}
             setExpanded={setExpandedQuality}
+            canShrink={canShrink}
+            defaultQuality={defaultQuality}
           />
         )}
       </div>
-      {expandedQuality && (
-        <div className={classNames(styles.row, 'flex')}>
-          <QualitySelectGroup
-            canEdit={canEdit}
-            emissionSource={emissionSource}
-            update={update}
-            advanced={advanced}
-            setGlossary={setGlossary}
-            expanded={expandedQuality}
-            setExpanded={setExpandedQuality}
-          />
-        </div>
+      {(expandedQuality || !canShrink) && (
+        <QualitySelectGroup
+          canEdit={canEdit}
+          emissionSource={emissionSource}
+          update={update}
+          advanced={advanced}
+          setGlossary={setGlossary}
+          expanded={expandedQuality || !canShrink}
+          setExpanded={setExpandedQuality}
+          canShrink={canShrink}
+          defaultQuality={defaultQuality}
+        />
       )}
 
       <div className={classNames(styles.row, 'flex')}>
@@ -281,19 +297,18 @@ const EmissionSourceForm = ({
           label={t('form.comment')}
         />
       </div>
-      <div className={classNames(styles.buttons, 'justify-end mt1 w100')}>
+      <div className={classNames(styles.gapped, 'justify-end mt1 w100')}>
         {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
-        {canValidate &&
-          status !== EmissionSourcesStatus.Waiting &&
-          status !== EmissionSourcesStatus.WaitingContributor && (
-            <Button
-              color={emissionSource.validated ? 'secondary' : 'primary'}
-              onClick={() => update('validated', !emissionSource.validated)}
-              data-testid="emission-source-validate"
-            >
-              {t(emissionSource.validated ? 'unvalidate' : 'validate')}
-            </Button>
-          )}
+        {canValidate && (
+          <Button
+            color={emissionSource.validated ? 'secondary' : 'primary'}
+            onClick={() => update('validated', !emissionSource.validated)}
+            data-testid="emission-source-validate"
+            disabled={status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor}
+          >
+            {t(emissionSource.validated ? 'unvalidate' : 'validate')}
+          </Button>
+        )}
       </div>
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>

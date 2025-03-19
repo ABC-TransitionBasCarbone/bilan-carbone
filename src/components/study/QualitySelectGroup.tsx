@@ -19,6 +19,8 @@ interface Props {
   setGlossary: (key: string) => void
   expanded: boolean
   setExpanded: (value: boolean) => void
+  canShrink: boolean
+  defaultQuality?: number | null
 }
 
 const QualitySelectGroup = ({
@@ -29,24 +31,15 @@ const QualitySelectGroup = ({
   setGlossary,
   expanded,
   setExpanded,
+  canShrink,
+  defaultQuality,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tGlossary = useTranslations('emissionSource.glossary')
 
-  const qualities = [
-    emissionSource.reliability,
-    emissionSource.technicalRepresentativeness,
-    emissionSource.geographicRepresentativeness,
-    emissionSource.temporalRepresentativeness,
-    emissionSource.completeness,
-  ]
-
-  const defaultQuality = qualities.find((quality) => quality)
-  const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
-
   return (
     <div className={classNames('flex', expanded ? styles.row : styles.shrinked)}>
-      {expanded || !canShrink ? (
+      {expanded ? (
         <>
           <QualitySelect
             disabled={!canEdit}

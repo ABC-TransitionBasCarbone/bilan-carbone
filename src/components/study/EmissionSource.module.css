@@ -8,6 +8,9 @@
   @media screen and (max-width: 60rem) {
     flex-direction: column;
   }
+  p {
+    line-height: 1.25rem;
+  }
 }
 
 .editIcon {
@@ -140,8 +143,4 @@
     border-color: var(--orange-500);
     color: var(--orange-500);
   }
-}
-
-.buttons {
-  gap: 1rem;
 }
