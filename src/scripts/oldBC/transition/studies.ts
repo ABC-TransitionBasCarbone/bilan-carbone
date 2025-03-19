@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client'
+import { getJsDateFromExcel } from 'excel-date-to-js'
 
 export enum RequiredStudiesColumns {
   id = 'IDETUDE',
@@ -22,8 +23,8 @@ export enum RequiredStudyExportsColumns {
 interface Study {
   id: string
   name: string
-  startDate: string
-  endDate: string
+  startDate: Date | string
+  endDate: Date | string
   sites: Site[]
   exports: Export[]
 }
@@ -38,14 +39,21 @@ interface Export {
 }
 
 const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
-  return data.slice(1).map((row) => ({
-    id: row[indexes[RequiredStudiesColumns.id]] as string,
-    name: row[indexes[RequiredStudiesColumns.name]] as string,
-    startDate: row[indexes[RequiredStudiesColumns.startDate]] as string,
-    endDate: row[indexes[RequiredStudiesColumns.endDate]] as string,
-    sites: [],
-    exports: [],
-  }))
+  return data
+    .slice(1)
+    .filter((row) => row[indexes[RequiredStudiesColumns.name]])
+    .map((row) => ({
+      id: row[indexes[RequiredStudiesColumns.id]] as string,
+      name: row[indexes[RequiredStudiesColumns.name]] as string,
+      startDate: row[indexes[RequiredStudiesColumns.startDate]]
+        ? new Date(getJsDateFromExcel(row[indexes[RequiredStudiesColumns.startDate]] as number))
+        : '',
+      endDate: row[indexes[RequiredStudiesColumns.startDate]]
+        ? new Date(getJsDateFromExcel(row[indexes[RequiredStudiesColumns.endDate]] as number))
+        : '',
+      sites: [],
+      exports: [],
+    }))
 }
 
 const parseSites = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, Site[]> => {
@@ -91,6 +99,8 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
 
 export const uploadStudies = async (
   transaction: Prisma.TransactionClient,
+  userId: string,
+  organizationId: string,
   studiesIndexes: Record<string, number>,
   studiesData: (string | number)[][],
   studySitesIndexes: Record<string, number>,
