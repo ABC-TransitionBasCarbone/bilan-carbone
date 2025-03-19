@@ -59,7 +59,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
 
   if (!organizationsSheet || !emissionFactorsSheet || !studiesSheet) {
     console.log(
-      "Veuillez verifier que le fichier contient une feuille 'Organisations', une feuille 'Facteurs d'émissions, et une feuille 'Etudes'",
+      "Veuillez verifier que le fichier contient une feuille 'Organisations', une feuille 'Facteurs d'émissions', et une feuille 'Etudes'",
     )
     return
   }
