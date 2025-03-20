@@ -258,6 +258,23 @@
       "isPublicTitle": "Visibilité de l'étude",
       "private": "Privée",
       "public": "Publique",
+      "numberOfSessions": "Nombre de séances",
+      "numberOfTickets": "Nombre d'entrées",
+      "numberOfOpenDays": "Nombre de jours d'ouverture",
+      "openingHours": "Horaires d'ouverture",
+      "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
+      "days": {
+        "Monday": "Lundi",
+        "Tuesday": "Mardi",
+        "Wednesday": "Mercredi",
+        "Thursday": "Jeudi",
+        "Friday": "Vendredi",
+        "Saturday": "Samedi",
+        "Sunday": "Dimanche",
+        "from": "de",
+        "to": "à",
+        "DifferentHoursHoliday": "Horaires différents pendant les vacances scolaires"
+      },
       "create": "Créer l'étude",
       "glossary": {
         "title": "Glossaire",
@@ -397,6 +414,11 @@
           "no": "Non",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
         }
+      },
+      "hours": {
+        "cancelEditOpeningHours": "Annuler la modification",
+        "editOpeningHours": "Modifier les horaires d'ouverture",
+        "validOpeningHours": "Valider les changements"
       }
     },
     "perimeter": {
@@ -945,6 +967,10 @@
       "etpPlaceholder": "Entrez votre nombre d'ETP pour ce site ici",
       "ca": "Chiffre d'affaire ({unit})",
       "caPlaceholder": "Entrez votre CA pour ce site en {unit} ici",
+      "postalCode": "Code postal",
+      "postalCodePlaceholder": "Code postal",
+      "city": "Ville",
+      "cityPlaceholder": "Ville",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",

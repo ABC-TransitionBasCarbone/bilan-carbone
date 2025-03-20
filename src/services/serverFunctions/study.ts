@@ -48,6 +48,7 @@ import {
   canChangeDates,
   canChangeLevel,
   canChangeName,
+  canChangeOpeningHours,
   canChangePublicStatus,
   canChangeSites,
   canCreateStudy,
@@ -63,6 +64,7 @@ import {
   ChangeStudyDatesCommand,
   ChangeStudyLevelCommand,
   ChangeStudyNameCommand,
+  ChangeStudyOpeningHoursCommand,
   ChangeStudyPublicStatusCommand,
   ChangeStudySitesCommand,
   CreateStudyCommand,
@@ -89,9 +91,11 @@ export const createStudyCommand = async ({
   organizationId,
   validator,
   sites,
+  openingHoursHoliday,
   ...command
 }: CreateStudyCommand): Promise<{ message: string; success: false } | { id: string; success: true }> => {
   const session = await auth()
+
   if (!session || !session.user) {
     return { success: false, message: NOT_AUTHORIZED }
   }
@@ -139,11 +143,16 @@ export const createStudyCommand = async ({
   const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
   const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
+  const mergedOpeningHours = [...Object.values(command.openingHours || {}), ...Object.values(openingHoursHoliday || {})]
+
   const study = {
     ...command,
     createdBy: { connect: { id: session.user.id } },
     organization: { connect: { id: organizationId } },
     isPublic: command.isPublic === 'true',
+    openingHours: {
+      create: mergedOpeningHours,
+    },
     allowedUsers: {
       createMany: { data: rights },
     },
@@ -250,6 +259,62 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
   }
 
   await updateStudy(studyId, { name: command.name })
+}
+
+export const changeStudyOpeningHours = async ({ studyId, ...command }: ChangeStudyOpeningHoursCommand) => {
+  const informations = await getStudyRightsInformations(studyId)
+  if (informations === null) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+    return NOT_AUTHORIZED
+  }
+
+  const mergedOpeningHours = [
+    ...Object.values(command.openingHours || {}),
+    ...Object.values(command.openingHoursHoliday || {}),
+  ]
+
+  await prismaClient.$transaction(async (prisma) => {
+    const existingOpeningHours = await prisma.openingHours.findMany({
+      where: { studyId },
+      select: { id: true },
+    })
+
+    const existingIds = new Set(existingOpeningHours.map((openingHour) => openingHour.id))
+    const updateIds = new Set(mergedOpeningHours.map((openingHour) => openingHour.id))
+
+    const openingHourIdsToDelete = [...existingIds].filter((id) => !updateIds.has(id))
+
+    if (openingHourIdsToDelete.length > 0) {
+      await prisma.openingHours.deleteMany({
+        where: { id: { in: openingHourIdsToDelete } },
+      })
+    }
+
+    await prismaClient.$transaction(async (prisma) => {
+      for (const openingHour of mergedOpeningHours) {
+        if (openingHour.id) {
+          await prisma.openingHours.upsert({
+            where: { id: openingHour.id },
+            update: openingHour,
+            create: {
+              ...openingHour,
+              Study: { connect: { id: studyId } },
+            },
+          })
+        } else {
+          await prisma.openingHours.create({
+            data: {
+              ...openingHour,
+              Study: { connect: { id: studyId } },
+            },
+          })
+        }
+      }
+    })
+  })
 }
 
 export const hasActivityData = async (

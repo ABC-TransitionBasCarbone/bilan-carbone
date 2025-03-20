@@ -3,8 +3,9 @@ import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import LinkButton from '@/components/base/LinkButton'
 import { FormSelect } from '@/components/form/Select'
-import Sites from '@/components/organization/Sites'
 import { OrganizationWithSites } from '@/db/user'
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { ComponentKey } from '@/environments/core/utils/getComponent'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
@@ -43,6 +44,8 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
           ...site,
           ca: site.ca ? displayCA(site.ca, caUnit) : 0,
           selected: false,
+          postalCode: site.postalCode ?? '',
+          city: site.city ?? '',
         })),
       )
     } else {
@@ -95,7 +98,7 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
       {organization &&
         (organization.sites.length > 0 ? (
           <>
-            <Sites form={form} sites={sites} withSelection />
+            <DynamicComponent componentPath={ComponentKey.Sites} sites={sites} form={form} withSelection />
             <div className="mt2">
               <Button data-testid="new-study-organization-button" onClick={next}>
                 {t('next')}

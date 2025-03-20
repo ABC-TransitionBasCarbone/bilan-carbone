@@ -1,8 +1,9 @@
 'use client'
-import NewStudyForm from '@/components/study/new/Form'
 import SelectOrganization from '@/components/study/organization/Select'
 import { getOrganizationUsers } from '@/db/organization'
 import { OrganizationWithSites } from '@/db/user'
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { ComponentKey } from '@/environments/core/utils/getComponent'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -41,6 +42,8 @@ const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit 
           ...site,
           ca: site.ca ? displayCA(site.ca, caUnit) : 0,
           selected: false,
+          postalCode: site.postalCode ?? '',
+          city: site.city ?? '',
         })) || [],
       exports: {
         [Export.Beges]: false,
@@ -65,7 +68,7 @@ const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit 
         ].filter((link) => link !== undefined)}
       />
       {organization ? (
-        <NewStudyForm user={user} users={users} form={form} />
+        <DynamicComponent componentPath={ComponentKey.NewStudyForm} user={user} users={users} form={form} />
       ) : (
         <SelectOrganization organizations={organizations} selectOrganization={setOrganization} form={form} />
       )}

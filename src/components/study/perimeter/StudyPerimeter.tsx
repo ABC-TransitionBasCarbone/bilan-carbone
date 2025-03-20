@@ -2,9 +2,10 @@
 import Button from '@/components/base/Button'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import Sites from '@/components/organization/Sites'
 import { FullStudy } from '@/db/study'
 import { OrganizationWithSites } from '@/db/user'
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { ComponentKey } from '@/environments/core/utils/getComponent'
 import {
   changeStudyDates,
   changeStudyExports,
@@ -99,8 +100,15 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         .map((site) => {
           const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
           return existingStudySite
-            ? { ...existingStudySite, id: site.id, name: existingStudySite.site.name, selected: true }
-            : { ...site, selected: false }
+            ? {
+                ...existingStudySite,
+                id: site.id,
+                name: existingStudySite.site.name,
+                selected: true,
+                postalCode: existingStudySite.site.postalCode ?? '',
+                city: existingStudySite.site.city ?? '',
+              }
+            : { ...site, selected: false, postalCode: site.postalCode ?? '', city: site.city ?? '' }
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
@@ -196,9 +204,20 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
           })}
         </p>
       )}
-      <Sites
+      <DynamicComponent
+        componentPath={ComponentKey.Sites}
+        sites={
+          isEditing
+            ? sites
+            : study.sites.map((site) => ({
+                ...site,
+                name: site.site.name,
+                selected: false,
+                postalCode: site.site.postalCode,
+                city: site.site.city,
+              }))
+        }
         form={isEditing ? siteForm : undefined}
-        sites={isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
         withSelection
       />
       {hasEditionRole && (
