@@ -5,8 +5,8 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { OrganizationWithSites } from '@/db/user'
-import { ComponentKey } from '@/environments/core/utils/componentList'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { ComponentKey } from '@/environments/core/utils/getComponent'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
   UpdateOrganizationCommand,

@@ -12,7 +12,7 @@ interface AppEnvironmentState {
 
 export const useAppEnvironmentStore = create<AppEnvironmentState>(
   (set): AppEnvironmentState => ({
-    environment: CUT, // CHANGE THIS TO BASE TO TEST THE DYNAMIC COMPONENT
+    environment: BASE, // CHANGE THIS TO BASE TO TEST THE DYNAMIC COMPONENT
     setEnvironment: (environment: Environment) => set({ environment }),
   }),
 )

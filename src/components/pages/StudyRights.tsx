@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { ComponentKey } from '@/environments/core/utils/componentList'
+import { ComponentKey } from '@/environments/core/utils/getComponent'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'

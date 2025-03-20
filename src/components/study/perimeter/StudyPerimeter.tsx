@@ -4,8 +4,8 @@ import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { OrganizationWithSites } from '@/db/user'
-import { ComponentKey } from '@/environments/core/utils/componentList'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { ComponentKey } from '@/environments/core/utils/getComponent'
 import {
   changeStudyDates,
   changeStudyExports,

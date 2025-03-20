@@ -1,10 +1,7 @@
 'use client'
 
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { CircularProgress } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { ComponentKey } from './componentList'
-import getComponent from './getComponent'
+import getComponent, { ComponentKey } from './getComponent'
 
 interface Props {
   componentPath: ComponentKey
@@ -12,30 +9,10 @@ interface Props {
   [key: string]: any
 }
 
-const DynamicComponent: React.FC<Props> = ({ componentPath, ...props }) => {
-  const [Component, setComponent] = useState<React.ComponentType | null>(null)
+const DynamicComponent = ({ componentPath, ...props }: Props) => {
   const { environment } = useAppEnvironmentStore()
-
-  useEffect(() => {
-    const loadComponent = async () => {
-      try {
-        const loadedComponent = getComponent(componentPath, environment)
-        setComponent(() => loadedComponent)
-      } catch (error) {
-        console.error('Error loading component:', error)
-      }
-    }
-
-    loadComponent()
-  }, [componentPath])
-
-  if (!Component) {
-    return (
-      <div className="flex justify-center mt2 mb2">
-        <CircularProgress />
-      </div>
-    )
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Component = getComponent(componentPath, environment) as React.ComponentType<any>
 
   return <Component {...props} />
 }
