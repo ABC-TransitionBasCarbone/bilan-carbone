@@ -4,7 +4,7 @@ import ValidatedIcon from '@mui/icons-material/CheckCircle'
 import ToDoIcon from '@mui/icons-material/CheckCircleOutline'
 import ExpandIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary } from '@mui/material'
-import { CRUserChecklist } from '@prisma/client'
+import { UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -14,7 +14,7 @@ import LinkButton from '../base/LinkButton'
 import styles from './Checklist.module.css'
 
 interface Props {
-  step: CRUserChecklist
+  step: UserChecklist
   getCheckList: () => void
   validated: boolean
   disabled: boolean
