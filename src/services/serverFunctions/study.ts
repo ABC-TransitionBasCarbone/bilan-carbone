@@ -24,7 +24,6 @@ import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import {
   ControlMode,
-  CRUserChecklist,
   User as DBUser,
   Document,
   Export,
@@ -34,6 +33,7 @@ import {
   Role,
   StudyRole,
   SubPost,
+  UserChecklist,
   UserStatus,
 } from '@prisma/client'
 import { User } from 'next-auth'
@@ -182,7 +182,7 @@ export const createStudyCommand = async ({
 
   try {
     const createdStudy = await createStudy(study)
-    addUserChecklistItem(CRUserChecklist.CreateFirstStudy)
+    addUserChecklistItem(UserChecklist.CreateFirstStudy)
     return { success: true, id: createdStudy.id }
   } catch (e) {
     console.error(e)

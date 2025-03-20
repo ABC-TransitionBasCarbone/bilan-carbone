@@ -1,5 +1,5 @@
-import { mandatoryParentSteps } from '@/services/checklist'
-import { CRUserChecklist, Organization } from '@prisma/client'
+import { CRUserChecklist, mandatoryParentSteps, OrgaUserChecklist } from '@/services/checklist'
+import { Organization, UserChecklist } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo } from 'react'
@@ -12,7 +12,7 @@ const FAQLink = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 interface Props {
   setOpen: (open: boolean) => void
   getCheckList: () => void
-  userChecklist: CRUserChecklist[]
+  userChecklist: UserChecklist[]
   userOrganization: Organization
   clientId?: string
   studyId?: string
@@ -20,11 +20,11 @@ interface Props {
 
 const ChecklistDrawer = ({ setOpen, getCheckList, userOrganization, clientId, userChecklist, studyId }: Props) => {
   const t = useTranslations('checklist')
-  const steps = useMemo(() => (userOrganization.isCR ? CRUserChecklist : CRUserChecklist), [userOrganization])
+  const steps = useMemo(() => (userOrganization.isCR ? CRUserChecklist : OrgaUserChecklist), [userOrganization])
   const finished = useMemo(() => userChecklist.length === Object.values(steps).length - 1, [userChecklist, steps])
-  const isValidated = (step: CRUserChecklist) => userChecklist.some((checkedStep) => checkedStep === step)
-  const isDisabled = (step: CRUserChecklist) =>
-    mandatoryParentSteps(step).some((mandatoryStep) => !userChecklist.includes(mandatoryStep))
+  const isValidated = (step: UserChecklist) => userChecklist.some((checkedStep) => checkedStep === step)
+  const isDisabled = (step: UserChecklist) =>
+    mandatoryParentSteps(step, userOrganization.isCR).some((mandatoryStep) => !userChecklist.includes(mandatoryStep))
   return (
     <div>
       <Stepper
@@ -36,8 +36,8 @@ const ChecklistDrawer = ({ setOpen, getCheckList, userOrganization, clientId, us
       />
       <div className="flex-col px-2">
         {Object.values(steps)
-          .filter((step) => step !== CRUserChecklist.Completed)
-          .map((step: CRUserChecklist) => (
+          .filter((step) => step !== UserChecklist.Completed)
+          .map((step: UserChecklist) => (
             <ChecklistItem
               key={step}
               step={step}

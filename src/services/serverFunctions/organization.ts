@@ -3,6 +3,7 @@
 import {
   createOrganization,
   deleteClient,
+  getOrganizationById,
   getOrganizationNameById,
   getRawOrganizationById,
   onboardOrganization,
@@ -12,7 +13,7 @@ import {
 import { getUserApplicationSettings, getUserByEmail } from '@/db/user'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { CRUserChecklist, Prisma } from '@prisma/client'
+import { Prisma, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateOrganization, canDeleteOrganization, canUpdateOrganization } from '../permissions/organization'
@@ -58,7 +59,7 @@ export const createOrganizationCommand = async (
 
   try {
     const createdOrganization = await createOrganization(organization)
-    addUserChecklistItem(CRUserChecklist.AddClient)
+    addUserChecklistItem(UserChecklist.AddClient)
     return { success: true, id: createdOrganization.id }
   } catch (e) {
     console.error(e)
@@ -80,7 +81,8 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
   const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
   await updateOrganization(command, caUnit)
-  addUserChecklistItem(CRUserChecklist.AddSite)
+  const organization = await getOrganizationById(command.organizationId)
+  addUserChecklistItem(organization?.isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
 }
 
 export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) => {

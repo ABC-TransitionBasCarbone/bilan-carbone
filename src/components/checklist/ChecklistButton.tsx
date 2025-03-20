@@ -3,7 +3,7 @@
 import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Drawer, IconButton } from '@mui/material'
-import { CRUserChecklist, Organization } from '@prisma/client'
+import { Organization, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -20,7 +20,7 @@ const ChecklistButton = ({ userOrganization, clientId, studyId }: Props) => {
   const t = useTranslations('checklist')
   const [open, setOpen] = useState(false)
   const [completed, setCompleted] = useState(false)
-  const [checklist, setChecklist] = useState<CRUserChecklist[]>([])
+  const [checklist, setChecklist] = useState<UserChecklist[]>([])
 
   useEffect(() => {
     getCheckList()
@@ -28,7 +28,7 @@ const ChecklistButton = ({ userOrganization, clientId, studyId }: Props) => {
 
   const getCheckList = async () => {
     const checkList = await getUserCheckedItems()
-    if (checkList.some((item) => item.step === CRUserChecklist.Completed)) {
+    if (checkList.some((item) => item.step === UserChecklist.Completed)) {
       setCompleted(true)
     } else {
       setChecklist(checkList.map((item) => item.step))
