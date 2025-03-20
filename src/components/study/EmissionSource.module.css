@@ -102,6 +102,10 @@
   gap: 1rem;
 }
 
+.caracterisationSource {
+  flex: 2 !important;
+}
+
 .shrinked {
   justify-content: flex-start;
   > div {

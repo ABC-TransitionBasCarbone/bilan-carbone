@@ -38,7 +38,7 @@ const QualitySelectGroup = ({
   const tGlossary = useTranslations('emissionSource.glossary')
 
   return (
-    <div className={classNames('flex', expanded ? styles.row : styles.shrinked)}>
+    <div className={classNames('flex grow', expanded ? styles.row : styles.shrinked)}>
       {expanded ? (
         <>
           <QualitySelect

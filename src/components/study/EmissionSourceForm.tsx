@@ -1,4 +1,5 @@
 'use client'
+
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
@@ -232,48 +233,36 @@ const EmissionSourceForm = ({
       )}
 
       <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('optionalFields')}</p>
-      <div className={classNames(styles.row, 'flex')}>
-        {caracterisations.length > 0 && (
-          <FormControl>
-            <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')}${mandatoryCaracterisation ? ' *' : ''}`}</InputLabel>
-            <Select
-              disabled={!canEdit || caracterisations.length === 1}
-              value={emissionSource.caracterisation || ''}
-              data-testid="emission-source-caracterisation"
-              onChange={(event) => update('caracterisation', event.target.value)}
-              labelId="emission-source-caracterisation-label"
-              label={`${t('form.caracterisation')}${mandatoryCaracterisation ? ' *' : ''}`}
-            >
-              {caracterisations.map((categorisation) => (
-                <MenuItem key={categorisation} value={categorisation}>
-                  {tCategorisations(categorisation)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
-        <TextField
-          disabled={!canEdit}
-          data-testid="emission-source-source"
-          defaultValue={emissionSource.source}
-          onBlur={(event) => update('source', event.target.value)}
-          label={t('form.source')}
-        />
-        {!expandedQuality && canShrink && (
-          <QualitySelectGroup
-            canEdit={canEdit}
-            emissionSource={emissionSource}
-            update={update}
-            advanced={advanced}
-            setGlossary={setGlossary}
-            expanded={expandedQuality}
-            setExpanded={setExpandedQuality}
-            canShrink={canShrink}
-            defaultQuality={defaultQuality}
+      <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
+        <div className={classNames(styles.gapped, styles.caracterisationSource, 'flex')}>
+          {caracterisations.length > 0 && (
+            <FormControl className="grow">
+              <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')}${mandatoryCaracterisation ? ' *' : ''}`}</InputLabel>
+              <Select
+                disabled={!canEdit || caracterisations.length === 1}
+                value={emissionSource.caracterisation || ''}
+                data-testid="emission-source-caracterisation"
+                onChange={(event) => update('caracterisation', event.target.value)}
+                labelId="emission-source-caracterisation-label"
+                label={`${t('form.caracterisation')}${mandatoryCaracterisation ? ' *' : ''}`}
+              >
+                {caracterisations.map((categorisation) => (
+                  <MenuItem key={categorisation} value={categorisation}>
+                    {tCategorisations(categorisation)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+          <TextField
+            className="grow"
+            disabled={!canEdit}
+            data-testid="emission-source-source"
+            defaultValue={emissionSource.source}
+            onBlur={(event) => update('source', event.target.value)}
+            label={t('form.source')}
           />
-        )}
-      </div>
-      {(expandedQuality || !canShrink) && (
+        </div>
         <QualitySelectGroup
           canEdit={canEdit}
           emissionSource={emissionSource}
@@ -285,8 +274,7 @@ const EmissionSourceForm = ({
           canShrink={canShrink}
           defaultQuality={defaultQuality}
         />
-      )}
-
+      </div>
       <div className={classNames(styles.row, 'flex')}>
         <TextField
           style={{ flex: 2 }}
