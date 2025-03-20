@@ -21,6 +21,7 @@ const ChecklistButton = ({ userOrganization, clientId, studyId }: Props) => {
   const [open, setOpen] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [checklist, setChecklist] = useState<UserChecklist[]>([])
+  const [fetchedCheckedSteps, setFetchedCheckedSteps] = useState(false)
 
   useEffect(() => {
     getCheckList()
@@ -28,6 +29,7 @@ const ChecklistButton = ({ userOrganization, clientId, studyId }: Props) => {
 
   const getCheckList = async () => {
     const checkList = await getUserCheckedItems()
+    setFetchedCheckedSteps(true)
     if (checkList.some((item) => item.step === UserChecklist.Completed)) {
       setCompleted(true)
     } else {
@@ -35,7 +37,7 @@ const ChecklistButton = ({ userOrganization, clientId, studyId }: Props) => {
     }
   }
 
-  if (completed) {
+  if (completed || !fetchedCheckedSteps) {
     return null
   }
 
