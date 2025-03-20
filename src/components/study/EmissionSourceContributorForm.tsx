@@ -4,10 +4,14 @@ import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { formatNumber } from '@/utils/number'
+import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Path } from 'react-hook-form'
+import LinkButton from '../base/LinkButton'
 import QualitySelect from '../form/QualitySelect'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
@@ -19,33 +23,53 @@ interface Props {
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
 }
 
+const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
+  [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
+
 const EmissionSourceContributorForm = ({ emissionSource, update, emissionFactors, selectedFactor }: Props) => {
   const t = useTranslations('emissionSource')
+  const tResults = useTranslations('results')
   const tUnits = useTranslations('units')
 
   return (
     <>
-      <div className={styles.row}>
+      <div className={classNames(styles.row, 'flex')}>
         <EmissionSourceFactor
           canEdit
           update={update}
           emissionFactors={emissionFactors}
           selectedFactor={selectedFactor}
+          getDetail={getDetail}
         />
-      </div>
-      <div className={classNames(styles.row, 'flex')}>
-        <div className={styles.inputWithUnit}>
-          <TextField
-            type="number"
-            data-testid="emission-source-value-da"
-            defaultValue={emissionSource.value}
-            onBlur={(event) => update('value', Number(event.target.value))}
-            label={`${t('form.value')} *`}
-            slotProps={{
-              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-            }}
-          />
-          {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
+        <div className={classNames(styles.gapped, 'flex')}>
+          <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+            <TextField
+              className="grow"
+              type="number"
+              data-testid="emission-source-value-da"
+              defaultValue={emissionSource.value}
+              onBlur={(event) => update('value', Number(event.target.value))}
+              label={`${t('form.value')} *`}
+              slotProps={{ input: { onWheel: (event) => (event.target as HTMLInputElement).blur() } }}
+            />
+            {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
+          </div>
+          {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
+            <div className={classNames(styles.inputWithUnit, 'flex grow')}>
+              <TextField
+                className="grow"
+                type="number"
+                defaultValue={emissionSource.depreciationPeriod}
+                onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
+                label={`${t('form.depreciationPeriod')} *`}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+                }}
+              />
+              <div className={styles.unit}>{t('form.years')}</div>
+            </div>
+          )}
         </div>
         <TextField
           data-testid="emission-source-source"
@@ -54,22 +78,24 @@ const EmissionSourceContributorForm = ({ emissionSource, update, emissionFactors
           label={t('form.source')}
         />
       </div>
-      {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
-        <div className={classNames(styles.row, styles.inputWithUnit, 'flex')}>
-          <TextField
-            type="number"
-            defaultValue={emissionSource.depreciationPeriod}
-            className={styles.depreciationPeriod}
-            onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-            label={`${t('form.depreciationPeriod')} *`}
-            slotProps={{
-              inputLabel: { shrink: true },
-              input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-            }}
-          />
-          <div className={styles.unit}>{t('form.years')}</div>
+      {selectedFactor ? (
+        <div className={styles.row} data-testid="emission-source-factor">
+          <p className={styles.header}>
+            {selectedFactor.metaData?.title}
+            {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
+            {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
+            {formatNumber(getEmissionFactorValue(selectedFactor) / 1000, 5)} {tResults('unit')}/
+            {tUnits(selectedFactor.unit)}{' '}
+          </p>
+          {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
         </div>
+      ) : (
+        <LinkButton color="secondary" href="/facteurs-d-emission/creer" className="mt-2">
+          <AddIcon />
+          {t('createEmissionFactor')}
+        </LinkButton>
       )}
+
       <div className={classNames(styles.row, 'flex')}>
         <QualitySelect
           data-testid="emission-source-reliability"

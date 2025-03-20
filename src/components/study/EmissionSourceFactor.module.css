@@ -38,7 +38,6 @@
 
 .inputContainer {
   position: relative;
-  min-width: 15rem;
   :global(.MuiFormControl-root) {
     width: 100%;
   }

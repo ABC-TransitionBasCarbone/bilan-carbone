@@ -29,6 +29,7 @@ const postXAxisList = [
 const Result = ({ studySite, computedResults }: Props) => {
   const t = useTranslations('results')
   const tPost = useTranslations('emissionFactors.post')
+  const tResults = useTranslations('results')
   const [dynamicHeight, setDynamicHeight] = useState(0)
   const chartRef = useRef<Chart | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -74,7 +75,11 @@ const Result = ({ studySite, computedResults }: Props) => {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              tooltip: { callbacks: { label: (context) => `${formatNumber((context.raw as number) / 1000)} tCO₂e` } },
+              tooltip: {
+                callbacks: {
+                  label: (context) => `${formatNumber((context.raw as number) / 1000)} ${tResults('unit')}`,
+                },
+              },
               legend: { display: true },
             },
             scales: {
