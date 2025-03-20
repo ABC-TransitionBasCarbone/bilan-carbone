@@ -1,6 +1,6 @@
 .container {
   &:not(:last-child) {
-    border-bottom: solid 1px var(--neutral-30);
+    border-bottom: solid 1px var(--neutral-300);
   }
 }
 
@@ -19,7 +19,7 @@
   right: 1rem;
   transform: translateY(-50%);
   display: none;
-  color: var(--neutral-50);
+  color: var(--neutral-500);
 }
 
 .line {
@@ -34,7 +34,7 @@
   gap: 1rem;
   flex-wrap: wrap;
   &:hover {
-    background-color: var(--primary-10);
+    background-color: var(--primary-50);
 
     .editIcon {
       display: block;
@@ -53,7 +53,7 @@
 .status {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: var(--neutral-50);
+  color: var(--neutral-500);
 }
 
 @keyframes grid-expand {

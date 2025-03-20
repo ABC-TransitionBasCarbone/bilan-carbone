@@ -18,9 +18,9 @@
 }
 
 .green {
-  color: var(--success);
+  color: var(--success-400);
 }
 
 .red {
-  color: var(--error);
+  color: var(--error-100);
 }

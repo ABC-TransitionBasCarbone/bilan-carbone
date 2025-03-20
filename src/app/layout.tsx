@@ -7,6 +7,8 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import Head from 'next/head'
 
+const theme = process.env.NEXT_PUBLIC_THEME || 'base'
+
 export const metadata: Metadata = {
   title: 'Bilan Carbone +',
   description: 'Découvrez le logiciel Bilan Carbone +',
@@ -24,7 +26,7 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
   const messages = await getMessages()
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={theme}>
       <Head>
         <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/gilroy-bold" />
       </Head>
