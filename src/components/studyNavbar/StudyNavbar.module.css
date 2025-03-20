@@ -10,7 +10,7 @@
 .openDrawerButton {
   height: 4rem;
   width: 4rem;
-  background-color: var(--info-900) !important;
+  background-color: var(--info-300) !important;
   border-radius: 50% !important;
   display: flex !important;
   justify-content: center !important;
@@ -54,7 +54,7 @@
   background-color: white;
   width: 100%;
   border: none;
-  color: var(--info-900);
+  color: var(--info-300);
   padding: 1rem;
   text-decoration: none;
   font-weight: 600;

@@ -63,17 +63,17 @@
 }
 
 .green {
-  border-color: var(--secondary2-700);
+  border-color: var(--post-green-dark);
 }
 
 .darkBlue {
-  border-color: var(--primary-800);
+  border-color: var(--post-darkBlue-dark);
 }
 
 .blue {
-  border-color: var(--primary2-300);
+  border-color: var(--post-blue-dark);
 }
 
 .orange {
-  border-color: var(--warning-400);
+  border-color: var(--post-orange-dark);
 }

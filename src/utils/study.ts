@@ -31,20 +31,20 @@ export const getUserRoleOnStudy = (
 
 export const colors: Record<string, { dark: string; light: string }> = {
   darkBlue: {
-    dark: 'var(--primary-800)',
-    light: 'var(--primary2-200)',
+    dark: 'var(--post-darkBlue-dark)',
+    light: 'var(--post-darkBlue-light)',
   },
   green: {
-    dark: 'var(--secondary2-700)',
-    light: 'var(--secondary2-400)',
+    dark: 'var(--post-green-dark)',
+    light: 'var(--post-green-light)',
   },
   blue: {
-    dark: 'var(--primary2-300)',
-    light: 'var(--primary2-200)',
+    dark: 'var(--post-blue-dark)',
+    light: 'var(--post-blue-light)',
   },
   orange: {
-    dark: 'var(--warning-400)',
-    light: 'var(--warning-300)',
+    dark: 'var(--post-orange-dark)',
+    light: 'var(--post-orange-light)',
   },
 }
 

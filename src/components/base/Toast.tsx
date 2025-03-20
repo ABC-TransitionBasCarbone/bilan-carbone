@@ -15,9 +15,9 @@ interface Props {
 
 const backgrounds: Record<ToastColors, string> = {
   info: 'var(--neutral-400)',
-  error: 'var(--error-500)',
-  success: 'var(--success-500)',
-  warning: 'var(--warning-500)',
+  error: 'var(--error-50)',
+  success: 'var(--success-400)',
+  warning: 'var(--warning-300)',
 }
 
 const Toast = ({ position, open, onClose, message, color, toastKey, duration }: Props) => (

@@ -30,10 +30,10 @@
   }
 }
 .error {
-  background-color: var(--error-700) !important;
-  border-color: var(--error-700) !important;
+  background-color: var(--error-200) !important;
+  border-color: var(--error-200) !important;
   &:hover {
-    background-color: var(--error-800) !important;
-    border-color: var(--error-800) !important;
+    background-color: var(--error-300) !important;
+    border-color: var(--error-300) !important;
   }
 }
