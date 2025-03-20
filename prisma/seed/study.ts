@@ -24,6 +24,20 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
   }
 
   await getEmissionFactorsFromCSV('test', './prisma/seed/Base_Carbone_Test.csv')
+  await prisma.emissionFactorImportVersion.createMany({
+    data: [
+      {
+        internId: 'Legifrance_Test.csv',
+        name: 'test',
+        source: Import.Legifrance,
+      },
+      {
+        internId: 'Negaoctet_Test.csv',
+        name: 'test',
+        source: Import.NegaOctet,
+      },
+    ],
+  })
 
   await prisma.site.create({
     data: {
