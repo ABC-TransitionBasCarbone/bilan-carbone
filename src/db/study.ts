@@ -1,6 +1,8 @@
 import { filterAllowedStudies } from '@/services/permissions/study'
-import { checkLevel } from '@/services/study'
+import { isAdmin } from '@/services/permissions/user'
+import { checkLevel, getAllowedLevels } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/onganization'
+import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
@@ -163,13 +165,42 @@ export const getAllowedStudiesByUser = async (user: User) => {
   const studies = await prismaClient.study.findMany({
     where: {
       OR: [
-        { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
+        {
+          AND: [
+            { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
+            ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
+          ],
+        },
         { allowedUsers: { some: { userId: user.id } } },
         { contributors: { some: { userId: user.id } } },
       ],
     },
   })
   return filterAllowedStudies(user, studies)
+}
+
+export const getAllowedStudyIdByUser = async (user: User) => {
+  const organizationIds = (await getUserOrganizations(user.email)).map((organization) => organization.id)
+  const isAllowedOnPublicStudies = user.level && getUserRoleOnPublicStudy(user, user.level) !== StudyRole.Reader
+  const study = await prismaClient.study.findFirst({
+    where: {
+      OR: [
+        { allowedUsers: { some: { userId: user.id, role: { notIn: [StudyRole.Reader] } } } },
+        ...(isAllowedOnPublicStudies
+          ? [
+              {
+                AND: [
+                  { organizationId: { in: organizationIds } },
+                  ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
+                ],
+              },
+            ]
+          : []),
+      ],
+    },
+    orderBy: { createdAt: 'desc' },
+  })
+  return study?.id
 }
 
 export const getAllowedStudiesByUserAndOrganization = async (user: User, organizationId: string) => {

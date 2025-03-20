@@ -1092,10 +1092,10 @@
     "loading": "Chargement"
   },
   "onboarding": {
-    "title-0": "Bienvenue sur le BC+ ! Avant de commencer, veuillez configurer votre organisation",
-    "titleDescription-0": "Nous avons pré-rempli certaines informations concernant votre organisation (association, entreprise, ...) suite à votre adhésion à l'ABC. Vous pouvez modifier le nom de votre organisation maintenant, ou à tout moment dans le BC+ via la rubrique \"Organisation\".",
-    "title-1": "Gestion de votre équipe",
-    "titleDescription-1": "Vous pouvez d'ores et déjà ajouter vos collaborateurs au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Mon équipe\" située dans le menu \"Mon organisation\".",
+    "title-1": "Bienvenue sur le BC+ ! Avant de commencer, veuillez configurer votre organisation",
+    "titleDescription-1": "Nous avons pré-rempli certaines informations concernant votre organisation (association, entreprise, ...) suite à votre adhésion à l'ABC. Vous pouvez modifier le nom de votre organisation maintenant, ou à tout moment dans le BC+ via la rubrique \"Organisation\".",
+    "title-2": "Gestion de votre équipe",
+    "titleDescription-2": "Vous pouvez d'ores et déjà ajouter vos collaborateurs au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Mon équipe\" située dans le menu \"Mon organisation\".",
     "previous": "Précédent",
     "next": "Suivant",
     "validate": "Valider",
@@ -1124,5 +1124,27 @@
         "requiredRole": "Rôle obligatoire"
       }
     }
+  },
+  "checklist": {
+    "title": "Bien démarrer sur le BC+",
+    "done": "Fait",
+    "CreateAccount": "Créer votre compte",
+    "CreateAccountDetails": "",
+    "AddCollaborator": "Ajouter des collaborateurs",
+    "AddCollaboratorDetails": "Ajouter vos collègues pour qu'ils puissent vous aider à établir le Bilan Carbone® de votre entreprise.",
+    "AddClient": "Créer votre premier client",
+    "AddClientDetails": "Ajouter votre premier client afin de commencer vos Bilans Carbone®",
+    "AddSite": "Ajouter les sites",
+    "AddSiteDetails": "Ajouter des sites à votre <orga>organisation</orga> ou à <client>un de vos clients</client> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation ou client n'a qu'un site, créer un site 'Tous sites'",
+    "CreateFirstStudy": "Créer votre premier Bilan Carbone®",
+    "CreateFirstStudyDetails": "C'est parti pour votre premier Bilan Carbone® ! Remplissez les premières informations comme la date, le nom...",
+    "CreateFirstEmissionSource": "Créer votre première source d'émissions",
+    "CreateFirstEmissionSourceDetails": "Rendez-vous dans le premier poste/sous poste que vous souhaitez renseigner ! Choisissez votre facteur d'emission, rentrez votre donnée d'activité et faites vos premiers calculs",
+    "ConsultResults": "Allez voir vos premiers résultats",
+    "ConsultResultsDetails": "Rendez-vous maintenant dans la page \"Résultats\" pour voir vos émissions, les exporter...",
+    "optional": "Optionnel",
+    "markAsDone": "Marquer comme fait",
+    "go": "Aller",
+    "finished": "Vous êtes prêt à commencer votre utilisation du BC+ ! N'hésitez pas à consulter la <faq>FAQ</faq> ou à nous contacter en cas de besoin."
   }
 }

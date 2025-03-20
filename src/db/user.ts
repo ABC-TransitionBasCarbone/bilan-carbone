@@ -1,6 +1,6 @@
 import { signPassword } from '@/services/auth'
 import { findUserInfo } from '@/services/permissions/user'
-import { Prisma, Role, UserStatus } from '@prisma/client'
+import { CRUserChecklist, Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 
@@ -33,7 +33,7 @@ export type UserWithAllowedStudies = AsyncReturnType<typeof getUserByEmailWithAl
 
 export const updateUserPasswordForEmail = async (email: string, password: string) => {
   const signedPassword = await signPassword(password)
-  return prismaClient.user.update({
+  const user = await prismaClient.user.update({
     where: { email },
     data: {
       resetToken: null,
@@ -42,6 +42,12 @@ export const updateUserPasswordForEmail = async (email: string, password: string
       updatedAt: new Date(),
     },
   })
+  prismaClient.userCheckedStep.upsert({
+    where: { userId_step: { userId: user.id, step: CRUserChecklist.CreateAccount } },
+    update: {},
+    create: { userId: user.id, step: CRUserChecklist.CreateAccount },
+  })
+  return user
 }
 
 export const updateUserResetTokenForEmail = async (email: string, resetToken: string) =>

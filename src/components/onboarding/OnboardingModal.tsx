@@ -2,7 +2,7 @@ import { onboardOrganizationCommand } from '@/services/serverFunctions/organizat
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
-import { Dialog, DialogActions, DialogContent, DialogTitle, MobileStepper, Button as MUIButton } from '@mui/material'
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
 import { Organization, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
+import Stepper from '../base/Stepper'
 import styles from './Onboarding.module.css'
 import Step1 from './OnboardingStep1'
 import Step2 from './OnboardingStep2'
@@ -30,11 +31,11 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const { update: updateSession } = useSession()
   const router = useRouter()
 
-  const [activeStep, setActiveStep] = useState(0)
+  const [activeStep, setActiveStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const stepCount = 2
-  const Step = activeStep === 0 ? Step1 : Step2
-  const buttonLabel = activeStep === stepCount - 1 ? 'validate' : 'next'
+  const Step = activeStep === 1 ? Step1 : Step2
+  const buttonLabel = activeStep === stepCount ? 'validate' : 'next'
 
   const newRole = useMemo(() => (user.level ? Role.ADMIN : Role.GESTIONNAIRE), [user])
 
@@ -54,7 +55,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const goToPreviousStep = () => setActiveStep(activeStep > 1 ? activeStep - 1 : 0)
 
   const onValidate = async () => {
-    if (activeStep < stepCount - 1) {
+    if (activeStep < stepCount) {
       setActiveStep(activeStep + 1)
     } else {
       setLoading(true)
@@ -77,25 +78,6 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     }
   }
 
-  const Title = (
-    <>
-      <MobileStepper
-        className="mb2"
-        classes={{ dot: styles.stepperDots, dotActive: styles.active }}
-        style={{ padding: 0 }}
-        variant="dots"
-        steps={stepCount}
-        position="static"
-        activeStep={activeStep}
-        sx={{ flexGrow: 1 }}
-        nextButton={null}
-        backButton={null}
-      />
-      <p className={classNames(styles.stepTitle, 'mb2')}>{t(`title-${activeStep}`)}</p>
-      <p>{t(`titleDescription-${activeStep}`)}</p>
-    </>
-  )
-
   return (
     <Dialog
       open={open}
@@ -111,7 +93,13 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
               <CloseIcon />
             </MUIButton>
           </div>
-          <DialogTitle className="noSpacing">{Title}</DialogTitle>
+          <DialogTitle className="noSpacing">
+            <>
+              <Stepper activeStep={activeStep} steps={stepCount} fillValidatedSteps />
+              <p className={classNames(styles.stepTitle, 'mb2')}>{t(`title-${activeStep}`)}</p>
+              <p>{t(`titleDescription-${activeStep}`)}</p>
+            </>
+          </DialogTitle>
           <DialogContent className="noSpacing">
             <Step form={form} role={newRole} isCr={organization.isCR} />
           </DialogContent>
