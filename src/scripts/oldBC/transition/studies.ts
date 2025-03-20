@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { ControlMode, Level, Prisma, Export as StudyExport } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 
 export enum RequiredStudiesColumns {
@@ -34,8 +34,8 @@ interface StudySite {
 }
 
 interface Export {
-  type: string
-  control: string
+  type: StudyExport
+  control: ControlMode
 }
 
 const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
@@ -82,8 +82,8 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
     .map<[string, Export]>((row) => [
       row[indexes[RequiredStudyExportsColumns.studyId]] as string,
       {
-        type: row[indexes[RequiredStudyExportsColumns.type]] as string,
-        control: row[indexes[RequiredStudyExportsColumns.control]] as string,
+        type: StudyExport.GHGP,
+        control: ControlMode.CapitalShare,
       },
     ])
     .reduce((accumulator, currentValue) => {
@@ -146,7 +146,37 @@ export const uploadStudies = async (
     (study) => !existingStudyIds.find((existingStudy) => study.oldBCId !== existingStudy.oldBCId),
   )
 
-  console.log(newStudies)
+  await transaction.study.createMany({
+    data: newStudies.map((study) => ({
+      ...study,
+      sites: undefined,
+      exports: undefined,
+      createdById: userId,
+      isPublic: false,
+      level: Level.Initial,
+      organizationId: organizationId,
+    })),
+  })
+
+  await transaction.studySite.createMany({
+    data: newStudies.slice(0, 1).flatMap((study) =>
+      study.sites.slice(0, 1).map((site) => ({
+        studyId: study.oldBCId,
+        siteId: site.id,
+        etp: 1,
+        ca: 1,
+      })),
+    ),
+  })
+
+  await transaction.studyExport.createMany({
+    data: newStudies.slice(0, 1).flatMap((study) =>
+      study.exports.slice(0, 1).map((site) => ({
+        ...site,
+        studyId: study.oldBCId,
+      })),
+    ),
+  })
 
   return false
 }
