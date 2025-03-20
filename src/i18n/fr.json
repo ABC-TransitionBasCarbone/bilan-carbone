@@ -95,10 +95,12 @@
     "organization": "Organisation",
     "edit": "Modifier",
     "studyRights": "Cadrage",
-    "team": "Équipe"
+    "team": "Équipe",
+    "actualities": "Actualités"
   },
   "actuality": {
     "title": "Les actualités du BC+",
+    "allActualities": "Voir toutes les actualités",
     "noItems": "Aucune actualité pour le moment",
     "seeLess": "Voir moins",
     "seeMore": "Voir plus"

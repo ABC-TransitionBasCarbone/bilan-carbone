@@ -95,10 +95,12 @@
     "organization": "Organization",
     "edit": "Edit",
     "studyRights": "Rights",
-    "team": "Team"
+    "team": "Team",
+    "actualities": "Actualities"
   },
   "actuality": {
     "title": "BC+ actualities",
+    "allActualities": "See all actualities",
     "noItems": "No news at the moment",
     "seeLess": "See less",
     "seeMore": "See more"

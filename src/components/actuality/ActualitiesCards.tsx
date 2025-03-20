@@ -12,7 +12,11 @@ const ActualitiesCards = async () => {
   const actualities = await getMainActualities()
   const t = await getTranslations('actuality')
   return (
-    <Block title={t('title')} data-testid="home-actualities">
+    <Block
+      title={t('title')}
+      data-testid="home-actualities"
+      actions={[{ actionType: 'link', href: '/actualites', children: t('allActualities') }]}
+    >
       <ul className={classNames(styles.actualities, 'grid')}>
         {actualities.length ? (
           actualities.map((actuality) => <ActualityRow key={actuality.id} actuality={actuality} />)
