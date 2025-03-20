@@ -1,5 +1,6 @@
 import RouteChangeListener from '@/components/RouteChangeListener'
 import '@/css/index.css'
+import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import Providers from '@/services/providers/Providers'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import type { Metadata } from 'next'
@@ -22,7 +23,6 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages()
-
   return (
     <html lang={locale}>
       <Head>
@@ -35,6 +35,7 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
             <Providers>{children}</Providers>
           </NextIntlClientProvider>
         </AppRouterCacheProvider>
+        <EnvironmentInitializer />
       </body>
     </html>
   )

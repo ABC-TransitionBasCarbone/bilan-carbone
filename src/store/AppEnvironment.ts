@@ -10,9 +10,13 @@ interface AppEnvironmentState {
   setEnvironment: (newEnvironment: Environment) => void
 }
 
-export const useAppEnvironmentStore = create<AppEnvironmentState>(
-  (set): AppEnvironmentState => ({
-    environment: BASE, // CHANGE THIS TO BASE TO TEST THE DYNAMIC COMPONENT
-    setEnvironment: (environment: Environment) => set({ environment }),
-  }),
-)
+export const useAppEnvironmentStore = create<AppEnvironmentState>((set) => {
+  const initialEnv = BASE // CHANGE THIS TO CUT TO TEST THE DYNAMIC COMPONENT
+
+  return {
+    environment: initialEnv,
+    setEnvironment: (newEnvironment: Environment) => {
+      set({ environment: newEnvironment })
+    },
+  }
+})
