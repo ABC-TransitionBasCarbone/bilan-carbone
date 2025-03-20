@@ -1,7 +1,3 @@
-.iconButton {
-  background-color: var(--primary-40) !important;
-}
-
-.blockStudyParams {
-  width: fit-content;
+.select {
+  width: 15rem;
 }

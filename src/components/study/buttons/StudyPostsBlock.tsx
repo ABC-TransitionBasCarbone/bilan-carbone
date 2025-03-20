@@ -28,7 +28,7 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
   const tQuality = useTranslations('quality')
   const tStudyPost = useTranslations('study.post')
   const tUnit = useTranslations('units')
-  const tResults = useTranslations('results')
+  const tResultUnits = useTranslations('study.results.units')
 
   return (
     <Block
@@ -56,7 +56,7 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
               tPost,
               tQuality,
               tUnit,
-              tResults,
+              tResultUnits,
             )
             setDownloading(false)
           },

@@ -22,6 +22,11 @@ enum StudyRole {
   Reader
 }
 
+enum StudyResultUnit {
+  K // kg (1)
+  T // t (1000)
+}
+
 enum EmissionSourceCaracterisation {
   Operated
   NotOperated
@@ -50,12 +55,13 @@ model Study {
   createdById String @map("created_by_id")
   createdBy   User   @relation(fields: [createdById], references: [id])
 
-  name      String
-  isPublic  Boolean       @map("is_public")
-  startDate DateTime      @map("start_date") @db.Date
-  endDate   DateTime      @map("end_date") @db.Date
-  level     Level
-  exports   StudyExport[]
+  name        String
+  isPublic    Boolean         @map("is_public")
+  startDate   DateTime        @map("start_date") @db.Date
+  endDate     DateTime        @map("end_date") @db.Date
+  level       Level
+  resultsUnit StudyResultUnit @default(T) @map("results_unit")
+  exports     StudyExport[]
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")

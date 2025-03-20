@@ -4,6 +4,7 @@ import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
@@ -46,7 +47,7 @@ const SubPost = ({
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const t = useTranslations('study.post')
   const tPost = useTranslations('emissionFactors.post')
-  const tUnit = useTranslations('results')
+  const tUnits = useTranslations('study.results.units')
 
   const subPostEmissionFactors = useMemo(
     () => emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost)),
@@ -89,7 +90,7 @@ const SubPost = ({
               />
             )}
             <span className={classNames(styles.value, 'ml1')}>
-              {formatNumber(total / 1000)} {tUnit('unit')}
+              {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
             </span>
           </p>
         </AccordionSummary>

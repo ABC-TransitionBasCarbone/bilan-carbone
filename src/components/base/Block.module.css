@@ -29,7 +29,7 @@
 }
 
 .bigIcon {
-  height: 2rem;
+  min-height: 2rem;
   svg {
     height: 2rem;
     width: auto;
