@@ -2,6 +2,7 @@
 
 import {
   createOrganization,
+  deleteClient,
   getOrganizationNameById,
   getRawOrganizationById,
   onboardOrganization,
@@ -14,9 +15,10 @@ import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { Prisma } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canCreateOrganization, canUpdateOrganization } from '../permissions/organization'
+import { canCreateOrganization, canDeleteOrganization, canUpdateOrganization } from '../permissions/organization'
 import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
 import { getStudy } from './study'
+import { DeleteCommand } from './study.command'
 import { OnboardingCommand } from './user.command'
 
 /**
@@ -68,7 +70,7 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     return NOT_AUTHORIZED
   }
 
-  if (!(await canUpdateOrganization(session.user, command))) {
+  if (!(await canUpdateOrganization(session.user, command.organizationId))) {
     return NOT_AUTHORIZED
   }
 
@@ -76,6 +78,22 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
   const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
   await updateOrganization(command, caUnit)
+}
+
+export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) => {
+  if (!(await canDeleteOrganization(id))) {
+    return NOT_AUTHORIZED
+  }
+  const organization = await getOrganizationNameById(id)
+  if (!organization) {
+    return NOT_AUTHORIZED
+  }
+
+  if (organization.name.toLowerCase() !== name.toLowerCase()) {
+    return 'wrongName'
+  }
+
+  return deleteClient(id)
 }
 
 export const setOnboardedOrganization = async (organizationId: string) => {

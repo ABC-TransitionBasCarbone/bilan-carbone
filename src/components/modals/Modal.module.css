@@ -28,3 +28,8 @@
 .actions {
   gap: 1rem;
 }
+
+.error {
+  font-size: small;
+  color: var(--error);
+}
