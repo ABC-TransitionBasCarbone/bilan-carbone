@@ -1,6 +1,16 @@
 import { Prisma } from '@prisma/client'
 import { prismaClient } from '../../../db/client'
 
+export enum RequiredOrganizationsColumns {
+  ID_ENTITE = 'ID_ENTITE',
+  NOM_ORGANISATION = 'NOM_ORGANISATION',
+  NOM_ENTITE = 'NOM_ENTITE',
+  ENTITE_PRINCIPALE = 'ENTITE_PRINCIPALE',
+  SIRET = 'SIRET',
+  ID_ENTITE_MERE = 'ID_ENTITE_MERE',
+  IS_USER_ORGA = 'IS_USER_ORGA',
+}
+
 const getOrganizationId = (id: string, oldUserOrganizationId: string, userOrganizationId: string) => {
   // Si l'id que je recherche est l'ancienne id principale, je la remplace par le nouveau
   if (id === oldUserOrganizationId) {
@@ -19,13 +29,13 @@ export const uploadOrganizations = async (
   const organizations = data
     .slice(1)
     .map((row) => ({
-      id: row[indexes['ID_ENTITE']],
-      name: row[indexes['NOM_ORGANISATION']],
-      entityName: row[indexes['NOM_ENTITE']],
-      mainEntity: row[indexes['ENTITE_PRINCIPALE']],
-      siret: row[indexes['SIRET']],
-      parentId: row[indexes['ID_ENTITE_MERE']],
-      userOrga: row[indexes['IS_USER_ORGA']],
+      id: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]],
+      name: row[indexes[RequiredOrganizationsColumns.NOM_ORGANISATION]],
+      entityName: row[indexes[RequiredOrganizationsColumns.NOM_ENTITE]],
+      mainEntity: row[indexes[RequiredOrganizationsColumns.ENTITE_PRINCIPALE]],
+      siret: row[indexes[RequiredOrganizationsColumns.SIRET]],
+      parentId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]],
+      userOrga: row[indexes[RequiredOrganizationsColumns.IS_USER_ORGA]],
     }))
     // On ignore les parentID supprimés
     .filter((organization) => organization.parentId !== '00000000-0000-0000-0000-000000000000')
