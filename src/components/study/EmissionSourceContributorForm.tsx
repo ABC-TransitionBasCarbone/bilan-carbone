@@ -6,7 +6,6 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
@@ -22,20 +21,13 @@ interface Props {
   emissionSource: StudyWithoutDetail['emissionSources'][0]
   emissionFactors: EmissionFactorWithMetaData[]
   selectedFactor?: EmissionFactorWithMetaData
-  resultsUnit: StudyResultUnit
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 
-const EmissionSourceContributorForm = ({
-  emissionSource,
-  emissionFactors,
-  selectedFactor,
-  resultsUnit,
-  update,
-}: Props) => {
+const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, selectedFactor, update }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.unit')
   const tUnits = useTranslations('units')
@@ -93,8 +85,8 @@ const EmissionSourceContributorForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatNumber(getEmissionFactorValue(selectedFactor) / STUDY_UNIT_VALUES[resultsUnit], 5)}{' '}
-            {tResultUnits(resultsUnit)}/{tUnits(selectedFactor.unit)}{' '}
+            {formatNumber(getEmissionFactorValue(selectedFactor), 5)} {tResultUnits(StudyResultUnit.K)}/
+            {tUnits(selectedFactor.unit)}
           </p>
           {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
         </div>

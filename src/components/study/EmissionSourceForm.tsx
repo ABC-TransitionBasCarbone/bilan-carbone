@@ -8,7 +8,6 @@ import { EmissionSourcesStatus } from '@/services/study'
 import { getQualityRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { EmissionSourceCaracterisation, EmissionSourceType, StudyResultUnit, SubPost, Unit } from '@prisma/client'
@@ -41,7 +40,6 @@ interface Props {
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
-  resultsUnit: StudyResultUnit
 }
 
 const EmissionSourceForm = ({
@@ -55,7 +53,6 @@ const EmissionSourceForm = ({
   caracterisations,
   mandatoryCaracterisation,
   status,
-  resultsUnit,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -220,8 +217,8 @@ const EmissionSourceForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatNumber(getEmissionFactorValue(selectedFactor) / STUDY_UNIT_VALUES[resultsUnit], 5)}{' '}
-            {tResultUnits(resultsUnit)}/{tUnits(selectedFactor.unit)}{' '}
+            {formatNumber(getEmissionFactorValue(selectedFactor), 5)} {tResultUnits(StudyResultUnit.K)}/
+            {tUnits(selectedFactor.unit)}{' '}
             {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
           </p>
           {selectedFactor.metaData && (
