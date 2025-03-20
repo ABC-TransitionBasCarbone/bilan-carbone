@@ -15,6 +15,7 @@ interface Props {
 const NavLayout = async ({ children, user }: Props & UserProps) => {
   const [organizations, studyId] = await Promise.all([getUserOrganizations(user.email), getAllowedStudyIdByUser(user)])
   const userOrganization = organizations.find((organization) => organization.id === user.organizationId) as Organization
+  const clientId = organizations.find((organization) => organization.id !== user.organizationId)?.id
 
   return (
     <div className="flex-col h100">
@@ -23,7 +24,7 @@ const NavLayout = async ({ children, user }: Props & UserProps) => {
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: user.organizationId })}>
         {children}
       </main>
-      <ChecklistButton userOrganization={userOrganization} organizations={organizations} studyId={studyId} />
+      <ChecklistButton userOrganization={userOrganization} clientId={clientId} studyId={studyId} />
     </div>
   )
 }

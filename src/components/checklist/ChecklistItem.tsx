@@ -4,7 +4,7 @@ import ValidatedIcon from '@mui/icons-material/CheckCircle'
 import ToDoIcon from '@mui/icons-material/CheckCircleOutline'
 import ExpandIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary } from '@mui/material'
-import { CRUserChecklist, Organization } from '@prisma/client'
+import { CRUserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -20,7 +20,7 @@ interface Props {
   disabled: boolean
   onClose: () => void
   organizationId: string
-  clients?: Organization[]
+  clientId?: string
   studyId?: string
 }
 
@@ -31,7 +31,7 @@ const ChecklistItem = ({
   disabled,
   onClose,
   organizationId,
-  clients,
+  clientId,
   studyId,
 }: Props) => {
   const t = useTranslations('checklist')
@@ -85,7 +85,7 @@ const ChecklistItem = ({
                 </Link>
               ),
               client: (children) => (
-                <Link href={`/organisations/${clients ? clients[0].id : organizationId}/modifier`} onClick={onClose}>
+                <Link href={`/organisations/${clientId ? clientId : organizationId}/modifier`} onClick={onClose}>
                   {children}
                 </Link>
               ),

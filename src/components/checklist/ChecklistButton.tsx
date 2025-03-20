@@ -12,11 +12,11 @@ import ChecklistDrawer from './ChecklistDrawer'
 
 interface Props {
   userOrganization: Organization
-  organizations: Organization[]
+  clientId?: string
   studyId?: string
 }
 
-const ChecklistButton = ({ userOrganization, organizations, studyId }: Props) => {
+const ChecklistButton = ({ userOrganization, clientId, studyId }: Props) => {
   const t = useTranslations('checklist')
   const [open, setOpen] = useState(false)
   const [completed, setCompleted] = useState(false)
@@ -62,7 +62,7 @@ const ChecklistButton = ({ userOrganization, organizations, studyId }: Props) =>
           getCheckList={getCheckList}
           userChecklist={checklist}
           userOrganization={userOrganization}
-          organizations={organizations}
+          clientId={clientId}
           studyId={studyId}
         />
       </Drawer>

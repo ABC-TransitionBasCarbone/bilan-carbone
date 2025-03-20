@@ -14,11 +14,11 @@ interface Props {
   getCheckList: () => void
   userChecklist: CRUserChecklist[]
   userOrganization: Organization
-  organizations: Organization[]
+  clientId?: string
   studyId?: string
 }
 
-const ChecklistDrawer = ({ setOpen, getCheckList, userOrganization, organizations, userChecklist, studyId }: Props) => {
+const ChecklistDrawer = ({ setOpen, getCheckList, userOrganization, clientId, userChecklist, studyId }: Props) => {
   const t = useTranslations('checklist')
   const steps = useMemo(() => (userOrganization.isCR ? CRUserChecklist : CRUserChecklist), [userOrganization])
   const finished = useMemo(() => userChecklist.length === Object.values(steps).length - 1, [userChecklist, steps])
@@ -46,7 +46,7 @@ const ChecklistDrawer = ({ setOpen, getCheckList, userOrganization, organization
               disabled={isValidated(step) || isDisabled(step)}
               onClose={() => setOpen(false)}
               organizationId={userOrganization.id}
-              clients={organizations}
+              clientId={clientId}
               studyId={studyId}
             />
           ))}
