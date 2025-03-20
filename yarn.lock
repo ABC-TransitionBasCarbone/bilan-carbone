@@ -4769,6 +4769,11 @@ eventemitter2@6.4.7:
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-6.4.7.tgz#a7f6c4d7abf28a14c1ef3442f21cb306a054271d"
   integrity sha512-tYUSVOGeQPKt/eC1ABfhHy5Xd96N3oIijJvN3O9+TsC28T5V9yX9oEfEK5faP0EFSNVOG97qtAS68GBrQB2hDg==
 
+excel-date-to-js@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/excel-date-to-js/-/excel-date-to-js-1.1.5.tgz#d4b3cbd48ae5ac0279d58f5378b01776570a4157"
+  integrity sha512-grZW0MPye0VGCzLNljI7H22QWgrI8/hkTCvIUczYsQTTSaPQU/UTcz1fBPHNxWKpiv8Zu2I/98z+aAnlp6STNw==
+
 execa@4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/execa/-/execa-4.1.0.tgz#4e5491ad1572f2f17a77d388c6c857135b22847a"
