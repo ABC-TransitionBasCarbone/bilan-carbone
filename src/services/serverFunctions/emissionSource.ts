@@ -9,7 +9,7 @@ import {
 } from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
 import { getUserByEmail } from '@/db/user'
-import { CRUserChecklist } from '@prisma/client'
+import { UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -83,7 +83,7 @@ export const updateEmissionSource = async ({
     emissionSourceId,
     isContributor ? { ...data, contributor: { connect: { id: user.id } } } : data,
   )
-  addUserChecklistItem(CRUserChecklist.CreateFirstEmissionSource)
+  addUserChecklistItem(UserChecklist.CreateFirstEmissionSource)
 }
 
 export const deleteEmissionSource = async (emissionSourceId: string) => {

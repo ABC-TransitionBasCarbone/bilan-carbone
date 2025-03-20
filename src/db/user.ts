@@ -1,6 +1,6 @@
 import { signPassword } from '@/services/auth'
 import { findUserInfo } from '@/services/permissions/user'
-import { CRUserChecklist, Prisma, Role, UserStatus } from '@prisma/client'
+import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 
@@ -43,9 +43,9 @@ export const updateUserPasswordForEmail = async (email: string, password: string
     },
   })
   prismaClient.userCheckedStep.upsert({
-    where: { userId_step: { userId: user.id, step: CRUserChecklist.CreateAccount } },
+    where: { userId_step: { userId: user.id, step: UserChecklist.CreateAccount } },
     update: {},
-    create: { userId: user.id, step: CRUserChecklist.CreateAccount },
+    create: { userId: user.id, step: UserChecklist.CreateAccount },
   })
   return user
 }
