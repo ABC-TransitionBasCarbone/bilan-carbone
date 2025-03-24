@@ -25,11 +25,11 @@ interface Study {
   name: string
   startDate: Date | string
   endDate: Date | string
-  sites: Site[]
+  sites: StudySite[]
   exports: Export[]
 }
 
-interface Site {
+interface StudySite {
   id: string
 }
 
@@ -56,10 +56,10 @@ const parseStudies = (indexes: Record<string, number>, data: (string | number)[]
     }))
 }
 
-const parseSites = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, Site[]> => {
+const parseStudySites = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, StudySite[]> => {
   return data
     .slice(1)
-    .map<[string, Site]>((row) => [
+    .map<[string, StudySite]>((row) => [
       row[indexes[RequiredStudySitesColumns.studyId]] as string,
       {
         id: row[indexes[RequiredStudySitesColumns.id]] as string,
@@ -73,7 +73,7 @@ const parseSites = (indexes: Record<string, number>, data: (string | number)[][]
         accumulator.set(currentValue[0], [currentValue[1]])
       }
       return accumulator
-    }, new Map<string, Site[]>())
+    }, new Map<string, StudySite[]>())
 }
 
 const parseExports = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, Export[]> => {
@@ -87,9 +87,9 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
       },
     ])
     .reduce((accumulator, currentValue) => {
-      const sites = accumulator.get(currentValue[0])
-      if (sites) {
-        sites.push(currentValue[1])
+      const exports = accumulator.get(currentValue[0])
+      if (exports) {
+        exports.push(currentValue[1])
       } else {
         accumulator.set(currentValue[0], [currentValue[1]])
       }
@@ -111,7 +111,7 @@ export const uploadStudies = async (
   console.log('Import des études...')
 
   const studies = parseStudies(studiesIndexes, studiesData)
-  const studySites = parseSites(studySitesIndexes, studySitesData)
+  const studySites = parseStudySites(studySitesIndexes, studySitesData)
   const studyExports = parseExports(studyExportsIndexes, studyExportsData)
 
   studySites.entries().forEach(([studyId, sites]) => {
