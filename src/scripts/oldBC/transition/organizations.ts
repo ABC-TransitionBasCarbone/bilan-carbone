@@ -29,7 +29,7 @@ export const uploadOrganizations = async (
   const organizations = data
     .slice(1)
     .map((row) => ({
-      id: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]],
+      oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]],
       name: row[indexes[RequiredOrganizationsColumns.NOM_ORGANISATION]],
       entityName: row[indexes[RequiredOrganizationsColumns.NOM_ENTITE]],
       mainEntity: row[indexes[RequiredOrganizationsColumns.ENTITE_PRINCIPALE]],
@@ -44,7 +44,7 @@ export const uploadOrganizations = async (
     where: {
       OR: [
         // On va chercher les ids déjà importé
-        { id: { in: organizations.map((organization) => organization.id as string) } },
+        { oldBCId: { in: organizations.map((organization) => organization.oldBCId as string) } },
         // Ou les siret deja existant
         { siret: { in: organizations.map((organization) => organization.siret as string).filter((siret) => siret) } },
         // Ou si il n'y a pas de siret, les organisations avec le même nom, dans mon organisation
@@ -60,7 +60,7 @@ export const uploadOrganizations = async (
     },
   })
 
-  const oldUserOrganizationId = organizations.find((organization) => organization.userOrga === 1)?.id as string
+  const oldUserOrganizationOldBCId = organizations.find((organization) => organization.userOrga === 1)?.oldBCId as string
   const newOrganizations = organizations
     .filter(
       (organization) =>
@@ -68,8 +68,9 @@ export const uploadOrganizations = async (
         // Ou avec un siret existant
         // Ou si il n'y a pas de siret, avec un nom existant dans mon organisation
         !existingOrganizations.some(
-          ({ id, siret, name }) =>
-            id === organization.id || (organization.siret ? siret === organization.siret : name === organization.name),
+          ({ oldBCId, siret, name }) =>
+            oldBCId === organization.oldBCId ||
+            (organization.siret ? siret === organization.siret : name === organization.name),
         ),
     )
     .filter((organization) => organization.mainEntity === 1)
@@ -81,7 +82,7 @@ export const uploadOrganizations = async (
     await transaction.organization.createMany({
       data: organizationsToCreate.map((organization) => ({
         parentId: userOrganizationId,
-        id: organization.id as string,
+        oldBCId: organization.oldBCId as string,
         siret: organization.siret as string,
         name: organization.name as string,
         isCR: false,
@@ -95,7 +96,8 @@ export const uploadOrganizations = async (
     // Et pour toutes les organisations j'ajoute un site par defaut
     await transaction.site.createMany({
       data: newOrganizations.map((organization) => ({
-        organizationId: getOrganizationId(organization.id as string, oldUserOrganizationId, userOrganizationId),
+        oldBCId: organization.oldBCId as string,
+        organizationId: getOrganizationId(organization.oldBCId as string, oldUserOrganizationOldBCId, userOrganizationId),
         name: organization.entityName as string,
       })),
     })
@@ -105,11 +107,12 @@ export const uploadOrganizations = async (
   const sitesToCreate = organizations
     .filter((organization) => organization.mainEntity !== 1)
     .map((organization) => ({
-      organizationId: getOrganizationId(organization.parentId as string, oldUserOrganizationId, userOrganizationId),
+      oldBCId: organization.oldBCId as string,
+      organizationId: getOrganizationId(organization.parentId as string, oldUserOrganizationOldBCId, userOrganizationId),
       name: organization.entityName as string,
     }))
     // Sauf celles qui n'ont pas de parent (car supprimées dans l'ancien BC+)
-    .filter((site) => organizationsToCreate.some((organization) => organization.id === site.organizationId))
+    .filter((site) => organizationsToCreate.some((organization) => organization.oldBCId === site.organizationId))
     .filter((site) => site.organizationId !== userOrganizationId)
   if (sitesToCreate.length > 0) {
     console.log(`Import de ${sitesToCreate.length} sites`)
