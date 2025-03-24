@@ -2,7 +2,12 @@ import xlsx from 'node-xlsx'
 import { prismaClient } from '../../../db/client'
 import { RequiredEmissionFactorsColumns, uploadEmissionFactors } from './emissionFactors'
 import { RequiredOrganizationsColumns, uploadOrganizations } from './organizations'
-import { RequiredStudiesColumns, uploadStudies } from './studies'
+import {
+  RequiredStudiesColumns,
+  RequiredStudyExportsColumns,
+  RequiredStudySitesColumns,
+  uploadStudies,
+} from './studies'
 
 const getIndexes = (
   headers: string[],
@@ -44,6 +49,14 @@ const getStudiesIndexes = (studiesHeaders: string[]): Record<string, number> => 
   return getIndexes(studiesHeaders, RequiredStudiesColumns, 'Etudes')
 }
 
+const getStudySitesIndexes = (studiesHeaders: string[]): Record<string, number> => {
+  return getIndexes(studiesHeaders, RequiredStudySitesColumns, 'Etudes - sites')
+}
+
+const getStudyExportIndexes = (studiesHeaders: string[]): Record<string, number> => {
+  return getIndexes(studiesHeaders, RequiredStudyExportsColumns, 'Etudes - exports')
+}
+
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
   const user = await prismaClient.user.findUnique({ where: { email } })
   if (!user || user.organizationId !== organizationId) {
@@ -56,10 +69,12 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   const organizationsSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Organisations')
   const emissionFactorsSheet = workSheetsFromFile.find((sheet) => sheet.name === "Facteurs d'émissions")
   const studiesSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes')
+  const studySitesSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes - sites')
+  const studyExportsSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes - exports')
 
-  if (!organizationsSheet || !emissionFactorsSheet || !studiesSheet) {
+  if (!organizationsSheet || !emissionFactorsSheet || !studiesSheet || !studySitesSheet || !studyExportsSheet) {
     console.log(
-      "Veuillez verifier que le fichier contient une feuille 'Organisations', une feuille 'Facteurs d'émissions', et une feuille 'Etudes'",
+      "Veuillez verifier que le fichier contient une feuille 'Organisations', une feuille 'Facteurs d'émissions', une feuille 'Etudes', une feuille 'Études - sites', et une feuille 'Études - exports'",
     )
     return
   }
@@ -67,6 +82,8 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   const organizationsIndexes = getOrganisationIndexes(organizationsSheet.data[0])
   const emissionFactorsIndexes = getEmissionFactorsIndexes(emissionFactorsSheet.data[0])
   const studiesIndexes = getStudiesIndexes(studiesSheet.data[0])
+  const studySitesIndexes = getStudySitesIndexes(studySitesSheet.data[0])
+  const studyExportsIndexes = getStudyExportIndexes(studyExportsSheet.data[0])
 
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
@@ -84,7 +101,17 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       emissionFactorsIndexes,
       organizationId,
     )
-    hasStudiesWarning = await uploadStudies(transaction, studiesSheet.data, studiesIndexes)
+    hasStudiesWarning = await uploadStudies(
+      transaction,
+      user.id,
+      organizationId,
+      studiesIndexes,
+      studiesSheet.data,
+      studySitesIndexes,
+      studySitesSheet.data,
+      studyExportsIndexes,
+      studyExportsSheet.data,
+    )
   })
 
   if (hasOrganizationsWarning) {
