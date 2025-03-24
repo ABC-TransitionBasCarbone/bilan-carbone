@@ -42,7 +42,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     Membership_Year: membershipYear,
   } = value
 
-  const siretOrSiren = siret || siren
+  const siretOrSiren = siret.replace(/\s+/g, '') || siren.replace(/\s+/g, '')
   const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
 
@@ -65,7 +65,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   if (siretOrSiren) {
     let organisation = dbUser?.organizationId
       ? await prismaClient.organization.findFirst({ where: { id: dbUser.organizationId } })
-      : await prismaClient.organization.findFirst({ where: { siret: { startsWith: siretOrSiren } } })
+      : await prismaClient.organization.findFirst({ where: { siret: { startsWith: siretOrSiren.substring(0, 9) } } })
 
     organisation = await prismaClient.organization.upsert({
       where: { id: organisation?.id || '' },
@@ -95,7 +95,6 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
         organizationId: dbUser.status === UserStatus.IMPORTED ? user.organizationId : undefined,
       },
     })
-    console.log(`Updating ${email} because already exists`)
     return null
   }
 
