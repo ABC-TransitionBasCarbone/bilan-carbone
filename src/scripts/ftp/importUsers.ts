@@ -95,7 +95,6 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
         organizationId: dbUser.status === UserStatus.IMPORTED ? user.organizationId : undefined,
       },
     })
-    console.log(`Updating ${email} because already exists`)
     return null
   }
 
