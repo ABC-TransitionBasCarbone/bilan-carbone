@@ -11,14 +11,6 @@ export enum RequiredOrganizationsColumns {
   IS_USER_ORGA = 'IS_USER_ORGA',
 }
 
-const getOrganizationId = (id: string, oldUserOrganizationId: string, userOrganizationId: string) => {
-  // Si l'id que je recherche est l'ancienne id principale, je la remplace par le nouveau
-  if (id === oldUserOrganizationId) {
-    return userOrganizationId
-  }
-  return id
-}
-
 export const uploadOrganizations = async (
   transaction: Prisma.TransactionClient,
   data: (string | number)[][],
@@ -60,7 +52,8 @@ export const uploadOrganizations = async (
     },
   })
 
-  const oldUserOrganizationOldBCId = organizations.find((organization) => organization.userOrga === 1)?.oldBCId as string
+  const oldUserOrganizationOldBCId = organizations.find((organization) => organization.userOrga === 1)
+    ?.oldBCId as string
   const newOrganizations = organizations
     .filter(
       (organization) =>
@@ -91,26 +84,65 @@ export const uploadOrganizations = async (
     })
   }
 
+  const createdOrganizations = await transaction.organization.findMany({
+    where: {
+      oldBCId: {
+        in: organizations.map((organization) => organization.oldBCId as string).concat([userOrganizationId]),
+      },
+    },
+    select: { id: true, oldBCId: true },
+  })
+
+  const createdOrganizationsMap = createdOrganizations.reduce((map, currentCreatedOrganisation) => {
+    if (currentCreatedOrganisation.oldBCId) {
+      map.set(currentCreatedOrganisation.oldBCId, currentCreatedOrganisation.id)
+    }
+    return map
+  }, new Map<string, string>())
+
   if (newOrganizations.length > 0) {
     console.log(`Ajout de ${newOrganizations.length} sites par défaut`)
     // Et pour toutes les organisations j'ajoute un site par defaut
     await transaction.site.createMany({
-      data: newOrganizations.map((organization) => ({
-        oldBCId: organization.oldBCId as string,
-        organizationId: getOrganizationId(organization.oldBCId as string, oldUserOrganizationOldBCId, userOrganizationId),
-        name: organization.entityName as string,
-      })),
+      data: newOrganizations
+        .map((organization) => {
+          const createdOrganisationId: string | undefined =
+            (organization.oldBCId as string) === oldUserOrganizationOldBCId
+              ? userOrganizationId
+              : createdOrganizationsMap.get(organization.oldBCId as string)
+          if (!createdOrganisationId) {
+            console.warn(`Impossible de retrouver l'organization avec l'ancien BC id ${organization.oldBCId}`)
+            return null
+          }
+          return {
+            oldBCId: organization.oldBCId as string,
+            organizationId: createdOrganisationId,
+            name: organization.entityName as string,
+          }
+        })
+        .filter((organization) => organization !== null),
     })
   }
 
   // Et je crée tous les autres sites
   const sitesToCreate = organizations
     .filter((organization) => organization.mainEntity !== 1)
-    .map((organization) => ({
-      oldBCId: organization.oldBCId as string,
-      organizationId: getOrganizationId(organization.parentId as string, oldUserOrganizationOldBCId, userOrganizationId),
-      name: organization.entityName as string,
-    }))
+    .map((organization) => {
+      const createdParentOrganisationId: string | undefined =
+        (organization.parentId as string) === oldUserOrganizationOldBCId
+          ? userOrganizationId
+          : createdOrganizationsMap.get(organization.parentId as string)
+      if (!createdParentOrganisationId) {
+        console.warn(`Impossible de retrouver l'organization avec le parent id ${organization.parentId}`)
+        return null
+      }
+      return {
+        oldBCId: organization.oldBCId as string,
+        organizationId: createdParentOrganisationId,
+        name: organization.entityName as string,
+      }
+    })
+    .filter((site) => site !== null)
     // Sauf celles qui n'ont pas de parent (car supprimées dans l'ancien BC+)
     .filter((site) => organizationsToCreate.some((organization) => organization.oldBCId === site.organizationId))
     .filter((site) => site.organizationId !== userOrganizationId)
