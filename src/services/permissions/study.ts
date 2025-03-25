@@ -1,7 +1,7 @@
 import { getDocumentById } from '@/db/document'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/onganization'
+import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getUserRoleOnStudy } from '@/utils/study'
 import { User as DbUser, Level, Organization, Prisma, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'

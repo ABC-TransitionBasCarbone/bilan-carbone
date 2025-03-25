@@ -5,7 +5,7 @@ import { Post } from '@/services/posts'
 import { checkLevel } from '@/services/study'
 import { Level, Organization, Role, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
-import { isInOrgaOrParent } from './onganization'
+import { isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (user: User, studyLevel: Level) => {
   if (isAdmin(user.role)) {
