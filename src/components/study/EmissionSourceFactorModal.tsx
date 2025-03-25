@@ -30,6 +30,8 @@ const EmissionSourceFactorModal = ({ close, open, emissionFactors, selectEmissio
     setEmissionFactorVersions(versions)
   }
 
+  const initialSelectedSources = (emissionFactorVersions || []).map((importVersion) => importVersion.id).concat([''])
+
   return emissionFactorVersions ? (
     <Modal
       open={open}
@@ -43,6 +45,7 @@ const EmissionSourceFactorModal = ({ close, open, emissionFactors, selectEmissio
         emissionFactors={emissionFactors}
         selectEmissionFactor={selectEmissionFactor}
         importVersions={emissionFactorVersions.concat(manualImport)}
+        initialSelectedSources={initialSelectedSources}
       />
     </Modal>
   ) : (

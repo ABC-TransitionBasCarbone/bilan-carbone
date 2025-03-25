@@ -26,7 +26,7 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorImportVersion, EmissionFactorStatus, Import } from '@prisma/client'
+import { EmissionFactorImportVersion, EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -42,6 +42,7 @@ import { useTranslations } from 'next-intl'
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
+import MultiSelectAll from '../base/MultiSelectAll'
 import EmissionFactorDetails from './EmissionFactorDetails'
 import styles from './Table.module.css'
 import EditEmissionFactorModal from './edit/EditEmissionFactorModal'
@@ -91,6 +92,8 @@ interface Props {
   userOrganizationId?: string | null
 }
 
+const initialSelectedUnits: (Unit | string)[] = [...['all', ''], ...Object.values(Unit)]
+
 const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrganizationId, importVersions }: Props) => {
   const initialSelectedSources = importVersions
     .filter((importVersion) =>
@@ -110,6 +113,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
   const [displayArchived, setDisplayArchived] = useState(false)
   const [locationFilter, setLocationFilter] = useState('')
   const [filteredSources, setFilteredSources] = useState(initialSelectedSources)
+  const [filteredUnits, setFilteredUnits] = useState(initialSelectedUnits)
   const [displayHideButton, setDisplayHideButton] = useState(false)
   const [displayFilters, setDisplayFilters] = useState(true)
   const filtersRef = useRef<HTMLDivElement>(null)
@@ -166,7 +170,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} kgCO₂e/${tUnits(emissionFactor.unit)}`,
+          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} kgCO₂e/${tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),
@@ -311,8 +315,9 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
             (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
             (!emissionFactor.version && filteredSources.includes(Import.Manual)),
         )
+        .filter((emissionFactor) => filteredUnits.includes(emissionFactor.unit || ''))
         .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived),
-    [searchedEmissionFactors, filteredSources, displayArchived],
+    [searchedEmissionFactors, filteredSources, filteredUnits, displayArchived],
   )
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
@@ -373,6 +378,18 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
   const getEmissionVersionLabel = (version?: EmissionFactorImportVersion) =>
     version ? `${t(version.source)} ${version.name}` : ''
 
+  const allUnitsSelected = useMemo(
+    () => filteredUnits.filter((unit) => unit !== 'all').length === initialSelectedUnits.length - 1,
+    [filteredUnits],
+  )
+
+  const unitsSelectorRenderValue = () =>
+    allUnitsSelected
+      ? t('all')
+      : filteredUnits.length === 0
+        ? t('none')
+        : filteredUnits.map((unit) => tUnits(unit)).join(', ')
+
   return (
     <>
       <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
@@ -411,6 +428,18 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
                   </MenuItem>
                 ))}
               </Select>
+            </FormControl>
+            <FormControl className={styles.selector}>
+              <InputLabel id="emissions-unit-selector">{t('units')}</InputLabel>
+              <MultiSelectAll
+                id="emissions-unit"
+                renderValue={unitsSelectorRenderValue}
+                value={filteredUnits}
+                allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
+                setValues={setFilteredUnits}
+                t={tUnits}
+                tLabel={t}
+              />
             </FormControl>
             <FormControl className={styles.selector}>
               <FormLabel id="archived-emissions-factors-radio-group-label" component="legend">

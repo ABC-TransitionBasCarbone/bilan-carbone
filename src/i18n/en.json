@@ -654,6 +654,7 @@
       "showing": "Showing {number} rows of {total}",
       "source": "Source",
       "sources": "Sources",
+      "units": "Units",
       "status": "Status",
       "value": "Value",
       "displayFilters": "Display filters",
@@ -775,6 +776,9 @@
     }
   },
   "units": {
+    "selectAll": "Select all",
+    "unSelectAll": "Unselect all",
+    "": "No unit",
     "A4_SHEET_100": "100 A4 sheets",
     "KM_100": "100km",
     "ACTIVE": "active",
