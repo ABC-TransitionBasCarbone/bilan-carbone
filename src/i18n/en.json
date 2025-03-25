@@ -238,7 +238,7 @@
       "results": "Results",
       "transitionPlan": "Transition plan",
       "menu": "Open the study navigation menu",
-      "comming": "comming"
+      "coming": "coming"
     },
     "new": {
       "title": "Information about the new study",
@@ -283,7 +283,7 @@
         "default": "Something went wrong ...",
         "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support"
       },
-      "comming": "comming"
+      "coming": "coming"
     },
     "post": {
       "displayInfography": "Display all posts",
@@ -421,7 +421,7 @@
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
-      "comming": "comming",
+      "coming": "coming",
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"

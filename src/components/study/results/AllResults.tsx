@@ -62,7 +62,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
               >
                 {tExport(exportItem.type)}
                 {(exportItem.type !== Export.Beges || exportItem.control !== ControlMode.Operational) && (
-                  <em> ({t('comming')})</em>
+                  <em> ({t('coming')})</em>
                 )}
               </MenuItem>
             ))}

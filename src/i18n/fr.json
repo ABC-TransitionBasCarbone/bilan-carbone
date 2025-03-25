@@ -238,7 +238,7 @@
       "results": "Résultats",
       "transitionPlan": "Plan de transition",
       "menu": "Ouvrir le menu de navigation de l'étude",
-      "comming": "à venir"
+      "coming": "à venir"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -283,7 +283,7 @@
         "default": "Une erreur s'est produite ...",
         "noActiveVersion_BaseEmpreinte": "Aucune version active de Base Empreinte. Veuillez contacter le support."
       },
-      "comming": "à venir"
+      "coming": "à venir"
     },
     "post": {
       "displayInfography": "Voir les différents postes",
@@ -421,7 +421,7 @@
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
-      "comming": "à venir",
+      "coming": "à venir",
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
