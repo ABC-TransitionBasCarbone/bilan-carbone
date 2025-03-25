@@ -11,6 +11,41 @@ export enum RequiredOrganizationsColumns {
   IS_USER_ORGA = 'IS_USER_ORGA',
 }
 
+const getCreatedOrganizationsIds = async (
+  transaction: Prisma.TransactionClient,
+  organizations: {
+    oldBCId: string | number
+    name: string | number
+    entityName: string | number
+    mainEntity: string | number
+    siret: string | number
+    parentId: string | number
+    userOrga: string | number
+  }[],
+  userOrganizationId: string,
+) => {
+  const createdOrganizations = await transaction.organization.findMany({
+    where: {
+      oldBCId: {
+        in: organizations.map((organization) => organization.oldBCId as string),
+      },
+    },
+    select: { id: true, oldBCId: true },
+  })
+
+  const createdOrganizationsMap = createdOrganizations.reduce((map, currentCreatedOrganisation) => {
+    if (currentCreatedOrganisation.oldBCId) {
+      map.set(currentCreatedOrganisation.oldBCId, currentCreatedOrganisation.id)
+    }
+    return map
+  }, new Map<string, string>())
+
+  const userOrganizationOldBCId = organizations.find((organization) => organization.userOrga === 1)?.oldBCId as string
+  createdOrganizationsMap.set(userOrganizationOldBCId, userOrganizationId)
+
+  return createdOrganizationsMap
+}
+
 export const uploadOrganizations = async (
   transaction: Prisma.TransactionClient,
   data: (string | number)[][],
@@ -52,7 +87,6 @@ export const uploadOrganizations = async (
     },
   })
 
-  const userOrganizationOldBCId = organizations.find((organization) => organization.userOrga === 1)?.oldBCId as string
   const newOrganizations = organizations
     .filter(
       (organization) =>
@@ -83,21 +117,7 @@ export const uploadOrganizations = async (
     })
   }
 
-  const createdOrganizations = await transaction.organization.findMany({
-    where: {
-      oldBCId: {
-        in: organizations.map((organization) => organization.oldBCId as string).concat([userOrganizationId]),
-      },
-    },
-    select: { id: true, oldBCId: true },
-  })
-
-  const createdOrganizationsMap = createdOrganizations.reduce((map, currentCreatedOrganisation) => {
-    if (currentCreatedOrganisation.oldBCId) {
-      map.set(currentCreatedOrganisation.oldBCId, currentCreatedOrganisation.id)
-    }
-    return map
-  }, new Map<string, string>())
+  const createdOrganizationsIds = await getCreatedOrganizationsIds(transaction, organizations, userOrganizationId)
 
   if (newOrganizations.length > 0) {
     console.log(`Ajout de ${newOrganizations.length} sites par défaut`)
@@ -105,10 +125,7 @@ export const uploadOrganizations = async (
     await transaction.site.createMany({
       data: newOrganizations
         .map((organization) => {
-          const createdOrganisationId: string | undefined =
-            (organization.oldBCId as string) === userOrganizationOldBCId
-              ? userOrganizationId
-              : createdOrganizationsMap.get(organization.oldBCId as string)
+          const createdOrganisationId = createdOrganizationsIds.get(organization.oldBCId as string)
           if (!createdOrganisationId) {
             console.warn(`Impossible de retrouver l'organization avec l'ancien BC id ${organization.oldBCId}`)
             return null
@@ -127,10 +144,7 @@ export const uploadOrganizations = async (
   const sitesToCreate = organizations
     .filter((organization) => organization.mainEntity !== 1)
     .map((organization) => {
-      const createdParentOrganisationId: string | undefined =
-        (organization.parentId as string) === userOrganizationOldBCId
-          ? userOrganizationId
-          : createdOrganizationsMap.get(organization.parentId as string)
+      const createdParentOrganisationId = createdOrganizationsIds.get(organization.parentId as string)
       if (!createdParentOrganisationId) {
         console.warn(`Impossible de retrouver l'organization avec le parent id ${organization.parentId}`)
         return null
