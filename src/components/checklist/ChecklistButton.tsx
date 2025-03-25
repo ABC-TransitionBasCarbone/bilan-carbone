@@ -6,6 +6,7 @@ import { Drawer, IconButton } from '@mui/material'
 import { Organization, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from './Checklist.module.css'
 import ChecklistDrawer from './ChecklistDrawer'
@@ -22,7 +23,23 @@ const ChecklistButton = ({ userOrganization, clientId, studyId, userRole }: Prop
   const [open, setOpen] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [checklist, setChecklist] = useState<UserChecklist[]>([])
+  const [previousPath, setPreviousPath] = useState('/')
   const [fetchedCheckedSteps, setFetchedCheckedSteps] = useState(false)
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+
+  useEffect(() => {
+    if (searchParams.get('fromLogin') !== null) {
+      setOpen(true)
+    }
+  }, [searchParams])
+
+  useEffect(() => {
+    setPreviousPath(pathname)
+    if (pathname !== previousPath) {
+      setOpen(false)
+    }
+  }, [pathname])
 
   useEffect(() => {
     getCheckList()

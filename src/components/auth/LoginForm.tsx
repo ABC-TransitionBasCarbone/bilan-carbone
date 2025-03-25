@@ -69,7 +69,7 @@ const LoginForm = () => {
       setSubmitting(false)
       setErrorMessage('error')
     } else {
-      router.push('/')
+      router.push('/?fromLogin')
     }
   }
 
