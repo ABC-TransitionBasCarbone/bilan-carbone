@@ -12,11 +12,24 @@ interface Props {
 const EmissionFactors = async ({ userOrganizationId }: Props) => {
   const [emissionFactors, importVersions] = await Promise.all([getEmissionFactors(), getEmissionFactorSources()])
   const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
+
+  const initialSelectedSources = importVersions
+    .filter((importVersion) =>
+      importVersion.source === Import.Manual
+        ? true
+        : importVersion.id ===
+          importVersions
+            .filter((version) => version.source === importVersion.source)
+            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id,
+    )
+    .map((importVersion) => importVersion.id)
+
   return (
     <EmissionFactorsTable
       emissionFactors={emissionFactors}
       userOrganizationId={userOrganizationId}
       importVersions={importVersions.concat([manualImport])}
+      initialSelectedSources={initialSelectedSources}
     />
   )
 }

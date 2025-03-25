@@ -89,22 +89,19 @@ interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
   importVersions: EmissionFactorImportVersion[]
+  initialSelectedSources: string[]
   userOrganizationId?: string | null
 }
 
 const initialSelectedUnits: (Unit | string)[] = [...['all', ''], ...Object.values(Unit)]
 
-const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrganizationId, importVersions }: Props) => {
-  const initialSelectedSources = importVersions
-    .filter((importVersion) =>
-      importVersion.source === Import.Manual
-        ? true
-        : importVersion.id ===
-          importVersions
-            .filter((version) => version.source === importVersion.source)
-            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id,
-    )
-    .map((importVersion) => importVersion.id)
+const EmissionFactorsTable = ({
+  emissionFactors,
+  selectEmissionFactor,
+  userOrganizationId,
+  importVersions,
+  initialSelectedSources,
+}: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
