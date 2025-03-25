@@ -10,12 +10,12 @@ export enum RequiredStudiesColumns {
 }
 
 export enum RequiredStudySitesColumns {
-  oldBCId = 'ID_ENTITE',
-  studyId = 'IDETUDE',
+  siteOldBCId = 'ID_ENTITE',
+  studyOldBCId = 'IDETUDE',
 }
 
 export enum RequiredStudyExportsColumns {
-  studyId = 'IDETUDE',
+  studyOldBCId = 'IDETUDE',
   type = 'LIB_REFERENTIEL',
   control = 'LIBELLE_MODE_CONTROLE',
 }
@@ -30,7 +30,7 @@ interface Study {
 }
 
 interface StudySite {
-  oldBCId: string
+  siteOldBCId: string
 }
 
 interface Export {
@@ -60,9 +60,9 @@ const parseStudySites = (indexes: Record<string, number>, data: (string | number
   return data
     .slice(1)
     .map<[string, StudySite]>((row) => [
-      row[indexes[RequiredStudySitesColumns.studyId]] as string,
+      row[indexes[RequiredStudySitesColumns.studyOldBCId]] as string,
       {
-        oldBCId: row[indexes[RequiredStudySitesColumns.oldBCId]] as string,
+        siteOldBCId: row[indexes[RequiredStudySitesColumns.siteOldBCId]] as string,
       },
     ])
     .reduce((accumulator, currentValue) => {
@@ -80,7 +80,7 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
   return data
     .slice(1)
     .map<[string, Export]>((row) => [
-      row[indexes[RequiredStudyExportsColumns.studyId]] as string,
+      row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string,
       {
         type: StudyExport.GHGP,
         control: ControlMode.CapitalShare,
@@ -162,7 +162,7 @@ export const uploadStudies = async (
     data: newStudies.slice(0, 1).flatMap((study) =>
       study.sites.slice(0, 1).map((site) => ({
         studyId: study.oldBCId,
-        siteId: site.id,
+        siteId: site.siteOldBCId,
         etp: 1,
         ca: 1,
       })),
