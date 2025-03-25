@@ -1,7 +1,7 @@
+import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
+import { sendNewUser } from '@/services/serverFunctions/user'
+import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import { Prisma, Role, User, UserStatus } from '@prisma/client'
-import { UpdateOrganizationCommand } from './../services/serverFunctions/organization.command'
-import { sendNewUser } from './../services/serverFunctions/user'
-import { OnboardingCommand } from './../services/serverFunctions/user.command'
 import { prismaClient } from './client'
 
 export const getRawOrganizationBySiret = (siret: string | null) =>

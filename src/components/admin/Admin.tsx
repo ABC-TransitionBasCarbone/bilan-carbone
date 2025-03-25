@@ -24,11 +24,7 @@ const Admin = () => {
     })
   }
 
-  return (
-    <>
-      <InputFileUpload label={t('uploadButton')} onChange={onChange} />
-    </>
-  )
+  return <InputFileUpload label={t('uploadButton')} onChange={onChange} />
 }
 
 export default Admin

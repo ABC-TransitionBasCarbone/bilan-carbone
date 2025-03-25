@@ -1,5 +1,26 @@
 'use server'
-
+import {
+  createOrUpdateOrganization,
+  getOrganizationById,
+  getRawOrganizationById,
+  getRawOrganizationBySiret,
+} from '@/db/organization'
+import { FullStudy } from '@/db/study'
+import {
+  addUser,
+  changeStatus,
+  changeUserRole,
+  createUsers,
+  deleteUserFromOrga,
+  getUserApplicationSettings,
+  getUserByEmail,
+  getUserFromUserOrganization,
+  organizationActiveUsersCount,
+  updateUser,
+  updateUserApplicationSettings,
+  updateUserResetTokenForEmail,
+  validateUser,
+} from '@/db/user'
 import { DAY, HOUR, TIME_IN_MS } from '@/utils/time'
 import { User as DBUser, Level, Organization, Prisma, Role, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
@@ -17,28 +38,6 @@ import {
 } from '../email/email'
 import { EMAIL_SENT, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
-import {
-  createOrUpdateOrganization,
-  getOrganizationById,
-  getRawOrganizationById,
-  getRawOrganizationBySiret,
-} from './../../db/organization'
-import { FullStudy } from './../../db/study'
-import {
-  addUser,
-  changeStatus,
-  changeUserRole,
-  createUsers,
-  deleteUserFromOrga,
-  getUserApplicationSettings,
-  getUserByEmail,
-  getUserFromUserOrganization,
-  organizationActiveUsersCount,
-  updateUser,
-  updateUserApplicationSettings,
-  updateUserResetTokenForEmail,
-  validateUser,
-} from './../../db/user'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
 const updateUserResetToken = async (email: string, duration: number) => {

@@ -1,7 +1,7 @@
+import { signPassword } from '@/services/auth'
+import { findUserInfo } from '@/services/permissions/user'
 import { Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
-import { signPassword } from './../services/auth'
-import { findUserInfo } from './../services/permissions/user'
 import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
