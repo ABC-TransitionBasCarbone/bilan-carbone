@@ -52,8 +52,7 @@ export const uploadOrganizations = async (
     },
   })
 
-  const oldUserOrganizationOldBCId = organizations.find((organization) => organization.userOrga === 1)
-    ?.oldBCId as string
+  const userOrganizationOldBCId = organizations.find((organization) => organization.userOrga === 1)?.oldBCId as string
   const newOrganizations = organizations
     .filter(
       (organization) =>
@@ -107,7 +106,7 @@ export const uploadOrganizations = async (
       data: newOrganizations
         .map((organization) => {
           const createdOrganisationId: string | undefined =
-            (organization.oldBCId as string) === oldUserOrganizationOldBCId
+            (organization.oldBCId as string) === userOrganizationOldBCId
               ? userOrganizationId
               : createdOrganizationsMap.get(organization.oldBCId as string)
           if (!createdOrganisationId) {
@@ -129,7 +128,7 @@ export const uploadOrganizations = async (
     .filter((organization) => organization.mainEntity !== 1)
     .map((organization) => {
       const createdParentOrganisationId: string | undefined =
-        (organization.parentId as string) === oldUserOrganizationOldBCId
+        (organization.parentId as string) === userOrganizationOldBCId
           ? userOrganizationId
           : createdOrganizationsMap.get(organization.parentId as string)
       if (!createdParentOrganisationId) {
