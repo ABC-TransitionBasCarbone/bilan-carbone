@@ -1,5 +1,6 @@
 import { getUserCheckList, mandatoryParentSteps } from '@/services/checklist'
 import { Organization, Role, UserChecklist } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo } from 'react'
@@ -39,12 +40,13 @@ const ChecklistDrawer = ({
   return (
     <div>
       <Stepper
-        className={styles.drawer}
+        className={classNames(styles.drawer, styles.centered)}
         activeStep={userChecklist.length}
         steps={Object.keys(steps).length - 1}
         fillValidatedSteps
         small
       />
+
       <div className="flex-col px-2">
         {Object.values(steps)
           .filter((step) => step !== UserChecklist.Completed)
