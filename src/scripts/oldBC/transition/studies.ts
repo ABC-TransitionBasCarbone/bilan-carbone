@@ -10,7 +10,7 @@ export enum RequiredStudiesColumns {
 }
 
 export enum RequiredStudySitesColumns {
-  oldBCId = 'ID_ENTITE',
+  siteOldBCId = 'ID_ENTITE',
   studyId = 'IDETUDE',
 }
 
@@ -30,7 +30,7 @@ interface Study {
 }
 
 interface StudySite {
-  oldBCId: string
+  siteOldBCId: string
 }
 
 interface Export {
@@ -62,7 +62,7 @@ const parseStudySites = (indexes: Record<string, number>, data: (string | number
     .map<[string, StudySite]>((row) => [
       row[indexes[RequiredStudySitesColumns.studyId]] as string,
       {
-        oldBCId: row[indexes[RequiredStudySitesColumns.oldBCId]] as string,
+        siteOldBCId: row[indexes[RequiredStudySitesColumns.siteOldBCId]] as string,
       },
     ])
     .reduce((accumulator, currentValue) => {
@@ -162,7 +162,7 @@ export const uploadStudies = async (
     data: newStudies.slice(0, 1).flatMap((study) =>
       study.sites.slice(0, 1).map((site) => ({
         studyId: study.oldBCId,
-        siteId: site.id,
+        siteId: site.siteOldBCId,
         etp: 1,
         ca: 1,
       })),
