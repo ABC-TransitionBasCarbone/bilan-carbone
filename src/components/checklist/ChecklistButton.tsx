@@ -3,7 +3,7 @@
 import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Drawer, IconButton } from '@mui/material'
-import { Organization, UserChecklist } from '@prisma/client'
+import { Organization, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -14,9 +14,10 @@ interface Props {
   userOrganization: Organization
   clientId?: string
   studyId?: string
+  userRole: Role
 }
 
-const ChecklistButton = ({ userOrganization, clientId, studyId }: Props) => {
+const ChecklistButton = ({ userOrganization, clientId, studyId, userRole }: Props) => {
   const t = useTranslations('checklist')
   const [open, setOpen] = useState(false)
   const [completed, setCompleted] = useState(false)
@@ -63,6 +64,7 @@ const ChecklistButton = ({ userOrganization, clientId, studyId }: Props) => {
           setOpen={setOpen}
           getCheckList={getCheckList}
           userChecklist={checklist}
+          userRole={userRole}
           userOrganization={userOrganization}
           clientId={clientId}
           studyId={studyId}

@@ -1,5 +1,5 @@
-import { CRUserChecklist, mandatoryParentSteps, OrgaUserChecklist } from '@/services/checklist'
-import { Organization, UserChecklist } from '@prisma/client'
+import { getUserCheckList, mandatoryParentSteps } from '@/services/checklist'
+import { Organization, Role, UserChecklist } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo } from 'react'
@@ -13,18 +13,29 @@ interface Props {
   setOpen: (open: boolean) => void
   getCheckList: () => void
   userChecklist: UserChecklist[]
+  userRole: Role
   userOrganization: Organization
   clientId?: string
   studyId?: string
 }
 
-const ChecklistDrawer = ({ setOpen, getCheckList, userOrganization, clientId, userChecklist, studyId }: Props) => {
+const ChecklistDrawer = ({
+  setOpen,
+  getCheckList,
+  userRole,
+  userOrganization,
+  clientId,
+  userChecklist,
+  studyId,
+}: Props) => {
   const t = useTranslations('checklist')
-  const steps = useMemo(() => (userOrganization.isCR ? CRUserChecklist : OrgaUserChecklist), [userOrganization])
+  const steps = useMemo(() => getUserCheckList(userRole, userOrganization.isCR), [userRole, userOrganization])
   const finished = useMemo(() => userChecklist.length === Object.values(steps).length - 1, [userChecklist, steps])
   const isValidated = (step: UserChecklist) => userChecklist.some((checkedStep) => checkedStep === step)
   const isDisabled = (step: UserChecklist) =>
-    mandatoryParentSteps(step, userOrganization.isCR).some((mandatoryStep) => !userChecklist.includes(mandatoryStep))
+    mandatoryParentSteps(step, userRole, userOrganization.isCR).some(
+      (mandatoryStep) => !userChecklist.includes(mandatoryStep),
+    )
   return (
     <div>
       <Stepper

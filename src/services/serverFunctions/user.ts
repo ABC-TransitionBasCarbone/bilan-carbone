@@ -22,7 +22,7 @@ import { User as DBUser, Organization, Role, UserChecklist, UserStatus } from '@
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
 import { auth } from '../auth'
-import { CRUserChecklist, OrgaUserChecklist } from '../checklist'
+import { getUserCheckList } from '../checklist'
 import {
   sendActivationEmail,
   sendActivationRequest,
@@ -309,7 +309,7 @@ export const addUserChecklistItem = async (step: UserChecklist) => {
     return
   }
   const isCR = (await prismaClient.organization.findUnique({ where: { id: session.user.organizationId || '' } }))?.isCR
-  const checklist = isCR ? CRUserChecklist : OrgaUserChecklist
+  const checklist = getUserCheckList(session.user.role, !!isCR)
   if (!Object.values(checklist).includes(step)) {
     return
   }

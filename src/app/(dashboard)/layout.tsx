@@ -24,7 +24,7 @@ const NavLayout = async ({ children, user }: Props & UserProps) => {
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: user.organizationId })}>
         {children}
       </main>
-      <ChecklistButton userOrganization={userOrganization} clientId={clientId} studyId={studyId} />
+      <ChecklistButton userOrganization={userOrganization} clientId={clientId} studyId={studyId} userRole={user.role} />
     </div>
   )
 }
