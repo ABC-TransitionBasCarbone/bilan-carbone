@@ -67,43 +67,43 @@ export const sendInvitation = async (
   if (newUser) {
     return role
       ? sendUserOnStudyInvitationEmail(
-          email,
-          study.name,
-          study.id,
-          organization.name,
-          `${user.firstName} ${user.lastName}`,
-          newUser.firstName,
-          role,
-        )
+        email,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+        newUser.firstName,
+        role,
+      )
       : sendContributorInvitationEmail(
-          email,
-          study.name,
-          study.id,
-          organization.name,
-          `${user.firstName} ${user.lastName}`,
-          newUser.firstName,
-        )
+        email,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+        newUser.firstName,
+      )
   }
 
   const token = await updateUserResetToken(email, 1 * DAY)
   return role
     ? sendNewUserOnStudyInvitationEmail(
-        email,
-        token,
-        study.name,
-        study.id,
-        organization.name,
-        `${user.firstName} ${user.lastName}`,
-        role,
-      )
+      email,
+      token,
+      study.name,
+      study.id,
+      organization.name,
+      `${user.firstName} ${user.lastName}`,
+      role,
+    )
     : sendNewContributorInvitationEmail(
-        email,
-        token,
-        study.name,
-        study.id,
-        organization.name,
-        `${user.firstName} ${user.lastName}`,
-      )
+      email,
+      token,
+      study.name,
+      study.id,
+      organization.name,
+      `${user.firstName} ${user.lastName}`,
+    )
 }
 
 export const sendActivation = async (email: string, fromReset: boolean) => {
@@ -311,7 +311,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
 
-  const dbUser = (await getUserByEmail(email)) as Prisma.UserCreateManyInput
+  const dbUser = await getUserByEmail(email)
 
   const user: Prisma.UserCreateManyInput = {
     id: dbUser?.id,
