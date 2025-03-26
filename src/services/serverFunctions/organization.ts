@@ -5,11 +5,11 @@ import {
   deleteClient,
   getOrganizationById,
   getOrganizationNameById,
-  getRawOrganizationById,
   onboardOrganization,
   setOnboarded,
   updateOrganization,
 } from '@/db/organization'
+import { getRawOrganizationById } from '@/db/organizationImport'
 import { getUserApplicationSettings, getUserByEmail } from '@/db/user'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'

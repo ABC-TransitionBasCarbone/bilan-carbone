@@ -5,9 +5,6 @@ import { Prisma, Role, User, UserStatus } from '@prisma/client'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
 
-export const getRawOrganizationById = (id: string | null) =>
-  id ? prismaClient.organization.findUnique({ where: { id } }) : null
-
 export const getOrganizationNameById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id }, select: { id: true, name: true } }) : null
 

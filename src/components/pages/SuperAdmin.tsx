@@ -1,17 +1,19 @@
-'use client'
+'use server'
 
-import { useTranslations } from 'next-intl'
-import Block from '../base/Block'
-import InputFileUpload from '../base/InputFileUpload'
+import NotFound from '@/components/pages/NotFound'
+import { auth } from '@/services/auth'
+import { Role } from '@prisma/client'
+import Admin from '../admin/Admin'
 
-const SuperAdminPage = () => {
-  const t = useTranslations('admin')
+const SuperAdminPage = async () => {
+  const session = await auth()
+  const user = session?.user
 
-  return (
-    <Block title={t('title')} as="h1">
-      <InputFileUpload label={t('uploadButton')} />
-    </Block>
-  )
+  if (user?.role !== Role.SUPER_ADMIN) {
+    return <NotFound />
+  }
+
+  return <Admin />
 }
 
 export default SuperAdminPage
