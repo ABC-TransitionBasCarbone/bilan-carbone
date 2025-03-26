@@ -17,7 +17,8 @@ export const canEditOrganization = (user: User, organization?: Pick<Organization
   if (organization && !isInOrgaOrParent(user.organizationId, organization)) {
     return false
   }
-  return hasEditionRole(!!organization?.isCR, user.role)
+  const isCR = !!organization?.isCR || organization?.parentId === user.organizationId
+  return hasEditionRole(isCR, user.role)
 }
 
 export const canEditMemberRole = (user: User) => isAdmin(user.role) || user.role === Role.GESTIONNAIRE
