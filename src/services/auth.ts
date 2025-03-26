@@ -38,14 +38,17 @@ export const authOptions: NextAuthOptions = {
       }
       if (trigger === 'update') {
         const dbUser = await getUserByEmail(token.email || '')
+
+        // TODO GET THE RIGHT ACCOUNT
+        const account = dbUser?.accounts[0] || { role: Role.DEFAULT, organizationId: '' }
         return dbUser
           ? {
               ...token,
               id: dbUser.id,
               firstName: dbUser.firstName,
               lastName: dbUser.lastName,
-              role: dbUser.role,
-              organizationId: dbUser.organizationId,
+              role: account.role,
+              organizationId: account.organizationId,
               level: dbUser.level,
             }
           : token
@@ -81,6 +84,8 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await getUserByEmailWithSensibleInformations(credentials.email)
+        const account = user?.accounts[0]
+        // TODO GET THE RIGHT ACCOUNT
         if (!user || !user.password || user.status !== UserStatus.ACTIVE) {
           return null
         }
@@ -94,9 +99,9 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           firstName: user.firstName,
           lastName: user.lastName,
-          role: user.role,
+          role: account?.role,
           email: user.email,
-          organizationId: user.organizationId,
+          organizationId: account?.organizationId,
           level: user.level,
         }
       },
