@@ -77,9 +77,8 @@ model Study {
   id      String  @id @default(uuid())
   oldBCId String? @map("old_bc_id")
 
-  // TO REMOVE default("") or optionnal "?"
-  createdById String?  @map("created_by_account_id")
-  createdBy   Account? @relation(fields: [createdById], references: [id])
+  createdById String  @map("created_by_account_id")
+  createdBy   Account @relation(fields: [createdById], references: [id])
 
   name                 String
   isPublic             Boolean         @map("is_public")
@@ -91,9 +90,8 @@ model Study {
   resultsUnit          StudyResultUnit @default(T) @map("results_unit")
   exports              StudyExport[]
 
-  // TO REMOVE -> @default("") or "?"
-  organizationVersion   OrganizationVersion? @relation(fields: [organizationVersionId], references: [id])
-  organizationVersionId String?              @map("organizationVersion_id")
+  organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id])
+  organizationVersionId String              @map("organizationVersion_id")
 
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
@@ -109,13 +107,6 @@ model Study {
 
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
-  // TO DELETE
-  createdByUserId String?  @map("created_by_id")
-  createdByUser   User?    @relation(fields: [createdByUserId], references: [id])
-
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId String?       @map("organization_id")
-  // END TO DELETE
 
   @@map("studies")
 }
@@ -134,46 +125,33 @@ model StudyExport {
 }
 
 model UserOnStudy {
-  study     Study    @relation(fields: [studyId], references: [id])
-  studyId   String   @map("study_id")
-  // TO REMOVE -> @default("") or "?"
-  account   Account? @relation(fields: [accountId], references: [id])
-  accountId String?  @map("account_id")
+  // @@id([studyId, accountId]) // TO UNCOMMENT
+  study     Study   @relation(fields: [studyId], references: [id])
+  studyId   String  @map("study_id")
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String  @map("account_id")
 
   role StudyRole
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  // TO DELETE
-  user   User?  @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
-  // END TO DELETE
-
-  @@id([studyId, userId])
-  // @@id([studyId, accountId]) // TO UNCOMMENT
+  @@id([studyId, accountId])
   @@map("users_on_study")
 }
 
 model Contributors {
-  study     Study    @relation(fields: [studyId], references: [id])
-  studyId   String   @map("study_id")
-  // TO REMOVE -> @default("") or "?"
-  account   Account? @relation(fields: [accountId], references: [id])
-  accountId String?  @map("account_id")
+  study     Study   @relation(fields: [studyId], references: [id])
+  studyId   String  @map("study_id")
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String  @map("account_id")
 
   subPost SubPost
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  // TO DELETE
-  user   User?  @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
-  // END TO DELETE
-
-  @@id([studyId, userId, subPost])
-  // @@id([studyId, accountId, subPost]) // TO UNCOMMENT
+  @@id([studyId, accountId, subPost])
   @@map("contributors")
 }
 
@@ -228,10 +206,6 @@ model StudyEmissionSource {
 
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
-  // TO DELETE
-  contributorUserId String?  @map("contributor_id")
-  contributorUser   User?    @relation(fields: [contributorUserId], references: [id])
-  // END TO DELETE
 
   @@map("study_emission_sources")
 }

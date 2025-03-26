@@ -15,10 +15,5 @@ model Document {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  // TO DELETE
-  uploaderUserId String? @map("uploader_id")
-  uploaderUser   User?   @relation(fields: [uploaderUserId], references: [id])
-  // END TO DELETE
-
   @@map("documents")
 }

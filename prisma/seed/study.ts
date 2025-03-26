@@ -1,6 +1,7 @@
 import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromCSV'
 import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import {
+  Account,
   ControlMode,
   EmissionFactorStatus,
   EmissionSourceCaracterisation,
@@ -11,15 +12,14 @@ import {
   StudyRole,
   SubPost,
   Unit,
-  User,
 } from '@prisma/client'
 
 const studyId = '91bb3826-2be7-4d56-bb9b-363f4d9af62f'
 const siteId = 'c3f2b8d4-7a0c-4b3f-8c5b-5b5e7b6f3e3b'
 const studySiteId = 'ca3e68bd-dee6-400a-b3cb-b3e11725282e'
 
-export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
-  if (!creator.organizationId) {
+export const createRealStudy = async (prisma: PrismaClient, creator: Account) => {
+  if (!creator.organizationVersionId) {
     return null
   }
 
@@ -39,11 +39,20 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
     ],
   })
 
+  const creatorOrganizationVersion = await prisma.organizationVersion.findFirst({
+    where: {
+      id: creator.organizationVersionId,
+    },
+  })
+  if (!creatorOrganizationVersion) {
+    return null
+  }
+
   await prisma.site.create({
     data: {
       id: siteId,
       name: 'Bourges',
-      organizationId: creator.organizationId,
+      organizationId: creatorOrganizationVersion.organizationId,
       etp: 35,
       ca: 1_000_000,
     },
@@ -63,7 +72,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
   const papier = await prisma.emissionFactor.create({
     data: {
       importedFrom: Import.Manual,
-      organizationId: creator.organizationId,
+      organizationId: creatorOrganizationVersion.organizationId,
       status: EmissionFactorStatus.Valid,
       co2b: 345,
       co2f: 34,
@@ -92,10 +101,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       isPublic: true,
       level: Level.Initial,
       exports: { createMany: { data: [{ type: Export.Beges, control: ControlMode.Operational }] } },
-      // TO DELETE AND UNCOMMENT NEXT
-      createdByUser: { connect: { id: creator.id } },
-      // createdBy: { connect: { id: creator.id } },
-      organization: { connect: { id: creator.organizationId } },
+      createdBy: { connect: { id: creator.id } },
+      organizationVersion: { connect: { id: creator.organizationVersionId } },
       sites: {
         createMany: {
           data: [
@@ -120,7 +127,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
   await prisma.userOnStudy.create({
     data: {
       role: StudyRole.Validator,
-      userId: creator.id,
+      accountId: creator.id,
       studyId,
     },
   })
