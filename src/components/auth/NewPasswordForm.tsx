@@ -1,7 +1,7 @@
 'use client'
 
-import { resetPassword } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
+import { resetPassword } from '@/services/serverFunctions/userAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'

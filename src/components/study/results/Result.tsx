@@ -2,7 +2,7 @@
 
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { getUserSettings } from '@/services/serverFunctions/user'
+import { getUserSettings } from '@/services/serverFunctions/userAuth'
 import { formatNumber } from '@/utils/number'
 import Chart from 'chart.js/auto'
 import { useTranslations } from 'next-intl'

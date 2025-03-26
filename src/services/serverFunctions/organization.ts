@@ -4,10 +4,11 @@ import {
   createOrUpdateOrganization,
   getOrganizationNameById,
   getRawOrganizationById,
-  onboardOrganization,
   setOnboarded,
   updateOrganization,
 } from '@/db/organization'
+
+import { onboardOrganization } from '@/db/organizationAuth'
 import { getUserApplicationSettings, getUserByEmail } from '@/db/user'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'

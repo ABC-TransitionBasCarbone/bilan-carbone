@@ -1,7 +1,7 @@
 'use client'
 
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import { getUserSettings } from '@/services/serverFunctions/user'
+import { getUserSettings } from '@/services/serverFunctions/userAuth'
 import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { SiteCAUnit } from '@prisma/client'

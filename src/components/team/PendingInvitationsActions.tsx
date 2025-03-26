@@ -1,7 +1,7 @@
 'use client'
 
-import { TeamMember } from '@/db/user'
-import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
+import { TeamMember } from '@/db/userAuth'
+import { deleteMember, resendInvitation } from '@/services/serverFunctions/userAuth'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'

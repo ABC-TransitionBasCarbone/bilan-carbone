@@ -1,5 +1,5 @@
-import { updateUserProfile } from '@/services/serverFunctions/user'
 import { EditProfileCommand, EditProfileCommandValidation } from '@/services/serverFunctions/user.command'
+import { updateUserProfile } from '@/services/serverFunctions/userAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
 import DoneIcon from '@mui/icons-material/Done'

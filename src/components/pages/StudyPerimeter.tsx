@@ -2,7 +2,7 @@
 
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/userAuth'
 import { canEditStudyFlows } from '@/services/permissions/study'
 import { getUserRoleOnStudy } from '@/utils/study'
 import { User } from 'next-auth'

@@ -1,7 +1,4 @@
-import { signPassword } from '@/services/auth'
-import { findUserInfo } from '@/services/permissions/user'
 import { Prisma, Role, UserStatus } from '@prisma/client'
-import { User } from 'next-auth'
 import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
@@ -28,21 +25,6 @@ export const getUserById = (id: string) =>
 
 export const getUserByEmailWithAllowedStudies = (email: string) =>
   prismaClient.user.findUnique({ where: { email }, include: { allowedStudies: true, contributors: true } })
-
-export type UserWithAllowedStudies = AsyncReturnType<typeof getUserByEmailWithAllowedStudies>
-
-export const updateUserPasswordForEmail = async (email: string, password: string) => {
-  const signedPassword = await signPassword(password)
-  return prismaClient.user.update({
-    where: { email },
-    data: {
-      resetToken: null,
-      password: signedPassword,
-      status: UserStatus.ACTIVE,
-      updatedAt: new Date(),
-    },
-  })
-}
 
 export const updateUserResetTokenForEmail = async (email: string, resetToken: string) =>
   prismaClient.user.update({
@@ -82,12 +64,6 @@ export const getUserOrganizations = async (email: string) => {
 
   return user.organization ? [user.organization] : []
 }
-
-export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]
-
-export const getUserFromUserOrganization = (user: User) =>
-  prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
-export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
 
 export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
   prismaClient.user.create({

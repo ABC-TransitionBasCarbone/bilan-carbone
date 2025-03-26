@@ -3,7 +3,7 @@ import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationUsers } from '@/db/organization'
 import { getUserOrganizations } from '@/db/user'
-import { getUserSettings } from '@/services/serverFunctions/user'
+import { getUserSettings } from '@/services/serverFunctions/userAuth'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 
 const NewStudy = async ({ user }: UserProps) => {

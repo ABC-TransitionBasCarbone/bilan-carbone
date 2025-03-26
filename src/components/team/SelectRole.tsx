@@ -1,6 +1,6 @@
 'use client'
 
-import { changeRole } from '@/services/serverFunctions/user'
+import { changeRole } from '@/services/serverFunctions/userAuth'
 import { isUntrainedRole } from '@/utils/onganization'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Level, Role } from '@prisma/client'

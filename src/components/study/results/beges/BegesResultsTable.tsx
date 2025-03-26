@@ -3,7 +3,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { BegesLine, computeBegesResult, rulesSpans } from '@/services/results/beges'
-import { getUserSettings } from '@/services/serverFunctions/user'
+import { getUserSettings } from '@/services/serverFunctions/userAuth'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { ExportRule } from '@prisma/client'

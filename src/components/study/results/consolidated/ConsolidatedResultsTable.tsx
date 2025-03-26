@@ -2,7 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
-import { getUserSettings } from '@/services/serverFunctions/user'
+import { getUserSettings } from '@/services/serverFunctions/userAuth'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'

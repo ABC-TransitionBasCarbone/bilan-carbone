@@ -1,6 +1,6 @@
 'use server'
 
-import { getUserSettings } from '@/services/serverFunctions/user'
+import { getUserSettings } from '@/services/serverFunctions/userAuth'
 import Settings from '../settings/Settings'
 import NotFound from './NotFound'
 

@@ -1,7 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { getUserSettings } from '@/services/serverFunctions/user'
+import { getUserSettings } from '@/services/serverFunctions/userAuth'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

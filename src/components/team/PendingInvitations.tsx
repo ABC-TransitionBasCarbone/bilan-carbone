@@ -1,4 +1,4 @@
-import { TeamMember } from '@/db/user'
+import { TeamMember } from '@/db/userAuth'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'

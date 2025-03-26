@@ -1,4 +1,4 @@
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/userAuth'
 import { isAdmin } from '@/services/permissions/user'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'

@@ -2,7 +2,7 @@ import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import TeamPage from '@/components/pages/Team'
 import { getOrganizationById } from '@/db/organization'
-import { getUserFromUserOrganization } from '@/db/user'
+import { getUserFromUserOrganization } from '@/db/userAuth'
 
 export const revalidate = 0
 

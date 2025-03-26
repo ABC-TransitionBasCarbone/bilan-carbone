@@ -2,8 +2,8 @@
 
 import Form from '@/components/base/Form'
 import { FormTextField } from '@/components/form/TextField'
-import { addMember } from '@/services/serverFunctions/user'
 import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverFunctions/user.command'
+import { addMember } from '@/services/serverFunctions/userAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { Role } from '@prisma/client'

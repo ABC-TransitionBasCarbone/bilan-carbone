@@ -1,7 +1,7 @@
 'use client'
 
-import { activateEmail } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
+import { activateEmail } from '@/services/serverFunctions/userAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'

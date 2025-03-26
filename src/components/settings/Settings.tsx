@@ -1,7 +1,7 @@
 'use client'
 
-import { updateUserSettings } from '@/services/serverFunctions/user'
 import { EditSettingsCommand, EditSettingsCommandValidation } from '@/services/serverFunctions/user.command'
+import { updateUserSettings } from '@/services/serverFunctions/userAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl, FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
 import { SiteCAUnit, UserApplicationSettings } from '@prisma/client'

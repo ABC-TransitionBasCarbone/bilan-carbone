@@ -65,7 +65,7 @@ import {
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
-import { sendInvitation } from './user'
+import { sendInvitation } from './userAuth'
 
 export const getStudy = async (studyId: string) => {
   const session = await auth()
