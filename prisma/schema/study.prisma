@@ -77,7 +77,7 @@ model Study {
   updatedAt DateTime @default(now()) @map("updated_at")
 
   createdById String @map("created_by_id")
-  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdBy   Account   @relation(fields: [createdById], references: [id])
 
   name        String
   isPublic    Boolean         @map("is_public")
@@ -118,24 +118,24 @@ model StudyExport {
 model UserOnStudy {
   study   Study  @relation(fields: [studyId], references: [id])
   studyId String @map("study_id")
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @map("user_id")
+  account    Account   @relation(fields: [accountId], references: [id])
+  accountId  String @map("account_id")
 
   role StudyRole
 
-  @@id([studyId, userId])
+  @@id([studyId, accountId])
   @@map("users_on_study")
 }
 
 model Contributors {
   study   Study  @relation(fields: [studyId], references: [id])
   studyId String @map("study_id")
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @map("user_id")
+  account    Account   @relation(fields: [accountId], references: [id])
+  accountId  String @map("account_id")
 
   subPost SubPost
 
-  @@id([studyId, userId, subPost])
+  @@id([studyId, accountId, subPost])
   @@map("contributors")
 }
 
@@ -182,7 +182,7 @@ model StudyEmissionSource {
   hectare            Int?
 
   contributorId String? @map("contributor_id")
-  contributor   User?   @relation(fields: [contributorId], references: [id])
+  contributor   Account?   @relation(fields: [contributorId], references: [id])
 
   @@map("study_emission_sources")
 }
