@@ -89,7 +89,7 @@ const OrganizationCard = ({ user, organizations }: Props) => {
         </div>
         <div>
           <LinkButton
-            className="align-end"
+            className="align-center"
             color="secondary"
             target="_blank"
             rel="noreferrer noopener"
