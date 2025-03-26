@@ -31,22 +31,21 @@ enum UserSource {
 }
 
 model Account {
-  id               String    @id @default(uuid())
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @default(now()) @map("updated_at")
-  userId           String    @map("user_id")
-  user             User      @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
 
   importedFileDate DateTime? @map("imported_file_date")
 
   organizationVersion           OrganizationVersion?  @relation(fields: [organizationVersionId], references: [id])
   onboardedOrganizationVersions OrganizationVersion[] @relation("organizationVersionOnboarder")
-  organizationVersionId         String?        @map("organizationVersion_id")
-  
+  organizationVersionId         String?               @map("organizationVersion_id")
+
   deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
 
-
-  role                       Role
+  role Role
 
   createdStudies             Study[]
   allowedStudies             UserOnStudy[]
@@ -59,74 +58,40 @@ model Account {
   @@map("accounts")
 }
 
-
 model User {
-  id               String    @id @default(uuid())
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @default(now()) @map("updated_at")
-  level                      Level?
-  firstName                  String                   @map("first_name")
-  lastName                   String                   @map("last_name")
-  email                      String                   @unique
-  password                   String?
-  resetToken                 String?                  @map("reset_token")
-  accounts                   Account[]
-  status                     UserStatus
-  source                     UserSource               @default(CRON)
+  id         String     @id @default(uuid())
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @default(now()) @map("updated_at")
+  level      Level?
+  firstName  String     @map("first_name")
+  lastName   String     @map("last_name")
+  email      String     @unique
+  password   String?
+  resetToken String?    @map("reset_token")
+  accounts   Account[]
+  status     UserStatus
+  source     UserSource @default(CRON)
 
-  formationFormStartTime DateTime?  @map("formation_form_start_time")
-
-
-// TO DELETE
-  importedFileDate DateTime? @map("imported_file_date")
-
-  deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
-
-
-  role                       Role?
-
-  createdStudies             Study[]
-  allowedStudies             UserOnStudy[]
-  contributors               Contributors[]
-  contributedEmissionSources StudyEmissionSource[]
-  flows                      Document[]
-  userApplicationSettings    UserApplicationSettings?
-
-  organization           Organization?  @relation(fields: [organizationId], references: [id])
-  onboardedOrganizations Organization[] @relation("organizationOnboarder")
-  organizationId         String?        @map("organization_id")
-
-  // END TO DELETE
+  formationFormStartTime DateTime? @map("formation_form_start_time")
 
   @@map("users")
 }
 
 model UserApplicationSettings {
   id                           String     @id @default(uuid())
-  accountId                       String     @unique @map("account_id")
-  account                         Account?      @relation(fields: [accountId], references: [id])
+  accountId                    String     @unique @map("account_id")
+  account                      Account?   @relation(fields: [accountId], references: [id])
   validatedEmissionSourcesOnly Boolean    @default(true) @map("validated_emission_sources_only")
   caUnit                       SiteCAUnit @default(K) @map("ca_unit")
-
-// TO DELETE
-  userId                       String?     @unique @map("user_id")
-  user                         User?      @relation(fields: [userId], references: [id])
-  // END TO DELETE
 
   @@map("user_application_settings")
 }
 
 model UserCheckedStep {
-  id     String          @id @default(uuid())
-  // TO REMOVE -> @default("") or "?"
-  accountId String?          @map("account_id")
-  step   UserChecklist
+  id        String        @id @default(uuid())
+  accountId String        @map("account_id")
+  step      UserChecklist
 
-// TO DELETE
-  userId String?          @map("user_id")
-  @@unique([userId, step])
-  // END TO DELETE
-
-  // @@unique([accountId, step]) // TO UNCOMMENT
+  @@unique([accountId, step])
   @@map("user_checked_steps")
 }

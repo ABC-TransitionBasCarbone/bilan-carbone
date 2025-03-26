@@ -3,5 +3,5 @@ model Formation {
   name String @unique
   link String
 
-	@@map("formations")
+  @@map("formations")
 }

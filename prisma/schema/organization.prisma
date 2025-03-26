@@ -17,59 +17,40 @@ model Organization {
   updatedAt        DateTime  @default(now()) @map("updated_at")
   importedFileDate DateTime? @map("imported_file_date")
 
-  name             String
-  wordpressId      String?        @map("wordpress_id")
+  name        String
+  wordpressId String? @map("wordpress_id")
 
   sites     Site[]
   emissions EmissionFactor[]
 
-
-  organizationVersions    OrganizationVersion[]
-
-  // TO DELETE
-  siret      String?
-  isCR             Boolean? @map("is_cr") @default(false)
-  activatedLicence Boolean? @map("activated_licence") @default(false)
-
-  users            User[]
-  studies          Study[]
-
-  onboarded        Boolean? @default(false)
-  onboarderId      String? @map("onboarder_id")
-  onboarder        User?   @relation("organizationOnboarder", fields: [onboarderId], references: [id])
-
-  parentId String?        @map("parent_id")
-  parent   Organization?  @relation("childOrganizations", fields: [parentId], references: [id])
-  childs   Organization[] @relation("childOrganizations")
-
-  // END TO DELETE
+  organizationVersions OrganizationVersion[]
 
   @@map("organizations")
 }
 
 model OrganizationVersion {
-  id               String    @id @default(uuid())
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @default(now()) @map("updated_at")
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
 
-  organizationId  String
-  organization Organization  @relation(fields: [organizationId], references: [id])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
 
-  isCR             Boolean @map("is_cr") @default(false)
-  activatedLicence Boolean @map("activated_licence") @default(false)
+  isCR             Boolean @default(false) @map("is_cr")
+  activatedLicence Boolean @default(false) @map("activated_licence")
 
-  userAccounts     Account[]
-  studies          Study[]
+  userAccounts Account[]
+  studies      Study[]
 
-  onboarded        Boolean @default(false)
-  onboarderId      String? @map("onboarder_id")
-  onboarder        Account?   @relation("organizationVersionOnboarder", fields: [onboarderId], references: [id])
+  onboarded   Boolean  @default(false)
+  onboarderId String?  @map("onboarder_id")
+  onboarder   Account? @relation("organizationVersionOnboarder", fields: [onboarderId], references: [id])
 
-  parentId String?        @map("parent_id")
+  parentId String?               @map("parent_id")
   parent   OrganizationVersion?  @relation("childOrganizationVersions", fields: [parentId], references: [id])
   childs   OrganizationVersion[] @relation("childOrganizationVersions")
 
-  environment      Environment
+  environment Environment
 
   @@unique([organizationId, environment])
   @@map("organization_versions")
