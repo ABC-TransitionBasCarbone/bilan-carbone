@@ -9,6 +9,7 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { getUserSettings } from '@/services/serverFunctions/user'
+import { CUT } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -100,7 +101,7 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
         (organization.sites.length > 0 ? (
           <>
             <DynamicComponent
-              environmentComponents={{ cut: <SitesCut sites={sites} form={form} withSelection /> }}
+              environmentComponents={{ [CUT]: <SitesCut sites={sites} form={form} withSelection /> }}
               defaultComponent={<Sites sites={sites} form={form} withSelection />}
             />
             <div className="mt2">

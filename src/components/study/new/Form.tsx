@@ -1,6 +1,5 @@
 'use client'
 
-import Block from '@/components/base/Block'
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
@@ -28,9 +27,10 @@ interface Props {
   user: User
   users: Awaited<ReturnType<typeof getOrganizationUsers>>
   form: UseFormReturn<CreateStudyCommand>
+  children?: React.ReactNode
 }
 
-const NewStudyForm = ({ user, users, form }: Props) => {
+const NewStudyForm = ({ user, users, form, children }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
@@ -52,7 +52,7 @@ const NewStudyForm = ({ user, users, form }: Props) => {
   const showControl = useMemo(() => Object.values(exports || {}).some((value) => value), [exports])
 
   return (
-    <Block title={t('title')} as="h1">
+    <>
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <FormTextField
           data-testid="new-study-name"
@@ -109,6 +109,7 @@ const NewStudyForm = ({ user, users, form }: Props) => {
           <FormControlLabel value="false" control={<Radio />} label={t('private')} />
         </FormRadio>
         <StudyExportsForm form={form} showControl={showControl} setGlossary={setGlossary} t={t} />
+        {children}
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
           {t('create')}
         </LoadingButton>
@@ -131,7 +132,7 @@ const NewStudyForm = ({ user, users, form }: Props) => {
           </p>
         </GlossaryModal>
       )}
-    </Block>
+    </>
   )
 }
 

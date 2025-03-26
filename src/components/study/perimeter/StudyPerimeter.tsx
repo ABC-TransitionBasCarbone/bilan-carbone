@@ -23,6 +23,7 @@ import {
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { getUserSettings } from '@/services/serverFunctions/user'
+import { CUT } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -208,7 +209,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
       )}
       <DynamicComponent
         environmentComponents={{
-          cut: (
+          [CUT]: (
             <SitesCut
               sites={
                 isEditing
