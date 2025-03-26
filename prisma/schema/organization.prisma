@@ -17,9 +17,9 @@ model Organization {
   activatedLicence Boolean @map("activated_licence")
   onboarded        Boolean @default(false)
   onboarderId      String? @map("onboarder_id")
-  onboarder        User?   @relation("organizationOnboarder", fields: [onboarderId], references: [id])
+  onboarder        Account?   @relation("organizationOnboarder", fields: [onboarderId], references: [id])
 
-  users     User[]
+  users     Account[]
   sites     Site[]
   studies   Study[]
   emissions EmissionFactor[]
