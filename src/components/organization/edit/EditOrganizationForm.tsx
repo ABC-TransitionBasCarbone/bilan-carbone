@@ -5,12 +5,16 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { OrganizationWithSites } from '@/db/user'
+import Sites from '@/environments/base/organization/Sites'
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import SitesCut from '@/environments/cut/organization/Sites'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
   UpdateOrganizationCommand,
   UpdateOrganizationCommandValidation,
 } from '@/services/serverFunctions/organization.command'
 import { findStudiesWithSites } from '@/services/serverFunctions/study'
+import { CUT } from '@/store/AppEnvironment'
 import { handleWarningText } from '@/utils/components'
 import { displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,7 +23,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import Sites from '../Sites'
 
 interface Props {
   organization: OrganizationWithSites
@@ -42,7 +45,12 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
     defaultValues: {
       organizationId: organization.id,
       name: organization.name,
-      sites: organization.sites.map((site) => ({ ...site, ca: site.ca ? displayCA(site.ca, caUnit) : 0 })),
+      sites: organization.sites.map((site) => ({
+        ...site,
+        ca: site.ca ? displayCA(site.ca, caUnit) : 0,
+        postalCode: site.postalCode ?? '',
+        city: site.city ?? '',
+      })),
     },
   })
 
@@ -78,7 +86,10 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
         name="name"
         label={t('name')}
       />
-      <Sites form={form} sites={sites} />
+      <DynamicComponent
+        environmentComponents={{ [CUT]: <SitesCut sites={sites} form={form} /> }}
+        defaultComponent={<Sites sites={sites} form={form} />}
+      />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}
       </LoadingButton>
