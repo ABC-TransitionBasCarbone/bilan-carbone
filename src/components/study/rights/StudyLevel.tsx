@@ -15,7 +15,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import styles from './StudyPublicStatus.module.css'
+import styles from './StudyParams.module.css'
 
 interface Props {
   user: User
@@ -57,42 +57,40 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
 
   const allowedLevels = useMemo(() => getAllowedLevels(user.level), [user])
   return (
-    <div className="pb2">
-      <>
-        <FormSelect
-          className={styles.select}
-          control={form.control}
-          translation={t}
-          name="level"
-          label={t('level')}
-          data-testid="study-level"
-          icon={<HelpIcon onClick={() => setGlossary('type')} label={tGlossary('title')} />}
-          iconPosition="after"
-          disabled={disabled}
-        >
-          {Object.values(Level).map((level) => (
-            <MenuItem key={level} value={level} disabled={!allowedLevels.includes(level)}>
-              {tLevel(level)}
-            </MenuItem>
-          ))}
-        </FormSelect>
-        <GlossaryModal label="study-type" glossary={glossary} onClose={() => setGlossary('')} t={tGlossary}>
-          <span>
-            {t.rich('glossary.typeDescription', {
-              link: (children) => (
-                <Link
-                  href="https://www.bilancarbone-methode.com/1-cadrage-de-la-demarche/1.1-definir-son-niveau-de-maturite-bilan-carbone-r"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  {children}
-                </Link>
-              ),
-            })}
-          </span>
-        </GlossaryModal>
-        {error && <p>{error}</p>}
-      </>
+    <div className="grow">
+      <FormSelect
+        className={styles.select}
+        control={form.control}
+        translation={t}
+        name="level"
+        label={t('level')}
+        data-testid="study-level"
+        icon={<HelpIcon onClick={() => setGlossary('type')} label={tGlossary('title')} />}
+        iconPosition="after"
+        disabled={disabled}
+      >
+        {Object.values(Level).map((level) => (
+          <MenuItem key={level} value={level} disabled={!allowedLevels.includes(level)}>
+            {tLevel(level)}
+          </MenuItem>
+        ))}
+      </FormSelect>
+      <GlossaryModal label="study-type" glossary={glossary} onClose={() => setGlossary('')} t={tGlossary}>
+        <span>
+          {t.rich('glossary.typeDescription', {
+            link: (children) => (
+              <Link
+                href="https://www.bilancarbone-methode.com/1-cadrage-de-la-demarche/1.1-definir-son-niveau-de-maturite-bilan-carbone-r"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {children}
+              </Link>
+            ),
+          })}
+        </span>
+      </GlossaryModal>
+      {error && <p>{error}</p>}
     </div>
   )
 }

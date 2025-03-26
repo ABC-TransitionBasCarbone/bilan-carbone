@@ -102,7 +102,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               }}
             />
           ) : (
-            formatNumber(getValue<number>())
+            formatNumber(getValue<number>(), 2)
           ),
       },
       {

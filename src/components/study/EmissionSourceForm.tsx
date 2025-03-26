@@ -10,7 +10,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
+import { EmissionSourceCaracterisation, EmissionSourceType, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -58,7 +58,7 @@ const EmissionSourceForm = ({
   const tUnits = useTranslations('units')
   const tCategorisations = useTranslations('categorisations')
   const tGlossary = useTranslations('emissionSource.glossary')
-  const tResults = useTranslations('results')
+  const tResultUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
   const [glossary, setGlossary] = useState('')
   const [error, setError] = useState('')
@@ -217,7 +217,7 @@ const EmissionSourceForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatNumber(getEmissionFactorValue(selectedFactor) / 1000, 5)} {tResults('unit')}/
+            {formatNumber(getEmissionFactorValue(selectedFactor), 5)} {tResultUnits(StudyResultUnit.K)}/
             {tUnits(selectedFactor.unit)}{' '}
             {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
           </p>

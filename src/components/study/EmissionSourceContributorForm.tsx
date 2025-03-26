@@ -8,6 +8,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
+import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Path } from 'react-hook-form'
@@ -26,9 +27,9 @@ interface Props {
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 
-const EmissionSourceContributorForm = ({ emissionSource, update, emissionFactors, selectedFactor }: Props) => {
+const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, selectedFactor, update }: Props) => {
   const t = useTranslations('emissionSource')
-  const tResults = useTranslations('results')
+  const tResultUnits = useTranslations('study.results.unit')
   const tUnits = useTranslations('units')
 
   return (
@@ -84,8 +85,8 @@ const EmissionSourceContributorForm = ({ emissionSource, update, emissionFactors
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatNumber(getEmissionFactorValue(selectedFactor) / 1000, 5)} {tResults('unit')}/
-            {tUnits(selectedFactor.unit)}{' '}
+            {formatNumber(getEmissionFactorValue(selectedFactor), 5)} {tResultUnits(StudyResultUnit.K)}/
+            {tUnits(selectedFactor.unit)}
           </p>
           {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
         </div>

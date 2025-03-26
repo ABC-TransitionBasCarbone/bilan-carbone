@@ -1,6 +1,7 @@
 import { Post } from '@/services/posts'
 import { formatNumber } from '@/utils/number'
-import { SubPost } from '@prisma/client'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { StudyResultUnit, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './PostHeader.module.css'
@@ -12,11 +13,12 @@ interface Props {
   emissionValue?: number
   percent: number
   color: string
+  resultsUnit: StudyResultUnit
 }
 
-export const PostHeader = ({ post, mainPost, emissionValue, percent, color }: Props) => {
+export const PostHeader = ({ post, mainPost, emissionValue, percent, color, resultsUnit }: Props) => {
   const t = useTranslations('emissionFactors.post')
-  const tResults = useTranslations('results')
+  const tUnits = useTranslations('study.results.units')
 
   return (
     <div className={classNames(styles.header, 'align-center', 'flex-col')}>
@@ -27,7 +29,7 @@ export const PostHeader = ({ post, mainPost, emissionValue, percent, color }: Pr
           <span>{t(post)}</span>
         </div>
         <span>
-          {formatNumber((emissionValue || 0) / 1000)} {tResults('unit')}
+          {formatNumber((emissionValue || 0) / STUDY_UNIT_VALUES[resultsUnit])} {tUnits(resultsUnit)}
         </span>
       </div>
     </div>

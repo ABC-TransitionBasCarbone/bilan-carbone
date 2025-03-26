@@ -4,7 +4,7 @@ import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { colors, postColors } from '@/utils/study'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { SubPost } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -16,9 +16,10 @@ interface Props {
   post: Post | SubPost
   data?: ResultsByPost
   studyId: string
+  resultsUnit: StudyResultUnit
 }
 
-const PostInfography = ({ post, data, studyId }: Props) => {
+const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
   const t = useTranslations('emissionFactors.post')
   const ref = useRef<HTMLDivElement>(null)
   const [displayChildren, setDisplayChildren] = useState(false)
@@ -82,6 +83,7 @@ const PostInfography = ({ post, data, studyId }: Props) => {
           emissionValue={data?.value}
           percent={percent}
           color={colors[postColor].dark}
+          resultsUnit={resultsUnit}
         />
         <div className={styles.subPostsContainer} ref={ref}>
           {subPosts && (

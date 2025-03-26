@@ -13,10 +13,11 @@ import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study
 import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, Level, StudyRole } from '@prisma/client'
+import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -59,8 +60,8 @@ const EmissionSource = ({
   const [error, setError] = useState('')
   const tError = useTranslations('error')
   const t = useTranslations('emissionSource')
-  const tResults = useTranslations('results')
   const tUnits = useTranslations('units')
+  const tResultstUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
   const router = useRouter()
   const [display, setDisplay] = useState(false)
@@ -168,7 +169,7 @@ const EmissionSource = ({
                 <>
                   <p>{t('emissionSource')}</p>
                   <p>
-                    {formatNumber(emissionSource.value, 5)} {selectedFactor && tUnits(selectedFactor.unit)}
+                    {formatNumber(emissionSource.value)} {selectedFactor && tUnits(selectedFactor.unit)}
                   </p>
                 </>
               )}
@@ -178,8 +179,8 @@ const EmissionSource = ({
               <div className="flex-col justify-center text-center">
                 <p>{t('emissionFactor')}</p>
                 <p>
-                  {formatNumber(getEmissionFactorValue(selectedFactor) / 1000, 5)} {tResults('unit')}/
-                  {tUnits(selectedFactor.unit)}
+                  {formatNumber(getEmissionFactorValue(selectedFactor), 5)}
+                  {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit)}
                 </p>
               </div>
             )}
@@ -189,7 +190,7 @@ const EmissionSource = ({
                 <p
                   className={styles.result}
                   data-testid="emission-source-value"
-                >{`${formatNumber(emissionResults.emission / 1000)} ${tResults('unit')}`}</p>
+                >{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}</p>
                 {emissionResults.standardDeviation && (
                   <p className={styles.status} data-testid="emission-source-quality">
                     {tQuality('name')}{' '}
@@ -267,7 +268,8 @@ const EmissionSource = ({
                   <div>
                     <p>{t('results.emission')}</p>
                     <p>
-                      {formatNumber(emissionResults.emission / 1000)} {tResults('unit')}
+                      {formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])}{' '}
+                      {tResultstUnits(study.resultsUnit)}
                     </p>
                   </div>
                   {sourceRating && (
@@ -280,15 +282,15 @@ const EmissionSource = ({
                     <div>
                       <p>{t('results.confiance')}</p>
                       <p>
-                        [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
-                        {formatNumber(emissionResults.confidenceInterval[1])}]
+                        [{formatNumber(emissionResults.confidenceInterval[0], 2)};{' '}
+                        {formatNumber(emissionResults.confidenceInterval[1], 2)}]
                       </p>
                     </div>
                   )}
                   {emissionResults.alpha !== null && (
                     <div>
                       <p>{t('results.alpha')}</p>
-                      <p>{formatNumber(emissionResults.alpha)}</p>
+                      <p>{formatNumber(emissionResults.alpha, 2)}</p>
                     </div>
                   )}
                 </div>

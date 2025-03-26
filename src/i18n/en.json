@@ -80,7 +80,7 @@
     "other": "Other gases",
     "total": "Total",
     "uncertainty": "Uncertainty",
-    "ges": "GHG emissions (tCO₂e)"
+    "ges": "GHG emissions ({unit})"
   },
   "nav": {
     "backToHome": "Back to home",
@@ -174,9 +174,6 @@
     "team": "My team",
     "information": "Global informations"
   },
-  "results": {
-    "unit": "tCO₂e"
-  },
   "profile": {
     "title": "My profile",
     "legalNotices": "Legal notices",
@@ -241,7 +238,7 @@
       "results": "Results",
       "transitionPlan": "Transition plan",
       "menu": "Open the study navigation menu",
-      "comming": "comming"
+      "coming": "coming"
     },
     "new": {
       "title": "Information about the new study",
@@ -258,6 +255,7 @@
       "isPublicTitle": "Study visibility",
       "private": "Private",
       "public": "Public",
+      "resultsUnit": "Study result's unit",
       "create": "Create study",
       "glossary": {
         "title": "Glossaire",
@@ -285,7 +283,7 @@
         "default": "Something went wrong ...",
         "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support"
       },
-      "comming": "comming"
+      "coming": "coming"
     },
     "post": {
       "displayInfography": "Display all posts",
@@ -419,11 +417,15 @@
     "results": {
       "type": "Type",
       "post": "Post",
-      "value": "Emissions (tCO₂e)",
+      "value": "Emissions ({unit})",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
-      "comming": "comming"
+      "coming": "coming",
+      "units": {
+        "K": "kgCO₂e",
+        "T": "tCO₂e"
+      }
     },
     "export": {
       "activityDataComment": "Activity data comment",

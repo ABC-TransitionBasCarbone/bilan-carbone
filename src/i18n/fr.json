@@ -80,7 +80,7 @@
     "other": "Autres gaz",
     "total": "Total",
     "uncertainty": "Incertitude",
-    "ges": "Émissions de GES (tCO₂e)"
+    "ges": "Émissions de GES ({unit})"
   },
   "nav": {
     "backToHome": "Retour a l'accueil",
@@ -174,9 +174,6 @@
     "team": "Mon équipe",
     "information": "Informations générales"
   },
-  "results": {
-    "unit": "tCO₂e"
-  },
   "profile": {
     "title": "Mon profil",
     "legalNotices": "Mentions légales",
@@ -241,7 +238,7 @@
       "results": "Résultats",
       "transitionPlan": "Plan de transition",
       "menu": "Ouvrir le menu de navigation de l'étude",
-      "comming": "à venir"
+      "coming": "à venir"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -258,6 +255,7 @@
       "isPublicTitle": "Visibilité de l'étude",
       "private": "Privée",
       "public": "Publique",
+      "resultsUnit": "Unité des resultats de l'étude",
       "create": "Créer l'étude",
       "glossary": {
         "title": "Glossaire",
@@ -285,7 +283,7 @@
         "default": "Une erreur s'est produite ...",
         "noActiveVersion_BaseEmpreinte": "Aucune version active de Base Empreinte. Veuillez contacter le support."
       },
-      "comming": "à venir"
+      "coming": "à venir"
     },
     "post": {
       "displayInfography": "Voir les différents postes",
@@ -419,11 +417,15 @@
     "results": {
       "type": "Type",
       "post": "Poste",
-      "value": "Émissions (tCO₂e)",
+      "value": "Émissions ({unit})",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
-      "comming": "à venir"
+      "coming": "à venir",
+      "units": {
+        "K": "kgCO₂e",
+        "T": "tCO₂e"
+      }
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",
