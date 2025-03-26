@@ -179,7 +179,7 @@ const EmissionSource = ({
               <div className="flex-col justify-center text-center">
                 <p>{t('emissionFactor')}</p>
                 <p>
-                  {formatNumber(getEmissionFactorValue(selectedFactor) / STUDY_UNIT_VALUES[study.resultsUnit])}
+                  {formatNumber(getEmissionFactorValue(selectedFactor))}
                   {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit)}
                 </p>
               </div>
