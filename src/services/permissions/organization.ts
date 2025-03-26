@@ -1,8 +1,9 @@
 import { getOrganizationById } from '@/db/organization'
 import { getUserByEmail } from '@/db/user'
-import { canEditOrganization, isInOrgaOrParent } from '@/utils/organization'
+import { canEditOrganization, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
 import { User } from 'next-auth'
 import { auth } from '../auth'
+import { getOrganizationStudiesFromOtherUsers } from '../serverFunctions/study'
 
 export const isInOrgaOrParentFromId = async (userOrganizationId: string | null, organizationId: string) => {
   if (userOrganizationId === organizationId) {
@@ -50,6 +51,13 @@ export const canUpdateOrganization = async (user: User, organizationId: string) 
 export const canDeleteOrganization = async (organizationId: string) => {
   const [session, targetOrganization] = await Promise.all([auth(), getOrganizationById(organizationId)])
   if (!session || !session.user || !targetOrganization) {
+    return false
+  }
+
+  if (
+    !hasEditionRole(false, session.user.role) &&
+    (await getOrganizationStudiesFromOtherUsers(organizationId, session.user.id))
+  ) {
     return false
   }
   return targetOrganization.parentId === session.user.organizationId
