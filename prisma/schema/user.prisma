@@ -13,11 +13,12 @@ enum UserStatus {
   ACTIVE
 }
 
-enum CRUserChecklist {
+enum UserChecklist {
   CreateAccount
   AddCollaborator
   AddClient
-  AddSite
+  AddSiteCR
+  AddSiteOrga
   CreateFirstStudy
   CreateFirstEmissionSource
   ConsultResults
@@ -65,7 +66,7 @@ model UserApplicationSettings {
 model UserCheckedStep {
   id     String          @id @default(uuid())
   userId String          @map("user_id")
-  step   CRUserChecklist
+  step   UserChecklist
 
   @@unique([userId, step])
   @@map("user_checked_steps")

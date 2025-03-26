@@ -3,7 +3,6 @@ import { reCreateBegesRules } from '@/services/exportRules/beges'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { faker } from '@faker-js/faker'
 import {
-  CRUserChecklist,
   EmissionFactorStatus,
   Import,
   Level,
@@ -13,6 +12,7 @@ import {
   SubPost,
   Unit,
   User,
+  UserChecklist,
   UserStatus,
 } from '@prisma/client'
 import { Command } from 'commander'
@@ -276,7 +276,7 @@ const users = async () => {
 
   const activeUsers = await prisma.user.findMany({ where: { status: UserStatus.ACTIVE }, select: { id: true } })
   await prisma.userCheckedStep.createMany({
-    data: activeUsers.map((user) => ({ userId: user.id, step: CRUserChecklist.CreateAccount })),
+    data: activeUsers.map((user) => ({ userId: user.id, step: UserChecklist.CreateAccount })),
   })
 
   const subPosts = Object.keys(SubPost)

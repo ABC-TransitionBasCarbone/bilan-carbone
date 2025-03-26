@@ -1,7 +1,7 @@
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { isAdmin } from '@/services/permissions/user'
 import { checkLevel, getAllowedLevels } from '@/services/study'
-import { isAdminOnOrga } from '@/utils/onganization'
+import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'

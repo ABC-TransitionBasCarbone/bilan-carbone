@@ -1,5 +1,6 @@
-import { mandatoryParentSteps } from '@/services/checklist'
-import { CRUserChecklist, Organization } from '@prisma/client'
+import { getUserCheckList, mandatoryParentSteps } from '@/services/checklist'
+import { Organization, Role, UserChecklist } from '@prisma/client'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo } from 'react'
@@ -12,32 +13,44 @@ const FAQLink = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 interface Props {
   setOpen: (open: boolean) => void
   getCheckList: () => void
-  userChecklist: CRUserChecklist[]
+  userChecklist: UserChecklist[]
+  userRole: Role
   userOrganization: Organization
   clientId?: string
   studyId?: string
 }
 
-const ChecklistDrawer = ({ setOpen, getCheckList, userOrganization, clientId, userChecklist, studyId }: Props) => {
+const ChecklistDrawer = ({
+  setOpen,
+  getCheckList,
+  userRole,
+  userOrganization,
+  clientId,
+  userChecklist,
+  studyId,
+}: Props) => {
   const t = useTranslations('checklist')
-  const steps = useMemo(() => (userOrganization.isCR ? CRUserChecklist : CRUserChecklist), [userOrganization])
+  const steps = useMemo(() => getUserCheckList(userRole, userOrganization.isCR), [userRole, userOrganization])
   const finished = useMemo(() => userChecklist.length === Object.values(steps).length - 1, [userChecklist, steps])
-  const isValidated = (step: CRUserChecklist) => userChecklist.some((checkedStep) => checkedStep === step)
-  const isDisabled = (step: CRUserChecklist) =>
-    mandatoryParentSteps(step).some((mandatoryStep) => !userChecklist.includes(mandatoryStep))
+  const isValidated = (step: UserChecklist) => userChecklist.some((checkedStep) => checkedStep === step)
+  const isDisabled = (step: UserChecklist) =>
+    mandatoryParentSteps(step, userRole, userOrganization.isCR).some(
+      (mandatoryStep) => !userChecklist.includes(mandatoryStep),
+    )
   return (
     <div>
       <Stepper
-        className={styles.drawer}
+        className={classNames(styles.drawer, styles.centered)}
         activeStep={userChecklist.length}
         steps={Object.keys(steps).length - 1}
         fillValidatedSteps
         small
       />
+
       <div className="flex-col px-2">
         {Object.values(steps)
-          .filter((step) => step !== CRUserChecklist.Completed)
-          .map((step: CRUserChecklist) => (
+          .filter((step) => step !== UserChecklist.Completed)
+          .map((step: UserChecklist) => (
             <ChecklistItem
               key={step}
               step={step}

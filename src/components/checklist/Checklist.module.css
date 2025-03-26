@@ -23,12 +23,13 @@
 }
 
 .checklistContainer {
-  display: flex;
-  height: 60vh !important;
+  max-height: 60vh !important;
+  height: fit-content !important;
   min-width: 30rem;
   width: 30vw;
   border-radius: 1rem 0 0 1rem;
-  top: calc(40vh - 8rem) !important;
+  top: auto !important;
+  bottom: 7rem !important;
   overflow-x: hidden !important;
   border: var(--border) !important;
   padding: 0.5rem;
@@ -39,6 +40,10 @@
 
 .drawer {
   background-color: var(--organization-card-bg) !important;
+}
+
+.centered {
+  justify-content: center !important;
 }
 
 .optional {

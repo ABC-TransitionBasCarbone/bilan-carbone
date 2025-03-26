@@ -18,10 +18,11 @@ import {
   validateUser,
 } from '@/db/user'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
-import { CRUserChecklist, User as DBUser, Organization, Role, UserStatus } from '@prisma/client'
+import { User as DBUser, Organization, Role, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { User } from 'next-auth'
 import { auth } from '../auth'
+import { getUserCheckList } from '../checklist'
 import {
   sendActivationEmail,
   sendActivationRequest,
@@ -132,7 +133,7 @@ export const addMember = async (member: AddMemberCommand) => {
       organizationId: session.user.organizationId,
     }
     await addUser(newMember)
-    addUserChecklistItem(CRUserChecklist.AddCollaborator)
+    addUserChecklistItem(UserChecklist.AddCollaborator)
   } else {
     if (memberExists.status === UserStatus.ACTIVE && memberExists.organizationId) {
       return NOT_AUTHORIZED
@@ -302,13 +303,13 @@ export const getUserCheckedItems = async () => {
   return prismaClient.userCheckedStep.findMany({ where: { userId: session.user.id } })
 }
 
-export const addUserChecklistItem = async (step: CRUserChecklist) => {
+export const addUserChecklistItem = async (step: UserChecklist) => {
   const session = await auth()
   if (!session || !session.user) {
     return
   }
   const isCR = (await prismaClient.organization.findUnique({ where: { id: session.user.organizationId || '' } }))?.isCR
-  const checklist = isCR ? CRUserChecklist : CRUserChecklist
+  const checklist = getUserCheckList(session.user.role, !!isCR)
   if (!Object.values(checklist).includes(step)) {
     return
   }
@@ -322,7 +323,7 @@ export const addUserChecklistItem = async (step: CRUserChecklist) => {
     setTimeout(
       async () => {
         await prismaClient.userCheckedStep.create({
-          data: { userId: session.user.id, step: CRUserChecklist.Completed },
+          data: { userId: session.user.id, step: UserChecklist.Completed },
         })
       },
       1 * MIN * TIME_IN_MS,
