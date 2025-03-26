@@ -1,6 +1,7 @@
 'use server'
 
-import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
+import { getUserByEmailWithSensibleInformations } from '@/db/user'
+import { updateUserPasswordForEmail } from '@/db/userAuth'
 import jwt from 'jsonwebtoken'
 import { computePasswordValidation } from '../utils'
 

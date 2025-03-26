@@ -1,4 +1,5 @@
-import { getUserApplicationSettings, OrganizationWithSites } from '@/db/user'
+import { getUserApplicationSettings } from '@/db/user'
+import { OrganizationWithSites } from '@/db/userAuth'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'

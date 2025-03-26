@@ -1,4 +1,4 @@
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/userAuth'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'

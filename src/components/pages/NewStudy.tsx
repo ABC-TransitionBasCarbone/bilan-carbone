@@ -2,7 +2,7 @@
 import NewStudyForm from '@/components/study/new/Form'
 import SelectOrganization from '@/components/study/organization/Select'
 import { getOrganizationUsers } from '@/db/organization'
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/userAuth'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'

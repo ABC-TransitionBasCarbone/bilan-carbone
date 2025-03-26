@@ -1,6 +1,7 @@
 import { getDocumentById } from '@/db/document'
 import { FullStudy, getStudyById } from '@/db/study'
-import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
+import { getUserByEmail, getUserByEmailWithAllowedStudies } from '@/db/user'
+import { UserWithAllowedStudies } from '@/db/userAuth'
 import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/onganization'
 import { getUserRoleOnStudy } from '@/utils/study'
 import { User as DbUser, Level, Prisma, Study, StudyRole } from '@prisma/client'

@@ -12,7 +12,7 @@ import { computeBegesResult } from './results/beges'
 import { computeResultsByPost } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import { prepareExcel } from './serverFunctions/file'
-import { getUserSettings } from './serverFunctions/user'
+import { getUserSettings } from './serverFunctions/userAuth'
 import {
   getEmissionSourcesGlobalUncertainty,
   getQualityRating,

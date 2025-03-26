@@ -3,7 +3,7 @@ import Button from '@/components/base/Button'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import Sites from '@/components/organization/Sites'
 import { FullStudy } from '@/db/study'
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/userAuth'
 import { changeStudyDates, changeStudySites, hasActivityData } from '@/services/serverFunctions/study'
 import {
   ChangeStudyDatesCommand,
@@ -11,7 +11,7 @@ import {
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
 } from '@/services/serverFunctions/study.command'
-import { getUserSettings } from '@/services/serverFunctions/user'
+import { getUserSettings } from '@/services/serverFunctions/userAuth'
 import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StudyRole } from '@prisma/client'

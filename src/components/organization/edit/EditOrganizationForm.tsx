@@ -4,7 +4,7 @@ import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/userAuth'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
   UpdateOrganizationCommand,

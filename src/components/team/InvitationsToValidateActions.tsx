@@ -1,7 +1,7 @@
 'use client'
 
-import { TeamMember } from '@/db/user'
-import { deleteMember, validateMember } from '@/services/serverFunctions/user'
+import { TeamMember } from '@/db/userAuth'
+import { deleteMember, validateMember } from '@/services/serverFunctions/userAuth'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Role } from '@prisma/client'
