@@ -1,3 +1,4 @@
+// TODO : merge this file with organization.ts after fixed aliases imports from script files
 import { Prisma } from '@prisma/client'
 import { prismaClient } from './client'
 

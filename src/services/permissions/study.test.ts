@@ -1,5 +1,5 @@
 import * as dbStudyModule from '@/db/study'
-import * as dbUserModule from '@/db/user'
+import * as dbUserModule from '@/db/userImport'
 import { getMockedDbUser, getMockedStudy, mockedOrganizationId } from '@/tests/utils/models'
 import { expect } from '@jest/globals'
 import { Level, Role } from '@prisma/client'
@@ -8,7 +8,7 @@ import * as organizationModule from './organization'
 import { canCreateStudy, canDeleteStudy } from './study'
 
 // mocked called function
-jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
+jest.mock('@/db/userImport', () => ({ getUserByEmail: jest.fn() }))
 jest.mock('@/db/study', () => ({ getStudyById: jest.fn() }))
 jest.mock('./organization', () => ({ isInOrgaOrParentFromId: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))

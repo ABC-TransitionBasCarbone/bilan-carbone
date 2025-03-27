@@ -1,3 +1,4 @@
+// TODO : merge this file with user.ts after fixed aliases imports from script files
 import { Prisma, Role } from '@prisma/client'
 import { prismaClient } from './client'
 
