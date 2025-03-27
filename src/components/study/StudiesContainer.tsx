@@ -1,7 +1,7 @@
-import { getAllowedStudiesByUser, getAllowedStudiesByUserAndOrganization } from '@/db/study'
+import { getAllowedStudiesByAccount, getAllowedStudiesByUserAndOrganization } from '@/db/study'
 import AddIcon from '@mui/icons-material/Add'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { Suspense } from 'react'
@@ -12,7 +12,7 @@ import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
 
 interface Props {
-  user: User
+  user: UserSession
   organizationId?: string
 }
 
@@ -21,7 +21,7 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
 
   const studies = organizationId
     ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
-    : await getAllowedStudiesByUser(user)
+    : await getAllowedStudiesByAccount(user)
 
   const creationUrl = organizationId ? `/organisations/${organizationId}/etudes/creer` : '/etudes/creer'
 

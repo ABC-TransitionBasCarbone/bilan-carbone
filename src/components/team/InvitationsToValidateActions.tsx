@@ -1,12 +1,12 @@
 'use client'
 
-import { TeamMember } from '@/db/user'
+import { TeamMember } from '@/db/account'
 import { deleteMember, validateMember } from '@/services/serverFunctions/user'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -15,7 +15,7 @@ import styles from './InvitationsActions.module.css'
 import SelectRole from './SelectRole'
 
 interface Props {
-  user: User
+  user: UserSession
   member: TeamMember
 }
 
@@ -24,10 +24,15 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
   const [validating, setValidating] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
-  const role = member.level ? member.role : Role.GESTIONNAIRE
+  const role = member.user.level ? member.role : Role.GESTIONNAIRE
   return (
     <div className={classNames(styles.buttons, 'flex')}>
-      <SelectRole currentUserEmail={user.email} email={member.email} currentRole={role} level={member.level} />
+      <SelectRole
+        currentUserEmail={user.email}
+        email={member.user.email}
+        currentRole={role}
+        level={member.user.level}
+      />
       <LoadingButton
         data-testid="validate-invitation"
         aria-label={t('resend')}
@@ -35,7 +40,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
         loading={validating}
         onClick={async () => {
           setValidating(true)
-          const result = await validateMember(member.email)
+          const result = await validateMember(member.user.email)
           setValidating(false)
           if (!result) {
             router.refresh()
@@ -52,7 +57,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
         loading={deleting}
         onClick={async () => {
           setDeleting(true)
-          const result = await deleteMember(member.email)
+          const result = await deleteMember(member.user.email)
           setDeleting(false)
           if (!result) {
             router.refresh()

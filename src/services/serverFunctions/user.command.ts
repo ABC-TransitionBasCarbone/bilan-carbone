@@ -51,6 +51,7 @@ export const OnboardingCommandValidation = z.object({
     .array(
       z
         .object({
+          accountId: z.string(),
           email: z.string().trim().optional(),
           role: z.nativeEnum(Role).optional(),
         })

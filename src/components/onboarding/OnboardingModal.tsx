@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
 import { Organization, Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -22,7 +22,7 @@ import Step2 from './OnboardingStep2'
 interface Props {
   open: boolean
   onClose: () => void
-  user: User
+  user: UserSession
   organization: Organization
 }
 

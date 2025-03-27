@@ -1,9 +1,9 @@
 import ChecklistButton from '@/components/checklist/ChecklistButton'
-import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import Navbar from '@/components/navbar/Navbar'
 import OrganizationCard from '@/components/organizationCard/OrganizationCard'
-import { getAllowedStudyIdByUser } from '@/db/study'
-import { getUserOrganizations } from '@/db/user'
+import { getAccountOrganizations } from '@/db/account'
+import { getAllowedStudyIdByAccount } from '@/db/study'
 import { Organization } from '@prisma/client'
 import classNames from 'classnames'
 import styles from './layout.module.css'
@@ -12,19 +12,30 @@ interface Props {
   children: React.ReactNode
 }
 
-const NavLayout = async ({ children, user }: Props & UserProps) => {
-  const [organizations, studyId] = await Promise.all([getUserOrganizations(user.email), getAllowedStudyIdByUser(user)])
-  const userOrganization = organizations.find((organization) => organization.id === user.organizationId) as Organization
-  const clientId = organizations.find((organization) => organization.id !== user.organizationId)?.id
+const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
+  const [organizations, studyId] = await Promise.all([
+    getAccountOrganizations(account.accountId),
+    getAllowedStudyIdByAccount(account),
+  ])
+
+  const userOrganization = organizations.find(
+    (organization) => organization.id === account.organizationId,
+  ) as Organization
+  const clientId = organizations.find((organization) => organization.id !== account.organizationId)?.id
 
   return (
     <div className="flex-col h100">
-      <Navbar user={user} />
-      {user.organizationId && <OrganizationCard user={user} organizations={organizations} />}
-      <main className={classNames(styles.content, { [styles.withOrganizationCard]: user.organizationId })}>
+      <Navbar account={account} />
+      {account.organizationId && <OrganizationCard account={account} organizations={organizations} />}
+      <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationId })}>
         {children}
       </main>
-      <ChecklistButton userOrganization={userOrganization} clientId={clientId} studyId={studyId} userRole={user.role} />
+      <ChecklistButton
+        userOrganization={userOrganization}
+        clientId={clientId}
+        studyId={studyId}
+        userRole={account.role}
+      />
     </div>
   )
 }
