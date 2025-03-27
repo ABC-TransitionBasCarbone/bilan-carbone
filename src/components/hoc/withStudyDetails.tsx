@@ -3,7 +3,7 @@ import { getStudyById } from '@/db/study'
 import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
 import { redirect } from 'next/navigation'
 import React from 'react'
-import { UserProps } from './withAuth'
+import { AccountProps } from './withAuth'
 import { StudyProps } from './withStudy'
 
 interface Props {
@@ -13,9 +13,9 @@ interface Props {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserProps & StudyProps>) => {
+const WithStudyDetails = (WrappedComponent: React.ComponentType<any & AccountProps & StudyProps>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Component = async (props: any & Props & UserProps) => {
+  const Component = async (props: any & Props & AccountProps) => {
     const params = await props.params
     const id = params.id
     if (!id) {

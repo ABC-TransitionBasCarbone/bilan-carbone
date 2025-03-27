@@ -1,5 +1,6 @@
 'use server'
 
+import { getAccountById } from '@/db/account'
 import { prismaClient } from '@/db/client'
 import {
   createEmissionFactor,
@@ -9,7 +10,6 @@ import {
   getEmissionFactorDetailsById,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
-import { getUserByEmail } from '@/db/userImport'
 import { getLocale } from '@/i18n/locale'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
@@ -114,9 +114,9 @@ export const createEmissionFactorCommand = async ({
     return NOT_AUTHORIZED
   }
 
-  const user = await getUserByEmail(session.user.email)
+  const account = await getAccountById(session.user.accountId)
 
-  if (!user || !user.organizationId) {
+  if (!account || !account.organizationId) {
     return NOT_AUTHORIZED
   }
 
@@ -129,7 +129,7 @@ export const createEmissionFactorCommand = async ({
     importedFrom: Import.Manual,
     status: EmissionFactorStatus.Valid,
     reliability: 5,
-    organization: { connect: { id: user.organizationId } },
+    organization: { connect: { id: account.organizationId } },
     unit: unit as Unit,
     subPosts: flattenSubposts(subPosts),
     metaData: {

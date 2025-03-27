@@ -4,7 +4,7 @@ import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
-import { getOrganizationUsers } from '@/db/organization'
+import { getOrganizationAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { ALREADY_IN_STUDY } from '@/services/permissions/check'
 import { newStudyRight } from '@/services/serverFunctions/study'
@@ -22,15 +22,15 @@ import NewStudyRightModal from './NewStudyRightModal'
 
 interface Props {
   study: FullStudy
-  users: Awaited<ReturnType<typeof getOrganizationUsers>>
-  existingUsers: string[]
-  userRole: StudyRole
+  accounts: Awaited<ReturnType<typeof getOrganizationAccounts>>
+  existingAccounts: string[]
+  accountRole: StudyRole
 }
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
-const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => {
+const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
@@ -52,8 +52,8 @@ const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => 
   const onEmailChange = (_: SyntheticEvent, value: string | null) => {
     form.setValue('email', value || '')
     if (value) {
-      const organizationUser = users.find((user) => user.email === value)
-      if (!organizationUser || checkLevel(organizationUser.level, study.level)) {
+      const organizationAccount = accounts.find((account) => account.user.email === value)
+      if (!organizationAccount || checkLevel(organizationAccount.user.level, study.level)) {
         setReaderOnly(false)
       } else {
         setReaderOnly(true)
@@ -74,9 +74,9 @@ const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => 
   }
 
   const onSubmit = async (command: NewStudyRightCommand) => {
-    if (users.some((user) => user.email === command.email)) {
+    if (accounts.some((account) => account.user.email === command.email)) {
       await saveRight(command)
-    } else if (existingUsers.includes(command.email)) {
+    } else if (existingAccounts.includes(command.email)) {
       setError(ALREADY_IN_STUDY)
     } else {
       setOtherOrganization(true)
@@ -85,18 +85,18 @@ const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => 
 
   const usersOptions = useMemo(
     () =>
-      users.map((user) => ({
-        label: `${user.firstName} ${user.lastName.toUpperCase()} - ${user.email}`,
-        value: user.email,
+      accounts.map((account) => ({
+        label: `${account.user.firstName} ${account.user.lastName.toUpperCase()} - ${account.user.email}`,
+        value: account.user.email,
       })),
-    [users],
+    [accounts],
   )
 
   const allowedRoles = useMemo(
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          (userRole === StudyRole.Validator || role !== StudyRole.Validator) &&
+          (accountRole === StudyRole.Validator || role !== StudyRole.Validator) &&
           (!readerOnly || role === StudyRole.Reader),
       ),
     [readerOnly],

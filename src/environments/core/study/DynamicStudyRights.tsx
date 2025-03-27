@@ -5,11 +5,11 @@ import StudyRights from '@/environments/base/study/StudyRights'
 import StudyRightsCut from '@/environments/cut/study/StudyRights'
 import { CUT } from '@/store/AppEnvironment'
 import { EmissionFactorImportVersion, StudyRole } from '@prisma/client'
-import { User } from 'next-auth'
+import { Account } from 'next-auth'
 import DynamicComponent from '../utils/DynamicComponent'
 
 interface Props {
-  user: User
+  user: Account
   study: FullStudy
   editionDisabled: boolean
   userRoleOnStudy: StudyRole

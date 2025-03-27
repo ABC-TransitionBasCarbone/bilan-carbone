@@ -1,14 +1,14 @@
 import NotFound from '@/components/pages/NotFound'
 import { auth } from '@/services/auth'
-import { User } from 'next-auth'
+import { Account } from 'next-auth'
 import React from 'react'
 
-export type UserProps = {
-  user: User
+export type AccountProps = {
+  user: Account
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const withAuth = (WrappedComponent: React.ComponentType<any & UserProps>) => {
+const withAuth = (WrappedComponent: React.ComponentType<any & AccountProps>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any) => {
     const session = await auth()

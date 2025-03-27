@@ -24,7 +24,7 @@ export interface StudyContributorRow {
   email: string
   post: string
   subPosts: string[]
-  userId: string
+  accountId: string
 }
 
 const emptyToast = { text: '', color: 'error' } as const
@@ -51,13 +51,14 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
       study.contributors
         .filter(
           (contributor, index) =>
-            study.contributors.findIndex((value) => value.user.email === contributor.user.email) === index,
+            study.contributors.findIndex((value) => value.account.user.email === contributor.account.user.email) ===
+            index,
         )
-        .map((contributor) => ({ userId: contributor.user.id, email: contributor.user.email }))
+        .map((contributor) => ({ accountId: contributor.accountId, email: contributor.account.user.email }))
         .map((contributor) => ({
           ...contributor,
           subPosts: study.contributors
-            .filter((studyContributor) => studyContributor.user.id === contributor.userId)
+            .filter((studyContributor) => studyContributor.accountId === contributor.accountId)
             .map((studyContributor) => studyContributor.subPost),
         }))
         .map(({ subPosts, ...contributor }) => ({

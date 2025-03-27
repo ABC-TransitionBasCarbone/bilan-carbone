@@ -1,6 +1,6 @@
 'use client'
 
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/account'
 import { deleteOrganizationCommand } from '@/services/serverFunctions/organization'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'

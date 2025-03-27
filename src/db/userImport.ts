@@ -2,7 +2,8 @@
 import { Prisma, Role } from '@prisma/client'
 import { prismaClient } from './client'
 
-export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
+export const getUserByEmail = (email: string) =>
+  prismaClient.user.findUnique({ where: { email }, include: { accounts: true } })
 
 export const updateUser = (
   userId: string,

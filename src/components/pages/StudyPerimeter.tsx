@@ -1,11 +1,11 @@
 'use server'
 
+import { OrganizationWithSites } from '@/db/account'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
-import { OrganizationWithSites } from '@/db/user'
 import { canEditStudyFlows } from '@/services/permissions/study'
-import { getUserRoleOnStudy } from '@/utils/study'
-import { User } from 'next-auth'
+import { getAccountRoleOnStudy } from '@/utils/study'
+import { Account } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -15,7 +15,7 @@ import StudyPerimeter from '../study/perimeter/StudyPerimeter'
 interface Props {
   study: FullStudy
   organization: OrganizationWithSites
-  user: User
+  user: Account
 }
 
 const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
@@ -23,7 +23,7 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
   const t = await getTranslations('study.perimeter')
   const documents = await getDocumentsForStudy(study.id)
 
-  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+  const userRoleOnStudy = getAccountRoleOnStudy(user, study)
 
   if (!userRoleOnStudy) {
     return null
