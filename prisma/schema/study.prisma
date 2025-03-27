@@ -112,7 +112,7 @@ model StudyExport {
   type    Export
   control ControlMode
 
-  @@id([studyId, type])
+  @@id([studyId, type, control])
   @@map("study_exports")
 }
 

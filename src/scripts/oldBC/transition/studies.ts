@@ -25,8 +25,6 @@ interface Study {
   name: string
   startDate: Date | string
   endDate: Date | string
-  sites: StudySite[]
-  exports: Export[]
 }
 
 interface StudySite {
@@ -51,8 +49,6 @@ const parseStudies = (indexes: Record<string, number>, data: (string | number)[]
       endDate: row[indexes[RequiredStudiesColumns.startDate]]
         ? new Date(getJsDateFromExcel(row[indexes[RequiredStudiesColumns.endDate]] as number))
         : '',
-      sites: [],
-      exports: [],
     }))
 }
 
@@ -97,6 +93,36 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
     }, new Map<string, Export[]>())
 }
 
+interface Delegate {
+  findMany(args?: object): Promise<{ id: string; oldBCId: string | null }[]>
+}
+
+async function getExistingObjectIds(delegate: Delegate, ids: string[]) {
+  const createdObjects = await delegate.findMany({
+    where: {
+      oldBCId: {
+        in: ids,
+      },
+    },
+    select: { id: true, oldBCId: true },
+  })
+
+  return createdObjects.reduce((map, currentCreatedObject) => {
+    if (currentCreatedObject.oldBCId) {
+      map.set(currentCreatedObject.oldBCId, currentCreatedObject.id)
+    }
+    return map
+  }, new Map<string, string>())
+}
+
+const getExistingStudiesIds = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
+  return getExistingObjectIds(transaction.study, studiesIds)
+}
+
+const getExistingSitesIds = async (transaction: Prisma.TransactionClient, sitesIds: string[]) => {
+  return getExistingObjectIds(transaction.site, sitesIds)
+}
+
 export const uploadStudies = async (
   transaction: Prisma.TransactionClient,
   userId: string,
@@ -113,24 +139,6 @@ export const uploadStudies = async (
   const studies = parseStudies(studiesIndexes, studiesData)
   const studySites = parseStudySites(studySitesIndexes, studySitesData)
   const studyExports = parseExports(studyExportsIndexes, studyExportsData)
-
-  studySites.entries().forEach(([studyId, sites]) => {
-    const study = studies.find((study) => study.oldBCId === studyId)
-    if (study) {
-      study.sites = sites
-    } else {
-      console.warn(`Study of id ${studyId} not found.`)
-    }
-  })
-
-  studyExports.entries().forEach(([studyId, exports]) => {
-    const study = studies.find((study) => study.oldBCId === studyId)
-    if (study) {
-      study.exports = exports
-    } else {
-      console.warn(`Study of id ${studyId} not found.`)
-    }
-  })
 
   const existingStudyIds = await transaction.study.findMany({
     where: {
@@ -158,23 +166,52 @@ export const uploadStudies = async (
     })),
   })
 
+  const existingStudiesIds = await getExistingStudiesIds(transaction, Array.from(studySites.keys()))
+  const existingSiteIds = await getExistingSitesIds(transaction, Array.from(studySites.keys()))
+
   await transaction.studySite.createMany({
-    data: newStudies.slice(0, 1).flatMap((study) =>
-      study.sites.slice(0, 1).map((site) => ({
-        studyId: study.oldBCId,
-        siteId: site.siteOldBCId,
-        etp: 1,
-        ca: 1,
-      })),
+    data: Array.from(
+      studySites.entries().flatMap(([studyOldBCId, studySites]) => {
+        const existingStudyId = existingStudiesIds.get(studyOldBCId)
+        if (!existingStudyId) {
+          console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
+          return []
+        }
+        return studySites
+          .map((studySite) => {
+            const existingSiteId = existingSiteIds.get(studySite.siteOldBCId)
+            if (!existingSiteId) {
+              console.warn(`Impossible de retrouver le site de oldBCId: ${studySite.siteOldBCId}`)
+              return null
+            }
+            return {
+              studyId: existingStudyId,
+              siteId: existingSiteId,
+              etp: 1,
+              ca: 1,
+            }
+          })
+          .filter((studySite) => studySite !== null)
+      }),
     ),
   })
 
   await transaction.studyExport.createMany({
-    data: newStudies.slice(0, 1).flatMap((study) =>
-      study.exports.slice(0, 1).map((site) => ({
-        ...site,
-        studyId: study.oldBCId,
-      })),
+    data: Array.from(
+      studyExports.entries().flatMap(([studyOldBCId, studyExports]) => {
+        const existingStudyId = existingStudiesIds.get(studyOldBCId)
+        if (!existingStudyId) {
+          console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
+          return []
+        }
+        return studyExports
+          .slice(0, 1)
+          .map((studyExport) => ({
+            ...studyExport,
+            studyId: existingStudyId,
+          }))
+          .filter((studyExport) => studyExport !== null)
+      }),
     ),
   })
 
