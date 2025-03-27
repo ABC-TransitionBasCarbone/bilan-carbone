@@ -1,13 +1,15 @@
-import { User as PrismaUser } from '@prisma/client'
+import { Account as PrismaAccount, User as PrismaUser } from '@prisma/client'
 import 'next-auth'
 
 declare module 'next-auth' {
   interface Session {
-    user: User
+    user: UserSession
   }
 
-  interface User extends Pick<PrismaUser, 'firstName' | 'lastName' | 'id' | 'role' | 'organizationId' | 'level'> {
-    // I don't get why email can be null if put on the list...
+  interface UserSession
+    extends Pick<PrismaAccount, 'id' | 'userId' | 'role' | 'organizationId'>,
+      Pick<PrismaUser, 'firstName' | 'lastName' | 'level'> {
     email: PrismaUser['email']
+    accountId: string
   }
 }
