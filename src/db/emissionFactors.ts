@@ -63,7 +63,10 @@ const getDefaultEmissionFactors = (versionIds?: string[]) =>
 const filterVersionedEmissionFactor = (
   emissionFactor: AsyncReturnType<typeof getDefaultEmissionFactors>[0],
   versionIds?: string[],
-) => !versionIds || (emissionFactor.versionId && versionIds.includes(emissionFactor.versionId))
+) =>
+  !versionIds ||
+  !emissionFactor.version ||
+  (emissionFactor.version.id && versionIds.includes(emissionFactor.version.id))
 
 const getCachedDefaultEmissionFactors = async (versionIds?: string[]) => {
   if (cachedEmissionFactors.length) {
