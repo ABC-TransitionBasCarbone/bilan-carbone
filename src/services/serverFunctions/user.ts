@@ -9,14 +9,13 @@ import {
   changeUserRole,
   deleteUserFromOrga,
   getUserApplicationSettings,
-  getUserByEmail,
   getUserFromUserOrganization,
   organizationActiveUsersCount,
-  updateUser,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
+import { getUserByEmail, updateUser } from '@/db/userImport'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
 import { User as DBUser, Organization, Role, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
