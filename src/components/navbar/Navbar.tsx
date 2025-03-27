@@ -10,7 +10,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
@@ -19,10 +19,10 @@ import { useEffect, useMemo, useState } from 'react'
 import styles from './Navbar.module.css'
 
 interface Props {
-  user: User
+  account: UserSession
 }
 
-const Navbar = ({ user }: Props) => {
+const Navbar = ({ account }: Props) => {
   const t = useTranslations('navigation')
   const [showSubMenu, setShowSubMenu] = useState(false)
   const [hasFormation, setHasFormation] = useState(false)
@@ -49,7 +49,7 @@ const Navbar = ({ user }: Props) => {
           <Link href="/" aria-label={t('home')} title={t('home')}>
             <Image src="/logos/logo_BC_2025_blanc.png" width={200} height={48} alt="" className={styles.logo} />
           </Link>
-          {user.organizationId && (
+          {account.organizationId && (
             <div className="flex-col">
               <div
                 className={classNames(styles.link, styles.notClickable)}
@@ -65,8 +65,8 @@ const Navbar = ({ user }: Props) => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
-                    <Link href={`/organisations/${user.organizationId}/modifier`} className={styles.link}>
+                  {(isAdmin(account.role) || account.role === Role.GESTIONNAIRE) && (
+                    <Link href={`/organisations/${account.organizationId}/modifier`} className={styles.link}>
                       {t('information')}
                     </Link>
                   )}
@@ -93,7 +93,7 @@ const Navbar = ({ user }: Props) => {
           )}
         </div>
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
-          {user.role === Role.SUPER_ADMIN && (
+          {account.role === Role.SUPER_ADMIN && (
             <Link className={styles.link} href="/super-admin">
               {t('admin')}
             </Link>

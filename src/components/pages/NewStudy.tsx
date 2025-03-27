@@ -1,7 +1,7 @@
 'use client'
 import SelectOrganization from '@/components/study/organization/Select'
-import { getOrganizationUsers } from '@/db/organization'
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/account'
+import { getOrganizationAccounts } from '@/db/organization'
 import NewStudyForm from '@/environments/base/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
@@ -11,21 +11,21 @@ import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Export, SiteCAUnit } from '@prisma/client'
 import dayjs from 'dayjs'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 interface Props {
-  user: User
-  users: Awaited<ReturnType<typeof getOrganizationUsers>>
+  user: UserSession
+  accounts: Awaited<ReturnType<typeof getOrganizationAccounts>>
   organizations: OrganizationWithSites[]
   defaultOrganization?: OrganizationWithSites
   caUnit: SiteCAUnit
 }
 
-const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit }: Props) => {
+const NewStudyPage = ({ organizations, user, accounts, defaultOrganization, caUnit }: Props) => {
   const [organization, setOrganization] = useState<OrganizationWithSites>()
   const tNav = useTranslations('nav')
 
@@ -69,8 +69,8 @@ const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit 
       />
       {organization ? (
         <DynamicComponent
-          environmentComponents={{ [CUT]: <NewStudyFormCut user={user} users={users} form={form} /> }}
-          defaultComponent={<NewStudyForm user={user} users={users} form={form} />}
+          environmentComponents={{ [CUT]: <NewStudyFormCut user={user} accounts={accounts} form={form} /> }}
+          defaultComponent={<NewStudyForm user={user} accounts={accounts} form={form} />}
         />
       ) : (
         <SelectOrganization

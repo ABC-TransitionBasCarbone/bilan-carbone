@@ -11,13 +11,13 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControlLabel, Radio } from '@mui/material'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface Props {
-  user: User
+  user: UserSession
   study: FullStudy
   disabled: boolean
 }

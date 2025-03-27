@@ -4,21 +4,21 @@ import Block from '@/components/base/Block'
 import { FormTextField } from '@/components/form/TextField'
 import WeekScheduleForm from '@/components/form/WeekScheduleForm'
 import GlobalNewStudyForm from '@/components/study/new/Form'
-import { getOrganizationUsers } from '@/db/organization'
+import { getOrganizationAccounts } from '@/db/organization'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { DayOfWeek } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
-  user: User
-  users: Awaited<ReturnType<typeof getOrganizationUsers>>
+  user: UserSession
+  accounts: Awaited<ReturnType<typeof getOrganizationAccounts>>
   form: UseFormReturn<CreateStudyCommand>
 }
 
-const NewStudyForm = ({ user, users, form }: Props) => {
+const NewStudyForm = ({ user, accounts, form }: Props) => {
   const t = useTranslations('study.new')
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
@@ -58,7 +58,7 @@ const NewStudyForm = ({ user, users, form }: Props) => {
 
   return (
     <Block title={t('title')} as="h1">
-      <GlobalNewStudyForm user={user} users={users} form={form}>
+      <GlobalNewStudyForm user={user} accounts={accounts} form={form}>
         <WeekScheduleForm
           label={t('openingHours')}
           days={days}

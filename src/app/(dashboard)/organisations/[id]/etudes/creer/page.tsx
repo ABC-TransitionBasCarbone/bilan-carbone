@@ -1,15 +1,15 @@
-import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
-import { getOrganizationUsers } from '@/db/organization'
-import { getUserOrganizations } from '@/db/user'
+import { getAccountOrganizations } from '@/db/account'
+import { getOrganizationAccounts } from '@/db/organization'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 interface Props {
   params: Promise<{ id: string }>
 }
 
-const NewStudyInOrganization = async (props: Props & UserProps) => {
+const NewStudyInOrganization = async (props: Props & UserSessionProps) => {
   const params = await props.params
 
   const id = params.id
@@ -17,9 +17,9 @@ const NewStudyInOrganization = async (props: Props & UserProps) => {
     return <NotFound />
   }
 
-  const [organizations, users] = await Promise.all([
-    getUserOrganizations(props.user.email),
-    getOrganizationUsers(props.user.organizationId),
+  const [organizations, accounts] = await Promise.all([
+    getAccountOrganizations(props.user.accountId),
+    getOrganizationAccounts(props.user.organizationId),
   ])
 
   const caUnit = (await getUserSettings())?.caUnit || defaultCAUnit
@@ -28,7 +28,7 @@ const NewStudyInOrganization = async (props: Props & UserProps) => {
     <NewStudyPage
       organizations={organizations}
       user={props.user}
-      users={users}
+      accounts={accounts}
       defaultOrganization={organizations.find((organization) => organization.id === id)}
       caUnit={caUnit}
     />

@@ -8,6 +8,7 @@ import {
 import { createUsers, getUserByEmail, updateUser } from '../../db/userImport'
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
+  // TODO en attente de retours
   const {
     Firstname: firstName = '',
     Lastname: lastName = '',
@@ -79,6 +80,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 }
 
 export const processUsers = async (values: Record<string, string>[], importedFileDate: Date) => {
+  // TODO en attente de retours
   const users: Prisma.UserCreateManyInput[] = []
   for (let i = 0; i < values.length; i++) {
     const user = await processUser(values[i] as Record<string, string>, importedFileDate)
