@@ -1,4 +1,4 @@
-import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import EditOrganizationPage from '@/components/pages/EditOrganization'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationWithSitesById } from '@/db/organization'
@@ -9,7 +9,7 @@ interface Props {
   params: Promise<{ id: UUID }>
 }
 
-const OrganizationView = async (props: Props & UserProps) => {
+const OrganizationView = async (props: Props & UserSessionProps) => {
   const params = await props.params
 
   const id = params.id

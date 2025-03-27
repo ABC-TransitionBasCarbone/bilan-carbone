@@ -1,7 +1,8 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { sendNewUser } from '@/services/serverFunctions/user'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import { Prisma, Role, User, UserStatus } from '@prisma/client'
+import { Environment, Prisma, Role, UserStatus } from '@prisma/client'
+import { AccountWithUser } from './account'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
 
@@ -11,12 +12,12 @@ export const getOrganizationNameById = (id: string | null) =>
 export const getOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
 
-export const getOrganizationUsers = (id: string | null) =>
+export const getOrganizationAccounts = (id: string | null) =>
   id
-    ? prismaClient.user.findMany({
-        select: { email: true, firstName: true, lastName: true, level: true, role: true },
-        where: { organizationId: id, status: UserStatus.ACTIVE },
-        orderBy: { email: 'asc' },
+    ? prismaClient.account.findMany({
+        select: { user: { select: { email: true, firstName: true, lastName: true, level: true } }, role: true },
+        where: { organizationId: id, user: { status: UserStatus.ACTIVE } },
+        orderBy: { user: { email: 'asc' } },
       })
     : []
 
@@ -60,69 +61,108 @@ export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrg
     }),
   ])
 
-export const setOnboarded = (organizationId: string, userId: string) =>
+export const setOnboarded = (organizationId: string, accountId: string) =>
   prismaClient.organization.update({
     where: { id: organizationId },
-    data: { onboarded: true, onboarderId: userId },
+    data: { onboarded: true, onboarderId: accountId },
   })
 
 export const onboardOrganization = async (
-  userId: string,
+  accountId: string,
   { organizationId, companyName, firstName, lastName, collaborators = [] }: OnboardingCommand,
-  existingCollaborators: User[],
+  existingCollaborators: AccountWithUser[],
 ) => {
-  const dbUser = await prismaClient.user.findUnique({ where: { id: userId } })
+  const dbUser = await prismaClient.user.findUnique({ where: { id: accountId } })
   if (!dbUser) {
     return
   }
   const role = dbUser.level ? Role.ADMIN : Role.GESTIONNAIRE
-  const newCollaborators: Pick<User, 'firstName' | 'lastName' | 'email' | 'role' | 'status' | 'organizationId'>[] = []
+  const newCollaborators: (Pick<AccountWithUser, 'role' | 'organizationId'> & {
+    user: { firstName: string; lastName: string; email: string; status: UserStatus }
+  })[] = []
   for (const collaborator of collaborators) {
     newCollaborators.push({
-      firstName: '',
-      lastName: '',
-      email: collaborator.email?.toLowerCase() || '',
+      user: {
+        firstName: '',
+        lastName: '',
+        email: collaborator.email?.toLowerCase() || '',
+        status: UserStatus.VALIDATED,
+      },
       role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
-      status: UserStatus.VALIDATED,
       organizationId,
     })
   }
 
   await prismaClient.$transaction(async (transaction) => {
-    await Promise.all([
-      transaction.organization.update({
-        where: { id: organizationId },
-        data: { name: companyName },
-      }),
-      transaction.user.update({
-        where: { id: userId },
-        data: { firstName, lastName, role },
-      }),
-      transaction.user.createMany({ data: newCollaborators }),
-      ...existingCollaborators.map((collaborator) =>
-        transaction.user.update({
-          where: { id: collaborator.id },
-          data: {
-            role:
-              collaborator.level || collaborator.role !== Role.ADMIN
-                ? collaborator.role
-                : collaborator.role === Role.ADMIN
-                  ? Role.GESTIONNAIRE
-                  : Role.COLLABORATOR,
-            status: UserStatus.VALIDATED,
+    await transaction.organization.update({
+      where: { id: organizationId },
+      data: { name: companyName },
+    })
+
+    await transaction.account.update({
+      where: { id: accountId },
+      data: {
+        role,
+        user: {
+          update: {
+            firstName,
+            lastName,
           },
-        }),
-      ),
-    ])
+        },
+      },
+    })
+
+    const collaboratorCreations = newCollaborators.map((collaborator) => {
+      if (!collaborator.organizationId) {
+        return
+      }
+      return transaction.account.create({
+        data: {
+          // TODO get Environment the right way
+          environment: Environment.BC,
+          role: collaborator.role,
+          organization: { connect: { id: collaborator.organizationId } },
+          user: {
+            create: {
+              firstName: collaborator.user.firstName,
+              lastName: collaborator.user.lastName,
+              email: collaborator.user.email,
+              status: collaborator.user.status,
+            },
+          },
+        },
+      })
+    })
+
+    await Promise.all(collaboratorCreations)
+
+    const collaboratorUpdates = existingCollaborators.map((collaborator) => {
+      return transaction.account.update({
+        where: { id: collaborator.id },
+        data: {
+          role:
+            collaborator.user.level || collaborator.role !== Role.ADMIN
+              ? collaborator.role
+              : collaborator.role === Role.ADMIN
+                ? Role.GESTIONNAIRE
+                : Role.COLLABORATOR,
+          user: {
+            update: { status: UserStatus.VALIDATED },
+          },
+        },
+      })
+    })
+
+    await Promise.all(collaboratorUpdates)
   })
 
   const allCollaborators = [...newCollaborators, ...existingCollaborators]
-  allCollaborators.forEach((collab) => sendNewUser(collab.email.toLowerCase(), dbUser, collab.firstName ?? ''))
+  allCollaborators.forEach((collab) => sendNewUser(collab.user.email.toLowerCase(), dbUser, collab.user.firstName ?? ''))
 }
 
 export const deleteClient = async (id: string) => {
   const [clientUsers, clientChildren, clientEmissionFactors] = await Promise.all([
-    prismaClient.user.findFirst({ where: { organizationId: id } }),
+    prismaClient.account.findFirst({ where: { organizationId: id } }),
     prismaClient.organization.findFirst({ where: { parentId: id } }),
     prismaClient.emissionFactor.findFirst({ where: { organizationId: id } }),
   ])
