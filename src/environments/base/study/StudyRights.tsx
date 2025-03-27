@@ -3,10 +3,10 @@ import StudyParams from '@/components/study/rights/StudyParams'
 import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
 import { FullStudy } from '@/db/study'
 import { EmissionFactorImportVersion, StudyRole } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 
 interface Props {
-  user: User
+  user: UserSession
   study: FullStudy
   editionDisabled: boolean
   userRoleOnStudy: StudyRole

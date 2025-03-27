@@ -1,14 +1,14 @@
-import { TeamMember } from '@/db/user'
+import { TeamMember } from '@/db/account'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import styles from './Invitations.module.css'
 import PendingInvitationsActions from './PendingInvitationsActions'
 
 interface Props {
-  user: User
+  user: UserSession
   team: TeamMember[]
 }
 
@@ -22,9 +22,13 @@ const PendingInvitations = ({ user, team }: Props) => {
         {team
           .sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())
           .map((member) => (
-            <li key={member.email} className={classNames(styles.line, 'align-center')} data-testid="pending-invitation">
+            <li
+              key={member.user.email}
+              className={classNames(styles.line, 'align-center')}
+              data-testid="pending-invitation"
+            >
               <p>
-                <span className={styles.email}>{member.email}</span>
+                <span className={styles.email}>{member.user.email}</span>
                 <br />
                 <span className={styles.invitation}>
                   {t('invitationDate')}{' '}

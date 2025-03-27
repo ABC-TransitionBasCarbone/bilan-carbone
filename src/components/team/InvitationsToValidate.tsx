@@ -1,14 +1,14 @@
-import { TeamMember } from '@/db/user'
+import { TeamMember } from '@/db/account'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import styles from './Invitations.module.css'
 import InvitationsToValidateActions from './InvitationsToValidateActions'
 
 interface Props {
-  user: User
+  user: UserSession
   team: TeamMember[]
 }
 
@@ -20,9 +20,9 @@ const InvitationsToValidate = ({ user, team }: Props) => {
     <Block title={t('toValidate')}>
       <ul data-testid="invitations-to-validate" className={classNames(styles.members, 'flex-col')}>
         {team.map((member) => (
-          <li data-testid="invitation" key={member.email} className={classNames(styles.line, 'align-center')}>
+          <li data-testid="invitation" key={member.user.email} className={classNames(styles.line, 'align-center')}>
             <p>
-              <span className={styles.email}>{member.email}</span>
+              <span className={styles.email}>{member.user.email}</span>
               <br />
               <span className={styles.invitation}>
                 {t('addedDate')}{' '}

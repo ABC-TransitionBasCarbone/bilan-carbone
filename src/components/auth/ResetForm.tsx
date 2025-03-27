@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { FormControl, IconButton, InputAdornment } from '@mui/material'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -22,7 +22,7 @@ import authStyles from './Auth.module.css'
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 
 interface Props {
-  user?: User
+  user?: UserSession
   token: string
 }
 

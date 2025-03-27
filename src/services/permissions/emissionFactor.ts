@@ -1,15 +1,15 @@
-import { EmissionFactor, Import, User } from '@prisma/client'
 import { isFromEmissionFactorOrganization } from '../serverFunctions/emissionFactor'
+import { Account, EmissionFactor, Import } from '@prisma/client'
 
 export const canReadEmissionFactor = (
-  user: User,
+  account: Account,
   emissionFactor: Pick<EmissionFactor, 'organizationId' | 'importedFrom'>,
 ) => {
   if (emissionFactor.importedFrom !== Import.Manual) {
     return true
   }
 
-  return user.organizationId === emissionFactor.organizationId
+  return account.organizationId === emissionFactor.organizationId
 }
 
 export const canCreateEmissionFactor = () => {

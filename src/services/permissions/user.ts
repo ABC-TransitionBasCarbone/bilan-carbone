@@ -1,15 +1,13 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+import { AccountWithUser } from '@/db/account'
 import { canEditMemberRole, isUntrainedRole } from '@/utils/organization'
 import { User as DbUser, Prisma, Role, UserStatus } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 
 export const canEditSelfRole = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.GESTIONNAIRE
 
 export const canAddMember = (
-  user: User,
-  member: Pick<Prisma.UserCreateInput, 'role'>,
+  user: UserSession,
+  member: Pick<Prisma.AccountCreateInput, 'role'>,
   organizationId: string | null,
 ) => {
   if (!organizationId) {
@@ -30,7 +28,7 @@ export const canAddMember = (
   return true
 }
 
-export const canDeleteMember = (user: User, member: DbUser | null) => {
+export const canDeleteMember = (user: UserSession, member: DbUser | null) => {
   if (!member) {
     return false
   }
@@ -50,12 +48,12 @@ export const canDeleteMember = (user: User, member: DbUser | null) => {
   return true
 }
 
-export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) => {
+export const canChangeRole = (user: UserSession, member: AccountWithUser | null, newRole: Role) => {
   if (!member) {
     return false
   }
 
-  if (user.id === member.id && !canEditSelfRole(user.role)) {
+  if (user.accountId === member.id && !canEditSelfRole(user.role)) {
     return false
   }
 
@@ -71,7 +69,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (!member.level && !isUntrainedRole(newRole)) {
+  if (!member.user.level && !isUntrainedRole(newRole)) {
     return false
   }
 

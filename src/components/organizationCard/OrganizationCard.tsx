@@ -11,34 +11,34 @@ import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { Organization, Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import LinkButton from '../base/LinkButton'
 import styles from './OrganizationCard.module.css'
 
 interface Props {
-  user: User
+  account: UserSession
   organizations: Organization[]
 }
 
-const OrganizationCard = ({ user, organizations }: Props) => {
+const OrganizationCard = ({ account, organizations }: Props) => {
   const t = useTranslations('organization.card')
 
   const { environment } = useAppEnvironmentStore()
   const isCut = useMemo(() => environment === CUT, [environment])
 
   const defaultOrganization = organizations.find(
-    (organization) => organization.id === user.organizationId,
+    (organization) => organization.id === account.organizationId,
   ) as Organization
   const [organization, setOrganization] = useState<Pick<Organization, 'id' | 'name'> | undefined>(undefined)
 
   const [hasAccess, hasEditionRole] = useMemo(
     () =>
       organization && organizations.map((organization) => organization.id).includes(organization.id)
-        ? [true, isAdmin(user.role) || user.role === Role.GESTIONNAIRE || defaultOrganization.isCR]
+        ? [true, isAdmin(account.role) || account.role === Role.GESTIONNAIRE || defaultOrganization.isCR]
         : [false, false],
-    [user.role, organizations, defaultOrganization, organization],
+    [account.role, organizations, defaultOrganization, organization],
   )
 
   const { context, contextId } = useAppContextStore()

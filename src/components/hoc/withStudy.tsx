@@ -1,7 +1,7 @@
 import NotFound from '@/components/pages/NotFound'
 import { FullStudy, getStudyById } from '@/db/study'
 import React from 'react'
-import { UserProps } from './withAuth'
+import { UserSessionProps } from './withAuth'
 
 export type StudyProps = {
   study: FullStudy
@@ -14,9 +14,9 @@ interface Props {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const withStudy = (WrappedComponent: React.ComponentType<any & UserProps & StudyProps>) => {
+const withStudy = (WrappedComponent: React.ComponentType<any & UserSessionProps & StudyProps>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Component = async (props: any & Props & UserProps) => {
+  const Component = async (props: any & Props & UserSessionProps) => {
     const params = await props.params
     const id = params.id
     if (!id) {

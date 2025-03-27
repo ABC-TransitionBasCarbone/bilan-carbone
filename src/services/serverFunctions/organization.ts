@@ -1,5 +1,6 @@
 'use server'
 
+import { AccountWithUser, getAccountById } from '@/db/account'
 import {
   createOrganization,
   deleteClient,
@@ -11,7 +12,6 @@ import {
 } from '@/db/organization'
 import { getRawOrganizationById } from '@/db/organizationImport'
 import { getUserApplicationSettings } from '@/db/user'
-import { getUserByEmail } from '@/db/userImport'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { Prisma, UserChecklist } from '@prisma/client'
@@ -78,7 +78,7 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     return NOT_AUTHORIZED
   }
 
-  const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
+  const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
   const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
   await updateOrganization(command, caUnit)
@@ -110,7 +110,7 @@ export const setOnboardedOrganization = async (organizationId: string) => {
     return NOT_AUTHORIZED
   }
 
-  await setOnboarded(organizationId, session.user.id)
+  await setOnboarded(organizationId, session.user.accountId)
 }
 
 export const onboardOrganizationCommand = async (command: OnboardingCommand) => {
@@ -123,24 +123,24 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
 
   const organization = await getRawOrganizationById(command.organizationId)
 
-  if (!organization || organization.onboarderId !== session.user.id) {
+  if (!organization || organization.onboarderId !== session.user.accountId) {
     return NOT_AUTHORIZED
   }
 
   // filter duplicatd email
-  let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'email')
-  const existingCollaborators = []
+  let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'accountId')
+  const existingCollaborators: AccountWithUser[] = []
 
-  // filter existing users
+  // filter existing accounts
   for (const collaborator of collaborators) {
-    const existingUser = await getUserByEmail(collaborator.email || '')
-    if (existingUser) {
+    const existingAccount = (await getAccountById(collaborator.accountId || '')) as AccountWithUser
+    if (existingAccount) {
       collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
-      if (existingUser.organizationId === organizationId) {
-        existingCollaborators.push(existingUser)
+      if (existingAccount.organizationId === organizationId) {
+        existingCollaborators.push(existingAccount)
       }
     }
   }
 
-  await onboardOrganization(session.user.id, { ...command, collaborators }, existingCollaborators)
+  await onboardOrganization(session.user.accountId, { ...command, collaborators }, existingCollaborators)
 }

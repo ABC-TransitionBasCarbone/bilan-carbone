@@ -3,13 +3,14 @@
 // @ts-nocheck
 'use server'
 
+import { OrganizationWithSites } from '@/db/account'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
-import { getUserApplicationSettings, OrganizationWithSites } from '@/db/user'
-import { canEditStudyFlows } from '@/services/permissions/study'
+import { getUserApplicationSettings } from '@/db/user'
 import { defaultCAUnit } from '@/utils/number'
-import { getUserRoleOnStudy } from '@/utils/study'
-import { User } from 'next-auth'
+import { canEditStudyFlows } from '@/services/permissions/study'
+import { getAccountRoleOnStudy } from '@/utils/study'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -19,7 +20,7 @@ import StudyPerimeter from '../study/perimeter/StudyPerimeter'
 interface Props {
   study: FullStudy
   organization: OrganizationWithSites
-  user: User
+  user: UserSession
 }
 
 const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
@@ -27,7 +28,7 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
   const t = await getTranslations('study.perimeter')
   const documents = await getDocumentsForStudy(study.id)
 
-  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+  const userRoleOnStudy = getAccountRoleOnStudy(user, study)
 
   if (!userRoleOnStudy) {
     return null

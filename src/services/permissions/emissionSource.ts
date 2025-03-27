@@ -1,22 +1,20 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+import { AccountWithUser, accountWithUserToUserSession } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
-import { getUserRoleOnStudy } from '@/utils/study'
-import { StudyEmissionSource, StudyRole, SubPost, User } from '@prisma/client'
+import { getAccountRoleOnStudy } from '@/utils/study'
+import { StudyEmissionSource, StudyRole, SubPost } from '@prisma/client'
 import { canBeValidated } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 import { canReadStudy, isAdminOnStudyOrga } from './study'
 
 export const hasStudyBasicRights = async (
-  user: User,
+  account: AccountWithUser,
   emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
     emissionFactorId?: string | null
   },
   study: FullStudy,
 ) => {
-  if (!(await canReadStudy(user, study.id))) {
+  if (!(await canReadStudy(accountWithUserToUserSession(account), study.id))) {
     return false
   }
 
@@ -24,8 +22,8 @@ export const hasStudyBasicRights = async (
     return false
   }
 
-  const userRoleOnStudy = getUserRoleOnStudy(user, study)
-  if (userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader) {
+  const accountRoleOnStudy = getAccountRoleOnStudy(accountWithUserToUserSession(account), study)
+  if (accountRoleOnStudy && accountRoleOnStudy !== StudyRole.Reader) {
     return true
   }
 
@@ -33,30 +31,31 @@ export const hasStudyBasicRights = async (
 }
 
 export const canCreateEmissionSource = async (
-  user: User,
+  account: AccountWithUser,
   emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
     emissionFactorId?: string | null
   },
   study?: FullStudy,
 ) => {
-  const dbStudy = study || (await getStudyById(emissionSource.studyId, user.organizationId))
+  const dbStudy = study || (await getStudyById(emissionSource.studyId, account.organizationId))
   if (!dbStudy) {
     return false
   }
 
-  return hasStudyBasicRights(user, emissionSource, dbStudy)
+  return hasStudyBasicRights(account, emissionSource, dbStudy)
 }
 
 export const canUpdateEmissionSource = async (
-  user: User,
+  account: AccountWithUser,
   emissionSource: StudyEmissionSource,
   change: Partial<StudyEmissionSource>,
   study: FullStudy,
 ) => {
-  const hasBasicRights = await hasStudyBasicRights(user, emissionSource, study)
+  const hasBasicRights = await hasStudyBasicRights(account, emissionSource, study)
   if (!hasBasicRights) {
     const contributor = study.contributors.find(
-      (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
+      (contributor) =>
+        contributor.account.user.email === account.user.email && contributor.subPost === emissionSource.subPost,
     )
 
     if (!contributor) {
@@ -69,8 +68,11 @@ export const canUpdateEmissionSource = async (
   }
 
   if (change.validated !== undefined) {
-    const rights = study.allowedUsers.find((right) => right.user.email === user.email)
-    if (!isAdminOnStudyOrga(user, study.organization) && (!rights || rights.role !== StudyRole.Validator)) {
+    const rights = study.allowedUsers.find((right) => right.account.user.email === account.user.email)
+    if (
+      !isAdminOnStudyOrga(accountWithUserToUserSession(account), study.organization) &&
+      (!rights || rights.role !== StudyRole.Validator)
+    ) {
       return false
     }
 
@@ -92,8 +94,8 @@ export const canUpdateEmissionSource = async (
   return true
 }
 
-export const canDeleteEmissionSource = async (user: User, study: FullStudy) => {
-  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+export const canDeleteEmissionSource = async (account: AccountWithUser, study: FullStudy) => {
+  const userRoleOnStudy = getAccountRoleOnStudy(accountWithUserToUserSession(account), study)
   if (userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader) {
     return true
   }
