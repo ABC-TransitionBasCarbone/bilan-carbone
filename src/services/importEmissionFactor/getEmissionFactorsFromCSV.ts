@@ -121,6 +121,6 @@ export const getEmissionFactorsFromCSV = async (
           })
       })
     },
-    { timeout: 10 * MIN * TIME_IN_MS },
+    { timeout: 20 * MIN * TIME_IN_MS },
   )
 }
