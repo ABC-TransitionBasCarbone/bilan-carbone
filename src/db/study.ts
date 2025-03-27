@@ -4,10 +4,10 @@ import { checkLevel, getAllowedLevels } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
+import { getAccountOrganizations } from './account'
 import { prismaClient } from './client'
 import { getOrganizationById } from './organization'
-import { getUserOrganizations } from './user'
 
 export const createStudy = async (data: Prisma.StudyCreateInput) => {
   const dbStudy = await prismaClient.study.create({ data })
@@ -70,7 +70,12 @@ const fullStudyInclude = {
       contributor: {
         select: {
           id: true,
-          email: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
         },
       },
     },
@@ -78,32 +83,42 @@ const fullStudyInclude = {
   },
   contributors: {
     select: {
-      userId: true,
-      user: {
+      accountId: true,
+      account: {
         select: {
           id: true,
-          email: true,
           organizationId: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
         },
       },
       subPost: true,
     },
-    orderBy: { user: { email: 'asc' } },
+    orderBy: { account: { user: { email: 'asc' } } },
   },
   allowedUsers: {
     select: {
-      userId: true,
-      user: {
+      accountId: true,
+      account: {
         select: {
           id: true,
-          email: true,
           organizationId: true,
-          level: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+              level: true,
+            },
+          },
         },
       },
       role: true,
     },
-    orderBy: { user: { email: 'asc' } },
+    orderBy: { account: { user: { email: 'asc' } } },
   },
   sites: {
     select: {
@@ -138,13 +153,13 @@ const normalizeAllowedUsers = (
   organizationId: string | null,
 ) =>
   allowedUsers.map((allowedUser) => {
-    const readerOnly = !allowedUser.user.organizationId || !checkLevel(allowedUser.user.level, studyLevel)
-    return organizationId && allowedUser.user.organizationId === organizationId
-      ? { ...allowedUser, user: { ...allowedUser.user, readerOnly } }
+    const readerOnly = !allowedUser.account.organizationId || !checkLevel(allowedUser.account.user.level, studyLevel)
+    return organizationId && allowedUser.account.organizationId === organizationId
+      ? { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
       : {
           ...allowedUser,
-          user: {
-            ...allowedUser.user,
+          account: {
+            ...allowedUser.account,
             organizationId: undefined,
             level: undefined,
             readerOnly,
@@ -166,54 +181,57 @@ export const getOrganizationStudiesOrderedByStartDate = async (organizationId: s
   }))
 }
 
-export const getAllowedStudiesByUser = async (user: User) => {
-  const userOrganizations = await getUserOrganizations(user.email)
+export const getAllowedStudiesByAccount = async (user: UserSession) => {
+  const accountOrganizations = await getAccountOrganizations(user.accountId)
 
-  // Be carefull: study on this query is shown to a lot of user
+  // Be carefull: study on this query is shown to a lot of account
   // Never display sensitive data here (like emission source)
   const studies = await prismaClient.study.findMany({
     where: {
       OR: [
         {
           AND: [
-            { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
+            { organizationId: { in: accountOrganizations.map((organization) => organization.id) } },
             ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
           ],
         },
-        { allowedUsers: { some: { userId: user.id } } },
-        { contributors: { some: { userId: user.id } } },
+        { allowedUsers: { some: { accountId: user.accountId } } },
+        { contributors: { some: { accountId: user.accountId } } },
       ],
     },
   })
   return filterAllowedStudies(user, studies)
 }
 
-export const getExternalAllowedStudiesByUser = async (user: User) => {
-  const userOrganizations = await getUserOrganizations(user.email)
+export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
+  const userOrganizations = await getAccountOrganizations(user.accountId)
   const studies = await prismaClient.study.findMany({
     where: {
       AND: [
         { organizationId: { notIn: userOrganizations.map((organization) => organization.id) } },
-        { OR: [{ allowedUsers: { some: { userId: user.id } } }, { contributors: { some: { userId: user.id } } }] },
+        { OR: [{ allowedUsers: { some: { accountId: user.accountId } } }, { contributors: { some: { accountId: user.accountId } } }] },
       ],
     },
   })
   return filterAllowedStudies(user, studies)
 }
 
-export const getAllowedStudyIdByUser = async (user: User) => {
-  const organizationIds = (await getUserOrganizations(user.email)).map((organization) => organization.id)
-  const isAllowedOnPublicStudies = user.level && getUserRoleOnPublicStudy(user, user.level) !== StudyRole.Reader
+export const getAllowedStudyIdByAccount = async (account: UserSession) => {
+  const organizationIds = (await getAccountOrganizations(account.accountId)).map((organization) => organization.id)
+  const isAllowedOnPublicStudies =
+    account.level && getUserRoleOnPublicStudy(account, account.level) !== StudyRole.Reader
   const study = await prismaClient.study.findFirst({
     where: {
       OR: [
-        { allowedUsers: { some: { userId: user.id, role: { notIn: [StudyRole.Reader] } } } },
+        { allowedUsers: { some: { accountId: account.id, role: { notIn: [StudyRole.Reader] } } } },
         ...(isAllowedOnPublicStudies
           ? [
               {
                 AND: [
                   { organizationId: { in: organizationIds } },
-                  ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
+                  ...(isAdmin(account.role)
+                    ? []
+                    : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
                 ],
               },
             ]
@@ -225,13 +243,13 @@ export const getAllowedStudyIdByUser = async (user: User) => {
   return study?.id
 }
 
-export const getAllowedStudiesByUserAndOrganization = async (user: User, organizationId: string) => {
+export const getAllowedStudiesByUserAndOrganization = async (account: UserSession, organizationId: string) => {
   const childOrganizations = await prismaClient.organization.findMany({
-    where: { parentId: user.organizationId },
+    where: { parentId: account.organizationId },
     select: { id: true },
   })
 
-  const userOrga = await getOrganizationById(user.organizationId)
+  const userOrga = await getOrganizationById(account.organizationId)
   if (!userOrga) {
     return []
   }
@@ -239,19 +257,19 @@ export const getAllowedStudiesByUserAndOrganization = async (user: User, organiz
   const studies = await prismaClient.study.findMany({
     where: {
       organizationId,
-      ...(isAdminOnOrga(user, userOrga)
+      ...(isAdminOnOrga(account, userOrga)
         ? {}
         : {
             OR: [
-              { allowedUsers: { some: { userId: user.id } } },
-              { contributors: { some: { userId: user.id } } },
-              { isPublic: true, organizationId: user.organizationId as string },
+              { allowedUsers: { some: { accountId: account.id } } },
+              { contributors: { some: { accountId: account.id } } },
+              { isPublic: true, organizationId: account.organizationId as string },
               { isPublic: true, organizationId: { in: childOrganizations.map((organization) => organization.id) } },
             ],
           }),
     },
   })
-  return filterAllowedStudies(user, studies)
+  return filterAllowedStudies(account, studies)
 }
 
 export const getStudyById = async (id: string, organizationId: string | null) => {
@@ -282,11 +300,11 @@ export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
     data: right,
   })
 
-export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRole) =>
+export const updateUserOnStudy = (accountId: string, studyId: string, role: StudyRole) =>
   prismaClient.userOnStudy.update({
     where: {
-      studyId_userId: {
-        userId,
+      studyId_accountId: {
+        accountId,
         studyId,
       },
     },
@@ -298,11 +316,11 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
 
-export const downgradeStudyUserRoles = (studyId: string, userIds: string[]) =>
+export const downgradeStudyUserRoles = (studyId: string, accountIds: string[]) =>
   Promise.all(
-    userIds.map((userId) =>
+    accountIds.map((accountId) =>
       prismaClient.userOnStudy.update({
-        where: { studyId_userId: { studyId, userId } },
+        where: { studyId_accountId: { studyId, accountId } },
         data: { role: StudyRole.Reader },
       }),
     ),
@@ -353,12 +371,12 @@ export const deleteStudy = async (id: string) => {
 }
 
 export const createContributorOnStudy = (
-  userId: string,
+  accountId: string,
   subPosts: SubPost[],
-  data: Omit<Prisma.ContributorsCreateManyInput, 'userId' | 'subPost'>,
+  data: Omit<Prisma.ContributorsCreateManyInput, 'accountId' | 'subPost'>,
 ) =>
   prismaClient.contributors.createMany({
-    data: subPosts.map((subPost) => ({ ...data, userId, subPost })),
+    data: subPosts.map((subPost) => ({ ...data, accountId, subPost })),
     skipDuplicates: true,
   })
 
@@ -375,8 +393,8 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
           name: true,
           isPublic: true,
           level: true,
-          allowedUsers: { select: { userId: true } },
-          contributors: { select: { userId: true } },
+          allowedUsers: { select: { accountId: true } },
+          contributors: { select: { accountId: true } },
           organizationId: true,
           organization: {
             select: {

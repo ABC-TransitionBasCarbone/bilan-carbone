@@ -1,7 +1,7 @@
+import { getAccountById } from '@/db/account'
 import { getOrganizationById } from '@/db/organization'
-import { getUserByEmail } from '@/db/userImport'
 import { canEditOrganization, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { auth } from '../auth'
 import { getOrganizationStudiesFromOtherUsers } from '../serverFunctions/study'
 
@@ -14,14 +14,14 @@ export const isInOrgaOrParentFromId = async (userOrganizationId: string | null, 
   return organization && isInOrgaOrParent(userOrganizationId, organization)
 }
 
-export const canCreateOrganization = async (user: User) => {
-  const dbUser = await getUserByEmail(user.email)
+export const canCreateOrganization = async (account: UserSession) => {
+  const dbAccount = await getAccountById(account.accountId)
 
-  if (!dbUser) {
+  if (!dbAccount) {
     return false
   }
 
-  const organization = await getOrganizationById(dbUser.organizationId)
+  const organization = await getOrganizationById(dbAccount.organizationId)
   if (!organization || !organization.isCR) {
     return false
   }
@@ -29,19 +29,19 @@ export const canCreateOrganization = async (user: User) => {
   return true
 }
 
-export const canUpdateOrganization = async (user: User, organizationId: string) => {
-  const dbUser = await getUserByEmail(user.email)
+export const canUpdateOrganization = async (account: UserSession, organizationId: string) => {
+  const dbAccount = await getAccountById(account.accountId)
 
-  if (!dbUser) {
+  if (!dbAccount) {
     return false
   }
 
-  if (!isInOrgaOrParentFromId(user.organizationId, organizationId)) {
+  if (!isInOrgaOrParentFromId(account.organizationId, organizationId)) {
     return false
   }
 
-  const organization = await getOrganizationById(dbUser.organizationId)
-  if (!organization || !canEditOrganization(user, organization)) {
+  const organization = await getOrganizationById(account.organizationId)
+  if (!organization || !canEditOrganization(account, organization)) {
     return false
   }
 

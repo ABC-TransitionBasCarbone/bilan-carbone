@@ -10,14 +10,14 @@ import DeleteIcon from '@mui/icons-material/Cancel'
 import { Button } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import SelectStudyRole from './SelectStudyRole'
 
 interface Props {
-  user: User
+  user: UserSession
   study: FullStudy
   canAddMember: boolean
   userRoleOnStudy: StudyRole
@@ -41,7 +41,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
     const columns: ColumnDef<FullStudy['allowedUsers'][0]>[] = [
       {
         header: t('email'),
-        accessorKey: 'user.email',
+        accessorKey: 'account.user.email',
       },
     ]
     if (canAddMember) {
@@ -55,7 +55,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
               user={user}
               userRole={userRoleOnStudy}
               currentRole={role}
-              rowUser={context.row.original.user}
+              rowUser={context.row.original.account}
               study={study}
             />
           )
@@ -64,7 +64,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
       columns.push({
         header: t('actions'),
         cell: ({ row }) =>
-          user.id !== row.original.userId && (
+          user.accountId !== row.original.accountId && (
             <div className="flex-cc">
               <Button
                 aria-label={t('delete')}
@@ -184,7 +184,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
             },
           ]}
         >
-          {tDeleting('confirmation', { email: memberToDelete.user.email })}
+          {tDeleting('confirmation', { email: memberToDelete.account.user.email })}
         </Modal>
       )}
       {toast.text && (

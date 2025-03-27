@@ -2,13 +2,13 @@
 
 import { setOnboardedOrganization } from '@/services/serverFunctions/organization'
 import { Organization } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import OnboardingModal from './OnboardingModal'
 
 interface Props {
-  user: User
+  user: UserSession
   organization: Organization
 }
 
@@ -23,7 +23,7 @@ const Onboarding = ({ organization, user }: Props) => {
 
   return (
     <SessionProvider>
-      <OnboardingModal open={open} onClose={onClose} user={user} organization={organization} />
+      <OnboardingModal open={open} onClose={onClose} account={user} organization={organization} />
     </SessionProvider>
   )
 }

@@ -1,14 +1,14 @@
 import Block from '@/components/base/Block'
-import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import UserView from '@/components/home/UserView'
 
 export const revalidate = 0
 
-const Home = async ({ user }: UserProps) => {
+const Home = async ({ user: account }: UserSessionProps) => {
   return (
     <>
       <Block>
-        <UserView user={user} />
+        <UserView account={account} />
       </Block>
     </>
   )

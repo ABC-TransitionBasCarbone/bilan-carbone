@@ -1,12 +1,11 @@
 import {
-  getAllowedStudiesByUser,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
-} from '@/db/study'
+getAllowedStudiesByAccount } from '@/db/study'
 import AddIcon from '@mui/icons-material/Add'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { Suspense } from 'react'
@@ -17,7 +16,7 @@ import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
 
 interface Props {
-  user: User
+  user: UserSession
   organizationId?: string
   isCR?: boolean
 }
@@ -29,7 +28,7 @@ const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
     ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
     : isCR
       ? await getExternalAllowedStudiesByUser(user)
-      : await getAllowedStudiesByUser(user)
+    : await getAllowedStudiesByAccount(user)
 
   const [orgaStudies, otherStudies] = studies.reduce(
     (res, study) => {

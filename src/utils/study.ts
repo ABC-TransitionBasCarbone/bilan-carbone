@@ -4,20 +4,20 @@ import { isAdmin } from '@/services/permissions/user'
 import { Post } from '@/services/posts'
 import { checkLevel } from '@/services/study'
 import { Level, Organization, Role, StudyResultUnit, StudyRole } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { isInOrgaOrParent } from './organization'
 
-export const getUserRoleOnPublicStudy = (user: User, studyLevel: Level) => {
+export const getUserRoleOnPublicStudy = (user: UserSession, studyLevel: Level) => {
   if (isAdmin(user.role)) {
     return checkLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
   }
   return user.role === Role.COLLABORATOR && checkLevel(user.level, studyLevel) ? StudyRole.Editor : StudyRole.Reader
 }
 
-export const getUserRoleOnStudy = (
-  user: User,
+export const getAccountRoleOnStudy = (
+  user: UserSession,
   study: Pick<FullStudy, 'isPublic' | 'level'> & {
-    allowedUsers: { user: { id: string }; role: StudyRole }[]
+    allowedUsers: { account: { id: string }; role: StudyRole }[]
   } & {
     organization: Pick<Organization, 'id' | 'parentId'>
   },
@@ -26,7 +26,7 @@ export const getUserRoleOnStudy = (
     return checkLevel(user.level, study.level) ? StudyRole.Validator : StudyRole.Reader
   }
 
-  const right = study.allowedUsers.find((right) => right.user.id === user.id)
+  const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
     return right.role
   }

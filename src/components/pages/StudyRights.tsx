@@ -1,21 +1,21 @@
 import { getEmissionFactorSources } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
-import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { User } from 'next-auth'
+import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import NotFound from './NotFound'
 
 interface Props {
   study: FullStudy
-  user: User
+  user: UserSession
 }
 
 const StudyRightsPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
 
-  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+  const userRoleOnStudy = getAccountRoleOnStudy(user, study)
 
   const editionDisabled = !hasEditionRights(userRoleOnStudy)
 

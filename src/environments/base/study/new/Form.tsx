@@ -2,24 +2,24 @@
 
 import Block from '@/components/base/Block'
 import GlobalNewStudyForm from '@/components/study/new/Form'
-import { getOrganizationUsers } from '@/db/organization'
+import { getOrganizationAccounts } from '@/db/organization'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
-  user: User
-  users: Awaited<ReturnType<typeof getOrganizationUsers>>
+  user: UserSession
+  accounts: Awaited<ReturnType<typeof getOrganizationAccounts>>
   form: UseFormReturn<CreateStudyCommand>
 }
 
-const NewStudyForm = ({ user, users, form }: Props) => {
+const NewStudyForm = ({ user, accounts, form }: Props) => {
   const t = useTranslations('study.new')
 
   return (
     <Block title={t('title')} as="h1">
-      <GlobalNewStudyForm user={user} users={users} form={form} />
+      <GlobalNewStudyForm user={user} accounts={accounts} form={form} />
     </Block>
   )
 }

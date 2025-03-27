@@ -5,7 +5,7 @@ import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { changeStudyRole } from '@/services/serverFunctions/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { StudyRole } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import Toast, { ToastColors } from '../../base/Toast'
@@ -14,9 +14,9 @@ const emptyToast = { text: '', color: 'info' } as const
 const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
-  user: User
+  user: UserSession
   userRole?: StudyRole
-  rowUser: FullStudy['allowedUsers'][0]['user']
+  rowUser: FullStudy['allowedUsers'][0]['account']
   currentRole: StudyRole
   study: FullStudy
 }
@@ -34,7 +34,7 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
     const newRole = event.target.value as StudyRole
     setRole(newRole)
     if (newRole !== role) {
-      const result = await changeStudyRole(study.id, rowUser.email, newRole)
+      const result = await changeStudyRole(study.id, rowUser.user.email, newRole)
       if (result) {
         setToast({ text: result, color: 'error' })
       } else {
@@ -51,7 +51,7 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
    */
   const isDisabled = useMemo(
     () =>
-      user.email === rowUser.email ||
+      user.email === rowUser.user.email ||
       (currentRole === StudyRole.Validator &&
         userRole !== StudyRole.Validator &&
         !isAdminOnStudyOrga(user, study.organization)) ||
