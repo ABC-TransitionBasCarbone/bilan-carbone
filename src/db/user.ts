@@ -40,7 +40,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
       updatedAt: new Date(),
     },
   })
-  prismaClient.userCheckedStep.upsert({
+  await prismaClient.userCheckedStep.upsert({
     where: { userId_step: { userId: user.id, step: UserChecklist.CreateAccount } },
     update: {},
     create: { userId: user.id, step: UserChecklist.CreateAccount },
