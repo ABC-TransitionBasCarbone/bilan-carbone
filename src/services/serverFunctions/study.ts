@@ -647,3 +647,6 @@ export const getStudyEmissionFactorImportVersions = async (studyId: string) => {
   }
   return getStudyEmissionFactorSources(studyId)
 }
+
+export const getOrganizationStudiesFromOtherUsers = async (organizationId: string, userId: string) =>
+  prismaClient.study.count({ where: { organizationId, createdById: { not: userId } } })
