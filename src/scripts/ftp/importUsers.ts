@@ -1,8 +1,7 @@
-import { Level, Prisma, Role, UserStatus } from '@prisma/client'
 import { AccessOptions, Client } from 'basic-ftp'
 import dotenv from 'dotenv'
 import fs from 'fs'
-import { prismaClient } from '../../db/client'
+import { processUsers } from './userImport'
 
 const getFTPClient = async () => {
   const client = new Client()
@@ -23,84 +22,6 @@ const downloadFileFromFTP = async (client: Client, folderPath: string, fileName:
   return fs.promises.readFile(fileName, 'utf-8')
 }
 
-const parseUsers = (data: string) => {
-  const values = JSON.parse(data)
-  console.log(`Users parsed: ${values.length} rows`)
-  return values
-}
-
-const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
-  const {
-    User_Email: email,
-    Firstname: firstName = '',
-    Lastname: lastName = '',
-    Session_Code: sessionCodeTraining,
-    Company_Name: name,
-    SIRET: siret,
-    SIREN: siren,
-    Purchased_Products: purchasedProducts,
-    Membership_Year: membershipYear,
-  } = value
-
-  const siretOrSiren = siret.replace(/\s+/g, '') || siren.replace(/\s+/g, '')
-  const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
-  const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
-
-  const dbUser = (await prismaClient.user.findUnique({ where: { email } })) as Prisma.UserCreateManyInput
-
-  const user: Prisma.UserCreateManyInput = {
-    id: dbUser?.id,
-    email,
-    firstName,
-    lastName,
-    role: Role.COLLABORATOR,
-    status: UserStatus.IMPORTED,
-    importedFileDate,
-  }
-
-  if (sessionCodeTraining) {
-    user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Initial
-  }
-
-  if (siretOrSiren) {
-    let organisation = dbUser?.organizationId
-      ? await prismaClient.organization.findFirst({ where: { id: dbUser.organizationId } })
-      : await prismaClient.organization.findFirst({ where: { siret: { startsWith: siretOrSiren.substring(0, 9) } } })
-
-    organisation = await prismaClient.organization.upsert({
-      where: { id: organisation?.id || '' },
-      update: {
-        isCR: isCR || organisation?.isCR,
-        importedFileDate,
-        activatedLicence: activatedLicence || organisation?.activatedLicence,
-      },
-      create: {
-        siret: siretOrSiren,
-        name,
-        isCR,
-        importedFileDate,
-        activatedLicence,
-      },
-    })
-
-    user.organizationId = organisation.id
-  }
-
-  if (dbUser) {
-    await prismaClient.user.update({
-      where: { id: dbUser.id },
-      data: {
-        level: user.level,
-        role: dbUser.status === UserStatus.IMPORTED ? user.role : undefined,
-        organizationId: dbUser.status === UserStatus.IMPORTED ? user.organizationId : undefined,
-      },
-    })
-    return null
-  }
-
-  return user
-}
-
 const getUsersFromFTP = async () => {
   try {
     const client = await getFTPClient()
@@ -111,22 +32,10 @@ const getUsersFromFTP = async () => {
     const importedFileDate = new Date(file?.rawModifiedAt || Date.now())
 
     const data = await downloadFileFromFTP(client, folderPath, fileName)
-    const values = parseUsers(data)
+    const values = JSON.parse(data)
     client.close()
 
-    const users: Prisma.UserCreateManyInput[] = []
-    for (let i = 0; i < values.length; i++) {
-      const user = await processUser(values[i] as Record<string, string>, importedFileDate)
-      if (user) {
-        users.push(user)
-      }
-      if (i % 50 === 0) {
-        console.log(`${i}/${values.length}`)
-      }
-    }
-
-    const created = await prismaClient.user.createMany({ data: users, skipDuplicates: true })
-    console.log(`${created.count} users created`)
+    await processUsers(values, importedFileDate)
   } catch (error) {
     console.error('Error importing users:', error)
   }

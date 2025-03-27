@@ -19,7 +19,8 @@ import {
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserApplicationSettings, getUserByEmail } from '@/db/user'
+import { addUser, getUserApplicationSettings } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import {

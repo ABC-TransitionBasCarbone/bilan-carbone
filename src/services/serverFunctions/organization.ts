@@ -5,12 +5,13 @@ import {
   deleteClient,
   getOrganizationById,
   getOrganizationNameById,
-  getRawOrganizationById,
   onboardOrganization,
   setOnboarded,
   updateOrganization,
 } from '@/db/organization'
-import { getUserApplicationSettings, getUserByEmail } from '@/db/user'
+import { getRawOrganizationById } from '@/db/organizationImport'
+import { getUserApplicationSettings } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { Prisma, UserChecklist } from '@prisma/client'
