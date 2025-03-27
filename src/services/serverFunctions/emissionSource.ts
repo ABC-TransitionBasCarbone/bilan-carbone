@@ -8,7 +8,7 @@ import {
   updateEmissionSourceOnStudy,
 } from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
-import { getUserByEmail } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
 import { UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'

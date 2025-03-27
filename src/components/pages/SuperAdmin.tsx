@@ -3,7 +3,7 @@
 import NotFound from '@/components/pages/NotFound'
 import { auth } from '@/services/auth'
 import { Role } from '@prisma/client'
-import Admin from '../admin/Admin'
+import Admin from '../admin/SuperAdmin'
 
 const SuperAdminPage = async () => {
   const session = await auth()

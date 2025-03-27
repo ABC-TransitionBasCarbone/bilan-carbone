@@ -1,6 +1,6 @@
 'use client'
 
-import { processUsers } from '@/services/serverFunctions/userImport'
+import { processUsers } from '@/scripts/ftp/userImport'
 import { useTranslations } from 'next-intl'
 import InputFileUpload from '../base/InputFileUpload'
 

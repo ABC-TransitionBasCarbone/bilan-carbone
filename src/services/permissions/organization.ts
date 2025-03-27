@@ -1,5 +1,5 @@
 import { getOrganizationById } from '@/db/organization'
-import { getUserByEmail } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
 import { canEditOrganization, isInOrgaOrParent } from '@/utils/organization'
 import { User } from 'next-auth'
 import { auth } from '../auth'

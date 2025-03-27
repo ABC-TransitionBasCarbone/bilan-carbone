@@ -9,7 +9,7 @@ import {
   getEmissionFactorDetailsById,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
-import { getUserByEmail } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
 import { getLocale } from '@/i18n/locale'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'

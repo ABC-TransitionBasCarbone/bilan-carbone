@@ -1,7 +1,7 @@
 import { AccessOptions, Client } from 'basic-ftp'
 import dotenv from 'dotenv'
 import fs from 'fs'
-import { processUsers } from '../../services/serverFunctions/userImport'
+import { processUsers } from './userImport'
 
 const getFTPClient = async () => {
   const client = new Client()

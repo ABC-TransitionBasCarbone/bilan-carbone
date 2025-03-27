@@ -21,8 +21,6 @@ export const getUserByEmailWithSensibleInformations = (email: string) =>
     where: { email },
   })
 
-export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
-
 export const getUserById = (id: string) =>
   prismaClient.user.findUnique({ where: { id }, select: { organizationId: true } })
 
@@ -128,15 +126,6 @@ export const hasUserToValidateInOrganization = async (organizationId: string | n
 export const organizationActiveUsersCount = async (organizationId: string) =>
   prismaClient.user.count({
     where: { organizationId, status: UserStatus.ACTIVE },
-  })
-
-export const updateUser = (
-  userId: string,
-  data: Partial<Prisma.UserCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
-) =>
-  prismaClient.user.update({
-    where: { id: userId },
-    data,
   })
 
 export const changeStatus = (userId: string, newStatus: UserStatus) =>
