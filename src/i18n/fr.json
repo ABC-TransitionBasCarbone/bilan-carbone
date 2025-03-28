@@ -483,6 +483,10 @@
   "emissionFactors": {
     "add": "Ajouter un facteur d'émission",
     "post": {
+      "all": "Tous",
+      "none": "Aucun",
+      "selectAll": "Tout sélectionner",
+      "unselectAll": "Tout désélectionner",
       "total": "Total",
       "allPost": "Tous les postes",
       "allSubPost": "Tous les sous postes",
@@ -655,6 +659,7 @@
       "source": "Source",
       "sources": "Sources",
       "units": "Unités",
+      "subPosts": "Sous postes",
       "status": "Statut",
       "value": "Valeur",
       "yes": "Oui",

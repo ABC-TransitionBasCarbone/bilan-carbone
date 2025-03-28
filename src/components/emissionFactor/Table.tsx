@@ -1,5 +1,6 @@
 'use client'
 
+import { Post, subPostsByPost } from '@/services/posts'
 import { canEditEmissionFactor, EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
@@ -26,7 +27,7 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorImportVersion, EmissionFactorStatus, Import, Unit } from '@prisma/client'
+import { EmissionFactorImportVersion, EmissionFactorStatus, Import, SubPost, Unit } from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -94,6 +95,7 @@ interface Props {
 }
 
 const initialSelectedUnits: (Unit | string)[] = [...['all', ''], ...Object.values(Unit)]
+const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
 
 const EmissionFactorsTable = ({
   emissionFactors,
@@ -104,6 +106,7 @@ const EmissionFactorsTable = ({
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
+  const tPosts = useTranslations('emissionFactors.post')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
   const [filter, setFilter] = useState('')
@@ -111,6 +114,7 @@ const EmissionFactorsTable = ({
   const [locationFilter, setLocationFilter] = useState('')
   const [filteredSources, setFilteredSources] = useState(initialSelectedSources)
   const [filteredUnits, setFilteredUnits] = useState(initialSelectedUnits)
+  const [filteredSubPosts, setFilteredSubPosts] = useState(initialSelectedSubPosts)
   const [displayHideButton, setDisplayHideButton] = useState(false)
   const [displayFilters, setDisplayFilters] = useState(true)
   const filtersRef = useRef<HTMLDivElement>(null)
@@ -313,8 +317,9 @@ const EmissionFactorsTable = ({
             (!emissionFactor.version && filteredSources.includes(Import.Manual)),
         )
         .filter((emissionFactor) => filteredUnits.includes(emissionFactor.unit || ''))
+        .filter((emissionFactor) => emissionFactor.subPosts.some((subPost) => filteredSubPosts.includes(subPost)))
         .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived),
-    [searchedEmissionFactors, filteredSources, filteredUnits, displayArchived],
+    [searchedEmissionFactors, filteredSources, filteredUnits, filteredSubPosts, displayArchived],
   )
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
@@ -387,6 +392,36 @@ const EmissionFactorsTable = ({
         ? t('none')
         : filteredUnits.map((unit) => tUnits(unit)).join(', ')
 
+  const allSelectedSubPosts = useMemo(
+    () => filteredSubPosts.length === initialSelectedSubPosts.length,
+    [filteredSubPosts],
+  )
+
+  const subPostsSelectorRenderValue = () =>
+    allSelectedSubPosts
+      ? tPosts('all')
+      : filteredSubPosts.length === 0
+        ? tPosts('none')
+        : filteredSubPosts.map((subPosts) => tPosts(subPosts)).join(', ')
+
+  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
+
+  const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : initialSelectedSubPosts)
+
+  const selectPost = (post: Post) => {
+    const newValue = areAllSelected(post)
+      ? filteredSubPosts.filter((filteredSubPost) => !subPostsByPost[post].includes(filteredSubPost))
+      : filteredSubPosts.concat(subPostsByPost[post].filter((a) => !filteredSubPosts.includes(a)))
+    setFilteredSubPosts(newValue)
+  }
+
+  const selectSubPost = (subPost: SubPost) => {
+    const newValue = filteredSubPosts.includes(subPost)
+      ? filteredSubPosts.filter((filteredSubPost) => filteredSubPost !== subPost)
+      : filteredSubPosts.concat([subPost])
+    setFilteredSubPosts(newValue)
+  }
+
   return (
     <>
       <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
@@ -437,6 +472,45 @@ const EmissionFactorsTable = ({
                 t={tUnits}
                 tLabel={t}
               />
+            </FormControl>
+            <FormControl className={styles.selector}>
+              <InputLabel id="emissions-subposts-selector">{t('subPosts')}</InputLabel>
+              <Select
+                id="emissions-subposts-selector"
+                labelId="emissions-subposts-selector"
+                value={filteredSubPosts}
+                input={<OutlinedInput label={t('subPosts')} />}
+                renderValue={subPostsSelectorRenderValue}
+                multiple
+              >
+                <MenuItem
+                  key="subpost-item-all"
+                  className={allSelectedSubPosts ? 'Mui-selected' : ''} // dirty-hack because selected does not work on this option
+                  onClick={selectAllSubPosts}
+                >
+                  <Checkbox checked={allSelectedSubPosts} />
+                  <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
+                </MenuItem>
+                {Object.values(Post).map((post) => (
+                  <div key={`subpostGroup-${post}`}>
+                    <MenuItem key={`subpost-${post}`} selected={areAllSelected(post)} onClick={() => selectPost(post)}>
+                      <Checkbox checked={areAllSelected(post)} />
+                      <ListItemText primary={tPosts(post)} />
+                    </MenuItem>
+                    {subPostsByPost[post].map((subPost) => (
+                      <MenuItem
+                        key={`subpost-${subPost}`}
+                        className={styles.subPostItem}
+                        selected={filteredSubPosts.includes(subPost)}
+                        onClick={() => selectSubPost(subPost)}
+                      >
+                        <Checkbox checked={filteredSubPosts.includes(subPost)} />
+                        <ListItemText primary={tPosts(subPost)} />
+                      </MenuItem>
+                    ))}
+                  </div>
+                ))}
+              </Select>
             </FormControl>
             <FormControl className={styles.selector}>
               <FormLabel id="archived-emissions-factors-radio-group-label" component="legend">

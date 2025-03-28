@@ -483,6 +483,10 @@
   "emissionFactors": {
     "add": "Add an emission factor",
     "post": {
+      "all": "All",
+      "none": "None",
+      "selectAll": "Select all",
+      "unselectAll": "Unselect all",
       "total": "Total",
       "allPost": "All posts",
       "allSubPost": "All sub posts",
@@ -655,6 +659,7 @@
       "source": "Source",
       "sources": "Sources",
       "units": "Units",
+      "subPosts": "Sub posts",
       "status": "Status",
       "value": "Value",
       "displayFilters": "Display filters",

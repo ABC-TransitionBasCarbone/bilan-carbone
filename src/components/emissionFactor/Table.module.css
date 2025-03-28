@@ -16,6 +16,10 @@
   }
 }
 
+.subPostItem {
+  padding-left: 2rem !important;
+}
+
 .hideFiltersButton {
   width: 0;
   height: 0;
