@@ -29,7 +29,7 @@ const EmissionFactors = async ({ userOrganizationId }: Props) => {
       emissionFactors={emissionFactors}
       userOrganizationId={userOrganizationId}
       importVersions={importVersions.concat([manualImport])}
-      initialSelectedSources={initialSelectedSources}
+      initialSelectedSources={initialSelectedSources.concat([manualImport.id])}
     />
   )
 }
