@@ -412,6 +412,9 @@
           "no": "No",
           "Not authorized": "You are not allowed to do this action"
         }
+      },
+      "versions": {
+        "list": "Study's emission factors versions"
       }
     },
     "perimeter": {

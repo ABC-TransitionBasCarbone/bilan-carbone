@@ -11,6 +11,7 @@ import { changeStudyName } from '@/services/serverFunctions/study'
 import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import EditIcon from '@mui/icons-material/Edit'
+import { EmissionFactorImportVersion } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
@@ -18,14 +19,16 @@ import StudyLevel from './StudyLevel'
 import styles from './StudyParams.module.css'
 import StudyPublicStatus from './StudyPublicStatus'
 import StudyResultsUnit from './StudyResultsUnit'
+import StudyVersions from './StudyVersions'
 
 interface Props {
   user: User
   study: FullStudy
   disabled: boolean
+  emissionFactorSources: EmissionFactorImportVersion[]
 }
 
-const StudyParams = ({ user, study, disabled }: Props) => {
+const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) => {
   const t = useTranslations('study.rights')
   const tValidation = useTranslations('study.rights.new')
 
@@ -90,7 +93,10 @@ const StudyParams = ({ user, study, disabled }: Props) => {
           <StudyLevel study={study} user={user} disabled={disabled} />
           <StudyResultsUnit study={study} disabled={disabled} />
         </div>
-        <StudyPublicStatus study={study} user={user} disabled={disabled} />
+        <div className="flex">
+          <StudyPublicStatus study={study} user={user} disabled={disabled} />
+          <StudyVersions study={study} emissionFactorSources={emissionFactorSources} />
+        </div>
       </Block>
       <Modal
         open={editTitle}

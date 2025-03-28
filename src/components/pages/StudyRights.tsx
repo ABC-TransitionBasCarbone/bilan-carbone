@@ -1,3 +1,4 @@
+import { getEmissionFactorSources } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
@@ -17,6 +18,8 @@ const StudyRightsPage = async ({ study, user }: Props) => {
   const userRoleOnStudy = getUserRoleOnStudy(user, study)
 
   const editionDisabled = !hasEditionRights(userRoleOnStudy)
+
+  const emissionFactorSources = await getEmissionFactorSources()
 
   if (!userRoleOnStudy) {
     return <NotFound />
@@ -43,6 +46,7 @@ const StudyRightsPage = async ({ study, user }: Props) => {
         study={study}
         editionDisabled={editionDisabled}
         userRoleOnStudy={userRoleOnStudy}
+        emissionFactorSources={emissionFactorSources}
       />
     </>
   )

@@ -412,6 +412,9 @@
           "no": "Non",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
         }
+      },
+      "versions": {
+        "list": "Versions des facteurs d'emissions de l'étude"
       }
     },
     "perimeter": {
