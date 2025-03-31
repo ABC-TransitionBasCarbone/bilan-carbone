@@ -2,7 +2,7 @@
 
 import { canEditSelfRole } from '@/services/permissions/user'
 import { changeRole } from '@/services/serverFunctions/user'
-import { isUntrainedRole } from '@/utils/onganization'
+import { isUntrainedRole } from '@/utils/organization'
 import { SEC, TIME_IN_MS } from '@/utils/time'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Level, Role } from '@prisma/client'

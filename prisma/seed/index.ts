@@ -12,6 +12,7 @@ import {
   SubPost,
   Unit,
   User,
+  UserChecklist,
   UserStatus,
 } from '@prisma/client'
 import { Command } from 'commander'
@@ -34,6 +35,7 @@ const users = async () => {
   await prisma.userOnStudy.deleteMany()
   await prisma.studyExport.deleteMany()
   await prisma.studyEmissionSource.deleteMany()
+  await prisma.studyEmissionFactorVersion.deleteMany()
   await prisma.contributors.deleteMany()
 
   await prisma.studySite.deleteMany()
@@ -259,9 +261,6 @@ const users = async () => {
       },
     ],
   })
-  const emissionFactorsImportVersion = await prisma.emissionFactorImportVersion.create({
-    data: { source: Import.BaseEmpreinte, name: '1', internId: 'Base_Carbone_V1.csv' },
-  })
 
   await prisma.user.create({
     data: {
@@ -273,6 +272,11 @@ const users = async () => {
       status: UserStatus.IMPORTED,
       organizationId: regularOrganizations[0].id,
     },
+  })
+
+  const activeUsers = await prisma.user.findMany({ where: { status: UserStatus.ACTIVE }, select: { id: true } })
+  await prisma.userCheckedStep.createMany({
+    data: activeUsers.map((user) => ({ userId: user.id, step: UserChecklist.CreateAccount })),
   })
 
   const subPosts = Object.keys(SubPost)
@@ -290,7 +294,6 @@ const users = async () => {
           level: faker.helpers.enumValue(Level),
           name: faker.lorem.words({ min: 2, max: 5 }),
           organizationId: creator.organizationId as string,
-          versionId: emissionFactorsImportVersion.id,
           sites: {
             createMany: {
               data: faker.helpers
@@ -330,7 +333,6 @@ const users = async () => {
         level: faker.helpers.enumValue(Level),
         name: faker.lorem.words({ min: 2, max: 5 }),
         organizationId: defaultUser.organizationId as string,
-        versionId: emissionFactorsImportVersion.id,
         sites: {
           createMany: {
             data: faker.helpers
@@ -414,7 +416,7 @@ program
   .option('-i, --import-factors <value>', 'Import BaseCarbone emission factors')
   .parse(process.argv)
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   main(program.opts())
     .then(async () => {
       await prisma.$disconnect()

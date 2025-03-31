@@ -1,16 +1,26 @@
 import { filterAllowedStudies } from '@/services/permissions/study'
-import { checkLevel } from '@/services/study'
-import { isAdminOnOrga } from '@/utils/onganization'
-import { Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
+import { isAdmin } from '@/services/permissions/user'
+import { checkLevel, getAllowedLevels } from '@/services/study'
+import { isAdminOnOrga } from '@/utils/organization'
+import { getUserRoleOnPublicStudy } from '@/utils/study'
+import { Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationById } from './organization'
 import { getUserOrganizations } from './user'
 
-export const createStudy = (study: Prisma.StudyCreateInput) =>
-  prismaClient.study.create({
-    data: study,
-  })
+export const createStudy = async (data: Prisma.StudyCreateInput) => {
+  const dbStudy = await prismaClient.study.create({ data })
+  const studyEmissionFactorVersions = []
+  for (const source of Object.values(Import).filter((source) => source !== Import.Manual)) {
+    const latestImportVersion = await getSourceLatestImportVersionId(source)
+    if (latestImportVersion) {
+      studyEmissionFactorVersions.push({ studyId: dbStudy.id, source, importVersionId: latestImportVersion.id })
+    }
+  }
+  await prismaClient.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
+  return dbStudy
+}
 
 const fullStudyInclude = {
   emissionSources: {
@@ -102,6 +112,13 @@ const fullStudyInclude = {
       },
     },
   },
+  emissionFactorVersions: {
+    select: {
+      id: true,
+      importVersionId: true,
+      source: true,
+    },
+  },
   exports: { select: { type: true, control: true } },
   organization: { select: { id: true, name: true, isCR: true, parentId: true } },
 } satisfies Prisma.StudyInclude
@@ -148,13 +165,42 @@ export const getAllowedStudiesByUser = async (user: User) => {
   const studies = await prismaClient.study.findMany({
     where: {
       OR: [
-        { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
+        {
+          AND: [
+            { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
+            ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
+          ],
+        },
         { allowedUsers: { some: { userId: user.id } } },
         { contributors: { some: { userId: user.id } } },
       ],
     },
   })
   return filterAllowedStudies(user, studies)
+}
+
+export const getAllowedStudyIdByUser = async (user: User) => {
+  const organizationIds = (await getUserOrganizations(user.email)).map((organization) => organization.id)
+  const isAllowedOnPublicStudies = user.level && getUserRoleOnPublicStudy(user, user.level) !== StudyRole.Reader
+  const study = await prismaClient.study.findFirst({
+    where: {
+      OR: [
+        { allowedUsers: { some: { userId: user.id, role: { notIn: [StudyRole.Reader] } } } },
+        ...(isAllowedOnPublicStudies
+          ? [
+              {
+                AND: [
+                  { organizationId: { in: organizationIds } },
+                  ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
+                ],
+              },
+            ]
+          : []),
+      ],
+    },
+    orderBy: { createdAt: 'desc' },
+  })
+  return study?.id
 }
 
 export const getAllowedStudiesByUserAndOrganization = async (user: User, organizationId: string) => {
@@ -267,6 +313,8 @@ export const deleteStudy = async (id: string) => {
       transaction.contributors.deleteMany({ where: { studyId: id } }),
       transaction.studySite.deleteMany({ where: { studyId: id } }),
       transaction.document.deleteMany({ where: { studyId: id } }),
+      transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
+      transaction.studyExport.deleteMany({ where: { studyId: id } }),
     ])
     await transaction.study.delete({ where: { id } })
   })
@@ -331,3 +379,10 @@ export const getStudyValidatedEmissionsSources = async (studyId: string) => {
     validated: study.emissionSources.filter((emissionSource) => emissionSource.validated).length,
   }
 }
+
+const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
+  (transaction || prismaClient).emissionFactorImportVersion.findFirst({
+    select: { id: true, source: true },
+    where: { source },
+    orderBy: { createdAt: 'desc' },
+  })

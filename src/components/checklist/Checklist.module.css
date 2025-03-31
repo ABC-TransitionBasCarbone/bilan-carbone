@@ -1,0 +1,64 @@
+.checklistButton {
+  bottom: 1rem;
+  right: 1rem;
+  position: fixed;
+  justify-content: center;
+  display: flex;
+  z-index: 10;
+}
+
+.openDrawerButton {
+  height: 4rem;
+  width: 4rem;
+  background-color: var(--primary-80) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  color: white !important;
+
+  &:hover {
+    background-color: var(--primary-60) !important;
+  }
+}
+
+.checklistContainer {
+  max-height: 60vh !important;
+  height: fit-content !important;
+  min-width: 30rem;
+  width: 30vw;
+  border-radius: 1rem 0 0 1rem;
+  top: auto !important;
+  bottom: 7rem !important;
+  overflow-x: hidden !important;
+  border: var(--border) !important;
+  padding: 0.5rem;
+  hr {
+    color: var(--neutral-30) !important;
+  }
+}
+
+.drawer {
+  background-color: var(--organization-card-bg) !important;
+}
+
+.centered {
+  justify-content: center !important;
+}
+
+.optional {
+  color: var(--primary-40);
+  font-style: italic;
+}
+
+.stepSummary {
+  opacity: 1 !important;
+}
+
+.stepHeader {
+  gap: 0.5rem;
+}
+
+.validated {
+  color: var(--green-500) !important;
+}

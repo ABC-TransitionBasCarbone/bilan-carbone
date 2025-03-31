@@ -13,6 +13,18 @@ enum UserStatus {
   ACTIVE
 }
 
+enum UserChecklist {
+  CreateAccount
+  AddCollaborator
+  AddClient
+  AddSiteCR
+  AddSiteOrga
+  CreateFirstStudy
+  CreateFirstEmissionSource
+  ConsultResults
+  Completed
+}
+
 model User {
   id               String    @id @default(uuid())
   createdAt        DateTime  @default(now()) @map("created_at")
@@ -49,4 +61,13 @@ model UserApplicationSettings {
   caUnit                       SiteCAUnit @default(K) @map("ca_unit")
 
   @@map("user_application_settings")
+}
+
+model UserCheckedStep {
+  id     String          @id @default(uuid())
+  userId String          @map("user_id")
+  step   UserChecklist
+
+  @@unique([userId, step])
+  @@map("user_checked_steps")
 }

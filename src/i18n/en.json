@@ -80,7 +80,7 @@
     "other": "Other gases",
     "total": "Total",
     "uncertainty": "Uncertainty",
-    "ges": "GHG emissions (tCO₂e)"
+    "ges": "GHG emissions ({unit})"
   },
   "nav": {
     "backToHome": "Back to home",
@@ -95,10 +95,12 @@
     "organization": "Organization",
     "edit": "Edit",
     "studyRights": "Rights",
-    "team": "Team"
+    "team": "Team",
+    "actualities": "Actualities"
   },
   "actuality": {
     "title": "BC+ actualities",
+    "allActualities": "See all actualities",
     "noItems": "No news at the moment",
     "seeLess": "See less",
     "seeMore": "See more"
@@ -172,9 +174,6 @@
     "team": "My team",
     "information": "Global informations"
   },
-  "results": {
-    "unit": "tCO₂e"
-  },
   "profile": {
     "title": "My profile",
     "legalNotices": "Legal notices",
@@ -239,7 +238,7 @@
       "results": "Results",
       "transitionPlan": "Transition plan",
       "menu": "Open the study navigation menu",
-      "comming": "comming"
+      "coming": "coming"
     },
     "new": {
       "title": "Information about the new study",
@@ -256,6 +255,7 @@
       "isPublicTitle": "Study visibility",
       "private": "Private",
       "public": "Public",
+      "resultsUnit": "Study result's unit",
       "create": "Create study",
       "glossary": {
         "title": "Glossaire",
@@ -268,7 +268,7 @@
         "exports": "Exports",
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
         "control": "Control mode",
-        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the items and sub-items within the Bilan Carbone® method) the emissions will be broken down. Depending on the control mode selected, the characterisations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
+        "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the posts and sub-posts within the Bilan Carbone® method) the emissions will be broken down. Depending on the control mode selected, the characterisations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
         "close": "Close"
       },
       "validation": {
@@ -283,7 +283,7 @@
         "default": "Something went wrong ...",
         "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support"
       },
-      "comming": "comming"
+      "coming": "coming"
     },
     "post": {
       "displayInfography": "Display all posts",
@@ -291,7 +291,9 @@
       "emissionSource": "{count, plural, =0 {No emission source} =1 {1 emission source} other {# emission sources}}",
       "contributors": "{count, plural, =1 {1 contributor} other {# contibutors}}",
       "contributorsList": "{count, plural, =1 {Contributor :} other {Contributors :}}",
-      "new": "Add an emission source..."
+      "label": "Emission source label",
+      "new": "Give your new emission source a title",
+      "add": "Add"
     },
     "organization": {
       "site": "Site",
@@ -375,7 +377,7 @@
         },
         "role": {
           "information": "Information",
-          "description": "Here you can manage the contributors to your study. They will have access to certain items and sub-items (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>.",
+          "description": "Here you can manage the contributors to your study. They will have access to certain posts and sub-posts (which you can define) and will be able to fill in certain information for emission sources that you have already created in the study. For more information on the contributor interface, please see our <link>FAQ</link>.",
           "close": "Close"
         }
       },
@@ -415,11 +417,15 @@
     "results": {
       "type": "Type",
       "post": "Post",
-      "value": "Emissions (tCO₂e)",
+      "value": "Emissions ({unit})",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
-      "comming": "comming"
+      "coming": "coming",
+      "units": {
+        "K": "kgCO₂e",
+        "T": "tCO₂e"
+      }
     },
     "export": {
       "activityDataComment": "Activity data comment",
@@ -467,7 +473,7 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "delete": "Delete the study",
-      "content": "Are you sure you want to delete this study ? <warning>All its data will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the study name in the field right below.",
+      "content": "Are you sure you want to delete this study ? <warning>All its data will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the study name in the field right below:",
       "name": "Study name",
       "Not authorized": "You are not allowed to do this action",
       "title": "Study deletion",
@@ -477,6 +483,10 @@
   "emissionFactors": {
     "add": "Add an emission factor",
     "post": {
+      "all": "All",
+      "none": "None",
+      "selectAll": "Select all",
+      "unselectAll": "Unselect all",
       "total": "Total",
       "allPost": "All posts",
       "allSubPost": "All sub posts",
@@ -533,7 +543,33 @@
       "ConsommationDEnergieEnFinDeVie": "Energy consumption at end of life",
       "TraitementDesDechetsEnFinDeVie": "Waste treatment at end of life",
       "FuitesOuEmissionsNonEnergetiques": "Leaks or non-energy emissions",
-      "TraitementDesEmballagesEnFinDeVie": "Packaging treatment at end of life"
+      "TraitementDesEmballagesEnFinDeVie": "Packaging treatment at end of life",
+      "glossary": "Glossary",
+      "close": "Close",
+      "glossaryDescription": {
+        "DechetsDirects": "This post covers all emissions linked to the management of waste produced (collection and treatment) within the organisation. It is divided into different sub-posts, each covering a different category of waste.",
+        "IntrantsBiensEtMatieres": "This post covers emissions linked to the various flows of goods and materials entering the organisation. It is divided into different sub-posts, each covering a different category of material.",
+        "Immobilisations": "All emissions linked to the purchase or long-term rental of durable goods (subject to accounting depreciation by the organisation).",
+        "FinDeVie": "This post covers all emissions related to the future end-of-life of products sold within the timeframe.",
+        "DeplacementsDomicileTravail": "Commuting to and from work for employees working within the organisation, including temporary staff, subcontractors and contractors.",
+        "DeplacementsProfessionnels": "Business travel by employees in the course of their professional activity, whether or not the organisation owns the means of transport, and whether or not the travel takes place during working hours.",
+        "DeplacementsVisiteurs": "Customers, users, beneficiaries...",
+        "CombustiblesFossiles": "For heating, industrial processes, electricity or steam production.",
+        "CombustiblesOrganiques": "For heating, industrial processes, electricity or steam production.",
+        "ReseauxDeChaleurEtDeVapeur": "For heating and industrial processes.",
+        "ReseauxDeFroid": "For heating and industrial processes.",
+        "Electricite": "For heating, routine use, industrial processes and own electricity production.",
+        "Agriculture": "Enteric fermentation of ruminants, livestock waste, use of nitrogen fertilisers, etc.",
+        "EmissionsLieesAuChangementDAffectationDesSolsCas": "Soil sealing, ...",
+        "EmissionsLieesALaProductionDeFroid": "Refrigerant leaks.",
+        "EmissionsLieesAuxProcedesIndustriels": "Cement production, process emissions in the semiconductor industry, etc.",
+        "FretInterne": "If the departure and arrival points are part of the organisational perimeter.",
+        "ServicesEnApprocheMonetaire": "Various services received, accounted for via emission factors in monetary ratios.",
+        "MatiereDestineeAuxEmballages": "In order to be able to focus the transition plan's actions on packaging, a sub-post dedicated to the material used in this packaging is available.",
+        "BiensEtMatieresEnApprocheMonetaire": "A sub-section is also dedicated to materials for which emission factors in monetary ratios are used.",
+        "UtilisationEnResponsabilite": "Products sold by the organisation within the timeframe under consideration over their entire lifespan, for which the organisation is directly responsible ([in italisque] for a manufacturer of meal trays served on aircraft, the responsible use corresponds to the energy used to cool and heat the meal tray).",
+        "UtilisationEnDependance": "Products sold by the organisation within the timeframe under consideration over their entire lifespan, for which the organisation is not directly responsible but which its activity contributes to emitting ([in italics] For a manufacturer of meal trays served in an aircraft, the dependent use corresponds to the emissions for the entire flight)."
+      }
     },
     "create": {
       "title": "Add an emission factor",
@@ -622,6 +658,8 @@
       "showing": "Showing {number} rows of {total}",
       "source": "Source",
       "sources": "Sources",
+      "units": "Units",
+      "subPosts": "Sub posts",
       "status": "Status",
       "value": "Value",
       "displayFilters": "Display filters",
@@ -743,6 +781,9 @@
     }
   },
   "units": {
+    "selectAll": "Select all",
+    "unSelectAll": "Unselect all",
+    "": "No unit",
     "A4_SHEET_100": "100 A4 sheets",
     "KM_100": "100km",
     "ACTIVE": "active",
@@ -757,6 +798,11 @@
     "HA_CLEMENTINE": "ha of clementine",
     "HOUR": "hour",
     "KEURO": "keuro",
+    "KEURO_2019_HT": "keuro (2019) excl. VAT",
+    "KEURO_2020_HT": "keuro (2020) excl. VAT",
+    "KEURO_2021_HT": "keuro (2021) excl. VAT",
+    "KEURO_2022_HT": "keuro (2022) excl. VAT",
+    "KEURO_2023_HT": "keuro (2023) excl. VAT",
     "KG": "kg",
     "KG_BIOGNC": "kg BioGNC",
     "KG_NITROGEN_SPREAD": "kg of nitrogen spread",
@@ -946,12 +992,34 @@
       "myClient": "My client",
       "update": "Update my information",
       "updateClient": "Update my client"
+    },
+    "delete": {
+      "button": "Delete organization",
+      "title": "Are you sure you want to delete this client ?",
+      "content": "Are you sure you want to delete this client ? <warning>All its data and studies will be definitely deleted and it won't be possible to recover it.</warning> If it is the case, please write the organization name in the field right below:",
+      "name": "Organisation's name",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "Not authorized": "You are not allowed to do this action",
+      "wrongName": "Client's name does not match",
+      "unexpectedAssociations": "An unexpected event occurred when deleting this client. Please contact <support>support</support>."
     }
   },
   "emissionSource": {
+    "emissionSource": "Activity data :",
+    "emissionFactor": "Emission Factor :",
     "advancedSearch": "Advanced search",
     "noResults": "Search with more filters",
     "seeMore": "...See more and search with more filters",
+    "delete": "Delete source",
+    "validate": "Validate data",
+    "label": "Emission source label",
+    "addPlaceholder": "Give your new emission source a title",
+    "createEmissionFactor": "Create an emission factor",
+    "saved": "Saved",
+    "unvalidate": "Éditer les données",
+    "mandartoryFields": "Mandatory information",
+    "optionalFields": "Optional information",
     "glossary": {
       "title": "Glossary",
       "type": "Type",
@@ -961,6 +1029,7 @@
       "close": "Fermer"
     },
     "deleteDialog": {
+      "button": "Delete source",
       "delete": "Delete this emission source",
       "title": "Are you sur you want to delete this emission source?",
       "description": "<warning>All data entered will be permanently lost,</warning> and any contributors will no longer have access to this emission source.",
@@ -970,7 +1039,7 @@
     "saving": "Saving ...",
     "status": {
       "valid": "Validated",
-      "waiting": "Pending",
+      "waiting": "Completing",
       "waitingContributor": "Waiting for a contributor",
       "toVerify": "To verify"
     },
@@ -1039,10 +1108,10 @@
     "loading": "Loading"
   },
   "onboarding": {
-    "title-0": "Welcome to BC+! Before you start, please set up your organization",
-    "titleDescription-0": "We’ve pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization’s name now, or at any time in BC+ via the \"Organization\" section.",
-    "title-1": "Manage your team",
-    "titleDescription-1": "You can already add your team members! You’ll still be able to add new people later via the \"Team\" section within the \"Organization\" menu.",
+    "title-1": "Welcome to BC+! Before you start, please set up your organization",
+    "titleDescription-1": "We’ve pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization’s name now, or at any time in BC+ via the \"Organization\" section.",
+    "title-2": "Manage your team",
+    "titleDescription-2": "You can already add your team members! You’ll still be able to add new people later via the \"Team\" section within the \"Organization\" menu.",
     "previous": "Previous",
     "next": "Next",
     "validate": "Validate",
@@ -1071,5 +1140,29 @@
         "requiredRole": "Role is required"
       }
     }
+  },
+  "checklist": {
+    "title": "Getting started on BC+",
+    "done": "Done",
+    "CreateAccount": "Create your account",
+    "CreateAccountDetails": "",
+    "AddCollaborator": "Add collaborators",
+    "AddCollaboratorDetails": "Add your colleagues so that they can help you draw up your organization's Bilan Carbone®.",
+    "AddClient": "Create your first client",
+    "AddClientDetails": "Add your first client to start your Bilans Carbone®.",
+    "AddSiteCR": "Add sites",
+    "AddSiteCRDetails": "Add sites to your <orga>organisation</orga> or to <client>one of your clients</client> so that you can set up emissions for each site. If your organisation or customer has only one site, create an 'All sites' site.",
+    "AddSiteOrga": "Add sites",
+    "AddSiteOrgaDetails": "Add sites to your <orga>organisation</orga> so that you can set up emissions for each site. If your organisation has only one site, create an 'All sites' site.",
+    "CreateFirstStudy": "Create your first Bilan Carbone®",
+    "CreateFirstStudyDetails": "Let's get started with your first Bilan Carbone®! Fill in the initial details, such as the date, name...",
+    "CreateFirstEmissionSource": "Create your first emissions source",
+    "CreateFirstEmissionSourceDetails": "Go to the first item/sub-item you wish to enter! Choose your emission factor, enter your activity data and make your first calculations.",
+    "ConsultResults": "Consult your first results",
+    "ConsultResultsDetails": "Now go to the \"Results\" page to view and export your emissions...",
+    "optional": "Optional",
+    "markAsDone": "Mark as done",
+    "go": "Go",
+    "finished": "You're ready to start using BC+! Feel free to consult the <faq>FAQ</faq> or contact us if you need anything."
   }
 }

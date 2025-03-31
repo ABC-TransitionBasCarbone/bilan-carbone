@@ -60,6 +60,7 @@ export type ImportEmissionFactor = {
   Valeur_gaz_supplémentaire_1: number
   Code_gaz_supplémentaire_2: string
   Valeur_gaz_supplémentaire_2: number
+  reseau?: 'froid' | 'chaud'
 }
 
 export const requiredColumns = [
@@ -380,6 +381,27 @@ export const cleanImport = async (transaction: Prisma.TransactionClient, version
         otherGES: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.otherGES || 0), 0),
         totalCo2: emissionFactor.emissionFactorParts.reduce((sum, part) => sum + (part.totalCo2 || 0), 0),
       },
+    })
+  }
+}
+
+const getSourceLatestImportVersionId = async (source: Import, transaction: Prisma.TransactionClient) =>
+  transaction.emissionFactorImportVersion.findFirst({
+    select: { id: true, source: true },
+    where: { source },
+    orderBy: { createdAt: 'desc' },
+  })
+
+export const addSourceToStudies = async (source: Import, transaction: Prisma.TransactionClient) => {
+  const [studies, importVersion] = await Promise.all([
+    transaction.study.findMany({ select: { id: true } }),
+    getSourceLatestImportVersionId(source, transaction), // TODO : import from @/db/study
+  ])
+
+  if (studies.length && !!importVersion) {
+    await transaction.studyEmissionFactorVersion.createMany({
+      data: studies.map((study) => ({ studyId: study.id, source, importVersionId: importVersion.id })),
+      skipDuplicates: true,
     })
   }
 }

@@ -28,7 +28,6 @@ const mockedStudy = {
   exports: { createMany: { data: [] } },
   createdBy: { connect: { id: mockedUserId } },
   organization: { connect: { id: mockedOrganizationId } },
-  version: { connect: { id: 'mocked-version-id' } },
   allowedUsers: { createMany: { data: [{ role: 'Validator', userId: mockedUserId }] } },
   sites: {
     createMany: {

@@ -1,8 +1,10 @@
 'use client'
 import Block from '@/components/base/Block'
+import HelpIcon from '@/components/base/HelpIcon'
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
+import { withInfobulle } from '@/utils/post'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useTranslations } from 'next-intl'
 import { ReactNode, useState } from 'react'
@@ -15,9 +17,10 @@ interface Props {
   setDisplay: (display: boolean) => void
   children: ReactNode
   emissionSources: FullStudy['emissionSources']
+  setGlossary: (post: string) => void
 }
 
-const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources }: Props) => {
+const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources, setGlossary }: Props) => {
   const [downloading, setDownloading] = useState(false)
   const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('study.export')
@@ -25,11 +28,18 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
   const tQuality = useTranslations('quality')
   const tStudyPost = useTranslations('study.post')
   const tUnit = useTranslations('units')
-  const tResults = useTranslations('results')
+  const tResultUnits = useTranslations('study.results.units')
 
   return (
     <Block
-      title={tPost(post)}
+      title={
+        <>
+          {tPost(post)}
+          {withInfobulle(post) && (
+            <HelpIcon className="ml-2" label={tPost('glossary')} onClick={() => setGlossary(post)} />
+          )}
+        </>
+      }
       icon={<PostIcon post={post} />}
       iconPosition="before"
       actions={[
@@ -46,7 +56,7 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
               tPost,
               tQuality,
               tUnit,
-              tResults,
+              tResultUnits,
             )
             setDownloading(false)
           },

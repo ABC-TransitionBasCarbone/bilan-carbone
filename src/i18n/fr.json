@@ -80,7 +80,7 @@
     "other": "Autres gaz",
     "total": "Total",
     "uncertainty": "Incertitude",
-    "ges": "Émissions de GES (tCO₂e)"
+    "ges": "Émissions de GES ({unit})"
   },
   "nav": {
     "backToHome": "Retour a l'accueil",
@@ -95,10 +95,12 @@
     "organization": "Organisation",
     "edit": "Modifier",
     "studyRights": "Cadrage",
-    "team": "Équipe"
+    "team": "Équipe",
+    "actualities": "Actualités"
   },
   "actuality": {
     "title": "Les actualités du BC+",
+    "allActualities": "Voir toutes les actualités",
     "noItems": "Aucune actualité pour le moment",
     "seeLess": "Voir moins",
     "seeMore": "Voir plus"
@@ -172,9 +174,6 @@
     "team": "Mon équipe",
     "information": "Informations générales"
   },
-  "results": {
-    "unit": "tCO₂e"
-  },
   "profile": {
     "title": "Mon profil",
     "legalNotices": "Mentions légales",
@@ -239,7 +238,7 @@
       "results": "Résultats",
       "transitionPlan": "Plan de transition",
       "menu": "Ouvrir le menu de navigation de l'étude",
-      "comming": "à venir"
+      "coming": "à venir"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -256,6 +255,7 @@
       "isPublicTitle": "Visibilité de l'étude",
       "private": "Privée",
       "public": "Publique",
+      "resultsUnit": "Unité des resultats de l'étude",
       "create": "Créer l'étude",
       "glossary": {
         "title": "Glossaire",
@@ -283,7 +283,7 @@
         "default": "Une erreur s'est produite ...",
         "noActiveVersion_BaseEmpreinte": "Aucune version active de Base Empreinte. Veuillez contacter le support."
       },
-      "comming": "à venir"
+      "coming": "à venir"
     },
     "post": {
       "displayInfography": "Voir les différents postes",
@@ -291,7 +291,9 @@
       "emissionSource": "{count, plural, =0 {Pas de source d'emission} =1 {1 source d'émission} other {# sources d'émission}}",
       "contributors": "{count, plural, =1 {1 contributeur} other {# contibuteurs}}",
       "contributorsList": "{count, plural, =1 {Contributeur :} other {Contributeurs :}}",
-      "new": "Ajouter une source d'émission..."
+      "label": "Libellé de la source d'émission",
+      "new": "Donnez un titre à votre nouvelle source d'émission",
+      "add": "Ajouter"
     },
     "organization": {
       "site": "Site",
@@ -415,11 +417,15 @@
     "results": {
       "type": "Type",
       "post": "Poste",
-      "value": "Émissions (tCO₂e)",
+      "value": "Émissions ({unit})",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
-      "comming": "à venir"
+      "coming": "à venir",
+      "units": {
+        "K": "kgCO₂e",
+        "T": "tCO₂e"
+      }
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",
@@ -467,7 +473,7 @@
       "cancel": "Annuler",
       "confirm": "Confirmer",
       "delete": "Supprimer l'étude",
-      "content": "Êtes vous sur de vouloir supprimer cette étude ? <warning>Toutes ses données seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous",
+      "content": "Êtes vous sur de vouloir supprimer cette étude ? <warning>Toutes ses données seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'étude dans le champs ci-dessous :",
       "name": "Nom de l'étude",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "title": "Suppression d'une étude",
@@ -477,6 +483,10 @@
   "emissionFactors": {
     "add": "Ajouter un facteur d'émission",
     "post": {
+      "all": "Tous",
+      "none": "Aucun",
+      "selectAll": "Tout sélectionner",
+      "unselectAll": "Tout désélectionner",
       "total": "Total",
       "allPost": "Tous les postes",
       "allSubPost": "Tous les sous postes",
@@ -533,7 +543,33 @@
       "ConsommationDEnergieEnFinDeVie": "Consommation d'énergie en fin de vie",
       "TraitementDesDechetsEnFinDeVie": "Traitement des déchets en fin de vie",
       "FuitesOuEmissionsNonEnergetiques": "Fuites ou émissions non énergétiques en fin de vie",
-      "TraitementDesEmballagesEnFinDeVie": "Traitement des emballages en fin de vie"
+      "TraitementDesEmballagesEnFinDeVie": "Traitement des emballages en fin de vie",
+      "glossary": "Glossaire",
+      "close": "Fermer",
+      "glossaryDescription": {
+        "DechetsDirects": "Ce poste recouvre l'ensemble des émissions liées à la gestion des déchets produits (collecte et traitement) au sein de l'organisation. Il est divisé en différents sous-postes qui recouvrent chacun une catégorie de déchets.",
+        "IntrantsBiensEtMatieres": "Ce poste recouvre les émissions liées aux différents flux de biens et de matières qui entrent dans l'organisation. Il est divisé en différents sous-postes qui recouvrent chacun une catégorie de matériaux.",
+        "Immobilisations": "L'ensemble des émissions liées à l'achat ou la location longue durée de biens durables (faisant l'objet d'un amortissement comptable par l'organisation).",
+        "FinDeVie": "Ce poste recouvre l'ensemble des émissions liées à la future fin de vie des produits qui ont été vendus au sein du périmètre temporel.",
+        "DeplacementsDomicileTravail": "Déplacements domicile-travail des collaborateur.ices présent.es au sein de l'organisation, y compris intérimaires, sous-traitants et contractuels.",
+        "DeplacementsProfessionnels": "Déplacements professionnels des collaborateur.ices dans le cadre de leur activité professionnelle, que l'organisation soit propriétaire ou non du moyen de transport, et que le déplacement ait lieu ou non pendant les heures ouvrées.",
+        "DeplacementsVisiteurs": "Clients, usagers, bénéficiaires...",
+        "CombustiblesFossiles": "Pour le chauffage, les procéés industriels, la production d'électricité ou de vapeur.",
+        "CombustiblesOrganiques": "Pour le chauffage, les procéés industriels, la production d'électricité ou de vapeur.",
+        "ReseauxDeChaleurEtDeVapeur": "Pour le chauffage et les procédés industriels.",
+        "ReseauxDeFroid": "Pour le chauffage et les procédés industriels.",
+        "Electricite": "Pour le chauffage, les usages de routine, les procédés industriels et la production d'électricité en propre.",
+        "Agriculture": "Fermentation entérique des ruminants, déjections d'élevage, usage des engrais azotés, ...",
+        "EmissionsLieesAuChangementDAffectationDesSolsCas": "Imperméabilisation des sols, ...",
+        "EmissionsLieesALaProductionDeFroid": "Fuites de fluides réfrigérants.",
+        "EmissionsLieesAuxProcedesIndustriels": "Production de ciment, émissions de process dans l'industrie des semiconducteurs, ...",
+        "FretInterne": "Dans le cas où les points de départ et d'arrivée deraient partie du périmètre organisationnel.",
+        "ServicesEnApprocheMonetaire": "Différents services reçus, comptabilisés via des facteurs d'émission en ratios monétaires.",
+        "MatiereDestineeAuxEmballages": "Afin de pouvoir faire porter des actions du plan de transition sur les emballages, un sous-poste est dédié à la matière destinée à ces emballages est disponible.",
+        "BiensEtMatieresEnApprocheMonetaire": "Un sous-poste est également dédié aux matières pour lesquelles des facteurs d'émission en ratios monétaires sont utilisés.",
+        "UtilisationEnResponsabilite": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation est directement responsable ([en italisque] pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en responsabilité correspond à l'énergie utilisée pour refroidir et réchauffer le plateau-repas).",
+        "UtilisationEnDependance": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation n'est pas directement reponsable mais que sont activité contribue à émettre ([en italique] Pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en dépendance correspond aux émissions du vol complet)."
+      }
     },
     "create": {
       "title": "Ajouter un facteur d'émission",
@@ -622,6 +658,8 @@
       "showing": "Affichage de {number} lignes sur {total}",
       "source": "Source",
       "sources": "Sources",
+      "units": "Unités",
+      "subPosts": "Sous postes",
       "status": "Statut",
       "value": "Valeur",
       "yes": "Oui",
@@ -743,6 +781,9 @@
     }
   },
   "units": {
+    "selectAll": "Tout sélectionner",
+    "unSelectAll": "Tout désélectionner",
+    "": "Aucune unité",
     "A4_SHEET_100": "100 feuilles A4",
     "KM_100": "100km",
     "ACTIVE": "actif",
@@ -757,6 +798,11 @@
     "HA_CLEMENTINE": "ha de clémentine",
     "HOUR": "heure",
     "KEURO": "keuro",
+    "KEURO_2019_HT": "keuro (2019) HT",
+    "KEURO_2020_HT": "keuro (2020) HT",
+    "KEURO_2021_HT": "keuro (2021) HT",
+    "KEURO_2022_HT": "keuro (2022) HT",
+    "KEURO_2023_HT": "keuro (2023) HT",
     "KG": "kg",
     "KG_BIOGNC": "kg BioGNC",
     "KG_NITROGEN_SPREAD": "kg d'azote épandu",
@@ -946,12 +992,34 @@
       "myClient": "Mon client",
       "update": "Modifier mes informations",
       "updateClient": "Modifier mon client"
+    },
+    "delete": {
+      "button": "Supprimer l'organisation",
+      "title": "Êtes-vous sûr de vouloir supprimer ce client ?",
+      "content": "Êtes vous sur de vouloir supprimer ce client ? <warning>Toutes ses données et études seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'organisation dans le champs ci-dessous:",
+      "name": "Nom du client",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+      "wrongName": "Le nom du client ne correspond pas",
+      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le <support>support</support>."
     }
   },
   "emissionSource": {
+    "emissionSource": "Donnée d'activité :",
+    "emissionFactor": "Facteur d'émission :",
     "advancedSearch": "Recherche avancée",
     "noResults": "Rechercher avec plus de filtres",
     "seeMore": "...Voir plus et rechercher avec plus de filtres",
+    "delete": "Supprimer la source",
+    "label": "Libellé de la source d'émission",
+    "addPlaceholder": "Donnez un titre à votre nouvelle source d'émission",
+    "createEmissionFactor": "Créer un facteur d'émissions",
+    "saved": "Enregistré",
+    "validate": "Valider les données",
+    "unvalidate": "Éditer les données",
+    "mandartoryFields": "Informations obligatoires",
+    "optionalFields": "Informations optionnelles",
     "glossary": {
       "title": "Glossaire",
       "type": "Type",
@@ -961,6 +1029,7 @@
       "close": "Fermer"
     },
     "deleteDialog": {
+      "button": "Supprimer la source",
       "delete": "Supprimer cette source d'émission",
       "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
       "description": "<warning>Toutes les données renseignées seront définitivement perdues</warning>, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
@@ -970,7 +1039,7 @@
     "saving": "Sauvegarde en cours...",
     "status": {
       "valid": "Validée",
-      "waiting": "En attente",
+      "waiting": "En complétion",
       "waitingContributor": "En attente d'un contributeur",
       "toVerify": "À vérifier"
     },
@@ -1039,10 +1108,10 @@
     "loading": "Chargement"
   },
   "onboarding": {
-    "title-0": "Bienvenue sur le BC+ ! Avant de commencer, veuillez configurer votre organisation",
-    "titleDescription-0": "Nous avons pré-rempli certaines informations concernant votre organisation (association, entreprise, ...) suite à votre adhésion à l'ABC. Vous pouvez modifier le nom de votre organisation maintenant, ou à tout moment dans le BC+ via la rubrique \"Organisation\".",
-    "title-1": "Gestion de votre équipe",
-    "titleDescription-1": "Vous pouvez d'ores et déjà ajouter vos collaborateurs au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Mon équipe\" située dans le menu \"Mon organisation\".",
+    "title-1": "Bienvenue sur le BC+ ! Avant de commencer, veuillez configurer votre organisation",
+    "titleDescription-1": "Nous avons pré-rempli certaines informations concernant votre organisation (association, entreprise, ...) suite à votre adhésion à l'ABC. Vous pouvez modifier le nom de votre organisation maintenant, ou à tout moment dans le BC+ via la rubrique \"Organisation\".",
+    "title-2": "Gestion de votre équipe",
+    "titleDescription-2": "Vous pouvez d'ores et déjà ajouter vos collaborateurs au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Mon équipe\" située dans le menu \"Mon organisation\".",
     "previous": "Précédent",
     "next": "Suivant",
     "validate": "Valider",
@@ -1071,5 +1140,29 @@
         "requiredRole": "Rôle obligatoire"
       }
     }
+  },
+  "checklist": {
+    "title": "Bien démarrer sur le BC+",
+    "done": "Fait",
+    "CreateAccount": "Créer votre compte",
+    "CreateAccountDetails": "",
+    "AddCollaborator": "Ajouter des collaborateurs",
+    "AddCollaboratorDetails": "Ajouter vos collègues pour qu'ils puissent vous aider à établir le Bilan Carbone® de votre entreprise.",
+    "AddClient": "Créer votre premier client",
+    "AddClientDetails": "Ajouter votre premier client afin de commencer vos Bilans Carbone®",
+    "AddSiteCR": "Ajouter les sites",
+    "AddSiteCRDetails": "Ajouter des sites à votre <orga>organisation</orga> ou à <client>un de vos clients</client> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation ou client n'a qu'un site, créer un site 'Tous sites'",
+    "AddSiteOrga": "Ajouter les sites",
+    "AddSiteOrgaDetails": "Ajouter des sites à votre <orga>organisation</orga> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation n'a qu'un site, créer un site 'Tous sites'",
+    "CreateFirstStudy": "Créer votre premier Bilan Carbone®",
+    "CreateFirstStudyDetails": "C'est parti pour votre premier Bilan Carbone® ! Remplissez les premières informations comme la date, le nom...",
+    "CreateFirstEmissionSource": "Créer votre première source d'émissions",
+    "CreateFirstEmissionSourceDetails": "Rendez-vous dans le premier poste/sous poste que vous souhaitez renseigner ! Choisissez votre facteur d'emission, rentrez votre donnée d'activité et faites vos premiers calculs",
+    "ConsultResults": "Allez voir vos premiers résultats",
+    "ConsultResultsDetails": "Rendez-vous maintenant dans la page \"Résultats\" pour voir vos émissions, les exporter...",
+    "optional": "Optionnel",
+    "markAsDone": "Marquer comme fait",
+    "go": "Aller",
+    "finished": "Vous êtes prêt à commencer votre utilisation du BC+ ! N'hésitez pas à consulter la <faq>FAQ</faq> ou à nous contacter en cas de besoin."
   }
 }

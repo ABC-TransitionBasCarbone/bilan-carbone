@@ -6,6 +6,7 @@ import { BegesLine, computeBegesResult, rulesSpans } from '@/services/results/be
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ExportRule } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
@@ -22,6 +23,7 @@ interface Props {
 const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, withDependencies }: Props) => {
   const t = useTranslations('beges')
   const tQuality = useTranslations('quality')
+  const tUnits = useTranslations('study.results.units')
   const [validatedOnly, setValidatedOnly] = useState(true)
 
   useEffect(() => {
@@ -61,22 +63,38 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
           ],
         },
         {
-          header: t('ges'),
+          header: t('ges', { unit: tUnits(study.resultsUnit) }),
           columns: [
-            { header: 'CO2', accessorKey: 'co2', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
-            { header: 'CH4', accessorKey: 'ch4', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
-            { header: 'N20', accessorKey: 'n2o', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            {
+              header: 'CO2',
+              accessorKey: 'co2',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
+            },
+            {
+              header: 'CH4',
+              accessorKey: 'ch4',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
+            },
+            {
+              header: 'N20',
+              accessorKey: 'n2o',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
+            },
             {
               header: t('other'),
               accessorKey: 'other',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / 1000),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
             },
             {
               header: t('total'),
               accessorKey: 'total',
-              cell: ({ getValue }) => formatNumber(getValue<number>() / 1000),
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
             },
-            { header: 'CO2b', accessorKey: 'co2b', cell: ({ getValue }) => formatNumber(getValue<number>() / 1000) },
+            {
+              header: 'CO2b',
+              accessorKey: 'co2b',
+              cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
+            },
             {
               header: t('uncertainty'),
               accessorFn: ({ uncertainty }) =>

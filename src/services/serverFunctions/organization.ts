@@ -2,21 +2,26 @@
 
 import {
   createOrganization,
+  deleteClient,
+  getOrganizationById,
   getOrganizationNameById,
-  getRawOrganizationById,
   onboardOrganization,
   setOnboarded,
   updateOrganization,
 } from '@/db/organization'
-import { getUserApplicationSettings, getUserByEmail } from '@/db/user'
+import { getRawOrganizationById } from '@/db/organizationImport'
+import { getUserApplicationSettings } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { Prisma } from '@prisma/client'
+import { Prisma, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canCreateOrganization, canUpdateOrganization } from '../permissions/organization'
+import { canCreateOrganization, canDeleteOrganization, canUpdateOrganization } from '../permissions/organization'
 import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
 import { getStudy } from './study'
+import { DeleteCommand } from './study.command'
+import { addUserChecklistItem } from './user'
 import { OnboardingCommand } from './user.command'
 
 /**
@@ -55,6 +60,7 @@ export const createOrganizationCommand = async (
 
   try {
     const createdOrganization = await createOrganization(organization)
+    addUserChecklistItem(UserChecklist.AddClient)
     return { success: true, id: createdOrganization.id }
   } catch (e) {
     console.error(e)
@@ -68,7 +74,7 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     return NOT_AUTHORIZED
   }
 
-  if (!(await canUpdateOrganization(session.user, command))) {
+  if (!(await canUpdateOrganization(session.user, command.organizationId))) {
     return NOT_AUTHORIZED
   }
 
@@ -76,6 +82,24 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
   const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
   await updateOrganization(command, caUnit)
+  const organization = await getOrganizationById(command.organizationId)
+  addUserChecklistItem(organization?.isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
+}
+
+export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) => {
+  if (!(await canDeleteOrganization(id))) {
+    return NOT_AUTHORIZED
+  }
+  const organization = await getOrganizationNameById(id)
+  if (!organization) {
+    return NOT_AUTHORIZED
+  }
+
+  if (organization.name.toLowerCase() !== name.toLowerCase()) {
+    return 'wrongName'
+  }
+
+  return deleteClient(id)
 }
 
 export const setOnboardedOrganization = async (organizationId: string) => {

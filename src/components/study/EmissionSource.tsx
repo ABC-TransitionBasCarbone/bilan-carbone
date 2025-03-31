@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { getEmissionResults, getEmissionSourceCompletion } from '@/services/emissionSource'
+import { getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { updateEmissionSource } from '@/services/serverFunctions/emissionSource'
@@ -13,14 +13,17 @@ import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study
 import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
+import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
-import { Alert, CircularProgress, FormControlLabel, Switch } from '@mui/material'
-import { EmissionSourceCaracterisation, Level, StudyRole } from '@prisma/client'
+import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
+import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
+import Label from '../base/Label'
 import styles from './EmissionSource.module.css'
 import EmissionSourceContributorForm from './EmissionSourceContributorForm'
 import EmissionSourceForm from './EmissionSourceForm'
@@ -53,10 +56,12 @@ const EmissionSource = ({
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const ref = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(false)
+  const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
   const tError = useTranslations('error')
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
+  const tResultstUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
   const router = useRouter()
   const [display, setDisplay] = useState(false)
@@ -83,6 +88,9 @@ const EmissionSource = ({
             const result = await updateEmissionSource(isValid.data)
             if (result) {
               setError(result)
+            } else {
+              setSaved(true)
+              setTimeout(() => setSaved(false), 3000)
             }
             setLoading(false)
             router.refresh()
@@ -125,89 +133,101 @@ const EmissionSource = ({
   const status = useMemo(() => getEmissionSourceStatus(study, emissionSource), [study, emissionSource])
   const sourceRating = useMemo(() => getQualityRating(emissionSource), [emissionSource])
   const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
-  const selectedFactorQualityRating = useMemo(
-    () => (selectedFactor ? getQualityRating(selectedFactor) : null),
-    [selectedFactor],
-  )
 
   return (
     <div className={styles.container}>
       <button
         data-testid={`emission-source-${emissionSource.name}`}
-        className={classNames(styles.line, 'justify-between', 'align-center')}
+        className={classNames(styles.line, 'flex-col')}
         aria-expanded={display}
         aria-controls={detailId}
         onClick={() => setDisplay(!display)}
       >
-        <div className={classNames(styles.infosLeft, 'flex-col')}>
-          <p>{emissionSource.name}</p>
-          {emissionSource.contributor && (
-            <p data-testid="emission-source-contributor" className={styles.status}>
-              {emissionSource.contributor.email}
-            </p>
-          )}
-          <p data-testid="emission-source-status" className={classNames(styles.status, 'align-center')}>
-            {t(`status.${status}`)}
-            {(status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor) && (
+        <div className={classNames(styles.header, styles.gapped, 'grow justify-between')}>
+          <div className="align-center grow">
+            {emissionSource.validated || withoutDetail ? (
+              <p data-testid="validated-emission-source-name">{emissionSource.name}</p>
+            ) : (
               <>
-                {' '}
-                -{' '}
-                {formatNumber(getEmissionSourceCompletion(emissionSource, study, emissionSource.emissionFactor) * 100)}%
-              </>
-            )}
-            {loading && (
-              <>
-                {' '}
-                - {t('saving')} <CircularProgress size="1rem" />
-              </>
-            )}
-          </p>
-        </div>
-        <div className={classNames(styles.infosRight, 'flex')}>
-          <div className="flex-col">
-            {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
-              <>
-                <p>
-                  {formatNumber(emissionSource.value, 5)} {selectedFactor && tUnits(selectedFactor.unit)}
-                </p>
-                {sourceRating && (
-                  <p className={styles.status}>
-                    {tQuality('name')} {tQuality(sourceRating.toString())}
-                  </p>
-                )}
+                {!emissionSource.name && <FormLabel component="legend">{t('label')}</FormLabel>}
+                <TextField
+                  className="grow"
+                  disabled={!canEdit}
+                  defaultValue={emissionSource.name}
+                  data-testid="emission-source-name"
+                  onBlur={(event) => update('name', event.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  placeholder={t('addPlaceholder')}
+                />
               </>
             )}
           </div>
-          <div className="flex-col">
-            {selectedFactor && (
-              <>
-                <p>
-                  {selectedFactor.metaData?.title}
-                  {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
-                  {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-                  {getEmissionFactorValue(selectedFactor) / 1000} tCO₂e/
-                  {tUnits(selectedFactor.unit)}
-                </p>
-                {selectedFactorQualityRating && (
-                  <p className={styles.status}>
-                    {tQuality('name')} {tQuality(selectedFactorQualityRating.toString())}
+          <div className={classNames(styles.gapped, 'grow align-center')}>
+            {/* activity data */}
+            <div className="flex-col justify-center text-center">
+              {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
+                <>
+                  <p>{t('emissionSource')}</p>
+                  <p>
+                    {formatNumber(emissionSource.value)} {selectedFactor && tUnits(selectedFactor.unit)}
                   </p>
-                )}
-              </>
-            )}
-          </div>
-          {emissionResults && (
-            <div className="flex-col">
-              <p data-testid="emission-source-value">{`${formatNumber(emissionResults.emission / 1000)} tCO₂e`}</p>
-              {emissionResults.standardDeviation && (
-                <p className={styles.status} data-testid="emission-source-quality">
-                  {tQuality('name')}{' '}
-                  {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
-                </p>
+                </>
               )}
             </div>
-          )}
+            {/* emission factor */}
+            {selectedFactor && (
+              <div className="flex-col justify-center text-center">
+                <p>{t('emissionFactor')}</p>
+                <p>
+                  {formatNumber(getEmissionFactorValue(selectedFactor), 5)}
+                  {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit)}
+                </p>
+              </div>
+            )}
+            {/* result */}
+            {emissionResults && (
+              <div className="flex-col justify-center text-center">
+                <p
+                  className={styles.result}
+                  data-testid="emission-source-value"
+                >{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}</p>
+                {emissionResults.standardDeviation && (
+                  <p className={styles.status} data-testid="emission-source-quality">
+                    {tQuality('name')}{' '}
+                    {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+          <div data-testid="emission-source-status" className={classNames(styles.status, 'flex-cc')}>
+            {loading && (
+              <>
+                {t('saving')} <CircularProgress size="1rem" />
+              </>
+            )}
+            {saved && (
+              <span className={classNames(styles.saved, 'align-center')}>
+                <SavedIcon />
+                {t('saved')}
+              </span>
+            )}
+            <Label
+              className={classNames(
+                styles.statusLabel,
+                status === EmissionSourcesStatus.Valid ? styles.validated : styles.working,
+                'text-center ml1',
+              )}
+            >
+              {t(`status.${status}`)}
+            </Label>
+          </div>
         </div>
+        {emissionSource.contributor && (
+          <p data-testid="emission-source-contributor" className={styles.status}>
+            {emissionSource.contributor.email}
+          </p>
+        )}
         <div className={styles.editIcon}>
           <EditIcon />
         </div>
@@ -220,27 +240,6 @@ const EmissionSource = ({
                 {tError(error)}
               </Alert>
             )}
-            <div className="justify-between align-center">
-              <p>{t('informations')}</p>
-              <div>
-                {!withoutDetail &&
-                  canValidate &&
-                  status !== EmissionSourcesStatus.Waiting &&
-                  status !== EmissionSourcesStatus.WaitingContributor && (
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          data-testid="emission-source-validated"
-                          checked={emissionSource.validated || false}
-                          onChange={(event) => update('validated', event.target.checked)}
-                        />
-                      }
-                      label={t('form.validate')}
-                      labelPlacement="start"
-                    />
-                  )}
-              </div>
-            </div>
             {withoutDetail ? (
               <EmissionSourceContributorForm
                 emissionSource={emissionSource}
@@ -252,12 +251,14 @@ const EmissionSource = ({
               <EmissionSourceForm
                 advanced={study.level === Level.Advanced}
                 canEdit={canEdit}
+                canValidate={canValidate}
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
                 emissionFactors={emissionFactors}
                 update={update}
                 caracterisations={caracterisations}
                 mandatoryCaracterisation={study.exports.length > 0}
+                status={status}
               />
             )}
             {emissionResults && (
@@ -266,7 +267,10 @@ const EmissionSource = ({
                 <div className={classNames(styles.row, 'flex')}>
                   <div>
                     <p>{t('results.emission')}</p>
-                    <p>{formatNumber(emissionResults.emission / 1000)} tCO₂e</p>
+                    <p>
+                      {formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])}{' '}
+                      {tResultstUnits(study.resultsUnit)}
+                    </p>
                   </div>
                   {sourceRating && (
                     <div>
@@ -278,15 +282,15 @@ const EmissionSource = ({
                     <div>
                       <p>{t('results.confiance')}</p>
                       <p>
-                        [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
-                        {formatNumber(emissionResults.confidenceInterval[1])}]
+                        [{formatNumber(emissionResults.confidenceInterval[0], 2)};{' '}
+                        {formatNumber(emissionResults.confidenceInterval[1], 2)}]
                       </p>
                     </div>
                   )}
                   {emissionResults.alpha !== null && (
                     <div>
                       <p>{t('results.alpha')}</p>
-                      <p>{formatNumber(emissionResults.alpha)}</p>
+                      <p>{formatNumber(emissionResults.alpha, 2)}</p>
                     </div>
                   )}
                 </div>

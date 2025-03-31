@@ -26,7 +26,7 @@ const ExportCheckbox = ({ id, values, setValues, disabled }: Props) => {
         label={
           <span>
             {tExport(id)}
-            {id !== Export.Beges && <em> ({t('comming')})</em>}
+            {id !== Export.Beges && <em> ({t('coming')})</em>}
           </span>
         }
         value={!!values[id]}
@@ -43,7 +43,7 @@ const ExportCheckbox = ({ id, values, setValues, disabled }: Props) => {
               {Object.keys(ControlMode).map((key) => (
                 <MenuItem key={key} value={key} disabled={key !== ControlMode.Operational}>
                   {t(key)}
-                  {key !== ControlMode.Operational && <em> ({t('comming')})</em>}
+                  {key !== ControlMode.Operational && <em> ({t('coming')})</em>}
                 </MenuItem>
               ))}
             </Select>

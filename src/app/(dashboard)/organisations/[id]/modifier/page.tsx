@@ -2,7 +2,7 @@ import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import EditOrganizationPage from '@/components/pages/EditOrganization'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationWithSitesById } from '@/db/organization'
-import { canEditOrganization } from '@/utils/onganization'
+import { canEditOrganization } from '@/utils/organization'
 import { UUID } from 'crypto'
 
 interface Props {

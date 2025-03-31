@@ -1,94 +1,60 @@
 import xlsx from 'node-xlsx'
 import { prismaClient } from '../../../db/client'
-import { uploadEmissionFactors } from './emissionFactors'
-import { uploadOrganizations } from './organizations'
+import { RequiredEmissionFactorsColumns, uploadEmissionFactors } from './emissionFactors'
+import { RequiredOrganizationsColumns, uploadOrganizations } from './organizations'
+import {
+  RequiredStudiesColumns,
+  RequiredStudyExportsColumns,
+  RequiredStudySitesColumns,
+  uploadStudies,
+} from './studies'
 
-const requiredOrganizationsColumns = [
-  'ID_ENTITE',
-  'NOM_ORGANISATION',
-  'NOM_ENTITE',
-  'ENTITE_PRINCIPALE',
-  'SIRET',
-  'ID_ENTITE_MERE',
-  'IS_USER_ORGA',
-]
-
-const requiredEmissionFactorsColumns = [
-  'EFV_GUID',
-  'ID_Source_Ref',
-  'GUID',
-  'EF_VAL_LIB',
-  'EF_VAL_CARAC',
-  'EF_VAL_COMPLEMENT',
-  'Commentaires',
-  'DateValidité',
-  'Incertitude',
-  'Unité_Nom',
-  'EF_Statut',
-  'EF_TYPE',
-  'Total_CO2e',
-  'CO2f',
-  'CH4f',
-  'CH4b',
-  'N2O',
-  'HFC',
-  'PFC',
-  'SF6',
-  'CO2b',
-  'Autre_gaz',
-  'Qualité_TeR',
-  'Qualité_GR',
-  'Qualité_TiR',
-  'Qualité_C',
-  'Source_Nom',
-  'NOM_CONTINENT',
-  'NOM_PAYS',
-  'NOM_REGION',
-  'NOM_DEPARTEMENT',
-  'FE_BCPlus',
-]
-
-const getColumnsIndex = async (organizationHeaders: string[], emissionFactorHeaders: string[]) => {
-  if (requiredOrganizationsColumns.length > organizationHeaders.length) {
-    return {
-      success: false,
-      error: `Les colonnes suivantes sont obligatoires : ${requiredOrganizationsColumns.join(', ')}`,
-    }
-  }
+const getIndexes = (
+  headers: string[],
+  requiredColumns: Record<string, string>,
+  sheetName: string,
+): Record<string, number> => {
   const missingHeaders: string[] = []
-  const indexes = { organizations: {} as Record<string, number>, emissionFactors: {} as Record<string, number> }
-  requiredOrganizationsColumns.forEach((header) => {
-    const index = organizationHeaders.indexOf(header)
+  const indexes = {} as Record<string, number>
+  Object.values(requiredColumns).forEach((requiredHeader) => {
+    const index = headers.indexOf(requiredHeader)
     if (index === -1) {
-      missingHeaders.push(header)
+      missingHeaders.push(requiredHeader)
     } else {
-      indexes.organizations[header] = index
+      indexes[requiredHeader] = index
     }
   })
 
   if (missingHeaders.length > 0) {
-    return {
-      success: false,
-      error: `Colonnes manquantes dans la feuille 'Organisations' : ${missingHeaders.join(', ')}`,
-    }
+    throw new Error(`Colonnes manquantes dans la feuille '${sheetName}' : ${missingHeaders.join(', ')}`)
   }
 
-  requiredEmissionFactorsColumns.forEach((header) => {
-    const index = emissionFactorHeaders.indexOf(header)
-    if (index === -1) {
-      missingHeaders.push(header)
-    } else {
-      indexes.emissionFactors[header] = index
-    }
-  })
+  return indexes
+}
 
-  if (missingHeaders.length > 0) {
-    return {
-      success: false,
-      error: `Colonnes manquantes dans la feuille 'Facteurs d'émissions' : ${missingHeaders.join(', ')}`,
-    }
+const getOrganisationIndexes = (organizationHeaders: string[]): Record<string, number> => {
+  if (Object.values(RequiredOrganizationsColumns).length > organizationHeaders.length) {
+    throw new Error(
+      `Les colonnes suivantes sont obligatoires : ${Object.values(RequiredOrganizationsColumns).join(', ')}`,
+    )
   }
-  return { success: true, indexes }
+  return getIndexes(organizationHeaders, RequiredOrganizationsColumns, 'Organisations')
+}
+
+const getEmissionFactorsIndexes = (emissionFactorHeaders: string[]): Record<string, number> => {
+  return getIndexes(emissionFactorHeaders, RequiredEmissionFactorsColumns, "Facteurs d'émissions")
+}
+
+const getStudiesIndexes = (studiesHeaders: string[]): Record<string, number> => {
+  return getIndexes(studiesHeaders, RequiredStudiesColumns, 'Etudes')
+}
+
+const getStudySitesIndexes = (studiesHeaders: string[]): Record<string, number> => {
+  return getIndexes(studiesHeaders, RequiredStudySitesColumns, 'Etudes - sites')
+}
+
+const getStudyExportIndexes = (studiesHeaders: string[]): Record<string, number> => {
+  return getIndexes(studiesHeaders, RequiredStudyExportsColumns, 'Etudes - exports')
 }
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
@@ -102,34 +68,49 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
 
   const organizationsSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Organisations')
   const emissionFactorsSheet = workSheetsFromFile.find((sheet) => sheet.name === "Facteurs d'émissions")
+  const studiesSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes')
+  const studySitesSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes - sites')
+  const studyExportsSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes - exports')
 
-  if (!organizationsSheet || !emissionFactorsSheet) {
+  if (!organizationsSheet || !emissionFactorsSheet || !studiesSheet || !studySitesSheet || !studyExportsSheet) {
     console.log(
-      "Veuillez verifier que le fichier contient une feuille 'Organisations' et une feuille 'Facteurs d'émissions'",
+      "Veuillez verifier que le fichier contient une feuille 'Organisations', une feuille 'Facteurs d'émissions', une feuille 'Etudes', une feuille 'Études - sites', et une feuille 'Études - exports'",
     )
     return
   }
 
-  const { success, error, indexes } = await getColumnsIndex(organizationsSheet.data[0], emissionFactorsSheet.data[0])
-  if (!success || !indexes) {
-    console.log(error)
-    return
-  }
+  const organizationsIndexes = getOrganisationIndexes(organizationsSheet.data[0])
+  const emissionFactorsIndexes = getEmissionFactorsIndexes(emissionFactorsSheet.data[0])
+  const studiesIndexes = getStudiesIndexes(studiesSheet.data[0])
+  const studySitesIndexes = getStudySitesIndexes(studySitesSheet.data[0])
+  const studyExportsIndexes = getStudyExportIndexes(studyExportsSheet.data[0])
 
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
+  let hasStudiesWarning = false
   await prismaClient.$transaction(async (transaction) => {
     hasOrganizationsWarning = await uploadOrganizations(
       transaction,
       organizationsSheet.data,
-      indexes.organizations,
+      organizationsIndexes,
       organizationId,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
       emissionFactorsSheet.data,
-      indexes.emissionFactors,
+      emissionFactorsIndexes,
       organizationId,
+    )
+    hasStudiesWarning = await uploadStudies(
+      transaction,
+      user.id,
+      organizationId,
+      studiesIndexes,
+      studiesSheet.data,
+      studySitesIndexes,
+      studySitesSheet.data,
+      studyExportsIndexes,
+      studyExportsSheet.data,
     )
   })
 
@@ -141,6 +122,12 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   if (hasEmissionFactorsWarning) {
     console.log(
       "Attention, certains facteurs d'emissions ont des sommes inconsistentes et ont été ignorées. Veuillez verifier que toutes vos données sont correctes.",
+    )
+  }
+
+  if (hasStudiesWarning) {
+    console.log(
+      'Attention, certaines études ont été ignorées. Veuillez verifier que toutes vos données sont correctes.',
     )
   }
 }

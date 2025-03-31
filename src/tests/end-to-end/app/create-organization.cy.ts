@@ -8,6 +8,7 @@ describe('Create organization', () => {
   it('should create a child organization as a cr user', () => {
     cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
 
+    cy.getByTestId('checklist-button').click()
     cy.getByTestId('new-organization').click()
 
     cy.getByTestId('new-organization-title').should('be.visible')

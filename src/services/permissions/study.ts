@@ -1,8 +1,9 @@
 import { getDocumentById } from '@/db/document'
 import { FullStudy, getStudyById } from '@/db/study'
-import { getUserByEmail, getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/onganization'
-import { getUserRoleOnStudy } from '@/utils/study'
+import { getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
+import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
+import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { User as DbUser, Level, Organization, Prisma, Study, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
 import { auth } from '../auth'
@@ -86,8 +87,8 @@ const canChangeStudyValues = async (user: User, study: FullStudy) => {
     return true
   }
 
-  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
-  if (!userRightsOnStudy || userRightsOnStudy.role === StudyRole.Reader) {
+  const userRightsOnStudy = await getUserRoleOnStudy(user, study)
+  if (!userRightsOnStudy || !hasEditionRights(userRightsOnStudy)) {
     return false
   }
 
@@ -107,8 +108,7 @@ export const canChangeSites = async (user: User, study: FullStudy) => {
 }
 
 export const canChangeLevel = async (user: User, study: FullStudy, level: Level) => {
-  const basicRight = canChangeStudyValues(user, study)
-  if (!basicRight) {
+  if (!(await canChangeStudyValues(user, study))) {
     return false
   }
 
@@ -116,12 +116,11 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
     return false
   }
 
-  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
-  if (!userRightsOnStudy || userRightsOnStudy.role !== StudyRole.Validator) {
-    return false
-  }
-
   return true
+}
+
+export const canChangeResultsUnit = async (user: User, study: FullStudy) => {
+  return canChangeStudyValues(user, study)
 }
 
 export const canChangeName = async (user: User, study: FullStudy) => {
@@ -204,6 +203,7 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
     id: study.id,
     name: study.name,
     sites: study.sites,
+    resultsUnit: study.resultsUnit,
     emissionSources: study.emissionSources
       .filter((emissionSource) => availableSubPosts.includes(emissionSource.subPost))
       .map((emissionSource) => ({

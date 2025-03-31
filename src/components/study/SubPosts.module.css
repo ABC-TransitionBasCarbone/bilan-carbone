@@ -2,7 +2,7 @@
   gap: 1rem;
 }
 
-.count {
+.value {
   font-size: 0.875rem;
   color: var(--neutral-50);
 }

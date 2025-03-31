@@ -25,6 +25,7 @@ interface Props {
   userRole: StudyRole | null
   studySite: string
   emissionSources: FullStudy['emissionSources']
+  setGlossary: (subPost: string) => void
 }
 
 const SubPosts = ({
@@ -34,6 +35,7 @@ const SubPosts = ({
   withoutDetail,
   emissionSources,
   studySite,
+  setGlossary,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
   const subPosts = useMemo(() => subPostsByPost[post], [post])
   const [emissionFactors, setEmissionFactors] = useState<EmissionFactorWithMetaData[]>([])
@@ -58,6 +60,7 @@ const SubPosts = ({
           userRoleOnStudy={userRole}
           studySite={studySite}
           {...(withoutDetail ? { study, withoutDetail: true } : { study, withoutDetail: false })}
+          setGlossary={setGlossary}
         />
       ))}
     </div>

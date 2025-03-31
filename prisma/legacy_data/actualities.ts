@@ -61,7 +61,7 @@ export const ACTUALITIES = [
   },
   {
     title: 'BC+ Version Windows en cours de ravallement',
-    text: "La version Windows du BC+ est en cours de 'ravallement' pour avoir un aspect similaire à la version Web. Pendant les travaux l'application continue de fonctionner, mais certaines fenêtres pourront avoir un aspect modifié.",
+    text: "La version <b>Windows</b> du BC+ est en cours de 'ravallement' pour avoir un aspect similaire à la version Web. Pendant les travaux l'application continue de fonctionner, mais certaines fenêtres pourront avoir un aspect modifié.",
     createdAt: new Date('2023-10-28 12:00:00.000'),
     updatedAt: new Date('2023-10-28 12:00:00.000'),
   },

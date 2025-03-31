@@ -1,5 +1,5 @@
 import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
-import { canEditMemberRole } from '@/utils/onganization'
+import { canEditMemberRole } from '@/utils/organization'
 import { User } from 'next-auth'
 import Actualities from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'

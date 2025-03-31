@@ -6,7 +6,6 @@ import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
 import { Path } from 'react-hook-form'
 import Button from '../base/Button'
 import HelpIcon from '../base/HelpIcon'
@@ -18,27 +17,29 @@ interface Props {
   emissionSource: FullStudy['emissionSources'][0]
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
   setGlossary: (key: string) => void
+  expanded: boolean
+  setExpanded: (value: boolean) => void
+  canShrink: boolean
+  defaultQuality?: number | null
 }
 
-const QualitySelectGroup = ({ advanced, canEdit, emissionSource, update, setGlossary }: Props) => {
+const QualitySelectGroup = ({
+  advanced,
+  canEdit,
+  emissionSource,
+  update,
+  setGlossary,
+  expanded,
+  setExpanded,
+  canShrink,
+  defaultQuality,
+}: Props) => {
   const t = useTranslations('emissionSource')
   const tGlossary = useTranslations('emissionSource.glossary')
 
-  const [expanded, setExpanded] = useState(advanced)
-  const qualities = [
-    emissionSource.reliability,
-    emissionSource.technicalRepresentativeness,
-    emissionSource.geographicRepresentativeness,
-    emissionSource.temporalRepresentativeness,
-    emissionSource.completeness,
-  ]
-
-  const defaultQuality = qualities.find((quality) => quality)
-  const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
-
   return (
-    <div className={classNames(styles.row, 'flex', { [styles.shrinked]: !expanded && canShrink })}>
-      {expanded || !canShrink ? (
+    <div className={classNames('flex grow', expanded ? styles.row : styles.shrinked)}>
+      {expanded ? (
         <>
           <QualitySelect
             disabled={!canEdit}
@@ -83,7 +84,6 @@ const QualitySelectGroup = ({ advanced, canEdit, emissionSource, update, setGlos
         </>
       ) : (
         <QualitySelect
-          formControlClassName={styles.small}
           disabled={!canEdit}
           data-testid="emission-source-quality-select"
           id="completeness"

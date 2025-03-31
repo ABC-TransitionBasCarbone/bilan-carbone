@@ -1,4 +1,4 @@
-import { ControlMode, Export, Level, StudyRole, SubPost } from '@prisma/client'
+import { ControlMode, Export, Level, StudyResultUnit, StudyRole, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { Post } from '../posts'
@@ -103,6 +103,13 @@ export const ChangeStudyLevelCommandValidation = z.object({
 
 export type ChangeStudyLevelCommand = z.infer<typeof ChangeStudyLevelCommandValidation>
 
+export const ChangeStudyResultsUnitCommandValidation = z.object({
+  studyId: z.string(),
+  resultsUnit: z.nativeEnum(StudyResultUnit),
+})
+
+export type ChangeStudyResultsUnitCommand = z.infer<typeof ChangeStudyResultsUnitCommandValidation>
+
 export const ChangeStudyDatesCommandValidation = z
   .object({
     studyId: z.string(),
@@ -167,8 +174,8 @@ export const NewStudyContributorCommandValidation = z.object({
 
 export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>
 
-export const DeleteStudyCommandValidation = z.object({
+export const DeleteCommandValidation = z.object({
   id: z.string(),
   name: z.string(),
 })
-export type DeleteStudyCommand = z.infer<typeof DeleteStudyCommandValidation>
+export type DeleteCommand = z.infer<typeof DeleteCommandValidation>
