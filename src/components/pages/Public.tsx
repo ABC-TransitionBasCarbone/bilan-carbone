@@ -31,61 +31,63 @@ const PublicPage = ({ children }: Props) => {
   return (
     <>
       <div className="w100 h100 flex-cc">
-        <div className={classNames(styles.container, 'flex-row')}>
-          <div className={classNames(styles.info, 'grow p2 text-center')}>
-            <p className="title-h4 mb1">{t('welcome')}</p>
-            <p>{t('explaination')}</p>
-            <Image
-              src="/logos/monogramme_BC_noir.png"
-              alt="logo"
-              width={400}
-              height={400}
-              className={classNames(styles.image, 'w100')}
-            />
-            <p>
-              {t.rich('question', {
-                link: (children) => (
-                  <Link href={faq} style={{ color: 'white' }} target="_blank" rel="noreferrer noopener">
-                    {children}
-                  </Link>
-                ),
-                support: (children) => (
-                  <Link href={`mailto:${contactMail}`} style={{ color: 'white' }}>
-                    {children}
-                  </Link>
-                ),
-              })}
-            </p>
-          </div>
-          <div className={classNames(styles.loginForm, 'grow flex-col')}>
-            <div className={classNames(styles.header, 'justify-between')}>
-              <div className={classNames(styles.locales, 'flex')}>
-                {languages.map((language) => (
-                  <button
-                    key={language.target}
-                    title={language.name}
-                    aria-label={language.name}
-                    className={classNames(styles.flag, 'flex', {
-                      [styles.selected]: language.target === locale,
-                    })}
-                    onClick={() => {
-                      switchLocale(language.target)
-                      setLocale(language.target)
-                    }}
-                  >
-                    <Image alt={language.name} src={`/logos/${language.code}.svg`} width={30} height={20} />
-                  </button>
-                ))}
-              </div>
+        <div className={classNames(styles.container, 'mt1 mb1')}>
+          <div className="flex">
+            <div className={classNames(styles.info, 'grow p2 text-center')}>
+              <p className="title-h4 mb1">{t('welcome')}</p>
+              <p>{t('explaination')}</p>
               <Image
-                className={classNames(styles.welcomeLogo, 'align-end')}
-                src="/logos/logo_BC_2025_noir.png"
+                src="/logos/monogramme_BC_noir.png"
                 alt="logo"
-                width={278}
-                height={136}
+                width={400}
+                height={400}
+                className={classNames(styles.image, 'w100')}
               />
+              <p>
+                {t.rich('question', {
+                  link: (children) => (
+                    <Link href={faq} style={{ color: 'white' }} target="_blank" rel="noreferrer noopener">
+                      {children}
+                    </Link>
+                  ),
+                  support: (children) => (
+                    <Link href={`mailto:${contactMail}`} style={{ color: 'white' }}>
+                      {children}
+                    </Link>
+                  ),
+                })}
+              </p>
             </div>
-            {children}
+            <div className={classNames(styles.loginForm, 'grow flex-col')}>
+              <div className={classNames(styles.header, 'justify-between')}>
+                <div className={classNames(styles.locales, 'flex')}>
+                  {languages.map((language) => (
+                    <button
+                      key={language.target}
+                      title={language.name}
+                      aria-label={language.name}
+                      className={classNames(styles.flag, 'flex', {
+                        [styles.selected]: language.target === locale,
+                      })}
+                      onClick={() => {
+                        switchLocale(language.target)
+                        setLocale(language.target)
+                      }}
+                    >
+                      <Image alt={language.name} src={`/logos/${language.code}.svg`} width={30} height={20} />
+                    </button>
+                  ))}
+                </div>
+                <Image
+                  className={classNames(styles.welcomeLogo, 'align-end')}
+                  src="/logos/logo_BC_2025_noir.png"
+                  alt="logo"
+                  width={278}
+                  height={136}
+                />
+              </div>
+              {children}
+            </div>
           </div>
         </div>
       </div>
