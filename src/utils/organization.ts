@@ -10,11 +10,15 @@ export const isInOrgaOrParent = (
   organization: Pick<Organization, 'id' | 'parentId'>,
 ) => userOrganizationId === organization.id || userOrganizationId === organization.parentId
 
+export const hasEditionRole = (isCR: boolean, userRole: Role) =>
+  isCR ? userRole !== Role.DEFAULT : isAdmin(userRole) || userRole === Role.GESTIONNAIRE
+
 export const canEditOrganization = (user: User, organization?: Pick<Organization, 'id' | 'parentId' | 'isCR'>) => {
   if (organization && !isInOrgaOrParent(user.organizationId, organization)) {
     return false
   }
-  return organization?.isCR ? user.role !== Role.DEFAULT : isAdmin(user.role) || user.role === Role.GESTIONNAIRE
+  const isCR = !!organization?.isCR || organization?.parentId === user.organizationId
+  return hasEditionRole(isCR, user.role)
 }
 
 export const canEditMemberRole = (user: User) => isAdmin(user.role) || user.role === Role.GESTIONNAIRE

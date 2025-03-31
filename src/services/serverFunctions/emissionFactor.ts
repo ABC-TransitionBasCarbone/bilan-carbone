@@ -9,7 +9,7 @@ import {
   getEmissionFactorDetailsById,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
-import { getUserByEmail } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
 import { getLocale } from '@/i18n/locale'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
@@ -28,18 +28,16 @@ export const getEmissionFactors = async (studyId?: string) => {
   }
 
   const locale = await getLocale()
-
-  let emissionFactorOrganization
+  let emissionFactors
   if (studyId) {
     if (!(await canReadStudy(session.user, studyId))) {
       return []
     }
-    emissionFactorOrganization = await getStudyParentOrganization(studyId, session.user.organizationId)
+    const emissionFactorOrganizationId = await getStudyParentOrganization(studyId, session.user.organizationId)
+    emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId)
   } else {
-    emissionFactorOrganization = session.user.organizationId
+    emissionFactors = await getAllEmissionFactors(session.user.organizationId)
   }
-
-  const emissionFactors = await getAllEmissionFactors(emissionFactorOrganization)
 
   return emissionFactors
     .map((emissionFactor) => ({

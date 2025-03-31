@@ -1,6 +1,6 @@
 import { signPassword } from '@/services/auth'
 import { findUserInfo } from '@/services/permissions/user'
-import { Prisma, Role, UserStatus } from '@prisma/client'
+import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 
@@ -21,8 +21,6 @@ export const getUserByEmailWithSensibleInformations = (email: string) =>
     where: { email },
   })
 
-export const getUserByEmail = (email: string) => prismaClient.user.findUnique({ where: { email } })
-
 export const getUserById = (id: string) =>
   prismaClient.user.findUnique({ where: { id }, select: { organizationId: true } })
 
@@ -33,7 +31,7 @@ export type UserWithAllowedStudies = AsyncReturnType<typeof getUserByEmailWithAl
 
 export const updateUserPasswordForEmail = async (email: string, password: string) => {
   const signedPassword = await signPassword(password)
-  return prismaClient.user.update({
+  const user = await prismaClient.user.update({
     where: { email },
     data: {
       resetToken: null,
@@ -42,6 +40,12 @@ export const updateUserPasswordForEmail = async (email: string, password: string
       updatedAt: new Date(),
     },
   })
+  await prismaClient.userCheckedStep.upsert({
+    where: { userId_step: { userId: user.id, step: UserChecklist.CreateAccount } },
+    update: {},
+    create: { userId: user.id, step: UserChecklist.CreateAccount },
+  })
+  return user
 }
 
 export const updateUserResetTokenForEmail = async (email: string, resetToken: string) =>
@@ -122,15 +126,6 @@ export const hasUserToValidateInOrganization = async (organizationId: string | n
 export const organizationActiveUsersCount = async (organizationId: string) =>
   prismaClient.user.count({
     where: { organizationId, status: UserStatus.ACTIVE },
-  })
-
-export const updateUser = (
-  userId: string,
-  data: Partial<Prisma.UserCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
-) =>
-  prismaClient.user.update({
-    where: { id: userId },
-    data,
   })
 
 export const changeStatus = (userId: string, newStatus: UserStatus) =>

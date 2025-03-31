@@ -59,6 +59,7 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
         title={t('delete')}
       >
         <DeleteIcon />
+        {t('button')}
       </Button>
     </>
   )

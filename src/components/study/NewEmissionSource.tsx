@@ -1,11 +1,13 @@
 'use client'
 import { FullStudy } from '@/db/study'
 import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
-import { TextField } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
+import { FormLabel, TextField } from '@mui/material'
 import { EmissionSourceCaracterisation, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { FocusEvent, KeyboardEvent, useCallback, useState } from 'react'
+import Button from '../base/Button'
 import styles from './NewEmissionSource.module.css'
 
 interface Props {
@@ -49,16 +51,27 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySite }: Prop
     [study, subPost, router, studySite],
   )
   return (
-    <TextField
-      data-testid="new-emission-source"
-      disabled={saving}
-      className={styles.input}
-      label={t('new')}
-      onKeyDown={onKeyDown}
-      onBlur={onBlur}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
+    <>
+      <FormLabel component="legend">{t('label')}</FormLabel>
+      <div className="flex">
+        <TextField
+          data-testid="new-emission-source"
+          disabled={saving}
+          className={styles.input}
+          onKeyDown={onKeyDown}
+          onBlur={onBlur}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={t('new')}
+        />
+        <div className="ml1">
+          <Button className="h100" disabled={!value}>
+            <AddIcon />
+            {t('add')}
+          </Button>
+        </div>
+      </div>
+    </>
   )
 }
 

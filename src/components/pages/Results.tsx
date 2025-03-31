@@ -1,6 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { ExportRule } from '@prisma/client'
+import { addUserChecklistItem } from '@/services/serverFunctions/user'
+import { ExportRule, UserChecklist } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -15,6 +16,8 @@ interface Props {
 const ResultsPage = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
+
+  addUserChecklistItem(UserChecklist.ConsultResults)
 
   return (
     <>

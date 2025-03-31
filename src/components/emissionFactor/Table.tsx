@@ -1,5 +1,6 @@
 'use client'
 
+import { Post, subPostsByPost } from '@/services/posts'
 import { canEditEmissionFactor, EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
@@ -26,7 +27,7 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorStatus, Import } from '@prisma/client'
+import { EmissionFactorImportVersion, EmissionFactorStatus, Import, SubPost, Unit } from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -42,6 +43,7 @@ import { useTranslations } from 'next-intl'
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
+import MultiSelectAll from '../base/MultiSelectAll'
 import EmissionFactorDetails from './EmissionFactorDetails'
 import styles from './Table.module.css'
 import EditEmissionFactorModal from './edit/EditEmissionFactorModal'
@@ -84,23 +86,35 @@ const locationFuseOptions = {
   isCaseSensitive: false,
 }
 
-const sources = Object.values(Import).map((source) => source)
-
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
+  importVersions: EmissionFactorImportVersion[]
+  initialSelectedSources: string[]
   userOrganizationId?: string | null
 }
 
-const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrganizationId }: Props) => {
+const initialSelectedUnits: (Unit | string)[] = [...['all', ''], ...Object.values(Unit)]
+const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
+
+const EmissionFactorsTable = ({
+  emissionFactors,
+  selectEmissionFactor,
+  userOrganizationId,
+  importVersions,
+  initialSelectedSources,
+}: Props) => {
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
+  const tPosts = useTranslations('emissionFactors.post')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
   const [filter, setFilter] = useState('')
   const [displayArchived, setDisplayArchived] = useState(false)
   const [locationFilter, setLocationFilter] = useState('')
-  const [filteredSources, setSources] = useState<Import[]>(sources)
+  const [filteredSources, setFilteredSources] = useState(initialSelectedSources)
+  const [filteredUnits, setFilteredUnits] = useState(initialSelectedUnits)
+  const [filteredSubPosts, setFilteredSubPosts] = useState(initialSelectedSubPosts)
   const [displayHideButton, setDisplayHideButton] = useState(false)
   const [displayFilters, setDisplayFilters] = useState(true)
   const filtersRef = useRef<HTMLDivElement>(null)
@@ -157,7 +171,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} kgCO₂e/${tUnits(emissionFactor.unit)}`,
+          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} kgCO₂e/${tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),
@@ -294,11 +308,19 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
     return searchResults
   }, [emissionFactors, filter, locationFilter])
 
-  const data = useMemo(() => {
-    return searchedEmissionFactors
-      .filter((emissionFactor) => filteredSources.includes(emissionFactor.importedFrom))
-      .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived)
-  }, [searchedEmissionFactors, filteredSources, displayArchived])
+  const data = useMemo(
+    () =>
+      searchedEmissionFactors
+        .filter(
+          (emissionFactor) =>
+            (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
+            (!emissionFactor.version && filteredSources.includes(Import.Manual)),
+        )
+        .filter((emissionFactor) => filteredUnits.includes(emissionFactor.unit || ''))
+        .filter((emissionFactor) => emissionFactor.subPosts.some((subPost) => filteredSubPosts.includes(subPost)))
+        .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived),
+    [searchedEmissionFactors, filteredSources, filteredUnits, filteredSubPosts, displayArchived],
+  )
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
 
@@ -331,11 +353,74 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
       target: { value },
     } = event
 
-    setSources(value as Import[])
+    setFilteredSources(value as string[])
   }
 
+  const sortedImportVersions = useMemo(
+    () =>
+      importVersions.sort((a, b) => {
+        if (initialSelectedSources.includes(a.id) === initialSelectedSources.includes(b.id)) {
+          // both are sort selected or not selected : sort by alphabetical order
+          return `${a.source} ${a.name}`.localeCompare(`${b.source} ${b.name}`)
+        } else {
+          // else : sort initially selected first
+          return initialSelectedSources.includes(a.id) ? -1 : 1
+        }
+      }),
+    [importVersions],
+  )
+
   const statusSelectorRenderValue = () =>
-    filteredSources.length === sources.length ? t('all') : filteredSources.map((source) => t(source)).join(', ')
+    filteredSources.length === importVersions.length
+      ? t('all')
+      : filteredSources
+          .map((source) => getEmissionVersionLabel(importVersions.find((importVersion) => importVersion.id === source)))
+          .join(', ')
+
+  const getEmissionVersionLabel = (version?: EmissionFactorImportVersion) =>
+    version ? `${t(version.source)} ${version.name}` : ''
+
+  const allUnitsSelected = useMemo(
+    () => filteredUnits.filter((unit) => unit !== 'all').length === initialSelectedUnits.length - 1,
+    [filteredUnits],
+  )
+
+  const unitsSelectorRenderValue = () =>
+    allUnitsSelected
+      ? t('all')
+      : filteredUnits.length === 0
+        ? t('none')
+        : filteredUnits.map((unit) => tUnits(unit)).join(', ')
+
+  const allSelectedSubPosts = useMemo(
+    () => filteredSubPosts.length === initialSelectedSubPosts.length,
+    [filteredSubPosts],
+  )
+
+  const subPostsSelectorRenderValue = () =>
+    allSelectedSubPosts
+      ? tPosts('all')
+      : filteredSubPosts.length === 0
+        ? tPosts('none')
+        : filteredSubPosts.map((subPosts) => tPosts(subPosts)).join(', ')
+
+  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
+
+  const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : initialSelectedSubPosts)
+
+  const selectPost = (post: Post) => {
+    const newValue = areAllSelected(post)
+      ? filteredSubPosts.filter((filteredSubPost) => !subPostsByPost[post].includes(filteredSubPost))
+      : filteredSubPosts.concat(subPostsByPost[post].filter((a) => !filteredSubPosts.includes(a)))
+    setFilteredSubPosts(newValue)
+  }
+
+  const selectSubPost = (subPost: SubPost) => {
+    const newValue = filteredSubPosts.includes(subPost)
+      ? filteredSubPosts.filter((filteredSubPost) => filteredSubPost !== subPost)
+      : filteredSubPosts.concat([subPost])
+    setFilteredSubPosts(newValue)
+  }
 
   return (
     <>
@@ -368,11 +453,62 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
                 renderValue={statusSelectorRenderValue}
                 multiple
               >
-                {sources.map((source, i) => (
-                  <MenuItem key={`source-item-${i}`} value={source}>
-                    <Checkbox checked={filteredSources.includes(source)} />
-                    <ListItemText primary={t(source)} />
+                {sortedImportVersions.map((importVersion) => (
+                  <MenuItem key={`source-item-${importVersion.id}`} value={importVersion.id}>
+                    <Checkbox checked={filteredSources.includes(importVersion.id)} />
+                    <ListItemText primary={getEmissionVersionLabel(importVersion)} />
                   </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl className={styles.selector}>
+              <InputLabel id="emissions-unit-selector">{t('units')}</InputLabel>
+              <MultiSelectAll
+                id="emissions-unit"
+                renderValue={unitsSelectorRenderValue}
+                value={filteredUnits}
+                allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
+                setValues={setFilteredUnits}
+                t={tUnits}
+                tLabel={t}
+              />
+            </FormControl>
+            <FormControl className={styles.selector}>
+              <InputLabel id="emissions-subposts-selector">{t('subPosts')}</InputLabel>
+              <Select
+                id="emissions-subposts-selector"
+                labelId="emissions-subposts-selector"
+                value={filteredSubPosts}
+                input={<OutlinedInput label={t('subPosts')} />}
+                renderValue={subPostsSelectorRenderValue}
+                multiple
+              >
+                <MenuItem
+                  key="subpost-item-all"
+                  className={allSelectedSubPosts ? 'Mui-selected' : ''} // dirty-hack because selected does not work on this option
+                  onClick={selectAllSubPosts}
+                >
+                  <Checkbox checked={allSelectedSubPosts} />
+                  <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
+                </MenuItem>
+                {Object.values(Post).map((post) => (
+                  <div key={`subpostGroup-${post}`}>
+                    <MenuItem key={`subpost-${post}`} selected={areAllSelected(post)} onClick={() => selectPost(post)}>
+                      <Checkbox checked={areAllSelected(post)} />
+                      <ListItemText primary={tPosts(post)} />
+                    </MenuItem>
+                    {subPostsByPost[post].map((subPost) => (
+                      <MenuItem
+                        key={`subpost-${subPost}`}
+                        className={styles.subPostItem}
+                        selected={filteredSubPosts.includes(subPost)}
+                        onClick={() => selectSubPost(subPost)}
+                      >
+                        <Checkbox checked={filteredSubPosts.includes(subPost)} />
+                        <ListItemText primary={tPosts(subPost)} />
+                      </MenuItem>
+                    ))}
+                  </div>
                 ))}
               </Select>
             </FormControl>
@@ -440,7 +576,7 @@ const EmissionFactorsTable = ({ emissionFactors, selectEmissionFactor, userOrgan
               ]
               if (row.getIsExpanded()) {
                 lines.push(
-                  <tr key={row.id}>
+                  <tr key={`${row.id}-details`}>
                     <td colSpan={columns.length} className={styles.detail}>
                       <EmissionFactorDetails emissionFactor={row.original} />
                     </td>

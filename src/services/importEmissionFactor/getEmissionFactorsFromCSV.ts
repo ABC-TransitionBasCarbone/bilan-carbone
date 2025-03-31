@@ -6,6 +6,7 @@ import { prismaClient } from '../../db/client'
 import { getEncoding } from '../../utils/csv'
 import { MIN, TIME_IN_MS } from '../../utils/time'
 import {
+  addSourceToStudies,
   cleanImport,
   getEmissionFactorImportVersion,
   ImportEmissionFactor,
@@ -111,6 +112,7 @@ export const getEmissionFactorsFromCSV = async (
             console.log(`Save ${parts.length} emission factors parts...`)
             await saveEmissionFactorsParts(transaction, emissionFactorImportVersion.id, parts)
             await cleanImport(transaction, emissionFactorImportVersion.id)
+            await addSourceToStudies(importFrom, transaction)
             console.log('Done')
             resolve()
           })
@@ -119,6 +121,6 @@ export const getEmissionFactorsFromCSV = async (
           })
       })
     },
-    { timeout: 10 * MIN * TIME_IN_MS },
+    { timeout: 20 * MIN * TIME_IN_MS },
   )
 }

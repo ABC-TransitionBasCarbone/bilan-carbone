@@ -1,4 +1,4 @@
-import { canEditMemberRole, isUntrainedRole } from '@/utils/onganization'
+import { canEditMemberRole, isUntrainedRole } from '@/utils/organization'
 import { User as DbUser, Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 

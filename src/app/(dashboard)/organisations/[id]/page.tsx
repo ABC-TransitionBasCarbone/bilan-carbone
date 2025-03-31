@@ -2,7 +2,7 @@ import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import OrganizationPage from '@/components/pages/Organization'
 import { getOrganizationWithSitesById } from '@/db/organization'
-import { isInOrgaOrParent } from '@/utils/onganization'
+import { isInOrgaOrParent } from '@/utils/organization'
 import { UUID } from 'crypto'
 
 interface Props {
@@ -22,7 +22,7 @@ const OrganizationView = async (props: Props & UserProps) => {
     return <NotFound />
   }
 
-  return <OrganizationPage user={props.user} organizations={[organization]} />
+  return <OrganizationPage user={props.user} organization={organization} />
 }
 
 export default withAuth(OrganizationView)

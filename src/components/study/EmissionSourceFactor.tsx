@@ -1,7 +1,5 @@
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
-import { getQualityRating } from '@/services/uncertainty'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
 import classNames from 'classnames'
@@ -46,16 +44,12 @@ interface Props {
   update: (name: Path<UpdateEmissionSourceCommand>, value: string) => void
   selectedFactor?: EmissionFactorWithMetaData | null
   canEdit: boolean | null
+  getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
 }
 
-const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => {
-  return [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
-}
-
-const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit }: Props) => {
+const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit, getDetail }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
-  const tQuality = useTranslations('quality')
 
   const [advancedSearch, setAdvancedSearch] = useState(false)
   const [display, setDisplay] = useState(false)
@@ -84,11 +78,10 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
     )
   }, [fuse, value])
 
-  const qualityRating = useMemo(() => (selectedFactor ? getQualityRating(selectedFactor) : null), [selectedFactor])
   return (
     <>
       <div className={classNames(styles.factor, 'align-center')}>
-        <div className={classNames(styles.inputContainer, { [styles.withSearch]: canEdit })}>
+        <div className={classNames(styles.inputContainer, 'grow', { [styles.withSearch]: canEdit })}>
           <DebouncedInput
             disabled={!canEdit}
             data-testid="emission-source-factor-search"
@@ -109,19 +102,6 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
             </button>
           )}
         </div>
-        {selectedFactor && (
-          <div data-testid="emission-source-factor">
-            <p className={styles.header}>
-              {selectedFactor.metaData?.title}
-              {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
-              {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-              {getEmissionFactorValue(selectedFactor)} kgCO₂e/
-              {tUnits(selectedFactor.unit)}{' '}
-              {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
-            </p>
-            {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
-          </div>
-        )}
       </div>
       {display && value && (
         <div className={styles.suggestions}>

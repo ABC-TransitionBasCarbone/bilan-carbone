@@ -1,10 +1,18 @@
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
+import { isAdmin } from '@/services/permissions/user'
 import { Post } from '@/services/posts'
 import { checkLevel } from '@/services/study'
-import { Organization, Role, StudyRole } from '@prisma/client'
+import { Level, Organization, Role, StudyResultUnit, StudyRole } from '@prisma/client'
 import { User } from 'next-auth'
-import { isInOrgaOrParent } from './onganization'
+import { isInOrgaOrParent } from './organization'
+
+export const getUserRoleOnPublicStudy = (user: User, studyLevel: Level) => {
+  if (isAdmin(user.role)) {
+    return StudyRole.Validator
+  }
+  return user.role === Role.COLLABORATOR && checkLevel(user.level, studyLevel) ? StudyRole.Editor : StudyRole.Reader
+}
 
 export const getUserRoleOnStudy = (
   user: User,
@@ -24,7 +32,7 @@ export const getUserRoleOnStudy = (
   }
 
   if (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization)) {
-    return user.role === Role.COLLABORATOR && checkLevel(user.level, study.level) ? StudyRole.Editor : StudyRole.Reader
+    return getUserRoleOnPublicStudy(user, study.level)
   }
   return null
 }
@@ -63,3 +71,10 @@ export const postColors: Record<Post, string> = {
 
 export const hasEditionRights = (userRoleOnStudy: StudyRole | null) =>
   userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
+
+export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
+  K: 1,
+  T: 1000,
+}
+
+export const defaultStudyResultUnit = StudyResultUnit.T

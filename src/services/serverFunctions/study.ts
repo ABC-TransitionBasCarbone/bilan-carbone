@@ -3,6 +3,7 @@
 import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
 import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
+import { getStudyEmissionFactorSources } from '@/db/emissionFactors'
 import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
 import {
   createContributorOnStudy,
@@ -18,7 +19,8 @@ import {
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserApplicationSettings, getUserByEmail } from '@/db/user'
+import { addUser, getUserApplicationSettings } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import {
@@ -32,6 +34,7 @@ import {
   Role,
   StudyRole,
   SubPost,
+  UserChecklist,
   UserStatus,
 } from '@prisma/client'
 import { User } from 'next-auth'
@@ -47,6 +50,7 @@ import {
   canChangeLevel,
   canChangeName,
   canChangePublicStatus,
+  canChangeResultsUnit,
   canChangeSites,
   canCreateStudy,
   canDeleteStudy,
@@ -62,13 +66,14 @@ import {
   ChangeStudyLevelCommand,
   ChangeStudyNameCommand,
   ChangeStudyPublicStatusCommand,
+  ChangeStudyResultsUnitCommand,
   ChangeStudySitesCommand,
   CreateStudyCommand,
-  DeleteStudyCommand,
+  DeleteCommand,
   NewStudyContributorCommand,
   NewStudyRightCommand,
 } from './study.command'
-import { sendInvitation } from './user'
+import { addUserChecklistItem, sendInvitation } from './user'
 
 export const getStudy = async (studyId: string) => {
   const session = await auth()
@@ -141,7 +146,6 @@ export const createStudyCommand = async ({
     ...command,
     createdBy: { connect: { id: session.user.id } },
     organization: { connect: { id: organizationId } },
-    version: { connect: { id: activeVersion.id } },
     isPublic: command.isPublic === 'true',
     allowedUsers: {
       createMany: { data: rights },
@@ -181,6 +185,7 @@ export const createStudyCommand = async ({
 
   try {
     const createdStudy = await createStudy(study)
+    addUserChecklistItem(UserChecklist.CreateFirstStudy)
     return { success: true, id: createdStudy.id }
   } catch (e) {
     console.error(e)
@@ -219,9 +224,22 @@ export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevel
     return NOT_AUTHORIZED
   }
 
-  if (!canChangeLevel(informations.user, informations.studyWithRights, command.level)) {
+  if (!(await canChangeLevel(informations.user, informations.studyWithRights, command.level))) {
     return NOT_AUTHORIZED
   }
+  await updateStudy(studyId, command)
+}
+
+export const changeStudyResultsUnit = async ({ studyId, ...command }: ChangeStudyResultsUnitCommand) => {
+  const informations = await getStudyRightsInformations(studyId)
+  if (informations === null) {
+    return NOT_AUTHORIZED
+  }
+
+  if (!(await canChangeResultsUnit(informations.user, informations.studyWithRights))) {
+    return NOT_AUTHORIZED
+  }
+
   await updateStudy(studyId, command)
 }
 
@@ -505,7 +523,7 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
   }
 }
 
-export const deleteStudyCommand = async ({ id, name }: DeleteStudyCommand) => {
+export const deleteStudyCommand = async ({ id, name }: DeleteCommand) => {
   if (!(await canDeleteStudy(id))) {
     return NOT_AUTHORIZED
   }
@@ -622,3 +640,14 @@ export const deleteStudyContributor = async (contributor: StudyContributorRow, s
   }
   await prismaClient.contributors.deleteMany({ where })
 }
+
+export const getStudyEmissionFactorImportVersions = async (studyId: string) => {
+  const study = await getStudy(studyId)
+  if (!study) {
+    return []
+  }
+  return getStudyEmissionFactorSources(studyId)
+}
+
+export const getOrganizationStudiesFromOtherUsers = async (organizationId: string, userId: string) =>
+  prismaClient.study.count({ where: { organizationId, createdById: { not: userId } } })

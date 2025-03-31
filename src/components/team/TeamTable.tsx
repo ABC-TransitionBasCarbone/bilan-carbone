@@ -1,7 +1,7 @@
 'use client'
 import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/user'
-import { canEditMemberRole } from '@/utils/onganization'
+import { canEditMemberRole } from '@/utils/organization'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { User } from 'next-auth'

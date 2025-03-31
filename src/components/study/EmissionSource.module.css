@@ -4,6 +4,15 @@
   }
 }
 
+.header {
+  @media screen and (max-width: 60rem) {
+    flex-direction: column;
+  }
+  p {
+    line-height: 1.25rem;
+  }
+}
+
 .editIcon {
   position: absolute;
   top: 50%;
@@ -20,6 +29,7 @@
   background-color: transparent;
   border: none;
   width: 100%;
+  line-height: 1rem;
   padding: 1rem 3.5rem 1rem 1rem;
   gap: 1rem;
   flex-wrap: wrap;
@@ -32,15 +42,12 @@
   }
 }
 
-.infosLeft,
-.infosRight {
-  gap: 0.25rem;
+.subTitle {
+  font-size: 20px;
 }
 
-.infosRight {
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: flex-end;
+.result {
+  font-size: 1.25rem;
 }
 
 .status {
@@ -91,8 +98,19 @@
   }
 }
 
+.gapped {
+  gap: 1rem;
+}
+
+.caracterisationSource {
+  flex: 2 !important;
+}
+
 .shrinked {
   justify-content: flex-start;
+  > div {
+    flex: 1;
+  }
 }
 
 .small {
@@ -101,11 +119,6 @@
 
 .inputWithUnit {
   position: relative;
-  width: min-content;
-  max-width: 15rem;
-  input {
-    width: 13.25rem;
-  }
 }
 
 .unit {
@@ -119,6 +132,19 @@
   margin-top: 2rem;
 }
 
-.delete {
-  justify-content: flex-end;
+.saved {
+  color: var(--green-500);
+  gap: 0.5rem;
+}
+
+.statusLabel {
+  border: 2px solid;
+  &.validated {
+    border-color: var(--green-500);
+    color: var(--green-500);
+  }
+  &.working {
+    border-color: var(--orange-500);
+    color: var(--orange-500);
+  }
 }

@@ -22,6 +22,11 @@ enum StudyRole {
   Reader
 }
 
+enum StudyResultUnit {
+  K // kg (1)
+  T // t (1000)
+}
+
 enum EmissionSourceCaracterisation {
   Operated
   NotOperated
@@ -50,24 +55,24 @@ model Study {
   createdById String @map("created_by_id")
   createdBy   User   @relation(fields: [createdById], references: [id])
 
-  name      String
-  isPublic  Boolean       @map("is_public")
-  startDate DateTime      @map("start_date") @db.Date
-  endDate   DateTime      @map("end_date") @db.Date
-  level     Level
-  exports   StudyExport[]
+  name        String
+  isPublic    Boolean         @map("is_public")
+  startDate   DateTime        @map("start_date") @db.Date
+  endDate     DateTime        @map("end_date") @db.Date
+  level       Level
+  resultsUnit StudyResultUnit @default(T) @map("results_unit")
+  exports     StudyExport[]
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
-
-  versionId String                      @map("version_id")
-  version   EmissionFactorImportVersion @relation(fields: [versionId], references: [id])
 
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
   contributors    Contributors[]
   sites           StudySite[]
   flows           Document[]
+
+  emissionFactorVersions StudyEmissionFactorVersion[]
 
   @@map("studies")
 }
@@ -182,6 +187,21 @@ model ExportRule {
 
   @@unique([export, subPost, type])
   @@map("export_rules")
+}
+
+model StudyEmissionFactorVersion {
+  id String @id @default(uuid())
+
+  studyId String @map("study_id")
+  study   Study  @relation(fields: [studyId], references: [id])
+
+  importVersionId String                      @map("import_version_id")
+  importVersion   EmissionFactorImportVersion @relation(fields: [importVersionId], references: [id])
+
+  source Import
+
+  @@unique([studyId, source])
+  @@map("study_emission_factor_versions")
 }
 
 model StudySite {

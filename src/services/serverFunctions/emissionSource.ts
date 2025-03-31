@@ -1,5 +1,6 @@
 'use server'
 
+import { getEmissionFactorById } from '@/db/emissionFactors'
 import {
   createEmissionSourceOnStudy,
   deleteEmissionSourceOnStudy,
@@ -7,7 +8,8 @@ import {
   updateEmissionSourceOnStudy,
 } from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
-import { getUserByEmail } from '@/db/user'
+import { getUserByEmail } from '@/db/userImport'
+import { UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -16,6 +18,7 @@ import {
   canUpdateEmissionSource,
 } from '../permissions/emissionSource'
 import { CreateEmissionSourceCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
+import { addUserChecklistItem } from './user'
 
 export const createEmissionSource = async ({ studyId, studySiteId, ...command }: CreateEmissionSourceCommand) => {
   const session = await auth()
@@ -49,9 +52,10 @@ export const updateEmissionSource = async ({
     return NOT_AUTHORIZED
   }
 
-  const [user, emissionSource] = await Promise.all([
+  const [user, emissionSource, emissionFactor] = await Promise.all([
     getUserByEmail(session.user.email),
     getEmissionSourceById(emissionSourceId),
+    emissionFactorId ? getEmissionFactorById(emissionFactorId) : undefined,
   ])
   if (!user || !emissionSource) {
     return NOT_AUTHORIZED
@@ -63,6 +67,14 @@ export const updateEmissionSource = async ({
     return NOT_AUTHORIZED
   }
 
+  if (
+    emissionFactor?.version?.id &&
+    !study.emissionFactorVersions
+      .map((emissionFactorVersion) => emissionFactorVersion.importVersionId)
+      .includes(emissionFactor.version.id)
+  ) {
+    return NOT_AUTHORIZED
+  }
   const isContributor = study.contributors.some(
     (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
   )
@@ -71,6 +83,7 @@ export const updateEmissionSource = async ({
     emissionSourceId,
     isContributor ? { ...data, contributor: { connect: { id: user.id } } } : data,
   )
+  addUserChecklistItem(UserChecklist.CreateFirstEmissionSource)
 }
 
 export const deleteEmissionSource = async (emissionSourceId: string) => {

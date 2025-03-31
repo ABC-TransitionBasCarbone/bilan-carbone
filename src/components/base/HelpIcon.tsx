@@ -1,10 +1,11 @@
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import classNames from 'classnames'
+import { MouseEventHandler } from 'react'
 import styles from './HelpIcon.module.css'
 
 interface Props {
   className?: string
-  onClick: () => void
+  onClick: MouseEventHandler<SVGSVGElement>
   label: string
 }
 

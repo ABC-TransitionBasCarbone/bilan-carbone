@@ -1,9 +1,9 @@
-import { getEncoding } from '@/utils/csv'
 import { Prisma } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 import { prismaClient } from '../../db/client'
+import { getEncoding } from '../../utils/csv'
 
 const addActualities = async (file: string) => {
   const actualities: Prisma.ActualityCreateManyInput[] = []
