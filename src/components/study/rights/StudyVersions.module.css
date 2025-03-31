@@ -4,3 +4,7 @@
   min-width: 0 !important;
   border-radius: 50% !important;
 }
+
+.updatedValue {
+  text-decoration: line-through;
+}

@@ -32,6 +32,7 @@ import {
   ControlMode,
   User as DBUser,
   Document,
+  EmissionFactor,
   Export,
   Import,
   Organization,
@@ -769,9 +770,11 @@ export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, 
     })
     .map((emissionFactor) => ({
       ...emissionFactor,
-      newValue: upgradedEmissionFactors.find(
-        (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
-      )?.totalCo2,
+      newValue: (
+        upgradedEmissionFactors.find(
+          (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
+        ) as EmissionFactor
+      ).totalCo2,
     }))
   return {
     success: true,
