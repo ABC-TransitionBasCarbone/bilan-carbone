@@ -72,22 +72,64 @@ const parseStudySites = (indexes: Record<string, number>, data: (string | number
     }, new Map<string, StudySite[]>())
 }
 
+const getType = (type: string) => {
+  if (type.startsWith('BEGES-r')) {
+    return StudyExport.Beges
+  } else if (type === 'GHG-P') {
+    return StudyExport.GHGP
+  } else if (type === 'ISO 14069') {
+    return StudyExport.ISO14069
+  } else {
+    return null
+  }
+}
+
+const getControl = (control: string) => {
+  if (control === 'Part du capital') {
+    return ControlMode.CapitalShare
+  } else if (control === 'Contrôle financier') {
+    return ControlMode.Financial
+  } else if (control === 'Contrôle opérationnel') {
+    return ControlMode.Operational
+  } else {
+    return null
+  }
+}
+
 const parseExports = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, Export[]> => {
   return data
     .slice(1)
-    .map<[string, Export]>((row) => [
-      row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string,
-      {
-        type: StudyExport.GHGP,
-        control: ControlMode.CapitalShare,
-      },
-    ])
+    .map<[string, Export | null]>((row) => {
+      const type = getType(row[indexes[RequiredStudyExportsColumns.type]] as string)
+      const control = getControl(row[indexes[RequiredStudyExportsColumns.control]] as string)
+      if (!type) {
+        console.warn(`Type ${type} invalide`)
+        return [row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string, null]
+      }
+      if (!control) {
+        console.warn(`Control ${control} invalide`)
+        return [row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string, null]
+      }
+      return [
+        row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string,
+        {
+          type: type,
+          control: control,
+        },
+      ]
+    })
     .reduce((accumulator, currentValue) => {
+      const currentExport = currentValue[1]
+      if (currentExport === null) {
+        return accumulator
+      }
       const exports = accumulator.get(currentValue[0])
       if (exports) {
-        exports.push(currentValue[1])
+        if (!exports.some((e) => e.type === currentExport.type)) {
+          exports.push(currentExport)
+        }
       } else {
-        accumulator.set(currentValue[0], [currentValue[1]])
+        accumulator.set(currentValue[0], [currentExport])
       }
       return accumulator
     }, new Map<string, Export[]>())
@@ -206,7 +248,6 @@ export const uploadStudies = async (
           return []
         }
         return studyExports
-          .slice(0, 1)
           .map((studyExport) => ({
             ...studyExport,
             studyId: existingStudyId,
