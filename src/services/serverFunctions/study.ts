@@ -3,7 +3,12 @@
 import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
 import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
-import { getStudyEmissionFactorSources } from '@/db/emissionFactors'
+import {
+  getEmissionFactorsByIdsAndSource,
+  getEmissionFactorsByImportedIdsAndVersion,
+  getEmissionFactorVersionsBySource,
+  getStudyEmissionFactorSources,
+} from '@/db/emissionFactors'
 import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
 import {
   createContributorOnStudy,
@@ -56,6 +61,7 @@ import {
   canCreateStudy,
   canDeleteStudy,
   canEditStudyFlows,
+  canUpgradeSourceVersion,
   isAdminOnStudyOrga,
 } from '../permissions/study'
 import { isAdmin } from '../permissions/user'
@@ -715,3 +721,61 @@ export const getStudyEmissionFactorImportVersions = async (studyId: string) => {
 
 export const getOrganizationStudiesFromOtherUsers = async (organizationId: string, userId: string) =>
   prismaClient.study.count({ where: { organizationId, createdById: { not: userId } } })
+
+export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, source: Import) => {
+  const [session, study, importVersions] = await Promise.all([
+    auth(),
+    getStudyById(studyId, null),
+    getEmissionFactorVersionsBySource(source),
+  ])
+  if (!session || !session.user || !study || !importVersions.length) {
+    return { success: false }
+  }
+
+  if (!(await canUpgradeSourceVersion(session.user, study))) {
+    return { success: false, message: NOT_AUTHORIZED }
+  }
+
+  const latest = importVersions[0]
+  if (latest.id === study.emissionFactorVersions.find((version) => version.source === source)?.importVersionId) {
+    return { success: false, message: 'latest' }
+  }
+
+  const targetedEmissionSources = study.emissionSources.filter(
+    (emissionSource) => emissionSource.emissionFactor?.importedFrom === source,
+  )
+  const emissionFactors = await getEmissionFactorsByIdsAndSource(
+    targetedEmissionSources.map((emissionSource) => emissionSource.emissionFactorId).filter((id) => id !== null),
+    source,
+  )
+  const upgradedEmissionFactors = await getEmissionFactorsByImportedIdsAndVersion(
+    emissionFactors.map((emissionFactor) => emissionFactor.importedId).filter((importedId) => importedId !== null),
+    latest.id,
+  )
+
+  const deletedEmissionFactors = emissionFactors.filter(
+    (emissionFactor) =>
+      !upgradedEmissionFactors
+        .map((upgradedEmissionFactor) => upgradedEmissionFactor.importedId)
+        .includes(emissionFactor.importedId),
+  )
+
+  const updatedEmissionFactors = emissionFactors
+    .filter((emissionFactor) => {
+      const upgradedVersion = upgradedEmissionFactors.find(
+        (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
+      )
+      return upgradedVersion && upgradedVersion.totalCo2 !== emissionFactor.totalCo2
+    })
+    .map((emissionFactor) => ({
+      ...emissionFactor,
+      newValue: upgradedEmissionFactors.find(
+        (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
+      )?.totalCo2,
+    }))
+  return {
+    success: true,
+    deleted: deletedEmissionFactors,
+    updated: updatedEmissionFactors,
+  }
+}

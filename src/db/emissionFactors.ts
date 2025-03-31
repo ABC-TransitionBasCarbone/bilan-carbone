@@ -122,6 +122,24 @@ export const getAllEmissionFactorsByIds = (ids: string[], organizationId: string
     orderBy: { createdAt: 'desc' },
   })
 
+export const getEmissionFactorsByIdsAndSource = (ids: string[], source: Import) =>
+  prismaClient.emissionFactor.findMany({
+    where: {
+      id: { in: ids },
+      importedFrom: source,
+    },
+    select: selectEmissionFactor,
+  })
+
+export const getEmissionFactorsByImportedIdsAndVersion = (ids: string[], versionId: string) =>
+  prismaClient.emissionFactor.findMany({
+    where: {
+      importedId: { in: ids },
+      versionId,
+    },
+    select: selectEmissionFactor,
+  })
+
 export const createEmissionFactor = (emissionFactor: Prisma.EmissionFactorCreateInput) =>
   prismaClient.emissionFactor.create({
     data: emissionFactor,
@@ -236,6 +254,7 @@ export type DetailedEmissionFactor = AsyncReturnType<typeof getEmissionFactorDet
 export const getEmissionFactorSources = async () => {
   return prismaClient.emissionFactorImportVersion.findMany()
 }
+
 export const getStudyEmissionFactorSources = async (studyId: string) => {
   const versionIds = (
     await prismaClient.studyEmissionFactorVersion.findMany({
@@ -245,3 +264,6 @@ export const getStudyEmissionFactorSources = async (studyId: string) => {
   ).map((studyVersion) => studyVersion.importVersionId)
   return prismaClient.emissionFactorImportVersion.findMany({ where: { id: { in: versionIds } } })
 }
+
+export const getEmissionFactorVersionsBySource = async (source: Import) =>
+  prismaClient.emissionFactorImportVersion.findMany({ where: { source }, orderBy: { createdAt: 'desc' } })

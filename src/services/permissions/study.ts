@@ -99,6 +99,10 @@ export const canChangePublicStatus = async (user: User, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
+export const canUpgradeSourceVersion = async (user: User, study: FullStudy) => {
+  return canChangeStudyValues(user, study)
+}
+
 export const canChangeDates = async (user: User, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
