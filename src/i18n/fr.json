@@ -1039,7 +1039,7 @@
     "saving": "Sauvegarde en cours...",
     "status": {
       "valid": "Validée",
-      "waiting": "En completion",
+      "waiting": "En complétion",
       "waitingContributor": "En attente d'un contributeur",
       "toVerify": "À vérifier"
     },

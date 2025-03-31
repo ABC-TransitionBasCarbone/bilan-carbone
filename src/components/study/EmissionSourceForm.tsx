@@ -121,7 +121,7 @@ const EmissionSourceForm = ({
           getDetail={getDetail}
         />
         {isCAS ? (
-          <div className={classNames(styles.gapped, 'flex')}>
+          <>
             <TextField
               className="grow"
               disabled={!canEdit}
@@ -146,9 +146,9 @@ const EmissionSourceForm = ({
                 input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
               }}
             />
-          </div>
+          </>
         ) : (
-          <div className={classNames(styles.gapped, 'flex')}>
+          <>
             <div className={classNames(styles.inputWithUnit, 'flex grow')}>
               <TextField
                 className="grow"
@@ -169,7 +169,7 @@ const EmissionSourceForm = ({
               {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
             </div>
             {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
-              <>
+              <div className={classNames(styles.inputWithUnit, 'flex grow')}>
                 <TextField
                   className="grow"
                   disabled={!canEdit}
@@ -183,9 +183,9 @@ const EmissionSourceForm = ({
                   }}
                 />
                 <div className={styles.unit}>{t('form.years')}</div>
-              </>
+              </div>
             )}
-          </div>
+          </>
         )}
         <FormControl>
           <div className="flex">
