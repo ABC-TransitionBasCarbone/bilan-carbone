@@ -4,6 +4,7 @@ import { RequiredEmissionFactorsColumns, uploadEmissionFactors } from './emissio
 import { RequiredOrganizationsColumns, uploadOrganizations } from './organizations'
 import {
   RequiredStudiesColumns,
+  RequiredStudyEmissionSourcesColumns,
   RequiredStudyExportsColumns,
   RequiredStudySitesColumns,
   uploadStudies,
@@ -32,29 +33,33 @@ const getIndexes = (
   return indexes
 }
 
-const getOrganisationIndexes = (organizationHeaders: string[]): Record<string, number> => {
-  if (Object.values(RequiredOrganizationsColumns).length > organizationHeaders.length) {
+const getOrganisationIndexes = (headers: string[]): Record<string, number> => {
+  if (Object.values(RequiredOrganizationsColumns).length > headers.length) {
     throw new Error(
       `Les colonnes suivantes sont obligatoires : ${Object.values(RequiredOrganizationsColumns).join(', ')}`,
     )
   }
-  return getIndexes(organizationHeaders, RequiredOrganizationsColumns, 'Organisations')
+  return getIndexes(headers, RequiredOrganizationsColumns, 'Organisations')
 }
 
-const getEmissionFactorsIndexes = (emissionFactorHeaders: string[]): Record<string, number> => {
-  return getIndexes(emissionFactorHeaders, RequiredEmissionFactorsColumns, "Facteurs d'émissions")
+const getEmissionFactorsIndexes = (headers: string[]): Record<string, number> => {
+  return getIndexes(headers, RequiredEmissionFactorsColumns, "Facteurs d'émissions")
 }
 
-const getStudiesIndexes = (studiesHeaders: string[]): Record<string, number> => {
-  return getIndexes(studiesHeaders, RequiredStudiesColumns, 'Etudes')
+const getStudiesIndexes = (headers: string[]): Record<string, number> => {
+  return getIndexes(headers, RequiredStudiesColumns, 'Etudes')
 }
 
-const getStudySitesIndexes = (studiesHeaders: string[]): Record<string, number> => {
-  return getIndexes(studiesHeaders, RequiredStudySitesColumns, 'Etudes - sites')
+const getStudySitesIndexes = (headers: string[]): Record<string, number> => {
+  return getIndexes(headers, RequiredStudySitesColumns, 'Etudes - sites')
 }
 
-const getStudyExportIndexes = (studiesHeaders: string[]): Record<string, number> => {
-  return getIndexes(studiesHeaders, RequiredStudyExportsColumns, 'Etudes - exports')
+const getStudyExportIndexes = (headers: string[]): Record<string, number> => {
+  return getIndexes(headers, RequiredStudyExportsColumns, 'Etudes - exports')
+}
+
+const getStudyEmissionSourcesIndexes = (headers: string[]): Record<string, number> => {
+  return getIndexes(headers, RequiredStudyEmissionSourcesColumns, 'Données sources')
 }
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
@@ -75,10 +80,18 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   const studiesSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes')
   const studySitesSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes - sites')
   const studyExportsSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Etudes - exports')
+  const studyEmissionSourceSheet = workSheetsFromFile.find((sheet) => sheet.name === 'Données sources')
 
-  if (!organizationsSheet || !emissionFactorsSheet || !studiesSheet || !studySitesSheet || !studyExportsSheet) {
+  if (
+    !organizationsSheet ||
+    !emissionFactorsSheet ||
+    !studiesSheet ||
+    !studySitesSheet ||
+    !studyExportsSheet ||
+    !studyEmissionSourceSheet
+  ) {
     console.log(
-      "Veuillez verifier que le fichier contient une feuille 'Organisations', une feuille 'Facteurs d'émissions', une feuille 'Etudes', une feuille 'Études - sites', et une feuille 'Études - exports'",
+      "Veuillez verifier que le fichier contient une feuille 'Organisations', une feuille 'Facteurs d'émissions', une feuille 'Etudes', une feuille 'Études - sites', une feuille 'Études - exports', et une feuille 'Données sources'",
     )
     return
   }
@@ -88,6 +101,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   const studiesIndexes = getStudiesIndexes(studiesSheet.data[0])
   const studySitesIndexes = getStudySitesIndexes(studySitesSheet.data[0])
   const studyExportsIndexes = getStudyExportIndexes(studyExportsSheet.data[0])
+  const studyEmissionSourcesIndexes = getStudyEmissionSourcesIndexes(studyEmissionSourceSheet.data[0])
 
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
@@ -115,6 +129,8 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       studySitesSheet.data,
       studyExportsIndexes,
       studyExportsSheet.data,
+      studyEmissionSourcesIndexes,
+      studyEmissionSourceSheet.data,
     )
   })
 
