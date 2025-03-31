@@ -483,6 +483,10 @@
   "emissionFactors": {
     "add": "Ajouter un facteur d'émission",
     "post": {
+      "all": "Tous",
+      "none": "Aucun",
+      "selectAll": "Tout sélectionner",
+      "unselectAll": "Tout désélectionner",
       "total": "Total",
       "allPost": "Tous les postes",
       "allSubPost": "Tous les sous postes",
@@ -654,6 +658,8 @@
       "showing": "Affichage de {number} lignes sur {total}",
       "source": "Source",
       "sources": "Sources",
+      "units": "Unités",
+      "subPosts": "Sous postes",
       "status": "Statut",
       "value": "Valeur",
       "yes": "Oui",
@@ -775,6 +781,9 @@
     }
   },
   "units": {
+    "selectAll": "Tout sélectionner",
+    "unSelectAll": "Tout désélectionner",
+    "": "Aucune unité",
     "A4_SHEET_100": "100 feuilles A4",
     "KM_100": "100km",
     "ACTIVE": "actif",
