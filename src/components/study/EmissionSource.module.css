@@ -77,7 +77,7 @@
 }
 
 .detailContent {
-  border-top: solid 1px var(--neutral-20);
+  border-top: solid 1px var(--neutral-200);
   margin: -0.25rem 0 0.5rem 0;
   padding: 1rem;
 }
@@ -133,18 +133,18 @@
 }
 
 .saved {
-  color: var(--green-500);
+  color: var(--success-100);
   gap: 0.5rem;
 }
 
 .statusLabel {
   border: 2px solid;
   &.validated {
-    border-color: var(--green-500);
-    color: var(--green-500);
+    border-color: var(--success-100);
+    color: var(--success-100);
   }
   &.working {
-    border-color: var(--orange-500);
-    color: var(--orange-500);
+    border-color: var(--warning);
+    color: var(--warning);
   }
 }

@@ -3,7 +3,7 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--background-50);
   height: 100vh;
   line-height: 1.25;
   overflow: hidden;
@@ -85,7 +85,7 @@ table {
         background: white;
       }
       &:nth-child(odd) {
-        background: var(--neutral-200);
+        background: var(--background-150);
       }
     }
   }

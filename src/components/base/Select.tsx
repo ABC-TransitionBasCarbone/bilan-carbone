@@ -21,7 +21,7 @@ export const Select = ({ name, value, onChange, label, icon, iconPosition, ...se
         onChange={onChange}
         name={name}
         slotProps={{
-          root: { sx: { borderRadius: '12px', borderColor: 'var(--color-grey-400)', color: 'var(--color-grey-950)' } },
+          root: { sx: { borderRadius: '12px', borderColor: 'var(--grayscale-300)', color: 'black' } },
         }}
       />
     </>

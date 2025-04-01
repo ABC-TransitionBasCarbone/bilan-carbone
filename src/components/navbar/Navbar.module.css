@@ -1,6 +1,6 @@
 .navbar {
   z-index: 1000;
-  background-color: var(--info-300);
+  background-color: var(--background-300);
   position: fixed;
   top: 0;
   left: 0;
@@ -54,7 +54,7 @@
 }
 
 .subMenu {
-  background-color: var(--info-300);
+  background-color: var(--background-300);
   flex-direction: column;
   padding: 1rem;
   position: absolute;

@@ -1,12 +1,12 @@
 .card {
-  background-color: var(--organization-card-bg);
+  background-color: var(--background-100);
   gap: 1rem;
 }
 
 .validated {
-  color: var(--warning-300);
+  color: var(--warning);
 
   &.success {
-    color: var(--success-400);
+    color: var(--success-100);
   }
 }

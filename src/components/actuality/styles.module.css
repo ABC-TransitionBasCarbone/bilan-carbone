@@ -18,7 +18,7 @@
 }
 
 .card {
-  background-color: var(--organization-card-bg);
+  background-color: var(--background-100);
 }
 
 .text {

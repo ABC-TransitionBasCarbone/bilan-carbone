@@ -47,7 +47,7 @@
   &:hover {
     border-color: var(--neutral-400);
     &:nth-child(even) {
-      background: var(--neutral-100);
+      background: var(--background-150);
     }
     &:nth-child(odd) {
       background: var(--neutral-300);

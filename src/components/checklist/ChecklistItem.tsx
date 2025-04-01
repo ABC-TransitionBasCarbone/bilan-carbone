@@ -53,7 +53,7 @@ const ChecklistItem = ({
         sx={{
           opacity: 1,
           pointerEvents: 'auto',
-          backgroundColor: 'var(--neutral-00) !important',
+          backgroundColor: 'white !important',
         }}
       >
         <AccordionSummary

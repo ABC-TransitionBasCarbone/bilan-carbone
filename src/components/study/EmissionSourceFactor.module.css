@@ -57,13 +57,13 @@
   top: 0.75rem;
   border-radius: 0.5rem;
   padding: 0.25rem;
-  background-color: var(--neutral-100);
+  background-color: var(--background-150);
   border: none;
   cursor: pointer;
   height: 2rem;
 
   &:hover {
-    background-color: var(--neutral-200);
+    background-color: var(--background-200);
     svg {
       color: var(--primary-800);
     }

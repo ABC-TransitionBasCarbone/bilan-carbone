@@ -11,67 +11,43 @@
   --primary-900: #00163d;
   --primary-950: #050019;
 
-  --primary2-50: #d6e4ff;
-  --primary2-100: #b3ccff;
-  --primary2-200: #6196ff;
-  --primary2-300: #1463ff;
-  --primary2-400: #0042c7;
-  --primary2-500: #002978;
-  --primary2-600: #002061;
-  --primary2-700: #001847;
-  --primary2-800: #000f2e;
-  --primary2-900: #000919;
-  --primary2-950: #00030a;
-
-  --background-50: #fefdfb;
-  --background-100: #fefbf6;
-  --background-200: #fdf6ed;
-  --background-300: #fbf2e4;
-  --background-400: #faeedb;
-  --background-500: #f9ead4;
-  --background-600: #eec282;
-  --background-700: #e29b31;
-  --background-800: #e29b31;
-  --background-900: #51350b;
-  --background-950: #281a06;
-
-  --neutral-50: #f4f7fc;
-  --neutral-100: #e9eff9;
-  --neutral-200: #dbe5f6;
+  --neutral-50: #e9eff9;
+  --neutral-100: #dbe5f6;
+  --neutral-200: #eae5e8;
   --neutral-300: #c6d8f5;
   --neutral-400: #9fbff3;
   --neutral-500: #0a0317;
   --neutral-600: #080212;
-  --neutral-700: #06020e;
   --neutral-800: #040109;
   --neutral-900: #020105;
   --neutral-950: #020105;
 
-  --success-50: #e5faf0;
-  --success-100: #89d7b0;
-  --success-200: #94ebbf;
-  --success-300: #308d5e;
-  --success-400: #1d9c5c;
+  --success-50: #94ebbf;
+  --success-100: #1d9c5c;
 
   --error-50: #e04949;
   --error-100: #cd2323;
   --error-200: #991a1a;
   --error-300: #641111;
 
-  --warning-50: #fed7aa;
-  --warning-100: #fdba74;
-  --warning-200: #fc9947;
-  --warning-300: #fc8514;
+  --warning: #fc8514;
 
-  --info-50: #4a61e3;
-  --info-100: #3946d7;
-  --info-200: #2f34c6;
-  --info-300: #272768;
+  --info: #272768;
 
   --grayscale-50: #f0f2f4;
   --grayscale-100: #ebf0f4;
   --grayscale-200: #ebf2ff;
   --grayscale-300: #c4d1dd;
+
+  --background-50: rgba(56, 128, 255, 0.05);
+  --background-100: var(--grayscale-200);
+  --background-150: var(--neutral-50);
+  --background-200: var(--neutral-200);
+  --background-250: #fed7aa;
+  --background-300: var(--info);
+
+  --border: 2px solid rgba(27, 91, 245, 0.1);
+  --border-dark: 2px solid var(--primary-800);
 
   --post-darkBlue-dark: #0c2155;
   --post-darkBlue-light: #3f5488;
