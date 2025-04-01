@@ -38,6 +38,7 @@ const users = async () => {
   await prisma.studyEmissionFactorVersion.deleteMany()
   await prisma.contributors.deleteMany()
 
+  await prisma.openingHours.deleteMany()
   await prisma.studySite.deleteMany()
   await prisma.document.deleteMany()
   await prisma.study.deleteMany()

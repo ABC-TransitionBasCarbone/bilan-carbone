@@ -39,6 +39,9 @@ model Site {
   etp  Int    @default(0)
   ca   Float  @default(0)
 
+  postalCode  String?
+  city        String?
+
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
   studies        StudySite[]

@@ -47,6 +47,30 @@ enum EmissionSourceCaracterisation {
   LandUse
 }
 
+enum DayOfWeek {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}
+
+model OpeningHours {
+  id              String   @id @default(uuid())
+  Study           Study    @relation(fields: [studyId], references: [id])
+  studyId         String   @map("study_id")
+
+  isHoliday           Boolean @default(false)
+  day                 DayOfWeek
+  openHour            String?
+  closeHour           String?
+
+  @@map("opening_hours")
+}
+
+
 model Study {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -73,6 +97,10 @@ model Study {
   flows           Document[]
 
   emissionFactorVersions StudyEmissionFactorVersion[]
+  numberOfSessions      Int?
+  numberOfTickets       Int?
+  numberOfOpenDays      Int?
+  openingHours          OpeningHours[]
 
   @@map("studies")
 }
