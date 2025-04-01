@@ -64,6 +64,7 @@ const fullStudyInclude = {
       },
       contributor: {
         select: {
+          id: true,
           email: true,
         },
       },

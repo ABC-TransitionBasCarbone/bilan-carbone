@@ -4,22 +4,26 @@ import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
 import { getQualityRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
+import CopyIcon from '@mui/icons-material/ContentCopy'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { EmissionSourceCaracterisation, EmissionSourceType, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { Path } from 'react-hook-form'
 import Button from '../base/Button'
 import HelpIcon from '../base/HelpIcon'
 import LinkButton from '../base/LinkButton'
 import GlossaryModal from '../modals/GlossaryModal'
+import Modal from '../modals/Modal'
 import DeleteEmissionSource from './DeleteEmissionSource'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
@@ -30,6 +34,7 @@ const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], und
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 
 interface Props {
+  studyId: string
   advanced?: boolean
   emissionSource: FullStudy['emissionSources'][0]
   canEdit: boolean | null
@@ -40,9 +45,11 @@ interface Props {
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
+  studySites: FullStudy['sites']
 }
 
 const EmissionSourceForm = ({
+  studyId,
   advanced,
   emissionSource,
   canEdit,
@@ -53,6 +60,7 @@ const EmissionSourceForm = ({
   caracterisations,
   mandatoryCaracterisation,
   status,
+  studySites,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -62,7 +70,10 @@ const EmissionSourceForm = ({
   const tQuality = useTranslations('quality')
   const [glossary, setGlossary] = useState('')
   const [error, setError] = useState('')
+  const [open, setOpen] = useState(false)
+  const [duplicationSite, setDuplicationSite] = useState(emissionSource.studySite.id)
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
+  const router = useRouter()
 
   const qualityRating = useMemo(() => (selectedFactor ? getQualityRating(selectedFactor) : null), [selectedFactor])
 
@@ -109,9 +120,22 @@ const EmissionSourceForm = ({
     }
   }, [glossary])
 
+  const duplicateEmissionSource = async () => {
+    const err = await duplicateStudyEmissionSource(studyId, emissionSource, duplicationSite)
+    setOpen(false)
+    if (!err) {
+      router.refresh()
+    }
+  }
+
   return (
     <>
-      <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('mandartoryFields')}</p>
+      <p className={classNames(styles.subTitle, 'mt1 mb-2 justify-between')}>
+        {t('mandartoryFields')}
+        <Button onClick={() => setOpen(true)} color="secondary">
+          <CopyIcon />
+        </Button>
+      </p>
       <div className={classNames(styles.row, 'flex')}>
         <EmissionSourceFactor
           canEdit={canEdit}
@@ -311,6 +335,28 @@ const EmissionSourceForm = ({
           </p>
         </GlossaryModal>
       )}
+      <Modal
+        open={open}
+        title={t('duplicateDialog.title')}
+        label="duplicate-emission-source"
+        onClose={() => setOpen(false)}
+      >
+        {t('duplicateDialog.content')}
+        {!!studySites.length && <> {t('duplicateDialog.selectSite')}</>}
+        <div className="justify-center mt1">
+          <Select value={duplicationSite} onChange={(event) => setDuplicationSite(event.target.value)}>
+            {studySites.map((studySite) => (
+              <MenuItem key={`duplication-site-${studySite.id}`} value={studySite.id}>
+                {studySite.site.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </div>
+        <div className={classNames(styles.gapped, 'justify-end mt1')}>
+          <Button onClick={() => setOpen(false)}>{t('duplicateDialog.cancel')}</Button>
+          <Button onClick={duplicateEmissionSource}>{t('duplicateDialog.confirm')}</Button>
+        </div>
+      </Modal>
     </>
   )
 }
