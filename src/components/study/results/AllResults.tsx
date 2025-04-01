@@ -11,6 +11,7 @@ import { useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
+import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import DependenciesSwitch from './DependenciesSwitch'
 import styles from './ResultsTables.module.css'
@@ -89,6 +90,12 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
         {type !== 'consolidated' && (
           <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
         )}
+        <ConsolatedBEGESDifference
+          study={study}
+          rules={rules}
+          emissionFactorsWithParts={emissionFactorsWithParts}
+          studySite={studySite}
+        />
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
@@ -97,7 +104,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
         {type === Export.Beges && (
           <BegesResultsTable
             study={study}
-            rules={rules.filter((rule) => rule.export === Export.Beges)}
+            rules={begesRules}
             emissionFactorsWithParts={emissionFactorsWithParts}
             studySite={studySite}
             withDependencies={withDependencies}
