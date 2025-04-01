@@ -17,6 +17,7 @@ import styles from './StudyVersions.module.css'
 interface Props {
   study: FullStudy
   emissionFactorSources: EmissionFactorImportVersion[]
+  canUpdate: boolean
 }
 
 type SimulationResult = {
@@ -24,7 +25,7 @@ type SimulationResult = {
   deleted: AsyncReturnType<typeof getEmissionFactorsByImportedIdsAndVersion>
 }
 
-const StudyVersions = ({ study, emissionFactorSources }: Props) => {
+const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
   const t = useTranslations('study.rights.versions')
   const tSources = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
@@ -88,7 +89,7 @@ const StudyVersions = ({ study, emissionFactorSources }: Props) => {
         {sources.map((source) => (
           <li key={source.source} className={classNames(styles.source, 'flex align-center mb-2')}>
             {tSources(source.source)} {source.name}
-            {source.upgradable && (
+            {source.upgradable && canUpdate && (
               <div className="ml1">
                 <Button
                   className={styles.upgradeButton}

@@ -95,7 +95,7 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
         </div>
         <div className="flex">
           <StudyPublicStatus study={study} user={user} disabled={disabled} />
-          <StudyVersions study={study} emissionFactorSources={emissionFactorSources} />
+          <StudyVersions study={study} emissionFactorSources={emissionFactorSources} canUpdate={!disabled} />
         </div>
       </Block>
       <Modal
