@@ -132,9 +132,11 @@ const EmissionSourceForm = ({
     <>
       <p className={classNames(styles.subTitle, 'mt1 mb-2 justify-between')}>
         {t('mandartoryFields')}
-        <Button onClick={() => setOpen(true)} color="secondary">
-          <CopyIcon />
-        </Button>
+        {canEdit && (
+          <Button onClick={() => setOpen(true)} color="secondary">
+            <CopyIcon />
+          </Button>
+        )}
       </p>
       <div className={classNames(styles.row, 'flex')}>
         <EmissionSourceFactor
