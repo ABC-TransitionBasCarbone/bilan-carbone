@@ -38,6 +38,7 @@ import {
   Organization,
   Prisma,
   Role,
+  StudyEmissionSource,
   StudyRole,
   SubPost,
   UserChecklist,
@@ -770,6 +771,11 @@ export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, 
     })
     .map((emissionFactor) => ({
       ...emissionFactor,
+      newId: (
+        upgradedEmissionFactors.find(
+          (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
+        ) as EmissionFactor
+      ).id,
       newValue: (
         upgradedEmissionFactors.find(
           (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
@@ -778,7 +784,47 @@ export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, 
     }))
   return {
     success: true,
+    emissionSources: targetedEmissionSources,
     deleted: deletedEmissionFactors,
     updated: updatedEmissionFactors,
+    latest,
   }
+}
+
+export const upgradeStudyEmissionFactorSource = async (studyId: string, source: Import) => {
+  const results = await simulateStudyEmissionFactorSourceUpgrade(studyId, source)
+  if (!results.success) {
+    return results
+  }
+  const updatePromises = (results.updated || []).reduce((promises, emissionFactor) => {
+    const emissionSources =
+      results.emissionSources?.filter((emissionSource) => emissionSource.emissionFactor?.id === emissionFactor.id) || []
+    return promises.concat(
+      emissionSources.map((emissionSource) =>
+        prismaClient.studyEmissionSource.update({
+          where: { id: emissionSource.id },
+          data: { emissionFactorId: emissionFactor.newId },
+        }),
+      ),
+    )
+  }, [] as Prisma.PrismaPromise<StudyEmissionSource>[])
+  const deletePromises = (results.deleted || []).reduce((promises, emissionFactor) => {
+    const emissionSources =
+      results.emissionSources?.filter((emissionSource) => emissionSource.emissionFactor?.id === emissionFactor.id) || []
+    return promises.concat(
+      emissionSources.map((emissionSource) =>
+        prismaClient.studyEmissionSource.update({
+          where: { id: emissionSource.id },
+          data: { emissionFactorId: null, validated: false },
+        }),
+      ),
+    )
+  }, [] as Prisma.PrismaPromise<StudyEmissionSource>[])
+  await Promise.all(updatePromises.concat(deletePromises))
+
+  await prismaClient.studyEmissionFactorVersion.update({
+    where: { studyId_source: { studyId, source } },
+    data: { importVersionId: results.latest?.id },
+  })
+  return { success: true }
 }

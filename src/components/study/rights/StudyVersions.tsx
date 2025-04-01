@@ -2,11 +2,15 @@ import Button from '@/components/base/Button'
 import Modal from '@/components/modals/Modal'
 import { getEmissionFactorsByImportedIdsAndVersion } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { simulateStudyEmissionFactorSourceUpgrade } from '@/services/serverFunctions/study'
+import {
+  simulateStudyEmissionFactorSourceUpgrade,
+  upgradeStudyEmissionFactorSource,
+} from '@/services/serverFunctions/study'
 import UpgradeIcon from '@mui/icons-material/Upgrade'
 import { EmissionFactorImportVersion, Import, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import styles from './StudyVersions.module.css'
 
@@ -29,6 +33,8 @@ const StudyVersions = ({ study, emissionFactorSources }: Props) => {
   const [source, setSource] = useState<Import | null>(null)
   const [upgrading, setUpgrading] = useState(false)
   const [simulationResult, setSimulationResult] = useState<SimulationResult>({ updated: [], deleted: [] })
+  const router = useRouter()
+
   const isUpgradable = (source: EmissionFactorImportVersion) =>
     emissionFactorSources.some(
       (emissionFactorSource) =>
@@ -55,6 +61,18 @@ const StudyVersions = ({ study, emissionFactorSources }: Props) => {
       setError(res.message || '')
     } else {
       setSimulationResult({ updated: res.updated || [], deleted: res.deleted || [] })
+    }
+  }
+
+  const upgradeSource = async (source: Import) => {
+    setUpgrading(true)
+    const res = await upgradeStudyEmissionFactorSource(study.id, source)
+    setUpgrading(false)
+    if (!res.success) {
+      setError(res.message || '')
+    } else {
+      setSource(null)
+      router.refresh()
     }
   }
 
@@ -100,7 +118,7 @@ const StudyVersions = ({ study, emissionFactorSources }: Props) => {
             },
             {
               actionType: 'loadingButton',
-              onClick: () => setUpgrading(true),
+              onClick: () => upgradeSource(source),
               loading: upgrading,
               children: t('confirm'),
               ['data-testid']: 'confirm-emission-source-update',
