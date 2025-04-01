@@ -5,7 +5,8 @@ export const CUT = 'cut'
 
 export type Environment = typeof CUT | typeof BASE
 
-export const defaultEnvironment: Environment = BASE // CHANGE THIS TO CUT TO TEST THE DYNAMIC COMPONENT
+// TODO DELETE THE .ENV LOGIC WHEN WE CAN GET ENVIRONMENT FORM USER
+export const defaultEnvironment: Environment = (process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT as Environment) || BASE
 
 interface AppEnvironmentState {
   environment: Environment
