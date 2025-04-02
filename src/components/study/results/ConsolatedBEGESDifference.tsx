@@ -33,10 +33,10 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite }: Props
   const computedResults = useMemo(() => computeResultsByPost(study, tPost, studySite, true, true), [studySite])
   const computedTotal = computedResults.find((result) => result.post === 'total')?.value
 
-  const hasUtilisationEnDependance =
-    computedResults
-      .find((result) => result.post === Post.UtilisationEtDependance)
-      ?.subPosts.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)?.value !== 0
+  const utilisationEnDependance = computedResults
+    .find((result) => result.post === Post.UtilisationEtDependance)
+    ?.subPosts.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)
+  const hasUtilisationEnDependance = !!utilisationEnDependance && utilisationEnDependance.value !== 0
 
   const wasteEmissionSourcesOnStudy = study.emissionSources.filter(
     (emissionSource) =>
