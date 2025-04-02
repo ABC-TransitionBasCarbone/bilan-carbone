@@ -1077,6 +1077,13 @@
       "accept": "Oui",
       "decline": "Non"
     },
+    "duplicateDialog": {
+      "title": "Voulez-vous dupliquer cette source d'émission ?",
+      "content": "Vous pouvez dupliquer cette source d'émission. Vous pourrez ensuite la modifier.",
+      "selectSite": "Merci d'indiquer pour quel site de l'étude vous voulez dupliquer cette source.",
+      "cancel": "Annuler",
+      "confirm": "Confirmer"
+    },
     "saving": "Sauvegarde en cours...",
     "status": {
       "valid": "Validée",

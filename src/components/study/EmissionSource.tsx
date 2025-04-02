@@ -249,6 +249,7 @@ const EmissionSource = ({
               />
             ) : (
               <EmissionSourceForm
+                studyId={study.id}
                 advanced={study.level === Level.Advanced}
                 canEdit={canEdit}
                 canValidate={canValidate}
@@ -259,6 +260,7 @@ const EmissionSource = ({
                 caracterisations={caracterisations}
                 mandatoryCaracterisation={study.exports.length > 0}
                 status={status}
+                studySites={study.sites}
               />
             )}
             {emissionResults && (

@@ -1077,6 +1077,13 @@
       "accept": "Yes",
       "decline": "No"
     },
+    "duplicateDialog": {
+      "title": "Do you want to duplicate this broadcast source?",
+      "content": "You can duplicate this broadcast source. You can then modify it.",
+      "selectSite": "Please indicate for which study site you wish to duplicate this source.",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
     "saving": "Saving ...",
     "status": {
       "valid": "Validated",

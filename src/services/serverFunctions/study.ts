@@ -46,6 +46,7 @@ import {
 } from '@prisma/client'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import { v4 as uuidv4 } from 'uuid'
 import { auth } from '../auth'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
@@ -827,4 +828,39 @@ export const upgradeStudyEmissionFactorSource = async (studyId: string, source: 
     data: { importVersionId: results.latest?.id },
   })
   return { success: true }
+}
+
+export const duplicateStudyEmissionSource = async (
+  studyId: string,
+  emissionSource: FullStudy['emissionSources'][0],
+  studySite: string,
+) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return NOT_AUTHORIZED
+  }
+  const study = await getStudyById(studyId, session.user.organizationId)
+
+  if (
+    !study ||
+    !getUserRoleOnStudy(session.user, study) ||
+    !hasEditionRights(getUserRoleOnStudy(session.user, study))
+  ) {
+    return NOT_AUTHORIZED
+  }
+
+  const data = {
+    ...emissionSource,
+    id: uuidv4(),
+    study: { connect: { id: studyId } },
+    emissionFactor: emissionSource.emissionFactor ? { connect: { id: emissionSource.emissionFactor.id } } : undefined,
+    emissionFactorId: undefined,
+    contributor: emissionSource.contributor ? { connect: { id: emissionSource.contributor.id } } : undefined,
+    contributorId: undefined,
+    studySite: { connect: { id: studySite } },
+    studySiteId: undefined,
+    validated: false,
+  } as Prisma.StudyEmissionSourceCreateInput
+
+  await prismaClient.studyEmissionSource.create({ data })
 }
