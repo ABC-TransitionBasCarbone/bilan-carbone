@@ -1,0 +1,10 @@
+.upgradeButton {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+  border-radius: 50% !important;
+}
+
+.updatedValue {
+  text-decoration: line-through;
+}

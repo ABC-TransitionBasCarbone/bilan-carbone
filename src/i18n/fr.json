@@ -412,6 +412,19 @@
           "no": "Non",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
         }
+      },
+      "versions": {
+        "list": "Versions des facteurs d'emissions de l'étude",
+        "upgradeSource": "Mettre à jour les facteurs d'émissions",
+        "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+        "latest": "Vous utilisez déjà la dernière version de {name}",
+        "title": "Êtes vous sûr de vouloir mettre à jour la source {name} ?",
+        "unchanged": "Les résultats de l'étude seront inchangés",
+        "updated": "Les facteurs d'émission suivants ont été mis à jour",
+        "deleted": "Les facteurs d'émission suivants ont été supprimés",
+        "deletionDetails": "Les sources d'émissions associées n'auront plus de facteur d'émissions et seront dévalidées",
+        "confirm": "Confirmer",
+        "cancel": "Annuler"
       }
     },
     "perimeter": {

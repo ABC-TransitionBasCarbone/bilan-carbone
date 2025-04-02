@@ -54,7 +54,7 @@ const StudyPublicStatus = ({ study, disabled }: Props) => {
   }, [isPublic, study, form])
 
   return (
-    <>
+    <div className="grow">
       <FormRadio
         control={form.control}
         translation={tForm}
@@ -71,7 +71,7 @@ const StudyPublicStatus = ({ study, disabled }: Props) => {
         <span>{tGlossary('visibilityDescription')}</span>
       </GlossaryModal>
       {error && <p>{error}</p>}
-    </>
+    </div>
   )
 }
 export default StudyPublicStatus
