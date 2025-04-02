@@ -10,7 +10,7 @@ import { FullStudy } from '@/db/study'
 import { changeStudyCinema } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DayOfWeek, OpeningHours, StudyRole } from '@prisma/client'
+import { DayOfWeek, EmissionFactorImportVersion, OpeningHours, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -23,9 +23,10 @@ interface Props {
   study: FullStudy
   editionDisabled: boolean
   userRoleOnStudy: StudyRole
+  emissionFactorSources: EmissionFactorImportVersion[]
 }
 
-const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy }: Props) => {
+const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFactorSources }: Props) => {
   const t = useTranslations('study.new')
 
   const openingHoursToObject = (openingHoursArr: OpeningHours[], isHoliday: boolean = false) => {
@@ -121,7 +122,7 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy }: Props) =
 
   return (
     <>
-      <StudyParams user={user} study={study} disabled={editionDisabled} />
+      <StudyParams user={user} study={study} disabled={editionDisabled} emissionFactorSources={emissionFactorSources} />
       <Block>
         <FormTextField
           control={form.control}
