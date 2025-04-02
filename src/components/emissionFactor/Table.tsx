@@ -155,7 +155,7 @@ const EmissionFactorsTable = ({
         header: t('name'),
         accessorFn: (emissionFactor) =>
           emissionFactor.metaData
-            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}${emissionFactor.metaData.location ? ` - ${emissionFactor.metaData.location}` : ''}`
+            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}`
             : '',
         cell: ({ getValue, row }) => (
           <div className="align-center">
@@ -175,7 +175,8 @@ const EmissionFactorsTable = ({
       },
       {
         header: t('location'),
-        accessorKey: 'location',
+        accessorFn: (emissionFactor) =>
+          `${emissionFactor.location}${emissionFactor.metaData?.location ? ` - ${emissionFactor.metaData.location}` : ''}`,
         cell: ({ getValue }) => <span>{getValue<string>() || ' '}</span>,
       },
       {
