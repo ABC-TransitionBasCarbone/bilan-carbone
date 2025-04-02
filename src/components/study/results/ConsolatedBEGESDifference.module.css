@@ -1,0 +1,15 @@
+.button {
+  max-width: 20rem;
+  /* TODO : switch after color update */
+  /* background-color: var(--greyscale-50); */
+  background-color: var(--greyscale-200);
+  color: var(--primary-60);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.wasteList {
+  list-style-position: inside;
+  list-style-type: initial;
+}
