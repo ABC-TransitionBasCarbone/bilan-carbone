@@ -15,6 +15,7 @@ import {
   createStudy,
   createUserOnStudy,
   deleteStudy,
+  downgradeStudyUserRoles,
   FullStudy,
   getStudiesFromSites,
   getStudyById,
@@ -246,6 +247,17 @@ export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevel
     return NOT_AUTHORIZED
   }
   await updateStudy(studyId, command)
+  const usersOnStudy = await prismaClient.userOnStudy.findMany({ where: { studyId } })
+  const usersLevel = await prismaClient.user.findMany({
+    where: { id: { in: usersOnStudy.map((user) => user.userId) } },
+    select: { id: true, level: true },
+  })
+  const usersRoleToDowngrade = usersLevel
+    .filter((userLevel) => !checkLevel(userLevel.level, command.level))
+    .map((userLevel) => userLevel.id)
+  if (usersRoleToDowngrade.length) {
+    await downgradeStudyUserRoles(studyId, usersRoleToDowngrade)
+  }
 }
 
 export const changeStudyResultsUnit = async ({ studyId, ...command }: ChangeStudyResultsUnitCommand) => {

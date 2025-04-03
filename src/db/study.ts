@@ -280,6 +280,16 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
 
+export const downgradeStudyUserRoles = (studyId: string, userIds: string[]) =>
+  Promise.all(
+    userIds.map((userId) =>
+      prismaClient.userOnStudy.update({
+        where: { studyId_userId: { studyId, userId } },
+        data: { role: StudyRole.Reader },
+      }),
+    ),
+  )
+
 export const getStudySites = (studyId: string) => prismaClient.studySite.findMany({ where: { studyId } })
 
 export const updateStudySites = async (
