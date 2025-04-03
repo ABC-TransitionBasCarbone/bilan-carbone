@@ -15,6 +15,7 @@ import {
   createStudy,
   createUserOnStudy,
   deleteStudy,
+  downgradeStudyUserRoles,
   FullStudy,
   getStudiesFromSites,
   getStudyById,
@@ -246,6 +247,17 @@ export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevel
     return NOT_AUTHORIZED
   }
   await updateStudy(studyId, command)
+  const usersOnStudy = await prismaClient.userOnStudy.findMany({ where: { studyId } })
+  const usersLevel = await prismaClient.user.findMany({
+    where: { id: { in: usersOnStudy.map((user) => user.userId) } },
+    select: { id: true, level: true },
+  })
+  const usersRoleToDowngrade = usersLevel
+    .filter((userLevel) => !checkLevel(userLevel.level, command.level))
+    .map((userLevel) => userLevel.id)
+  if (usersRoleToDowngrade.length) {
+    await downgradeStudyUserRoles(studyId, usersRoleToDowngrade)
+  }
 }
 
 export const changeStudyResultsUnit = async ({ studyId, ...command }: ChangeStudyResultsUnitCommand) => {
@@ -481,11 +493,6 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const organization = await getOrganizationById(studyWithRights.organizationId)
-  if (!organization) {
-    return NOT_AUTHORIZED
-  }
-
   if (!existingUser || !checkLevel(existingUser.level, studyWithRights.level)) {
     right.role = StudyRole.Reader
   }
@@ -494,8 +501,9 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights.organization)) {
-    right.role = StudyRole.Validator
+  const organization = await getOrganizationById(studyWithRights.organizationId)
+  if (!organization) {
+    return NOT_AUTHORIZED
   }
 
   if (
@@ -503,6 +511,14 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     studyWithRights.contributors.some((contributor) => contributor.user.id === existingUser?.id)
   ) {
     return ALREADY_IN_STUDY
+  }
+
+  if (
+    existingUser &&
+    isAdminOnStudyOrga(existingUser, studyWithRights.organization) &&
+    checkLevel(existingUser.level, studyWithRights.level)
+  ) {
+    right.role = StudyRole.Validator
   }
 
   const userId = await getOrCreateUserAndSendStudyInvite(
