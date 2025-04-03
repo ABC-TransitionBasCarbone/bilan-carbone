@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { ControlMode, Level, Prisma, Export as StudyExport } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 
 export enum RequiredStudiesColumns {
@@ -10,7 +10,7 @@ export enum RequiredStudiesColumns {
 }
 
 export enum RequiredStudySitesColumns {
-  oldBCId = 'ID_ENTITE',
+  siteOldBCId = 'ID_ENTITE',
   studyId = 'IDETUDE',
 }
 
@@ -25,17 +25,15 @@ interface Study {
   name: string
   startDate: Date | string
   endDate: Date | string
-  sites: StudySite[]
-  exports: Export[]
 }
 
 interface StudySite {
-  oldBCId: string
+  siteOldBCId: string
 }
 
 interface Export {
-  type: string
-  control: string
+  type: StudyExport
+  control: ControlMode
 }
 
 const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
@@ -51,8 +49,6 @@ const parseStudies = (indexes: Record<string, number>, data: (string | number)[]
       endDate: row[indexes[RequiredStudiesColumns.startDate]]
         ? new Date(getJsDateFromExcel(row[indexes[RequiredStudiesColumns.endDate]] as number))
         : '',
-      sites: [],
-      exports: [],
     }))
 }
 
@@ -62,7 +58,7 @@ const parseStudySites = (indexes: Record<string, number>, data: (string | number
     .map<[string, StudySite]>((row) => [
       row[indexes[RequiredStudySitesColumns.studyId]] as string,
       {
-        oldBCId: row[indexes[RequiredStudySitesColumns.oldBCId]] as string,
+        siteOldBCId: row[indexes[RequiredStudySitesColumns.siteOldBCId]] as string,
       },
     ])
     .reduce((accumulator, currentValue) => {
@@ -76,25 +72,97 @@ const parseStudySites = (indexes: Record<string, number>, data: (string | number
     }, new Map<string, StudySite[]>())
 }
 
+const getType = (type: string) => {
+  if (type.startsWith('BEGES')) {
+    return StudyExport.Beges
+  } else if (type.startsWith('GHG')) {
+    return StudyExport.GHGP
+  } else if (type === 'ISO 14069') {
+    return StudyExport.ISO14069
+  } else {
+    return null
+  }
+}
+
+const getControl = (control: string) => {
+  if (control === 'Part du capital') {
+    return ControlMode.CapitalShare
+  } else if (control.includes('financier')) {
+    return ControlMode.Financial
+  } else if (control.includes('opérationnel')) {
+    return ControlMode.Operational
+  } else {
+    return null
+  }
+}
+
 const parseExports = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, Export[]> => {
   return data
     .slice(1)
-    .map<[string, Export]>((row) => [
-      row[indexes[RequiredStudyExportsColumns.studyId]] as string,
-      {
-        type: row[indexes[RequiredStudyExportsColumns.type]] as string,
-        control: row[indexes[RequiredStudyExportsColumns.control]] as string,
-      },
-    ])
+    .map<[string, Export | null]>((row) => {
+      const type = getType(row[indexes[RequiredStudyExportsColumns.type]] as string)
+      const control = getControl(row[indexes[RequiredStudyExportsColumns.control]] as string)
+      if (!type) {
+        console.warn(`Type ${type} invalide`)
+        return [row[indexes[RequiredStudyExportsColumns.studyId]] as string, null]
+      }
+      if (!control) {
+        console.warn(`Control ${control} invalide`)
+        return [row[indexes[RequiredStudyExportsColumns.studyId]] as string, null]
+      }
+      return [
+        row[indexes[RequiredStudyExportsColumns.studyId]] as string,
+        {
+          type: type,
+          control: control,
+        },
+      ]
+    })
     .reduce((accumulator, currentValue) => {
+      const currentExport = currentValue[1]
+      if (currentExport === null) {
+        return accumulator
+      }
       const exports = accumulator.get(currentValue[0])
       if (exports) {
-        exports.push(currentValue[1])
+        if (!exports.find((e) => e.type === currentExport.type && e.control === currentExport.control)) {
+          exports.push(currentExport)
+        }
       } else {
-        accumulator.set(currentValue[0], [currentValue[1]])
+        accumulator.set(currentValue[0], [currentExport])
       }
       return accumulator
     }, new Map<string, Export[]>())
+}
+
+interface Delegate {
+  findMany(args?: object): Promise<{ id: string; oldBCId: string | null }[]>
+}
+
+async function getExistingObjectIds(delegate: Delegate, ids: string[]) {
+  const createdObjects = await delegate.findMany({
+    where: {
+      oldBCId: {
+        in: ids,
+      },
+    },
+    select: { id: true, oldBCId: true },
+  })
+
+  return createdObjects.reduce((map, currentCreatedObject) => {
+    if (currentCreatedObject.oldBCId) {
+      map.set(currentCreatedObject.oldBCId, currentCreatedObject.id)
+    }
+    return map
+  }, new Map<string, string>())
+}
+
+const getExistingStudiesIds = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
+  return getExistingObjectIds(transaction.study, studiesIds)
+}
+
+const getExistingSitesIds = async (transaction: Prisma.TransactionClient, sitesIds: string[]) => {
+  return getExistingObjectIds(transaction.site, sitesIds)
 }
 
 export const uploadStudies = async (
@@ -114,24 +182,6 @@ export const uploadStudies = async (
   const studySites = parseStudySites(studySitesIndexes, studySitesData)
   const studyExports = parseExports(studyExportsIndexes, studyExportsData)
 
-  studySites.entries().forEach(([studyId, sites]) => {
-    const study = studies.find((study) => study.oldBCId === studyId)
-    if (study) {
-      study.sites = sites
-    } else {
-      console.warn(`Study of id ${studyId} not found.`)
-    }
-  })
-
-  studyExports.entries().forEach(([studyId, exports]) => {
-    const study = studies.find((study) => study.oldBCId === studyId)
-    if (study) {
-      study.exports = exports
-    } else {
-      console.warn(`Study of id ${studyId} not found.`)
-    }
-  })
-
   const existingStudyIds = await transaction.study.findMany({
     where: {
       oldBCId: { in: studies.map((study) => study.oldBCId) },
@@ -146,7 +196,65 @@ export const uploadStudies = async (
     (study) => !existingStudyIds.find((existingStudy) => study.oldBCId !== existingStudy.oldBCId),
   )
 
-  console.log(newStudies)
+  await transaction.study.createMany({
+    data: newStudies.map((study) => ({
+      ...study,
+      sites: undefined,
+      exports: undefined,
+      createdById: userId,
+      isPublic: false,
+      level: Level.Initial,
+      organizationId: organizationId,
+    })),
+  })
+
+  const existingStudiesIds = await getExistingStudiesIds(transaction, Array.from(studySites.keys()))
+  const existingSiteIds = await getExistingSitesIds(transaction, Array.from(studySites.keys()))
+
+  await transaction.studySite.createMany({
+    data: Array.from(
+      studySites.entries().flatMap(([studyOldBCId, studySites]) => {
+        const existingStudyId = existingStudiesIds.get(studyOldBCId)
+        if (!existingStudyId) {
+          console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
+          return []
+        }
+        return studySites
+          .map((studySite) => {
+            const existingSiteId = existingSiteIds.get(studySite.siteOldBCId)
+            if (!existingSiteId) {
+              console.warn(`Impossible de retrouver le site de oldBCId: ${studySite.siteOldBCId}`)
+              return null
+            }
+            return {
+              studyId: existingStudyId,
+              siteId: existingSiteId,
+              etp: 1,
+              ca: 1,
+            }
+          })
+          .filter((studySite) => studySite !== null)
+      }),
+    ),
+  })
+
+  await transaction.studyExport.createMany({
+    data: Array.from(
+      studyExports.entries().flatMap(([studyOldBCId, studyExports]) => {
+        const existingStudyId = existingStudiesIds.get(studyOldBCId)
+        if (!existingStudyId) {
+          console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
+          return []
+        }
+        return studyExports
+          .map((studyExport) => ({
+            ...studyExport,
+            studyId: existingStudyId,
+          }))
+          .filter((studyExport) => studyExport !== null)
+      }),
+    ),
+  })
 
   return false
 }

@@ -428,7 +428,7 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
     return NOT_AUTHORIZED
   }
   if (control === false) {
-    return prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })
+    return prismaClient.studyExport.deleteMany({ where: { studyId: studyId, type: type } })
   }
   return prismaClient.studyExport.create({ data: { studyId, type, control } })
 }
