@@ -2,6 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { getSpecificEmissionFactorQualityColumn, qualityKeys } from '@/services/uncertainty'
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
 import classNames from 'classnames'
@@ -21,6 +22,7 @@ interface Props {
   setExpanded: (value: boolean) => void
   canShrink: boolean
   defaultQuality?: number | null
+  feSpecific?: boolean
 }
 
 const QualitySelectGroup = ({
@@ -33,67 +35,40 @@ const QualitySelectGroup = ({
   setExpanded,
   canShrink,
   defaultQuality,
+  feSpecific,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tGlossary = useTranslations('emissionSource.glossary')
+
+  const getField = (field: (typeof qualityKeys)[number]) =>
+    feSpecific ? getSpecificEmissionFactorQualityColumn[field] : field
 
   return (
     <div className={classNames('flex grow', expanded ? styles.row : styles.shrinked)}>
       {expanded ? (
         <>
-          <QualitySelect
-            disabled={!canEdit}
-            data-testid="emission-source-reliability"
-            id="reliability"
-            value={emissionSource.reliability || ''}
-            onChange={(event) => update('reliability', Number(event.target.value))}
-            label={t('form.reliability')}
-          />
-          <QualitySelect
-            disabled={!canEdit}
-            data-testid="emission-source-technicalRepresentativeness"
-            id="technicalRepresentativeness"
-            value={emissionSource.technicalRepresentativeness || ''}
-            onChange={(event) => update('technicalRepresentativeness', Number(event.target.value))}
-            label={t('form.technicalRepresentativeness')}
-          />
-          <QualitySelect
-            disabled={!canEdit}
-            data-testid="emission-source-geographicRepresentativeness"
-            id="geographicRepresentativeness"
-            value={emissionSource.geographicRepresentativeness || ''}
-            onChange={(event) => update('geographicRepresentativeness', Number(event.target.value))}
-            label={t('form.geographicRepresentativeness')}
-          />
-          <QualitySelect
-            disabled={!canEdit}
-            data-testid="emission-source-temporalRepresentativeness"
-            id="temporalRepresentativeness"
-            value={emissionSource.temporalRepresentativeness || ''}
-            onChange={(event) => update('temporalRepresentativeness', Number(event.target.value))}
-            label={t('form.temporalRepresentativeness')}
-          />
-          <QualitySelect
-            disabled={!canEdit}
-            data-testid="emission-source-completeness"
-            id="completeness"
-            value={emissionSource.completeness || ''}
-            onChange={(event) => update('completeness', Number(event.target.value))}
-            label={t('form.completeness')}
-          />
+          {qualityKeys.map((field) => (
+            <QualitySelect
+              key={`qualify-${getField(field)}`}
+              disabled={!canEdit}
+              data-testid={`emission-source-${getField(field)}`}
+              id={getField(field)}
+              value={emissionSource[getField(field)] || ''}
+              onChange={(event) => update(getField(field), Number(event.target.value))}
+              label={t(`form.${field}`)}
+            />
+          ))}
         </>
       ) : (
         <QualitySelect
           disabled={!canEdit}
           data-testid="emission-source-quality-select"
-          id="completeness"
+          id="quality"
           value={defaultQuality || ''}
           onChange={(event) => {
-            update('reliability', Number(event.target.value))
-            update('technicalRepresentativeness', Number(event.target.value))
-            update('geographicRepresentativeness', Number(event.target.value))
-            update('temporalRepresentativeness', Number(event.target.value))
-            update('completeness', Number(event.target.value))
+            qualityKeys.forEach((field) => {
+              update(getField(field), Number(event.target.value))
+            })
           }}
           label={t('form.quality')}
         />
