@@ -13,6 +13,7 @@ import InventoryIcon from '@mui/icons-material/Inventory'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import {
+  Autocomplete,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -73,14 +74,9 @@ const fuseOptions = {
 
 const locationFuseOptions = {
   keys: [
-    {
-      name: 'location',
-      weight: 1,
-    },
-    {
-      name: 'metaData.location',
-      weight: 0.5,
-    },
+    { name: 'location', weight: 1 },
+    { name: 'metaData.location', weight: 0.5 },
+    { name: 'combinedLocation', weight: 1.5 },
   ],
   threshold: 0.3,
   isCaseSensitive: false,
@@ -96,6 +92,9 @@ interface Props {
 
 const initialSelectedUnits: (Unit | string)[] = [...['all', ''], ...Object.values(Unit)]
 const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
+
+const getLocationLabel = (row: EmissionFactorWithMetaData) =>
+  `${row.location}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`
 
 const EmissionFactorsTable = ({
   emissionFactors,
@@ -175,8 +174,7 @@ const EmissionFactorsTable = ({
       },
       {
         header: t('location'),
-        accessorFn: (emissionFactor) =>
-          `${emissionFactor.location}${emissionFactor.metaData?.location ? ` - ${emissionFactor.metaData.location}` : ''}`,
+        accessorFn: (emissionFactor) => getLocationLabel(emissionFactor),
         cell: ({ getValue }) => <span>{getValue<string>() || ' '}</span>,
       },
       {
@@ -303,7 +301,11 @@ const EmissionFactorsTable = ({
     const searchResults = filter ? fuse.search(filter).map(({ item }) => item) : emissionFactors
 
     if (locationFilter) {
-      const locationFuse = new Fuse(searchResults, locationFuseOptions)
+      const enhancedSearchResults = searchResults.map((item) => ({
+        ...item,
+        combinedLocation: getLocationLabel(item),
+      }))
+      const locationFuse = new Fuse(enhancedSearchResults, locationFuseOptions)
       return locationFuse.search(locationFilter).map(({ item }) => item)
     }
     return searchResults
@@ -349,11 +351,10 @@ const EmissionFactorsTable = ({
     }
   }
 
-  const selectLocations = (event: SelectChangeEvent<typeof filteredSources>) => {
+  const selectSource = (event: SelectChangeEvent<typeof filteredSources>) => {
     const {
       target: { value },
     } = event
-
     setFilteredSources(value as string[])
   }
 
@@ -423,6 +424,16 @@ const EmissionFactorsTable = ({
     setFilteredSubPosts(newValue)
   }
 
+  const locationOptions = useMemo(
+    () =>
+      data
+        .map((emissionFactor) => getLocationLabel(emissionFactor))
+        .filter(
+          (location, i) => data.map((emissionFactor) => getLocationLabel(emissionFactor)).indexOf(location) === i,
+        ),
+    [data],
+  )
+
   return (
     <>
       <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
@@ -436,12 +447,22 @@ const EmissionFactorsTable = ({
               placeholder={t('search')}
               data-testid="emission-factor-search-input"
             />
-            <DebouncedInput
-              className={styles.searchInput}
-              debounce={200}
+            <Autocomplete
               value={locationFilter}
-              onChange={setLocationFilter}
-              placeholder={t('locationSearch')}
+              options={locationOptions}
+              onChange={(_, option) => setLocationFilter(option || '')}
+              onInputChange={(_, newInputValue) => setLocationFilter(newInputValue)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder={t('locationSearch')}
+                  sx={{
+                    minWidth: '20rem',
+                    '& .MuiOutlinedInput-root': { '& fieldset': { borderRadius: '0.25rem' } },
+                    '& .MuiInputBase-input': { color: 'var(--color-grey-950)' },
+                  }}
+                />
+              )}
             />
             <FormControl className={styles.selector}>
               <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>
@@ -449,7 +470,7 @@ const EmissionFactorsTable = ({
                 id="emissions-sources-selector"
                 labelId="emissions-sources-selector"
                 value={filteredSources}
-                onChange={selectLocations}
+                onChange={selectSource}
                 input={<OutlinedInput label={t('sources')} />}
                 renderValue={statusSelectorRenderValue}
                 multiple
