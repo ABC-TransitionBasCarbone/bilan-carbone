@@ -493,11 +493,6 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const organization = await getOrganizationById(studyWithRights.organizationId)
-  if (!organization) {
-    return NOT_AUTHORIZED
-  }
-
   if (!existingUser || !checkLevel(existingUser.level, studyWithRights.level)) {
     right.role = StudyRole.Reader
   }
@@ -506,8 +501,9 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  if (existingUser && isAdminOnStudyOrga(existingUser, studyWithRights.organization)) {
-    right.role = StudyRole.Validator
+  const organization = await getOrganizationById(studyWithRights.organizationId)
+  if (!organization) {
+    return NOT_AUTHORIZED
   }
 
   if (
@@ -515,6 +511,14 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     studyWithRights.contributors.some((contributor) => contributor.user.id === existingUser?.id)
   ) {
     return ALREADY_IN_STUDY
+  }
+
+  if (
+    existingUser &&
+    isAdminOnStudyOrga(existingUser, studyWithRights.organization) &&
+    checkLevel(existingUser.level, studyWithRights.level)
+  ) {
+    right.role = StudyRole.Validator
   }
 
   const userId = await getOrCreateUserAndSendStudyInvite(
