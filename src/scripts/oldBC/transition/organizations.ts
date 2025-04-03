@@ -69,37 +69,16 @@ export const uploadOrganizations = async (
 
   const existingOrganizations = await prismaClient.organization.findMany({
     where: {
-      OR: [
-        // On va chercher les ids déjà importé
+      AND: [
+        { parentId: userOrganizationId },
         { oldBCId: { in: organizations.map((organization) => organization.oldBCId as string) } },
-        // Ou les siret deja existant
-        { siret: { in: organizations.map((organization) => organization.siret as string).filter((siret) => siret) } },
-        // Ou si il n'y a pas de siret, les organisations avec le même nom, dans mon organisation
-        {
-          parentId: userOrganizationId,
-          name: {
-            in: organizations
-              .filter((organization) => !organization.siret)
-              .map((organization) => organization.name as string),
-          },
-        },
       ],
     },
   })
 
   const newOrganizations = organizations
-    .filter(
-      (organization) =>
-        // On ne crée pas les organizations avec un id déjà existant
-        // Ou avec un siret existant
-        // Ou si il n'y a pas de siret, avec un nom existant dans mon organisation
-        !existingOrganizations.some(
-          ({ oldBCId, siret, name }) =>
-            oldBCId === organization.oldBCId ||
-            (organization.siret ? siret === organization.siret : name === organization.name),
-        ),
-    )
     .filter((organization) => organization.mainEntity === 1)
+    .filter((organization) => !existingOrganizations.some(({ oldBCId }) => oldBCId === organization.oldBCId))
 
   // Je crée toutes les organisations sauf la mienne
   const organizationsToCreate = newOrganizations.filter((organization) => organization.userOrga !== 1)
