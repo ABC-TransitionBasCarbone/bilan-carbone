@@ -122,6 +122,10 @@ export const uploadOrganizations = async (
   // Et je crée tous les autres sites
   const sitesToCreate = organizations
     .filter((organization) => organization.mainEntity !== 1)
+    .filter(
+      (organization) =>
+        !existingOrganizations.some((existingOrganization) => organization.parentId === existingOrganization.oldBCId),
+    )
     .map((organization) => {
       const createdParentOrganisationId = createdOrganizationsIds.get(organization.parentId as string)
       if (!createdParentOrganisationId) {
