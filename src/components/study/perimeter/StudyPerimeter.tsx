@@ -2,11 +2,12 @@
 import Button from '@/components/base/Button'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import { OrganizationWithSites } from '@/db/account'
 import { FullStudy } from '@/db/study'
-import { OrganizationWithSites } from '@/db/user'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
+
 import {
   changeStudyDates,
   changeStudyExports,

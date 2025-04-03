@@ -65,7 +65,7 @@ const SubPost = ({
         ? null
         : study.contributors
             .filter((contributor) => contributor.subPost === subPost)
-            .map((contributor) => contributor.user.email),
+            .map((contributor) => contributor.account.user.email),
     [study, subPost, withoutDetail],
   )
 

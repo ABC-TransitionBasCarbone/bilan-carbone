@@ -12,7 +12,7 @@ import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/se
 import { zodResolver } from '@hookform/resolvers/zod'
 import EditIcon from '@mui/icons-material/Edit'
 import { EmissionFactorImportVersion } from '@prisma/client'
-import { User } from 'next-auth'
+import { Account } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import StudyLevel from './StudyLevel'
@@ -22,7 +22,7 @@ import StudyResultsUnit from './StudyResultsUnit'
 import StudyVersions from './StudyVersions'
 
 interface Props {
-  user: User
+  user: Account
   study: FullStudy
   disabled: boolean
   emissionFactorSources: EmissionFactorImportVersion[]

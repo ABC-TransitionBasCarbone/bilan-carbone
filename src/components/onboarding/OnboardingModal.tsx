@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
 import { Organization, Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { Account } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -22,11 +22,11 @@ import Step2 from './OnboardingStep2'
 interface Props {
   open: boolean
   onClose: () => void
-  user: User
+  account: Account
   organization: Organization
 }
 
-const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
+const OnboardingModal = ({ open, onClose, account, organization }: Props) => {
   const t = useTranslations('onboarding')
   const { update: updateSession } = useSession()
   const router = useRouter()
@@ -37,7 +37,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const Step = activeStep === 1 ? Step1 : Step2
   const buttonLabel = activeStep === stepCount ? 'validate' : 'next'
 
-  const newRole = useMemo(() => (user.level ? Role.ADMIN : Role.GESTIONNAIRE), [user])
+  const newRole = useMemo(() => (account.level ? Role.ADMIN : Role.GESTIONNAIRE), [account])
 
   const form = useForm<OnboardingCommand>({
     resolver: zodResolver(OnboardingCommandValidation),
@@ -45,8 +45,8 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     reValidateMode: 'onBlur',
     defaultValues: {
       organizationId: organization.id,
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
+      firstName: account.firstName || '',
+      lastName: account.lastName || '',
       companyName: organization.name || '',
       collaborators: [{ email: '' }],
     },

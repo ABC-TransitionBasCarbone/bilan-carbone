@@ -1,6 +1,7 @@
-import { getUserApplicationSettings, OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/account'
+import { getUserApplicationSettings } from '@/db/user'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { User } from 'next-auth'
+import { Account } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -8,14 +9,14 @@ import EditOrganizationForm from '../organization/edit/EditOrganizationForm'
 
 interface Props {
   organization: OrganizationWithSites
-  user: User
+  user: Account
 }
 
 const EditOrganizationPage = async ({ organization, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('organization.form')
 
-  const userCAUnit = (await getUserApplicationSettings(user.id))?.caUnit
+  const userCAUnit = (await getUserApplicationSettings(user.accountId))?.caUnit
   const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
 
   return (

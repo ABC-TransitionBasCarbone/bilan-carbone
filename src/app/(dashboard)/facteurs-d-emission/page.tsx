@@ -1,9 +1,9 @@
 import withAuth from '@/components/hoc/withAuth'
 import EmissionsFactorPage from '@/components/pages/EmissionFactors'
-import { User } from 'next-auth'
+import { Account } from 'next-auth'
 
 interface Props {
-  user: User
+  user: Account
 }
 
 const EmissionFactors = async ({ user }: Props) => {
