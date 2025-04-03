@@ -38,12 +38,6 @@ const Navbar = ({ user }: Props) => {
           <Link href="/" aria-label={t('home')} title={t('home')}>
             <Image src="/logos/logo_BC_2025_blanc.png" width={200} height={48} alt="" className={styles.logo} />
           </Link>
-          {!isCut && (
-            <Link className={styles.link} href="/facteurs-d-emission">
-              <span className={styles.big}>{t('factors')}</span>
-              <span className={styles.small}>{t('fe')}</span>
-            </Link>
-          )}
           {user.organizationId && (
             <div className="flex-col">
               <div
@@ -74,6 +68,12 @@ const Navbar = ({ user }: Props) => {
                 </div>
               )}
             </div>
+          )}
+          {!isCut && (
+            <Link className={styles.link} href="/facteurs-d-emission">
+              <span className={styles.big}>{t('factors')}</span>
+              <span className={styles.small}>{t('fe')}</span>
+            </Link>
           )}
         </div>
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
