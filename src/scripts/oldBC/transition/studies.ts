@@ -20,6 +20,10 @@ export enum RequiredStudyExportsColumns {
   control = 'LIBELLE_MODE_CONTROLE',
 }
 
+export enum RequiredStudyEmissionSourcesColumns {
+  studyId = 'ID_ETUDE',
+}
+
 interface Study {
   oldBCId: string
   name: string
@@ -35,6 +39,8 @@ interface Export {
   type: StudyExport
   control: ControlMode
 }
+
+interface EmissionSource {}
 
 const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
   return data
@@ -135,6 +141,26 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
     }, new Map<string, Export[]>())
 }
 
+const parseEmissionSources = (
+  indexes: Record<string, number>,
+  data: (string | number)[][],
+): Map<string, EmissionSource[]> => {
+  return data
+    .slice(1)
+    .map<[string, EmissionSource]>((row) => {
+      return [row[indexes[RequiredStudyExportsColumns.studyId]] as string, {}]
+    })
+    .reduce((accumulator, currentValue) => {
+      const EmissionSources = accumulator.get(currentValue[0])
+      if (EmissionSources) {
+        EmissionSources.push(currentValue[1])
+      } else {
+        accumulator.set(currentValue[0], [currentValue[1]])
+      }
+      return accumulator
+    }, new Map<string, EmissionSource[]>())
+}
+
 interface Delegate {
   findMany(args?: object): Promise<{ id: string; oldBCId: string | null }[]>
 }
@@ -175,12 +201,15 @@ export const uploadStudies = async (
   studySitesData: (string | number)[][],
   studyExportsIndexes: Record<string, number>,
   studyExportsData: (string | number)[][],
+  studyEmissionSourceIndexes: Record<string, number>,
+  studyEmissionSourceData: (string | number)[][],
 ) => {
   console.log('Import des études...')
 
   const studies = parseStudies(studiesIndexes, studiesData)
   const studySites = parseStudySites(studySitesIndexes, studySitesData)
   const studyExports = parseExports(studyExportsIndexes, studyExportsData)
+  const studyEmissionSources = parseEmissionSources(studyEmissionSourceIndexes, studyEmissionSourceData)
 
   const existingStudyIds = await transaction.study.findMany({
     where: {
