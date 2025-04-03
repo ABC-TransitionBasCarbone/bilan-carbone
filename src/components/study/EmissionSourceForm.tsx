@@ -9,10 +9,18 @@ import { EmissionSourcesStatus } from '@/services/study'
 import { getQualityRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
+import { hasEditionRights } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, EmissionSourceType, StudyResultUnit, SubPost, Unit } from '@prisma/client'
+import {
+  EmissionSourceCaracterisation,
+  EmissionSourceType,
+  StudyResultUnit,
+  StudyRole,
+  SubPost,
+  Unit,
+} from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -37,6 +45,7 @@ interface Props {
   studyId: string
   advanced?: boolean
   emissionSource: FullStudy['emissionSources'][0]
+  userRoleOnStudy: StudyRole | null
   canEdit: boolean | null
   canValidate: boolean
   emissionFactors: EmissionFactorWithMetaData[]
@@ -52,6 +61,7 @@ const EmissionSourceForm = ({
   studyId,
   advanced,
   emissionSource,
+  userRoleOnStudy,
   canEdit,
   canValidate,
   update,
@@ -132,7 +142,7 @@ const EmissionSourceForm = ({
     <>
       <p className={classNames(styles.subTitle, 'mt1 mb-2 justify-between')}>
         {t('mandartoryFields')}
-        {canEdit && (
+        {hasEditionRights(userRoleOnStudy) && (
           <Button onClick={() => setOpen(true)} color="secondary">
             <CopyIcon />
           </Button>
