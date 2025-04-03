@@ -3,6 +3,7 @@
 import { isAdmin } from '@/services/permissions/user'
 import { getStudyOrganization } from '@/services/serverFunctions/organization'
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
+import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { Organization, Role } from '@prisma/client'
@@ -20,6 +21,9 @@ interface Props {
 
 const OrganizationCard = ({ user, organizations }: Props) => {
   const t = useTranslations('organization.card')
+
+  const { environment } = useAppEnvironmentStore()
+  const isCut = useMemo(() => environment === CUT, [environment])
 
   const defaultOrganization = organizations.find(
     (organization) => organization.id === user.organizationId,
@@ -87,18 +91,20 @@ const OrganizationCard = ({ user, organizations }: Props) => {
             </LinkButton>
           )}
         </div>
-        <div>
-          <LinkButton
-            className="align-center"
-            color="secondary"
-            target="_blank"
-            rel="noreferrer noopener"
-            href="https://www.bilancarbone-methode.com/"
-          >
-            <MenuBookIcon />
-            <span className="ml-2">{t('method')}</span>
-          </LinkButton>
-        </div>
+        {!isCut && (
+          <div>
+            <LinkButton
+              className="align-end"
+              color="secondary"
+              target="_blank"
+              rel="noreferrer noopener"
+              href="https://www.bilancarbone-methode.com/"
+            >
+              <MenuBookIcon />
+              <span className="ml-2">{t('method')}</span>
+            </LinkButton>
+          </div>
+        )}
       </div>
     </div>
   )
