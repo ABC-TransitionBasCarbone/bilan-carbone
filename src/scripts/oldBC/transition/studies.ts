@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 
 export enum RequiredStudiesColumns {
-  id = 'IDETUDE',
+  oldBCId = 'IDETUDE',
   name = 'NOM_ETUDE',
   startDate = 'PERIODE_DEBUT',
   endDate = 'PERIODE_FIN',
@@ -10,7 +10,7 @@ export enum RequiredStudiesColumns {
 }
 
 export enum RequiredStudySitesColumns {
-  id = 'ID_ENTITE',
+  oldBCId = 'ID_ENTITE',
   studyId = 'IDETUDE',
 }
 
@@ -21,7 +21,7 @@ export enum RequiredStudyExportsColumns {
 }
 
 interface Study {
-  id: string
+  oldBCId: string
   name: string
   startDate: Date | string
   endDate: Date | string
@@ -30,7 +30,7 @@ interface Study {
 }
 
 interface StudySite {
-  id: string
+  oldBCId: string
 }
 
 interface Export {
@@ -43,7 +43,7 @@ const parseStudies = (indexes: Record<string, number>, data: (string | number)[]
     .slice(1)
     .filter((row) => row[indexes[RequiredStudiesColumns.name]])
     .map((row) => ({
-      id: row[indexes[RequiredStudiesColumns.id]] as string,
+      oldBCId: row[indexes[RequiredStudiesColumns.oldBCId]] as string,
       name: row[indexes[RequiredStudiesColumns.name]] as string,
       startDate: row[indexes[RequiredStudiesColumns.startDate]]
         ? new Date(getJsDateFromExcel(row[indexes[RequiredStudiesColumns.startDate]] as number))
@@ -62,7 +62,7 @@ const parseStudySites = (indexes: Record<string, number>, data: (string | number
     .map<[string, StudySite]>((row) => [
       row[indexes[RequiredStudySitesColumns.studyId]] as string,
       {
-        id: row[indexes[RequiredStudySitesColumns.id]] as string,
+        oldBCId: row[indexes[RequiredStudySitesColumns.oldBCId]] as string,
       },
     ])
     .reduce((accumulator, currentValue) => {
@@ -115,7 +115,7 @@ export const uploadStudies = async (
   const studyExports = parseExports(studyExportsIndexes, studyExportsData)
 
   studySites.entries().forEach(([studyId, sites]) => {
-    const study = studies.find((study) => study.id === studyId)
+    const study = studies.find((study) => study.oldBCId === studyId)
     if (study) {
       study.sites = sites
     } else {
@@ -124,7 +124,7 @@ export const uploadStudies = async (
   })
 
   studyExports.entries().forEach(([studyId, exports]) => {
-    const study = studies.find((study) => study.id === studyId)
+    const study = studies.find((study) => study.oldBCId === studyId)
     if (study) {
       study.exports = exports
     } else {
@@ -134,14 +134,17 @@ export const uploadStudies = async (
 
   const existingStudyIds = await transaction.study.findMany({
     where: {
-      id: { in: studies.map((study) => study.id) },
+      oldBCId: { in: studies.map((study) => study.oldBCId) },
     },
     select: {
       id: true,
+      oldBCId: true,
     },
   })
 
-  const newStudies = studies.filter((study) => !existingStudyIds.find((existingStudy) => study.id !== existingStudy.id))
+  const newStudies = studies.filter(
+    (study) => !existingStudyIds.find((existingStudy) => study.oldBCId !== existingStudy.oldBCId),
+  )
 
   console.log(newStudies)
 
