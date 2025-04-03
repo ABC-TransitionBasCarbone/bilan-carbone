@@ -65,6 +65,11 @@
   }
 }
 
+.editFEQualityButton {
+  color: var(--primary-40);
+  cursor: pointer;
+}
+
 .detail {
   height: 0;
   overflow: hidden;

@@ -12,6 +12,25 @@ export const qualityKeys = [
   'completeness',
 ] as const
 
+export const specificFEQualityKeys = [
+  'feReliability',
+  'feTechnicalRepresentativeness',
+  'feGeographicRepresentativeness',
+  'feTemporalRepresentativeness',
+  'feCompleteness',
+] as const
+
+export const getSpecificEmissionFactorQualityColumn: Record<
+  (typeof qualityKeys)[number],
+  (typeof specificFEQualityKeys)[number]
+> = {
+  reliability: 'feReliability',
+  technicalRepresentativeness: 'feTechnicalRepresentativeness',
+  geographicRepresentativeness: 'feGeographicRepresentativeness',
+  temporalRepresentativeness: 'feTemporalRepresentativeness',
+  completeness: 'feCompleteness',
+}
+
 type Quality = Pick<EmissionFactor, (typeof qualityKeys)[number]>
 
 const coeffs: Record<keyof Quality, number[]> = {
