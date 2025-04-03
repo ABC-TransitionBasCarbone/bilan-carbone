@@ -27,7 +27,7 @@
 .roleLabel {
   padding: 0.75rem 1.25rem;
   border-radius: 0.5rem;
-  background-color: var(--background);
+  background-color: var(--background-50);
   width: fit-content;
 }
 

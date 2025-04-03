@@ -459,7 +459,7 @@ const EmissionFactorsTable = ({
                   sx={{
                     minWidth: '20rem',
                     '& .MuiOutlinedInput-root': { '& fieldset': { borderRadius: '0.25rem' } },
-                    '& .MuiInputBase-input': { color: 'var(--color-grey-950)' },
+                    '& .MuiInputBase-input': { color: 'black' },
                   }}
                 />
               )}

@@ -1,8 +1,8 @@
 .studyInfo {
-  color: var(--neutral-50);
+  color: var(--neutral-500);
 }
 
 .error {
   font-size: small;
-  color: var(--error);
+  color: var(--error-100);
 }

@@ -23,7 +23,7 @@ const Stepper = ({ steps, activeStep, fillValidatedSteps, className, small }: Pr
       flexGrow: 1,
       ...(fillValidatedSteps && {
         [`& .MuiMobileStepper-dot:nth-of-type(-n+${activeStep})`]: {
-          backgroundColor: 'var(--primary-40) !important',
+          backgroundColor: 'var(--primary-500) !important',
         },
       }),
     }}

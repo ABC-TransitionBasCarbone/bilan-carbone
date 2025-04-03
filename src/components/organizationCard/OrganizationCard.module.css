@@ -1,5 +1,5 @@
 .organizationCard {
-  background-color: var(--organization-card-bg);
+  background-color: var(--background-100);
   z-index: 100;
   position: fixed;
   top: var(--header-height);

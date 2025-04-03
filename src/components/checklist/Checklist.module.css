@@ -10,7 +10,7 @@
 .openDrawerButton {
   height: 4rem;
   width: 4rem;
-  background-color: var(--primary-80) !important;
+  background-color: var(--background-300) !important;
   border-radius: 50% !important;
   display: flex !important;
   justify-content: center !important;
@@ -18,7 +18,7 @@
   color: white !important;
 
   &:hover {
-    background-color: var(--primary-60) !important;
+    background-color: var(--primary-800) !important;
   }
 }
 
@@ -34,12 +34,12 @@
   border: var(--border) !important;
   padding: 0.5rem;
   hr {
-    color: var(--neutral-30) !important;
+    color: var(--neutral-300) !important;
   }
 }
 
 .drawer {
-  background-color: var(--organization-card-bg) !important;
+  background-color: var(--background-100) !important;
 }
 
 .centered {
@@ -47,7 +47,7 @@
 }
 
 .optional {
-  color: var(--primary-40);
+  color: var(--primary-500);
   font-style: italic;
 }
 
@@ -60,5 +60,5 @@
 }
 
 .validated {
-  color: var(--green-500) !important;
+  color: var(--success-100) !important;
 }

@@ -1,9 +1,9 @@
 .card {
-  background-color: var(--neutral-00);
+  background-color: white;
 }
 
 .link {
   text-decoration: none;
-  color: var(--primary-60);
+  color: var(--primary-800);
   gap: 1rem;
 }

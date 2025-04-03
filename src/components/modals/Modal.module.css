@@ -31,5 +31,5 @@
 
 .error {
   font-size: small;
-  color: var(--error);
+  color: var(--error-100);
 }

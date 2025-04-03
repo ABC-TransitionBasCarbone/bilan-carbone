@@ -2,10 +2,10 @@
   width: 6rem !important;
   height: 0.8rem !important;
   border-radius: 0.4rem !important;
-  background-color: var(--neutral-20) !important;
+  background-color: var(--neutral-200) !important;
 
   &.active {
-    background-color: var(--primary-40) !important;
+    background-color: var(--primary-500) !important;
   }
 
   &.small {
