@@ -13,7 +13,7 @@ import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study
 import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
@@ -67,7 +67,7 @@ const EmissionSource = ({
   const [display, setDisplay] = useState(false)
 
   const detailId = `${emissionSource.id}-detail`
-  const canEdit = !emissionSource.validated && userRoleOnStudy !== StudyRole.Reader
+  const canEdit = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
   const canValidate = userRoleOnStudy === StudyRole.Validator
 
   const update = useCallback(
@@ -252,6 +252,7 @@ const EmissionSource = ({
                 studyId={study.id}
                 advanced={study.level === Level.Advanced}
                 canEdit={canEdit}
+                userRoleOnStudy={userRoleOnStudy}
                 canValidate={canValidate}
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
