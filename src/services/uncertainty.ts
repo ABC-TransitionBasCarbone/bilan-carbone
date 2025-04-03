@@ -3,6 +3,7 @@
 import { FullStudy } from '@/db/study'
 import { EmissionFactor } from '@prisma/client'
 import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from './emissionSource'
+import { StudyWithoutDetail } from './permissions/study'
 
 export const qualityKeys = [
   'reliability',
@@ -30,6 +31,14 @@ export const getSpecificEmissionFactorQualityColumn: Record<
   temporalRepresentativeness: 'feTemporalRepresentativeness',
   completeness: 'feCompleteness',
 }
+
+export const getSpecificEmissionFactorQuality = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+) =>
+  qualityKeys.reduce(
+    (res, column) => ({ ...res, [column]: emissionSource[getSpecificEmissionFactorQualityColumn[column]] }),
+    {} as Record<(typeof qualityKeys)[number], number>,
+  )
 
 type Quality = Pick<EmissionFactor, (typeof qualityKeys)[number]>
 

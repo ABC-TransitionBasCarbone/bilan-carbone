@@ -8,7 +8,7 @@ import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
 import {
   getQualityRating,
-  getSpecificEmissionFactorQualityColumn,
+  getSpecificEmissionFactorQuality,
   qualityKeys,
   specificFEQualityKeys,
 } from '@/services/uncertainty'
@@ -64,12 +64,6 @@ interface Props {
   status: EmissionSourcesStatus
   studySites: FullStudy['sites']
 }
-
-const getSpecificEmissionFactorQuality = (emissionSource: FullStudy['emissionSources'][0]) =>
-  qualityKeys.reduce(
-    (res, column) => ({ ...res, [column]: emissionSource[getSpecificEmissionFactorQualityColumn[column]] }),
-    {} as Record<(typeof qualityKeys)[number], number>,
-  )
 
 const EmissionSourceForm = ({
   studyId,
