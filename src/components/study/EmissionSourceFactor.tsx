@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
 import DebouncedInput from '../base/DebouncedInput'
 import styles from './EmissionSourceFactor.module.css'
@@ -55,6 +55,26 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
   const [display, setDisplay] = useState(false)
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setDisplay(false)
+      }
+    }
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setDisplay(false)
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   useEffect(() => {
     setValue(selectedFactor?.metaData?.title || '')
@@ -79,7 +99,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
   }, [fuse, value])
 
   return (
-    <div>
+    <div ref={containerRef}>
       <div className={classNames(styles.factor, 'align-center')}>
         <div className={classNames(styles.inputContainer, 'grow', { [styles.withSearch]: canEdit })}>
           <DebouncedInput
