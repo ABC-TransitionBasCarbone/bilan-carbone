@@ -2,6 +2,7 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
+import { StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
@@ -50,6 +51,7 @@ interface Props {
 const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit, getDetail }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
+  const tResultUnits = useTranslations('study.results.units')
 
   const [advancedSearch, setAdvancedSearch] = useState(false)
   const [display, setDisplay] = useState(false)
@@ -123,8 +125,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
                   result.metaData?.location,
                   result.totalCo2,
                 ])}{' '}
-                kgCO₂e/
-                {tUnits(result.unit)}
+                {tResultUnits(StudyResultUnit.K)}/{tUnits(result.unit)}
               </p>
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>

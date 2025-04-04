@@ -2,7 +2,7 @@ import { gazKeys } from '@/constants/emissions'
 import { subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getQualityRating, qualityKeys } from '@/services/uncertainty'
-import { Import } from '@prisma/client'
+import { Import, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -16,6 +16,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('units')
   const tQuality = useTranslations('quality')
+  const tResultUnits = useTranslations('study.results.units')
 
   const gases = useMemo(() => gazKeys.filter((gaz) => emissionFactor[gaz]), [emissionFactor])
   const qualities = useMemo(() => qualityKeys.filter((quality) => emissionFactor[quality]), [emissionFactor])
@@ -57,7 +58,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
         <div className={classNames(styles.info, styles.list, 'flex')}>
           {gases.map((gaz) => (
             <div key={gaz}>
-              {t(gaz)} {emissionFactor[gaz]} kgCO₂e/{tUnits(emissionFactor.unit)}
+              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}s/{tUnits(emissionFactor.unit)}
             </div>
           ))}
         </div>

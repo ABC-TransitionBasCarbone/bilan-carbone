@@ -6,12 +6,19 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
-import { getQualityRating } from '@/services/uncertainty'
+import {
+  getQualityRating,
+  getSpecificEmissionFactorQuality,
+  qualityKeys,
+  specificFEQualityKeys,
+} from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
+import EditIcon from '@mui/icons-material/Edit'
+import HideIcon from '@mui/icons-material/VisibilityOff'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
@@ -79,24 +86,43 @@ const EmissionSourceForm = ({
   const tResultUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
   const [glossary, setGlossary] = useState('')
+  const [editSpecificQuality, setEditSpecificQuality] = useState(false)
   const [error, setError] = useState('')
   const [open, setOpen] = useState(false)
   const [duplicationSite, setDuplicationSite] = useState(emissionSource.studySite.id)
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
+  const [expandedFEQuality, setExpandedFEQuality] = useState(true)
   const router = useRouter()
 
-  const qualityRating = useMemo(() => (selectedFactor ? getQualityRating(selectedFactor) : null), [selectedFactor])
+  const qualities = qualityKeys.map((column) => emissionSource[column])
+  const specificFEQualities = specificFEQualityKeys.map((column) => emissionSource[column])
 
-  const qualities = [
-    emissionSource.reliability,
-    emissionSource.technicalRepresentativeness,
-    emissionSource.geographicRepresentativeness,
-    emissionSource.temporalRepresentativeness,
-    emissionSource.completeness,
-  ]
+  const hasSpecificFEQuality = useMemo(
+    () =>
+      selectedFactor &&
+      qualityKeys.some(
+        (column) =>
+          getSpecificEmissionFactorQuality(emissionSource)[column] &&
+          selectedFactor[column] !== getSpecificEmissionFactorQuality(emissionSource)[column],
+      ),
+    [selectedFactor, emissionSource],
+  )
+  const qualityRating = useMemo(
+    () =>
+      hasSpecificFEQuality
+        ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource))
+        : selectedFactor
+          ? getQualityRating(selectedFactor)
+          : null,
+    [selectedFactor, hasSpecificFEQuality, emissionSource],
+  )
 
   const defaultQuality = qualities.find((quality) => quality)
   const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
+
+  const specificFEDefaultQuality = specificFEQualities.find((quality) => quality)
+  const canShrinkSpecificFEQuality =
+    !specificFEDefaultQuality || specificFEQualities.every((quality) => quality === specificFEDefaultQuality)
 
   const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (Number(event.target.value) > 0) {
@@ -249,16 +275,45 @@ const EmissionSourceForm = ({
       </div>
       {selectedFactor ? (
         <div className={styles.row} data-testid="emission-source-factor">
-          <p className={emissionFactorStyles.header}>
+          <p className={classNames(emissionFactorStyles.header, 'align-end')}>
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatNumber(getEmissionFactorValue(selectedFactor), 5)} {tResultUnits(StudyResultUnit.K)}/
             {tUnits(selectedFactor.unit)}{' '}
-            {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
+            {qualityRating && (
+              <>
+                - {tQuality('name')} {tQuality(qualityRating.toString())}
+                {!editSpecificQuality ? (
+                  <EditIcon
+                    className={classNames(styles.editFEQualityButton, 'ml-4')}
+                    onClick={() => setEditSpecificQuality(true)}
+                  />
+                ) : (
+                  <HideIcon
+                    className={classNames(styles.editFEQualityButton, 'ml-4')}
+                    onClick={() => setEditSpecificQuality(false)}
+                  />
+                )}
+              </>
+            )}
           </p>
           {selectedFactor.metaData && (
             <p className={emissionFactorStyles.detail}>{getDetail(selectedFactor.metaData)}</p>
+          )}
+          {editSpecificQuality && (
+            <QualitySelectGroup
+              canEdit={canEdit}
+              emissionSource={emissionSource}
+              update={update}
+              advanced={advanced}
+              setGlossary={setGlossary}
+              expanded={expandedFEQuality || !canShrinkSpecificFEQuality}
+              setExpanded={setExpandedFEQuality}
+              canShrink={canShrinkSpecificFEQuality}
+              defaultQuality={specificFEDefaultQuality}
+              feSpecific
+            />
           )}
         </div>
       ) : (

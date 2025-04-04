@@ -60,10 +60,9 @@ export const updateEmissionSource = async ({
   if (!user || !emissionSource) {
     return NOT_AUTHORIZED
   }
-  const data = { ...command, emissionFactor: emissionFactorId ? { connect: { id: emissionFactorId } } : undefined }
 
   const study = await getStudyById(emissionSource.studyId, user.organizationId)
-  if (!study || !(await canUpdateEmissionSource(user, emissionSource, data, study))) {
+  if (!study || !(await canUpdateEmissionSource(user, emissionSource, command, study))) {
     return NOT_AUTHORIZED
   }
 
@@ -78,6 +77,20 @@ export const updateEmissionSource = async ({
   const isContributor = study.contributors.some(
     (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
   )
+
+  const data = {
+    ...command,
+    ...(emissionFactorId
+      ? {
+          emissionFactor: { connect: { id: emissionFactorId } },
+          feReliability: null,
+          feTechnicalRepresentativeness: null,
+          feGeographicRepresentativeness: null,
+          feTemporalRepresentativeness: null,
+          feCompleteness: null,
+        }
+      : {}),
+  }
 
   await updateEmissionSourceOnStudy(
     emissionSourceId,

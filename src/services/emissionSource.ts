@@ -3,7 +3,13 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
-import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
+import {
+  getConfidenceInterval,
+  getQualityStandardDeviation,
+  getSpecificEmissionFactorQuality,
+  getSpecificEmissionFactorQualityColumn,
+  qualityKeys,
+} from './uncertainty'
 
 export const getEmissionSourceCompletion = (
   emissionSource: Pick<
@@ -61,12 +67,25 @@ export const canBeValidated = (
   return getEmissionSourceCompletion(emissionSource, study, emissionFactor) === 1
 }
 
+const hasSpecificFEQuality = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) =>
+  emissionSource.emissionFactor &&
+  qualityKeys.some(
+    (column) =>
+      emissionSource.emissionFactor &&
+      emissionSource[getSpecificEmissionFactorQualityColumn[column]] &&
+      emissionSource.emissionFactor[column] !== emissionSource[getSpecificEmissionFactorQualityColumn[column]],
+  )
+
 export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
     return null
   }
   const emissionStandardDeviation = getQualityStandardDeviation(emissionSource)
-  const factorStandardDeviation = getQualityStandardDeviation(emissionSource.emissionFactor)
+  const factorStandardDeviation = getQualityStandardDeviation(
+    hasSpecificFEQuality(emissionSource)
+      ? getSpecificEmissionFactorQuality(emissionSource)
+      : emissionSource.emissionFactor,
+  )
   if (emissionStandardDeviation === null || factorStandardDeviation === null) {
     return null
   }

@@ -29,5 +29,10 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   depreciationPeriod: z.number().optional(),
   hectare: z.number().optional(),
   duration: z.number().optional(),
+  feReliability: z.number().optional(),
+  feTechnicalRepresentativeness: z.number().optional(),
+  feGeographicRepresentativeness: z.number().optional(),
+  feTemporalRepresentativeness: z.number().optional(),
+  feCompleteness: z.number().optional(),
 })
 export type UpdateEmissionSourceCommand = z.infer<typeof UpdateEmissionSourceCommandValidation>
