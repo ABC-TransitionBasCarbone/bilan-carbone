@@ -572,7 +572,7 @@ const EmissionFactorsTable = ({
         )}
       </div>
       <div className={classNames('grow', { [styles.modalTable]: fromModal })}>
-        <table>
+        <table className={styles.table}>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -587,7 +587,7 @@ const EmissionFactorsTable = ({
           <tbody>
             {table.getRowModel().rows.flatMap((row) => {
               const lines = [
-                <tr key={row.id} className={styles.line}>
+                <tr key={row.id} className={classNames(styles.line, { [styles.open]: row.getIsExpanded() })}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} data-testid={`cell-emission-${cell.column.id}`}>
                       {cell.column.id === 'actions' ? (
