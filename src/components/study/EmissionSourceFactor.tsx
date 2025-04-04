@@ -79,7 +79,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
   }, [fuse, value])
 
   return (
-    <>
+    <div>
       <div className={classNames(styles.factor, 'align-center')}>
         <div className={classNames(styles.inputContainer, 'grow', { [styles.withSearch]: canEdit })}>
           <DebouncedInput
@@ -147,7 +147,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
           }}
         />
       )}
-    </>
+    </div>
   )
 }
 
