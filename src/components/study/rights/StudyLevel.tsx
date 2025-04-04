@@ -13,6 +13,7 @@ import { Level } from '@prisma/client'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyParams.module.css'
@@ -29,6 +30,7 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
   const tLevel = useTranslations('level')
   const [error, setError] = useState('')
   const [glossary, setGlossary] = useState('')
+  const router = useRouter()
 
   const form = useForm<ChangeStudyLevelCommand>({
     resolver: zodResolver(ChangeStudyLevelCommandValidation),
@@ -46,6 +48,8 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
     const result = await changeStudyLevel(command)
     if (result) {
       setError(result)
+    } else {
+      router.refresh()
     }
   }
 
