@@ -28,7 +28,14 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorImportVersion, EmissionFactorStatus, Import, SubPost, Unit } from '@prisma/client'
+import {
+  EmissionFactorImportVersion,
+  EmissionFactorStatus,
+  Import,
+  StudyResultUnit,
+  SubPost,
+  Unit,
+} from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -105,6 +112,7 @@ const EmissionFactorsTable = ({
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const tPosts = useTranslations('emissionFactors.post')
+  const tResultUnits = useTranslations('study.results.units')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
   const [filter, setFilter] = useState('')
@@ -178,7 +186,7 @@ const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} kgCO₂e/${tUnits(emissionFactor.unit || '')}`,
+          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),

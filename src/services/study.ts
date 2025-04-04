@@ -149,7 +149,7 @@ const getEmissionSourcesRows = (
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
           emissionFactor ? getEmissionFactorValue(emissionFactor) : '',
-          emissionFactor?.unit ? `kgCO₂e/${tUnit(emissionFactor.unit)}` : '',
+          emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit)}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
         ])

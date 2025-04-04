@@ -1034,9 +1034,9 @@
       "glossary": {
         "title": "Glossary",
         "etp": "Number of Full Time Equivalents",
-        "etpDescription": "This data will eventually be used to calculate carbon intensities (kgCO2e/FTE).",
+        "etpDescription": "This data will eventually be used to calculate carbon intensities (kgCO₂e/FTE).",
         "ca": "Turnover ({unit})",
-        "caDescription": "These data will eventually be used to calculate carbon intensities (kgCO2e/{unit} Turnover).",
+        "caDescription": "These data will eventually be used to calculate carbon intensities (kgCO₂e/{unit} Turnover).",
         "close": "Close"
       },
       "validation": {
