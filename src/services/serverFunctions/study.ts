@@ -564,6 +564,10 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
+  if (existingUser && !checkLevel(existingUser.level, studyWithRights.level) && studyRole !== StudyRole.Reader) {
+    return NOT_AUTHORIZED
+  }
+
   await updateUserOnStudy(existingUser.id, studyWithRights.id, studyRole)
 }
 
