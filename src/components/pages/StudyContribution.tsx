@@ -5,7 +5,7 @@ import { StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
-import AllPostsInfography from '../study/infography/AllPostsInfography'
+import AllPostsInfographyContainer from '../study/infography/AllPostsInfographyContainer'
 import SelectStudySite from '../study/site/SelectStudySite'
 import useStudySite from '../study/site/useStudySite'
 
@@ -38,7 +38,7 @@ const StudyContributionPage = ({ study }: Props) => {
         <div className="mb1">
           <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
         </div>
-        <AllPostsInfography study={study} studySite={studySite} />
+        <AllPostsInfographyContainer study={study} studySite={studySite} />
       </Block>
     </>
   )

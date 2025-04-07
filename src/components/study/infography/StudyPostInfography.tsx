@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import AllPostsInfography from './AllPostsInfography'
+import AllPostsInfographyContainer from './AllPostsInfographyContainer'
 import styles from './StudyPostInfography.module.css'
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 const StudyPostInfography = ({ study, studySite }: Props) => {
   return (
     <div className={styles.infography} id="study-post-infography">
-      <AllPostsInfography study={study} studySite={studySite} />
+      <AllPostsInfographyContainer study={study} studySite={studySite} />
     </div>
   )
 }

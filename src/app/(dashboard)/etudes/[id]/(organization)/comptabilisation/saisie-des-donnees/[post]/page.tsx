@@ -1,7 +1,7 @@
 import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import withStudy, { StudyProps } from '@/components/hoc/withStudy'
 import NotFound from '@/components/pages/NotFound'
-import StudyPostsPage from '@/components/pages/StudyPosts'
+import StudyPostsPageContainer from '@/components/pages/StudyPostsContainer'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { getUserRoleOnStudy } from '@/utils/study'
@@ -29,7 +29,7 @@ const StudyPost = async (props: Props & StudyProps & UserProps) => {
     return <NotFound />
   }
 
-  return <StudyPostsPage post={post as Post} study={props.study} userRole={userRole} />
+  return <StudyPostsPageContainer post={post as Post} study={props.study} userRole={userRole} />
 }
 
 export default withAuth(withStudy(StudyPost))
