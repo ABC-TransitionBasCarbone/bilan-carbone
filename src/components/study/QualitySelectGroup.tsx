@@ -1,21 +1,22 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
-import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { qualityKeys } from '@/services/uncertainty'
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { Path } from 'react-hook-form'
 import Button from '../base/Button'
 import HelpIcon from '../base/HelpIcon'
 import QualitySelect from '../form/QualitySelect'
 import styles from './EmissionSource.module.css'
+
+type Source = Partial<Record<(typeof qualityKeys)[number], number | null>>
+
 interface Props {
   advanced?: boolean
   canEdit: boolean | null
-  emissionSource: FullStudy['emissionSources'][0]
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
+  emissionSource: Source
+  update: (key: keyof Source, value: string | number | boolean) => void
   setGlossary: (key: string) => void
   expanded: boolean
   setExpanded: (value: boolean) => void
