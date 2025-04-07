@@ -11,6 +11,15 @@ export enum Post {
   Immobilisations = 'Immobilisations',
   UtilisationEtDependance = 'UtilisationEtDependance',
   FinDeVie = 'FinDeVie',
+
+  // CUT
+  Fonctionnement = 'Fonctionnement',
+  MobiliteSpectateurs = 'MobiliteSpectateurs',
+  TourneesAvantPremiere = 'TourneesAvantPremiere',
+  SallesEtCabines = 'SallesEtCabines',
+  ConfiseriesEtBoissons = 'ConfiseriesEtBoissons',
+  Dechets = 'Dechets',
+  BilletterieEtCommunication = 'BilletterieEtCommunication',
 }
 
 export const subPostsByPost: Record<Post, SubPost[]> = {
@@ -65,5 +74,24 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
     SubPost.TraitementDesDechetsEnFinDeVie,
     SubPost.FuitesOuEmissionsNonEnergetiques,
     SubPost.TraitementDesEmballagesEnFinDeVie,
+  ],
+
+  [Post.Fonctionnement]: [
+    SubPost.Batiment,
+    SubPost.Equipe,
+    SubPost.DeplacementsProfessionnels,
+    SubPost.Energie,
+    SubPost.ActivitesDeBureau,
+  ],
+  [Post.MobiliteSpectateurs]: [SubPost.MobiliteSpectateurs],
+  [Post.TourneesAvantPremiere]: [SubPost.EquipesRecues],
+  [Post.SallesEtCabines]: [SubPost.MaterielTechnique, SubPost.AutreMateriel],
+  [Post.ConfiseriesEtBoissons]: [SubPost.Achats, SubPost.Fret, SubPost.Electromenager],
+  [Post.Dechets]: [SubPost.DechetsOrdinaires, SubPost.DechetsExceptionnels],
+  [Post.BilletterieEtCommunication]: [
+    SubPost.MaterielDistributeurs,
+    SubPost.MaterielCinema,
+    SubPost.CommunicationDigitale,
+    SubPost.CaissesEtBornes,
   ],
 }
