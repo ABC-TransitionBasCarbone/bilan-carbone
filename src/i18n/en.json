@@ -681,6 +681,7 @@
       "displayArchived": "Display archived factors",
       "goTo": "Go to page",
       "items": "Items per page",
+      "noLocation": "Not specified",
       "location": "Location",
       "locationSearch": "Search by location",
       "locationSearchPlaceholder": "e.g. Europe",

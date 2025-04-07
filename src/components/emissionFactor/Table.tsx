@@ -93,9 +93,6 @@ interface Props {
 const initialSelectedUnits: (Unit | string)[] = [...['all', ''], ...Object.values(Unit)]
 const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
 
-const getLocationLabel = (row: EmissionFactorWithMetaData) =>
-  `${row.location}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`
-
 const EmissionFactorsTable = ({
   emissionFactors,
   selectEmissionFactor,
@@ -138,6 +135,9 @@ const EmissionFactorsTable = ({
     window.addEventListener('resize', checkWrappedRows)
     return () => window.removeEventListener('resize', checkWrappedRows)
   }, [])
+
+  const getLocationLabel = (row: EmissionFactorWithMetaData) =>
+    `${row.location || t('noLocation')}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`
 
   const editEmissionFactor = async (emissionFactorId: string, action: 'edit' | 'delete') => {
     if (!(await canEditEmissionFactor(emissionFactorId))) {
