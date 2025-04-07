@@ -595,12 +595,7 @@ const EmissionFactorsTable = ({
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </div>
                       ) : (
-                        <div
-                          className={styles.cellButton}
-                          onClick={() => {
-                            row.toggleExpanded()
-                          }}
-                        >
+                        <div className={styles.cellButton} onClick={() => row.toggleExpanded()}>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </div>
                       )}

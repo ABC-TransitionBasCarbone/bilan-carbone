@@ -34,13 +34,17 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
 
   return (
     <>
-      {emissionFactor.importedFrom !== Import.Manual && emissionFactor.version && (
-        <div className={styles.info}>
-          {t(emissionFactor.importedFrom)} {emissionFactor.version.name}
-        </div>
-      )}
-      {emissionFactor.source && <div className={styles.info}>{emissionFactor.source}</div>}
       <div className={styles.info}>
+        {t('source')} :{' '}
+        {emissionFactor.importedFrom !== Import.Manual && emissionFactor.version && (
+          <>
+            {t(emissionFactor.importedFrom)} {emissionFactor.version.name}
+          </>
+        )}
+        {emissionFactor.source && <> - {emissionFactor.source}</>}
+      </div>
+      <div className={styles.info}>
+        {t('quality')} :{' '}
         <div className={classNames(styles.list, 'grid')}>
           <span className="align-center">{t('qualityRating')}</span>
           <span className="align-center">
@@ -66,9 +70,10 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
       </div>
       {Object.entries(subPosts).length > 0 && (
         <div className={styles.info}>
+          {t('post')}
           {Object.entries(subPosts).map(([post, subPosts]) => (
             <div key={post}>
-              {t('post')} {tPost(post)} ({subPosts.map((subPost) => tPost(subPost)).join(', ')})
+              {tPost(post)} ({subPosts.map((subPost) => tPost(subPost)).join(', ')})
             </div>
           ))}
         </div>
