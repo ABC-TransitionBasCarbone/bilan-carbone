@@ -128,7 +128,6 @@ export const createEmissionFactorCommand = async ({
     ...command,
     importedFrom: Import.Manual,
     status: EmissionFactorStatus.Valid,
-    reliability: 5,
     organization: { connect: { id: user.organizationId } },
     unit: unit as Unit,
     subPosts: flattenSubposts(subPosts),

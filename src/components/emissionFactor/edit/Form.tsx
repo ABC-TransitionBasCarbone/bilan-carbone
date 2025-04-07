@@ -86,6 +86,11 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       totalCo2: emissionFactor?.totalCo2 || 0,
       parts: buildParts(emissionFactor, partsCount),
       comment: emissionFactor?.metaData[0].comment || '',
+      reliability: emissionFactor.reliability || undefined,
+      technicalRepresentativeness: emissionFactor.technicalRepresentativeness || undefined,
+      geographicRepresentativeness: emissionFactor.geographicRepresentativeness || undefined,
+      temporalRepresentativeness: emissionFactor.temporalRepresentativeness || undefined,
+      completeness: emissionFactor.completeness || undefined,
     },
   })
 
