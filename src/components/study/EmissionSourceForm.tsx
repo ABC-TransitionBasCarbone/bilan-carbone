@@ -99,24 +99,9 @@ const EmissionSourceForm = ({
   const qualities = qualityKeys.map((column) => emissionSource[column])
   const specificFEQualities = specificFEQualityKeys.map((column) => emissionSource[column])
 
-  const hasSpecificFEQuality = useMemo(
-    () =>
-      selectedFactor &&
-      qualityKeys.some(
-        (column) =>
-          getSpecificEmissionFactorQuality(emissionSource)[column] &&
-          selectedFactor[column] !== getSpecificEmissionFactorQuality(emissionSource)[column],
-      ),
-    [selectedFactor, emissionSource],
-  )
   const qualityRating = useMemo(
-    () =>
-      hasSpecificFEQuality
-        ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource))
-        : selectedFactor
-          ? getQualityRating(selectedFactor)
-          : null,
-    [selectedFactor, hasSpecificFEQuality, emissionSource],
+    () => (selectedFactor ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource)) : null),
+    [selectedFactor, emissionSource],
   )
 
   const defaultQuality = qualities.find((quality) => quality)
@@ -306,15 +291,15 @@ const EmissionSourceForm = ({
             {qualityRating && (
               <>
                 - {tQuality('name')} {tQuality(qualityRating.toString())}
-                {!editSpecificQuality ? (
-                  <EditIcon
-                    className={classNames(styles.editFEQualityButton, 'ml-4')}
-                    onClick={() => setEditSpecificQuality(true)}
-                  />
-                ) : (
+                {editSpecificQuality ? (
                   <HideIcon
                     className={classNames(styles.editFEQualityButton, 'ml-4')}
                     onClick={() => setEditSpecificQuality(false)}
+                  />
+                ) : (
+                  <EditIcon
+                    className={classNames(styles.editFEQualityButton, 'ml-4')}
+                    onClick={() => setEditSpecificQuality(true)}
                   />
                 )}
               </>

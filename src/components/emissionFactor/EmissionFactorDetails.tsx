@@ -85,7 +85,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
         <div className={classNames(styles.info, styles.list, 'flex')}>
           {gases.map((gaz) => (
             <div key={gaz}>
-              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}s/{tUnits(emissionFactor.unit)}
+              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}/{tUnits(emissionFactor.unit)}
             </div>
           ))}
         </div>

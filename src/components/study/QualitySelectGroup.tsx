@@ -1,6 +1,6 @@
 'use client'
 
-import { getSpecificEmissionFactorQualityColumn, qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
+import { qualityKeys, specificFEQualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
 import classNames from 'classnames'
@@ -41,8 +41,7 @@ const QualitySelectGroup = ({
   const t = useTranslations('emissionSource')
   const tGlossary = useTranslations('emissionSource.glossary')
 
-  const getField = (field: (typeof qualityKeys)[number]) =>
-    feSpecific ? getSpecificEmissionFactorQualityColumn[field] : field
+  const getField = (field: (typeof qualityKeys)[number]) => (feSpecific ? specificFEQualityKeysLinks[field] : field)
 
   return (
     <div className={classNames('flex grow', expanded ? styles.row : styles.shrinked)}>

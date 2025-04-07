@@ -21,22 +21,20 @@ export const specificFEQualityKeys = [
   'feCompleteness',
 ] as const
 
-export const getSpecificEmissionFactorQualityColumn: Record<
-  (typeof qualityKeys)[number],
-  (typeof specificFEQualityKeys)[number]
-> = {
-  reliability: 'feReliability',
-  technicalRepresentativeness: 'feTechnicalRepresentativeness',
-  geographicRepresentativeness: 'feGeographicRepresentativeness',
-  temporalRepresentativeness: 'feTemporalRepresentativeness',
-  completeness: 'feCompleteness',
-}
+export const specificFEQualityKeysLinks: Record<(typeof qualityKeys)[number], (typeof specificFEQualityKeys)[number]> =
+  {
+    reliability: 'feReliability',
+    technicalRepresentativeness: 'feTechnicalRepresentativeness',
+    geographicRepresentativeness: 'feGeographicRepresentativeness',
+    temporalRepresentativeness: 'feTemporalRepresentativeness',
+    completeness: 'feCompleteness',
+  }
 
 export const getSpecificEmissionFactorQuality = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
 ) =>
   qualityKeys.reduce(
-    (res, column) => ({ ...res, [column]: emissionSource[getSpecificEmissionFactorQualityColumn[column]] }),
+    (res, column) => ({ ...res, [column]: emissionSource[specificFEQualityKeysLinks[column]] }),
     {} as Record<(typeof qualityKeys)[number], number>,
   )
 
