@@ -215,6 +215,10 @@ export const uploadStudies = async (
   await transaction.studySite.createMany({
     data: Array.from(
       studySites.entries().flatMap(([studyOldBCId, studySites]) => {
+        // N'importer que les studySites d'études nouvelles.
+        if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
+          return []
+        }
         const existingStudyId = existingStudiesIds.get(studyOldBCId)
         if (!existingStudyId) {
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
@@ -242,6 +246,10 @@ export const uploadStudies = async (
   await transaction.studyExport.createMany({
     data: Array.from(
       studyExports.entries().flatMap(([studyOldBCId, studyExports]) => {
+        // N'importer que les exports d'études nouvelles.
+        if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
+          return []
+        }
         const existingStudyId = existingStudiesIds.get(studyOldBCId)
         if (!existingStudyId) {
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
