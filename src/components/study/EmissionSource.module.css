@@ -66,8 +66,11 @@
 }
 
 .editFEQualityButton {
-  color: var(--primary-40);
+  color: var(--primary-500);
   cursor: pointer;
+  &:hover {
+    color: var(--primary-800);
+  }
 }
 
 .detail {

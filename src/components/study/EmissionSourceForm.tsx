@@ -309,18 +309,20 @@ const EmissionSourceForm = ({
             <p className={emissionFactorStyles.detail}>{getDetail(selectedFactor.metaData)}</p>
           )}
           {editSpecificQuality && (
-            <QualitySelectGroup
-              canEdit={canEdit}
-              emissionSource={emissionSource}
-              update={update}
-              advanced={advanced}
-              setGlossary={setGlossary}
-              expanded={expandedFEQuality || !canShrinkSpecificFEQuality}
-              setExpanded={setExpandedFEQuality}
-              canShrink={canShrinkSpecificFEQuality}
-              defaultQuality={specificFEDefaultQuality}
-              feSpecific
-            />
+            <div className={expandedQuality ? '' : 'mt1'}>
+              <QualitySelectGroup
+                canEdit={canEdit}
+                emissionSource={emissionSource}
+                update={update}
+                advanced={advanced}
+                setGlossary={setGlossary}
+                expanded={expandedFEQuality || !canShrinkSpecificFEQuality}
+                setExpanded={setExpandedFEQuality}
+                canShrink={canShrinkSpecificFEQuality}
+                defaultQuality={specificFEDefaultQuality}
+                feSpecific
+              />
+            </div>
           )}
         </div>
       ) : (
