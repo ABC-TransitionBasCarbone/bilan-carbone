@@ -1,5 +1,4 @@
 import { Prisma } from '@prisma/client'
-import { prismaClient } from '../../../db/client'
 
 export enum RequiredOrganizationsColumns {
   ID_ENTITE = 'ID_ENTITE',
@@ -102,7 +101,7 @@ export const uploadOrganizations = async (
   }
   const userOrganizationOldBCId = userOrganizationsOldBCIds[0]
 
-  const existingOrganizations = await prismaClient.organization.findMany({
+  const existingOrganizations = await transaction.organization.findMany({
     where: {
       AND: [
         { parentId: userOrganizationId },
