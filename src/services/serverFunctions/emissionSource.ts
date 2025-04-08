@@ -83,11 +83,11 @@ export const updateEmissionSource = async ({
     ...(emissionFactorId
       ? {
           emissionFactor: { connect: { id: emissionFactorId } },
-          feReliability: emissionFactor?.reliability,
-          feTechnicalRepresentativeness: emissionFactor?.technicalRepresentativeness,
-          feGeographicRepresentativeness: emissionFactor?.geographicRepresentativeness,
-          feTemporalRepresentativeness: emissionFactor?.temporalRepresentativeness,
-          feCompleteness: emissionFactor?.completeness,
+          feReliability: null,
+          feTechnicalRepresentativeness: null,
+          feGeographicRepresentativeness: null,
+          feTemporalRepresentativeness: null,
+          feCompleteness: null,
         }
       : {}),
   }

@@ -30,11 +30,21 @@ export const specificFEQualityKeysLinks: Record<(typeof qualityKeys)[number], (t
     completeness: 'feCompleteness',
   }
 
+const getQualityValue = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  column: (typeof qualityKeys)[number],
+) =>
+  emissionSource[specificFEQualityKeysLinks[column]]
+    ? emissionSource[specificFEQualityKeysLinks[column]]
+    : emissionSource.emissionFactor
+      ? emissionSource.emissionFactor[column]
+      : null
+
 export const getSpecificEmissionFactorQuality = (
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
 ) =>
   qualityKeys.reduce(
-    (res, column) => ({ ...res, [column]: emissionSource[specificFEQualityKeysLinks[column]] }),
+    (res, column) => ({ ...res, [column]: getQualityValue(emissionSource, column) }),
     {} as Record<(typeof qualityKeys)[number], number>,
   )
 
