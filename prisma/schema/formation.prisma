@@ -1,0 +1,7 @@
+model Formation {
+  id   String @id @default(uuid())
+  name String @unique
+  link String
+
+	@@map("formations")
+}
