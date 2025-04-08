@@ -19,7 +19,7 @@
   right: 1rem;
   transform: translateY(-50%);
   display: none;
-  color: var(--neutral-500);
+  color: var(--primary-500);
 }
 
 .line {
