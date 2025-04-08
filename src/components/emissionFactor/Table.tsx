@@ -93,9 +93,6 @@ interface Props {
 const initialSelectedUnits: (Unit | string)[] = [...['all', ''], ...Object.values(Unit)]
 const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
 
-const getLocationLabel = (row: EmissionFactorWithMetaData) =>
-  `${row.location}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`
-
 const EmissionFactorsTable = ({
   emissionFactors,
   selectEmissionFactor,
@@ -138,6 +135,9 @@ const EmissionFactorsTable = ({
     window.addEventListener('resize', checkWrappedRows)
     return () => window.removeEventListener('resize', checkWrappedRows)
   }, [])
+
+  const getLocationLabel = (row: EmissionFactorWithMetaData) =>
+    `${row.location || t('noLocation')}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`
 
   const editEmissionFactor = async (emissionFactorId: string, action: 'edit' | 'delete') => {
     if (!(await canEditEmissionFactor(emissionFactorId))) {
@@ -182,20 +182,18 @@ const EmissionFactorsTable = ({
         accessorKey: 'status',
         cell: ({ getValue }) => {
           const status = getValue<EmissionFactorStatus>()
-          switch (status) {
-            case EmissionFactorStatus.Archived:
-              return (
-                <div className="flex-cc">
-                  <InventoryIcon color="inherit" />
-                </div>
-              )
-            default:
-              return (
-                <div className="flex-cc">
-                  <CheckCircleIcon color="success" />
-                </div>
-              )
-          }
+          const Icon =
+            status === EmissionFactorStatus.Archived ? (
+              <InventoryIcon color="inherit" />
+            ) : (
+              <CheckCircleIcon color="success" />
+            )
+
+          return (
+            <div className="flex-cc" aria-label={t(status)} title={t(status)}>
+              {Icon}
+            </div>
+          )
         },
       },
       {
@@ -436,42 +434,54 @@ const EmissionFactorsTable = ({
 
   return (
     <>
+      {t('subTitle')}
       <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
         {displayFilters && (
           <>
-            <DebouncedInput
-              className={styles.searchInput}
-              debounce={200}
-              value={filter}
-              onChange={setFilter}
-              placeholder={t('search')}
-              data-testid="emission-factor-search-input"
-            />
-            <Autocomplete
-              value={locationFilter}
-              options={locationOptions}
-              onChange={(_, option) => setLocationFilter(option || '')}
-              onInputChange={(_, newInputValue) => setLocationFilter(newInputValue)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder={t('locationSearch')}
-                  sx={{
-                    minWidth: '20rem',
-                    '& .MuiOutlinedInput-root': { '& fieldset': { borderRadius: '0.25rem' } },
-                    '& .MuiInputBase-input': { color: 'black' },
-                  }}
-                />
-              )}
-            />
+            <FormControl>
+              <FormLabel id="emission-factors-filter-search" component="legend">
+                {t('search')}
+              </FormLabel>
+              <DebouncedInput
+                className={styles.searchInput}
+                debounce={200}
+                value={filter}
+                onChange={setFilter}
+                placeholder={t('searchPlaceholder')}
+                data-testid="emission-factor-search-input"
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel id="emission-factors-filter-location" component="legend">
+                {t('locationSearch')}
+              </FormLabel>
+              <Autocomplete
+                value={locationFilter}
+                options={locationOptions}
+                onChange={(_, option) => setLocationFilter(option || '')}
+                onInputChange={(_, newInputValue) => setLocationFilter(newInputValue)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder={t('locationSearchPlaceholder')}
+                    sx={{
+                      minWidth: '20rem',
+                      '& .MuiOutlinedInput-root': { '& fieldset': { borderRadius: '0.25rem' } },
+                      '& .MuiInputBase-input': { color: 'black' },
+                    }}
+                  />
+                )}
+              />
+            </FormControl>
             <FormControl className={styles.selector}>
-              <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>
+              <FormLabel id="emissions-sources-selector" component="legend">
+                {t('sources')}
+              </FormLabel>
               <Select
                 id="emissions-sources-selector"
                 labelId="emissions-sources-selector"
                 value={filteredSources}
                 onChange={selectSource}
-                input={<OutlinedInput label={t('sources')} />}
                 renderValue={statusSelectorRenderValue}
                 multiple
               >
@@ -484,7 +494,9 @@ const EmissionFactorsTable = ({
               </Select>
             </FormControl>
             <FormControl className={styles.selector}>
-              <InputLabel id="emissions-unit-selector">{t('units')}</InputLabel>
+              <FormLabel id="emissions-unit-selector" component="legend">
+                {t('units')}
+              </FormLabel>
               <MultiSelectAll
                 id="emissions-unit"
                 renderValue={unitsSelectorRenderValue}
@@ -492,16 +504,16 @@ const EmissionFactorsTable = ({
                 allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
                 setValues={setFilteredUnits}
                 t={tUnits}
-                tLabel={t}
               />
             </FormControl>
             <FormControl className={styles.selector}>
-              <InputLabel id="emissions-subposts-selector">{t('subPosts')}</InputLabel>
+              <FormLabel id="emissions-subposts-selector" component="legend">
+                {t('subPosts')}
+              </FormLabel>
               <Select
                 id="emissions-subposts-selector"
                 labelId="emissions-subposts-selector"
                 value={filteredSubPosts}
-                input={<OutlinedInput label={t('subPosts')} />}
                 renderValue={subPostsSelectorRenderValue}
                 multiple
               >
@@ -560,7 +572,7 @@ const EmissionFactorsTable = ({
         )}
       </div>
       <div className={classNames('grow', { [styles.modalTable]: fromModal })}>
-        <table>
+        <table className={styles.table}>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -575,7 +587,7 @@ const EmissionFactorsTable = ({
           <tbody>
             {table.getRowModel().rows.flatMap((row) => {
               const lines = [
-                <tr key={row.id} className={styles.line}>
+                <tr key={row.id} className={classNames(styles.line, { [styles.open]: row.getIsExpanded() })}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} data-testid={`cell-emission-${cell.column.id}`}>
                       {cell.column.id === 'actions' ? (
@@ -583,12 +595,7 @@ const EmissionFactorsTable = ({
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </div>
                       ) : (
-                        <div
-                          className={styles.cellButton}
-                          onClick={() => {
-                            row.toggleExpanded()
-                          }}
-                        >
+                        <div className={styles.cellButton} onClick={() => row.toggleExpanded()}>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </div>
                       )}
@@ -599,7 +606,7 @@ const EmissionFactorsTable = ({
               if (row.getIsExpanded()) {
                 lines.push(
                   <tr key={`${row.id}-details`}>
-                    <td colSpan={columns.length} className={styles.detail}>
+                    <td colSpan={columns.length} className={classNames(styles.detail, 'p1')}>
                       <EmissionFactorDetails emissionFactor={row.original} />
                     </td>
                   </tr>,

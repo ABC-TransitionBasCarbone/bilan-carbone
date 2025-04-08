@@ -1,9 +1,7 @@
 .button {
   max-width: 20rem;
-  /* TODO : switch after color update */
-  /* background-color: var(--greyscale-50); */
-  background-color: var(--greyscale-200);
-  color: var(--primary-60);
+  background-color: var(--background-200);
+  color: var(--primary-800);
   border-radius: 0.5rem;
   cursor: pointer;
   gap: 0.5rem;
