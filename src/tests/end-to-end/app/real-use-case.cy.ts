@@ -15,62 +15,104 @@ describe('Real use case: BC V8_10', () => {
     cy.getByTestId('consolidated-results-table-row')
       .eq(1)
       .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Billetterie et communication')
+        cy.get('td').eq(2).should('have.text', '0')
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(2)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Confiseries et boissons')
+        cy.get('td').eq(2).should('have.text', '0')
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(3)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Déchets')
+        cy.get('td').eq(2).should('have.text', '0')
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(4)
+      .within(() => {
         cy.get('td').eq(0).should('have.text', 'Déchets directs')
         cy.get('td').eq(2).should('have.text', '0') // 0.18
       })
     cy.getByTestId('consolidated-results-table-row')
-      .eq(2)
+      .eq(5)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Déplacements')
         cy.get('td').eq(2).should('have.text', '105') // 105.37
       })
     cy.getByTestId('consolidated-results-table-row')
-      .eq(3)
+      .eq(6)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Énergie')
         cy.get('td').eq(2).should('have.text', '16') // 15.79
       })
     cy.getByTestId('consolidated-results-table-row')
-      .eq(4)
+      .eq(7)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Fin de vie')
         cy.get('td').eq(2).should('have.text', '6') // 6.28
       })
     cy.getByTestId('consolidated-results-table-row')
-      .eq(5)
+      .eq(8)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Fonctionnement')
+        cy.get('td').eq(2).should('have.text', '57')
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(9)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Fret')
         cy.get('td').eq(2).should('have.text', '4') // 4.33
       })
     cy.getByTestId('consolidated-results-table-row')
-      .eq(6)
+      .eq(10)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Immobilisations')
         cy.get('td').eq(2).should('have.text', '12') // 11.55
       })
     cy.getByTestId('consolidated-results-table-row')
-      .eq(7)
+      .eq(11)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Intrants biens et matières')
         cy.get('td').eq(2).should('have.text', '17') // 16.54
       })
     cy.getByTestId('consolidated-results-table-row')
-      .eq(8)
+      .eq(12)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Intrants services')
         cy.get('td').eq(2).should('have.text', '104') // 103.74
       })
     cy.getByTestId('consolidated-results-table-row')
-      .eq(9)
+      .eq(13)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Mobilité spectateurs')
+        cy.get('td').eq(2).should('have.text', '0')
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(14)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Salles et cabines')
+        cy.get('td').eq(2).should('have.text', '0')
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(15)
+      .within(() => {
+        cy.get('td').eq(0).should('have.text', 'Tournées avant-première')
+        cy.get('td').eq(2).should('have.text', '0')
+      })
+    cy.getByTestId('consolidated-results-table-row')
+      .eq(16)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Utilisation et dépendance')
         cy.get('td').eq(2).should('have.text', '0') // 0
       })
     cy.getByTestId('consolidated-results-table-row')
-      .eq(10)
+      .eq(17)
       .within(() => {
         cy.get('td').eq(0).should('have.text', 'Total')
-        cy.get('td').eq(2).should('have.text', '280') // 280.45
+        cy.get('td').eq(2).should('have.text', '337') // 337
       })
 
     cy.getByTestId('result-type-select').click()
