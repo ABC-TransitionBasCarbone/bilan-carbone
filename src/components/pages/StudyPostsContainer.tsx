@@ -37,7 +37,7 @@ const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
       />
       <DynamicComponent
         defaultComponent={<StudyPostsPage post={post} study={study} userRole={userRole} />}
-        environmentComponents={{ [CUT]: <StudyPostsPageCut /> }}
+        environmentComponents={{ [CUT]: <StudyPostsPageCut post={post} study={study} /> }}
       />
     </>
   )
