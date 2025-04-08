@@ -1,7 +1,7 @@
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
 import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from '../emissionSource'
-import { Post, subPostsByPost } from '../posts'
+import { BCPost, CutPost, Post, subPostsByPost } from '../posts'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 export type ResultsByPost = {
@@ -33,10 +33,11 @@ export const computeResultsByPost = (
   studySite: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
+  postValues: typeof Post | typeof CutPost | typeof BCPost = Post,
 ) => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 
-  const postInfos = Object.values(Post)
+  const postInfos = Object.values(postValues)
     .sort((a, b) => tPost(a).localeCompare(tPost(b)))
     .map((post) => {
       const subPosts = subPostsByPost[post]

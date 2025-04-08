@@ -95,6 +95,38 @@ enum SubPost {
   TraitementDesDechetsEnFinDeVie
   FuitesOuEmissionsNonEnergetiques
   TraitementDesEmballagesEnFinDeVie
+
+  // CUT
+  // Fonctionnement
+  Batiment
+  Equipe
+  Energie
+  ActivitesDeBureau
+
+  // MobiliteSpectateurs
+  MobiliteSpectateurs
+
+  // TourneesAvantPremiere
+  EquipesRecues
+
+  // SallesEtCabines
+  MaterielTechnique
+  AutreMateriel
+
+  // ConfiseriesEtBoissons
+  Achats
+  Fret
+  Electromenager
+
+  // Dechets
+  DechetsOrdinaires
+  DechetsExceptionnels
+
+  // BilletterieEtCommunication
+  MaterielDistributeurs
+  MaterielCinema
+  CommunicationDigitale
+  CaissesEtBornes
 }
 
 model EmissionFactorImportVersion {
