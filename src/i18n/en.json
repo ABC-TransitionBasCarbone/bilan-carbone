@@ -172,7 +172,8 @@
     "organizations": "My carbon assessments",
     "settings": "Settings",
     "team": "My team",
-    "information": "Global informations"
+    "information": "Global informations",
+    "formation": "Training"
   },
   "profile": {
     "title": "My profile",
@@ -1237,5 +1238,14 @@
     "markAsDone": "Mark as done",
     "go": "Go",
     "finished": "You're ready to start using BC+! Feel free to consult the <faq>FAQ</faq> or contact us if you need anything."
+  },
+  "formation": {
+    "title": "Training",
+    "explaination": "You will find below the training course for updating the BC V8 to V9 method. Watch the videos, take the quiz and receive your certificate!",
+    "videos": "Videos",
+    "evaluation": "Knowledge assessment",
+    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training certificate.",
+    "answer": "Answer the questionnaire",
+    "form": "Typeform Questionnaire"
   }
 }

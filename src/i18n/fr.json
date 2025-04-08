@@ -172,7 +172,8 @@
     "organizations": "Mes Bilans Carbone®",
     "settings": "Paramètres",
     "team": "Mon équipe",
-    "information": "Informations générales"
+    "information": "Informations générales",
+    "formation": "Formation"
   },
   "profile": {
     "title": "Mon profil",
@@ -1237,5 +1238,14 @@
     "markAsDone": "Marquer comme fait",
     "go": "Aller",
     "finished": "Vous êtes prêt à commencer votre utilisation du BC+ ! N'hésitez pas à consulter la <faq>FAQ</faq> ou à nous contacter en cas de besoin."
+  },
+  "formation": {
+    "title": "Formation",
+    "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode BC V8 à V9. Regardez les vidéos, répondez au questionnaire et recevez votre certificat !",
+    "videos": "Vidéos",
+    "evaluation": "Evaluation des connaissances",
+    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre certificat de formation v9",
+    "answer": "Répondre au questionnaire",
+    "form": "Questionnaire Typeform"
   }
 }

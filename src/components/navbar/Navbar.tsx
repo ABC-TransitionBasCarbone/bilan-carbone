@@ -1,5 +1,6 @@
 'use client'
 
+import { hasAccessToFormation } from '@/services/permissions/formations'
 import { isAdmin } from '@/services/permissions/user'
 import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
@@ -73,6 +74,11 @@ const Navbar = ({ user }: Props) => {
             <Link className={styles.link} href="/facteurs-d-emission">
               <span className={styles.big}>{t('factors')}</span>
               <span className={styles.small}>{t('fe')}</span>
+            </Link>
+          )}
+          {hasAccessToFormation(user) && (
+            <Link className={styles.link} href="/formation">
+              <span>{t('formation')}</span>
             </Link>
           )}
         </div>
