@@ -606,7 +606,7 @@ const EmissionFactorsTable = ({
               if (row.getIsExpanded()) {
                 lines.push(
                   <tr key={`${row.id}-details`}>
-                    <td colSpan={columns.length} className={styles.detail}>
+                    <td colSpan={columns.length} className={classNames(styles.detail, 'p1')}>
                       <EmissionFactorDetails emissionFactor={row.original} />
                     </td>
                   </tr>,
