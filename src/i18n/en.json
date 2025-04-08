@@ -415,7 +415,7 @@
       },
       "versions": {
         "list": "Study's emission factors versions",
-        "upgradeSource": "Updating emissions factors",
+        "upgradeSource": "Update",
         "Not authorized": "You are not allowed to do this action",
         "latest": "You are already using the latest version of {name}.",
         "title": "Are you sure you want to update the {name} source?",

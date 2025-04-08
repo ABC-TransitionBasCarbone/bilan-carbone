@@ -6,7 +6,6 @@ import {
   simulateStudyEmissionFactorSourceUpgrade,
   upgradeStudyEmissionFactorSource,
 } from '@/services/serverFunctions/study'
-import UpgradeIcon from '@mui/icons-material/Upgrade'
 import { EmissionFactorImportVersion, Import, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -94,10 +93,9 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
                 <Button
                   className={styles.upgradeButton}
                   onClick={() => simulateSourceUpgrade(source.source)}
-                  aria-label={t('upgradeSource')}
-                  title={t('upgradeSource')}
+                  color="secondary"
                 >
-                  <UpgradeIcon />
+                  {t('upgradeSource')}
                 </Button>
               </div>
             )}

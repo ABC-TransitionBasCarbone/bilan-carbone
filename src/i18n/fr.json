@@ -415,7 +415,7 @@
       },
       "versions": {
         "list": "Versions des facteurs d'emissions de l'étude",
-        "upgradeSource": "Mettre à jour les facteurs d'émissions",
+        "upgradeSource": "Mettre à jour",
         "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
         "latest": "Vous utilisez déjà la dernière version de {name}",
         "title": "Êtes vous sûr de vouloir mettre à jour la source {name} ?",
