@@ -7,7 +7,7 @@ import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { qualityKeys } from '@/services/uncertainty'
+import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
 import { MenuItem } from '@mui/material'
 import { Unit } from '@prisma/client'
 import classNames from 'classnames'
@@ -28,6 +28,10 @@ interface Props<T extends EmissionFactorCommand> {
   setPartsCount: (count: number) => void
   button: 'create' | 'update'
 }
+
+type EmissionFactorQuality = Partial<
+  Record<(typeof qualityKeys)[number] | (typeof specificFEQualityKeys)[number], number | null>
+>
 
 const EmissionFactorForm = <T extends EmissionFactorCommand>({
   form,
@@ -107,7 +111,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         canEdit
         canShrink
         emissionSource={quality}
-        update={update}
+        update={update as (key: keyof EmissionFactorQuality, value: string | number | boolean) => void}
         advanced={false}
         setGlossary={setGlossary}
         expanded={expandedQuality}
