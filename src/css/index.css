@@ -1,5 +1,6 @@
 @import url('https://fonts.cdnfonts.com/css/gilroy-bold');
 @import './reset.css';
+@import './themes/themes.css';
 @import './variables.css';
 @import './globals.css';
 @import './flex.css';

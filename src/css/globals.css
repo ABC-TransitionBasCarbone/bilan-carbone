@@ -3,7 +3,7 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--background-50);
   height: 100vh;
   line-height: 1.25;
   overflow: hidden;
@@ -55,7 +55,7 @@ h6 {
 }
 
 .MuiInputBase-root {
-  background-color: var(--neutral-00) !important;
+  background-color: white !important;
 }
 
 caption {
@@ -75,17 +75,17 @@ table {
 
   thead {
     tr {
-      background-color: var(--neutral-00);
+      background-color: white;
     }
   }
 
   tbody {
     tr {
       &:nth-child(even) {
-        background: var(--neutral-00);
+        background: white;
       }
       &:nth-child(odd) {
-        background: var(--neutral-20);
+        background: var(--background-150);
       }
     }
   }
@@ -126,7 +126,7 @@ table {
 }
 
 .error {
-  color: var(--error);
+  color: var(--error-100);
 }
 
 .inputLabel {
@@ -147,5 +147,5 @@ table {
 }
 
 .userWarning {
-  color: var(--error-700);
+  color: var(--error-50);
 }

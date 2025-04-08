@@ -22,7 +22,7 @@ const StudyCard = async ({ study }: Props) => {
   }
 
   const percent = values.validated ? Math.floor((values.validated / values.total) * 100) : 0
-  const color = values.validated > 0 && percent === 100 ? '--green-500' : '--orange-500'
+  const color = values.validated > 0 && percent === 100 ? '--success-100' : '--warning'
 
   return (
     <li data-testid="study" className="flex">

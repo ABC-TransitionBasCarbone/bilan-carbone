@@ -47,10 +47,10 @@ export const FormAutocomplete = <T extends FieldValues>({
                 {...params}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    '& fieldset': { borderColor: 'var(--color-grey-400)', borderRadius: '0.75rem' },
+                    '& fieldset': { borderColor: 'var(--grayscale-300)', borderRadius: '0.75rem' },
                   },
                   '& .MuiInputBase-input': {
-                    color: 'var(--color-grey-950)',
+                    color: 'black',
                   },
                 }}
                 slotProps={{

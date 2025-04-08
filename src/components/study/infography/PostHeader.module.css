@@ -2,7 +2,7 @@
   position: relative;
   padding: 1rem;
   gap: 0.5rem;
-  color: var(--neutral-00);
+  color: white;
 
   @media screen and (max-width: 64rem) {
     padding: 1rem 0.5rem;

@@ -45,12 +45,12 @@
 
 .line {
   &:hover {
-    border-color: var(--neutral-40);
+    border-color: var(--neutral-400);
     &:nth-child(even) {
-      background: var(--neutral-10);
+      background: var(--background-150);
     }
     &:nth-child(odd) {
-      background: var(--neutral-30);
+      background: var(--neutral-300);
     }
   }
 }
@@ -70,7 +70,7 @@
 }
 
 .detail {
-  background-color: var(--neutral-00);
+  background-color: white;
   padding: 1rem;
 }
 
