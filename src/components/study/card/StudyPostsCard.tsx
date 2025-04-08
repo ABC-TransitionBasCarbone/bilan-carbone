@@ -66,7 +66,7 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
             variant="determinate"
             value={percent}
             sx={{
-              backgroundColor: 'var(--greyscale-200)',
+              backgroundColor: 'var(--grayscale-200)',
               '& .MuiLinearProgress-bar': {
                 backgroundColor: `var(${color})`,
               },
