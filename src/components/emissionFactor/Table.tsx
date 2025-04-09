@@ -84,6 +84,7 @@ const locationFuseOptions = {
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
+  subPost?: SubPost
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
   importVersions: EmissionFactorImportVersion[]
   initialSelectedSources: string[]
@@ -95,6 +96,7 @@ const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap
 
 const EmissionFactorsTable = ({
   emissionFactors,
+  subPost,
   selectEmissionFactor,
   userOrganizationId,
   importVersions,
@@ -135,6 +137,12 @@ const EmissionFactorsTable = ({
     window.addEventListener('resize', checkWrappedRows)
     return () => window.removeEventListener('resize', checkWrappedRows)
   }, [])
+
+  useEffect(() => {
+    if (subPost) {
+      setFilteredSubPosts([subPost])
+    }
+  }, [subPost])
 
   const getLocationLabel = (row: EmissionFactorWithMetaData) =>
     `${row.location || t('noLocation')}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`
