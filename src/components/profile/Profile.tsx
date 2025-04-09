@@ -26,6 +26,7 @@ const Profile = ({ version }: Props) => {
 
   const t = useTranslations('profile')
   const [editing, setEditing] = useState(false)
+  const [nameClick, setNameClick] = useState(0)
   const [error, setError] = useState('')
 
   const form = useForm<EditProfileCommand>({
@@ -105,7 +106,7 @@ const Profile = ({ version }: Props) => {
             </Form>
           ) : (
             <div className="align-center">
-              <div className="mr1">
+              <div className="mr1" onClick={() => setNameClick(nameClick + 1)}>
                 {session.user.firstName} {session.user.lastName}
               </div>
               <Button data-testid="edit-profile" onClick={() => setEditing(true)}>
@@ -120,7 +121,7 @@ const Profile = ({ version }: Props) => {
             {t('legalNotices')}
           </Link>
         </div>
-        <span className="mb1">{t('version') + version}</span>
+        {nameClick > 4 && <span className="mb1">{t('version') + version}</span>}
       </div>
       <div>
         <div className="flex-col justify-end">
