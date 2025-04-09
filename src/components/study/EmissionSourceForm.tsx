@@ -12,7 +12,7 @@ import {
   qualityKeys,
   specificFEQualityKeys,
 } from '@/services/uncertainty'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
@@ -388,6 +388,9 @@ const EmissionSourceForm = ({
               ),
             })}
           </p>
+          {glossary === 'quality' && (
+            <p>{tGlossary('specificEmissionFactorQuality', { marker: emissionFactorDefautQualityStar })}</p>
+          )}
         </GlossaryModal>
       )}
       <Modal

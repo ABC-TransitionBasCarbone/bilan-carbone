@@ -1092,6 +1092,7 @@
       "typeDescription": "The type of data is a denomination introduced by the new Bilan Carbone® method, which complements the calculation of uncertainties. For more information on the different types of data, please consult <link>this page</link>.",
       "quality": "Quality",
       "qualityDescription": "Uncertainties are now calculated using qualitative notes on the quality of the emission factor and the quality of the activity data. The scores for the emission factor are taken directly from the databases, but those for the activity data must be entered. For more information on how scores are awarded, please consult <link>this page</link>.",
+      "specificEmissionFactorQuality": "You can specifically adjust the quality of the emission factor in your emission source. The generic value of the emission factor is indicated by the {marker} symbol.",
       "close": "Fermer"
     },
     "deleteDialog": {

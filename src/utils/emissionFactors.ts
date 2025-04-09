@@ -15,3 +15,5 @@ export const getEmissionFactorValue = (
 
   return emissionFactor.totalCo2
 }
+
+export const emissionFactorDefautQualityStar = '☆'
