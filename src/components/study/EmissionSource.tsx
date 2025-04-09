@@ -17,7 +17,7 @@ import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole } from '@prisma/client'
+import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -42,6 +42,7 @@ type StudyWithoutDetailProps = {
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
+  subPost: SubPost
   userRoleOnStudy: StudyRole | null
   caracterisations: EmissionSourceCaracterisation[]
 }
@@ -50,6 +51,7 @@ const EmissionSource = ({
   study,
   emissionSource,
   emissionFactors,
+  subPost,
   userRoleOnStudy,
   withoutDetail,
   caracterisations,
@@ -244,6 +246,7 @@ const EmissionSource = ({
               <EmissionSourceContributorForm
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
+                subPost={subPost}
                 emissionFactors={emissionFactors}
                 update={update}
               />
@@ -257,6 +260,7 @@ const EmissionSource = ({
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
                 emissionFactors={emissionFactors}
+                subPost={subPost}
                 update={update}
                 caracterisations={caracterisations}
                 mandatoryCaracterisation={study.exports.length > 0}

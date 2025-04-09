@@ -49,6 +49,7 @@ interface Props {
   canEdit: boolean | null
   canValidate: boolean
   emissionFactors: EmissionFactorWithMetaData[]
+  subPost: SubPost
   selectedFactor?: EmissionFactorWithMetaData
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
   caracterisations: EmissionSourceCaracterisation[]
@@ -66,6 +67,7 @@ const EmissionSourceForm = ({
   canValidate,
   update,
   emissionFactors,
+  subPost,
   selectedFactor,
   caracterisations,
   mandatoryCaracterisation,
@@ -153,6 +155,7 @@ const EmissionSourceForm = ({
           canEdit={canEdit}
           update={update}
           emissionFactors={emissionFactors}
+          subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
         />

@@ -8,7 +8,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
-import { StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Path } from 'react-hook-form'
@@ -21,13 +21,14 @@ interface Props {
   emissionSource: StudyWithoutDetail['emissionSources'][0]
   emissionFactors: EmissionFactorWithMetaData[]
   selectedFactor?: EmissionFactorWithMetaData
+  subPost: SubPost
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 
-const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, selectedFactor, update }: Props) => {
+const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPost, selectedFactor, update }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.unit')
   const tUnits = useTranslations('units')
@@ -39,6 +40,7 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, select
           canEdit
           update={update}
           emissionFactors={emissionFactors}
+          subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
         />

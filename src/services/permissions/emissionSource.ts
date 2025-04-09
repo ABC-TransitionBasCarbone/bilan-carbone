@@ -21,13 +21,6 @@ const hasStudyBasicRights = async (
     return false
   }
 
-  if (emissionSource.emissionFactorId) {
-    const emissionFactor = await getEmissionFactorById(emissionSource.emissionFactorId)
-    if (!emissionFactor || !emissionFactor.subPosts.includes(emissionSource.subPost)) {
-      return false
-    }
-  }
-
   const userRoleOnStudy = getUserRoleOnStudy(user, study)
   if (userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader) {
     return true

@@ -49,11 +49,6 @@ const SubPost = ({
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
 
-  const subPostEmissionFactors = useMemo(
-    () => emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost)),
-    [emissionFactors, subPost],
-  )
-
   const total = useMemo(
     () => emissionSources.reduce((sum, emissionSource) => sum + (getEmissionResults(emissionSource)?.emission || 0), 0),
     [emissionSources],
@@ -107,7 +102,8 @@ const SubPost = ({
                 study={study}
                 emissionSource={emissionSource}
                 key={emissionSource.id}
-                emissionFactors={subPostEmissionFactors}
+                emissionFactors={emissionFactors}
+                subPost={subPost}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail
                 caracterisations={caracterisations}
@@ -117,7 +113,8 @@ const SubPost = ({
                 study={study}
                 emissionSource={emissionSource}
                 key={emissionSource.id}
-                emissionFactors={subPostEmissionFactors}
+                emissionFactors={emissionFactors}
+                subPost={subPost}
                 userRoleOnStudy={userRoleOnStudy}
                 withoutDetail={false}
                 caracterisations={caracterisations}
