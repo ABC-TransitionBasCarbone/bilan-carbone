@@ -8,7 +8,7 @@ import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
 import { getQualityRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { formatNumber } from '@/utils/number'
+import { formatEmissionFactorNumber } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
@@ -275,7 +275,7 @@ const EmissionSourceForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatNumber(getEmissionFactorValue(selectedFactor), 5)} {tResultUnits(StudyResultUnit.K)}/
+            {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))} {tResultUnits(StudyResultUnit.K)}/
             {tUnits(selectedFactor.unit)}{' '}
             {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
           </p>
