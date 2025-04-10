@@ -148,3 +148,12 @@ export const sendNewContributorInvitationEmail = async (
   })
   return send([toEmail], `Demande de contribution sur l'étude ${studyName}`, html)
 }
+
+export const sendAuthorizationEmail = async (uuid: string, results: Record<string, string>[]) => {
+  const html = await getHtml('authorization-import-users', {
+    uuid,
+    results,
+  })
+  console.log('html', html)
+  return send([process.env.MAIL_USER || ''], `Autorisation de l'ajout d'utilisateurs ?`, html)
+}
