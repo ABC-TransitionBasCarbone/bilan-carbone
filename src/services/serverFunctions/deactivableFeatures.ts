@@ -37,3 +37,8 @@ export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeatu
     update: { active: status, updatedById: session.user.id },
   })
 }
+
+export const isFeatureActive = async (feature: DeactivatableFeature) => {
+  const featureStatus = await prismaClient.deactivatableFeatureStatus.findUnique({ where: { feature } })
+  return !!featureStatus?.active
+}

@@ -8,7 +8,7 @@ import { hasAccessToFormation } from '@/services/permissions/formations'
 
 const Formation = async () => {
   const session = await auth()
-  if (!session?.user || !hasAccessToFormation(session.user)) {
+  if (!session?.user || !(await hasAccessToFormation(session.user))) {
     return <NotFound />
   }
   const formations = await getFormationVideos()

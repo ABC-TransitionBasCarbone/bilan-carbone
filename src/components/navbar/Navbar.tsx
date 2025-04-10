@@ -15,7 +15,7 @@ import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './Navbar.module.css'
 
 interface Props {
@@ -25,6 +25,16 @@ interface Props {
 const Navbar = ({ user }: Props) => {
   const t = useTranslations('navigation')
   const [showSubMenu, setShowSubMenu] = useState(false)
+  const [hasFormation, setHasFormation] = useState(false)
+
+  useEffect(() => {
+    const getFormationAccess = async () => {
+      const hasAccess = await hasAccessToFormation(user)
+      setHasFormation(hasAccess)
+    }
+
+    getFormationAccess()
+  })
 
   const { environment } = useAppEnvironmentStore()
   const isCut = useMemo(() => environment === CUT, [environment])
@@ -76,7 +86,7 @@ const Navbar = ({ user }: Props) => {
               <span className={styles.small}>{t('fe')}</span>
             </Link>
           )}
-          {hasAccessToFormation(user) && (
+          {hasFormation && (
             <Link className={styles.link} href="/formation">
               <span>{t('formation')}</span>
             </Link>
