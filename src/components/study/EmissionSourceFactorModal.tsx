@@ -1,7 +1,7 @@
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getStudyEmissionFactorImportVersions } from '@/services/serverFunctions/study'
 import { useAppContextStore } from '@/store/AppContext'
-import { EmissionFactorImportVersion, Import } from '@prisma/client'
+import { EmissionFactorImportVersion, Import, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import EmissionFactorsTable from '../emissionFactor/Table'
@@ -11,10 +11,11 @@ interface Props {
   close: () => void
   open: boolean
   emissionFactors: EmissionFactorWithMetaData[]
+  subPost?: SubPost
   selectEmissionFactor: (emissionFactor: EmissionFactorWithMetaData) => void
 }
 
-const EmissionSourceFactorModal = ({ close, open, emissionFactors, selectEmissionFactor }: Props) => {
+const EmissionSourceFactorModal = ({ close, open, emissionFactors, subPost, selectEmissionFactor }: Props) => {
   const t = useTranslations('emissionSource.emissionFactorDialog')
   const [emissionFactorVersions, setEmissionFactorVersions] = useState<EmissionFactorImportVersion[] | undefined>(
     undefined,
@@ -43,6 +44,7 @@ const EmissionSourceFactorModal = ({ close, open, emissionFactors, selectEmissio
     >
       <EmissionFactorsTable
         emissionFactors={emissionFactors}
+        subPost={subPost}
         selectEmissionFactor={selectEmissionFactor}
         importVersions={emissionFactorVersions.concat(manualImport)}
         initialSelectedSources={initialSelectedSources}

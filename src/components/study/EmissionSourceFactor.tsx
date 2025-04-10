@@ -2,6 +2,7 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
+import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
@@ -10,6 +11,7 @@ import { Path } from 'react-hook-form'
 import DebouncedInput from '../base/DebouncedInput'
 import styles from './EmissionSourceFactor.module.css'
 import EmissionSourceFactorModal from './EmissionSourceFactorModal'
+
 const fuseOptions = {
   keys: [
     {
@@ -41,13 +43,14 @@ const fuseOptions = {
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
+  subPost: SubPost
   update: (name: Path<UpdateEmissionSourceCommand>, value: string) => void
   selectedFactor?: EmissionFactorWithMetaData | null
   canEdit: boolean | null
   getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
 }
 
-const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit, getDetail }: Props) => {
+const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor, canEdit, getDetail }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
 
@@ -80,9 +83,13 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
     setValue(selectedFactor?.metaData?.title || '')
   }, [selectedFactor])
 
+  const subPostEmissionFactors = useMemo(
+    () => emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost)),
+    [emissionFactors, subPost],
+  )
   const fuse = useMemo(() => {
     return new Fuse(
-      emissionFactors.filter((emissionFactor) => emissionFactor.metaData),
+      subPostEmissionFactors.filter((emissionFactor) => emissionFactor.metaData),
       fuseOptions,
     )
   }, [emissionFactors])
@@ -160,6 +167,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
           open={advancedSearch}
           close={() => setAdvancedSearch(false)}
           emissionFactors={emissionFactors}
+          subPost={subPost}
           selectEmissionFactor={(emissionFactor) => {
             update('emissionFactorId', emissionFactor.id)
             setDisplay(false)
