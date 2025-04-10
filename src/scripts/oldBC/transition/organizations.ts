@@ -15,7 +15,6 @@ interface Organization {
   oldBCId: string
   name: string
   siret: string
-  parentOldBCId: string
 }
 
 interface Site {
@@ -29,7 +28,6 @@ function mapRowToOrganization(row: (string | number)[], indexes: Record<string, 
     oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string,
     name: row[indexes[RequiredOrganizationsColumns.NOM_ORGANISATION]] as string,
     siret: row[indexes[RequiredOrganizationsColumns.SIRET]] as string,
-    parentOldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]] as string,
   }
 }
 
