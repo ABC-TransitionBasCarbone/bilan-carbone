@@ -58,18 +58,17 @@ enum DayOfWeek {
 }
 
 model OpeningHours {
-  id              String   @id @default(uuid())
-  Study           Study    @relation(fields: [studyId], references: [id])
-  studyId         String   @map("study_id")
+  id      String @id @default(uuid())
+  Study   Study  @relation(fields: [studyId], references: [id])
+  studyId String @map("study_id")
 
-  isHoliday           Boolean @default(false)
-  day                 DayOfWeek
-  openHour            String?
-  closeHour           String?
+  isHoliday Boolean   @default(false)
+  day       DayOfWeek
+  openHour  String?
+  closeHour String?
 
   @@map("opening_hours")
 }
-
 
 model Study {
   id        String   @id @default(uuid())
@@ -97,10 +96,10 @@ model Study {
   flows           Document[]
 
   emissionFactorVersions StudyEmissionFactorVersion[]
-  numberOfSessions      Int?
-  numberOfTickets       Int?
-  numberOfOpenDays      Int?
-  openingHours          OpeningHours[]
+  numberOfSessions       Int?
+  numberOfTickets        Int?
+  numberOfOpenDays       Int?
+  openingHours           OpeningHours[]
 
   @@map("studies")
 }
