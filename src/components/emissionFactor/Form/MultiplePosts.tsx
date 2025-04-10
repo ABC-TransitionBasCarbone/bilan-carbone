@@ -1,7 +1,7 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { Post } from '@/services/posts'
+import { BCPost, Post } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
@@ -33,11 +33,11 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
     form.trigger('subPosts' as FieldPath<T>)
   }, [posts])
 
-  const postSelection: Post[] = useMemo(
+  const postSelection: BCPost[] = useMemo(
     () =>
-      Object.keys(Post)
+      Object.keys(BCPost)
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-        .filter((p) => !Object.keys(posts).includes(p)) as Post[],
+        .filter((p) => !Object.keys(posts).includes(p)) as BCPost[],
     [posts],
   )
 

@@ -3,7 +3,7 @@
 import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import { Select } from '@/components/base/Select'
-import { Post, subPostsByPost } from '@/services/posts'
+import { BCPost, Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -36,7 +36,7 @@ const Posts = <T extends EmissionFactorCommand>({
 
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
-  const posts = useMemo(() => Object.keys(Post).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
+  const posts = useMemo(() => Object.keys(BCPost).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
   const subPosts = useMemo<SubPost[]>(
     () => (post ? subPostsByPost[post].sort((a, b) => tPost(a).localeCompare(tPost(b))) : []),
     [post, tPost],

@@ -1,6 +1,6 @@
 'use client'
 
-import { Post, subPostsByPost } from '@/services/posts'
+import { BCPost, subPostsByPost } from '@/services/posts'
 import { canEditEmissionFactor, EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
@@ -420,11 +420,11 @@ const EmissionFactorsTable = ({
         ? tPosts('none')
         : filteredSubPosts.map((subPosts) => tPosts(subPosts)).join(', ')
 
-  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
+  const areAllSelected = (post: BCPost) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
 
   const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : initialSelectedSubPosts)
 
-  const selectPost = (post: Post) => {
+  const selectPost = (post: BCPost) => {
     const newValue = areAllSelected(post)
       ? filteredSubPosts.filter((filteredSubPost) => !subPostsByPost[post].includes(filteredSubPost))
       : filteredSubPosts.concat(subPostsByPost[post].filter((a) => !filteredSubPosts.includes(a)))
@@ -541,7 +541,7 @@ const EmissionFactorsTable = ({
                   <Checkbox checked={allSelectedSubPosts} />
                   <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
                 </MenuItem>
-                {Object.values(Post).map((post) => (
+                {Object.values(BCPost).map((post) => (
                   <div key={`subpostGroup-${post}`}>
                     <MenuItem key={`subpost-${post}`} selected={areAllSelected(post)} onClick={() => selectPost(post)}>
                       <Checkbox checked={areAllSelected(post)} />
