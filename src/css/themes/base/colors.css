@@ -14,8 +14,8 @@
   --neutral-50: #e9eff9;
   --neutral-100: #dbe5f6;
   --neutral-200: #eae5e8;
-  --neutral-300: #c6d8f5;
-  --neutral-400: #9fbff3;
+  --neutral-300: #d5cdd2;
+  --neutral-400: #83777f;
   --neutral-500: #0a0317;
   --neutral-600: #080212;
   --neutral-800: #040109;
@@ -26,9 +26,9 @@
   --success-100: #1d9c5c;
 
   --error-50: #e04949;
-  --error-100: #cd2323;
-  --error-200: #991a1a;
-  --error-300: #641111;
+  --error-100: #ff0000;
+  --error-200: #e50000;
+  --error-300: #990000;
 
   --warning: #fc8514;
 
