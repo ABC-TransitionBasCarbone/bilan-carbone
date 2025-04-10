@@ -58,7 +58,7 @@ interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
   selectedFactor?: EmissionFactorWithMetaData
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
@@ -150,6 +150,8 @@ const EmissionSourceForm = ({
       router.refresh()
     }
   }
+
+  const resetSpecificFEQuality = () => specificFEQualityKeys.forEach((key) => update(key, null))
 
   return (
     <>
@@ -309,20 +311,25 @@ const EmissionSourceForm = ({
             <p className={emissionFactorStyles.detail}>{getDetail(selectedFactor.metaData)}</p>
           )}
           {editSpecificQuality && (
-            <div className={expandedQuality ? '' : 'mt1'}>
-              <QualitySelectGroup
-                canEdit={canEdit}
-                emissionSource={emissionSource}
-                update={update}
-                advanced={advanced}
-                setGlossary={setGlossary}
-                expanded={expandedFEQuality || !canShrinkSpecificFEQuality}
-                setExpanded={setExpandedFEQuality}
-                canShrink={canShrinkSpecificFEQuality}
-                defaultQuality={specificFEDefaultQuality}
-                feSpecific
-              />
-            </div>
+            <>
+              <div className={expandedQuality ? '' : 'mt1'}>
+                <QualitySelectGroup
+                  canEdit={canEdit}
+                  emissionSource={emissionSource}
+                  update={update}
+                  advanced={advanced}
+                  setGlossary={setGlossary}
+                  expanded={expandedFEQuality || !canShrinkSpecificFEQuality}
+                  setExpanded={setExpandedFEQuality}
+                  canShrink={canShrinkSpecificFEQuality}
+                  defaultQuality={specificFEDefaultQuality}
+                  feSpecific
+                />
+              </div>
+              <p className={classNames(styles.resetFESpecific, 'mt-2')} onClick={resetSpecificFEQuality}>
+                {t('resetFESpecific')}
+              </p>
+            </>
           )}
         </div>
       ) : (

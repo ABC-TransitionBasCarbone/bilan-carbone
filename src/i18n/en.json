@@ -1086,6 +1086,7 @@
     "unvalidate": "Éditer les données",
     "mandartoryFields": "Mandatory information",
     "optionalFields": "Optional information",
+    "resetFESpecific": "Reset to default values",
     "glossary": {
       "title": "Glossary",
       "type": "Type",

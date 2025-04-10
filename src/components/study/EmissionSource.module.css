@@ -73,6 +73,16 @@
   }
 }
 
+.resetFESpecific {
+  color: var(--primary-500);
+  cursor: pointer;
+  width: fit-content;
+  &:hover {
+    text-decoration: underline;
+    color: var(--primary-800);
+  }
+}
+
 .detail {
   height: 0;
   overflow: hidden;

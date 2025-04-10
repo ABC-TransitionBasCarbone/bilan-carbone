@@ -73,7 +73,7 @@ const EmissionSource = ({
   const canValidate = userRoleOnStudy === StudyRole.Validator
 
   const update = useCallback(
-    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => {
+    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => {
       if (key) {
         if (value === emissionSource[key as keyof typeof emissionSource]) {
           return
