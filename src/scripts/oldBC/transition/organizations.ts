@@ -123,7 +123,7 @@ export const uploadOrganizations = async (
         siret: organization.siret,
         name: organization.name,
         isCR: false,
-        activatedLicence: true,
+        activatedLicence: false,
       })),
     })
   }
