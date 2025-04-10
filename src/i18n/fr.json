@@ -1249,5 +1249,12 @@
     "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre certificat de formation v9",
     "answer": "Répondre au questionnaire",
     "form": "Questionnaire Typeform"
+  },
+  "deactivableFeatures": {
+    "title": "Fonctionnalités désactivables",
+    "Formation": "Formation",
+    "true": "Active",
+    "false": "Désactivée",
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
   }
 }

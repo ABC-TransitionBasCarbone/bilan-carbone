@@ -1249,5 +1249,13 @@
     "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training certificate.",
     "answer": "Answer the questionnaire",
     "form": "Typeform Questionnaire"
+  },
+
+  "deactivableFeatures": {
+    "title": "Deactivable functionnalities",
+    "Formation": "Formation",
+    "true": "Activated",
+    "false": "Deactivated",
+    "Not authorized": "You are not allowed to do this action"
   }
 }
