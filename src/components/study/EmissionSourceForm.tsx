@@ -326,9 +326,11 @@ const EmissionSourceForm = ({
                   feSpecific
                 />
               </div>
-              <p className={classNames(styles.resetFESpecific, 'mt-2')} onClick={resetSpecificFEQuality}>
-                {t('resetFESpecific')}
-              </p>
+              {canEdit && (
+                <p className={classNames(styles.resetFESpecific, 'mt-2')} onClick={resetSpecificFEQuality}>
+                  {t('resetFESpecific')}
+                </p>
+              )}
             </>
           )}
         </div>
