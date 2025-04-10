@@ -12,7 +12,7 @@ import {
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { formatNumber } from '@/utils/number'
+import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
@@ -181,7 +181,7 @@ const EmissionSource = ({
               <div className="flex-col justify-center text-center">
                 <p>{t('emissionFactor')}</p>
                 <p>
-                  {formatNumber(getEmissionFactorValue(selectedFactor), 5)}
+                  {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}
                   {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit)}
                 </p>
               </div>

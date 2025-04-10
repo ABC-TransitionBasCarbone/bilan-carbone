@@ -1,5 +1,6 @@
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
 import { SubPost } from '@prisma/client'
@@ -148,7 +149,7 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
                   result.metaData?.frontiere,
                   result.location,
                   result.metaData?.location,
-                  result.totalCo2,
+                  formatEmissionFactorNumber(result.totalCo2),
                 ])}{' '}
                 kgCO₂e/
                 {tUnits(result.unit)}
