@@ -3,7 +3,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
-import { getConfidenceInterval, getQualityStandardDeviation } from './uncertainty'
+import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
 
 export const getEmissionSourceCompletion = (
   emissionSource: Pick<
@@ -66,7 +66,7 @@ export const getStandardDeviation = (emissionSource: (FullStudy | StudyWithoutDe
     return null
   }
   const emissionStandardDeviation = getQualityStandardDeviation(emissionSource)
-  const factorStandardDeviation = getQualityStandardDeviation(emissionSource.emissionFactor)
+  const factorStandardDeviation = getQualityStandardDeviation(getSpecificEmissionFactorQuality(emissionSource))
   if (emissionStandardDeviation === null || factorStandardDeviation === null) {
     return null
   }

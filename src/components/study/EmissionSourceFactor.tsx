@@ -3,7 +3,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
-import { SubPost } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
@@ -54,6 +54,7 @@ interface Props {
 const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor, canEdit, getDetail }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
+  const tResultUnits = useTranslations('study.results.units')
 
   const [advancedSearch, setAdvancedSearch] = useState(false)
   const [display, setDisplay] = useState(false)
@@ -151,8 +152,7 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
                   result.metaData?.location,
                   formatEmissionFactorNumber(result.totalCo2),
                 ])}{' '}
-                kgCO₂e/
-                {tUnits(result.unit)}
+                {tResultUnits(StudyResultUnit.K)}/{tUnits(result.unit)}
               </p>
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>

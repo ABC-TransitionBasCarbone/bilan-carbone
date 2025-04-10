@@ -1087,12 +1087,14 @@
     "unvalidate": "Éditer les données",
     "mandartoryFields": "Informations obligatoires",
     "optionalFields": "Informations optionnelles",
+    "resetFESpecific": "Réinitialiser les valeurs par défaut",
     "glossary": {
       "title": "Glossaire",
       "type": "Type",
       "typeDescription": "Le type de données est une dénomination introduite par la nouvelle méthode Bilan Carbone®, qui vient en complément du calcul des incertitudes. Pour plus d'informations sur les différents types de données, nous vous invitons à consulter <link>cette page</link>.",
       "quality": "Qualité",
       "qualityDescription": "Les incertitudes sont dorénavant calculées grâce à des notes qualitatives apportées sur la qualité du facteur d'émission et la qualité de la donnée d'activité. Les notes associées au facteur d'émission sont directement issues des bases de données, mais celles liées à la donnée d'activité doivent être saisies. Pour plus d'informations sur l'attribution des notes, nous vous invitons à consulter <link>cette page</link>.",
+      "specificEmissionFactorQuality": "Vous pouvez spécifiquement ajuster la qualité du facteur d'émission dans votre source d'émission. La valeur générique du facteur d'émission est indiquée par le symbole {marker}.",
       "close": "Fermer"
     },
     "deleteDialog": {

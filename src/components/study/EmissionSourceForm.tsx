@@ -6,12 +6,19 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
-import { getQualityRating } from '@/services/uncertainty'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import {
+  getQualityRating,
+  getSpecificEmissionFactorQuality,
+  qualityKeys,
+  specificFEQualityKeys,
+} from '@/services/uncertainty'
+import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
+import EditIcon from '@mui/icons-material/Edit'
+import HideIcon from '@mui/icons-material/VisibilityOff'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
@@ -51,7 +58,7 @@ interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
   selectedFactor?: EmissionFactorWithMetaData
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
@@ -81,24 +88,28 @@ const EmissionSourceForm = ({
   const tResultUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
   const [glossary, setGlossary] = useState('')
+  const [editSpecificQuality, setEditSpecificQuality] = useState(false)
   const [error, setError] = useState('')
   const [open, setOpen] = useState(false)
   const [duplicationSite, setDuplicationSite] = useState(emissionSource.studySite.id)
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
+  const [expandedFEQuality, setExpandedFEQuality] = useState(true)
   const router = useRouter()
 
-  const qualityRating = useMemo(() => (selectedFactor ? getQualityRating(selectedFactor) : null), [selectedFactor])
+  const qualities = qualityKeys.map((column) => emissionSource[column])
+  const specificFEQualities = specificFEQualityKeys.map((column) => emissionSource[column])
 
-  const qualities = [
-    emissionSource.reliability,
-    emissionSource.technicalRepresentativeness,
-    emissionSource.geographicRepresentativeness,
-    emissionSource.temporalRepresentativeness,
-    emissionSource.completeness,
-  ]
+  const qualityRating = useMemo(
+    () => (selectedFactor ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource)) : null),
+    [selectedFactor, emissionSource],
+  )
 
   const defaultQuality = qualities.find((quality) => quality)
   const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
+
+  const specificFEDefaultQuality = specificFEQualities.find((quality) => quality)
+  const canShrinkSpecificFEQuality =
+    !specificFEDefaultQuality || specificFEQualities.every((quality) => quality === specificFEDefaultQuality)
 
   const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (Number(event.target.value) > 0) {
@@ -139,6 +150,8 @@ const EmissionSourceForm = ({
       router.refresh()
     }
   }
+
+  const resetSpecificFEQuality = () => specificFEQualityKeys.forEach((key) => update(key, null))
 
   return (
     <>
@@ -271,16 +284,54 @@ const EmissionSourceForm = ({
       </div>
       {selectedFactor ? (
         <div className={styles.row} data-testid="emission-source-factor">
-          <p className={emissionFactorStyles.header}>
+          <p className={classNames(emissionFactorStyles.header, 'align-end')}>
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))} {tResultUnits(StudyResultUnit.K)}/
             {tUnits(selectedFactor.unit)}{' '}
-            {qualityRating && `- ${tQuality('name')} ${tQuality(qualityRating.toString())}`}
+            {qualityRating && (
+              <>
+                - {tQuality('name')} {tQuality(qualityRating.toString())}
+                {editSpecificQuality ? (
+                  <HideIcon
+                    className={classNames(styles.editFEQualityButton, 'ml-4')}
+                    onClick={() => setEditSpecificQuality(false)}
+                  />
+                ) : (
+                  <EditIcon
+                    className={classNames(styles.editFEQualityButton, 'ml-4')}
+                    onClick={() => setEditSpecificQuality(true)}
+                  />
+                )}
+              </>
+            )}
           </p>
           {selectedFactor.metaData && (
             <p className={emissionFactorStyles.detail}>{getDetail(selectedFactor.metaData)}</p>
+          )}
+          {editSpecificQuality && (
+            <>
+              <div className={expandedQuality ? '' : 'mt1'}>
+                <QualitySelectGroup
+                  canEdit={canEdit}
+                  emissionSource={emissionSource}
+                  update={update}
+                  advanced={advanced}
+                  setGlossary={setGlossary}
+                  expanded={expandedFEQuality || !canShrinkSpecificFEQuality}
+                  setExpanded={setExpandedFEQuality}
+                  canShrink={canShrinkSpecificFEQuality}
+                  defaultQuality={specificFEDefaultQuality}
+                  feSpecific
+                />
+              </div>
+              {canEdit && (
+                <p className={classNames(styles.resetFESpecific, 'mt-2')} onClick={resetSpecificFEQuality}>
+                  {t('resetFESpecific')}
+                </p>
+              )}
+            </>
           )}
         </div>
       ) : (
@@ -346,6 +397,9 @@ const EmissionSourceForm = ({
               ),
             })}
           </p>
+          {glossary === 'quality' && (
+            <p>{tGlossary('specificEmissionFactorQuality', { marker: emissionFactorDefautQualityStar })}</p>
+          )}
         </GlossaryModal>
       )}
       <Modal

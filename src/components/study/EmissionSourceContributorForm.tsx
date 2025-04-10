@@ -30,7 +30,7 @@ const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], und
 
 const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPost, selectedFactor, update }: Props) => {
   const t = useTranslations('emissionSource')
-  const tResultUnits = useTranslations('study.results.unit')
+  const tResultUnits = useTranslations('study.results.units')
   const tUnits = useTranslations('units')
 
   return (
