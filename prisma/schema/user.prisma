@@ -35,6 +35,8 @@ model User {
   onboardedOrganizations Organization[] @relation("organizationOnboarder")
   organizationId         String?        @map("organization_id")
 
+  deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
+
   role                       Role
   level                      Level?
   firstName                  String                   @map("first_name")

@@ -1,0 +1,17 @@
+enum DeactivatableFeature {
+  Formation
+}
+
+model DeactivatableFeatureStatus {
+  id      String               @id @default(uuid())
+  feature DeactivatableFeature @unique
+  active  Boolean              @default(false)
+
+  updatedById String? @map("updated_by")
+  updator     User?   @relation("deactivable_feature_updator", fields: [updatedById], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  @@map("deactivable_features_statuses")
+}
