@@ -16,6 +16,7 @@ import {
   validateUser,
 } from '@/db/user'
 import { getUserByEmail, updateUser } from '@/db/userImport'
+import { isUntrainedRole } from '@/utils/organization'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
 import { User as DBUser, Organization, Role, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
@@ -124,9 +125,12 @@ export const addMember = async (member: AddMemberCommand) => {
   }
 
   if (!memberExists) {
+    if (!isUntrainedRole(member.role)) {
+      return NOT_AUTHORIZED
+    }
     const newMember = {
       ...member,
-      role: Role.COLLABORATOR,
+      role: member.role,
       status: UserStatus.VALIDATED,
       level: null,
       organizationId: session.user.organizationId,
