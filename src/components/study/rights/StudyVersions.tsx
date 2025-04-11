@@ -143,7 +143,7 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
                     <p className="ml1">
                       {getEmissionFactorName(emissionFactor)} :{' '}
                       <span className={styles.updatedValue}>{emissionFactor.totalCo2}</span> {emissionFactor.newValue}{' '}
-                      {unit}/{tUnits(emissionFactor.unit)}
+                      {unit}/{tUnits(emissionFactor.unit || '')}
                       {!!wasteEmissionFactors[emissionFactor.importedId || ''] && <>*</>}
                     </p>
                   </li>
@@ -168,7 +168,7 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
         </Modal>
       )}
 
-      {error && <p className="error">{t(error, { name: tSources(source) })}</p>}
+      {error && <p className="error">{t(error, { name: tSources(source || '') })}</p>}
     </div>
   )
 }

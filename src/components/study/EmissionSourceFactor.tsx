@@ -153,7 +153,7 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
                   result.metaData?.location,
                   formatEmissionFactorNumber(getEmissionFactorValue(result)),
                 ])}{' '}
-                {tResultUnits(StudyResultUnit.K)}/{tUnits(result.unit)}
+                {tResultUnits(StudyResultUnit.K)}/{tUnits(result.unit || '')}
               </p>
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>

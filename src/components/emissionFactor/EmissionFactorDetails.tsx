@@ -60,12 +60,16 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
             </span>
             {displayDetailedQuality && (
               <>
-                {qualities.map((quality) => (
-                  <Fragment key={quality}>
-                    <span>{t(quality)}</span>
-                    <span>{tQuality(emissionFactor[quality]?.toString())}</span>
-                  </Fragment>
-                ))}
+                {qualities.map((quality) =>
+                  emissionFactor[quality] ? (
+                    <Fragment key={quality}>
+                      <span>{t(quality)}</span>
+                      <span>{tQuality(emissionFactor[quality].toString())}</span>
+                    </Fragment>
+                  ) : (
+                    <></>
+                  ),
+                )}
               </>
             )}
           </div>
@@ -87,7 +91,8 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
         <div className={classNames(styles.info, styles.list, 'flex')}>
           {gases.map((gaz) => (
             <div key={gaz}>
-              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}/{tUnits(emissionFactor.unit)}
+              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}/
+              {tUnits(emissionFactor.unit || StudyResultUnit.K)}
             </div>
           ))}
         </div>

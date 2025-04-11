@@ -218,7 +218,7 @@ const EmissionSourceForm = ({
                   inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
                 }}
               />
-              {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
+              {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit || '')}</div>}
             </div>
             {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
               <div className={classNames(styles.inputWithUnit, 'flex grow')}>
@@ -289,7 +289,7 @@ const EmissionSourceForm = ({
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))} {tResultUnits(StudyResultUnit.K)}/
-            {tUnits(selectedFactor.unit)}{' '}
+            {tUnits(selectedFactor.unit || '')}{' '}
             {qualityRating && (
               <>
                 - {tQuality('name')} {tQuality(qualityRating.toString())}

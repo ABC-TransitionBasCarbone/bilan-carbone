@@ -129,7 +129,7 @@ const getEmissionSourcesRows = (
         const post = Object.keys(subPostsByPost).find((post) =>
           subPostsByPost[post as Post].includes(emissionSource.subPost),
         )
-        initCols.push(tPost(post))
+        initCols.push(tPost(post || ''))
         initCols.push(tPost(emissionSource.subPost))
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
