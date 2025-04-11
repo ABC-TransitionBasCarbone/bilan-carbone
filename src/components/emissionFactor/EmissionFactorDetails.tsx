@@ -46,28 +46,30 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
       </div>
       <div className={styles.info}>
         {t('quality')} :{' '}
-        <div className={classNames(styles.list, 'grid')}>
-          <span className="align-center">{t('qualityRating')}</span>
-          <span className="align-center">
-            {tQuality(quality?.toString())}
-            <span
-              className={classNames(styles.expandIcon, 'ml-4')}
-              onClick={() => setDisplayDetailedQuality(!displayDetailedQuality)}
-            >
-              {displayDetailedQuality ? <ShrinkIcon /> : <ExpandIcon />}
+        {quality && (
+          <div className={classNames(styles.list, 'grid')}>
+            <span className="align-center">{t('qualityRating')}</span>
+            <span className="align-center">
+              {tQuality(quality?.toString())}
+              <span
+                className={classNames(styles.expandIcon, 'ml-4')}
+                onClick={() => setDisplayDetailedQuality(!displayDetailedQuality)}
+              >
+                {displayDetailedQuality ? <ShrinkIcon /> : <ExpandIcon />}
+              </span>
             </span>
-          </span>
-          {displayDetailedQuality && (
-            <>
-              {qualities.map((quality) => (
-                <Fragment key={quality}>
-                  <span>{t(quality)}</span>
-                  <span>{tQuality(emissionFactor[quality]?.toString())}</span>
-                </Fragment>
-              ))}
-            </>
-          )}
-        </div>
+            {displayDetailedQuality && (
+              <>
+                {qualities.map((quality) => (
+                  <Fragment key={quality}>
+                    <span>{t(quality)}</span>
+                    <span>{tQuality(emissionFactor[quality]?.toString())}</span>
+                  </Fragment>
+                ))}
+              </>
+            )}
+          </div>
+        )}
       </div>
       {Object.entries(subPosts).length > 0 && (
         <div className={styles.info}>
