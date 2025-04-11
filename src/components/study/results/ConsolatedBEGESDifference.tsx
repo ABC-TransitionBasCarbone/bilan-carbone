@@ -49,6 +49,15 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
       wasteEmissionFactors[emissionSource.emissionFactor.importedId],
   )
 
+  const missingCaract = useMemo(
+    () =>
+      study.emissionSources.filter(
+        (emissionSource) => (emissionSource.validated || !validatedOnly) && !emissionSource.caracterisation,
+      ),
+    [study.emissionSources, validatedOnly],
+  )
+  const maxListedEmissionSources = 10
+
   return begesTotal !== computedTotal ? (
     <>
       <div className={classNames(styles.button, 'flex-cc p-2 px1')} onClick={() => setOpen(true)}>
@@ -64,6 +73,23 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
               {wasteEmissionSourcesOnStudy.map((emissionSource) => (
                 <li key={`waste-emission-source-${emissionSource.id}`}>{emissionSource.name}</li>
               ))}
+            </ul>
+          </div>
+        )}
+        {!!missingCaract.length && (
+          <div className="mb1">
+            <p className="mb-2">{t('missingCaract')}</p>
+            <ul className={styles.wasteList}>
+              {missingCaract
+                .filter((_, i) => i < maxListedEmissionSources)
+                .map((emissionSource) => (
+                  <li key={`caract-emission-source-${emissionSource.id}`}>{emissionSource.name}</li>
+                ))}
+              {missingCaract.length > maxListedEmissionSources && (
+                <li key="additional-missing">
+                  {t('additionalMissing', { count: missingCaract.length - maxListedEmissionSources })}
+                </li>
+              )}
             </ul>
           </div>
         )}

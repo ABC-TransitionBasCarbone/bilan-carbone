@@ -463,6 +463,8 @@
         "modalTitle": "Explanation of the difference between the results",
         "dependance": "The regulatory GHG balance does not include the sub-item \"Dependent use\", as the concept of dependence does not exist in the BEGES-R method",
         "waste": "The regulatory Bilan GES includes all emissions due to waste recycling in the waste emitter's balance sheet, whereas the Bilan Carbone® only includes the weight of waste collection and transport in the waste emitter's balance sheet. Thus, the emission factors with a value of 41 kgCO₂e/t within the tool are those used for the Bilan Carbone®, while the values incorporating the regeneration of materials (the recycling process, for the emission factors \"Recycling\" or \"Average end of life\") are used for the BEGES-R. The emission factor displayed on the BC+ is only that used for the Bilan Carbone®, but the BEGES-R export calculations are made using the ADEME emission factors linked to recycling or average end-of-life. Here are the sources of emissions related to this topic: ",
+        "missingCaract": "You have not entered the characterisations for all the emission sources in your study. Please edit and add the characterisation for the following emission sources:",
+        "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "close": "Close"
       }
     },
