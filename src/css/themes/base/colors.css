@@ -38,6 +38,13 @@
   --grayscale-100: #ebf0f4;
   --grayscale-200: #ebf2ff;
   --grayscale-300: #c4d1dd;
+  --grayscale-400: #acbbcd;
+  --grayscale-500: #8a9bb7;
+  --grayscale-600: #7f8dac;
+  --grayscale-700: #6c7896;
+  --grayscale-800: #59637a;
+  --grayscale-900: #4c5363;
+  --grayscale-950: #2c303a;
 
   --background-50: rgba(56, 128, 255, 0.05);
   --background-100: var(--grayscale-200);
