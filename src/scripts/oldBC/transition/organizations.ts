@@ -159,12 +159,6 @@ export const uploadOrganizations = async (
 
   // Et je crée tous les autres sites
   const sitesToCreate = sites
-    .filter(
-      (site) =>
-        !existingOrganizations.some(
-          (existingOrganization) => existingOrganization.oldBCId === site.organizationOldBCId,
-        ),
-    )
     .map((site) => {
       const existingParentOrganisationId = organizationsOldBCIdsIdsMap.get(site.organizationOldBCId)
       if (!existingParentOrganisationId) {
@@ -178,9 +172,6 @@ export const uploadOrganizations = async (
       }
     })
     .filter((site) => site !== null)
-    // Sauf celles qui n'ont pas de parent (car supprimées dans l'ancien BC+)
-    .filter((site) => newOrganizations.some((organization) => organization.oldBCId === site.organizationId))
-    .filter((site) => site.organizationId !== userOrganizationId)
   if (sitesToCreate.length > 0) {
     console.log(`Import de ${sitesToCreate.length} sites`)
     await transaction.site.createMany({ data: sitesToCreate })
