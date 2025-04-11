@@ -18,19 +18,23 @@ interface Props {
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
   studySite: string
+  validatedOnly: boolean
 }
 
-const Difference = ({ study, rules, emissionFactorsWithParts, studySite }: Props) => {
+const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validatedOnly }: Props) => {
   const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
   const [open, setOpen] = useState(false)
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
   const beges = useMemo(
-    () => computeBegesResult(study, begesRules, emissionFactorsWithParts, studySite, true, true),
-    [study, begesRules, emissionFactorsWithParts, studySite],
+    () => computeBegesResult(study, begesRules, emissionFactorsWithParts, studySite, true, validatedOnly),
+    [study, begesRules, emissionFactorsWithParts, studySite, validatedOnly],
   )
   const begesTotal = beges.find((result) => result.rule === 'total')?.total
-  const computedResults = useMemo(() => computeResultsByPost(study, tPost, studySite, true, true), [studySite])
+  const computedResults = useMemo(
+    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
+    [study, studySite, validatedOnly],
+  )
   const computedTotal = computedResults.find((result) => result.post === 'total')?.value
 
   const utilisationEnDependance = computedResults
