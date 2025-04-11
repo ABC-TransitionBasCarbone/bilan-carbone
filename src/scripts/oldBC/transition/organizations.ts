@@ -5,7 +5,6 @@ export enum RequiredOrganizationsColumns {
   ID_ENTITE = 'ID_ENTITE',
   NOM_ORGANISATION = 'NOM_ORGANISATION',
   NOM_ENTITE = 'NOM_ENTITE',
-  ENTITE_PRINCIPALE = 'ENTITE_PRINCIPALE',
   SIRET = 'SIRET',
   ID_ENTITE_MERE = 'ID_ENTITE_MERE',
   IS_USER_ORGA = 'IS_USER_ORGA',
@@ -88,7 +87,10 @@ export const uploadOrganizations = async (
     .forEach((row) => {
       if ((row[indexes[RequiredOrganizationsColumns.IS_USER_ORGA]] as number) === 1) {
         userOrganizationsOldBCIds.push(row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string)
-      } else if ((row[indexes[RequiredOrganizationsColumns.ENTITE_PRINCIPALE]] as number) === 1) {
+      } else if (
+        row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] ===
+        row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]]
+      ) {
         organizations.push(mapRowToOrganization(row, indexes))
       } else {
         sites.push(mapRowToSite(row, indexes))
