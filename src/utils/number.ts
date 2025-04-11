@@ -20,7 +20,7 @@ export const formatEmissionFactorNumber = (value: number): string => {
     return formatNumber(value, integerPart === 0 ? 2 : 1)
   }
 
-  return formatNumber(value, 5)
+  return formatNumber(value, value >= 0.1 ? 2 : 5)
 }
 
 export const displayCA = (ca: number, factor: number) => new Big(ca).div(factor).toNumber()
