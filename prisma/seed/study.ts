@@ -19,7 +19,7 @@ const siteId = 'c3f2b8d4-7a0c-4b3f-8c5b-5b5e7b6f3e3b'
 const studySiteId = 'ca3e68bd-dee6-400a-b3cb-b3e11725282e'
 
 export const createRealStudy = async (prisma: PrismaClient, creator: Account) => {
-  if (!creator.organizationId) {
+  if (!creator.organizationVersionId) {
     return null
   }
 
@@ -39,11 +39,20 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
     ],
   })
 
+  const creatorOrganizationVersion = await prisma.organizationVersion.findFirst({
+    where: {
+      id: creator.organizationVersionId,
+    },
+  })
+  if (!creatorOrganizationVersion) {
+    return null
+  }
+
   await prisma.site.create({
     data: {
       id: siteId,
       name: 'Bourges',
-      organizationId: creator.organizationId,
+      organizationId: creatorOrganizationVersion.organizationId,
       etp: 35,
       ca: 1_000_000,
     },
@@ -63,7 +72,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
   const papier = await prisma.emissionFactor.create({
     data: {
       importedFrom: Import.Manual,
-      organizationId: creator.organizationId,
+      organizationId: creatorOrganizationVersion.organizationId,
       status: EmissionFactorStatus.Valid,
       co2b: 345,
       co2f: 34,
@@ -93,7 +102,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       level: Level.Initial,
       exports: { createMany: { data: [{ type: Export.Beges, control: ControlMode.Operational }] } },
       createdBy: { connect: { id: creator.id } },
-      organization: { connect: { id: creator.organizationId } },
+      organizationVersion: { connect: { id: creator.organizationVersionId } },
       sites: {
         createMany: {
           data: [

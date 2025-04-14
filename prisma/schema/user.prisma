@@ -30,12 +30,6 @@ enum UserSource {
   TUNISIE
 }
 
-enum Environment {
-  BC
-  CUT
-  TILT
-}
-
 model Account {
   id               String    @id @default(uuid())
   createdAt        DateTime  @default(now()) @map("created_at")
@@ -45,14 +39,13 @@ model Account {
 
   importedFileDate DateTime? @map("imported_file_date")
 
-  organization           Organization?  @relation(fields: [organizationId], references: [id])
-  onboardedOrganizations Organization[] @relation("organizationOnboarder")
-  organizationId         String?        @map("organization_id")
+  organizationVersion           OrganizationVersion?  @relation(fields: [organizationVersionId], references: [id])
+  onboardedOrganizationVersions OrganizationVersion[] @relation("organizationVersionOnboarder")
+  organizationVersionId         String?        @map("organizationVersion_id")
 
   deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
 
   role                       Role
-  environment Environment
 
   createdStudies             Study[]
   allowedStudies             UserOnStudy[]
@@ -61,7 +54,7 @@ model Account {
   flows                      Document[]
   userApplicationSettings    UserApplicationSettings?
 
-  @@unique([userId, environment])
+  @@unique([userId, organizationVersionId])
   @@map("accounts")
 }
 

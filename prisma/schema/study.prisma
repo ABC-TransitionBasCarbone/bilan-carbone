@@ -87,8 +87,8 @@ model Study {
   resultsUnit StudyResultUnit @default(T) @map("results_unit")
   exports     StudyExport[]
 
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId String       @map("organization_id")
+  organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id])
+  organizationVersionId String       @map("organizationVersion_id")
 
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
