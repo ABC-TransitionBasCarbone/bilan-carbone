@@ -1,5 +1,5 @@
 .spinner {
-  color: white !important;
+  color: var(--neutral-500) !important;
 }
 
 .hidden {
