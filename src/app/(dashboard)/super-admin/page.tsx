@@ -1,17 +1,17 @@
 'use server'
 
-import Block from '@/components/base/Block'
 import withAuth from '@/components/hoc/withAuth'
+import NotFound from '@/components/pages/NotFound'
 import SuperAdminPage from '@/components/pages/SuperAdmin'
-import { useTranslations } from 'next-intl'
+import { auth } from '@/services/auth'
+import { Role } from '@prisma/client'
 
-const SuperAdmin = () => {
-  const t = useTranslations('admin')
-  return (
-    <Block title={t('title')} as="h1">
-      <SuperAdminPage />
-    </Block>
-  )
+const SuperAdmin = async () => {
+  const session = await auth()
+  if (session?.user?.role !== Role.SUPER_ADMIN) {
+    return <NotFound />
+  }
+  return <SuperAdminPage />
 }
 
 export default withAuth(SuperAdmin)

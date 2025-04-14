@@ -4,7 +4,7 @@ import { processUsers } from '@/scripts/ftp/userImport'
 import { useTranslations } from 'next-intl'
 import InputFileUpload from '../base/InputFileUpload'
 
-const SuperAdmin = () => {
+const SuperAdminImport = () => {
   const t = useTranslations('admin')
 
   const onChange = (files: FileList) => {
@@ -27,4 +27,4 @@ const SuperAdmin = () => {
   return <InputFileUpload label={t('uploadButton')} onChange={onChange} />
 }
 
-export default SuperAdmin
+export default SuperAdminImport
