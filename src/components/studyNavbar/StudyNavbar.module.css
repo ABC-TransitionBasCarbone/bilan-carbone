@@ -78,8 +78,7 @@
 }
 
 .disabled {
-  background-color: white;
-  color: var(--neutral-400);
+  color: var(--grayscale-800);
   cursor: not-allowed;
   &:hover {
     background-color: white;

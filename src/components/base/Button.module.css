@@ -13,8 +13,9 @@
 
   &[aria-disabled='true'],
   &:disabled {
-    background-color: var(--neutral-300) !important;
-    border-color: var(--neutral-300) !important;
+    color: var(--neutral-500) !important;
+    background-color: var(--grayscale-300) !important;
+    border-color: var(--grayscale-300) !important;
   }
 }
 
@@ -30,10 +31,10 @@
   }
 }
 .error {
-  background-color: var(--error-200) !important;
-  border-color: var(--error-200) !important;
+  background-color: var(--error-100) !important;
+  border-color: var(--error-100) !important;
   &:hover {
-    background-color: var(--error-300) !important;
-    border-color: var(--error-300) !important;
+    background-color: var(--error-200) !important;
+    border-color: var(--error-200) !important;
   }
 }
