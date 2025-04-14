@@ -1,5 +1,6 @@
 import Button from '@/components/base/Button'
 import Modal from '@/components/modals/Modal'
+import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { getEmissionFactorsByImportedIdsAndVersion } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import {
@@ -10,7 +11,7 @@ import { EmissionFactorImportVersion, Import, StudyResultUnit } from '@prisma/cl
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import styles from './StudyVersions.module.css'
 
 interface Props {
@@ -81,6 +82,14 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
   ) =>
     `${emissionFactor.metaData[0].title}${emissionFactor.metaData[0].attribute ? ` - ${emissionFactor.metaData[0].attribute}` : ''}${emissionFactor.metaData[0].frontiere ? ` - ${emissionFactor.metaData[0].frontiere}` : ''}${emissionFactor.metaData[0].location ? ` - ${emissionFactor.metaData[0].location}` : ''}`
 
+  const hasUpdatedWastedEmissionFactor = useMemo(
+    () =>
+      (simulationResult.updated || []).some(
+        (emissionFactor) => !!wasteEmissionFactors[emissionFactor.importedId || ''],
+      ),
+    [simulationResult],
+  )
+
   return (
     <div className="flex-col grow">
       <p className="bold mb-2">{t('list')} :</p>
@@ -128,23 +137,25 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
           {!!simulationResult.updated.length && (
             <>
               <p>{t('updated')} :</p>
-              <ul>
+              <ul className="mt-2">
                 {simulationResult.updated.map((emissionFactor) => (
                   <li key={`updated-factor-${emissionFactor.id}`}>
                     <p className="ml1">
                       {getEmissionFactorName(emissionFactor)} :{' '}
                       <span className={styles.updatedValue}>{emissionFactor.totalCo2}</span> {emissionFactor.newValue}{' '}
                       {unit}/{tUnits(emissionFactor.unit)}
+                      {!!wasteEmissionFactors[emissionFactor.importedId || ''] && <>*</>}
                     </p>
                   </li>
                 ))}
               </ul>
+              {hasUpdatedWastedEmissionFactor && <span className="mt-2">(*) : {t('wastedUpdated')}</span>}
             </>
           )}
           {!!simulationResult.deleted.length && (
             <>
               <p className="mt1">{t('deleted')} :</p>
-              <ul>
+              <ul className="mt-2">
                 {simulationResult.deleted.map((emissionFactor) => (
                   <li key={`deleted-factor-${emissionFactor.id}`}>
                     <p className="ml1">{getEmissionFactorName(emissionFactor)}</p>
