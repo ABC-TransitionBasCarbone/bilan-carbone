@@ -86,7 +86,7 @@ const Navbar = ({ user }: Props) => {
               <span className={styles.small}>{t('fe')}</span>
             </Link>
           )}
-          {hasFormation && (
+          {hasFormation && !isCut && (
             <Link className={styles.link} href="/formation">
               <span>{t('formation')}</span>
             </Link>
