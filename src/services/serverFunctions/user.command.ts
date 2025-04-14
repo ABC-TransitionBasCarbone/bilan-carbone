@@ -83,7 +83,7 @@ export type EditSettingsCommand = z.infer<typeof EditSettingsCommandValidation>
 
 export const LoginCommandValidation = z.object({
   email: z.string({ required_error: 'email' }).email('email').trim(),
-  password: z.string({ required_error: 'password' }),
+  password: z.string({ required_error: 'password' }).min(1, 'password'),
 })
 
 export type LoginCommand = z.infer<typeof LoginCommandValidation>

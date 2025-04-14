@@ -144,7 +144,11 @@
       "emailRequired": "Veuillez entrer un email",
       "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
       "emailSent": "Si votre email est correct, vous allez recevoir un mail pour réinitialiser votre mot de passe",
-      "validated": "Votre mot de passe a été réinitialisé, vous allez être redirigé vers la page de <link>connexion</link>."
+      "validated": "Votre mot de passe a été réinitialisé, vous allez être redirigé vers la page de <link>connexion</link>.",
+      "validation": {
+        "email": "Veuillez entrer un email",
+        "password": "Veuillez entrer un mot de passe"
+      }
     }
   },
   "activation": {
