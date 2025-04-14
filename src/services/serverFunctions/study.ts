@@ -760,8 +760,11 @@ export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, 
     return { success: false, message: NOT_AUTHORIZED }
   }
 
-  const latest = importVersions[0]
-  if (latest.id === study.emissionFactorVersions.find((version) => version.source === source)?.importVersionId) {
+  const latestSourceVersion = importVersions[0]
+  if (
+    latestSourceVersion.id ===
+    study.emissionFactorVersions.find((version) => version.source === source)?.importVersionId
+  ) {
     return { success: false, message: 'latest' }
   }
 
@@ -774,7 +777,7 @@ export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, 
   )
   const upgradedEmissionFactors = await getEmissionFactorsByImportedIdsAndVersion(
     emissionFactors.map((emissionFactor) => emissionFactor.importedId).filter((importedId) => importedId !== null),
-    latest.id,
+    latestSourceVersion.id,
   )
 
   const deletedEmissionFactors = emissionFactors.filter(
@@ -804,26 +807,26 @@ export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, 
     emissionSources: targetedEmissionSources,
     deleted: deletedEmissionFactors,
     updated: updatedEmissionFactors,
-    latest,
+    latestSourceVersion,
   }
 }
 
 export const upgradeStudyEmissionFactorSource = async (studyId: string, source: Import) => {
-  const results = await simulateStudyEmissionFactorSourceUpgrade(studyId, source)
-  if (!results.success) {
-    return results
+  const simulationResults = await simulateStudyEmissionFactorSourceUpgrade(studyId, source)
+  if (!simulationResults.success) {
+    return simulationResults
   }
 
-  const importedIds = (results.emissionSources || [])
+  const importedIds = (simulationResults.emissionSources || [])
     .map((emissionSource) => emissionSource.emissionFactor?.importedId)
     .filter((importId) => importId !== null && importId !== undefined)
 
   const upgradedEmissionFactors = await getEmissionFactorsByImportedIdsAndVersion(
     importedIds,
-    (results.latest as EmissionFactorImportVersion).id,
+    (simulationResults.latestSourceVersion as EmissionFactorImportVersion).id,
   )
 
-  const updatePromises = (results.emissionSources || []).reduce((promises, emissionSource) => {
+  const updatePromises = (simulationResults.emissionSources || []).reduce((promises, emissionSource) => {
     const newEmissionFactor = (upgradedEmissionFactors || []).find(
       (emissionFactor) => emissionFactor.importedId === emissionSource.emissionFactor?.importedId,
     )
@@ -838,9 +841,11 @@ export const upgradeStudyEmissionFactorSource = async (studyId: string, source: 
         : [],
     )
   }, [] as Prisma.PrismaPromise<StudyEmissionSource>[])
-  const deletePromises = (results.deleted || []).reduce((promises, emissionFactor) => {
+  const deletePromises = (simulationResults.deleted || []).reduce((promises, emissionFactor) => {
     const emissionSources =
-      results.emissionSources?.filter((emissionSource) => emissionSource.emissionFactor?.id === emissionFactor.id) || []
+      simulationResults.emissionSources?.filter(
+        (emissionSource) => emissionSource.emissionFactor?.id === emissionFactor.id,
+      ) || []
     return promises.concat(
       emissionSources.map((emissionSource) =>
         prismaClient.studyEmissionSource.update({
@@ -854,7 +859,7 @@ export const upgradeStudyEmissionFactorSource = async (studyId: string, source: 
 
   await prismaClient.studyEmissionFactorVersion.update({
     where: { studyId_source: { studyId, source } },
-    data: { importVersionId: results.latest?.id },
+    data: { importVersionId: simulationResults.latestSourceVersion?.id },
   })
   return { success: true }
 }
