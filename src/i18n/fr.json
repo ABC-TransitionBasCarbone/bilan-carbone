@@ -422,6 +422,7 @@
         "title": "Êtes vous sûr de vouloir mettre à jour la source {name} ?",
         "unchanged": "Les résultats de l'étude seront inchangés",
         "updated": "Les facteurs d'émission suivants ont été mis à jour",
+        "wastedUpdated": "Les facteurs marqués ne seront différents que pour les exports BEGES. Vous pouvez trouver une explication dans la page \"Résultats\" de votre étude",
         "deleted": "Les facteurs d'émission suivants ont été supprimés",
         "deletionDetails": "Les sources d'émissions associées n'auront plus de facteur d'émissions et seront dévalidées",
         "confirm": "Confirmer",

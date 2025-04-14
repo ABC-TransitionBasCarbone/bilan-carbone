@@ -422,6 +422,7 @@
         "title": "Are you sure you want to update the {name} source?",
         "unchanged": "The results of the study will remain unchanged",
         "updated": "The following emission factors have been updated",
+        "wastedUpdated": "The factors marked will only be different for BEGES exports. You can find an explanation on the \"Results\" page of your study.",
         "deleted": "The following emission factors have been deleted",
         "deletionDetails": "The associated emission sources will no longer have an emission factor and will be invalidated.",
         "confirm": "Confirm",
