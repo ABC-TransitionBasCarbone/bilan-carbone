@@ -5,7 +5,7 @@ export const formatNumber = (value: number, dec = 0) =>
   value.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: dec })
 
 const countZerosAfterDecimal = (value: number): number => {
-  if (value >= 1 || value <= 0) {
+  if (value >= 1 || value <= -1) {
     return 0
   }
 
@@ -20,16 +20,16 @@ export const formatEmissionFactorNumber = (value: number): string => {
   }
 
   const integerPart = Math.floor(value)
-  const decimalPart = value.toString().split('.')[1] ?? ''
 
-  if (integerPart > 9) {
+  if (integerPart > 9 || integerPart < -9) {
     return formatNumber(value)
   }
 
-  if (decimalPart.length === 2) {
-    return formatNumber(value, integerPart === 0 ? 2 : 1)
+  if (integerPart >= 1 || integerPart <= -1) {
+    return formatNumber(value, 1)
   }
-  return formatNumber(value, value >= 0.1 ? 2 : countZerosAfterDecimal(value) + 2)
+
+  return formatNumber(value, countZerosAfterDecimal(value) + 2)
 }
 
 export const displayCA = (ca: number, factor: number) => new Big(ca).div(factor).toNumber()
