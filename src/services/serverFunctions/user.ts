@@ -16,6 +16,7 @@ import {
   validateUser,
 } from '@/db/user'
 import { getUserByEmail, updateUser } from '@/db/userImport'
+import { processUsers } from '@/scripts/ftp/userImport'
 import { isUntrainedRole } from '@/utils/organization'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
 import { User as DBUser, Organization, Role, UserChecklist, UserStatus } from '@prisma/client'
@@ -26,6 +27,7 @@ import { getUserCheckList } from '../checklist'
 import {
   sendActivationEmail,
   sendActivationRequest,
+  sendAddedUsersByFile,
   sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
@@ -333,3 +335,10 @@ export const addUserChecklistItem = async (step: UserChecklist) => {
     )
   }
 }
+
+export const sendAddedUsersAndProccess = async (results: Record<string, string>[]) => {
+  sendAddedUsersByFile(results)
+  processUsers(results, new Date())
+}
+
+export const verifyPasswordAndProcessUsers = async (uuid: string) => uuid !== process.env.ADMIN_PASSWORD

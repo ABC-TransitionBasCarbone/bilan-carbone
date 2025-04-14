@@ -1,6 +1,6 @@
 'use client'
 
-import { processUsers } from '@/scripts/ftp/userImport'
+import { sendAddedUsersAndProccess, verifyPasswordAndProcessUsers } from '@/services/serverFunctions/user'
 import { useTranslations } from 'next-intl'
 import InputFileUpload from '../base/InputFileUpload'
 
@@ -10,13 +10,19 @@ const SuperAdminImport = () => {
   const onChange = (files: FileList) => {
     Array.from(files).forEach((file) => {
       const reader = new FileReader()
-      reader.onload = (event) => {
+      reader.onload = async (event) => {
         if (typeof event.target?.result === 'string') {
           try {
+            const userUuid = prompt("Veuillez entrer l'UUID :")
+            if (!userUuid || (await verifyPasswordAndProcessUsers(userUuid))) {
+              console.error('Non-concordance des UUID. Processus annulé.')
+              return
+            }
+
             const results = JSON.parse(event.target.result) as Record<string, string>[]
-            processUsers(results, new Date())
+            await sendAddedUsersAndProccess(results)
           } catch (error) {
-            console.error('Error parsing JSON:', error)
+            console.error("Erreur lors de l'analyse du JSON :", error)
           }
         }
       }
