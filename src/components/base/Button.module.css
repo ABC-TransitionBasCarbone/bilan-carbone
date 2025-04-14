@@ -13,6 +13,7 @@
 
   &[aria-disabled='true'],
   &:disabled {
+    color: var(--neutral-500) !important;
     background-color: var(--grayscale-300) !important;
     border-color: var(--grayscale-300) !important;
   }
