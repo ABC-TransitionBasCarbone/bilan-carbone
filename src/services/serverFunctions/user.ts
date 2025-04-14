@@ -27,7 +27,7 @@ import { getUserCheckList } from '../checklist'
 import {
   sendActivationEmail,
   sendActivationRequest,
-  sendAuthorizationEmail,
+  sendAddedUsersByFile,
   sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
@@ -336,8 +336,8 @@ export const addUserChecklistItem = async (step: UserChecklist) => {
   }
 }
 
-export const sendAuthorizationEmailUsers = async (results: Record<string, string>[]) => {
-  sendAuthorizationEmail(results)
+export const sendAddedUsersAndProccess = async (results: Record<string, string>[]) => {
+  sendAddedUsersByFile(results)
   processUsers(results, new Date())
 }
 

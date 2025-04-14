@@ -149,7 +149,7 @@ export const sendNewContributorInvitationEmail = async (
   return send([toEmail], `Demande de contribution sur l'étude ${studyName}`, html)
 }
 
-export const sendAuthorizationEmail = async (results: Record<string, string>[]) => {
+export const sendAddedUsersByFile = async (results: Record<string, string>[]) => {
   if (!process.env.MAIL_USER) {
     throw new Error("La variable d'environnement MAIL_USER n'est pas définie")
   }

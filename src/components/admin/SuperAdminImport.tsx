@@ -1,6 +1,6 @@
 'use client'
 
-import { sendAuthorizationEmailUsers, verifyPasswordAndProcessUsers } from '@/services/serverFunctions/user'
+import { sendAddedUsersAndProccess, verifyPasswordAndProcessUsers } from '@/services/serverFunctions/user'
 import { useTranslations } from 'next-intl'
 import InputFileUpload from '../base/InputFileUpload'
 
@@ -20,7 +20,7 @@ const SuperAdminImport = () => {
             }
 
             const results = JSON.parse(event.target.result) as Record<string, string>[]
-            await sendAuthorizationEmailUsers(results)
+            await sendAddedUsersAndProccess(results)
           } catch (error) {
             console.error("Erreur lors de l'analyse du JSON :", error)
           }
