@@ -5,7 +5,7 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import { FullStudy } from '@/db/study'
-import { Post, subPostsByPost } from '@/services/posts'
+import { BCPost, subPostsByPost } from '@/services/posts'
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import {
   NewStudyContributorCommand,
@@ -78,7 +78,7 @@ const NewStudyContributorForm = ({ study }: Props) => {
         data-testid="study-contributor-post"
       >
         <MenuItem value="all">{tPost('allPost')}</MenuItem>
-        {Object.keys(Post).map((key) => (
+        {Object.keys(BCPost).map((key) => (
           <MenuItem key={key} value={key}>
             {tPost(key)}
           </MenuItem>
