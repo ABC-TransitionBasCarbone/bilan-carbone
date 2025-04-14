@@ -82,7 +82,7 @@ export const onboardOrganization = async (
       firstName: '',
       lastName: '',
       email: collaborator.email || '',
-      role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.COLLABORATOR),
+      role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       status: UserStatus.VALIDATED,
       organizationId,
     })
