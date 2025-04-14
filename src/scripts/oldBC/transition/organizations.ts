@@ -5,18 +5,64 @@ export enum RequiredOrganizationsColumns {
   ID_ENTITE = 'ID_ENTITE',
   NOM_ORGANISATION = 'NOM_ORGANISATION',
   NOM_ENTITE = 'NOM_ENTITE',
-  ENTITE_PRINCIPALE = 'ENTITE_PRINCIPALE',
   SIRET = 'SIRET',
   ID_ENTITE_MERE = 'ID_ENTITE_MERE',
   IS_USER_ORGA = 'IS_USER_ORGA',
 }
 
-const getOrganizationId = (id: string, oldUserOrganizationId: string, userOrganizationId: string) => {
-  // Si l'id que je recherche est l'ancienne id principale, je la remplace par le nouveau
-  if (id === oldUserOrganizationId) {
-    return userOrganizationId
+interface Organization {
+  oldBCId: string
+  name: string
+  siret: string
+}
+
+interface Site {
+  oldBCId: string
+  name: string
+  organizationOldBCId: string
+}
+
+function mapRowToOrganization(row: (string | number)[], indexes: Record<string, number>) {
+  return {
+    oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string,
+    name: row[indexes[RequiredOrganizationsColumns.NOM_ORGANISATION]] as string,
+    siret: row[indexes[RequiredOrganizationsColumns.SIRET]] as string,
   }
-  return id
+}
+
+function mapRowToSite(row: (string | number)[], indexes: Record<string, number>) {
+  return {
+    oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string,
+    name: row[indexes[RequiredOrganizationsColumns.NOM_ENTITE]] as string,
+    organizationOldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]] as string,
+  }
+}
+
+const getOrganizationsOldBCIdsIdsMap = async (
+  transaction: Prisma.TransactionClient,
+  organizations: Organization[],
+  userOrganizationId: string,
+  userOrganizationOldBCId: string,
+) => {
+  const createdOrganizations = await transaction.organization.findMany({
+    where: {
+      oldBCId: {
+        in: organizations.map((organization) => organization.oldBCId),
+      },
+    },
+    select: { id: true, oldBCId: true },
+  })
+
+  const createdOrganizationsMap = createdOrganizations.reduce((map, currentCreatedOrganisation) => {
+    if (currentCreatedOrganisation.oldBCId) {
+      map.set(currentCreatedOrganisation.oldBCId, currentCreatedOrganisation.id)
+    }
+    return map
+  }, new Map<string, string>())
+
+  createdOrganizationsMap.set(userOrganizationOldBCId, userOrganizationId)
+
+  return createdOrganizationsMap
 }
 
 export const uploadOrganizations = async (
@@ -26,90 +72,115 @@ export const uploadOrganizations = async (
   userOrganizationId: string,
 ) => {
   console.log('Import des organisations...')
-  const organizations = data
+
+  const userOrganizationsOldBCIds: string[] = []
+  const organizations: Organization[] = []
+  const sites: Site[] = []
+  data
     .slice(1)
-    .map((row) => ({
-      id: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]],
-      name: row[indexes[RequiredOrganizationsColumns.NOM_ORGANISATION]],
-      entityName: row[indexes[RequiredOrganizationsColumns.NOM_ENTITE]],
-      mainEntity: row[indexes[RequiredOrganizationsColumns.ENTITE_PRINCIPALE]],
-      siret: row[indexes[RequiredOrganizationsColumns.SIRET]],
-      parentId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]],
-      userOrga: row[indexes[RequiredOrganizationsColumns.IS_USER_ORGA]],
-    }))
     // On ignore les parentID supprimés
-    .filter((organization) => organization.parentId !== '00000000-0000-0000-0000-000000000000')
+    .filter(
+      (row) =>
+        (row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]] as string) !==
+        '00000000-0000-0000-0000-000000000000',
+    )
+    .forEach((row) => {
+      if ((row[indexes[RequiredOrganizationsColumns.IS_USER_ORGA]] as number) === 1) {
+        userOrganizationsOldBCIds.push(row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string)
+      } else if (
+        row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] ===
+        row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]]
+      ) {
+        organizations.push(mapRowToOrganization(row, indexes))
+      } else {
+        sites.push(mapRowToSite(row, indexes))
+      }
+    })
+
+  if (userOrganizationsOldBCIds.length !== 1) {
+    throw new Error("Il faut exactement 1 organisation rattachée à l'utilisateur !")
+  }
+  const userOrganizationOldBCId = userOrganizationsOldBCIds[0]
 
   const existingOrganizations = await prismaClient.organization.findMany({
     where: {
-      OR: [
-        // On va chercher les ids déjà importé
-        { id: { in: organizations.map((organization) => organization.id as string) } },
-        // Ou les siret deja existant
-        { siret: { in: organizations.map((organization) => organization.siret as string).filter((siret) => siret) } },
-        // Ou si il n'y a pas de siret, les organisations avec le même nom, dans mon organisation
-        {
-          parentId: userOrganizationId,
-          name: {
-            in: organizations
-              .filter((organization) => !organization.siret)
-              .map((organization) => organization.name as string),
-          },
-        },
+      AND: [
+        { parentId: userOrganizationId },
+        { oldBCId: { in: organizations.map((organization) => organization.oldBCId) } },
       ],
     },
   })
 
-  const oldUserOrganizationId = organizations.find((organization) => organization.userOrga === 1)?.id as string
-  const newOrganizations = organizations
-    .filter(
-      (organization) =>
-        // On ne crée pas les organizations avec un id déjà existant
-        // Ou avec un siret existant
-        // Ou si il n'y a pas de siret, avec un nom existant dans mon organisation
-        !existingOrganizations.some(
-          ({ id, siret, name }) =>
-            id === organization.id || (organization.siret ? siret === organization.siret : name === organization.name),
-        ),
-    )
-    .filter((organization) => organization.mainEntity === 1)
+  const newOrganizations = organizations.filter(
+    (organization) => !existingOrganizations.some(({ oldBCId }) => oldBCId === organization.oldBCId),
+  )
 
   // Je crée toutes les organisations sauf la mienne
-  const organizationsToCreate = newOrganizations.filter((organization) => organization.userOrga !== 1)
-  if (organizationsToCreate.length > 0) {
-    console.log(`Import de ${organizationsToCreate.length} organisations`)
+  if (newOrganizations.length > 0) {
+    console.log(`Import de ${newOrganizations.length} organisations`)
     await transaction.organization.createMany({
-      data: organizationsToCreate.map((organization) => ({
+      data: newOrganizations.map((organization) => ({
         parentId: userOrganizationId,
-        id: organization.id as string,
-        siret: organization.siret as string,
-        name: organization.name as string,
+        oldBCId: organization.oldBCId,
+        siret: organization.siret,
+        name: organization.name,
         isCR: false,
-        activatedLicence: true,
+        activatedLicence: false,
       })),
     })
   }
+
+  const organizationsOldBCIdsIdsMap = await getOrganizationsOldBCIdsIdsMap(
+    transaction,
+    organizations,
+    userOrganizationId,
+    userOrganizationOldBCId,
+  )
 
   if (newOrganizations.length > 0) {
     console.log(`Ajout de ${newOrganizations.length} sites par défaut`)
     // Et pour toutes les organisations j'ajoute un site par defaut
     await transaction.site.createMany({
-      data: newOrganizations.map((organization) => ({
-        organizationId: getOrganizationId(organization.id as string, oldUserOrganizationId, userOrganizationId),
-        name: organization.entityName as string,
-      })),
+      data: newOrganizations
+        .map((organization) => {
+          const createdOrganisationId = organizationsOldBCIdsIdsMap.get(organization.oldBCId)
+          if (!createdOrganisationId) {
+            console.warn(`Impossible de retrouver l'organization avec l'ancien BC id ${organization.oldBCId}`)
+            return null
+          }
+          return {
+            oldBCId: organization.oldBCId,
+            organizationId: createdOrganisationId,
+            name: organization.name,
+          }
+        })
+        .filter((organization) => organization !== null),
     })
   }
 
   // Et je crée tous les autres sites
-  const sitesToCreate = organizations
-    .filter((organization) => organization.mainEntity !== 1)
-    .map((organization) => ({
-      organizationId: getOrganizationId(organization.parentId as string, oldUserOrganizationId, userOrganizationId),
-      name: organization.entityName as string,
-    }))
+  const sitesToCreate = sites
+    .filter(
+      (site) =>
+        !existingOrganizations.some(
+          (existingOrganization) => existingOrganization.oldBCId === site.organizationOldBCId,
+        ),
+    )
+    .map((site) => {
+      const existingParentOrganisationId = organizationsOldBCIdsIdsMap.get(site.organizationOldBCId)
+      if (!existingParentOrganisationId) {
+        console.warn(`Impossible de retrouver l'organization avec le oldBCId ${site.organizationOldBCId}`)
+        return null
+      }
+      return {
+        oldBCId: site.oldBCId,
+        organizationId: existingParentOrganisationId,
+        name: site.name,
+      }
+    })
+    .filter((site) => site !== null)
     // Sauf celles qui n'ont pas de parent (car supprimées dans l'ancien BC+)
-    .filter((site) => organizationsToCreate.some((organization) => organization.id === site.organizationId))
+    .filter((site) => newOrganizations.some((organization) => organization.oldBCId === site.organizationId))
     .filter((site) => site.organizationId !== userOrganizationId)
   if (sitesToCreate.length > 0) {
     console.log(`Import de ${sitesToCreate.length} sites`)

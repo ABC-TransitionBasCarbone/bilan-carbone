@@ -72,6 +72,7 @@ model OpeningHours {
 
 model Study {
   id        String   @id @default(uuid())
+  oldBCId   String?  @map("old_bc_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
 
