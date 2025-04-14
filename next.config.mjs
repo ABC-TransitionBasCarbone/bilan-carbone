@@ -8,6 +8,10 @@ const scalewayUrl = `${bucketName}.s3.${region}.scw.cloud`
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {
+    resolveAlias: { underscore: 'lodash' },
+    resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+  },
   images: {
     remotePatterns: [{ hostname: scalewayUrl }],
   },
