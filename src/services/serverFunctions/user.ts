@@ -16,6 +16,7 @@ import {
   validateUser,
 } from '@/db/user'
 import { getUserByEmail, updateUser } from '@/db/userImport'
+import { processUsers } from '@/scripts/ftp/userImport'
 import { isUntrainedRole } from '@/utils/organization'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
 import { User as DBUser, Organization, Role, UserChecklist, UserStatus } from '@prisma/client'
@@ -65,43 +66,43 @@ export const sendInvitation = async (
   if (newUser) {
     return role
       ? sendUserOnStudyInvitationEmail(
-        email,
-        study.name,
-        study.id,
-        organization.name,
-        `${user.firstName} ${user.lastName}`,
-        newUser.firstName,
-        role,
-      )
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${user.firstName} ${user.lastName}`,
+          newUser.firstName,
+          role,
+        )
       : sendContributorInvitationEmail(
-        email,
-        study.name,
-        study.id,
-        organization.name,
-        `${user.firstName} ${user.lastName}`,
-        newUser.firstName,
-      )
+          email,
+          study.name,
+          study.id,
+          organization.name,
+          `${user.firstName} ${user.lastName}`,
+          newUser.firstName,
+        )
   }
 
   const token = await updateUserResetToken(email, 1 * DAY)
   return role
     ? sendNewUserOnStudyInvitationEmail(
-      email,
-      token,
-      study.name,
-      study.id,
-      organization.name,
-      `${user.firstName} ${user.lastName}`,
-      role,
-    )
+        email,
+        token,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+        role,
+      )
     : sendNewContributorInvitationEmail(
-      email,
-      token,
-      study.name,
-      study.id,
-      organization.name,
-      `${user.firstName} ${user.lastName}`,
-    )
+        email,
+        token,
+        study.name,
+        study.id,
+        organization.name,
+        `${user.firstName} ${user.lastName}`,
+      )
 }
 
 export const sendActivation = async (email: string, fromReset: boolean) => {
@@ -335,6 +336,9 @@ export const addUserChecklistItem = async (step: UserChecklist) => {
   }
 }
 
-export const sendAuthorizationEmailUsers = async (results: Record<string, string>[], uuid: string) => {
-  sendAuthorizationEmail(results, uuid)
+export const sendAuthorizationEmailUsers = async (results: Record<string, string>[]) => {
+  sendAuthorizationEmail(results)
+  processUsers(results, new Date())
 }
+
+export const verifyPasswordAndProcessUsers = async (uuid: string) => uuid !== process.env.ADMIN_PASSWORD
