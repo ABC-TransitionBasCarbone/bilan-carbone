@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 import { v4 as uuidv4 } from 'uuid'
 import InputFileUpload from '../base/InputFileUpload'
 
-const SuperAdmin = () => {
+const SuperAdminImport = () => {
   const t = useTranslations('admin')
 
   const onChange = (files: FileList) => {
@@ -37,4 +37,4 @@ const SuperAdmin = () => {
   return <InputFileUpload label={t('uploadButton')} onChange={onChange} />
 }
 
-export default SuperAdmin
+export default SuperAdminImport

@@ -1,5 +1,6 @@
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
@@ -150,7 +151,7 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
                   result.metaData?.frontiere,
                   result.location,
                   result.metaData?.location,
-                  formatEmissionFactorNumber(result.totalCo2),
+                  formatEmissionFactorNumber(getEmissionFactorValue(result)),
                 ])}{' '}
                 {tResultUnits(StudyResultUnit.K)}/{tUnits(result.unit)}
               </p>

@@ -31,7 +31,9 @@ const EmissionSourceFactorModal = ({ close, open, emissionFactors, subPost, sele
     setEmissionFactorVersions(versions)
   }
 
-  const initialSelectedSources = (emissionFactorVersions || []).map((importVersion) => importVersion.id).concat([''])
+  const initialSelectedSources = (emissionFactorVersions || [])
+    .map((importVersion) => importVersion.id)
+    .concat([Import.Manual])
 
   return emissionFactorVersions ? (
     <Modal

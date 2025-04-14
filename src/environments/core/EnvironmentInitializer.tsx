@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 const RESTRICTED_ROUTES: Partial<Record<Environment, string[]>> = {
-  [CUT]: ['/parametres', '/facteurs-d-emission'],
+  [CUT]: ['/parametres', '/facteurs-d-emission', '/formation'],
 }
 
 const EnvironmentInitializer = () => {

@@ -422,6 +422,7 @@
         "title": "Êtes vous sûr de vouloir mettre à jour la source {name} ?",
         "unchanged": "Les résultats de l'étude seront inchangés",
         "updated": "Les facteurs d'émission suivants ont été mis à jour",
+        "wastedUpdated": "Les facteurs marqués ne seront différents que pour les exports BEGES. Vous pouvez trouver une explication dans la page \"Résultats\" de votre étude",
         "deleted": "Les facteurs d'émission suivants ont été supprimés",
         "deletionDetails": "Les sources d'émissions associées n'auront plus de facteur d'émissions et seront dévalidées",
         "confirm": "Confirmer",
@@ -462,6 +463,8 @@
         "modalTitle": "Explication de la différence entre les résultats",
         "dependance": "Le Bilan GES règlementaire n'intègre pas le sous-poste \"Utilisation en dépendance\", car la notion de dépendance n'est pas existante dans la méthode BEGES-R",
         "waste": "Le Bilan GES règlementaire intègre l'ensemble des émissions dues au recyclage des déchets dans le bilan de l'émetteur des déchets, tandis que le Bilan Carbone® ne fait porter sur l'émetteur des déchets que le poids de la collecte et du transport des déchets. Ainsi, les facteurs d'émission ayant pour valeur 41 kgCO₂e/t au sein de l'outil sont ceux utilisés pour le Bilan Carbone®, tandis que les valeurs intégrant la régénération des matériaux (le processus de recyclage, pour les facteur d'émission \"Recyclage\" ou \"Fin de vie moyenne\") sont utilisés pour le BEGES-R. Le facteur d'émission affiché sur le BC+ est uniquement celui utilisé pour le Bilan Carbone®, mais les calculs de l'export BEGES-R se font bien avec les facteurs d'émission liés au recyclage ou à la fin de vie moyenne de l'ADEME. Voici les sources d'émissions liées à ce sujet : ",
+        "missingCaract": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
+        "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
       }
     },
@@ -1249,5 +1252,12 @@
     "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre certificat de formation v9",
     "answer": "Répondre au questionnaire",
     "form": "Questionnaire Typeform"
+  },
+  "deactivableFeatures": {
+    "title": "Fonctionnalités désactivables",
+    "Formation": "Formation",
+    "true": "Active",
+    "false": "Désactivée",
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
   }
 }
