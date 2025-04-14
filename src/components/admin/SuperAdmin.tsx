@@ -19,14 +19,14 @@ const SuperAdmin = () => {
             const uuid = uuidv4()
             await sendAuthorizationEmailUsers(results, uuid)
 
-            const userUuid = prompt('Please enter the UUID:')
+            const userUuid = prompt('Veuillez entrer l\'UUID :')
             if (userUuid !== uuid) {
-              console.error('UUID mismatch. Process aborted.')
+              console.error('Non-concordance des UUID. Processus annulé.')
               return
             }
             processUsers(results, new Date())
           } catch (error) {
-            console.error('Error parsing JSON:', error)
+            console.error('Erreur lors de l\'analyse du JSON :', error)
           }
         }
       }
