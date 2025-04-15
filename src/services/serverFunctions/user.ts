@@ -17,7 +17,6 @@ import {
 } from '@/db/user'
 import { getUserByEmail, updateUser } from '@/db/userImport'
 import { processUsers } from '@/scripts/ftp/userImport'
-import { isUntrainedRole } from '@/utils/organization'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
 import { User as DBUser, Organization, Role, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
@@ -127,12 +126,9 @@ export const addMember = async (member: AddMemberCommand) => {
   }
 
   if (!memberExists) {
-    if (!isUntrainedRole(member.role)) {
-      return NOT_AUTHORIZED
-    }
     const newMember = {
       ...member,
-      role: member.role,
+      role: member.role === Role.ADMIN || member.role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT,
       status: UserStatus.VALIDATED,
       level: null,
       organizationId: session.user.organizationId,
@@ -148,7 +144,11 @@ export const addMember = async (member: AddMemberCommand) => {
       ...member,
       status: UserStatus.VALIDATED,
       level: memberExists.level ? memberExists.level : null,
-      role: memberExists.level ? memberExists.role : Role.COLLABORATOR,
+      role: memberExists.level
+        ? memberExists.role
+        : member.role === Role.ADMIN || member.role === Role.GESTIONNAIRE
+          ? Role.GESTIONNAIRE
+          : Role.DEFAULT,
       organizationId: session.user.organizationId,
     }
     await updateUser(memberExists.id, updateMember)
