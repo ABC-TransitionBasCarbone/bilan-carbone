@@ -16,6 +16,7 @@ import {
   validateUser,
 } from '@/db/user'
 import { getUserByEmail, updateUser } from '@/db/userImport'
+import { processUsers } from '@/scripts/ftp/userImport'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
 import { User as DBUser, Organization, Role, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
@@ -25,6 +26,7 @@ import { getUserCheckList } from '../checklist'
 import {
   sendActivationEmail,
   sendActivationRequest,
+  sendAddedUsersByFile,
   sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
@@ -126,7 +128,7 @@ export const addMember = async (member: AddMemberCommand) => {
   if (!memberExists) {
     const newMember = {
       ...member,
-      role: Role.COLLABORATOR,
+      role: member.role === Role.ADMIN || member.role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT,
       status: UserStatus.VALIDATED,
       level: null,
       organizationId: session.user.organizationId,
@@ -142,7 +144,11 @@ export const addMember = async (member: AddMemberCommand) => {
       ...member,
       status: UserStatus.VALIDATED,
       level: memberExists.level ? memberExists.level : null,
-      role: memberExists.level ? memberExists.role : Role.COLLABORATOR,
+      role: memberExists.level
+        ? memberExists.role
+        : member.role === Role.ADMIN || member.role === Role.GESTIONNAIRE
+          ? Role.GESTIONNAIRE
+          : Role.DEFAULT,
       organizationId: session.user.organizationId,
     }
     await updateUser(memberExists.id, updateMember)
@@ -329,3 +335,10 @@ export const addUserChecklistItem = async (step: UserChecklist) => {
     )
   }
 }
+
+export const sendAddedUsersAndProccess = async (results: Record<string, string>[]) => {
+  sendAddedUsersByFile(results)
+  processUsers(results, new Date())
+}
+
+export const verifyPasswordAndProcessUsers = async (uuid: string) => uuid !== process.env.ADMIN_PASSWORD

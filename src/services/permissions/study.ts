@@ -99,6 +99,10 @@ export const canChangePublicStatus = async (user: User, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
+export const canUpgradeSourceVersion = async (user: User, study: FullStudy) => {
+  return canChangeStudyValues(user, study)
+}
+
 export const canChangeDates = async (user: User, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
@@ -124,6 +128,10 @@ export const canChangeResultsUnit = async (user: User, study: FullStudy) => {
 }
 
 export const canChangeName = async (user: User, study: FullStudy) => {
+  return canChangeStudyValues(user, study)
+}
+
+export const canChangeOpeningHours = async (user: User, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
@@ -220,6 +228,11 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
         geographicRepresentativeness: emissionSource.geographicRepresentativeness,
         temporalRepresentativeness: emissionSource.temporalRepresentativeness,
         completeness: emissionSource.completeness,
+        feReliability: emissionSource.feReliability,
+        feTechnicalRepresentativeness: emissionSource.feTechnicalRepresentativeness,
+        feGeographicRepresentativeness: emissionSource.feGeographicRepresentativeness,
+        feTemporalRepresentativeness: emissionSource.feTemporalRepresentativeness,
+        feCompleteness: emissionSource.feCompleteness,
         source: emissionSource.source,
         type: emissionSource.type,
         caracterisation: emissionSource.caracterisation,

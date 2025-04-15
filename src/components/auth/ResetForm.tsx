@@ -11,7 +11,7 @@ import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
@@ -56,12 +56,7 @@ const ResetForm = ({ user, token }: Props) => {
   const [validated, setValidated] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const {
-    getValues,
-    control,
-    watch,
-    formState: { isValid },
-  } = useForm<ResetPasswordCommand>({
+  const { getValues, control, watch, handleSubmit } = useForm<ResetPasswordCommand>({
     resolver: zodResolver(ResetPasswordCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
@@ -80,16 +75,16 @@ const ResetForm = ({ user, token }: Props) => {
     return <ResetLinkAlreadyUsed />
   }
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = async () => {
     setSubmitting(true)
     setError(false)
 
-    if (!isValid) {
+    const isValid = ResetPasswordCommandValidation.safeParse(getValues())
+    if (!isValid.success) {
       setErrorMessage('emailAndPasswordRequired')
       setSubmitting(false)
     } else {
-      const { email, password } = getValues()
+      const { email, password } = isValid.data
       const result = await reset(email, password, token)
       if (result) {
         setSubmitting(false)
@@ -105,7 +100,7 @@ const ResetForm = ({ user, token }: Props) => {
   }
 
   return (
-    <Form onSubmit={onSubmit} className="mt1">
+    <Form onSubmit={handleSubmit(onSubmit)} className="mt1">
       <FormControl className={authStyles.form}>
         <p>{t('resetTitle')}</p>
         <FormTextField

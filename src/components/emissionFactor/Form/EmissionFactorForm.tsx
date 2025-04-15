@@ -4,13 +4,17 @@ import LinkButton from '@/components/base/LinkButton'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
+import GlossaryModal from '@/components/modals/GlossaryModal'
+import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { MenuItem } from '@mui/material'
+import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
+import { FormControl, FormHelperText, MenuItem } from '@mui/material'
 import { Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
-import { Control, UseFormReturn } from 'react-hook-form'
+import Link from 'next/link'
+import { useMemo, useState } from 'react'
+import { Control, Controller, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
 import MultiplePosts from './MultiplePosts'
 
@@ -25,6 +29,10 @@ interface Props<T extends EmissionFactorCommand> {
   button: 'create' | 'update'
 }
 
+type EmissionFactorQuality = Partial<
+  Record<(typeof qualityKeys)[number] | (typeof specificFEQualityKeys)[number], number | null>
+>
+
 const EmissionFactorForm = <T extends EmissionFactorCommand>({
   form,
   detailedGES,
@@ -37,9 +45,34 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
 }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tUnit = useTranslations('units')
+  const tGlossary = useTranslations('emissionSource.glossary')
   const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [tUnit])
-
+  const [expandedQuality, setExpandedQuality] = useState(true)
+  const [glossary, setGlossary] = useState('')
   const control = form.control as Control<EmissionFactorCommand>
+  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
+
+  const update = (column: (typeof qualityKeys)[number], value: string | number | boolean) => {
+    if (typeof value === 'number') {
+      setValue(column, value)
+    }
+  }
+
+  const [
+    reliability,
+    technicalRepresentativeness,
+    geographicRepresentativeness,
+    temporalRepresentativeness,
+    completeness,
+  ] = useWatch({ control, name: qualityKeys })
+
+  const quality = {
+    reliability,
+    technicalRepresentativeness,
+    geographicRepresentativeness,
+    temporalRepresentativeness,
+    completeness,
+  }
 
   return (
     <>
@@ -74,6 +107,27 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         partsCount={partsCount}
         setPartsCount={setPartsCount}
       />
+      <Controller
+        name={'reliability'}
+        control={control}
+        render={({ fieldState: { error } }) => (
+          <FormControl error={!!error}>
+            <QualitySelectGroup
+              canEdit
+              canShrink
+              emissionSource={quality}
+              update={update as (key: keyof EmissionFactorQuality, value: string | number | boolean) => void}
+              advanced={false}
+              setGlossary={setGlossary}
+              expanded={expandedQuality}
+              setExpanded={setExpandedQuality}
+              defaultQuality={qualityKeys.map((qualityKey) => quality[qualityKey]).find((quality) => !!quality)}
+              error={error}
+            />
+            {error?.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
+          </FormControl>
+        )}
+      />
       <MultiplePosts form={form} />
       <FormTextField control={control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
@@ -87,6 +141,23 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         </LoadingButton>
       </div>
       {error && <p>{error}</p>}
+      {glossary && (
+        <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-factor" t={tGlossary}>
+          <p className="mb-2">
+            {tGlossary.rich(`${glossary}Description`, {
+              link: (children) => (
+                <Link
+                  href="https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {children}
+                </Link>
+              ),
+            })}
+          </p>
+        </GlossaryModal>
+      )}
     </>
   )
 }

@@ -10,7 +10,7 @@
 .openDrawerButton {
   height: 4rem;
   width: 4rem;
-  background-color: var(--primary-80) !important;
+  background-color: var(--background-300) !important;
   border-radius: 50% !important;
   display: flex !important;
   justify-content: center !important;
@@ -18,14 +18,14 @@
   color: white !important;
 
   &:hover {
-    background-color: var(--primary-60) !important;
+    background-color: var(--primary-800) !important;
   }
 }
 
 .studyNavbarContainer {
   display: flex;
   height: 100%;
-  background-color: var(--neutral-10) !important;
+  background-color: var(--background-150) !important;
   height: fit-content !important;
   width: 14rem;
   border-radius: 0px 1rem 1rem 0px;
@@ -33,7 +33,7 @@
   overflow: hidden !important;
   border: var(--border) !important;
   hr {
-    color: var(--neutral-30) !important;
+    color: var(--neutral-300) !important;
   }
 }
 
@@ -51,10 +51,10 @@
 .button,
 .link,
 .section {
-  background-color: var(--neutral-00);
+  background-color: white;
   width: 100%;
   border: none;
-  color: var(--primary-80);
+  color: var(--info);
   padding: 1rem;
   text-decoration: none;
   font-weight: 600;
@@ -63,7 +63,7 @@
 
   &.active,
   &:hover {
-    background-color: var(--primary-10);
+    background-color: var(--primary-50);
   }
 }
 
@@ -78,10 +78,9 @@
 }
 
 .disabled {
-  background-color: var(--neutral-00);
-  color: var(--neutral-40);
+  color: var(--grayscale-800);
   cursor: not-allowed;
   &:hover {
-    background-color: var(--neutral-00);
+    background-color: white;
   }
 }

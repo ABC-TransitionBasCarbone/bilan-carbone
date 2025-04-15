@@ -1,4 +1,4 @@
-import { Checkbox, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent } from '@mui/material'
+import { Checkbox, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 
@@ -8,11 +8,10 @@ interface Props {
   value: string[]
   allValues: string[]
   t: ReturnType<typeof useTranslations>
-  tLabel: ReturnType<typeof useTranslations>
   setValues: (allValues: string[]) => void
 }
 
-const MultiSelect = ({ id, renderValue, value, allValues, t, tLabel, setValues }: Props) => {
+const MultiSelect = ({ id, renderValue, value, allValues, t, setValues }: Props) => {
   const allUnitsSelected = useMemo(
     () => value.filter((unit) => unit !== 'all').length === allValues.length,
     [value, allValues],
@@ -41,7 +40,6 @@ const MultiSelect = ({ id, renderValue, value, allValues, t, tLabel, setValues }
       labelId={`${id}-selector`}
       value={value}
       onChange={onChange}
-      input={<OutlinedInput label={tLabel('units')} />}
       renderValue={renderValue}
       multiple
     >

@@ -12,12 +12,12 @@ import {
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
+import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole } from '@prisma/client'
+import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -42,6 +42,7 @@ type StudyWithoutDetailProps = {
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
+  subPost: SubPost
   userRoleOnStudy: StudyRole | null
   caracterisations: EmissionSourceCaracterisation[]
 }
@@ -50,6 +51,7 @@ const EmissionSource = ({
   study,
   emissionSource,
   emissionFactors,
+  subPost,
   userRoleOnStudy,
   withoutDetail,
   caracterisations,
@@ -67,11 +69,11 @@ const EmissionSource = ({
   const [display, setDisplay] = useState(false)
 
   const detailId = `${emissionSource.id}-detail`
-  const canEdit = !emissionSource.validated && userRoleOnStudy !== StudyRole.Reader
+  const canEdit = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
   const canValidate = userRoleOnStudy === StudyRole.Validator
 
   const update = useCallback(
-    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => {
+    async (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => {
       if (key) {
         if (value === emissionSource[key as keyof typeof emissionSource]) {
           return
@@ -169,7 +171,7 @@ const EmissionSource = ({
                 <>
                   <p>{t('emissionSource')}</p>
                   <p>
-                    {formatNumber(emissionSource.value)} {selectedFactor && tUnits(selectedFactor.unit)}
+                    {formatNumber(emissionSource.value)} {selectedFactor && tUnits(selectedFactor.unit || '')}
                   </p>
                 </>
               )}
@@ -179,8 +181,8 @@ const EmissionSource = ({
               <div className="flex-col justify-center text-center">
                 <p>{t('emissionFactor')}</p>
                 <p>
-                  {formatNumber(getEmissionFactorValue(selectedFactor), 5)}
-                  {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit)}
+                  {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}
+                  {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit || '')}
                 </p>
               </div>
             )}
@@ -244,21 +246,26 @@ const EmissionSource = ({
               <EmissionSourceContributorForm
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
+                subPost={subPost}
                 emissionFactors={emissionFactors}
                 update={update}
               />
             ) : (
               <EmissionSourceForm
+                studyId={study.id}
                 advanced={study.level === Level.Advanced}
                 canEdit={canEdit}
+                userRoleOnStudy={userRoleOnStudy}
                 canValidate={canValidate}
                 emissionSource={emissionSource}
                 selectedFactor={selectedFactor}
                 emissionFactors={emissionFactors}
+                subPost={subPost}
                 update={update}
                 caracterisations={caracterisations}
                 mandatoryCaracterisation={study.exports.length > 0}
                 status={status}
+                studySites={study.sites}
               />
             )}
             {emissionResults && (

@@ -5,7 +5,6 @@ import { StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import Block from '../base/Block'
-import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import GlossaryModal from '../modals/GlossaryModal'
 import SubPosts from '../study/SubPosts'
 import StudyPostsBlock from '../study/buttons/StudyPostsBlock'
@@ -21,7 +20,6 @@ interface Props {
 
 const StudyPostsPage = ({ post, study, userRole }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
-  const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
   const [glossary, setGlossary] = useState('')
@@ -37,20 +35,6 @@ const StudyPostsPage = ({ post, study, userRole }: Props) => {
 
   return (
     <>
-      <Breadcrumbs
-        current={tPost(post)}
-        links={[
-          { label: tNav('home'), link: '/' },
-          study.organization.isCR
-            ? {
-                label: study.organization.name,
-                link: `/organisations/${study.organization.id}`,
-              }
-            : undefined,
-
-          { label: study.name, link: `/etudes/${study.id}` },
-        ].filter((link) => link !== undefined)}
-      />
       <Block>
         <StudyPostsCard
           study={study}

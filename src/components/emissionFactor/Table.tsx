@@ -1,6 +1,6 @@
 'use client'
 
-import { Post, subPostsByPost } from '@/services/posts'
+import { BCPost, subPostsByPost } from '@/services/posts'
 import { canEditEmissionFactor, EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
@@ -13,6 +13,7 @@ import InventoryIcon from '@mui/icons-material/Inventory'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import {
+  Autocomplete,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -27,7 +28,14 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorImportVersion, EmissionFactorStatus, Import, SubPost, Unit } from '@prisma/client'
+import {
+  EmissionFactorImportVersion,
+  EmissionFactorStatus,
+  Import,
+  StudyResultUnit,
+  SubPost,
+  Unit,
+} from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -73,14 +81,9 @@ const fuseOptions = {
 
 const locationFuseOptions = {
   keys: [
-    {
-      name: 'location',
-      weight: 1,
-    },
-    {
-      name: 'metaData.location',
-      weight: 0.5,
-    },
+    { name: 'location', weight: 1 },
+    { name: 'metaData.location', weight: 0.5 },
+    { name: 'combinedLocation', weight: 1.5 },
   ],
   threshold: 0.3,
   isCaseSensitive: false,
@@ -88,6 +91,7 @@ const locationFuseOptions = {
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
+  subPost?: SubPost
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
   importVersions: EmissionFactorImportVersion[]
   initialSelectedSources: string[]
@@ -99,6 +103,7 @@ const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap
 
 const EmissionFactorsTable = ({
   emissionFactors,
+  subPost,
   selectEmissionFactor,
   userOrganizationId,
   importVersions,
@@ -107,6 +112,7 @@ const EmissionFactorsTable = ({
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const tPosts = useTranslations('emissionFactors.post')
+  const tResultUnits = useTranslations('study.results.units')
   const [action, setAction] = useState<'edit' | 'delete' | undefined>(undefined)
   const [targetedEmission, setTargetedEmission] = useState('')
   const [filter, setFilter] = useState('')
@@ -140,6 +146,15 @@ const EmissionFactorsTable = ({
     return () => window.removeEventListener('resize', checkWrappedRows)
   }, [])
 
+  useEffect(() => {
+    if (subPost) {
+      setFilteredSubPosts([subPost])
+    }
+  }, [subPost])
+
+  const getLocationLabel = (row: EmissionFactorWithMetaData) =>
+    `${row.location || t('noLocation')}${row.metaData?.location ? ` - ${row.metaData.location}` : ''}`
+
   const editEmissionFactor = async (emissionFactorId: string, action: 'edit' | 'delete') => {
     if (!(await canEditEmissionFactor(emissionFactorId))) {
       return
@@ -155,7 +170,7 @@ const EmissionFactorsTable = ({
         header: t('name'),
         accessorFn: (emissionFactor) =>
           emissionFactor.metaData
-            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}${emissionFactor.metaData.location ? ` - ${emissionFactor.metaData.location}` : ''}`
+            ? `${emissionFactor.metaData.title}${emissionFactor.metaData.attribute ? ` - ${emissionFactor.metaData.attribute}` : ''}${emissionFactor.metaData.frontiere ? ` - ${emissionFactor.metaData.frontiere}` : ''}`
             : '',
         cell: ({ getValue, row }) => (
           <div className="align-center">
@@ -171,11 +186,11 @@ const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} kgCO₂e/${tUnits(emissionFactor.unit || '')}`,
+          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),
-        accessorKey: 'location',
+        accessorFn: (emissionFactor) => getLocationLabel(emissionFactor),
         cell: ({ getValue }) => <span>{getValue<string>() || ' '}</span>,
       },
       {
@@ -183,20 +198,18 @@ const EmissionFactorsTable = ({
         accessorKey: 'status',
         cell: ({ getValue }) => {
           const status = getValue<EmissionFactorStatus>()
-          switch (status) {
-            case EmissionFactorStatus.Archived:
-              return (
-                <div className="flex-cc">
-                  <InventoryIcon color="inherit" />
-                </div>
-              )
-            default:
-              return (
-                <div className="flex-cc">
-                  <CheckCircleIcon color="success" />
-                </div>
-              )
-          }
+          const Icon =
+            status === EmissionFactorStatus.Archived ? (
+              <InventoryIcon color="inherit" />
+            ) : (
+              <CheckCircleIcon color="success" />
+            )
+
+          return (
+            <div className="flex-cc" aria-label={t(status)} title={t(status)}>
+              {Icon}
+            </div>
+          )
         },
       },
       {
@@ -302,7 +315,11 @@ const EmissionFactorsTable = ({
     const searchResults = filter ? fuse.search(filter).map(({ item }) => item) : emissionFactors
 
     if (locationFilter) {
-      const locationFuse = new Fuse(searchResults, locationFuseOptions)
+      const enhancedSearchResults = searchResults.map((item) => ({
+        ...item,
+        combinedLocation: getLocationLabel(item),
+      }))
+      const locationFuse = new Fuse(enhancedSearchResults, locationFuseOptions)
       return locationFuse.search(locationFilter).map(({ item }) => item)
     }
     return searchResults
@@ -348,11 +365,10 @@ const EmissionFactorsTable = ({
     }
   }
 
-  const selectLocations = (event: SelectChangeEvent<typeof filteredSources>) => {
+  const selectSource = (event: SelectChangeEvent<typeof filteredSources>) => {
     const {
       target: { value },
     } = event
-
     setFilteredSources(value as string[])
   }
 
@@ -404,11 +420,11 @@ const EmissionFactorsTable = ({
         ? tPosts('none')
         : filteredSubPosts.map((subPosts) => tPosts(subPosts)).join(', ')
 
-  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
+  const areAllSelected = (post: BCPost) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
 
   const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : initialSelectedSubPosts)
 
-  const selectPost = (post: Post) => {
+  const selectPost = (post: BCPost) => {
     const newValue = areAllSelected(post)
       ? filteredSubPosts.filter((filteredSubPost) => !subPostsByPost[post].includes(filteredSubPost))
       : filteredSubPosts.concat(subPostsByPost[post].filter((a) => !filteredSubPosts.includes(a)))
@@ -422,34 +438,66 @@ const EmissionFactorsTable = ({
     setFilteredSubPosts(newValue)
   }
 
+  const locationOptions = useMemo(
+    () =>
+      data
+        .map((emissionFactor) => getLocationLabel(emissionFactor))
+        .filter(
+          (location, i) => data.map((emissionFactor) => getLocationLabel(emissionFactor)).indexOf(location) === i,
+        ),
+    [data],
+  )
+
   return (
     <>
+      {t('subTitle')}
       <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>
         {displayFilters && (
           <>
-            <DebouncedInput
-              className={styles.searchInput}
-              debounce={200}
-              value={filter}
-              onChange={setFilter}
-              placeholder={t('search')}
-              data-testid="emission-factor-search-input"
-            />
-            <DebouncedInput
-              className={styles.searchInput}
-              debounce={200}
-              value={locationFilter}
-              onChange={setLocationFilter}
-              placeholder={t('locationSearch')}
-            />
+            <FormControl>
+              <FormLabel id="emission-factors-filter-search" component="legend">
+                {t('search')}
+              </FormLabel>
+              <DebouncedInput
+                className={styles.searchInput}
+                debounce={200}
+                value={filter}
+                onChange={setFilter}
+                placeholder={t('searchPlaceholder')}
+                data-testid="emission-factor-search-input"
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel id="emission-factors-filter-location" component="legend">
+                {t('locationSearch')}
+              </FormLabel>
+              <Autocomplete
+                value={locationFilter}
+                options={locationOptions}
+                onChange={(_, option) => setLocationFilter(option || '')}
+                onInputChange={(_, newInputValue) => setLocationFilter(newInputValue)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder={t('locationSearchPlaceholder')}
+                    sx={{
+                      minWidth: '20rem',
+                      '& .MuiOutlinedInput-root': { '& fieldset': { borderRadius: '0.25rem' } },
+                      '& .MuiInputBase-input': { color: 'black' },
+                    }}
+                  />
+                )}
+              />
+            </FormControl>
             <FormControl className={styles.selector}>
-              <InputLabel id="emissions-sources-selector">{t('sources')}</InputLabel>
+              <FormLabel id="emissions-sources-selector" component="legend">
+                {t('sources')}
+              </FormLabel>
               <Select
                 id="emissions-sources-selector"
                 labelId="emissions-sources-selector"
                 value={filteredSources}
-                onChange={selectLocations}
-                input={<OutlinedInput label={t('sources')} />}
+                onChange={selectSource}
                 renderValue={statusSelectorRenderValue}
                 multiple
               >
@@ -462,7 +510,9 @@ const EmissionFactorsTable = ({
               </Select>
             </FormControl>
             <FormControl className={styles.selector}>
-              <InputLabel id="emissions-unit-selector">{t('units')}</InputLabel>
+              <FormLabel id="emissions-unit-selector" component="legend">
+                {t('units')}
+              </FormLabel>
               <MultiSelectAll
                 id="emissions-unit"
                 renderValue={unitsSelectorRenderValue}
@@ -470,16 +520,16 @@ const EmissionFactorsTable = ({
                 allValues={initialSelectedUnits.filter((unit) => unit != 'all')}
                 setValues={setFilteredUnits}
                 t={tUnits}
-                tLabel={t}
               />
             </FormControl>
             <FormControl className={styles.selector}>
-              <InputLabel id="emissions-subposts-selector">{t('subPosts')}</InputLabel>
+              <FormLabel id="emissions-subposts-selector" component="legend">
+                {t('subPosts')}
+              </FormLabel>
               <Select
                 id="emissions-subposts-selector"
                 labelId="emissions-subposts-selector"
                 value={filteredSubPosts}
-                input={<OutlinedInput label={t('subPosts')} />}
                 renderValue={subPostsSelectorRenderValue}
                 multiple
               >
@@ -491,7 +541,7 @@ const EmissionFactorsTable = ({
                   <Checkbox checked={allSelectedSubPosts} />
                   <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
                 </MenuItem>
-                {Object.values(Post).map((post) => (
+                {Object.values(BCPost).map((post) => (
                   <div key={`subpostGroup-${post}`}>
                     <MenuItem key={`subpost-${post}`} selected={areAllSelected(post)} onClick={() => selectPost(post)}>
                       <Checkbox checked={areAllSelected(post)} />
@@ -538,7 +588,7 @@ const EmissionFactorsTable = ({
         )}
       </div>
       <div className={classNames('grow', { [styles.modalTable]: fromModal })}>
-        <table>
+        <table className={styles.table}>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -553,7 +603,7 @@ const EmissionFactorsTable = ({
           <tbody>
             {table.getRowModel().rows.flatMap((row) => {
               const lines = [
-                <tr key={row.id} className={styles.line}>
+                <tr key={row.id} className={classNames(styles.line, { [styles.open]: row.getIsExpanded() })}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} data-testid={`cell-emission-${cell.column.id}`}>
                       {cell.column.id === 'actions' ? (
@@ -561,12 +611,7 @@ const EmissionFactorsTable = ({
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </div>
                       ) : (
-                        <div
-                          className={styles.cellButton}
-                          onClick={() => {
-                            row.toggleExpanded()
-                          }}
-                        >
+                        <div className={styles.cellButton} onClick={() => row.toggleExpanded()}>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </div>
                       )}
@@ -577,7 +622,7 @@ const EmissionFactorsTable = ({
               if (row.getIsExpanded()) {
                 lines.push(
                   <tr key={`${row.id}-details`}>
-                    <td colSpan={columns.length} className={styles.detail}>
+                    <td colSpan={columns.length} className={classNames(styles.detail, 'p1')}>
                       <EmissionFactorDetails emissionFactor={row.original} />
                     </td>
                   </tr>,

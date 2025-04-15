@@ -129,7 +129,7 @@ const getEmissionSourcesRows = (
         const post = Object.keys(subPostsByPost).find((post) =>
           subPostsByPost[post as Post].includes(emissionSource.subPost),
         )
-        initCols.push(tPost(post))
+        initCols.push(tPost(post || ''))
         initCols.push(tPost(emissionSource.subPost))
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
@@ -149,7 +149,7 @@ const getEmissionSourcesRows = (
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
           emissionFactor ? getEmissionFactorValue(emissionFactor) : '',
-          emissionFactor?.unit ? `kgCO₂e/${tUnit(emissionFactor.unit)}` : '',
+          emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit)}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
         ])

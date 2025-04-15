@@ -25,6 +25,11 @@ enum UserChecklist {
   Completed
 }
 
+enum UserSource {
+  CRON
+  TUNISIE
+}
+
 model User {
   id               String    @id @default(uuid())
   createdAt        DateTime  @default(now()) @map("created_at")
@@ -35,6 +40,8 @@ model User {
   onboardedOrganizations Organization[] @relation("organizationOnboarder")
   organizationId         String?        @map("organization_id")
 
+  deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
+
   role                       Role
   level                      Level?
   firstName                  String                   @map("first_name")
@@ -43,6 +50,7 @@ model User {
   password                   String?
   resetToken                 String?                  @map("reset_token")
   status                     UserStatus
+  source                     UserSource               @default(CRON)
   createdStudies             Study[]
   allowedStudies             UserOnStudy[]
   contributors               Contributors[]
@@ -64,8 +72,8 @@ model UserApplicationSettings {
 }
 
 model UserCheckedStep {
-  id     String          @id @default(uuid())
-  userId String          @map("user_id")
+  id     String        @id @default(uuid())
+  userId String        @map("user_id")
   step   UserChecklist
 
   @@unique([userId, step])

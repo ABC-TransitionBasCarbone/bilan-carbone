@@ -1,6 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { BCPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
@@ -81,7 +82,7 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies }: Props)
   )
 
   const data = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, withDependencies, validatedOnly),
+    () => computeResultsByPost(study, tPost, studySite, withDependencies, validatedOnly, BCPost),
     [study, tPost, studySite, withDependencies, validatedOnly],
   )
 

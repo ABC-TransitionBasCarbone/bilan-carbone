@@ -144,7 +144,11 @@
       "emailRequired": "Veuillez entrer un email",
       "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
       "emailSent": "Si votre email est correct, vous allez recevoir un mail pour réinitialiser votre mot de passe",
-      "validated": "Votre mot de passe a été réinitialisé, vous allez être redirigé vers la page de <link>connexion</link>."
+      "validated": "Votre mot de passe a été réinitialisé, vous allez être redirigé vers la page de <link>connexion</link>.",
+      "validation": {
+        "email": "Veuillez entrer un email",
+        "password": "Veuillez entrer un mot de passe"
+      }
     }
   },
   "activation": {
@@ -172,7 +176,8 @@
     "organizations": "Mes Bilans Carbone®",
     "settings": "Paramètres",
     "team": "Mon équipe",
-    "information": "Informations générales"
+    "information": "Informations générales",
+    "formation": "Formation"
   },
   "profile": {
     "title": "Mon profil",
@@ -256,6 +261,23 @@
       "private": "Privée",
       "public": "Publique",
       "resultsUnit": "Unité des resultats de l'étude",
+      "numberOfSessions": "Nombre de séances",
+      "numberOfTickets": "Nombre d'entrées",
+      "numberOfOpenDays": "Nombre de jours d'ouverture",
+      "openingHours": "Horaires d'ouverture",
+      "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
+      "days": {
+        "Monday": "Lundi",
+        "Tuesday": "Mardi",
+        "Wednesday": "Mercredi",
+        "Thursday": "Jeudi",
+        "Friday": "Vendredi",
+        "Saturday": "Samedi",
+        "Sunday": "Dimanche",
+        "from": "de",
+        "to": "à",
+        "DifferentHoursHoliday": "Horaires différents pendant les vacances scolaires"
+      },
       "create": "Créer l'étude",
       "glossary": {
         "title": "Glossaire",
@@ -395,6 +417,20 @@
           "no": "Non",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
         }
+      },
+      "versions": {
+        "list": "Versions des facteurs d'emissions de l'étude",
+        "upgradeSource": "Mettre à jour",
+        "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+        "latest": "Vous utilisez déjà la dernière version de {name}",
+        "title": "Êtes vous sûr de vouloir mettre à jour la source {name} ?",
+        "unchanged": "Les résultats de l'étude seront inchangés",
+        "updated": "Les facteurs d'émission suivants ont été mis à jour",
+        "wastedUpdated": "Les facteurs marqués ne seront différents que pour les exports BEGES. Vous pouvez trouver une explication dans la page \"Résultats\" de votre étude",
+        "deleted": "Les facteurs d'émission suivants ont été supprimés",
+        "deletionDetails": "Les sources d'émissions associées n'auront plus de facteur d'émissions et seront dévalidées",
+        "confirm": "Confirmer",
+        "cancel": "Annuler"
       }
     },
     "perimeter": {
@@ -425,6 +461,15 @@
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
+      },
+      "difference": {
+        "button": "Explication des différences entre le Bilan Carbone® et l’export Beges",
+        "modalTitle": "Explication de la différence entre les résultats",
+        "dependance": "Le Bilan GES règlementaire n'intègre pas le sous-poste \"Utilisation en dépendance\", car la notion de dépendance n'est pas existante dans la méthode BEGES-R",
+        "waste": "Le Bilan GES règlementaire intègre l'ensemble des émissions dues au recyclage des déchets dans le bilan de l'émetteur des déchets, tandis que le Bilan Carbone® ne fait porter sur l'émetteur des déchets que le poids de la collecte et du transport des déchets. Ainsi, les facteurs d'émission ayant pour valeur 41 kgCO₂e/t au sein de l'outil sont ceux utilisés pour le Bilan Carbone®, tandis que les valeurs intégrant la régénération des matériaux (le processus de recyclage, pour les facteur d'émission \"Recyclage\" ou \"Fin de vie moyenne\") sont utilisés pour le BEGES-R. Le facteur d'émission affiché sur le BC+ est uniquement celui utilisé pour le Bilan Carbone®, mais les calculs de l'export BEGES-R se font bien avec les facteurs d'émission liés au recyclage ou à la fin de vie moyenne de l'ADEME. Voici les sources d'émissions liées à ce sujet : ",
+        "missingCaract": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
+        "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
+        "close": "Fermer"
       }
     },
     "export": {
@@ -500,6 +545,13 @@
       "Immobilisations": "Immobilisations",
       "UtilisationEtDependance": "Utilisation et dépendance",
       "FinDeVie": "Fin de vie",
+      "Fonctionnement": "Fonctionnement",
+      "MobiliteSpectateurs": "Mobilité spectateurs",
+      "TourneesAvantPremiere": "Tournées avant-première",
+      "SallesEtCabines": "Salles et cabines",
+      "ConfiseriesEtBoissons": "Confiseries et boissons",
+      "Dechets": "Déchets",
+      "BilletterieEtCommunication": "Billetterie et communication",
       "CombustiblesFossiles": "Combustibles fossiles",
       "CombustiblesOrganiques": "Combustibles organiques",
       "ReseauxDeChaleurEtDeVapeur": "Réseaux de chaleur et de vapeur",
@@ -544,6 +596,21 @@
       "TraitementDesDechetsEnFinDeVie": "Traitement des déchets en fin de vie",
       "FuitesOuEmissionsNonEnergetiques": "Fuites ou émissions non énergétiques en fin de vie",
       "TraitementDesEmballagesEnFinDeVie": "Traitement des emballages en fin de vie",
+      "Batiment": "Bâtiment",
+      "Equipe": "Équipe",
+      "Energie": "Énergie",
+      "ActivitesDeBureau": "Activités de bureau",
+      "EquipesRecues": "Équipes reçues",
+      "MaterielTechnique": "Matériel technique",
+      "AutreMateriel": "Autre matériel",
+      "Achats": "Achats",
+      "Electromenager": "Électroménager",
+      "DechetsOrdinaires": "Déchets ordinaires",
+      "DechetsExceptionnels": "Déchets exceptionnels",
+      "MaterielDistributeurs": "Matériel distributeurs",
+      "MaterielCinema": "Matériel cinéma",
+      "CommunicationDigitale": "Communication digitale",
+      "CaissesEtBornes": "Caisses et bornes",
       "glossary": "Glossaire",
       "close": "Fermer",
       "glossaryDescription": {
@@ -625,7 +692,16 @@
         "nameMaxLength": "64 caractères maximum",
         "source": "Veuillez renseigner une source",
         "subPost": "Veuillez selectionner un sous poste",
+        "co2f": "Valeur positive uniquement",
+        "ch4b": "Valeur positive uniquement",
+        "ch4f": "Valeur positive uniquement",
+        "n2o": "Valeur positive uniquement",
+        "sf6": "Valeur positive uniquement",
+        "hfc": "Valeur positive uniquement",
+        "pfc": "Valeur positive uniquement",
+        "otherGES": "Valeur positive uniquement",
         "totalCo2": "Veuillez renseigner une émission totale",
+        "reliability": "Veuillez renseigner une valeur pour la Fiabilité",
         "type": "Veuillez renseigner un type de poste",
         "unit": "Veuillez renseigner une unité"
       }
@@ -633,6 +709,7 @@
     "title": "Facteurs d'émission",
     "loading": "Chargement des facteurs d'émission",
     "table": {
+      "subTitle": "Vous pouvez parcourir l’ensemble des facteurs d’émission disponibles, et en créer de nouveaux",
       "Valid": "Valide",
       "Archived": "Archivé",
       "selectLine": "Selectionner ce facteur d'émission",
@@ -643,18 +720,21 @@
       "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
       "items": "Élements par page",
+      "noLocation": "Non précisée",
       "location": "Localisation",
-      "locationSearch": "Rechercher une localisation",
+      "locationSearch": "Rechercher par localisation",
+      "locationSearchPlaceholder": "ex : Europe",
       "Manual": "Manuelle",
       "edit": "Éditer le facteur d'émissions",
       "delete": "Supprimer facteur d'émissions",
-      "name": "Nom",
+      "name": "Libellé",
       "none": "Aucune",
       "no": "Non",
       "per": "par",
       "page": "Page {page} sur {total}",
       "quality": "Qualité",
-      "search": "Rechercher un facteur d'émission",
+      "search": "Rechercher par libellé",
+      "searchPlaceholder": "ex : Acier",
       "showing": "Affichage de {number} lignes sur {total}",
       "source": "Source",
       "sources": "Sources",
@@ -671,8 +751,7 @@
         "negaOctet": "Logo de NegaOctet",
         "manual": "Manuel"
       },
-      "post": "Poste :",
-      "subPost": "Sous poste :",
+      "post": "Postes :",
       "co2f": "CO2f :",
       "ch4f": "CH4f :",
       "ch4b": "CH4b :",
@@ -682,7 +761,7 @@
       "hfc": "HFC :",
       "pfc": "PFC :",
       "otherGES": "Autres gaz :",
-      "qualityRating": "Qualité :",
+      "qualityRating": "Qualité globale du Facteur d'Émission : ",
       "reliability": "Fiabilité :",
       "technicalRepresentativeness": "Représentativité technique :",
       "geographicRepresentativeness": "Représentativité géographique :",
@@ -961,6 +1040,10 @@
       "etpPlaceholder": "Entrez votre nombre d'ETP pour ce site ici",
       "ca": "Chiffre d'affaire ({unit})",
       "caPlaceholder": "Entrez votre CA pour ce site en {unit} ici",
+      "postalCode": "Code postal",
+      "postalCodePlaceholder": "Code postal",
+      "city": "Ville",
+      "cityPlaceholder": "Ville",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",
@@ -968,9 +1051,9 @@
       "glossary": {
         "title": "Glossaire",
         "etp": "Nombre d'Équivalent Temps Plein",
-        "etpDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO2e/ETP).",
+        "etpDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO₂e/ETP).",
         "ca": "Chiffre d'Affaire ({unit})",
-        "caDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO2e/{unit} CA).",
+        "caDescription": "Ces données seront à terme utilisées pour calculer des intensités carbone (kgCO₂e/{unit} CA).",
         "close": "Fermer"
       },
       "validation": {
@@ -1020,12 +1103,14 @@
     "unvalidate": "Éditer les données",
     "mandartoryFields": "Informations obligatoires",
     "optionalFields": "Informations optionnelles",
+    "resetFESpecific": "Réinitialiser les valeurs par défaut",
     "glossary": {
       "title": "Glossaire",
       "type": "Type",
       "typeDescription": "Le type de données est une dénomination introduite par la nouvelle méthode Bilan Carbone®, qui vient en complément du calcul des incertitudes. Pour plus d'informations sur les différents types de données, nous vous invitons à consulter <link>cette page</link>.",
       "quality": "Qualité",
       "qualityDescription": "Les incertitudes sont dorénavant calculées grâce à des notes qualitatives apportées sur la qualité du facteur d'émission et la qualité de la donnée d'activité. Les notes associées au facteur d'émission sont directement issues des bases de données, mais celles liées à la donnée d'activité doivent être saisies. Pour plus d'informations sur l'attribution des notes, nous vous invitons à consulter <link>cette page</link>.",
+      "specificEmissionFactorQuality": "Vous pouvez spécifiquement ajuster la qualité du facteur d'émission dans votre source d'émission. La valeur générique du facteur d'émission est indiquée par le symbole {marker}.",
       "close": "Fermer"
     },
     "deleteDialog": {
@@ -1035,6 +1120,13 @@
       "description": "<warning>Toutes les données renseignées seront définitivement perdues</warning>, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
       "accept": "Oui",
       "decline": "Non"
+    },
+    "duplicateDialog": {
+      "title": "Voulez-vous dupliquer cette source d'émission ?",
+      "content": "Vous pouvez dupliquer cette source d'émission. Vous pourrez ensuite la modifier.",
+      "selectSite": "Merci d'indiquer pour quel site de l'étude vous voulez dupliquer cette source.",
+      "cancel": "Annuler",
+      "confirm": "Confirmer"
     },
     "saving": "Sauvegarde en cours...",
     "status": {
@@ -1164,5 +1256,21 @@
     "markAsDone": "Marquer comme fait",
     "go": "Aller",
     "finished": "Vous êtes prêt à commencer votre utilisation du BC+ ! N'hésitez pas à consulter la <faq>FAQ</faq> ou à nous contacter en cas de besoin."
+  },
+  "formation": {
+    "title": "Formation",
+    "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode BC V8 à V9. Regardez les vidéos, répondez au questionnaire et recevez votre certificat !",
+    "videos": "Vidéos",
+    "evaluation": "Evaluation des connaissances",
+    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre certificat de formation v9",
+    "answer": "Répondre au questionnaire",
+    "form": "Questionnaire Typeform"
+  },
+  "deactivableFeatures": {
+    "title": "Fonctionnalités désactivables",
+    "Formation": "Formation",
+    "true": "Active",
+    "false": "Désactivée",
+    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
   }
 }

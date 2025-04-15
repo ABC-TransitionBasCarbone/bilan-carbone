@@ -1,15 +1,19 @@
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import SearchIcon from '@mui/icons-material/Search'
+import { StudyResultUnit, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
 import DebouncedInput from '../base/DebouncedInput'
 import styles from './EmissionSourceFactor.module.css'
 import EmissionSourceFactorModal from './EmissionSourceFactorModal'
+
 const fuseOptions = {
   keys: [
     {
@@ -41,28 +45,54 @@ const fuseOptions = {
 
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
+  subPost: SubPost
   update: (name: Path<UpdateEmissionSourceCommand>, value: string) => void
   selectedFactor?: EmissionFactorWithMetaData | null
   canEdit: boolean | null
   getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
 }
 
-const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit, getDetail }: Props) => {
+const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor, canEdit, getDetail }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
+  const tResultUnits = useTranslations('study.results.units')
 
   const [advancedSearch, setAdvancedSearch] = useState(false)
   const [display, setDisplay] = useState(false)
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setDisplay(false)
+      }
+    }
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setDisplay(false)
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   useEffect(() => {
     setValue(selectedFactor?.metaData?.title || '')
   }, [selectedFactor])
 
+  const subPostEmissionFactors = useMemo(
+    () => emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost)),
+    [emissionFactors, subPost],
+  )
   const fuse = useMemo(() => {
     return new Fuse(
-      emissionFactors.filter((emissionFactor) => emissionFactor.metaData),
+      subPostEmissionFactors.filter((emissionFactor) => emissionFactor.metaData),
       fuseOptions,
     )
   }, [emissionFactors])
@@ -79,7 +109,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
   }, [fuse, value])
 
   return (
-    <>
+    <div ref={containerRef}>
       <div className={classNames(styles.factor, 'align-center')}>
         <div className={classNames(styles.inputContainer, 'grow', { [styles.withSearch]: canEdit })}>
           <DebouncedInput
@@ -121,10 +151,9 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
                   result.metaData?.frontiere,
                   result.location,
                   result.metaData?.location,
-                  result.totalCo2,
+                  formatEmissionFactorNumber(getEmissionFactorValue(result)),
                 ])}{' '}
-                kgCO₂e/
-                {tUnits(result.unit)}
+                {tResultUnits(StudyResultUnit.K)}/{tUnits(result.unit || '')}
               </p>
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>
@@ -140,6 +169,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
           open={advancedSearch}
           close={() => setAdvancedSearch(false)}
           emissionFactors={emissionFactors}
+          subPost={subPost}
           selectEmissionFactor={(emissionFactor) => {
             update('emissionFactorId', emissionFactor.id)
             setDisplay(false)
@@ -147,7 +177,7 @@ const EmissionSourceFactor = ({ emissionFactors, update, selectedFactor, canEdit
           }}
         />
       )}
-    </>
+    </div>
   )
 }
 

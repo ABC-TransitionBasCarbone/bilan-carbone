@@ -1,5 +1,5 @@
 'use server'
-import { Level, Prisma, Role, UserStatus } from '@prisma/client'
+import { Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
 import {
   createOrUpdateOrganization,
   getRawOrganizationById,
@@ -18,6 +18,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     SIREN: siren,
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
+    User_Source: source,
   } = value
 
   const siretOrSiren = siret || siren
@@ -34,6 +35,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     role: Role.COLLABORATOR,
     status: UserStatus.IMPORTED,
     importedFileDate,
+    source: source as UserSource,
   }
 
   if (sessionCodeTraining) {

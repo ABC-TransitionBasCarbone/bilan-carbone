@@ -23,7 +23,12 @@ export const getOrganizationUsers = (id: string | null) =>
 export const getOrganizationWithSitesById = (id: string) =>
   prismaClient.organization.findUnique({
     where: { id },
-    include: { sites: { select: { name: true, etp: true, ca: true, id: true }, orderBy: { createdAt: 'asc' } } },
+    include: {
+      sites: {
+        select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
+        orderBy: { createdAt: 'asc' },
+      },
+    },
   })
 
 export const createOrganization = (organization: Prisma.OrganizationCreateInput) =>
@@ -36,8 +41,16 @@ export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrg
     ...sites.map((site) =>
       prismaClient.site.upsert({
         where: { id: site.id },
-        create: { id: site.id, organizationId, name: site.name, etp: site.etp, ca: site.ca * caUnit },
-        update: { name: site.name, etp: site.etp, ca: site.ca * caUnit },
+        create: {
+          id: site.id,
+          organizationId,
+          name: site.name,
+          etp: site.etp,
+          ca: site.ca * caUnit,
+          postalCode: site.postalCode,
+          city: site.city,
+        },
+        update: { name: site.name, etp: site.etp, ca: site.ca * caUnit, postalCode: site.postalCode, city: site.city },
       }),
     ),
     prismaClient.site.deleteMany({ where: { organizationId, id: { notIn: sites.map((site) => site.id) } } }),
@@ -69,7 +82,7 @@ export const onboardOrganization = async (
       firstName: '',
       lastName: '',
       email: collaborator.email || '',
-      role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.COLLABORATOR),
+      role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       status: UserStatus.VALIDATED,
       organizationId,
     })

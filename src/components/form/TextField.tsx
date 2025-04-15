@@ -50,7 +50,7 @@ export const FormTextField = <T extends FieldValues>({
             slotProps={{
               input: {
                 onWheel: (event) => (event.target as HTMLInputElement).blur(),
-                sx: { borderRadius: '0.75rem', borderColor: 'var(--color-grey-400)', color: 'var(--color-grey-950)' },
+                sx: { borderRadius: '0.75rem', borderColor: 'var(--grayscale-300)', color: 'black' },
                 endAdornment,
               },
             }}

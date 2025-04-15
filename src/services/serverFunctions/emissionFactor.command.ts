@@ -8,7 +8,7 @@ const GESschema = z.object({
   ch4f: z.nan().or(z.number().min(0, 'ch4f')).optional(),
   ch4b: z.nan().or(z.number().min(0, 'ch4b')).optional(),
   n2o: z.nan().or(z.number().min(0, 'n2o')).optional(),
-  co2b: z.nan().or(z.number().min(0, 'co2b')).optional(),
+  co2b: z.nan().or(z.number()).optional(),
   sf6: z.nan().or(z.number().min(0, 'sf6')).optional(),
   hfc: z.nan().or(z.number().min(0, 'hfc')).optional(),
   pfc: z.nan().or(z.number().min(0, 'pfc')).optional(),
@@ -37,6 +37,11 @@ export const EmissionFactorCommandValidation = z.intersection(
         required_error: 'totalCo2',
       })
       .min(0, 'totalCo2'),
+    reliability: z.number({ required_error: 'reliability' }),
+    technicalRepresentativeness: z.number().optional(),
+    geographicRepresentativeness: z.number().optional(),
+    temporalRepresentativeness: z.number().optional(),
+    completeness: z.number().optional(),
     attribute: z.string().optional(),
     subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1), { required_error: 'type' }).superRefine((val, ctx) => {
       if (Object.keys(val).length === 0) {

@@ -2,9 +2,11 @@
 import Button from '@/components/base/Button'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import Sites from '@/components/organization/Sites'
 import { FullStudy } from '@/db/study'
 import { OrganizationWithSites } from '@/db/user'
+import Sites from '@/environments/base/organization/Sites'
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import SitesCut from '@/environments/cut/organization/Sites'
 import {
   changeStudyDates,
   changeStudyExports,
@@ -16,10 +18,12 @@ import {
   ChangeStudyDatesCommandValidation,
   ChangeStudySitesCommand,
   ChangeStudySitesCommandValidation,
+  SitesCommand,
   StudyExportsCommand,
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
 import { getUserSettings } from '@/services/serverFunctions/user'
+import { CUT } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,7 +32,7 @@ import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import DeleteStudySiteModal from './DeleteStudySiteModal'
 import StudyExportsForm from './StudyExportsForm'
 import styles from './StudyPerimeter.module.css'
@@ -99,8 +103,15 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         .map((site) => {
           const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
           return existingStudySite
-            ? { ...existingStudySite, id: site.id, name: existingStudySite.site.name, selected: true }
-            : { ...site, selected: false }
+            ? {
+                ...existingStudySite,
+                id: site.id,
+                name: existingStudySite.site.name,
+                selected: true,
+                postalCode: existingStudySite.site.postalCode ?? '',
+                city: existingStudySite.site.city ?? '',
+              }
+            : { ...site, selected: false, postalCode: site.postalCode ?? '', city: site.city ?? '' }
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
@@ -196,10 +207,41 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
           })}
         </p>
       )}
-      <Sites
-        form={isEditing ? siteForm : undefined}
-        sites={isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
-        withSelection
+      <DynamicComponent
+        environmentComponents={{
+          [CUT]: (
+            <SitesCut
+              sites={
+                isEditing
+                  ? sites
+                  : study.sites.map((site) => ({
+                      ...site,
+                      name: site.site.name,
+                      selected: false,
+                      postalCode: site.site.postalCode ?? '',
+                      city: site.site.city ?? '',
+                    }))
+              }
+              form={isEditing ? siteForm : undefined}
+              withSelection
+            />
+          ),
+        }}
+        defaultComponent={
+          <Sites
+            sites={
+              isEditing
+                ? sites
+                : study.sites.map((site) => ({
+                    ...site,
+                    name: site.site.name,
+                    selected: false,
+                  }))
+            }
+            form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
+            withSelection
+          />
+        }
       />
       {hasEditionRole && (
         <div className={classNames('mt1', { 'justify-between': isEditing })}>

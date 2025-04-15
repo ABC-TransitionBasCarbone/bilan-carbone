@@ -11,6 +11,7 @@ import { useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
+import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import DependenciesSwitch from './DependenciesSwitch'
 import styles from './ResultsTables.module.css'
@@ -19,9 +20,10 @@ interface Props {
   study: FullStudy
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
+  validatedOnly: boolean
 }
 
-const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
+const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) => {
   const t = useTranslations('study.results')
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
@@ -33,6 +35,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
   const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
   const exports = useMemo(() => study.exports, [study.exports])
+
   const { studySite, setSite } = useStudySite(study, true)
 
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
@@ -89,6 +92,15 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
         {type !== 'consolidated' && (
           <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
         )}
+        {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
+          <ConsolatedBEGESDifference
+            study={study}
+            rules={rules}
+            emissionFactorsWithParts={emissionFactorsWithParts}
+            studySite={studySite}
+            validatedOnly={validatedOnly}
+          />
+        )}
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
@@ -97,7 +109,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts }: Props) => {
         {type === Export.Beges && (
           <BegesResultsTable
             study={study}
-            rules={rules.filter((rule) => rule.export === Export.Beges)}
+            rules={begesRules}
             emissionFactorsWithParts={emissionFactorsWithParts}
             studySite={studySite}
             withDependencies={withDependencies}

@@ -1,6 +1,8 @@
 'use client'
 
+import { hasAccessToFormation } from '@/services/permissions/formations'
 import { isAdmin } from '@/services/permissions/user'
+import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -13,7 +15,7 @@ import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './Navbar.module.css'
 
 interface Props {
@@ -23,6 +25,19 @@ interface Props {
 const Navbar = ({ user }: Props) => {
   const t = useTranslations('navigation')
   const [showSubMenu, setShowSubMenu] = useState(false)
+  const [hasFormation, setHasFormation] = useState(false)
+
+  useEffect(() => {
+    const getFormationAccess = async () => {
+      const hasAccess = await hasAccessToFormation(user)
+      setHasFormation(hasAccess)
+    }
+
+    getFormationAccess()
+  })
+
+  const { environment } = useAppEnvironmentStore()
+  const isCut = useMemo(() => environment === CUT, [environment])
 
   const handleMouseEnter = () => setShowSubMenu(true)
   const handleMouseLeave = () => setShowSubMenu(false)
@@ -33,10 +48,6 @@ const Navbar = ({ user }: Props) => {
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
           <Link href="/" aria-label={t('home')} title={t('home')}>
             <Image src="/logos/logo_BC_2025_blanc.png" width={200} height={48} alt="" className={styles.logo} />
-          </Link>
-          <Link className={styles.link} href="/facteurs-d-emission">
-            <span className={styles.big}>{t('factors')}</span>
-            <span className={styles.small}>{t('fe')}</span>
           </Link>
           {user.organizationId && (
             <div className="flex-col">
@@ -69,6 +80,17 @@ const Navbar = ({ user }: Props) => {
               )}
             </div>
           )}
+          {!isCut && (
+            <Link className={styles.link} href="/facteurs-d-emission">
+              <span className={styles.big}>{t('factors')}</span>
+              <span className={styles.small}>{t('fe')}</span>
+            </Link>
+          )}
+          {hasFormation && !isCut && (
+            <Link className={styles.link} href="/formation">
+              <span>{t('formation')}</span>
+            </Link>
+          )}
         </div>
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
           {user.role === Role.SUPER_ADMIN && (
@@ -85,21 +107,25 @@ const Navbar = ({ user }: Props) => {
           >
             <HelpOutlineIcon />
           </Link>
-          <Link className={classNames(styles.link, 'align-center')} aria-label={t('settings')} href="/parametres">
-            <SettingsIcon />
-          </Link>
+          {!isCut && (
+            <Link className={classNames(styles.link, 'align-center')} aria-label={t('settings')} href="/parametres">
+              <SettingsIcon />
+            </Link>
+          )}
           <Link className={classNames(styles.link, 'align-center')} aria-label={t('profile')} href="/profil">
             <AccountCircleIcon />
           </Link>
-          <Link
-            className={classNames(styles.link, 'align-center')}
-            aria-label={t('methodology')}
-            target="_blank"
-            rel="noreferrer noopener"
-            href="https://www.bilancarbone-methode.com/"
-          >
-            <MenuBookIcon />
-          </Link>
+          {!isCut && (
+            <Link
+              className={classNames(styles.link, 'align-center')}
+              aria-label={t('methodology')}
+              target="_blank"
+              rel="noreferrer noopener"
+              href="https://www.bilancarbone-methode.com/"
+            >
+              <MenuBookIcon />
+            </Link>
+          )}
           <button
             className={classNames(styles.link, 'align-center')}
             title={t('logout')}

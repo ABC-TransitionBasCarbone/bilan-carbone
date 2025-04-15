@@ -11,9 +11,10 @@ interface Props {
   study: FullStudy
   rules: ExportRule[]
   emissionFactorsWithParts: EmissionFactorWithParts[]
+  validatedOnly: boolean
 }
 
-const ResultsPage = ({ study, rules, emissionFactorsWithParts }: Props) => {
+const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
 
@@ -35,7 +36,12 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <Block title={tStudyNav('results')} as="h1">
-        <AllResults study={study} rules={rules} emissionFactorsWithParts={emissionFactorsWithParts} />
+        <AllResults
+          study={study}
+          rules={rules}
+          emissionFactorsWithParts={emissionFactorsWithParts}
+          validatedOnly={validatedOnly}
+        />
       </Block>
     </>
   )

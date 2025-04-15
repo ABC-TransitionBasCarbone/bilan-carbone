@@ -1,0 +1,13 @@
+.button {
+  max-width: 20rem;
+  background-color: var(--background-200);
+  color: var(--primary-800);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.wasteList {
+  list-style-position: inside;
+  list-style-type: initial;
+}

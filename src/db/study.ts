@@ -35,6 +35,11 @@ const fullStudyInclude = {
       geographicRepresentativeness: true,
       temporalRepresentativeness: true,
       completeness: true,
+      feReliability: true,
+      feTechnicalRepresentativeness: true,
+      feGeographicRepresentativeness: true,
+      feTemporalRepresentativeness: true,
+      feCompleteness: true,
       source: true,
       type: true,
       comment: true,
@@ -64,6 +69,7 @@ const fullStudyInclude = {
       },
       contributor: {
         select: {
+          id: true,
           email: true,
         },
       },
@@ -108,6 +114,8 @@ const fullStudyInclude = {
         select: {
           id: true,
           name: true,
+          postalCode: true,
+          city: true,
         },
       },
     },
@@ -121,6 +129,7 @@ const fullStudyInclude = {
   },
   exports: { select: { type: true, control: true } },
   organization: { select: { id: true, name: true, isCR: true, parentId: true } },
+  openingHours: true,
 } satisfies Prisma.StudyInclude
 
 const normalizeAllowedUsers = (
@@ -275,6 +284,16 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
+
+export const downgradeStudyUserRoles = (studyId: string, userIds: string[]) =>
+  Promise.all(
+    userIds.map((userId) =>
+      prismaClient.userOnStudy.update({
+        where: { studyId_userId: { studyId, userId } },
+        data: { role: StudyRole.Reader },
+      }),
+    ),
+  )
 
 export const getStudySites = (studyId: string) => prismaClient.studySite.findMany({ where: { studyId } })
 

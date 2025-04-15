@@ -9,7 +9,7 @@ import { isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (user: User, studyLevel: Level) => {
   if (isAdmin(user.role)) {
-    return StudyRole.Validator
+    return checkLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
   }
   return user.role === Role.COLLABORATOR && checkLevel(user.level, studyLevel) ? StudyRole.Editor : StudyRole.Reader
 }
@@ -23,7 +23,7 @@ export const getUserRoleOnStudy = (
   },
 ) => {
   if (isAdminOnStudyOrga(user, study.organization)) {
-    return StudyRole.Validator
+    return checkLevel(user.level, study.level) ? StudyRole.Validator : StudyRole.Reader
   }
 
   const right = study.allowedUsers.find((right) => right.user.id === user.id)
@@ -67,6 +67,14 @@ export const postColors: Record<Post, string> = {
   [Post.Fret]: 'green',
   [Post.FinDeVie]: 'orange',
   [Post.UtilisationEtDependance]: 'orange',
+
+  [Post.Fonctionnement]: 'darkBlue',
+  [Post.MobiliteSpectateurs]: 'darkBlue',
+  [Post.TourneesAvantPremiere]: 'darkBlue',
+  [Post.SallesEtCabines]: 'darkBlue',
+  [Post.ConfiseriesEtBoissons]: 'orange',
+  [Post.Dechets]: 'darkBlue',
+  [Post.BilletterieEtCommunication]: 'darkBlue',
 }
 
 export const hasEditionRights = (userRoleOnStudy: StudyRole | null) =>

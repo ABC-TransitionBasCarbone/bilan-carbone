@@ -31,8 +31,8 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
       subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.id === studySite,
   )
   const validated = emissionSources.filter((emissionSource) => emissionSource.validated).length
-  const percent = Math.floor((validated / emissionSources.length) * 100)
-  const color = emissionSources.length && percent === 100 ? '--green-500' : '--orange-500'
+  const percent = emissionSources.length ? Math.floor((validated / emissionSources.length) * 100) : 0
+  const color = emissionSources.length && percent === 100 ? '--success-100' : '--warning'
 
   return (
     <div className="justify-center">
@@ -66,7 +66,7 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
             variant="determinate"
             value={percent}
             sx={{
-              backgroundColor: 'var(--greyscale-200)',
+              backgroundColor: 'var(--grayscale-200)',
               '& .MuiLinearProgress-bar': {
                 backgroundColor: `var(${color})`,
               },

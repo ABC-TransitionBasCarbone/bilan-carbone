@@ -1,6 +1,6 @@
 import { SubPost } from '@prisma/client'
 
-export enum Post {
+export enum BCPost {
   Energies = 'Energies',
   AutresEmissionsNonEnergetiques = 'AutresEmissionsNonEnergetiques',
   IntrantsBiensEtMatieres = 'IntrantsBiensEtMatieres',
@@ -12,6 +12,19 @@ export enum Post {
   UtilisationEtDependance = 'UtilisationEtDependance',
   FinDeVie = 'FinDeVie',
 }
+
+export enum CutPost {
+  Fonctionnement = 'Fonctionnement',
+  MobiliteSpectateurs = 'MobiliteSpectateurs',
+  TourneesAvantPremiere = 'TourneesAvantPremiere',
+  SallesEtCabines = 'SallesEtCabines',
+  ConfiseriesEtBoissons = 'ConfiseriesEtBoissons',
+  Dechets = 'Dechets',
+  BilletterieEtCommunication = 'BilletterieEtCommunication',
+}
+
+export const Post = { ...BCPost, ...CutPost }
+export type Post = BCPost | CutPost
 
 export const subPostsByPost: Record<Post, SubPost[]> = {
   [Post.Energies]: [
@@ -65,5 +78,24 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
     SubPost.TraitementDesDechetsEnFinDeVie,
     SubPost.FuitesOuEmissionsNonEnergetiques,
     SubPost.TraitementDesEmballagesEnFinDeVie,
+  ],
+
+  [Post.Fonctionnement]: [
+    SubPost.Batiment,
+    SubPost.Equipe,
+    SubPost.DeplacementsProfessionnels,
+    SubPost.Energie,
+    SubPost.ActivitesDeBureau,
+  ],
+  [Post.MobiliteSpectateurs]: [SubPost.MobiliteSpectateurs],
+  [Post.TourneesAvantPremiere]: [SubPost.EquipesRecues],
+  [Post.SallesEtCabines]: [SubPost.MaterielTechnique, SubPost.AutreMateriel],
+  [Post.ConfiseriesEtBoissons]: [SubPost.Achats, SubPost.Fret, SubPost.Electromenager],
+  [Post.Dechets]: [SubPost.DechetsOrdinaires, SubPost.DechetsExceptionnels],
+  [Post.BilletterieEtCommunication]: [
+    SubPost.MaterielDistributeurs,
+    SubPost.MaterielCinema,
+    SubPost.CommunicationDigitale,
+    SubPost.CaissesEtBornes,
   ],
 }

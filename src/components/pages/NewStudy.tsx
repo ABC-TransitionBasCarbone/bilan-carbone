@@ -1,9 +1,12 @@
 'use client'
-import NewStudyForm from '@/components/study/new/Form'
 import SelectOrganization from '@/components/study/organization/Select'
 import { getOrganizationUsers } from '@/db/organization'
 import { OrganizationWithSites } from '@/db/user'
+import NewStudyForm from '@/environments/base/study/new/Form'
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import NewStudyFormCut from '@/environments/cut/study/new/Form'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
+import { CUT } from '@/store/AppEnvironment'
 import { displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Export } from '@prisma/client'
@@ -41,6 +44,8 @@ const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit 
           ...site,
           ca: site.ca ? displayCA(site.ca, caUnit) : 0,
           selected: false,
+          postalCode: site.postalCode ?? '',
+          city: site.city ?? '',
         })) || [],
       exports: {
         [Export.Beges]: false,
@@ -65,7 +70,10 @@ const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit 
         ].filter((link) => link !== undefined)}
       />
       {organization ? (
-        <NewStudyForm user={user} users={users} form={form} />
+        <DynamicComponent
+          environmentComponents={{ [CUT]: <NewStudyFormCut user={user} users={users} form={form} /> }}
+          defaultComponent={<NewStudyForm user={user} users={users} form={form} />}
+        />
       ) : (
         <SelectOrganization organizations={organizations} selectOrganization={setOrganization} form={form} />
       )}

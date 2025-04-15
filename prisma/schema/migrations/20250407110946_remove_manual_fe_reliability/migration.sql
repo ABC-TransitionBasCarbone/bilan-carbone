@@ -1,0 +1,1 @@
+UPDATE emission_factors SET reliability = NULL WHERE imported_from = 'Manual'

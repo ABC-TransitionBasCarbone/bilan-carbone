@@ -1,6 +1,7 @@
-import { ControlMode, Export, Level, StudyResultUnit, StudyRole, SubPost } from '@prisma/client'
+import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
+import { OpeningHoursValidation } from '../hours'
 import { Post } from '../posts'
 
 export const SitesCommandValidation = z.object({
@@ -16,6 +17,8 @@ export const SitesCommandValidation = z.object({
       etp: z.number({ required_error: 'etp', invalid_type_error: 'etp' }).int('etp').min(0, { message: 'etp' }),
       ca: z.number({ required_error: 'ca', invalid_type_error: 'ca' }).min(0, { message: 'ca' }),
       selected: z.boolean().optional(),
+      postalCode: z.string().optional(),
+      city: z.string().optional(),
     }),
   ),
 })
@@ -59,6 +62,12 @@ export const CreateStudyCommandValidation = z
         }, 'endDate'),
         level: z.nativeEnum(Level, { required_error: 'level' }),
         isPublic: z.string(),
+
+        numberOfSessions: z.number().optional(),
+        numberOfTickets: z.number().optional(),
+        numberOfOpenDays: z.number().optional(),
+        openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
+        openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
       }),
       StudyExportsCommandValidation,
     ),
@@ -145,6 +154,17 @@ export const ChangeStudyNameValidation = z.object({
 })
 
 export type ChangeStudyNameCommand = z.infer<typeof ChangeStudyNameValidation>
+
+export const ChangeStudyCinemaValidation = z.object({
+  studyId: z.string(),
+  openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
+  openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
+  numberOfSessions: z.number().optional().nullable(),
+  numberOfTickets: z.number().optional().nullable(),
+  numberOfOpenDays: z.number().optional().nullable(),
+})
+
+export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>
 
 export const NewStudyRightCommandValidation = z.object({
   studyId: z.string(),

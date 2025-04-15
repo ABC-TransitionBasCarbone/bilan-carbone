@@ -66,7 +66,6 @@ const OnboardingStep = ({ form, isCr }: Props) => {
               control={form.control}
               translation={t}
               name={`collaborators.${index}.role`}
-              renderValue={tRole}
               MenuProps={{
                 anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
                 transformOrigin: { vertical: 'top', horizontal: 'left' },

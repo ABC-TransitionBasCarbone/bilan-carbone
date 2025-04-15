@@ -8,7 +8,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
-import { StudyResultUnit } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Path } from 'react-hook-form'
@@ -21,15 +21,16 @@ interface Props {
   emissionSource: StudyWithoutDetail['emissionSources'][0]
   emissionFactors: EmissionFactorWithMetaData[]
   selectedFactor?: EmissionFactorWithMetaData
+  subPost: SubPost
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 
-const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, selectedFactor, update }: Props) => {
+const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPost, selectedFactor, update }: Props) => {
   const t = useTranslations('emissionSource')
-  const tResultUnits = useTranslations('study.results.unit')
+  const tResultUnits = useTranslations('study.results.units')
   const tUnits = useTranslations('units')
 
   return (
@@ -39,6 +40,7 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, select
           canEdit
           update={update}
           emissionFactors={emissionFactors}
+          subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
         />
@@ -53,7 +55,7 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, select
               label={`${t('form.value')} *`}
               slotProps={{ input: { onWheel: (event) => (event.target as HTMLInputElement).blur() } }}
             />
-            {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
+            {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit || '')}</div>}
           </div>
           {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
             <div className={classNames(styles.inputWithUnit, 'flex grow')}>
@@ -86,7 +88,7 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, select
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatNumber(getEmissionFactorValue(selectedFactor), 5)} {tResultUnits(StudyResultUnit.K)}/
-            {tUnits(selectedFactor.unit)}
+            {tUnits(selectedFactor.unit || '')}
           </p>
           {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
         </div>

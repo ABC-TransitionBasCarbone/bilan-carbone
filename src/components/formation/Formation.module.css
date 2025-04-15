@@ -1,0 +1,9 @@
+.videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(0, 40rem));
+  gap: 1rem;
+}
+
+.video {
+  max-width: 100%;
+}

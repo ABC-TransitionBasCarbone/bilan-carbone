@@ -3,6 +3,7 @@
 import { FullStudy } from '@/db/study'
 import { EmissionFactor } from '@prisma/client'
 import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from './emissionSource'
+import { StudyWithoutDetail } from './permissions/study'
 
 export const qualityKeys = [
   'reliability',
@@ -11,6 +12,41 @@ export const qualityKeys = [
   'temporalRepresentativeness',
   'completeness',
 ] as const
+
+export const specificFEQualityKeys = [
+  'feReliability',
+  'feTechnicalRepresentativeness',
+  'feGeographicRepresentativeness',
+  'feTemporalRepresentativeness',
+  'feCompleteness',
+] as const
+
+export const specificFEQualityKeysLinks: Record<(typeof qualityKeys)[number], (typeof specificFEQualityKeys)[number]> =
+  {
+    reliability: 'feReliability',
+    technicalRepresentativeness: 'feTechnicalRepresentativeness',
+    geographicRepresentativeness: 'feGeographicRepresentativeness',
+    temporalRepresentativeness: 'feTemporalRepresentativeness',
+    completeness: 'feCompleteness',
+  }
+
+const getQualityValue = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  column: (typeof qualityKeys)[number],
+) =>
+  emissionSource[specificFEQualityKeysLinks[column]]
+    ? emissionSource[specificFEQualityKeysLinks[column]]
+    : emissionSource.emissionFactor
+      ? emissionSource.emissionFactor[column]
+      : null
+
+export const getSpecificEmissionFactorQuality = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+) =>
+  qualityKeys.reduce(
+    (res, column) => ({ ...res, [column]: getQualityValue(emissionSource, column) }),
+    {} as Record<(typeof qualityKeys)[number], number>,
+  )
 
 type Quality = Pick<EmissionFactor, (typeof qualityKeys)[number]>
 
