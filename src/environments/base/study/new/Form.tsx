@@ -2,7 +2,7 @@
 
 import Block from '@/components/base/Block'
 import GlobalNewStudyForm from '@/components/study/new/Form'
-import { getOrganizationAccounts } from '@/db/organization'
+import { getOrganizationVersionAccounts } from '@/db/organization'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -10,7 +10,7 @@ import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
   user: UserSession
-  accounts: Awaited<ReturnType<typeof getOrganizationAccounts>>
+  accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
   form: UseFormReturn<CreateStudyCommand>
 }
 

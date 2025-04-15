@@ -1,12 +1,10 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { checkLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
-import { Level, Organization, Role, StudyResultUnit, StudyRole } from '@prisma/client'
+import { Level, Role, StudyResultUnit, StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { isInOrgaOrParent } from './organization'
 
@@ -17,15 +15,8 @@ export const getUserRoleOnPublicStudy = (user: UserSession, studyLevel: Level) =
   return user.role === Role.COLLABORATOR && checkLevel(user.level, studyLevel) ? StudyRole.Editor : StudyRole.Reader
 }
 
-export const getAccountRoleOnStudy = (
-  user: UserSession,
-  study: Pick<FullStudy, 'isPublic' | 'level'> & {
-    allowedUsers: { account: { id: string }; role: StudyRole }[]
-  } & {
-    organization: Pick<Organization, 'id' | 'parentId'>
-  },
-) => {
-  if (isAdminOnStudyOrga(user, study.organization)) {
+export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
+  if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
     return checkLevel(user.level, study.level) ? StudyRole.Validator : StudyRole.Reader
   }
 
@@ -34,7 +25,10 @@ export const getAccountRoleOnStudy = (
     return right.role
   }
 
-  if (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization)) {
+  if (
+    study.isPublic &&
+    isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization)
+  ) {
     return getUserRoleOnPublicStudy(user, study.level)
   }
 

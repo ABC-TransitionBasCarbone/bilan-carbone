@@ -1,5 +1,5 @@
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import AddIcon from '@mui/icons-material/Add'
-import { Organization } from '@prisma/client'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import Box from '../base/Box'
@@ -9,12 +9,12 @@ import CRClients from '../organization/CRClients'
 import styles from './CRClientsList.module.css'
 
 interface Props {
-  organizations: Organization[]
+  organizationVersions: OrganizationVersionWithOrganization[]
 }
-const CRClientsList = async ({ organizations }: Props) => {
+const CRClientsList = async ({ organizationVersions }: Props) => {
   const t = await getTranslations('organization')
-  return organizations.length ? (
-    <CRClients organizations={organizations} />
+  return organizationVersions.length ? (
+    <CRClients organizationVersions={organizationVersions} />
   ) : (
     <div className="justify-center text-center">
       <Box className={classNames(styles.firstClientCard, 'flex-col align-center')}>

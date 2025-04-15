@@ -4,7 +4,7 @@
 'use server'
 
 import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
-import { AccountWithUser, accountWithUserToUserSession, getAccountByEmailAndOrganizationId } from '@/db/account'
+import { AccountWithUser, accountWithUserToUserSession, getAccountByEmailAndOrganizationVersionId } from '@/db/account'
 import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -14,7 +14,11 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
-import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
+import {
+  getOrganizationVersionById,
+  getOrganizationWithSitesById,
+  OrganizationVersionWithOrganization,
+} from '@/db/organization'
 import {
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
@@ -54,10 +58,8 @@ import {
   Document,
   EmissionFactor,
   EmissionFactorImportVersion,
-  Environment,
   Export,
   Import,
-  Organization,
   Prisma,
   Role,
   StudyEmissionSource,
@@ -110,7 +112,7 @@ export const getStudy = async (studyId: string) => {
   if (!studyId || !session || !session.user) {
     return null
   }
-  const study = await getStudyById(studyId, session.user.organizationId)
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
   if (!study || !hasAccessToStudy(session.user, study)) {
     return null
   }
@@ -119,7 +121,7 @@ export const getStudy = async (studyId: string) => {
 }
 
 export const createStudyCommand = async ({
-  organizationId,
+  organizationVersionId,
   validator,
   sites,
   openingHoursHoliday,
@@ -159,12 +161,16 @@ export const createStudyCommand = async ({
   }
 
   const studySites = sites.filter((site) => site.selected)
-  const organization = await getOrganizationWithSitesById(organizationId)
-  if (!organization) {
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  if (!organizationVersion) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 
-  if (studySites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.id))) {
+  if (
+    studySites.some((site) =>
+      organizationVersion.organization.sites.every((organizationSite) => organizationSite.id !== site.id),
+    )
+  ) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 
@@ -176,7 +182,7 @@ export const createStudyCommand = async ({
   const study = {
     ...command,
     createdBy: { connect: { id: session.user.accountId } },
-    organization: { connect: { id: organizationId } },
+    organizationVersion: { connect: { id: organizationVersionId } },
     isPublic: command.isPublic === 'true',
     openingHours: {
       create: mergedOpeningHours,
@@ -198,7 +204,9 @@ export const createStudyCommand = async ({
       createMany: {
         data: studySites
           .map((site) => {
-            const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === site.id)
+            const organizationSite = organizationVersion.organization.sites.find(
+              (organizationSite) => organizationSite.id === site.id,
+            )
             if (!organizationSite) {
               return undefined
             }
@@ -213,7 +221,7 @@ export const createStudyCommand = async ({
     },
   } satisfies Prisma.StudyCreateInput
 
-  if (!(await canCreateStudy(session.user.accountId, study, organizationId))) {
+  if (!(await canCreateStudy(session.user.accountId, study, organizationVersionId))) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 
@@ -233,7 +241,7 @@ const getStudyRightsInformations = async (studyId: string) => {
     return null
   }
 
-  const studyWithRights = await getStudyById(studyId, session.user.organizationId)
+  const studyWithRights = await getStudyById(studyId, session.user.organizationVersionId)
 
   if (!studyWithRights) {
     return null
@@ -332,9 +340,9 @@ export const changeStudyCinema = async ({ studyId, ...command }: ChangeStudyCine
 export const hasActivityData = async (
   studyId: string,
   deletedSites: ChangeStudySitesCommand['sites'],
-  organizationId: string,
+  organizationVersionId: string,
 ) => {
-  const study = await getStudyById(studyId, organizationId)
+  const study = await getStudyById(studyId, organizationVersionId)
   if (!study) {
     return false
   }
@@ -424,7 +432,7 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
 const getOrCreateUserAndSendStudyInvite = async (
   email: string,
   study: FullStudy,
-  organization: Organization,
+  organizationVersion: OrganizationVersionWithOrganization,
   creator: UserSession,
   existingAccount: AccountWithUser | null,
   role?: StudyRole,
@@ -441,18 +449,23 @@ const getOrCreateUserAndSendStudyInvite = async (
       accounts: {
         create: {
           role: Role.COLLABORATOR,
-          // TODO refactor this to orgnaizationVersion Environment
-          environment: Environment.BC,
         },
       },
     })
 
-    await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '')
+    await sendInvitation(email, study, organizationVersion.organization, creator, role ? t(role).toLowerCase() : '')
 
     accountId = newAccount.id
   } else {
-    if (existingAccount.organizationId !== organization.id) {
-      await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '', existingAccount)
+    if (existingAccount.organizationVersionId !== organizationVersion.id) {
+      await sendInvitation(
+        email,
+        study,
+        organizationVersion.organization,
+        creator,
+        role ? t(role).toLowerCase() : '',
+        existingAccount,
+      )
     }
     accountId = existingAccount.id
   }
@@ -467,8 +480,8 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
   }
 
   const [studyWithRights, existingAccount] = await Promise.all([
-    getStudyById(right.studyId, session.user.organizationId),
-    getAccountByEmailAndOrganizationId(session.user.accountId, right.email),
+    getStudyById(right.studyId, session.user.organizationVersionId),
+    getAccountByEmailAndOrganizationVersionId(right.email, session.user.organizationVersionId),
   ])
 
   if (!studyWithRights) {
@@ -479,12 +492,12 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     right.role = StudyRole.Reader
   }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, existingAccount, right.role)) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingAccount as AccountWithUser, right.role)) {
     return NOT_AUTHORIZED
   }
 
-  const organization = await getOrganizationById(studyWithRights.organizationId)
-  if (!organization) {
+  const organizationVersion = await getOrganizationVersionById(studyWithRights.organizationVersionId)
+  if (!organizationVersion) {
     return NOT_AUTHORIZED
   }
 
@@ -497,7 +510,10 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
 
   if (
     existingAccount &&
-    isAdminOnStudyOrga(accountWithUserToUserSession(existingAccount), studyWithRights.organization) &&
+    isAdminOnStudyOrga(
+      accountWithUserToUserSession(existingAccount as AccountWithUser),
+      studyWithRights.organizationVersion as OrganizationVersionWithOrganization,
+    ) &&
     checkLevel(existingAccount.user.level, studyWithRights.level)
   ) {
     right.role = StudyRole.Validator
@@ -506,9 +522,9 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
   const accountId = await getOrCreateUserAndSendStudyInvite(
     right.email,
     studyWithRights,
-    organization,
+    organizationVersion as OrganizationVersionWithOrganization,
     session.user,
-    existingAccount,
+    existingAccount as AccountWithUser,
     right.role,
   )
 
@@ -521,32 +537,39 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
 
 export const changeStudyRole = async (studyId: string, email: string, studyRole: StudyRole) => {
   const session = await auth()
-  if (!session || !session.user || !session.user.organizationId) {
+  if (!session || !session.user || !session.user.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
   const [studyWithRights, existingAccount] = await Promise.all([
-    getStudyById(studyId, session.user.organizationId),
-    getAccountByEmailAndOrganizationId(email, session.user.organizationId),
+    getStudyById(studyId, session.user.organizationVersionId),
+    getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId),
   ])
 
   if (!studyWithRights || !existingAccount) {
     return NOT_AUTHORIZED
   }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, existingAccount, studyRole)) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingAccount as AccountWithUser, studyRole)) {
     return NOT_AUTHORIZED
   }
 
   if (
     existingAccount &&
-    isAdminOnStudyOrga(accountWithUserToUserSession(existingAccount), studyWithRights.organization) &&
+    isAdminOnStudyOrga(
+      accountWithUserToUserSession(existingAccount as AccountWithUser),
+      studyWithRights.organizationVersion as OrganizationVersionWithOrganization,
+    ) &&
     studyRole !== StudyRole.Validator
   ) {
     return NOT_AUTHORIZED
   }
 
-  if (existingAccount && !checkLevel(existingAccount.level, studyWithRights.level) && studyRole !== StudyRole.Reader) {
+  if (
+    existingAccount &&
+    !checkLevel(existingAccount.user.level, studyWithRights.level) &&
+    studyRole !== StudyRole.Reader
+  ) {
     return NOT_AUTHORIZED
   }
 
@@ -555,21 +578,21 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
 
 export const newStudyContributor = async ({ email, subPosts, ...command }: NewStudyContributorCommand) => {
   const session = await auth()
-  if (!session || !session.user || !session.user.organizationId) {
+  if (!session || !session.user || !session.user.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
   const [studyWithRights, existingAccount] = await Promise.all([
-    getStudyById(command.studyId, session.user.organizationId),
-    getAccountByEmailAndOrganizationId(email, session.user.organizationId),
+    getStudyById(command.studyId, session.user.organizationVersionId),
+    getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId),
   ])
 
   if (!studyWithRights) {
     return NOT_AUTHORIZED
   }
 
-  const organization = await getOrganizationById(studyWithRights.organizationId)
-  if (!organization) {
+  const organizationVersion = await getOrganizationVersionById(studyWithRights.organizationVersionId)
+  if (!organizationVersion) {
     return NOT_AUTHORIZED
   }
 
@@ -584,9 +607,9 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
   const accountId = await getOrCreateUserAndSendStudyInvite(
     email,
     studyWithRights,
-    organization,
+    organizationVersion as OrganizationVersionWithOrganization,
     session.user,
-    existingAccount,
+    existingAccount as AccountWithUser,
   )
 
   const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
@@ -649,7 +672,7 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
   }))
   const studyObject = { ...study, allowedUsers: allowedUsers }
   return (
-    getAccountRoleOnStudy(user, studyObject) ||
+    getAccountRoleOnStudy(user, studyObject as FullStudy) ||
     study.contributors.some((contributor) => contributor.accountId === user.accountId)
   )
 }
@@ -659,8 +682,9 @@ export const findStudiesWithSites = async (siteIds: string[]) => {
 
   const user = session?.user
   const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
-  const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site'> & { count: number })[] =
-    []
+  const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site' | 'study'> & {
+    count: number
+  })[] = []
 
   studySites.forEach((studySite) => {
     if (user && hasAccessToStudy(user, studySite.study)) {
@@ -672,7 +696,7 @@ export const findStudiesWithSites = async (siteIds: string[]) => {
           unauthorizedStudySite.site.organization.id === studySite.site.organization.id,
       )
       if (!targetedSite) {
-        unauthorizedStudySites.push({ site: studySite.site, count: 1 })
+        unauthorizedStudySites.push({ site: studySite.site, study: studySite.study, count: 1 })
       } else {
         targetedSite.count++
       }
@@ -710,8 +734,8 @@ export const getStudyEmissionFactorImportVersions = async (studyId: string) => {
   return getStudyEmissionFactorSources(studyId)
 }
 
-export const getOrganizationStudiesFromOtherUsers = async (organizationId: string, userId: string) =>
-  countOrganizationStudiesFromOtherUsers(organizationId, userId)
+export const getOrganizationStudiesFromOtherUsers = async (organizationVersionId: string, accountId: string) =>
+  countOrganizationStudiesFromOtherUsers(organizationVersionId, accountId)
 
 const getMetaData = (emissionFactor: AsyncReturnType<typeof getEmissionFactorsByIdsAndSource>[0], locale: LocaleType) =>
   emissionFactor.metaData.find((metadata) => metadata.language === locale) ?? emissionFactor.metaData[0]
@@ -837,7 +861,7 @@ export const duplicateStudyEmissionSource = async (
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
-  const study = await getStudyById(studyId, session.user.organizationId)
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
 
   if (
     !study ||

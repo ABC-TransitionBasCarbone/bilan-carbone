@@ -5,7 +5,7 @@ import { MIN, TIME_IN_MS } from '@/utils/time'
 import { Checkbox } from '@mui/material'
 import { Formation } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
@@ -17,7 +17,7 @@ import Video from './Video'
 
 interface Props {
   formations: Formation[]
-  user: User
+  user: UserSession
   organizationName: string
 }
 

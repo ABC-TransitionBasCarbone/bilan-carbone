@@ -4,7 +4,7 @@ import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
-import { getOrganizationAccounts } from '@/db/organization'
+import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { ALREADY_IN_STUDY } from '@/services/permissions/check'
 import { newStudyRight } from '@/services/serverFunctions/study'
@@ -22,7 +22,7 @@ import NewStudyRightModal from './NewStudyRightModal'
 
 interface Props {
   study: FullStudy
-  accounts: Awaited<ReturnType<typeof getOrganizationAccounts>>
+  accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
   existingAccounts: string[]
   accountRole: StudyRole
 }
@@ -37,7 +37,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
 
   const [error, setError] = useState('')
   const [readerOnly, setReaderOnly] = useState(false)
-  const [otherOrganization, setOtherOrganization] = useState(false)
+  const [otherOrganizationVersion, setOtherOrganizationVersion] = useState(false)
 
   const form = useForm<NewStudyRightCommand>({
     resolver: zodResolver(NewStudyRightCommandValidation),
@@ -52,8 +52,8 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
   const onEmailChange = (_: SyntheticEvent, value: string | null) => {
     form.setValue('email', value || '')
     if (value) {
-      const organizationAccount = accounts.find((account) => account.user.email === value)
-      if (!organizationAccount || checkLevel(organizationAccount.user.level, study.level)) {
+      const organizationVersionAccount = accounts.find((account) => account.user.email === value)
+      if (!organizationVersionAccount || checkLevel(organizationVersionAccount.user.level, study.level)) {
         setReaderOnly(false)
       } else {
         setReaderOnly(true)
@@ -64,7 +64,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
 
   const saveRight = async (command: NewStudyRightCommand) => {
     const result = await newStudyRight(command)
-    setOtherOrganization(false)
+    setOtherOrganizationVersion(false)
     if (result) {
       setError(result)
     } else {
@@ -79,7 +79,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
     } else if (existingAccounts.includes(command.email)) {
       setError(ALREADY_IN_STUDY)
     } else {
-      setOtherOrganization(true)
+      setOtherOrganizationVersion(true)
     }
   }
 
@@ -152,9 +152,9 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
         )}
       </Form>
       <NewStudyRightModal
-        otherOrganization={otherOrganization}
+        otherOrganizationVersion={otherOrganizationVersion}
         rightsWarning={form.getValues().role !== StudyRole.Reader}
-        decline={() => setOtherOrganization(false)}
+        decline={() => setOtherOrganizationVersion(false)}
         accept={() => saveRight(form.getValues())}
       />
     </>

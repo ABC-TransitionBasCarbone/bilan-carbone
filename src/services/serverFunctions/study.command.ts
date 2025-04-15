@@ -38,7 +38,7 @@ export const CreateStudyCommandValidation = z
   .intersection(
     z.intersection(
       z.object({
-        organizationId: z.string(),
+        organizationVersionId: z.string(),
         name: z
           .string({
             required_error: 'name',

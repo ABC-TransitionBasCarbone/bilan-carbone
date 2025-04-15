@@ -1,4 +1,4 @@
-import { getOrganizationAccounts } from '@/db/organization'
+import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { isAdmin } from '@/utils/user'
 import { getAccountRoleOnStudy } from '@/utils/study'
@@ -17,7 +17,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('study.rights.new')
 
-  const accounts = await getOrganizationAccounts(user.organizationId)
+  const accounts = await getOrganizationVersionAccounts(user.organizationVersionId)
   const accountRole = getAccountRoleOnStudy(user, study)
 
   if (!accountRole) {
@@ -35,10 +35,10 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
         current={tNav('newStudyRight')}
         links={[
           { label: tNav('home'), link: '/' },
-          study.organization.isCR
+          study.organizationVersion.isCR
             ? {
-                label: study.organization.name,
-                link: `/organisations/${study.organization.id}`,
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
               }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },

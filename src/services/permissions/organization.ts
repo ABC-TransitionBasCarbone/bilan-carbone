@@ -1,17 +1,23 @@
 import { getAccountById } from '@/db/account'
-import { getOrganizationById } from '@/db/organization'
-import { canEditOrganization, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
+import { getOrganizationVersionById, OrganizationVersionWithOrganization } from '@/db/organization'
+import { canEditOrganizationVersion, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
 import { UserSession } from 'next-auth'
 import { auth } from '../auth'
 import { getOrganizationStudiesFromOtherUsers } from '../serverFunctions/study'
 
-export const isInOrgaOrParentFromId = async (userOrganizationId: string | null, organizationId: string) => {
-  if (userOrganizationId === organizationId) {
+export const isInOrgaOrParentFromId = async (
+  userOrganizationVersionId: string | null,
+  organizationVersionId: string,
+) => {
+  if (userOrganizationVersionId === organizationVersionId) {
     return true
   }
 
-  const organization = await getOrganizationById(organizationId)
-  return organization && isInOrgaOrParent(userOrganizationId, organization)
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  return (
+    organizationVersion &&
+    isInOrgaOrParent(userOrganizationVersionId, organizationVersion as OrganizationVersionWithOrganization)
+  )
 }
 
 export const canCreateOrganization = async (account: UserSession) => {
@@ -21,7 +27,7 @@ export const canCreateOrganization = async (account: UserSession) => {
     return false
   }
 
-  const organization = await getOrganizationById(dbAccount.organizationId)
+  const organization = await getOrganizationVersionById(dbAccount.organizationVersionId)
   if (!organization || !organization.isCR) {
     return false
   }
@@ -29,36 +35,44 @@ export const canCreateOrganization = async (account: UserSession) => {
   return true
 }
 
-export const canUpdateOrganization = async (account: UserSession, organizationId: string) => {
+export const canUpdateOrganizationVersion = async (account: UserSession, organizationVersionId: string) => {
   const dbAccount = await getAccountById(account.accountId)
 
   if (!dbAccount) {
     return false
   }
 
-  if (!(await isInOrgaOrParentFromId(account.organizationId, organizationId))) {
+  if (!(await isInOrgaOrParentFromId(account.organizationVersionId, organizationVersionId))) {
     return false
   }
 
-  const organization = await getOrganizationById(account.organizationId)
-  if (!organization || !canEditOrganization(account, organization)) {
+  const organizationVersion = (await getOrganizationVersionById(
+    account.organizationVersionId,
+  )) as OrganizationVersionWithOrganization
+  if (!organizationVersion || !canEditOrganizationVersion(account, organizationVersion)) {
     return false
   }
 
   return true
 }
 
-export const canDeleteOrganization = async (organizationId: string) => {
-  const [session, targetOrganization] = await Promise.all([auth(), getOrganizationById(organizationId)])
-  if (!session || !session.user || !targetOrganization) {
+export const canDeleteOrganizationVersion = async (organizationVersionId: string) => {
+  const [session, targetOrganizationVersion] = await Promise.all([
+    auth(),
+    getOrganizationVersionById(organizationVersionId),
+  ])
+  if (!session || !session.user || !targetOrganizationVersion) {
     return false
   }
 
   if (
     !hasEditionRole(true, session.user.role) ||
-    (await getOrganizationStudiesFromOtherUsers(organizationId, session.user.id))
+    (await getOrganizationStudiesFromOtherUsers(organizationVersionId, session.user.accountId))
   ) {
     return false
   }
-  return targetOrganization.parentId === session.user.organizationId
+
+  const userOrganizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+
+  return targetOrganizationVersion.organization.parentId === userOrganizationVersion?.organizationId
 }

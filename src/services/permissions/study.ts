@@ -1,40 +1,40 @@
 import { AccountWithUser, getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { Level, Organization, Prisma, Study, StudyRole } from '@prisma/client'
+import { Level, Prisma, Study, StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { auth } from '../auth'
 import { checkLevel } from '../study'
 import { isInOrgaOrParentFromId } from './organization'
 
-export const isAdminOnStudyOrga = (user: UserSession, studyOrganization: Pick<Organization, 'id' | 'parentId'>) =>
-  isAdminOnOrga(user, studyOrganization)
+export const isAdminOnStudyOrga = (user: UserSession, studyOrganizationVersion: OrganizationVersionWithOrganization) =>
+  isAdminOnOrga(user, studyOrganizationVersion)
 
 export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, studyId: string) => {
   if (!user) {
     return false
   }
 
-  const study = await getStudyById(studyId, user.organizationId)
+  const study = await getStudyById(studyId, user.organizationVersionId)
 
   if (!study) {
     return false
   }
 
   if (
-    // TODO Checker si y avait déjà un soucis niveau typage
-    isAdminOnStudyOrga(user, study.organization) ||
-    (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization))
+    isAdminOnStudyOrga(user as UserSession, study.organizationVersion as OrganizationVersionWithOrganization) ||
+    (study.isPublic &&
+      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization))
   ) {
     return true
   }
 
   let allowedStudiesId: string[]
   if ('allowedStudies' in user) {
-    // TODO Checker si y avait déjà un soucis niveau typage
     allowedStudiesId = [
       ...user.allowedStudies.map((allowedStudy) => allowedStudy.studyId),
       ...user.contributors.map((contributor) => contributor.studyId),
@@ -66,7 +66,11 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateStudy = async (accountId: string, study: Prisma.StudyCreateInput, organizationId: string) => {
+export const canCreateStudy = async (
+  accountId: string,
+  study: Prisma.StudyCreateInput,
+  organizationVersionId: string,
+) => {
   const dbAccount = await getAccountById(accountId)
 
   if (!dbAccount) {
@@ -77,7 +81,7 @@ export const canCreateStudy = async (accountId: string, study: Prisma.StudyCreat
     return false
   }
 
-  if (!(await isInOrgaOrParentFromId(dbAccount.organizationId, organizationId))) {
+  if (!(await isInOrgaOrParentFromId(dbAccount.organizationVersionId, organizationVersionId))) {
     return false
   }
 
@@ -85,7 +89,7 @@ export const canCreateStudy = async (accountId: string, study: Prisma.StudyCreat
 }
 
 const canChangeStudyValues = async (user: UserSession, study: FullStudy) => {
-  if (isAdminOnStudyOrga(user, study.organization)) {
+  if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
     return true
   }
 
@@ -147,7 +151,7 @@ export const canAddRightOnStudy = (
     return false
   }
 
-  if ((!acountToAddOnStudy || !acountToAddOnStudy.organizationId) && role !== StudyRole.Reader) {
+  if ((!acountToAddOnStudy || !acountToAddOnStudy.organizationVersionId) && role !== StudyRole.Reader) {
     return false
   }
 
@@ -165,7 +169,7 @@ export const canAddRightOnStudy = (
 }
 
 export const canAddContributorOnStudy = (user: UserSession, study: FullStudy) => {
-  if (isAdminOnStudyOrga(user, study.organization)) {
+  if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
     return true
   }
 
@@ -184,7 +188,8 @@ export const canDeleteStudy = async (studyId: string) => {
     return false
   }
 
-  const study = await getStudyById(studyId, session.user.organizationId)
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
+
   if (!study) {
     return false
   }
@@ -193,8 +198,9 @@ export const canDeleteStudy = async (studyId: string) => {
     return true
   }
 
-  const accountRoleOnStudy = getAccountRoleOnStudy(session.user, study)
-  if (accountRoleOnStudy && accountRoleOnStudy !== StudyRole.Reader) {
+  const accountRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
+
+  if (accountRoleOnStudy && accountRoleOnStudy === StudyRole.Validator) {
     return true
   }
 
@@ -255,8 +261,9 @@ export const canReadStudyDetail = async (user: UserSession, study: FullStudy) =>
   }
 
   if (
-    isAdminOnStudyOrga(user, study.organization) ||
-    (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization))
+    isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization) ||
+    (study.isPublic &&
+      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization))
   ) {
     return true
   }
@@ -276,7 +283,7 @@ const canAccessStudyFlows = async (studyId: string) => {
     return false
   }
 
-  const study = await getStudyById(studyId, session.user.organizationId)
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
   if (!study || !getAccountRoleOnStudy(session.user, study)) {
     return false
   }
@@ -289,7 +296,7 @@ export const canEditStudyFlows = async (studyId: string) => {
   if (!session) {
     return false
   }
-  const study = await getStudyById(studyId, session.user.organizationId)
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
 
   if (!study) {
     return false

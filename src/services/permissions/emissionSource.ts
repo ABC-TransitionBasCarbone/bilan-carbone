@@ -1,5 +1,6 @@
 import { AccountWithUser, accountWithUserToUserSession } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { StudyEmissionSource, StudyRole, SubPost } from '@prisma/client'
@@ -37,7 +38,7 @@ export const canCreateEmissionSource = async (
   },
   study?: FullStudy,
 ) => {
-  const dbStudy = study || (await getStudyById(emissionSource.studyId, account.organizationId))
+  const dbStudy = study || (await getStudyById(emissionSource.studyId, account.organizationVersionId))
   if (!dbStudy) {
     return false
   }
@@ -70,7 +71,10 @@ export const canUpdateEmissionSource = async (
   if (change.validated !== undefined) {
     const rights = study.allowedUsers.find((right) => right.account.user.email === account.user.email)
     if (
-      !isAdminOnStudyOrga(accountWithUserToUserSession(account), study.organization) &&
+      !isAdminOnStudyOrga(
+        accountWithUserToUserSession(account),
+        study.organizationVersion as OrganizationVersionWithOrganization,
+      ) &&
       (!rights || rights.role !== StudyRole.Validator)
     ) {
       return false

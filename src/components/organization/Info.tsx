@@ -13,12 +13,12 @@ import DeletionModal from '../modals/DeletionModal'
 import styles from './Info.module.css'
 
 interface Props {
-  organization: OrganizationWithSites
+  organizationVersion: OrganizationWithSites
   canDelete: boolean
   canUpdate: boolean
 }
 
-const OrganizationInfo = ({ organization, canDelete, canUpdate }: Props) => {
+const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) => {
   const t = useTranslations('organization')
   const tDelete = useTranslations('organization.delete')
   const [deleting, setDeleting] = useState(false)
@@ -31,7 +31,7 @@ const OrganizationInfo = ({ organization, canDelete, canUpdate }: Props) => {
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
-      id: organization.id,
+      id: organizationVersion.id,
       name: '',
     },
   })
@@ -63,7 +63,7 @@ const OrganizationInfo = ({ organization, canDelete, canUpdate }: Props) => {
     ? [
         {
           actionType: 'link',
-          href: `/organisations/${organization.id}/modifier`,
+          href: `/organisations/${organizationVersion.id}/modifier`,
           'data-testid': 'edit-organization-button',
           children: t('modify'),
         },
@@ -74,7 +74,7 @@ const OrganizationInfo = ({ organization, canDelete, canUpdate }: Props) => {
     <>
       <Block as="h1" title={t('myOrganization')} actions={[...deleteAction, ...updateAction]}>
         <p data-testid="organization-name">
-          <span className={styles.info}>{t('name')}</span> {organization.name}
+          <span className={styles.info}>{t('name')}</span> {organizationVersion.organization.name}
         </p>
       </Block>
       {deleting && (

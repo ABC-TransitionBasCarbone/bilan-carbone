@@ -26,10 +26,10 @@ const StudyPage = async ({ study, user }: Props) => {
         current={study.name}
         links={[
           { label: tNav('home'), link: '/' },
-          study.organization.isCR
+          study.organizationVersion.isCR
             ? {
-                label: study.organization.name,
-                link: `/organisations/${study.organization.id}`,
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
               }
             : undefined,
         ].filter((link) => link !== undefined)}

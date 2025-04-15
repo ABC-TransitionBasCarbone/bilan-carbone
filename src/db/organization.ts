@@ -1,28 +1,82 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { sendNewUser } from '@/services/serverFunctions/user'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import { Environment, Prisma, Role, UserStatus } from '@prisma/client'
+import { Environment, Organization, OrganizationVersion, Prisma, Role, Site, UserStatus } from '@prisma/client'
 import { AccountWithUser } from './account'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
 
-export const getOrganizationNameById = (id: string | null) =>
-  id ? prismaClient.organization.findUnique({ where: { id }, select: { id: true, name: true } }) : null
+export type OrganizationVersionWithOrganization = OrganizationVersion & {
+  organization: Organization & { sites: Site[] }
+}
+export type OrganizationVersionWithOrganizationWithoutSites = OrganizationVersion & { organization: Organization }
 
-export const getOrganizationById = (id: string | null) =>
-  id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
+export const OrganizationVersionWithOrganizationSelect = {
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  organizationId: true,
+  isCR: true,
+  activatedLicence: true,
+  organization: {
+    select: {
+      id: true,
+      name: true,
+      parentId: true,
+      sites: {
+        select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
+        orderBy: { createdAt: Prisma.SortOrder.asc },
+      },
+    },
+  },
+}
+export const OrganizationVersionWithOrganizationSelectLight = {
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  organizationId: true,
+  organization: {
+    select: {
+      id: true,
+      name: true,
+      parentId: true,
+    },
+  },
+}
 
-export const isOrganizationCR = async (id: string | null) =>
-  (await prismaClient.organization.findUnique({ where: { id: id || '' } }))?.isCR
+export const getOrganizationNameByOrganizationVersionId = (id: string | null) =>
+  id
+    ? prismaClient.organizationVersion.findUnique({
+        where: { id },
+        select: { id: true, organization: { select: { id: true, name: true } } },
+      })
+    : null
 
-export const getOrganizationAccounts = (id: string | null) =>
+export const getOrganizationVersionById = (id: string | null) =>
+  id
+    ? prismaClient.organizationVersion.findUnique({ where: { id }, select: OrganizationVersionWithOrganizationSelect })
+    : null
+
+export const isOrganizationVersionCR = async (id: string | null) =>
+  (await prismaClient.organizationVersion.findUnique({ where: { id: id || '' } }))?.isCR
+
+export const getOrganizationVersionAccounts = (id: string | null) =>
   id
     ? prismaClient.account.findMany({
         select: { user: { select: { email: true, firstName: true, lastName: true, level: true } }, role: true },
-        where: { organizationId: id, user: { status: UserStatus.ACTIVE } },
+        where: { organizationVersionId: id, user: { status: UserStatus.ACTIVE } },
         orderBy: { user: { email: 'asc' } },
       })
     : []
+
+export const getOrganizationVersionWithSitesById = (id: string) =>
+  prismaClient.organizationVersion.findUnique({
+    where: { id },
+    select: OrganizationVersionWithOrganizationSelect,
+  })
+
+export const getOrganizationById = (id: string | null) =>
+  id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
 
 export const getOrganizationWithSitesById = (id: string) =>
   prismaClient.organization.findUnique({
@@ -35,19 +89,36 @@ export const getOrganizationWithSitesById = (id: string) =>
     },
   })
 
-export const createOrganization = (organization: Prisma.OrganizationCreateInput) =>
-  prismaClient.organization.create({
+export const createOrganizationWithVersion = async (organization: Prisma.OrganizationCreateInput) => {
+  const newOrganization = await prismaClient.organization.create({
     data: organization,
   })
 
-export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrganizationCommand, caUnit: number) =>
-  prismaClient.$transaction([
+  return prismaClient.organizationVersion.create({
+    data: {
+      organization: { connect: { id: newOrganization.id } },
+      environment: Environment.BC,
+      isCR: false,
+      activatedLicence: false,
+    },
+  })
+}
+
+export const updateOrganization = async (
+  { organizationVersionId, sites, ...data }: UpdateOrganizationCommand,
+  caUnit: number,
+) => {
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  if (!organizationVersion) {
+    return
+  }
+  return prismaClient.$transaction([
     ...sites.map((site) =>
       prismaClient.site.upsert({
         where: { id: site.id },
         create: {
           id: site.id,
-          organizationId,
+          organizationId: organizationVersion.organizationId,
           name: site.name,
           etp: site.etp,
           ca: site.ca * caUnit,
@@ -57,29 +128,32 @@ export const updateOrganization = ({ organizationId, sites, ...data }: UpdateOrg
         update: { name: site.name, etp: site.etp, ca: site.ca * caUnit, postalCode: site.postalCode, city: site.city },
       }),
     ),
-    prismaClient.site.deleteMany({ where: { organizationId, id: { notIn: sites.map((site) => site.id) } } }),
+    prismaClient.site.deleteMany({
+      where: { organizationId: organizationVersion.organizationId, id: { notIn: sites.map((site) => site.id) } },
+    }),
     prismaClient.organization.update({
-      where: { id: organizationId },
+      where: { id: organizationVersion.organizationId },
       data: data,
     }),
   ])
+}
 
-export const setOnboarded = (organizationId: string, accountId: string) =>
-  prismaClient.organization.update({
-    where: { id: organizationId },
+export const setOnboarded = (organizationVersionId: string, accountId: string) =>
+  prismaClient.organizationVersion.update({
+    where: { id: organizationVersionId },
     data: { onboarded: true, onboarderId: accountId },
   })
 
-export const onboardOrganization = async (
+export const onboardOrganizationVersion = async (
   accountId: string,
-  { organizationId, companyName, firstName, lastName, collaborators = [] }: OnboardingCommand,
+  { organizationVersionId, companyName, firstName, lastName, collaborators = [] }: OnboardingCommand,
   existingCollaborators: AccountWithUser[],
 ) => {
   const dbUser = await prismaClient.user.findUnique({ where: { id: accountId } })
   if (!dbUser) {
     return
   }
-  const newCollaborators: (Pick<AccountWithUser, 'role' | 'organizationId'> & {
+  const newCollaborators: (Pick<AccountWithUser, 'role' | 'organizationVersionId'> & {
     user: { firstName: string; lastName: string; email: string; status: UserStatus }
   })[] = []
   for (const collaborator of collaborators) {
@@ -91,13 +165,16 @@ export const onboardOrganization = async (
         status: UserStatus.VALIDATED,
       },
       role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
-      organizationId,
+      organizationVersionId,
     })
   }
+  const organizationVersion = (await getOrganizationVersionById(
+    organizationVersionId,
+  )) as OrganizationVersionWithOrganization
 
   await prismaClient.$transaction(async (transaction) => {
     await transaction.organization.update({
-      where: { id: organizationId },
+      where: { id: organizationVersion.organizationId },
       data: { name: companyName },
     })
 
@@ -114,15 +191,13 @@ export const onboardOrganization = async (
     })
 
     const collaboratorCreations = newCollaborators.map((collaborator) => {
-      if (!collaborator.organizationId) {
+      if (!collaborator.organizationVersionId) {
         return
       }
       return transaction.account.create({
         data: {
-          // TODO get Environment the right way
-          environment: Environment.BC,
           role: collaborator.role,
-          organization: { connect: { id: collaborator.organizationId } },
+          organizationVersion: { connect: { id: collaborator.organizationVersionId } },
           user: {
             create: {
               firstName: collaborator.user.firstName,
@@ -162,18 +237,24 @@ export const onboardOrganization = async (
 }
 
 export const deleteClient = async (id: string) => {
+  const organizationVersion = (await getOrganizationVersionById(id)) as OrganizationVersionWithOrganization
+
   const [clientUsers, clientChildren, clientEmissionFactors] = await Promise.all([
-    prismaClient.account.findFirst({ where: { organizationId: id } }),
-    prismaClient.organization.findFirst({ where: { parentId: id } }),
-    prismaClient.emissionFactor.findFirst({ where: { organizationId: id } }),
+    prismaClient.account.findFirst({ where: { organizationVersionId: id } }),
+    prismaClient.organization.findFirst({ where: { parentId: organizationVersion.organizationId } }),
+    prismaClient.emissionFactor.findFirst({ where: { organizationId: organizationVersion.organizationId } }),
   ])
   if (clientUsers || clientChildren || clientEmissionFactors) {
     return 'unexpectedAssociations'
   }
   return prismaClient.$transaction(async (transaction) => {
-    const studies = await transaction.study.findMany({ where: { organizationId: id } })
+    const studies = await transaction.study.findMany({
+      where: { organizationVersionId: organizationVersion.organizationId },
+    })
     await Promise.all(studies.map((study) => deleteStudy(study.id)))
-    await transaction.site.deleteMany({ where: { organizationId: id } })
-    await transaction.organization.delete({ where: { id } })
+    // TODO je dois delete les site ou pas ici car je sais pas si on va delete que la version ou toute l'organization
+    await transaction.site.deleteMany({ where: { organizationId: organizationVersion.organizationId } })
+    await transaction.organizationVersion.delete({ where: { id } })
+    await transaction.organization.delete({ where: { id: organizationVersion.organizationId } })
   })
 }

@@ -19,7 +19,7 @@ interface Props {
   validated: boolean
   disabled: boolean
   onClose: () => void
-  organizationId: string
+  organizationVersionId: string
   clientId?: string
   studyId?: string
 }
@@ -30,7 +30,7 @@ const ChecklistItem = ({
   validated,
   disabled,
   onClose,
-  organizationId,
+  organizationVersionId,
   clientId,
   studyId,
 }: Props) => {
@@ -80,12 +80,12 @@ const ChecklistItem = ({
           <p>
             {t.rich(`${step}Details`, {
               orga: (children) => (
-                <Link href={`/organisations/${organizationId}/modifier`} onClick={onClose}>
+                <Link href={`/organisations/${organizationVersionId}/modifier`} onClick={onClose}>
                   {children}
                 </Link>
               ),
               client: (children) => (
-                <Link href={`/organisations/${clientId ? clientId : organizationId}/modifier`} onClick={onClose}>
+                <Link href={`/organisations/${clientId ? clientId : organizationVersionId}/modifier`} onClick={onClose}>
                   {children}
                 </Link>
               ),
