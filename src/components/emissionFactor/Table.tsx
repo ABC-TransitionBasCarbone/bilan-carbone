@@ -3,7 +3,7 @@
 import { BCPost, subPostsByPost } from '@/services/posts'
 import { canEditEmissionFactor, EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { formatNumber } from '@/utils/number'
+import { formatEmissionFactorNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
@@ -186,7 +186,7 @@ const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatNumber(getEmissionFactorValue(emissionFactor), 5)} ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || '')}`,
+          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),
