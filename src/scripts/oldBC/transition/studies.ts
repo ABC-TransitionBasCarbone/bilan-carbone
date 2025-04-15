@@ -291,9 +291,9 @@ const getExistingStudySites = async (transaction: Prisma.TransactionClient, stud
 export const uploadStudies = async (
   transaction: Prisma.TransactionClient,
   userId: string,
-  organizationId: string,
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
   oldBCWorksheetReader: OldBCWorkSheetsReader,
+  organizationVersionId: string,
 ) => {
   console.log('Import des études...')
 

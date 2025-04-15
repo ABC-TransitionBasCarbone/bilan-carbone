@@ -8,9 +8,9 @@ import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { ControlMode, Export, Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { UserSession } from 'next-auth'
-import { getAccountOrganizations } from './account'
+import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
-import { getOrganizationById } from './organization'
+import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
 
 export const createStudy = async (data: Prisma.StudyCreateInput) => {
   const dbStudy = await prismaClient.study.create({ data })
@@ -90,7 +90,7 @@ const fullStudyInclude = {
       account: {
         select: {
           id: true,
-          organizationId: true,
+          organizationVersionId: true,
           user: {
             select: {
               id: true,
@@ -109,7 +109,7 @@ const fullStudyInclude = {
       account: {
         select: {
           id: true,
-          organizationId: true,
+          organizationVersionId: true,
           user: {
             select: {
               id: true,
@@ -146,46 +146,59 @@ const fullStudyInclude = {
     },
   },
   exports: { select: { type: true, control: true } },
-  organization: { select: { id: true, name: true, isCR: true, parentId: true } },
+  organizationVersion: {
+    select: {
+      id: true,
+      isCR: true,
+      organization: {
+        select: {
+          id: true,
+          parentId: true,
+          name: true,
+        },
+      },
+    },
+  },
   openingHours: true,
 } satisfies Prisma.StudyInclude
 
 const normalizeAllowedUsers = (
   allowedUsers: Prisma.StudyGetPayload<{ include: typeof fullStudyInclude }>['allowedUsers'],
   studyLevel: Level,
-  organizationId: string | null,
+  organizationVersionId: string | null,
 ) =>
   allowedUsers.map((allowedUser) => {
-    const readerOnly = !allowedUser.account.organizationId || !checkLevel(allowedUser.account.user.level, studyLevel)
-    return organizationId && allowedUser.account.organizationId === organizationId
+    const readerOnly =
+      !allowedUser.account.organizationVersionId || !checkLevel(allowedUser.account.user.level, studyLevel)
+    return organizationVersionId && allowedUser.account.organizationVersionId === organizationVersionId
       ? { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
       : {
           ...allowedUser,
           account: {
             ...allowedUser.account,
-            organizationId: undefined,
+            organizationVersionId: undefined,
             level: undefined,
             readerOnly,
           },
         }
   })
 
-export const getOrganizationStudiesOrderedByStartDate = async (organizationId: string) => {
+export const getOrganizationVersionStudiesOrderedByStartDate = async (organizationVersionId: string) => {
   const studies = await prismaClient.study.findMany({
     where: {
-      organizationId,
+      organizationVersionId,
     },
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
   return studies.map((study) => ({
     ...study,
-    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId),
+    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId),
   }))
 }
 
 export const getAllowedStudiesByAccount = async (user: UserSession) => {
-  const accountOrganizations = await getAccountOrganizations(user.accountId)
+  const accountOrganizationVersions = await getAccountOrganizationVersions(user.accountId)
 
   // Be carefull: study on this query is shown to a lot of account
   // Never display sensitive data here (like emission source)
@@ -194,7 +207,11 @@ export const getAllowedStudiesByAccount = async (user: UserSession) => {
       OR: [
         {
           AND: [
-            { organizationId: { in: accountOrganizations.map((organization) => organization.id) } },
+            {
+              organizationVersionId: {
+                in: accountOrganizationVersions.map((organizationVersion) => organizationVersion.id),
+              },
+            },
             ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
           ],
         },
@@ -220,7 +237,9 @@ export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
 }
 
 export const getAllowedStudyIdByAccount = async (account: UserSession) => {
-  const organizationIds = (await getAccountOrganizations(account.accountId)).map((organization) => organization.id)
+  const organizationVersionIds = (await getAccountOrganizationVersions(account.accountId)).map(
+    (organizationVersion) => organizationVersion.id,
+  )
   const isAllowedOnPublicStudies =
     account.level && getUserRoleOnPublicStudy(account, account.level) !== StudyRole.Reader
   const study = await prismaClient.study.findFirst({
@@ -231,7 +250,7 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
           ? [
               {
                 AND: [
-                  { organizationId: { in: organizationIds } },
+                  { organizationVersionId: { in: organizationVersionIds } },
                   ...(isAdmin(account.role)
                     ? []
                     : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
@@ -246,28 +265,37 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
   return study?.id
 }
 
-export const getAllowedStudiesByUserAndOrganization = async (account: UserSession, organizationId: string) => {
-  const childOrganizations = await prismaClient.organization.findMany({
-    where: { parentId: account.organizationId },
-    select: { id: true },
-  })
-
-  const userOrga = await getOrganizationById(account.organizationId)
-  if (!userOrga) {
+export const getAllowedStudiesByUserAndOrganization = async (account: UserSession, organizationVersionId: string) => {
+  // TODO pas sûr si je m'y prend bien ici vu que y a ala fois le check de la version des de l'orga parents etc
+  const accountOrganizationVersion = await getOrganizationVersionById(account.organizationVersionId)
+  if (!accountOrganizationVersion) {
     return []
   }
+  const childOrganizations = await prismaClient.organization.findMany({
+    where: { parentId: accountOrganizationVersion?.organizationId },
+    select: { id: true, organizationVersions: { select: { id: true } } },
+  })
 
   const studies = await prismaClient.study.findMany({
     where: {
-      organizationId,
-      ...(isAdminOnOrga(account, userOrga)
+      organizationVersionId,
+      ...(isAdminOnOrga(account, accountOrganizationVersion as OrganizationVersionWithOrganization)
         ? {}
         : {
             OR: [
               { allowedUsers: { some: { accountId: account.id } } },
               { contributors: { some: { accountId: account.id } } },
-              { isPublic: true, organizationId: account.organizationId as string },
-              { isPublic: true, organizationId: { in: childOrganizations.map((organization) => organization.id) } },
+              { isPublic: true, organizationVersionId: account.organizationVersionId as string },
+              {
+                isPublic: true,
+                organizationVersionId: {
+                  in: childOrganizations
+                    .map((organization) =>
+                      organization.organizationVersions.map((organizationVersion) => organizationVersion.id),
+                    )
+                    .flat(),
+                },
+              },
             ],
           }),
     },
@@ -275,7 +303,7 @@ export const getAllowedStudiesByUserAndOrganization = async (account: UserSessio
   return filterAllowedStudies(account, studies)
 }
 
-export const getStudyById = async (id: string, organizationId: string | null) => {
+export const getStudyById = async (id: string, organizationVersionId: string | null) => {
   const study = await prismaClient.study.findUnique({
     where: { id },
     include: fullStudyInclude,
@@ -283,7 +311,7 @@ export const getStudyById = async (id: string, organizationId: string | null) =>
   if (!study) {
     return null
   }
-  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId) }
+  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId) }
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
@@ -447,11 +475,14 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
           level: true,
           allowedUsers: { select: { accountId: true } },
           contributors: { select: { accountId: true } },
-          organizationId: true,
-          organization: {
+          organizationVersionId: true,
+          organizationVersion: {
             select: {
               id: true,
-              parentId: true,
+              isCR: true,
+              organization: {
+                select: { id: true, parentId: true },
+              },
             },
           },
         },
@@ -460,7 +491,15 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
         select: {
           name: true,
           organization: {
-            select: { id: true, isCR: true, name: true },
+            select: {
+              id: true,
+              name: true,
+              organizationVersions: {
+                select: {
+                  isCR: true,
+                },
+              },
+            },
           },
         },
       },
@@ -495,8 +534,8 @@ export const createStudyExport = async (studyId: string, type: Export, control: 
 export const deleteStudyExport = async (studyId: string, type: Export) =>
   prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })
 
-export const countOrganizationStudiesFromOtherUsers = async (organizationId: string, userId: string) =>
-  prismaClient.study.count({ where: { organizationId, createdById: { not: userId } } })
+export const countOrganizationStudiesFromOtherUsers = async (organizationVersionId: string, accountId: string) =>
+  prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })
 
 export const updateStudyOpeningHours = async (
   openingHours: ChangeStudyCinemaCommand['openingHours'],

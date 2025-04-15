@@ -19,41 +19,43 @@ import styles from './StudiesContainer.module.css'
 
 interface Props {
   user: UserSession
-  organizationId?: string
+  organizationVersionId?: string
   isCR?: boolean
 }
 
-const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
+
+
+const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) => {
   const t = await getTranslations('study')
 
-  const studies = organizationId
-    ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
+  const studies = organizationVersionId
+    ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId)
     : isCR
       ? await getExternalAllowedStudiesByUser(user)
     : await getAllowedStudiesByAccount(user)
 
   const [orgaStudies, otherStudies] = studies.reduce(
     (res, study) => {
-      res[study.organizationId === user.organizationId ? 0 : 1].push(study)
+      res[study.organizationVersionId === user.organizationVersionId ? 0 : 1].push(study)
       return res
     },
     [[] as Study[], [] as Study[]],
   )
 
-  const isOrgaHomePage = !organizationId && !isCR
+  const isOrgaHomePage = !organizationVersionId && !isCR
   const mainStudies = isOrgaHomePage ? orgaStudies : studies
   const collaborations = isOrgaHomePage ? otherStudies : []
 
-  const creationUrl = organizationId ? `/organisations/${organizationId}/etudes/creer` : '/etudes/creer'
+  const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
 
-  const canCreateStudy = !!user.level && !!user.organizationId
-  const mainStudyOrganizationId = organizationId ?? user.organizationId
+  const canCreateStudy = !!user.level && !!user.organizationVersionId
+  const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
   return studies.length ? (
     <>
-      {mainStudyOrganizationId && !isCR && (
+      {mainStudyOrganizationVersionId && !isCR && (
         <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={mainStudyOrganizationId} />
+          <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
         </Suspense>
       )}
       {!!mainStudies.length && (
@@ -62,7 +64,7 @@ const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
           canAddStudy={canCreateStudy && !isCR}
           creationUrl={creationUrl}
           user={user}
-          collaborations={!organizationId && isCR}
+          collaborations={!organizationVersionId && isCR}
         />
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}

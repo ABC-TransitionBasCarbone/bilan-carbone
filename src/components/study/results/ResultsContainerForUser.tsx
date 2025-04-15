@@ -1,7 +1,7 @@
 'use server'
 
 import Block from '@/components/base/Block'
-import { getOrganizationStudiesOrderedByStartDate } from '@/db/study'
+import { getOrganizationVersionStudiesOrderedByStartDate } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import { canReadStudy } from '@/services/permissions/study'
 import { UserSession } from 'next-auth'
@@ -9,12 +9,12 @@ import StudyResultsContainerSummary from './StudyResultsContainerSummary'
 
 interface Props {
   user: UserSession
-  mainStudyOrganizationId: string
+  mainStudyOrganizationVersionId: string
 }
 
-const ResultsContainerForUser = async ({ user, mainStudyOrganizationId }: Props) => {
+const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }: Props) => {
   const [studies, settings] = await Promise.all([
-    getOrganizationStudiesOrderedByStartDate(mainStudyOrganizationId),
+    getOrganizationVersionStudiesOrderedByStartDate(mainStudyOrganizationVersionId),
     getUserApplicationSettings(user.accountId),
   ])
   let mainStudy = null

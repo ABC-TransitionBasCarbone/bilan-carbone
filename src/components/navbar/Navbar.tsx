@@ -19,10 +19,10 @@ import { useEffect, useMemo, useState } from 'react'
 import styles from './Navbar.module.css'
 
 interface Props {
-  account: UserSession
+  user: UserSession
 }
 
-const Navbar = ({ account }: Props) => {
+const Navbar = ({ user }: Props) => {
   const t = useTranslations('navigation')
   const [showSubMenu, setShowSubMenu] = useState(false)
   const [hasFormation, setHasFormation] = useState(false)
@@ -49,7 +49,7 @@ const Navbar = ({ account }: Props) => {
           <Link href="/" aria-label={t('home')} title={t('home')}>
             <Image src="/logos/logo_BC_2025_blanc.png" width={200} height={48} alt="" className={styles.logo} />
           </Link>
-          {account.organizationId && (
+          {user.organizationVersionId && (
             <div className="flex-col">
               <div
                 className={classNames(styles.link, styles.notClickable)}
@@ -65,8 +65,8 @@ const Navbar = ({ account }: Props) => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  {(isAdmin(account.role) || account.role === Role.GESTIONNAIRE) && (
-                    <Link href={`/organisations/${account.organizationId}/modifier`} className={styles.link}>
+                  {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+                    <Link href={`/organisations/${user.organizationVersionId}/modifier`} className={styles.link}>
                       {t('information')}
                     </Link>
                   )}
@@ -93,7 +93,7 @@ const Navbar = ({ account }: Props) => {
           )}
         </div>
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
-          {account.role === Role.SUPER_ADMIN && (
+          {user.role === Role.SUPER_ADMIN && (
             <Link className={styles.link} href="/super-admin">
               {t('admin')}
             </Link>

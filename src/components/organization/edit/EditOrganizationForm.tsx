@@ -32,7 +32,7 @@ interface Props {
 
 const emptySitesOnError = { authorizedStudySites: [], unauthorizedStudySites: [] }
 
-const EditOrganizationForm = ({ organization, caUnit }: Props) => {
+const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
   const tStudySites = useTranslations('organization.studySites')
@@ -44,9 +44,9 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
-      organizationId: organization.id,
-      name: organization.name,
-      sites: organization.sites.map((site) => ({
+      organizationVersionId: organizationVersion.id,
+      name: organizationVersion.organization.name,
+      sites: organizationVersion.organization.sites.map((site) => ({
         ...site,
         ca: site.ca ? displayCA(site.ca, CA_UNIT_VALUES[caUnit]) : 0,
         postalCode: site.postalCode ?? '',
@@ -57,7 +57,7 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
 
   const onSubmit = async (command: UpdateOrganizationCommand) => {
     setSitesOnError(emptySitesOnError)
-    const deletedSiteIds = organization.sites
+    const deletedSiteIds = organizationVersion.organization.sites
       .filter((site) => !command.sites.find((s) => s.id === site.id))
       .map((site) => site.id)
     const deletedSitesOnStudies = await findStudiesWithSites(deletedSiteIds)
@@ -71,7 +71,7 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
       if (result) {
         setError(result)
       } else {
-        router.push(`/organisations/${organization.id}`)
+        router.push(`/organisations/${organizationVersion.id}`)
         router.refresh()
       }
     }
@@ -110,9 +110,10 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
             {sitesOnError &&
               sitesOnError.authorizedStudySites.map((studySite) => (
                 <li key={studySite.id}>
+                  {/* TODO je sais pas trop si je récupère de la bonne façon isCR ici */}
                   {tStudySites.rich('existingSite', {
                     name: () =>
-                      `${studySite.site.name}${studySite.site.organization.isCR ? ` (${studySite.site.organization.name})` : ''}`,
+                      `${studySite.site.name}${studySite.study.organizationVersion.isCR ? ` (${studySite.site.organization.name})` : ''}`,
                     link: () => <Link href={`/etudes/${studySite.studyId}/perimetre`}>{studySite.study.name}</Link>,
                   })}
                 </li>
@@ -121,7 +122,7 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
               sitesOnError.unauthorizedStudySites.map((studySite) => (
                 <li key={studySite.site.name}>
                   {tStudySites('existingUnauthorizedSite', {
-                    name: `${studySite.site.name}${studySite.site.organization.isCR ? ` (${studySite.site.organization.name})` : ''}`,
+                    name: `${studySite.site.name}${studySite.study.organizationVersion.isCR ? ` (${studySite.site.organization.name})` : ''}`,
                     count: studySite.count,
                   })}
                 </li>

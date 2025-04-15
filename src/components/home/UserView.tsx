@@ -1,7 +1,8 @@
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { CUT, getServerEnvironment } from '@/store/AppEnvironment'
 import ActualitiesCards from '../actuality/ActualitiesCards'
-import { getAccountOrganizations } from '@/db/account'
+import { getAccountOrganizationVersions } from '@/db/account'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { canEditMemberRole } from '@/utils/organization'
 import { UserSession } from 'next-auth'
@@ -16,13 +17,16 @@ interface Props {
 
 const UserView = async ({ account }: Props) => {
   const environment = getServerEnvironment()
-  const [organizations, hasUserToValidate] = await Promise.all([
-    getAccountOrganizations(account.id),
-    hasAccountToValidateInOrganization(account.organizationId),
+  const [organizationVersions, hasUserToValidate] = await Promise.all([
+    getAccountOrganizationVersions(account.id),
+    hasAccountToValidateInOrganization(account.organizationVersionId),
   ])
 
-  const userOrganization = organizations.find((organization) => organization.id === account.organizationId)
-  const isCR = userOrganization?.isCR
+  const userOrganizationVersion = organizationVersions.find(
+    (organizationVersion) => organizationVersion.id === account.organizationVersionId,
+  ) as OrganizationVersionWithOrganization
+  const isCR = userOrganizationVersion?.isCR
+
   return (
     <>
       {!!hasUserToValidate && canEditMemberRole(account) && (
@@ -32,16 +36,19 @@ const UserView = async ({ account }: Props) => {
       )}
       {isCR && (
         <CRClientsList
-          organizations={organizations.filter((organization) => organization.id !== account.organizationId)}
+          organizationVersions={
+            organizationVersions.filter(
+              (organizationVersion) => organizationVersion.id !== account.organizationVersionId,
+            ) as OrganizationVersionWithOrganization[]
+          }
         />
       )}
       <StudiesContainer user={account} isCR={isCR} />
 
       {environment !== CUT && <ActualitiesCards />}
       <CUTLogosHome />
-      {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
-      {userOrganization && !userOrganization.onboarded && (
-        <Onboarding account={account} organization={userOrganization} />
+      {userOrganizationVersion && !userOrganizationVersion.onboarded && (
+        <Onboarding user={account} organizationVersion={userOrganizationVersion} />
       )}
     </>
   )

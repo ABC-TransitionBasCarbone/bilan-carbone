@@ -18,10 +18,10 @@ export const createDeactivableFeatures = async (data: Prisma.DeactivatableFeatur
 export const createOrUpdateDeactivableFeature = async (
   feature: DeactivatableFeature,
   status: boolean,
-  userId: string,
+  accountId: string,
 ) =>
   prismaClient.deactivatableFeatureStatus.upsert({
     where: { feature },
-    create: { feature, active: status, updatedById: userId },
-    update: { active: status, updatedById: userId },
+    create: { feature, active: status, updatedById: accountId },
+    update: { active: status, updatedById: accountId },
   })

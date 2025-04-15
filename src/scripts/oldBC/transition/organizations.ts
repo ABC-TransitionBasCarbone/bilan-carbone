@@ -2,6 +2,7 @@ import { Prisma, Organization as PrismaOrganization } from '@prisma/client'
 import { OrganizationRow, OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
 import { getExistingSitesIds } from './repositories'
 
+
 interface Organization {
   oldBCId: string
   name: string
@@ -131,10 +132,8 @@ export const uploadOrganizations = async (
       data: newOrganizations.map((organization) => ({
         parentId: userOrganization.id,
         oldBCId: organization.oldBCId,
-        siret: organization.siret,
+        wordpressId: organization.siret,
         name: organization.name,
-        isCR: false,
-        activatedLicence: false,
       })),
     })
   }

@@ -11,6 +11,7 @@ import {
   getEmissionFactorDetailsById,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
+import { getOrganizationVersionById } from '@/db/organization'
 import { getLocale } from '@/i18n/locale'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
@@ -34,10 +35,10 @@ export const getEmissionFactors = async (studyId?: string) => {
     if (!(await canReadStudy(session.user, studyId))) {
       return []
     }
-    const emissionFactorOrganizationId = await getStudyParentOrganization(studyId, session.user.organizationId)
+    const emissionFactorOrganizationId = await getStudyParentOrganization(studyId, session.user.organizationVersionId)
     emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId)
   } else {
-    emissionFactors = await getAllEmissionFactors(session.user.organizationId)
+    emissionFactors = await getAllEmissionFactors(session.user.organizationVersionId)
   }
 
   return emissionFactors
@@ -55,13 +56,13 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
 
     const session = await auth()
 
-    if (!session || !session.user.organizationId || !(await canReadStudy(session.user, studyId))) {
+    if (!session || !session.user.organizationVersionId || !(await canReadStudy(session.user, studyId))) {
       return []
     }
 
     const emissionFactorOrganization = (await getStudyParentOrganization(
       studyId,
-      session.user.organizationId,
+      session.user.organizationVersionId,
     )) as string
 
     const emissionFactors = await getAllEmissionFactorsByIds(ids, emissionFactorOrganization)
@@ -84,7 +85,9 @@ export const getDetailedEmissionFactor = async (id: string) => {
     return null
   }
 
-  if (!emissionFactor.organizationId || emissionFactor.organizationId !== session.user.organizationId) {
+  const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+
+  if (!emissionFactor.organizationId || emissionFactor.organizationId !== organizationVersion?.organizationId) {
     return null
   }
 
@@ -97,7 +100,7 @@ export const isFromEmissionFactorOrganization = async (id: string) => {
   if (!emissionFactor || !session || !session.user) {
     return false
   }
-  return emissionFactor.organizationId === session.user.organizationId
+  return emissionFactor.organizationId === session.user.organizationVersionId
 }
 
 export const createEmissionFactorCommand = async ({
@@ -117,7 +120,7 @@ export const createEmissionFactorCommand = async ({
 
   const account = await getAccountById(session.user.accountId)
 
-  if (!account || !account.organizationId) {
+  if (!account || !account.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
@@ -130,7 +133,7 @@ export const createEmissionFactorCommand = async ({
       ...command,
       importedFrom: Import.Manual,
       status: EmissionFactorStatus.Valid,
-      organization: { connect: { id: account.organizationId } },
+      organization: { connect: { id: account.organizationVersion?.organizationId } },
       unit: unit as Unit,
       subPosts: flattenSubposts(subPosts),
       metaData: { create: { language: local, title: name, attribute, comment } },
