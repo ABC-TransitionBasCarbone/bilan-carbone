@@ -10,7 +10,7 @@ import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
@@ -28,19 +28,11 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
 
-  const {
-    getValues,
-    control,
-    watch,
-    formState: { isValid },
-  } = useForm<LoginCommand>({
+  const { getValues, control, watch, handleSubmit } = useForm<LoginCommand>({
     resolver: zodResolver(LoginCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+    defaultValues: { email: '', password: '' },
   })
 
   useEffect(() => {
@@ -49,19 +41,20 @@ const LoginForm = () => {
     return () => unsubscribe()
   }, [watch])
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = async () => {
     setErrorMessage('')
     setSubmitting(true)
 
-    if (!isValid) {
+    const isValid = LoginCommandValidation.safeParse(getValues())
+
+    if (!isValid.success) {
       setErrorMessage('emailAndPasswordRequired')
       setSubmitting(false)
       return
     }
 
     const result = await signIn('credentials', {
-      ...getValues(),
+      ...isValid.data,
       redirect: false,
     })
 
@@ -74,7 +67,7 @@ const LoginForm = () => {
   }
 
   return (
-    <Form onSubmit={onSubmit} className="grow justify-center">
+    <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
       <FormControl className={authStyles.form}>
         <FormTextField
           className="grow"

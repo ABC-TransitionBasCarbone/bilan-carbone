@@ -8,7 +8,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
@@ -33,12 +33,7 @@ const ActivationForm = () => {
     }
   }, [searchParams])
 
-  const {
-    control,
-    getValues,
-    setValue,
-    formState: { isValid },
-  } = useForm<EmailCommand>({
+  const { control, getValues, setValue, handleSubmit } = useForm<EmailCommand>({
     resolver: zodResolver(EmailCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
@@ -47,17 +42,13 @@ const ActivationForm = () => {
     },
   })
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    activate()
-  }
-
-  const activate = async () => {
+  const onSubmit = async () => {
     setMessage('')
     setSubmitting(true)
 
-    if (isValid) {
-      const { error, message } = await activateEmail(getValues().email)
+    const isValid = EmailCommandValidation.safeParse(getValues())
+    if (isValid.success) {
+      const { error, message } = await activateEmail(isValid.data.email)
       setSubmitting(false)
 
       if (error) {
@@ -74,7 +65,7 @@ const ActivationForm = () => {
   }
 
   return (
-    <Form onSubmit={onSubmit} className="grow justify-center">
+    <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
       <FormControl className={authStyles.form}>
         <p>{t('description')}</p>
         <FormTextField

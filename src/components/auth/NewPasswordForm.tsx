@@ -7,7 +7,7 @@ import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
@@ -23,12 +23,7 @@ const NewPasswordForm = () => {
   const [submitting, setSubmitting] = useState(false)
   const searchParams = useSearchParams()
 
-  const {
-    control,
-    getValues,
-    formState: { isValid },
-    setValue,
-  } = useForm<EmailCommand>({
+  const { control, getValues, handleSubmit, setValue } = useForm<EmailCommand>({
     resolver: zodResolver(EmailCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
@@ -37,17 +32,18 @@ const NewPasswordForm = () => {
     },
   })
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = async () => {
     setSubmitting(true)
     setMessage('')
     setErrorMessage('')
 
-    if (!isValid) {
+    const isValid = EmailCommandValidation.safeParse(getValues())
+
+    if (!isValid.success) {
       setErrorMessage('emailRequired')
       setSubmitting(false)
     } else {
-      await resetPassword(getValues().email)
+      await resetPassword(isValid.data?.email)
       setSubmitting(false)
       setMessage('emailSent')
     }
@@ -61,7 +57,7 @@ const NewPasswordForm = () => {
   }, [searchParams])
 
   return (
-    <Form onSubmit={onSubmit} className="grow justify-center">
+    <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
       <FormControl className={authStyles.form}>
         <FormTextField
           control={control}
