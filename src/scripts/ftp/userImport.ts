@@ -18,7 +18,6 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     SIREN: siren,
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
-    User_Source: source,
   } = value
 
   const siretOrSiren = siret || siren
