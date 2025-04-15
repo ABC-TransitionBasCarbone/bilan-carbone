@@ -1,26 +1,28 @@
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { isAdmin } from '@/services/permissions/user'
-import { Organization, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
-export const isAdminOnOrga = (account: UserSession, organization: Pick<Organization, 'id' | 'parentId'>) =>
-  isAdmin(account.role) && isInOrgaOrParent(account.organizationId, organization)
+export const isAdminOnOrga = (account: UserSession, organizationVersion: OrganizationVersionWithOrganization) =>
+  isAdmin(account.role) && isInOrgaOrParent(account.organizationVersionId, organizationVersion)
 
 export const isInOrgaOrParent = (
   userOrganizationId: string | null,
-  organization: Pick<Organization, 'id' | 'parentId'>,
-) => userOrganizationId === organization.id || userOrganizationId === organization.parentId
+  organizationVersion: OrganizationVersionWithOrganization,
+) => userOrganizationId === organizationVersion.id || userOrganizationId === organizationVersion.organization.parentId
 
 export const hasEditionRole = (isCR: boolean, userRole: Role) =>
   isCR ? userRole !== Role.DEFAULT : isAdmin(userRole) || userRole === Role.GESTIONNAIRE
 
-export const canEditOrganization = (
+export const canEditOrganizationVersion = (
   account: UserSession,
-  organization?: Pick<Organization, 'id' | 'parentId' | 'isCR'>,
+  organizationVersion?: OrganizationVersionWithOrganization,
 ) => {
-  if (organization && !isInOrgaOrParent(account.organizationId, organization)) {
+  if (organizationVersion && !isInOrgaOrParent(account.organizationVersionId, organizationVersion)) {
     return false
   }
-  const isCR = !!organization?.isCR || organization?.parentId === account.organizationId
+  const isCR =
+    !!organizationVersion?.isCR || organizationVersion?.organization?.parentId === account.organizationVersionId
   return hasEditionRole(isCR, account.role)
 }
 

@@ -22,7 +22,7 @@ const WithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessio
       return <NotFound />
     }
 
-    const study = await getStudyById(id, props.user.organizationId)
+    const study = await getStudyById(id, props.user.organizationVersionId)
     if (!study) {
       return <NotFound />
     }

@@ -2,8 +2,9 @@ import { findUserInfo } from '@/services/permissions/user'
 import { Account, Role, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
+import { OrganizationVersionWithOrganizationSelect } from './organization'
 
-export type AccountWithUser = Account & { user: User }
+export type AccountWithUser = Account & { user: User; organizationVersion: { organizationId: string } }
 
 export const AccountWithUserSelect = {
   id: true,
@@ -11,9 +12,15 @@ export const AccountWithUserSelect = {
   updatedAt: true,
   userId: true,
   importedFileDate: true,
-  organizationId: true,
+  deactivatableFeatureStatus: true,
+  organizationVersionId: true,
+  organizationVersion: {
+    select: {
+      id: true,
+      organizationId: true,
+    },
+  },
   role: true,
-  environment: true,
   user: {
     select: {
       id: true,
@@ -26,13 +33,14 @@ export const AccountWithUserSelect = {
       password: true,
       resetToken: true,
       status: true,
+      source: true,
     },
   },
 }
 
-export const getAccountByEmailAndOrganizationId = (email: string, organizationId: string) =>
+export const getAccountByEmailAndOrganizationVersionId = (email: string, organizationVersionId: string | null) =>
   prismaClient.account.findFirst({
-    where: { user: { email }, organizationId },
+    where: { user: { email }, organizationVersionId },
     select: AccountWithUserSelect,
   })
 
@@ -48,19 +56,15 @@ export const changeAccountRole = (id: string, role: Role) =>
     where: { id },
   })
 
-export const getAccountOrganizations = async (accountId: string) => {
+export const getAccountOrganizationVersions = async (accountId: string) => {
   if (!accountId) {
     return []
-  }
-
-  const organizationSelect = {
-    include: { sites: { select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true } } },
   }
 
   const account = await prismaClient.account.findUnique({
     select: {
       role: true,
-      organization: organizationSelect,
+      organizationVersion: { select: OrganizationVersionWithOrganizationSelect },
     },
     where: { id: accountId },
   })
@@ -68,18 +72,20 @@ export const getAccountOrganizations = async (accountId: string) => {
   if (!account) {
     return []
   }
-  if (account.organization && account.organization.isCR) {
-    const childOrganizations = await prismaClient.organization.findMany({
-      ...organizationSelect,
-      where: { parentId: account.organization.id },
+
+  // TODO est-ce ok comme façon de récupérer les organizations ?
+  if (account.organizationVersion && account.organizationVersion.isCR) {
+    const childOrganizations = await prismaClient.organizationVersion.findMany({
+      ...{ select: OrganizationVersionWithOrganizationSelect },
+      where: { organization: { parentId: account.organizationVersion.organizationId } },
     })
-    return [account.organization, ...childOrganizations]
+    return [account.organizationVersion, ...childOrganizations]
   }
 
-  return account.organization ? [account.organization] : []
+  return account.organizationVersion ? [account.organizationVersion] : []
 }
 
-export type OrganizationWithSites = AsyncReturnType<typeof getAccountOrganizations>[0]
+export type OrganizationWithSites = AsyncReturnType<typeof getAccountOrganizationVersions>[0]
 
 export const accountWithUserToUserSession = (account: AccountWithUser) =>
   ({
@@ -87,7 +93,7 @@ export const accountWithUserToUserSession = (account: AccountWithUser) =>
     accountId: account.id,
     userId: account.user.id,
     role: account.role,
-    organizationId: account.organizationId,
+    organizationVersionId: account.organizationVersionId,
     email: account.user.email,
     firstName: account.user.firstName,
     lastName: account.user.lastName,
@@ -97,7 +103,7 @@ export const accountWithUserToUserSession = (account: AccountWithUser) =>
 export const userSessionToDbUser = (userSession: UserSession) =>
   ({
     id: userSession.userId,
-    organizationId: userSession.organizationId,
+    organizationVersionId: userSession.organizationVersionId,
     email: userSession.email,
     firstName: userSession.firstName,
     lastName: userSession.lastName,

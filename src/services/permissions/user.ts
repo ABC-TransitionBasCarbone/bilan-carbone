@@ -25,16 +25,16 @@ export const findUserInfo = (user: UserSession) =>
     },
     where:
       user.role === Role.COLLABORATOR
-        ? { user: { status: UserStatus.ACTIVE }, organizationId: user.organizationId }
-        : { organizationId: user.organizationId },
+        ? { user: { status: UserStatus.ACTIVE }, organizationVersionId: user.organizationVersionId }
+        : { organizationVersionId: user.organizationVersionId },
   }) satisfies Prisma.AccountFindManyArgs
 
 export const canAddMember = (
   user: UserSession,
   member: Pick<Prisma.AccountCreateInput, 'role'>,
-  organizationId: string | null,
+  organizationVersionId: string | null,
 ) => {
-  if (!organizationId) {
+  if (!organizationVersionId) {
     return false
   }
 
@@ -46,7 +46,7 @@ export const canAddMember = (
     return false
   }
 
-  if (organizationId !== user.organizationId) {
+  if (organizationVersionId !== user.organizationVersionId) {
     return false
   }
   return true
@@ -81,7 +81,7 @@ export const canChangeRole = (user: UserSession, member: AccountWithUser | null,
     return false
   }
 
-  if (user.organizationId !== member.organizationId) {
+  if (user.organizationVersionId !== member.organizationVersionId) {
     return false
   }
 

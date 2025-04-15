@@ -1,14 +1,15 @@
-import { Account, EmissionFactor, Import } from '@prisma/client'
+import { AccountWithUser } from '@/db/account'
+import { EmissionFactor, Import } from '@prisma/client'
 
 export const canReadEmissionFactor = (
-  account: Account,
+  account: AccountWithUser,
   emissionFactor: Pick<EmissionFactor, 'organizationId' | 'importedFrom'>,
 ) => {
   if (emissionFactor.importedFrom !== Import.Manual) {
     return true
   }
 
-  return account.organizationId === emissionFactor.organizationId
+  return account.organizationVersion.organizationId === emissionFactor.organizationId
 }
 
 export const canCreateEmissionFactor = () => {

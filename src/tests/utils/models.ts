@@ -1,8 +1,10 @@
 import { Level, Prisma, Role, UserStatus } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 
 export const mockedUserId = 'mocked-user-id'
 export const mockedOrganizationId = 'mocked-organization-id'
+
+// TODO faire le mockedAccount / organizationversion
 
 const mockedUser = {
   id: '6d2af85f-f6f8-42ec-9fa4-965405e52d12',
@@ -36,6 +38,6 @@ const mockedStudy = {
   },
 }
 
-export const getMockedDbUser = (props: Partial<User>): User => ({ ...mockedDbUser, ...props })
+export const getMockedDbUser = (props: Partial<UserSession>): UserSession => ({ ...mockedDbUser, ...props })
 export const getMockedStudy = (props: Partial<Prisma.StudyCreateInput>) =>
   ({ ...mockedStudy, ...props }) as Prisma.StudyCreateInput

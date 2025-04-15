@@ -9,7 +9,7 @@ import { FormRadio } from '@/components/form/Radio'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { getOrganizationAccounts } from '@/db/organization'
+import { getOrganizationVersionAccounts } from '@/db/organization'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
@@ -26,7 +26,7 @@ import styles from './Form.module.css'
 
 interface Props {
   user: UserSession
-  accounts: Awaited<ReturnType<typeof getOrganizationAccounts>>
+  accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
   form: UseFormReturn<CreateStudyCommand>
   children?: React.ReactNode
 }

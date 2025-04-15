@@ -1,5 +1,6 @@
 'use client'
 
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { changeStudyRole } from '@/services/serverFunctions/study'
@@ -54,7 +55,7 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
       user.email === rowUser.user.email ||
       (currentRole === StudyRole.Validator &&
         userRole !== StudyRole.Validator &&
-        !isAdminOnStudyOrga(user, study.organization)) ||
+        !isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) ||
       rowUser.readerOnly,
     [currentRole, rowUser, study, user, userRole],
   )
@@ -68,7 +69,7 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          isAdminOnStudyOrga(user, study.organization) ||
+          isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization) ||
           userRole === StudyRole.Validator ||
           isDisabled ||
           role !== StudyRole.Validator,

@@ -33,8 +33,8 @@ export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeatu
   }
   await prismaClient.deactivatableFeatureStatus.upsert({
     where: { feature },
-    create: { feature, active: status, updatedById: session.user.id },
-    update: { active: status, updatedById: session.user.id },
+    create: { feature, active: status, updatedById: session.user.accountId },
+    update: { active: status, updatedById: session.user.accountId },
   })
 }
 

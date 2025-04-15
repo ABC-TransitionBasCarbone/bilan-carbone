@@ -2,22 +2,26 @@
 
 import { AccountWithUser, getAccountById } from '@/db/account'
 import {
-  createOrganization,
+  createOrganizationWithVersion,
   deleteClient,
-  getOrganizationById,
-  getOrganizationNameById,
-  onboardOrganization,
+  getOrganizationNameByOrganizationVersionId,
+  getOrganizationVersionById,
+  onboardOrganizationVersion,
   setOnboarded,
   updateOrganization,
 } from '@/db/organization'
-import { getRawOrganizationById } from '@/db/organizationImport'
+import { getRawOrganizationVersionById } from '@/db/organizationImport'
 import { getUserApplicationSettings } from '@/db/user'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { Prisma, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canCreateOrganization, canDeleteOrganization, canUpdateOrganization } from '../permissions/organization'
+import {
+  canCreateOrganization,
+  canDeleteOrganizationVersion,
+  canUpdateOrganizationVersion,
+} from '../permissions/organization'
 import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
 import { getStudy } from './study'
 import { DeleteCommand } from './study.command'
@@ -31,27 +35,31 @@ import { OnboardingCommand } from './user.command'
  * The security and authorization checks are made in the getStudy function
  * Chloé, if you consider refactoring this function, do not forget to add the security and authorization checks
  */
-export const getStudyOrganization = async (studyId: string) => {
+export const getStudyOrganizationVersion = async (studyId: string) => {
   const study = await getStudy(studyId)
   if (!study) {
     return null
   }
-  return getOrganizationNameById(study.organizationId)
+  return getOrganizationNameByOrganizationVersionId(study.organizationVersionId)
 }
 
 export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,
 ): Promise<{ message: string; success: false } | { id: string; success: true }> => {
+  // TODO pas trop sûr de si je m'y prend bien ici pour la création d'orga
+  // On a dit que si y a un parentId on ne peut pas créer de version donc jsp trop ici j'ai dû retirer ces champs qui ne sont plus sur orga
+  // ou alors ici je crée just eune version et je lui passe orgaId ? (c'est ce que j'ai fait pour le moment)
+
   const session = await auth()
-  if (!session || !session.user.organizationId) {
+  if (!session || !session.user.organizationVersionId) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 
+  const userOrganizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+
   const organization = {
     ...command,
-    isCR: false,
-    activatedLicence: true,
-    parent: { connect: { id: session.user.organizationId } },
+    parent: { connect: { id: userOrganizationVersion?.organizationId } },
   } satisfies Prisma.OrganizationCreateInput
 
   if (!(await canCreateOrganization(session.user))) {
@@ -59,9 +67,9 @@ export const createOrganizationCommand = async (
   }
 
   try {
-    const createdOrganization = await createOrganization(organization)
+    const createdOrganizationVersion = await createOrganizationWithVersion(organization)
     addUserChecklistItem(UserChecklist.AddClient)
-    return { success: true, id: createdOrganization.id }
+    return { success: true, id: createdOrganizationVersion.id }
   } catch (e) {
     console.error(e)
     return { success: false, message: 'Something went wrong...' }
@@ -70,11 +78,11 @@ export const createOrganizationCommand = async (
 
 export const updateOrganizationCommand = async (command: UpdateOrganizationCommand) => {
   const session = await auth()
-  if (!session || !session.user.organizationId) {
+  if (!session || !session.user.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
-  if (!(await canUpdateOrganization(session.user, command.organizationId))) {
+  if (!(await canUpdateOrganizationVersion(session.user, command.organizationVersionId))) {
     return NOT_AUTHORIZED
   }
 
@@ -82,48 +90,49 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
   const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
   await updateOrganization(command, caUnit)
-  const organization = await getOrganizationById(command.organizationId)
-  addUserChecklistItem(organization?.isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
+  const organizationVersion = await getOrganizationVersionById(command.organizationVersionId)
+  addUserChecklistItem(organizationVersion?.isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
 }
 
 export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) => {
-  if (!(await canDeleteOrganization(id))) {
+  // TODO ici aussi je delete juste la version ?
+  if (!(await canDeleteOrganizationVersion(id))) {
     return NOT_AUTHORIZED
   }
-  const organization = await getOrganizationNameById(id)
-  if (!organization) {
+  const organizationVersion = await getOrganizationNameByOrganizationVersionId(id)
+  if (!organizationVersion) {
     return NOT_AUTHORIZED
   }
 
-  if (organization.name.toLowerCase() !== name.toLowerCase()) {
+  if (organizationVersion.organization.name.toLowerCase() !== name.toLowerCase()) {
     return 'wrongName'
   }
 
   return deleteClient(id)
 }
 
-export const setOnboardedOrganization = async (organizationId: string) => {
+export const setOnboardedOrganizationVersion = async (organizationVersionId: string) => {
   const session = await auth()
-  const userOrganizationId = session?.user.organizationId
+  const userOrganizationVersionId = session?.user.organizationVersionId
 
-  if (!session || !userOrganizationId || userOrganizationId !== organizationId) {
+  if (!session || !userOrganizationVersionId || userOrganizationVersionId !== organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
-  await setOnboarded(organizationId, session.user.accountId)
+  await setOnboarded(organizationVersionId, session.user.accountId)
 }
 
-export const onboardOrganizationCommand = async (command: OnboardingCommand) => {
+export const onboardOrganizationVersionCommand = async (command: OnboardingCommand) => {
   const session = await auth()
-  const organizationId = session?.user.organizationId
+  const organizationVersionId = session?.user.organizationVersionId
 
-  if (!session || !organizationId || organizationId !== command.organizationId) {
+  if (!session || !organizationVersionId || organizationVersionId !== command.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
-  const organization = await getRawOrganizationById(command.organizationId)
+  const organizationVersion = await getRawOrganizationVersionById(command.organizationVersionId)
 
-  if (!organization || organization.onboarderId !== session.user.accountId) {
+  if (!organizationVersion || organizationVersion.onboarderId !== session.user.accountId) {
     return NOT_AUTHORIZED
   }
 
@@ -136,11 +145,11 @@ export const onboardOrganizationCommand = async (command: OnboardingCommand) => 
     const existingAccount = (await getAccountById(collaborator.accountId || '')) as AccountWithUser
     if (existingAccount) {
       collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
-      if (existingAccount.organizationId === organizationId) {
+      if (existingAccount.organizationVersionId === organizationVersionId) {
         existingCollaborators.push(existingAccount)
       }
     }
   }
 
-  await onboardOrganization(session.user.accountId, { ...command, collaborators }, existingCollaborators)
+  await onboardOrganizationVersion(session.user.accountId, { ...command, collaborators }, existingCollaborators)
 }

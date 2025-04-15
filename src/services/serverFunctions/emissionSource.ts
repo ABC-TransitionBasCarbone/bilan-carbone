@@ -1,6 +1,6 @@
 'use server'
 
-import { getAccountById } from '@/db/account'
+import { AccountWithUser, getAccountById } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import {
   createEmissionSourceOnStudy,
@@ -31,7 +31,7 @@ export const createEmissionSource = async ({ studyId, studySiteId, ...command }:
     return NOT_AUTHORIZED
   }
 
-  if (!(await canCreateEmissionSource(account, { studyId, studySiteId, ...command }))) {
+  if (!(await canCreateEmissionSource(account as AccountWithUser, { studyId, studySiteId, ...command }))) {
     return NOT_AUTHORIZED
   }
 
@@ -61,8 +61,8 @@ export const updateEmissionSource = async ({
     return NOT_AUTHORIZED
   }
 
-  const study = await getStudyById(emissionSource.studyId, account.organizationId)
-  if (!study || !(await canUpdateEmissionSource(account, emissionSource, command, study))) {
+  const study = await getStudyById(emissionSource.studyId, account.organizationVersionId)
+  if (!study || !(await canUpdateEmissionSource(account as AccountWithUser, emissionSource, command, study))) {
     return NOT_AUTHORIZED
   }
 
@@ -113,9 +113,9 @@ export const deleteEmissionSource = async (emissionSourceId: string) => {
   if (!account || !emissionSource) {
     return NOT_AUTHORIZED
   }
-  const study = await getStudyById(emissionSource.studyId, account.organizationId)
+  const study = await getStudyById(emissionSource.studyId, account.organizationVersionId)
 
-  if (!study || !(await canDeleteEmissionSource(account, study))) {
+  if (!study || !(await canDeleteEmissionSource(account as AccountWithUser, study))) {
     return NOT_AUTHORIZED
   }
 
