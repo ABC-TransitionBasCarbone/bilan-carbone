@@ -1,8 +1,9 @@
 import * as dbStudyModule from '@/db/study'
 import * as dbUserModule from '@/db/userImport'
 import { getMockedDbUser, getMockedStudy, mockedOrganizationId } from '@/tests/utils/models'
+import * as studyUtils from '@/utils/study'
 import { expect } from '@jest/globals'
-import { Level, Role } from '@prisma/client'
+import { Level, Role, StudyRole } from '@prisma/client'
 import * as authModule from '../auth'
 import * as organizationModule from './organization'
 import { canCreateStudy, canDeleteStudy } from './study'
@@ -10,6 +11,7 @@ import { canCreateStudy, canDeleteStudy } from './study'
 // mocked called function
 jest.mock('@/db/userImport', () => ({ getUserByEmail: jest.fn() }))
 jest.mock('@/db/study', () => ({ getStudyById: jest.fn() }))
+jest.mock('@/utils/study', () => ({ getUserRoleOnStudy: jest.fn() }))
 jest.mock('./organization', () => ({ isInOrgaOrParentFromId: jest.fn() }))
 jest.mock('../auth', () => ({ auth: jest.fn() }))
 
@@ -22,6 +24,7 @@ const mockedStudyId = 'mocked-study-id'
 
 const mockAuth = authModule.auth as jest.Mock
 const mockGetStudyById = dbStudyModule.getStudyById as jest.Mock
+const mockGetUserRoleOnStudy = studyUtils.getUserRoleOnStudy as jest.Mock
 const mockGetUserByEmail = dbUserModule.getUserByEmail as jest.Mock
 const mockIsInOrgaOrParentFromId = organizationModule.isInOrgaOrParentFromId as jest.Mock
 
@@ -131,6 +134,7 @@ describe('Study permissions service', () => {
       mockAuth.mockResolvedValue({
         user: { id: 'mocked-random-user-id', organizationId: mockedOrganizationId, email: 'mocked-validator-email' },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -140,6 +144,7 @@ describe('Study permissions service', () => {
       mockAuth.mockResolvedValue({
         user: { id: 'mocked-random-user-id', organizationId: mockedOrganizationId, email: 'mocked-editor-email' },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(StudyRole.Editor)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -149,6 +154,7 @@ describe('Study permissions service', () => {
       mockAuth.mockResolvedValue({
         user: { id: 'mocked-random-user-id', organizationId: mockedOrganizationId, email: 'mocked-editor-reader' },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(StudyRole.Reader)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -158,6 +164,7 @@ describe('Study permissions service', () => {
       mockAuth.mockResolvedValue({
         user: { id: 'mocked-user-admin-id', organizationId: mockedOrganizationId, role: Role.ADMIN },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -167,6 +174,7 @@ describe('Study permissions service', () => {
       mockAuth.mockResolvedValue({
         user: { id: 'mocked-user-super-admin-id', organizationId: mockedOrganizationId, role: Role.SUPER_ADMIN },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -180,6 +188,7 @@ describe('Study permissions service', () => {
           role: 'GESTIONNAIRE',
         },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(StudyRole.Reader)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -193,6 +202,7 @@ describe('Study permissions service', () => {
           role: 'COLLABORATOR',
         },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(StudyRole.Reader)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -202,6 +212,7 @@ describe('Study permissions service', () => {
       mockAuth.mockResolvedValue({
         user: { id: 'mocked-user-admin-id', organizationId: mockedOrganizationId, role: Role.ADMIN },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -211,6 +222,7 @@ describe('Study permissions service', () => {
       mockAuth.mockResolvedValue({
         user: { id: 'mocked-user-super-admin-id', organizationId: mockedOrganizationId, role: Role.SUPER_ADMIN },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -224,6 +236,7 @@ describe('Study permissions service', () => {
           role: Role.SUPER_ADMIN,
         },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(null)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -237,6 +250,7 @@ describe('Study permissions service', () => {
           role: Role.SUPER_ADMIN,
         },
       })
+      mockGetUserRoleOnStudy.mockResolvedValue(null)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
