@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
           select: {
             id: true,
             role: true,
-            organizationId: true,
+            organizationVersionId: true,
             user: {
               select: {
                 id: true,
@@ -54,7 +54,7 @@ export const authOptions: NextAuthOptions = {
             accountId: account.id,
             firstName: account.user.firstName,
             lastName: account.user.lastName,
-            organizationId: account.organizationId,
+            organizationVersionId: account.organizationVersionId,
             role: account.role,
             level: account.user.level,
           }
@@ -65,7 +65,7 @@ export const authOptions: NextAuthOptions = {
         const dbUser = await getUserByEmail(token.email || '')
 
         // TODO GET THE RIGHT ACCOUNT
-        const account = dbUser?.accounts[0] || { id: '', role: Role.DEFAULT, organizationId: '' }
+        const account = dbUser?.accounts[0] || { id: '', role: Role.DEFAULT, organizationVersionId: '' }
 
         return dbUser
           ? {
@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
               firstName: dbUser.firstName,
               lastName: dbUser.lastName,
               role: account.role,
-              organizationId: account.organizationId,
+              organizationVersionId: account.organizationVersionId,
               level: dbUser.level,
             }
           : token
@@ -92,7 +92,7 @@ export const authOptions: NextAuthOptions = {
           accountId: token.accountId as string,
           firstName: token.firstName as string,
           lastName: token.lastName as string,
-          organizationId: token.organizationId as string,
+          organizationVersionId: token.organizationVersionId as string,
           role: token.role as Role,
           level: token.level as Level,
         }
@@ -125,6 +125,17 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
+        console.log({
+          id: user.id,
+          accountId: account?.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: account?.role,
+          email: user.email,
+          organizationVersionId: account?.organizationVersionId,
+          level: user.level,
+        })
+
         return {
           id: user.id,
           accountId: account?.id,
@@ -132,7 +143,7 @@ export const authOptions: NextAuthOptions = {
           lastName: user.lastName,
           role: account?.role,
           email: user.email,
-          organizationId: account?.organizationId,
+          organizationVersionId: account?.organizationVersionId,
           level: user.level,
         }
       },
