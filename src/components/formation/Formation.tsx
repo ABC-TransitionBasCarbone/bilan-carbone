@@ -14,9 +14,10 @@ import Video from './Video'
 interface Props {
   formations: Formation[]
   user: User
+  organisationName: string
 }
 
-const FormationView = ({ formations, user }: Props) => {
+const FormationView = ({ formations, user, organisationName }: Props) => {
   const t = useTranslations('formation')
   const [open, setOpen] = useState(false)
   return (
@@ -34,7 +35,7 @@ const FormationView = ({ formations, user }: Props) => {
         <Button>{t('answer')}</Button>
       </div>
       <Modal open={open} label="formation-evaluation" title={t('evaluation')} onClose={() => setOpen(false)}>
-        <EvaluationModal user={user} />
+        <EvaluationModal user={user} organisationName={organisationName} />
       </Modal>
     </>
   )
