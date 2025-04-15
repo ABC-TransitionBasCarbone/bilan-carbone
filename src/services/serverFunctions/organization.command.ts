@@ -16,7 +16,7 @@ export const UpdateOrganizationCommandValidation = z.intersection(
   CreateOrganizationCommandValidation,
   z.intersection(
     z.object({
-      organizationId: z.string(),
+      organizationVersionId: z.string(),
     }),
     SitesCommandValidation,
   ),

@@ -303,8 +303,8 @@ const getExistingStudySites = async (transaction: Prisma.TransactionClient, stud
 export const uploadStudies = async (
   transaction: Prisma.TransactionClient,
   userId: string,
-  organizationId: string,
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
+  organizationVersionId: string,
   studiesIndexes: Record<string, number>,
   studiesData: (string | number)[][],
   studySitesIndexes: Record<string, number>,

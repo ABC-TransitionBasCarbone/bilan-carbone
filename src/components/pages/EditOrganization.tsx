@@ -8,11 +8,11 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EditOrganizationForm from '../organization/edit/EditOrganizationForm'
 
 interface Props {
-  organization: OrganizationWithSites
+  organizationVersion: OrganizationWithSites
   user: UserSession
 }
 
-const EditOrganizationPage = async ({ organization, user }: Props) => {
+const EditOrganizationPage = async ({ organizationVersion, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('organization.form')
 
@@ -24,11 +24,11 @@ const EditOrganizationPage = async ({ organization, user }: Props) => {
         current={tNav('edit')}
         links={[
           { label: tNav('home'), link: '/' },
-          { label: organization.name, link: `/organisations/${organization.id}` },
+          { label: organizationVersion.organization.name, link: `/organisations/${organizationVersion.id}` },
         ]}
       />
       <Block as="h1" title={t('editTitle')}>
-        <EditOrganizationForm organization={organization} caUnit={caUnit} />
+        <EditOrganizationForm organizationVersion={organizationVersion} caUnit={caUnit} />
       </Block>
     </>
   )

@@ -52,7 +52,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       {
         id: organization?.id,
         name,
-        siret: siretOrSiren,
+        wordpressId: siretOrSiren,
       } as Prisma.OrganizationCreateInput,
       isCR,
       activatedLicence,

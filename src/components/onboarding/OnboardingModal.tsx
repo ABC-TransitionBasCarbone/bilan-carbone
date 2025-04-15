@@ -1,9 +1,10 @@
-import { onboardOrganizationCommand } from '@/services/serverFunctions/organization'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { onboardOrganizationVersionCommand } from '@/services/serverFunctions/organization'
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
-import { Organization, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useSession } from 'next-auth/react'
@@ -23,10 +24,10 @@ interface Props {
   open: boolean
   onClose: () => void
   user: UserSession
-  organization: Organization
+  organizationVersion: OrganizationVersionWithOrganization
 }
 
-const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
+const OnboardingModal = ({ open, onClose, user, organizationVersion }: Props) => {
   const t = useTranslations('onboarding')
   const { update: updateSession } = useSession()
   const router = useRouter()
@@ -44,10 +45,10 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      organizationId: organization.id,
+      organizationVersionId: organizationVersion.id,
       firstName: user.firstName || '',
       lastName: user.lastName || '',
-      companyName: organization.name || '',
+      companyName: organizationVersion.organization.name || '',
       collaborators: [{ email: '' }],
     },
   })
@@ -65,7 +66,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
       )
       const isValid = OnboardingCommandValidation.safeParse(values)
       if (isValid.success) {
-        const result = await onboardOrganizationCommand(isValid.data)
+        const result = await onboardOrganizationVersionCommand(isValid.data)
         if (result) {
           onClose()
         } else {
@@ -101,7 +102,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
             </>
           </DialogTitle>
           <DialogContent className="noSpacing">
-            <Step form={form} role={newRole} isCr={organization.isCR} />
+            <Step form={form} role={newRole} isCr={organizationVersion.isCR} />
           </DialogContent>
           <DialogActions className="noSpacing">
             {activeStep > 0 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
