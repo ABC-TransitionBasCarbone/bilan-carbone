@@ -55,7 +55,7 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPos
               label={`${t('form.value')} *`}
               slotProps={{ input: { onWheel: (event) => (event.target as HTMLInputElement).blur() } }}
             />
-            {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit)}</div>}
+            {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit || '')}</div>}
           </div>
           {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
             <div className={classNames(styles.inputWithUnit, 'flex grow')}>
@@ -88,7 +88,7 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPos
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatNumber(getEmissionFactorValue(selectedFactor), 5)} {tResultUnits(StudyResultUnit.K)}/
-            {tUnits(selectedFactor.unit)}
+            {tUnits(selectedFactor.unit || '')}
           </p>
           {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
         </div>

@@ -171,7 +171,7 @@ const EmissionSource = ({
                 <>
                   <p>{t('emissionSource')}</p>
                   <p>
-                    {formatNumber(emissionSource.value)} {selectedFactor && tUnits(selectedFactor.unit)}
+                    {formatNumber(emissionSource.value)} {selectedFactor && tUnits(selectedFactor.unit || '')}
                   </p>
                 </>
               )}
@@ -182,7 +182,7 @@ const EmissionSource = ({
                 <p>{t('emissionFactor')}</p>
                 <p>
                   {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}
-                  {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit)}
+                  {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit || '')}
                 </p>
               </div>
             )}

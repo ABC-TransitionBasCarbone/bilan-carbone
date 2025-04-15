@@ -14,13 +14,13 @@ const EditEmissionFactor = ({ emissionFactor }: Props) => {
   return (
     <>
       <Breadcrumbs
-        current={t('title', { name: emissionFactor?.metaData[0].title })}
+        current={t('title', { name: emissionFactor?.metaData[0].title || '' })}
         links={[
           { label: tNav('home'), link: '/' },
           { label: tNav('emissionFactors'), link: '/facteurs-d-emission' },
         ]}
       />
-      <Block title={t('title', { name: emissionFactor?.metaData[0].title })} as="h1">
+      <Block title={t('title', { name: emissionFactor?.metaData[0].title || '' })} as="h1">
         <EditEmissionFactorForm emissionFactor={emissionFactor} />
       </Block>
     </>

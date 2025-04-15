@@ -4,7 +4,7 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { getQualityRating, qualityKeys } from '@/services/uncertainty'
 import ShrinkIcon from '@mui/icons-material/ZoomInMap'
 import ExpandIcon from '@mui/icons-material/ZoomOutMap'
-import { Import, StudyResultUnit, SubPost } from '@prisma/client'
+import { Import, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Fragment, useMemo, useState } from 'react'
@@ -60,12 +60,16 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
             </span>
             {displayDetailedQuality && (
               <>
-                {qualities.map((quality) => (
-                  <Fragment key={quality}>
-                    <span>{t(quality)}</span>
-                    <span>{tQuality(emissionFactor[quality]?.toString())}</span>
-                  </Fragment>
-                ))}
+                {qualities.map((quality) =>
+                  emissionFactor[quality] ? (
+                    <Fragment key={quality}>
+                      <span>{t(quality)}</span>
+                      <span>{tQuality(emissionFactor[quality].toString())}</span>
+                    </Fragment>
+                  ) : (
+                    <></>
+                  ),
+                )}
               </>
             )}
           </div>
@@ -87,7 +91,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
         <div className={classNames(styles.info, styles.list, 'flex')}>
           {gases.map((gaz) => (
             <div key={gaz}>
-              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}/{tUnits(emissionFactor.unit)}
+              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}/{tUnits(emissionFactor.unit || Unit.KG)}
             </div>
           ))}
         </div>
