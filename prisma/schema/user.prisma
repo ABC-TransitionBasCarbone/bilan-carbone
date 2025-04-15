@@ -25,6 +25,11 @@ enum UserChecklist {
   Completed
 }
 
+enum UserSource {
+  CRON
+  TUNISIE
+}
+
 model User {
   id               String    @id @default(uuid())
   createdAt        DateTime  @default(now()) @map("created_at")
@@ -45,6 +50,7 @@ model User {
   password                   String?
   resetToken                 String?                  @map("reset_token")
   status                     UserStatus
+  source                     UserSource               @default(CRON)
   createdStudies             Study[]
   allowedStudies             UserOnStudy[]
   contributors               Contributors[]
