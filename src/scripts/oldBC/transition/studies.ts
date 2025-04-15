@@ -182,7 +182,7 @@ export const uploadStudies = async (
   const studySites = parseStudySites(studySitesIndexes, studySitesData)
   const studyExports = parseExports(studyExportsIndexes, studyExportsData)
 
-  const existingStudyIds = await transaction.study.findMany({
+  const alreadyImportedStudyIds = await transaction.study.findMany({
     where: {
       oldBCId: { in: studies.map((study) => study.oldBCId) },
     },
@@ -193,7 +193,7 @@ export const uploadStudies = async (
   })
 
   const newStudies = studies.filter(
-    (study) => !existingStudyIds.find((existingStudy) => study.oldBCId !== existingStudy.oldBCId),
+    (study) => !alreadyImportedStudyIds.find((existingStudy) => study.oldBCId !== existingStudy.oldBCId),
   )
 
   await transaction.study.createMany({
