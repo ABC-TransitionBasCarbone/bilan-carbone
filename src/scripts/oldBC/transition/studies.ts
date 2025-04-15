@@ -192,8 +192,8 @@ export const uploadStudies = async (
     },
   })
 
-  const newStudies = studies.filter(
-    (study) => !alreadyImportedStudyIds.find((existingStudy) => study.oldBCId !== existingStudy.oldBCId),
+  const newStudies = studies.filter((study) =>
+    alreadyImportedStudyIds.every((alreadyImportedStudy) => alreadyImportedStudy.oldBCId !== study.oldBCId),
   )
 
   await transaction.study.createMany({
