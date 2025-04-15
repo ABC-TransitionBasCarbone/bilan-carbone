@@ -1,7 +1,9 @@
 describe('Create emission factor', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
+  })
 
+  beforeEach(() => {
     cy.intercept('POST', '/facteurs-d-emission/creer').as('create')
   })
 
@@ -16,6 +18,8 @@ describe('Create emission factor', () => {
     cy.get('[data-value="GWH"]').click()
     cy.getByTestId('emission-factor-source').type('Magic')
     cy.getByTestId('emission-factor-totalCo2').type('12')
+    cy.getByTestId('emission-source-reliability').click()
+    cy.get('[data-value="5"]').click()
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
@@ -89,6 +93,8 @@ describe('Create emission factor', () => {
       cy.get('input').should('have.value', '37')
     })
 
+    cy.getByTestId('emission-source-reliability').click()
+    cy.get('[data-value="5"]').click()
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
@@ -159,6 +165,8 @@ describe('Create emission factor', () => {
       cy.get('input').should('have.value', '21')
     })
 
+    cy.getByTestId('emission-source-reliability').click()
+    cy.get('[data-value="5"]').click()
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
@@ -255,6 +263,8 @@ describe('Create emission factor', () => {
       cy.get('input').should('have.value', '81')
     })
 
+    cy.getByTestId('emission-source-reliability').click()
+    cy.get('[data-value="5"]').click()
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()
@@ -434,6 +444,8 @@ describe('Create emission factor', () => {
 
     cy.getByTestId('emission-factor-totalCo2').clear()
     cy.getByTestId('emission-factor-totalCo2').type('144')
+    cy.getByTestId('emission-source-reliability').click()
+    cy.get('[data-value="5"]').click()
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').click()

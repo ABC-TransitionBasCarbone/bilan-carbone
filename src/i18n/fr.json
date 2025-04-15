@@ -697,6 +697,7 @@
         "pfc": "Valeur positive uniquement",
         "otherGES": "Valeur positive uniquement",
         "totalCo2": "Veuillez renseigner une émission totale",
+        "reliability": "Veuillez renseigner une valeur pour la Fiabilité",
         "type": "Veuillez renseigner un type de poste",
         "unit": "Veuillez renseigner une unité"
       }

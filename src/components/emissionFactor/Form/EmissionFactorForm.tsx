@@ -8,13 +8,13 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
-import { MenuItem } from '@mui/material'
+import { FormControl, FormHelperText, MenuItem } from '@mui/material'
 import { Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
+import { Control, Controller, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
 import MultiplePosts from './MultiplePosts'
 
@@ -107,16 +107,26 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         partsCount={partsCount}
         setPartsCount={setPartsCount}
       />
-      <QualitySelectGroup
-        canEdit
-        canShrink
-        emissionSource={quality}
-        update={update as (key: keyof EmissionFactorQuality, value: string | number | boolean) => void}
-        advanced={false}
-        setGlossary={setGlossary}
-        expanded={expandedQuality}
-        setExpanded={setExpandedQuality}
-        defaultQuality={qualityKeys.map((qualityKey) => quality[qualityKey]).find((quality) => !!quality)}
+      <Controller
+        name={'reliability'}
+        control={control}
+        render={({ fieldState: { error } }) => (
+          <FormControl error={!!error}>
+            <QualitySelectGroup
+              canEdit
+              canShrink
+              emissionSource={quality}
+              update={update as (key: keyof EmissionFactorQuality, value: string | number | boolean) => void}
+              advanced={false}
+              setGlossary={setGlossary}
+              expanded={expandedQuality}
+              setExpanded={setExpandedQuality}
+              defaultQuality={qualityKeys.map((qualityKey) => quality[qualityKey]).find((quality) => !!quality)}
+              error={error}
+            />
+            {error?.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
+          </FormControl>
+        )}
       />
       <MultiplePosts form={form} />
       <FormTextField control={control} translation={t} name="comment" label={t('comment')} multiline rows={2} />

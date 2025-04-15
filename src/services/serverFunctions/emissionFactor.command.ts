@@ -37,7 +37,7 @@ export const EmissionFactorCommandValidation = z.intersection(
         required_error: 'totalCo2',
       })
       .min(0, 'totalCo2'),
-    reliability: z.number().optional(),
+    reliability: z.number({ required_error: 'reliability' }),
     technicalRepresentativeness: z.number().optional(),
     geographicRepresentativeness: z.number().optional(),
     temporalRepresentativeness: z.number().optional(),

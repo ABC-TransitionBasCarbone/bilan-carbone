@@ -55,6 +55,8 @@ describe('Edit emission factor', () => {
     cy.getByTestId('emission-factor-part-1-pfc').type('9')
     cy.getByTestId('emission-factor-part-1-otherGES').type('10')
 
+    cy.getByTestId('emission-source-reliability').click()
+    cy.get('[data-value="5"]').click()
     cy.getByTestId('emission-factor-post').click()
     cy.get('[data-value="Energies"]').click()
     cy.getByTestId('emission-factor-subPost').first().click()
