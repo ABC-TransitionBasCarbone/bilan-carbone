@@ -10,6 +10,8 @@ export enum RequiredOrganizationsColumns {
   IS_USER_ORGA = 'IS_USER_ORGA',
 }
 
+// TODO Repasser sur ce script avec account et organizationversion
+
 interface Organization {
   oldBCId: string
   name: string

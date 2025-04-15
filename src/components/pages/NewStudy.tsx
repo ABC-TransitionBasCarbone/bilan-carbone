@@ -1,7 +1,7 @@
 'use client'
 import SelectOrganization from '@/components/study/organization/Select'
 import { OrganizationWithSites } from '@/db/account'
-import { getOrganizationAccounts } from '@/db/organization'
+import { getOrganizationVersionAccounts } from '@/db/organization'
 import NewStudyForm from '@/environments/base/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
@@ -19,14 +19,14 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 interface Props {
   user: UserSession
-  accounts: Awaited<ReturnType<typeof getOrganizationAccounts>>
-  organizations: OrganizationWithSites[]
-  defaultOrganization?: OrganizationWithSites
+  accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
+  organizationVersions: OrganizationWithSites[]
+  defaultOrganizationVersion?: OrganizationWithSites
   caUnit: number
 }
 
-const NewStudyPage = ({ organizations, user, accounts, defaultOrganization, caUnit }: Props) => {
-  const [organization, setOrganization] = useState<OrganizationWithSites>()
+const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizationVersion, caUnit }: Props) => {
+  const [organizationVersion, setOrganizationVersion] = useState<OrganizationWithSites>()
   const tNav = useTranslations('nav')
 
   const form = useForm<CreateStudyCommand>({
@@ -38,9 +38,9 @@ const NewStudyPage = ({ organizations, user, accounts, defaultOrganization, caUn
       validator: user.email,
       isPublic: 'true',
       startDate: dayjs().toISOString(),
-      organizationId: (defaultOrganization ?? organizations[0])?.id || '',
+      organizationVersionId: (defaultOrganizationVersion ?? organizationVersions[0])?.id || '',
       sites:
-        (defaultOrganization ?? organizations[0])?.sites.map((site) => ({
+        (defaultOrganizationVersion ?? organizationVersions[0])?.organization.sites.map((site) => ({
           ...site,
           ca: site.ca ? displayCA(site.ca, caUnit) : 0,
           selected: false,
@@ -61,21 +61,25 @@ const NewStudyPage = ({ organizations, user, accounts, defaultOrganization, caUn
         current={tNav('newStudy')}
         links={[
           { label: tNav('home'), link: '/' },
-          defaultOrganization && defaultOrganization.isCR
+          defaultOrganizationVersion && defaultOrganizationVersion.isCR
             ? {
-                label: defaultOrganization.name,
-                link: `/organisations/${defaultOrganization.id}`,
+                label: defaultOrganizationVersion.organization.name,
+                link: `/organisations/${defaultOrganizationVersion.id}`,
               }
             : undefined,
         ].filter((link) => link !== undefined)}
       />
-      {organization ? (
+      {organizationVersion ? (
         <DynamicComponent
           environmentComponents={{ [CUT]: <NewStudyFormCut user={user} accounts={accounts} form={form} /> }}
           defaultComponent={<NewStudyForm user={user} accounts={accounts} form={form} />}
         />
       ) : (
-        <SelectOrganization organizations={organizations} selectOrganization={setOrganization} form={form} />
+        <SelectOrganization
+          organizationVersions={organizationVersions}
+          selectOrganizationVersion={setOrganizationVersion}
+          form={form}
+        />
       )}
     </>
   )

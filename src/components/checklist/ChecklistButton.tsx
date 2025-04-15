@@ -3,7 +3,7 @@
 import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Drawer, IconButton } from '@mui/material'
-import { Organization, Role, UserChecklist } from '@prisma/client'
+import { OrganizationVersion, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { usePathname, useSearchParams } from 'next/navigation'
@@ -12,13 +12,13 @@ import styles from './Checklist.module.css'
 import ChecklistDrawer from './ChecklistDrawer'
 
 interface Props {
-  userOrganization: Organization
+  accountOrganizationVersion: OrganizationVersion
   clientId?: string
   studyId?: string
   userRole: Role
 }
 
-const ChecklistButton = ({ userOrganization, clientId, studyId, userRole }: Props) => {
+const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRole }: Props) => {
   const t = useTranslations('checklist')
   const [open, setOpen] = useState(false)
   const [completed, setCompleted] = useState(false)
@@ -82,7 +82,7 @@ const ChecklistButton = ({ userOrganization, clientId, studyId, userRole }: Prop
           getCheckList={getCheckList}
           userChecklist={checklist}
           userRole={userRole}
-          userOrganization={userOrganization}
+          accountOrganizationVersion={accountOrganizationVersion}
           clientId={clientId}
           studyId={studyId}
         />

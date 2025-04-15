@@ -40,11 +40,11 @@ import styles from './StudyPerimeter.module.css'
 
 interface Props {
   study: FullStudy
-  organization: OrganizationWithSites
+  organizationVersion: OrganizationWithSites
   userRoleOnStudy: StudyRole
 }
 
-const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
+const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy }: Props) => {
   const format = useFormatter()
   const tForm = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
@@ -100,7 +100,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
 
   const siteList = useMemo(
     () =>
-      organization.sites
+      organizationVersion.organization.sites
         .map((site) => {
           const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
           return existingStudySite
@@ -116,7 +116,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
-    [organization.sites, study.sites],
+    [organizationVersion.organization.sites, study.sites],
   )
 
   const siteForm = useForm<ChangeStudySitesCommand>({
@@ -124,7 +124,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
-      organizationId: organization.id,
+      organizationId: organizationVersion.organization.id,
       sites: siteList,
     },
   })
@@ -143,7 +143,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
     const deletedSites = sites.filter((site) => {
       return !site.selected && study.sites.some((studySite) => studySite.site.id === site.id)
     })
-    const hasActivity = await hasActivityData(study.id, deletedSites, organization.id)
+    const hasActivity = await hasActivityData(study.id, deletedSites, organizationVersion.id)
     if (hasActivity) {
       setOpen(true)
       setDeleting(deletedSites.length)

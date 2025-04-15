@@ -8,7 +8,7 @@ interface Props {
 }
 
 const NewEmissionFactor = async ({ user }: Props) => {
-  if (!user.organizationId) {
+  if (!user.organizationVersionId) {
     return <NotFound />
   }
   return <NewEmissionFactorPage />
