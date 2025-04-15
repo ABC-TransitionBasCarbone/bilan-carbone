@@ -6,6 +6,7 @@ import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { FieldError } from 'react-hook-form'
 import Button from '../base/Button'
 import HelpIcon from '../base/HelpIcon'
 import QualitySelect from '../form/QualitySelect'
@@ -17,10 +18,7 @@ type Source = Partial<Record<AllQualityKeys, number | null>>
 interface Props {
   advanced?: boolean
   canEdit: boolean | null
-  emissionSource: Source & {
-    emissionFactor?: FullStudy['emissionSources'][0]['emissionFactor']
-  }
-
+  emissionSource: Source & { emissionFactor?: FullStudy['emissionSources'][0]['emissionFactor'] }
   update: (key: keyof Source, value: string | number | boolean) => void
   setGlossary: (key: string) => void
   expanded: boolean
@@ -28,6 +26,7 @@ interface Props {
   canShrink: boolean
   defaultQuality?: number | null
   feSpecific?: boolean
+  error?: FieldError
 }
 
 const QualitySelectGroup = ({
@@ -41,6 +40,7 @@ const QualitySelectGroup = ({
   canShrink,
   defaultQuality,
   feSpecific,
+  error,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tGlossary = useTranslations('emissionSource.glossary')
@@ -66,6 +66,7 @@ const QualitySelectGroup = ({
               onChange={(event) => update(getField(field), Number(event.target.value))}
               label={t(`form.${field}`)}
               starredValue={feSpecific && emissionSource.emissionFactor ? emissionSource.emissionFactor[field] : null}
+              error={error?.ref?.name === field}
             />
           ))}
         </>
@@ -81,6 +82,7 @@ const QualitySelectGroup = ({
             })
           }}
           label={t('form.quality')}
+          error={!!error}
         />
       )}
       <HelpIcon onClick={() => setGlossary('quality')} label={tGlossary('title')} />

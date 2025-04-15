@@ -689,6 +689,7 @@
         "unit": "Please provide a unit",
         "source": "Please provide a source",
         "totalCo2": "Please provide a total emission",
+        "reliability": "Please provide a value for Reliability",
         "type": "Please select a post type",
         "subPost": "Please select a sub post"
       }

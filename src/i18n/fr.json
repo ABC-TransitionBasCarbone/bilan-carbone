@@ -689,6 +689,7 @@
         "source": "Veuillez renseigner une source",
         "subPost": "Veuillez selectionner un sous poste",
         "totalCo2": "Veuillez renseigner une émission totale",
+        "reliability": "Veuillez renseigner une valeur pour la Fiabilité",
         "type": "Veuillez renseigner un type de poste",
         "unit": "Veuillez renseigner une unité"
       }
