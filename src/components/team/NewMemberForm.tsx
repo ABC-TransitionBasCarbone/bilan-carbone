@@ -4,7 +4,6 @@ import Form from '@/components/base/Form'
 import { FormTextField } from '@/components/form/TextField'
 import { addMember } from '@/services/serverFunctions/user'
 import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverFunctions/user.command'
-import { isUntrainedRole } from '@/utils/organization'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { Role } from '@prisma/client'
@@ -74,7 +73,7 @@ const NewMemberForm = () => {
       />
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="new-member-role">
         {Object.keys(Role)
-          .filter((role) => isUntrainedRole(role as Role))
+          .filter((role) => role !== Role.SUPER_ADMIN)
           .map((key) => (
             <MenuItem key={key} value={key}>
               {tRole(key)}
