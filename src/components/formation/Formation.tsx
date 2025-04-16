@@ -78,7 +78,7 @@ const FormationView = ({ formations, user, organisationName }: Props) => {
       >
         <EvaluationModal
           user={user}
-          organisationName={organisationName}
+          organizationName={organisationName}
           onClose={() => setOpen(false)}
           startTime={formStartTime as number}
         />

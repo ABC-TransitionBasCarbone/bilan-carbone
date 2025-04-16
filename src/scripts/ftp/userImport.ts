@@ -43,13 +43,13 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   }
 
   if (siretOrSiren) {
-    let organisation = dbUser?.organizationId
+    let organization = dbUser?.organizationId
       ? await getRawOrganizationById(dbUser.organizationId)
       : await getRawOrganizationBySiret(siretOrSiren)
 
-    organisation = await createOrUpdateOrganization(
+    organization = await createOrUpdateOrganization(
       {
-        id: organisation?.id,
+        id: organization?.id,
         name,
         siret: siretOrSiren,
       } as Prisma.OrganizationCreateInput,
@@ -58,7 +58,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       importedFileDate,
     )
 
-    user.organizationId = organisation?.id
+    user.organizationId = organization?.id
   }
 
   if (dbUser) {

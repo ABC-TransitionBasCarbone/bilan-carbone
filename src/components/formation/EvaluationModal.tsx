@@ -5,7 +5,7 @@ import Countdown from 'react-countdown'
 
 interface Props {
   user: User
-  organisationName: string
+  organizationName: string
   onClose: () => void
   startTime: number
 }
@@ -13,7 +13,7 @@ interface Props {
 const typeformId = process.env.NEXT_PUBLIC_TYPEFORM_ID
 const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
 
-const EvaluationModal = ({ user, organisationName, onClose, startTime }: Props) => {
+const EvaluationModal = ({ user, organizationName, onClose, startTime }: Props) => {
   const t = useTranslations('formation')
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const EvaluationModal = ({ user, organisationName, onClose, startTime }: Props) 
     email: user.email,
     level: user.level || '',
     date: new Date().toLocaleDateString('Fr-fr'),
-    organisation: organisationName,
+    organization: organizationName,
   }
 
   const onTimerEnd = () => {
@@ -53,7 +53,7 @@ const EvaluationModal = ({ user, organisationName, onClose, startTime }: Props) 
           `email=${params.email}`,
           `level=${params.level}`,
           `date=${params.date}`,
-          `organisation=${params.organisation}`,
+          `organization=${params.organization}`,
         ].join(',')}
       />
     </>
