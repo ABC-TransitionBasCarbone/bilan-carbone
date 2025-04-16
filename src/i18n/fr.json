@@ -217,7 +217,7 @@
   "admin": {
     "title": "Administration du BC+",
     "csvOnly": "Seuls les fichiers CSV sont acceptés",
-    "uploadButton": "Importer un fichier CSV de l'ADEME"
+    "uploadButton": "Importer un fichier CSV d'utilisateurs"
   },
   "study": {
     "create": "Ajouter un Bilan Carbone®",

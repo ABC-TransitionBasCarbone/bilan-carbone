@@ -17,7 +17,6 @@ export const createOrUpdateOrganization = (
   prismaClient.organization.upsert({
     where: { id: organization.id ?? '' },
     update: {
-      ...organization,
       isCR: isCR || organization.isCR,
       importedFileDate,
       activatedLicence: activatedLicence || organization.activatedLicence,
