@@ -64,7 +64,9 @@ const parseStudySites = (indexes: Record<string, number>, data: (string | number
     .reduce((accumulator, currentValue) => {
       const sites = accumulator.get(currentValue[0])
       if (sites) {
-        sites.push(currentValue[1])
+        if (sites.every((site) => site.siteOldBCId !== currentValue[1].siteOldBCId)) {
+          sites.push(currentValue[1])
+        }
       } else {
         accumulator.set(currentValue[0], [currentValue[1]])
       }
