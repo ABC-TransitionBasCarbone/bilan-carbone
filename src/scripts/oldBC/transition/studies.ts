@@ -1,5 +1,6 @@
 import { ControlMode, Level, Prisma, Export as StudyExport } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
+import { getExistingObjectsIds, getExistingSitesIds } from './repositories'
 
 export enum RequiredStudiesColumns {
   oldBCId = 'IDETUDE',
@@ -137,34 +138,8 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
     }, new Map<string, Export[]>())
 }
 
-interface Delegate {
-  findMany(args?: object): Promise<{ id: string; oldBCId: string | null }[]>
-}
-
-async function getExistingObjectsIds(delegate: Delegate, ids: string[]) {
-  const existingObjects = await delegate.findMany({
-    where: {
-      oldBCId: {
-        in: ids,
-      },
-    },
-    select: { id: true, oldBCId: true },
-  })
-
-  return existingObjects.reduce((map, currentExistingObject) => {
-    if (currentExistingObject.oldBCId) {
-      map.set(currentExistingObject.oldBCId, currentExistingObject.id)
-    }
-    return map
-  }, new Map<string, string>())
-}
-
 const getExistingStudiesIds = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
   return getExistingObjectsIds(transaction.study, studiesIds)
-}
-
-const getExistingSitesIds = async (transaction: Prisma.TransactionClient, sitesIds: string[]) => {
-  return getExistingObjectsIds(transaction.site, sitesIds)
 }
 
 export const uploadStudies = async (

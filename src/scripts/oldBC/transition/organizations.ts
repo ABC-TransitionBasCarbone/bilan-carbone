@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client'
+import { getExistingSitesIds } from './repositories'
 
 export enum RequiredOrganizationsColumns {
   ID_ENTITE = 'ID_ENTITE',
