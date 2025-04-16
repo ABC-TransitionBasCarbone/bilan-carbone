@@ -1263,7 +1263,8 @@
     "videos": "Vidéos",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au quesitonnaire",
-    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre certificat de formation v9. Vous aurez {time} minutes pour y répondre et ne pourrez plus le retenter à l'avenir.",
+    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre certificat de formation v9. Ce dernier est chronométré et vous aurez <red>au maximum {time} minutes pour répondre au question. Vous ne pouvez répondre au questionnaire qu'une seule fois. Une fois lancé, impossible de revenir en arrière.</red>",
+    "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre au question. Je suis dans les bonnes conditions pour commencer mon test",
     "answer": "Répondre au questionnaire",
     "timer": "Temps restant : ",
     "form": "Questionnaire Typeform"

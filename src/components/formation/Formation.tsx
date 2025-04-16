@@ -2,6 +2,7 @@
 
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
 import { MIN, TIME_IN_MS } from '@/utils/time'
+import { Checkbox } from '@mui/material'
 import { Formation } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -25,11 +26,13 @@ const FormationView = ({ formations, user, organisationName }: Props) => {
   const t = useTranslations('formation')
   const [open, setOpen] = useState(false)
   const [formStartTime, setFormStartTime] = useState<number | undefined>(undefined)
+  const [checkedUnique, setCheckedUnique] = useState(false)
 
   useEffect(() => {
     const getStartTime = async () => {
       const startDate = await getFormationFormStart(user.id)
       if (startDate) {
+        setCheckedUnique(true)
         setFormStartTime(startDate.getTime())
       }
     }
@@ -63,10 +66,27 @@ const FormationView = ({ formations, user, organisationName }: Props) => {
       ) : (
         <>
           <div className={classNames(styles.subTitle, 'mb2')}>
-            {t('evaluationSubtitle', { time: timer / (MIN * TIME_IN_MS) })}
+            {t.rich('evaluationSubtitle', {
+              time: timer / (MIN * TIME_IN_MS),
+              red: (children) => <span className="error">{children}</span>,
+            })}
           </div>
-          <div className="justify-center" onClick={openFormationForm}>
-            <Button>{t('answer')}</Button>
+          {!formStartTime && (
+            <>
+              <Checkbox
+                checked={checkedUnique}
+                onChange={() => setCheckedUnique(!checkedUnique)}
+                id="form-acceptation"
+              />
+              <label className="pointer" htmlFor="form-acceptation">
+                {t('acceptation')}
+              </label>
+            </>
+          )}
+          <div className="justify-center">
+            <Button disabled={!checkedUnique} onClick={openFormationForm}>
+              {t('answer')}
+            </Button>
           </div>
         </>
       )}

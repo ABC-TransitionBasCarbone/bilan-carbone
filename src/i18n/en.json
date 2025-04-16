@@ -1263,7 +1263,8 @@
     "videos": "Videos",
     "evaluation": "Knowledge assessment",
     "evaluationEnded": "You already answered the questionnaire",
-    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training certificate. You will have {time} minutes to answer it and will not be able to retry it later.",
+    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training certificate. It is limited in time and you will have <red>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</red>",
+    "acceptation": "I've understood that I'll only be able to launch the questionnaire once and that I'll have a limited amount of time to answer the question. I'm in the right conditions to start my test",
     "answer": "Answer the questionnaire",
     "timer": "Remaining time: ",
     "form": "Typeform Questionnaire"
