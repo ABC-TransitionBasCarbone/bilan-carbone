@@ -45,15 +45,22 @@ export default function PieResult({ studySite, computedResults, resultsUnit }: P
         }
     }
 
-    const labels = useMemo(() => Object.values(CutPost), []);
 
-    const data = useMemo(() => {
+    const [labels, data] = useMemo(() => {
         if (computedResults.every((post) => post.value === 0)) {
-            return [];
+            return [[], []];
         }
 
-        return labels.map((post) => (computedResults.find((resultByPost) => resultByPost.post === post) as ResultsByPost).value);
+        const validPosts = new Set(Object.values(CutPost));
 
+        const filtered = computedResults.filter(
+            (result) => validPosts.has(result.post as CutPost) && result.value > 0
+        );
+
+        const labels = filtered.map((result) => result.post);
+        const data = filtered.map((result) => result.value);
+
+        return [labels, data];
     }, [studySite, validatedOnly, computedResults]);
 
     useEffect(() => {
@@ -67,7 +74,7 @@ export default function PieResult({ studySite, computedResults, resultsUnit }: P
                 chartRef.current = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: labels,
+                        labels,
                         datasets: [
                             {
                                 data,
@@ -76,7 +83,6 @@ export default function PieResult({ studySite, computedResults, resultsUnit }: P
                         ],
                     },
                     options: {
-
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {

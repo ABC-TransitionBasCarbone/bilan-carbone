@@ -5,7 +5,8 @@ import { FullStudy } from "@/db/study";
 import DynamicComponent from "@/environments/core/utils/DynamicComponent";
 import { CUT } from "@/store/AppEnvironment";
 import { ExportRule } from "@prisma/client";
-import AllResults, { default as AllResultsCUT } from '@/environments/cut/study/results/AllResults'
+import { default as AllResultsCUT } from '@/environments/cut/study/results/AllResults'
+import AllResults from "@/components/study/results/AllResults";
 
 
 interface Props {
