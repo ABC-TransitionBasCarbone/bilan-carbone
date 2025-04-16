@@ -12,6 +12,7 @@ export const AccountWithUserSelect = {
   updatedAt: true,
   userId: true,
   importedFileDate: true,
+  deactivatableFeatureStatus: true,
   organizationVersionId: true,
   organizationVersion: {
     select: {
@@ -32,6 +33,7 @@ export const AccountWithUserSelect = {
       password: true,
       resetToken: true,
       status: true,
+      source: true,
     },
   },
 }
