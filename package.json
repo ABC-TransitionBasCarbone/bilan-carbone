@@ -1,6 +1,6 @@
 {
   "name": "bilan-carbone",
-  "version": "1.4.0",
+  "version": "2.5.0",
   "private": true,
   "engines": {
     "node": "22",
@@ -17,7 +17,7 @@
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "seed:import": "prisma db seed -- -i",
-    "user:import": "ts-node src/scripts/ftp/importUsers.ts"
+    "user:import": "tsx src/scripts/ftp/importUsers.ts"
   },
   "prisma": {
     "schema": "prisma/schema",
