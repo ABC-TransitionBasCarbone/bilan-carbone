@@ -186,15 +186,8 @@ export const canDeleteStudy = async (studyId: string) => {
     return true
   }
 
-  if (
-    study.allowedUsers.some(
-      (allowedUser) => allowedUser.role === StudyRole.Validator && allowedUser.user.email === session.user.email,
-    )
-  ) {
-    return true
-  }
-
-  if (isAdminOnStudyOrga(session.user, study.organization)) {
+  const userRoleOnStudy = await getUserRoleOnStudy(session.user, study)
+  if (userRoleOnStudy === StudyRole.Validator) {
     return true
   }
 
