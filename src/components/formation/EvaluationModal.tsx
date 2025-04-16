@@ -1,14 +1,21 @@
 import { User } from 'next-auth'
+import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
+import Countdown from 'react-countdown'
 
 interface Props {
   user: User
   organisationName: string
+  onClose: () => void
+  startTime: number
 }
 
 const typeformId = process.env.NEXT_PUBLIC_TYPEFORM_ID
+const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
 
-const EvaluationModal = ({ user, organisationName }: Props) => {
+const EvaluationModal = ({ user, organisationName, onClose, startTime }: Props) => {
+  const t = useTranslations('formation')
+
   useEffect(() => {
     const script = document.createElement('script')
     script.src = '//embed.typeform.com/next/embed.js'
@@ -28,18 +35,28 @@ const EvaluationModal = ({ user, organisationName }: Props) => {
     organisation: organisationName,
   }
 
+  const onTimerEnd = () => {
+    onClose()
+  }
+
   return (
-    <div
-      data-tf-live={typeformId}
-      data-tf-hidden={[
-        `name=${params.name}`,
-        `firstname=${params.firstname}`,
-        `email=${params.email}`,
-        `level=${params.level}`,
-        `date=${params.date}`,
-        `organisation=${params.organisation}`,
-      ].join(',')}
-    />
+    <>
+      <span className="text-center mb-2">
+        {t('timer')}
+        <Countdown date={startTime + timer} onComplete={onTimerEnd} />
+      </span>
+      <div
+        data-tf-live={typeformId}
+        data-tf-hidden={[
+          `name=${params.name}`,
+          `firstname=${params.firstname}`,
+          `email=${params.email}`,
+          `level=${params.level}`,
+          `date=${params.date}`,
+          `organisation=${params.organisation}`,
+        ].join(',')}
+      />
+    </>
   )
 }
 

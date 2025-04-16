@@ -1262,8 +1262,10 @@
     "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode BC V8 à V9. Regardez les vidéos, répondez au questionnaire et recevez votre certificat !",
     "videos": "Vidéos",
     "evaluation": "Evaluation des connaissances",
-    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre certificat de formation v9",
+    "evaluationEnded": "Vous avez déjà répondu au quesitonnaire",
+    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre certificat de formation v9. Vous aurez {time} minutes pour y répondre et ne pourrez plus le retenter à l'avenir.",
     "answer": "Répondre au questionnaire",
+    "timer": "Temps restant : ",
     "form": "Questionnaire Typeform"
   },
   "deactivableFeatures": {

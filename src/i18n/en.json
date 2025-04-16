@@ -1262,8 +1262,10 @@
     "explaination": "You will find below the training course for updating the BC V8 to V9 method. Watch the videos, take the quiz and receive your certificate!",
     "videos": "Videos",
     "evaluation": "Knowledge assessment",
-    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training certificate.",
+    "evaluationEnded": "You already answered the questionnaire",
+    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training certificate. You will have {time} minutes to answer it and will not be able to retry it later.",
     "answer": "Answer the questionnaire",
+    "timer": "Remaining time: ",
     "form": "Typeform Questionnaire"
   },
   "deactivableFeatures": {
