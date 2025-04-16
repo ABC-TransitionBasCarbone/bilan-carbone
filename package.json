@@ -1,6 +1,6 @@
 {
   "name": "bilan-carbone",
-  "version": "2.5.1",
+  "version": "2.5.0",
   "private": true,
   "engines": {
     "node": "22",
