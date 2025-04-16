@@ -67,7 +67,7 @@ const QualitySelectGroup = <T extends FieldValues>({
   const hasQualityError = qualityFieldErrors.length > 0
 
   return (
-    <div className={classNames('flex grow', expanded ? styles.row : styles.shrinked)}>
+    <div className={classNames('flex grow', expanded ? styles.row : styles.shrinked, { mt1: feSpecific || control })}>
       {expanded ? (
         <>
           {qualityKeys.map((field) => (
