@@ -158,8 +158,13 @@ export const uploadOrganizations = async (
     })
   }
 
+  const existingSitesIds = await getExistingSitesIds(
+    transaction,
+    sites.map((site) => site.oldBCId),
+  )
   // Et je crée tous les autres sites
   const sitesToCreate = sites
+    .filter((site) => !existingSitesIds.has(site.oldBCId))
     .map((site) => {
       const existingParentOrganisationId = organizationsOldBCIdsIdsMap.get(site.organizationOldBCId)
       if (!existingParentOrganisationId) {
