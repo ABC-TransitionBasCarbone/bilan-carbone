@@ -8,7 +8,7 @@ model DeactivatableFeatureStatus {
   active  Boolean              @default(false)
 
   updatedById String? @map("updated_by")
-  updator     User?   @relation("deactivable_feature_updator", fields: [updatedById], references: [id])
+  updator     Account?   @relation("deactivable_feature_updator", fields: [updatedById], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
