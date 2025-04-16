@@ -4,9 +4,10 @@ import { FullStudy } from '@/db/study'
 import { qualityKeys, specificFEQualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
+import { FormControl, FormHelperText } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { FieldError } from 'react-hook-form'
+import { Control, Controller, FieldValues, Path, useForm, useFormState } from 'react-hook-form'
 import Button from '../base/Button'
 import HelpIcon from '../base/HelpIcon'
 import QualitySelect from '../form/QualitySelect'
@@ -15,7 +16,7 @@ import styles from './EmissionSource.module.css'
 type AllQualityKeys = (typeof qualityKeys)[number] | (typeof specificFEQualityKeys)[number]
 type Source = Partial<Record<AllQualityKeys, number | null>>
 
-interface Props {
+interface Props<T extends FieldValues> {
   advanced?: boolean
   canEdit: boolean | null
   emissionSource: Source & { emissionFactor?: FullStudy['emissionSources'][0]['emissionFactor'] }
@@ -26,10 +27,10 @@ interface Props {
   canShrink: boolean
   defaultQuality?: number | null
   feSpecific?: boolean
-  error?: FieldError
+  control?: Control<T>
 }
 
-const QualitySelectGroup = ({
+const QualitySelectGroup = <T extends FieldValues>({
   advanced,
   canEdit,
   emissionSource,
@@ -40,8 +41,8 @@ const QualitySelectGroup = ({
   canShrink,
   defaultQuality,
   feSpecific,
-  error,
-}: Props) => {
+  control,
+}: Props<T>) => {
   const t = useTranslations('emissionSource')
   const tGlossary = useTranslations('emissionSource.glossary')
 
@@ -52,42 +53,69 @@ const QualitySelectGroup = ({
       ? emissionSource[getField(field)] || (emissionSource.emissionFactor ? emissionSource.emissionFactor[field] : null)
       : emissionSource[field]
 
+  const mockControl = useForm<T>().control
+  const actualControl = (control ?? mockControl) as Control<T>
+
+  const { errors } = useFormState({
+    control: actualControl,
+    name: qualityKeys.map((key) => getField(key) as Path<T>),
+  })
+
+  const qualityFieldErrors = qualityKeys
+    .map((field) => errors[getField(field) as keyof typeof errors])
+    .filter((error) => error !== undefined)
+  const hasQualityError = qualityFieldErrors.length > 0
+
   return (
     <div className={classNames('flex grow', expanded ? styles.row : styles.shrinked)}>
       {expanded ? (
         <>
           {qualityKeys.map((field) => (
-            <QualitySelect
+            <Controller
               key={`qualify-${getField(field)}`}
-              disabled={!canEdit}
-              data-testid={`emission-source-${getField(field)}`}
-              id={getField(field)}
-              value={getFieldValue(field) || ''}
-              onChange={(event) => update(getField(field), Number(event.target.value))}
-              label={t(`form.${field}`)}
-              starredValue={feSpecific && emissionSource.emissionFactor ? emissionSource.emissionFactor[field] : null}
-              error={error?.ref?.name === field}
+              name={getField(field) as Path<T>}
+              control={actualControl}
+              render={({ fieldState: { error } }) => (
+                <FormControl error={!!error}>
+                  <QualitySelect
+                    disabled={!canEdit}
+                    data-testid={`emission-source-${getField(field)}`}
+                    id={getField(field)}
+                    value={getFieldValue(field) || ''}
+                    onChange={(event) => update(getField(field), Number(event.target.value))}
+                    label={t(`form.${field}`)}
+                    starredValue={
+                      feSpecific && emissionSource.emissionFactor ? emissionSource.emissionFactor[field] : null
+                    }
+                    error={!!error}
+                  />
+                  {error?.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
+                </FormControl>
+              )}
             />
           ))}
         </>
       ) : (
-        <QualitySelect
-          disabled={!canEdit}
-          data-testid="emission-source-quality-select"
-          id="quality"
-          value={defaultQuality || ''}
-          onChange={(event) => {
-            qualityKeys.forEach((field) => {
-              update(getField(field), Number(event.target.value))
-            })
-          }}
-          label={t('form.quality')}
-          error={!!error}
-        />
+        <FormControl error={hasQualityError}>
+          <QualitySelect
+            data-testid="emission-source-quality-select"
+            disabled={!canEdit}
+            id="quality"
+            value={defaultQuality || ''}
+            onChange={(event) => qualityKeys.forEach((field) => update(getField(field), Number(event.target.value)))}
+            label={t('form.quality')}
+            error={hasQualityError}
+          />
+          {hasQualityError &&
+            qualityFieldErrors.map((error) => (
+              <FormHelperText key={error?.message as string}>{t('validation.' + error?.message)}</FormHelperText>
+            ))}
+        </FormControl>
       )}
       <HelpIcon onClick={() => setGlossary('quality')} label={tGlossary('title')} />
       {!advanced && canShrink && (
         <Button
+          className={styles.expandButton}
           data-testid="emission-source-quality-expand-button"
           onClick={() => setExpanded(!expanded)}
           title={t(expanded ? 'form.shrink' : 'form.expand')}

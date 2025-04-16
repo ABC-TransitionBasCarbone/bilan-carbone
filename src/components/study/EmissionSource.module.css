@@ -131,6 +131,10 @@
   }
 }
 
+.expandButton {
+  height: 3.5rem;
+}
+
 .small {
   max-width: 15rem;
 }

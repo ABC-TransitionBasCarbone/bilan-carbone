@@ -713,7 +713,6 @@
         "pfc": "Positive value only",
         "otherGES": "Vositive value only",
         "totalCo2": "Please provide a total emission",
-        "reliability": "Please provide a value for Reliability",
         "type": "Please select a post type",
         "subPost": "Please select a sub post"
       }
@@ -1187,6 +1186,13 @@
     "emissionFactorDialog": {
       "title": "Choose an emission factor",
       "cancel": "Cancel"
+    },
+    "validation": {
+      "reliability": "Reliability required",
+      "technicalRepresentativeness": "Technical representativeness required",
+      "geographicRepresentativeness": "Geographic representativeness required",
+      "temporalRepresentativeness": "Temporal representativeness required",
+      "completeness": "Completeness required"
     }
   },
   "quality": {

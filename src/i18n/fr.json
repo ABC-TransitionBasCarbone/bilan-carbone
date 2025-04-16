@@ -713,7 +713,6 @@
         "pfc": "Valeur positive uniquement",
         "otherGES": "Valeur positive uniquement",
         "totalCo2": "Veuillez renseigner une émission totale",
-        "reliability": "Veuillez renseigner une valeur pour la Fiabilité",
         "type": "Veuillez renseigner un type de poste",
         "unit": "Veuillez renseigner une unité"
       }
@@ -1187,6 +1186,13 @@
     "emissionFactorDialog": {
       "title": "Choisir un facteur d'émission",
       "cancel": "Annuler"
+    },
+    "validation": {
+      "reliability": "Fiabilité requise",
+      "technicalRepresentativeness": "Représentativité technique requise",
+      "geographicRepresentativeness": "Représentativité géographique requise",
+      "temporalRepresentativeness": "Représentativité temporelle requise",
+      "completeness": "Complétude requise"
     }
   },
   "quality": {
