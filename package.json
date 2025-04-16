@@ -17,7 +17,7 @@
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "seed:import": "prisma db seed -- -i",
-    "user:import": "ts-node src/scripts/ftp/importUsers.ts"
+    "user:import": "tsx src/scripts/ftp/importUsers.ts"
   },
   "prisma": {
     "schema": "prisma/schema",
