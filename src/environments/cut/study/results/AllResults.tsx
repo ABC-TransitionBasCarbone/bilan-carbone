@@ -5,7 +5,7 @@ import useStudySite from "@/components/study/site/useStudySite";
 import { EmissionFactorWithParts } from "@/db/emissionFactors";
 import { FullStudy } from "@/db/study";
 import { Box, Button, Container, Tab, Tabs } from "@mui/material";
-import { ExportRule, SubPost } from "@prisma/client";
+import { Export, ExportRule, SubPost } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import DownloadIcon from '@mui/icons-material/Download';
 import { SyntheticEvent, useMemo, useState } from "react";
@@ -13,6 +13,7 @@ import Result from "@/components/study/results/Result";
 import { computeResultsByPost } from "@/services/results/consolidated";
 import { filterWithDependencies } from "@/services/results/utils";
 import PieResult from "./PieResult";
+import BegesResultsTable from "@/components/study/results/beges/BegesResultsTable";
 
 interface Props {
     study: FullStudy,
@@ -55,18 +56,17 @@ function a11yProps(index: number) {
 
 export default function AllResults({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) {
     const [value, setValue] = useState(0);
-
     const handleChange = (event: SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
     const tPost = useTranslations('emissionFactors.post');
 
-    const { studySite, setSite } = useStudySite(study, true)
+    const { studySite, setSite } = useStudySite(study, true);
 
     const allComputedResults = useMemo(
         () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
         [studySite, validatedOnly],
-    )
+    );
 
     const computedResults = useMemo(
         () =>
@@ -77,7 +77,9 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
                 }))
                 .map((post) => ({ ...post, value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0) })),
         [allComputedResults],
-    )
+    );
+
+    const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules]);
 
     return (
         <Container>
@@ -85,25 +87,37 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
                 <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
                 <Button variant="outlined" size="large" endIcon={<DownloadIcon />}>exporter mon Bilan Carbone</Button>
             </Box>
-            <Tabs
-                value={value}
-                onChange={handleChange}
-                indicatorColor="secondary"
-                textColor="inherit"
-                variant="fullWidth"
-            >
-                <Tab label="Tableau" />
-                <Tab label="Diagramme en barres" />
-                <Tab label="Diagramme circulaire" />
-            </Tabs>
-            <Box component="section">
-                <TabPanel value={value} index={0}></TabPanel>
-                <TabPanel value={value} index={1}>
-                    <PieResult studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
-                </TabPanel>
+            <Box
+                component="section"
+                sx={{ marginTop: '1rem' }}>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="secondary"
+                    textColor="inherit"
+                    variant="fullWidth"
+                >
+                    <Tab label="Tableau" {...a11yProps(0)} />
+                    <Tab label="Diagramme en barres" {...a11yProps(1)} />
+                    <Tab label="Diagramme circulaire" {...a11yProps(2)} />
+                </Tabs>
+                <Box component="section" sx={{ marginTop: '1rem' }}>
+                    <TabPanel value={value} index={0}>
+                        <BegesResultsTable
+                            study={study}
+                            rules={begesRules}
+                            emissionFactorsWithParts={emissionFactorsWithParts}
+                            studySite={studySite}
+                            withDependencies={false}
+                        />
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        <PieResult studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
+                    </TabPanel>
+                </Box>
             </Box>
         </Container >
     );
