@@ -217,7 +217,7 @@
   "admin": {
     "title": "Administration",
     "csvOnly": "Only CSV files are accepted",
-    "uploadButton": "Import emission factors"
+    "uploadButton": "Import users"
   },
   "study": {
     "create": "Add a Bilan Carbone®",
@@ -1266,7 +1266,6 @@
     "answer": "Answer the questionnaire",
     "form": "Typeform Questionnaire"
   },
-
   "deactivableFeatures": {
     "title": "Deactivable functionnalities",
     "Formation": "Formation",
