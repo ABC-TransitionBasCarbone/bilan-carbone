@@ -2,7 +2,7 @@
 
 import { Formation } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Button from '../base/Button'
@@ -13,7 +13,7 @@ import Video from './Video'
 
 interface Props {
   formations: Formation[]
-  user: User
+  user: UserSession
   organisationName: string
 }
 

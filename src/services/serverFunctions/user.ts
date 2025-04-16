@@ -132,7 +132,7 @@ export const addMember = async (member: AddMemberCommand) => {
   }
 
   if (!memberExists) {
-    const { role: _, ...rest } = member
+    const { role, ...rest } = member
     const newMember = {
       ...rest,
       status: UserStatus.VALIDATED,

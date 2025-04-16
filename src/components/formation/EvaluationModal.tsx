@@ -1,8 +1,8 @@
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useEffect } from 'react'
 
 interface Props {
-  user: User
+  user: UserSession
   organisationName: string
 }
 

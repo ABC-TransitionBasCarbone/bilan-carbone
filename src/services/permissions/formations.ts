@@ -1,8 +1,8 @@
 import { DeactivatableFeature } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { isFeatureActive } from '../serverFunctions/deactivableFeatures'
 
-export const hasAccessToFormation = async (user: User) => {
+export const hasAccessToFormation = async (user: UserSession) => {
   if (!user.level) {
     return false
   }
