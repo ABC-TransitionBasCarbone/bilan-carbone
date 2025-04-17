@@ -71,22 +71,25 @@ const QualitySelectGroup = <T extends FieldValues>({
     <div className={classNames('flex grow', expanded ? styles.row : styles.shrinked, { mt1: feSpecific || control })}>
       {expanded ? (
         <>
-          {qualityKeys.map((field) => (
+          {qualityKeys.map((key) => (
             <Controller
-              key={`qualify-${getField(field)}`}
-              name={getField(field) as Path<T>}
+              key={`qualify-${getField(key)}`}
+              name={getField(key) as Path<T>}
               control={actualControl}
-              render={({ fieldState: { error } }) => (
+              render={({ field, fieldState: { error } }) => (
                 <FormControl error={!!error}>
                   <QualitySelect
                     disabled={!canEdit}
-                    data-testid={`emission-source-${getField(field)}`}
-                    id={getField(field)}
-                    value={getFieldValue(field) || ''}
-                    onChange={(event) => update(getField(field), Number(event.target.value))}
-                    label={t(`form.${field}`)}
+                    data-testid={`emission-source-${getField(key)}`}
+                    id={field.name}
+                    value={getFieldValue(key) || ''}
+                    onChange={(event) => {
+                      field.onChange(event)
+                      update(field.name as keyof Source, Number(event.target.value))
+                    }}
+                    label={t(`form.${key}`)}
                     starredValue={
-                      feSpecific && emissionSource.emissionFactor ? emissionSource.emissionFactor[field] : null
+                      feSpecific && emissionSource.emissionFactor ? emissionSource.emissionFactor[key] : null
                     }
                     error={!!error}
                   />
