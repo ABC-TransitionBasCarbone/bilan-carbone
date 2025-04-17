@@ -7,11 +7,8 @@ Run this import scripts in the production environnement (change the value of the
 Importer les facteurs d'emissions de negaoctet :
 `npx tsx src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileNegaOctet}`
 
-Importer les facteurs d'emissions de legifrance froid :
-`npx tsx src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileLegifranceCold} -r froid`
-
-Importer les facteurs d'emissions de legifrance chaud :
-`npx tsx src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileLegifranceHot} -r chaud`
+Importer les facteurs d'emissions de legifrance :
+`npx tsx src/scripts/legifrance/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFileLegifrance} `
 
 Importer les facteurs d'emissions de la base empreinte :
 `npx tsx src/scripts/baseEmpreinte/getEmissionFactors.ts -n ${versionNumberBaseEmpreinte}"`
