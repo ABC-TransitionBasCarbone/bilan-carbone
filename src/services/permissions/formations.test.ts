@@ -1,4 +1,4 @@
-import { getMockedDbUser } from '@/tests/utils/models'
+import { getMockedUserSesssion } from '@/tests/utils/models'
 import { expect } from '@jest/globals'
 import { Level } from '@prisma/client'
 import * as featuresModule from '../serverFunctions/deactivableFeatures'
@@ -17,25 +17,25 @@ describe('Formation permissions service', () => {
       })
 
       it('"Advanced" level user should not be able to access the formation view', async () => {
-        const user = getMockedDbUser({ level: Level.Advanced })
+        const user = getMockedUserSesssion({ level: Level.Advanced })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(true)
       })
 
       it('"Standard" level user should not be able to access the formation view', async () => {
-        const user = getMockedDbUser({ level: Level.Standard })
+        const user = getMockedUserSesssion({ level: Level.Standard })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(true)
       })
 
       it('"Initial" level user should not be able to access the formation view', async () => {
-        const user = getMockedDbUser({ level: Level.Initial })
+        const user = getMockedUserSesssion({ level: Level.Initial })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(true)
       })
 
       it('Untrained user should not be able to access the formation view', async () => {
-        const user = getMockedDbUser({ level: null })
+        const user = getMockedUserSesssion({ level: null })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
@@ -48,25 +48,25 @@ describe('Formation permissions service', () => {
       })
 
       it('"Advanced" level user should be able to access the formation view', async () => {
-        const user = getMockedDbUser({ level: Level.Advanced })
+        const user = getMockedUserSesssion({ level: Level.Advanced })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
       it('"Standard" level user should be able to access the formation view', async () => {
-        const user = getMockedDbUser({ level: Level.Standard })
+        const user = getMockedUserSesssion({ level: Level.Standard })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
       it('"Initial" level user should be able to access the formation view', async () => {
-        const user = getMockedDbUser({ level: Level.Initial })
+        const user = getMockedUserSesssion({ level: Level.Initial })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
       it('Untrained user should not be able to access the formation view', async () => {
-        const user = getMockedDbUser({ level: null })
+        const user = getMockedUserSesssion({ level: null })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
