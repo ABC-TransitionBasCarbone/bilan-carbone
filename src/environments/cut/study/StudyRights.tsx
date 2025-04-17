@@ -12,14 +12,14 @@ import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/service
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DayOfWeek, EmissionFactorImportVersion, OpeningHours, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
 
 interface Props {
-  user: User
+  user: UserSession
   study: FullStudy
   editionDisabled: boolean
   userRoleOnStudy: StudyRole

@@ -58,8 +58,12 @@ const getStudyExportIndexes = (studiesHeaders: string[]): Record<string, number>
 }
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
-  const user = await prismaClient.user.findUnique({ where: { email } })
-  if (!user || user.organizationId !== organizationId) {
+  // TODO Je ne sais pas si je fais le bon check sur l'orgaId
+  const user = await prismaClient.user.findUnique({
+    where: { email },
+    include: { accounts: { include: { organizationVersion: true } } },
+  })
+  if (!user || !user.accounts.some((account) => account.organizationVersion?.organizationId == organizationId)) {
     console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
     return
   }

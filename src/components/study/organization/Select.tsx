@@ -3,7 +3,7 @@ import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import LinkButton from '@/components/base/LinkButton'
 import { FormSelect } from '@/components/form/Select'
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/account'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
@@ -17,21 +17,21 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
-  organizations: OrganizationWithSites[]
-  selectOrganization: Dispatch<SetStateAction<OrganizationWithSites | undefined>>
+  organizationVersions: OrganizationWithSites[]
+  selectOrganizationVersion: Dispatch<SetStateAction<OrganizationWithSites | undefined>>
   form: UseFormReturn<CreateStudyCommand>
 }
 
-const SelectOrganization = ({ organizations, selectOrganization, form }: Props) => {
+const SelectOrganization = ({ organizationVersions, selectOrganizationVersion, form }: Props) => {
   const t = useTranslations('study.organization')
   const [error, setError] = useState('')
   const [caUnit, setCAUnit] = useState(defaultCAUnit)
   const sites = form.watch('sites')
-  const organizationId = form.watch('organizationId')
+  const organizationVersionId = form.watch('organizationVersionId')
 
-  const organization = useMemo(
-    () => organizations.find((organization) => organization.id === organizationId),
-    [organizationId, organizations],
+  const organizationVersion = useMemo(
+    () => organizationVersions.find((organizationVersion) => organizationVersion.id === organizationVersionId),
+    [organizationVersionId, organizationVersions],
   )
 
   useEffect(() => {
@@ -39,10 +39,10 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
   }, [])
 
   useEffect(() => {
-    if (organization) {
+    if (organizationVersion) {
       form.setValue(
         'sites',
-        organization.sites.map((site) => ({
+        organizationVersion.organization.sites.map((site) => ({
           ...site,
           ca: site.ca ? displayCA(site.ca, caUnit) : 0,
           selected: false,
@@ -53,7 +53,7 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
     } else {
       form.setValue('sites', [])
     }
-  }, [organization, caUnit])
+  }, [organizationVersion, caUnit])
 
   const applyUserSettings = async () => {
     const caUnit = (await getUserSettings())?.caUnit
@@ -73,32 +73,32 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
       ) {
         setError(t('validation.etpCa'))
       } else {
-        selectOrganization(organization)
+        selectOrganizationVersion(organizationVersion)
       }
     }
   }
 
   return (
     <Block title={t('title')} as="h1" data-testid="new-study-organization-title">
-      {organizations.length === 1 ? (
-        <p className="title-h2">{organizations[0].name}</p>
+      {organizationVersions.length === 1 ? (
+        <p className="title-h2">{organizationVersions[0].organization.name}</p>
       ) : (
         <FormSelect
           data-testid="new-study-organization-select"
-          name="organizationId"
+          name="organizationVersionId"
           control={form.control}
           translation={t}
           label={t('select')}
         >
-          {organizations.map((organization) => (
-            <MenuItem key={organization.id} value={organization.id}>
-              {organization.name}
+          {organizationVersions.map((organizationVersion) => (
+            <MenuItem key={organizationVersion.id} value={organizationVersion.id}>
+              {organizationVersion.organization.name}
             </MenuItem>
           ))}
         </FormSelect>
       )}
-      {organization &&
-        (organization.sites.length > 0 ? (
+      {organizationVersion &&
+        (organizationVersion.organization.sites.length > 0 ? (
           <>
             <DynamicComponent
               environmentComponents={{ [CUT]: <SitesCut sites={sites} form={form} withSelection /> }}
@@ -114,7 +114,7 @@ const SelectOrganization = ({ organizations, selectOrganization, form }: Props) 
         ) : (
           <>
             <p className="title-h3 mt1 mb-2">{t('noSites')}</p>
-            <LinkButton href={`/organisations/${organization.id}/modifier`}>{t('addSite')}</LinkButton>
+            <LinkButton href={`/organisations/${organizationVersion.id}/modifier`}>{t('addSite')}</LinkButton>
           </>
         ))}
     </Block>

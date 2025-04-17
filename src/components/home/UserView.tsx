@@ -1,6 +1,8 @@
-import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
+import { getAccountOrganizationVersions } from '@/db/account'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { hasAccountToValidateInOrganization } from '@/db/user'
 import { canEditMemberRole } from '@/utils/organization'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import Actualities from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
 import StudiesContainer from '../study/StudiesContainer'
@@ -8,34 +10,42 @@ import CRClientsList from './CRClientsList'
 import UserToValidate from './UserToValidate'
 
 interface Props {
-  user: User
+  account: UserSession
 }
 
-const UserView = async ({ user }: Props) => {
-  const [organizations, hasUserToValidate] = await Promise.all([
-    getUserOrganizations(user.email),
-    hasUserToValidateInOrganization(user.organizationId),
+const UserView = async ({ account }: Props) => {
+  const [organizationVersions, hasUserToValidate] = await Promise.all([
+    getAccountOrganizationVersions(account.id),
+    hasAccountToValidateInOrganization(account.organizationVersionId),
   ])
 
-  const userOrganization = organizations.find((organization) => organization.id === user.organizationId)
-  const isCR = userOrganization?.isCR
+  const userOrganizationVersion = organizationVersions.find(
+    (organizationVersion) => organizationVersion.id === account.organizationVersionId,
+  ) as OrganizationVersionWithOrganization
+  const isCR = userOrganizationVersion?.isCR
 
   return (
     <>
-      {!!hasUserToValidate && canEditMemberRole(user) && (
+      {!!hasUserToValidate && canEditMemberRole(account) && (
         <div className="main-container mb1">
           <UserToValidate />
         </div>
       )}
       {isCR ? (
         <CRClientsList
-          organizations={organizations.filter((organization) => organization.id !== user.organizationId)}
+          organizationVersions={
+            organizationVersions.filter(
+              (organizationVersion) => organizationVersion.id !== account.organizationVersionId,
+            ) as OrganizationVersionWithOrganization[]
+          }
         />
       ) : (
-        <StudiesContainer user={user} />
+        <StudiesContainer user={account} />
       )}
       <Actualities />
-      {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
+      {userOrganizationVersion && !userOrganizationVersion.onboarded && (
+        <Onboarding user={account} organizationVersion={userOrganizationVersion} />
+      )}
     </>
   )
 }

@@ -1,16 +1,23 @@
 'use server'
 
+import {
+  AccountWithUser,
+  accountWithUserToUserSession,
+  changeAccountRole,
+  getAccountByEmailAndOrganizationVersionId,
+  getAccountById,
+  getAccountFromUserOrganization,
+  userSessionToDbUser,
+} from '@/db/account'
 import { prismaClient } from '@/db/client'
-import { getOrganizationById } from '@/db/organization'
+import { getOrganizationVersionById } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
   addUser,
   changeStatus,
-  changeUserRole,
   deleteUserFromOrga,
   getUserApplicationSettings,
-  getUserFromUserOrganization,
-  organizationActiveUsersCount,
+  organizationVersionActiveAccountsCount,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
   validateUser,
@@ -18,9 +25,9 @@ import {
 import { getUserByEmail, updateUser } from '@/db/userImport'
 import { processUsers } from '@/scripts/ftp/userImport'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
-import { User as DBUser, Organization, Role, UserChecklist, UserStatus } from '@prisma/client'
+import { Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { auth } from '../auth'
 import { getUserCheckList } from '../checklist'
 import {
@@ -58,11 +65,11 @@ export const sendInvitation = async (
   email: string,
   study: FullStudy,
   organization: Organization,
-  user: User,
+  user: UserSession,
   role: string,
-  newUser?: DBUser,
+  newAccount?: AccountWithUser,
 ) => {
-  if (newUser) {
+  if (newAccount) {
     return role
       ? sendUserOnStudyInvitationEmail(
           email,
@@ -70,7 +77,7 @@ export const sendInvitation = async (
           study.id,
           organization.name,
           `${user.firstName} ${user.lastName}`,
-          newUser.firstName,
+          newAccount.user.firstName,
           role,
         )
       : sendContributorInvitationEmail(
@@ -79,7 +86,7 @@ export const sendInvitation = async (
           study.id,
           organization.name,
           `${user.firstName} ${user.lastName}`,
-          newUser.firstName,
+          newAccount.user.firstName,
         )
   }
 
@@ -111,79 +118,84 @@ export const sendActivation = async (email: string, fromReset: boolean) => {
 
 export const addMember = async (member: AddMemberCommand) => {
   const session = await auth()
-  if (!session || !session.user || !session.user.organizationId || member.role === Role.SUPER_ADMIN) {
+  if (!session || !session.user || !session.user.organizationVersionId || member.role === Role.SUPER_ADMIN) {
     return NOT_AUTHORIZED
   }
 
-  if (!canAddMember(session.user, member, session.user.organizationId)) {
+  if (!canAddMember(session.user, member, session.user.organizationVersionId)) {
     return NOT_AUTHORIZED
   }
 
-  const memberExists = await getUserByEmail(member.email)
+  const memberExists = await getAccountByEmailAndOrganizationVersionId(member.email, session.user.organizationVersionId)
 
   if (memberExists?.role === Role.SUPER_ADMIN) {
     return NOT_AUTHORIZED
   }
 
   if (!memberExists) {
+    const { role, ...rest } = member
     const newMember = {
-      ...member,
-      role: member.role === Role.ADMIN || member.role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT,
+      ...rest,
       status: UserStatus.VALIDATED,
       level: null,
-      organizationId: session.user.organizationId,
+      accounts: {
+        create: {
+          role: role === Role.ADMIN || member.role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT,
+          organizationVersionId: session.user.organizationVersionId,
+        },
+      },
     }
     await addUser(newMember)
     addUserChecklistItem(UserChecklist.AddCollaborator)
   } else {
-    if (memberExists.status === UserStatus.ACTIVE && memberExists.organizationId) {
+    if (memberExists.user.status === UserStatus.ACTIVE && memberExists.organizationVersionId) {
       return NOT_AUTHORIZED
     }
 
     const updateMember = {
       ...member,
       status: UserStatus.VALIDATED,
-      level: memberExists.level ? memberExists.level : null,
-      role: memberExists.level
+      level: memberExists.user.level ? memberExists.user.level : null,
+      role: memberExists.user.level
         ? memberExists.role
         : member.role === Role.ADMIN || member.role === Role.GESTIONNAIRE
           ? Role.GESTIONNAIRE
           : Role.DEFAULT,
-      organizationId: session.user.organizationId,
+      organizationVersionId: session.user.organizationVersionId,
     }
     await updateUser(memberExists.id, updateMember)
   }
 
-  await sendNewUser(member.email, session.user, member.firstName)
+  await sendNewUser(member.email, userSessionToDbUser(session.user), member.firstName)
 }
 
 export const validateMember = async (email: string) => {
   const session = await auth()
-  if (!session || !session.user) {
+  if (!session || !session.user || !session.user.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
-  const member = await getUserByEmail(email)
-  if (!member || !canAddMember(session.user, member, member.organizationId)) {
+  const member = await getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId)
+  if (!member || !canAddMember(session.user, member, member.organizationVersionId)) {
     return NOT_AUTHORIZED
   }
 
   await validateUser(email)
-  await sendNewUser(member.email, session.user, member.firstName)
+  await sendNewUser(member.user.email, userSessionToDbUser(session.user), member.user.firstName)
 }
 
 export const resendInvitation = async (email: string) => {
   const session = await auth()
-  if (!session || !session.user) {
+  if (!session || !session.user || !session.user.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
-  const member = await getUserByEmail(email)
-  if (!member || !canAddMember(session.user, member, member.organizationId)) {
+  const member = await getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId)
+  if (!member || !canAddMember(session.user, member, member.organizationVersionId)) {
     return NOT_AUTHORIZED
   }
 
-  await sendNewUser(member.email, session.user, member.firstName)
+  await sendNewUser(member.user.email, userSessionToDbUser(session.user), member.user.firstName)
 }
 
 export const deleteMember = async (email: string) => {
@@ -201,28 +213,32 @@ export const deleteMember = async (email: string) => {
 
 export const changeRole = async (email: string, role: Role) => {
   const session = await auth()
-  if (!session || !session.user) {
+  if (!session || !session.user || !session.user.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
-  const userToChange = await getUserByEmail(email)
+  const accountToChange = await getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId)
 
-  if (!canChangeRole(session.user, userToChange, role)) {
+  if (!accountToChange) {
     return NOT_AUTHORIZED
   }
 
-  const team = await getUserFromUserOrganization(session.user)
+  if (!canChangeRole(session.user, accountToChange as AccountWithUser, role)) {
+    return NOT_AUTHORIZED
+  }
+
+  const team = await getAccountFromUserOrganization(session.user)
   const selfEditRolesCount = team.filter((member) => canEditSelfRole(member.role)).length
-  if (userToChange && selfEditRolesCount === 1 && canEditSelfRole(userToChange.role) && !canEditSelfRole(role)) {
+  if (accountToChange && selfEditRolesCount === 1 && canEditSelfRole(accountToChange.role) && !canEditSelfRole(role)) {
     return MORE_THAN_ONE
   }
 
-  const targetUser = await getUserByEmail(email)
-  if (!targetUser || targetUser.organizationId !== session.user.organizationId) {
+  const targetAccount = await getAccountById(accountToChange.id)
+  if (!targetAccount || targetAccount.organizationVersionId !== session.user.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
-  await changeUserRole(email, role)
+  await changeAccountRole(accountToChange.id, role)
 }
 
 export const updateUserProfile = async (command: EditProfileCommand) => {
@@ -256,19 +272,23 @@ export const resetPassword = async (email: string) => {
 
 export const activateEmail = async (email: string, fromReset: boolean = false) => {
   const user = await getUserByEmail(email)
-  if (!user || !user.organizationId || user.status === UserStatus.ACTIVE) {
+  const account = (await getAccountById(user?.accounts[0]?.id || '')) as AccountWithUser
+  if (!user || !account || !account.organizationVersionId || user.status === UserStatus.ACTIVE) {
     return { error: true, message: NOT_AUTHORIZED }
   }
 
-  const userOrga = await getOrganizationById(user.organizationId)
-  if (!userOrga || !userOrga.activatedLicence) {
+  const accountOrgaVersion = await getOrganizationVersionById(account.organizationVersionId)
+  if (!accountOrgaVersion || !accountOrgaVersion.activatedLicence) {
     return { error: true, message: NOT_AUTHORIZED }
   }
 
-  if ((await organizationActiveUsersCount(user.organizationId)) && user.status !== UserStatus.VALIDATED) {
-    const users = await getUserFromUserOrganization(user)
+  if (
+    (await organizationVersionActiveAccountsCount(account.organizationVersionId)) &&
+    user.status !== UserStatus.VALIDATED
+  ) {
+    const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(account))
     await sendActivationRequest(
-      users.filter((u) => u.role === Role.GESTIONNAIRE || u.role === Role.ADMIN).map((u) => u.email),
+      accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
       email,
       `${user.firstName} ${user.lastName}`,
     )
@@ -289,7 +309,7 @@ export const getUserSettings = async () => {
   if (!session || !session.user) {
     return null
   }
-  return getUserApplicationSettings(session.user.id)
+  return getUserApplicationSettings(session.user.accountId)
 }
 
 export const updateUserSettings = async (command: EditSettingsCommand) => {
@@ -297,7 +317,7 @@ export const updateUserSettings = async (command: EditSettingsCommand) => {
   if (!session || !session.user) {
     return NOT_AUTHORIZED
   }
-  await updateUserApplicationSettings(session.user.id, command)
+  await updateUserApplicationSettings(session.user.accountId, command)
 }
 
 export const getUserCheckedItems = async () => {
@@ -305,7 +325,7 @@ export const getUserCheckedItems = async () => {
   if (!session || !session.user) {
     return []
   }
-  return prismaClient.userCheckedStep.findMany({ where: { userId: session.user.id } })
+  return prismaClient.userCheckedStep.findMany({ where: { accountId: session.user.accountId } })
 }
 
 export const addUserChecklistItem = async (step: UserChecklist) => {
@@ -313,22 +333,24 @@ export const addUserChecklistItem = async (step: UserChecklist) => {
   if (!session || !session.user) {
     return
   }
-  const isCR = (await prismaClient.organization.findUnique({ where: { id: session.user.organizationId || '' } }))?.isCR
+  const isCR = (
+    await prismaClient.organizationVersion.findUnique({ where: { id: session.user.organizationVersionId || '' } })
+  )?.isCR
   const checklist = getUserCheckList(session.user.role, !!isCR)
   if (!Object.values(checklist).includes(step)) {
     return
   }
   await prismaClient.userCheckedStep.upsert({
-    where: { userId_step: { userId: session.user.id, step } },
+    where: { accountId_step: { accountId: session.user.accountId, step } },
     update: {},
-    create: { userId: session.user.id, step },
+    create: { accountId: session.user.accountId, step },
   })
   const userChecklist = await getUserCheckedItems()
   if (userChecklist.length === Object.values(checklist).length - 1) {
     setTimeout(
       async () => {
         await prismaClient.userCheckedStep.create({
-          data: { userId: session.user.id, step: UserChecklist.Completed },
+          data: { accountId: session.user.accountId, step: UserChecklist.Completed },
         })
       },
       1 * MIN * TIME_IN_MS,

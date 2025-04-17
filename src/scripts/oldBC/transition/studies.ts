@@ -100,7 +100,7 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
 export const uploadStudies = async (
   transaction: Prisma.TransactionClient,
   userId: string,
-  organizationId: string,
+  organizationVersionId: string,
   studiesIndexes: Record<string, number>,
   studiesData: (string | number)[][],
   studySitesIndexes: Record<string, number>,

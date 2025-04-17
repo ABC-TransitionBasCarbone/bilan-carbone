@@ -1,7 +1,7 @@
-import { getAllowedStudiesByUser, getAllowedStudiesByUserAndOrganization } from '@/db/study'
+import { getAllowedStudiesByAccount, getAllowedStudiesByUserAndOrganization } from '@/db/study'
 import AddIcon from '@mui/icons-material/Add'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { Suspense } from 'react'
@@ -12,27 +12,27 @@ import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
 
 interface Props {
-  user: User
-  organizationId?: string
+  user: UserSession
+  organizationVersionId?: string
 }
 
-const StudiesContainer = async ({ user, organizationId }: Props) => {
+const StudiesContainer = async ({ user, organizationVersionId }: Props) => {
   const t = await getTranslations('study')
 
-  const studies = organizationId
-    ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
-    : await getAllowedStudiesByUser(user)
+  const studies = organizationVersionId
+    ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId)
+    : await getAllowedStudiesByAccount(user)
 
-  const creationUrl = organizationId ? `/organisations/${organizationId}/etudes/creer` : '/etudes/creer'
+  const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
 
-  const canCreateStudy = !!user.level && !!user.organizationId
-  const mainStudyOrganizationId = organizationId ?? user.organizationId
+  const canCreateStudy = !!user.level && !!user.organizationVersionId
+  const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
   return studies.length ? (
     <>
-      {mainStudyOrganizationId && (
+      {mainStudyOrganizationVersionId && (
         <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={mainStudyOrganizationId} />
+          <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
         </Suspense>
       )}
       <Studies studies={studies} canAddStudy={canCreateStudy} creationUrl={creationUrl} />
