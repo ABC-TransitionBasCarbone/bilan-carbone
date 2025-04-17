@@ -342,3 +342,11 @@ export const sendAddedUsersAndProccess = async (results: Record<string, string>[
 }
 
 export const verifyPasswordAndProcessUsers = async (uuid: string) => uuid !== process.env.ADMIN_PASSWORD
+
+export const getFormationFormStart = async (userId: string) => {
+  return (await prismaClient.user.findUnique({ where: { id: userId }, select: { formationFormStartTime: true } }))
+    ?.formationFormStartTime
+}
+
+export const startFormationForm = async (userId: string, date: Date) =>
+  prismaClient.user.update({ where: { id: userId }, data: { formationFormStartTime: date } })
