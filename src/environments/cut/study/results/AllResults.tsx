@@ -9,11 +9,15 @@ import { Export, ExportRule, SubPost } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import DownloadIcon from '@mui/icons-material/Download';
 import { SyntheticEvent, useMemo, useState } from "react";
-import Result from "@/components/study/results/Result";
 import { computeResultsByPost } from "@/services/results/consolidated";
 import { filterWithDependencies } from "@/services/results/utils";
-import PieResult from "./PieResult";
 import BegesResultsTable from "@/components/study/results/beges/BegesResultsTable";
+import { CutPost } from "@/services/posts";
+import { PieChart } from "@mui/x-charts/PieChart";
+import { BarChart } from "@mui/x-charts";
+
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import TabPanel from "@/components/tabPanel/tabPanel";
 
 interface Props {
     study: FullStudy,
@@ -22,30 +26,21 @@ interface Props {
     validatedOnly: boolean,
 }
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    dir?: string;
-    index: number;
-    value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <>{children}</>
-            )}
-        </div>
-    );
-}
+const barChartSettings = {
+    yAxis: [
+        {
+            label: 'tCo2',
+        },
+    ],
+    height: 300,
+    sx: {
+        marginLeft: '6rem',
+        [`.${axisClasses.left} .${axisClasses.label}`]: {
+            transform: 'translate(-10px, 0)',
+        },
+    },
+    borderRadius: 10
+};
 
 function a11yProps(index: number) {
     return {
@@ -56,28 +51,46 @@ function a11yProps(index: number) {
 
 export default function AllResults({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) {
     const [value, setValue] = useState(0);
-    const handleChange = (event: SyntheticEvent, newValue: number) => {
+    const handleChange = (_event: SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
     const tPost = useTranslations('emissionFactors.post');
 
     const { studySite, setSite } = useStudySite(study, true);
 
-    const allComputedResults = useMemo(
+    const resultsByPost = useMemo(
         () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
         [studySite, validatedOnly],
     );
 
-    const computedResults = useMemo(
-        () =>
-            allComputedResults
-                .map((post) => ({
-                    ...post,
-                    subPosts: post.subPosts.filter((subPost) => filterWithDependencies(subPost.post as SubPost, false)),
-                }))
-                .map((post) => ({ ...post, value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0) })),
-        [allComputedResults],
-    );
+    const computeResults = useMemo(() => {
+        const validCutPosts = new Set(Object.values(CutPost));
+
+        return resultsByPost
+            .map((post) => ({
+                ...post,
+                subPosts: post.subPosts.filter((subPost) =>
+                    filterWithDependencies(subPost.post as SubPost, false)
+                ),
+            }))
+            .map((post) => ({
+                ...post,
+                value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0),
+            }))
+            .filter((post) => validCutPosts.has(post.post as CutPost))
+            .map(({ post, ...rest }) => ({
+                ...rest,
+                label: post,
+            }));
+    }, [resultsByPost]);
+
+    const pieData = useMemo(() => {
+        return computeResults.filter((computeResult) => computeResult.value > 0);
+    }, [computeResults]);
+
+    const barData = useMemo(() => {
+        return computeResults.map(({ label, value }) => ({ label, value: value / 1000 }));
+    }, [computeResults]);
 
     const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules]);
 
@@ -112,10 +125,21 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
                         />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <PieResult studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
+                        <BarChart
+                            dataset={barData}
+                            xAxis={[{
+                                scaleType: 'band', dataKey: 'label', colorMap: {
+                                    type: 'ordinal',
+                                    colors: [getComputedStyle(document.body).getPropertyValue('--primary-500')]
+                                }
+                            }]}
+                            series={[{ dataKey: 'value' }]}
+                            {...barChartSettings}
+
+                        />
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
+                        <PieChart series={[{ data: pieData }]} height={300} />
                     </TabPanel>
                 </Box>
             </Box>
