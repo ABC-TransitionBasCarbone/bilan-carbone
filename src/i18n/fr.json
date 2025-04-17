@@ -1188,11 +1188,7 @@
       "cancel": "Annuler"
     },
     "validation": {
-      "reliability": "Fiabilité requise",
-      "technicalRepresentativeness": "Représentativité technique requise",
-      "geographicRepresentativeness": "Représentativité géographique requise",
-      "temporalRepresentativeness": "Représentativité temporelle requise",
-      "completeness": "Complétude requise"
+      "required": "Champs requis"
     }
   },
   "quality": {
