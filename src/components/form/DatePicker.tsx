@@ -10,6 +10,7 @@ interface Props<T extends FieldValues> {
   control: Control<T>
   translation: (slug: string) => string
   ['data-testid']?: string
+  clearable?: boolean
 }
 
 export const FormDatePicker = <T extends FieldValues>({
@@ -17,6 +18,7 @@ export const FormDatePicker = <T extends FieldValues>({
   control,
   translation,
   'data-testid': dataTestId,
+  clearable = false,
   ...datePickerProps
 }: Props<T> & DatePickerProps<Dayjs>) => {
   return (
@@ -33,10 +35,13 @@ export const FormDatePicker = <T extends FieldValues>({
               //@ts-expect-error: Missing in MUI Props
               'data-testid': dataTestId,
             },
+            field: { clearable },
           }}
           onChange={(date) => {
             if (date && date.isValid()) {
               onChange(date.utc(true).format())
+            } else if (date == null && clearable) {
+              onChange(null)
             }
           }}
           value={value ? dayjs(value) : null}

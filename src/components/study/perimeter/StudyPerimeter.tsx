@@ -1,5 +1,7 @@
 'use client'
 import Button from '@/components/base/Button'
+import HelpIcon from '@/components/base/HelpIcon'
+import IconLabel from '@/components/base/IconLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
@@ -43,6 +45,8 @@ interface Props {
   userRoleOnStudy: StudyRole
 }
 
+const dateFormat = { year: 'numeric', month: 'long', day: 'numeric' } as const
+
 const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   const format = useFormatter()
   const tForm = useTranslations('study.new')
@@ -77,6 +81,8 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
       studyId: study.id,
       startDate: study.startDate.toISOString(),
       endDate: study.endDate.toISOString(),
+      realizationStartDate: study.realizationStartDate?.toISOString(),
+      realizationEndDate: study.realizationEndDate?.toISOString(),
     },
   })
 
@@ -163,7 +169,12 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
     }
   }
 
-  const [startDate, endDate] = form.watch(['startDate', 'endDate'])
+  const [startDate, endDate, realizationStartDate, realizationEndDate] = form.watch([
+    'startDate',
+    'endDate',
+    'realizationStartDate',
+    'realizationEndDate',
+  ])
   const onDateSubmit = async (command: ChangeStudyDatesCommand) => {
     await form.trigger()
     if (form.formState.isValid) {
@@ -184,27 +195,78 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
 
   useEffect(() => {
     onDateSubmit(form.getValues())
-  }, [startDate, endDate])
+  }, [startDate, endDate, realizationStartDate, realizationEndDate])
+
+  const Help = (name: string) => (
+    <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
+  )
 
   return (
     <>
       {hasEditionRole ? (
-        <div className={classNames(styles.dates, 'flex')}>
-          <FormDatePicker control={form.control} translation={tForm} name="startDate" label={tForm('start')} />
-          <FormDatePicker
-            control={form.control}
-            translation={tForm}
-            name="endDate"
-            label={tForm('end')}
-            data-testid="study-endDate"
-          />
-        </div>
+        <>
+          <div className="mb1">
+            <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
+              <span className="inputLabel bold">{t('studyDates')}</span>
+            </IconLabel>
+            <div className={classNames(styles.dates, 'flex')}>
+              <FormDatePicker control={form.control} translation={tForm} name="startDate" label={tForm('start')} />
+              <FormDatePicker
+                control={form.control}
+                translation={tForm}
+                name="endDate"
+                label={tForm('end')}
+                data-testid="study-endDate"
+              />
+            </div>
+          </div>
+          <div className="mb1">
+            <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">
+              <span className="inputLabel bold">{t('realizationDates')}</span>
+            </IconLabel>
+            <div className={classNames(styles.dates, 'flex')}>
+              <FormDatePicker
+                control={form.control}
+                translation={tForm}
+                name="realizationStartDate"
+                label={tForm('start')}
+                clearable
+              />
+              <FormDatePicker
+                control={form.control}
+                translation={tForm}
+                name="realizationEndDate"
+                label={tForm('end')}
+                data-testid="new-study-realizationEndDate"
+                clearable
+              />
+            </div>
+          </div>
+        </>
       ) : (
-        <p>
-          {t('dates', {
-            startDate: format.dateTime(new Date(startDate), { year: 'numeric', month: 'long', day: 'numeric' }),
-            endDate: format.dateTime(new Date(endDate), { year: 'numeric', month: 'long', day: 'numeric' }),
-          })}
+        <p className="mb1 flex-col">
+          <span>
+            {t('dates', {
+              startDate: format.dateTime(new Date(startDate), dateFormat),
+              endDate: format.dateTime(new Date(endDate), dateFormat),
+            })}
+          </span>
+          <span>
+            {realizationStartDate && !realizationEndDate && (
+              <>{t('realizationFrom', { date: format.dateTime(new Date(realizationStartDate), dateFormat) })}</>
+            )}
+            {!realizationStartDate && realizationEndDate && (
+              <>{t('realizationUntil', { date: format.dateTime(new Date(realizationEndDate), dateFormat) })}</>
+            )}
+            {realizationStartDate && realizationEndDate && (
+              <>
+                {t('realizedDates', {
+                  startDate: format.dateTime(new Date(realizationStartDate), dateFormat),
+                  endDate: format.dateTime(new Date(realizationEndDate), dateFormat),
+                })}
+              </>
+            )}
+          </span>
         </p>
       )}
       <DynamicComponent
