@@ -1,20 +1,25 @@
+import classNames from 'classnames'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Countdown from 'react-countdown'
+
+dayjs.extend(utc)
 
 interface Props {
   user: User
   organizationName: string
-  onClose: () => void
   startTime: number
 }
 
 const typeformId = process.env.NEXT_PUBLIC_TYPEFORM_ID
 const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
 
-const EvaluationModal = ({ user, organizationName, onClose, startTime }: Props) => {
+const EvaluationModal = ({ user, organizationName, startTime }: Props) => {
   const t = useTranslations('formation')
+  const [isEnding, setIsEnding] = useState(false)
 
   useEffect(() => {
     const script = document.createElement('script')
@@ -31,19 +36,20 @@ const EvaluationModal = ({ user, organizationName, onClose, startTime }: Props) 
     firstname: user.firstName,
     email: user.email,
     level: user.level || '',
-    date: new Date().toLocaleDateString('Fr-fr'),
+    date: dayjs(startTime).toISOString(),
     organization: organizationName,
   }
 
-  const onTimerEnd = () => {
-    onClose()
+  const displayWarning = () => {
+    setIsEnding(true)
+    window.alert(t('alertMessage'))
   }
 
   return (
     <>
-      <span className="text-center mb-2">
+      <span className={classNames('text-center mb-2', { error: isEnding })}>
         {t('timer')}
-        <Countdown date={startTime + timer} onComplete={onTimerEnd} />
+        <Countdown onTick={(e) => e.minutes < 5 && !isEnding && displayWarning()} date={startTime + timer} />
       </span>
       <div
         data-tf-live={typeformId}

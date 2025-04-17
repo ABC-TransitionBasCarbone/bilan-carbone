@@ -1267,6 +1267,7 @@
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre au question. Je suis dans les bonnes conditions pour commencer mon test",
     "answer": "Répondre au questionnaire",
     "timer": "Temps restant : ",
+    "alertMessage": "Il ne vous reste que 5 minutes. Au bout de ces 5 minutes ce formulaire restera disponible et vous pourrez transmettre vos réponses, mais le temps étant écoulé, si vous prenez trop de temps, vos réponses ne seront pas prises en compte et vous ne recevrez pas d'attestation de réussite.",
     "form": "Questionnaire Typeform"
   },
   "deactivableFeatures": {

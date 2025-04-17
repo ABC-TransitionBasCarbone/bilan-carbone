@@ -1267,6 +1267,7 @@
     "acceptation": "I've understood that I'll only be able to launch the questionnaire once and that I'll have a limited amount of time to answer the question. I'm in the right conditions to start my test",
     "answer": "Answer the questionnaire",
     "timer": "Remaining time: ",
+    "alertMessage": "You only have 5 minutes remaining. After 5 minutes, this form will remain available and you will be able to submit your answers. However, if you take too long, your answers will not be taken into account and you will not receive a certificate of achievement.",
     "form": "Typeform Questionnaire"
   },
   "deactivableFeatures": {
