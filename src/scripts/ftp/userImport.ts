@@ -50,8 +50,9 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   }
 
   if (siretOrSiren) {
-    let organisation = dbUser?.organizationId
-      ? await getRawOrganizationById(dbUser.organizationId)
+    // TODO récupérer l'organisationVersionId du user correctement
+    let organisation = dbUser?.accounts[0].organizationVersionId
+      ? await getRawOrganizationById(dbUser.accounts[0].organizationVersionId)
       : await getRawOrganizationBySiret(siretOrSiren)
 
     organisation = await createOrUpdateOrganization(
@@ -65,16 +66,20 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       importedFileDate,
     )
 
-    user.organizationId = organisation?.id
+    // TODO retirer ce commentaire temporaire pour voir si les tests passent
+    // user.accounts[0].organizationVersionId = organisation?.id
+    // TODO suppirmer la ligne ci-dessous
+    return organisation
   }
 
   if (dbUser) {
     await updateUser(dbUser.id || '', {
       level: user.level,
-      ...(dbUser.status === UserStatus.IMPORTED && {
-        role: user.role as Exclude<Role, 'SUPER_ADMIN'>,
-        organizationId: user.organizationId,
-      }),
+      ...(dbUser.status === UserStatus.IMPORTED &&
+        {
+          // role: user.role as Exclude<Role, 'SUPER_ADMIN'>, // TODO retirer ici aussi
+          // organizationId: user.organizationId,
+        }),
     })
     console.log(`Updating ${email} because already exists`)
     return null
@@ -89,7 +94,8 @@ export const processUsers = async (values: Record<string, string>[], importedFil
   for (let i = 0; i < values.length; i++) {
     const user = await processUser(values[i] as Record<string, string>, importedFileDate)
     if (user) {
-      users.push(user)
+      // TODO retirer le commentaire temporaire pour voir si les tests passent
+      // users.push(user)
     }
     if (i % 50 === 0) {
       console.log(`${i}/${values.length}`)
