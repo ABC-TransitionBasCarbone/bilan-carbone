@@ -1,7 +1,6 @@
 import Button from '@/components/base/Button'
 import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
-import { getEmissionFactorsByImportedIdsAndVersion } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import {
   simulateStudyEmissionFactorSourceUpgrade,
@@ -21,8 +20,8 @@ interface Props {
 }
 
 type SimulationResult = {
-  updated: (AsyncReturnType<typeof getEmissionFactorsByImportedIdsAndVersion>[0] & { newValue: number })[]
-  deleted: AsyncReturnType<typeof getEmissionFactorsByImportedIdsAndVersion>
+  updated: Exclude<AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>['updated'], undefined> | []
+  deleted: Exclude<AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>['deleted'], undefined> | []
 }
 
 const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
@@ -78,9 +77,12 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
   }
 
   const getEmissionFactorName = (
-    emissionFactor: AsyncReturnType<typeof getEmissionFactorsByImportedIdsAndVersion>[0],
+    metaData: Exclude<
+      AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>['updated'],
+      undefined
+    >[0]['metaData'],
   ) =>
-    `${emissionFactor.metaData[0].title}${emissionFactor.metaData[0].attribute ? ` - ${emissionFactor.metaData[0].attribute}` : ''}${emissionFactor.metaData[0].frontiere ? ` - ${emissionFactor.metaData[0].frontiere}` : ''}${emissionFactor.metaData[0].location ? ` - ${emissionFactor.metaData[0].location}` : ''}`
+    `${metaData.title}${metaData.attribute ? ` - ${metaData.attribute}` : ''}${metaData.frontiere ? ` - ${metaData.frontiere}` : ''}${metaData.location ? ` - ${metaData.location}` : ''}`
 
   const hasUpdatedWastedEmissionFactor = useMemo(
     () =>
@@ -141,7 +143,7 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
                 {simulationResult.updated.map((emissionFactor) => (
                   <li key={`updated-factor-${emissionFactor.id}`}>
                     <p className="ml1">
-                      {getEmissionFactorName(emissionFactor)} :{' '}
+                      {getEmissionFactorName(emissionFactor.metaData)} :{' '}
                       <span className={styles.updatedValue}>{emissionFactor.totalCo2}</span> {emissionFactor.newValue}{' '}
                       {unit}/{tUnits(emissionFactor.unit || '')}
                       {!!wasteEmissionFactors[emissionFactor.importedId || ''] && <>*</>}
@@ -154,15 +156,16 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
           )}
           {!!simulationResult.deleted.length && (
             <>
-              <p className="mt1">{t('deleted')} :</p>
+              <p className="mt1">
+                {t('deleted')} ({t('deletionDetails')}) :
+              </p>
               <ul className="mt-2">
                 {simulationResult.deleted.map((emissionFactor) => (
                   <li key={`deleted-factor-${emissionFactor.id}`}>
-                    <p className="ml1">{getEmissionFactorName(emissionFactor)}</p>
+                    <p className="ml1">{getEmissionFactorName(emissionFactor.metaData)}</p>
                   </li>
                 ))}
               </ul>
-              <p className="mt1">{t('deletionDetails')}</p>
             </>
           )}
         </Modal>
