@@ -69,7 +69,8 @@ export const deleteUserFromOrga = (email: string) =>
   // TODO en attente de réponse sur le status + comment s'y prendre avec orgaVersion est-ce qu'on peut récupérer celle de la session user ? ça permettrait de cibler le bon account
   prismaClient.user.update({
     where: { email },
-    data: { status: UserStatus.IMPORTED, organizationId: null },
+    data: { status: UserStatus.IMPORTED },
+    // data: { status: UserStatus.IMPORTED, organizationId: null } // commentaire temporaire pour ne pas casser les tests,
   })
 
 export const validateUser = (email: string) =>
