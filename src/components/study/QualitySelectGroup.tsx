@@ -53,6 +53,7 @@ const QualitySelectGroup = <T extends FieldValues>({
       ? emissionSource[getField(field)] || (emissionSource.emissionFactor ? emissionSource.emissionFactor[field] : null)
       : emissionSource[field]
 
+  // hack to manage quality errors when fields are required (emission factor) and handle no control provided cases (emission source)
   const mockControl = useForm<T>().control
   const actualControl = (control ?? mockControl) as Control<T>
 
@@ -106,10 +107,7 @@ const QualitySelectGroup = <T extends FieldValues>({
             label={t('form.quality')}
             error={hasQualityError}
           />
-          {hasQualityError &&
-            qualityFieldErrors.map((error) => (
-              <FormHelperText key={error?.message as string}>{t('validation.' + error?.message)}</FormHelperText>
-            ))}
+          {hasQualityError && <FormHelperText>{t('validation.' + qualityFieldErrors[0]?.message)}</FormHelperText>}
         </FormControl>
       )}
       <HelpIcon onClick={() => setGlossary('quality')} label={tGlossary('title')} />

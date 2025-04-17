@@ -37,11 +37,11 @@ export const EmissionFactorCommandValidation = z.intersection(
         required_error: 'totalCo2',
       })
       .min(0, 'totalCo2'),
-    reliability: z.number({ required_error: 'reliability' }),
-    technicalRepresentativeness: z.number({ required_error: 'technicalRepresentativeness' }),
-    geographicRepresentativeness: z.number({ required_error: 'geographicRepresentativeness' }),
-    temporalRepresentativeness: z.number({ required_error: 'temporalRepresentativeness' }),
-    completeness: z.number({ required_error: 'completeness' }),
+    reliability: z.number({ required_error: 'required' }),
+    technicalRepresentativeness: z.number({ required_error: 'required' }),
+    geographicRepresentativeness: z.number({ required_error: 'required' }),
+    temporalRepresentativeness: z.number({ required_error: 'required' }),
+    completeness: z.number({ required_error: 'required' }),
     attribute: z.string().optional(),
     subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1), { required_error: 'type' }).superRefine((val, ctx) => {
       if (Object.keys(val).length === 0) {
