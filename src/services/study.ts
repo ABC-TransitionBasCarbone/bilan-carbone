@@ -1,6 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
@@ -143,12 +144,12 @@ const getEmissionSourcesRows = (
             STUDY_UNIT_VALUES[resultsUnit] || '0',
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
-          emissionSource.value || '0',
+          formatNumber(emissionSource.value || 0),
           emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
           getQuality(getQualityRating(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
-          emissionFactor ? getEmissionFactorValue(emissionFactor) : '',
+          emissionFactor ? formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor)) : '',
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit)}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
