@@ -63,16 +63,18 @@ export const CreateStudyCommandValidation = z
         realizationStartDate: z
           .string()
           .optional()
+          .nullable()
           .refine((val) => {
             const date = dayjs(val)
-            return date.isValid()
+            return val === null || date.isValid()
           }, 'startDate'),
         realizationEndDate: z
           .string()
           .optional()
+          .nullable()
           .refine((val) => {
             const date = dayjs(val)
-            return date.isValid()
+            return val === null || date.isValid()
           }, 'endDate'),
         level: z.nativeEnum(Level, { required_error: 'level' }),
         isPublic: z.string(),
@@ -149,14 +151,35 @@ export const ChangeStudyDatesCommandValidation = z
       const date = dayjs(val)
       return date.isValid()
     }, 'endDate'),
+    realizationStartDate: z
+      .string()
+      .optional()
+      .nullable()
+      .refine((val) => {
+        const date = dayjs(val)
+        return val === null || date.isValid()
+      }, 'startDate'),
+    realizationEndDate: z
+      .string()
+      .optional()
+      .nullable()
+      .refine((val) => {
+        const date = dayjs(val)
+        return val === null || date.isValid()
+      }, 'endDate'),
+  })
+  .refine((data) => dayjs(data.endDate).isAfter(dayjs(data.startDate)), {
+    message: 'endDateBeforStartDate',
+    path: ['endDate'],
   })
   .refine(
-    (data) => {
-      return dayjs(data.endDate).isAfter(dayjs(data.startDate))
-    },
+    (data) =>
+      !data.realizationStartDate ||
+      !data.realizationEndDate ||
+      dayjs(data.realizationEndDate).isAfter(dayjs(data.realizationStartDate)),
     {
       message: 'endDateBeforStartDate',
-      path: ['endDate'],
+      path: ['realizationEndDate'],
     },
   )
 

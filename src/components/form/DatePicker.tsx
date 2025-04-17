@@ -41,7 +41,7 @@ export const FormDatePicker = <T extends FieldValues>({
             if (date && date.isValid()) {
               onChange(date.utc(true).format())
             } else if (date == null && clearable) {
-              onChange(undefined)
+              onChange(null)
             }
           }}
           value={value ? dayjs(value) : null}

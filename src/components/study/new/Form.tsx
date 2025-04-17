@@ -52,6 +52,10 @@ const NewStudyForm = ({ user, users, form, children }: Props) => {
   const exports = useWatch(form).exports
   const showControl = useMemo(() => Object.values(exports || {}).some((value) => value), [exports])
 
+  const Help = (name: string) => (
+    <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
+  )
+
   return (
     <>
       <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -73,11 +77,7 @@ const NewStudyForm = ({ user, users, form, children }: Props) => {
           iconPosition="after"
         />
         <div>
-          <IconLabel
-            icon={<HelpIcon className="ml-4" onClick={() => setGlossary('studyDates')} label={tGlossary('title')} />}
-            iconPosition="after"
-            className="mb-2"
-          >
+          <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
             <span className="inputLabel bold">{t('studyDates')}</span>
           </IconLabel>
           <div className={styles.dates}>
@@ -92,13 +92,7 @@ const NewStudyForm = ({ user, users, form, children }: Props) => {
           </div>
         </div>
         <div>
-          <IconLabel
-            icon={
-              <HelpIcon className="ml-4" onClick={() => setGlossary('realizationDates')} label={tGlossary('title')} />
-            }
-            iconPosition="after"
-            className="mb-2"
-          >
+          <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">
             <span className="inputLabel bold">{t('realizationDates')}</span>
           </IconLabel>
           <div className={styles.dates}>

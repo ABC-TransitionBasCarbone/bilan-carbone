@@ -280,7 +280,7 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
     return NOT_AUTHORIZED
   }
 
-  if (!canChangeDates(informations.user, informations.studyWithRights)) {
+  if (!(await canChangeDates(informations.user, informations.studyWithRights))) {
     return NOT_AUTHORIZED
   }
   await updateStudy(studyId, command)
