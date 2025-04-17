@@ -47,7 +47,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   const tUnit = useTranslations('units')
   const tGlossary = useTranslations('emissionSource.glossary')
   const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [tUnit])
-  const [expandedQuality, setExpandedQuality] = useState(true)
+  const [expandedQuality, setExpandedQuality] = useState(button === 'update')
   const [glossary, setGlossary] = useState('')
   const control = form.control as Control<EmissionFactorCommand>
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
@@ -109,7 +109,6 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
       />
       <QualitySelectGroup
         canEdit
-        canShrink
         control={control}
         emissionSource={quality}
         update={update as (key: keyof EmissionFactorQuality, value: string | number | boolean) => void}
@@ -118,6 +117,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         expanded={expandedQuality}
         setExpanded={setExpandedQuality}
         defaultQuality={qualityKeys.map((qualityKey) => quality[qualityKey]).find((quality) => !!quality)}
+        canShrink={qualityKeys.every((key) => quality[key] === quality[qualityKeys[0]])}
       />
       <MultiplePosts form={form} context="emissionFactor" />
       <FormTextField control={control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
