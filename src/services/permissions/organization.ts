@@ -16,6 +16,7 @@ export const isInOrgaOrParentFromId = async (
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
   return (
     organizationVersion &&
+    userOrganizationVersionId &&
     isInOrgaOrParent(userOrganizationVersionId, organizationVersion as OrganizationVersionWithOrganization)
   )
 }
@@ -67,12 +68,10 @@ export const canDeleteOrganizationVersion = async (organizationVersionId: string
 
   if (
     !hasEditionRole(false, session.user.role) &&
-    (await getOrganizationStudiesFromOtherUsers(organizationVersionId, session.user.id))
+    (await getOrganizationStudiesFromOtherUsers(organizationVersionId, session.user.userId))
   ) {
     return false
   }
 
-  const userOrganizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-
-  return targetOrganizationVersion.organization.parentId === userOrganizationVersion?.organizationId
+  return targetOrganizationVersion.parentId === session.user.organizationVersionId
 }

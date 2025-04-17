@@ -1,5 +1,6 @@
 import { signPassword } from '@/services/auth'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
+import { getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
@@ -55,22 +56,34 @@ export const updateUserResetTokenForEmail = async (email: string, resetToken: st
     data: { resetToken, updatedAt: new Date() },
   })
 
-
-export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]
-
-export const getUserFromUserOrganization = (user: User) =>
-  prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
-export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
-
 export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
-  prismaClient.user.create({ data: user })
-
-export const deleteUserFromOrga = (email: string) =>
-  // TODO en attente de réponse sur le status + comment s'y prendre avec orgaVersion est-ce qu'on peut récupérer celle de la session user ? ça permettrait de cibler le bon account
-  prismaClient.user.update({
-    where: { email },
-    data: { status: UserStatus.IMPORTED, organizationId: null },
+  prismaClient.user.create({
+    data: user,
+    select: {
+      accounts: {
+        select: {
+          id: true,
+        },
+      },
+    },
   })
+
+export const deleteUserFromOrga = async (email: string, organizationVersionId: string | null) => {
+  const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
+  if (!account) {
+    return null
+  }
+
+  await prismaClient.account.update({
+    where: { id: account.id },
+    data: { organizationVersionId: null },
+  })
+
+  return prismaClient.user.update({
+    where: { email },
+    data: { status: UserStatus.IMPORTED },
+  })
+}
 
 export const validateUser = (email: string) =>
   prismaClient.user.update({
@@ -103,3 +116,8 @@ export const updateUserApplicationSettings = (accountId: string, data: Prisma.Us
     where: { accountId },
     data,
   })
+
+export const getUserByIdWithAccounts = (id: string) =>
+  prismaClient.user.findUnique({ where: { id }, include: { accounts: true } })
+
+export type UserWithAccounts = AsyncReturnType<typeof getUserByIdWithAccounts>

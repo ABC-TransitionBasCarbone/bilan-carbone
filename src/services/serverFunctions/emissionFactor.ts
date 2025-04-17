@@ -18,7 +18,7 @@ import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
 import { canReadStudy } from '../permissions/study'
-import { getStudyParentOrganization } from '../study'
+import { getStudyParentOrganizationVersionId } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
@@ -34,10 +34,19 @@ export const getEmissionFactors = async (studyId?: string) => {
     if (!(await canReadStudy(session.user, studyId))) {
       return []
     }
-    const emissionFactorOrganizationId = await getStudyParentOrganization(studyId, session.user.organizationVersionId)
+    const organizationVersionId = await getStudyParentOrganizationVersionId(studyId, session.user.organizationVersionId)
+    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+    if (!organizationVersion) {
+      return []
+    }
+    const emissionFactorOrganizationId = organizationVersion.organizationId
     emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId)
   } else {
-    emissionFactors = await getAllEmissionFactors(session.user.organizationVersionId)
+    const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+    if (!organizationVersion) {
+      return []
+    }
+    emissionFactors = await getAllEmissionFactors(organizationVersion.organizationId)
   }
 
   return emissionFactors
@@ -59,7 +68,7 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
       return []
     }
 
-    const emissionFactorOrganization = (await getStudyParentOrganization(
+    const emissionFactorOrganization = (await getStudyParentOrganizationVersionId(
       studyId,
       session.user.organizationVersionId,
     )) as string
@@ -99,7 +108,7 @@ export const canEditEmissionFactor = async (id: string) => {
   if (!emissionFactor || !session) {
     return false
   }
-  return emissionFactor.organizationId === session.user.organizationVersionId
+  return emissionFactor.organizationId === session.user.organizationId
 }
 
 export const createEmissionFactorCommand = async ({

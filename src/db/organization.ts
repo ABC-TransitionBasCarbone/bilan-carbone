@@ -18,28 +18,18 @@ export const OrganizationVersionWithOrganizationSelect = {
   organizationId: true,
   isCR: true,
   activatedLicence: true,
+  onboarded: true,
+  environment: true,
+  parentId: true,
   organization: {
     select: {
+      oldBCId: true,
       id: true,
       name: true,
-      parentId: true,
       sites: {
         select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
         orderBy: { createdAt: Prisma.SortOrder.asc },
       },
-    },
-  },
-}
-export const OrganizationVersionWithOrganizationSelectLight = {
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  organizationId: true,
-  organization: {
-    select: {
-      id: true,
-      name: true,
-      parentId: true,
     },
   },
 }
@@ -72,8 +62,19 @@ export const getOrganizationVersionWithSitesById = (id: string) =>
     select: OrganizationVersionWithOrganizationSelect,
   })
 
-export const getOrganizationById = (id: string | null) =>
-  id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
+export const getOrganizationVersionByOrganizationIdAndEnvironment = (
+  organizationId: string,
+  environment: Environment,
+) =>
+  prismaClient.organizationVersion.findUnique({
+    where: {
+      organizationId_environment: {
+        organizationId,
+        environment,
+      },
+    },
+    select: OrganizationVersionWithOrganizationSelect,
+  })
 
 export const getOrganizationWithSitesById = (id: string) =>
   prismaClient.organization.findUnique({
@@ -83,18 +84,22 @@ export const getOrganizationWithSitesById = (id: string) =>
         select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
         orderBy: { createdAt: 'asc' },
       },
+      organizationVersions: true,
     },
   })
 
-export const createOrganizationWithVersion = async (organization: Prisma.OrganizationCreateInput) => {
+export const createOrganizationWithVersion = async (
+  organization: Prisma.OrganizationCreateInput,
+  organizationVersion: Omit<Prisma.OrganizationVersionCreateInput, 'organization'>,
+) => {
   const newOrganization = await prismaClient.organization.create({
     data: organization,
   })
 
   return prismaClient.organizationVersion.create({
     data: {
+      ...organizationVersion,
       organization: { connect: { id: newOrganization.id } },
-      environment: Environment.BC,
       isCR: false,
       activatedLicence: false,
     },
@@ -232,15 +237,18 @@ export const onboardOrganizationVersion = async (
   })
 
   const allCollaborators = [...newCollaborators, ...existingCollaborators]
-  allCollaborators.forEach((collab) => sendNewUser(collab.user.email.toLowerCase(), dbUser, collab.user.firstName ?? ''))
+  allCollaborators.forEach((collab) =>
+    sendNewUser(collab.user.email.toLowerCase(), dbUser, collab.user.firstName ?? ''),
+  )
 }
 
 export const deleteClient = async (id: string) => {
   const organizationVersion = (await getOrganizationVersionById(id)) as OrganizationVersionWithOrganization
+  const organization = await getOrganizationWithSitesById(organizationVersion.organizationId)
 
   const [clientUsers, clientChildren, clientEmissionFactors] = await Promise.all([
     prismaClient.account.findFirst({ where: { organizationVersionId: id } }),
-    prismaClient.organization.findFirst({ where: { parentId: organizationVersion.organizationId } }),
+    prismaClient.organizationVersion.findFirst({ where: { parentId: id } }),
     prismaClient.emissionFactor.findFirst({ where: { organizationId: organizationVersion.organizationId } }),
   ])
   if (clientUsers || clientChildren || clientEmissionFactors) {
@@ -251,9 +259,13 @@ export const deleteClient = async (id: string) => {
       where: { organizationVersionId: organizationVersion.organizationId },
     })
     await Promise.all(studies.map((study) => deleteStudy(study.id)))
-    // TODO je dois delete les site ou pas ici car je sais pas si on va delete que la version ou toute l'organization
-    await transaction.site.deleteMany({ where: { organizationId: organizationVersion.organizationId } })
     await transaction.organizationVersion.delete({ where: { id } })
+
+    if (!organization?.organizationVersions.length) {
+      return 'unexpectedAssociations'
+    }
+
+    await transaction.site.deleteMany({ where: { organizationId: organizationVersion.organizationId } })
     await transaction.organization.delete({ where: { id: organizationVersion.organizationId } })
   })
 }

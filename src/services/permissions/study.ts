@@ -1,11 +1,11 @@
-import { AccountWithUser, getAccountById } from '@/db/account'
+import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { Level, Prisma, Study, StudyRole } from '@prisma/client'
+import { Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { auth } from '../auth'
 import { checkLevel } from '../study'
@@ -40,7 +40,7 @@ export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, s
       ...user.contributors.map((contributor) => contributor.studyId),
     ]
   } else {
-    const accountWithAllowedStudies = await getAccountByIdWithAllowedStudies(user.email)
+    const accountWithAllowedStudies = await getAccountByIdWithAllowedStudies(user.accountId)
     if (!accountWithAllowedStudies) {
       return false
     }
@@ -144,14 +144,14 @@ export const canChangeOpeningHours = async (user: UserSession, study: FullStudy)
 export const canAddRightOnStudy = (
   user: UserSession,
   study: FullStudy,
-  acountToAddOnStudy: AccountWithUser | null,
+  userToAddOnStudy: User | null,
   role: StudyRole,
 ) => {
-  if (acountToAddOnStudy && user.accountId === acountToAddOnStudy.id) {
+  if (userToAddOnStudy && user.accountId === userToAddOnStudy.id) {
     return false
   }
 
-  if ((!acountToAddOnStudy || !acountToAddOnStudy.organizationVersionId) && role !== StudyRole.Reader) {
+  if (!userToAddOnStudy && role !== StudyRole.Reader) {
     return false
   }
 

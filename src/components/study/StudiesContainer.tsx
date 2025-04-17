@@ -1,7 +1,8 @@
 import {
+  getAllowedStudiesByAccount,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
-getAllowedStudiesByAccount } from '@/db/study'
+} from '@/db/study'
 import AddIcon from '@mui/icons-material/Add'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
@@ -21,8 +22,6 @@ interface Props {
   isCR?: boolean
 }
 
-
-
 const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) => {
   const t = await getTranslations('study')
 
@@ -30,7 +29,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
     ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId)
     : isCR
       ? await getExternalAllowedStudiesByUser(user)
-    : await getAllowedStudiesByAccount(user)
+      : await getAllowedStudiesByAccount(user)
 
   const [orgaStudies, otherStudies] = studies.reduce(
     (res, study) => {

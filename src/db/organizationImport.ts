@@ -1,6 +1,7 @@
 // TODO : merge this file with organization.ts after fixed aliases imports from script files
 import { Environment, Prisma } from '@prisma/client'
 import { prismaClient } from './client'
+import { getOrganizationVersionByOrganizationIdAndEnvironment } from './organization'
 
 export const getRawOrganizationVersionById = (id: string | null) =>
   id ? prismaClient.organizationVersion.findUnique({ where: { id } }) : null
@@ -16,55 +17,11 @@ export const createOrUpdateOrganization = async (
   isCR?: boolean,
   activatedLicence?: boolean,
   importedFileDate?: Date,
-) => {
-  const updatedOrganization = await prismaClient.organization.upsert({
-    where: { id: organization.id ?? '' },
-    update: {
-      importedFileDate,
-      updatedAt: new Date(),
-    },
-    create: {
-      ...organization,
-      importedFileDate,
-    },
-  })
-
-  await prismaClient.organizationVersion.upsert({
-    where: {
-      organizationId_environment: {
-        organizationId: updatedOrganization.id,
-        environment: Environment.BC,
-      },
-    },
-    update: {
-      // TODO Récupérer isCR d'organizationVErsion ?
-      isCR: isCR,
-      activatedLicence,
-      updatedAt: new Date(),
-    },
-    create: {
-      organizationId: updatedOrganization.id,
-      isCR: isCR || false,
-      activatedLicence,
-      onboarded: false,
-      environment: Environment.BC,
-    },
-  })
-
-  return updatedOrganization
-}
-
-export const createOrUpdateOrganizationWithVersion = async (
-  organization: Prisma.OrganizationCreateInput & { id?: string },
-  isCR?: boolean,
-  activatedLicence?: boolean,
-  importedFileDate?: Date,
   environment: Environment = Environment.BC,
 ) => {
   const updatedOrganization = await prismaClient.organization.upsert({
     where: { id: organization.id ?? '' },
     update: {
-      ...organization,
       importedFileDate,
       updatedAt: new Date(),
     },
@@ -73,6 +30,11 @@ export const createOrUpdateOrganizationWithVersion = async (
       importedFileDate,
     },
   })
+
+  const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
+    updatedOrganization.id,
+    environment,
+  )
 
   await prismaClient.organizationVersion.upsert({
     where: {
@@ -82,14 +44,15 @@ export const createOrUpdateOrganizationWithVersion = async (
       },
     },
     update: {
-      isCR: isCR ?? undefined,
-      activatedLicence: activatedLicence ?? undefined,
+      isCR: isCR || organizationVersion?.isCR || false,
+      activatedLicence,
       updatedAt: new Date(),
     },
     create: {
       organizationId: updatedOrganization.id,
-      isCR: isCR ?? false,
-      activatedLicence: activatedLicence ?? false,
+      isCR: isCR || false,
+      activatedLicence,
+      onboarded: false,
       environment,
     },
   })

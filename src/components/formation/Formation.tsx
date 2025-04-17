@@ -30,7 +30,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
 
   useEffect(() => {
     const getStartTime = async () => {
-      const startDate = await getFormationFormStart(user.id)
+      const startDate = await getFormationFormStart(user.userId)
       if (startDate) {
         setCheckedUnique(true)
         setFormStartTime(startDate.getTime())
@@ -42,7 +42,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
   const openFormationForm = () => {
     const now = new Date()
     if (!formStartTime) {
-      startFormationForm(user.id, now)
+      startFormationForm(user.userId, now)
       setFormStartTime(now.getTime())
     }
     setOpen(true)

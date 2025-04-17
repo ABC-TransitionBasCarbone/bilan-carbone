@@ -2,12 +2,10 @@
 
 import {
   AccountWithUser,
-  accountWithUserToUserSession,
   changeAccountRole,
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
   getAccountFromUserOrganization,
-  userSessionToDbUser,
 } from '@/db/account'
 import { prismaClient } from '@/db/client'
 import { getOrganizationVersionById } from '@/db/organization'
@@ -26,6 +24,7 @@ import {
 import { getUserByEmail, updateUser } from '@/db/userImport'
 import { processUsers } from '@/scripts/ftp/userImport'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
+import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
 import { Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
@@ -127,7 +126,10 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const memberExists = await getAccountByEmailAndOrganizationVersionId(member.email.toLowerCase(), session.user.organizationVersionId)
+  const memberExists = await getAccountByEmailAndOrganizationVersionId(
+    member.email.toLowerCase(),
+    session.user.organizationVersionId,
+  )
 
   if (memberExists?.role === Role.SUPER_ADMIN) {
     return NOT_AUTHORIZED
@@ -216,7 +218,7 @@ export const deleteMember = async (email: string) => {
   if (!canDeleteMember(session.user, userToRemove)) {
     return NOT_AUTHORIZED
   }
-  await deleteUserFromOrga(email)
+  await deleteUserFromOrga(email, session.user.organizationVersionId)
 }
 
 export const changeRole = async (email: string, role: Role) => {
@@ -255,7 +257,7 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
     return NOT_AUTHORIZED
   }
 
-  await updateUser(session.user.id, command)
+  await updateUser(session.user.userId, command)
 }
 
 export const resetPassword = async (email: string) => {

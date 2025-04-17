@@ -1,3 +1,10 @@
+import { getAccountByEmailAndOrganizationVersionId } from '@/db/account'
+import {
+  getOrganizationVersionById,
+  getOrganizationWithSitesById,
+  OrganizationVersionWithOrganization,
+} from '@/db/organization'
+import { Environment } from '@prisma/client'
 import xlsx from 'node-xlsx'
 import { prismaClient } from '../../../db/client'
 import { RequiredEmissionFactorsColumns, uploadEmissionFactors } from './emissionFactors'
@@ -63,21 +70,30 @@ const getStudyEmissionSourcesIndexes = (headers: string[]): Record<string, numbe
   return getIndexes(headers, RequiredStudyEmissionSourcesColumns, 'Données sources')
 }
 
-export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
+export const uploadOldBCInformations = async (file: string, email: string, organizationVersionId: string) => {
   const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
 
-  // TODO Je ne sais pas si je fais le bon check sur l'orgaId
-  const user = await prismaClient.user.findUnique({
-    where: { email },
-    include: { accounts: { include: { organizationVersion: true } } },
-  })
-  if (!user || !user.accounts.some((account) => account.organizationVersion?.organizationId == organizationId)) {
+  const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
+  if (!account) {
     console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
     return
   }
-  const userOrganization = await prismaClient.organization.findUnique({ where: { id: user.organizationId } })
-  if (!userOrganization) {
-    throw new Error(`L'organisation de l'utilisateur n'existe pas.`)
+
+  const accountOrganizationVersion = (await getOrganizationVersionById(
+    account.organizationVersionId,
+  )) as OrganizationVersionWithOrganization
+
+  if (!accountOrganizationVersion) {
+    throw new Error(`La version de l'organisation de l'utilisateur n'existe pas.`)
+  }
+
+  if (!(accountOrganizationVersion.environment === Environment.BC)) {
+    throw new Error(`L'organisation de l'utilisateur n'est pas dans l'environnement BC+.`)
+  }
+
+  const accountOrganization = await getOrganizationWithSitesById(accountOrganizationVersion.organizationId)
+  if (!accountOrganization) {
+    throw new Error("L'organisation de l'utilisateur est introuvable.")
   }
 
   const workSheetsFromFile = xlsx.parse(file)
@@ -113,24 +129,25 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
   let hasStudiesWarning = false
+
   await prismaClient.$transaction(async (transaction) => {
     hasOrganizationsWarning = await uploadOrganizations(
       transaction,
       organizationsSheet.data,
       organizationsIndexes,
-      userOrganization,
+      accountOrganizationVersion,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
       emissionFactorsSheet.data,
       emissionFactorsIndexes,
-      organizationId,
+      accountOrganizationVersion.id,
     )
     hasStudiesWarning = await uploadStudies(
       transaction,
-      user.id,
-      organizationId,
       postAndSubPostsOldNewMapping,
+      account.id,
+      organizationVersionId,
       studiesIndexes,
       studiesSheet.data,
       studySitesIndexes,
