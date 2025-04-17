@@ -11,7 +11,7 @@ model DeactivatableFeatureStatus {
   updator     User?   @relation("deactivable_feature_updator", fields: [updatedById], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("deactivable_features_statuses")
 }

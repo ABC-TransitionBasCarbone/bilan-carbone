@@ -146,7 +146,7 @@ model EmissionFactorImportVersion {
 model EmissionFactor {
   id                  String               @id @default(uuid())
   createdAt           DateTime             @default(now()) @map("created_at")
-  updatedAt           DateTime             @default(now()) @map("updated_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
   emissionFactorParts EmissionFactorPart[]
 
   oldBCId String? @map("old_bc_id")
@@ -209,7 +209,7 @@ model EmissionFactorMetaData {
 model EmissionFactorPart {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   oldBCId String? @map("old_bc_id")
 

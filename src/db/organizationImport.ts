@@ -20,7 +20,6 @@ export const createOrUpdateOrganization = (
       isCR: isCR || organization.isCR,
       importedFileDate,
       activatedLicence: activatedLicence || organization.activatedLicence,
-      updatedAt: new Date(),
     },
     create: {
       ...organization,

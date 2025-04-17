@@ -37,7 +37,6 @@ export const updateUserPasswordForEmail = async (email: string, password: string
       resetToken: null,
       password: signedPassword,
       status: UserStatus.ACTIVE,
-      updatedAt: new Date(),
     },
   })
   await prismaClient.userCheckedStep.upsert({
@@ -51,10 +50,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
 export const updateUserResetTokenForEmail = async (email: string, resetToken: string) =>
   prismaClient.user.update({
     where: { email },
-    data: {
-      resetToken,
-      updatedAt: new Date(),
-    },
+    data: { resetToken },
   })
 
 export const getUserOrganizations = async (email: string) => {
@@ -109,12 +105,12 @@ export const deleteUserFromOrga = (email: string) =>
 export const validateUser = (email: string) =>
   prismaClient.user.update({
     where: { email },
-    data: { status: UserStatus.VALIDATED, updatedAt: new Date() },
+    data: { status: UserStatus.VALIDATED },
   })
 
 export const changeUserRole = (email: string, role: Role) =>
   prismaClient.user.update({
-    data: { role, updatedAt: new Date() },
+    data: { role },
     where: { email },
   })
 
