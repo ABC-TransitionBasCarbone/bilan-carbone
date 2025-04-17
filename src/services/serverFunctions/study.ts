@@ -507,8 +507,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
 
   const [studyWithRights, existingAccount] = await Promise.all([
     getStudyById(right.studyId, session.user.organizationVersionId),
-    // TODO pas sûr de comprendre pourquoi on appelle avec ces paramètres qui sont pas bon je dois vérifier comment c'était avant
-    getAccountByEmailAndOrganizationVersionId(session.user.accountId, right.email),
+    getAccountByEmailAndOrganizationVersionId(right.email, session.user.organizationVersionId),
   ])
 
   if (!studyWithRights) {

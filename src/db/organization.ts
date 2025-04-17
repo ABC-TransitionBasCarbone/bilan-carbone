@@ -1,7 +1,7 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { sendNewUser } from '@/services/serverFunctions/user'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import { Organization, OrganizationVersion, Prisma, Role, Site, UserStatus } from '@prisma/client'
+import { Environment, Organization, OrganizationVersion, Prisma, Role, Site, UserStatus } from '@prisma/client'
 import { AccountWithUser } from './account'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
@@ -17,6 +17,7 @@ export const OrganizationVersionWithOrganizationSelect = {
   updatedAt: true,
   organizationId: true,
   isCR: true,
+  activatedLicence: true,
   organization: {
     select: {
       id: true,
@@ -85,16 +86,25 @@ export const getOrganizationWithSitesById = (id: string) =>
     },
   })
 
-export const createOrganization = (organization: Prisma.OrganizationCreateInput) =>
-  prismaClient.organization.create({
+export const createOrganizationWithVersion = async (organization: Prisma.OrganizationCreateInput) => {
+  const newOrganization = await prismaClient.organization.create({
     data: organization,
   })
+
+  return prismaClient.organizationVersion.create({
+    data: {
+      organization: { connect: { id: newOrganization.id } },
+      environment: Environment.BC,
+      isCR: false,
+      activatedLicence: false,
+    },
+  })
+}
 
 export const updateOrganization = async (
   { organizationVersionId, sites, ...data }: UpdateOrganizationCommand,
   caUnit: number,
 ) => {
-  // TODO peut être pas très clair ici aussi sur comment on update je crois qu'ici on chang que le name ? donc pas besoin d'update organizationVersion normalement
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
   if (!organizationVersion) {
     return

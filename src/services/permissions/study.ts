@@ -189,6 +189,7 @@ export const canDeleteStudy = async (studyId: string) => {
   }
 
   const study = await getStudyById(studyId, session.user.organizationVersionId)
+
   if (!study) {
     return false
   }
@@ -197,8 +198,9 @@ export const canDeleteStudy = async (studyId: string) => {
     return true
   }
 
-  const accountRoleOnStudy = getAccountRoleOnStudy(session.user, study)
-  if (accountRoleOnStudy && accountRoleOnStudy !== StudyRole.Reader) {
+  const accountRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
+
+  if (accountRoleOnStudy && accountRoleOnStudy === StudyRole.Validator) {
     return true
   }
 

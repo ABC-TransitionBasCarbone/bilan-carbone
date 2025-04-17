@@ -2,7 +2,7 @@
 
 import { AccountWithUser, getAccountById } from '@/db/account'
 import {
-  createOrganization,
+  createOrganizationWithVersion,
   deleteClient,
   getOrganizationNameByOrganizationVersionId,
   getOrganizationVersionById,
@@ -48,9 +48,7 @@ export const createOrganizationCommand = async (
 ): Promise<{ message: string; success: false } | { id: string; success: true }> => {
   // TODO pas trop sûr de si je m'y prend bien ici pour la création d'orga
   // On a dit que si y a un parentId on ne peut pas créer de version donc jsp trop ici j'ai dû retirer ces champs qui ne sont plus sur orga
-  // ou alors ici je crée just eune version et je lui passe orgaId ?
-  // isCR: false,
-  // activatedLicence: true,
+  // ou alors ici je crée just eune version et je lui passe orgaId ? (c'est ce que j'ai fait pour le moment)
 
   const session = await auth()
   if (!session || !session.user.organizationVersionId) {
@@ -69,9 +67,9 @@ export const createOrganizationCommand = async (
   }
 
   try {
-    const createdOrganization = await createOrganization(organization)
+    const createdOrganizationVersion = await createOrganizationWithVersion(organization)
     addUserChecklistItem(UserChecklist.AddClient)
-    return { success: true, id: createdOrganization.id }
+    return { success: true, id: createdOrganizationVersion.id }
   } catch (e) {
     console.error(e)
     return { success: false, message: 'Something went wrong...' }

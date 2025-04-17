@@ -66,7 +66,7 @@ export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'S
   })
 
 export const deleteUserFromOrga = (email: string) =>
-  // TODO en attente de réponse sur le status + comment s'y prendre avec orgaVersion
+  // TODO en attente de réponse sur le status + comment s'y prendre avec orgaVersion est-ce qu'on peut récupérer celle de la session user ? ça permettrait de cibler le bon account
   prismaClient.user.update({
     where: { email },
     data: { status: UserStatus.IMPORTED, organizationId: null },
@@ -85,7 +85,7 @@ export const hasAccountToValidateInOrganization = async (organizationVersionId: 
       })
     : 0
 
-export const organizationActiveUsersCount = async (organizationVersionId: string) =>
+export const organizationVersionActiveAccountsCount = async (organizationVersionId: string) =>
   prismaClient.account.count({
     where: { organizationVersionId, user: { status: UserStatus.ACTIVE } },
   })

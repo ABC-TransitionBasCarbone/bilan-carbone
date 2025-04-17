@@ -30,7 +30,6 @@ const NewOrganizationForm = () => {
   })
 
   const onSubmit = async (command: CreateOrganizationCommand) => {
-    // TODO comprendre comment marche la création d'organisation de base et adapter pour organizationVersion
     const result = await createOrganizationCommand(command)
     if (!result.success) {
       setError(result.message)

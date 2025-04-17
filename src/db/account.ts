@@ -38,7 +38,7 @@ export const AccountWithUserSelect = {
   },
 }
 
-export const getAccountByEmailAndOrganizationVersionId = (email: string, organizationVersionId: string) =>
+export const getAccountByEmailAndOrganizationVersionId = (email: string, organizationVersionId: string | null) =>
   prismaClient.account.findFirst({
     where: { user: { email }, organizationVersionId },
     select: AccountWithUserSelect,
