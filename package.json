@@ -67,6 +67,7 @@
     "react-dom": "19.1.0",
     "react-hook-form": "^7.55.0",
     "react-player": "^2.16.0",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "uuid": "^11.1.0",
     "zod": "^3.24.1",
@@ -103,7 +104,6 @@
     "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^4.1.0",
     "prisma": "^6.6.0",
-    "ts-node": "^10.9.2",
     "ts-jest": "^29.3.2",
     "typescript": "^5.8.3"
   }
