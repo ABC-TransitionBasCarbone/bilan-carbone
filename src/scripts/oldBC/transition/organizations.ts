@@ -38,6 +38,17 @@ function mapRowToSite(row: (string | number)[], indexes: Record<string, number>)
   }
 }
 
+async function checkUserOrganizationHaveNoNewSites(transaction: Prisma.TransactionClient, userOrganizationId: string) {
+  const numberOfNewUserOrganizationSites = await transaction.site.count({
+    where: {
+      AND: [{ organizationId: userOrganizationId }, { oldBCId: null }],
+    },
+  })
+  if (numberOfNewUserOrganizationSites > 0) {
+    throw new Error(`L'organisation de l'utilisateur contient ${numberOfNewUserOrganizationSites} nouveau(x) site(s).`)
+  }
+}
+
 const getOrganizationsOldBCIdsIdsMap = async (
   transaction: Prisma.TransactionClient,
   organizations: Organization[],
@@ -101,6 +112,8 @@ export const uploadOrganizations = async (
     throw new Error("Il faut exactement 1 organisation rattachée à l'utilisateur !")
   }
   const userOrganizationOldBCId = userOrganizationsOldBCIds[0]
+
+  await checkUserOrganizationHaveNoNewSites(transaction, userOrganizationId)
 
   const existingOrganizations = await transaction.organization.findMany({
     where: {
