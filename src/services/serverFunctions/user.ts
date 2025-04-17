@@ -2,6 +2,7 @@
 
 import {
   AccountWithUser,
+  accountWithUserToUserSession,
   changeAccountRole,
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
@@ -9,16 +10,15 @@ import {
   userSessionToDbUser,
 } from '@/db/account'
 import { prismaClient } from '@/db/client'
-import { getOrganizationById } from '@/db/organization'
+import { getOrganizationVersionById } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
   addUser,
   changeStatus,
   deleteUserFromOrga,
   getUserApplicationSettings,
-  getUserFromUserOrganization,
   getUserSourceById,
-  organizationActiveUsersCount,
+  organizationVersionActiveAccountsCount,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
   validateUser,
@@ -280,20 +280,23 @@ export const resetPassword = async (email: string) => {
 
 export const activateEmail = async (email: string, fromReset: boolean = false) => {
   const user = await getUserByEmail(email)
-  if (!user || !user.accounts.some((account) => account.organizationVersionId) || user.status === UserStatus.ACTIVE) {
+  const account = (await getAccountById(user?.accounts[0]?.id || '')) as AccountWithUser
+  if (!user || !account || !account.organizationVersionId || user.status === UserStatus.ACTIVE) {
     return { error: true, message: NOT_AUTHORIZED }
   }
 
-  // TODO en attente de réponse
-  const userOrga = await getOrganizationById(user.organizationId)
-  if (!userOrga || !userOrga.activatedLicence) {
+  const accountOrgaVersion = await getOrganizationVersionById(account.organizationVersionId)
+  if (!accountOrgaVersion || !accountOrgaVersion.activatedLicence) {
     return { error: true, message: NOT_AUTHORIZED }
   }
 
-  if ((await organizationActiveUsersCount(user.organizationId)) && user.status !== UserStatus.VALIDATED) {
-    const users = await getAccountFromUserOrganization(user)
+  if (
+    (await organizationVersionActiveAccountsCount(account.organizationVersionId)) &&
+    user.status !== UserStatus.VALIDATED
+  ) {
+    const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(account))
     await sendActivationRequest(
-      users.filter((u) => u.role === Role.GESTIONNAIRE || u.role === Role.ADMIN).map((u) => u.email),
+      accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
       email.toLowerCase(),
       `${user.firstName} ${user.lastName}`,
     )

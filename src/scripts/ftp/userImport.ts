@@ -28,15 +28,21 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   const dbUser = await getUserByEmail(email)
 
-  const user: Prisma.UserCreateManyInput = {
+  const user: Prisma.UserCreateInput = {
     id: dbUser?.id,
     email,
     firstName,
     lastName,
-    role: Role.COLLABORATOR,
     status: UserStatus.IMPORTED,
-    importedFileDate,
     source: source as UserSource,
+    accounts: {
+      create: [
+        {
+          role: Role.COLLABORATOR,
+          importedFileDate,
+        },
+      ],
+    },
   }
 
   if (sessionCodeTraining) {

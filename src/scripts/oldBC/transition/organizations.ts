@@ -10,7 +10,7 @@ export enum RequiredOrganizationsColumns {
   IS_USER_ORGA = 'IS_USER_ORGA',
 }
 
-// TODO Repasser sur ce script avec account et organizationversion
+// TODO Je ne sais pas trop quoi changer ici avec OrganizationVersion car on a dit que si il y a un parentId il n'a aps d'orgaVersion
 
 interface Organization {
   oldBCId: string
@@ -149,10 +149,8 @@ export const uploadOrganizations = async (
       data: newOrganizations.map((organization) => ({
         parentId: userOrganization.id,
         oldBCId: organization.oldBCId,
-        siret: organization.siret,
+        wordpressId: organization.siret,
         name: organization.name,
-        isCR: false,
-        activatedLicence: false,
       })),
     })
   }

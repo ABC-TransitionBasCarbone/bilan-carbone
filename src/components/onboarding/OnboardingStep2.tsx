@@ -22,7 +22,6 @@ const OnboardingStep = ({ form, isCr }: Props) => {
   const collaborators = useWatch(form).collaborators?.length || 0
 
   const addCollaborator = () => {
-    // TODO peut être qu'il y a besoin d'un mail vide ?
     form.setValue('collaborators', (form.getValues('collaborators') || [])?.concat([{ accountId: '' }]))
   }
 
