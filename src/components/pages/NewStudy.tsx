@@ -19,9 +19,9 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
 interface Props {
   user: UserSession
-  accounts: Awaited<ReturnType<typeof getOrganizationAccounts>>
-  organizations: OrganizationWithSites[]
-  defaultOrganization?: OrganizationWithSites
+  accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
+  organizationVersions: OrganizationWithSites[]
+  defaultOrganizationVersion?: OrganizationWithSites
   caUnit: SiteCAUnit
 }
 
@@ -63,7 +63,10 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
         links={[
           { label: tNav('home'), link: '/' },
           defaultOrganizationVersion && defaultOrganizationVersion.isCR
-            ? { label: defaultOrganizationVersion.organization.name, link: `/organisations/${defaultOrganizationVersion.id}` }
+            ? {
+                label: defaultOrganizationVersion.organization.name,
+                link: `/organisations/${defaultOrganizationVersion.id}`,
+              }
             : undefined,
         ].filter((link) => link !== undefined)}
       />

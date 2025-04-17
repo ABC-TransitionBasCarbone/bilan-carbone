@@ -18,7 +18,7 @@ interface Props {
 const UserView = async ({ account }: Props) => {
   const environment = getServerEnvironment()
   const [organizationVersions, hasUserToValidate] = await Promise.all([
-    getAccountOrganizationVersions(account.id),
+    getAccountOrganizationVersions(account.accountId),
     hasAccountToValidateInOrganization(account.organizationVersionId),
   ])
 

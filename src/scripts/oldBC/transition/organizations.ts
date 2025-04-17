@@ -1,7 +1,16 @@
-import { Prisma, Organization as PrismaOrganization } from '@prisma/client'
 import { OrganizationRow, OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
+import { OrganizationVersionWithOrganization, OrganizationVersionWithOrganizationSelect } from '@/db/organization'
+import { Prisma } from '@prisma/client'
 import { getExistingSitesIds } from './repositories'
 
+export enum RequiredOrganizationsColumns {
+  ID_ENTITE = 'ID_ENTITE',
+  NOM_ORGANISATION = 'NOM_ORGANISATION',
+  NOM_ENTITE = 'NOM_ENTITE',
+  SIRET = 'SIRET',
+  ID_ENTITE_MERE = 'ID_ENTITE_MERE',
+  IS_USER_ORGA = 'IS_USER_ORGA',
+}
 
 interface Organization {
   oldBCId: string
@@ -72,7 +81,7 @@ const getOrganizationsOldBCIdsIdsMap = async (
 export const uploadOrganizations = async (
   transaction: Prisma.TransactionClient,
   organizationWorksheet: OrganizationsWorkSheet,
-  userOrganization: PrismaOrganization,
+  userOrganizationVersion: OrganizationVersionWithOrganization,
 ) => {
   console.log('Import des organisations...')
 
@@ -101,26 +110,30 @@ export const uploadOrganizations = async (
   }
   const userOrganizationRow = userOrganizationsRows[0]
 
-  await checkUserOrganizationHaveNoNewSites(transaction, userOrganization.id)
+  await checkUserOrganizationHaveNoNewSites(transaction, userOrganizationVersion.organizationId)
 
-  const existingOrganizations = await transaction.organization.findMany({
+  const existingOrganizations = await transaction.organizationVersion.findMany({
     where: {
       AND: [
-        { parentId: userOrganization.id },
-        { oldBCId: { in: organizations.map((organization) => organization.oldBCId) } },
+        { parentId: userOrganizationVersion.id },
+        { organization: { oldBCId: { in: organizations.map((organization) => organization.oldBCId) } } },
       ],
     },
+    select: OrganizationVersionWithOrganizationSelect,
   })
 
   const newOrganizations = organizations.filter(
-    (organization) => !existingOrganizations.some(({ oldBCId }) => oldBCId === organization.oldBCId),
+    (organization) =>
+      !existingOrganizations.some(
+        ({ organization: existingOrganization }) => existingOrganization.oldBCId === organization.oldBCId,
+      ),
   )
 
   // Je crée un site par défaut pour mon organization
   await transaction.site.create({
     data: {
       oldBCId: userOrganizationRow.oldBCId,
-      organizationId: userOrganization.id,
+      organizationId: userOrganizationVersion.organizationId,
       name: userOrganizationRow.name,
     },
   })
@@ -130,7 +143,7 @@ export const uploadOrganizations = async (
     console.log(`Import de ${newOrganizations.length} organisations`)
     await transaction.organization.createMany({
       data: newOrganizations.map((organization) => ({
-        parentId: userOrganization.id,
+        parentId: userOrganizationVersion.id,
         oldBCId: organization.oldBCId,
         wordpressId: organization.siret,
         name: organization.name,
@@ -141,7 +154,7 @@ export const uploadOrganizations = async (
   const organizationsOldBCIdsIdsMap = await getOrganizationsOldBCIdsIdsMap(
     transaction,
     organizations,
-    userOrganization.id,
+    userOrganizationVersion.organizationId,
     userOrganizationRow.oldBCId,
   )
 

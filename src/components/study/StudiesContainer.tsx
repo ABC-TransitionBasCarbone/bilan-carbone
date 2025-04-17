@@ -23,8 +23,6 @@ interface Props {
   isCR?: boolean
 }
 
-
-
 const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) => {
   const t = await getTranslations('study')
 
@@ -32,7 +30,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
     ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId)
     : isCR
       ? await getExternalAllowedStudiesByUser(user)
-    : await getAllowedStudiesByAccount(user)
+      : await getAllowedStudiesByAccount(user)
 
   const [orgaStudies, otherStudies] = studies.reduce(
     (res, study) => {
