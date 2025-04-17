@@ -105,7 +105,7 @@ const Result = ({ studySite, computedResults, resultsUnit }: Props) => {
   }, [xAxis, yData])
 
   return (
-    <div style={{ height: dynamicHeight }}>
+    <div style={{ minHeight: dynamicHeight }}>
       <canvas data-testid={`study-Post-chart`} ref={canvasRef} />
     </div>
   )
