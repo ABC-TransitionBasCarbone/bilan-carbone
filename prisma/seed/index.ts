@@ -156,7 +156,6 @@ const users = async () => {
       password: onboardingPassword,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
-      level: Level.Initial,
       status: UserStatus.IMPORTED,
     },
   })

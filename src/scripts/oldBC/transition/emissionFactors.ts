@@ -14,7 +14,7 @@ const getStringValue = (value: string | number) => {
 export const uploadEmissionFactors = async (
   transaction: Prisma.TransactionClient,
   emissionFactorsWorksheet: EmissionFactorsWorkSheet,
-  organizationId: string,
+  organizationVersionId: string,
 ) => {
   console.log("Import des facteurs d'émissions...")
   const ids = emissionFactorsWorksheet.getRows().map((row) => row.EFV_GUID as string)
@@ -50,7 +50,7 @@ export const uploadEmissionFactors = async (
 
       return {
         id,
-        organizationId,
+        organizationVersionId,
         importedFrom: Import.Manual,
         status: EmissionFactorStatus.Valid,
         oldBCId: getStringValue(row.EFV_GUID),

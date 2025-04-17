@@ -1,4 +1,4 @@
-import { OrganizationWithSites } from '@/db/account'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getUserApplicationSettings } from '@/db/user'
 import { defaultCAUnit } from '@/utils/number'
 import { UserSession } from 'next-auth'
@@ -8,7 +8,7 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EditOrganizationForm from '../organization/edit/EditOrganizationForm'
 
 interface Props {
-  organizationVersion: OrganizationWithSites
+  organizationVersion: OrganizationVersionWithOrganization
   user: UserSession
 }
 

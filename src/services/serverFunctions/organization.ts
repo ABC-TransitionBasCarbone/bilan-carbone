@@ -1,6 +1,6 @@
 'use server'
 
-import { AccountWithUser, getAccountById } from '@/db/account'
+import { AccountWithUser, getAccountByEmailAndOrganizationVersionId } from '@/db/account'
 import {
   createOrganizationWithVersion,
   deleteClient,
@@ -14,7 +14,7 @@ import { getRawOrganizationVersionById } from '@/db/organizationImport'
 import { getUserApplicationSettings } from '@/db/user'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { Prisma, UserChecklist } from '@prisma/client'
+import { Environment, Prisma, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -46,28 +46,27 @@ export const getStudyOrganizationVersion = async (studyId: string) => {
 export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,
 ): Promise<{ message: string; success: false } | { id: string; success: true }> => {
-  // TODO pas trop sûr de si je m'y prend bien ici pour la création d'orga
-  // On a dit que si y a un parentId on ne peut pas créer de version donc jsp trop ici j'ai dû retirer ces champs qui ne sont plus sur orga
-  // ou alors ici je crée just eune version et je lui passe orgaId ? (c'est ce que j'ai fait pour le moment)
-
   const session = await auth()
   if (!session || !session.user.organizationVersionId) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 
-  const userOrganizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-
   const organization = {
     ...command,
-    parent: { connect: { id: userOrganizationVersion?.organizationId } },
   } satisfies Prisma.OrganizationCreateInput
+
+  const organizationVersion = {
+    // TODO Récupérer l'environnement de la bonne manière
+    environment: Environment.BC,
+    parent: { connect: { id: session.user.organizationVersionId } },
+  } satisfies Omit<Prisma.OrganizationVersionCreateInput, 'organization'>
 
   if (!(await canCreateOrganization(session.user))) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 
   try {
-    const createdOrganizationVersion = await createOrganizationWithVersion(organization)
+    const createdOrganizationVersion = await createOrganizationWithVersion(organization, organizationVersion)
     addUserChecklistItem(UserChecklist.AddClient)
     return { success: true, id: createdOrganizationVersion.id }
   } catch (e) {
@@ -95,7 +94,6 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
 }
 
 export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) => {
-  // TODO ici aussi je delete juste la version ?
   if (!(await canDeleteOrganizationVersion(id))) {
     return NOT_AUTHORIZED
   }
@@ -137,12 +135,15 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
   }
 
   // filter duplicatd email
-  let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'accountId')
+  let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'email')
   const existingCollaborators: AccountWithUser[] = []
 
   // filter existing accounts
   for (const collaborator of collaborators) {
-    const existingAccount = (await getAccountById(collaborator.accountId || '')) as AccountWithUser
+    const existingAccount = (await getAccountByEmailAndOrganizationVersionId(
+      collaborator.email || '',
+      organizationVersionId,
+    )) as AccountWithUser
     if (existingAccount) {
       collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
       if (existingAccount.organizationVersionId === organizationVersionId) {

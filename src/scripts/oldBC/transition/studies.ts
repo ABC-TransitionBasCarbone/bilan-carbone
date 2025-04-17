@@ -290,10 +290,10 @@ const getExistingStudySites = async (transaction: Prisma.TransactionClient, stud
 
 export const uploadStudies = async (
   transaction: Prisma.TransactionClient,
-  userId: string,
+  accountId: string,
+  organizationVersionId: string,
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
   oldBCWorksheetReader: OldBCWorkSheetsReader,
-  organizationVersionId: string,
 ) => {
   console.log('Import des études...')
 
@@ -327,10 +327,10 @@ export const uploadStudies = async (
   await transaction.study.createMany({
     data: newStudies.map((study) => ({
       ...study,
-      createdById: userId,
+      createdById: accountId,
       isPublic: false,
       level: Level.Initial,
-      organizationId: organizationId,
+      organizationVersionId: organizationVersionId,
     })),
   })
 

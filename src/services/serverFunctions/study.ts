@@ -1,7 +1,7 @@
 'use server'
 
 import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
-import { AccountWithUser, accountWithUserToUserSession, getAccountByEmailAndOrganizationVersionId } from '@/db/account'
+import { AccountWithUser, getAccountByEmailAndOrganizationVersionId, getAccountById } from '@/db/account'
 import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -43,12 +43,13 @@ import {
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserApplicationSettings } from '@/db/user'
+import { addUser, getUserApplicationSettings, UserWithAccounts } from '@/db/user'
 import { getUserByEmail } from '@/db/userImport'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
   ControlMode,
   Document,
@@ -137,8 +138,11 @@ export const createStudyCommand = async ({
       accountId: session.user.accountId,
     })
   } else {
-    const userValidator = await getUserByEmail(validator)
-    if (!userValidator) {
+    const accountValidator = await getAccountByEmailAndOrganizationVersionId(
+      validator,
+      session.user.organizationVersionId,
+    )
+    if (!accountValidator) {
       return { success: false, message: NOT_AUTHORIZED }
     }
 
@@ -148,7 +152,7 @@ export const createStudyCommand = async ({
     })
     rights.push({
       role: StudyRole.Validator,
-      accountId: session.user.accountId,
+      accountId: accountValidator.id,
     })
   }
 
@@ -431,14 +435,15 @@ const getOrCreateUserAndSendStudyInvite = async (
   study: FullStudy,
   organizationVersion: OrganizationVersionWithOrganization,
   creator: UserSession,
+  existingUser: UserWithAccounts | null,
   existingAccount: AccountWithUser | null,
   role?: StudyRole,
 ) => {
   let accountId = ''
   const t = await getTranslations('study.role')
 
-  if (!existingAccount) {
-    const newAccount = await addUser({
+  if (!existingUser) {
+    const newUser = await addUser({
       email: email,
       status: UserStatus.VALIDATED,
       firstName: '',
@@ -446,25 +451,26 @@ const getOrCreateUserAndSendStudyInvite = async (
       accounts: {
         create: {
           role: Role.COLLABORATOR,
+          organizationVersionId: organizationVersion.id,
         },
       },
     })
 
     await sendInvitation(email, study, organizationVersion.organization, creator, role ? t(role).toLowerCase() : '')
 
-    accountId = newAccount.id
+    accountId = newUser.accounts[0].id
   } else {
-    if (existingAccount.organizationVersionId !== organizationVersion.id) {
-      await sendInvitation(
-        email,
-        study,
-        organizationVersion.organization,
-        creator,
-        role ? t(role).toLowerCase() : '',
-        existingAccount,
-      )
-    }
-    accountId = existingAccount.id
+    // TODO récupérer le bon account
+    const account = (await getAccountById(existingUser.accounts[0].id)) as AccountWithUser
+    await sendInvitation(
+      email,
+      study,
+      organizationVersion.organization,
+      creator,
+      role ? t(role).toLowerCase() : '',
+      account,
+    )
+    accountId = account.id
   }
 
   return accountId
@@ -476,20 +482,21 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, existingAccount] = await Promise.all([
+  const [studyWithRights, existingAccount, existingUser] = await Promise.all([
     getStudyById(right.studyId, session.user.organizationVersionId),
     getAccountByEmailAndOrganizationVersionId(right.email, session.user.organizationVersionId),
+    getUserByEmail(right.email),
   ])
 
   if (!studyWithRights) {
     return NOT_AUTHORIZED
   }
 
-  if (!existingAccount || !checkLevel(existingAccount.user.level, studyWithRights.level)) {
+  if (!existingUser || !checkLevel(existingUser.level, studyWithRights.level)) {
     right.role = StudyRole.Reader
   }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, existingAccount as AccountWithUser, right.role)) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, right.role)) {
     return NOT_AUTHORIZED
   }
 
@@ -521,6 +528,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     studyWithRights,
     organizationVersion as OrganizationVersionWithOrganization,
     session.user,
+    existingUser,
     existingAccount as AccountWithUser,
     right.role,
   )
@@ -538,16 +546,17 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, existingAccount] = await Promise.all([
+  const [studyWithRights, existingAccount, existingUser] = await Promise.all([
     getStudyById(studyId, session.user.organizationVersionId),
     getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId),
+    getUserByEmail(email),
   ])
 
   if (!studyWithRights || !existingAccount) {
     return NOT_AUTHORIZED
   }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, existingAccount as AccountWithUser, studyRole)) {
+  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole)) {
     return NOT_AUTHORIZED
   }
 
@@ -579,9 +588,10 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
     return NOT_AUTHORIZED
   }
 
-  const [studyWithRights, existingAccount] = await Promise.all([
+  const [studyWithRights, existingAccount, existingUser] = await Promise.all([
     getStudyById(command.studyId, session.user.organizationVersionId),
     getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId),
+    getUserByEmail(email),
   ])
 
   if (!studyWithRights) {
@@ -597,7 +607,10 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
     return NOT_AUTHORIZED
   }
 
-  if (existingAccount && getAccountRoleOnStudy(existingAccount, studyWithRights)) {
+  if (
+    existingAccount &&
+    getAccountRoleOnStudy(accountWithUserToUserSession(existingAccount as AccountWithUser), studyWithRights)
+  ) {
     return ALREADY_IN_STUDY
   }
 
@@ -606,6 +619,7 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
     studyWithRights,
     organizationVersion as OrganizationVersionWithOrganization,
     session.user,
+    existingUser,
     existingAccount as AccountWithUser,
   )
 
@@ -664,7 +678,7 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
   // We don't need to know the role, only whether or not the user has one
   // We therefore arbitrarily use the "Reader" role
   const allowedUsers = study.allowedUsers.map(({ accountId }) => ({
-    account: { id: accountId, user: { id: user.id } },
+    account: { id: accountId, user: { id: user.userId } },
     role: StudyRole.Reader,
   }))
   const studyObject = { ...study, allowedUsers: allowedUsers }

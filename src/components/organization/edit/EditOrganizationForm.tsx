@@ -4,7 +4,7 @@ import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
-import { OrganizationWithSites } from '@/db/account'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
@@ -26,7 +26,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface Props {
-  organization: OrganizationWithSites
+  organizationVersion: OrganizationVersionWithOrganization
   caUnit: SiteCAUnit
 }
 
@@ -110,7 +110,6 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
             {sitesOnError &&
               sitesOnError.authorizedStudySites.map((studySite) => (
                 <li key={studySite.id}>
-                  {/* TODO je sais pas trop si je récupère de la bonne façon isCR ici */}
                   {tStudySites.rich('existingSite', {
                     name: () =>
                       `${studySite.site.name}${studySite.study.organizationVersion.isCR ? ` (${studySite.site.organization.name})` : ''}`,

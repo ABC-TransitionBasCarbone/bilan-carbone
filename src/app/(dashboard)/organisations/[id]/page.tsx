@@ -20,7 +20,7 @@ const OrganizationView = async (props: Props & UserSessionProps) => {
   const organizationVersion = await getOrganizationVersionWithSitesById(id)
   if (
     !organizationVersion ||
-    !isInOrgaOrParent(props.user.organizationVersionId, organizationVersion as OrganizationVersionWithOrganization)
+    !isInOrgaOrParent(props.user?.organizationVersionId, organizationVersion as OrganizationVersionWithOrganization)
   ) {
     return <NotFound />
   }
