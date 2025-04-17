@@ -1,6 +1,7 @@
 'use client'
 
 import Form from '@/components/base/Form'
+import IconLabel from '@/components/base/IconLabel'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormDatePicker } from '@/components/form/DatePicker'
@@ -71,15 +72,52 @@ const NewStudyForm = ({ user, users, form, children }: Props) => {
           icon={<HelpIcon onClick={() => setGlossary('validatorEmail')} label={tGlossary('title')} />}
           iconPosition="after"
         />
-        <div className={styles.dates}>
-          <FormDatePicker control={form.control} translation={t} name="startDate" label={t('start')} />
-          <FormDatePicker
-            control={form.control}
-            translation={t}
-            name="endDate"
-            label={t('end')}
-            data-testid="new-study-endDate"
-          />
+        <div>
+          <IconLabel
+            icon={<HelpIcon className="ml-4" onClick={() => setGlossary('studyDates')} label={tGlossary('title')} />}
+            iconPosition="after"
+            className="mb-2"
+          >
+            <span className="inputLabel bold">{t('studyDates')}</span>
+          </IconLabel>
+          <div className={styles.dates}>
+            <FormDatePicker control={form.control} translation={t} name="startDate" label={t('start')} />
+            <FormDatePicker
+              control={form.control}
+              translation={t}
+              name="endDate"
+              label={t('end')}
+              data-testid="new-study-endDate"
+            />
+          </div>
+        </div>
+        <div>
+          <IconLabel
+            icon={
+              <HelpIcon className="ml-4" onClick={() => setGlossary('realizationDates')} label={tGlossary('title')} />
+            }
+            iconPosition="after"
+            className="mb-2"
+          >
+            <span className="inputLabel bold">{t('realizationDates')}</span>
+          </IconLabel>
+          <div className={styles.dates}>
+            <FormDatePicker
+              control={form.control}
+              translation={t}
+              name="realizationStartDate"
+              label={t('start')}
+              clearable
+            />
+            <FormDatePicker
+              control={form.control}
+              translation={t}
+              name="realizationEndDate"
+              label={t('end')}
+              data-testid="new-study-realizationEndDate"
+              clearable
+            />
+          </div>
         </div>
         <FormSelect
           control={form.control}
