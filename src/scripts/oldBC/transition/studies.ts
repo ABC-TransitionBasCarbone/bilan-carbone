@@ -1,4 +1,4 @@
-import { ControlMode, Level, Prisma, Export as StudyExport } from '@prisma/client'
+import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { getExistingObjectsIds, getExistingSitesIds } from './repositories'
 
@@ -21,6 +21,11 @@ export enum RequiredStudyExportsColumns {
   control = 'LIBELLE_MODE_CONTROLE',
 }
 
+export enum RequiredStudyEmissionSourcesColumns {
+  studyOldBCId = 'ID_ETUDE',
+  siteOldBCId = 'ID_ENTITE',
+}
+
 interface Study {
   oldBCId: string
   name: string
@@ -35,6 +40,10 @@ interface StudySite {
 interface Export {
   type: StudyExport
   control: ControlMode
+}
+
+interface EmissionSource {
+  siteOldBCId: string
 }
 
 const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
@@ -138,8 +147,55 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
     }, new Map<string, Export[]>())
 }
 
+const parseEmissionSources = (
+  indexes: Record<string, number>,
+  data: (string | number)[][],
+): Map<string, EmissionSource[]> => {
+  return data
+    .slice(1)
+    .map<[string, EmissionSource]>((row) => [
+      row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
+      {
+        siteOldBCId: row[indexes[RequiredStudyEmissionSourcesColumns.siteOldBCId]] as string,
+      },
+    ])
+    .reduce((accumulator, currentValue) => {
+      const EmissionSources = accumulator.get(currentValue[0])
+      if (EmissionSources) {
+        EmissionSources.push(currentValue[1])
+      } else {
+        accumulator.set(currentValue[0], [currentValue[1]])
+      }
+      return accumulator
+    }, new Map<string, EmissionSource[]>())
+}
+
 const getExistingStudiesIds = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
   return getExistingObjectsIds(transaction.study, studiesIds)
+}
+
+const getExistingStudySites = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
+  const existingStudySites = await transaction.studySite.findMany({
+    where: {
+      studyId: {
+        in: studiesIds,
+      },
+    },
+    select: { id: true, studyId: true, siteId: true },
+  })
+  return existingStudySites.reduce((accumulator, currentExistingStudySite) => {
+    const studySite = {
+      id: currentExistingStudySite.id,
+      siteId: currentExistingStudySite.siteId,
+    }
+    const studySites = accumulator.get(studyId)
+    if (studySites) {
+      studySites.push(studySite)
+    } else {
+      accumulator.set(currentExistingStudySite.studyId, [studySite])
+    }
+    return accumulator
+  }, new Map<string, [{ id: string; siteId: string }]>())
 }
 
 export const uploadStudies = async (
@@ -152,12 +208,15 @@ export const uploadStudies = async (
   studySitesData: (string | number)[][],
   studyExportsIndexes: Record<string, number>,
   studyExportsData: (string | number)[][],
+  studyEmissionSourceIndexes: Record<string, number>,
+  studyEmissionSourceData: (string | number)[][],
 ) => {
   console.log('Import des études...')
 
   const studies = parseStudies(studiesIndexes, studiesData)
   const studySites = parseStudySites(studySitesIndexes, studySitesData)
   const studyExports = parseExports(studyExportsIndexes, studyExportsData)
+  const studyEmissionSources = parseEmissionSources(studyEmissionSourceIndexes, studyEmissionSourceData)
 
   const alreadyImportedStudyIds = await transaction.study.findMany({
     where: {
@@ -238,6 +297,50 @@ export const uploadStudies = async (
             studyId: existingStudyId,
           }))
           .filter((studyExport) => studyExport !== null)
+      }),
+    ),
+  })
+
+  const existingStudySites = await getExistingStudySites(transaction, Array.from(studyEmissionSources.keys()))
+
+  await transaction.studyEmissionSource.createMany({
+    data: Array.from(
+      studyEmissionSources.entries().flatMap(([studyOldBCId, studyEmissionSources]) => {
+        // N'importer que les sources d'émission d'études nouvelles.
+        if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
+          return []
+        }
+        const existingStudyId = existingStudiesIds.get(studyOldBCId)
+        if (!existingStudyId) {
+          console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
+          return []
+        }
+        console.log(studyEmissionSources)
+        return studyEmissionSources
+          .map((studyEmissionSource) => {
+            const existingSiteId = existingSiteIds.get(studyEmissionSource.siteOldBCId)
+            if (!existingSiteId) {
+              console.warn(`Impossible de retrouver le site de oldBCId: ${studyEmissionSource.siteOldBCId}`)
+              return null
+            }
+            const studySites = existingStudySites.get(existingStudyId)
+            if (!studySites) {
+              console.warn(`Impossible de retrouver les studySites de studyId: ${existingStudyId}`)
+              return null
+            }
+            const studySite = studySites.find((studySite) => studySite.siteId === existingSiteId)
+            if (!studySite) {
+              console.warn(`Impossible de retrouver le studySite d'id: ${existingSiteId}`)
+              return null
+            }
+            return {
+              studyId: existingStudyId,
+              studySiteId: studySite.siteId,
+              name: 'toto',
+              subPost: SubPost.CombustiblesFossiles,
+            }
+          })
+          .filter((studyEmissionSource) => studyEmissionSource !== null)
       }),
     ),
   })
