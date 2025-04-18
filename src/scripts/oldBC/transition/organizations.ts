@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import { prismaClient } from '../../../db/client'
+import { getExistingSitesIds } from './repositories'
 
 export enum RequiredOrganizationsColumns {
   ID_ENTITE = 'ID_ENTITE',
@@ -35,6 +35,17 @@ function mapRowToSite(row: (string | number)[], indexes: Record<string, number>)
     oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string,
     name: row[indexes[RequiredOrganizationsColumns.NOM_ENTITE]] as string,
     organizationOldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]] as string,
+  }
+}
+
+async function checkUserOrganizationHaveNoNewSites(transaction: Prisma.TransactionClient, userOrganizationId: string) {
+  const numberOfNewUserOrganizationSites = await transaction.site.count({
+    where: {
+      AND: [{ organizationId: userOrganizationId }, { oldBCId: null }],
+    },
+  })
+  if (numberOfNewUserOrganizationSites > 0) {
+    throw new Error(`L'organisation de l'utilisateur contient ${numberOfNewUserOrganizationSites} nouveau(x) site(s).`)
   }
 }
 
@@ -102,7 +113,9 @@ export const uploadOrganizations = async (
   }
   const userOrganizationOldBCId = userOrganizationsOldBCIds[0]
 
-  const existingOrganizations = await prismaClient.organization.findMany({
+  await checkUserOrganizationHaveNoNewSites(transaction, userOrganizationId)
+
+  const existingOrganizations = await transaction.organization.findMany({
     where: {
       AND: [
         { parentId: userOrganizationId },
@@ -158,14 +171,13 @@ export const uploadOrganizations = async (
     })
   }
 
+  const existingSitesIds = await getExistingSitesIds(
+    transaction,
+    sites.map((site) => site.oldBCId),
+  )
   // Et je crée tous les autres sites
   const sitesToCreate = sites
-    .filter(
-      (site) =>
-        !existingOrganizations.some(
-          (existingOrganization) => existingOrganization.oldBCId === site.organizationOldBCId,
-        ),
-    )
+    .filter((site) => !existingSitesIds.has(site.oldBCId))
     .map((site) => {
       const existingParentOrganisationId = organizationsOldBCIdsIdsMap.get(site.organizationOldBCId)
       if (!existingParentOrganisationId) {
@@ -179,9 +191,6 @@ export const uploadOrganizations = async (
       }
     })
     .filter((site) => site !== null)
-    // Sauf celles qui n'ont pas de parent (car supprimées dans l'ancien BC+)
-    .filter((site) => newOrganizations.some((organization) => organization.oldBCId === site.organizationId))
-    .filter((site) => site.organizationId !== userOrganizationId)
   if (sitesToCreate.length > 0) {
     console.log(`Import de ${sitesToCreate.length} sites`)
     await transaction.site.createMany({ data: sitesToCreate })
