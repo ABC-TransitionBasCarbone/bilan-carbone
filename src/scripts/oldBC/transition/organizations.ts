@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma, Organization as PrismaOrganization } from '@prisma/client'
 import { getExistingSitesIds } from './repositories'
 
 export enum RequiredOrganizationsColumns {
@@ -80,11 +80,11 @@ export const uploadOrganizations = async (
   transaction: Prisma.TransactionClient,
   data: (string | number)[][],
   indexes: Record<string, number>,
-  userOrganizationId: string,
+  userOrganization: PrismaOrganization,
 ) => {
   console.log('Import des organisations...')
 
-  const userOrganizationsOldBCIds: string[] = []
+  const userOrganizationsRows: { oldBCId: string; name: string }[] = []
   const organizations: Organization[] = []
   const sites: Site[] = []
   data
@@ -97,7 +97,10 @@ export const uploadOrganizations = async (
     )
     .forEach((row) => {
       if ((row[indexes[RequiredOrganizationsColumns.IS_USER_ORGA]] as number) === 1) {
-        userOrganizationsOldBCIds.push(row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string)
+        userOrganizationsRows.push({
+          oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string,
+          name: row[indexes[RequiredOrganizationsColumns.NOM_ENTITE]] as string,
+        })
       } else if (
         row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] ===
         row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]]
@@ -108,17 +111,17 @@ export const uploadOrganizations = async (
       }
     })
 
-  if (userOrganizationsOldBCIds.length !== 1) {
+  if (userOrganizationsRows.length !== 1) {
     throw new Error("Il faut exactement 1 organisation rattachée à l'utilisateur !")
   }
-  const userOrganizationOldBCId = userOrganizationsOldBCIds[0]
+  const userOrganizationRow = userOrganizationsRows[0]
 
-  await checkUserOrganizationHaveNoNewSites(transaction, userOrganizationId)
+  await checkUserOrganizationHaveNoNewSites(transaction, userOrganization.id)
 
   const existingOrganizations = await transaction.organization.findMany({
     where: {
       AND: [
-        { parentId: userOrganizationId },
+        { parentId: userOrganization.id },
         { oldBCId: { in: organizations.map((organization) => organization.oldBCId) } },
       ],
     },
@@ -128,12 +131,21 @@ export const uploadOrganizations = async (
     (organization) => !existingOrganizations.some(({ oldBCId }) => oldBCId === organization.oldBCId),
   )
 
+  // Je crée un site par défaut pour mon organization
+  await transaction.site.create({
+    data: {
+      oldBCId: userOrganizationRow.oldBCId,
+      organizationId: userOrganization.id,
+      name: userOrganizationRow.name,
+    },
+  })
+
   // Je crée toutes les organisations sauf la mienne
   if (newOrganizations.length > 0) {
     console.log(`Import de ${newOrganizations.length} organisations`)
     await transaction.organization.createMany({
       data: newOrganizations.map((organization) => ({
-        parentId: userOrganizationId,
+        parentId: userOrganization.id,
         oldBCId: organization.oldBCId,
         siret: organization.siret,
         name: organization.name,
@@ -146,8 +158,8 @@ export const uploadOrganizations = async (
   const organizationsOldBCIdsIdsMap = await getOrganizationsOldBCIdsIdsMap(
     transaction,
     organizations,
-    userOrganizationId,
-    userOrganizationOldBCId,
+    userOrganization.id,
+    userOrganizationRow.oldBCId,
   )
 
   if (newOrganizations.length > 0) {
