@@ -59,7 +59,7 @@ const NewStudyContributorForm = ({ study }: Props) => {
         name="email"
         label={t('email')}
       />
-      <MultiplePosts form={form} />
+      <MultiplePosts form={form} context="studyContributor" />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-contributor-create-button">
         {t('create')}
       </LoadingButton>

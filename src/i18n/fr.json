@@ -695,7 +695,8 @@
           "conclusion": "Cette désagrégation n'est pas utilisée au sein de la méthode Bilan Carbone®, mais permet de ventiler les émissions des différentes composantes au sein des catégories pour les exports (pour le Bilan GES règlementaire, en reprenant le même exemple, et si la source d'émission est \"Opérée\", les émissions \"amont\", \"combustion à la centrale\" et \"pertes\" sont respectivement ventilées au sein des catégories 4.1, 1.2, 4.1). <b>Nous vous recommandons très fortement de ne pas utiliser cette fonctionnalité si vous ne maîtrisez pas les affectations au sein du Bilan GES règlementaire.</b>"
         },
         "post": "Poste",
-        "postDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel votre facteur d'émission sera sélectionnable.",
+        "post_studyContributorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel votre facteur d'émission sera sélectionnable.",
+        "post_emissionFactorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel le contributeur pourra intervenir.",
         "close": "Fermer"
       },
       "validation": {

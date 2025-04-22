@@ -13,9 +13,10 @@ import styles from './Posts.module.css'
 
 interface Props<T extends SubPostsCommand> {
   form: UseFormReturn<T>
+  context: 'emissionFactor' | 'studyContributor'
 }
 
-const MultiplePosts = <T extends SubPostsCommand>({ form }: Props<T>) => {
+const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const tGlossary = useTranslations('emissionFactors.create.glossary')
@@ -66,7 +67,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form }: Props<T>) => {
               data-testid="emission-factor-post"
               label={t('posts')}
               fullWidth
-              icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
+              icon={<HelpIcon onClick={() => setGlossary(`post_${context}`)} label={tGlossary('title')} />}
               iconPosition="after"
             >
               {postSelection.map((post) => (
@@ -83,7 +84,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form }: Props<T>) => {
       />
 
       {glossary && (
-        <GlossaryModal glossary={glossary} label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
+        <GlossaryModal glossary="post" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
           {tGlossary(`${glossary}Description`)}
         </GlossaryModal>
       )}
