@@ -574,7 +574,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
   await updateUserOnStudy(existingUser.id, studyWithRights.id, studyRole)
 }
 
-export const newStudyContributor = async ({ email, post, subPost, ...command }: NewStudyContributorCommand) => {
+export const newStudyContributor = async ({ email, subPosts, ...command }: NewStudyContributorCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
@@ -610,13 +610,8 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     existingUser,
   )
 
-  if (post === 'all') {
-    await createContributorOnStudy(userId, Object.values(SubPost), command)
-  } else if (!subPost || subPost === 'all') {
-    await createContributorOnStudy(userId, subPostsByPost[post], command)
-  } else {
-    await createContributorOnStudy(userId, [subPost], command)
-  }
+  const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
+  await createContributorOnStudy(userId, selectedSubposts, command)
 }
 
 export const deleteStudyCommand = async ({ id, name }: DeleteCommand) => {

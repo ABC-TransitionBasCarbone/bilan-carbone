@@ -2,7 +2,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { BCPost, Post } from '@/services/posts'
-import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -11,17 +11,17 @@ import { Control, Controller, FieldPath, UseFormReturn, UseFormSetValue } from '
 import Posts from './Posts'
 import styles from './Posts.module.css'
 
-interface Props<T extends EmissionFactorCommand> {
+interface Props<T extends SubPostsCommand> {
   form: UseFormReturn<T>
 }
 
-const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
+const MultiplePosts = <T extends SubPostsCommand>({ form }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const tGlossary = useTranslations('emissionFactors.create.glossary')
 
-  const control = form.control as Control<EmissionFactorCommand>
-  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
+  const control = form.control as Control<SubPostsCommand>
+  const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
 
   const posts: Record<Post, SubPost[]> = (form.watch('subPosts' as FieldPath<T>) as Record<Post, SubPost[]>) || {}
   const [glossary, setGlossary] = useState('')

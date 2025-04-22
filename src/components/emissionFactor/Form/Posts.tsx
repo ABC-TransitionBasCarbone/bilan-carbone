@@ -4,7 +4,7 @@ import Button from '@/components/base/Button'
 import { MultiSelect } from '@/components/base/MultiSelect'
 import { Select } from '@/components/base/Select'
 import { BCPost, Post, subPostsByPost } from '@/services/posts'
-import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
@@ -14,14 +14,14 @@ import { useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from './Posts.module.css'
 
-interface Props<T extends EmissionFactorCommand> {
+interface Props<T extends SubPostsCommand> {
   post?: Post
   postOptions: Post[]
   subPosts?: SubPost[]
   form: UseFormReturn<T>
 }
 
-const Posts = <T extends EmissionFactorCommand>({
+const Posts = <T extends SubPostsCommand>({
   form,
   subPosts: initalSubPosts,
   post: initialPost,
@@ -31,10 +31,10 @@ const Posts = <T extends EmissionFactorCommand>({
   const tPost = useTranslations('emissionFactors.post')
   const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
 
-  const control = form.control as Control<EmissionFactorCommand>
+  const control = form.control as Control<SubPostsCommand>
   const [post, setPost] = useState<Post | undefined>(getPost(initalSubPosts?.[0]) || initialPost)
 
-  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
+  const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
 
   const posts = useMemo(() => Object.keys(BCPost).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
   const subPosts = useMemo<SubPost[]>(
