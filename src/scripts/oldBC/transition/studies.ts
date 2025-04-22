@@ -243,10 +243,10 @@ export const uploadStudies = async (
   })
 
   const existingStudiesIds = await getExistingStudiesIds(transaction, Array.from(studySites.keys()))
-  const sitesIds = Array.from(
+  const sitesOldBCIds = Array.from(
     studySites.values().flatMap((studySites) => studySites.map((studySite) => studySite.siteOldBCId)),
   )
-  const existingSiteIds = await getExistingSitesIds(transaction, sitesIds)
+  const existingSiteIds = await getExistingSitesIds(transaction, sitesOldBCIds)
 
   await transaction.studySite.createMany({
     data: Array.from(
