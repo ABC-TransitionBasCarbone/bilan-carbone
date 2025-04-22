@@ -1,14 +1,12 @@
 'use client'
 
-import { Post } from '@/services/posts'
+import { BCPost, Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
-import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { Box } from '@mui/material'
+import { BarChart } from '@mui/x-charts'
 import { StudyResultUnit } from '@prisma/client'
-import Chart from 'chart.js/auto'
-import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
   studySite: string
@@ -16,7 +14,7 @@ interface Props {
   resultsUnit: StudyResultUnit
 }
 
-const postXAxisList = [
+const listPost = [
   Post.Energies,
   Post.DechetsDirects,
   Post.IntrantsBiensEtMatieres,
@@ -30,12 +28,7 @@ const postXAxisList = [
 ]
 
 const Result = ({ studySite, computedResults, resultsUnit }: Props) => {
-  const tPost = useTranslations('emissionFactors.post')
-  const tUnits = useTranslations('study.results.units')
-  const [dynamicHeight, setDynamicHeight] = useState(0)
-  const chartRef = useRef<Chart | null>(null)
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const [validatedOnly, setValidatedOnly] = useState(true)
+  const [_, setValidatedOnly] = useState(true)
 
   useEffect(() => {
     applyUserSettings()
@@ -48,66 +41,37 @@ const Result = ({ studySite, computedResults, resultsUnit }: Props) => {
     }
   }
 
-  const xAxis = useMemo(() => postXAxisList, [])
-
-  const yData = useMemo(() => {
-    if (computedResults.every((post) => post.value === 0)) {
-      return []
-    }
-    return xAxis.map(
-      (post) =>
-        (computedResults.find((postResult) => postResult.post === post) as ResultsByPost).value /
-        STUDY_UNIT_VALUES[resultsUnit],
-    )
-  }, [studySite, validatedOnly, computedResults])
-
-  useEffect(() => {
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d')
-      if (ctx) {
-        chartRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: xAxis.map((post) => tPost(post)),
-            datasets: [
-              {
-                data: yData,
-                backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary-500'),
-                label: tUnits(resultsUnit),
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  label: (context) => `${formatNumber(context.raw as number)} ${tUnits(resultsUnit)}`,
-                },
-              },
-              legend: { display: true },
-            },
-            scales: {
-              x: { afterUpdate: ({ height }) => setDynamicHeight(370 + (height || 0)) },
-              y: { beginAtZero: true },
-            },
-          },
-        })
-      }
-    }
-
-    return () => {
-      if (chartRef.current) {
-        chartRef.current.destroy()
-      }
-    }
-  }, [xAxis, yData])
+  const data = useMemo(() => {
+    return computedResults
+      .filter(({ post }) => listPost.includes(post as BCPost))
+      .map(({ post, value }) => ({ label: post, value: value / 1000 }))
+  }, [computedResults])
 
   return (
-    <div style={{ minHeight: dynamicHeight }}>
-      <canvas data-testid={`study-Post-chart`} ref={canvasRef} />
-    </div>
+    <Box>
+      <BarChart
+        dataset={data}
+        xAxis={[
+          {
+            scaleType: 'band',
+            dataKey: 'label',
+            colorMap: {
+              type: 'ordinal',
+              colors: [getComputedStyle(document.body).getPropertyValue('--primary-500')],
+            },
+            tickLabelStyle: {
+              angle: -20,
+              fontSize: 10,
+              translate: '0 20px',
+            },
+          },
+        ]}
+        series={[{ dataKey: 'value' }]}
+        height={400}
+        width={800}
+        margin={{ top: 50, right: 50, bottom: 80, left: 50 }}
+      />
+    </Box>
   )
 }
 

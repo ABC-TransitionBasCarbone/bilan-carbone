@@ -119,7 +119,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             </Box>
           </label>
         </fieldset>
-        <div className={styles.graph}>
+        <div>
           <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
         </div>
       </div>

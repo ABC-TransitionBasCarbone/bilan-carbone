@@ -1,24 +1,22 @@
 interface TabPanelProps {
-    children?: React.ReactNode;
-    dir?: string;
-    index: number;
-    value: number;
+  children?: React.ReactNode
+  dir?: string
+  index: number
+  value: number
 }
 
 export default function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = props
 
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <>{children}</>
-            )}
-        </div>
-    );
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && <>{children}</>}
+    </div>
+  )
 }
