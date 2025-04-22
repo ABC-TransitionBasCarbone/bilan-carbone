@@ -16,7 +16,7 @@ interface Props {
   resultsUnit: StudyResultUnit
 }
 
-function getColor(value: string) {
+const getColor = (value: string) => {
   return getComputedStyle(document.body).getPropertyValue(value)
 }
 

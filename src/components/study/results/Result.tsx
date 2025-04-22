@@ -27,7 +27,7 @@ const listPost = [
   Post.FinDeVie,
 ]
 
-const Result = ({ studySite, computedResults, resultsUnit }: Props) => {
+const Result = ({ computedResults, resultsUnit }: Props) => {
   const [_, setValidatedOnly] = useState(true)
 
   useEffect(() => {
