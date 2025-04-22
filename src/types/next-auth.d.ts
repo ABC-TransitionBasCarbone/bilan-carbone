@@ -11,5 +11,6 @@ declare module 'next-auth' {
       Pick<PrismaUser, 'firstName' | 'lastName' | 'level'> {
     email: PrismaUser['email']
     accountId: string
+    organizationId: string | null
   }
 }

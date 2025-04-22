@@ -1,5 +1,5 @@
 import { findUserInfo } from '@/services/permissions/user'
-import { Account, Role, User } from '@prisma/client'
+import { Account, Prisma, Role, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
 import { OrganizationVersionWithOrganizationSelect } from './organization'
@@ -38,11 +38,12 @@ export const AccountWithUserSelect = {
   },
 }
 
-export const getAccountByEmailAndOrganizationVersionId = (email: string, organizationVersionId: string | null) =>
-  prismaClient.account.findFirst({
+export const getAccountByEmailAndOrganizationVersionId = (email: string, organizationVersionId: string | null) => {
+  return prismaClient.account.findFirst({
     where: { user: { email }, organizationVersionId },
     select: AccountWithUserSelect,
   })
+}
 
 export const getAccountById = (id: string) =>
   prismaClient.account.findUnique({
@@ -113,3 +114,9 @@ export const userSessionToDbUser = (userSession: UserSession) =>
 export const getAccountFromUserOrganization = (user: UserSession) =>
   prismaClient.account.findMany({ ...findUserInfo(user), orderBy: { user: { email: 'asc' } } })
 export type TeamMember = AsyncReturnType<typeof getAccountFromUserOrganization>[0]
+
+export const addAccount = (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) =>
+  prismaClient.account.create({
+    data: account,
+    select: AccountWithUserSelect,
+  })

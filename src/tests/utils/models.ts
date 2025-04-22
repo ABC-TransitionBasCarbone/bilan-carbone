@@ -3,13 +3,18 @@ import { UserSession } from 'next-auth'
 
 export const mockedUserId = 'mocked-user-id'
 export const mockedAccountId = 'mocked-account-id'
-export const mockedOrganizationVersionId = 'mocked-organization-id'
+export const mockedOrganizationVersionId = 'mocked-organization-version-id'
+export const mockedOrganizationId = 'mocked-organization-id'
 
 // TODO faire le mockedAccount / organizationversion
 
 const mockedAccount = {
   id: '6d2af85f-f6f8-42ec-9fa4-965405e52d12',
   organizationVersionId: mockedOrganizationVersionId,
+  organizationVersion: {
+    id: mockedOrganizationVersionId,
+    organizationId: mockedOrganizationId,
+  },
   role: Role.ADMIN,
 }
 const mockedDbAccount = {
@@ -55,6 +60,7 @@ export const getMockedUserSesssion = (props: Partial<UserSession>): UserSession 
   accountId: mockedAccount.id,
   userId: mockedUserId,
   organizationVersionId: mockedDbAccount.organizationVersionId,
+  organizationId: mockedDbAccount.organizationVersion.organizationId,
   role: mockedDbAccount.role,
   ...mockedDbAccount.user,
   ...props,

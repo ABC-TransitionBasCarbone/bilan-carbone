@@ -27,7 +27,7 @@ export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
 
   if (
     study.isPublic &&
-    isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization)
+    isInOrgaOrParent(user.organizationId, study.organizationVersion as OrganizationVersionWithOrganization)
   ) {
     return getUserRoleOnPublicStudy(user, study.level)
   }
@@ -75,8 +75,9 @@ export const postColors: Record<Post, string> = {
   [Post.BilletterieEtCommunication]: 'darkBlue',
 }
 
-export const hasEditionRights = (userRoleOnStudy: StudyRole | null) =>
-  userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
+export const hasEditionRights = (userRoleOnStudy: StudyRole | null) => {
+  return userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
+}
 
 export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
   K: 1,

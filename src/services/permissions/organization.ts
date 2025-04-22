@@ -14,9 +14,14 @@ export const isInOrgaOrParentFromId = async (
   }
 
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  const userOrganizationVersion = await getOrganizationVersionById(userOrganizationVersionId)
   return (
     organizationVersion &&
-    isInOrgaOrParent(userOrganizationVersionId, organizationVersion as OrganizationVersionWithOrganization)
+    userOrganizationVersion &&
+    isInOrgaOrParent(
+      userOrganizationVersion?.organizationId,
+      organizationVersion as OrganizationVersionWithOrganization,
+    )
   )
 }
 

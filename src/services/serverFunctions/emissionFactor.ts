@@ -37,7 +37,11 @@ export const getEmissionFactors = async (studyId?: string) => {
     const emissionFactorOrganizationId = await getStudyParentOrganization(studyId, session.user.organizationVersionId)
     emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId)
   } else {
-    emissionFactors = await getAllEmissionFactors(session.user.organizationVersionId)
+    const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+    if (!organizationVersion) {
+      return []
+    }
+    emissionFactors = await getAllEmissionFactors(organizationVersion.organizationId)
   }
 
   return emissionFactors
@@ -99,7 +103,7 @@ export const canEditEmissionFactor = async (id: string) => {
   if (!emissionFactor || !session) {
     return false
   }
-  return emissionFactor.organizationId === session.user.organizationVersionId
+  return emissionFactor.organizationId === session.user.organizationId
 }
 
 export const createEmissionFactorCommand = async ({

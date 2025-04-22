@@ -18,6 +18,8 @@ export const OrganizationVersionWithOrganizationSelect = {
   organizationId: true,
   isCR: true,
   activatedLicence: true,
+  onboarded: true,
+  environment: true,
   organization: {
     select: {
       id: true,

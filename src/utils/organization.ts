@@ -4,12 +4,14 @@ import { Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
 export const isAdminOnOrga = (account: UserSession, organizationVersion: OrganizationVersionWithOrganization) =>
-  isAdmin(account.role) && isInOrgaOrParent(account.organizationVersionId, organizationVersion)
+  isAdmin(account.role) && isInOrgaOrParent(account.organizationId, organizationVersion)
 
 export const isInOrgaOrParent = (
   userOrganizationId: string | null,
   organizationVersion: OrganizationVersionWithOrganization,
-) => userOrganizationId === organizationVersion.id || userOrganizationId === organizationVersion.organization.parentId
+) =>
+  userOrganizationId === organizationVersion.organizationId ||
+  userOrganizationId === organizationVersion.organization.parentId
 
 export const hasEditionRole = (isCR: boolean, userRole: Role) =>
   isCR ? userRole !== Role.DEFAULT : isAdmin(userRole) || userRole === Role.GESTIONNAIRE
@@ -18,7 +20,7 @@ export const canEditOrganizationVersion = (
   account: UserSession,
   organizationVersion?: OrganizationVersionWithOrganization,
 ) => {
-  if (organizationVersion && !isInOrgaOrParent(account.organizationVersionId, organizationVersion)) {
+  if (organizationVersion && !isInOrgaOrParent(account.organizationId, organizationVersion)) {
     return false
   }
   const isCR =

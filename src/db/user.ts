@@ -63,7 +63,16 @@ export const getUserFromUserOrganization = (user: User) =>
 export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
 
 export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
-  prismaClient.user.create({ data: user })
+  prismaClient.user.create({
+    data: user,
+    select: {
+      accounts: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  })
 
 export const deleteUserFromOrga = (email: string) =>
   // TODO en attente de réponse sur le status + comment s'y prendre avec orgaVersion est-ce qu'on peut récupérer celle de la session user ? ça permettrait de cibler le bon account
@@ -104,3 +113,8 @@ export const updateUserApplicationSettings = (accountId: string, data: Prisma.Us
     where: { accountId },
     data,
   })
+
+export const getUserByIdWithAccounts = (id: string) =>
+  prismaClient.user.findUnique({ where: { id }, include: { accounts: true } })
+
+export type UserWithAccounts = AsyncReturnType<typeof getUserByIdWithAccounts>
