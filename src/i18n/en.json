@@ -546,6 +546,7 @@
       "total": "Total",
       "allPost": "All posts",
       "allSubPost": "All sub posts",
+      "clear": "Clear value",
       "Energies": "Energy",
       "AutresEmissionsNonEnergetiques": "Other direct emissions",
       "IntrantsBiensEtMatieres": "Goods and materials inputs",
@@ -684,6 +685,7 @@
       "partType": "Part type",
       "comment": "Comments",
       "delete": "Delete",
+      "clear": "Clear value",
       "glossary": {
         "title": "Glossary",
         "detailedGES": "Breakdown of GHG",
