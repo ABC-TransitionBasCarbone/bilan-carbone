@@ -148,4 +148,9 @@ enum Unit {
   GO
   REQUEST
   MAIL
+	EURO
+	DOLLAR
+	JPY
+	CNY
+	YEAR
 }
