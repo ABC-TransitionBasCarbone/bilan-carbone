@@ -547,6 +547,7 @@
       "total": "Total",
       "allPost": "Tous les postes",
       "allSubPost": "Tous les sous postes",
+      "clear": "Supprimer la valeur",
       "Energies": "Énergie",
       "AutresEmissionsNonEnergetiques": "Autres émissions directes",
       "IntrantsBiensEtMatieres": "Intrants biens et matières",
@@ -685,6 +686,7 @@
       "subPost": "Sous Poste",
       "comment": "Commentaires",
       "delete": "Supprimer",
+      "clear": "Supprimer la valeur",
       "glossary": {
         "title": "Glossaire",
         "detailedGES": "Décomposition des GES",
