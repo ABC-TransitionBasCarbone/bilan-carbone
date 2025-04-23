@@ -26,8 +26,6 @@ interface Props {
   validatedOnly: boolean
 }
 
-
-
 const a11yProps = (index: number) => {
   return {
     id: `full-width-tab-${index}`,
@@ -81,7 +79,9 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
   }, [resultsByPost, tPost])
 
   const pieData = useMemo(() => {
-    return computeResults.map(({ label, value }) => ({ label, value: value / STUDY_UNIT_VALUES[study.resultsUnit] })).filter((computeResult) => computeResult.value > 0)
+    return computeResults
+      .map(({ label, value }) => ({ label, value: value / STUDY_UNIT_VALUES[study.resultsUnit] }))
+      .filter((computeResult) => computeResult.value > 0)
   }, [computeResults])
 
   const barData = useMemo(() => {
@@ -124,20 +124,21 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
                   scaleType: 'band',
                   tickLabelStyle: {
                     angle: -20,
-                    fontSize: 10,
-                    textAnchor: 'end'
+                    textAnchor: 'end',
                   },
                   tickPlacement: 'extremities',
-                  tickLabelPlacement: 'middle'
+                  tickLabelPlacement: 'middle',
                 },
               ]}
               series={[{ data: barData.values }]}
               grid={{ vertical: true, horizontal: true }}
-              yAxis={[{
-                label: tUnits(study.resultsUnit)
-              }]}
+              yAxis={[
+                {
+                  label: tUnits(study.resultsUnit),
+                },
+              ]}
               margin={{ top: 5, right: 100, bottom: 100, left: 100 }}
-              axisHighlight={{ x: 'none', }}
+              axisHighlight={{ x: 'none' }}
               {...barChartSettings}
             />
           </TabPanel>
