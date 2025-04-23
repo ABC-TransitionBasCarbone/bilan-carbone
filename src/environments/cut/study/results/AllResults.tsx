@@ -9,7 +9,7 @@ import { CutPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import DownloadIcon from '@mui/icons-material/Download'
-import { Box, Button, Container, Tab, Tabs } from '@mui/material'
+import { Box, Button, Container, Tab, Tabs, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
 import { Export, ExportRule, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -34,6 +34,7 @@ const a11yProps = (index: number) => {
 }
 
 export default function AllResults({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) {
+  const theme = useTheme()
   const [value, setValue] = useState(0)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -80,7 +81,7 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
 
   const pieData = useMemo(() => {
     return computeResults
-      .map(({ label, value }) => ({ label, value: value / STUDY_UNIT_VALUES[study.resultsUnit] }))
+      .map(({ label, value }) => ({ label, value: value / STUDY_UNIT_VALUES[study.resultsUnit], color: theme.palette.primary.main }))
       .filter((computeResult) => computeResult.value > 0)
   }, [computeResults])
 
@@ -130,7 +131,7 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
                   tickLabelPlacement: 'middle',
                 },
               ]}
-              series={[{ data: barData.values }]}
+              series={[{ color: theme.palette.primary.main, data: barData.values }]}
               grid={{ vertical: true, horizontal: true }}
               yAxis={[
                 {
@@ -143,7 +144,9 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <PieChart series={[{ data: pieData }]} height={300} />
+            <PieChart series={[{
+              data: pieData
+            }]} height={300} />
           </TabPanel>
         </Box>
       </Box>
