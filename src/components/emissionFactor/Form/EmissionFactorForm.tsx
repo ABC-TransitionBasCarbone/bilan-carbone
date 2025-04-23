@@ -8,6 +8,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
+import { EmissionFactorCreationUnitList } from '@/utils/emissionFactors'
 import { MenuItem } from '@mui/material'
 import { Unit } from '@prisma/client'
 import classNames from 'classnames'
@@ -46,7 +47,13 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   const t = useTranslations('emissionFactors.create')
   const tUnit = useTranslations('units')
   const tGlossary = useTranslations('emissionSource.glossary')
-  const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [tUnit])
+  const units = useMemo(
+    () =>
+      Object.values(button === 'create' ? EmissionFactorCreationUnitList : Unit).sort((a, b) =>
+        tUnit(a).localeCompare(tUnit(b)),
+      ),
+    [tUnit],
+  )
   const [expandedQuality, setExpandedQuality] = useState(button === 'update')
   const [glossary, setGlossary] = useState('')
   const control = form.control as Control<EmissionFactorCommand>
