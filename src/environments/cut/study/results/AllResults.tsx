@@ -10,13 +10,13 @@ import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import DownloadIcon from '@mui/icons-material/Download'
 import { Box, Button, Container, Tab, Tabs } from '@mui/material'
-import { BarChart } from '@mui/x-charts'
-import { PieChart } from '@mui/x-charts/PieChart'
+import { BarChart, PieChart } from '@mui/x-charts'
 import { Export, ExportRule, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent, useMemo, useState } from 'react'
 
 import TabPanel from '@/components/tabPanel/tabPanel'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
 
 interface Props {
@@ -26,21 +26,7 @@ interface Props {
   validatedOnly: boolean
 }
 
-const barChartSettings = {
-  yAxis: [
-    {
-      label: 'tCo2',
-    },
-  ],
-  height: 300,
-  sx: {
-    marginLeft: '6rem',
-    [`.${axisClasses.left} .${axisClasses.label}`]: {
-      transform: 'translate(-10px, 0)',
-    },
-  },
-  borderRadius: 10,
-}
+
 
 const a11yProps = (index: number) => {
   return {
@@ -55,13 +41,25 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
     setValue(newValue)
   }
   const tPost = useTranslations('emissionFactors.post')
+  const tUnits = useTranslations('study.results.units')
 
   const { studySite, setSite } = useStudySite(study, true)
 
   const resultsByPost = useMemo(
     () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
-    [studySite, validatedOnly],
+    [study, studySite, tPost, validatedOnly],
   )
+
+  const barChartSettings = {
+    height: 300,
+    sx: {
+      marginLeft: '6rem',
+      [`.${axisClasses.left} .${axisClasses.label}`]: {
+        transform: 'translate(-32px, 0)',
+      },
+    },
+    borderRadius: 10,
+  }
 
   const computeResults = useMemo(() => {
     const validCutPosts = new Set(Object.values(CutPost))
@@ -78,17 +76,19 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
       .filter((post) => validCutPosts.has(post.post as CutPost))
       .map(({ post, ...rest }) => ({
         ...rest,
-        label: post,
+        label: tPost(post),
       }))
-  }, [resultsByPost])
+  }, [resultsByPost, tPost])
 
   const pieData = useMemo(() => {
-    return computeResults.filter((computeResult) => computeResult.value > 0)
+    return computeResults.map(({ label, value }) => ({ label, value: value / STUDY_UNIT_VALUES[study.resultsUnit] })).filter((computeResult) => computeResult.value > 0)
   }, [computeResults])
 
   const barData = useMemo(() => {
-    return computeResults.map(({ label, value }) => ({ label, value: value / 1000 }))
-  }, [computeResults])
+    const values = computeResults.map(({ value }) => value)
+    const labels = computeResults.map(({ label }) => label)
+    return { values, labels }
+  }, [computeResults, study.resultsUnit])
 
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
 
@@ -118,18 +118,26 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
           </TabPanel>
           <TabPanel value={value} index={1}>
             <BarChart
-              dataset={barData}
               xAxis={[
                 {
+                  data: barData.labels,
                   scaleType: 'band',
-                  dataKey: 'label',
-                  colorMap: {
-                    type: 'ordinal',
-                    colors: [getComputedStyle(document.body).getPropertyValue('--primary-500')],
+                  tickLabelStyle: {
+                    angle: -20,
+                    fontSize: 10,
+                    textAnchor: 'end'
                   },
+                  tickPlacement: 'extremities',
+                  tickLabelPlacement: 'middle'
                 },
               ]}
-              series={[{ dataKey: 'value' }]}
+              series={[{ data: barData.values }]}
+              grid={{ vertical: true, horizontal: true }}
+              yAxis={[{
+                label: tUnits(study.resultsUnit)
+              }]}
+              margin={{ top: 5, right: 100, bottom: 100, left: 100 }}
+              axisHighlight={{ x: 'none', }}
               {...barChartSettings}
             />
           </TabPanel>
