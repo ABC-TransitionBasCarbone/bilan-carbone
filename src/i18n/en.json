@@ -1027,7 +1027,8 @@
     "DOLLAR": "Dollar ($)",
     "JPY": "Japanese yen (¥)",
     "CNY": "Renminbi (¥)",
-    "YEAR": "Years"
+    "YEAR": "Years",
+    "CUSTOM": "Custom"
   },
   "organization": {
     "create": "New Organization",
