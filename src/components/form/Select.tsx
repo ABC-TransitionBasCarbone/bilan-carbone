@@ -1,4 +1,5 @@
 import { FormControl, FormHelperText, SelectProps } from '@mui/material'
+import { useTranslations } from 'next-intl'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import { Select } from '../base/Select'
 import styles from './Form.module.css'
@@ -6,9 +7,10 @@ import styles from './Form.module.css'
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
   control: Control<T>
-  translation: (slug: string) => string
+  translation: ReturnType<typeof useTranslations>
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
+  clearable?: boolean
 }
 
 export const FormSelect = <T extends FieldValues>({
@@ -18,6 +20,7 @@ export const FormSelect = <T extends FieldValues>({
   icon,
   iconPosition = 'before',
   translation,
+  clearable,
   ...selectProps
 }: Props<T> & SelectProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -34,6 +37,8 @@ export const FormSelect = <T extends FieldValues>({
             label={label}
             icon={iconDiv}
             iconPosition={iconPosition}
+            clearable={clearable}
+            t={translation}
             {...selectProps}
           />
           {error && error.message && <FormHelperText>{translation('validation.' + error.message)}</FormHelperText>}
