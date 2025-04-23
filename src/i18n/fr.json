@@ -268,6 +268,7 @@
       "numberOfOpenDays": "Nombre de jours d'ouverture",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
+      "clear": "Supprimer la valeur",
       "days": {
         "Monday": "Lundi",
         "Tuesday": "Mardi",
