@@ -177,3 +177,7 @@
     color: var(--warning);
   }
 }
+
+.expandButton {
+  height: 3.5rem;
+}
