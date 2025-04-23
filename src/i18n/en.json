@@ -1023,7 +1023,12 @@
     "KG_H2_PER_100KM": "kgH2/100km",
     "GO": "GB",
     "REQUEST": "request",
-    "MAIL": "mail"
+    "MAIL": "mail",
+    "EURO": "Euro (€)",
+    "DOLLAR": "Dollar ($)",
+    "JPY": "Japanese yen (¥)",
+    "CNY": "Renminbi (¥)",
+    "YEAR": "Years"
   },
   "organization": {
     "create": "New Organization",
