@@ -17,6 +17,7 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
+import styles from './EmissionFactorForm.module.css'
 import MultiplePosts from './MultiplePosts'
 
 interface Props<T extends EmissionFactorCommand> {
@@ -65,6 +66,8 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
     }
   }
 
+  const unit = useWatch({ control, name: 'unit' })
+
   const [
     reliability,
     technicalRepresentativeness,
@@ -99,13 +102,38 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         name="source"
         label={t('source')}
       />
-      <FormSelect data-testid="emission-factor-unit" control={control} translation={t} label={t('unit')} name="unit">
-        {units.map((unit) => (
-          <MenuItem key={unit} value={unit}>
-            {tUnit(unit)}
-          </MenuItem>
-        ))}
-      </FormSelect>
+      <div className={classNames(styles.gapped, 'flex')}>
+        <div className="grow">
+          <FormSelect
+            data-testid="emission-factor-unit"
+            control={control}
+            translation={t}
+            label={t('unit')}
+            name="unit"
+            fullWidth
+          >
+            {units.map((unit) => (
+              <MenuItem key={unit} value={unit}>
+                {tUnit(unit)}
+              </MenuItem>
+            ))}
+          </FormSelect>
+        </div>
+        {unit === Unit.CUSTOM && (
+          <div className="grow">
+            <FormTextField
+              data-testid="emission-factor-custom-unit"
+              control={control}
+              translation={t}
+              name="customUnit"
+              label={t('customUnit')}
+              placeholder={t('customUnitPlaceholder')}
+              fullWidth
+            />
+          </div>
+        )}
+      </div>
+
       <DetailedGES
         form={form}
         initialDetailedGES={detailedGES}
