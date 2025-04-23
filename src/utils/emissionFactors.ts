@@ -43,4 +43,9 @@ export const EmissionFactorCreationUnitList: Unit[] = [
   Unit.TON,
   Unit.UNIT,
   Unit.VEHICLE_KM,
+  Unit.EURO,
+  Unit.DOLLAR,
+  Unit.JPY,
+  Unit.CNY,
+  Unit.YEAR,
 ]
