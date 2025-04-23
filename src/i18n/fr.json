@@ -658,6 +658,8 @@
       "namePlaceholder": "Donnez un nom à votre facteur d'émission",
       "attribute": "Détails",
       "unit": "Unité",
+      "customUnit": "Unité personalisée",
+      "customUnitPlaceholder": "Votre unité personalisée",
       "source": "Source",
       "detailedGES": "Décomposition des GES",
       "multiple": "Facteur d'émission désagrégé",

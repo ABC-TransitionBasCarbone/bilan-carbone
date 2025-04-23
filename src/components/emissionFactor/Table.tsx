@@ -186,7 +186,7 @@ const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || '')}`,
+          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === Unit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),
