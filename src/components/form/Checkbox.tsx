@@ -1,5 +1,6 @@
 import { Checkbox, CheckboxProps, FormControl, FormHelperText, FormLabel } from '@mui/material'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
+import styles from './Form.module.css'
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
@@ -33,7 +34,9 @@ export const FormCheckbox = <T extends FieldValues>({
             checked={value || false}
             onChange={onChange}
           />
-          {error && error.message && <FormHelperText>{translation('validation.' + error.message)}</FormHelperText>}
+          {error?.message && (
+            <FormHelperText className={styles.helper}>{translation('validation.' + error.message)}</FormHelperText>
+          )}
         </FormControl>
       )}
     />

@@ -12,6 +12,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import styles from './Sites.module.css'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
@@ -52,11 +53,12 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
               ) : (
                 <FormTextField
                   data-testid="edit-site-name"
-                  className="w100"
+                  className={styles.field}
                   control={control}
                   translation={t}
                   name={`sites.${row.index}.name`}
                   placeholder={t('namePlaceholder')}
+                  fullWidth
                 />
               )}
             </>
@@ -73,7 +75,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
             <FormTextField
               data-testid="organization-sites-etp"
               type="number"
-              className="w100"
+              className={styles.field}
               control={control}
               translation={t}
               name={`sites.${row.index}.etp`}
@@ -82,6 +84,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
                 htmlInput: { type: 'number', min: 0 },
                 input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
               }}
+              fullWidth
             />
           ) : (
             formatNumber(getValue<number>(), 2)
@@ -96,7 +99,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
             <FormTextField
               data-testid="organization-sites-ca"
               type="number"
-              className="w100"
+              className={styles.field}
               control={control}
               translation={t}
               name={`sites.${row.index}.ca`}
@@ -105,6 +108,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
                 htmlInput: { type: 'number', min: 0 },
                 input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
               }}
+              fullWidth
             />
           ) : (
             `${formatNumber(displayCA(getValue<number>(), CA_UNIT_VALUES[caUnit]))}`

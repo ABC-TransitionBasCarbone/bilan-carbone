@@ -84,6 +84,7 @@ const Profile = ({ version }: Props) => {
                   label={t('lastName')}
                 />
                 <Button
+                  className={styles.nameButton}
                   data-testid="cancel-update-profile"
                   onClick={onCancel}
                   aria-label={t('cancelUpdate')}
@@ -93,6 +94,7 @@ const Profile = ({ version }: Props) => {
                 </Button>
                 <LoadingButton
                   type="submit"
+                  className={styles.nameButton}
                   loading={form.formState.isSubmitting}
                   data-testid="update-profile"
                   aria-label={t(form.formState.isSubmitting ? 'updating' : 'update')}

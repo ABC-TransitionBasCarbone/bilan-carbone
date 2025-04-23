@@ -41,7 +41,9 @@ export const FormSelect = <T extends FieldValues>({
             t={translation}
             {...selectProps}
           />
-          {error && error.message && <FormHelperText>{translation('validation.' + error.message)}</FormHelperText>}
+          <FormHelperText className={styles.helper}>
+            {error?.message && translation('validation.' + error.message)}
+          </FormHelperText>
         </FormControl>
       )}
     />
