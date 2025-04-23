@@ -33,3 +33,8 @@
 .checkLabel {
   font-size: 0.75rem;
 }
+
+.helper {
+  height: 1.25rem;
+  margin-top: 0 !important;
+}

@@ -13,11 +13,14 @@ const QualitySelect = ({
   formControlClassName,
   starredValue,
   clearable,
+  error,
   ...props
 }: Props & Omit<SelectProps, 'options' | 'labelId'>) => {
   const t = useTranslations('quality')
+  console.log('props : ', props)
+
   return (
-    <FormControl className={formControlClassName}>
+    <FormControl error={error} className={formControlClassName}>
       <InputLabel id={`${props.id}-label}`}>{props.label}</InputLabel>
       <Select {...props} labelId={`${props.id}-label}`} withLabel={false} clearable={clearable}>
         {Array.from({ length: 5 }).map((_, index) => (
