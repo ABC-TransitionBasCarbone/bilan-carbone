@@ -81,6 +81,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       attribute: emissionFactor?.metaData[0].attribute || '',
       source: emissionFactor?.source || '',
       unit: emissionFactor?.unit || undefined,
+      customUnit: emissionFactor.customUnit || undefined,
       subPosts: subPostObject,
       ...getGazValues(emissionFactor),
       totalCo2: emissionFactor?.totalCo2 || 0,
