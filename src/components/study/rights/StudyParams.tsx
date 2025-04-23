@@ -105,14 +105,7 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
         onClose={resetInput}
         actions={[{ actionType: 'button', onClick: onSubmit, children: t('edit') }]}
       >
-        <FormTextField
-          name="name"
-          translation={tValidation}
-          control={form.control}
-          error={!!form.formState.errors.name}
-          helperText={form.formState.errors.name?.message}
-          required
-        />
+        <FormTextField name="name" translation={tValidation} control={form.control} required />
         {error && <p>{error}</p>}
       </Modal>
     </>
