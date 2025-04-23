@@ -8,7 +8,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Path } from 'react-hook-form'
@@ -55,7 +55,11 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPos
               label={`${t('form.value')} *`}
               slotProps={{ input: { onWheel: (event) => (event.target as HTMLInputElement).blur() } }}
             />
-            {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit || '')}</div>}
+            {selectedFactor && (
+              <div className={styles.unit}>
+                {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
+              </div>
+            )}
           </div>
           {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
             <div className={classNames(styles.inputWithUnit, 'flex grow')}>
@@ -88,7 +92,7 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPos
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))} {tResultUnits(StudyResultUnit.K)}/
-            {tUnits(selectedFactor.unit || '')}
+            {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
           </p>
           {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}
         </div>

@@ -17,7 +17,7 @@ import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -171,7 +171,11 @@ const EmissionSource = ({
                 <>
                   <p>{t('emissionSource')}</p>
                   <p>
-                    {formatNumber(emissionSource.value)} {selectedFactor && tUnits(selectedFactor.unit || '')}
+                    {formatNumber(emissionSource.value)}{' '}
+                    {selectedFactor &&
+                      (selectedFactor.unit === Unit.CUSTOM
+                        ? selectedFactor.customUnit
+                        : tUnits(selectedFactor.unit || ''))}
                   </p>
                 </>
               )}
@@ -182,7 +186,8 @@ const EmissionSource = ({
                 <p>{t('emissionFactor')}</p>
                 <p>
                   {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}
-                  {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit || '')}
+                  {tResultstUnits(StudyResultUnit.K)}/
+                  {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
                 </p>
               </div>
             )}
