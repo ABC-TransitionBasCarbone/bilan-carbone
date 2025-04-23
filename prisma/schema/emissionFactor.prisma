@@ -170,17 +170,18 @@ model EmissionFactor {
   temporalRepresentativeness   Int? @map("temporal_representativeness")
   completeness                 Int? @map("completeness")
 
-  totalCo2 Float  @map("total_co2")
-  co2f     Float?
-  ch4f     Float?
-  ch4b     Float?
-  n2o      Float?
-  co2b     Float?
-  sf6      Float?
-  hfc      Float?
-  pfc      Float?
-  otherGES Float? @map("other_ges")
-  unit     Unit?
+  totalCo2   Float   @map("total_co2")
+  co2f       Float?
+  ch4f       Float?
+  ch4b       Float?
+  n2o        Float?
+  co2b       Float?
+  sf6        Float?
+  hfc        Float?
+  pfc        Float?
+  otherGES   Float?  @map("other_ges")
+  unit       Unit?
+  customUnit String?
 
   subPosts            SubPost[]             @map("sub_posts")
   studyEmissionSource StudyEmissionSource[]
