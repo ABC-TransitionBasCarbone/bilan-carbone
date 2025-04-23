@@ -1027,7 +1027,8 @@
     "DOLLAR": "Dollar ($)",
     "JPY": "Yen (¥)",
     "CNY": "Yuan (¥)",
-    "YEAR": "Années"
+    "YEAR": "Années",
+    "CUSTOM": "Personnalisée"
   },
   "organization": {
     "create": "Nouvelle Organisation",

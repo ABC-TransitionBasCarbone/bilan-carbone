@@ -48,4 +48,5 @@ export const EmissionFactorCreationUnitList: Unit[] = [
   Unit.JPY,
   Unit.CNY,
   Unit.YEAR,
+  Unit.CUSTOM,
 ]
