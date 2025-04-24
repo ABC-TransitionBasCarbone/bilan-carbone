@@ -1,4 +1,4 @@
-import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
+import { ControlMode, Export as StudyExport, Level, Prisma, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { getExistingObjectsIds, getExistingSitesIds } from './repositories'
 
@@ -28,6 +28,7 @@ export enum RequiredStudyEmissionSourcesColumns {
   recycledPart = 'POURCENT_RECYCLE',
   commentaires = 'Commentaires',
   commentairesCollecte = 'COMMENTAIRES_COLLECTE',
+  validationDASaisie = 'ValidationDASaisie',
 }
 
 interface Study {
@@ -51,6 +52,7 @@ interface EmissionSource {
   name: string
   recycledPart: number
   comment: string
+  validated: boolean
 }
 
 const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
@@ -161,16 +163,22 @@ const parseEmissionSources = (
   return data
     .slice(1)
     .filter((row) => row[indexes[RequiredStudyExportsColumns.studyOldBCId]] !== '00000000-0000-0000-0000-000000000000')
-    .map<[string, EmissionSource]>((row) => [
-      row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
-      {
-        siteOldBCId: row[indexes[RequiredStudyEmissionSourcesColumns.siteOldBCId]] as string,
-        name: row[indexes[RequiredStudyEmissionSourcesColumns.descriptifData]] as string,
-        recycledPart: row[indexes[RequiredStudyEmissionSourcesColumns.recycledPart]] as number,
-        comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
-      },
-    ])
+    .map<[string, EmissionSource] | null>((row) => {
+      return [
+        row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
+        {
+          siteOldBCId: row[indexes[RequiredStudyEmissionSourcesColumns.siteOldBCId]] as string,
+          name: row[indexes[RequiredStudyEmissionSourcesColumns.descriptifData]] as string,
+          recycledPart: row[indexes[RequiredStudyEmissionSourcesColumns.recycledPart]] as number,
+          comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
+          validated: (row[indexes[RequiredStudyEmissionSourcesColumns.validationDASaisie]] as number) === 1,
+        },
+      ]
+    })
     .reduce((accumulator, currentValue) => {
+      if (currentValue === null) {
+        return accumulator
+      }
       const emissionSources = accumulator.get(currentValue[0])
       if (emissionSources) {
         emissionSources.push(currentValue[1])
@@ -358,6 +366,7 @@ export const uploadStudies = async (
               subPost: SubPost.CombustiblesFossiles,
               recycledPart: studyEmissionSource.recycledPart,
               comment: studyEmissionSource.comment,
+              validated: studyEmissionSource.validated,
             }
           })
           .filter((studyEmissionSource) => studyEmissionSource !== null)
