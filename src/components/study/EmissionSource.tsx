@@ -146,7 +146,7 @@ const EmissionSource = ({
         onClick={() => setDisplay(!display)}
       >
         <div className={classNames(styles.header, styles.gapped, 'grow justify-between')}>
-          <div className="align-center grow">
+          <div className={classNames(styles.name, 'align-center grow')}>
             {emissionSource.validated || withoutDetail ? (
               <p data-testid="validated-emission-source-name">{emissionSource.name}</p>
             ) : (
@@ -164,7 +164,7 @@ const EmissionSource = ({
               </>
             )}
           </div>
-          <div className={classNames(styles.gapped, 'grow align-center')}>
+          <div className={classNames(styles.gapped, 'align-center')}>
             {/* activity data */}
             <div className="flex-col justify-center text-center">
               {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
