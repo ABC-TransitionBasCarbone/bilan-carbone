@@ -109,7 +109,7 @@ const escapeTranslation = (value?: string) => (value ? value.replaceAll('"""', '
 
 const getUnit = (value?: string): Unit | null => {
   if (!value) {
-    return null
+    value = 'kg'
   }
   if (value.startsWith('kgCO2e/')) {
     value = value.replace('kgCO2e/', '')

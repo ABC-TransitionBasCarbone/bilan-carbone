@@ -98,7 +98,7 @@ interface Props {
   userOrganizationId?: string | null
 }
 
-const initialSelectedUnits: (Unit | string)[] = [...['all', ''], ...Object.values(Unit)]
+const initialSelectedUnits: (Unit | string)[] = [...['all'], ...Object.values(Unit)]
 const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
 
 const EmissionFactorsTable = ({
