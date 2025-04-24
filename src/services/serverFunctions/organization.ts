@@ -26,7 +26,7 @@ import { OnboardingCommand } from './user.command'
 
 /**
  *
- * @param studyId the id of the study whose organisation is being fetched
+ * @param studyId the id of the study whose organization is being fetched
  * @returns the id and name of the organization if found, null otherwise
  * The security and authorization checks are made in the getStudy function
  * Chloé, if you consider refactoring this function, do not forget to add the security and authorization checks

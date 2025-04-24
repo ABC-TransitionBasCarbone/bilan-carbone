@@ -7773,6 +7773,13 @@ rambda@^7.4.0:
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-7.5.0.tgz#1865044c59bc0b16f63026c6e5a97e4b1bbe98fe"
   integrity sha512-y/M9weqWAH4iopRd7EHDEQQvpFPHj1AA3oHozE9tfITHUtTR7Z9PSlIRRG2l1GuW7sefC1cXFfIcF+cgnShdBA==
 
+react-countdown@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/react-countdown/-/react-countdown-2.3.6.tgz#26699ea87e548bd7c981281e5a8fd8b511f774ff"
+  integrity sha512-ZfX6S08Hb6x6W6eCn1hMDvxPICI/T30fd+gaeVTCR/2cGZ2WJ3f26e4ImNIMX1fHkopJrUdnRpWXP13/D39+gg==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-dom@19.1.0:
   version "19.1.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.1.0.tgz#133558deca37fa1d682708df8904b25186793623"

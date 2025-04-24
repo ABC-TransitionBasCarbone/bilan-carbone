@@ -79,13 +79,15 @@ model Study {
   createdById String @map("created_by_id")
   createdBy   User   @relation(fields: [createdById], references: [id])
 
-  name        String
-  isPublic    Boolean         @map("is_public")
-  startDate   DateTime        @map("start_date") @db.Date
-  endDate     DateTime        @map("end_date") @db.Date
-  level       Level
-  resultsUnit StudyResultUnit @default(T) @map("results_unit")
-  exports     StudyExport[]
+  name                 String
+  isPublic             Boolean         @map("is_public")
+  startDate            DateTime        @map("start_date") @db.Date
+  endDate              DateTime        @map("end_date") @db.Date
+  realizationStartDate DateTime?       @map("realization_start_date") @db.Date
+  realizationEndDate   DateTime?       @map("realization_end_date") @db.Date
+  level                Level
+  resultsUnit          StudyResultUnit @default(T) @map("results_unit")
+  exports              StudyExport[]
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")

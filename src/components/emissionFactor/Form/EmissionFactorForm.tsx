@@ -8,13 +8,13 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
-import { FormControl, FormHelperText, MenuItem } from '@mui/material'
+import { MenuItem } from '@mui/material'
 import { Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import { Control, Controller, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
+import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
 import MultiplePosts from './MultiplePosts'
 
@@ -47,7 +47,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   const tUnit = useTranslations('units')
   const tGlossary = useTranslations('emissionSource.glossary')
   const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [tUnit])
-  const [expandedQuality, setExpandedQuality] = useState(true)
+  const [expandedQuality, setExpandedQuality] = useState(button === 'update')
   const [glossary, setGlossary] = useState('')
   const control = form.control as Control<EmissionFactorCommand>
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
@@ -107,28 +107,19 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         partsCount={partsCount}
         setPartsCount={setPartsCount}
       />
-      <Controller
-        name={'reliability'}
+      <QualitySelectGroup
+        canEdit
         control={control}
-        render={({ fieldState: { error } }) => (
-          <FormControl error={!!error}>
-            <QualitySelectGroup
-              canEdit
-              canShrink
-              emissionSource={quality}
-              update={update as (key: keyof EmissionFactorQuality, value: string | number | boolean) => void}
-              advanced={false}
-              setGlossary={setGlossary}
-              expanded={expandedQuality}
-              setExpanded={setExpandedQuality}
-              defaultQuality={qualityKeys.map((qualityKey) => quality[qualityKey]).find((quality) => !!quality)}
-              error={error}
-            />
-            {error?.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
-          </FormControl>
-        )}
+        emissionSource={quality}
+        update={update as (key: keyof EmissionFactorQuality, value: string | number | boolean) => void}
+        advanced={false}
+        setGlossary={setGlossary}
+        expanded={expandedQuality}
+        setExpanded={setExpandedQuality}
+        defaultQuality={qualityKeys.map((qualityKey) => quality[qualityKey]).find((quality) => !!quality)}
+        canShrink={qualityKeys.every((key) => quality[key] === quality[qualityKeys[0]])}
       />
-      <MultiplePosts form={form} />
+      <MultiplePosts form={form} context="emissionFactor" />
       <FormTextField control={control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (

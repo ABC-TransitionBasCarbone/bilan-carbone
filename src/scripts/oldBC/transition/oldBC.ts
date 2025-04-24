@@ -63,6 +63,10 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
     console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
     return
   }
+  const userOrganization = await prismaClient.organization.findUnique({ where: { id: user.organizationId } })
+  if (!userOrganization) {
+    throw new Error(`L'organisation de l'utilisateur n'existe pas.`)
+  }
 
   const workSheetsFromFile = xlsx.parse(file)
 
@@ -93,7 +97,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       transaction,
       organizationsSheet.data,
       organizationsIndexes,
-      organizationId,
+      userOrganization,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,

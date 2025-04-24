@@ -38,6 +38,7 @@ const NewStudyPage = ({ organizations, user, users, defaultOrganization, caUnit 
       validator: user.email,
       isPublic: 'true',
       startDate: dayjs().toISOString(),
+      realizationStartDate: dayjs().toISOString(),
       organizationId: (defaultOrganization ?? organizations[0])?.id || '',
       sites:
         (defaultOrganization ?? organizations[0])?.sites.map((site) => ({

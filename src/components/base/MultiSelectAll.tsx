@@ -47,10 +47,6 @@ const MultiSelect = ({ id, renderValue, value, allValues, t, setValues }: Props)
         <Checkbox checked={value.includes('all')} />
         <ListItemText primary={t(value.includes('all') ? 'unSelectAll' : 'selectAll')} />
       </MenuItem>
-      <MenuItem key={`${id}-item-empty`} value={''}>
-        <Checkbox checked={value.includes('')} />
-        <ListItemText primary={t('')} />
-      </MenuItem>
       {allValues
         .filter((option) => option !== '')
         .sort((a, b) => t(a).localeCompare(t(b)))

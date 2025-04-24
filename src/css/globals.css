@@ -149,3 +149,7 @@ table {
 .userWarning {
   color: var(--error-50);
 }
+
+.pointer {
+  cursor: pointer;
+}

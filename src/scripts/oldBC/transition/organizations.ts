@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client'
-import { prismaClient } from '../../../db/client'
+import { Prisma, Organization as PrismaOrganization } from '@prisma/client'
+import { getExistingSitesIds } from './repositories'
 
 export enum RequiredOrganizationsColumns {
   ID_ENTITE = 'ID_ENTITE',
@@ -38,6 +38,17 @@ function mapRowToSite(row: (string | number)[], indexes: Record<string, number>)
   }
 }
 
+async function checkUserOrganizationHaveNoNewSites(transaction: Prisma.TransactionClient, userOrganizationId: string) {
+  const numberOfNewUserOrganizationSites = await transaction.site.count({
+    where: {
+      AND: [{ organizationId: userOrganizationId }, { oldBCId: null }],
+    },
+  })
+  if (numberOfNewUserOrganizationSites > 0) {
+    throw new Error(`L'organisation de l'utilisateur contient ${numberOfNewUserOrganizationSites} nouveau(x) site(s).`)
+  }
+}
+
 const getOrganizationsOldBCIdsIdsMap = async (
   transaction: Prisma.TransactionClient,
   organizations: Organization[],
@@ -69,11 +80,11 @@ export const uploadOrganizations = async (
   transaction: Prisma.TransactionClient,
   data: (string | number)[][],
   indexes: Record<string, number>,
-  userOrganizationId: string,
+  userOrganization: PrismaOrganization,
 ) => {
   console.log('Import des organisations...')
 
-  const userOrganizationsOldBCIds: string[] = []
+  const userOrganizationsRows: { oldBCId: string; name: string }[] = []
   const organizations: Organization[] = []
   const sites: Site[] = []
   data
@@ -86,7 +97,10 @@ export const uploadOrganizations = async (
     )
     .forEach((row) => {
       if ((row[indexes[RequiredOrganizationsColumns.IS_USER_ORGA]] as number) === 1) {
-        userOrganizationsOldBCIds.push(row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string)
+        userOrganizationsRows.push({
+          oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string,
+          name: row[indexes[RequiredOrganizationsColumns.NOM_ENTITE]] as string,
+        })
       } else if (
         row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] ===
         row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]]
@@ -97,15 +111,17 @@ export const uploadOrganizations = async (
       }
     })
 
-  if (userOrganizationsOldBCIds.length !== 1) {
+  if (userOrganizationsRows.length !== 1) {
     throw new Error("Il faut exactement 1 organisation rattachée à l'utilisateur !")
   }
-  const userOrganizationOldBCId = userOrganizationsOldBCIds[0]
+  const userOrganizationRow = userOrganizationsRows[0]
 
-  const existingOrganizations = await prismaClient.organization.findMany({
+  await checkUserOrganizationHaveNoNewSites(transaction, userOrganization.id)
+
+  const existingOrganizations = await transaction.organization.findMany({
     where: {
       AND: [
-        { parentId: userOrganizationId },
+        { parentId: userOrganization.id },
         { oldBCId: { in: organizations.map((organization) => organization.oldBCId) } },
       ],
     },
@@ -115,12 +131,21 @@ export const uploadOrganizations = async (
     (organization) => !existingOrganizations.some(({ oldBCId }) => oldBCId === organization.oldBCId),
   )
 
+  // Je crée un site par défaut pour mon organization
+  await transaction.site.create({
+    data: {
+      oldBCId: userOrganizationRow.oldBCId,
+      organizationId: userOrganization.id,
+      name: userOrganizationRow.name,
+    },
+  })
+
   // Je crée toutes les organisations sauf la mienne
   if (newOrganizations.length > 0) {
     console.log(`Import de ${newOrganizations.length} organisations`)
     await transaction.organization.createMany({
       data: newOrganizations.map((organization) => ({
-        parentId: userOrganizationId,
+        parentId: userOrganization.id,
         oldBCId: organization.oldBCId,
         siret: organization.siret,
         name: organization.name,
@@ -133,8 +158,8 @@ export const uploadOrganizations = async (
   const organizationsOldBCIdsIdsMap = await getOrganizationsOldBCIdsIdsMap(
     transaction,
     organizations,
-    userOrganizationId,
-    userOrganizationOldBCId,
+    userOrganization.id,
+    userOrganizationRow.oldBCId,
   )
 
   if (newOrganizations.length > 0) {
@@ -158,14 +183,13 @@ export const uploadOrganizations = async (
     })
   }
 
+  const existingSitesIds = await getExistingSitesIds(
+    transaction,
+    sites.map((site) => site.oldBCId),
+  )
   // Et je crée tous les autres sites
   const sitesToCreate = sites
-    .filter(
-      (site) =>
-        !existingOrganizations.some(
-          (existingOrganization) => existingOrganization.oldBCId === site.organizationOldBCId,
-        ),
-    )
+    .filter((site) => !existingSitesIds.has(site.oldBCId))
     .map((site) => {
       const existingParentOrganisationId = organizationsOldBCIdsIdsMap.get(site.organizationOldBCId)
       if (!existingParentOrganisationId) {
@@ -179,9 +203,6 @@ export const uploadOrganizations = async (
       }
     })
     .filter((site) => site !== null)
-    // Sauf celles qui n'ont pas de parent (car supprimées dans l'ancien BC+)
-    .filter((site) => newOrganizations.some((organization) => organization.oldBCId === site.organizationId))
-    .filter((site) => site.organizationId !== userOrganizationId)
   if (sitesToCreate.length > 0) {
     console.log(`Import de ${sitesToCreate.length} sites`)
     await transaction.site.createMany({ data: sitesToCreate })

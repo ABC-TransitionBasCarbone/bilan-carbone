@@ -2,6 +2,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { downloadStudyResults } from '@/services/study'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { ControlMode, Export, ExportRule } from '@prisma/client'
@@ -39,6 +40,8 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
   const { studySite, setSite } = useStudySite(study, true)
 
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
+
+  const { environment } = useAppEnvironmentStore()
 
   return (
     <>
@@ -84,6 +87,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
               tQuality,
               tBeges,
               tUnits,
+              environment,
             )
           }
         >

@@ -33,7 +33,7 @@ export const computeResultsByPost = (
   studySite: string,
   withDependencies: boolean,
   validatedOnly: boolean = true,
-  postValues: typeof Post | typeof CutPost | typeof BCPost = Post,
+  postValues: typeof Post | typeof CutPost | typeof BCPost = BCPost,
 ) => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 

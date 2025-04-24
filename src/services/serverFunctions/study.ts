@@ -27,6 +27,8 @@ import {
 } from '@/db/study'
 import { addUser, getUserApplicationSettings } from '@/db/user'
 import { getUserByEmail } from '@/db/userImport'
+import { LocaleType } from '@/i18n/config'
+import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
 import {
@@ -280,7 +282,7 @@ export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDates
     return NOT_AUTHORIZED
   }
 
-  if (!canChangeDates(informations.user, informations.studyWithRights)) {
+  if (!(await canChangeDates(informations.user, informations.studyWithRights))) {
     return NOT_AUTHORIZED
   }
   await updateStudy(studyId, command)
@@ -572,7 +574,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
   await updateUserOnStudy(existingUser.id, studyWithRights.id, studyRole)
 }
 
-export const newStudyContributor = async ({ email, post, subPost, ...command }: NewStudyContributorCommand) => {
+export const newStudyContributor = async ({ email, subPosts, ...command }: NewStudyContributorCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
@@ -608,13 +610,8 @@ export const newStudyContributor = async ({ email, post, subPost, ...command }: 
     existingUser,
   )
 
-  if (post === 'all') {
-    await createContributorOnStudy(userId, Object.values(SubPost), command)
-  } else if (!subPost || subPost === 'all') {
-    await createContributorOnStudy(userId, subPostsByPost[post], command)
-  } else {
-    await createContributorOnStudy(userId, [subPost], command)
-  }
+  const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
+  await createContributorOnStudy(userId, selectedSubposts, command)
 }
 
 export const deleteStudyCommand = async ({ id, name }: DeleteCommand) => {
@@ -746,11 +743,15 @@ export const getStudyEmissionFactorImportVersions = async (studyId: string) => {
 export const getOrganizationStudiesFromOtherUsers = async (organizationId: string, userId: string) =>
   prismaClient.study.count({ where: { organizationId, createdById: { not: userId } } })
 
+const getMetaData = (emissionFactor: AsyncReturnType<typeof getEmissionFactorsByIdsAndSource>[0], locale: LocaleType) =>
+  emissionFactor.metaData.find((metadata) => metadata.language === locale) ?? emissionFactor.metaData[0]
+
 export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, source: Import) => {
-  const [session, study, importVersions] = await Promise.all([
+  const [session, study, importVersions, locale] = await Promise.all([
     auth(),
     getStudyById(studyId, null),
     getEmissionFactorVersionsBySource(source),
+    getLocale(),
   ])
   if (!session || !session.user || !study || !importVersions.length) {
     return { success: false }
@@ -780,12 +781,17 @@ export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, 
     latestSourceVersion.id,
   )
 
-  const deletedEmissionFactors = emissionFactors.filter(
-    (emissionFactor) =>
-      !upgradedEmissionFactors
-        .map((upgradedEmissionFactor) => upgradedEmissionFactor.importedId)
-        .includes(emissionFactor.importedId),
-  )
+  const deletedEmissionFactors = emissionFactors
+    .filter(
+      (emissionFactor) =>
+        !upgradedEmissionFactors
+          .map((upgradedEmissionFactor) => upgradedEmissionFactor.importedId)
+          .includes(emissionFactor.importedId),
+    )
+    .map((emissionFactor) => ({
+      ...emissionFactor,
+      metaData: getMetaData(emissionFactor, locale),
+    }))
 
   const updatedEmissionFactors = emissionFactors
     .filter((emissionFactor) => {
@@ -796,12 +802,14 @@ export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, 
     })
     .map((emissionFactor) => ({
       ...emissionFactor,
+      metaData: getMetaData(emissionFactor, locale),
       newValue: (
         upgradedEmissionFactors.find(
           (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
         ) as EmissionFactor
       ).totalCo2,
     }))
+
   return {
     success: true,
     emissionSources: targetedEmissionSources,

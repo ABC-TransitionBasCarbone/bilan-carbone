@@ -1,8 +1,8 @@
-import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole, SubPost } from '@prisma/client'
+import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { OpeningHoursValidation } from '../hours'
-import { Post } from '../posts'
+import { SubPostsCommandValidation } from './emissionFactor.command'
 
 export const SitesCommandValidation = z.object({
   sites: z.array(
@@ -60,6 +60,22 @@ export const CreateStudyCommandValidation = z
           const date = dayjs(val)
           return date.isValid()
         }, 'endDate'),
+        realizationStartDate: z
+          .string()
+          .optional()
+          .nullable()
+          .refine((val) => {
+            const date = dayjs(val)
+            return val === null || date.isValid()
+          }, 'startDate'),
+        realizationEndDate: z
+          .string()
+          .optional()
+          .nullable()
+          .refine((val) => {
+            const date = dayjs(val)
+            return val === null || date.isValid()
+          }, 'endDate'),
         level: z.nativeEnum(Level, { required_error: 'level' }),
         isPublic: z.string(),
 
@@ -73,13 +89,18 @@ export const CreateStudyCommandValidation = z
     ),
     SitesCommandValidation,
   )
+  .refine((data) => dayjs(data.endDate).isAfter(dayjs(data.startDate)), {
+    message: 'endDateBeforStartDate',
+    path: ['endDate'],
+  })
   .refine(
-    (data) => {
-      return dayjs(data.endDate).isAfter(dayjs(data.startDate))
-    },
+    (data) =>
+      !data.realizationStartDate ||
+      !data.realizationEndDate ||
+      dayjs(data.realizationEndDate).isAfter(dayjs(data.realizationStartDate)),
     {
       message: 'endDateBeforStartDate',
-      path: ['endDate'],
+      path: ['realizationEndDate'],
     },
   )
   .refine(({ sites }) => {
@@ -130,14 +151,35 @@ export const ChangeStudyDatesCommandValidation = z
       const date = dayjs(val)
       return date.isValid()
     }, 'endDate'),
+    realizationStartDate: z
+      .string()
+      .optional()
+      .nullable()
+      .refine((val) => {
+        const date = dayjs(val)
+        return val === null || date.isValid()
+      }, 'startDate'),
+    realizationEndDate: z
+      .string()
+      .optional()
+      .nullable()
+      .refine((val) => {
+        const date = dayjs(val)
+        return val === null || date.isValid()
+      }, 'endDate'),
+  })
+  .refine((data) => dayjs(data.endDate).isAfter(dayjs(data.startDate)), {
+    message: 'endDateBeforStartDate',
+    path: ['endDate'],
   })
   .refine(
-    (data) => {
-      return dayjs(data.endDate).isAfter(dayjs(data.startDate))
-    },
+    (data) =>
+      !data.realizationStartDate ||
+      !data.realizationEndDate ||
+      dayjs(data.realizationEndDate).isAfter(dayjs(data.realizationStartDate)),
     {
       message: 'endDateBeforStartDate',
-      path: ['endDate'],
+      path: ['realizationEndDate'],
     },
   )
 
@@ -180,17 +222,10 @@ export const NewStudyRightCommandValidation = z.object({
 
 export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>
 
-export const NewStudyContributorCommandValidation = z.object({
-  studyId: z.string(),
-  email: z
-    .string({
-      required_error: 'email',
-    })
-    .email('email')
-    .trim(),
-  post: z.union([z.nativeEnum(Post, { required_error: 'post' }), z.literal('all', { required_error: 'post' })]),
-  subPost: z.union([z.nativeEnum(SubPost), z.literal('all')]),
-})
+export const NewStudyContributorCommandValidation = z.intersection(
+  z.object({ studyId: z.string(), email: z.string({ required_error: 'email' }).email('email').trim() }),
+  SubPostsCommandValidation,
+)
 
 export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>
 
