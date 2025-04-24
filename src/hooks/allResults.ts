@@ -21,20 +21,24 @@ export function useComputedResults(resultsByPost: ResultsByPost[], tPost: TFunct
     const validCutPosts = new Set(Object.values(CutPost))
 
     return resultsByPost
-      .map((post) => ({
-        ...post,
-        subPosts: post.subPosts.filter((subPost) => filterWithDependencies(subPost.post as SubPost, false)),
-      }))
-      .map((post) => ({
-        ...post,
-        value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0),
-      }))
+      .map((post) => {
+        const filteredSubPosts = post.subPosts.filter((subPost) =>
+          filterWithDependencies(subPost.post as SubPost, false),
+        )
+        const value = filteredSubPosts.reduce((res, subPost) => res + subPost.value, 0)
+
+        return {
+          ...post,
+          subPosts: filteredSubPosts,
+          value,
+        }
+      })
       .filter((post) => validCutPosts.has(post.post as CutPost))
       .map(({ post, ...rest }) => ({
         ...rest,
         label: tPost(post),
       }))
-  }, [resultsByPost])
+  }, [resultsByPost, tPost])
 }
 
 export function useChartData(computeResults: ComputeResult[], theme: Theme) {

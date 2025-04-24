@@ -19,7 +19,13 @@ export default function DynamicAllResults({ study, rules, emissionFactorsWithPar
   return (
     <DynamicComponent
       environmentComponents={{
-        [CUT]: <AllResultsCUT study={study} validatedOnly={validatedOnly} />,
+        [CUT]: (
+          <AllResultsCUT
+            emissionFactorsWithParts={emissionFactorsWithParts}
+            study={study}
+            validatedOnly={validatedOnly}
+          />
+        ),
       }}
       defaultComponent={
         <AllResults

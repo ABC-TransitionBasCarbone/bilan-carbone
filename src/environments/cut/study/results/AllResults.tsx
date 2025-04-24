@@ -12,11 +12,15 @@ import { SyntheticEvent, useMemo, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
+import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { useChartData, useComputedResults } from '@/hooks/allResults'
+import { downloadStudyResults } from '@/services/study'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
 
 interface Props {
+  emissionFactorsWithParts: EmissionFactorWithParts[]
   study: FullStudy
   validatedOnly: boolean
 }
@@ -28,15 +32,20 @@ const a11yProps = (index: number) => {
   }
 }
 
-export default function AllResults({ study, validatedOnly }: Props) {
+export default function AllResults({ emissionFactorsWithParts, study, validatedOnly }: Props) {
   const theme = useTheme()
   const [value, setValue] = useState(0)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
+  const t = useTranslations('study.results')
+  const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
+  const tExport = useTranslations('exports')
+  const tQuality = useTranslations('quality')
+  const tBeges = useTranslations('beges')
   const tUnits = useTranslations('study.results.units')
-  const tExport = useTranslations('study.export')
+  const tExportButton = useTranslations('study.export')
 
   const { studySite, setSite } = useStudySite(study, true)
 
@@ -63,12 +72,33 @@ export default function AllResults({ study, validatedOnly }: Props) {
   const chartFormatter = (value: number) =>
     `${value / STUDY_UNIT_VALUES[study.resultsUnit]} ${tUnits(study.resultsUnit)}`
 
+  const { environment } = useAppEnvironmentStore()
+
   return (
     <Container>
       <Box component="section" sx={{ display: 'flex', gap: '1rem' }}>
         <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
-        <Button variant="outlined" size="large" endIcon={<DownloadIcon />}>
-          {tExport('export')}
+        <Button
+          variant="outlined"
+          size="large"
+          endIcon={<DownloadIcon />}
+          onClick={() =>
+            downloadStudyResults(
+              study,
+              [],
+              emissionFactorsWithParts,
+              t,
+              tExport,
+              tPost,
+              tOrga,
+              tQuality,
+              tBeges,
+              tUnits,
+              environment,
+            )
+          }
+        >
+          {tExportButton('export')}
         </Button>
       </Box>
       <Box component="section" sx={{ marginTop: '1rem' }}>
