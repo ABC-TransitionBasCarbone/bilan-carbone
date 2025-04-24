@@ -98,15 +98,17 @@ const Navbar = ({ user }: Props) => {
               {t('admin')}
             </Link>
           )}
-          <Link
-            target="_blank"
-            rel="noreferrer noopener"
-            href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''}
-            className={classNames(styles.link, 'align-center')}
-            aria-label={t('help')}
-          >
-            <HelpOutlineIcon />
-          </Link>
+          {!isCut && (
+            <Link
+              target="_blank"
+              rel="noreferrer noopener"
+              href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''}
+              className={classNames(styles.link, 'align-center')}
+              aria-label={t('help')}
+            >
+              <HelpOutlineIcon />
+            </Link>
+          )}
           {!isCut && (
             <Link className={classNames(styles.link, 'align-center')} aria-label={t('settings')} href="/parametres">
               <SettingsIcon />
