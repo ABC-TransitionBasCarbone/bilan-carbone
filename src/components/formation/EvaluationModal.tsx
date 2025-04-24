@@ -45,11 +45,23 @@ const EvaluationModal = ({ user, organizationName, startTime }: Props) => {
     window.alert(t('alertMessage'))
   }
 
+  const renderer = ({ minutes, seconds }: { minutes: number; seconds: number }) => {
+    return (
+      <span>
+        00:{minutes > 9 ? minutes : `0${minutes}`}:{seconds > 9 ? seconds : `0${seconds}`}
+      </span>
+    )
+  }
+
   return (
     <>
       <span className={classNames('text-center mb-2', { error: isEnding })}>
         {t('timer')}
-        <Countdown onTick={(e) => e.minutes < 5 && !isEnding && displayWarning()} date={startTime + timer} />
+        <Countdown
+          onTick={(e) => e.minutes < 10 && !isEnding && displayWarning()}
+          date={startTime + timer}
+          renderer={renderer}
+        />
       </span>
       <div
         data-tf-live={typeformId}

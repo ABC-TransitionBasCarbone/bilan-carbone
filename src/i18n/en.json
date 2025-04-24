@@ -1273,15 +1273,15 @@
   },
   "formation": {
     "title": "Training",
-    "explaination": "You will find below the training course for updating the BC V8 to V9 method. Watch the videos, take the quiz and receive your certificate!",
+    "explaination": "You will find below the training course for updating the BC V8 to V9 method. Watch the videos, take the quiz and receive your attestation!",
     "videos": "Videos",
     "evaluation": "Knowledge assessment",
     "evaluationEnded": "You already answered the questionnaire",
-    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training certificate. It is limited in time and you will have <red>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</red>",
+    "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training attestation. It is limited in time and you will have <red>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</red>",
     "acceptation": "I've understood that I'll only be able to launch the questionnaire once and that I'll have a limited amount of time to answer the question. I'm in the right conditions to start my test",
     "answer": "Answer the questionnaire",
     "timer": "Remaining time: ",
-    "alertMessage": "You only have 5 minutes remaining. After 5 minutes, this form will remain available and you will be able to submit your answers. However, if you take too long, your answers will not be taken into account and you will not receive a certificate of achievement.",
+    "alertMessage": "You only have 10 minutes remaining. After 10 minutes, this form will remain available and you will be able to submit your answers. However, if you take too long, your answers will not be taken into account and you will not receive a attestation of achievement.",
     "form": "Typeform Questionnaire"
   },
   "deactivableFeatures": {
