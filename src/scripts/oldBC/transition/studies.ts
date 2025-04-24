@@ -155,6 +155,7 @@ const parseEmissionSources = (
 ): Map<string, EmissionSource[]> => {
   return data
     .slice(1)
+    .filter((row) => row[indexes[RequiredStudyExportsColumns.studyOldBCId]] !== '00000000-0000-0000-0000-000000000000')
     .map<[string, EmissionSource]>((row) => [
       row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
       {
