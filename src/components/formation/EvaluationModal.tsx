@@ -45,13 +45,11 @@ const EvaluationModal = ({ user, organizationName, startTime }: Props) => {
     window.alert(t('alertMessage'))
   }
 
-  const renderer = ({ minutes, seconds }: { minutes: number; seconds: number }) => {
-    return (
-      <span>
-        00:{minutes > 9 ? minutes : `0${minutes}`}:{seconds > 9 ? seconds : `0${seconds}`}
-      </span>
-    )
-  }
+  const renderer = ({ hours, minutes, seconds }: { hours: number; minutes: number; seconds: number }) => (
+    <span>
+      {`0${hours}`}:{minutes > 9 ? minutes : `0${minutes}`}:{seconds > 9 ? seconds : `0${seconds}`}
+    </span>
+  )
 
   return (
     <>
