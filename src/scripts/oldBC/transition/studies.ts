@@ -26,6 +26,8 @@ export enum RequiredStudyEmissionSourcesColumns {
   siteOldBCId = 'ID_ENTITE',
   descriptifData = 'DESCRIPTIF_DATA',
   recycledPart = 'POURCENT_RECYCLE',
+  commentaires = 'Commentaires',
+  commentairesCollecte = 'COMMENTAIRES_COLLECTE',
 }
 
 interface Study {
@@ -48,6 +50,7 @@ interface EmissionSource {
   siteOldBCId: string
   name: string
   recycledPart: number
+  comment: string
 }
 
 const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
@@ -164,6 +167,7 @@ const parseEmissionSources = (
         siteOldBCId: row[indexes[RequiredStudyEmissionSourcesColumns.siteOldBCId]] as string,
         name: row[indexes[RequiredStudyEmissionSourcesColumns.descriptifData]] as string,
         recycledPart: row[indexes[RequiredStudyEmissionSourcesColumns.recycledPart]] as number,
+        comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
       },
     ])
     .reduce((accumulator, currentValue) => {
@@ -353,6 +357,7 @@ export const uploadStudies = async (
               name: studyEmissionSource.name,
               subPost: SubPost.CombustiblesFossiles,
               recycledPart: studyEmissionSource.recycledPart,
+              comment: studyEmissionSource.comment,
             }
           })
           .filter((studyEmissionSource) => studyEmissionSource !== null)
