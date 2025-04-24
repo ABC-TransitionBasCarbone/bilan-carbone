@@ -34,6 +34,7 @@ export const AccountWithUserSelect = {
       resetToken: true,
       status: true,
       source: true,
+      formationFormStartTime: true,
     },
   },
 }

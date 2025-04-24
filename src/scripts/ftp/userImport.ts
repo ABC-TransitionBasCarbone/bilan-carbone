@@ -51,7 +51,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   if (siretOrSiren) {
     // TODO récupérer l'organisationVersionId du user correctement
-    let organisation = dbUser?.accounts[0].organizationVersionId
+    let organization = dbUser?.accounts[0].organizationVersionId
       ? await getRawOrganizationById(dbUser.accounts[0].organizationVersionId)
       : await getRawOrganizationBySiret(siretOrSiren)
 
@@ -69,7 +69,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     // TODO retirer ce commentaire temporaire pour voir si les tests passent
     // user.accounts[0].organizationVersionId = organisation?.id
     // TODO suppirmer la ligne ci-dessous
-    return organisation
+    return organization
   }
 
   if (dbUser) {

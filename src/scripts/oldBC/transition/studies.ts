@@ -352,7 +352,7 @@ export const uploadStudies = async (
       createdById: userId,
       isPublic: false,
       level: Level.Initial,
-      organizationId: organizationId,
+      organizationVersionId: organizationVersionId,
     })),
   })
 

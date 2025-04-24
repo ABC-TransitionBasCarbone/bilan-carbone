@@ -75,8 +75,12 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
     console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
     return
   }
-  const userOrganization = await prismaClient.organization.findUnique({ where: { id: user.organizationId } })
-  if (!userOrganization) {
+
+  // TODO je ne sais pas comment récupérer la bonne orga (code temporaire pour le linter mais ne marche pas)
+  const accountOrganization = await prismaClient.organization.findUnique({
+    where: { id: user?.accounts[0]?.organizationVersionId || undefined },
+  })
+  if (!accountOrganization) {
     throw new Error(`L'organisation de l'utilisateur n'existe pas.`)
   }
 
@@ -118,7 +122,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       transaction,
       organizationsSheet.data,
       organizationsIndexes,
-      userOrganization,
+      accountOrganization,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
