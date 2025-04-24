@@ -1,5 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
+import { BASE, Environment } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
@@ -8,7 +9,7 @@ import { useTranslations } from 'next-intl'
 import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
 import { download } from './file'
 import { StudyWithoutDetail } from './permissions/study'
-import { Post, subPostsByPost } from './posts'
+import { environmentPostMapping, Post, subPostsByPost } from './posts'
 import { computeBegesResult } from './results/beges'
 import { computeResultsByPost } from './results/consolidated'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
@@ -302,11 +303,19 @@ export const formatConsolidatedStudyResultsForExport = (
   tQuality: ReturnType<typeof useTranslations>,
   tUnits: ReturnType<typeof useTranslations>,
   validatedEmissionSourcesOnly?: boolean,
+  environment: Environment = BASE,
 ) => {
   const dataForExport = []
 
   for (const site of siteList) {
-    const resultList = computeResultsByPost(study, tPost, site.id, true, validatedEmissionSourcesOnly)
+    const resultList = computeResultsByPost(
+      study,
+      tPost,
+      site.id,
+      true,
+      validatedEmissionSourcesOnly,
+      environmentPostMapping[environment],
+    )
 
     dataForExport.push([site.name])
     dataForExport.push([tStudy('post'), tStudy('uncertainty'), tStudy('value', { unit: tUnits(study.resultsUnit) })])
@@ -435,6 +444,7 @@ export const downloadStudyResults = async (
   tQuality: ReturnType<typeof useTranslations>,
   tBeges: ReturnType<typeof useTranslations>,
   tUnits: ReturnType<typeof useTranslations>,
+  environment: Environment = BASE,
 ) => {
   const data = []
 
@@ -455,6 +465,7 @@ export const downloadStudyResults = async (
       tQuality,
       tUnits,
       validatedEmissionSourcesOnly,
+      environment,
     ),
   )
 
