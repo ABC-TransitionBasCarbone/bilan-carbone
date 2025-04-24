@@ -154,7 +154,6 @@ export const updateEmissionFactor = async (
     ...command,
     importedFrom: Import.Manual,
     status: EmissionFactorStatus.Valid,
-    reliability: 5,
     organization: { connect: { id: session?.user.organizationId as string } },
     unit: unit as Unit,
     subPosts: flattenSubposts(subPosts),
