@@ -1,6 +1,5 @@
 'use client'
 
-import BegesResultsTable from '@/components/study/results/beges/BegesResultsTable'
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
@@ -11,20 +10,21 @@ import { filterWithDependencies } from '@/services/results/utils'
 import DownloadIcon from '@mui/icons-material/Download'
 import { Box, Button, Container, Tab, Tabs, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
-import { Export, ExportRule, SubPost } from '@prisma/client'
+import { ExportRule, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent, useMemo, useState } from 'react'
 
+import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
+import { useChartData, useComputedResults } from '@/hooks/allResults'
 
 interface Props {
   study: FullStudy
-  rules: ExportRule[]
-  emissionFactorsWithParts: EmissionFactorWithParts[]
   validatedOnly: boolean
 }
+
 
 const a11yProps = (index: number) => {
   return {
@@ -33,7 +33,7 @@ const a11yProps = (index: number) => {
   }
 }
 
-export default function AllResults({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) {
+export default function AllResults({ study, validatedOnly }: Props) {
   const theme = useTheme()
   const [value, setValue] = useState(0)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
@@ -60,38 +60,12 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
     borderRadius: 10,
   }
 
-  const computeResults = useMemo(() => {
-    const validCutPosts = new Set(Object.values(CutPost))
+  const computeResults = useComputedResults(resultsByPost, tPost);
 
-    return resultsByPost
-      .map((post) => ({
-        ...post,
-        subPosts: post.subPosts.filter((subPost) => filterWithDependencies(subPost.post as SubPost, false)),
-      }))
-      .map((post) => ({
-        ...post,
-        value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0),
-      }))
-      .filter((post) => validCutPosts.has(post.post as CutPost))
-      .map(({ post, ...rest }) => ({
-        ...rest,
-        label: tPost(post),
-      }))
-  }, [resultsByPost, tPost])
+  const { pieData, barData } = useChartData(computeResults, theme);
 
-  const pieData = useMemo(() => {
-    return computeResults
-      .map(({ label, value }) => ({ label, value: value / STUDY_UNIT_VALUES[study.resultsUnit], color: theme.palette.primary.main }))
-      .filter((computeResult) => computeResult.value > 0)
-  }, [computeResults])
-
-  const barData = useMemo(() => {
-    const values = computeResults.map(({ value }) => value)
-    const labels = computeResults.map(({ label }) => label)
-    return { values, labels }
-  }, [computeResults, study.resultsUnit])
-
-  const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
+  const chartFormatter = (value: number) =>
+    `${value / STUDY_UNIT_VALUES[study.resultsUnit]} ${tUnits(study.resultsUnit)}`
 
   return (
     <Container>
@@ -109,13 +83,7 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
           <TabPanel value={value} index={0}>
-            <BegesResultsTable
-              study={study}
-              rules={begesRules}
-              emissionFactorsWithParts={emissionFactorsWithParts}
-              studySite={studySite}
-              withDependencies={false}
-            />
+            <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <BarChart
@@ -131,7 +99,12 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
                   tickLabelPlacement: 'middle',
                 },
               ]}
-              series={[{ color: theme.palette.primary.main, data: barData.values }]}
+              series={[
+                {
+                  color: theme.palette.primary.main,
+                  data: barData.values,
+                },
+              ]}
               grid={{ vertical: true, horizontal: true }}
               yAxis={[
                 {
@@ -144,9 +117,15 @@ export default function AllResults({ study, rules, emissionFactorsWithParts, val
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <PieChart series={[{
-              data: pieData
-            }]} height={300} />
+            <PieChart
+              series={[
+                {
+                  data: pieData,
+                  valueFormatter: (value) => chartFormatter(value.value),
+                },
+              ]}
+              height={300}
+            />
           </TabPanel>
         </Box>
       </Box>

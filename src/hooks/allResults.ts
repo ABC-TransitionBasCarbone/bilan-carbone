@@ -1,0 +1,57 @@
+import { useMemo } from 'react'
+import { CutPost } from '@/services/posts'
+import { filterWithDependencies } from '@/services/results/utils'
+import { SubPost } from '@prisma/client'
+import { Theme } from '@mui/material/styles'
+import { ResultsByPost } from '@/services/results/consolidated'
+
+interface ComputeResult {
+    label: string;
+    value: number;
+    subPosts: ResultsByPost[];
+    numberOfEmissionSource: number;
+    numberOfValidatedEmissionSource: number;
+    uncertainty?: number;
+}
+
+type TFunction = (key: string) => string
+
+export function useComputedResults(resultsByPost: ResultsByPost[], tPost: TFunction) {
+    return useMemo(() => {
+        const validCutPosts = new Set(Object.values(CutPost))
+
+        return resultsByPost
+            .map((post) => ({
+                ...post,
+                subPosts: post.subPosts.filter((subPost) =>
+                    filterWithDependencies(subPost.post as SubPost, false),
+                ),
+            }))
+            .map((post) => ({
+                ...post,
+                value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0),
+            }))
+            .filter((post) => validCutPosts.has(post.post as CutPost))
+            .map(({ post, ...rest }) => ({
+                ...rest,
+                label: tPost(post),
+            }))
+    }, [resultsByPost])
+}
+
+export function useChartData(computeResults: ComputeResult[], theme: Theme) {
+    const pieData = useMemo(() => {
+        return computeResults
+            .map(({ label, value }) => ({ label, value, color: theme.palette.primary.main }))
+            .filter((computeResult) => computeResult.value > 0)
+    }, [computeResults, theme])
+
+    const barData = useMemo(() => {
+        return {
+            labels: computeResults.map(({ label }) => label),
+            values: computeResults.map(({ value }) => value),
+        }
+    }, [computeResults])
+
+    return { pieData, barData }
+}
