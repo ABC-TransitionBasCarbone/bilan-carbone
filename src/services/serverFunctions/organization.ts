@@ -1,6 +1,6 @@
 'use server'
 
-import { AccountWithUser, getAccountById } from '@/db/account'
+import { AccountWithUser, getAccountByEmailAndOrganizationVersionId } from '@/db/account'
 import {
   createOrganizationWithVersion,
   deleteClient,
@@ -137,12 +137,15 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
   }
 
   // filter duplicatd email
-  let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'accountId')
+  let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'email')
   const existingCollaborators: AccountWithUser[] = []
 
   // filter existing accounts
   for (const collaborator of collaborators) {
-    const existingAccount = (await getAccountById(collaborator.accountId || '')) as AccountWithUser
+    const existingAccount = (await getAccountByEmailAndOrganizationVersionId(
+      collaborator.email || '',
+      organizationVersionId,
+    )) as AccountWithUser
     if (existingAccount) {
       collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
       if (existingAccount.organizationVersionId === organizationVersionId) {

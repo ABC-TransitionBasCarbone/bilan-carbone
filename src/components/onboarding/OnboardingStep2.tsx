@@ -22,7 +22,7 @@ const OnboardingStep = ({ form, isCr }: Props) => {
   const collaborators = useWatch(form).collaborators?.length || 0
 
   const addCollaborator = () => {
-    form.setValue('collaborators', (form.getValues('collaborators') || [])?.concat([{ accountId: '' }]))
+    form.setValue('collaborators', (form.getValues('collaborators') || [])?.concat([{ email: '' }]))
   }
 
   const removeCollaborator = (index: number) => {

@@ -33,6 +33,7 @@ export const createOrUpdateOrganization = async (
     where: {
       organizationId_environment: {
         organizationId: updatedOrganization.id,
+        // TODO récupérer l'environement de la bonne façon
         environment: Environment.BC,
       },
     },
