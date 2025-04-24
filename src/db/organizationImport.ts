@@ -17,6 +17,7 @@ export const createOrUpdateOrganization = async (
   activatedLicence?: boolean,
   importedFileDate?: Date,
 ) => {
+  // TODO récupérer environnement depuis les paramètres
   const updatedOrganization = await prismaClient.organization.upsert({
     where: { id: organization.id ?? '' },
     update: {
@@ -38,7 +39,8 @@ export const createOrUpdateOrganization = async (
       },
     },
     update: {
-      // TODO Récupérer isCR d'organizationVErsion ?
+      // TODO Récupérer isCR d'organizationVErsion
+      // Récupérer l'orga version grace  a l'env
       isCR: isCR,
       activatedLicence,
       updatedAt: new Date(),

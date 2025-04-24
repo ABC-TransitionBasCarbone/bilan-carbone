@@ -59,6 +59,7 @@ export const changeAccountRole = (id: string, role: Role) =>
   })
 
 export const getAccountOrganizationVersions = async (accountId: string) => {
+  // TODO renvoyer directement les organizations et changer les appels à la fonction pour que ça marche
   if (!accountId) {
     return []
   }
@@ -76,6 +77,7 @@ export const getAccountOrganizationVersions = async (accountId: string) => {
   }
 
   // TODO est-ce ok comme façon de récupérer les organizations ?
+  // Récupérer les orgaversion des childs en fonction de l'environnement du parent
   if (account.organizationVersion && account.organizationVersion.isCR) {
     const childOrganizations = await prismaClient.organizationVersion.findMany({
       ...{ select: OrganizationVersionWithOrganizationSelect },

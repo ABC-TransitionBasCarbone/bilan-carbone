@@ -66,11 +66,13 @@ const getStudyEmissionSourcesIndexes = (headers: string[]): Record<string, numbe
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
   const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
 
-  // TODO Je ne sais pas si je fais le bon check sur l'orgaId
+  // TODO Récup l'orgaversion et pas l'orgaid
+
   const user = await prismaClient.user.findUnique({
     where: { email },
     include: { accounts: { include: { organizationVersion: true } } },
   })
+  // TODO Vérifier aussi que l'env est BC
   if (!user || !user.accounts.some((account) => account.organizationVersion?.organizationId == organizationId)) {
     console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
     return

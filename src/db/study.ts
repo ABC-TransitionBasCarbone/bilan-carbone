@@ -7,7 +7,7 @@ import { Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
-import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
+import { OrganizationVersionWithOrganization } from './organization'
 
 export const createStudy = async (data: Prisma.StudyCreateInput) => {
   const dbStudy = await prismaClient.study.create({ data })
@@ -263,14 +263,13 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
 }
 
 export const getAllowedStudiesByUserAndOrganization = async (account: UserSession, organizationVersionId: string) => {
-  // TODO pas sûr si je m'y prend bien ici vu que y a ala fois le check de la version des de l'orga parents etc
-  const accountOrganizationVersion = await getOrganizationVersionById(account.organizationVersionId)
-  if (!accountOrganizationVersion) {
+  // TODO check this after migration
+  if (!account.organizationVersionId) {
     return []
   }
-  const childOrganizations = await prismaClient.organization.findMany({
-    where: { parentId: accountOrganizationVersion?.organizationId },
-    select: { id: true, organizationVersions: { select: { id: true } } },
+  const childOrganizations = await prismaClient.organizationVersion.findMany({
+    where: { parentId: account.organizationVersionId },
+    select: { id: true },
   })
 
   const studies = await prismaClient.study.findMany({
@@ -286,11 +285,7 @@ export const getAllowedStudiesByUserAndOrganization = async (account: UserSessio
               {
                 isPublic: true,
                 organizationVersionId: {
-                  in: childOrganizations
-                    .map((organization) =>
-                      organization.organizationVersions.map((organizationVersion) => organizationVersion.id),
-                    )
-                    .flat(),
+                  in: childOrganizations.map((organizationVersion) => organizationVersion.id),
                 },
               },
             ],

@@ -9,6 +9,7 @@ import { createUsers, getUserByEmail, updateUser } from '../../db/userImport'
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
   // TODO en attente de retours
+  // Réupérer aussi environnement avec par défaut BC user_environmment
   const {
     User_Email: email,
     Firstname: firstName = '',
@@ -51,10 +52,12 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   if (siretOrSiren) {
     // TODO récupérer l'organisationVersionId du user correctement
+    // Récupérer l'orga pour l'env sinon la créer
     let organization = dbUser?.accounts[0].organizationVersionId
       ? await getRawOrganizationById(dbUser.accounts[0].organizationVersionId)
       : await getRawOrganizationBySiret(siretOrSiren)
 
+    // TODO passer l'environnement
     organization = await createOrUpdateOrganization(
       {
         id: organization?.id,
@@ -65,6 +68,8 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       activatedLicence,
       importedFileDate,
     )
+
+    // Créer orgaversiona avec l'env et ensuite l'associer à l'utilisateur
 
     // TODO retirer ce commentaire temporaire pour voir si les tests passent
     // user.accounts[0].organizationVersionId = organisation?.id
