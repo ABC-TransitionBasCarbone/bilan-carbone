@@ -5,8 +5,15 @@
 }
 
 .header {
+  .name {
+    max-width: 50%;
+  }
+
   @media screen and (max-width: 60rem) {
     flex-direction: column;
+    .name {
+      max-width: 100%;
+    }
   }
   p {
     line-height: 1.25rem;
