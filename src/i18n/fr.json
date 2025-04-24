@@ -1273,15 +1273,15 @@
   },
   "formation": {
     "title": "Formation",
-    "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode BC V8 à V9. Regardez les vidéos, répondez au questionnaire et recevez votre certificat !",
+    "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode. Regardez les vidéos, répondez au questionnaire et recevez votre attestation !",
     "videos": "Vidéos",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au quesitonnaire",
-    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre certificat de formation v9. Ce dernier est chronométré et vous aurez <red>au maximum {time} minutes pour répondre au question. Vous ne pouvez répondre au questionnaire qu'une seule fois. Une fois lancé, impossible de revenir en arrière.</red>",
+    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. Ce dernier est chronométré et vous aurez <red>au maximum {time} minutes pour répondre au question. Vous ne pouvez répondre au questionnaire qu'une seule fois. Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l’outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines des questions.</red>",
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre au question. Je suis dans les bonnes conditions pour commencer mon test",
     "answer": "Répondre au questionnaire",
     "timer": "Temps restant : ",
-    "alertMessage": "Il ne vous reste que 5 minutes. Au bout de ces 5 minutes ce formulaire restera disponible et vous pourrez transmettre vos réponses, mais le temps étant écoulé, si vous prenez trop de temps, vos réponses ne seront pas prises en compte et vous ne recevrez pas d'attestation de réussite.",
+    "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite d'une heure avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d’attestation de réussite.",
     "form": "Questionnaire Typeform"
   },
   "deactivableFeatures": {
