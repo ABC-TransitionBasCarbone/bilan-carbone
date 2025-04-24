@@ -18,7 +18,7 @@ export const getEmissionFactorValue = (
 
 export const emissionFactorDefautQualityStar = '☆'
 
-export const EmissionFactorCreationUnitList: Unit[] = [
+export const ManualEmissionFactorUnitList: Unit[] = [
   Unit.PERCENT,
   Unit.GJ_PCI,
   Unit.GJ_PCS,
