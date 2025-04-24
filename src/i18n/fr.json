@@ -509,7 +509,8 @@
       "total": "Total",
       "uncertainty": "Incertitude",
       "validation": "Validation de la source d'émission",
-      "yes": "Oui"
+      "yes": "Oui",
+      "export": "Exporter mon Bilan Carbone"
     },
     "flow": {
       "loading": "Chargement du document...",

@@ -2,29 +2,24 @@
 
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
-import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { CutPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { filterWithDependencies } from '@/services/results/utils'
 import DownloadIcon from '@mui/icons-material/Download'
 import { Box, Button, Container, Tab, Tabs, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
-import { ExportRule, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent, useMemo, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
+import { useChartData, useComputedResults } from '@/hooks/allResults'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
-import { useChartData, useComputedResults } from '@/hooks/allResults'
 
 interface Props {
   study: FullStudy
   validatedOnly: boolean
 }
-
 
 const a11yProps = (index: number) => {
   return {
@@ -41,6 +36,7 @@ export default function AllResults({ study, validatedOnly }: Props) {
   }
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
+  const tExport = useTranslations('study.export')
 
   const { studySite, setSite } = useStudySite(study, true)
 
@@ -60,9 +56,9 @@ export default function AllResults({ study, validatedOnly }: Props) {
     borderRadius: 10,
   }
 
-  const computeResults = useComputedResults(resultsByPost, tPost);
+  const computeResults = useComputedResults(resultsByPost, tPost)
 
-  const { pieData, barData } = useChartData(computeResults, theme);
+  const { pieData, barData } = useChartData(computeResults, theme)
 
   const chartFormatter = (value: number) =>
     `${value / STUDY_UNIT_VALUES[study.resultsUnit]} ${tUnits(study.resultsUnit)}`
@@ -72,7 +68,7 @@ export default function AllResults({ study, validatedOnly }: Props) {
       <Box component="section" sx={{ display: 'flex', gap: '1rem' }}>
         <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
         <Button variant="outlined" size="large" endIcon={<DownloadIcon />}>
-          exporter mon Bilan Carbone
+          {tExport('export')}
         </Button>
       </Box>
       <Box component="section" sx={{ marginTop: '1rem' }}>
