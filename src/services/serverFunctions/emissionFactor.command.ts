@@ -15,65 +15,51 @@ const GESschema = z.object({
   otherGES: z.nan().or(z.number().min(0, 'otherGES')).optional(),
 })
 
+export const SubPostsCommandValidation = z.object({
+  subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1), { required_error: 'type' }).superRefine((val, ctx) => {
+    if (Object.keys(val).length === 0) {
+      ctx.addIssue({ message: 'type', code: z.ZodIssueCode.custom })
+      return false
+    }
+
+    if (Object.values(val).some((arr) => arr.length === 0)) {
+      ctx.addIssue({ message: 'subPost', code: z.ZodIssueCode.custom })
+      return false
+    }
+  }),
+})
+export type SubPostsCommand = z.infer<typeof SubPostsCommandValidation>
+
 export const EmissionFactorCommandValidation = z.intersection(
   GESschema,
-  z.object({
-    name: z
-      .string({
-        required_error: 'name',
-      })
-      .trim()
-      .min(1, 'name'),
-    unit: z.nativeEnum(Unit, { required_error: 'unit' }),
-    source: z
-      .string({
-        required_error: 'source',
-      })
-      .trim()
-      .min(1, 'source'),
-    totalCo2: z
-      .number({
-        invalid_type_error: 'totalCo2',
-        required_error: 'totalCo2',
-      })
-      .min(0, 'totalCo2'),
-    reliability: z.number({ required_error: 'reliability' }),
-    technicalRepresentativeness: z.number().optional(),
-    geographicRepresentativeness: z.number().optional(),
-    temporalRepresentativeness: z.number().optional(),
-    completeness: z.number().optional(),
-    attribute: z.string().optional(),
-    subPosts: z.record(z.array(z.nativeEnum(SubPost)).min(1), { required_error: 'type' }).superRefine((val, ctx) => {
-      if (Object.keys(val).length === 0) {
-        ctx.addIssue({
-          message: 'type',
-          code: z.ZodIssueCode.custom,
-        })
-        return false
-      }
-
-      if (Object.values(val).some((arr) => arr.length === 0)) {
-        ctx.addIssue({
-          message: 'subPost',
-          code: z.ZodIssueCode.custom,
-        })
-        return false
-      }
+  z.intersection(
+    z.object({
+      name: z.string({ required_error: 'name' }).trim().min(1, 'name'),
+      unit: z.nativeEnum(Unit, { required_error: 'unit' }),
+      source: z.string({ required_error: 'source' }).trim().min(1, 'source'),
+      totalCo2: z.number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' }).min(0, 'totalCo2'),
+      reliability: z.number({ required_error: 'reliability' }),
+      technicalRepresentativeness: z.number().optional(),
+      geographicRepresentativeness: z.number().optional(),
+      temporalRepresentativeness: z.number().optional(),
+      completeness: z.number().optional(),
+      attribute: z.string().optional(),
+      comment: z.string().optional(),
+      parts: z
+        .array(
+          z.intersection(
+            GESschema,
+            z.object({
+              name: z.string({ required_error: 'name' }).trim().min(1, 'name').max(64, 'nameMaxLength'),
+              type: z.nativeEnum(EmissionFactorPartType, { required_error: 'type' }),
+              totalCo2: z.number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' }).min(0, 'totalCo2'),
+            }),
+          ),
+        )
+        .max(maxParts),
     }),
-    comment: z.string().optional(),
-    parts: z
-      .array(
-        z.intersection(
-          GESschema,
-          z.object({
-            name: z.string({ required_error: 'name' }).trim().min(1, 'name').max(64, 'nameMaxLength'),
-            type: z.nativeEnum(EmissionFactorPartType, { required_error: 'type' }),
-            totalCo2: z.number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' }).min(0, 'totalCo2'),
-          }),
-        ),
-      )
-      .max(maxParts),
-  }),
+    SubPostsCommandValidation,
+  ),
 )
 
 export type EmissionFactorCommand = z.infer<typeof EmissionFactorCommandValidation>

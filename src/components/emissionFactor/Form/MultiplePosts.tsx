@@ -2,7 +2,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { BCPost, Post } from '@/services/posts'
-import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -11,17 +11,18 @@ import { Control, Controller, FieldPath, UseFormReturn, UseFormSetValue } from '
 import Posts from './Posts'
 import styles from './Posts.module.css'
 
-interface Props<T extends EmissionFactorCommand> {
+interface Props<T extends SubPostsCommand> {
   form: UseFormReturn<T>
+  context: 'emissionFactor' | 'studyContributor'
 }
 
-const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
+const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const tGlossary = useTranslations('emissionFactors.create.glossary')
 
-  const control = form.control as Control<EmissionFactorCommand>
-  const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
+  const control = form.control as Control<SubPostsCommand>
+  const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
 
   const posts: Record<Post, SubPost[]> = (form.watch('subPosts' as FieldPath<T>) as Record<Post, SubPost[]>) || {}
   const [glossary, setGlossary] = useState('')
@@ -66,7 +67,7 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
               data-testid="emission-factor-post"
               label={t('posts')}
               fullWidth
-              icon={<HelpIcon onClick={() => setGlossary('post')} label={tGlossary('title')} />}
+              icon={<HelpIcon onClick={() => setGlossary(`post_${context}`)} label={tGlossary('title')} />}
               iconPosition="after"
             >
               {postSelection.map((post) => (
@@ -83,7 +84,7 @@ const MultiplePosts = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
       />
 
       {glossary && (
-        <GlossaryModal glossary={glossary} label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
+        <GlossaryModal glossary="post" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
           {tGlossary(`${glossary}Description`)}
         </GlossaryModal>
       )}

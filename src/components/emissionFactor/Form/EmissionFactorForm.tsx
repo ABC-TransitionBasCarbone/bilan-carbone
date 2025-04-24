@@ -128,7 +128,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
           </FormControl>
         )}
       />
-      <MultiplePosts form={form} />
+      <MultiplePosts form={form} context="emissionFactor" />
       <FormTextField control={control} translation={t} name="comment" label={t('comment')} multiline rows={2} />
       <div className={classNames({ ['justify-between']: button === 'update' })}>
         {button === 'update' && (

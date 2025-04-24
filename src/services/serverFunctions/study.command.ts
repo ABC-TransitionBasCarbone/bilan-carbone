@@ -1,8 +1,8 @@
-import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole, SubPost } from '@prisma/client'
+import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
 import { OpeningHoursValidation } from '../hours'
-import { Post } from '../posts'
+import { SubPostsCommandValidation } from './emissionFactor.command'
 
 export const SitesCommandValidation = z.object({
   sites: z.array(
@@ -222,17 +222,10 @@ export const NewStudyRightCommandValidation = z.object({
 
 export type NewStudyRightCommand = z.infer<typeof NewStudyRightCommandValidation>
 
-export const NewStudyContributorCommandValidation = z.object({
-  studyId: z.string(),
-  email: z
-    .string({
-      required_error: 'email',
-    })
-    .email('email')
-    .trim(),
-  post: z.union([z.nativeEnum(Post, { required_error: 'post' }), z.literal('all', { required_error: 'post' })]),
-  subPost: z.union([z.nativeEnum(SubPost), z.literal('all')]),
-})
+export const NewStudyContributorCommandValidation = z.intersection(
+  z.object({ studyId: z.string(), email: z.string({ required_error: 'email' }).email('email').trim() }),
+  SubPostsCommandValidation,
+)
 
 export type NewStudyContributorCommand = z.infer<typeof NewStudyContributorCommandValidation>
 
