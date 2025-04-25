@@ -205,6 +205,7 @@ describe('Authentication', () => {
     cy.getByTestId('pending-invitation').contains('imported@yopmail.com').should('be.visible')
 
     cy.logout()
+    cy.url().should('include', '/login')
 
     cy.visit('http://localhost:1080')
     cy.origin('http://localhost:1080', () => {
