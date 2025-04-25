@@ -598,7 +598,7 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
     return NOT_AUTHORIZED
   }
 
-  if (studyWithRights.allowedUsers.some((allowedUser) => allowedUser.user.id === existingUser?.id)) {
+  if (existingUser && getUserRoleOnStudy(existingUser, studyWithRights)) {
     return ALREADY_IN_STUDY
   }
 
