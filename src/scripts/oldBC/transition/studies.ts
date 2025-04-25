@@ -29,6 +29,7 @@ export enum RequiredStudyEmissionSourcesColumns {
   commentaires = 'Commentaires',
   commentairesCollecte = 'COMMENTAIRES_COLLECTE',
   validationDASaisie = 'ValidationDASaisie',
+  daTotalValue = 'DA_VAL_TOTAL',
 }
 
 interface Study {
@@ -53,6 +54,7 @@ interface EmissionSource {
   recycledPart: number
   comment: string
   validated: boolean
+  value: number
 }
 
 const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
@@ -172,6 +174,7 @@ const parseEmissionSources = (
           recycledPart: row[indexes[RequiredStudyEmissionSourcesColumns.recycledPart]] as number,
           comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
           validated: (row[indexes[RequiredStudyEmissionSourcesColumns.validationDASaisie]] as number) === 1,
+          value: row[indexes[RequiredStudyEmissionSourcesColumns.daTotalValue]] as number,
         },
       ]
     })
@@ -367,6 +370,7 @@ export const uploadStudies = async (
               recycledPart: studyEmissionSource.recycledPart,
               comment: studyEmissionSource.comment,
               validated: studyEmissionSource.validated,
+              value: studyEmissionSource.value,
             }
           })
           .filter((studyEmissionSource) => studyEmissionSource !== null)
