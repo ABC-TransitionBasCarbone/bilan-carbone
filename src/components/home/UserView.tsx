@@ -27,13 +27,12 @@ const UserView = async ({ user }: Props) => {
           <UserToValidate />
         </div>
       )}
-      {isCR ? (
+      {isCR && (
         <CRClientsList
           organizations={organizations.filter((organization) => organization.id !== user.organizationId)}
         />
-      ) : (
-        <StudiesContainer user={user} />
       )}
+      <StudiesContainer user={user} isCR={isCR} />
       <Actualities />
       {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
     </>
