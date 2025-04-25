@@ -78,7 +78,9 @@ const StudyCard = async ({ study, user }: Props) => {
           />
         </Box>
         <div className="justify-end">
-          <LinkButton href={`/etudes/${study.id}`}>{t('see')}</LinkButton>
+          <LinkButton href={`/etudes/${study.id}${userRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>
+            {t('see')}
+          </LinkButton>
         </div>
       </Box>
     </li>
