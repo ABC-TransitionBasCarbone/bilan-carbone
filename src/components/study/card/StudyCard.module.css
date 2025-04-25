@@ -3,8 +3,17 @@
   gap: 1rem;
 }
 
-.role {
-  background-color: var(--background-200);
+.validator {
+  background-color: var(--validator-role);
+}
+.editor {
+  background-color: var(--editor-role);
+}
+.reader {
+  background-color: var(--reader-role);
+}
+.contributor {
+  background-color: var(--contributor-role);
 }
 
 .validated {
