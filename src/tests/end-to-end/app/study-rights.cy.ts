@@ -160,17 +160,16 @@ describe('Study Rights', () => {
       .eq(7)
       .within(() => cy.get('input').should('be.disabled'))
     // Validators can edit other people's rights
-    // TODO : investigate why edition may be in error
-    // cy.getByTestId('study-rights-table-line').eq(2).contains('bc-collaborator-1@yopmail.comValidateur')
-    // cy.getByTestId('study-rights-table-line')
-    //   .eq(2)
-    //   .within(() => {
-    //     cy.get('input').should('not.be.disabled')
-    //     cy.get('.MuiSelect-select').click()
-    //   })
-    // cy.get('[data-value="Editor"]').click()
-    // cy.wait('@update')
-    // cy.getByTestId('study-rights-table-line').eq(2).contains('bc-collaborator-1@yopmail.comÉditeur')
+    cy.getByTestId('study-rights-table-line').eq(3).contains('bc-collaborator-1@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line')
+      .eq(3)
+      .within(() => {
+        cy.get('input').should('not.be.disabled')
+        cy.get('.MuiSelect-select').click()
+      })
+    cy.get('[data-value="Editor"]').click()
+    cy.wait('@update')
+    cy.getByTestId('study-rights-table-line').eq(3).contains('bc-collaborator-1@yopmail.comÉditeur')
 
     // Editors cannot edit validator's rights
     cy.url().then((link) => {
@@ -181,9 +180,9 @@ describe('Study Rights', () => {
     cy.getByTestId('study-rights-change-button').should('exist')
     cy.getByTestId('select-study-role').should('exist')
 
-    cy.getByTestId('study-rights-table-line').eq(3).contains('bc-collaborator-1@yopmail.comValidateur')
+    cy.getByTestId('study-rights-table-line').eq(0).contains('bc-admin-1@yopmail.comValidateur')
     cy.getByTestId('study-rights-table-line')
-      .eq(3)
+      .eq(0)
       .within(() => cy.get('input').should('be.disabled'))
 
     // Editors can't select validator's rights
