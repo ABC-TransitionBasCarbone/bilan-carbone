@@ -18,7 +18,6 @@ export const getUserRoleOnStudy = (
   user: User,
   study: Pick<FullStudy, 'isPublic' | 'level'> & {
     allowedUsers: { user: { id: string }; role: StudyRole }[]
-    contributors: { user: { id: string } }[]
   } & {
     organization: Pick<Organization, 'id' | 'parentId'>
   },
@@ -36,9 +35,6 @@ export const getUserRoleOnStudy = (
     return getUserRoleOnPublicStudy(user, study.level)
   }
 
-  if (study.contributors.find((contributor) => contributor.user.id === user.id)) {
-    return 'Contributor'
-  }
   return null
 }
 

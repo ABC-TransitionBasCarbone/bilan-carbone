@@ -26,7 +26,10 @@ const StudyCard = async ({ study, user }: Props) => {
     return null
   }
 
-  const userRoleOnStudy = getUserRoleOnStudy(user, fullStudy)
+  const userRoleOnStudy = fullStudy.contributors.some((contributor) => contributor.userId === user.id)
+    ? 'Contributor'
+    : getUserRoleOnStudy(user, fullStudy)
+
   if (!userRoleOnStudy) {
     return null
   }
