@@ -1,7 +1,10 @@
-import { getStudyValidatedEmissionsSources } from '@/db/study'
+import Label from '@/components/base/Label'
+import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
+import { getUserRoleOnStudy } from '@/utils/study'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
+import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Box from '../../base/Box'
 import LinkButton from '../../base/LinkButton'
@@ -11,16 +14,22 @@ import StudyName from './StudyName'
 
 interface Props {
   study: Study
+  user: User
 }
 
-const StudyCard = async ({ study }: Props) => {
+const StudyCard = async ({ study, user }: Props) => {
   const t = await getTranslations('study')
   const values = await getStudyValidatedEmissionsSources(study.id)
+  const fullStudy = await getStudyById(study.id, user.organizationId)
 
-  if (!values) {
+  if (!values || !fullStudy) {
     return null
   }
 
+  const userRoleOnStudy = getUserRoleOnStudy(user, fullStudy)
+  if (!userRoleOnStudy) {
+    return null
+  }
   const percent = values.validated ? Math.floor((values.validated / values.total) * 100) : 0
   const color = values.validated > 0 && percent === 100 ? '--success-100' : '--warning'
 
@@ -29,6 +38,9 @@ const StudyCard = async ({ study }: Props) => {
       <Box className={classNames(styles.card, 'flex-col grow')}>
         <div className="justify-center">
           <StudyName name={study.name} />
+        </div>
+        <div className="justify-center">
+          <Label className={styles.role}>{t(`role.${userRoleOnStudy}`)}</Label>
         </div>
         <Box>
           <p className="mb1 align-center">
