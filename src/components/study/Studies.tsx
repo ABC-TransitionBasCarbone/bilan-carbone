@@ -3,6 +3,7 @@
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { Study } from '@prisma/client'
+import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 import Block from '../base/Block'
@@ -13,14 +14,16 @@ interface Props {
   studies: Study[]
   canAddStudy: boolean
   creationUrl: string
+  user: User
+  contributions?: boolean
 }
 
-const Studies = async ({ studies, canAddStudy, creationUrl }: Props) => {
+const Studies = async ({ studies, canAddStudy, creationUrl, user, contributions }: Props) => {
   const t = await getTranslations('study')
 
   return (
     <Block
-      title={t('myStudies')}
+      title={t(contributions ? 'myContributions' : 'myStudies')}
       data-testid="home-studies"
       actions={
         canAddStudy
@@ -46,7 +49,7 @@ const Studies = async ({ studies, canAddStudy, creationUrl }: Props) => {
           <ul className={styles.grid}>
             {studies.map((study) => (
               <Suspense key={study.id}>
-                <StudyCard study={study} />
+                <StudyCard study={study} user={user} />
               </Suspense>
             ))}
           </ul>
