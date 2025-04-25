@@ -3,6 +3,10 @@
   gap: 1rem;
 }
 
+.role {
+  background-color: var(--background-200);
+}
+
 .validated {
   color: var(--warning);
 
