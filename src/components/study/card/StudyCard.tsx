@@ -43,7 +43,7 @@ const StudyCard = async ({ study, user }: Props) => {
           <StudyName name={study.name} />
         </div>
         <div className="justify-center">
-          <Label className={styles.role}>{t(`role.${userRoleOnStudy}`)}</Label>
+          <Label className={styles[userRoleOnStudy.toLowerCase()]}>{t(`role.${userRoleOnStudy}`)}</Label>
         </div>
         <Box>
           <p className="mb1 align-center">
