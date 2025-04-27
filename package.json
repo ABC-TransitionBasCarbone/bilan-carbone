@@ -41,7 +41,6 @@
     "basic-ftp": "^5.0.5",
     "bcryptjs": "^3.0.2",
     "big.js": "^6.2.2",
-    "chart.js": "^4.4.9",
     "classnames": "^2.5.1",
     "commander": "^13.1.0",
     "csv-parse": "^5.6.0",
