@@ -29,7 +29,7 @@ const listPost = [
 ]
 
 const Result = ({ computedResults, resultsUnit }: Props) => {
-  const [_, setValidatedOnly] = useState(true)
+  const [validateOnly, setValidatedOnly] = useState(true)
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
 
@@ -53,7 +53,7 @@ const Result = ({ computedResults, resultsUnit }: Props) => {
     const labels = filtered.map(({ post }) => tPost(post))
 
     return { labels, values }
-  }, [computedResults, resultsUnit, tPost])
+  }, [computedResults, validateOnly, resultsUnit, tPost])
 
   const chartSetting = {
     height: 450,
