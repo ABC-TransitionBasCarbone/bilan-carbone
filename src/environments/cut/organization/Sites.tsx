@@ -6,6 +6,7 @@ import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { SiteCAUnit } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -15,9 +16,10 @@ interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
   sites: SitesCommand['sites']
   withSelection?: boolean
+  caUnit: SiteCAUnit
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: Props<T>) => {
   const t = useTranslations('organization.sites')
 
   const control = form?.control as Control<SitesCommand>
@@ -133,7 +135,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
     return columns
   }, [t, form])
 
-  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} />
+  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} caUnit={caUnit} />
 }
 
 export default Sites
