@@ -79,7 +79,7 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
   }
 
   const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
-  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
+  const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
   await updateOrganization(command, caUnit)
   const organization = await getOrganizationById(command.organizationId)
