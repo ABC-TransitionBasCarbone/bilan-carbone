@@ -1,11 +1,11 @@
-interface TabPanelProps {
+interface Props {
   children?: React.ReactNode
   dir?: string
   index: number
   value: number
 }
 
-const TabPanel = ({ children, index, value, ...other }: TabPanelProps) => {
+const TabPanel = ({ children, index, value, ...other }: Props) => {
   return (
     <div
       role="tabpanel"

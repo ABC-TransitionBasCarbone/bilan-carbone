@@ -15,7 +15,7 @@ interface Props {
   validatedOnly: boolean
 }
 
-export default function DynamicAllResults({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) {
+const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: Props) => {
   return (
     <DynamicComponent
       environmentComponents={{
