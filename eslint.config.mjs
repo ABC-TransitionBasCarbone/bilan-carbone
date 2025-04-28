@@ -17,13 +17,13 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 })
 
-export default [
+const config = [
+  mocha.configs.recommended,
   ...compat.extends(
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
     'plugin:cypress/recommended',
-    'plugin:mocha/recommended',
     'next/core-web-vitals',
     'next/typescript',
   ),
@@ -71,3 +71,5 @@ export default [
     },
   },
 ]
+
+export default config
