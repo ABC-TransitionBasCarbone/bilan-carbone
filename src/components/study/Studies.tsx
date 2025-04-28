@@ -13,17 +13,17 @@ import StudyCard from './card/StudyCard'
 interface Props {
   studies: Study[]
   canAddStudy: boolean
-  creationUrl: string
+  creationUrl?: string
   user: User
-  contributions?: boolean
+  collaborations?: boolean
 }
 
-const Studies = async ({ studies, canAddStudy, creationUrl, user, contributions }: Props) => {
+const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations }: Props) => {
   const t = await getTranslations('study')
 
   return (
     <Block
-      title={t(contributions ? 'myCollaborations' : 'myStudies')}
+      title={t(collaborations ? 'myCollaborations' : 'myStudies')}
       data-testid="home-studies"
       actions={
         canAddStudy
