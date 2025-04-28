@@ -23,7 +23,7 @@ const Studies = async ({ studies, canAddStudy, creationUrl, user, contributions 
 
   return (
     <Block
-      title={t(contributions ? 'myContributions' : 'myStudies')}
+      title={t(contributions ? 'myCollaborations' : 'myStudies')}
       data-testid="home-studies"
       actions={
         canAddStudy
