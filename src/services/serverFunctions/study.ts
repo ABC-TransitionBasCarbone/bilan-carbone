@@ -157,7 +157,7 @@ export const createStudyCommand = async ({
   }
 
   const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
-  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
+  const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
   const mergedOpeningHours = [...Object.values(command.openingHours || {}), ...Object.values(openingHoursHoliday || {})]
 
@@ -395,7 +395,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
   }
 
   const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
-  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
+  const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
   const selectedSites = command.sites
     .filter((site) => site.selected)
