@@ -1,5 +1,5 @@
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 
@@ -20,7 +20,7 @@ export const FormDatePicker = <T extends FieldValues>({
   'data-testid': dataTestId,
   clearable = false,
   ...datePickerProps
-}: Props<T> & DatePickerProps<Dayjs>) => {
+}: Props<T> & DatePickerProps<true>) => {
   return (
     <Controller
       name={name}
