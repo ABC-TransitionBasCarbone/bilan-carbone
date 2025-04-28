@@ -1,4 +1,4 @@
-import { CutPost } from '@/services/posts'
+import { BCPost, CutPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { Theme } from '@mui/material/styles'
@@ -14,11 +14,13 @@ interface ComputeResult {
   uncertainty?: number
 }
 
+type PostKey = CutPost | BCPost
+
 type TFunction = (key: string) => string
 
-export function useComputedResults(resultsByPost: ResultsByPost[], tPost: TFunction) {
+export function useComputedResults(resultsByPost: ResultsByPost[], tPost: TFunction, listPosts: PostKey[]) {
   return useMemo(() => {
-    const validCutPosts = new Set(Object.values(CutPost))
+    const validPosts = new Set(Object.values(listPosts))
 
     return resultsByPost
       .map((post) => {
@@ -33,27 +35,23 @@ export function useComputedResults(resultsByPost: ResultsByPost[], tPost: TFunct
           value,
         }
       })
-      .filter((post) => validCutPosts.has(post.post as CutPost))
+      .filter((post) => validPosts.has(post.post as PostKey))
       .map(({ post, ...rest }) => ({
         ...rest,
         label: tPost(post),
       }))
-  }, [resultsByPost, tPost])
+  }, [resultsByPost, tPost, listPosts])
 }
 
 export function useChartData(computeResults: ComputeResult[], theme: Theme) {
-  const pieData = useMemo(() => {
-    return computeResults
+  return useMemo(() => {
+    const pieData = computeResults
       .map(({ label, value }) => ({ label, value, color: theme.palette.primary.main }))
       .filter((computeResult) => computeResult.value > 0)
-  }, [computeResults, theme])
-
-  const barData = useMemo(() => {
-    return {
+    const barData = {
       labels: computeResults.map(({ label }) => label),
       values: computeResults.map(({ value }) => value),
     }
-  }, [computeResults])
-
-  return { pieData, barData }
+    return { pieData, barData }
+  }, [computeResults, theme])
 }

@@ -39,4 +39,4 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
   )
 }
 
-export default DynamicAllResults;
+export default DynamicAllResults

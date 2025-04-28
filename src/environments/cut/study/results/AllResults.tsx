@@ -5,7 +5,7 @@ import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import DownloadIcon from '@mui/icons-material/Download'
-import { Box, Button, Container, Tab, Tabs, useTheme } from '@mui/material'
+import { Box, Button, CircularProgress, Container, Tab, Tabs, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent, useMemo, useState } from 'react'
@@ -13,7 +13,9 @@ import { SyntheticEvent, useMemo, useState } from 'react'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { useChartData, useComputedResults } from '@/hooks/allResults'
+import { useChartData, useComputedResults } from '@/hooks/useComputedResults'
+import { useListPosts } from '@/hooks/useListPosts'
+import { CutPost } from '@/services/posts'
 import { downloadStudyResults } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
@@ -32,7 +34,15 @@ const a11yProps = (index: number) => {
   }
 }
 
-export default function AllResults({ emissionFactorsWithParts, study, validatedOnly }: Props) {
+const CircularProgressCenter = () => {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <CircularProgress />
+    </Box>
+  )
+}
+
+const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) => {
   const theme = useTheme()
   const [value, setValue] = useState(0)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
@@ -64,8 +74,8 @@ export default function AllResults({ emissionFactorsWithParts, study, validatedO
     },
     borderRadius: 10,
   }
-
-  const computeResults = useComputedResults(resultsByPost, tPost)
+  const listCutPosts = useListPosts() as CutPost[]
+  const computeResults = useComputedResults(resultsByPost, tPost, listCutPosts)
 
   const { pieData, barData } = useChartData(computeResults, theme)
 
@@ -111,50 +121,64 @@ export default function AllResults({ emissionFactorsWithParts, study, validatedO
           <TabPanel value={value} index={0}>
             <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} />
           </TabPanel>
-          <TabPanel value={value} index={1}>
-            <BarChart
-              xAxis={[
-                {
-                  data: barData.labels,
-                  scaleType: 'band',
-                  tickLabelStyle: {
-                    angle: -20,
-                    textAnchor: 'end',
-                  },
-                  tickPlacement: 'extremities',
-                  tickLabelPlacement: 'middle',
-                },
-              ]}
-              series={[
-                {
-                  color: theme.palette.primary.main,
-                  data: barData.values,
-                },
-              ]}
-              grid={{ vertical: true, horizontal: true }}
-              yAxis={[
-                {
-                  label: tUnits(study.resultsUnit),
-                },
-              ]}
-              margin={{ top: 5, right: 100, bottom: 100, left: 100 }}
-              axisHighlight={{ x: 'none' }}
-              {...barChartSettings}
-            />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <PieChart
-              series={[
-                {
-                  data: pieData,
-                  valueFormatter: (value) => chartFormatter(value.value),
-                },
-              ]}
-              height={300}
-            />
-          </TabPanel>
+          {resultsByPost.length !== 0 && (
+            <>
+              <TabPanel value={value} index={1}>
+                {barData.values.length !== 0 ? (
+                  <BarChart
+                    xAxis={[
+                      {
+                        data: barData.labels,
+                        scaleType: 'band',
+                        tickLabelStyle: {
+                          angle: -20,
+                          textAnchor: 'end',
+                        },
+                        tickPlacement: 'extremities',
+                        tickLabelPlacement: 'middle',
+                      },
+                    ]}
+                    series={[
+                      {
+                        color: theme.palette.primary.main,
+                        data: barData.values,
+                      },
+                    ]}
+                    grid={{ vertical: true, horizontal: true }}
+                    yAxis={[
+                      {
+                        label: tUnits(study.resultsUnit),
+                      },
+                    ]}
+                    margin={{ top: 5, right: 100, bottom: 100, left: 100 }}
+                    axisHighlight={{ x: 'none' }}
+                    {...barChartSettings}
+                  />
+                ) : (
+                  <CircularProgressCenter />
+                )}
+              </TabPanel>
+              <TabPanel value={value} index={2}>
+                {pieData.length !== 0 ? (
+                  <PieChart
+                    series={[
+                      {
+                        data: pieData,
+                        valueFormatter: (value) => chartFormatter(value.value),
+                      },
+                    ]}
+                    height={300}
+                  />
+                ) : (
+                  <CircularProgressCenter />
+                )}
+              </TabPanel>
+            </>
+          )}
         </Box>
       </Box>
     </Container>
   )
 }
+
+export default AllResults

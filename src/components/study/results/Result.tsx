@@ -4,6 +4,7 @@ import { BCPost, Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { useTheme } from '@mui/material'
 import { axisClasses, BarChart } from '@mui/x-charts'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -32,6 +33,7 @@ const Result = ({ computedResults, resultsUnit }: Props) => {
   const [validateOnly, setValidatedOnly] = useState(true)
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
+  const theme = useTheme()
 
   useEffect(() => {
     applyUserSettings()
@@ -88,7 +90,12 @@ const Result = ({ computedResults, resultsUnit }: Props) => {
           label: tUnits(resultsUnit),
         },
       ]}
-      series={[{ data: values }]}
+      series={[
+        {
+          color: theme.palette.primary.main,
+          data: values,
+        },
+      ]}
       margin={{ bottom: 60, left: 70 }}
       {...chartSetting}
     />
