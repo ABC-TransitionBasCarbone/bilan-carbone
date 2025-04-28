@@ -4,6 +4,7 @@ import {
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
 import AddIcon from '@mui/icons-material/Add'
+import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -30,6 +31,18 @@ const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
       ? await getExternalAllowedStudiesByUser(user)
       : await getAllowedStudiesByUser(user)
 
+  const [orgaStudies, otherStudies] = studies.reduce(
+    (res, study) => {
+      res[study.organizationId === user.organizationId ? 0 : 1].push(study)
+      return res
+    },
+    [[] as Study[], [] as Study[]],
+  )
+
+  const isOrgaHomePage = !organizationId && !isCR
+  const mainStudies = isOrgaHomePage ? orgaStudies : studies
+  const collaborations = isOrgaHomePage ? otherStudies : []
+
   const creationUrl = organizationId ? `/organisations/${organizationId}/etudes/creer` : '/etudes/creer'
 
   const canCreateStudy = !!user.level && !!user.organizationId
@@ -42,13 +55,16 @@ const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
           <ResultsContainerForUser user={user} mainStudyOrganizationId={mainStudyOrganizationId} />
         </Suspense>
       )}
-      <Studies
-        studies={studies}
-        canAddStudy={canCreateStudy && !isCR}
-        creationUrl={creationUrl}
-        user={user}
-        contributions={!organizationId && isCR}
-      />
+      {!!mainStudies.length && (
+        <Studies
+          studies={mainStudies}
+          canAddStudy={canCreateStudy && !isCR}
+          creationUrl={creationUrl}
+          user={user}
+          collaborations={!organizationId && isCR}
+        />
+      )}
+      {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
   ) : canCreateStudy && !isCR ? (
     <div className="justify-center">
