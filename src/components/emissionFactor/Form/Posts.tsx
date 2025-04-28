@@ -114,9 +114,7 @@ const Posts = <T extends SubPostsCommand>({
               onChange={handleSelectSubPost}
               label={t('subPost')}
               options={translatedSubPosts}
-              placeholder="placeholdertest"
               translation={tPost}
-              clearable
             />
             {error && error.message && selectedSubPosts?.length === 0 && (
               <FormHelperText className={styles.errorSubposts} color="red">
