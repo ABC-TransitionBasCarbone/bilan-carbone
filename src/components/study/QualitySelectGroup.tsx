@@ -28,6 +28,7 @@ interface Props<T extends FieldValues> {
   defaultQuality?: number | null
   feSpecific?: boolean
   control?: Control<T>
+  clearable?: boolean
 }
 
 const QualitySelectGroup = <T extends FieldValues>({
@@ -42,6 +43,7 @@ const QualitySelectGroup = <T extends FieldValues>({
   defaultQuality,
   feSpecific,
   control,
+  clearable,
 }: Props<T>) => {
   const t = useTranslations('emissionSource')
   const tGlossary = useTranslations('emissionSource.glossary')
@@ -68,7 +70,11 @@ const QualitySelectGroup = <T extends FieldValues>({
   const hasQualityError = qualityFieldErrors.length > 0
 
   return (
-    <div className={classNames('flex grow', expanded ? styles.row : styles.shrinked, { mt1: feSpecific || control })}>
+    <div
+      className={classNames('flex grow', expanded ? `${styles.row} ${styles.quality}` : styles.shrinked, {
+        mt1: feSpecific || control,
+      })}
+    >
       {expanded ? (
         <>
           {qualityKeys.map((key) => (
@@ -77,7 +83,7 @@ const QualitySelectGroup = <T extends FieldValues>({
               name={getField(key) as Path<T>}
               control={actualControl}
               render={({ field, fieldState: { error } }) => (
-                <FormControl error={!!error}>
+                <FormControl error={!!error} className={styles.qualitySelect}>
                   <QualitySelect
                     disabled={!canEdit}
                     data-testid={`emission-source-${getField(key)}`}
@@ -92,6 +98,7 @@ const QualitySelectGroup = <T extends FieldValues>({
                       feSpecific && emissionSource.emissionFactor ? emissionSource.emissionFactor[key] : null
                     }
                     error={!!error}
+                    clearable={clearable}
                   />
                   {error?.message && <FormHelperText>{t('validation.' + error.message)}</FormHelperText>}
                 </FormControl>
@@ -109,6 +116,7 @@ const QualitySelectGroup = <T extends FieldValues>({
             onChange={(event) => qualityKeys.forEach((field) => update(getField(field), Number(event.target.value)))}
             label={t('form.quality')}
             error={hasQualityError}
+            clearable={clearable}
           />
           {hasQualityError && <FormHelperText>{t('validation.' + qualityFieldErrors[0]?.message)}</FormHelperText>}
         </FormControl>
