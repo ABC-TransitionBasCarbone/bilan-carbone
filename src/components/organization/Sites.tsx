@@ -1,11 +1,10 @@
 'use client'
 
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import { getUserSettings } from '@/services/serverFunctions/user'
 import { SiteCAUnit } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../base/Button'
@@ -17,29 +16,18 @@ interface Props<T extends SitesCommand> {
   sites: SitesCommand['sites']
   withSelection?: boolean
   columns: ColumnDef<SitesCommand['sites'][0]>[]
+  caUnit: SiteCAUnit
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, caUnit }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const tGlossary = useTranslations('organization.sites.glossary')
   const tUnit = useTranslations('settings.caUnit')
-  const [caUnit, setCAUnit] = useState<SiteCAUnit>(SiteCAUnit.K)
   const [showGlossary, setShowGlossary] = useState(false)
 
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
 
   const newSite = () => ({ id: uuidv4(), name: '', selected: false }) as SitesCommand['sites'][0]
-
-  useEffect(() => {
-    applyUserSettings()
-  }, [])
-
-  const applyUserSettings = async () => {
-    const caUnit = (await getUserSettings())?.caUnit
-    if (caUnit !== undefined) {
-      setCAUnit(caUnit)
-    }
-  }
 
   const headerCAUnit = useMemo(() => tUnit(caUnit), [caUnit])
 

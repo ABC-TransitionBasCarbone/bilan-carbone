@@ -16,8 +16,9 @@ import {
 import { findStudiesWithSites } from '@/services/serverFunctions/study'
 import { CUT } from '@/store/AppEnvironment'
 import { handleWarningText } from '@/utils/components'
-import { displayCA } from '@/utils/number'
+import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -26,7 +27,7 @@ import { useForm } from 'react-hook-form'
 
 interface Props {
   organization: OrganizationWithSites
-  caUnit: number
+  caUnit: SiteCAUnit
 }
 
 const emptySitesOnError = { authorizedStudySites: [], unauthorizedStudySites: [] }
@@ -47,7 +48,7 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
       name: organization.name,
       sites: organization.sites.map((site) => ({
         ...site,
-        ca: site.ca ? displayCA(site.ca, caUnit) : 0,
+        ca: site.ca ? displayCA(site.ca, CA_UNIT_VALUES[caUnit]) : 0,
         postalCode: site.postalCode ?? '',
         city: site.city ?? '',
       })),
@@ -87,8 +88,8 @@ const EditOrganizationForm = ({ organization, caUnit }: Props) => {
         label={t('name')}
       />
       <DynamicComponent
-        environmentComponents={{ [CUT]: <SitesCut sites={sites} form={form} /> }}
-        defaultComponent={<Sites sites={sites} form={form} />}
+        environmentComponents={{ [CUT]: <SitesCut sites={sites} form={form} caUnit={caUnit} /> }}
+        defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} />}
       />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}

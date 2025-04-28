@@ -21,6 +21,13 @@ describe('Edit organization', () => {
     cy.getByTestId('organization-sites-etp').last().type('10')
     cy.getByTestId('organization-sites-ca').last().type('1000')
 
+    cy.getByTestId('edit-organization-button').click()
+    cy.wait('@update')
+
+    cy.getByTestId('organization-name').should('includes.text', 'My new name')
+
+    cy.getByTestId('edit-organization-button').click()
+
     cy.getByTestId('add-site-button').type('click')
     cy.getByTestId('edit-site-name').last().type('My new site 1')
     cy.getByTestId('organization-sites-etp').last().type('20')
@@ -29,7 +36,7 @@ describe('Edit organization', () => {
     cy.getByTestId('edit-organization-button').click()
     cy.wait('@update')
 
-    cy.getByTestId('organization-name').should('includes.text', 'My new name')
+    cy.getByTestId('organization-name').should('be.visible')
     cy.getByTestId('edit-organization-button').click()
 
     cy.getByTestId('edit-site-name')

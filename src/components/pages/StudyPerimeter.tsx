@@ -2,8 +2,9 @@
 
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
-import { OrganizationWithSites } from '@/db/user'
+import { getUserApplicationSettings, OrganizationWithSites } from '@/db/user'
 import { canEditStudyFlows } from '@/services/permissions/study'
+import { defaultCAUnit } from '@/utils/number'
 import { getUserRoleOnStudy } from '@/utils/study'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -29,6 +30,7 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
     return null
   }
 
+  const caUnit = (await getUserApplicationSettings(user.id))?.caUnit || defaultCAUnit
   const canAddFlow = await canEditStudyFlows(study.id)
 
   return (
@@ -47,7 +49,7 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
         ].filter((link) => link !== undefined)}
       />
       <Block title={t('title', { name: study.name })} as="h1">
-        <StudyPerimeter study={study} organization={organization} userRoleOnStudy={userRoleOnStudy} />
+        <StudyPerimeter study={study} organization={organization} userRoleOnStudy={userRoleOnStudy} caUnit={caUnit} />
       </Block>
       <StudyFlow
         canAddFlow={canAddFlow}
