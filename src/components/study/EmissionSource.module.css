@@ -118,6 +118,14 @@
     flex-direction: column;
   }
 
+  &.quality {
+    flex-wrap: wrap;
+
+    .qualitySelect {
+      min-width: 12rem;
+    }
+  }
+
   &:not(:first-child) {
     margin-top: 1rem;
   }

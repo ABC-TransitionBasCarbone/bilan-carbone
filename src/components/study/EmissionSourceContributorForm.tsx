@@ -4,6 +4,7 @@ import { StudyWithoutDetail } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
+import { qualityKeys } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
@@ -104,40 +105,24 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPos
       )}
 
       <div className={classNames(styles.row, 'flex')}>
+        {qualityKeys.map((quality) => (
+          <QualitySelect
+            key={quality}
+            data-testid={`emission-source-${quality}`}
+            id={quality}
+            value={emissionSource[quality] || ''}
+            onChange={(event) => update(quality, Number(event.target.value))}
+            label={t(`form.${quality}`)}
+            clearable
+          />
+        ))}
         <QualitySelect
           data-testid="emission-source-reliability"
           id="reliability"
           value={emissionSource.reliability || ''}
           onChange={(event) => update('reliability', Number(event.target.value))}
           label={t('form.reliability')}
-        />
-        <QualitySelect
-          data-testid="emission-source-technicalRepresentativeness"
-          id="technicalRepresentativeness"
-          value={emissionSource.technicalRepresentativeness || ''}
-          onChange={(event) => update('technicalRepresentativeness', Number(event.target.value))}
-          label={t('form.technicalRepresentativeness')}
-        />
-        <QualitySelect
-          data-testid="emission-source-geographicRepresentativeness"
-          id="geographicRepresentativeness"
-          value={emissionSource.geographicRepresentativeness || ''}
-          onChange={(event) => update('geographicRepresentativeness', Number(event.target.value))}
-          label={t('form.geographicRepresentativeness')}
-        />
-        <QualitySelect
-          data-testid="emission-source-temporalRepresentativeness"
-          id="temporalRepresentativeness"
-          value={emissionSource.temporalRepresentativeness || ''}
-          onChange={(event) => update('temporalRepresentativeness', Number(event.target.value))}
-          label={t('form.temporalRepresentativeness')}
-        />
-        <QualitySelect
-          data-testid="emission-source-completeness"
-          id="completeness"
-          value={emissionSource.completeness || ''}
-          onChange={(event) => update('completeness', Number(event.target.value))}
-          label={t('form.completeness')}
+          clearable
         />
       </div>
     </>
