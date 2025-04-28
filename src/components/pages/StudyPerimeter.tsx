@@ -4,8 +4,8 @@ import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings, OrganizationWithSites } from '@/db/user'
 import { canEditStudyFlows } from '@/services/permissions/study'
+import { defaultCAUnit } from '@/utils/number'
 import { getUserRoleOnStudy } from '@/utils/study'
-import { SiteCAUnit } from '@prisma/client'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -30,7 +30,7 @@ const StudyPerimeterPage = async ({ study, organization, user }: Props) => {
     return null
   }
 
-  const caUnit = (await getUserApplicationSettings(user.id))?.caUnit || SiteCAUnit.K
+  const caUnit = (await getUserApplicationSettings(user.id))?.caUnit || defaultCAUnit
   const canAddFlow = await canEditStudyFlows(study.id)
 
   return (
