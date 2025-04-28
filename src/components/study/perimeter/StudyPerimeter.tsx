@@ -24,12 +24,11 @@ import {
   StudyExportsCommand,
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
-import { getUserSettings } from '@/services/serverFunctions/user'
 import { CUT } from '@/store/AppEnvironment'
-import { CA_UNIT_VALUES, defaultCAUnit, displayCA } from '@/utils/number'
+import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ControlMode, Export, StudyRole } from '@prisma/client'
+import { ControlMode, Export, SiteCAUnit, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -43,11 +42,12 @@ interface Props {
   study: FullStudy
   organization: OrganizationWithSites
   userRoleOnStudy: StudyRole
+  caUnit: SiteCAUnit
 }
 
 const dateFormat = { year: 'numeric', month: 'long', day: 'numeric' } as const
 
-const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
+const StudyPerimeter = ({ study, organization, userRoleOnStudy, caUnit }: Props) => {
   const format = useFormatter()
   const tForm = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
@@ -57,21 +57,9 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   const [exportsValues, setExportsValues] = useState<Record<Export, ControlMode | false> | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
   const [deleting, setDeleting] = useState(0)
-  const [caUnit, setCAUnit] = useState(defaultCAUnit)
   const [error, setError] = useState<string | null>(null)
   const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
   const router = useRouter()
-
-  useEffect(() => {
-    applyUserSettings()
-  }, [])
-
-  const applyUserSettings = async () => {
-    const caUnit = (await getUserSettings())?.caUnit
-    if (caUnit !== undefined) {
-      setCAUnit(CA_UNIT_VALUES[caUnit])
-    }
-  }
 
   const form = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),
@@ -140,7 +128,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
   useEffect(() => {
     siteForm.setValue(
       'sites',
-      siteList.map((site) => ({ ...site, ca: displayCA(site.ca, caUnit) })),
+      siteList.map((site) => ({ ...site, ca: displayCA(site.ca, CA_UNIT_VALUES[caUnit]) })),
     )
   }, [siteList, isEditing, caUnit])
 
@@ -285,22 +273,16 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy }: Props) => {
                     }))
               }
               form={isEditing ? siteForm : undefined}
+              caUnit={caUnit}
               withSelection
             />
           ),
         }}
         defaultComponent={
           <Sites
-            sites={
-              isEditing
-                ? sites
-                : study.sites.map((site) => ({
-                    ...site,
-                    name: site.site.name,
-                    selected: false,
-                  }))
-            }
+            sites={isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))}
             form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
+            caUnit={caUnit}
             withSelection
           />
         }
