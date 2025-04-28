@@ -1,5 +1,5 @@
 import { getUserApplicationSettings, OrganizationWithSites } from '@/db/user'
-import { SiteCAUnit } from '@prisma/client'
+import { defaultCAUnit } from '@/utils/number'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -15,7 +15,7 @@ const EditOrganizationPage = async ({ organization, user }: Props) => {
   const tNav = await getTranslations('nav')
   const t = await getTranslations('organization.form')
 
-  const caUnit = (await getUserApplicationSettings(user.id))?.caUnit || SiteCAUnit.K
+  const caUnit = (await getUserApplicationSettings(user.id))?.caUnit || defaultCAUnit
 
   return (
     <>
