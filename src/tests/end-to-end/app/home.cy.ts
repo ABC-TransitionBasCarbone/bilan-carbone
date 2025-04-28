@@ -12,7 +12,7 @@ describe('Home page', () => {
   it('Should display the list of studies as a simple user', () => {
     cy.login()
 
-    cy.getByTestId('home-studies').scrollIntoView()
+    cy.getByTestId('home-studies').first().scrollIntoView()
     cy.getByTestId('home-studies').should('be.visible')
     cy.getByTestId('home-studies').contains('Mes Bilans Carbone®')
   })
