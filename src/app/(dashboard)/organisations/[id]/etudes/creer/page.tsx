@@ -4,7 +4,7 @@ import NotFound from '@/components/pages/NotFound'
 import { getOrganizationUsers } from '@/db/organization'
 import { getUserOrganizations } from '@/db/user'
 import { getUserSettings } from '@/services/serverFunctions/user'
-import { SiteCAUnit } from '@prisma/client'
+import { defaultCAUnit } from '@/utils/number'
 interface Props {
   params: Promise<{ id: string }>
 }
@@ -22,7 +22,7 @@ const NewStudyInOrganization = async (props: Props & UserProps) => {
     getOrganizationUsers(props.user.organizationId),
   ])
 
-  const caUnit = (await getUserSettings())?.caUnit || SiteCAUnit.K
+  const caUnit = (await getUserSettings())?.caUnit || defaultCAUnit
 
   return (
     <NewStudyPage
