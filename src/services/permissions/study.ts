@@ -1,6 +1,6 @@
 import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
-import { getOrganizationVersionById, OrganizationVersionWithOrganization } from '@/db/organization'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
@@ -20,7 +20,6 @@ export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, s
   }
 
   const study = await getStudyById(studyId, user.organizationVersionId)
-  const userOrganizationVersion = await getOrganizationVersionById(user.organizationVersionId)
 
   if (!study) {
     return false
@@ -29,11 +28,7 @@ export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, s
   if (
     isAdminOnStudyOrga(user as UserSession, study.organizationVersion as OrganizationVersionWithOrganization) ||
     (study.isPublic &&
-      userOrganizationVersion &&
-      isInOrgaOrParent(
-        userOrganizationVersion?.organizationId,
-        study.organizationVersion as OrganizationVersionWithOrganization,
-      ))
+      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization))
   ) {
     return true
   }
@@ -158,7 +153,6 @@ export const canAddRightOnStudy = (
 
   // TODO ici avant on vérifiait si l'utilisateur avait une organizationId mais là ça a plus trop de sesns donc à réfléchir
   if (!userToAddOnStudy && role !== StudyRole.Reader) {
-    console.log('ici role ?', role)
     return false
   }
 
@@ -270,7 +264,7 @@ export const canReadStudyDetail = async (user: UserSession, study: FullStudy) =>
   if (
     isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization) ||
     (study.isPublic &&
-      isInOrgaOrParent(user.organizationId, study.organizationVersion as OrganizationVersionWithOrganization))
+      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization))
   ) {
     return true
   }

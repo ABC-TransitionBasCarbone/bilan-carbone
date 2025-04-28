@@ -1,3 +1,6 @@
+import { getAccountByEmailAndOrganizationVersionId } from '@/db/account'
+import { getOrganizationVersionById, getOrganizationWithSitesById } from '@/db/organization'
+import { Environment } from '@prisma/client'
 import xlsx from 'node-xlsx'
 import { prismaClient } from '../../../db/client'
 import { RequiredEmissionFactorsColumns, uploadEmissionFactors } from './emissionFactors'
@@ -63,27 +66,30 @@ const getStudyEmissionSourcesIndexes = (headers: string[]): Record<string, numbe
   return getIndexes(headers, RequiredStudyEmissionSourcesColumns, 'Données sources')
 }
 
-export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
+export const uploadOldBCInformations = async (file: string, email: string, organizationVersionId: string) => {
   const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
 
-  // TODO Récup l'orgaversion et pas l'orgaid
+  // TODO Ne pas oublier d'utiliser l'orgaversion id lors des imports maintenant
 
-  const user = await prismaClient.user.findUnique({
-    where: { email },
-    include: { accounts: { include: { organizationVersion: true } } },
-  })
-  // TODO Vérifier aussi que l'env est BC
-  if (!user || !user.accounts.some((account) => account.organizationVersion?.organizationId == organizationId)) {
+  const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
+  if (!account) {
     console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
     return
   }
 
-  // TODO je ne sais pas comment récupérer la bonne orga (code temporaire pour le linter mais ne marche pas)
-  const accountOrganization = await prismaClient.organization.findUnique({
-    where: { id: user?.accounts[0]?.organizationVersionId || undefined },
-  })
+  const accountOrganizationVersion = await getOrganizationVersionById(account.organizationVersionId)
+
+  if (!accountOrganizationVersion) {
+    throw new Error(`La version de l'organisation de l'utilisateur n'existe pas.`)
+  }
+
+  if (!(accountOrganizationVersion.environment === Environment.BC)) {
+    throw new Error(`L'organisation de l'utilisateur n'est pas dans l'environnement BC+.`)
+  }
+
+  const accountOrganization = await getOrganizationWithSitesById(accountOrganizationVersion.organizationId)
   if (!accountOrganization) {
-    throw new Error(`L'organisation de l'utilisateur n'existe pas.`)
+    throw new Error("L'organisation de l'utilisateur est introuvable.")
   }
 
   const workSheetsFromFile = xlsx.parse(file)
@@ -119,6 +125,8 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
   let hasStudiesWarning = false
+
+  // TODO je récupère des orga ou orga version depuis la sheet ici ? Et qu'est-ce qu'il doit se passer par la suite ?
   await prismaClient.$transaction(async (transaction) => {
     hasOrganizationsWarning = await uploadOrganizations(
       transaction,
@@ -130,13 +138,13 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       transaction,
       emissionFactorsSheet.data,
       emissionFactorsIndexes,
-      organizationId,
+      accountOrganizationVersion.organizationId,
     )
     hasStudiesWarning = await uploadStudies(
       transaction,
-      user.id,
-      organizationId,
       postAndSubPostsOldNewMapping,
+      account.id,
+      organizationVersionId,
       studiesIndexes,
       studiesSheet.data,
       studySitesIndexes,

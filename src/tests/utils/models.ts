@@ -6,8 +6,6 @@ export const mockedAccountId = 'mocked-account-id'
 export const mockedOrganizationVersionId = 'mocked-organization-version-id'
 export const mockedOrganizationId = 'mocked-organization-id'
 
-// TODO faire le mockedAccount / organizationversion
-
 const mockedAccount = {
   id: '6d2af85f-f6f8-42ec-9fa4-965405e52d12',
   organizationVersionId: mockedOrganizationVersionId,

@@ -20,28 +20,16 @@ export const OrganizationVersionWithOrganizationSelect = {
   activatedLicence: true,
   onboarded: true,
   environment: true,
+  parentId: true,
   organization: {
     select: {
+      oldBCId: true,
       id: true,
       name: true,
-      parentId: true,
       sites: {
         select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
         orderBy: { createdAt: Prisma.SortOrder.asc },
       },
-    },
-  },
-}
-export const OrganizationVersionWithOrganizationSelectLight = {
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  organizationId: true,
-  organization: {
-    select: {
-      id: true,
-      name: true,
-      parentId: true,
     },
   },
 }
@@ -74,8 +62,17 @@ export const getOrganizationVersionWithSitesById = (id: string) =>
     select: OrganizationVersionWithOrganizationSelect,
   })
 
-export const getOrganizationById = (id: string | null) =>
-  id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
+export const getOrganizationVersionByOrganizationIdAndEnvironment = (
+  organizationId: string,
+  environment: Environment,
+) =>
+  prismaClient.organizationVersion.findFirst({
+    where: {
+      organizationId,
+      environment,
+    },
+    select: OrganizationVersionWithOrganizationSelect,
+  })
 
 export const getOrganizationWithSitesById = (id: string) =>
   prismaClient.organization.findUnique({
@@ -88,15 +85,18 @@ export const getOrganizationWithSitesById = (id: string) =>
     },
   })
 
-export const createOrganizationWithVersion = async (organization: Prisma.OrganizationCreateInput) => {
+export const createOrganizationWithVersion = async (
+  organization: Prisma.OrganizationCreateInput,
+  organizationVersion: Omit<Prisma.OrganizationVersionCreateInput, 'organization'>,
+) => {
   const newOrganization = await prismaClient.organization.create({
     data: organization,
   })
 
   return prismaClient.organizationVersion.create({
     data: {
+      ...organizationVersion,
       organization: { connect: { id: newOrganization.id } },
-      environment: Environment.BC,
       isCR: false,
       activatedLicence: false,
     },
@@ -242,7 +242,7 @@ export const deleteClient = async (id: string) => {
 
   const [clientUsers, clientChildren, clientEmissionFactors] = await Promise.all([
     prismaClient.account.findFirst({ where: { organizationVersionId: id } }),
-    prismaClient.organization.findFirst({ where: { parentId: organizationVersion.organizationId } }),
+    prismaClient.organizationVersion.findFirst({ where: { parentId: id } }),
     prismaClient.emissionFactor.findFirst({ where: { organizationId: organizationVersion.organizationId } }),
   ])
   if (clientUsers || clientChildren || clientEmissionFactors) {

@@ -495,28 +495,7 @@ const getOrCreateUserAndSendStudyInvite = async (
 
     accountId = newUser.accounts[0].id
   } else {
-    // TODO  revoir cette partie et récupérer le bon account
-    // if (!existingAccount) {
-    //   const newAccount = await addAccount({
-    //     role: Role.COLLABORATOR,
-    //     organizationVersion: {
-    //       connect: {
-    //         id: organizationVersion.id,
-    //       },
-    //     },
-    //     user: {
-    //       connect: { id: existingUser.id },
-    //     }
-    //   })
-    //     await sendInvitation(
-    //       email,
-    //       study,
-    //       organizationVersion.organization,
-    //       creator,
-    //       role ? t(role).toLowerCase() : '',
-    //       newAccount as AccountWithUser,
-    //     )
-    //   accountId = newAccount.id
+    // TODO récupérer le bon account
     const account = (await getAccountById(existingUser.accounts[0].id)) as AccountWithUser
     await sendInvitation(
       email,

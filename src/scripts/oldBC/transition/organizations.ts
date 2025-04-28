@@ -1,3 +1,4 @@
+import { OrganizationVersionWithOrganizationSelect } from '@/db/organization'
 import { Prisma, Organization as PrismaOrganization } from '@prisma/client'
 import { getExistingSitesIds } from './repositories'
 
@@ -9,8 +10,6 @@ export enum RequiredOrganizationsColumns {
   ID_ENTITE_MERE = 'ID_ENTITE_MERE',
   IS_USER_ORGA = 'IS_USER_ORGA',
 }
-
-// TODO Je ne sais pas trop quoi changer ici avec OrganizationVersion car on a dit que si il y a un parentId il n'a aps d'orgaVersion
 
 interface Organization {
   oldBCId: string
@@ -119,18 +118,24 @@ export const uploadOrganizations = async (
   const userOrganizationRow = userOrganizationsRows[0]
 
   await checkUserOrganizationHaveNoNewSites(transaction, userOrganization.id)
+  // TODO Je ne sais pas trop si j'ai bien géré ici avec le oldBCId ou bien il faut déplacer la column sur organizationVersion ?
+  // aussi je sais pas si les organizationid qu'on récupère doivent être tuilisé en tant que OrganizatioNVersionId ou OrganizationId
 
-  const existingOrganizations = await transaction.organization.findMany({
+  const existingOrganizations = await transaction.organizationVersion.findMany({
     where: {
       AND: [
-        { parentId: userOrganization.id },
-        { oldBCId: { in: organizations.map((organization) => organization.oldBCId) } },
+        { parentId: userOrganization.id }, // TODO la par ex j'utilise orgaId sur un orgaversion Id vu que les parents sont sur les versions
+        { organization: { oldBCId: { in: organizations.map((organization) => organization.oldBCId) } } },
       ],
     },
+    select: OrganizationVersionWithOrganizationSelect,
   })
 
   const newOrganizations = organizations.filter(
-    (organization) => !existingOrganizations.some(({ oldBCId }) => oldBCId === organization.oldBCId),
+    (organization) =>
+      !existingOrganizations.some(
+        ({ organization: existingOrganization }) => existingOrganization.oldBCId === organization.oldBCId,
+      ),
   )
 
   // Je crée un site par défaut pour mon organization

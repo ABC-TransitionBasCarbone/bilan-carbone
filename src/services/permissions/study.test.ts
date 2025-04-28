@@ -42,12 +42,13 @@ const mockedStudyToDelete = {
   id: mockedStudyId,
   organizationVersionId: mockedOrganizationVersionId,
   createdById: mockedAccountId,
+  parentId: null,
   allowedUsers: [
     { account: { id: 'mocked-validator-id' }, role: 'Validator' },
     { account: { id: 'mocked-editor-id' }, role: 'Editor' },
     { account: { id: 'mocked-reader-id' }, role: 'Reader' },
   ],
-  organization: { id: mockedOrganizationVersionId, parentId: null },
+  organization: { id: mockedOrganizationVersionId },
 }
 
 const getStudyWithPublicStatus = (isPublic: boolean) => ({ ...mockedStudyToDelete, isPublic })

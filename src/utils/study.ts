@@ -27,7 +27,7 @@ export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
 
   if (
     study.isPublic &&
-    isInOrgaOrParent(user.organizationId, study.organizationVersion as OrganizationVersionWithOrganization)
+    isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization)
   ) {
     return getUserRoleOnPublicStudy(user, study.level)
   }

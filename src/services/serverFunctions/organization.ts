@@ -14,7 +14,7 @@ import { getRawOrganizationVersionById } from '@/db/organizationImport'
 import { getUserApplicationSettings } from '@/db/user'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { Prisma, UserChecklist } from '@prisma/client'
+import { Environment, Prisma, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -47,7 +47,6 @@ export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,
 ): Promise<{ message: string; success: false } | { id: string; success: true }> => {
   // TODO pas trop sûr de si je m'y prend bien ici pour la création d'orga
-  // On a dit que si y a un parentId on ne peut pas créer de version donc jsp trop ici j'ai dû retirer ces champs qui ne sont plus sur orga
   // ou alors ici je crée just eune version et je lui passe orgaId ? (c'est ce que j'ai fait pour le moment)
 
   const session = await auth()
@@ -55,19 +54,22 @@ export const createOrganizationCommand = async (
     return { success: false, message: NOT_AUTHORIZED }
   }
 
-  const userOrganizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-
   const organization = {
     ...command,
-    parent: { connect: { id: userOrganizationVersion?.organizationId } },
   } satisfies Prisma.OrganizationCreateInput
+
+  const organizationVersion = {
+    // TODO Récupérer l'environnement de la bonne manière
+    environment: Environment.BC,
+    parent: { connect: { id: session.user.organizationVersionId } },
+  } satisfies Omit<Prisma.OrganizationVersionCreateInput, 'organization'>
 
   if (!(await canCreateOrganization(session.user))) {
     return { success: false, message: NOT_AUTHORIZED }
   }
 
   try {
-    const createdOrganizationVersion = await createOrganizationWithVersion(organization)
+    const createdOrganizationVersion = await createOrganizationWithVersion(organization, organizationVersion)
     addUserChecklistItem(UserChecklist.AddClient)
     return { success: true, id: createdOrganizationVersion.id }
   } catch (e) {

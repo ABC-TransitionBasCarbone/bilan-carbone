@@ -490,11 +490,14 @@ export const downloadStudyResults = async (
   download([buffer], `${study.name}_results.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 }
 
-export const getStudyParentOrganization = async (studyId: string, userOrganizationVersionId: string | null) => {
+export const getStudyParentOrganizationVersionId = async (
+  studyId: string,
+  userOrganizationVersionId: string | null,
+) => {
   const study = await getStudyById(studyId, userOrganizationVersionId)
   if (!study) {
     throw Error("Study doesn't exist")
   }
 
-  return study.organizationVersion.organization.parentId || study.organizationVersion.organization.id
+  return study.organizationVersion.parentId || study.organizationVersion.id
 }

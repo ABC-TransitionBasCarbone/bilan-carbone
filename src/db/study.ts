@@ -7,7 +7,7 @@ import { Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
-import { OrganizationVersionWithOrganization } from './organization'
+import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
 
 export const createStudy = async (data: Prisma.StudyCreateInput) => {
   const dbStudy = await prismaClient.study.create({ data })
@@ -147,10 +147,10 @@ const fullStudyInclude = {
     select: {
       id: true,
       isCR: true,
+      parentId: true,
       organization: {
         select: {
           id: true,
-          parentId: true,
           name: true,
         },
       },
@@ -263,7 +263,8 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
 }
 
 export const getAllowedStudiesByUserAndOrganization = async (account: UserSession, organizationVersionId: string) => {
-  // TODO check this after migration
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+
   if (!account.organizationVersionId) {
     return []
   }
@@ -275,7 +276,7 @@ export const getAllowedStudiesByUserAndOrganization = async (account: UserSessio
   const studies = await prismaClient.study.findMany({
     where: {
       organizationVersionId,
-      ...(isAdminOnOrga(account, accountOrganizationVersion as OrganizationVersionWithOrganization)
+      ...(isAdminOnOrga(account, organizationVersion as OrganizationVersionWithOrganization)
         ? {}
         : {
             OR: [
@@ -423,8 +424,9 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
             select: {
               id: true,
               isCR: true,
+              parentId: true,
               organization: {
-                select: { id: true, parentId: true },
+                select: { id: true },
               },
             },
           },

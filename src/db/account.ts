@@ -1,5 +1,5 @@
 import { findUserInfo } from '@/services/permissions/user'
-import { Account, Prisma, Role, User } from '@prisma/client'
+import { Account, Environment, Prisma, Role, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
 import { OrganizationVersionWithOrganizationSelect } from './organization'
@@ -59,7 +59,6 @@ export const changeAccountRole = (id: string, role: Role) =>
   })
 
 export const getAccountOrganizationVersions = async (accountId: string) => {
-  // TODO renvoyer directement les organizations et changer les appels à la fonction pour que ça marche
   if (!accountId) {
     return []
   }
@@ -76,17 +75,22 @@ export const getAccountOrganizationVersions = async (accountId: string) => {
     return []
   }
 
-  // TODO est-ce ok comme façon de récupérer les organizations ?
-  // Récupérer les orgaversion des childs en fonction de l'environnement du parent
   if (account.organizationVersion && account.organizationVersion.isCR) {
     const childOrganizations = await prismaClient.organizationVersion.findMany({
       ...{ select: OrganizationVersionWithOrganizationSelect },
-      where: { organization: { parentId: account.organizationVersion.organizationId } },
+      where: { parentId: account.organizationVersion.id },
     })
     return [account.organizationVersion, ...childOrganizations]
   }
 
   return account.organizationVersion ? [account.organizationVersion] : []
+}
+
+export const getAccountByEmailAndEnvironment = (email: string, environment: Environment) => {
+  return prismaClient.account.findFirst({
+    where: { user: { email }, organizationVersion: { environment } },
+    select: AccountWithUserSelect,
+  })
 }
 
 export type OrganizationWithSites = AsyncReturnType<typeof getAccountOrganizationVersions>[0]
