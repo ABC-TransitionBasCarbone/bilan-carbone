@@ -10,6 +10,7 @@ import {
   deleteUserFromOrga,
   getUserApplicationSettings,
   getUserFromUserOrganization,
+  getUserSourceById,
   organizationActiveUsersCount,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
@@ -290,6 +291,15 @@ export const getUserSettings = async () => {
     return null
   }
   return getUserApplicationSettings(session.user.id)
+}
+
+export const getUserSource = async () => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return null
+  }
+
+  return (await getUserSourceById(session.user.id))?.source
 }
 
 export const updateUserSettings = async (command: EditSettingsCommand) => {
