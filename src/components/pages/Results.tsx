@@ -1,6 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import DynamicAllResults from '@/environments/cut/study/results/DynamicAllResults'
+import DynamicAllResults from '@/environments/core/study/results/DynamicAllResults'
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import { ExportRule, UserChecklist } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -27,9 +27,9 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly }: 
           { label: tNav('home'), link: '/' },
           study.organization.isCR
             ? {
-                label: study.organization.name,
-                link: `/organisations/${study.organization.id}`,
-              }
+              label: study.organization.name,
+              link: `/organisations/${study.organization.id}`,
+            }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
