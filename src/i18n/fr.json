@@ -1289,7 +1289,7 @@
     "title": "Formation",
     "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode. Regardez les vidéos, répondez au questionnaire et recevez votre attestation !",
     "warning": "Avertissement",
-    "warningMessage": "Veuillez vérifier le nom de votre organisation dans la page Mon organisation > Informations générales ainsi que votre nom et prénom dans votre profile en haut à droite. Ces informations seront utilisées pour générer votre attestation.",
+    "warningMessage": "<error>Veuillez vérifier sur votre compte BC+ le nom de votre organisation dans la page <i>Mon organisation > Informations générales</i>, ainsi que vos nom et prénom dans votre profil (en haut à droite). Ces informations seront utilisées pour générer votre attestation.</error><br></br>Vous êtes actuellement connecté en tant que {name}, de l'organisation {organization}.<br></br><b>Rappel :</b> la formation doit être suivie avec <b>votre compte personnel</b> et <b>votre adresse e-mail nominative</b>, et non avec un compte générique de l'entreprise. Vous pouvez ajouter d'autres membres de votre organisation depuis le BC+ : page <i>Mon organisation > Mon équipe</i>.",
     "videos": "Vidéos",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au quesitonnaire",
