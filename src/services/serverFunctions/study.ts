@@ -642,7 +642,10 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
     return NOT_AUTHORIZED
   }
 
-  if (existingAccount && getAccountRoleOnStudy(existingAccount, studyWithRights)) {
+  if (
+    existingAccount &&
+    getAccountRoleOnStudy(accountWithUserToUserSession(existingAccount as AccountWithUser), studyWithRights)
+  ) {
     return ALREADY_IN_STUDY
   }
 
