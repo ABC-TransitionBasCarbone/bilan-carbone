@@ -108,7 +108,6 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
             label={t('unit')}
             name="unit"
             fullWidth
-            clearable
           >
             {units.map((unit) => (
               <MenuItem key={unit} value={unit}>
