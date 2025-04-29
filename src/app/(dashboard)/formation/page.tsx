@@ -16,7 +16,7 @@ const Formation = async () => {
   const organization = await getOrganizationById(session.user.organizationId)
   const formations = await getFormationVideos()
 
-  return <FormationPage formations={formations} user={session.user} organisationName={organization?.name ?? ''} />
+  return <FormationPage formations={formations} user={session.user} organizationName={organization?.name ?? ''} />
 }
 
 export default Formation

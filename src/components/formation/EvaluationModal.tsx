@@ -32,8 +32,8 @@ const EvaluationModal = ({ user, organizationName, startTime }: Props) => {
   }, [])
 
   const params = {
-    name: user.lastName,
-    firstname: user.firstName,
+    name: user.lastName.toUpperCase(),
+    firstname: user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase(),
     email: user.email,
     level: user.level || '',
     date: dayjs(startTime).toISOString(),

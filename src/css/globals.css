@@ -142,6 +142,10 @@ table {
   font-weight: bold;
 }
 
+.italic {
+  font-style: italic;
+}
+
 .text-center {
   text-align: center;
 }
