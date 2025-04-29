@@ -66,12 +66,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
 
   const barChartSettings = {
     height: 300,
-    sx: {
-      marginLeft: '6rem',
-      [`.${axisClasses.left} .${axisClasses.label}`]: {
-        transform: 'translate(-32px, 0)',
-      },
-    },
+    sx: { marginLeft: '6rem', [`.${axisClasses.left} .${axisClasses.label}`]: { transform: 'translate(-2rem, 0)' } },
     borderRadius: 10,
   }
   const listCutPosts = useListPosts() as CutPost[]
@@ -130,26 +125,14 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                       {
                         data: barData.labels,
                         scaleType: 'band',
-                        tickLabelStyle: {
-                          angle: -20,
-                          textAnchor: 'end',
-                        },
+                        tickLabelStyle: { angle: -20, textAnchor: 'end' },
                         tickPlacement: 'extremities',
                         tickLabelPlacement: 'middle',
                       },
                     ]}
-                    series={[
-                      {
-                        color: theme.palette.primary.main,
-                        data: barData.values,
-                      },
-                    ]}
+                    series={[{ color: theme.palette.primary.main, data: barData.values }]}
                     grid={{ vertical: true, horizontal: true }}
-                    yAxis={[
-                      {
-                        label: tUnits(study.resultsUnit),
-                      },
-                    ]}
+                    yAxis={[{ label: tUnits(study.resultsUnit) }]}
                     margin={{ top: 5, right: 100, bottom: 100, left: 100 }}
                     axisHighlight={{ x: 'none' }}
                     {...barChartSettings}
@@ -161,12 +144,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               <TabPanel value={value} index={2}>
                 {pieData.length !== 0 ? (
                   <PieChart
-                    series={[
-                      {
-                        data: pieData,
-                        valueFormatter: (value) => chartFormatter(value.value),
-                      },
-                    ]}
+                    series={[{ data: pieData, valueFormatter: (value) => chartFormatter(value.value) }]}
                     height={300}
                   />
                 ) : (
