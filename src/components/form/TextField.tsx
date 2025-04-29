@@ -12,6 +12,7 @@ interface Props<T extends FieldValues> {
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
   endAdornment?: React.ReactNode
+  customError?: string
 }
 
 export const FormTextField = <T extends FieldValues>({
@@ -22,6 +23,7 @@ export const FormTextField = <T extends FieldValues>({
   icon,
   iconPosition = 'before',
   endAdornment,
+  customError,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -30,7 +32,7 @@ export const FormTextField = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <FormControl fullWidth={textFieldProps.fullWidth} error={!!error} className="inputContainer">
+        <FormControl fullWidth={textFieldProps.fullWidth} error={!!error || !!customError} className="inputContainer">
           {label ? (
             <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
               <span className="inputLabel bold">{label}</span>
@@ -38,7 +40,7 @@ export const FormTextField = <T extends FieldValues>({
           ) : null}
           <TextField
             {...textFieldProps}
-            error={!!error}
+            error={!!error || !!customError}
             onChange={textFieldProps.type === 'number' ? (event) => onChange(parseFloat(event.target.value)) : onChange}
             value={(textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined ? '' : value}
             slotProps={{
@@ -50,7 +52,7 @@ export const FormTextField = <T extends FieldValues>({
             }}
           />
           <FormHelperText className={styles.helper}>
-            {error?.message ? translation('validation.' + error.message) : ' '}
+            {customError ? customError : error?.message ? translation('validation.' + error.message) : ' '}
           </FormHelperText>
         </FormControl>
       )}
