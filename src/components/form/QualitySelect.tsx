@@ -17,7 +17,6 @@ const QualitySelect = ({
   ...props
 }: Props & Omit<SelectProps, 'options' | 'labelId'>) => {
   const t = useTranslations('quality')
-  console.log('props : ', props)
 
   return (
     <FormControl error={error} className={formControlClassName}>

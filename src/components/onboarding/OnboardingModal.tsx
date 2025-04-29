@@ -42,7 +42,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const form = useForm<OnboardingCommand>({
     resolver: zodResolver(OnboardingCommandValidation),
     mode: 'onSubmit',
-    reValidateMode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       organizationId: organization.id,
       firstName: user.firstName || '',
