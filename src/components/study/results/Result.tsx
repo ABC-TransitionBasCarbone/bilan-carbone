@@ -1,14 +1,14 @@
 'use client'
 
-import { Post } from '@/services/posts'
+import { BCPost, Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
-import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { useTheme } from '@mui/material'
+import { axisClasses, BarChart } from '@mui/x-charts'
 import { StudyResultUnit } from '@prisma/client'
-import Chart from 'chart.js/auto'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
   studySite: string
@@ -16,7 +16,7 @@ interface Props {
   resultsUnit: StudyResultUnit
 }
 
-const postXAxisList = [
+const listPost = [
   Post.Energies,
   Post.DechetsDirects,
   Post.IntrantsBiensEtMatieres,
@@ -29,13 +29,11 @@ const postXAxisList = [
   Post.FinDeVie,
 ]
 
-const Result = ({ studySite, computedResults, resultsUnit }: Props) => {
+const Result = ({ computedResults, resultsUnit }: Props) => {
+  const [validateOnly, setValidatedOnly] = useState(true)
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
-  const [dynamicHeight, setDynamicHeight] = useState(0)
-  const chartRef = useRef<Chart | null>(null)
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const [validatedOnly, setValidatedOnly] = useState(true)
+  const theme = useTheme()
 
   useEffect(() => {
     applyUserSettings()
@@ -48,66 +46,59 @@ const Result = ({ studySite, computedResults, resultsUnit }: Props) => {
     }
   }
 
-  const xAxis = useMemo(() => postXAxisList, [])
+  const { labels, values } = useMemo(() => {
+    const filtered = computedResults
+      .filter(({ post }) => listPost.includes(post as BCPost))
+      .sort((a, b) => listPost.indexOf(a.post as BCPost) - listPost.indexOf(b.post as BCPost))
 
-  const yData = useMemo(() => {
-    if (computedResults.every((post) => post.value === 0)) {
-      return []
-    }
-    return xAxis.map(
-      (post) =>
-        (computedResults.find((postResult) => postResult.post === post) as ResultsByPost).value /
-        STUDY_UNIT_VALUES[resultsUnit],
-    )
-  }, [studySite, validatedOnly, computedResults])
+    const values = filtered.map(({ value }) => value / STUDY_UNIT_VALUES[resultsUnit])
+    const labels = filtered.map(({ post }) => tPost(post))
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d')
-      if (ctx) {
-        chartRef.current = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: xAxis.map((post) => tPost(post)),
-            datasets: [
-              {
-                data: yData,
-                backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary-500'),
-                label: tUnits(resultsUnit),
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  label: (context) => `${formatNumber(context.raw as number)} ${tUnits(resultsUnit)}`,
-                },
-              },
-              legend: { display: true },
-            },
-            scales: {
-              x: { afterUpdate: ({ height }) => setDynamicHeight(370 + (height || 0)) },
-              y: { beginAtZero: true },
-            },
-          },
-        })
-      }
-    }
+    return { labels, values }
+  }, [computedResults, validateOnly, resultsUnit, tPost])
 
-    return () => {
-      if (chartRef.current) {
-        chartRef.current.destroy()
-      }
-    }
-  }, [xAxis, yData])
+  const chartSetting = {
+    height: 450,
+    width: 700,
+    sx: {
+      [`.${axisClasses.left} .${axisClasses.label}`]: {
+        transform: 'translate(-1.8rem, 0)',
+      },
+    },
+    borderRadius: 10,
+  }
 
   return (
-    <div style={{ height: dynamicHeight }}>
-      <canvas data-testid={`study-Post-chart`} ref={canvasRef} />
-    </div>
+    <BarChart
+      xAxis={[
+        {
+          data: labels,
+          scaleType: 'band',
+          tickLabelStyle: {
+            angle: -20,
+            fontSize: 10,
+            textAnchor: 'end',
+          },
+          tickPlacement: 'extremities',
+          tickLabelPlacement: 'middle',
+        },
+      ]}
+      grid={{ vertical: true, horizontal: true }}
+      axisHighlight={{ x: 'none' }}
+      yAxis={[
+        {
+          label: tUnits(resultsUnit),
+        },
+      ]}
+      series={[
+        {
+          color: theme.palette.primary.main,
+          data: values,
+        },
+      ]}
+      margin={{ bottom: 60, left: 70 }}
+      {...chartSetting}
+    />
   )
 }
 
