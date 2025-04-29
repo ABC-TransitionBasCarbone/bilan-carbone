@@ -1274,6 +1274,8 @@
   "formation": {
     "title": "Formation",
     "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode. Regardez les vidéos, répondez au questionnaire et recevez votre attestation !",
+    "warning": "Avertissement",
+    "warningMessage": "Veuillez vérifier le nom de votre organisation dans la page Mon organisation > Informations générales ainsi que votre nom et prénom dans votre profile en haut à droite. Ces informations seront utilisées pour générer votre attestation.",
     "videos": "Vidéos",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au quesitonnaire",

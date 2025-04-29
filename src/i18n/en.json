@@ -1274,6 +1274,8 @@
   "formation": {
     "title": "Training",
     "explaination": "You will find below the training course for updating the BC V8 to V9 method. Watch the videos, take the quiz and receive your attestation!",
+    "warning": "Warning",
+    "warningMessage": "Please check the name of your organisation on the My Organisation > General Information page and your first and last name in your profile in the top right-hand corner. This information will be used to generate your certificate.",
     "videos": "Videos",
     "evaluation": "Knowledge assessment",
     "evaluationEnded": "You already answered the questionnaire",
