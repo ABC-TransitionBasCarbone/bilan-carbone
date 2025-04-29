@@ -54,7 +54,16 @@ const FormationView = ({ formations, user, organisationName }: Props) => {
     <>
       <div className={classNames(styles.subTitle, 'mb2')}>{t('explaination')}</div>
       <h3 className="mb1">{t('warning')}</h3>
-      <div className={classNames(styles.subTitle, 'error mb2')}>{t('warningMessage')}</div>
+      <div className={classNames(styles.subTitle, 'mb2')}>
+        {t.rich('warningMessage', {
+          organization: organisationName,
+          name: `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase()} ${user.lastName.toUpperCase()}`,
+          error: (children) => <span className="error">{children}</span>,
+          b: (children) => <span className="bold">{children}</span>,
+          i: (children) => <span className="italic">{children}</span>,
+          br: () => <br />,
+        })}
+      </div>
       <h3 className="mb1">{t('videos')}</h3>
       <div className={classNames(styles.videos, 'justify-center mb2')}>
         {formations.map((formation) => (
