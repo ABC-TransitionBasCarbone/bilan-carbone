@@ -27,9 +27,9 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly }: 
           { label: tNav('home'), link: '/' },
           study.organization.isCR
             ? {
-              label: study.organization.name,
-              link: `/organisations/${study.organization.id}`,
-            }
+                label: study.organization.name,
+                link: `/organisations/${study.organization.id}`,
+              }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
