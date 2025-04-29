@@ -17,12 +17,12 @@ import Video from './Video'
 interface Props {
   formations: Formation[]
   user: User
-  organisationName: string
+  organizationName: string
 }
 
 const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
 
-const FormationView = ({ formations, user, organisationName }: Props) => {
+const FormationView = ({ formations, user, organizationName }: Props) => {
   const t = useTranslations('formation')
   const [open, setOpen] = useState(false)
   const [formStartTime, setFormStartTime] = useState<number | undefined>(undefined)
@@ -56,7 +56,7 @@ const FormationView = ({ formations, user, organisationName }: Props) => {
       <h3 className="mb1">{t('warning')}</h3>
       <div className={classNames(styles.subTitle, 'mb2')}>
         {t.rich('warningMessage', {
-          organization: organisationName,
+          organization: organizationName,
           name: `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase()} ${user.lastName.toUpperCase()}`,
           error: (children) => <span className="error">{children}</span>,
           b: (children) => <span className="bold">{children}</span>,
@@ -107,7 +107,7 @@ const FormationView = ({ formations, user, organisationName }: Props) => {
         title={t('evaluation')}
         onClose={() => setOpen(false)}
       >
-        <EvaluationModal user={user} organizationName={organisationName} startTime={formStartTime as number} />
+        <EvaluationModal user={user} organizationName={organizationName} startTime={formStartTime as number} />
       </Modal>
     </>
   )

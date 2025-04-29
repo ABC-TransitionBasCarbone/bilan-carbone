@@ -9,14 +9,14 @@ import FormationView from '../formation/Formation'
 interface Props {
   formations: Formation[]
   user: User
-  organisationName: string
+  organizationName: string
 }
 
-const FormationPage = async ({ formations, user, organisationName }: Props) => {
+const FormationPage = async ({ formations, user, organizationName }: Props) => {
   const t = await getTranslations('formation')
   return (
     <Block title={t('title')}>
-      <FormationView formations={formations} user={user} organisationName={organisationName} />
+      <FormationView formations={formations} user={user} organizationName={organizationName} />
     </Block>
   )
 }
