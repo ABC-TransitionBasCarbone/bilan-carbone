@@ -328,6 +328,7 @@ const EmissionSourceForm = ({
                   canShrink={canShrinkSpecificFEQuality}
                   defaultQuality={specificFEDefaultQuality}
                   feSpecific
+                  clearable
                 />
               </div>
               {canEdit && (
@@ -375,6 +376,7 @@ const EmissionSourceForm = ({
           setExpanded={setExpandedQuality}
           canShrink={canShrink}
           defaultQuality={defaultQuality}
+          clearable
         />
       </div>
       <div className={classNames(styles.gapped, 'justify-end mt1 w100')}>

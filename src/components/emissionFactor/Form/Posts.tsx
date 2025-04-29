@@ -91,6 +91,8 @@ const Posts = <T extends SubPostsCommand>({
           value={post || ''}
           onChange={handleSelectPost}
           label={t('post')}
+          t={t}
+          clearable
         >
           {posts.map((post) => (
             <MenuItem disabled={!postOptions.includes(post as Post)} key={post} value={post}>
@@ -112,7 +114,6 @@ const Posts = <T extends SubPostsCommand>({
               onChange={handleSelectSubPost}
               label={t('subPost')}
               options={translatedSubPosts}
-              placeholder="placeholdertest"
               translation={tPost}
             />
             {error && error.message && selectedSubPosts?.length === 0 && (
