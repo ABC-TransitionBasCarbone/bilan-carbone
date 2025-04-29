@@ -4,16 +4,16 @@
 }
 
 .validator {
-  background-color: var(--validator-role);
+  background-color: var(--validator-background);
 }
 .editor {
-  background-color: var(--editor-role);
+  background-color: var(--editor-background);
 }
 .reader {
-  background-color: var(--reader-role);
+  background-color: var(--reader-background);
 }
 .contributor {
-  background-color: var(--contributor-role);
+  background-color: var(--contributor-background);
 }
 
 .validated {
