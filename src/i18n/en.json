@@ -221,6 +221,7 @@
   },
   "study": {
     "create": "Add a Bilan Carbone®",
+    "myCollaborations": "My collaborations",
     "myStudies": "My Bilan Carbone®",
     "createFirstStudy": "Create my first Bilan Carbone®",
     "seeResults": "See results",
@@ -342,6 +343,7 @@
       "Validator": "Validator",
       "Editor": "Editor",
       "Reader": "Reader",
+      "Contributor": "Contributor",
       "guide": "Roles guide",
       "introduction": "From this page, you can manage the members of your team involved in the Bilan Carbone®. In all cases, the administrators of your organization have access to all your studies as validators. If your study is public, members of your organization (employees, managers) automatically have read access to it. You can also add people from outside your organization via this menu.",
       "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",

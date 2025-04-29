@@ -188,6 +188,19 @@ export const getAllowedStudiesByUser = async (user: User) => {
   return filterAllowedStudies(user, studies)
 }
 
+export const getExternalAllowedStudiesByUser = async (user: User) => {
+  const userOrganizations = await getUserOrganizations(user.email)
+  const studies = await prismaClient.study.findMany({
+    where: {
+      AND: [
+        { organizationId: { notIn: userOrganizations.map((organization) => organization.id) } },
+        { OR: [{ allowedUsers: { some: { userId: user.id } } }, { contributors: { some: { userId: user.id } } }] },
+      ],
+    },
+  })
+  return filterAllowedStudies(user, studies)
+}
+
 export const getAllowedStudyIdByUser = async (user: User) => {
   const organizationIds = (await getUserOrganizations(user.email)).map((organization) => organization.id)
   const isAllowedOnPublicStudies = user.level && getUserRoleOnPublicStudy(user, user.level) !== StudyRole.Reader

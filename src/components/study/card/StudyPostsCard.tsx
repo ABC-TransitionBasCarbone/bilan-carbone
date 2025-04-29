@@ -46,7 +46,9 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
         </div>
         <div className="justify-between align-center">
           <StudyName name={study.name} />
-          <div className={classNames(styles.role, 'ml-2 text-center')}>{tRole(userRole)}</div>
+          <div className={classNames(styles.role, styles[userRole.toLowerCase()], 'ml-2 text-center')}>
+            {tRole(userRole)}
+          </div>
         </div>
         <p className="text-center">{t('selectSite')}</p>
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} withLabel={false} />

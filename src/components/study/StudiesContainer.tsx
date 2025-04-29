@@ -1,5 +1,10 @@
-import { getAllowedStudiesByUser, getAllowedStudiesByUserAndOrganization } from '@/db/study'
+import {
+  getAllowedStudiesByUser,
+  getAllowedStudiesByUserAndOrganization,
+  getExternalAllowedStudiesByUser,
+} from '@/db/study'
 import AddIcon from '@mui/icons-material/Add'
+import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -14,14 +19,29 @@ import styles from './StudiesContainer.module.css'
 interface Props {
   user: User
   organizationId?: string
+  isCR?: boolean
 }
 
-const StudiesContainer = async ({ user, organizationId }: Props) => {
+const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
   const t = await getTranslations('study')
 
   const studies = organizationId
     ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
-    : await getAllowedStudiesByUser(user)
+    : isCR
+      ? await getExternalAllowedStudiesByUser(user)
+      : await getAllowedStudiesByUser(user)
+
+  const [orgaStudies, otherStudies] = studies.reduce(
+    (res, study) => {
+      res[study.organizationId === user.organizationId ? 0 : 1].push(study)
+      return res
+    },
+    [[] as Study[], [] as Study[]],
+  )
+
+  const isOrgaHomePage = !organizationId && !isCR
+  const mainStudies = isOrgaHomePage ? orgaStudies : studies
+  const collaborations = isOrgaHomePage ? otherStudies : []
 
   const creationUrl = organizationId ? `/organisations/${organizationId}/etudes/creer` : '/etudes/creer'
 
@@ -30,14 +50,23 @@ const StudiesContainer = async ({ user, organizationId }: Props) => {
 
   return studies.length ? (
     <>
-      {mainStudyOrganizationId && (
+      {mainStudyOrganizationId && !isCR && (
         <Suspense>
           <ResultsContainerForUser user={user} mainStudyOrganizationId={mainStudyOrganizationId} />
         </Suspense>
       )}
-      <Studies studies={studies} canAddStudy={canCreateStudy} creationUrl={creationUrl} />
+      {!!mainStudies.length && (
+        <Studies
+          studies={mainStudies}
+          canAddStudy={canCreateStudy && !isCR}
+          creationUrl={creationUrl}
+          user={user}
+          collaborations={!organizationId && isCR}
+        />
+      )}
+      {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
-  ) : canCreateStudy ? (
+  ) : canCreateStudy && !isCR ? (
     <div className="justify-center">
       <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
         <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />

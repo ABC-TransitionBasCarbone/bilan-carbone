@@ -221,6 +221,7 @@
   },
   "study": {
     "create": "Ajouter un Bilan Carbone®",
+    "myCollaborations": "Mes collaborations",
     "myStudies": "Mes Bilans Carbone®",
     "createFirstStudy": "Créer mon premier Bilan Carbone®",
     "seeResults": "Voir les résultats",
@@ -342,6 +343,7 @@
       "Validator": "Validateur",
       "Editor": "Éditeur",
       "Reader": "Lecteur",
+      "Contributor": "Contributeur",
       "guide": "Guide des rôles",
       "introduction": "Depuis cette page, vous pouvez gérer les membres de votre équipe impliqués dans ce Bilan Carbone®. Dans tous les cas, les administrateurs de votre organisation ont accès à toutes vos études en tant que validateur. Si votre étude est publique, les membres de votre organisation (collaborateurs, gestionnaires) y ont automatiquement accès en lecture. Vous pouvez également ajouter des personnes externes à votre organisation via ce menu.",
       "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émission qui ont été renseignées par les validateurs, éditeurs et contributeurs.",

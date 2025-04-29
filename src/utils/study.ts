@@ -34,6 +34,7 @@ export const getUserRoleOnStudy = (
   if (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization)) {
     return getUserRoleOnPublicStudy(user, study.level)
   }
+
   return null
 }
 

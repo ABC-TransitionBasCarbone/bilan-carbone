@@ -42,7 +42,6 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
       </Block>
 
-      <Block />
       {Object.values(Post)
         .filter((post) =>
           study.emissionSources.some((emissionSource) => subPostsByPost[post].includes(emissionSource.subPost)),
