@@ -203,7 +203,7 @@ const parseEmissionSources = (
         row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
         {
           siteOldBCId: row[indexes[RequiredStudyEmissionSourcesColumns.siteOldBCId]] as string,
-          name: name,
+          name: !name ? `${newPostAndSubPost.newPost} - ${newPostAndSubPost.newSubPost}` : name,
           recycledPart: row[indexes[RequiredStudyEmissionSourcesColumns.recycledPart]] as number,
           comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
           validated: (row[indexes[RequiredStudyEmissionSourcesColumns.validationDASaisie]] as number) === 1,
