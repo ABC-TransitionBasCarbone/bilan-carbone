@@ -166,11 +166,16 @@ const parseEmissionSources = (
     .slice(1)
     .filter((row) => row[indexes[RequiredStudyExportsColumns.studyOldBCId]] !== '00000000-0000-0000-0000-000000000000')
     .map<[string, EmissionSource] | null>((row) => {
+      const name = row[indexes[RequiredStudyEmissionSourcesColumns.descriptifData]] as string
+      if (!name) {
+        console.warn(`Source d'émission sans nom.`)
+        return null
+      }
       return [
         row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
         {
           siteOldBCId: row[indexes[RequiredStudyEmissionSourcesColumns.siteOldBCId]] as string,
-          name: row[indexes[RequiredStudyEmissionSourcesColumns.descriptifData]] as string,
+          name: name,
           recycledPart: row[indexes[RequiredStudyEmissionSourcesColumns.recycledPart]] as number,
           comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
           validated: (row[indexes[RequiredStudyEmissionSourcesColumns.validationDASaisie]] as number) === 1,
