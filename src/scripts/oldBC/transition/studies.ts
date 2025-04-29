@@ -1,3 +1,4 @@
+import { OldNewPostAndSubPostsMapping } from '@/scripts/oldBC/transition/newPostAndSubPosts'
 import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { getExistingObjectsIds, getExistingSitesIds } from './repositories'
@@ -30,6 +31,11 @@ export enum RequiredStudyEmissionSourcesColumns {
   commentairesCollecte = 'COMMENTAIRES_COLLECTE',
   validationDASaisie = 'ValidationDASaisie',
   daTotalValue = 'DA_VAL_TOTAL',
+  domain = 'Nom_DOMAINE',
+  category = 'NOM_CATEGORIES',
+  subCategory = 'NOM_SOUS_CATEGORIE',
+  post = 'NOM_POSTE',
+  subPost = 'NOM_SOUS_POSTE',
 }
 
 interface Study {
@@ -55,6 +61,7 @@ interface EmissionSource {
   comment: string
   validated: boolean
   value: number
+  subPost: SubPost
 }
 
 const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
@@ -158,7 +165,21 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
     }, new Map<string, Export[]>())
 }
 
+const mapToSubPost = (newSubPost: string) => {
+  const normalizedSubPost = newSubPost
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\s,]/g, '')
+    .toLowerCase()
+  const foundSubPost = Object.values(SubPost).find((subPost) => subPost.toLowerCase() === normalizedSubPost)
+  if (foundSubPost) {
+    return foundSubPost
+  }
+  throw new Error(`Sous poste invalide "${newSubPost}"`)
+}
+
 const parseEmissionSources = (
+  postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
   indexes: Record<string, number>,
   data: (string | number)[][],
 ): Map<string, EmissionSource[]> => {
@@ -171,6 +192,13 @@ const parseEmissionSources = (
         console.warn(`Source d'émission sans nom.`)
         return null
       }
+      const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
+        domain: row[indexes[RequiredStudyEmissionSourcesColumns.domain]] as string,
+        category: row[indexes[RequiredStudyEmissionSourcesColumns.category]] as string,
+        subCategory: row[indexes[RequiredStudyEmissionSourcesColumns.subCategory]] as string,
+        oldPost: row[indexes[RequiredStudyEmissionSourcesColumns.post]] as string,
+        oldSubPost: row[indexes[RequiredStudyEmissionSourcesColumns.subPost]] as string,
+      })
       return [
         row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
         {
@@ -180,6 +208,7 @@ const parseEmissionSources = (
           comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
           validated: (row[indexes[RequiredStudyEmissionSourcesColumns.validationDASaisie]] as number) === 1,
           value: row[indexes[RequiredStudyEmissionSourcesColumns.daTotalValue]] as number,
+          subPost: mapToSubPost(newPostAndSubPost.newSubPost),
         },
       ]
     })
@@ -229,6 +258,7 @@ export const uploadStudies = async (
   transaction: Prisma.TransactionClient,
   userId: string,
   organizationId: string,
+  postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
   studiesIndexes: Record<string, number>,
   studiesData: (string | number)[][],
   studySitesIndexes: Record<string, number>,
@@ -243,7 +273,11 @@ export const uploadStudies = async (
   const studies = parseStudies(studiesIndexes, studiesData)
   const studySites = parseStudySites(studySitesIndexes, studySitesData)
   const studyExports = parseExports(studyExportsIndexes, studyExportsData)
-  const studyEmissionSources = parseEmissionSources(studyEmissionSourceIndexes, studyEmissionSourceData)
+  const studyEmissionSources = parseEmissionSources(
+    postAndSubPostsOldNewMapping,
+    studyEmissionSourceIndexes,
+    studyEmissionSourceData,
+  )
 
   const alreadyImportedStudyIds = await transaction.study.findMany({
     where: {
@@ -371,7 +405,7 @@ export const uploadStudies = async (
               studyId: existingStudyId,
               studySiteId: studySite.id,
               name: studyEmissionSource.name,
-              subPost: SubPost.CombustiblesFossiles,
+              subPost: studyEmissionSource.subPost,
               recycledPart: studyEmissionSource.recycledPart,
               comment: studyEmissionSource.comment,
               validated: studyEmissionSource.validated,
