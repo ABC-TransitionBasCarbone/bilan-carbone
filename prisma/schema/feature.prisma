@@ -7,11 +7,16 @@ model DeactivatableFeatureStatus {
   feature DeactivatableFeature @unique
   active  Boolean              @default(false)
 
-  updatedById String? @map("updated_by")
-  updator     User?   @relation("deactivable_feature_updator", fields: [updatedById], references: [id])
+  updatedById String? @map("updated_by_account")
+  updator     Account?   @relation("deactivable_feature_updator", fields: [updatedById], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
+
+// TO DELETE
+  updatedByUserId String? @map("updated_by")
+  updatorUser     User?   @relation("deactivable_feature_updator", fields: [updatedByUserId], references: [id])
+  // END TO DELETE
 
   @@map("deactivable_features_statuses")
 }
