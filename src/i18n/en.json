@@ -510,7 +510,8 @@
       "total": "Total",
       "uncertainty": "Uncertainty",
       "validation": "Emission source validation",
-      "yes": "Yes"
+      "yes": "Yes",
+      "export": "Export my Carbon Footprint"
     },
     "flow": {
       "loading": "Loading document...",
