@@ -113,6 +113,7 @@ describe('Team', () => {
         cy.get('.MuiSelect-select').click()
       })
     cy.get('[data-value="GESTIONNAIRE"]').click()
+    cy.getByTestId('alert-toaster').should('be.visible')
 
     cy.reload()
 
