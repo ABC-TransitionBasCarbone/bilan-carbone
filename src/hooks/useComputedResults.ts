@@ -18,8 +18,8 @@ type PostKey = CutPost | BCPost
 
 type TFunction = (key: string) => string
 
-export function useComputedResults(resultsByPost: ResultsByPost[], tPost: TFunction, listPosts: PostKey[]) {
-  return useMemo(() => {
+export const useComputedResults = (resultsByPost: ResultsByPost[], tPost: TFunction, listPosts: PostKey[]) =>
+  useMemo(() => {
     const validPosts = new Set(Object.values(listPosts))
 
     return resultsByPost
@@ -29,22 +29,14 @@ export function useComputedResults(resultsByPost: ResultsByPost[], tPost: TFunct
         )
         const value = filteredSubPosts.reduce((res, subPost) => res + subPost.value, 0)
 
-        return {
-          ...post,
-          subPosts: filteredSubPosts,
-          value,
-        }
+        return { ...post, subPosts: filteredSubPosts, value }
       })
       .filter((post) => validPosts.has(post.post as PostKey))
-      .map(({ post, ...rest }) => ({
-        ...rest,
-        label: tPost(post),
-      }))
+      .map(({ post, ...rest }) => ({ ...rest, label: tPost(post) }))
   }, [resultsByPost, tPost, listPosts])
-}
 
-export function useChartData(computeResults: ComputeResult[], theme: Theme) {
-  return useMemo(() => {
+export const useChartData = (computeResults: ComputeResult[], theme: Theme) =>
+  useMemo(() => {
     const pieData = computeResults
       .map(({ label, value }) => ({ label, value, color: theme.palette.primary.main }))
       .filter((computeResult) => computeResult.value > 0)
@@ -54,4 +46,3 @@ export function useChartData(computeResults: ComputeResult[], theme: Theme) {
     }
     return { pieData, barData }
   }, [computeResults, theme])
-}
