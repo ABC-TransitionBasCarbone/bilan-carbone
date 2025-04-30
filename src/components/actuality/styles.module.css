@@ -17,10 +17,6 @@
   gap: 1rem;
 }
 
-.card {
-  background-color: var(--background-100);
-}
-
 .text {
   white-space: pre-wrap;
   word-wrap: break-word;
