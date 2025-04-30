@@ -70,6 +70,7 @@ const OnboardingStep = ({ form, isCr }: Props) => {
                 anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
                 transformOrigin: { vertical: 'top', horizontal: 'left' },
               }}
+              renderValue={(role) => tRole(role as string)}
               fullWidth
             >
               {Object.values(Role)
@@ -82,11 +83,9 @@ const OnboardingStep = ({ form, isCr }: Props) => {
                 ))}
             </FormSelect>
           </div>
-          <div>
-            <Button className={styles.deleteButton} onClick={() => removeCollaborator(index)}>
-              <DeleteIcon />
-            </Button>
-          </div>
+          <Button className={styles.deleteButton} onClick={() => removeCollaborator(index)}>
+            <DeleteIcon />
+          </Button>
         </div>
       ))}
       <Button color="secondary" onClick={addCollaborator}>

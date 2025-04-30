@@ -29,7 +29,12 @@ const Toast = ({ position, open, onClose, message, color, toastKey, duration }: 
     onClose={onClose}
     autoHideDuration={duration || 5 * SEC * TIME_IN_MS}
   >
-    <Alert onClose={onClose} icon={<></>} sx={{ background: backgrounds[color], color: 'white' }}>
+    <Alert
+      onClose={onClose}
+      icon={<></>}
+      data-testid="alert-toaster"
+      sx={{ background: backgrounds[color], color: 'white' }}
+    >
       {message}
     </Alert>
   </Snackbar>

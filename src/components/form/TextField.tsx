@@ -1,3 +1,4 @@
+import { FormControl, FormHelperText } from '@mui/material'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import IconLabel from '../base/IconLabel'
@@ -11,6 +12,7 @@ interface Props<T extends FieldValues> {
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
   endAdornment?: React.ReactNode
+  customError?: string
 }
 
 export const FormTextField = <T extends FieldValues>({
@@ -21,6 +23,7 @@ export const FormTextField = <T extends FieldValues>({
   icon,
   iconPosition = 'before',
   endAdornment,
+  customError,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -29,7 +32,7 @@ export const FormTextField = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <div className="inputContainer">
+        <FormControl fullWidth={textFieldProps.fullWidth} error={!!error || !!customError} className="inputContainer">
           {label ? (
             <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
               <span className="inputLabel bold">{label}</span>
@@ -37,15 +40,8 @@ export const FormTextField = <T extends FieldValues>({
           ) : null}
           <TextField
             {...textFieldProps}
-            helperText={error && error.message ? translation('validation.' + error.message) : null}
-            error={!!error}
-            onChange={
-              textFieldProps.type === 'number'
-                ? (event) => {
-                    onChange(parseFloat(event.target.value))
-                  }
-                : onChange
-            }
+            error={!!error || !!customError}
+            onChange={textFieldProps.type === 'number' ? (event) => onChange(parseFloat(event.target.value)) : onChange}
             value={(textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined ? '' : value}
             slotProps={{
               input: {
@@ -55,7 +51,10 @@ export const FormTextField = <T extends FieldValues>({
               },
             }}
           />
-        </div>
+          <FormHelperText className={styles.helper}>
+            {customError ? customError : error?.message ? translation('validation.' + error.message) : ' '}
+          </FormHelperText>
+        </FormControl>
       )}
     />
   )

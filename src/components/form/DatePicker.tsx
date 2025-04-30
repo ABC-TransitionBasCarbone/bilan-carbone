@@ -1,7 +1,9 @@
+import { FormControl, FormHelperText } from '@mui/material'
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
+import styles from './Form.module.css'
 
 dayjs.extend(utc)
 
@@ -26,26 +28,30 @@ export const FormDatePicker = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <DatePicker
-          {...datePickerProps}
-          slotProps={{
-            textField: {
-              helperText: error && error.message ? translation('validation.' + error.message) : null,
-              error: !!error,
-              //@ts-expect-error: Missing in MUI Props
-              'data-testid': dataTestId,
-            },
-            field: { clearable },
-          }}
-          onChange={(date) => {
-            if (date && date.isValid()) {
-              onChange(date.utc(true).format())
-            } else if (date == null && clearable) {
-              onChange(null)
-            }
-          }}
-          value={value ? dayjs(value) : null}
-        />
+        <FormControl error={!!error}>
+          <DatePicker
+            {...datePickerProps}
+            slotProps={{
+              textField: {
+                error: !!error,
+                //@ts-expect-error: Missing in MUI Props
+                'data-testid': dataTestId,
+              },
+              field: { clearable },
+            }}
+            onChange={(date) => {
+              if (date && date.isValid()) {
+                onChange(date.utc(true).format())
+              } else if (date == null && clearable) {
+                onChange(null)
+              }
+            }}
+            value={value ? dayjs(value) : null}
+          />
+          <FormHelperText className={styles.helper}>
+            {error?.message ? translation('validation.' + error.message) : ' '}
+          </FormHelperText>
+        </FormControl>
       )}
     />
   )
