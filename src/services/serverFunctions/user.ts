@@ -126,6 +126,11 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
+  const userFromDb = await getUserByEmail(session.user.email)
+  if (!userFromDb) {
+    return NOT_AUTHORIZED
+  }
+
   if (!memberExists) {
     const newMember = {
       ...member,
@@ -133,7 +138,9 @@ export const addMember = async (member: AddMemberCommand) => {
       status: UserStatus.VALIDATED,
       level: null,
       organizationId: session.user.organizationId,
+      source: userFromDb.source,
     }
+
     await addUser(newMember)
     addUserChecklistItem(UserChecklist.AddCollaborator)
   } else {
