@@ -31,7 +31,7 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
     return null
   }
 
-  const caUnit = (await getUserApplicationSettings(user.id))?.caUnit || defaultCAUnit
+  const caUnit = (await getUserApplicationSettings(user.accountId))?.caUnit || defaultCAUnit
   const canAddFlow = await canEditStudyFlows(study.id)
 
   return (

@@ -42,7 +42,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
   const openFormationForm = () => {
     const now = new Date()
     if (!formStartTime) {
-      startFormationForm(user.id, now)
+      startFormationForm(user.userId, now)
       setFormStartTime(now.getTime())
     }
     setOpen(true)

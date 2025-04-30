@@ -221,12 +221,21 @@ export const getAllowedStudiesByAccount = async (user: UserSession) => {
 }
 
 export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
-  const userOrganizations = await getAccountOrganizations(user.accountId)
+  const userOrganizationVersions = await getAccountOrganizationVersions(user.accountId)
   const studies = await prismaClient.study.findMany({
     where: {
       AND: [
-        { organizationId: { notIn: userOrganizations.map((organization) => organization.id) } },
-        { OR: [{ allowedUsers: { some: { accountId: user.accountId } } }, { contributors: { some: { accountId: user.accountId } } }] },
+        {
+          organizationVersionId: {
+            notIn: userOrganizationVersions.map((organizationVersion) => organizationVersion.id),
+          },
+        },
+        {
+          OR: [
+            { allowedUsers: { some: { accountId: user.accountId } } },
+            { contributors: { some: { accountId: user.accountId } } },
+          ],
+        },
       ],
     },
   })

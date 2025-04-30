@@ -255,7 +255,7 @@ export const updateUserProfile = async (command: EditProfileCommand) => {
     return NOT_AUTHORIZED
   }
 
-  await updateUser(session.user.id, command)
+  await updateUser(session.user.userId, command)
 }
 
 export const resetPassword = async (email: string) => {

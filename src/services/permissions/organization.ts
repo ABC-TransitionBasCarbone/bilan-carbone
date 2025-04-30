@@ -68,7 +68,7 @@ export const canDeleteOrganizationVersion = async (organizationVersionId: string
 
   if (
     !hasEditionRole(false, session.user.role) &&
-    (await getOrganizationStudiesFromOtherUsers(organizationVersionId, session.user.id))
+    (await getOrganizationStudiesFromOtherUsers(organizationVersionId, session.user.userId))
   ) {
     return false
   }

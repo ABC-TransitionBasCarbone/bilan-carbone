@@ -713,7 +713,7 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
   // We don't need to know the role, only whether or not the user has one
   // We therefore arbitrarily use the "Reader" role
   const allowedUsers = study.allowedUsers.map(({ accountId }) => ({
-    account: { id: accountId, user: { id: user.id } },
+    account: { id: accountId, user: { id: user.userId } },
     role: StudyRole.Reader,
   }))
   const studyObject = { ...study, allowedUsers: allowedUsers }
