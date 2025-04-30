@@ -30,10 +30,6 @@ const theme = createTheme({
     info: {
       main: '#272768',
     },
-    background: {
-      default: '#ebf2ff',
-      paper: '#e9eff9',
-    },
   },
   custom: {
     postColors: {
