@@ -238,6 +238,13 @@ const parseEmissionSources = (
         oldSubPost: row[indexes[RequiredStudyEmissionSourcesColumns.subPost]] as string,
       })
       const name = buildStudyEmissionSourceName(row, indexes, emissionFactorsNames, newPostAndSubPost)
+      let subPost
+      try {
+        subPost = mapToSubPost(newPostAndSubPost.newSubPost)
+      } catch (e) {
+        console.warn(e)
+        return null
+      }
       return [
         row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
         {
@@ -247,7 +254,7 @@ const parseEmissionSources = (
           comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
           validated: (row[indexes[RequiredStudyEmissionSourcesColumns.validationDASaisie]] as number) === 1,
           value: row[indexes[RequiredStudyEmissionSourcesColumns.daTotalValue]] as number,
-          subPost: mapToSubPost(newPostAndSubPost.newSubPost),
+          subPost: subPost,
         },
       ]
     })
