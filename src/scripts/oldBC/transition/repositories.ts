@@ -25,3 +25,21 @@ export async function getExistingObjectsIds(delegate: Delegate, oldBCIds: string
 export const getExistingSitesIds = async (transaction: Prisma.TransactionClient, sitesOldBCIds: string[]) => {
   return getExistingObjectsIds(transaction.site, sitesOldBCIds)
 }
+
+export const getExistingEmissionFactorsNames = async (transaction: Prisma.TransactionClient, oldBCIds: string[]) => {
+  const existingObjects = await transaction.emissionFactor.findMany({
+    where: {
+      oldBCId: {
+        in: oldBCIds,
+      },
+    },
+    select: { id: true, oldBCId: true, source: true },
+  })
+
+  return existingObjects.reduce((map, currentExistingObject) => {
+    if (currentExistingObject.oldBCId && currentExistingObject.source) {
+      map.set(currentExistingObject.oldBCId, { id: currentExistingObject.id, name: currentExistingObject.source })
+    }
+    return map
+  }, new Map<string, { name: string; id: string }>())
+}

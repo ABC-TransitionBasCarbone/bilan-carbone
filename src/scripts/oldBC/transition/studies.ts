@@ -1,7 +1,11 @@
-import { OldNewPostAndSubPostsMapping } from '@/scripts/oldBC/transition/newPostAndSubPosts'
+import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from '@/scripts/oldBC/transition/newPostAndSubPosts'
 import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
-import { getExistingObjectsIds, getExistingSitesIds } from './repositories'
+import {
+  getExistingEmissionFactorsNames as getExistingEmissionFactorsNamesFromRepository,
+  getExistingObjectsIds,
+  getExistingSitesIds,
+} from './repositories'
 
 export enum RequiredStudiesColumns {
   oldBCId = 'IDETUDE',
@@ -36,6 +40,7 @@ export enum RequiredStudyEmissionSourcesColumns {
   subCategory = 'NOM_SOUS_CATEGORIE',
   post = 'NOM_POSTE',
   subPost = 'NOM_SOUS_POSTE',
+  emissionFactorOldBCId = 'EFV_GUID',
 }
 
 interface Study {
@@ -178,10 +183,45 @@ const mapToSubPost = (newSubPost: string) => {
   throw new Error(`Sous poste invalide "${newSubPost}"`)
 }
 
+const getExistingEmissionFactorsNames = async (
+  indexes: Record<string, number>,
+  data: (string | number)[][],
+  transaction: Prisma.TransactionClient,
+) => {
+  const emissionFactorsOldBCIds = data
+    .slice(1)
+    .filter(
+      (row) =>
+        row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] !== '00000000-0000-0000-0000-000000000000',
+    )
+    .map((row) => row[indexes[RequiredStudyEmissionSourcesColumns.emissionFactorOldBCId]] as string)
+
+  return await getExistingEmissionFactorsNamesFromRepository(transaction, emissionFactorsOldBCIds)
+}
+
+const buildStudyEmissionSourceName = (
+  row: (string | number)[],
+  indexes: Record<string, number>,
+  emissionFactorsNames: Map<string, { name: string; id: string }>,
+  newPostAndSubPost: NewPostAndSubPosts,
+) => {
+  let name = row[indexes[RequiredStudyEmissionSourcesColumns.descriptifData]] as string
+  if (!name) {
+    const emissionFactorName = emissionFactorsNames.get(
+      row[indexes[RequiredStudyEmissionSourcesColumns.emissionFactorOldBCId]] as string,
+    )
+    if (emissionFactorName) {
+      name = emissionFactorName.name
+    }
+  }
+  return !name ? `${newPostAndSubPost.newPost} - ${newPostAndSubPost.newSubPost}` : name
+}
+
 const parseEmissionSources = (
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
   indexes: Record<string, number>,
   data: (string | number)[][],
+  emissionFactorsNames: Map<string, { name: string; id: string }>,
 ): Map<string, EmissionSource[]> => {
   return data
     .slice(1)
@@ -190,11 +230,6 @@ const parseEmissionSources = (
         row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] !== '00000000-0000-0000-0000-000000000000',
     )
     .map<[string, EmissionSource] | null>((row) => {
-      const name = row[indexes[RequiredStudyEmissionSourcesColumns.descriptifData]] as string
-      if (!name) {
-        console.warn(`Source d'émission sans nom.`)
-        return null
-      }
       const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
         domain: row[indexes[RequiredStudyEmissionSourcesColumns.domain]] as string,
         category: row[indexes[RequiredStudyEmissionSourcesColumns.category]] as string,
@@ -202,11 +237,12 @@ const parseEmissionSources = (
         oldPost: row[indexes[RequiredStudyEmissionSourcesColumns.post]] as string,
         oldSubPost: row[indexes[RequiredStudyEmissionSourcesColumns.subPost]] as string,
       })
+      const name = buildStudyEmissionSourceName(row, indexes, emissionFactorsNames, newPostAndSubPost)
       return [
         row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
         {
           siteOldBCId: row[indexes[RequiredStudyEmissionSourcesColumns.siteOldBCId]] as string,
-          name: !name ? `${newPostAndSubPost.newPost} - ${newPostAndSubPost.newSubPost}` : name,
+          name: name,
           recycledPart: row[indexes[RequiredStudyEmissionSourcesColumns.recycledPart]] as number,
           comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
           validated: (row[indexes[RequiredStudyEmissionSourcesColumns.validationDASaisie]] as number) === 1,
@@ -276,10 +312,17 @@ export const uploadStudies = async (
   const studies = parseStudies(studiesIndexes, studiesData)
   const studySites = parseStudySites(studySitesIndexes, studySitesData)
   const studyExports = parseExports(studyExportsIndexes, studyExportsData)
+
+  const existingEmissionFactorNames = await getExistingEmissionFactorsNames(
+    studyEmissionSourceIndexes,
+    studyEmissionSourceData,
+    transaction,
+  )
   const studyEmissionSources = parseEmissionSources(
     postAndSubPostsOldNewMapping,
     studyEmissionSourceIndexes,
     studyEmissionSourceData,
+    existingEmissionFactorNames,
   )
 
   const alreadyImportedStudyIds = await transaction.study.findMany({
