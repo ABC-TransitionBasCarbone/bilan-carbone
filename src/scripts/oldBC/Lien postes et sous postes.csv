@@ -88,12 +88,12 @@ Déchets;Déchets banals;Inertes (métaux, verre, gravats...);Emissions évitées;Qua
 Déchets;Déchets banals;Inertes (métaux, verre, gravats...);Incinération;Qantité totale;;;Déchets matériaux & Déchets d'emballages et plastiques;Déchets
 Déchets;Déchets banals;Inertes (métaux, verre, gravats...);Moyenne;Qantité totale;;;Déchets matériaux & Déchets d'emballages et plastiques;Déchets
 Déchets;Déchets banals;Inertes (métaux, verre, gravats...);Recyclage;Qantité totale;;;Déchets matériaux & Déchets d'emballages et plastiques;Déchets
-Déchets;Déchets banals;Ordures ménagères;Méthanisation;Quantité totale;;;Déchets ordure ménagères;Déchets
+Déchets;Déchets banals;Ordures ménagères;Méthanisation;Quantité totale;;;Déchets ordures ménagères;Déchets
 Déchets;Déchets banals;Ordures ménagères;Emissions évitées;Quantité totale;;;Émissions évitées;Déchets
-Déchets;Déchets banals;Ordures ménagères;Moyenne;Qantité totale;;;Déchets ordure ménagères;Déchets
-Déchets;Déchets banals;Ordures ménagères;Compost;Qantité totale;;;Déchets ordure ménagères;Déchets
-Déchets;Déchets banals;Ordures ménagères;Stockage;Qantité totale;;;Déchets ordure ménagères;Déchets
-Déchets;Déchets banals;Ordures ménagères;Incinération;Qantité totale;;;Déchets ordure ménagères;Déchets
+Déchets;Déchets banals;Ordures ménagères;Moyenne;Qantité totale;;;Déchets ordures ménagères;Déchets
+Déchets;Déchets banals;Ordures ménagères;Compost;Qantité totale;;;Déchets ordures ménagères;Déchets
+Déchets;Déchets banals;Ordures ménagères;Stockage;Qantité totale;;;Déchets ordures ménagères;Déchets
+Déchets;Déchets banals;Ordures ménagères;Incinération;Qantité totale;;;Déchets ordures ménagères;Déchets
 Déchets;Déchets spéciaux;Déchets du bâtiment;Tous types;Quantité totale;;;Déchets dangereux;Déchets
 Déchets;Eaux usées;Toutes catégories;Quantités rejetées;Qantité totale;;;Déchets eaux usées;Déchets
 Déchets;Collectes et traitement;Traitement;Tous matériaux;Quantité totale;;;N/A;Déchets
@@ -237,7 +237,7 @@ Non énergétique;CH4;Méthane Fossile;Rejets dans l'atmosphère;Quantité totale rej
 Non énergétique;CO2 Fossile hors combustion;Toutes catégories;Rejets dans l'atmosphère;Qantité totale rejetée;;;émissions liées aux procédés industriels + Autres émissions;Autres émissions non énergétiques
 Non énergétique;Halocarbures Kyoto;HFC;Rejets dans l'atmosphère;Qantité totale rejetée;;;émissions procédés + émissions froid;Autres émissions non énergétiques
 Non énergétique;Halocarbures Kyoto;NF3;Rejets dans l'atmosphère;Qantité totale rejetée;;;émissions liées aux procédés industriels + production de froid +  Autres émissions;Autres émissions non énergétiques
-Non énergétique;Halocarbures Kyoto;Climatisation / groupes froid;Fuites de gaz frigorigènes;Quantités de recharge de gaz;;;Emissions liés à la production de froid;Autres émissions non énergétiques
+Non énergétique;Halocarbures Kyoto;Climatisation / groupes froid;Fuites de gaz frigorigènes;Quantités de recharge de gaz;;;Emissions liées à la production de froid;Autres émissions non énergétiques
 Non énergétique;Agriculture;N2O - Engrais;Rejets dans l'atmosphère;Qantité totale rejetée;;;Agriculture;Autres émissions non énergétiques
 Non énergétique;Agriculture;CH4 biogénique;Rejets dans l'atmosphère;Quantité totale rejetée;;;N/A;N/A
 Non énergétique;Agriculture;Animaux;Estimation par animal;Quantité totale;;;Agriculture;Autres émissions non énergétiques
