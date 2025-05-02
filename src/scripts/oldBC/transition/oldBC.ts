@@ -1,7 +1,7 @@
 import { prismaClient } from '../../../db/client'
 import { uploadEmissionFactors } from './emissionFactors'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
-import { OldBCWorkSheetReader } from './oldBCWorksheetReader'
+import { OldBCWorkSheetsReader } from './oldBCWorkSheetsReader'
 import { uploadOrganizations } from './organizations'
 import { uploadStudies } from './studies'
 
@@ -18,7 +18,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
     throw new Error(`L'organisation de l'utilisateur n'existe pas.`)
   }
 
-  const oldBCWorkSheetReader = new OldBCWorkSheetReader(file)
+  const oldBCWorksheetsReader = new OldBCWorkSheetsReader(file)
 
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
@@ -26,12 +26,12 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   await prismaClient.$transaction(async (transaction) => {
     hasOrganizationsWarning = await uploadOrganizations(
       transaction,
-      oldBCWorkSheetReader.organizationsWorksheet,
+      oldBCWorksheetsReader.organizationsWorksheet,
       userOrganization,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
-      oldBCWorkSheetReader.emissionFactorsWorksheet,
+      oldBCWorksheetsReader.emissionFactorsWorksheet,
       organizationId,
     )
     hasStudiesWarning = await uploadStudies(
@@ -39,10 +39,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       user.id,
       organizationId,
       postAndSubPostsOldNewMapping,
-      oldBCWorkSheetReader.studiesWorksheet,
-      oldBCWorkSheetReader.studySitesWorksheet,
-      oldBCWorkSheetReader.studyExportsWorksheet,
-      oldBCWorkSheetReader.studyEmissionSourcesWorksheet,
+      oldBCWorksheetsReader,
     )
   })
 

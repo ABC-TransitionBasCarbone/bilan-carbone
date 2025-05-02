@@ -2,7 +2,7 @@ import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma } from '@p
 import { v4 } from 'uuid'
 import { unitsMatrix } from '../../../services/importEmissionFactor/historyUnits'
 import { getEmissionQuality } from '../../../services/importEmissionFactor/import'
-import { EmissionFactorsWorkSheet } from './oldBCWorksheetReader'
+import { EmissionFactorsWorkSheet } from './oldBCWorkSheetsReader'
 
 export enum RequiredEmissionFactorsColumns {
   EFV_GUID = 'EFV_GUID',

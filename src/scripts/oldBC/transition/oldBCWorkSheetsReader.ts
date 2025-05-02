@@ -3,13 +3,13 @@ import xlsx from 'node-xlsx'
 import { RequiredEmissionFactorsColumns } from './emissionFactors'
 import { RequiredOrganizationsColumns } from './organizations'
 
-export class OldBCWorkSheetReader {
+export class OldBCWorkSheetsReader {
   organizationsWorksheet: OrganizationsWorkSheet
   emissionFactorsWorksheet: EmissionFactorsWorkSheet
   studiesWorksheet: StudiesWorkSheet
   studySitesWorksheet: StudySitesWorkSheet
   studyExportsWorksheet: StudyExportsWorkSheet
-  studyEmissionSourcesWorksheet: EmissionSourcesWorkSheet
+  emissionSourcesWorksheet: EmissionSourcesWorkSheet
   sitesCAWorksheet: SitesCAWorkSheet
   sitesETPWorksheet: SitesETPWorkSheet
 
@@ -20,13 +20,13 @@ export class OldBCWorkSheetReader {
     this.studiesWorksheet = new StudiesWorkSheet(worksheets)
     this.studySitesWorksheet = new StudySitesWorkSheet(worksheets)
     this.studyExportsWorksheet = new StudyExportsWorkSheet(worksheets)
-    this.studyEmissionSourcesWorksheet = new EmissionSourcesWorkSheet(worksheets)
+    this.emissionSourcesWorksheet = new EmissionSourcesWorkSheet(worksheets)
     this.sitesCAWorksheet = new SitesCAWorkSheet(worksheets)
     this.sitesETPWorksheet = new SitesETPWorkSheet(worksheets)
   }
 }
 
-export abstract class OldBCWorksheetReader {
+export abstract class OldBCWorkSheetReader {
   worksheet: { name: string; data: (string | number)[][] }
   indexes: Record<string, number>
 
@@ -68,13 +68,13 @@ export abstract class OldBCWorksheetReader {
   }
 }
 
-export class OrganizationsWorkSheet extends OldBCWorksheetReader {
+export class OrganizationsWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Organisations', RequiredOrganizationsColumns)
   }
 }
 
-export class EmissionFactorsWorkSheet extends OldBCWorksheetReader {
+export class EmissionFactorsWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, "Facteurs d'émissions", RequiredEmissionFactorsColumns)
   }
@@ -88,7 +88,7 @@ export enum RequiredStudiesColumns {
   siteId = 'ID_ENTITE',
 }
 
-export class StudiesWorkSheet extends OldBCWorksheetReader {
+export class StudiesWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Etudes', RequiredStudiesColumns)
   }
@@ -99,7 +99,7 @@ export enum RequiredStudySitesColumns {
   studyOldBCId = 'IDETUDE',
 }
 
-export class StudySitesWorkSheet extends OldBCWorksheetReader {
+export class StudySitesWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Etudes - sites', RequiredStudySitesColumns)
   }
@@ -111,7 +111,7 @@ export enum RequiredStudyExportsColumns {
   control = 'LIBELLE_MODE_CONTROLE',
 }
 
-export class StudyExportsWorkSheet extends OldBCWorksheetReader {
+export class StudyExportsWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Etudes - exports', RequiredStudyExportsColumns)
   }
@@ -134,7 +134,7 @@ export enum RequiredStudyEmissionSourcesColumns {
   emissionFactorOldBCId = 'EFV_GUID',
 }
 
-export class EmissionSourcesWorkSheet extends OldBCWorksheetReader {
+export class EmissionSourcesWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Données sources', RequiredStudyEmissionSourcesColumns)
   }
@@ -148,7 +148,7 @@ enum RequiredSitesCAColumns {
   unit = 'LIB_FIN_UNITE',
 }
 
-export class SitesCAWorkSheet extends OldBCWorksheetReader {
+export class SitesCAWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Sites - CA', RequiredSitesCAColumns)
   }
@@ -161,7 +161,7 @@ enum RequiredSitesETPColumns {
   numberOfEmployees = 'NB_EMPLOYES',
 }
 
-export class SitesETPWorkSheet extends OldBCWorksheetReader {
+export class SitesETPWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Sites - ETP', RequiredSitesETPColumns)
   }

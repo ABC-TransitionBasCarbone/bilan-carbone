@@ -3,6 +3,7 @@ import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {
   EmissionSourcesWorkSheet,
+  OldBCWorkSheetsReader,
   RequiredStudiesColumns,
   RequiredStudyEmissionSourcesColumns,
   RequiredStudyExportsColumns,
@@ -10,7 +11,7 @@ import {
   StudiesWorkSheet,
   StudyExportsWorkSheet,
   StudySitesWorkSheet,
-} from './oldBCWorksheetReader'
+} from './oldBCWorkSheetsReader'
 import {
   getExistingEmissionFactorsNames as getExistingEmissionFactorsNamesFromRepository,
   getExistingObjectsIds,
@@ -283,20 +284,20 @@ export const uploadStudies = async (
   userId: string,
   organizationId: string,
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
-  studiesWorksheet: StudiesWorkSheet,
-  studySitesWorksheet: StudySitesWorkSheet,
-  studyExportsWorksheet: StudyExportsWorkSheet,
-  emissionSourcesWorksheet: EmissionSourcesWorkSheet,
+  oldBCWorksheetReader: OldBCWorkSheetsReader,
 ) => {
   console.log('Import des études...')
 
-  const studies = parseStudies(studiesWorksheet)
-  const studySites = parseStudySites(studySitesWorksheet)
-  const studyExports = parseStudyExports(studyExportsWorksheet)
-  const existingEmissionFactorNames = await getExistingEmissionFactorsNames(emissionSourcesWorksheet, transaction)
+  const studies = parseStudies(oldBCWorksheetReader.studiesWorksheet)
+  const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
+  const studyExports = parseStudyExports(oldBCWorksheetReader.studyExportsWorksheet)
+  const existingEmissionFactorNames = await getExistingEmissionFactorsNames(
+    oldBCWorksheetReader.emissionSourcesWorksheet,
+    transaction,
+  )
   const studyEmissionSources = parseEmissionSources(
     postAndSubPostsOldNewMapping,
-    emissionSourcesWorksheet,
+    oldBCWorksheetReader.emissionSourcesWorksheet,
     existingEmissionFactorNames,
   )
 

@@ -1,5 +1,5 @@
 import { Prisma, Organization as PrismaOrganization } from '@prisma/client'
-import { OrganizationsWorkSheet } from './oldBCWorksheetReader'
+import { OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
 import { getExistingSitesIds } from './repositories'
 
 export enum RequiredOrganizationsColumns {
