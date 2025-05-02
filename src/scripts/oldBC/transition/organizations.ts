@@ -1,4 +1,5 @@
 import { Prisma, Organization as PrismaOrganization } from '@prisma/client'
+import { OrganizationsWorkSheet } from './oldBCWorksheetReader'
 import { getExistingSitesIds } from './repositories'
 
 export enum RequiredOrganizationsColumns {
@@ -78,17 +79,17 @@ const getOrganizationsOldBCIdsIdsMap = async (
 
 export const uploadOrganizations = async (
   transaction: Prisma.TransactionClient,
-  data: (string | number)[][],
-  indexes: Record<string, number>,
+  organizationWorksheet: OrganizationsWorkSheet,
   userOrganization: PrismaOrganization,
 ) => {
   console.log('Import des organisations...')
 
+  const indexes = organizationWorksheet.getIndexes()
   const userOrganizationsRows: { oldBCId: string; name: string }[] = []
   const organizations: Organization[] = []
   const sites: Site[] = []
-  data
-    .slice(1)
+  organizationWorksheet
+    .getRows()
     // On ignore les parentID supprimés
     .filter(
       (row) =>

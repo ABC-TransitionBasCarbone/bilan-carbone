@@ -1,6 +1,12 @@
-import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from '@/scripts/oldBC/transition/newPostAndSubPosts'
 import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
+import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
+import {
+  EmissionSourcesWorkSheet,
+  StudiesWorkSheet,
+  StudyExportsWorkSheet,
+  StudySitesWorkSheet,
+} from './oldBCWorksheetReader'
 import {
   getExistingEmissionFactorsNames as getExistingEmissionFactorsNamesFromRepository,
   getExistingObjectsIds,
@@ -69,9 +75,10 @@ interface EmissionSource {
   subPost: SubPost
 }
 
-const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
-  return data
-    .slice(1)
+const parseStudies = (studiesWorksheet: StudiesWorkSheet): Study[] => {
+  const indexes = studiesWorksheet.getIndexes()
+  return studiesWorksheet
+    .getRows()
     .filter((row) => row[indexes[RequiredStudiesColumns.name]])
     .map((row) => ({
       oldBCId: row[indexes[RequiredStudiesColumns.oldBCId]] as string,
@@ -85,9 +92,10 @@ const parseStudies = (indexes: Record<string, number>, data: (string | number)[]
     }))
 }
 
-const parseStudySites = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, StudySite[]> => {
-  return data
-    .slice(1)
+const parseStudySites = (studySitesWorksheet: StudySitesWorkSheet): Map<string, StudySite[]> => {
+  const indexes = studySitesWorksheet.getIndexes()
+  return studySitesWorksheet
+    .getRows()
     .map<[string, StudySite]>((row) => [
       row[indexes[RequiredStudySitesColumns.studyOldBCId]] as string,
       {
@@ -131,9 +139,10 @@ const getControl = (control: string) => {
   }
 }
 
-const parseExports = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, Export[]> => {
-  return data
-    .slice(1)
+const parseStudyExports = (studyExportsWorksheet: StudyExportsWorkSheet): Map<string, Export[]> => {
+  const indexes = studyExportsWorksheet.getIndexes()
+  return studyExportsWorksheet
+    .getRows()
     .map<[string, Export | null]>((row) => {
       const type = getType(row[indexes[RequiredStudyExportsColumns.type]] as string)
       const control = getControl(row[indexes[RequiredStudyExportsColumns.control]] as string)
@@ -184,12 +193,12 @@ const mapToSubPost = (newSubPost: string) => {
 }
 
 const getExistingEmissionFactorsNames = async (
-  indexes: Record<string, number>,
-  data: (string | number)[][],
+  studyEmissionSourcesWorksheet: EmissionSourcesWorkSheet,
   transaction: Prisma.TransactionClient,
 ) => {
-  const emissionFactorsOldBCIds = data
-    .slice(1)
+  const indexes = studyEmissionSourcesWorksheet.getIndexes()
+  const emissionFactorsOldBCIds = studyEmissionSourcesWorksheet
+    .getRows()
     .filter(
       (row) =>
         row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] !== '00000000-0000-0000-0000-000000000000',
@@ -219,11 +228,12 @@ const buildStudyEmissionSourceName = (
 
 const parseEmissionSources = (
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
-  indexes: Record<string, number>,
-  data: (string | number)[][],
+  studyEmissionSourcesWorkSheet: EmissionSourcesWorkSheet,
   emissionFactorsNames: Map<string, { name: string; id: string }>,
 ): Map<string, EmissionSource[]> => {
-  return data
+  const indexes = studyEmissionSourcesWorkSheet.getIndexes()
+  return studyEmissionSourcesWorkSheet
+    .getRows()
     .slice(1)
     .filter(
       (row) =>
@@ -305,30 +315,20 @@ export const uploadStudies = async (
   userId: string,
   organizationId: string,
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
-  studiesIndexes: Record<string, number>,
-  studiesData: (string | number)[][],
-  studySitesIndexes: Record<string, number>,
-  studySitesData: (string | number)[][],
-  studyExportsIndexes: Record<string, number>,
-  studyExportsData: (string | number)[][],
-  studyEmissionSourceIndexes: Record<string, number>,
-  studyEmissionSourceData: (string | number)[][],
+  studiesWorksheet: StudiesWorkSheet,
+  studySitesWorksheet: StudySitesWorkSheet,
+  studyExportsWorksheet: StudyExportsWorkSheet,
+  emissionSourcesWorksheet: EmissionSourcesWorkSheet,
 ) => {
   console.log('Import des études...')
 
-  const studies = parseStudies(studiesIndexes, studiesData)
-  const studySites = parseStudySites(studySitesIndexes, studySitesData)
-  const studyExports = parseExports(studyExportsIndexes, studyExportsData)
-
-  const existingEmissionFactorNames = await getExistingEmissionFactorsNames(
-    studyEmissionSourceIndexes,
-    studyEmissionSourceData,
-    transaction,
-  )
+  const studies = parseStudies(studiesWorksheet)
+  const studySites = parseStudySites(studySitesWorksheet)
+  const studyExports = parseStudyExports(studyExportsWorksheet)
+  const existingEmissionFactorNames = await getExistingEmissionFactorsNames(emissionSourcesWorksheet, transaction)
   const studyEmissionSources = parseEmissionSources(
     postAndSubPostsOldNewMapping,
-    studyEmissionSourceIndexes,
-    studyEmissionSourceData,
+    emissionSourcesWorksheet,
     existingEmissionFactorNames,
   )
 

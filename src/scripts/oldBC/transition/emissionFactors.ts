@@ -2,6 +2,7 @@ import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma } from '@p
 import { v4 } from 'uuid'
 import { unitsMatrix } from '../../../services/importEmissionFactor/historyUnits'
 import { getEmissionQuality } from '../../../services/importEmissionFactor/import'
+import { EmissionFactorsWorkSheet } from './oldBCWorksheetReader'
 
 export enum RequiredEmissionFactorsColumns {
   EFV_GUID = 'EFV_GUID',
@@ -48,13 +49,14 @@ const getStringValue = (value: string | number) => {
 
 export const uploadEmissionFactors = async (
   transaction: Prisma.TransactionClient,
-  data: (string | number)[][],
-  indexes: Record<string, number>,
+  emissionFactorsWorksheet: EmissionFactorsWorkSheet,
   organizationId: string,
 ) => {
   console.log("Import des facteurs d'émissions...")
-
-  const ids = data.map((row) => row[indexes[RequiredEmissionFactorsColumns.EFV_GUID]] as string)
+  const indexes = emissionFactorsWorksheet.getIndexes()
+  const ids = emissionFactorsWorksheet
+    .getRows()
+    .map((row) => row[indexes[RequiredEmissionFactorsColumns.EFV_GUID]] as string)
   const existingEmissionFactors = await transaction.emissionFactor.findMany({
     where: { oldBCId: { in: ids } },
   })
@@ -64,7 +66,8 @@ export const uploadEmissionFactors = async (
   }
 
   const metaData = [] as Prisma.EmissionFactorMetaDataCreateManyInput[]
-  const emissionFactorsToCreate = data
+  const emissionFactorsToCreate = emissionFactorsWorksheet
+    .getRows()
     .filter((row) => !row[indexes[RequiredEmissionFactorsColumns.FE_BCPlus]])
     .filter((row) => row[indexes[RequiredEmissionFactorsColumns.EF_TYPE]] === 'Consolidé')
     .filter((row) =>
@@ -135,7 +138,8 @@ export const uploadEmissionFactors = async (
     where: { oldBCId: { in: ids } },
   })
 
-  const emissionFactorPartsToCreate = data
+  const emissionFactorPartsToCreate = emissionFactorsWorksheet
+    .getRows()
     .filter((row) => !row[indexes[RequiredEmissionFactorsColumns.FE_BCPlus]])
     .filter((row) => row[indexes[RequiredEmissionFactorsColumns.EF_TYPE]] !== 'Consolidé')
     .filter((row) =>
