@@ -3,6 +3,10 @@ import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {
   EmissionSourcesWorkSheet,
+  RequiredStudiesColumns,
+  RequiredStudyEmissionSourcesColumns,
+  RequiredStudyExportsColumns,
+  RequiredStudySitesColumns,
   StudiesWorkSheet,
   StudyExportsWorkSheet,
   StudySitesWorkSheet,
@@ -12,42 +16,6 @@ import {
   getExistingObjectsIds,
   getExistingSitesIds,
 } from './repositories'
-
-export enum RequiredStudiesColumns {
-  oldBCId = 'IDETUDE',
-  name = 'NOM_ETUDE',
-  startDate = 'PERIODE_DEBUT',
-  endDate = 'PERIODE_FIN',
-  siteId = 'ID_ENTITE',
-}
-
-export enum RequiredStudySitesColumns {
-  siteOldBCId = 'ID_ENTITE',
-  studyOldBCId = 'IDETUDE',
-}
-
-export enum RequiredStudyExportsColumns {
-  studyOldBCId = 'IDETUDE',
-  type = 'LIB_REFERENTIEL',
-  control = 'LIBELLE_MODE_CONTROLE',
-}
-
-export enum RequiredStudyEmissionSourcesColumns {
-  studyOldBCId = 'ID_ETUDE',
-  siteOldBCId = 'ID_ENTITE',
-  descriptifData = 'DESCRIPTIF_DATA',
-  recycledPart = 'POURCENT_RECYCLE',
-  commentaires = 'Commentaires',
-  commentairesCollecte = 'COMMENTAIRES_COLLECTE',
-  validationDASaisie = 'ValidationDASaisie',
-  daTotalValue = 'DA_VAL_TOTAL',
-  domain = 'Nom_DOMAINE',
-  category = 'NOM_CATEGORIES',
-  subCategory = 'NOM_SOUS_CATEGORIE',
-  post = 'NOM_POSTE',
-  subPost = 'NOM_SOUS_POSTE',
-  emissionFactorOldBCId = 'EFV_GUID',
-}
 
 interface Study {
   oldBCId: string

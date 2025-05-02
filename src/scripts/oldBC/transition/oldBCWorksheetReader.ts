@@ -2,12 +2,6 @@ import xlsx from 'node-xlsx'
 
 import { RequiredEmissionFactorsColumns } from './emissionFactors'
 import { RequiredOrganizationsColumns } from './organizations'
-import {
-  RequiredStudiesColumns,
-  RequiredStudyEmissionSourcesColumns,
-  RequiredStudyExportsColumns,
-  RequiredStudySitesColumns,
-} from './studies'
 
 export class OldBCWorkSheetReader {
   organizationsWorksheet: OrganizationsWorkSheet
@@ -16,6 +10,8 @@ export class OldBCWorkSheetReader {
   studySitesWorksheet: StudySitesWorkSheet
   studyExportsWorksheet: StudyExportsWorkSheet
   studyEmissionSourcesWorksheet: EmissionSourcesWorkSheet
+  sitesCAWorksheet: SitesCAWorkSheet
+  sitesETPWorksheet: SitesETPWorkSheet
 
   constructor(file: string) {
     const worksheets = xlsx.parse<(string | number)[]>(file)
@@ -25,6 +21,8 @@ export class OldBCWorkSheetReader {
     this.studySitesWorksheet = new StudySitesWorkSheet(worksheets)
     this.studyExportsWorksheet = new StudyExportsWorkSheet(worksheets)
     this.studyEmissionSourcesWorksheet = new EmissionSourcesWorkSheet(worksheets)
+    this.sitesCAWorksheet = new SitesCAWorkSheet(worksheets)
+    this.sitesETPWorksheet = new SitesETPWorkSheet(worksheets)
   }
 }
 
@@ -82,10 +80,23 @@ export class EmissionFactorsWorkSheet extends OldBCWorksheetReader {
   }
 }
 
+export enum RequiredStudiesColumns {
+  oldBCId = 'IDETUDE',
+  name = 'NOM_ETUDE',
+  startDate = 'PERIODE_DEBUT',
+  endDate = 'PERIODE_FIN',
+  siteId = 'ID_ENTITE',
+}
+
 export class StudiesWorkSheet extends OldBCWorksheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Etudes', RequiredStudiesColumns)
   }
+}
+
+export enum RequiredStudySitesColumns {
+  siteOldBCId = 'ID_ENTITE',
+  studyOldBCId = 'IDETUDE',
 }
 
 export class StudySitesWorkSheet extends OldBCWorksheetReader {
@@ -94,14 +105,64 @@ export class StudySitesWorkSheet extends OldBCWorksheetReader {
   }
 }
 
+export enum RequiredStudyExportsColumns {
+  studyOldBCId = 'IDETUDE',
+  type = 'LIB_REFERENTIEL',
+  control = 'LIBELLE_MODE_CONTROLE',
+}
+
 export class StudyExportsWorkSheet extends OldBCWorksheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Etudes - exports', RequiredStudyExportsColumns)
   }
 }
 
+export enum RequiredStudyEmissionSourcesColumns {
+  studyOldBCId = 'ID_ETUDE',
+  siteOldBCId = 'ID_ENTITE',
+  descriptifData = 'DESCRIPTIF_DATA',
+  recycledPart = 'POURCENT_RECYCLE',
+  commentaires = 'Commentaires',
+  commentairesCollecte = 'COMMENTAIRES_COLLECTE',
+  validationDASaisie = 'ValidationDASaisie',
+  daTotalValue = 'DA_VAL_TOTAL',
+  domain = 'Nom_DOMAINE',
+  category = 'NOM_CATEGORIES',
+  subCategory = 'NOM_SOUS_CATEGORIE',
+  post = 'NOM_POSTE',
+  subPost = 'NOM_SOUS_POSTE',
+  emissionFactorOldBCId = 'EFV_GUID',
+}
+
 export class EmissionSourcesWorkSheet extends OldBCWorksheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Données sources', RequiredStudyEmissionSourcesColumns)
+  }
+}
+
+enum RequiredSitesCAColumns {
+  siteOldBCId = 'ID_ENTITE',
+  startDate = 'DATE_DEBUT',
+  endDate = 'DATE_FIN',
+  value = 'VALEUR_FIN',
+  unit = 'LIB_FIN_UNITE',
+}
+
+export class SitesCAWorkSheet extends OldBCWorksheetReader {
+  constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
+    super(worksheets, 'Sites - CA', RequiredSitesCAColumns)
+  }
+}
+
+enum RequiredSitesETPColumns {
+  siteOldBCId = 'ID_ENTITE',
+  startDate = 'DATE_DEBUT',
+  endDate = 'DATE_FIN',
+  numberOfEmployees = 'NB_EMPLOYES',
+}
+
+export class SitesETPWorkSheet extends OldBCWorksheetReader {
+  constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
+    super(worksheets, 'Sites - ETP', RequiredSitesETPColumns)
   }
 }
