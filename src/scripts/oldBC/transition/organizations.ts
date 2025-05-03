@@ -1,15 +1,6 @@
 import { Prisma, Organization as PrismaOrganization } from '@prisma/client'
-import { OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
+import { OrganizationRow, OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
 import { getExistingSitesIds } from './repositories'
-
-export enum RequiredOrganizationsColumns {
-  ID_ENTITE = 'ID_ENTITE',
-  NOM_ORGANISATION = 'NOM_ORGANISATION',
-  NOM_ENTITE = 'NOM_ENTITE',
-  SIRET = 'SIRET',
-  ID_ENTITE_MERE = 'ID_ENTITE_MERE',
-  IS_USER_ORGA = 'IS_USER_ORGA',
-}
 
 interface Organization {
   oldBCId: string
@@ -23,19 +14,19 @@ interface Site {
   organizationOldBCId: string
 }
 
-function mapRowToOrganization(row: (string | number)[], indexes: Record<string, number>) {
+function mapRowToOrganization(row: OrganizationRow) {
   return {
-    oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string,
-    name: row[indexes[RequiredOrganizationsColumns.NOM_ORGANISATION]] as string,
-    siret: row[indexes[RequiredOrganizationsColumns.SIRET]] as string,
+    oldBCId: row.ID_ENTITE as string,
+    name: row.NOM_ORGANISATION as string,
+    siret: row.SIRET as string,
   }
 }
 
-function mapRowToSite(row: (string | number)[], indexes: Record<string, number>) {
+function mapRowToSite(row: OrganizationRow) {
   return {
-    oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string,
-    name: row[indexes[RequiredOrganizationsColumns.NOM_ENTITE]] as string,
-    organizationOldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]] as string,
+    oldBCId: row.ID_ENTITE as string,
+    name: row.NOM_ENTITE as string,
+    organizationOldBCId: row.ID_ENTITE_MERE as string,
   }
 }
 
@@ -84,31 +75,23 @@ export const uploadOrganizations = async (
 ) => {
   console.log('Import des organisations...')
 
-  const indexes = organizationWorksheet.getIndexes()
   const userOrganizationsRows: { oldBCId: string; name: string }[] = []
   const organizations: Organization[] = []
   const sites: Site[] = []
   organizationWorksheet
     .getRows()
     // On ignore les parentID supprimés
-    .filter(
-      (row) =>
-        (row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]] as string) !==
-        '00000000-0000-0000-0000-000000000000',
-    )
+    .filter((row) => (row.ID_ENTITE_MERE as string) !== '00000000-0000-0000-0000-000000000000')
     .forEach((row) => {
-      if ((row[indexes[RequiredOrganizationsColumns.IS_USER_ORGA]] as number) === 1) {
+      if ((row.IS_USER_ORGA as number) === 1) {
         userOrganizationsRows.push({
-          oldBCId: row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] as string,
-          name: row[indexes[RequiredOrganizationsColumns.NOM_ENTITE]] as string,
+          oldBCId: row.ID_ENTITE as string,
+          name: row.NOM_ENTITE as string,
         })
-      } else if (
-        row[indexes[RequiredOrganizationsColumns.ID_ENTITE]] ===
-        row[indexes[RequiredOrganizationsColumns.ID_ENTITE_MERE]]
-      ) {
-        organizations.push(mapRowToOrganization(row, indexes))
+      } else if (row.ID_ENTITE === row.ID_ENTITE_MERE) {
+        organizations.push(mapRowToOrganization(row))
       } else {
-        sites.push(mapRowToSite(row, indexes))
+        sites.push(mapRowToSite(row))
       }
     })
 

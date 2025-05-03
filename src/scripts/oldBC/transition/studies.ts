@@ -2,12 +2,9 @@ import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@pri
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {
+  EmissionSourceRow,
   EmissionSourcesWorkSheet,
   OldBCWorkSheetsReader,
-  RequiredStudiesColumns,
-  RequiredStudyEmissionSourcesColumns,
-  RequiredStudyExportsColumns,
-  RequiredStudySitesColumns,
   StudiesWorkSheet,
   StudyExportsWorkSheet,
   StudySitesWorkSheet,
@@ -45,30 +42,24 @@ interface EmissionSource {
 }
 
 const parseStudies = (studiesWorksheet: StudiesWorkSheet): Study[] => {
-  const indexes = studiesWorksheet.getIndexes()
   return studiesWorksheet
     .getRows()
-    .filter((row) => row[indexes[RequiredStudiesColumns.name]])
+    .filter((row) => row.name)
     .map((row) => ({
-      oldBCId: row[indexes[RequiredStudiesColumns.oldBCId]] as string,
-      name: row[indexes[RequiredStudiesColumns.name]] as string,
-      startDate: row[indexes[RequiredStudiesColumns.startDate]]
-        ? new Date(getJsDateFromExcel(row[indexes[RequiredStudiesColumns.startDate]] as number))
-        : '',
-      endDate: row[indexes[RequiredStudiesColumns.startDate]]
-        ? new Date(getJsDateFromExcel(row[indexes[RequiredStudiesColumns.endDate]] as number))
-        : '',
+      oldBCId: row.oldBCId as string,
+      name: row.name as string,
+      startDate: row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : '',
+      endDate: row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : '',
     }))
 }
 
 const parseStudySites = (studySitesWorksheet: StudySitesWorkSheet): Map<string, StudySite[]> => {
-  const indexes = studySitesWorksheet.getIndexes()
   return studySitesWorksheet
     .getRows()
     .map<[string, StudySite]>((row) => [
-      row[indexes[RequiredStudySitesColumns.studyOldBCId]] as string,
+      row.studyOldBCId as string,
       {
-        siteOldBCId: row[indexes[RequiredStudySitesColumns.siteOldBCId]] as string,
+        siteOldBCId: row.siteOldBCId as string,
       },
     ])
     .reduce((accumulator, currentValue) => {
@@ -109,22 +100,21 @@ const getControl = (control: string) => {
 }
 
 const parseStudyExports = (studyExportsWorksheet: StudyExportsWorkSheet): Map<string, Export[]> => {
-  const indexes = studyExportsWorksheet.getIndexes()
   return studyExportsWorksheet
     .getRows()
     .map<[string, Export | null]>((row) => {
-      const type = getType(row[indexes[RequiredStudyExportsColumns.type]] as string)
-      const control = getControl(row[indexes[RequiredStudyExportsColumns.control]] as string)
+      const type = getType(row.type as string)
+      const control = getControl(row.control as string)
       if (!type) {
         console.warn(`Type ${type} invalide`)
-        return [row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string, null]
+        return [row.studyOldBCId as string, null]
       }
       if (!control) {
         console.warn(`Control ${control} invalide`)
-        return [row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string, null]
+        return [row.studyOldBCId as string, null]
       }
       return [
-        row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string,
+        row.studyOldBCId as string,
         {
           type: type,
           control: control,
@@ -165,29 +155,22 @@ const getExistingEmissionFactorsNames = async (
   studyEmissionSourcesWorksheet: EmissionSourcesWorkSheet,
   transaction: Prisma.TransactionClient,
 ) => {
-  const indexes = studyEmissionSourcesWorksheet.getIndexes()
   const emissionFactorsOldBCIds = studyEmissionSourcesWorksheet
     .getRows()
-    .filter(
-      (row) =>
-        row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] !== '00000000-0000-0000-0000-000000000000',
-    )
-    .map((row) => row[indexes[RequiredStudyEmissionSourcesColumns.emissionFactorOldBCId]] as string)
+    .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
+    .map((row) => row.emissionFactorOldBCId as string)
 
   return await getExistingEmissionFactorsNamesFromRepository(transaction, emissionFactorsOldBCIds)
 }
 
-const buildStudyEmissionSourceName = (
-  row: (string | number)[],
-  indexes: Record<string, number>,
+const buildEmissionSourceName = (
+  row: EmissionSourceRow,
   emissionFactorsNames: Map<string, { name: string; id: string }>,
   newPostAndSubPost: NewPostAndSubPosts,
 ) => {
-  let name = row[indexes[RequiredStudyEmissionSourcesColumns.descriptifData]] as string
+  let name = row.descriptifData as string
   if (!name) {
-    const emissionFactorName = emissionFactorsNames.get(
-      row[indexes[RequiredStudyEmissionSourcesColumns.emissionFactorOldBCId]] as string,
-    )
+    const emissionFactorName = emissionFactorsNames.get(row.emissionFactorOldBCId as string)
     if (emissionFactorName) {
       name = emissionFactorName.name
     }
@@ -200,23 +183,19 @@ const parseEmissionSources = (
   studyEmissionSourcesWorkSheet: EmissionSourcesWorkSheet,
   emissionFactorsNames: Map<string, { name: string; id: string }>,
 ): Map<string, EmissionSource[]> => {
-  const indexes = studyEmissionSourcesWorkSheet.getIndexes()
   return studyEmissionSourcesWorkSheet
     .getRows()
     .slice(1)
-    .filter(
-      (row) =>
-        row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] !== '00000000-0000-0000-0000-000000000000',
-    )
+    .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
     .map<[string, EmissionSource] | null>((row) => {
       const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
-        domain: row[indexes[RequiredStudyEmissionSourcesColumns.domain]] as string,
-        category: row[indexes[RequiredStudyEmissionSourcesColumns.category]] as string,
-        subCategory: row[indexes[RequiredStudyEmissionSourcesColumns.subCategory]] as string,
-        oldPost: row[indexes[RequiredStudyEmissionSourcesColumns.post]] as string,
-        oldSubPost: row[indexes[RequiredStudyEmissionSourcesColumns.subPost]] as string,
+        domain: row.domain as string,
+        category: row.category as string,
+        subCategory: row.subCategory as string,
+        oldPost: row.post as string,
+        oldSubPost: row.subPost as string,
       })
-      const name = buildStudyEmissionSourceName(row, indexes, emissionFactorsNames, newPostAndSubPost)
+      const name = buildEmissionSourceName(row, emissionFactorsNames, newPostAndSubPost)
       let subPost
       try {
         subPost = mapToSubPost(newPostAndSubPost.newSubPost)
@@ -225,14 +204,14 @@ const parseEmissionSources = (
         return null
       }
       return [
-        row[indexes[RequiredStudyEmissionSourcesColumns.studyOldBCId]] as string,
+        row.studyOldBCId as string,
         {
-          siteOldBCId: row[indexes[RequiredStudyEmissionSourcesColumns.siteOldBCId]] as string,
+          siteOldBCId: row.siteOldBCId as string,
           name: name,
-          recycledPart: row[indexes[RequiredStudyEmissionSourcesColumns.recycledPart]] as number,
-          comment: `${row[indexes[RequiredStudyEmissionSourcesColumns.commentaires]] as string} ${row[indexes[RequiredStudyEmissionSourcesColumns.commentairesCollecte]] as string}`,
-          validated: (row[indexes[RequiredStudyEmissionSourcesColumns.validationDASaisie]] as number) === 1,
-          value: row[indexes[RequiredStudyEmissionSourcesColumns.daTotalValue]] as number,
+          recycledPart: row.recycledPart as number,
+          comment: `${row.commentaires as string} ${row.commentairesCollecte as string}`,
+          validated: (row.validationDASaisie as number) === 1,
+          value: row.daTotalValue as number,
           subPost: subPost,
         },
       ]
