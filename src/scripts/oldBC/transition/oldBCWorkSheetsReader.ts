@@ -7,8 +7,8 @@ export class OldBCWorkSheetsReader {
   studySitesWorksheet: StudySitesWorkSheet
   studyExportsWorksheet: StudyExportsWorkSheet
   emissionSourcesWorksheet: EmissionSourcesWorkSheet
-  sitesCAWorksheet: SitesCAWorkSheet
-  sitesETPWorksheet: SitesETPWorkSheet
+  sitesETPsWorksheet: SitesETPsWorkSheet
+  sitesCAsWorksheet: SitesCAsWorkSheet
 
   constructor(file: string) {
     const worksheets = xlsx.parse<(string | number)[]>(file)
@@ -18,8 +18,8 @@ export class OldBCWorkSheetsReader {
     this.studySitesWorksheet = new StudySitesWorkSheet(worksheets)
     this.studyExportsWorksheet = new StudyExportsWorkSheet(worksheets)
     this.emissionSourcesWorksheet = new EmissionSourcesWorkSheet(worksheets)
-    this.sitesCAWorksheet = new SitesCAWorkSheet(worksheets)
-    this.sitesETPWorksheet = new SitesETPWorkSheet(worksheets)
+    this.sitesETPsWorksheet = new SitesETPsWorkSheet(worksheets)
+    this.sitesCAsWorksheet = new SitesCAsWorkSheet(worksheets)
   }
 }
 
@@ -299,16 +299,16 @@ enum RequiredSitesCAColumns {
   LIB_FIN_UNITE = 'unit',
 }
 
-export type SitesCARow = {
+export type SiteCARow = {
   [key in RequiredSitesCAColumns]: string | number
 }
 
-export class SitesCAWorkSheet extends OldBCWorkSheetReader {
+export class SitesCAsWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Sites - CA', RequiredSitesCAColumns)
   }
 
-  getRows(): SitesCARow[] {
+  getRows(): SiteCARow[] {
     return this.worksheet.data.slice(1).map((row) => ({
       siteOldBCId: row[this.indexes.ID_ENTITE],
       startDate: row[this.indexes.DATE_DEBUT],
@@ -326,16 +326,16 @@ enum RequiredSitesETPColumns {
   NB_EMPLOYES = 'numberOfEmployees',
 }
 
-export type SitesETPRow = {
+export type SiteETPRow = {
   [key in RequiredSitesETPColumns]: string | number
 }
 
-export class SitesETPWorkSheet extends OldBCWorkSheetReader {
+export class SitesETPsWorkSheet extends OldBCWorkSheetReader {
   constructor(worksheets: { name: string; data: (string | number)[][] }[]) {
     super(worksheets, 'Sites - ETP', RequiredSitesETPColumns)
   }
 
-  getRows(): SitesETPRow[] {
+  getRows(): SiteETPRow[] {
     return this.worksheet.data.slice(1).map((row) => ({
       siteOldBCId: row[this.indexes.ID_ENTITE],
       startDate: row[this.indexes.DATE_DEBUT],

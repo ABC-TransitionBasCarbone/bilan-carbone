@@ -11,9 +11,9 @@ import {
 } from './oldBCWorkSheetsReader'
 import {
   getExistingEmissionFactorsNames as getExistingEmissionFactorsNamesFromRepository,
-  getExistingObjectsIds,
   getExistingSitesIds,
 } from './repositories'
+import { SitesCAsMapper, SitesETPsMapper } from './sitesETPsAndCAs'
 
 interface Study {
   oldBCId: string
@@ -230,8 +230,26 @@ const parseEmissionSources = (
     }, new Map<string, EmissionSource[]>())
 }
 
-const getExistingStudiesIds = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
-  return getExistingObjectsIds(transaction.study, studiesIds)
+const getExistingStudies = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
+  const existingObjects = await transaction.study.findMany({
+    where: {
+      oldBCId: {
+        in: studiesIds,
+      },
+    },
+    select: { id: true, oldBCId: true, startDate: true, endDate: true },
+  })
+
+  return existingObjects.reduce((map, currentExistingObject) => {
+    if (currentExistingObject.oldBCId) {
+      map.set(currentExistingObject.oldBCId, {
+        id: currentExistingObject.id,
+        startDate: currentExistingObject.startDate,
+        endDate: currentExistingObject.endDate,
+      })
+    }
+    return map
+  }, new Map<string, { id: string; startDate: Date; endDate: Date }>())
 }
 
 const getExistingStudySites = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
@@ -304,12 +322,14 @@ export const uploadStudies = async (
     })),
   })
 
-  const existingStudiesIds = await getExistingStudiesIds(transaction, Array.from(studySites.keys()))
+  const existingStudies = await getExistingStudies(transaction, Array.from(studySites.keys()))
   const sitesOldBCIds = Array.from(
     studySites.values().flatMap((studySites) => studySites.map((studySite) => studySite.siteOldBCId)),
   )
   const existingSiteIds = await getExistingSitesIds(transaction, sitesOldBCIds)
 
+  const sitesETPsMapper = new SitesETPsMapper(oldBCWorksheetReader.sitesETPsWorksheet)
+  const sitesCAsMapper = new SitesCAsMapper(oldBCWorksheetReader.sitesCAsWorksheet)
   await transaction.studySite.createMany({
     data: Array.from(
       studySites.entries().flatMap(([studyOldBCId, studySites]) => {
@@ -317,8 +337,8 @@ export const uploadStudies = async (
         if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
           return []
         }
-        const existingStudyId = existingStudiesIds.get(studyOldBCId)
-        if (!existingStudyId) {
+        const existingStudy = existingStudies.get(studyOldBCId)
+        if (!existingStudy) {
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
@@ -329,11 +349,21 @@ export const uploadStudies = async (
               console.warn(`Impossible de retrouver le site de oldBCId: ${studySite.siteOldBCId}`)
               return null
             }
+            const siteETP = sitesETPsMapper.getMatchingSiteAdditionalData(
+              studySite.siteOldBCId,
+              existingStudy.startDate,
+              existingStudy.endDate,
+            )
+            const siteCA = sitesCAsMapper.getMatchingSiteAdditionalData(
+              studySite.siteOldBCId,
+              existingStudy.startDate,
+              existingStudy.endDate,
+            )
             return {
-              studyId: existingStudyId,
+              studyId: existingStudy.id,
               siteId: existingSiteId,
-              etp: 1,
-              ca: 1,
+              etp: siteETP ? siteETP.numberOfEmployees : 1,
+              ca: siteCA ? siteCA.ca : 1,
             }
           })
           .filter((studySite) => studySite !== null)
@@ -348,15 +378,15 @@ export const uploadStudies = async (
         if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
           return []
         }
-        const existingStudyId = existingStudiesIds.get(studyOldBCId)
-        if (!existingStudyId) {
+        const existingStudy = existingStudies.get(studyOldBCId)
+        if (!existingStudy) {
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
         return studyExports
           .map((studyExport) => ({
             ...studyExport,
-            studyId: existingStudyId,
+            studyId: existingStudy.id,
           }))
           .filter((studyExport) => studyExport !== null)
       }),
@@ -368,8 +398,9 @@ export const uploadStudies = async (
     Array.from(
       studyEmissionSources
         .keys()
-        .map((studyOldBCId) => existingStudiesIds.get(studyOldBCId))
-        .filter((studyId) => studyId !== undefined),
+        .map((studyOldBCId) => existingStudies.get(studyOldBCId))
+        .filter((study) => study !== undefined)
+        .map((study) => study.id),
     ),
   )
 
@@ -380,8 +411,8 @@ export const uploadStudies = async (
         if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
           return []
         }
-        const existingStudyId = existingStudiesIds.get(studyOldBCId)
-        if (!existingStudyId) {
+        const existingStudy = existingStudies.get(studyOldBCId)
+        if (!existingStudy) {
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
@@ -392,9 +423,9 @@ export const uploadStudies = async (
               console.warn(`Impossible de retrouver le site de oldBCId: ${studyEmissionSource.siteOldBCId}`)
               return null
             }
-            const studySites = existingStudySites.get(existingStudyId)
+            const studySites = existingStudySites.get(existingStudy.id)
             if (!studySites) {
-              console.warn(`Impossible de retrouver les studySites de studyId: ${existingStudyId}`)
+              console.warn(`Impossible de retrouver les studySites de studyId: ${existingStudy.id}`)
               return null
             }
             const studySite = studySites.find((studySite) => studySite.siteId === existingSiteId)
@@ -403,7 +434,7 @@ export const uploadStudies = async (
               return null
             }
             return {
-              studyId: existingStudyId,
+              studyId: existingStudy.id,
               studySiteId: studySite.id,
               name: studyEmissionSource.name,
               subPost: studyEmissionSource.subPost,
