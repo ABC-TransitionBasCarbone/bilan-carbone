@@ -282,7 +282,7 @@ const EmissionSourceForm = ({
               labelId="emission-source-caracterisation-label"
               label={`${t('form.caracterisation')} *`}
               withLabel={false}
-              clearable
+              clearable={!!canEdit && caracterisations.length > 1}
             >
               {caracterisations.map((categorisation) => (
                 <MenuItem key={categorisation} value={categorisation}>
