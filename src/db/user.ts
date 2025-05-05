@@ -119,3 +119,5 @@ export const getUserApplicationSettings = (userId: string) =>
 
 export const updateUserApplicationSettings = (userId: string, data: Prisma.UserApplicationSettingsUpdateInput) =>
   prismaClient.userApplicationSettings.update({ where: { userId }, data })
+
+export const getUsers = () => prismaClient.user.findMany({ select: { id: true, email: true } })
