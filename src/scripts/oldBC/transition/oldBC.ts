@@ -1,5 +1,9 @@
 import { getAccountByEmailAndOrganizationVersionId } from '@/db/account'
-import { getOrganizationVersionById, getOrganizationWithSitesById } from '@/db/organization'
+import {
+  getOrganizationVersionById,
+  getOrganizationWithSitesById,
+  OrganizationVersionWithOrganization,
+} from '@/db/organization'
 import { Environment } from '@prisma/client'
 import xlsx from 'node-xlsx'
 import { prismaClient } from '../../../db/client'
@@ -69,15 +73,15 @@ const getStudyEmissionSourcesIndexes = (headers: string[]): Record<string, numbe
 export const uploadOldBCInformations = async (file: string, email: string, organizationVersionId: string) => {
   const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
 
-  // TODO Ne pas oublier d'utiliser l'orgaversion id lors des imports maintenant
-
   const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
   if (!account) {
     console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
     return
   }
 
-  const accountOrganizationVersion = await getOrganizationVersionById(account.organizationVersionId)
+  const accountOrganizationVersion = (await getOrganizationVersionById(
+    account.organizationVersionId,
+  )) as OrganizationVersionWithOrganization
 
   if (!accountOrganizationVersion) {
     throw new Error(`La version de l'organisation de l'utilisateur n'existe pas.`)
@@ -126,19 +130,18 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   let hasEmissionFactorsWarning = false
   let hasStudiesWarning = false
 
-  // TODO je récupère des orga ou orga version depuis la sheet ici ? Et qu'est-ce qu'il doit se passer par la suite ?
   await prismaClient.$transaction(async (transaction) => {
     hasOrganizationsWarning = await uploadOrganizations(
       transaction,
       organizationsSheet.data,
       organizationsIndexes,
-      accountOrganization,
+      accountOrganizationVersion,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
       emissionFactorsSheet.data,
       emissionFactorsIndexes,
-      accountOrganizationVersion.organizationId,
+      accountOrganizationVersion.id,
     )
     hasStudiesWarning = await uploadStudies(
       transaction,

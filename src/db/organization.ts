@@ -82,6 +82,7 @@ export const getOrganizationWithSitesById = (id: string) =>
         select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
         orderBy: { createdAt: 'asc' },
       },
+      organizationVersions: true,
     },
   })
 
@@ -239,6 +240,7 @@ export const onboardOrganizationVersion = async (
 
 export const deleteClient = async (id: string) => {
   const organizationVersion = (await getOrganizationVersionById(id)) as OrganizationVersionWithOrganization
+  const organization = await getOrganizationWithSitesById(organizationVersion.organizationId)
 
   const [clientUsers, clientChildren, clientEmissionFactors] = await Promise.all([
     prismaClient.account.findFirst({ where: { organizationVersionId: id } }),
@@ -253,9 +255,13 @@ export const deleteClient = async (id: string) => {
       where: { organizationVersionId: organizationVersion.organizationId },
     })
     await Promise.all(studies.map((study) => deleteStudy(study.id)))
-    // TODO je dois delete les site ou pas ici car je sais pas si on va delete que la version ou toute l'organization
-    await transaction.site.deleteMany({ where: { organizationId: organizationVersion.organizationId } })
     await transaction.organizationVersion.delete({ where: { id } })
+
+    if (!organization?.organizationVersions.length) {
+      return 'unexpectedAssociations'
+    }
+
+    await transaction.site.deleteMany({ where: { organizationId: organizationVersion.organizationId } })
     await transaction.organization.delete({ where: { id: organizationVersion.organizationId } })
   })
 }

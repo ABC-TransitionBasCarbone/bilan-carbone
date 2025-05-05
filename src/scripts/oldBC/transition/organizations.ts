@@ -1,5 +1,5 @@
-import { OrganizationVersionWithOrganizationSelect } from '@/db/organization'
-import { Prisma, Organization as PrismaOrganization } from '@prisma/client'
+import { OrganizationVersionWithOrganization, OrganizationVersionWithOrganizationSelect } from '@/db/organization'
+import { Prisma } from '@prisma/client'
 import { getExistingSitesIds } from './repositories'
 
 export enum RequiredOrganizationsColumns {
@@ -81,7 +81,7 @@ export const uploadOrganizations = async (
   transaction: Prisma.TransactionClient,
   data: (string | number)[][],
   indexes: Record<string, number>,
-  userOrganization: PrismaOrganization,
+  userOrganizationVersion: OrganizationVersionWithOrganization,
 ) => {
   console.log('Import des organisations...')
 
@@ -117,14 +117,12 @@ export const uploadOrganizations = async (
   }
   const userOrganizationRow = userOrganizationsRows[0]
 
-  await checkUserOrganizationHaveNoNewSites(transaction, userOrganization.id)
-  // TODO Je ne sais pas trop si j'ai bien géré ici avec le oldBCId ou bien il faut déplacer la column sur organizationVersion ?
-  // aussi je sais pas si les organizationid qu'on récupère doivent être tuilisé en tant que OrganizatioNVersionId ou OrganizationId
+  await checkUserOrganizationHaveNoNewSites(transaction, userOrganizationVersion.organizationId)
 
   const existingOrganizations = await transaction.organizationVersion.findMany({
     where: {
       AND: [
-        { parentId: userOrganization.id }, // TODO la par ex j'utilise orgaId sur un orgaversion Id vu que les parents sont sur les versions
+        { parentId: userOrganizationVersion.id },
         { organization: { oldBCId: { in: organizations.map((organization) => organization.oldBCId) } } },
       ],
     },
@@ -142,7 +140,7 @@ export const uploadOrganizations = async (
   await transaction.site.create({
     data: {
       oldBCId: userOrganizationRow.oldBCId,
-      organizationId: userOrganization.id,
+      organizationId: userOrganizationVersion.organizationId,
       name: userOrganizationRow.name,
     },
   })
@@ -152,7 +150,7 @@ export const uploadOrganizations = async (
     console.log(`Import de ${newOrganizations.length} organisations`)
     await transaction.organization.createMany({
       data: newOrganizations.map((organization) => ({
-        parentId: userOrganization.id,
+        parentId: userOrganizationVersion.id,
         oldBCId: organization.oldBCId,
         wordpressId: organization.siret,
         name: organization.name,
@@ -163,7 +161,7 @@ export const uploadOrganizations = async (
   const organizationsOldBCIdsIdsMap = await getOrganizationsOldBCIdsIdsMap(
     transaction,
     organizations,
-    userOrganization.id,
+    userOrganizationVersion.organizationId,
     userOrganizationRow.oldBCId,
   )
 

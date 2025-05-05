@@ -32,19 +32,21 @@ export const createUsersWithAccount = async (
     where: { email: { in: emails } },
   })
 
-  await prismaClient.account.createMany({
-    data: createdUsers.map((user) => {
-      const originalUser = users.find((u) => u.email === user.email)
-      if (!originalUser) {
-        throw new Error(`No account info for user ${user.email}`)
-      }
-      return {
+  for (const user of createdUsers) {
+    const originalUser = users.find((u) => u.email === user.email)
+    if (!originalUser) {
+      throw new Error(`No account info for user ${user.email}`)
+    }
+
+    await prismaClient.account.create({
+      data: {
         ...originalUser.account,
-        userId: user.id,
-      }
-    }),
-    skipDuplicates: true,
-  })
+        user: {
+          connect: { id: user.id },
+        },
+      },
+    })
+  }
 
   return newUsers
 }

@@ -10,6 +10,7 @@ program
   .requiredOption('-f, --file <value>', 'Import from XLSX file')
   .requiredOption('-e, --email <value>', 'User email')
   .requiredOption('-o, --organization <value>', 'User organization ID')
+  // TODO: remove organization ou changer -o
   .requiredOption('-o, --organizationVersion <value>', 'User organization version ID')
   .parse(process.argv)
 

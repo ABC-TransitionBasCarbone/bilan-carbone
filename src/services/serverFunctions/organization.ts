@@ -46,9 +46,6 @@ export const getStudyOrganizationVersion = async (studyId: string) => {
 export const createOrganizationCommand = async (
   command: CreateOrganizationCommand,
 ): Promise<{ message: string; success: false } | { id: string; success: true }> => {
-  // TODO pas trop sûr de si je m'y prend bien ici pour la création d'orga
-  // ou alors ici je crée just eune version et je lui passe orgaId ? (c'est ce que j'ai fait pour le moment)
-
   const session = await auth()
   if (!session || !session.user.organizationVersionId) {
     return { success: false, message: NOT_AUTHORIZED }
@@ -97,7 +94,6 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
 }
 
 export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) => {
-  // TODO ici aussi je delete juste la version ?
   if (!(await canDeleteOrganizationVersion(id))) {
     return NOT_AUTHORIZED
   }

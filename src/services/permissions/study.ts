@@ -151,7 +151,6 @@ export const canAddRightOnStudy = (
     return false
   }
 
-  // TODO ici avant on vérifiait si l'utilisateur avait une organizationId mais là ça a plus trop de sesns donc à réfléchir
   if (!userToAddOnStudy && role !== StudyRole.Reader) {
     return false
   }

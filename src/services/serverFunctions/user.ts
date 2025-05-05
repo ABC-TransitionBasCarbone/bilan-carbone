@@ -216,7 +216,7 @@ export const deleteMember = async (email: string) => {
   if (!canDeleteMember(session.user, userToRemove)) {
     return NOT_AUTHORIZED
   }
-  await deleteUserFromOrga(email)
+  await deleteUserFromOrga(email, session.user.organizationVersionId)
 }
 
 export const changeRole = async (email: string, role: Role) => {

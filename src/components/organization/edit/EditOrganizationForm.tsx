@@ -110,7 +110,6 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
             {sitesOnError &&
               sitesOnError.authorizedStudySites.map((studySite) => (
                 <li key={studySite.id}>
-                  {/* TODO je sais pas trop si je récupère de la bonne façon isCR ici */}
                   {tStudySites.rich('existingSite', {
                     name: () =>
                       `${studySite.site.name}${studySite.study.organizationVersion.isCR ? ` (${studySite.site.organization.name})` : ''}`,
