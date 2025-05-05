@@ -73,13 +73,13 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         actions={
           canUpdateTeam
             ? [
-                {
-                  actionType: 'link',
-                  href: '/equipe/ajouter',
-                  'data-testid': 'add-member-link',
-                  children: t('newUser'),
-                },
-              ]
+              {
+                actionType: 'link',
+                href: '/equipe/ajouter',
+                'data-testid': 'add-member-link',
+                children: t('newUser'),
+              },
+            ]
             : undefined
         }
       >
@@ -122,8 +122,12 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       >
         {Object.keys(Role)
           .filter((role) => {
-            if (role === Role.SUPER_ADMIN) return false
-            if (isCut) return role === Role.ADMIN || role === Role.COLLABORATOR
+            if (role === Role.SUPER_ADMIN) {
+              return false
+            }
+            if (isCut) {
+              return role === Role.ADMIN || role === Role.COLLABORATOR
+            }
             return true
           })
           .map((role) => (

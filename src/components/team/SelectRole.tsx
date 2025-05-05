@@ -68,8 +68,12 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
         </MenuItem>
         {Object.keys(Role)
           .filter((role) => {
-            if (role === Role.SUPER_ADMIN) return false
-            if (isCut && role !== Role.ADMIN && role !== Role.COLLABORATOR) return false
+            if (role === Role.SUPER_ADMIN) {
+              return false
+            }
+            if (isCut && role !== Role.ADMIN && role !== Role.COLLABORATOR) {
+              return false
+            }
             return level || isUntrainedRole(role as Role)
           })
           .map((role) => (
