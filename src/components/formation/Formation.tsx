@@ -52,7 +52,11 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
 
   return (
     <>
-      <div className={classNames(styles.subTitle, 'mb2')}>{t('explaination')}</div>
+      <div className={classNames(styles.subTitle, 'mb2')}>
+        {t.rich('explaination', {
+          b: (children) => <span className="bold">{children}</span>,
+        })}
+      </div>
       <h3 className="mb1">{t('warning')}</h3>
       <div className={classNames(styles.subTitle, 'mb2')}>
         {t.rich('warningMessage', {
