@@ -55,7 +55,7 @@ export const OnboardingCommandValidation = z.object({
           email: z
             .string()
             .trim()
-            .transform((val) => val.toLowerCase())
+            .transform((email) => email.toLowerCase())
             .optional(),
           role: z.nativeEnum(Role).optional(),
         })
@@ -98,13 +98,21 @@ export const LoginCommandValidation = z.object({
 export type LoginCommand = z.infer<typeof LoginCommandValidation>
 
 export const EmailCommandValidation = z.object({
-  email: z.string({ required_error: 'email' }).email('email').trim(),
+  email: z
+    .string({ required_error: 'email' })
+    .email('email')
+    .trim()
+    .transform((email) => email.toLowerCase()),
 })
 
 export type EmailCommand = z.infer<typeof EmailCommandValidation>
 
 export const ResetPasswordCommandValidation = z.object({
-  email: z.string({ required_error: 'email' }).email('email').trim(),
+  email: z
+    .string({ required_error: 'email' })
+    .email('email')
+    .trim()
+    .transform((email) => email.toLowerCase()),
   password: z.string({ required_error: 'password' }),
   confirmPassword: z.string({ required_error: 'password' }),
 })

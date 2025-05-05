@@ -120,7 +120,7 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const memberExists = await getUserByEmail(member.email)
+  const memberExists = await getUserByEmail(member.email.toLowerCase())
 
   if (memberExists?.role === Role.SUPER_ADMIN) {
     return NOT_AUTHORIZED
@@ -162,7 +162,7 @@ export const addMember = async (member: AddMemberCommand) => {
     await updateUser(memberExists.id, updateMember)
   }
 
-  await sendNewUser(member.email, session.user, member.firstName)
+  await sendNewUser(member.email.toLowerCase(), session.user, member.firstName)
 }
 
 export const validateMember = async (email: string) => {
@@ -177,7 +177,7 @@ export const validateMember = async (email: string) => {
   }
 
   await validateUser(email)
-  await sendNewUser(member.email, session.user, member.firstName)
+  await sendNewUser(member.email.toLowerCase(), session.user, member.firstName)
 }
 
 export const resendInvitation = async (email: string) => {
@@ -277,7 +277,7 @@ export const activateEmail = async (email: string, fromReset: boolean = false) =
     const users = await getUserFromUserOrganization(user)
     await sendActivationRequest(
       users.filter((u) => u.role === Role.GESTIONNAIRE || u.role === Role.ADMIN).map((u) => u.email),
-      email,
+      email.toLowerCase(),
       `${user.firstName} ${user.lastName}`,
     )
 

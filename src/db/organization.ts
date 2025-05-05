@@ -81,7 +81,7 @@ export const onboardOrganization = async (
     newCollaborators.push({
       firstName: '',
       lastName: '',
-      email: collaborator.email || '',
+      email: collaborator.email?.toLowerCase() || '',
       role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       status: UserStatus.VALIDATED,
       organizationId,
@@ -117,7 +117,7 @@ export const onboardOrganization = async (
   })
 
   const allCollaborators = [...newCollaborators, ...existingCollaborators]
-  allCollaborators.forEach((collab) => sendNewUser(collab.email, dbUser, collab.firstName ?? ''))
+  allCollaborators.forEach((collab) => sendNewUser(collab.email.toLowerCase(), dbUser, collab.firstName ?? ''))
 }
 
 export const deleteClient = async (id: string) => {
