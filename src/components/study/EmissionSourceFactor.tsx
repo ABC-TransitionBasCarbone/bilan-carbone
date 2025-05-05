@@ -3,6 +3,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
+import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search'
 import { StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
@@ -46,7 +47,7 @@ const fuseOptions = {
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
-  update: (name: Path<UpdateEmissionSourceCommand>, value: string) => void
+  update: (name: Path<UpdateEmissionSourceCommand>, value: string | null) => void
   selectedFactor?: EmissionFactorWithMetaData | null
   canEdit: boolean | null
   getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
@@ -122,14 +123,26 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
             onFocus={() => setDisplay(true)}
           />
           {canEdit && (
-            <button
-              className={styles.search}
-              aria-label={t('advancedSearch')}
-              title={t('advancedSearch')}
-              onClick={() => setAdvancedSearch(true)}
-            >
-              <SearchIcon />
-            </button>
+            <>
+              {value && (
+                <button
+                  className={styles.clear}
+                  aria-label={t('clear')}
+                  title={t('clear')}
+                  onClick={() => update('emissionFactorId', null)}
+                >
+                  <ClearIcon />
+                </button>
+              )}
+              <button
+                className={styles.search}
+                aria-label={t('advancedSearch')}
+                title={t('advancedSearch')}
+                onClick={() => setAdvancedSearch(true)}
+              >
+                <SearchIcon />
+              </button>
+            </>
           )}
         </div>
       </div>
