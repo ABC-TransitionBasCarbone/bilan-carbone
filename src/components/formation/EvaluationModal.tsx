@@ -1,3 +1,4 @@
+import { MIN, TIME_IN_MS } from '@/utils/time'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -42,7 +43,12 @@ const EvaluationModal = ({ user, organizationName, startTime }: Props) => {
 
   const displayWarning = () => {
     setIsEnding(true)
-    window.alert(t('alertMessage'))
+    window.alert(
+      t.rich('alertMessage', {
+        b: (children) => <span className="bold">{children}</span>,
+        time: timer / (MIN * TIME_IN_MS),
+      }),
+    )
   }
 
   const renderer = ({ hours, minutes, seconds }: { hours: number; minutes: number; seconds: number }) => (

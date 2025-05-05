@@ -1287,7 +1287,7 @@
   },
   "formation": {
     "title": "Training",
-    "explaination": "You will find below the training course for updating the BC V8 to V9 method. Watch the videos, take the quiz and receive your attestation! <b>The videos take approximately 2 hours to watch. You can then take the test, which lasts up to 1 hour, whenever you like. This training is available year-round.</b>",
+    "explaination": "You will find below the training course for updating the BC V8 to V9 method. Watch the videos, take the quiz and receive your attestation! <b>The videos take approximately 2 hours to watch. You can then take the test, which lasts up to {time} minutes, whenever you like. This training is available year-round.</b>",
     "warning": "Warning",
     "warningMessage": "<error>Please check your BC+ account to see the name of your organisation on the <i>My Organisation > Global informations</i> page, as well as your first and last name in your profile (top right). Ces informations seront utilisées pour générer votre attestation.</error></error><br></br>You are currently logged in as {name}, from organisation {organization}.<br></br><b>Remember:</b> the course must be taken with your <b>personal account</b> and your <b>nominative e-mail address</b>, and not with a generic company account. You can add other members of your organisation from the BC+: <i>My organisation > My team</i> page.",
     "videos": "Videos",
