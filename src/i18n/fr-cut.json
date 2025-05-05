@@ -1,5 +1,14 @@
 {
+  "navigation": {
+    "organization": "Mes cinémas"
+  },
   "organization": {
+    "card": {
+      "myOrganization": "Mes cinéma"
+    },
+    "form": {
+      "editTitle": "Modifier mes cinémas"
+    },
     "sites": {
       "title": "Les cinemas de l'organisation concernés par l'étude",
       "noSites": "Il n'y a pas de cinemas configurés sur l'organisation",
@@ -13,5 +22,8 @@
       "delete": "Supprimer",
       "add": "Ajouter un cinema"
     }
+  },
+  "team": {
+    "title": "Mes cinémas"
   }
 }
