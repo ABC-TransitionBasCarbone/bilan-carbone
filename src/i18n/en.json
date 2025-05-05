@@ -1129,6 +1129,7 @@
     "mandartoryFields": "Mandatory information",
     "optionalFields": "Optional information",
     "resetFESpecific": "Reset to default values",
+    "duplicate": "Duplicate the emission source",
     "glossary": {
       "title": "Glossary",
       "type": "Type",

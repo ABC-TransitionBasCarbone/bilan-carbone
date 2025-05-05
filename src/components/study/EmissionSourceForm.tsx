@@ -159,7 +159,7 @@ const EmissionSourceForm = ({
       <p className={classNames(styles.subTitle, 'mt1 mb-2 justify-between')}>
         {t('mandartoryFields')}
         {hasEditionRights(userRoleOnStudy) && (
-          <Button onClick={() => setOpen(true)} color="secondary">
+          <Button onClick={() => setOpen(true)} title={t('duplicate')} aria-label={t('duplicate')} color="secondary">
             <CopyIcon />
           </Button>
         )}
