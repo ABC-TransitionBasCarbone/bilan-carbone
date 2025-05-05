@@ -1287,7 +1287,7 @@
   },
   "formation": {
     "title": "Formation",
-    "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode. Regardez les vidéos, répondez au questionnaire et recevez votre attestation !",
+    "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode. Regardez les vidéos, répondez au questionnaire et recevez votre attestation ! <b>Le temps de visionnage des vidéos est d'environ 2h. Vous pouvez ensuite, quand vous le souhaitez, répondre au test qui dure {time} minutes maximum. Cette formation de mise à niveau est disponible toute l'année.</b>",
     "warning": "Avertissement",
     "warningMessage": "<error>Veuillez vérifier sur votre compte BC+ le nom de votre organisation dans la page <i>Mon organisation > Informations générales</i>, ainsi que vos nom et prénom dans votre profil (en haut à droite). Ces informations seront utilisées pour générer votre attestation.</error><br></br>Vous êtes actuellement connecté en tant que {name}, de l'organisation {organization}.<br></br><b>Rappel :</b> la formation doit être suivie avec <b>votre compte personnel</b> et <b>votre adresse e-mail nominative</b>, et non avec un compte générique de l'entreprise. Vous pouvez ajouter d'autres membres de votre organisation depuis le BC+ : page <i>Mon organisation > Mon équipe</i>.",
     "videos": "Vidéos",
@@ -1297,7 +1297,7 @@
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre aux questions. Je suis dans les bonnes conditions pour commencer mon test",
     "answer": "Répondre au questionnaire",
     "timer": "Temps restant : ",
-    "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite d'une heure avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d’attestation de réussite.",
+    "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite de {time} minutes avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d’attestation de réussite.",
     "form": "Questionnaire Typeform"
   },
   "deactivableFeatures": {
