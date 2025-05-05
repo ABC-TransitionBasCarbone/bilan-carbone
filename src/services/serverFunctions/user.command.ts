@@ -7,7 +7,8 @@ export const AddMemberCommandValidation = z.object({
       required_error: 'email',
     })
     .email('email')
-    .trim(),
+    .trim()
+    .transform((email) => email.toLowerCase()),
   firstName: z
     .string({
       required_error: 'firstName',
@@ -51,7 +52,11 @@ export const OnboardingCommandValidation = z.object({
     .array(
       z
         .object({
-          email: z.string().trim().optional(),
+          email: z
+            .string()
+            .trim()
+            .transform((val) => val.toLowerCase())
+            .optional(),
           role: z.nativeEnum(Role).optional(),
         })
         .superRefine((collaborator, ctx) => {
@@ -63,7 +68,11 @@ export const OnboardingCommandValidation = z.object({
             ctx.addIssue({ code: 'custom', path: ['role'], message: 'requiredRole' })
           }
           if (email !== '' && role !== undefined) {
-            const emailValidation = z.string().email().safeParse(email)
+            const emailValidation = z
+              .string()
+              .email()
+              .transform((val) => val.toLowerCase())
+              .safeParse(email)
             if (!emailValidation.success) {
               ctx.addIssue({ code: 'custom', path: ['email'], message: 'email' })
             }
