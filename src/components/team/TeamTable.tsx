@@ -1,6 +1,7 @@
 'use client'
 import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/user'
+import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { canEditMemberRole } from '@/utils/organization'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -23,7 +24,8 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const tRole = useTranslations('role')
   const [displayRoles, setDisplayRoles] = useState(false)
   const canUpdateTeam = canEditMemberRole(user)
-
+  const { environment } = useAppEnvironmentStore()
+  const isCut = useMemo(() => environment === CUT, [environment])
   const columns: ColumnDef<TeamMember>[] = useMemo(
     () => [
       {
@@ -119,7 +121,11 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         ]}
       >
         {Object.keys(Role)
-          .filter((role) => role !== Role.SUPER_ADMIN)
+          .filter((role) => {
+            if (role === Role.SUPER_ADMIN) return false
+            if (isCut) return role === Role.ADMIN || role === Role.COLLABORATOR
+            return true
+          })
           .map((role) => (
             <p key={role} className="mb-2">
               <b>{tRole(role)} :</b> {tRole(`${role}_description${crOrga ? '_CR' : ''}`)}

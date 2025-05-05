@@ -2,6 +2,7 @@
 
 import { canEditSelfRole } from '@/services/permissions/user'
 import { changeRole } from '@/services/serverFunctions/user'
+import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { isUntrainedRole } from '@/utils/organization'
 import { SEC, TIME_IN_MS } from '@/utils/time'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
@@ -30,7 +31,8 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
 
   const router = useRouter()
   const { update: updateSession } = useSession()
-
+  const { environment } = useAppEnvironmentStore()
+  const isCut = useMemo(() => environment === CUT, [environment])
   useEffect(() => {
     setRole(currentRole)
   }, [currentRole])
@@ -65,8 +67,11 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
           {t(Role.SUPER_ADMIN)}
         </MenuItem>
         {Object.keys(Role)
-          .filter((role) => role !== Role.SUPER_ADMIN)
-          .filter((role) => level || isUntrainedRole(role as Role))
+          .filter((role) => {
+            if (role === Role.SUPER_ADMIN) return false
+            if (isCut && role !== Role.ADMIN && role !== Role.COLLABORATOR) return false
+            return level || isUntrainedRole(role as Role)
+          })
           .map((role) => (
             <MenuItem key={role} value={role}>
               {t(role)}
