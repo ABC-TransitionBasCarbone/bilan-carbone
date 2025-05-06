@@ -90,10 +90,10 @@ export const getDetailedEmissionFactor = async (id: string) => {
   return emissionFactor
 }
 
-export const canEditEmissionFactor = async (id: string) => {
+export const isFromEmissionFactorOrganization = async (id: string) => {
   const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorById(id)])
 
-  if (!emissionFactor || !session) {
+  if (!emissionFactor || !session || !session.user) {
     return false
   }
   return emissionFactor.organizationId === session.user.organizationId
@@ -160,7 +160,7 @@ export const createEmissionFactorCommand = async ({
 }
 
 export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorCommand) => {
-  if (!canEditEmissionFactor(command.id)) {
+  if (!isFromEmissionFactorOrganization(command.id)) {
     return NOT_AUTHORIZED
   }
 
@@ -174,7 +174,7 @@ export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorC
 }
 
 export const deleteEmissionFactor = async (id: string) => {
-  if (!canEditEmissionFactor(id)) {
+  if (!isFromEmissionFactorOrganization(id)) {
     return NOT_AUTHORIZED
   }
 
