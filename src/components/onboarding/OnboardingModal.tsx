@@ -63,9 +63,9 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
       values.collaborators = (values.collaborators || []).filter(
         (collaborator) => collaborator.email || collaborator.role,
       )
-      const isValid = OnboardingCommandValidation.safeParse(values)
-      if (isValid.success) {
-        const result = await onboardOrganizationCommand(isValid.data)
+      const parsed = OnboardingCommandValidation.safeParse(values)
+      if (parsed.success) {
+        const result = await onboardOrganizationCommand(parsed.data)
         if (result) {
           onClose()
         } else {

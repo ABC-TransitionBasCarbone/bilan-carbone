@@ -37,16 +37,9 @@ const NewPasswordForm = () => {
     setMessage('')
     setErrorMessage('')
 
-    const isValid = EmailCommandValidation.safeParse(getValues())
-
-    if (!isValid.success) {
-      setErrorMessage('emailRequired')
-      setSubmitting(false)
-    } else {
-      await resetPassword(isValid.data?.email)
-      setSubmitting(false)
-      setMessage('emailSent')
-    }
+    await resetPassword(getValues().email)
+    setSubmitting(false)
+    setMessage('emailSent')
   }
 
   useEffect(() => {

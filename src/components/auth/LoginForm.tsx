@@ -45,18 +45,7 @@ const LoginForm = () => {
     setErrorMessage('')
     setSubmitting(true)
 
-    const isValid = LoginCommandValidation.safeParse(getValues())
-
-    if (!isValid.success) {
-      setErrorMessage('emailAndPasswordRequired')
-      setSubmitting(false)
-      return
-    }
-
-    const result = await signIn('credentials', {
-      ...isValid.data,
-      redirect: false,
-    })
+    const result = await signIn('credentials', { ...getValues(), redirect: false })
 
     if (result?.error) {
       setSubmitting(false)

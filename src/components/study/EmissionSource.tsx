@@ -85,9 +85,9 @@ const EmissionSource = ({
             emissionSourceId: emissionSource.id,
             [key]: value,
           }
-          const isValid = UpdateEmissionSourceCommandValidation.safeParse(command)
-          if (isValid.success) {
-            const result = await updateEmissionSource(isValid.data)
+          const parsed = UpdateEmissionSourceCommandValidation.safeParse(command)
+          if (parsed.success) {
+            const result = await updateEmissionSource(parsed.data)
             if (result) {
               setError(result)
             } else {
