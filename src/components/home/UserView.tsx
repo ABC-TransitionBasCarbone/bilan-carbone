@@ -6,6 +6,7 @@ import Onboarding from '../onboarding/Onboarding'
 import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
 import UserToValidate from './UserToValidate'
+import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 
 interface Props {
   user: User
@@ -34,6 +35,7 @@ const UserView = async ({ user }: Props) => {
       )}
       <StudiesContainer user={user} isCR={isCR} />
       <Actualities />
+      <CUTLogosHome />
       {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
     </>
   )
