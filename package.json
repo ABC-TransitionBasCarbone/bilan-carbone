@@ -7,7 +7,7 @@
     "yarn": "1.22"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "prettier --check . && next lint",
