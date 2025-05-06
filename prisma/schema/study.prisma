@@ -74,7 +74,7 @@ model Study {
   id        String   @id @default(uuid())
   oldBCId   String?  @map("old_bc_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   createdById String @map("created_by_id")
   createdBy   User   @relation(fields: [createdById], references: [id])
@@ -154,7 +154,7 @@ model StudyEmissionSource {
   study     Study    @relation(fields: [studyId], references: [id])
   studyId   String   @map("study_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   subPost         SubPost                        @map("sub_post")
   name            String
