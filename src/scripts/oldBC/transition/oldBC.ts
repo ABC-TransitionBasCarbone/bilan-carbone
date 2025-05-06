@@ -1,6 +1,7 @@
 import xlsx from 'node-xlsx'
 import { prismaClient } from '../../../db/client'
 import { RequiredEmissionFactorsColumns, uploadEmissionFactors } from './emissionFactors'
+import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import { RequiredOrganizationsColumns, uploadOrganizations } from './organizations'
 import {
   RequiredStudiesColumns,
@@ -63,6 +64,8 @@ const getStudyEmissionSourcesIndexes = (headers: string[]): Record<string, numbe
 }
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
+  const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
+
   const user = await prismaClient.user.findUnique({ where: { email } })
   if (!user || user.organizationId !== organizationId) {
     console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
@@ -123,6 +126,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       transaction,
       user.id,
       organizationId,
+      postAndSubPostsOldNewMapping,
       studiesIndexes,
       studiesSheet.data,
       studySitesIndexes,
