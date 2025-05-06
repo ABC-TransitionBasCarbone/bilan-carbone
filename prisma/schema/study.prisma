@@ -67,6 +67,9 @@ model OpeningHours {
   openHour  String?
   closeHour String?
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("opening_hours")
 }
 
@@ -74,7 +77,7 @@ model Study {
   id        String   @id @default(uuid())
   oldBCId   String?  @map("old_bc_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   createdById String @map("created_by_id")
   createdBy   User   @relation(fields: [createdById], references: [id])
@@ -125,6 +128,8 @@ model UserOnStudy {
 
   role StudyRole
 
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@id([studyId, userId])
   @@map("users_on_study")
 }
@@ -136,6 +141,8 @@ model Contributors {
   userId  String @map("user_id")
 
   subPost SubPost
+
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@id([studyId, userId, subPost])
   @@map("contributors")
@@ -154,7 +161,7 @@ model StudyEmissionSource {
   study     Study    @relation(fields: [studyId], references: [id])
   studyId   String   @map("study_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   subPost         SubPost                        @map("sub_post")
   name            String
@@ -236,6 +243,9 @@ model StudyEmissionFactorVersion {
 
   source Import
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@unique([studyId, source])
   @@map("study_emission_factor_versions")
 }
@@ -252,6 +262,9 @@ model StudySite {
   etp                 Int
   ca                  Float
   StudyEmissionSource StudyEmissionSource[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@unique([studyId, siteId])
   @@map("study_sites")

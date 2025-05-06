@@ -8,7 +8,7 @@ model Organization {
   id               String    @id @default(uuid())
   oldBCId          String?   @map("old_bc_id")
   createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @default(now()) @map("updated_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
   importedFileDate DateTime? @map("imported_file_date")
 
   name             String
@@ -35,7 +35,7 @@ model Site {
   id        String   @id @default(uuid())
   oldBCId   String?  @map("old_bc_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   name String
   etp  Int    @default(0)
