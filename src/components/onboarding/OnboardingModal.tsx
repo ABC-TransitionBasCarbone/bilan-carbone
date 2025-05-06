@@ -63,16 +63,13 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
       values.collaborators = (values.collaborators || []).filter(
         (collaborator) => collaborator.email || collaborator.role,
       )
-      const parsed = OnboardingCommandValidation.safeParse(values)
-      if (parsed.success) {
-        const result = await onboardOrganizationCommand(parsed.data)
-        if (result) {
-          onClose()
-        } else {
-          await updateSession()
-          onClose()
-          router.refresh()
-        }
+      const result = await onboardOrganizationCommand(form.getValues())
+      if (result) {
+        onClose()
+      } else {
+        await updateSession()
+        onClose()
+        router.refresh()
       }
       setLoading(false)
     }

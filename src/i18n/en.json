@@ -159,7 +159,11 @@
     "validate": "Validate",
     "Not authorized": "You are not authorized. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Request sent": "A request has been sent to your colleagues",
-    "Email sent": "You will receive an email to finish your account validation."
+    "Email sent": "You will receive an email to finish your account validation.",
+
+    "validation": {
+      "email": "Veuillez entrer un email"
+    }
   },
   "navigation": {
     "factors": "Emission factors",

@@ -87,7 +87,6 @@ const LoginForm = () => {
           iconPosition="after"
           data-testid="input-password"
           type={showPassword ? 'text' : 'password'}
-          helperText={errorMessage}
           error={!!errorMessage}
         />
         <Link
