@@ -1,8 +1,8 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
 import {
-  createEmissionFactor,
+  createEmissionFactorWithParts,
+  deleteEmissionFactorAndDependencies,
   getAllEmissionFactors,
   getAllEmissionFactorsByIds,
   getEmissionFactorById,
@@ -124,38 +124,18 @@ export const createEmissionFactorCommand = async ({
     return NOT_AUTHORIZED
   }
 
-  const emissionFactor = await createEmissionFactor({
-    ...command,
-    importedFrom: Import.Manual,
-    status: EmissionFactorStatus.Valid,
-    organization: { connect: { id: user.organizationId } },
-    unit: unit as Unit,
-    subPosts: flattenSubposts(subPosts),
-    metaData: {
-      create: {
-        language: local,
-        title: name,
-        attribute,
-        comment,
-      },
+  await createEmissionFactorWithParts(
+    {
+      ...command,
+      importedFrom: Import.Manual,
+      status: EmissionFactorStatus.Valid,
+      organization: { connect: { id: user.organizationId } },
+      unit: unit as Unit,
+      subPosts: flattenSubposts(subPosts),
+      metaData: { create: { language: local, title: name, attribute, comment } },
     },
-  })
-
-  await Promise.all(
-    parts.map(({ name, ...part }) =>
-      prismaClient.emissionFactorPart.create({
-        data: {
-          emissionFactorId: emissionFactor.id,
-          ...part,
-          metaData: {
-            create: {
-              language: local,
-              title: name,
-            },
-          },
-        },
-      }),
-    ),
+    parts,
+    local,
   )
 }
 
@@ -178,20 +158,5 @@ export const deleteEmissionFactor = async (id: string) => {
     return NOT_AUTHORIZED
   }
 
-  await prismaClient.$transaction(async (transaction) => {
-    const emissionFactorParts = await transaction.emissionFactorPart.findMany({ where: { emissionFactorId: id } })
-    await transaction.emissionFactorPartMetaData.deleteMany({
-      where: { emissionFactorPartId: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
-    })
-
-    await Promise.all([
-      transaction.studyEmissionSource.deleteMany({ where: { emissionFactorId: id } }),
-      transaction.emissionFactorMetaData.deleteMany({ where: { emissionFactorId: id } }),
-      transaction.emissionFactorPart.deleteMany({
-        where: { id: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
-      }),
-    ])
-
-    await transaction.emissionFactor.delete({ where: { id } })
-  })
+  await deleteEmissionFactorAndDependencies(id)
 }

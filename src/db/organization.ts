@@ -11,6 +11,9 @@ export const getOrganizationNameById = (id: string | null) =>
 export const getOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
 
+export const isOrganizationCR = async (id: string | null) =>
+  (await prismaClient.organization.findUnique({ where: { id: id || '' } }))?.isCR
+
 export const getOrganizationUsers = (id: string | null) =>
   id
     ? prismaClient.user.findMany({
