@@ -20,7 +20,7 @@ import {
 import { CreateEmissionSourceCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
 import { addUserChecklistItem } from './user'
 
-export const createEmissionSource = async ({ studyId, studySiteId, ...command }: CreateEmissionSourceCommand) => {
+export const createEmissionSource = async ({ studyId, studySiteId, emissionFactorId, ...command }: CreateEmissionSourceCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
@@ -35,8 +35,26 @@ export const createEmissionSource = async ({ studyId, studySiteId, ...command }:
     return NOT_AUTHORIZED
   }
 
+  const [study, emissionFactor] = await Promise.all([
+  getStudyById(studyId, user.organizationId),
+  emissionFactorId ? getEmissionFactorById(emissionFactorId) : undefined
+  ])
+
+  if (
+    emissionFactor?.version?.id &&
+    !study?.emissionFactorVersions
+      .map((emissionFactorVersion) => emissionFactorVersion.importVersionId)
+      .includes(emissionFactor.version.id)
+  ) {
+    console.log("not Authorized Emisison factor id ", emissionFactor.version.id, study?.emissionFactorVersions)
+    return NOT_AUTHORIZED
+  }
+
   await createEmissionSourceOnStudy({
     ...command,
+    ...(emissionFactorId
+      ? { emissionFactor: { connect: { id: emissionFactorId } } }
+      : {}),
     studySite: { connect: { id: studySiteId } },
     study: { connect: { id: studyId } },
   })
@@ -72,6 +90,7 @@ export const updateEmissionSource = async ({
       .map((emissionFactorVersion) => emissionFactorVersion.importVersionId)
       .includes(emissionFactor.version.id)
   ) {
+    console.log("not Authorized Emisison factor id ", emissionFactor.version.id, study.emissionFactorVersions)
     return NOT_AUTHORIZED
   }
   const isContributor = study.contributors.some(
@@ -82,13 +101,13 @@ export const updateEmissionSource = async ({
     ...command,
     ...(emissionFactorId !== undefined
       ? {
-          emissionFactorId,
-          feReliability: null,
-          feTechnicalRepresentativeness: null,
-          feGeographicRepresentativeness: null,
-          feTemporalRepresentativeness: null,
-          feCompleteness: null,
-        }
+        emissionFactorId,
+        feReliability: null,
+        feTechnicalRepresentativeness: null,
+        feGeographicRepresentativeness: null,
+        feTemporalRepresentativeness: null,
+        feCompleteness: null,
+      }
       : {}),
   }
 
@@ -119,4 +138,23 @@ export const deleteEmissionSource = async (emissionSourceId: string) => {
   }
 
   await deleteEmissionSourceOnStudy(emissionSourceId)
+}
+
+export const getEmissionSourcesByStudyId = async (studyId: string) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return []
+  }
+
+  const user = await getUserByEmail(session.user.email)
+  if (!user) {
+    return []
+  }
+
+  const study = await getStudyById(studyId, user.organizationId)
+  if (!study) {
+    return []
+  }
+
+  return study.emissionSources
 }
