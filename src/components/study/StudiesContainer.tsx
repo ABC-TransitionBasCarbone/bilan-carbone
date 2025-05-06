@@ -15,6 +15,8 @@ import LinkButton from '../base/LinkButton'
 import ResultsContainerForUser from './results/ResultsContainerForUser'
 import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
+import { Box as MUIBox } from '@mui/material'
+import { default as CUTStudyHomeMessage } from '@/environments/cut/study/StudyHomeMessage'
 
 interface Props {
   user: User
@@ -67,6 +69,8 @@ const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
   ) : canCreateStudy && !isCR ? (
+    <MUIBox component="section">
+      <CUTStudyHomeMessage />
     <div className="justify-center">
       <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
         <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />
@@ -82,6 +86,7 @@ const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
         </LinkButton>
       </Box>
     </div>
+    </MUIBox>
   ) : null
 }
 
