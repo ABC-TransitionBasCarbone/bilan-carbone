@@ -56,13 +56,6 @@ export const updateUserResetTokenForEmail = async (email: string, resetToken: st
     data: { resetToken, updatedAt: new Date() },
   })
 
-
-export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]
-
-export const getUserFromUserOrganization = (user: User) =>
-  prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
-export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
-
 export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
   prismaClient.user.create({
     data: user,

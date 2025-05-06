@@ -127,7 +127,10 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const memberExists = await getAccountByEmailAndOrganizationVersionId(member.email.toLowerCase(), session.user.organizationVersionId)
+  const memberExists = await getAccountByEmailAndOrganizationVersionId(
+    member.email.toLowerCase(),
+    session.user.organizationVersionId,
+  )
 
   if (memberExists?.role === Role.SUPER_ADMIN) {
     return NOT_AUTHORIZED

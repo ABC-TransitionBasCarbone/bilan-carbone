@@ -235,7 +235,9 @@ export const onboardOrganizationVersion = async (
   })
 
   const allCollaborators = [...newCollaborators, ...existingCollaborators]
-  allCollaborators.forEach((collab) => sendNewUser(collab.user.email.toLowerCase(), dbUser, collab.user.firstName ?? ''))
+  allCollaborators.forEach((collab) =>
+    sendNewUser(collab.user.email.toLowerCase(), dbUser, collab.user.firstName ?? ''),
+  )
 }
 
 export const deleteClient = async (id: string) => {
