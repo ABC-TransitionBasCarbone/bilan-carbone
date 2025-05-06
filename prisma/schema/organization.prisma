@@ -7,8 +7,6 @@ enum SiteCAUnit {
 model Organization {
   id               String    @id @default(uuid())
   oldBCId          String?   @map("old_bc_id")
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
   importedFileDate DateTime? @map("imported_file_date")
 
   name             String
@@ -28,14 +26,15 @@ model Organization {
   parent   Organization?  @relation("childOrganizations", fields: [parentId], references: [id])
   childs   Organization[] @relation("childOrganizations")
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("organizations")
 }
 
 model Site {
-  id        String   @id @default(uuid())
-  oldBCId   String?  @map("old_bc_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id      String  @id @default(uuid())
+  oldBCId String? @map("old_bc_id")
 
   name String
   etp  Int    @default(0)
@@ -47,6 +46,9 @@ model Site {
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
   studies        StudySite[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("sites")
 }
