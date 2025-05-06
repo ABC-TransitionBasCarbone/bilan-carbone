@@ -1,6 +1,5 @@
 'use client'
 
-import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { changeDeactivableFeatureStatus } from '@/services/serverFunctions/deactivableFeatures'
 import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
 import { DeactivatableFeature } from '@prisma/client'
@@ -26,8 +25,8 @@ const DeactivableFeatures = ({ featuresStatuses }: Props) => {
   const changeFeatureStatus = async (feature: DeactivatableFeature, status: boolean) => {
     setError('')
     const result = await changeDeactivableFeatureStatus(feature, status)
-    if (result === NOT_AUTHORIZED) {
-      setError(result)
+    if (!result.success) {
+      setError(result.errorMessage)
     } else {
       router.refresh()
     }
