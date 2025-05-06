@@ -5,7 +5,7 @@ import { MIN, TIME_IN_MS } from '@/utils/time'
 import { Checkbox } from '@mui/material'
 import { Formation } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import Button from '../base/Button'
@@ -16,7 +16,7 @@ import Video from './Video'
 
 interface Props {
   formations: Formation[]
-  user: User
+  user: UserSession
   organizationName: string
 }
 
@@ -30,7 +30,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
 
   useEffect(() => {
     const getStartTime = async () => {
-      const startDate = await getFormationFormStart(user.id)
+      const startDate = await getFormationFormStart(user.userId)
       if (startDate) {
         setCheckedUnique(true)
         setFormStartTime(startDate.getTime())
@@ -42,7 +42,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
   const openFormationForm = () => {
     const now = new Date()
     if (!formStartTime) {
-      startFormationForm(user.id, now)
+      startFormationForm(user.userId, now)
       setFormStartTime(now.getTime())
     }
     setOpen(true)

@@ -58,7 +58,7 @@ describe('Onboarding', () => {
     cy.getByTestId('user-role').should('have.text', 'Administrateur')
   })
 
-  it('untraiend user has GESTIONNAIRE role after onboarding', () => {
+  it('untrained user has GESTIONNAIRE role after onboarding', () => {
     cy.visit('/')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(

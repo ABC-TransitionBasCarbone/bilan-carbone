@@ -3,18 +3,18 @@ import { handleWarningText } from '@/utils/components'
 import { useTranslations } from 'next-intl'
 
 interface Props {
-  otherOrganization: boolean
+  otherOrganizationVersion: boolean
   rightsWarning: boolean
   decline: () => void
   accept: () => void
 }
-const NewStudyRightModal = ({ otherOrganization, rightsWarning, decline, accept }: Props) => {
+const NewStudyRightModal = ({ otherOrganizationVersion, rightsWarning, decline, accept }: Props) => {
   const t = useTranslations('study.rights.new.dialog')
 
   return (
     <>
       <Modal
-        open={otherOrganization}
+        open={otherOrganizationVersion}
         label="new-study-right"
         title={t('title')}
         onClose={decline}

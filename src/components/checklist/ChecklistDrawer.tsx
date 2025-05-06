@@ -1,5 +1,5 @@
 import { getUserCheckList, mandatoryParentSteps } from '@/services/checklist'
-import { Organization, Role, UserChecklist } from '@prisma/client'
+import { OrganizationVersion, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -15,7 +15,7 @@ interface Props {
   getCheckList: () => void
   userChecklist: UserChecklist[]
   userRole: Role
-  userOrganization: Organization
+  accountOrganizationVersion: OrganizationVersion
   clientId?: string
   studyId?: string
 }
@@ -24,17 +24,20 @@ const ChecklistDrawer = ({
   setOpen,
   getCheckList,
   userRole,
-  userOrganization,
+  accountOrganizationVersion,
   clientId,
   userChecklist,
   studyId,
 }: Props) => {
   const t = useTranslations('checklist')
-  const steps = useMemo(() => getUserCheckList(userRole, userOrganization.isCR), [userRole, userOrganization])
+  const steps = useMemo(
+    () => getUserCheckList(userRole, accountOrganizationVersion.isCR),
+    [userRole, accountOrganizationVersion],
+  )
   const finished = useMemo(() => userChecklist.length === Object.values(steps).length - 1, [userChecklist, steps])
   const isValidated = (step: UserChecklist) => userChecklist.some((checkedStep) => checkedStep === step)
   const isDisabled = (step: UserChecklist) =>
-    mandatoryParentSteps(step, userRole, userOrganization.isCR).some(
+    mandatoryParentSteps(step, userRole, accountOrganizationVersion.isCR).some(
       (mandatoryStep) => !userChecklist.includes(mandatoryStep),
     )
   return (
@@ -58,7 +61,7 @@ const ChecklistDrawer = ({
               validated={isValidated(step)}
               disabled={isValidated(step) || isDisabled(step)}
               onClose={() => setOpen(false)}
-              organizationId={userOrganization.id}
+              organizationVersionId={accountOrganizationVersion.id}
               clientId={clientId}
               studyId={studyId}
             />

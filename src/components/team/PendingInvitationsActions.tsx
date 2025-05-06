@@ -1,6 +1,6 @@
 'use client'
 
-import { TeamMember } from '@/db/user'
+import { TeamMember } from '@/db/account'
 import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -24,7 +24,7 @@ const PendingInvitationsActions = ({ member }: Props) => {
         loading={sending}
         onClick={async () => {
           setSending(true)
-          const result = await resendInvitation(member.email)
+          const result = await resendInvitation(member.user.email)
           setSending(false)
           if (!result) {
             router.refresh()
@@ -38,7 +38,7 @@ const PendingInvitationsActions = ({ member }: Props) => {
         loading={deleting}
         onClick={async () => {
           setDeleting(true)
-          const result = await deleteMember(member.email)
+          const result = await deleteMember(member.user.email)
           setDeleting(false)
           if (!result) {
             router.refresh()
