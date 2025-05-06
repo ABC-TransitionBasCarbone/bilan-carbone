@@ -120,3 +120,22 @@ export const deleteEmissionSource = async (emissionSourceId: string) => {
 
   await deleteEmissionSourceOnStudy(emissionSourceId)
 }
+
+export const getEmissionSourcesByStudyId = async (studyId: string) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return []
+  }
+
+  const user = await getUserByEmail(session.user.email)
+  if (!user) {
+    return []
+  }
+
+  const study = await getStudyById(studyId, user.organizationId)
+  if (!study) {
+    return []
+  }
+
+  return study.emissionSources
+}
