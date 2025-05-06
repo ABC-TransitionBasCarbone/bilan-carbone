@@ -1,4 +1,5 @@
 import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
+import DynamicActualitiesCard from '@/environments/core/actuality/DynamicActualitiesCards'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { canEditMemberRole } from '@/utils/organization'
 import { User } from 'next-auth'
@@ -6,7 +7,6 @@ import Onboarding from '../onboarding/Onboarding'
 import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
 import UserToValidate from './UserToValidate'
-import DynamicActualitiesCard from '@/environments/core/actuality/DynamicActualitiesCards'
 
 interface Props {
   user: User
