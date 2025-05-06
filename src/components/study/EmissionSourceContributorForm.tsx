@@ -23,7 +23,7 @@ interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   selectedFactor?: EmissionFactorWithMetaData
   subPost: SubPost
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>

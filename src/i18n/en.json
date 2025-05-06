@@ -1116,6 +1116,7 @@
   "emissionSource": {
     "emissionSource": "Activity data :",
     "emissionFactor": "Emission Factor :",
+    "clear": "Clear value",
     "advancedSearch": "Advanced search",
     "noResults": "Search with more filters",
     "seeMore": "...See more and search with more filters",
@@ -1129,6 +1130,7 @@
     "mandartoryFields": "Mandatory information",
     "optionalFields": "Optional information",
     "resetFESpecific": "Reset to default values",
+    "duplicate": "Duplicate the emission source",
     "glossary": {
       "title": "Glossary",
       "type": "Type",

@@ -1116,6 +1116,7 @@
   "emissionSource": {
     "emissionSource": "Donnée d'activité :",
     "emissionFactor": "Facteur d'émission :",
+    "clear": "Supprimer la valeur",
     "advancedSearch": "Recherche avancée",
     "noResults": "Rechercher avec plus de filtres",
     "seeMore": "...Voir plus et rechercher avec plus de filtres",
@@ -1129,6 +1130,7 @@
     "mandartoryFields": "Informations obligatoires",
     "optionalFields": "Informations optionnelles",
     "resetFESpecific": "Réinitialiser les valeurs par défaut",
+    "duplicate": "Dupliquer la source d'émission",
     "glossary": {
       "title": "Glossaire",
       "type": "Type",
