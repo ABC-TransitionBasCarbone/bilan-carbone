@@ -65,8 +65,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   )
 
   const barChartSettings = {
-    height: 300,
-    sx: { marginLeft: '6rem', [`.${axisClasses.left} .${axisClasses.label}`]: { transform: 'translate(-2rem, 0)' } },
+    height: 450,
+    sx: { [`.${axisClasses.left} .${axisClasses.label}`]: { transform: 'translate(-1rem, 0)' } },
     borderRadius: 10,
   }
   const listCutPosts = useListPosts() as CutPost[]
@@ -124,6 +124,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                     xAxis={[
                       {
                         data: barData.labels,
+                        height: 80,
                         scaleType: 'band',
                         tickLabelStyle: { angle: -20, textAnchor: 'end' },
                         tickPlacement: 'extremities',
@@ -131,9 +132,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                       },
                     ]}
                     series={[{ color: theme.palette.primary.main, data: barData.values }]}
-                    grid={{ vertical: true, horizontal: true }}
+                    grid={{ horizontal: true }}
                     yAxis={[{ label: tUnits(study.resultsUnit) }]}
-                    margin={{ top: 5, right: 100, bottom: 100, left: 100 }}
                     axisHighlight={{ x: 'none' }}
                     {...barChartSettings}
                   />
