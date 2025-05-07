@@ -5,10 +5,10 @@ import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import DownloadIcon from '@mui/icons-material/Download'
-import { Box, Button, CircularProgress, Container, Tab, Tabs, useTheme } from '@mui/material'
+import { Box, Button, CircularProgress, Container, Tab, Tabs, Typography, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
-import { SyntheticEvent, useMemo, useState } from 'react'
+import { SyntheticEvent, useEffect, useMemo, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
@@ -20,6 +20,8 @@ import { downloadStudyResults } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
+
+import styles from './AllResults.module.css'
 
 interface Props {
   emissionFactorsWithParts: EmissionFactorWithParts[]
@@ -34,16 +36,18 @@ const a11yProps = (index: number) => {
   }
 }
 
-const CircularProgressCenter = () => {
+const CircularProgressCenter = ({ message }: { message: string }) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <CircularProgress />
+    <Box className={styles.circularContainer}>
+      <CircularProgress variant="indeterminate" color="primary" />
+      <Typography>{message}</Typography>
     </Box>
   )
 }
 
 const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) => {
   const theme = useTheme()
+  const [loading, setLoading] = useState<boolean>(true)
   const [value, setValue] = useState(0)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -74,10 +78,22 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
 
   const { pieData, barData } = useChartData(computeResults, theme)
 
+  console.log({ pieData, barData })
+
   const chartFormatter = (value: number) =>
     `${value / STUDY_UNIT_VALUES[study.resultsUnit]} ${tUnits(study.resultsUnit)}`
 
   const { environment } = useAppEnvironmentStore()
+
+  useEffect(() => {
+    setLoading(true)
+
+    const timeout = setTimeout(() => {
+      setLoading(false)
+    }, 2000)
+
+    return () => clearTimeout(timeout)
+  }, [resultsByPost])
 
   return (
     <Container>
@@ -119,7 +135,9 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           {resultsByPost.length !== 0 && (
             <>
               <TabPanel value={value} index={1}>
-                {barData.values.length !== 0 ? (
+                {loading ? (
+                  <CircularProgressCenter message={t('loading')} />
+                ) : barData.values.length !== 0 ? (
                   <BarChart
                     xAxis={[
                       {
@@ -138,17 +156,23 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                     {...barChartSettings}
                   />
                 ) : (
-                  <CircularProgressCenter />
+                  <Typography align="center" sx={{ mt: '0.25rem' }}>
+                    {t('no-data')}
+                  </Typography>
                 )}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {pieData.length !== 0 ? (
+                {loading ? (
+                  <CircularProgressCenter message={t('loading')} />
+                ) : pieData.length !== 0 ? (
                   <PieChart
                     series={[{ data: pieData, valueFormatter: (value) => chartFormatter(value.value) }]}
-                    height={300}
+                    height={350}
                   />
                 ) : (
-                  <CircularProgressCenter />
+                  <Typography align="center" sx={{ mt: '0.25rem' }}>
+                    {t('no-data')}
+                  </Typography>
                 )}
               </TabPanel>
             </>
