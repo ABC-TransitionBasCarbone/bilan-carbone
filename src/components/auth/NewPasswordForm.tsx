@@ -37,7 +37,7 @@ const NewPasswordForm = () => {
     setMessage('')
     setErrorMessage('')
 
-    await resetPassword(getValues().email)
+    await resetPassword(getValues().email.toLowerCase())
     setSubmitting(false)
     setMessage('emailSent')
   }
