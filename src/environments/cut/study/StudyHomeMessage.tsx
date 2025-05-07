@@ -3,32 +3,35 @@ import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Alert, List, ListItem, ListItemText, Typography } from '@mui/material'
 import { useMemo } from 'react'
 import styles from './StudyHomeMessage.module.css'
+import { useTranslations } from 'next-intl'
 
 const StudyHomeMessage = () => {
   const { environment } = useAppEnvironmentStore()
   const isCut = useMemo(() => environment === CUT, [environment])
+
+  if (!isCut) {
+    return null;
+  }
+
+  const t = useTranslations('home.message');
   return (
     isCut && (
       <Alert color="info" className={styles.mb1}>
-        <Typography>
-          Bienvenue sur COUNT le premier calculateur d'impact écologique dédié aux salles de cinéma. Cet outil a été
-          développé par l'association CUT ! Cinéma Uni pour la transition, en coopération avec l'ABC, association pour
-          la transition bas carbone Opération soutenue par l'État dans le cadre du dispositif « Soutenir les
-          alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts) (avec logo
-          France 2030 : bit.ly/France2030_KitCommunication) CUT bénéficie du soutien du CNC + logo CNC
+        <Typography className={styles.whiteSpaces}>
+          {t('core')}
         </Typography>
         <List dense>
           <ListItem disablePadding>
-            <ListItemText>Faire votre bilan d'impact vous permettra de :</ListItemText>
+            <ListItemText primary={t('0')} />
           </ListItem>
           <ListItem>
-            <ListItemText>Comprendre la mesure d'impact de votre établissement</ListItemText>
+            <ListItemText primary={t('1')} />
           </ListItem>
           <ListItem>
-            <ListItemText>Identifier les priorités d'action</ListItemText>
+            <ListItemText primary={t('2')} />
           </ListItem>
           <ListItem>
-            <ListItemText>Construire une trajectoire de réduction</ListItemText>
+            <ListItemText primary={t('3')} />
           </ListItem>
         </List>
       </Alert>

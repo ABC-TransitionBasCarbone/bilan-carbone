@@ -1,3 +1,7 @@
 .mb1 {
   margin-bottom: 1rem;
 }
+
+.preLine {
+  white-space: pre-line;
+}
