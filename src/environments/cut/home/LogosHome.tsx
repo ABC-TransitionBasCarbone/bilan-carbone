@@ -16,7 +16,7 @@ const LogosHome = () => {
   const isCut = useMemo(() => environment === CUT, [environment])
   return (
     isCut && (
-      <Box className={styles.container}>
+      <Box data-testid={'home-cut-logo'} className={styles.container}>
         {logos.map((logo, i) => (
           <Box key={i} className={styles.list}>
             <Image
