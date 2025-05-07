@@ -121,3 +121,25 @@ export const updateUserApplicationSettings = (userId: string, data: Prisma.UserA
   prismaClient.userApplicationSettings.update({ where: { userId }, data })
 
 export const getUsers = () => prismaClient.user.findMany({ select: { id: true, email: true } })
+
+export const getUsersCheckedSteps = async (userId: string) =>
+  prismaClient.userCheckedStep.findMany({ where: { userId } })
+
+export const finalizeUserChecklist = async (userId: string) =>
+  prismaClient.userCheckedStep.create({
+    data: { userId, step: UserChecklist.Completed },
+  })
+
+export const createOrUpdateUserCheckedStep = async (userId: string, step: UserChecklist) =>
+  prismaClient.userCheckedStep.upsert({
+    where: { userId_step: { userId, step } },
+    update: {},
+    create: { userId, step },
+  })
+
+export const getUserFormationFormStart = async (userId: string) =>
+  (await prismaClient.user.findUnique({ where: { id: userId }, select: { formationFormStartTime: true } }))
+    ?.formationFormStartTime
+
+export const startUserFormationForm = async (userId: string, date: Date) =>
+  prismaClient.user.update({ where: { id: userId }, data: { formationFormStartTime: date } })

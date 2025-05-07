@@ -1,6 +1,10 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
+import {
+  createDeactivableFeatures,
+  createOrUpdateDeactivableFeature,
+  getDeactivableFeatures,
+} from '@/db/deactivableFeatures'
 import { withServerResponse } from '@/utils/serverResponse'
 import { DeactivatableFeature, Role } from '@prisma/client'
 import { auth } from '../auth'
@@ -12,20 +16,17 @@ export const getDeactivableFeaturesStatuses = async () =>
     if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const selector = { id: true, feature: true, active: true }
 
-    const featuresStatuses = await prismaClient.deactivatableFeatureStatus.findMany({ select: selector })
+    const featuresStatuses = await getDeactivableFeatures()
     if (featuresStatuses.length === Object.values(DeactivatableFeature).length) {
       return featuresStatuses
     }
     const missing = Object.values(DeactivatableFeature).filter(
       (feature) => !featuresStatuses.map((featuresStatus) => featuresStatus.feature).includes(feature),
     )
-    await prismaClient.deactivatableFeatureStatus.createMany({
-      data: missing.map((feature) => ({ feature })),
-    })
+    await createDeactivableFeatures(missing.map((feature) => ({ feature })))
 
-    return prismaClient.deactivatableFeatureStatus.findMany({ select: selector })
+    return getDeactivableFeatures()
   })
 
 export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeature, status: boolean) =>
@@ -34,14 +35,6 @@ export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeatu
     if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
     }
-    await prismaClient.deactivatableFeatureStatus.upsert({
-      where: { feature },
-      create: { feature, active: status, updatedById: session.user.id },
-      update: { active: status, updatedById: session.user.id },
-    })
-  })
 
-export const isFeatureActive = async (feature: DeactivatableFeature) => {
-  const featureStatus = await prismaClient.deactivatableFeatureStatus.findUnique({ where: { feature } })
-  return !!featureStatus?.active
-}
+    await createOrUpdateDeactivableFeature(feature, status, session.user.id)
+  })

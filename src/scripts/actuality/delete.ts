@@ -1,12 +1,5 @@
 import { Command } from 'commander'
-import { prismaClient } from '../../db/client'
-
-const deleteActuality = async (id: string) => {
-  await prismaClient.actuality.delete({
-    where: { id },
-  })
-  console.log('Actualité supprimée')
-}
+import { deleteActuality } from '../../db/actuality'
 
 const program = new Command()
 
@@ -20,3 +13,4 @@ program
 const params = program.opts()
 
 deleteActuality(params.actuality)
+console.log('Actualité supprimée')

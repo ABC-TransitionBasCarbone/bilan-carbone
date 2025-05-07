@@ -1,8 +1,8 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
 import {
-  createEmissionFactor,
+  createEmissionFactorWithParts,
+  deleteEmissionFactorAndDependencies,
   getAllEmissionFactors,
   getAllEmissionFactorsByIds,
   getEmissionFactorById,
@@ -90,10 +90,10 @@ export const getDetailedEmissionFactor = async (id: string) => {
   return emissionFactor
 }
 
-export const canEditEmissionFactor = async (id: string) => {
+export const isFromEmissionFactorOrganization = async (id: string) => {
   const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorById(id)])
 
-  if (!emissionFactor || !session) {
+  if (!emissionFactor || !session || !session.user) {
     return false
   }
   return emissionFactor.organizationId === session.user.organizationId
@@ -124,43 +124,23 @@ export const createEmissionFactorCommand = async ({
     return NOT_AUTHORIZED
   }
 
-  const emissionFactor = await createEmissionFactor({
-    ...command,
-    importedFrom: Import.Manual,
-    status: EmissionFactorStatus.Valid,
-    organization: { connect: { id: user.organizationId } },
-    unit: unit as Unit,
-    subPosts: flattenSubposts(subPosts),
-    metaData: {
-      create: {
-        language: local,
-        title: name,
-        attribute,
-        comment,
-      },
+  await createEmissionFactorWithParts(
+    {
+      ...command,
+      importedFrom: Import.Manual,
+      status: EmissionFactorStatus.Valid,
+      organization: { connect: { id: user.organizationId } },
+      unit: unit as Unit,
+      subPosts: flattenSubposts(subPosts),
+      metaData: { create: { language: local, title: name, attribute, comment } },
     },
-  })
-
-  await Promise.all(
-    parts.map(({ name, ...part }) =>
-      prismaClient.emissionFactorPart.create({
-        data: {
-          emissionFactorId: emissionFactor.id,
-          ...part,
-          metaData: {
-            create: {
-              language: local,
-              title: name,
-            },
-          },
-        },
-      }),
-    ),
+    parts,
+    local,
   )
 }
 
 export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorCommand) => {
-  if (!canEditEmissionFactor(command.id)) {
+  if (!isFromEmissionFactorOrganization(command.id)) {
     return NOT_AUTHORIZED
   }
 
@@ -174,24 +154,9 @@ export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorC
 }
 
 export const deleteEmissionFactor = async (id: string) => {
-  if (!canEditEmissionFactor(id)) {
+  if (!isFromEmissionFactorOrganization(id)) {
     return NOT_AUTHORIZED
   }
 
-  await prismaClient.$transaction(async (transaction) => {
-    const emissionFactorParts = await transaction.emissionFactorPart.findMany({ where: { emissionFactorId: id } })
-    await transaction.emissionFactorPartMetaData.deleteMany({
-      where: { emissionFactorPartId: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
-    })
-
-    await Promise.all([
-      transaction.studyEmissionSource.deleteMany({ where: { emissionFactorId: id } }),
-      transaction.emissionFactorMetaData.deleteMany({ where: { emissionFactorId: id } }),
-      transaction.emissionFactorPart.deleteMany({
-        where: { id: { in: emissionFactorParts.map((emissionFactorPart) => emissionFactorPart.id) } },
-      }),
-    ])
-
-    await transaction.emissionFactor.delete({ where: { id } })
-  })
+  await deleteEmissionFactorAndDependencies(id)
 }

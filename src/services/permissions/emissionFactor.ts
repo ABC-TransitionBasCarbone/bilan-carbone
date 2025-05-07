@@ -1,4 +1,5 @@
 import { EmissionFactor, Import, User } from '@prisma/client'
+import { isFromEmissionFactorOrganization } from '../serverFunctions/emissionFactor'
 
 export const canReadEmissionFactor = (
   user: User,
@@ -14,4 +15,8 @@ export const canReadEmissionFactor = (
 export const canCreateEmissionFactor = () => {
   // For now everyone can create an FE
   return true
+}
+
+export const canEditEmissionFactor = async (id: string) => {
+  return isFromEmissionFactorOrganization(id)
 }
