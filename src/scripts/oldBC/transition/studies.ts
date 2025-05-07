@@ -1,5 +1,6 @@
 import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
+import { getEmissionQuality } from '../../../services/importEmissionFactor/import'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {
   EmissionSourceRow,
@@ -39,6 +40,11 @@ interface EmissionSource {
   validated: boolean
   value: number
   subPost: SubPost
+  reliability: number
+  technicalRepresentativeness: number
+  geographicRepresentativeness: number
+  temporalRepresentativeness: number
+  completeness: number
 }
 
 const parseStudies = (studiesWorksheet: StudiesWorkSheet): Study[] => {
@@ -203,6 +209,7 @@ const parseEmissionSources = (
         console.warn(e)
         return null
       }
+      const incertitudeDA = getEmissionQuality((row.incertitudeDA as number) * 100)
       return [
         row.studyOldBCId as string,
         {
@@ -213,6 +220,11 @@ const parseEmissionSources = (
           validated: (row.validationDASaisie as number) === 1,
           value: row.daTotalValue as number,
           subPost: subPost,
+          reliability: incertitudeDA,
+          technicalRepresentativeness: incertitudeDA,
+          geographicRepresentativeness: incertitudeDA,
+          temporalRepresentativeness: incertitudeDA,
+          completeness: incertitudeDA,
         },
       ]
     })
@@ -442,6 +454,11 @@ export const uploadStudies = async (
               comment: studyEmissionSource.comment,
               validated: studyEmissionSource.validated,
               value: studyEmissionSource.value,
+              reliability: studyEmissionSource.reliability,
+              technicalRepresentativeness: studyEmissionSource.technicalRepresentativeness,
+              geographicRepresentativeness: studyEmissionSource.geographicRepresentativeness,
+              temporalRepresentativeness: studyEmissionSource.temporalRepresentativeness,
+              completeness: studyEmissionSource.completeness,
             }
           })
           .filter((studyEmissionSource) => studyEmissionSource !== null)
