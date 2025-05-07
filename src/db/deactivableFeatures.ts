@@ -1,5 +1,3 @@
-'use server'
-
 import { DeactivatableFeature, Prisma } from '@prisma/client'
 import { prismaClient } from './client'
 
