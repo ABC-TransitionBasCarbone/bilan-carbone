@@ -35,7 +35,6 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const [loading, setLoading] = useState(false)
   const stepCount = 2
   const Step = activeStep === 1 ? Step1 : Step2
-  const buttonLabel = activeStep === stepCount ? 'validate' : 'next'
 
   const newRole = useMemo(() => (user.level ? Role.ADMIN : Role.GESTIONNAIRE), [user])
 
@@ -52,27 +51,24 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     },
   })
 
-  const goToPreviousStep = () => setActiveStep(activeStep > 1 ? activeStep - 1 : 0)
+  const goToPreviousStep = () => setActiveStep(activeStep > 1 ? activeStep - 1 : 1)
+  const goToNextStep = () => setActiveStep(activeStep + 1)
 
   const onValidate = async () => {
-    if (activeStep < stepCount) {
-      setActiveStep(activeStep + 1)
+    setLoading(true)
+    const values = form.getValues()
+    values.collaborators = (values.collaborators || []).filter(
+      (collaborator) => collaborator.email || collaborator.role,
+    )
+    const result = await onboardOrganizationCommand(form.getValues())
+    if (result) {
+      onClose()
     } else {
-      setLoading(true)
-      const values = form.getValues()
-      values.collaborators = (values.collaborators || []).filter(
-        (collaborator) => collaborator.email || collaborator.role,
-      )
-      const result = await onboardOrganizationCommand(form.getValues())
-      if (result) {
-        onClose()
-      } else {
-        await updateSession()
-        onClose()
-        router.refresh()
-      }
-      setLoading(false)
+      await updateSession()
+      onClose()
+      router.refresh()
     }
+    setLoading(false)
   }
 
   return (
@@ -101,10 +97,16 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
             <Step form={form} role={newRole} isCr={organization.isCR} />
           </DialogContent>
           <DialogActions className="noSpacing">
-            {activeStep > 0 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
-            <LoadingButton type="submit" loading={loading}>
-              {t(buttonLabel)}
-            </LoadingButton>
+            {activeStep > 1 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
+            {activeStep === stepCount ? (
+              <LoadingButton type="submit" loading={loading}>
+                {t('validate')}
+              </LoadingButton>
+            ) : (
+              <Button type="button" onClick={goToNextStep}>
+                {t('next')}
+              </Button>
+            )}
           </DialogActions>
         </Form>
       </div>
