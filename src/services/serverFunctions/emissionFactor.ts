@@ -195,3 +195,12 @@ export const deleteEmissionFactor = async (id: string) => {
     await transaction.emissionFactor.delete({ where: { id } })
   })
 }
+
+
+export const getEmissionFactorByImportedId = async (id: string) =>
+  prismaClient.emissionFactor.findFirst({
+    where: {
+      importedId: id,
+    },
+    select: {id: true, versionId: true, importedId: true, version: { select: { id: true } }, metaData: true },
+  })

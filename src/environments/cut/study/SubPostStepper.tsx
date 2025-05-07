@@ -12,10 +12,13 @@ import {
 import { UpdateEmissionSourceCommandValidation } from '@/services/serverFunctions/emissionSource.command'
 import { TextField } from '@mui/material'
 import { ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { subPostQuestions } from '../services/post'
+import styles from './SubPostStepper.module.css'
+import { getEmissionFactorByImportedId } from '@/services/serverFunctions/emissionFactor'
 
 interface Props {
   subPost: SubPost
@@ -63,10 +66,15 @@ const SubPostStepper = ({ subPost, emissionSources, study }: Props) => {
 
     try {
       if (emissionSource) {
+        console.log('emissionSource', questions[activeStep].importedEmissionFactorId)
+        const emissionFactor= await getEmissionFactorByImportedId(questions[activeStep].importedEmissionFactorId)
+        console.log('emissionFactor', emissionFactor)
+
         const command = {
           emissionSourceId: emissionSource.id,
           name,
           value,
+          emissionFactorId: emissionFactor?.id,
         }
         console.log('command', command)
 
@@ -104,19 +112,23 @@ const SubPostStepper = ({ subPost, emissionSources, study }: Props) => {
 
   return (
     <div>
-      {activeQuestion ? (
-        <Block title={tCutQuestions(activeQuestion.key, { value: activeQuestion?.value || '' })}>
-          <TextField
-            onChange={(e) => setCurrentValue(e.target.value)}
-            key={activeQuestion.key}
-            type={activeQuestion.type}
-            value={currentValue}
-            disabled={isLoading}
-          />
-        </Block>
-      ) : (
-        <div>Merci pour vos réponses</div>
-      )}
+      <div className={styles.container} >
+        {activeQuestion ? (
+          <Block title={tCutQuestions(activeQuestion.key, { value: activeQuestion?.value || '' })}>
+            <TextField
+              onChange={(e) => setCurrentValue(e.target.value)}
+              key={activeQuestion.key}
+              type={activeQuestion.type}
+              value={currentValue}
+              disabled={isLoading}
+            />
+          </Block>
+        ) : (
+          <div className={styles.checkIconContainer}>
+          <CheckCircleIcon className={styles.checkIcon} sx={{ fontSize: 100 }} />
+          </div>
+        )}
+      </div>
       <Stepper
         steps={questions.length}
         activeStep={activeStep}

@@ -7,6 +7,7 @@ export const CreateEmissionSourceCommandValidation = z.object({
   studyId: z.string(),
   studySiteId: z.string(),
   caracterisation: z.nativeEnum(EmissionSourceCaracterisation).optional(),
+  emissionFactorId: z.string().nullable().optional(),
 })
 
 export type CreateEmissionSourceCommand = z.infer<typeof CreateEmissionSourceCommandValidation>

@@ -20,7 +20,7 @@ import {
 import { CreateEmissionSourceCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
 import { addUserChecklistItem } from './user'
 
-export const createEmissionSource = async ({ studyId, studySiteId, ...command }: CreateEmissionSourceCommand) => {
+export const createEmissionSource = async ({ studyId, studySiteId, emissionFactorId, ...command }: CreateEmissionSourceCommand) => {
   const session = await auth()
   if (!session || !session.user) {
     return NOT_AUTHORIZED
@@ -37,6 +37,7 @@ export const createEmissionSource = async ({ studyId, studySiteId, ...command }:
 
   await createEmissionSourceOnStudy({
     ...command,
+    ...(emissionFactorId ? { emissionFactor: { connect: { id: emissionFactorId } } } : {}),
     studySite: { connect: { id: studySiteId } },
     study: { connect: { id: studyId } },
   })
