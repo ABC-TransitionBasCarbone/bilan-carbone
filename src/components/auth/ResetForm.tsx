@@ -79,7 +79,7 @@ const ResetForm = ({ user, token }: Props) => {
     setError(false)
 
     const { email, password } = getValues()
-    const result = await reset(email, password, token)
+    const result = await reset(email.toLowerCase(), password, token)
     if (result) {
       setSubmitting(false)
       setValidated(true)
