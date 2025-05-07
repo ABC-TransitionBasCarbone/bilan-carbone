@@ -21,3 +21,13 @@ export const useAppEnvironmentStore = create<AppEnvironmentState>((set) => {
     },
   }
 })
+
+/**
+ * NOTE: Méthode à supprimer quand l'environment pourra être récupéré
+ * depuis la session
+ *
+ * @returns Environment
+ */
+export const getServerEnvironment = () => {
+  return defaultEnvironment
+}

@@ -3,7 +3,9 @@ import {
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
+import { default as CUTStudyHomeMessage } from '@/environments/cut/study/StudyHomeMessage'
 import AddIcon from '@mui/icons-material/Add'
+import { Box as MUIBox } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -67,21 +69,24 @@ const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
   ) : canCreateStudy && !isCR ? (
-    <div className="justify-center">
-      <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
-        <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />
-        <h5>{t('createFirstStudy')}</h5>
-        <p>{t('firstStudyMessage')}</p>
-        <LinkButton
-          data-testid="new-organization"
-          className={classNames(styles.linkButton, 'w100 justify-center mb1')}
-          href={creationUrl}
-        >
-          <AddIcon />
-          {t('createFirstStudy')}
-        </LinkButton>
-      </Box>
-    </div>
+    <MUIBox component="section">
+      <CUTStudyHomeMessage />
+      <div className="justify-center">
+        <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
+          <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />
+          <h5>{t('createFirstStudy')}</h5>
+          <p>{t('firstStudyMessage')}</p>
+          <LinkButton
+            data-testid="new-organization"
+            className={classNames(styles.linkButton, 'w100 justify-center mb1')}
+            href={creationUrl}
+          >
+            <AddIcon />
+            {t('createFirstStudy')}
+          </LinkButton>
+        </Box>
+      </div>
+    </MUIBox>
   ) : null
 }
 

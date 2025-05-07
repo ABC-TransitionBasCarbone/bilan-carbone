@@ -1,7 +1,9 @@
 import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
+import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
+import { CUT, getServerEnvironment } from '@/store/AppEnvironment'
 import { canEditMemberRole } from '@/utils/organization'
 import { User } from 'next-auth'
-import Actualities from '../actuality/ActualitiesCards'
+import ActualitiesCards from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
 import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
@@ -12,6 +14,7 @@ interface Props {
 }
 
 const UserView = async ({ user }: Props) => {
+  const environment = getServerEnvironment()
   const [organizations, hasUserToValidate] = await Promise.all([
     getUserOrganizations(user.email),
     hasUserToValidateInOrganization(user.organizationId),
@@ -19,7 +22,6 @@ const UserView = async ({ user }: Props) => {
 
   const userOrganization = organizations.find((organization) => organization.id === user.organizationId)
   const isCR = userOrganization?.isCR
-
   return (
     <>
       {!!hasUserToValidate && canEditMemberRole(user) && (
@@ -33,7 +35,9 @@ const UserView = async ({ user }: Props) => {
         />
       )}
       <StudiesContainer user={user} isCR={isCR} />
-      <Actualities />
+
+      {environment !== CUT && <ActualitiesCards />}
+      <CUTLogosHome />
       {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
     </>
   )
