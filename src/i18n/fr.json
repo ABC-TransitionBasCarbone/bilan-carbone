@@ -487,7 +487,9 @@
         "missingCaract": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
-      }
+      },
+      "no-data": "Aucune données à afficher",
+      "loading": "Chargement des résultats"
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",

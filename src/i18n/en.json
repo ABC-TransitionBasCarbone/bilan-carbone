@@ -160,7 +160,6 @@
     "Not authorized": "You are not authorized. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Request sent": "A request has been sent to your colleagues",
     "Email sent": "You will receive an email to finish your account validation.",
-
     "validation": {
       "email": "Veuillez entrer un email"
     }
@@ -488,7 +487,9 @@
         "missingCaract": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "close": "Close"
-      }
+      },
+      "no-data": "Aucune données à afficher",
+      "loading": "Chargement des résultats"
     },
     "export": {
       "activityDataComment": "Activity data comment",
