@@ -1,6 +1,5 @@
 'use server'
 
-import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { getDeactivableFeaturesStatuses } from '@/services/serverFunctions/deactivableFeatures'
 import { getTranslations } from 'next-intl/server'
 import DeactivableFeatures from '../admin/DeactivableFeatures'
@@ -14,7 +13,7 @@ const SuperAdminPage = async () => {
     <>
       <Block title={t('title')} as="h1">
         <SuperAdminImport />
-        {deactivableFeatures !== NOT_AUTHORIZED && <DeactivableFeatures featuresStatuses={deactivableFeatures} />}
+        {deactivableFeatures.success && <DeactivableFeatures featuresStatuses={deactivableFeatures.data} />}
       </Block>
     </>
   )
