@@ -10,10 +10,10 @@ export const createEmissionSourceOnStudy = (emissionSource: Prisma.StudyEmission
 
 export const updateEmissionSourceOnStudy = (
   id: string,
-  emissionSource: Omit<Prisma.StudyEmissionSourceUpdateInput, 'id' | 'updatedAt'>,
+  emissionSource: Omit<Prisma.StudyEmissionSourceUpdateInput, 'id'>,
 ) =>
   prismaClient.studyEmissionSource.update({
-    data: { ...emissionSource, updatedAt: new Date() },
+    data: { ...emissionSource },
     where: { id },
   })
 
