@@ -1,5 +1,4 @@
 import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
-import DynamicActualitiesCard from '@/environments/core/actuality/DynamicActualitiesCards'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { canEditMemberRole } from '@/utils/organization'
 import { User } from 'next-auth'
@@ -7,12 +6,15 @@ import Onboarding from '../onboarding/Onboarding'
 import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
 import UserToValidate from './UserToValidate'
+import ActualitiesCards from '../actuality/ActualitiesCards'
+import { CUT, getServerEnvironment } from '@/store/AppEnvironment'
 
 interface Props {
   user: User
 }
 
 const UserView = async ({ user }: Props) => {
+  const environment = getServerEnvironment();
   const [organizations, hasUserToValidate] = await Promise.all([
     getUserOrganizations(user.email),
     hasUserToValidateInOrganization(user.organizationId),
@@ -20,7 +22,6 @@ const UserView = async ({ user }: Props) => {
 
   const userOrganization = organizations.find((organization) => organization.id === user.organizationId)
   const isCR = userOrganization?.isCR
-
   return (
     <>
       {!!hasUserToValidate && canEditMemberRole(user) && (
@@ -34,7 +35,8 @@ const UserView = async ({ user }: Props) => {
         />
       )}
       <StudiesContainer user={user} isCR={isCR} />
-      <DynamicActualitiesCard />
+
+      {environment !== CUT && (<ActualitiesCards />)}
       <CUTLogosHome />
       {userOrganization && !userOrganization.onboarded && <Onboarding user={user} organization={userOrganization} />}
     </>
