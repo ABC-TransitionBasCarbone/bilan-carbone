@@ -6,13 +6,19 @@ interface Props {
   study: FullStudy
   studySite: string
   withDependencies: boolean
+  validatedOnly: boolean
 }
 
-const ConsolidatedResults = ({ study, studySite, withDependencies }: Props) => {
+const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly }: Props) => {
   return (
     <>
       <div className="mb1">
-        <StudyResultsContainerSummary study={study} studySite={studySite} withDependencies={withDependencies} />
+        <StudyResultsContainerSummary
+          study={study}
+          studySite={studySite}
+          withDependencies={withDependencies}
+          validatedOnly={validatedOnly}
+        />
       </div>
       <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={withDependencies} />
     </>

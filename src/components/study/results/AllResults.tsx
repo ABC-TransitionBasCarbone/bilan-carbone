@@ -108,7 +108,12 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
       </div>
       <div className="mt1">
         {type === 'consolidated' && (
-          <ConsolidatedResults study={study} studySite={studySite} withDependencies={withDependencies} />
+          <ConsolidatedResults
+            study={study}
+            studySite={studySite}
+            withDependencies={withDependencies}
+            validatedOnly={validatedOnly}
+          />
         )}
         {type === Export.Beges && (
           <BegesResultsTable
