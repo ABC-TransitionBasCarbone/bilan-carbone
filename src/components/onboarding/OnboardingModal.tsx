@@ -101,10 +101,16 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
             <Step form={form} role={newRole} isCr={organization.isCR} />
           </DialogContent>
           <DialogActions className="noSpacing">
-            {activeStep > 0 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
-            <LoadingButton type="submit" loading={loading}>
-              {t(buttonLabel)}
-            </LoadingButton>
+            {activeStep > 1 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
+            {activeStep === stepCount ? (
+              <LoadingButton type="submit" loading={loading}>
+                {t(buttonLabel)}
+              </LoadingButton>
+            ) : (
+              <Button type="button" onClick={onValidate}>
+                {t(buttonLabel)}
+              </Button>
+            )}
           </DialogActions>
         </Form>
       </div>
