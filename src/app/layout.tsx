@@ -1,3 +1,4 @@
+/* eslint-disable react/self-closing-comp */
 import RouteChangeListener from '@/components/RouteChangeListener'
 import '@/css/index.css'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
@@ -7,6 +8,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
+import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
   title: 'Bilan Carbone +',
@@ -25,10 +27,18 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages()
+
+  const nonce = (await headers()).get('x-nonce') || undefined
+  console.log('RootLayout : ', nonce)
+  const providerOptions = { key: 'mui', nonce, prepend: true }
   return (
     <html lang={locale} className={environment}>
+      <head>
+        <script nonce={nonce}>console.log("Nonce chargé")</script>
+        <style nonce={nonce}></style>
+      </head>
       <body>
-        <AppRouterCacheProvider>
+        <AppRouterCacheProvider options={providerOptions}>
           <NextIntlClientProvider messages={messages}>
             <RouteChangeListener />
             <Providers>{children}</Providers>
