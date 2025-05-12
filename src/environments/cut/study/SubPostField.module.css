@@ -1,0 +1,16 @@
+.inputWithUnit {
+  position: relative;
+  max-width: fit-content;
+}
+
+.unit {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+}
+
+.deleteButton {
+  height: 3.5rem;
+  margin-bottom: 1.25rem !important;
+}
