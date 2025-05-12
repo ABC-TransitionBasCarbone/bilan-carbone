@@ -94,7 +94,10 @@ const getEmissionSourceEmission = (emissionSource: (FullStudy | StudyWithoutDeta
   }
 
   let emission = getEmissionFactorValue(emissionSource.emissionFactor) * emissionSource.value
-  if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && emissionSource.depreciationPeriod) {
+  if (
+    [...subPostsByPost[Post.Immobilisations], SubPost.Electromenager].includes(emissionSource.subPost) &&
+    emissionSource.depreciationPeriod
+  ) {
     emission = emission / emissionSource.depreciationPeriod
   }
 
@@ -147,6 +150,14 @@ export const sumEmissionSourcesUncertainty = (emissionSource: (FullStudy | Study
 
 export const getEmissionSourcesTotalCo2 = (emissionSources: FullStudy['emissionSources']) =>
   emissionSources.reduce((sum, emissionSource) => sum + (getEmissionSourceEmission(emissionSource) || 0), 0)
+
+export const getEmissionResultsCut = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
+  const result = getEmissionResults(emissionSource)
+  if (result?.emission && emissionSource.depreciationPeriod && emissionSource.depreciationPeriod < 5) {
+    result.emission = result.emission / 5
+  }
+  return result
+}
 
 export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
   [SubPost.CombustiblesFossiles]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],

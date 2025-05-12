@@ -1,5 +1,6 @@
 'use server'
 
+import { prismaClient } from '@/db/client'
 import {
   createEmissionFactorWithParts,
   deleteEmissionFactorAndDependencies,
@@ -160,3 +161,19 @@ export const deleteEmissionFactor = async (id: string) => {
 
   await deleteEmissionFactorAndDependencies(id)
 }
+
+export const getEmissionFactorByImportedId = async (id: string) =>
+  prismaClient.emissionFactor.findFirst({
+    where: {
+      importedId: id,
+    },
+    select: {
+      id: true,
+      versionId: true,
+      importedId: true,
+      unit: true,
+      customUnit: true,
+      version: { select: { id: true } },
+      metaData: true,
+    },
+  })
