@@ -7,6 +7,7 @@ import { Formation } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import Button from '../base/Button'
 import Modal from '../modals/Modal'
@@ -20,10 +21,12 @@ interface Props {
   organizationName: string
 }
 
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
 
 const FormationView = ({ formations, user, organizationName }: Props) => {
   const t = useTranslations('formation')
+  const tLevel = useTranslations('level')
   const [open, setOpen] = useState(false)
   const [formStartTime, setFormStartTime] = useState<number | undefined>(undefined)
   const [checkedUnique, setCheckedUnique] = useState(false)
@@ -63,6 +66,8 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
         {t.rich('warningMessage', {
           organization: organizationName,
           name: `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase()} ${user.lastName.toUpperCase()}`,
+          level: user.level ? tLevel(user.level) : '',
+          support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
           error: (children) => <span className="error">{children}</span>,
           b: (children) => <span className="bold">{children}</span>,
           i: (children) => <span className="italic">{children}</span>,
