@@ -68,7 +68,7 @@ model OpeningHours {
   closeHour String?
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("opening_hours")
 }
@@ -106,7 +106,7 @@ model Study {
   openingHours           OpeningHours[]
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("studies")
 }
@@ -118,7 +118,7 @@ model StudyExport {
   control ControlMode
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@id([studyId, type])
   @@map("study_exports")
@@ -133,7 +133,7 @@ model UserOnStudy {
   role StudyRole
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@id([studyId, userId])
   @@map("users_on_study")
@@ -148,7 +148,7 @@ model Contributors {
   subPost SubPost
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@id([studyId, userId, subPost])
   @@map("contributors")
@@ -204,7 +204,7 @@ model StudyEmissionSource {
   feCompleteness                 Int? @map("fe_completeness")
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("study_emission_sources")
 }
@@ -236,7 +236,7 @@ model ExportRule {
   landUse                 String? @map("land_use")
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@unique([export, subPost, type])
   @@map("export_rules")
@@ -254,7 +254,7 @@ model StudyEmissionFactorVersion {
   source Import
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@unique([studyId, source])
   @@map("study_emission_factor_versions")
@@ -274,7 +274,7 @@ model StudySite {
   StudyEmissionSource StudyEmissionSource[]
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@unique([studyId, siteId])
   @@map("study_sites")

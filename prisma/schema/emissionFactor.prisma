@@ -139,7 +139,7 @@ model EmissionFactorImportVersion {
   studyEmissionFactorVersions StudyEmissionFactorVersion[]
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@unique([source, internId])
   @@map("emission_factor_import_version")
@@ -148,7 +148,7 @@ model EmissionFactorImportVersion {
 model EmissionFactor {
   id                  String               @id @default(uuid())
   createdAt           DateTime             @default(now()) @map("created_at")
-  updatedAt           DateTime             @updatedAt @map("updated_at")
+  updatedAt           DateTime             @default(now()) @updatedAt @map("updated_at")
   emissionFactorParts EmissionFactorPart[]
 
   oldBCId String? @map("old_bc_id")
@@ -206,7 +206,7 @@ model EmissionFactorMetaData {
   comment   String?
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@id([emissionFactorId, language])
   @@map("emission_metadata")
@@ -215,7 +215,7 @@ model EmissionFactorMetaData {
 model EmissionFactorPart {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   oldBCId String? @map("old_bc_id")
 
@@ -245,7 +245,7 @@ model EmissionFactorPartMetaData {
   language             String
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@id([emissionFactorPartId, language])
   @@map("emission_factor_part_metadata")
