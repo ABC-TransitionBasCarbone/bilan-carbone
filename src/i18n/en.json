@@ -161,7 +161,7 @@
     "Request sent": "A request has been sent to your colleagues",
     "Email sent": "You will receive an email to finish your account validation.",
     "validation": {
-      "email": "Veuillez entrer un email"
+      "email": "Please enter an email"
     }
   },
   "navigation": {
@@ -488,8 +488,8 @@
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "close": "Close"
       },
-      "no-data": "Aucune données à afficher",
-      "loading": "Chargement des résultats"
+      "no-data": "No data to display",
+      "loading": "Loanding results"
     },
     "export": {
       "activityDataComment": "Activity data comment",

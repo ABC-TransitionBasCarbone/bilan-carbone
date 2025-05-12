@@ -78,8 +78,6 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
 
   const { pieData, barData } = useChartData(computeResults, theme)
 
-  console.log({ pieData, barData })
-
   const chartFormatter = (value: number) =>
     `${value / STUDY_UNIT_VALUES[study.resultsUnit]} ${tUnits(study.resultsUnit)}`
 
