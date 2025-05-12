@@ -3,9 +3,9 @@ import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
 import { getLocale, switchLocale } from '@/i18n/locale'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import Link from 'next/link'
 import { ReactNode, useEffect, useState } from 'react'
+import Image from '../document/Image'
 import styles from './Public.module.css'
 
 interface Props {

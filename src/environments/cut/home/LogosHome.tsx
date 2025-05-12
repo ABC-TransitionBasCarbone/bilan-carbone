@@ -1,7 +1,7 @@
 'use client'
+import Image from '@/components/document/Image'
 import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Box } from '@mui/material'
-import Image from 'next/image'
 import { useMemo } from 'react'
 import styles from './LogosHome.module.css'
 
