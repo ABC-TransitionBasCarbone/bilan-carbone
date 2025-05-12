@@ -657,6 +657,22 @@
         "BiensEtMatieresEnApprocheMonetaire": "Un sous-poste est également dédié aux matières pour lesquelles des facteurs d'émission en ratios monétaires sont utilisés.",
         "UtilisationEnResponsabilite": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation est directement responsable ([en italisque] pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en responsabilité correspond à l'énergie utilisée pour refroidir et réchauffer le plateau-repas).",
         "UtilisationEnDependance": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation n'est pas directement reponsable mais que sont activité contribue à émettre ([en italique] Pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en dépendance correspond aux émissions du vol complet)."
+      },
+      "cutQuestions": {
+        "error": "Erreur lors de la mise à jour du champs",
+        "next": "Suivant",
+        "previous": "Précédent",
+        "numberOfYears": "Nombre d'années",
+        "bonbons": "Bonbons - Nombre (sachets de {value}g)",
+        "chips": "Chips - Nombre (sachets de {value}g)",
+        "Electromenager": "Pour chacun de ces équipements électroménagers, veuillez renseigner :",
+        "FretCadence": "Fret - Cadence (fois/mois)",
+        "FretPoids moyen": "Fret - Poids moyen (kg)",
+        "FretProvenance": "Où est basé votre principal fournisseur ?",
+        "Refrigerateurs": "Réfrigérateurs",
+        "Congelateurs": "Congélateurs",
+        "Warmers": "Warmers",
+        "Distributeurs": "Distributeurs snacks / boisson"
       }
     },
     "create": {
@@ -1203,6 +1219,11 @@
       "expand": "Développer les qualités",
       "shrink": "Simplifier les qualités",
       "comment": "Commentaires"
+    },
+    "cut": {
+      "form": {
+        "value": "Nombre"
+      }
     },
     "emissionFactorDialog": {
       "title": "Choisir un facteur d'émission",
