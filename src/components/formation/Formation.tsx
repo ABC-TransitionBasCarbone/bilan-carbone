@@ -70,6 +70,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
         })}
       </div>
       <h3 className="mb1">{t('videos')}</h3>
+      <div className={classNames(styles.subTitle, 'mb2')}>{t.rich('videoExplaination')}</div>
       <div className={classNames(styles.videos, 'justify-center mb2')}>
         {formations.map((formation) => (
           <Video key={formation.id} formation={formation} />
@@ -85,6 +86,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
             {t.rich('evaluationSubtitle', {
               time: timer / (MIN * TIME_IN_MS),
               red: (children) => <span className="error">{children}</span>,
+              b: (children) => <span className="bold">{children}</span>,
             })}
           </div>
           {!formStartTime && (
