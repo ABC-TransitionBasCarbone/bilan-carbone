@@ -21,6 +21,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
 
+import { formatNumber } from '@/utils/number'
 import styles from './AllResults.module.css'
 
 interface Props {
@@ -78,8 +79,12 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
 
   const { pieData, barData } = useChartData(computeResults, theme)
 
-  const chartFormatter = (value: number) =>
-    `${value / STUDY_UNIT_VALUES[study.resultsUnit]} ${tUnits(study.resultsUnit)}`
+  const chartFormatter = (value: number | null) => {
+    const safeValue = value ?? 0
+    const unit = study.resultsUnit
+    const precision = unit === 'K' ? 3 : 0
+    return `${formatNumber(safeValue / STUDY_UNIT_VALUES[unit], precision)} ${tUnits(unit)}`
+  }
 
   const { environment } = useAppEnvironmentStore()
 
@@ -147,7 +152,9 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                         tickLabelPlacement: 'middle',
                       },
                     ]}
-                    series={[{ color: theme.palette.primary.main, data: barData.values }]}
+                    series={[
+                      { color: theme.palette.primary.main, data: barData.values, valueFormatter: chartFormatter },
+                    ]}
                     grid={{ horizontal: true }}
                     yAxis={[{ label: tUnits(study.resultsUnit) }]}
                     axisHighlight={{ x: 'none' }}
@@ -164,7 +171,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                   <CircularProgressCenter message={t('loading')} />
                 ) : pieData.length !== 0 ? (
                   <PieChart
-                    series={[{ data: pieData, valueFormatter: (value) => chartFormatter(value.value) }]}
+                    series={[{ data: pieData, valueFormatter: ({ value }) => chartFormatter(value) }]}
                     height={350}
                   />
                 ) : (
