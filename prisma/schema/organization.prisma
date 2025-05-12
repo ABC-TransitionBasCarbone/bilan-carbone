@@ -27,7 +27,7 @@ model Organization {
   childs   Organization[] @relation("childOrganizations")
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("organizations")
 }
@@ -48,7 +48,7 @@ model Site {
   studies        StudySite[]
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("sites")
 }
