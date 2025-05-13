@@ -53,7 +53,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
       oldBCWorksheetsReader.emissionFactorsWorksheet,
-      accountOrganizationVersion.id,
+      accountOrganizationVersion,
     )
     hasStudiesWarning = await uploadStudies(
       transaction,
