@@ -1,46 +1,15 @@
-.navbar {
-  z-index: 1000;
-  background-color: var(--background-300);
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.navbarContainer {
-  gap: 0.5rem;
-}
-
-.logo {
-  width: auto;
-  height: 48px;
-}
-
-.subLink,
 .link {
-  cursor: pointer;
-  gap: 0.25rem;
-  color: white;
-  height: 1.5rem;
-  padding: 1rem;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-weight: 600;
-  background-color: transparent;
-  border: none;
+  margin-right: 0.125rem;
+}
 
-  &:hover {
-    color: var(--primary-400);
-  }
-
-  &.notClickable {
-    &:hover {
-      color: white;
-    }
-  }
+.container {
+  display: flex;
+  justify-content: space-between;
 }
 
 .big {
   display: block;
+
   @media screen and (max-width: 60rem) {
     display: none;
   }
@@ -48,15 +17,8 @@
 
 .small {
   display: none;
+
   @media screen and (max-width: 60rem) {
     display: block;
   }
-}
-
-.subMenu {
-  background-color: var(--background-300);
-  flex-direction: column;
-  padding: 1rem;
-  position: absolute;
-  top: 100%;
 }

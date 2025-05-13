@@ -14,9 +14,12 @@ import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
-import Image from '../document/Image'
+import { MouseEvent, useEffect, useMemo, useState } from 'react'
+import { AppBar, Box, MenuItem, Toolbar } from '@mui/material'
+import { Logo } from '../base/Logo'
+import NavbarOrganizationMenu from './NavbarOrganizationMenu'
+import NavbarLink from './NavbarLink'
+import NavbarButton from './NavbarButton'
 import styles from './Navbar.module.css'
 
 interface Props {
@@ -25,9 +28,12 @@ interface Props {
 
 const Navbar = ({ user }: Props) => {
   const t = useTranslations('navigation')
-  const [showSubMenu, setShowSubMenu] = useState(false)
   const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClickMenu = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)
+  const handleClose = () => setAnchorEl(null)
 
   useEffect(() => {
     const getFormationAccess = async () => {
@@ -44,57 +50,49 @@ const Navbar = ({ user }: Props) => {
 
     hasMultipleAccounts()
     getFormationAccess()
-  })
+  }, [user])
 
   const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
 
-  const handleMouseEnter = () => setShowSubMenu(true)
-  const handleMouseLeave = () => setShowSubMenu(false)
-
   return (
-    <nav className={classNames(styles.navbar, 'w100')}>
-      <div className="main-container px-2 align-center justify-between grow h100">
-        <div className={classNames(styles.navbarContainer, 'flex-cc')}>
-          <Link href="/" aria-label={t('home')} title={t('home')}>
-            <Image src="/logos/logo_BC_2025_blanc.png" width={200} height={48} alt="" className={styles.logo} />
-          </Link>
+    <AppBar position="static">
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <Box display="flex" alignItems="center" gap={2}>
+          <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
+            <Logo />
+          </NavbarLink>
           {user.organizationVersionId && (
-            <div className="flex-col">
-              <div
-                className={classNames(styles.link, styles.notClickable)}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onClick={() => setShowSubMenu(!showSubMenu)}
-                data-testid="navbar-organization"
-              >
+            <Box>
+              <NavbarButton color="inherit" onMouseEnter={handleClickMenu}>
                 {t('organization')}
-              </div>
-              {showSubMenu && (
-                <div
-                  className={classNames(styles.subMenu, 'flex-cc')}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
-                    <Link href={`/organisations/${user.organizationVersionId}/modifier`} className={styles.link}>
+              </NavbarButton>
+              <NavbarOrganizationMenu
+                id="navbar-organisation-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+              >
+                {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+                  <MenuItem onClick={handleClose}>
+                    <NavbarLink href={`/organisations/${user.organizationVersionId}/modifier`}>
                       {t('information')}
-                    </Link>
-                  )}
-                  <Link href="/equipe" className={styles.link}>
-                    {t('team')}
-                  </Link>
-                  <Link href="/organisations" className={styles.link}>
-                    {t('organizations')}
-                  </Link>
-                </div>
-              )}
-            </div>
+                    </NavbarLink>
+                  </MenuItem>
+                )}
+                <MenuItem onClick={handleClose}>
+                  <NavbarLink href="/equipe">{t('team')}</NavbarLink>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <NavbarLink href="/organisations">{t('organizations')}</NavbarLink>
+                </MenuItem>
+              </NavbarOrganizationMenu>
+            </Box>
           )}
           {!isCut && (
-            <Link className={styles.link} href="/facteurs-d-emission" data-testid="navbar-factors">
+            <NavbarButton href="/facteurs-d-emission">
               <span className={styles.big}>{t('factors')}</span>
               <span className={styles.small}>{t('fe')}</span>
-            </Link>
+            </NavbarButton>
           )}
           {hasFormation && !isCut && (
             <Link className={styles.link} href="/formation">
@@ -154,10 +152,10 @@ const Navbar = ({ user }: Props) => {
             onClick={() => signOut()}
           >
             <PowerSettingsNewIcon />
-          </button>
-        </div>
-      </div>
-    </nav>
+          </NavbarButton>
+        </Box>
+      </Toolbar>
+    </AppBar>
   )
 }
 
