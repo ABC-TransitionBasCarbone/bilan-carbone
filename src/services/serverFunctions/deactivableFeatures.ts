@@ -4,6 +4,7 @@ import {
   createDeactivableFeatures,
   createOrUpdateDeactivableFeature,
   getDeactivableFeatures,
+  isFeatureActive,
 } from '@/db/deactivableFeatures'
 import { withServerResponse } from '@/utils/serverResponse'
 import { DeactivatableFeature, Role } from '@prisma/client'
@@ -38,3 +39,5 @@ export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeatu
 
     await createOrUpdateDeactivableFeature(feature, status, session.user.id)
   })
+
+export const isDeactivableFeatureActive = async (feature: DeactivatableFeature) => isFeatureActive(feature)
