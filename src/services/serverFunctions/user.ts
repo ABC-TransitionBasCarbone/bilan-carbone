@@ -361,3 +361,13 @@ export const verifyPasswordAndProcessUsers = async (uuid: string) => uuid !== pr
 export const getFormationFormStart = async (userId: string) => getUserFormationFormStart(userId)
 
 export const startFormationForm = async (userId: string, date: Date) => startUserFormationForm(userId, date)
+
+export const fixUserRoleOnOnboarding = async () => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return
+  }
+
+  const newRole = session.user.level ? Role.ADMIN : Role.GESTIONNAIRE
+  await changeUserRole(session.user.email, newRole)
+}
