@@ -8,6 +8,7 @@ const bucketName = process.env.SCW_BUCKET_NAME as string
 const region = process.env.SCW_REGION
 
 const scaleway = `https://${bucketName}.s3.${region}.scw.cloud`
+const logos = ['https://base-empreinte.ademe.fr', 'https://www.legifrance.gouv.fr', ''].join(' ')
 
 const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
@@ -25,7 +26,7 @@ export async function middleware(req: NextRequest) {
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
     style-src 'self' 'nonce-${nonce}' https://fonts.cdnfonts.com;
-    img-src 'self' data:;
+    img-src 'self' data: ${logos};
     font-src 'self' https://fonts.cdnfonts.com;
     object-src 'none';
     base-uri 'self';
