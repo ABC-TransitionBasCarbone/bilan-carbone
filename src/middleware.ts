@@ -31,7 +31,7 @@ export async function middleware(req: NextRequest) {
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
-		frame-src ${scaleway}
+		frame-src ${scaleway} https://www.youtube.com
 	`
   const contentSecurityPolicyHeader = cspHeader.replace(/\s{2,}/g, ' ').trim()
 
