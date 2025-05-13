@@ -1,25 +1,20 @@
-import { ControlMode, Level, Prisma, Export as StudyExport } from '@prisma/client'
+import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
-import { getExistingObjectsIds, getExistingSitesIds } from './repositories'
-
-export enum RequiredStudiesColumns {
-  oldBCId = 'IDETUDE',
-  name = 'NOM_ETUDE',
-  startDate = 'PERIODE_DEBUT',
-  endDate = 'PERIODE_FIN',
-  siteId = 'ID_ENTITE',
-}
-
-export enum RequiredStudySitesColumns {
-  siteOldBCId = 'ID_ENTITE',
-  studyOldBCId = 'IDETUDE',
-}
-
-export enum RequiredStudyExportsColumns {
-  studyOldBCId = 'IDETUDE',
-  type = 'LIB_REFERENTIEL',
-  control = 'LIBELLE_MODE_CONTROLE',
-}
+import { getEmissionQuality } from '../../../services/importEmissionFactor/import'
+import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
+import {
+  EmissionSourceRow,
+  EmissionSourcesWorkSheet,
+  OldBCWorkSheetsReader,
+  StudiesWorkSheet,
+  StudyExportsWorkSheet,
+  StudySitesWorkSheet,
+} from './oldBCWorkSheetsReader'
+import {
+  getExistingEmissionFactorsNames as getExistingEmissionFactorsNamesFromRepository,
+  getExistingSitesIds,
+} from './repositories'
+import { SitesCAsMapper, SitesETPsMapper } from './sitesETPsAndCAs'
 
 interface Study {
   oldBCId: string
@@ -37,29 +32,40 @@ interface Export {
   control: ControlMode
 }
 
-const parseStudies = (indexes: Record<string, number>, data: (string | number)[][]): Study[] => {
-  return data
-    .slice(1)
-    .filter((row) => row[indexes[RequiredStudiesColumns.name]])
+interface EmissionSource {
+  siteOldBCId: string
+  name: string
+  recycledPart: number
+  comment: string
+  validated: boolean
+  value: number
+  subPost: SubPost
+  reliability: number
+  technicalRepresentativeness: number
+  geographicRepresentativeness: number
+  temporalRepresentativeness: number
+  completeness: number
+}
+
+const parseStudies = (studiesWorksheet: StudiesWorkSheet): Study[] => {
+  return studiesWorksheet
+    .getRows()
+    .filter((row) => row.name)
     .map((row) => ({
-      oldBCId: row[indexes[RequiredStudiesColumns.oldBCId]] as string,
-      name: row[indexes[RequiredStudiesColumns.name]] as string,
-      startDate: row[indexes[RequiredStudiesColumns.startDate]]
-        ? new Date(getJsDateFromExcel(row[indexes[RequiredStudiesColumns.startDate]] as number))
-        : '',
-      endDate: row[indexes[RequiredStudiesColumns.startDate]]
-        ? new Date(getJsDateFromExcel(row[indexes[RequiredStudiesColumns.endDate]] as number))
-        : '',
+      oldBCId: row.oldBCId as string,
+      name: row.name as string,
+      startDate: row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : '',
+      endDate: row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : '',
     }))
 }
 
-const parseStudySites = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, StudySite[]> => {
-  return data
-    .slice(1)
+const parseStudySites = (studySitesWorksheet: StudySitesWorkSheet): Map<string, StudySite[]> => {
+  return studySitesWorksheet
+    .getRows()
     .map<[string, StudySite]>((row) => [
-      row[indexes[RequiredStudySitesColumns.studyOldBCId]] as string,
+      row.studyOldBCId as string,
       {
-        siteOldBCId: row[indexes[RequiredStudySitesColumns.siteOldBCId]] as string,
+        siteOldBCId: row.siteOldBCId as string,
       },
     ])
     .reduce((accumulator, currentValue) => {
@@ -99,22 +105,22 @@ const getControl = (control: string) => {
   }
 }
 
-const parseExports = (indexes: Record<string, number>, data: (string | number)[][]): Map<string, Export[]> => {
-  return data
-    .slice(1)
+const parseStudyExports = (studyExportsWorksheet: StudyExportsWorkSheet): Map<string, Export[]> => {
+  return studyExportsWorksheet
+    .getRows()
     .map<[string, Export | null]>((row) => {
-      const type = getType(row[indexes[RequiredStudyExportsColumns.type]] as string)
-      const control = getControl(row[indexes[RequiredStudyExportsColumns.control]] as string)
+      const type = getType(row.type as string)
+      const control = getControl(row.control as string)
       if (!type) {
         console.warn(`Type ${type} invalide`)
-        return [row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string, null]
+        return [row.studyOldBCId as string, null]
       }
       if (!control) {
         console.warn(`Control ${control} invalide`)
-        return [row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string, null]
+        return [row.studyOldBCId as string, null]
       }
       return [
-        row[indexes[RequiredStudyExportsColumns.studyOldBCId]] as string,
+        row.studyOldBCId as string,
         {
           type: type,
           control: control,
@@ -138,26 +144,171 @@ const parseExports = (indexes: Record<string, number>, data: (string | number)[]
     }, new Map<string, Export[]>())
 }
 
-const getExistingStudiesIds = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
-  return getExistingObjectsIds(transaction.study, studiesIds)
+const mapToSubPost = (newSubPost: string) => {
+  const normalizedSubPost = newSubPost
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\s,]/g, '')
+    .toLowerCase()
+  const foundSubPost = Object.values(SubPost).find((subPost) => subPost.toLowerCase() === normalizedSubPost)
+  if (foundSubPost) {
+    return foundSubPost
+  }
+  throw new Error(`Sous poste invalide "${newSubPost}"`)
+}
+
+const getExistingEmissionFactorsNames = async (
+  studyEmissionSourcesWorksheet: EmissionSourcesWorkSheet,
+  transaction: Prisma.TransactionClient,
+) => {
+  const emissionFactorsOldBCIds = studyEmissionSourcesWorksheet
+    .getRows()
+    .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
+    .map((row) => row.emissionFactorOldBCId as string)
+
+  return await getExistingEmissionFactorsNamesFromRepository(transaction, emissionFactorsOldBCIds)
+}
+
+const buildEmissionSourceName = (
+  row: EmissionSourceRow,
+  emissionFactorsNames: Map<string, { name: string; id: string }>,
+  newPostAndSubPost: NewPostAndSubPosts,
+) => {
+  let name = row.descriptifData as string
+  if (!name) {
+    const emissionFactorName = emissionFactorsNames.get(row.emissionFactorOldBCId as string)
+    if (emissionFactorName) {
+      name = emissionFactorName.name
+    }
+  }
+  return !name ? `${newPostAndSubPost.newPost} - ${newPostAndSubPost.newSubPost}` : name
+}
+
+const parseEmissionSources = (
+  postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
+  studyEmissionSourcesWorkSheet: EmissionSourcesWorkSheet,
+  emissionFactorsNames: Map<string, { name: string; id: string }>,
+): Map<string, EmissionSource[]> => {
+  return studyEmissionSourcesWorkSheet
+    .getRows()
+    .slice(1)
+    .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
+    .map<[string, EmissionSource] | null>((row) => {
+      const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
+        domain: row.domain as string,
+        category: row.category as string,
+        subCategory: row.subCategory as string,
+        oldPost: row.post as string,
+        oldSubPost: row.subPost as string,
+      })
+      const name = buildEmissionSourceName(row, emissionFactorsNames, newPostAndSubPost)
+      let subPost
+      try {
+        subPost = mapToSubPost(newPostAndSubPost.newSubPost)
+      } catch (e) {
+        console.warn(e)
+        return null
+      }
+      const incertitudeDA = getEmissionQuality((row.incertitudeDA as number) * 100)
+      return [
+        row.studyOldBCId as string,
+        {
+          siteOldBCId: row.siteOldBCId as string,
+          name: name,
+          recycledPart: row.recycledPart as number,
+          comment: `${row.commentaires as string} ${row.commentairesCollecte as string}`,
+          validated: (row.validationDASaisie as number) === 1,
+          value: row.daTotalValue as number,
+          subPost: subPost,
+          reliability: incertitudeDA,
+          technicalRepresentativeness: incertitudeDA,
+          geographicRepresentativeness: incertitudeDA,
+          temporalRepresentativeness: incertitudeDA,
+          completeness: incertitudeDA,
+        },
+      ]
+    })
+    .reduce((accumulator, currentValue) => {
+      if (currentValue === null) {
+        return accumulator
+      }
+      const emissionSources = accumulator.get(currentValue[0])
+      if (emissionSources) {
+        emissionSources.push(currentValue[1])
+      } else {
+        accumulator.set(currentValue[0], [currentValue[1]])
+      }
+      return accumulator
+    }, new Map<string, EmissionSource[]>())
+}
+
+const getExistingStudies = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
+  const existingObjects = await transaction.study.findMany({
+    where: {
+      oldBCId: {
+        in: studiesIds,
+      },
+    },
+    select: { id: true, oldBCId: true, startDate: true, endDate: true },
+  })
+
+  return existingObjects.reduce((map, currentExistingObject) => {
+    if (currentExistingObject.oldBCId) {
+      map.set(currentExistingObject.oldBCId, {
+        id: currentExistingObject.id,
+        startDate: currentExistingObject.startDate,
+        endDate: currentExistingObject.endDate,
+      })
+    }
+    return map
+  }, new Map<string, { id: string; startDate: Date; endDate: Date }>())
+}
+
+const getExistingStudySites = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
+  const existingStudySites = await transaction.studySite.findMany({
+    where: {
+      studyId: {
+        in: studiesIds,
+      },
+    },
+    select: { id: true, studyId: true, siteId: true },
+  })
+  return existingStudySites.reduce((map, currentExistingStudySite) => {
+    const studySite = {
+      id: currentExistingStudySite.id,
+      siteId: currentExistingStudySite.siteId,
+    }
+    const studySites = map.get(currentExistingStudySite.studyId)
+    if (studySites) {
+      studySites.push(studySite)
+    } else {
+      map.set(currentExistingStudySite.studyId, [studySite])
+    }
+    return map
+  }, new Map<string, [{ id: string; siteId: string }]>())
 }
 
 export const uploadStudies = async (
   transaction: Prisma.TransactionClient,
   userId: string,
   organizationId: string,
-  studiesIndexes: Record<string, number>,
-  studiesData: (string | number)[][],
-  studySitesIndexes: Record<string, number>,
-  studySitesData: (string | number)[][],
-  studyExportsIndexes: Record<string, number>,
-  studyExportsData: (string | number)[][],
+  postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
+  oldBCWorksheetReader: OldBCWorkSheetsReader,
 ) => {
   console.log('Import des études...')
 
-  const studies = parseStudies(studiesIndexes, studiesData)
-  const studySites = parseStudySites(studySitesIndexes, studySitesData)
-  const studyExports = parseExports(studyExportsIndexes, studyExportsData)
+  const studies = parseStudies(oldBCWorksheetReader.studiesWorksheet)
+  const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
+  const studyExports = parseStudyExports(oldBCWorksheetReader.studyExportsWorksheet)
+  const existingEmissionFactorNames = await getExistingEmissionFactorsNames(
+    oldBCWorksheetReader.emissionSourcesWorksheet,
+    transaction,
+  )
+  const studyEmissionSources = parseEmissionSources(
+    postAndSubPostsOldNewMapping,
+    oldBCWorksheetReader.emissionSourcesWorksheet,
+    existingEmissionFactorNames,
+  )
 
   const alreadyImportedStudyIds = await transaction.study.findMany({
     where: {
@@ -183,12 +334,14 @@ export const uploadStudies = async (
     })),
   })
 
-  const existingStudiesIds = await getExistingStudiesIds(transaction, Array.from(studySites.keys()))
-  const sitesIds = Array.from(
+  const existingStudies = await getExistingStudies(transaction, Array.from(studySites.keys()))
+  const sitesOldBCIds = Array.from(
     studySites.values().flatMap((studySites) => studySites.map((studySite) => studySite.siteOldBCId)),
   )
-  const existingSiteIds = await getExistingSitesIds(transaction, sitesIds)
+  const existingSiteIds = await getExistingSitesIds(transaction, sitesOldBCIds)
 
+  const sitesETPsMapper = new SitesETPsMapper(oldBCWorksheetReader.sitesETPsWorksheet)
+  const sitesCAsMapper = new SitesCAsMapper(oldBCWorksheetReader.sitesCAsWorksheet)
   await transaction.studySite.createMany({
     data: Array.from(
       studySites.entries().flatMap(([studyOldBCId, studySites]) => {
@@ -196,8 +349,8 @@ export const uploadStudies = async (
         if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
           return []
         }
-        const existingStudyId = existingStudiesIds.get(studyOldBCId)
-        if (!existingStudyId) {
+        const existingStudy = existingStudies.get(studyOldBCId)
+        if (!existingStudy) {
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
@@ -208,11 +361,21 @@ export const uploadStudies = async (
               console.warn(`Impossible de retrouver le site de oldBCId: ${studySite.siteOldBCId}`)
               return null
             }
+            const siteETP = sitesETPsMapper.getMatchingSiteAdditionalData(
+              studySite.siteOldBCId,
+              existingStudy.startDate,
+              existingStudy.endDate,
+            )
+            const siteCA = sitesCAsMapper.getMatchingSiteAdditionalData(
+              studySite.siteOldBCId,
+              existingStudy.startDate,
+              existingStudy.endDate,
+            )
             return {
-              studyId: existingStudyId,
+              studyId: existingStudy.id,
               siteId: existingSiteId,
-              etp: 1,
-              ca: 1,
+              etp: siteETP ? siteETP.numberOfEmployees : 1,
+              ca: siteCA ? siteCA.ca : 1,
             }
           })
           .filter((studySite) => studySite !== null)
@@ -227,17 +390,78 @@ export const uploadStudies = async (
         if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
           return []
         }
-        const existingStudyId = existingStudiesIds.get(studyOldBCId)
-        if (!existingStudyId) {
+        const existingStudy = existingStudies.get(studyOldBCId)
+        if (!existingStudy) {
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
         return studyExports
           .map((studyExport) => ({
             ...studyExport,
-            studyId: existingStudyId,
+            studyId: existingStudy.id,
           }))
           .filter((studyExport) => studyExport !== null)
+      }),
+    ),
+  })
+
+  const existingStudySites = await getExistingStudySites(
+    transaction,
+    Array.from(
+      studyEmissionSources
+        .keys()
+        .map((studyOldBCId) => existingStudies.get(studyOldBCId))
+        .filter((study) => study !== undefined)
+        .map((study) => study.id),
+    ),
+  )
+
+  await transaction.studyEmissionSource.createMany({
+    data: Array.from(
+      studyEmissionSources.entries().flatMap(([studyOldBCId, studyEmissionSources]) => {
+        // N'importer que les sources d'émission d'études nouvelles.
+        if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
+          return []
+        }
+        const existingStudy = existingStudies.get(studyOldBCId)
+        if (!existingStudy) {
+          console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
+          return []
+        }
+        return studyEmissionSources
+          .map((studyEmissionSource) => {
+            const existingSiteId = existingSiteIds.get(studyEmissionSource.siteOldBCId)
+            if (!existingSiteId) {
+              console.warn(`Impossible de retrouver le site de oldBCId: ${studyEmissionSource.siteOldBCId}`)
+              return null
+            }
+            const studySites = existingStudySites.get(existingStudy.id)
+            if (!studySites) {
+              console.warn(`Impossible de retrouver les studySites de studyId: ${existingStudy.id}`)
+              return null
+            }
+            const studySite = studySites.find((studySite) => studySite.siteId === existingSiteId)
+            if (!studySite) {
+              console.warn(`Impossible de retrouver le studySite d'id: ${existingSiteId}`)
+              return null
+            }
+            return {
+              studyId: existingStudy.id,
+              studySiteId: studySite.id,
+              name: studyEmissionSource.name,
+              subPost: studyEmissionSource.subPost,
+              recycledPart: studyEmissionSource.recycledPart,
+              comment: studyEmissionSource.comment,
+              validated: studyEmissionSource.validated,
+              value: studyEmissionSource.value,
+              reliability: studyEmissionSource.reliability,
+              technicalRepresentativeness: studyEmissionSource.technicalRepresentativeness,
+              geographicRepresentativeness: studyEmissionSource.geographicRepresentativeness,
+              temporalRepresentativeness: studyEmissionSource.temporalRepresentativeness,
+              completeness: studyEmissionSource.completeness,
+            }
+          })
+          .filter((studyEmissionSource) => studyEmissionSource !== null)
       }),
     ),
   })

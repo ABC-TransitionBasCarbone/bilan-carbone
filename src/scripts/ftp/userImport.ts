@@ -9,19 +9,22 @@ import { createUsers, getUserByEmail, updateUser } from '../../db/userImport'
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
   const {
-    User_Email: email,
     Firstname: firstName = '',
     Lastname: lastName = '',
     Session_Code: sessionCodeTraining,
     Company_Name: name,
     SIRET: siret,
     SIREN: siren,
+    VAT: vat,
+    Tax_Number: taxNumber,
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
     User_Source: source,
   } = value
 
-  const siretOrSiren = siret || siren
+  const email = value['User_Email'].replace(/ /g, '').toLowerCase()
+
+  const companyNumber = siret || siren || vat || taxNumber
   const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
 
@@ -42,16 +45,16 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     user.level = sessionCodeTraining.includes('BCM2') ? Level.Advanced : Level.Initial
   }
 
-  if (siretOrSiren) {
+  if (companyNumber) {
     let organization = dbUser?.organizationId
       ? await getRawOrganizationById(dbUser.organizationId)
-      : await getRawOrganizationBySiret(siretOrSiren)
+      : await getRawOrganizationBySiret(companyNumber)
 
     organization = await createOrUpdateOrganization(
       {
         id: organization?.id,
         name,
-        siret: siretOrSiren,
+        siret: companyNumber,
       } as Prisma.OrganizationCreateInput,
       isCR,
       activatedLicence,
@@ -69,7 +72,6 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
         organizationId: user.organizationId,
       }),
     })
-    console.log(`Updating ${email} because already exists`)
     return null
   }
 

@@ -1,17 +1,21 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
-import { getOrganizationById } from '@/db/organization'
+import { getOrganizationById, isOrganizationCR } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
   addUser,
   changeStatus,
   changeUserRole,
+  createOrUpdateUserCheckedStep,
   deleteUserFromOrga,
+  finalizeUserChecklist,
   getUserApplicationSettings,
+  getUserFormationFormStart,
   getUserFromUserOrganization,
+  getUsersCheckedSteps,
   getUserSourceById,
   organizationActiveUsersCount,
+  startUserFormationForm,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
   validateUser,
@@ -120,7 +124,7 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
-  const memberExists = await getUserByEmail(member.email)
+  const memberExists = await getUserByEmail(member.email.toLowerCase())
 
   if (memberExists?.role === Role.SUPER_ADMIN) {
     return NOT_AUTHORIZED
@@ -162,7 +166,7 @@ export const addMember = async (member: AddMemberCommand) => {
     await updateUser(memberExists.id, updateMember)
   }
 
-  await sendNewUser(member.email, session.user, member.firstName)
+  await sendNewUser(member.email.toLowerCase(), session.user, member.firstName)
 }
 
 export const validateMember = async (email: string) => {
@@ -177,7 +181,7 @@ export const validateMember = async (email: string) => {
   }
 
   await validateUser(email)
-  await sendNewUser(member.email, session.user, member.firstName)
+  await sendNewUser(member.email.toLowerCase(), session.user, member.firstName)
 }
 
 export const resendInvitation = async (email: string) => {
@@ -277,7 +281,7 @@ export const activateEmail = async (email: string, fromReset: boolean = false) =
     const users = await getUserFromUserOrganization(user)
     await sendActivationRequest(
       users.filter((u) => u.role === Role.GESTIONNAIRE || u.role === Role.ADMIN).map((u) => u.email),
-      email,
+      email.toLowerCase(),
       `${user.firstName} ${user.lastName}`,
     )
 
@@ -322,7 +326,7 @@ export const getUserCheckedItems = async () => {
   if (!session || !session.user) {
     return []
   }
-  return prismaClient.userCheckedStep.findMany({ where: { userId: session.user.id } })
+  return getUsersCheckedSteps(session.user.id)
 }
 
 export const addUserChecklistItem = async (step: UserChecklist) => {
@@ -330,23 +334,17 @@ export const addUserChecklistItem = async (step: UserChecklist) => {
   if (!session || !session.user) {
     return
   }
-  const isCR = (await prismaClient.organization.findUnique({ where: { id: session.user.organizationId || '' } }))?.isCR
+  const isCR = isOrganizationCR(session.user.organizationId)
   const checklist = getUserCheckList(session.user.role, !!isCR)
   if (!Object.values(checklist).includes(step)) {
     return
   }
-  await prismaClient.userCheckedStep.upsert({
-    where: { userId_step: { userId: session.user.id, step } },
-    update: {},
-    create: { userId: session.user.id, step },
-  })
+  await createOrUpdateUserCheckedStep(session.user.id, step)
   const userChecklist = await getUserCheckedItems()
   if (userChecklist.length === Object.values(checklist).length - 1) {
     setTimeout(
       async () => {
-        await prismaClient.userCheckedStep.create({
-          data: { userId: session.user.id, step: UserChecklist.Completed },
-        })
+        await finalizeUserChecklist(session.user.id)
       },
       1 * MIN * TIME_IN_MS,
     )
@@ -360,10 +358,16 @@ export const sendAddedUsersAndProccess = async (results: Record<string, string>[
 
 export const verifyPasswordAndProcessUsers = async (uuid: string) => uuid !== process.env.ADMIN_PASSWORD
 
-export const getFormationFormStart = async (userId: string) => {
-  return (await prismaClient.user.findUnique({ where: { id: userId }, select: { formationFormStartTime: true } }))
-    ?.formationFormStartTime
-}
+export const getFormationFormStart = async (userId: string) => getUserFormationFormStart(userId)
 
-export const startFormationForm = async (userId: string, date: Date) =>
-  prismaClient.user.update({ where: { id: userId }, data: { formationFormStartTime: date } })
+export const startFormationForm = async (userId: string, date: Date) => startUserFormationForm(userId, date)
+
+export const changeUserRoleOnOnboarding = async () => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return
+  }
+
+  const newRole = session.user.level ? Role.ADMIN : Role.GESTIONNAIRE
+  await changeUserRole(session.user.email, newRole)
+}

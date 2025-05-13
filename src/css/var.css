@@ -93,6 +93,11 @@
   padding-right: 0.5rem;
 }
 
+.py0 {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .h100 {
   height: 100%;
 }

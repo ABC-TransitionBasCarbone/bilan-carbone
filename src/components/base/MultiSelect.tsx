@@ -1,4 +1,5 @@
 import { MenuItem, SelectChangeEvent, SelectProps } from '@mui/material'
+import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Select } from './Select'
 
@@ -8,7 +9,8 @@ interface MultiSelectProps {
   iconPosition?: 'before' | 'after'
   options: { label: string; value: string }[]
   onChange: (value: string[]) => void
-  translation: (slug: string) => string
+  translation: ReturnType<typeof useTranslations>
+  clearable?: boolean
 }
 
 export const MultiSelect = ({
@@ -19,6 +21,7 @@ export const MultiSelect = ({
   options,
   translation,
   placeholder,
+  clearable,
   ...selectProps
 }: Omit<SelectProps, 'onChange'> & MultiSelectProps) => {
   const [selected, setSelected] = useState<string[]>(
@@ -32,7 +35,8 @@ export const MultiSelect = ({
       target: { value },
     } = event
 
-    const tmpSelected: string[] = typeof value === 'string' ? (value.split(',') as string[]) : (value as string[])
+    const tmpSelected: string[] =
+      typeof value === 'string' ? (value ? (value.split(',') as string[]) : []) : (value as string[])
     onChange(tmpSelected)
     setSelected(tmpSelected)
   }
@@ -50,6 +54,8 @@ export const MultiSelect = ({
         }
         return translatedSelected.join(', ')
       }}
+      t={translation}
+      clearable={clearable && selected.length > 0}
     >
       {options.map((option) => (
         <MenuItem key={option.value} value={option.value}>

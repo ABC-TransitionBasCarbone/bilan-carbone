@@ -119,9 +119,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             </Box>
           </label>
         </fieldset>
-        <div className={styles.graph}>
-          <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
-        </div>
+        <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
       </div>
       <GlossaryModal
         glossary={glossaryOpen ? 'results.withDependencies' : ''}

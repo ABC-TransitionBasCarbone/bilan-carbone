@@ -40,4 +40,4 @@ export const CA_UNIT_VALUES: Record<SiteCAUnit, number> = {
   M: 1000000,
 }
 
-export const defaultCAUnit = CA_UNIT_VALUES[SiteCAUnit.K]
+export const defaultCAUnit = SiteCAUnit.K

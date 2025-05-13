@@ -3,8 +3,9 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
+import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
@@ -46,7 +47,7 @@ const fuseOptions = {
 interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
-  update: (name: Path<UpdateEmissionSourceCommand>, value: string) => void
+  update: (name: Path<UpdateEmissionSourceCommand>, value: string | null) => void
   selectedFactor?: EmissionFactorWithMetaData | null
   canEdit: boolean | null
   getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
@@ -122,14 +123,26 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
             onFocus={() => setDisplay(true)}
           />
           {canEdit && (
-            <button
-              className={styles.search}
-              aria-label={t('advancedSearch')}
-              title={t('advancedSearch')}
-              onClick={() => setAdvancedSearch(true)}
-            >
-              <SearchIcon />
-            </button>
+            <>
+              {value && (
+                <button
+                  className={styles.clear}
+                  aria-label={t('clear')}
+                  title={t('clear')}
+                  onClick={() => update('emissionFactorId', null)}
+                >
+                  <ClearIcon />
+                </button>
+              )}
+              <button
+                className={styles.search}
+                aria-label={t('advancedSearch')}
+                title={t('advancedSearch')}
+                onClick={() => setAdvancedSearch(true)}
+              >
+                <SearchIcon />
+              </button>
+            </>
           )}
         </div>
       </div>
@@ -153,7 +166,8 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
                   result.metaData?.location,
                   formatEmissionFactorNumber(getEmissionFactorValue(result)),
                 ])}{' '}
-                {tResultUnits(StudyResultUnit.K)}/{tUnits(result.unit || '')}
+                {tResultUnits(StudyResultUnit.K)}/
+                {result.unit === Unit.CUSTOM ? result.customUnit : tUnits(result.unit || '')}
               </p>
               {result.metaData && <p className={styles.detail}>{getDetail(result.metaData)}</p>}
             </button>

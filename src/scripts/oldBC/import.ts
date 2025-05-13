@@ -14,4 +14,4 @@ program
 
 const params = program.opts()
 
-uploadOldBCInformations(params.file, params.email, params.organization)
+uploadOldBCInformations(params.file, params.email.toLowerCase(), params.organization)

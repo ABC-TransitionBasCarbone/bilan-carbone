@@ -1,4 +1,5 @@
 import { onboardOrganizationCommand } from '@/services/serverFunctions/organization'
+import { changeUserRoleOnOnboarding } from '@/services/serverFunctions/user'
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
@@ -9,7 +10,7 @@ import { User } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
@@ -35,14 +36,17 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const [loading, setLoading] = useState(false)
   const stepCount = 2
   const Step = activeStep === 1 ? Step1 : Step2
-  const buttonLabel = activeStep === stepCount ? 'validate' : 'next'
 
   const newRole = useMemo(() => (user.level ? Role.ADMIN : Role.GESTIONNAIRE), [user])
+
+  useEffect(() => {
+    changeUserRoleOnOnboarding()
+  }, [])
 
   const form = useForm<OnboardingCommand>({
     resolver: zodResolver(OnboardingCommandValidation),
     mode: 'onSubmit',
-    reValidateMode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       organizationId: organization.id,
       firstName: user.firstName || '',
@@ -52,30 +56,24 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     },
   })
 
-  const goToPreviousStep = () => setActiveStep(activeStep > 1 ? activeStep - 1 : 0)
+  const goToPreviousStep = () => setActiveStep(activeStep > 1 ? activeStep - 1 : 1)
+  const goToNextStep = () => setActiveStep(activeStep + 1)
+
+  const onCloseModal = async () => {
+    await updateSession()
+    onClose()
+    router.refresh()
+  }
 
   const onValidate = async () => {
-    if (activeStep < stepCount) {
-      setActiveStep(activeStep + 1)
-    } else {
-      setLoading(true)
-      const values = form.getValues()
-      values.collaborators = (values.collaborators || []).filter(
-        (collaborator) => collaborator.email || collaborator.role,
-      )
-      const isValid = OnboardingCommandValidation.safeParse(values)
-      if (isValid.success) {
-        const result = await onboardOrganizationCommand(isValid.data)
-        if (result) {
-          onClose()
-        } else {
-          await updateSession()
-          onClose()
-          router.refresh()
-        }
-      }
-      setLoading(false)
-    }
+    setLoading(true)
+    const values = form.getValues()
+    values.collaborators = (values.collaborators || []).filter(
+      (collaborator) => collaborator.email || collaborator.role,
+    )
+    await onboardOrganizationCommand(values)
+    setLoading(false)
+    onCloseModal()
   }
 
   return (
@@ -89,7 +87,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
       <div className={styles.container}>
         <Form onSubmit={form.handleSubmit(onValidate)}>
           <div className="justify-end">
-            <MUIButton className={styles.closeIcon} onClick={onClose}>
+            <MUIButton className={styles.closeIcon} onClick={onCloseModal}>
               <CloseIcon />
             </MUIButton>
           </div>
@@ -104,10 +102,16 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
             <Step form={form} role={newRole} isCr={organization.isCR} />
           </DialogContent>
           <DialogActions className="noSpacing">
-            {activeStep > 0 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
-            <LoadingButton type="submit" loading={loading}>
-              {t(buttonLabel)}
-            </LoadingButton>
+            {activeStep > 1 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}
+            {activeStep === stepCount ? (
+              <LoadingButton type="submit" loading={loading}>
+                {t('validate')}
+              </LoadingButton>
+            ) : (
+              <Button type="button" onClick={goToNextStep}>
+                {t('next')}
+              </Button>
+            )}
           </DialogActions>
         </Form>
       </div>

@@ -1,7 +1,8 @@
 'use client'
 
+import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { BCPost, subPostsByPost } from '@/services/posts'
-import { canEditEmissionFactor, EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
@@ -186,7 +187,7 @@ const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${tUnits(emissionFactor.unit || '')}`,
+          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === Unit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),

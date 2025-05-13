@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
-import { prismaClient } from '../../db/client'
+import { createActualities } from '../../db/actuality'
 import { getEncoding } from '../../utils/csv'
 
 const addActualities = async (file: string) => {
@@ -26,7 +26,8 @@ const addActualities = async (file: string) => {
       })
       .on('end', async () => {
         console.log(`Ajout de ${actualities.length} actualités...`)
-        await prismaClient.actuality.createMany({ data: actualities })
+        await createActualities(actualities)
+        console.log('Actualités créées')
         resolve()
       })
       .on('error', (error) => {

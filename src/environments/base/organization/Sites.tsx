@@ -5,40 +5,29 @@ import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
-import { getUserSettings } from '@/services/serverFunctions/user'
 import { CA_UNIT_VALUES, displayCA, formatNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { SiteCAUnit } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import styles from './Sites.module.css'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
   sites: SitesCommand['sites']
   withSelection?: boolean
+  caUnit: SiteCAUnit
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const tUnit = useTranslations('settings.caUnit')
-  const [caUnit, setCAUnit] = useState<SiteCAUnit>(SiteCAUnit.K)
 
   const control = form?.control as Control<SitesCommand>
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
   const getValues = form?.getValues as UseFormGetValues<SitesCommand>
-
-  useEffect(() => {
-    applyUserSettings()
-  }, [])
-
-  const applyUserSettings = async () => {
-    const caUnit = (await getUserSettings())?.caUnit
-    if (caUnit !== undefined) {
-      setCAUnit(caUnit)
-    }
-  }
 
   const headerCAUnit = useMemo(() => tUnit(caUnit), [caUnit])
 
@@ -64,11 +53,12 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
               ) : (
                 <FormTextField
                   data-testid="edit-site-name"
-                  className="w100"
+                  className={styles.field}
                   control={control}
                   translation={t}
                   name={`sites.${row.index}.name`}
                   placeholder={t('namePlaceholder')}
+                  fullWidth
                 />
               )}
             </>
@@ -85,7 +75,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
             <FormTextField
               data-testid="organization-sites-etp"
               type="number"
-              className="w100"
+              className={styles.field}
               control={control}
               translation={t}
               name={`sites.${row.index}.etp`}
@@ -94,6 +84,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 htmlInput: { type: 'number', min: 0 },
                 input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
               }}
+              fullWidth
             />
           ) : (
             formatNumber(getValue<number>(), 2)
@@ -108,7 +99,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
             <FormTextField
               data-testid="organization-sites-ca"
               type="number"
-              className="w100"
+              className={styles.field}
               control={control}
               translation={t}
               name={`sites.${row.index}.ca`}
@@ -117,6 +108,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 htmlInput: { type: 'number', min: 0 },
                 input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
               }}
+              fullWidth
             />
           ) : (
             `${formatNumber(displayCA(getValue<number>(), CA_UNIT_VALUES[caUnit]))}`
@@ -151,7 +143,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
     return columns
   }, [t, form, headerCAUnit])
 
-  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} />
+  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} caUnit={caUnit} />
 }
 
 export default Sites

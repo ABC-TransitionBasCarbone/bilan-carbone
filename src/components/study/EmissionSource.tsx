@@ -17,7 +17,7 @@ import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -85,9 +85,9 @@ const EmissionSource = ({
             emissionSourceId: emissionSource.id,
             [key]: value,
           }
-          const isValid = UpdateEmissionSourceCommandValidation.safeParse(command)
-          if (isValid.success) {
-            const result = await updateEmissionSource(isValid.data)
+          const parsed = UpdateEmissionSourceCommandValidation.safeParse(command)
+          if (parsed.success) {
+            const result = await updateEmissionSource(parsed.data)
             if (result) {
               setError(result)
             } else {
@@ -146,7 +146,7 @@ const EmissionSource = ({
         onClick={() => setDisplay(!display)}
       >
         <div className={classNames(styles.header, styles.gapped, 'grow justify-between')}>
-          <div className="align-center grow">
+          <div className={classNames(styles.name, 'align-center grow')}>
             {emissionSource.validated || withoutDetail ? (
               <p data-testid="validated-emission-source-name">{emissionSource.name}</p>
             ) : (
@@ -164,14 +164,18 @@ const EmissionSource = ({
               </>
             )}
           </div>
-          <div className={classNames(styles.gapped, 'grow align-center')}>
+          <div className={classNames(styles.gapped, 'align-center')}>
             {/* activity data */}
             <div className="flex-col justify-center text-center">
               {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
                 <>
                   <p>{t('emissionSource')}</p>
                   <p>
-                    {formatNumber(emissionSource.value)} {selectedFactor && tUnits(selectedFactor.unit || '')}
+                    {formatNumber(emissionSource.value)}{' '}
+                    {selectedFactor &&
+                      (selectedFactor.unit === Unit.CUSTOM
+                        ? selectedFactor.customUnit
+                        : tUnits(selectedFactor.unit || ''))}
                   </p>
                 </>
               )}
@@ -182,7 +186,8 @@ const EmissionSource = ({
                 <p>{t('emissionFactor')}</p>
                 <p>
                   {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}
-                  {tResultstUnits(StudyResultUnit.K)}/{tUnits(selectedFactor.unit || '')}
+                  {tResultstUnits(StudyResultUnit.K)}/
+                  {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
                 </p>
               </div>
             )}

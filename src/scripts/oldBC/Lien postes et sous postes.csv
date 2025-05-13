@@ -1,0 +1,487 @@
+Domaine;Catégorie;Sous cat;Poste;sous poste;;;Sous poste nouveau;Poste nouveau
+Achats et matières premières;Matières de base;Papier;Autres papiers;Consommation totale;;;Papiers cartons;Intrants biens et matières
+Achats et matières premières;Services;Prestations de services;Administration publique;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Enseignement et formation;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Services techniques;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Courrier;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Activité pour la santé humaine;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Activité sportives et culturelles;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Produits agricoles et alimentation;Produits agricoles (production);Produits végétaux;Fleurs;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Services;Prestations de services;Audiovisuel;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Services informatiques;Tous types;Total utilisation;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Produits agricoles et alimentation;Produits agricoles (production);Produits végétaux;Fruits;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits agricoles (production);Produits végétaux;Fruits;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits agricoles (production);Produits végétaux;Fruits;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Matières de base;Produits chimiques;Autres produits chimiques;Consommation totale;;;Produits chimiques;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits agricoles (production);Produits végétaux;Noix;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits agricoles (production);Produits végétaux;Légumes;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits agricoles (production);Produits végétaux;Céréales;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits agricoles (production);Produits végétaux;Autres;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Matières de base;Bois;Ameublement;Consommation totale;;;Matériaux de construction;Intrants biens et matières
+Achats et matières premières;Matières de base;Bois;Bois d'oeuvre (construction);Consommation totale;;;Matériaux de construction;Intrants biens et matières
+Achats et matières premières;Matières de base;Métaux;Métaux ferreux;Consommation totale;;;Métaux, plastiques et verre;Intrants biens et matières
+Achats et matières premières;Matières de base;Plastiques;Toutes catégories;Consommation totale;;;Métaux, plastiques et verre;Intrants biens et matières
+Achats et matières premières;Matières de base;Plastiques;Emballages;Consommation totale;;;Métaux, plastiques et verre;Intrants biens et matières
+Achats et matières premières;Matières de base;Plastiques;Autres usages;Consommation totale;;;Métaux, plastiques et verre;Intrants biens et matières
+Achats et matières premières;Matières de base;Plastiques;Tous types;Consommation totale;;;Métaux, plastiques et verre;Intrants biens et matières
+Achats et matières premières;Matières de base;Verre;Toutes catégories;Consommation totale;;;Métaux, plastiques et verre;Intrants biens et matières
+Achats et matières premières;Matières de base;Papier;Papier bureautique;Consommation totale;;;Papiers cartons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Huiles;Consommation totale;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Boissons;Consommation totale;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Noix;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Viandes;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Biscuits patisseries produits sucrés;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Pains;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Poissons et produits de la mer;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Fruits;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Légumes;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Fromages et produits laitiers;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Préparations diverses;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Aliments transformés et plats préparés;Céréales;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Produits végétaux et préparations;Légumes;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Produits végétaux et préparations;Fruits;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Produits végétaux et préparations;Céréales;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Produits végétaux et préparations;Autres;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Produits végétaux et préparations;Consommation totale;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Produits végétaux et préparations;Noix;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Produits animaux et préparations;Viandes;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Produits animaux et préparations;Poissons et produits de la mer;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Produits agricoles et alimentation;Produits alimentaires (consommation);Repas;Consommation totale;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Matières de base;Carton;Carton emballage;Consommation totale;;;Matière destinée aux emballages;Intrants biens et matières
+Achats et matières premières;Matières de base;Carton;Carton emballage;Montant HT dépensé;;;Matière destinée aux emballages;Intrants biens et matières
+Achats et matières premières;Matières de base;Carton;Autres cartons;Consommation totale;;;Papiers cartons;Intrants biens et matières
+Achats et matières premières;Matières de base;Produits chimiques;Acides;Consommation totale;;;Produits chimiques;Intrants biens et matières
+Achats et matières premières;Matières de base;Produits chimiques;Engrais et phytosanitaires;Consommation totale;;;Produits chimiques;Intrants biens et matières
+Achats et matières premières;Matières de base;Métaux;Métaux non ferreux;Consommation totale;;;Métaux, plastiques et verre;Intrants biens et matières
+Achats et matières premières;Matières de base;Matériaux de construction;Bâtiments;Consommation totale;;;Matériaux de construction;Intrants biens et matières
+Achats et matières premières;Matières de base;Matériaux de construction;Routier;Consommation totale;;;Matériaux de construction;Intrants biens et matières
+Achats et matières premières;Produits et matériels divers;Informatique et électronique;Tous équipements;Total achats;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Produits et matériels divers;Electroménager;Tous équipements;Total achats;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Produits et matériels divers;Textile habillement;Coton;Total achats;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Produits et matériels divers;Textile habillement;Cuir;Total achats;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Produits et matériels divers;Textile habillement;Synthétique;Total achats;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Produits et matériels divers;Textile habillement;Autres;Total achats;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Produits et matériels divers;Articles de sport;Tous équipements;Total achats;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Produits et matériels divers;Mobilier;Tous équipements;Total achats;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Produits et matériels divers;Autres produits;Toutes catégories;Consommation totale;;;Autres intrants;Intrants biens et matières
+Achats et matières premières;Services;Prestations de services;Services sociaux;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Hébergement et restauration;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Produits agricoles et alimentation;Produits agricoles (production);Produits animaux;Production totale;;;Nourriture, repas, boissons;Intrants biens et matières
+Achats et matières premières;Services;Prestations de services;Produits et matériaux;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Transports;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Services juridiques et financiers;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Télécommunications;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Achats et matières premières;Services;Prestations de services;Entreposage;Montant HT dépensé;;;Services en approche monétaire;Intrants services
+Déchets;Déchets spéciaux;DAS (Déchets d'Activités de Soins);Incinération;Qantité totale;;;Déchets dangereux;Déchets
+Déchets;Déchets banals;Autres;Textiles;Quantité totale;;;Autres déchets;Déchets
+Déchets;Déchets banals;Organiques;Emissions évitées;Quantité totale;;;Émissions évitées;Déchets
+Déchets;Déchets banals;Organiques;Incinération;Qantité totale;;;Déchets organiques;Déchets
+Déchets;Déchets banals;Organiques;Moyenne;Qantité totale;;;Déchets organiques;Déchets
+Déchets;Déchets banals;Organiques;Compost;Qantité totale;;;Déchets organiques;Déchets
+Déchets;Déchets banals;Organiques;Stockage;Qantité totale;;;Déchets organiques;Déchets
+Déchets;Déchets banals;Plastiques;Emissions évitées;Quantité totale;;;Émissions évitées;Déchets
+Déchets;Déchets banals;Plastiques;Moyenne;Qantité totale;;;Déchets d'emballages et plastiques;Déchets
+Déchets;Déchets banals;Plastiques;Recyclage;Qantité totale;;;Déchets d'emballages et plastiques;Déchets
+Déchets;Déchets banals;Plastiques;Stockage;Qantité totale;;;Déchets d'emballages et plastiques;Déchets
+Déchets;Déchets banals;Plastiques;Incinération;Qantité totale;;;Déchets d'emballages et plastiques;Déchets
+Déchets;Déchets banals;Inertes (métaux, verre, gravats...);Emissions évitées;Quantité totale;;;Émissions évitées;Déchets
+Déchets;Déchets banals;Inertes (métaux, verre, gravats...);Incinération;Qantité totale;;;Déchets matériaux & Déchets d'emballages et plastiques;Déchets
+Déchets;Déchets banals;Inertes (métaux, verre, gravats...);Moyenne;Qantité totale;;;Déchets matériaux & Déchets d'emballages et plastiques;Déchets
+Déchets;Déchets banals;Inertes (métaux, verre, gravats...);Recyclage;Qantité totale;;;Déchets matériaux & Déchets d'emballages et plastiques;Déchets
+Déchets;Déchets banals;Ordures ménagères;Méthanisation;Quantité totale;;;Déchets ordures ménagères;Déchets
+Déchets;Déchets banals;Ordures ménagères;Emissions évitées;Quantité totale;;;Émissions évitées;Déchets
+Déchets;Déchets banals;Ordures ménagères;Moyenne;Qantité totale;;;Déchets ordures ménagères;Déchets
+Déchets;Déchets banals;Ordures ménagères;Compost;Qantité totale;;;Déchets ordures ménagères;Déchets
+Déchets;Déchets banals;Ordures ménagères;Stockage;Qantité totale;;;Déchets ordures ménagères;Déchets
+Déchets;Déchets banals;Ordures ménagères;Incinération;Qantité totale;;;Déchets ordures ménagères;Déchets
+Déchets;Déchets spéciaux;Déchets du bâtiment;Tous types;Quantité totale;;;Déchets dangereux;Déchets
+Déchets;Eaux usées;Toutes catégories;Quantités rejetées;Qantité totale;;;Déchets eaux usées;Déchets
+Déchets;Collectes et traitement;Traitement;Tous matériaux;Quantité totale;;;N/A;Déchets
+Déchets;Collectes et traitement;Collecte;Tous matériaux;Quantité totale;;;N/A;Déchets
+Déchets;Déchets banals;Inertes (métaux, verre, gravats...);Stockage;Qantité totale;;;Déchets matériaux & Déchets d'emballages et plastiques;Déchets
+Déchets;Déchets spéciaux;Emballages;Tous types;Quantité totale;;;Déchets d'emballages et plastiques;Déchets
+Déchets;Déchets spéciaux;DEA (Déchets d'Elément d'Ameublement);Tous types;Quantité totale;;;Autres déchets;Déchets
+Déchets;Déchets spéciaux;DIS (Déchets Industriels Spéciaux);Stockage;Qantité totale;;;Déchets dangereux;Déchets
+Déchets;Déchets spéciaux;DIS (Déchets Industriels Spéciaux);Incinération;Qantité totale;;;Déchets dangereux;Déchets
+Déchets;Déchets spéciaux;DEEE;Emissions évitées;Quantité totale;;;Émissions évitées;Déchets
+Déchets;Déchets spéciaux;DEEE;Tous types;Quantité totale;;;Autres déchets;Déchets
+Déchets;Déchets spéciaux;Déchets dangereux;Toutes catégories;Qantité totale;;;Déchets dangereux;Déchets
+Energie;Autre;Fossiles gazeux;Gaz naturel;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles gazeux;Butane / Propane;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles gazeux;Autres gaz;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Réseaux de froid;Tous réseaux;Consommation totale;;;Réseaux de froid;Energie
+Energie;Autre;Fossiles liquides;Autres produits pétroliers;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles liquides;Bitumes;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles liquides;Combustibles haute viscosité;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles liquides;Fioul domestique;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles liquides;Fioul lourd;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles liquides;Gazole non routier;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles liquides;Huiles de schistes;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles liquides;Naphta;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles solides;Anthracite;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles solides;Charbon;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles solides;Houille;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles solides;Lignite;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Fossiles solides;Tourbe;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Autre;Réseaux chaleur;Tous réseaux;Consommation totale;;;Réseaux de chaleur et de vapeur;Energie
+Energie;Process;Fossiles gazeux;Gaz naturel;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Bâtiments;Fossiles gazeux;Gaz naturel;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Bâtiments;Réseaux froid;Tous réseaux;Consommation totale;;;Réseaux de froid;Energie
+Energie;Bâtiments;Réseaux chaleur;Tous réseaux;Consommation totale;;;Réseaux de chaleur et de vapeur;Energie
+Energie;Bâtiments;Fossiles solides;Charbon;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Bâtiments;Fossiles liquides;Autres produits pétroliers;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Bâtiments;Fossiles liquides;Fioul domestique;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Bâtiments;Fossiles gazeux;Autres gaz;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Bâtiments;Fossiles gazeux;Butane / Propane;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Bâtiments;Electricité - Production;Sources non renouvelables;Production totale;;;Electricité;Energie
+Energie;Bâtiments;Electricité - Production;Sources renouvelables;Production totale;;;Electricité;Energie
+Energie;Bâtiments;Electricité - Consommation;Par usage;Consommation totale;;;Electricité;Energie
+Energie;Bâtiments;Electricité - Consommation;Moyenne;Consommation totale;;;Electricité;Energie
+Energie;Bâtiments;Combustibles organiques;Combustibles gazeux;Consommation totale;;;Combustibles organiques;Energie
+Energie;Bâtiments;Combustibles organiques;Combustibles liquides;Consommation totale;;;Combustibles organiques;Energie
+Energie;Bâtiments;Combustibles organiques;Bois et paille;Consommation totale;;;Combustibles organiques;Energie
+Energie;Process;Autres;Tous types;Quantité totale;;;Combustibles fossiles;Energie
+Energie;Process;Electricité - Production;Sources non renouvelables;Production totale;;;Electricité;Energie
+Energie;Process;Electricité - Production;Sources renouvelables;Production totale;;;Electricité;Energie
+Energie;Process;Electricité - Consommation;Par usage;Consommation totale;;;Electricité;Energie
+Energie;Process;Electricité - Consommation;Moyenne;Consommation totale;;;Electricité;Energie
+Energie;Process;Combustibles organiques;Combustibles liquides;Consommation totale;;;Combustibles organiques;Energie
+Energie;Process;Combustibles organiques;Combustibles gazeux;Consommation totale;;;Combustibles organiques;Energie
+Energie;Process;Combustibles organiques;Bois et paille;Consommation totale;;;Combustibles organiques;Energie
+Energie;Process;Fossiles solides;Anthracite;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles solides;Charbon;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles solides;Houille;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles solides;Lignite;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles solides;Tourbe;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles liquides;Autres produits pétroliers;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles liquides;Bitumes;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles liquides;Combustibles haute viscosité;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles liquides;Fioul domestique;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles liquides;Fioul lourd;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles liquides;Gazole non routier;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles liquides;Huiles de schistes;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles liquides;Naphta;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles gazeux;Butane / Propane;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Fossiles gazeux;Autres gaz;Consommation totale;;;Combustibles fossiles;Energie
+Energie;Process;Réseaux froid;Tous réseaux;Consommation totale;;;Réseaux de froid;Energie
+Energie;Process;Réseaux chaleur;Tous réseaux;Consommation totale;;;Réseaux de chaleur et de vapeur;Energie
+Energie;Autre;Autres;Tous types;Quantité totale;;;N/A;Energie
+Energie;Autre;Hydrogène;Tous modes;Production totale;;;N/A;Energie
+Energie;Autre;Combustibles organiques;Bois et paille;Consommation totale;;;Combustibles organiques;Energie
+Energie;Autre;Combustibles organiques;Combustibles gazeux;Consommation totale;;;Combustibles organiques;Energie
+Energie;Autre;Combustibles organiques;Combustibles liquides;Consommation totale;;;Combustibles organiques;Energie
+Energie;Autre;Electricité - Consommation;Moyenne;Consommation totale;;;Electricité;Energie
+Energie;Autre;Electricité - Consommation;Par usage;Consommation totale;;;Electricité;Energie
+Energie;Autre;Electricité - Production;Sources renouvelables;Production totale;;;Electricité;Energie
+Energie;Autre;Electricité - Production;Sources non renouvelables;Production totale;;;Electricité;Energie
+Fin de vie des produits;Déchets banals;Organiques;Stockage;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Inertes (métaux, verre, gravats...);Recyclage;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Ordures ménagères;Moyenne;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Autres;Textiles;Quantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Plastiques;Recyclage;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Plastiques;Moyenne;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Plastiques;Emissions évitées;Quantité totale;;;N/A;
+Fin de vie des produits;Déchets banals;Plastiques;Stockage;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Plastiques;Incinération;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets spéciaux;Emballages;Tous types;Quantité totale;;;Traitement des emballages en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Organiques;Compost;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Organiques;Moyenne;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Organiques;Incinération;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Organiques;Emissions évitées;Quantité totale;;;N/A;
+Fin de vie des produits;Déchets banals;Ordures ménagères;Stockage;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Ordures ménagères;Incinération;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Ordures ménagères;Emissions évitées;Quantité totale;;;N/A;
+Fin de vie des produits;Déchets spéciaux;DIS (Déchets Industriels Spéciaux);Incinération;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Inertes (métaux, verre, gravats...);Incinération;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets spéciaux;DEA (Déchets d'Elément d'Ameublement);Tous types;Quantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets spéciaux;DAS (Déchets d'Activités de Soins);Incinération;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Eaux usées;Toutes catégories;Quantités rejetées;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets spéciaux;DEEE;Emissions évitées;Quantité totale;;;N/A;
+Fin de vie des produits;Déchets spéciaux;DEEE;Tous types;Quantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets spéciaux;DIS (Déchets Industriels Spéciaux);Moyenne;Quantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets spéciaux;DIS (Déchets Industriels Spéciaux);Stockage;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Inertes (métaux, verre, gravats...);Moyenne;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Ordures ménagères;Compost;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Inertes (métaux, verre, gravats...);Emissions évitées;Quantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Fin de vie des produits;Déchets banals;Inertes (métaux, verre, gravats...);Stockage;Qantité totale;;;Traitement des déchets en fin de vie;Fin de Vie
+Immobilisations;Matériels;Electroménager;Tous types;Nombre d'équipements;;;Equipements;Immobilisations
+Immobilisations;Bâtiments;Habitation;Tous types;Surface en m²;;;Bâtiments;Immobilisations
+Immobilisations;Parking et voiries;Parkings;Tous types;Surface en m²;;;Autres infrastructures;Immobilisations
+Immobilisations;Parking et voiries;Parkings;Tous types;Matériaux;;;Autres infrastructures;Immobilisations
+Immobilisations;Parking et voiries;Voiries;Tous types;Surface en m²;;;Autres infrastructures;Immobilisations
+Immobilisations;Matériels;Electronique;Tous types;Nombre d'équipements;;;Informatique;Immobilisations
+Immobilisations;Parking et voiries;Voiries;Tous types;Matériaux;;;Autres infrastructures;Immobilisations
+Immobilisations;Véhicules;Poids lourds;Tous types;Poids;;;Equipements;Immobilisations
+Immobilisations;Véhicules;Voitures;Tous types;Poids;;;Equipements;Immobilisations
+Immobilisations;Bâtiments;Commerce;Tous types;Surface en m²;;;Bâtiments;Immobilisations
+Immobilisations;Véhicules;Engins divers;Tous types;Poids;;;Equipements;Immobilisations
+Immobilisations;Bâtiments;Industriel;Tous types;Surface en m²;;;Bâtiments;Immobilisations
+Immobilisations;Bâtiments;Tertiaire;Tous types;Surface en m²;;;Bâtiments;Immobilisations
+Immobilisations;Bâtiments;Santé;Tous types;Surface en m²;;;Bâtiments;Immobilisations
+Immobilisations;Bâtiments;Agricole;Tous types;Surface en m²;;;Bâtiments;Immobilisations
+Immobilisations;Bâtiments;Sport et loisirs;Tous types;Surface en m²;;;Bâtiments;Immobilisations
+Immobilisations;Bâtiments;Autres;Tous types;Surface en m²;;;Bâtiments;Immobilisations
+Immobilisations;Matériels;Informatique;Tous types;Montant HT investi;;;Informatique;Immobilisations
+Immobilisations;Bâtiments;Ratios financiers;Tous types;Montant HT investit;;;N/A;N/A
+Immobilisations;Matériels;Machines;Tous types;Poids;;;Equipements;Immobilisations
+Immobilisations;Matériels;Machines;Tous types;Ratios financiers;;;Equipements;Immobilisations
+Immobilisations;Matériels;Informatique;Tous types;Nombre d'équipements;;;Informatique;Immobilisations
+Immobilisations;Matériels;Autres;Tous types;Quantité totale;;;Autres infrastructures;Immobilisations
+Immobilisations;Matériels;Mobilier;Tous types;Poids;;;Equipements;Immobilisations
+Immobilisations;Matériels;Mobilier;Tous types;Nombre d'équipements;;;Equipements;Immobilisations
+Investissements financiers;Catégorie 1;NULL;NULL;NULL;;;Investissements financiers réalisés;Utilisation et Dépendance
+Investissements financiers;Catégorie 2;NULL;NULL;NULL;;;Investissements financiers réalisés;Utilisation et Dépendance
+Non énergétique;N2O;Hors activités agricoles;Rejets dans l'atmosphère;Qantité totale rejetée;;;émissions liées aux procédés industriels + Autres émissions;Autres émissions non énergétiques
+Non énergétique;CH4;Méthane biogénique;Rejets dans l'atmosphère;Quantité totale rejetée;;;N/A;N/A
+Non énergétique;CH4;Méthane Fossile;Rejets dans l'atmosphère;Quantité totale rejetée;;;émissions liées aux procédés industriels + Autres émissions;Autres émissions non énergétiques
+Non énergétique;CO2 Fossile hors combustion;Toutes catégories;Rejets dans l'atmosphère;Qantité totale rejetée;;;émissions liées aux procédés industriels + Autres émissions;Autres émissions non énergétiques
+Non énergétique;Halocarbures Kyoto;HFC;Rejets dans l'atmosphère;Qantité totale rejetée;;;émissions procédés + émissions froid;Autres émissions non énergétiques
+Non énergétique;Halocarbures Kyoto;NF3;Rejets dans l'atmosphère;Qantité totale rejetée;;;émissions liées aux procédés industriels + production de froid +  Autres émissions;Autres émissions non énergétiques
+Non énergétique;Halocarbures Kyoto;Climatisation / groupes froid;Fuites de gaz frigorigènes;Quantités de recharge de gaz;;;Emissions liées à la production de froid;Autres émissions non énergétiques
+Non énergétique;Agriculture;N2O - Engrais;Rejets dans l'atmosphère;Qantité totale rejetée;;;Agriculture;Autres émissions non énergétiques
+Non énergétique;Agriculture;CH4 biogénique;Rejets dans l'atmosphère;Quantité totale rejetée;;;N/A;N/A
+Non énergétique;Agriculture;Animaux;Estimation par animal;Quantité totale;;;Agriculture;Autres émissions non énergétiques
+Non énergétique;Halocarbures Kyoto;SF6;Rejets dans l'atmosphère;Qantité totale rejetée;;;émissions liées aux procédés industriels + production de froid +  Autres émissions;Autres émissions non énergétiques
+Non énergétique;Agriculture;Cultures;Azote épandu;Quantité totale;;;Agriculture;Autres émissions non énergétiques
+Non énergétique;Autres GES hors Kyoto;CFC / HCFC;Rejets dans l'atmosphère;Quantité totale rejetée;;;émissions procédés + émissions froid;Autres émissions non énergétiques
+Non énergétique;Halocarbures Kyoto;PFC;Rejets dans l'atmosphère;Qantité totale rejetée;;;émissions procédés + émissions froid;Autres émissions non énergétiques
+Non énergétique;Autres GES hors Kyoto;Autres gaz;Rejets dans l'atmosphère;Quantité totale rejetée;;;émissions procédés + émissions froid;Autres émissions non énergétiques
+Terrains;Changement d'usage des sols;Emission de carbone;Tous types;Surface totale;;;Emissions liées au changement d'affection des sols (CAS);Autres émissions non énergétiques
+Terrains;Forêts;France;Tous types;Surface totale;;;N/A;N/A
+Terrains;Changement d'usage des sols;Séquestration de carbone;Tous types;Surface totale;;;Emissions liées au changement d'affection des sols (CAS);Autres émissions non énergétiques
+Transports de marchandises;Entrant;Aérien;Prestation transport;Total kg de CO2;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Aérien;Court courrier;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Aérien;Court courrier;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Aérien;Moyen courrier;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Aérien;Moyen courrier;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Aérien;Long courrier;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Aérien;Long courrier;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Ferroviaire;Electrique;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Ferroviaire;Electrique;Estimations en véhicules.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Ferroviaire;Thermique;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Ferroviaire;Thermique;Estimations en véhicules.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Ferroviaire;Mixte;Estimations en véhicules.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Ferroviaire;Mixte;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Porte-Conteneurs;Estimations en véhicules.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Porte-Conteneurs;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Porte-Conteneurs;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Vraquiers;Estimations en véhicules.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Vraquiers;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Vraquiers;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Pétrolier;Estimation véhicule.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Pétrolier;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Pétrolier;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Cargo;Estimation véhicule.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Cargo;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Cargo;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Ferry;Estimation véhicule.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Ferry;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Ferry;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Gazier;Estimation véhicule.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Gazier;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Gazier;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Roulier;Estimations en véhicules.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Roulier;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Roulier;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Maritime;Prestation transport;Total kg de CO2;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Fluvial;Prestation transport;Total kg de CO2;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Fluvial;Automoteur;Estimation véhicule.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Fluvial;Automoteur;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Fluvial;Automoteur;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Fluvial;Pousseur;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Fluvial;Pousseur;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Fluvial;Pousseur;Estimation véhicule.km;;;Fret entrant;Fret
+Transports de marchandises;Sortant;Routier;Prestation transport;Total kg de CO2;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Routier;Tous;Estimations en m3.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Routier;Tous;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Routier;Tous;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Routier;Tous;Estimations en véhicule.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Aérien;Prestation transport;Total kg de CO2;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Aérien;Court courrier;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Aérien;Court courrier;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Aérien;Moyen courrier;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Aérien;Moyen courrier;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Aérien;Long courrier;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Aérien;Long courrier;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Ferroviaire;Prestation transport;Total kg de CO2;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Ferroviaire;Electrique;Estimations en véhicules.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Ferroviaire;Electrique;Consommation d'électricité;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Ferroviaire;Thermique;Estimations en véhicules.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Ferroviaire;Thermique;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Ferroviaire;Mixte;Estimations en véhicules.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Ferroviaire;Mixte;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Prestation transport;Total kg de CO2;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Cargo;Estimation véhicule.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Cargo;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Cargo;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Porte-Conteneurs;Estimations en véhicules.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Porte-Conteneurs;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Vraquiers;Estimations en véhicules.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Vraquiers;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Vraquiers;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Roulier;Estimations en véhicules.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Roulier;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Roulier;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Gazier;Estimation véhicule.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Gazier;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Gazier;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Pétrolier;Estimation véhicule.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Pétrolier;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Pétrolier;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Ferry;Estimation véhicule.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Ferry;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Maritime;Ferry;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Fluvial;Prestation transport;Total kg de CO2;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Fluvial;Automoteur;Estimation véhicule.km;;;Fret sortant;Fret
+Transports de marchandises;Interne;Maritime;Roulier;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Sortant;Fluvial;Automoteur;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Fluvial;Automoteur;Estimations en tonnes.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Fluvial;Pousseur;Estimation véhicule.km;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Fluvial;Pousseur;es;;;Fret sortant;Fret
+Transports de marchandises;Sortant;Fluvial;Pousseur;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Interne;Routier;Prestation transport;Total kg de CO2;;;Fret interne;Fret
+Transports de marchandises;Interne;Routier;Tous;Estimations en véhicule.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Routier;Tous;Estimations en m3.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Routier;Tous;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Routier;Tous;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Aérien;Prestation transport;Total kg de CO2;;;Fret interne;Fret
+Transports de marchandises;Interne;Aérien;Court courrier;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Aérien;Court courrier;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Aérien;Moyen courrier;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Aérien;Moyen courrier;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Aérien;Long courrier;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Aérien;Long courrier;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Ferroviaire;Prestation transport;Total kg de CO2;;;Fret interne;Fret
+Transports de marchandises;Interne;Ferroviaire;Electrique;Estimations en véhicules.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Ferroviaire;Electrique;Consommation d'électricité;;;Fret interne;Fret
+Transports de marchandises;Interne;Ferroviaire;Thermique;Estimations en véhicules.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Ferroviaire;Thermique;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Ferroviaire;Mixte;Estimations en véhicules.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Ferroviaire;Mixte;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Prestation transport;Total kg de CO2;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Pétrolier;Estimation véhicule.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Pétrolier;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Pétrolier;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Porte-Conteneurs;Estimations en véhicules.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Porte-Conteneurs;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Porte-Conteneurs;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Vraquiers;Estimations en véhicules.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Vraquiers;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Vraquiers;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Gazier;Estimation véhicule.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Gazier;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Gazier;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Cargo;Estimation véhicule.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Cargo;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Cargo;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Ferry;Estimation véhicule.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Ferry;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Ferry;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Roulier;Estimations en véhicules.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Maritime;Roulier;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Fluvial;Prestation transport;Total kg de CO2;;;Fret interne;Fret
+Transports de marchandises;Interne;Fluvial;Pousseur;Estimation véhicule.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Fluvial;Pousseur;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Fluvial;Pousseur;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Fluvial;Automoteur;Estimation véhicule.km;;;Fret interne;Fret
+Transports de marchandises;Interne;Fluvial;Automoteur;Consommation de carburant;;;Fret interne;Fret
+Transports de marchandises;Interne;Fluvial;Automoteur;Estimations en tonnes.km;;;Fret interne;Fret
+Transports de marchandises;Tous transports;Non énergétique;Fuites gaz frigorigènes (climatisation et froid);Recharges de gaz;;;N/A;N/A
+Transports de marchandises;Sortant;Maritime;Porte-Conteneurs;Consommation de carburant;;;Fret sortant;Fret
+Transports de marchandises;Entrant;Ferroviaire;Prestation transport;Total kg de CO2;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Routier;Tous;Estimations en véhicule.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Routier;Tous;Estimations en tonnes.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Routier;Tous;Estimations en m3.km;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Routier;Tous;Consommation de carburant;;;Fret entrant;Fret
+Transports de marchandises;Entrant;Routier;Prestation transport;Total kg de CO2;;;Fret entrant;Fret
+Transports de personnes;Employés;Domicile travail;Autobus urbains;Distances parcourues par passager;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Employés;Domicile travail;Moto;Distances parcourues;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Employés;Domicile travail;Moto;Consommations de carburants;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Employés;Domicile travail;Train;Distances parcourues par passager;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Employés;Domicile travail;Metro / tramway;Distances parcourues par passager;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Employés;Domicile travail;Moyennes;Nombre d'actifs;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Employés;Domicile travail;Cars interurbains;Distances parcourues par passager;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Métro/tramway;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Moto;Distances parcourues par véhicule;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Bateau;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Train;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Moto;Consommations de carburants;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Avion;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Autobus urbains;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Cars interurbains;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Voiture;Distances parcourues par véhicule;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Voiture;Consommations de carburants;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Voiture;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Autres visiteurs;Voiture;Estimation véhicule.km;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Métro/tramway;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Train;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Avion;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Cars interurbains;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Cars interurbains;Consommation de carburant;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Autobus urbains;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Autobus urbains;Consommation de carburant;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Bateau;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Voiture;Distances parcourues par véhicule;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Voiture;Consommations de carburants;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Voiture;Distances parcourues par passager;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Moto;Consommations de carburants;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Employés;Professionnels;Métro/tramway;Distances parcourues par passager;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Moto;Consommations de carburants;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Moto;Distances parcourues;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Domicile travail;Voiture;Distances parcourues par passager;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Employés;Professionnels;Avion;Distances parcourues par passager;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Avion;Consommations de carburants;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Voiture;Distances parcourues par véhicule;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Voiture;Consommations de carburants;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Voiture;Distances parcourues par passager;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Car interurbains;Distances parcourues par passager;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Train;Distances parcourues par passager;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Bateau;Distances parcourues par passager;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Professionnels;Autobus urbains;Distances parcourues par passager;;;Déplacements des employés dans la cadre du travail;Déplacements
+Transports de personnes;Employés;Domicile travail;Voiture;Distances parcourues par véhicule;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Visiteurs et clients;Clients;Moto;Distances parcourues par véhicule;;;Déplacements visiteurs;Déplacements
+Transports de personnes;Employés;Domicile travail;Voiture;Consommations de carburants;;;Déplacements domicile travail;Déplacements
+Transports de personnes;Employés;Domicile travail;Autobus urbains;Distances parcourues par véhicule;;;Déplacements domicile travail;Déplacements
+Utilisation des produits et services;Consommation d'énergie;Combustibles organiques;Bois et paille;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Combustibles organiques;Autres combustibles;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Electricité - consommation;Par usage;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Electricité - consommation;Moyenne;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Réseaux chaleur;Tous types;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Réseaux froid;Tous types;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Fossiles solides;Tous types;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Fossiles gazeux;Autres gaz;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Fossiles gazeux;Gaz naturel;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Fossiles gazeux;Butane / propane;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Electricité - productIon;Sources non renouvelables;Production totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Métaux;Métaux ferreux;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Métaux;Métaux non ferreux;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Plastiques;Autres usages;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Plastiques;Emballages;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Papier;Toutes catégories;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Papier;Papier bureautique;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Carton;Carton emballage;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Carton;Autres cartons;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Verre;Toutes catégories;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits chimiques;Acides;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits chimiques;Engrais et phytosanitaires;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits chimiques;Autres produits chimiques;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Matériaux de construction;Bâtiments;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Matériaux de construction;Routier;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits agricoles;Boissons;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits agricoles;Huiles;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits agricoles;Aliments transformés et plats préparés;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits agricoles;Produits végétaux (non transformés);Autres;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits agricoles;Produits végétaux (non transformés);Légumes;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits agricoles;Produits végétaux (non transformés);Noix;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits agricoles;Produits végétaux (non transformés);Céréales;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits agricoles;Produits végétaux (non transformés);Fruits;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Autres produits;Toutes catégories;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Emissions non énergétiques;Toutes sources;Fuites de N2O;Recharges de gaz;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Emissions non énergétiques;Toutes sources;Fuites gaz frigorigènes (climatisation);Recharges de gaz;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Emissions non énergétiques;Toutes sources;Fuites gaz frigorigènes (groupes froid);Recharges de gaz;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Emissions non énergétiques;Toutes sources;Emissions de N2O - Autres;Emissions totales;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Emissions non énergétiques;Toutes sources;Emissions de méthane;Emissions totales de CH4 biogénique;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Emissions non énergétiques;Toutes sources;Emissions de méthane;Emissions totales de CH4 fossile;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Matériaux ou produits;Produits agricoles;Produits animaux;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Electricité - productIon;Sources renouvelables;Production totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance
+Utilisation des produits et services;Consommation d'énergie;Fossiles liquides;Tous types;Consommation totale;;;Utilisation en responsabilité + Utilisation en dépendance;Utilisation et Dépendance

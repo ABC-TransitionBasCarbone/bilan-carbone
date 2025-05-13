@@ -7,7 +7,8 @@ export const AddMemberCommandValidation = z.object({
       required_error: 'email',
     })
     .email('email')
-    .trim(),
+    .trim()
+    .transform((email) => email.toLowerCase()),
   firstName: z
     .string({
       required_error: 'firstName',
@@ -51,7 +52,11 @@ export const OnboardingCommandValidation = z.object({
     .array(
       z
         .object({
-          email: z.string().trim().optional(),
+          email: z
+            .string()
+            .trim()
+            .transform((email) => email.toLowerCase())
+            .optional(),
           role: z.nativeEnum(Role).optional(),
         })
         .superRefine((collaborator, ctx) => {
@@ -63,7 +68,11 @@ export const OnboardingCommandValidation = z.object({
             ctx.addIssue({ code: 'custom', path: ['role'], message: 'requiredRole' })
           }
           if (email !== '' && role !== undefined) {
-            const emailValidation = z.string().email().safeParse(email)
+            const emailValidation = z
+              .string()
+              .email()
+              .transform((val) => val.toLowerCase())
+              .safeParse(email)
             if (!emailValidation.success) {
               ctx.addIssue({ code: 'custom', path: ['email'], message: 'email' })
             }
@@ -89,13 +98,21 @@ export const LoginCommandValidation = z.object({
 export type LoginCommand = z.infer<typeof LoginCommandValidation>
 
 export const EmailCommandValidation = z.object({
-  email: z.string({ required_error: 'email' }).email('email').trim(),
+  email: z
+    .string({ required_error: 'email' })
+    .email('email')
+    .trim()
+    .transform((email) => email.toLowerCase()),
 })
 
 export type EmailCommand = z.infer<typeof EmailCommandValidation>
 
 export const ResetPasswordCommandValidation = z.object({
-  email: z.string({ required_error: 'email' }).email('email').trim(),
+  email: z
+    .string({ required_error: 'email' })
+    .email('email')
+    .trim()
+    .transform((email) => email.toLowerCase()),
   password: z.string({ required_error: 'password' }),
   confirmPassword: z.string({ required_error: 'password' }),
 })

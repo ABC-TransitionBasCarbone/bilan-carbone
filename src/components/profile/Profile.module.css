@@ -1,3 +1,8 @@
 .gapped {
   gap: 0.5rem;
 }
+
+.nameButton {
+  height: 3.5rem;
+  margin-top: 1.75rem !important;
+}

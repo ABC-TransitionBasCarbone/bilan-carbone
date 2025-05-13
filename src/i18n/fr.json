@@ -159,7 +159,10 @@
     "validate": "Valider",
     "Not authorized": "Vous n'êtes pas adhérent ou pas formé. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
     "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
-    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte."
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "validation": {
+      "email": "Veuillez entrer un email"
+    }
   },
   "navigation": {
     "factors": "Facteurs d'émission",
@@ -221,6 +224,7 @@
   },
   "study": {
     "create": "Ajouter un Bilan Carbone®",
+    "myCollaborations": "Mes collaborations",
     "myStudies": "Mes Bilans Carbone®",
     "createFirstStudy": "Créer mon premier Bilan Carbone®",
     "seeResults": "Voir les résultats",
@@ -268,6 +272,7 @@
       "numberOfOpenDays": "Nombre de jours d'ouverture",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
+      "clear": "Supprimer la valeur",
       "days": {
         "Monday": "Lundi",
         "Tuesday": "Mardi",
@@ -341,6 +346,7 @@
       "Validator": "Validateur",
       "Editor": "Éditeur",
       "Reader": "Lecteur",
+      "Contributor": "Contributeur",
       "guide": "Guide des rôles",
       "introduction": "Depuis cette page, vous pouvez gérer les membres de votre équipe impliqués dans ce Bilan Carbone®. Dans tous les cas, les administrateurs de votre organisation ont accès à toutes vos études en tant que validateur. Si votre étude est publique, les membres de votre organisation (collaborateurs, gestionnaires) y ont automatiquement accès en lecture. Vous pouvez également ajouter des personnes externes à votre organisation via ce menu.",
       "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émission qui ont été renseignées par les validateurs, éditeurs et contributeurs.",
@@ -481,7 +487,9 @@
         "missingCaract": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
-      }
+      },
+      "no-data": "Aucune données à afficher",
+      "loading": "Chargement des résultats"
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",
@@ -509,7 +517,8 @@
       "total": "Total",
       "uncertainty": "Incertitude",
       "validation": "Validation de la source d'émission",
-      "yes": "Oui"
+      "yes": "Oui",
+      "export": "Exporter mon Bilan Carbone"
     },
     "flow": {
       "loading": "Chargement du document...",
@@ -546,6 +555,7 @@
       "total": "Total",
       "allPost": "Tous les postes",
       "allSubPost": "Tous les sous postes",
+      "clear": "Supprimer la valeur",
       "Energies": "Énergie",
       "AutresEmissionsNonEnergetiques": "Autres émissions directes",
       "IntrantsBiensEtMatieres": "Intrants biens et matières",
@@ -658,6 +668,8 @@
       "namePlaceholder": "Donnez un nom à votre facteur d'émission",
       "attribute": "Détails",
       "unit": "Unité",
+      "customUnit": "Unité personalisée",
+      "customUnitPlaceholder": "Votre unité personalisée",
       "source": "Source",
       "detailedGES": "Décomposition des GES",
       "multiple": "Facteur d'émission désagrégé",
@@ -682,6 +694,7 @@
       "subPost": "Sous Poste",
       "comment": "Commentaires",
       "delete": "Supprimer",
+      "clear": "Supprimer la valeur",
       "glossary": {
         "title": "Glossaire",
         "detailedGES": "Décomposition des GES",
@@ -947,8 +960,8 @@
     "KWH": "kWh",
     "KWH_PCI": "kWh PCI",
     "KWH_PCS": "kWh PCS",
-    "LITER": "litre",
-    "LITER_LIQUID": "litre de liquide",
+    "LITER": "Litre",
+    "LITER_LIQUID": "Litre de liquide",
     "POUND": "livre",
     "METER": "m",
     "M2_SHON": "m² SHON",
@@ -966,7 +979,7 @@
     "PEQ_KM": "peq.km",
     "PERSON_MONTH": "personne.mois",
     "UNIT_PIECE_SHRUB_POT": "pièce (arbuste en pot)",
-    "UNIT_PIECE_SHRUB_POT_3L": "pièce (arbuste en pot de 3 litres)",
+    "UNIT_PIECE_SHRUB_POT_3L": "pièce (arbuste en pot de 3 Litres)",
     "UNIT_PIECE_GRAFT": "pièce (greffon)",
     "UNIT_PIECE_STEM": "pièce (tige)",
     "PORTION": "portion",
@@ -1012,7 +1025,7 @@
     "PERCENT_APPARTMENTS": "% des appartements",
     "PERCENT_HOUSES": "% des maisons",
     "DAY": "jours",
-    "LITER_PER_HA": "litre / ha",
+    "LITER_PER_HA": "Litre / ha",
     "MJ_PER_HA": "MJ / ha",
     "KWH_PER_PERSON_FLOOR_YEAR": "kWh / (habitant.étage.an)",
     "PLANT": "plant",
@@ -1022,7 +1035,13 @@
     "KG_H2_PER_100KM": "kgH2/100km",
     "GO": "Go",
     "REQUEST": "requête",
-    "MAIL": "mail"
+    "MAIL": "mail",
+    "EURO": "Euro (€)",
+    "DOLLAR": "Dollar ($)",
+    "JPY": "Yen (¥)",
+    "CNY": "Yuan (¥)",
+    "YEAR": "Années",
+    "CUSTOM": "Personnalisée"
   },
   "organization": {
     "create": "Nouvelle Organisation",
@@ -1102,6 +1121,7 @@
   "emissionSource": {
     "emissionSource": "Donnée d'activité :",
     "emissionFactor": "Facteur d'émission :",
+    "clear": "Supprimer la valeur",
     "advancedSearch": "Recherche avancée",
     "noResults": "Rechercher avec plus de filtres",
     "seeMore": "...Voir plus et rechercher avec plus de filtres",
@@ -1115,6 +1135,7 @@
     "mandartoryFields": "Informations obligatoires",
     "optionalFields": "Informations optionnelles",
     "resetFESpecific": "Réinitialiser les valeurs par défaut",
+    "duplicate": "Dupliquer la source d'émission",
     "glossary": {
       "title": "Glossaire",
       "type": "Type",
@@ -1273,17 +1294,18 @@
   },
   "formation": {
     "title": "Formation",
-    "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode. Regardez les vidéos, répondez au questionnaire et recevez votre attestation !",
+    "explaination": "Vous trouverez ci dessous la formation de mise à jour de la méthode Bilan Carbone®. Regardez les vidéos, répondez au questionnaire et recevez votre attestation de réussite ! <b>Le temps de visionnage des vidéos est d'environ 2h. Vous pouvez ensuite, quand vous le souhaitez, répondre au test qui dure {time} minutes maximum. Cette formation de mise à niveau est disponible toute l'année 2025.</b>",
     "warning": "Avertissement",
-    "warningMessage": "<error>Veuillez vérifier sur votre compte BC+ le nom de votre organisation dans la page <i>Mon organisation > Informations générales</i>, ainsi que vos nom et prénom dans votre profil (en haut à droite). Ces informations seront utilisées pour générer votre attestation.</error><br></br>Vous êtes actuellement connecté en tant que {name}, de l'organisation {organization}.<br></br><b>Rappel :</b> la formation doit être suivie avec <b>votre compte personnel</b> et <b>votre adresse e-mail nominative</b>, et non avec un compte générique de l'entreprise. Vous pouvez ajouter d'autres membres de votre organisation depuis le BC+ : page <i>Mon organisation > Mon équipe</i>.",
+    "warningMessage": "<error>Veuillez vérifier sur votre compte BC+ le nom de votre organisation dans la page <i>Mon organisation > Informations générales</i>, ainsi que vos nom et prénom dans votre profil (en haut à droite). Ces informations seront utilisées pour générer votre attestation personnalisée.</error><br></br>Vous êtes actuellement connecté en tant que {name}, de l'organisation {organization} et êtes formé au niveau {level}. Si cette dernière information n'est pas correcte, merci d'envoyer votre attestation de formation à l'adresse <support>support</support>.<br></br><b>Rappel :</b> la formation doit être suivie avec <b>votre compte personnel</b> et <b>votre adresse e-mail nominative</b>, et non avec un compte générique de l'entreprise. Vous pouvez ajouter d'autres membres de votre organisation depuis le BC+ : page <i>Mon organisation > Mon équipe</i>.",
     "videos": "Vidéos",
+    "videoExplanation": "Notez bien que l’évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d’obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au quesitonnaire",
-    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. Ce dernier est chronométré et vous aurez <red>au maximum {time} minutes pour répondre au question. Vous ne pouvez répondre au questionnaire qu'une seule fois. Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l’outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines des questions.</red>",
-    "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre au question. Je suis dans les bonnes conditions pour commencer mon test",
+    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><red> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l’outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</red>",
+    "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre aux questions. Je suis dans les bonnes conditions pour commencer mon test.",
     "answer": "Répondre au questionnaire",
     "timer": "Temps restant : ",
-    "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite d'une heure avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d’attestation de réussite.",
+    "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite de {time} minutes avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d’attestation de réussite.",
     "form": "Questionnaire Typeform"
   },
   "deactivableFeatures": {

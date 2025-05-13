@@ -1,9 +1,12 @@
+import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { isAdmin } from '@/services/permissions/user'
+import { Post, subPostsByPost } from '@/services/posts'
+import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { checkLevel, getAllowedLevels } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
-import { Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
+import { ControlMode, Export, Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
 import { getOrganizationById } from './organization'
@@ -188,6 +191,19 @@ export const getAllowedStudiesByUser = async (user: User) => {
   return filterAllowedStudies(user, studies)
 }
 
+export const getExternalAllowedStudiesByUser = async (user: User) => {
+  const userOrganizations = await getUserOrganizations(user.email)
+  const studies = await prismaClient.study.findMany({
+    where: {
+      AND: [
+        { organizationId: { notIn: userOrganizations.map((organization) => organization.id) } },
+        { OR: [{ allowedUsers: { some: { userId: user.id } } }, { contributors: { some: { userId: user.id } } }] },
+      ],
+    },
+  })
+  return filterAllowedStudies(user, studies)
+}
+
 export const getAllowedStudyIdByUser = async (user: User) => {
   const organizationIds = (await getUserOrganizations(user.email)).map((organization) => organization.id)
   const isAllowedOnPublicStudies = user.level && getUserRoleOnPublicStudy(user, user.level) !== StudyRole.Reader
@@ -282,6 +298,33 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
     },
   })
 
+export const getUsersOnStudy = async (studyId: string) => prismaClient.userOnStudy.findMany({ where: { studyId } })
+
+export const deleteUserOnStudy = async (studyId: string, userId: string) =>
+  prismaClient.userOnStudy.delete({
+    where: { studyId_userId: { studyId, userId } },
+  })
+
+export const deleteContributor = async (studyId: string, contributor: StudyContributorRow) => {
+  const where: Prisma.ContributorsWhereInput = {
+    studyId,
+    userId: contributor.userId,
+  }
+  if (contributor.subPosts[0] !== 'allSubPost') {
+    where.subPost = contributor.subPosts[0] as SubPost
+  } else if (contributor.post !== 'allPost') {
+    const subPosts = subPostsByPost[contributor.post as Post]
+    where.subPost = { in: subPosts }
+  }
+  return prismaClient.contributors.deleteMany({ where })
+}
+
+export const getUsersLevel = async (userIds: string[]) =>
+  prismaClient.user.findMany({
+    where: { id: { in: userIds } },
+    select: { id: true, level: true },
+  })
+
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
 
@@ -323,6 +366,27 @@ export const updateStudySites = async (
     return Promise.all(promises)
   })
 }
+
+export const createStudyEmissionSource = async (data: Prisma.StudyEmissionSourceCreateInput) =>
+  prismaClient.studyEmissionSource.create({ data })
+
+export const updateEmissionSourceEmissionFactor = (emissionSourceId: string, emissionFactorId: string) =>
+  prismaClient.studyEmissionSource.update({
+    where: { id: emissionSourceId },
+    data: { emissionFactorId },
+  })
+
+export const clearEmissionSourceEmissionFactor = (emissionSourceId: string) =>
+  prismaClient.studyEmissionSource.update({
+    where: { id: emissionSourceId },
+    data: { emissionFactorId: null, validated: false },
+  })
+
+export const updateStudyEmissionFactorVersion = async (studyId: string, source: Import, importVersionId?: string) =>
+  prismaClient.studyEmissionFactorVersion.update({
+    where: { studyId_source: { studyId, source } },
+    data: { importVersionId },
+  })
 
 export const deleteStudy = async (id: string) => {
   return prismaClient.$transaction(async (transaction) => {
@@ -405,3 +469,52 @@ const getSourceLatestImportVersionId = async (source: Import, transaction?: Pris
     where: { source },
     orderBy: { createdAt: 'desc' },
   })
+
+export const createStudyExport = async (studyId: string, type: Export, control: ControlMode) =>
+  prismaClient.studyExport.create({ data: { studyId, type, control } })
+
+export const deleteStudyExport = async (studyId: string, type: Export) =>
+  prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })
+
+export const countOrganizationStudiesFromOtherUsers = async (organizationId: string, userId: string) =>
+  prismaClient.study.count({ where: { organizationId, createdById: { not: userId } } })
+
+export const updateStudyOpeningHours = async (
+  openingHours: ChangeStudyCinemaCommand['openingHours'],
+  openingHoursHoliday: ChangeStudyCinemaCommand['openingHoursHoliday'],
+) => {
+  await prismaClient.$transaction(async (prisma) => {
+    const existingOpeningHours = await prisma.openingHours.findMany({
+      where: { studyId },
+      select: { id: true },
+    })
+    const mergedOpeningHours = [...Object.values(openingHours || {}), ...Object.values(openingHoursHoliday || {})]
+
+    const existingIds = new Set(existingOpeningHours.map((openingHour) => openingHour.id))
+    const updateIds = new Set(mergedOpeningHours.map((openingHour) => openingHour.id))
+
+    const openingHourIdsToDelete = [...existingIds].filter((id) => !updateIds.has(id))
+
+    if (openingHourIdsToDelete.length > 0) {
+      await prisma.openingHours.deleteMany({
+        where: { id: { in: openingHourIdsToDelete } },
+      })
+    }
+
+    await prismaClient.$transaction(async (prisma) => {
+      await Promise.all(
+        mergedOpeningHours.map((openingHour) =>
+          openingHour.id
+            ? prisma.openingHours.upsert({
+                where: { id: openingHour.id },
+                update: openingHour,
+                create: { ...openingHour, Study: { connect: { id: studyId } } },
+              })
+            : prisma.openingHours.create({
+                data: { ...openingHour, Study: { connect: { id: studyId } } },
+              }),
+        ),
+      )
+    })
+  })
+}

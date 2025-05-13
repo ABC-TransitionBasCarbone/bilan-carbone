@@ -7,6 +7,7 @@ import { Formation } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import Button from '../base/Button'
 import Modal from '../modals/Modal'
@@ -20,10 +21,12 @@ interface Props {
   organizationName: string
 }
 
+const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
 
 const FormationView = ({ formations, user, organizationName }: Props) => {
   const t = useTranslations('formation')
+  const tLevel = useTranslations('level')
   const [open, setOpen] = useState(false)
   const [formStartTime, setFormStartTime] = useState<number | undefined>(undefined)
   const [checkedUnique, setCheckedUnique] = useState(false)
@@ -52,12 +55,19 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
 
   return (
     <>
-      <div className={classNames(styles.subTitle, 'mb2')}>{t('explaination')}</div>
+      <div className={classNames(styles.subTitle, 'mb2')}>
+        {t.rich('explaination', {
+          b: (children) => <span className="bold">{children}</span>,
+          time: timer / (MIN * TIME_IN_MS),
+        })}
+      </div>
       <h3 className="mb1">{t('warning')}</h3>
       <div className={classNames(styles.subTitle, 'mb2')}>
         {t.rich('warningMessage', {
           organization: organizationName,
           name: `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase()} ${user.lastName.toUpperCase()}`,
+          level: user.level ? tLevel(user.level) : '',
+          support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
           error: (children) => <span className="error">{children}</span>,
           b: (children) => <span className="bold">{children}</span>,
           i: (children) => <span className="italic">{children}</span>,
@@ -65,6 +75,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
         })}
       </div>
       <h3 className="mb1">{t('videos')}</h3>
+      <div className={classNames(styles.subTitle, 'mb2')}>{t.rich('videoExplanation')}</div>
       <div className={classNames(styles.videos, 'justify-center mb2')}>
         {formations.map((formation) => (
           <Video key={formation.id} formation={formation} />
@@ -80,6 +91,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
             {t.rich('evaluationSubtitle', {
               time: timer / (MIN * TIME_IN_MS),
               red: (children) => <span className="error">{children}</span>,
+              b: (children) => <span className="bold">{children}</span>,
             })}
           </div>
           {!formStartTime && (

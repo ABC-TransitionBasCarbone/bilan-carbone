@@ -11,6 +11,9 @@ export const getOrganizationNameById = (id: string | null) =>
 export const getOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id }, include: { childs: true } }) : null
 
+export const isOrganizationCR = async (id: string | null) =>
+  (await prismaClient.organization.findUnique({ where: { id: id || '' } }))?.isCR
+
 export const getOrganizationUsers = (id: string | null) =>
   id
     ? prismaClient.user.findMany({
@@ -75,13 +78,12 @@ export const onboardOrganization = async (
   if (!dbUser) {
     return
   }
-  const role = dbUser.level ? Role.ADMIN : Role.GESTIONNAIRE
   const newCollaborators: Pick<User, 'firstName' | 'lastName' | 'email' | 'role' | 'status' | 'organizationId'>[] = []
   for (const collaborator of collaborators) {
     newCollaborators.push({
       firstName: '',
       lastName: '',
-      email: collaborator.email || '',
+      email: collaborator.email?.toLowerCase() || '',
       role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       status: UserStatus.VALIDATED,
       organizationId,
@@ -96,7 +98,7 @@ export const onboardOrganization = async (
       }),
       transaction.user.update({
         where: { id: userId },
-        data: { firstName, lastName, role },
+        data: { firstName, lastName },
       }),
       transaction.user.createMany({ data: newCollaborators }),
       ...existingCollaborators.map((collaborator) =>
@@ -117,7 +119,7 @@ export const onboardOrganization = async (
   })
 
   const allCollaborators = [...newCollaborators, ...existingCollaborators]
-  allCollaborators.forEach((collab) => sendNewUser(collab.email, dbUser, collab.firstName ?? ''))
+  allCollaborators.forEach((collab) => sendNewUser(collab.email.toLowerCase(), dbUser, collab.firstName ?? ''))
 }
 
 export const deleteClient = async (id: string) => {

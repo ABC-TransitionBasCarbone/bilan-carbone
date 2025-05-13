@@ -19,7 +19,7 @@ import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
-import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
@@ -37,6 +37,7 @@ import { Path } from 'react-hook-form'
 import Button from '../base/Button'
 import HelpIcon from '../base/HelpIcon'
 import LinkButton from '../base/LinkButton'
+import { Select } from '../base/Select'
 import GlossaryModal from '../modals/GlossaryModal'
 import Modal from '../modals/Modal'
 import DeleteEmissionSource from './DeleteEmissionSource'
@@ -158,7 +159,7 @@ const EmissionSourceForm = ({
       <p className={classNames(styles.subTitle, 'mt1 mb-2 justify-between')}>
         {t('mandartoryFields')}
         {hasEditionRights(userRoleOnStudy) && (
-          <Button onClick={() => setOpen(true)} color="secondary">
+          <Button onClick={() => setOpen(true)} title={t('duplicate')} aria-label={t('duplicate')} color="secondary">
             <CopyIcon />
           </Button>
         )}
@@ -218,7 +219,11 @@ const EmissionSourceForm = ({
                   inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
                 }}
               />
-              {selectedFactor && <div className={styles.unit}>{tUnits(selectedFactor.unit || '')}</div>}
+              {selectedFactor && (
+                <div className={styles.unit}>
+                  {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
+                </div>
+              )}
             </div>
             {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
               <div className={classNames(styles.inputWithUnit, 'flex grow')}>
@@ -247,10 +252,12 @@ const EmissionSourceForm = ({
                 disabled={!canEdit}
                 data-testid="emission-source-type"
                 value={emissionSource.type || ''}
-                onChange={(event) => update('type', event.target.value)}
+                onChange={(event) => update('type', event.target.value === '' ? null : (event.target.value as string))}
                 label={`${t('form.type')} *`}
                 labelId={'type-label'}
+                withLabel={false}
                 fullWidth
+                clearable
               >
                 {Object.keys(EmissionSourceType).map((value) => (
                   <MenuItem key={value} value={value}>
@@ -269,9 +276,13 @@ const EmissionSourceForm = ({
               disabled={!canEdit || caracterisations.length === 1}
               value={emissionSource.caracterisation || ''}
               data-testid="emission-source-caracterisation"
-              onChange={(event) => update('caracterisation', event.target.value)}
+              onChange={(event) =>
+                update('caracterisation', event.target.value === '' ? null : (event.target.value as string))
+              }
               labelId="emission-source-caracterisation-label"
               label={`${t('form.caracterisation')} *`}
+              withLabel={false}
+              clearable={!!canEdit && caracterisations.length > 1}
             >
               {caracterisations.map((categorisation) => (
                 <MenuItem key={categorisation} value={categorisation}>
@@ -289,7 +300,7 @@ const EmissionSourceForm = ({
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
             {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))} {tResultUnits(StudyResultUnit.K)}/
-            {tUnits(selectedFactor.unit || '')}{' '}
+            {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}{' '}
             {qualityRating && (
               <>
                 - {tQuality('name')} {tQuality(qualityRating.toString())}
@@ -324,6 +335,7 @@ const EmissionSourceForm = ({
                   canShrink={canShrinkSpecificFEQuality}
                   defaultQuality={specificFEDefaultQuality}
                   feSpecific
+                  clearable
                 />
               </div>
               {canEdit && (
@@ -371,6 +383,7 @@ const EmissionSourceForm = ({
           setExpanded={setExpandedQuality}
           canShrink={canShrink}
           defaultQuality={defaultQuality}
+          clearable
         />
       </div>
       <div className={classNames(styles.gapped, 'justify-end mt1 w100')}>
@@ -411,7 +424,7 @@ const EmissionSourceForm = ({
         {t('duplicateDialog.content')}
         {!!studySites.length && <> {t('duplicateDialog.selectSite')}</>}
         <div className="justify-center mt1">
-          <Select value={duplicationSite} onChange={(event) => setDuplicationSite(event.target.value)}>
+          <Select value={duplicationSite} onChange={(event) => setDuplicationSite(event.target.value as string)}>
             {studySites.map((studySite) => (
               <MenuItem key={`duplication-site-${studySite.id}`} value={studySite.id}>
                 {studySite.site.name}

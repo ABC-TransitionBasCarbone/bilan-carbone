@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
@@ -9,6 +9,7 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { changeStudyName } from '@/services/serverFunctions/study'
 import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/serverFunctions/study.command'
+import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { zodResolver } from '@hookform/resolvers/zod'
 import EditIcon from '@mui/icons-material/Edit'
 import { EmissionFactorImportVersion } from '@prisma/client'
@@ -70,6 +71,9 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
     [name, study, form],
   )
 
+  const { environment } = useAppEnvironmentStore()
+  const isCut = useMemo(() => environment === CUT, [environment])
+
   return (
     <>
       <Block
@@ -89,14 +93,18 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
         iconPosition="after"
         className={styles.blockStudyParams}
       >
-        <div className="flex pb2">
-          <StudyLevel study={study} user={user} disabled={disabled} />
-          <StudyResultsUnit study={study} disabled={disabled} />
-        </div>
-        <div className="flex">
-          <StudyPublicStatus study={study} user={user} disabled={disabled} />
-          <StudyVersions study={study} emissionFactorSources={emissionFactorSources} canUpdate={!disabled} />
-        </div>
+        {!isCut && (
+          <>
+            <div className="flex pb2">
+              <StudyLevel study={study} user={user} disabled={disabled} />
+              <StudyResultsUnit study={study} disabled={disabled} />
+            </div>
+            <div className="flex">
+              <StudyPublicStatus study={study} user={user} disabled={disabled} />
+              <StudyVersions study={study} emissionFactorSources={emissionFactorSources} canUpdate={!disabled} />
+            </div>
+          </>
+        )}
       </Block>
       <Modal
         open={editTitle}
@@ -105,15 +113,7 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
         onClose={resetInput}
         actions={[{ actionType: 'button', onClick: onSubmit, children: t('edit') }]}
       >
-        <FormTextField
-          name="name"
-          translation={tValidation}
-          control={form.control}
-          error={!!form.formState.errors.name}
-          helperText={form.formState.errors.name?.message}
-          required
-        />
-        {error && <p>{error}</p>}
+        <FormTextField name="name" translation={tValidation} control={form.control} customError={error} required />
       </Modal>
     </>
   )

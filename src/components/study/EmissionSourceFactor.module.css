@@ -51,9 +51,9 @@
   }
 }
 
+.clear,
 .search {
   position: absolute;
-  right: 0.5rem;
   top: 0.75rem;
   border-radius: 0.5rem;
   padding: 0.25rem;
@@ -68,4 +68,12 @@
       color: var(--primary-800);
     }
   }
+}
+
+.search {
+  right: 0.5rem;
+}
+
+.clear {
+  right: 3rem;
 }

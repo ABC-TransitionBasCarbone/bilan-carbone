@@ -46,21 +46,15 @@ const ActivationForm = () => {
     setMessage('')
     setSubmitting(true)
 
-    const isValid = EmailCommandValidation.safeParse(getValues())
-    if (isValid.success) {
-      const { error, message } = await activateEmail(isValid.data.email)
-      setSubmitting(false)
+    const { error, message } = await activateEmail(getValues().email)
+    setSubmitting(false)
 
-      if (error) {
-        setSuccess(false)
-        setMessage(message)
-      } else {
-        setSuccess(true)
-        setMessage(message)
-      }
+    if (error) {
+      setSuccess(false)
+      setMessage(message)
     } else {
-      setSubmitting(false)
-      setMessage('emailRequired')
+      setSuccess(true)
+      setMessage(message)
     }
   }
 

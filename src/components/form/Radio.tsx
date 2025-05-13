@@ -42,7 +42,9 @@ export const FormRadio = <T extends FieldValues>({
             value={value}
             onChange={onChange}
           />
-          {error && error.message && <FormHelperText>{translation('validation.' + error.message)}</FormHelperText>}
+          <FormHelperText className={styles.helper}>
+            {error?.message ? translation('validation.' + error.message) : ' '}
+          </FormHelperText>
         </FormControl>
       )}
     />

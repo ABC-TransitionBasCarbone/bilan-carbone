@@ -54,7 +54,6 @@ const ResetForm = ({ user, token }: Props) => {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(false)
   const [validated, setValidated] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
 
   const { getValues, control, watch, handleSubmit } = useForm<ResetPasswordCommand>({
     resolver: zodResolver(ResetPasswordCommandValidation),
@@ -79,23 +78,17 @@ const ResetForm = ({ user, token }: Props) => {
     setSubmitting(true)
     setError(false)
 
-    const isValid = ResetPasswordCommandValidation.safeParse(getValues())
-    if (!isValid.success) {
-      setErrorMessage('emailAndPasswordRequired')
+    const { email, password } = getValues()
+    const result = await reset(email.toLowerCase(), password, token)
+    if (result) {
       setSubmitting(false)
+      setValidated(true)
+      setTimeout(() => {
+        router.push('/login')
+      }, 5000)
     } else {
-      const { email, password } = isValid.data
-      const result = await reset(email, password, token)
-      if (result) {
-        setSubmitting(false)
-        setValidated(true)
-        setTimeout(() => {
-          router.push('/login')
-        }, 5000)
-      } else {
-        setError(true)
-        setSubmitting(false)
-      }
+      setError(true)
+      setSubmitting(false)
     }
   }
 
@@ -185,13 +178,6 @@ const ResetForm = ({ user, token }: Props) => {
         >
           {t('reset')}
         </LoadingButton>
-        {errorMessage && (
-          <p className="error">
-            {t.rich(errorMessage, {
-              link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-            })}
-          </p>
-        )}
         {validated && <p>{t.rich('validated', { link: (children) => <Link href="/login">{children}</Link> })}</p>}
       </FormControl>
     </Form>

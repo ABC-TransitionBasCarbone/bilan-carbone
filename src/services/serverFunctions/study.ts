@@ -1,27 +1,39 @@
 'use server'
 
 import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
-import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
   getEmissionFactorsByImportedIdsAndVersion,
+  getEmissionFactorsImportActiveVersion,
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
 import { getOrganizationById, getOrganizationWithSitesById } from '@/db/organization'
 import {
+  clearEmissionSourceEmissionFactor,
+  countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
   createStudy,
+  createStudyEmissionSource,
+  createStudyExport,
   createUserOnStudy,
+  deleteContributor,
   deleteStudy,
+  deleteStudyExport,
+  deleteUserOnStudy,
   downgradeStudyUserRoles,
   FullStudy,
   getStudiesFromSites,
   getStudyById,
   getStudyNameById,
   getStudySites,
+  getUsersLevel,
+  getUsersOnStudy,
+  updateEmissionSourceEmissionFactor,
   updateStudy,
+  updateStudyEmissionFactorVersion,
+  updateStudyOpeningHours,
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
@@ -44,7 +56,6 @@ import {
   Role,
   StudyEmissionSource,
   StudyRole,
-  SubPost,
   UserChecklist,
   UserStatus,
 } from '@prisma/client'
@@ -72,7 +83,6 @@ import {
   isAdminOnStudyOrga,
 } from '../permissions/study'
 import { isAdmin } from '../permissions/user'
-import { Post, subPostsByPost } from '../posts'
 import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
 import {
@@ -138,10 +148,7 @@ export const createStudyCommand = async ({
     })
   }
 
-  const activeVersion = await prismaClient.emissionFactorImportVersion.findFirst({
-    where: { source: Import.BaseEmpreinte },
-    orderBy: { createdAt: 'desc' },
-  })
+  const activeVersion = await getEmissionFactorsImportActiveVersion(Import.BaseEmpreinte)
   if (!activeVersion) {
     return { success: false, message: `noActiveVersion_${Import.BaseEmpreinte}` }
   }
@@ -157,7 +164,7 @@ export const createStudyCommand = async ({
   }
 
   const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
-  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
+  const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
   const mergedOpeningHours = [...Object.values(command.openingHours || {}), ...Object.values(openingHoursHoliday || {})]
 
@@ -250,11 +257,8 @@ export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevel
     return NOT_AUTHORIZED
   }
   await updateStudy(studyId, command)
-  const usersOnStudy = await prismaClient.userOnStudy.findMany({ where: { studyId } })
-  const usersLevel = await prismaClient.user.findMany({
-    where: { id: { in: usersOnStudy.map((user) => user.userId) } },
-    select: { id: true, level: true },
-  })
+  const usersOnStudy = await getUsersOnStudy(studyId)
+  const usersLevel = await getUsersLevel(usersOnStudy.map((user) => user.userId))
   const usersRoleToDowngrade = usersLevel
     .filter((userLevel) => !checkLevel(userLevel.level, command.level))
     .map((userLevel) => userLevel.id)
@@ -312,48 +316,8 @@ export const changeStudyCinema = async ({ studyId, ...command }: ChangeStudyCine
     return NOT_AUTHORIZED
   }
 
-  const mergedOpeningHours = [...Object.values(openingHours || {}), ...Object.values(openingHoursHoliday || {})]
-
-  await prismaClient.$transaction(async (prisma) => {
-    const existingOpeningHours = await prisma.openingHours.findMany({
-      where: { studyId },
-      select: { id: true },
-    })
-
-    const existingIds = new Set(existingOpeningHours.map((openingHour) => openingHour.id))
-    const updateIds = new Set(mergedOpeningHours.map((openingHour) => openingHour.id))
-
-    const openingHourIdsToDelete = [...existingIds].filter((id) => !updateIds.has(id))
-
-    if (openingHourIdsToDelete.length > 0) {
-      await prisma.openingHours.deleteMany({
-        where: { id: { in: openingHourIdsToDelete } },
-      })
-    }
-
-    await prismaClient.$transaction(async (prisma) => {
-      await Promise.all(
-        mergedOpeningHours.map((openingHour) =>
-          openingHour.id
-            ? prisma.openingHours.upsert({
-                where: { id: openingHour.id },
-                update: openingHour,
-                create: {
-                  ...openingHour,
-                  Study: { connect: { id: studyId } },
-                },
-              })
-            : prisma.openingHours.create({
-                data: {
-                  ...openingHour,
-                  Study: { connect: { id: studyId } },
-                },
-              }),
-        ),
-      )
-    })
-    await updateStudy(studyId, updateData)
-  })
+  await updateStudyOpeningHours(openingHours, openingHoursHoliday)
+  await updateStudy(studyId, updateData)
 }
 
 export const hasActivityData = async (
@@ -395,7 +359,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
   }
 
   const userCAUnit = (await getUserApplicationSettings(session.user.id))?.caUnit
-  const caUnit = userCAUnit ? CA_UNIT_VALUES[userCAUnit] : defaultCAUnit
+  const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
   const selectedSites = command.sites
     .filter((site) => site.selected)
@@ -443,9 +407,9 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
     return NOT_AUTHORIZED
   }
   if (control === false) {
-    return prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })
+    return deleteStudyExport(studyId, type)
   }
-  return prismaClient.studyExport.create({ data: { studyId, type, control } })
+  return createStudyExport(studyId, type, control)
 }
 
 const getOrCreateUserAndSendStudyInvite = async (
@@ -598,7 +562,7 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
     return NOT_AUTHORIZED
   }
 
-  if (studyWithRights.allowedUsers.some((allowedUser) => allowedUser.user.id === existingUser?.id)) {
+  if (existingUser && getUserRoleOnStudy(existingUser, studyWithRights)) {
     return ALREADY_IN_STUDY
   }
 
@@ -708,10 +672,7 @@ export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], st
     return NOT_AUTHORIZED
   }
 
-  const where = {
-    studyId_userId: { studyId, userId: member.userId },
-  }
-  await prismaClient.userOnStudy.delete({ where })
+  await deleteUserOnStudy(studyId, member.userId)
 }
 
 export const deleteStudyContributor = async (contributor: StudyContributorRow, studyId: string) => {
@@ -719,17 +680,7 @@ export const deleteStudyContributor = async (contributor: StudyContributorRow, s
   if (!session?.user || !study || !hasEditionRights(getUserRoleOnStudy(session.user, study))) {
     return NOT_AUTHORIZED
   }
-  const where: Prisma.ContributorsWhereInput = {
-    studyId,
-    userId: contributor.userId,
-  }
-  if (contributor.subPosts[0] !== 'allSubPost') {
-    where.subPost = contributor.subPosts[0] as SubPost
-  } else if (contributor.post !== 'allPost') {
-    const subPosts = subPostsByPost[contributor.post as Post]
-    where.subPost = { in: subPosts }
-  }
-  await prismaClient.contributors.deleteMany({ where })
+  await deleteContributor(studyId, contributor)
 }
 
 export const getStudyEmissionFactorImportVersions = async (studyId: string) => {
@@ -741,7 +692,7 @@ export const getStudyEmissionFactorImportVersions = async (studyId: string) => {
 }
 
 export const getOrganizationStudiesFromOtherUsers = async (organizationId: string, userId: string) =>
-  prismaClient.study.count({ where: { organizationId, createdById: { not: userId } } })
+  countOrganizationStudiesFromOtherUsers(organizationId, userId)
 
 const getMetaData = (emissionFactor: AsyncReturnType<typeof getEmissionFactorsByIdsAndSource>[0], locale: LocaleType) =>
   emissionFactor.metaData.find((metadata) => metadata.language === locale) ?? emissionFactor.metaData[0]
@@ -839,14 +790,7 @@ export const upgradeStudyEmissionFactorSource = async (studyId: string, source: 
       (emissionFactor) => emissionFactor.importedId === emissionSource.emissionFactor?.importedId,
     )
     return promises.concat(
-      newEmissionFactor
-        ? [
-            prismaClient.studyEmissionSource.update({
-              where: { id: emissionSource.id },
-              data: { emissionFactorId: newEmissionFactor.id },
-            }),
-          ]
-        : [],
+      newEmissionFactor ? [updateEmissionSourceEmissionFactor(emissionSource.id, newEmissionFactor.id)] : [],
     )
   }, [] as Prisma.PrismaPromise<StudyEmissionSource>[])
   const deletePromises = (simulationResults.deleted || []).reduce((promises, emissionFactor) => {
@@ -855,20 +799,13 @@ export const upgradeStudyEmissionFactorSource = async (studyId: string, source: 
         (emissionSource) => emissionSource.emissionFactor?.id === emissionFactor.id,
       ) || []
     return promises.concat(
-      emissionSources.map((emissionSource) =>
-        prismaClient.studyEmissionSource.update({
-          where: { id: emissionSource.id },
-          data: { emissionFactorId: null, validated: false },
-        }),
-      ),
+      emissionSources.map((emissionSource) => clearEmissionSourceEmissionFactor(emissionSource.id)),
     )
   }, [] as Prisma.PrismaPromise<StudyEmissionSource>[])
   await Promise.all(updatePromises.concat(deletePromises))
 
-  await prismaClient.studyEmissionFactorVersion.update({
-    where: { studyId_source: { studyId, source } },
-    data: { importVersionId: simulationResults.latestSourceVersion?.id },
-  })
+  await updateStudyEmissionFactorVersion(studyId, source, simulationResults.latestSourceVersion?.id)
+
   return { success: true }
 }
 
@@ -904,5 +841,5 @@ export const duplicateStudyEmissionSource = async (
     validated: false,
   } as Prisma.StudyEmissionSourceCreateInput
 
-  await prismaClient.studyEmissionSource.create({ data })
+  await createStudyEmissionSource(data)
 }

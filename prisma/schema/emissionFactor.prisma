@@ -130,14 +130,16 @@ enum SubPost {
 }
 
 model EmissionFactorImportVersion {
-  id        String   @id @default(uuid())
-  internId  String   @map("intern_id")
-  source    Import
-  name      String
-  createdAt DateTime @default(now()) @map("created_at")
+  id       String @id @default(uuid())
+  internId String @map("intern_id")
+  source   Import
+  name     String
 
   emissionFactors             EmissionFactor[]
   studyEmissionFactorVersions StudyEmissionFactorVersion[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@unique([source, internId])
   @@map("emission_factor_import_version")
@@ -146,7 +148,7 @@ model EmissionFactorImportVersion {
 model EmissionFactor {
   id                  String               @id @default(uuid())
   createdAt           DateTime             @default(now()) @map("created_at")
-  updatedAt           DateTime             @default(now()) @map("updated_at")
+  updatedAt           DateTime             @default(now()) @updatedAt @map("updated_at")
   emissionFactorParts EmissionFactorPart[]
 
   oldBCId String? @map("old_bc_id")
@@ -170,17 +172,18 @@ model EmissionFactor {
   temporalRepresentativeness   Int? @map("temporal_representativeness")
   completeness                 Int? @map("completeness")
 
-  totalCo2 Float  @map("total_co2")
-  co2f     Float?
-  ch4f     Float?
-  ch4b     Float?
-  n2o      Float?
-  co2b     Float?
-  sf6      Float?
-  hfc      Float?
-  pfc      Float?
-  otherGES Float? @map("other_ges")
-  unit     Unit?
+  totalCo2   Float   @map("total_co2")
+  co2f       Float?
+  ch4f       Float?
+  ch4b       Float?
+  n2o        Float?
+  co2b       Float?
+  sf6        Float?
+  hfc        Float?
+  pfc        Float?
+  otherGES   Float?  @map("other_ges")
+  unit       Unit?
+  customUnit String?
 
   subPosts            SubPost[]             @map("sub_posts")
   studyEmissionSource StudyEmissionSource[]
@@ -202,6 +205,9 @@ model EmissionFactorMetaData {
   location  String?
   comment   String?
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   @@id([emissionFactorId, language])
   @@map("emission_metadata")
 }
@@ -209,7 +215,7 @@ model EmissionFactorMetaData {
 model EmissionFactorPart {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   oldBCId String? @map("old_bc_id")
 
@@ -237,6 +243,9 @@ model EmissionFactorPartMetaData {
   emissionFactorPartId String             @map("emission_post_id")
   title                String
   language             String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@id([emissionFactorPartId, language])
   @@map("emission_factor_part_metadata")

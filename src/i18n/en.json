@@ -159,7 +159,10 @@
     "validate": "Validate",
     "Not authorized": "You are not authorized. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Request sent": "A request has been sent to your colleagues",
-    "Email sent": "You will receive an email to finish your account validation."
+    "Email sent": "You will receive an email to finish your account validation.",
+    "validation": {
+      "email": "Please enter an email"
+    }
   },
   "navigation": {
     "factors": "Emission factors",
@@ -221,6 +224,7 @@
   },
   "study": {
     "create": "Add a Bilan Carbone®",
+    "myCollaborations": "My collaborations",
     "myStudies": "My Bilan Carbone®",
     "createFirstStudy": "Create my first Bilan Carbone®",
     "seeResults": "See results",
@@ -265,6 +269,7 @@
       "numberOfOpenDays": "Number of open days",
       "openingHours": "Opening hours",
       "openingHoursHoliday": "Opening hours during school holidays",
+      "clear": "Clear value",
       "days": {
         "Monday": "Monday",
         "Tuesday": "Tuesday",
@@ -341,6 +346,7 @@
       "Validator": "Validator",
       "Editor": "Editor",
       "Reader": "Reader",
+      "Contributor": "Contributor",
       "guide": "Roles guide",
       "introduction": "From this page, you can manage the members of your team involved in the Bilan Carbone®. In all cases, the administrators of your organization have access to all your studies as validators. If your study is public, members of your organization (employees, managers) automatically have read access to it. You can also add people from outside your organization via this menu.",
       "Validator_description": "Has full rights over the study and can validate the emission sources entered by validators, editors and contributors.",
@@ -481,7 +487,9 @@
         "missingCaract": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "close": "Close"
-      }
+      },
+      "no-data": "No data to display",
+      "loading": "Loanding results"
     },
     "export": {
       "activityDataComment": "Activity data comment",
@@ -509,7 +517,8 @@
       "total": "Total",
       "uncertainty": "Uncertainty",
       "validation": "Emission source validation",
-      "yes": "Yes"
+      "yes": "Yes",
+      "export": "Export my Carbon Footprint"
     },
     "flow": {
       "loading": "Loading document...",
@@ -546,6 +555,7 @@
       "total": "Total",
       "allPost": "All posts",
       "allSubPost": "All sub posts",
+      "clear": "Clear value",
       "Energies": "Energy",
       "AutresEmissionsNonEnergetiques": "Other direct emissions",
       "IntrantsBiensEtMatieres": "Goods and materials inputs",
@@ -658,6 +668,8 @@
       "namePlaceholder": "Give a name to your emission Factor",
       "attribute": "Details",
       "unit": "Unit",
+      "customUnit": "Custom unit",
+      "customUnitPlaceholder": "Your custom unit",
       "source": "Source",
       "detailedGES": "Breakdown of GHG",
       "subPartsCount": "Number of parts",
@@ -682,6 +694,7 @@
       "partType": "Part type",
       "comment": "Comments",
       "delete": "Delete",
+      "clear": "Clear value",
       "glossary": {
         "title": "Glossary",
         "detailedGES": "Breakdown of GHG",
@@ -947,8 +960,8 @@
     "KWH": "kWh",
     "KWH_PCI": "kWh PCI",
     "KWH_PCS": "kWh PCS",
-    "LITER": "liter",
-    "LITER_LIQUID": "liter of liquid",
+    "LITER": "Liter",
+    "LITER_LIQUID": "Liter of liquid",
     "POUND": "pound",
     "METER": "m",
     "M2_SHON": "m² SHON",
@@ -966,7 +979,7 @@
     "PEQ_KM": "peq.km",
     "PERSON_MONTH": "person.month",
     "UNIT_PIECE_SHRUB_POT": "unit (shrub in pot)",
-    "UNIT_PIECE_SHRUB_POT_3L": "unit (shrub in 3-liter pot)",
+    "UNIT_PIECE_SHRUB_POT_3L": "unit (shrub in 3-Liter pot)",
     "UNIT_PIECE_GRAFT": "unit (graft)",
     "UNIT_PIECE_STEM": "unit (stem)",
     "PORTION": "portion",
@@ -1012,7 +1025,7 @@
     "PERCENT_APPARTMENTS": "% of apartments",
     "PERCENT_HOUSES": "% of houses",
     "DAY": "days",
-    "LITER_PER_HA": "liter / ha",
+    "LITER_PER_HA": "Liter / ha",
     "MJ_PER_HA": "MJ / ha",
     "KWH_PER_PERSON_FLOOR_YEAR": "kWh / (person.floor/year)",
     "PLANT": "plant",
@@ -1022,7 +1035,13 @@
     "KG_H2_PER_100KM": "kgH2/100km",
     "GO": "GB",
     "REQUEST": "request",
-    "MAIL": "mail"
+    "MAIL": "mail",
+    "EURO": "Euro (€)",
+    "DOLLAR": "Dollar ($)",
+    "JPY": "Japanese yen (¥)",
+    "CNY": "Renminbi (¥)",
+    "YEAR": "Years",
+    "CUSTOM": "Custom"
   },
   "organization": {
     "create": "New Organization",
@@ -1102,6 +1121,7 @@
   "emissionSource": {
     "emissionSource": "Activity data :",
     "emissionFactor": "Emission Factor :",
+    "clear": "Clear value",
     "advancedSearch": "Advanced search",
     "noResults": "Search with more filters",
     "seeMore": "...See more and search with more filters",
@@ -1115,6 +1135,7 @@
     "mandartoryFields": "Mandatory information",
     "optionalFields": "Optional information",
     "resetFESpecific": "Reset to default values",
+    "duplicate": "Duplicate the emission source",
     "glossary": {
       "title": "Glossary",
       "type": "Type",
@@ -1273,10 +1294,11 @@
   },
   "formation": {
     "title": "Training",
-    "explaination": "You will find below the training course for updating the BC V8 to V9 method. Watch the videos, take the quiz and receive your attestation!",
+    "explaination": "You will find below the training course for updating the BC V8 to V9 method. Watch the videos, take the quiz and receive your attestation! <b>The videos take approximately 2 hours to watch. You can then take the test, which lasts up to {time} minutes, whenever you like. This training is available year-round.</b>",
     "warning": "Warning",
-    "warningMessage": "<error>Please check your BC+ account to see the name of your organisation on the <i>My Organisation > Global informations</i> page, as well as your first and last name in your profile (top right). Ces informations seront utilisées pour générer votre attestation.</error></error><br></br>You are currently logged in as {name}, from organisation {organization}.<br></br><b>Remember:</b> the course must be taken with your <b>personal account</b> and your <b>nominative e-mail address</b>, and not with a generic company account. You can add other members of your organisation from the BC+: <i>My organisation > My team</i> page.",
+    "warningMessage": "<error>Please check your BC+ account to see the name of your organisation on the <i>My Organisation > Global informations</i> page, as well as your first and last name in your profile (top right). This information will be used to generate your attestation.</error><br></br>You are currently logged in as {name}, from organisation {organization} with a level of {level}. If this last information is not correct, please contact our <support>support</support>.<br></br><b>Remember:</b> the course must be taken with your <b>personal account</b> and your <b>nominative e-mail address</b>, and not with a generic company account. You can add other members of your organisation from the BC+: <i>My organisation > My team</i> page.",
     "videos": "Videos",
+    "videoExplanation": "Please note that the assessment associated with this 'condensed' training course does not contain any traps if you watch the training carefully. Successful completion will allow you to obtain a free updated training certificate. However, an insufficient result would mean that you will have to reintegrate into the full training course (new Initiation module if you were trained M1 on V8, or new Professional module if you were trained M2 on V8).",
     "evaluation": "Knowledge assessment",
     "evaluationEnded": "You already answered the questionnaire",
     "evaluationSubtitle": "Please complete the knowledge assessment questionnaire to receive your v9 training attestation. It is limited in time and you will have <red>at most {time} minutes to answer the question. You can only answer the questionnaire once. Once you've started, you can't go back.</red>",

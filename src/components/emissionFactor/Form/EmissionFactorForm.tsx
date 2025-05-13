@@ -8,6 +8,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
+import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { MenuItem } from '@mui/material'
 import { Unit } from '@prisma/client'
 import classNames from 'classnames'
@@ -16,6 +17,7 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Control, UseFormReturn, UseFormSetValue, useWatch } from 'react-hook-form'
 import DetailedGES from './DetailedGES'
+import styles from './EmissionFactorForm.module.css'
 import MultiplePosts from './MultiplePosts'
 
 interface Props<T extends EmissionFactorCommand> {
@@ -46,7 +48,10 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   const t = useTranslations('emissionFactors.create')
   const tUnit = useTranslations('units')
   const tGlossary = useTranslations('emissionSource.glossary')
-  const units = useMemo(() => Object.values(Unit).sort((a, b) => tUnit(a).localeCompare(tUnit(b))), [tUnit])
+  const units = useMemo(
+    () => Object.values(ManualEmissionFactorUnitList).sort((a, b) => tUnit(a).localeCompare(tUnit(b))),
+    [tUnit],
+  )
   const [expandedQuality, setExpandedQuality] = useState(button === 'update')
   const [glossary, setGlossary] = useState('')
   const control = form.control as Control<EmissionFactorCommand>
@@ -57,6 +62,8 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
       setValue(column, value)
     }
   }
+
+  const unit = useWatch({ control, name: 'unit' })
 
   const [
     reliability,
@@ -92,13 +99,38 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         name="source"
         label={t('source')}
       />
-      <FormSelect data-testid="emission-factor-unit" control={control} translation={t} label={t('unit')} name="unit">
-        {units.map((unit) => (
-          <MenuItem key={unit} value={unit}>
-            {tUnit(unit)}
-          </MenuItem>
-        ))}
-      </FormSelect>
+      <div className={classNames(styles.gapped, 'flex')}>
+        <div className="grow">
+          <FormSelect
+            data-testid="emission-factor-unit"
+            control={control}
+            translation={t}
+            label={t('unit')}
+            name="unit"
+            fullWidth
+          >
+            {units.map((unit) => (
+              <MenuItem key={unit} value={unit}>
+                {tUnit(unit)}
+              </MenuItem>
+            ))}
+          </FormSelect>
+        </div>
+        {unit === Unit.CUSTOM && (
+          <div className="grow">
+            <FormTextField
+              data-testid="emission-factor-custom-unit"
+              control={control}
+              translation={t}
+              name="customUnit"
+              label={t('customUnit')}
+              placeholder={t('customUnitPlaceholder')}
+              fullWidth
+            />
+          </div>
+        )}
+      </div>
+
       <DetailedGES
         form={form}
         initialDetailedGES={detailedGES}
