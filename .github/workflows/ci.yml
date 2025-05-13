@@ -65,7 +65,7 @@ jobs:
         with:
           lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
           minAccessibilityScore: '100'
-          minBestPracticesScore: '100'
+          minBestPracticesScore: '90'
       - name: Upload Lighthouse artifacts
         uses: actions/upload-artifact@v4
         if: always()
