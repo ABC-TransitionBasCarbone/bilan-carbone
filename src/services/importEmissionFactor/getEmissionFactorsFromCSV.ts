@@ -70,7 +70,7 @@ export const getEmissionFactorsFromCSV = async (
           .pipe(
             parse({
               columns: (headers: string[]) => {
-                const formattedHeader = headers.map((header) => header.replaceAll(' ', '_'))
+                const formattedHeader = headers.map((header) => header.trim().replaceAll(' ', '_'))
                 checkHeaders(formattedHeader)
                 return formattedHeader
               },
