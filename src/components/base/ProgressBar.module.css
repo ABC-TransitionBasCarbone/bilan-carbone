@@ -1,0 +1,314 @@
+.wrapper {
+  background-color: var(--grayscale-200);
+  border-radius: 0.125rem;
+  height: 0.25rem;
+  overflow: hidden;
+}
+
+.bar {
+  transition: width 1s ease;
+}
+
+.w100 {
+  width: 100%;
+}
+.w99 {
+  width: 99%;
+}
+.w98 {
+  width: 98%;
+}
+.w97 {
+  width: 97%;
+}
+.w96 {
+  width: 96%;
+}
+.w95 {
+  width: 95%;
+}
+.w94 {
+  width: 94%;
+}
+.w93 {
+  width: 93%;
+}
+.w92 {
+  width: 92%;
+}
+.w91 {
+  width: 91%;
+}
+.w90 {
+  width: 90%;
+}
+.w89 {
+  width: 89%;
+}
+.w88 {
+  width: 88%;
+}
+.w87 {
+  width: 87%;
+}
+.w86 {
+  width: 86%;
+}
+.w85 {
+  width: 85%;
+}
+.w84 {
+  width: 84%;
+}
+.w83 {
+  width: 83%;
+}
+.w82 {
+  width: 82%;
+}
+.w81 {
+  width: 81%;
+}
+.w80 {
+  width: 80%;
+}
+.w79 {
+  width: 79%;
+}
+.w78 {
+  width: 78%;
+}
+.w77 {
+  width: 77%;
+}
+.w76 {
+  width: 76%;
+}
+.w75 {
+  width: 75%;
+}
+.w74 {
+  width: 74%;
+}
+.w73 {
+  width: 73%;
+}
+.w72 {
+  width: 72%;
+}
+.w71 {
+  width: 71%;
+}
+.w70 {
+  width: 70%;
+}
+.w69 {
+  width: 69%;
+}
+.w68 {
+  width: 68%;
+}
+.w67 {
+  width: 67%;
+}
+.w66 {
+  width: 66%;
+}
+.w65 {
+  width: 65%;
+}
+.w64 {
+  width: 64%;
+}
+.w63 {
+  width: 63%;
+}
+.w62 {
+  width: 62%;
+}
+.w61 {
+  width: 61%;
+}
+.w60 {
+  width: 60%;
+}
+.w59 {
+  width: 59%;
+}
+.w58 {
+  width: 58%;
+}
+.w57 {
+  width: 57%;
+}
+.w56 {
+  width: 56%;
+}
+.w55 {
+  width: 55%;
+}
+.w54 {
+  width: 54%;
+}
+.w53 {
+  width: 53%;
+}
+.w52 {
+  width: 52%;
+}
+.w51 {
+  width: 51%;
+}
+.w50 {
+  width: 50%;
+}
+.w49 {
+  width: 49%;
+}
+.w48 {
+  width: 48%;
+}
+.w47 {
+  width: 47%;
+}
+.w46 {
+  width: 46%;
+}
+.w45 {
+  width: 45%;
+}
+.w44 {
+  width: 44%;
+}
+.w43 {
+  width: 43%;
+}
+.w42 {
+  width: 42%;
+}
+.w41 {
+  width: 41%;
+}
+.w40 {
+  width: 40%;
+}
+.w39 {
+  width: 39%;
+}
+.w38 {
+  width: 38%;
+}
+.w37 {
+  width: 37%;
+}
+.w36 {
+  width: 36%;
+}
+.w35 {
+  width: 35%;
+}
+.w34 {
+  width: 34%;
+}
+.w33 {
+  width: 33%;
+}
+.w32 {
+  width: 32%;
+}
+.w31 {
+  width: 31%;
+}
+.w30 {
+  width: 30%;
+}
+.w29 {
+  width: 29%;
+}
+.w28 {
+  width: 28%;
+}
+.w27 {
+  width: 27%;
+}
+.w26 {
+  width: 26%;
+}
+.w25 {
+  width: 25%;
+}
+.w24 {
+  width: 24%;
+}
+.w23 {
+  width: 23%;
+}
+.w22 {
+  width: 22%;
+}
+.w21 {
+  width: 21%;
+}
+.w20 {
+  width: 20%;
+}
+.w19 {
+  width: 19%;
+}
+.w18 {
+  width: 18%;
+}
+.w17 {
+  width: 17%;
+}
+.w16 {
+  width: 16%;
+}
+.w15 {
+  width: 15%;
+}
+.w14 {
+  width: 14%;
+}
+.w13 {
+  width: 13%;
+}
+.w12 {
+  width: 12%;
+}
+.w11 {
+  width: 11%;
+}
+.w10 {
+  width: 10%;
+}
+.w9 {
+  width: 9%;
+}
+.w8 {
+  width: 8%;
+}
+.w7 {
+  width: 7%;
+}
+.w6 {
+  width: 6%;
+}
+.w5 {
+  width: 5%;
+}
+.w4 {
+  width: 4%;
+}
+.w3 {
+  width: 3%;
+}
+.w2 {
+  width: 2%;
+}
+.w1 {
+  width: 1%;
+}
+.w0 {
+  width: 0;
+}
