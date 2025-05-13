@@ -37,23 +37,14 @@ const cutTheme = createTheme({
   },
   custom: {
     postColors: {
-      darkBlue: {
-        dark: '#0c2155',
-        light: '#3f5488',
-      },
-      green: {
-        dark: '#469478',
-        light: '#79c7ab',
-      },
-      blue: {
-        dark: '#2c6498',
-        light: '#5e97cb',
-      },
-      orange: {
-        dark: '#c88938',
-        light: '#fbbc6b',
-      },
-    },
+      functioning: { light: '#FF8145' },
+      mobility: { light: '#FEBC0C' },
+      tour: { light: '#3CCDB4' },
+      candyStore: { light: '#FF49A2' },
+      garbage: { light: '#9A61FA' },
+      ticketOffice: { light: '#FF4052' },
+      movieTheater: { light: '#6AA8FF' },
+    }
   },
 })
 
