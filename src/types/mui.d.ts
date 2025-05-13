@@ -4,10 +4,13 @@ declare module '@mui/material/styles' {
   interface Theme {
     custom: {
       postColors: {
-        darkBlue: { dark: string; light: string }
-        green: { dark: string; light: string }
-        blue: { dark: string; light: string }
-        orange: { dark: string; light: string }
+        functioning: { light: string },
+        mobility: { light: string },
+        tour: { light: string },
+        candyStore: { light: string },
+        garbage: { light: string },
+        ticketOffice: { light: string },
+        movieTheater: { light: string },
       }
     }
   }
@@ -15,10 +18,13 @@ declare module '@mui/material/styles' {
   interface ThemeOptions {
     custom?: {
       postColors?: {
-        darkBlue?: { dark: string; light: string }
-        green?: { dark: string; light: string }
-        blue?: { dark: string; light: string }
-        orange?: { dark: string; light: string }
+        functioning: { light: string },
+        mobility: { light: string },
+        tour: { light: string },
+        candyStore: { light: string },
+        garbage: { light: string },
+        ticketOffice: { light: string },
+        movieTheater: { light: string },
       }
     }
   }
