@@ -46,12 +46,12 @@ const PublicPage = ({ children }: Props) => {
               <p>
                 {t.rich('question', {
                   link: (children) => (
-                    <Link href={faq} style={{ color: 'white' }} target="_blank" rel="noreferrer noopener">
+                    <Link href={faq} className={styles.link} target="_blank" rel="noreferrer noopener">
                       {children}
                     </Link>
                   ),
                   support: (children) => (
-                    <Link href={`mailto:${contactMail}`} style={{ color: 'white' }}>
+                    <Link href={`mailto:${contactMail}`} className={styles.link}>
                       {children}
                     </Link>
                   ),
