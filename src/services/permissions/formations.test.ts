@@ -1,14 +1,14 @@
-import * as featuresModule from '@/db/deactivableFeatures'
 import { getMockedDbUser } from '@/tests/utils/models'
 import { expect } from '@jest/globals'
 import { Level, UserSource } from '@prisma/client'
+import * as featuresModule from '../serverFunctions/deactivableFeatures'
 import * as userModule from '../serverFunctions/user'
 import { hasAccessToFormation } from './formations'
 
-jest.mock('@/db/deactivableFeatures', () => ({ isFeatureActive: jest.fn() }))
+jest.mock('../serverFunctions/deactivableFeatures', () => ({ isDeactivableFeatureActive: jest.fn() }))
 jest.mock('../serverFunctions/user', () => ({ getUserSource: jest.fn() }))
 
-const mockIsFeatureActive = featuresModule.isFeatureActive as jest.Mock
+const mockIsFeatureActive = featuresModule.isDeactivableFeatureActive as jest.Mock
 const mockGetUserSource = userModule.getUserSource as jest.Mock
 
 describe('Formation permissions service', () => {
