@@ -1,7 +1,7 @@
 import Label from '@/components/base/Label'
+import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
 import { getUserRoleOnStudy } from '@/utils/study'
-import LinearProgress from '@mui/material/LinearProgress'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { User } from 'next-auth'
@@ -34,7 +34,6 @@ const StudyCard = async ({ study, user }: Props) => {
     return null
   }
   const percent = values.validated ? Math.floor((values.validated / values.total) * 100) : 0
-  const color = values.validated > 0 && percent === 100 ? '--success-100' : '--warning'
 
   return (
     <li data-testid="study" className="flex">
@@ -66,16 +65,7 @@ const StudyCard = async ({ study, user }: Props) => {
               {t('validatedOnlyDescription')}
             </GlossaryIconModal>
           </p>
-          <LinearProgress
-            variant="determinate"
-            value={percent}
-            sx={{
-              backgroundColor: 'var(--grayscale-200)',
-              '& .MuiLinearProgress-bar': {
-                backgroundColor: `var(${color})`,
-              },
-            }}
-          />
+          <ProgressBar value={percent} barClass={`${styles.progressBar}${percent === 100 ? '-success' : ''}`} />
         </Box>
         <div className="justify-end">
           <LinkButton href={`/etudes/${study.id}${userRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>

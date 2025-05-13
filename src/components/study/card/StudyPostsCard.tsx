@@ -1,7 +1,7 @@
+import ProgressBar from '@/components/base/ProgressBar'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { colors, postColors } from '@/utils/study'
-import { LinearProgress } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -32,7 +32,6 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
   )
   const validated = emissionSources.filter((emissionSource) => emissionSource.validated).length
   const percent = emissionSources.length ? Math.floor((validated / emissionSources.length) * 100) : 0
-  const color = emissionSources.length && percent === 100 ? '--success-100' : '--warning'
 
   return (
     <div className="justify-center">
@@ -64,16 +63,7 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
               ),
             })}
           </p>
-          <LinearProgress
-            variant="determinate"
-            value={percent}
-            sx={{
-              backgroundColor: 'var(--grayscale-200)',
-              '& .MuiLinearProgress-bar': {
-                backgroundColor: `var(${color})`,
-              },
-            }}
-          />
+          <ProgressBar value={percent} barClass={`${styles.progressBar}${percent === 100 ? '-success' : ''}`} />
         </Box>
       </Box>
     </div>

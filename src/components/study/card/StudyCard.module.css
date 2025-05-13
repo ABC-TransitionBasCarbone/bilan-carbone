@@ -23,3 +23,11 @@
     color: var(--success-100);
   }
 }
+
+.progressBar {
+  background: var(--warning);
+}
+
+.progressBar-success {
+  background: var(--success-100);
+}
