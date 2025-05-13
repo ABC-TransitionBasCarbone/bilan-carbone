@@ -1,5 +1,6 @@
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma } from '@prisma/client'
 import { v4 } from 'uuid'
+import { OrganizationVersionWithOrganization } from '../../../db/organization'
 import { unitsMatrix } from '../../../services/importEmissionFactor/historyUnits'
 import { getEmissionQuality } from '../../../services/importEmissionFactor/import'
 
@@ -50,7 +51,7 @@ export const uploadEmissionFactors = async (
   transaction: Prisma.TransactionClient,
   data: (string | number)[][],
   indexes: Record<string, number>,
-  organizationVersionId: string,
+  organizationVersion: OrganizationVersionWithOrganization,
 ) => {
   console.log("Import des facteurs d'émissions...")
 
@@ -88,7 +89,7 @@ export const uploadEmissionFactors = async (
 
       return {
         id,
-        organizationVersionId,
+        organizationId: organizationVersion.organizationId,
         importedFrom: Import.Manual,
         status: EmissionFactorStatus.Valid,
         oldBCId: getStringValue(row[indexes[RequiredEmissionFactorsColumns.EFV_GUID]]),

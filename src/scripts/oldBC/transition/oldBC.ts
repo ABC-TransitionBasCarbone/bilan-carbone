@@ -141,7 +141,7 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       transaction,
       emissionFactorsSheet.data,
       emissionFactorsIndexes,
-      accountOrganizationVersion.id,
+      accountOrganizationVersion,
     )
     hasStudiesWarning = await uploadStudies(
       transaction,
