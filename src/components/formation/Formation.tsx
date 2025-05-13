@@ -75,7 +75,7 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
         })}
       </div>
       <h3 className="mb1">{t('videos')}</h3>
-      <div className={classNames(styles.subTitle, 'mb2')}>{t.rich('videoExplaination')}</div>
+      <div className={classNames(styles.subTitle, 'mb2')}>{t.rich('videoExplanation')}</div>
       <div className={classNames(styles.videos, 'justify-center mb2')}>
         {formations.map((formation) => (
           <Video key={formation.id} formation={formation} />
