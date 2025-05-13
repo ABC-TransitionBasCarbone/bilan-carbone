@@ -43,6 +43,7 @@ export async function middleware(req: NextRequest) {
   const response = NextResponse.next({ request: { headers: requestHeaders } })
   response.headers.set('Content-Security-Policy', contentSecurityPolicyHeader)
   response.headers.set('X-Content-Type-Options', 'nosniff')
+  response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
 
   return response
 }
