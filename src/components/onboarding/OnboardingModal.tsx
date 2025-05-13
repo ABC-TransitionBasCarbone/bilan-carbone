@@ -1,4 +1,5 @@
 import { onboardOrganizationCommand } from '@/services/serverFunctions/organization'
+import { changeUserRoleOnOnboarding } from '@/services/serverFunctions/user'
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
@@ -9,7 +10,7 @@ import { User } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
@@ -38,6 +39,10 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
 
   const newRole = useMemo(() => (user.level ? Role.ADMIN : Role.GESTIONNAIRE), [user])
 
+  useEffect(() => {
+    changeUserRoleOnOnboarding()
+  }, [])
+
   const form = useForm<OnboardingCommand>({
     resolver: zodResolver(OnboardingCommandValidation),
     mode: 'onSubmit',
@@ -54,21 +59,21 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const goToPreviousStep = () => setActiveStep(activeStep > 1 ? activeStep - 1 : 1)
   const goToNextStep = () => setActiveStep(activeStep + 1)
 
+  const onCloseModal = async () => {
+    await updateSession()
+    onClose()
+    router.refresh()
+  }
+
   const onValidate = async () => {
     setLoading(true)
     const values = form.getValues()
     values.collaborators = (values.collaborators || []).filter(
       (collaborator) => collaborator.email || collaborator.role,
     )
-    const result = await onboardOrganizationCommand(form.getValues())
-    if (result) {
-      onClose()
-    } else {
-      await updateSession()
-      onClose()
-      router.refresh()
-    }
+    await onboardOrganizationCommand(values)
     setLoading(false)
+    onCloseModal()
   }
 
   return (
@@ -82,7 +87,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
       <div className={styles.container}>
         <Form onSubmit={form.handleSubmit(onValidate)}>
           <div className="justify-end">
-            <MUIButton className={styles.closeIcon} onClick={onClose}>
+            <MUIButton className={styles.closeIcon} onClick={onCloseModal}>
               <CloseIcon />
             </MUIButton>
           </div>

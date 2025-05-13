@@ -78,7 +78,6 @@ export const onboardOrganization = async (
   if (!dbUser) {
     return
   }
-  const role = dbUser.level ? Role.ADMIN : Role.GESTIONNAIRE
   const newCollaborators: Pick<User, 'firstName' | 'lastName' | 'email' | 'role' | 'status' | 'organizationId'>[] = []
   for (const collaborator of collaborators) {
     newCollaborators.push({
@@ -99,7 +98,7 @@ export const onboardOrganization = async (
       }),
       transaction.user.update({
         where: { id: userId },
-        data: { firstName, lastName, role },
+        data: { firstName, lastName },
       }),
       transaction.user.createMany({ data: newCollaborators }),
       ...existingCollaborators.map((collaborator) =>
