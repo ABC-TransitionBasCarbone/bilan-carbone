@@ -1,5 +1,5 @@
 import { OrganizationVersionWithOrganization, OrganizationVersionWithOrganizationSelect } from '@/db/organization'
-import { Prisma } from '@prisma/client'
+import { Environment, Prisma } from '@prisma/client'
 import { getExistingSitesIds } from './repositories'
 
 export enum RequiredOrganizationsColumns {
@@ -119,7 +119,7 @@ export const uploadOrganizations = async (
 
   await checkUserOrganizationHaveNoNewSites(transaction, userOrganizationVersion.organizationId)
 
-  const existingOrganizations = await transaction.organizationVersion.findMany({
+  const existingOrganizationVersions = await transaction.organizationVersion.findMany({
     where: {
       AND: [
         { parentId: userOrganizationVersion.id },
@@ -131,7 +131,7 @@ export const uploadOrganizations = async (
 
   const newOrganizations = organizations.filter(
     (organization) =>
-      !existingOrganizations.some(
+      !existingOrganizationVersions.some(
         ({ organization: existingOrganization }) => existingOrganization.oldBCId === organization.oldBCId,
       ),
   )
@@ -148,13 +148,28 @@ export const uploadOrganizations = async (
   // Je crée toutes les organisations sauf la mienne
   if (newOrganizations.length > 0) {
     console.log(`Import de ${newOrganizations.length} organisations`)
-    await transaction.organization.createMany({
+    const createdOrganizations = await transaction.organization.createManyAndReturn({
       data: newOrganizations.map((organization) => ({
-        parentId: userOrganizationVersion.id,
         oldBCId: organization.oldBCId,
-        wordpressId: organization.siret,
         name: organization.name,
       })),
+    })
+    await transaction.organizationVersion.createMany({
+      data: newOrganizations
+        .map((organization) => {
+          const foundCreatedOrganization = createdOrganizations.find(
+            (createdOrganization) => createdOrganization.oldBCId === organization.oldBCId,
+          )
+          if (!foundCreatedOrganization) {
+            return null
+          }
+          return {
+            environment: Environment.BC,
+            organizationId: foundCreatedOrganization.id,
+            parentId: userOrganizationVersion.id,
+          }
+        })
+        .filter((organizationVersion) => organizationVersion !== null),
     })
   }
 
@@ -211,8 +226,8 @@ export const uploadOrganizations = async (
     await transaction.site.createMany({ data: sitesToCreate })
   }
 
-  if (existingOrganizations.length > 0) {
-    console.log(`${existingOrganizations.length} organisations ignorées car déjà existantes`)
+  if (existingOrganizationVersions.length > 0) {
+    console.log(`${existingOrganizationVersions.length} organisations ignorées car déjà existantes`)
   }
-  return existingOrganizations.length > 0
+  return existingOrganizationVersions.length > 0
 }
