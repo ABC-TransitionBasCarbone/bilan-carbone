@@ -1,5 +1,5 @@
 import { onboardOrganizationCommand } from '@/services/serverFunctions/organization'
-import { fixUserRoleOnOnboarding } from '@/services/serverFunctions/user'
+import { changeUserRoleOnOnboarding } from '@/services/serverFunctions/user'
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
@@ -40,7 +40,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
   const newRole = useMemo(() => (user.level ? Role.ADMIN : Role.GESTIONNAIRE), [user])
 
   useEffect(() => {
-    fixUserRoleOnOnboarding()
+    changeUserRoleOnOnboarding()
   }, [])
 
   const form = useForm<OnboardingCommand>({

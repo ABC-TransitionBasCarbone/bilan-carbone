@@ -362,7 +362,7 @@ export const getFormationFormStart = async (userId: string) => getUserFormationF
 
 export const startFormationForm = async (userId: string, date: Date) => startUserFormationForm(userId, date)
 
-export const fixUserRoleOnOnboarding = async () => {
+export const changeUserRoleOnOnboarding = async () => {
   const session = await auth()
   if (!session || !session.user) {
     return
