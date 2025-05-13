@@ -42,6 +42,7 @@ export async function middleware(req: NextRequest) {
 
   const response = NextResponse.next({ request: { headers: requestHeaders } })
   response.headers.set('Content-Security-Policy', contentSecurityPolicyHeader)
+  response.headers.set('X-Content-Type-Options', 'nosniff')
 
   return response
 }
