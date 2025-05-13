@@ -1,4 +1,5 @@
 import '@mui/material/styles'
+import { CSSProperties } from 'react'
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -11,6 +12,14 @@ declare module '@mui/material/styles' {
         garbage: { light: string },
         ticketOffice: { light: string },
         movieTheater: { light: string },
+      },
+      navbar: {
+        text: {
+          color: string,
+          fontWeight: number,
+          textTransform: CSSProperties['textTransform'],
+          fontSize: string,
+        },
       }
     }
   }
@@ -25,6 +34,14 @@ declare module '@mui/material/styles' {
         garbage: { light: string },
         ticketOffice: { light: string },
         movieTheater: { light: string },
+      },
+      navbar: {
+        text: {
+          color: string,
+          fontWeight: number,
+          textTransform: CSSProperties['textTransform'],
+          fontSize: string,
+        },
       }
     }
   }

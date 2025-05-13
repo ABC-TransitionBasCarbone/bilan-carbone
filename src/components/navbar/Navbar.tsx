@@ -3,19 +3,17 @@
 import { hasAccessToFormation } from '@/services/permissions/formations'
 import { isAdmin } from '@/services/permissions/user'
 import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
-import SettingsIcon from '@mui/icons-material/Settings'
 import { Role } from '@prisma/client'
-import classNames from 'classnames'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { MouseEvent, useEffect, useMemo, useState } from 'react'
+import { AppBar, Box, MenuItem, Toolbar } from '@mui/material'
+import { Logo } from '../base/Logo'
+import NavbarOrganizationMenu from './NavbarOrganizationMenu'
+import NavbarLink from './NavbarLink'
+import NavbarButton from './NavbarButton'
 import styles from './Navbar.module.css'
 
 interface Props {
@@ -24,119 +22,78 @@ interface Props {
 
 const Navbar = ({ user }: Props) => {
   const t = useTranslations('navigation')
-  const [showSubMenu, setShowSubMenu] = useState(false)
   const [hasFormation, setHasFormation] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClickMenu = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)
+  const handleClose = () => setAnchorEl(null)
 
   useEffect(() => {
     const getFormationAccess = async () => {
       const hasAccess = await hasAccessToFormation(user)
       setHasFormation(hasAccess)
     }
-
     getFormationAccess()
-  })
+  }, [user])
 
   const { environment } = useAppEnvironmentStore()
   const isCut = useMemo(() => environment === CUT, [environment])
 
-  const handleMouseEnter = () => setShowSubMenu(true)
-  const handleMouseLeave = () => setShowSubMenu(false)
-
   return (
-    <nav className={classNames(styles.navbar, 'w100')}>
-      <div className="main-container px-2 align-center justify-between grow h100">
-        <div className={classNames(styles.navbarContainer, 'flex-cc')}>
-          <Link href="/" aria-label={t('home')} title={t('home')}>
-            <Image src="/logos/logo_BC_2025_blanc.png" width={200} height={48} alt="" className={styles.logo} />
-          </Link>
+    <AppBar position="static">
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <Box display="flex" alignItems="center" gap={2}>
+          <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
+            <Logo />
+          </NavbarLink>
           {user.organizationId && (
-            <div className="flex-col">
-              <div
-                className={classNames(styles.link, styles.notClickable)}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onClick={() => setShowSubMenu(!showSubMenu)}
-              >
+            <Box>
+              <NavbarButton color="inherit" onMouseEnter={handleClickMenu}>
                 {t('organization')}
-              </div>
-              {showSubMenu && (
-                <div
-                  className={classNames(styles.subMenu, 'flex-cc')}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
-                    <Link href={`/organisations/${user.organizationId}/modifier`} className={styles.link}>
+              </NavbarButton>
+              <NavbarOrganizationMenu
+                id="navbar-organisation-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+              >
+                {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+                  <MenuItem onClick={handleClose}>
+                    <NavbarLink href={`/organisations/${user.organizationId}/modifier`}>
                       {t('information')}
-                    </Link>
-                  )}
-                  <Link href="/equipe" className={styles.link}>
-                    {t('team')}
-                  </Link>
-                  <Link href="/organisations" className={styles.link}>
-                    {t('organizations')}
-                  </Link>
-                </div>
-              )}
-            </div>
+                    </NavbarLink>
+                  </MenuItem>
+                )}
+                <MenuItem onClick={handleClose}>
+                  <NavbarLink href="/equipe">{t('team')}</NavbarLink>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <NavbarLink href="/organisations">{t('organizations')}</NavbarLink>
+                </MenuItem>
+              </NavbarOrganizationMenu>
+            </Box>
           )}
           {!isCut && (
-            <Link className={styles.link} href="/facteurs-d-emission">
+            <NavbarButton href="/facteurs-d-emission">
               <span className={styles.big}>{t('factors')}</span>
               <span className={styles.small}>{t('fe')}</span>
-            </Link>
+            </NavbarButton>
           )}
           {hasFormation && !isCut && (
-            <Link className={styles.link} href="/formation">
-              <span>{t('formation')}</span>
-            </Link>
+            <NavbarButton href="/formation">{t('formation')}</NavbarButton>
           )}
-        </div>
-        <div className={classNames(styles.navbarContainer, 'flex-cc')}>
-          {user.role === Role.SUPER_ADMIN && (
-            <Link className={styles.link} href="/super-admin">
-              {t('admin')}
-            </Link>
-          )}
-          <Link
-            target="_blank"
-            rel="noreferrer noopener"
-            href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''}
-            className={classNames(styles.link, 'align-center')}
-            aria-label={t('help')}
-          >
-            <HelpOutlineIcon />
-          </Link>
-          {!isCut && (
-            <Link className={classNames(styles.link, 'align-center')} aria-label={t('settings')} href="/parametres">
-              <SettingsIcon />
-            </Link>
-          )}
-          <Link className={classNames(styles.link, 'align-center')} aria-label={t('profile')} href="/profil">
-            <AccountCircleIcon />
-          </Link>
-          {!isCut && (
-            <Link
-              className={classNames(styles.link, 'align-center')}
-              aria-label={t('methodology')}
-              target="_blank"
-              rel="noreferrer noopener"
-              href="https://www.bilancarbone-methode.com/"
-            >
-              <MenuBookIcon />
-            </Link>
-          )}
-          <button
-            className={classNames(styles.link, 'align-center')}
+        </Box>
+        <Box display="flex" alignItems="center" gap={2}>
+          <NavbarButton
             title={t('logout')}
             aria-label={t('logout')}
             onClick={() => signOut()}
           >
             <PowerSettingsNewIcon />
-          </button>
-        </div>
-      </div>
-    </nav>
+          </NavbarButton>
+        </Box>
+      </Toolbar>
+    </AppBar>
   )
 }
 

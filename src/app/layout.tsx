@@ -3,6 +3,7 @@ import '@/css/index.css'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import { getEnvironment } from '@/i18n/environment'
 import Providers from '@/services/providers/Providers'
+import { CssBaseline } from '@mui/material'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
@@ -27,11 +28,20 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
   const messages = await getMessages()
   return (
     <html lang={locale} className={environment}>
+      <head>
+        <link
+          href="https://fonts.cdnfonts.com/css/gilroy-bold"
+          rel="stylesheet"
+        />
+      </head>
       <body>
         <AppRouterCacheProvider>
           <NextIntlClientProvider messages={messages}>
             <RouteChangeListener />
-            <Providers>{children}</Providers>
+            <Providers>
+              <CssBaseline />
+              {children}
+            </Providers>
           </NextIntlClientProvider>
         </AppRouterCacheProvider>
         <EnvironmentInitializer />
