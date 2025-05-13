@@ -71,7 +71,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     values.collaborators = (values.collaborators || []).filter(
       (collaborator) => collaborator.email || collaborator.role,
     )
-    await onboardOrganizationCommand(form.getValues())
+    await onboardOrganizationCommand(values)
     setLoading(false)
     onCloseModal()
   }
