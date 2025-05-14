@@ -38,6 +38,7 @@ interface EmissionSource {
   recycledPart: number
   comment: string
   validated: boolean
+  emissionFactorOldBCId: string
   value: number
   subPost: SubPost
   reliability: number
@@ -46,6 +47,7 @@ interface EmissionSource {
   temporalRepresentativeness: number
   completeness: number
   emissionSourceImportedId: string
+  CO2f: number
 }
 
 const parseStudies = (studiesWorksheet: StudiesWorkSheet): Study[] => {
@@ -219,6 +221,7 @@ const parseEmissionSources = (
           recycledPart: row.recycledPart as number,
           comment: `${row.commentaires as string} ${row.commentairesCollecte as string}`,
           validated: (row.validationDASaisie as number) === 1,
+          emissionFactorOldBCId: row.emissionFactorOldBCId as string,
           value: row.daTotalValue as number,
           subPost: subPost,
           reliability: incertitudeDA,
@@ -228,6 +231,7 @@ const parseEmissionSources = (
           completeness: incertitudeDA,
           emissionSourceImportedId: String(row.emissionSourceImportedId),
         },
+          CO2f: row.CO2f as number,
       ]
     })
     .reduce((accumulator, currentValue) => {
@@ -425,23 +429,56 @@ export const uploadStudies = async (
         studyEmissionSources.map((studyEmissionSource) => studyEmissionSource.emissionSourceImportedId),
       ),
   )
+  const emissionFactorOldBCIds = Array.from(
+    studyEmissionSources
+      .values()
+      .flatMap((studyEmissionSources) =>
+        studyEmissionSources.map((studyEmissionSource) => studyEmissionSource.emissionFactorOldBCId),
+      ),
+  )
   const emissionFactors = await transaction.emissionFactor.findMany({
-    where: {
+    where: { OR: [{ importedId: { in: emissionSourceImportedIds } }, { oldBCId: { in: emissionFactorOldBCIds } }] },
+    include: {
+      version: true,
       importedId: { in: emissionSourceImportedIds },
     },
   })
-  const emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissiomFactor) => {
-    if (emissiomFactor.importedId) {
-      const emissionFactors = emissionFactorsMap.get(emissiomFactor.importedId)
-      if (!emissionFactors) {
-        emissionFactorsMap.set(emissiomFactor.importedId, [emissiomFactor])
-      } else {
-        emissionFactors.push(emissiomFactor)
+  const emissionFactorsMap = emissionFactors.reduce(
+    (emissionFactorsMap, emissionFactor) => {
+      if (emissionFactor.importedId) {
+        const emissionFactors = emissionFactorsMap.get(emissionFactor.importedId)
+        const emissionFactorItem = {
+          id: emissionFactor.id,
+          version: emissionFactor.version
+            ? {
+                id: emissionFactor.version.id,
+                source: emissionFactor.version.source,
+                createdAt: emissionFactor.version.createdAt,
+              }
+            : null,
+          importedId: emissionFactor.importedId,
+          co2f: emissionFactor.co2f,
+        }
+        if (emissionFactors) {
+          emissionFactors.push(emissionFactorItem)
+        } else {
+          emissionFactorsMap.set(emissionFactor.importedId, [emissionFactorItem])
+        }
       }
-    }
-    return emissionFactorsMap
-  }, new Map<string, EmissionFactor[]>())
+      return emissionFactorsMap
+    },
+    new Map<
+      string,
+      {
+        id: string
+        version: { id: string; source: string; createdAt: Date } | null
+        importedId: string
+        co2f: number | null
+      }[]
+    >(),
+  )
 
+  const studiesEmissionFactorVersionsMap = new Map<string, Map<string, { id: string; createdAt: Date }[]>>()
   await transaction.studyEmissionSource.createMany({
     data: Array.from(
       studyEmissionSources.entries().flatMap(([studyOldBCId, studyEmissionSources]) => {
@@ -471,11 +508,53 @@ export const uploadStudies = async (
               console.warn(`Impossible de retrouver le studySite d'id: ${existingSiteId}`)
               return null
             }
+            let emissionFactor: {
+              id: string
+              version: { id: string; source: string; createdAt: Date } | null
+              importedId: string
+              co2f: number | null
+            } | null = null
             let emissionFactorId: string | null = null
-            const emissionFactors = emissionFactorsMap.get(studyEmissionSource.emissionSourceImportedId)
-            if (emissionFactors) {
-              if (emissionFactors.length === 1) {
-                emissionFactorId = emissionFactors[0].id
+            if (studyEmissionSource.emissionSourceImportedId !== '0') {
+              const emissionFactorList = emissionFactorsMap.get(studyEmissionSource.emissionSourceImportedId)
+              if (emissionFactorList) {
+                if (emissionFactorList.length === 1) {
+                  emissionFactor = emissionFactorList[0]
+                } else if (emissionFactorList.length > 1) {
+                  const sortedByVersionNameEmissionFactors = emissionFactorList.sort((a, b) =>
+                    a.version && b.version ? b.version.createdAt.getTime() - a.version.createdAt.getTime() : 1,
+                  )
+                  const filteredByCO2fEmissionFactors = sortedByVersionNameEmissionFactors.filter(
+                    (emissionFactor) => emissionFactor.co2f === studyEmissionSource.CO2f,
+                  )
+                  if (filteredByCO2fEmissionFactors.length > 0) {
+                    emissionFactor = filteredByCO2fEmissionFactors[0]
+                  } else {
+                    emissionFactor = sortedByVersionNameEmissionFactors[0]
+                  }
+                }
+              }
+              if (emissionFactor) {
+                if (emissionFactor.version) {
+                  const emissionFactorVersionsMap =
+                    studiesEmissionFactorVersionsMap.get(existingStudy.id) ??
+                    new Map<string, { id: string; createdAt: Date }[]>()
+                  const emissionFactorItem = {
+                    id: emissionFactor.version.id,
+                    createdAt: emissionFactor.version.createdAt,
+                  }
+                  const emissionFactorVersions = emissionFactorVersionsMap.get(emissionFactor.version.source) ?? []
+                  emissionFactorVersionsMap.set(
+                    emissionFactor.version.source,
+                    emissionFactorVersions.concat(emissionFactorItem),
+                  )
+                  studiesEmissionFactorVersionsMap.set(existingStudy.id, emissionFactorVersionsMap)
+                }
+              }
+            } else {
+              const existingEmissionFactor = existingEmissionFactorNames.get(studyEmissionSource.emissionFactorOldBCId)
+              if (existingEmissionFactor) {
+                emissionFactorId = existingEmissionFactor.id
               }
             }
             return {
@@ -492,10 +571,34 @@ export const uploadStudies = async (
               geographicRepresentativeness: studyEmissionSource.geographicRepresentativeness,
               temporalRepresentativeness: studyEmissionSource.temporalRepresentativeness,
               completeness: studyEmissionSource.completeness,
-              emissionFactorId: emissionFactorId,
+              emissionFactorId: emissionFactor ? emissionFactor.id : emissionFactorId,
             }
           })
           .filter((studyEmissionSource) => studyEmissionSource !== null)
+      }),
+    ),
+  })
+
+  await transaction.studyEmissionFactorVersion.createMany({
+    data: Array.from(
+      studiesEmissionFactorVersionsMap.entries().flatMap(([studyId, emissionFactorVersionsMap]) => {
+        return emissionFactorVersionsMap
+          .entries()
+          .map(([importedFrom, emissionFactorVersions]) => {
+            const emissionFactorVersion = emissionFactorVersions.sort(
+              (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+            )[0]
+            const foundImport = Object.values(Import).find((importValue) => importValue === importedFrom)
+            if (!foundImport) {
+              return null
+            }
+            return {
+              studyId: studyId,
+              importVersionId: emissionFactorVersion.id,
+              source: foundImport,
+            }
+          })
+          .filter((studyEmissionFactor) => studyEmissionFactor !== null)
       }),
     ),
   })
