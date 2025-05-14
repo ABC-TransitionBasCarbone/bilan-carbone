@@ -1,4 +1,4 @@
-import { ControlMode, EmissionFactor, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
+import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { getEmissionQuality } from '../../../services/importEmissionFactor/import'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
@@ -46,6 +46,7 @@ interface EmissionSource {
   temporalRepresentativeness: number
   completeness: number
   emissionSourceImportedId: string
+  CO2f: number
 }
 
 const parseStudies = (studiesWorksheet: StudiesWorkSheet): Study[] => {
@@ -227,6 +228,7 @@ const parseEmissionSources = (
           temporalRepresentativeness: incertitudeDA,
           completeness: incertitudeDA,
           emissionSourceImportedId: String(row.emissionSourceImportedId),
+          CO2f: row.CO2f as number,
         },
       ]
     })
@@ -429,18 +431,30 @@ export const uploadStudies = async (
     where: {
       importedId: { in: emissionSourceImportedIds },
     },
+    select: {
+      id: true,
+      importedId: true,
+      version: true,
+      co2f: true,
+    },
   })
-  const emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissiomFactor) => {
-    if (emissiomFactor.importedId) {
-      const emissionFactors = emissionFactorsMap.get(emissiomFactor.importedId)
-      if (!emissionFactors) {
-        emissionFactorsMap.set(emissiomFactor.importedId, [emissiomFactor])
+  const emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissionFactor) => {
+    if (emissionFactor.importedId && emissionFactor.version) {
+      const emissionFactors = emissionFactorsMap.get(emissionFactor.importedId)
+      const emissionFactorItem = {
+        id: emissionFactor.id,
+        importedId: emissionFactor.importedId,
+        version: { name: emissionFactor.version.name },
+        co2f: emissionFactor.co2f,
+      }
+      if (emissionFactors) {
+        emissionFactors.push(emissionFactorItem)
       } else {
-        emissionFactors.push(emissiomFactor)
+        emissionFactorsMap.set(emissionFactor.importedId, [emissionFactorItem])
       }
     }
     return emissionFactorsMap
-  }, new Map<string, EmissionFactor[]>())
+  }, new Map<string, { id: string; importedId: string; version: { name: string }; co2f: number | null }[]>())
 
   await transaction.studyEmissionSource.createMany({
     data: Array.from(
@@ -472,10 +486,22 @@ export const uploadStudies = async (
               return null
             }
             let emissionFactorId: string | null = null
-            const emissionFactors = emissionFactorsMap.get(studyEmissionSource.emissionSourceImportedId)
-            if (emissionFactors) {
-              if (emissionFactors.length === 1) {
-                emissionFactorId = emissionFactors[0].id
+            const emissionFactorList = emissionFactorsMap.get(studyEmissionSource.emissionSourceImportedId)
+            if (emissionFactorList) {
+              if (emissionFactorList.length === 1) {
+                emissionFactorId = emissionFactorList[0].id
+              } else if (emissionFactorList.length > 1) {
+                const sortedByVersionNameEmissionFactors = emissionFactorList.sort((a, b) =>
+                  b.version.name > a.version.name ? 1 : -1,
+                )
+                const filteredByCO2fEmissionFactors = sortedByVersionNameEmissionFactors.filter(
+                  (emissionFactor) => emissionFactor.co2f === studyEmissionSource.CO2f,
+                )
+                if (filteredByCO2fEmissionFactors.length > 0) {
+                  emissionFactorId = filteredByCO2fEmissionFactors[0].id
+                } else {
+                  emissionFactorId = sortedByVersionNameEmissionFactors[0].id
+                }
               }
             }
             return {
