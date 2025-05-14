@@ -4,17 +4,22 @@ import { hasAccessToFormation } from '@/services/permissions/formations'
 import { isAdmin } from '@/services/permissions/user'
 import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
+import { AppBar, Box, MenuItem, Toolbar } from '@mui/material'
 import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { MouseEvent, useEffect, useMemo, useState } from 'react'
-import { AppBar, Box, MenuItem, Toolbar } from '@mui/material'
 import { Logo } from '../base/Logo'
-import NavbarOrganizationMenu from './NavbarOrganizationMenu'
-import NavbarLink from './NavbarLink'
-import NavbarButton from './NavbarButton'
 import styles from './Navbar.module.css'
+import NavbarButton from './NavbarButton'
+import NavbarLink from './NavbarLink'
+import NavbarOrganizationMenu from './NavbarOrganizationMenu'
+
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import SettingsIcon from '@mui/icons-material/Settings'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 
 interface Props {
   user: User
@@ -41,8 +46,8 @@ const Navbar = ({ user }: Props) => {
 
   return (
     <AppBar position="static">
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Box display="flex" alignItems="center" gap={2}>
+      <Toolbar className={styles.toolbarContainer}>
+        <Box className={styles.buttonContainer}>
           <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
             <Logo />
           </NavbarLink>
@@ -56,12 +61,15 @@ const Navbar = ({ user }: Props) => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                slotProps={{
+                  list: {
+                    onMouseLeave: handleClose,
+                  },
+                }}
               >
                 {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
                   <MenuItem onClick={handleClose}>
-                    <NavbarLink href={`/organisations/${user.organizationId}/modifier`}>
-                      {t('information')}
-                    </NavbarLink>
+                    <NavbarLink href={`/organisations/${user.organizationId}/modifier`}>{t('information')}</NavbarLink>
                   </MenuItem>
                 )}
                 <MenuItem onClick={handleClose}>
@@ -79,16 +87,34 @@ const Navbar = ({ user }: Props) => {
               <span className={styles.small}>{t('fe')}</span>
             </NavbarButton>
           )}
-          {hasFormation && !isCut && (
-            <NavbarButton href="/formation">{t('formation')}</NavbarButton>
-          )}
+          {hasFormation && !isCut && <NavbarButton href="/formation">{t('formation')}</NavbarButton>}
         </Box>
-        <Box display="flex" alignItems="center" gap={2}>
+        <Box className={styles.buttonContainer}>
           <NavbarButton
-            title={t('logout')}
-            aria-label={t('logout')}
-            onClick={() => signOut()}
+            rel="noreferrer noopener"
+            href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''}
+            aria-label={t('help')}
           >
+            <HelpOutlineIcon />
+          </NavbarButton>
+          {!isCut && (
+            <NavbarButton aria-label={t('settings')} href="/parametres">
+              <SettingsIcon />
+            </NavbarButton>
+          )}
+          <NavbarButton aria-label={t('profile')} href="/profil">
+            <AccountCircleIcon />
+          </NavbarButton>
+          {!isCut && (
+            <NavbarButton
+              aria-label={t('methodology')}
+              rel="noreferrer noopener"
+              href="https://www.bilancarbone-methode.com/"
+            >
+              <MenuBookIcon />
+            </NavbarButton>
+          )}
+          <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOut()}>
             <PowerSettingsNewIcon />
           </NavbarButton>
         </Box>

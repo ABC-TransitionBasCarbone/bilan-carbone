@@ -1,6 +1,5 @@
 'use client'
-import { Menu, MenuProps, styled } from "@mui/material";
-
+import { Menu, MenuProps, styled } from '@mui/material'
 
 const NavbarOrganizationMenu = styled((props: MenuProps) => (
     <Menu
@@ -18,7 +17,7 @@ const NavbarOrganizationMenu = styled((props: MenuProps) => (
 ))(({ theme }) => ({
     '& .MuiPaper-root': {
         backgroundColor: theme.palette.primary.main,
-        padding: '1rem'
+        padding: '1rem',
     },
     '& .MuiMenuItem-root': {
         color: theme.custom.navbar.text.color,
@@ -26,10 +25,11 @@ const NavbarOrganizationMenu = styled((props: MenuProps) => (
         textTransform: theme.custom.navbar.text.textTransform,
         textAlign: 'center',
         justifyContent: 'center',
+        padding: 0,
         '& a': {
-
             color: theme.custom.navbar.text.color,
             textDecoration: 'none',
+            padding: '1rem'
         },
     },
 }))

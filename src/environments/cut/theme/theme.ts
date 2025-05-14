@@ -4,7 +4,7 @@ const cutTheme = createTheme({
   palette: {
     primary: {
       main: '#63EA90',
-      contrastText: '#2C303A'
+      contrastText: '#2C303A',
     },
     grey: {
       50: '#e9eff9',
@@ -37,7 +37,7 @@ const cutTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Gilroy", sans-serif'
+    fontFamily: '"Gilroy-Regular", sans-serif',
   },
   custom: {
     postColors: {
@@ -54,9 +54,9 @@ const cutTheme = createTheme({
         color: '#000000',
         fontWeight: 600,
         textTransform: 'uppercase',
-        fontSize: '1rem'
+        fontSize: '1rem',
       },
-    }
+    },
   },
 })
 
