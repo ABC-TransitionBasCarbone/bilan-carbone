@@ -273,7 +273,7 @@ const EmissionSourceForm = ({
           <FormControl className="grow">
             <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')} *`}</InputLabel>
             <Select
-              disabled={!canEdit || caracterisations.length === 1}
+              disabled={!canEdit || (caracterisations.length === 1 && !!emissionSource.caracterisation)}
               value={emissionSource.caracterisation || ''}
               data-testid="emission-source-caracterisation"
               onChange={(event) =>
