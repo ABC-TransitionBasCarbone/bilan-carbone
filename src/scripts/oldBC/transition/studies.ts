@@ -1,5 +1,5 @@
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
-import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
+import { ControlMode, EmissionFactor, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {
@@ -45,6 +45,7 @@ interface EmissionSource {
   geographicRepresentativeness: number
   temporalRepresentativeness: number
   completeness: number
+  emissionSourceImportedId: string
 }
 
 const parseStudies = (studiesWorksheet: StudiesWorkSheet): Study[] => {
@@ -225,6 +226,7 @@ const parseEmissionSources = (
           geographicRepresentativeness: incertitudeDA,
           temporalRepresentativeness: incertitudeDA,
           completeness: incertitudeDA,
+          emissionSourceImportedId: String(row.emissionSourceImportedId),
         },
       ]
     })
@@ -416,6 +418,30 @@ export const uploadStudies = async (
     ),
   )
 
+  const emissionSourceImportedIds = Array.from(
+    studyEmissionSources
+      .values()
+      .flatMap((studyEmissionSources) =>
+        studyEmissionSources.map((studyEmissionSource) => studyEmissionSource.emissionSourceImportedId),
+      ),
+  )
+  const emissionFactors = await transaction.emissionFactor.findMany({
+    where: {
+      importedId: { in: emissionSourceImportedIds },
+    },
+  })
+  const emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissiomFactor) => {
+    if (emissiomFactor.importedId) {
+      const emissionFactors = emissionFactorsMap.get(emissiomFactor.importedId)
+      if (!emissionFactors) {
+        emissionFactorsMap.set(emissiomFactor.importedId, [emissiomFactor])
+      } else {
+        emissionFactors.push(emissiomFactor)
+      }
+    }
+    return emissionFactorsMap
+  }, new Map<string, EmissionFactor[]>())
+
   await transaction.studyEmissionSource.createMany({
     data: Array.from(
       studyEmissionSources.entries().flatMap(([studyOldBCId, studyEmissionSources]) => {
@@ -445,6 +471,13 @@ export const uploadStudies = async (
               console.warn(`Impossible de retrouver le studySite d'id: ${existingSiteId}`)
               return null
             }
+            let emissionFactorId: string | null = null
+            const emissionFactors = emissionFactorsMap.get(studyEmissionSource.emissionSourceImportedId)
+            if (emissionFactors) {
+              if (emissionFactors.length === 1) {
+                emissionFactorId = emissionFactors[0].id
+              }
+            }
             return {
               studyId: existingStudy.id,
               studySiteId: studySite.id,
@@ -459,6 +492,7 @@ export const uploadStudies = async (
               geographicRepresentativeness: studyEmissionSource.geographicRepresentativeness,
               temporalRepresentativeness: studyEmissionSource.temporalRepresentativeness,
               completeness: studyEmissionSource.completeness,
+              emissionFactorId: emissionFactorId,
             }
           })
           .filter((studyEmissionSource) => studyEmissionSource !== null)
