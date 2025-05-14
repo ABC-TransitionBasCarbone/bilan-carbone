@@ -1,4 +1,4 @@
-import { getMockedDbUser } from '@/tests/utils/models'
+import { getMockedDbUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
 import { Level, UserSource } from '@prisma/client'
 import * as featuresModule from '../serverFunctions/deactivableFeatures'

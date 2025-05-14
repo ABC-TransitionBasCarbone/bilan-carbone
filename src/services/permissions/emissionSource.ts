@@ -6,7 +6,7 @@ import { canBeValidated } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 import { canReadStudy, isAdminOnStudyOrga } from './study'
 
-const hasStudyBasicRights = async (
+export const hasStudyBasicRights = async (
   user: User,
   emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
     emissionFactorId?: string | null

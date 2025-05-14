@@ -1,6 +1,8 @@
 import * as dbStudyModule from '@/db/study'
 import * as dbUserModule from '@/db/userImport'
-import { getMockedDbUser, getMockedStudy, mockedOrganizationId } from '@/tests/utils/models'
+import { mockedOrganizationId } from '@/tests/utils/models/organization'
+import { getMockedStudyCreateInput } from '@/tests/utils/models/study'
+import { getMockedDbUser } from '@/tests/utils/models/user'
 import * as studyUtils from '@/utils/study'
 import { expect } from '@jest/globals'
 import { Level, Role, StudyRole } from '@prisma/client'
@@ -28,9 +30,9 @@ const mockGetUserRoleOnStudy = studyUtils.getUserRoleOnStudy as jest.Mock
 const mockGetUserByEmail = dbUserModule.getUserByEmail as jest.Mock
 const mockIsInOrgaOrParentFromId = organizationModule.isInOrgaOrParentFromId as jest.Mock
 
-const advancedStudy = getMockedStudy({ level: Level.Advanced })
-const standardStudy = getMockedStudy({ level: Level.Standard })
-const initialStudy = getMockedStudy({ level: Level.Initial })
+const advancedStudy = getMockedStudyCreateInput({ level: Level.Advanced })
+const standardStudy = getMockedStudyCreateInput({ level: Level.Standard })
+const initialStudy = getMockedStudyCreateInput({ level: Level.Initial })
 
 const mockedStudyToDelete = {
   id: mockedStudyId,
