@@ -32,7 +32,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Gilroy-Regular", sans-serif'
+    fontFamily: '"Gilroy-Regular", sans-serif',
   },
   custom: {
     navbar: {
@@ -40,10 +40,10 @@ const theme = createTheme({
         color: '#FFFFFF',
         fontWeight: 600,
         textTransform: 'uppercase',
-        fontSize: '1rem'
+        fontSize: '1rem',
       },
-    }
-  }
+    },
+  },
 })
 
 export default theme

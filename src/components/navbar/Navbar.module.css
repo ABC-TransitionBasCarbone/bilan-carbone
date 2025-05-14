@@ -1,9 +1,13 @@
-.link {
-  margin-right: 0.125rem;
+.buttonContainer {
+  display: flex;
+  align-items: center;
+
+  &:nth-child(1) {
+    gap: 1rem;
+  }
 }
 
-.container {
-  display: flex;
+.toolbarContainer {
   justify-content: space-between;
 }
 

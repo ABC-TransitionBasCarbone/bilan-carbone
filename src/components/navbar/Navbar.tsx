@@ -3,24 +3,25 @@
 import { hasAccessToFormation } from '@/services/permissions/formations'
 import { getUserAccounts } from '@/services/serverFunctions/user'
 import { isAdmin } from '@/utils/user'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
-import SettingsIcon from '@mui/icons-material/Settings'
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
+import { AppBar, Box, MenuItem, Toolbar } from '@mui/material'
 import { Environment, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { MouseEvent, useEffect, useMemo, useState } from 'react'
-import { AppBar, Box, MenuItem, Toolbar } from '@mui/material'
 import { Logo } from '../base/Logo'
-import NavbarOrganizationMenu from './NavbarOrganizationMenu'
-import NavbarLink from './NavbarLink'
-import NavbarButton from './NavbarButton'
 import styles from './Navbar.module.css'
+import NavbarButton from './NavbarButton'
+import NavbarLink from './NavbarLink'
+import NavbarOrganizationMenu from './NavbarOrganizationMenu'
+
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import SettingsIcon from '@mui/icons-material/Settings'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 
 interface Props {
   user: UserSession
@@ -56,8 +57,8 @@ const Navbar = ({ user }: Props) => {
 
   return (
     <AppBar position="static">
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Box display="flex" alignItems="center" gap={2}>
+      <Toolbar className={styles.toolbarContainer}>
+        <Box className={styles.buttonContainer}>
           <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
             <Logo />
           </NavbarLink>
@@ -71,6 +72,11 @@ const Navbar = ({ user }: Props) => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                slotProps={{
+                  list: {
+                    onMouseLeave: handleClose,
+                  },
+                }}
               >
                 {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
                   <MenuItem onClick={handleClose}>
