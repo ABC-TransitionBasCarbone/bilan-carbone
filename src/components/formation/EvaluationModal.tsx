@@ -6,6 +6,7 @@ import { User } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Countdown from 'react-countdown'
+import styles from './Formation.module.css'
 
 dayjs.extend(utc)
 
@@ -68,6 +69,7 @@ const EvaluationModal = ({ user, organizationName, startTime }: Props) => {
         />
       </span>
       <div
+        className={styles.form}
         data-tf-live={typeformId}
         data-tf-hidden={[
           `name=${params.name}`,
