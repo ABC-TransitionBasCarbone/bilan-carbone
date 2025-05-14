@@ -13,7 +13,7 @@ const ReactPlayer = dynamic(() => import('react-player/youtube'), { ssr: false }
 const Video = ({ formation }: Props) => (
   <Box>
     <div className="justify-center mb-2">{formation.name}</div>
-    <ReactPlayer url={formation.link} style={{ maxWidth: '100%' }} controls />
+    <ReactPlayer url={formation.link} controls />
   </Box>
 )
 

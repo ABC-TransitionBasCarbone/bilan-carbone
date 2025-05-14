@@ -1,7 +1,7 @@
 import ProgressBar from '@/components/base/ProgressBar'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
-import { colors, postColors } from '@/utils/study'
+import { postColors } from '@/utils/study'
 import { StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -36,10 +36,7 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
   return (
     <div className="justify-center">
       <Box className={classNames(styles.card, 'flex-col')}>
-        <div
-          className={classNames(styles.post, 'flex-cc')}
-          style={{ borderColor: colors[postColor].dark, color: colors[postColor].dark }}
-        >
+        <div className={classNames(styles.post, styles[`post-${postColor}`], 'flex-cc')}>
           <PostIcon className={styles.icon} post={post} />
           {tPost(post)}
         </div>

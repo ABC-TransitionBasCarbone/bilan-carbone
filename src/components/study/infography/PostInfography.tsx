@@ -2,7 +2,7 @@
 
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { colors, postColors } from '@/utils/study'
+import { postColors } from '@/utils/study'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { StudyResultUnit, SubPost } from '@prisma/client'
 import classNames from 'classnames'
@@ -75,14 +75,13 @@ const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
         }}
         href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
         className={classNames(styles[postColor], styles.link, { [styles.displayChildren]: displayChildren })}
-        style={{ backgroundColor: colors[postColor].light }}
       >
         <PostHeader
           post={post}
           mainPost={mainPost}
           emissionValue={data?.value}
           percent={percent}
-          color={colors[postColor].dark}
+          color={postColor}
           resultsUnit={resultsUnit}
         />
         <div className={styles.subPostsContainer} ref={ref}>

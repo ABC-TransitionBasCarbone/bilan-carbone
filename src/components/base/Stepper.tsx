@@ -14,7 +14,6 @@ const Stepper = ({ steps, activeStep, fillValidatedSteps, className, small }: Pr
   <MobileStepper
     className={classNames(className, 'mb2')}
     classes={{ dot: classNames(styles.stepperDots, { [styles.small]: small }), dotActive: styles.active }}
-    style={{ padding: 0 }}
     variant="dots"
     steps={steps}
     position="static"
