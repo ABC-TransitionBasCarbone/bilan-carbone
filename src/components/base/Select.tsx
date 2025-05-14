@@ -39,6 +39,7 @@ export const Select = ({
         label={withLabel ? undefined : label}
         slotProps={{
           root: { sx: { borderRadius: '12px', borderColor: 'var(--grayscale-300)', color: 'black' } },
+          input: { sx: { paddingRight: '0 !important' } },
         }}
         endAdornment={
           value && clearable ? (

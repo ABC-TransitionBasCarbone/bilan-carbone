@@ -86,7 +86,7 @@ const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
         />
         <div className={styles.subPostsContainer} ref={ref}>
           {subPosts && (
-            <div className={classNames(styles[postColor], styles.subPosts, 'flex')}>
+            <div className={classNames(styles.subPosts, 'flex')}>
               <ul className={classNames(styles.list, 'flex-col')}>
                 {subPosts.map((subPost) => (
                   <li className="align-center" key={subPost}>

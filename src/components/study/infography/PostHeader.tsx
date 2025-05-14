@@ -24,7 +24,9 @@ export const PostHeader = ({ post, mainPost, emissionValue, percent, color, resu
   return (
     <div className={classNames(styles.header, 'align-center', 'flex-col')}>
       {percent > 0 && (
-        <div className={classNames(styles.progress, styles[`progress-${color}`], progressStyles[`w${percent}`])} />
+        <div
+          className={classNames(styles.progress, styles[`progress-${color}`], progressStyles[`w${percent.toFixed(0)}`])}
+        />
       )}
       <div className={styles.content}>
         <div className={classNames(styles.title, 'flex-cc')}>

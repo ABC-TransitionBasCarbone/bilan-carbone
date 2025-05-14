@@ -131,3 +131,10 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+nextjs-portal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
