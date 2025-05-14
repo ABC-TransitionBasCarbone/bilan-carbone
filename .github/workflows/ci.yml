@@ -65,6 +65,7 @@ jobs:
         with:
           lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
           minAccessibilityScore: '100'
+          # TODO : set back to 100 when all CSP error logs are fixed
           minBestPracticesScore: '90'
       - name: Upload Lighthouse artifacts
         uses: actions/upload-artifact@v4

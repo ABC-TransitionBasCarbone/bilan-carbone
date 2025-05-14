@@ -1,4 +1,3 @@
-/* eslint-disable react/self-closing-comp */
 import RouteChangeListener from '@/components/RouteChangeListener'
 import '@/css/index.css'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
