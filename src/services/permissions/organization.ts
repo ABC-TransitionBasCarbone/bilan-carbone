@@ -36,7 +36,7 @@ export const canUpdateOrganization = async (user: User, organizationId: string) 
     return false
   }
 
-  if (!isInOrgaOrParentFromId(user.organizationId, organizationId)) {
+  if (!(await isInOrgaOrParentFromId(user.organizationId, organizationId))) {
     return false
   }
 
@@ -55,7 +55,7 @@ export const canDeleteOrganization = async (organizationId: string) => {
   }
 
   if (
-    !hasEditionRole(false, session.user.role) &&
+    !hasEditionRole(true, session.user.role) ||
     (await getOrganizationStudiesFromOtherUsers(organizationId, session.user.id))
   ) {
     return false

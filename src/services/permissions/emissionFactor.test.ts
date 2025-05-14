@@ -7,7 +7,7 @@ import { canEditEmissionFactor, canReadEmissionFactor } from './emissionFactor'
 jest.mock('../serverFunctions/emissionFactor', () => ({ isFromEmissionFactorOrganization: jest.fn() }))
 const mockIsFromEmissionFactorOrganization = emissionFactorModule.isFromEmissionFactorOrganization as jest.Mock
 
-describe('Study permissions service', () => {
+describe('EmissionFactor permissions service', () => {
   describe('canReadEmissionFactor', () => {
     it('returns true if emission factor is not manually imported', () => {
       const user = getMockedDbUser({}) as User
