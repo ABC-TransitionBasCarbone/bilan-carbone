@@ -1,6 +1,6 @@
-import { changeUserRoleOnOnboarding } from '@/services/serverFunctions/user'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { onboardOrganizationVersionCommand } from '@/services/serverFunctions/organization'
+import { changeUserRoleOnOnboarding } from '@/services/serverFunctions/user'
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'

@@ -44,7 +44,7 @@ export const createEmissionSource = async ({
   }
 
   const [study, emissionFactor] = await Promise.all([
-    getStudyById(studyId, user.organizationId),
+    getStudyById(studyId, account.organizationVersionId),
     emissionFactorId ? getEmissionFactorById(emissionFactorId) : undefined,
   ])
 
@@ -151,12 +151,12 @@ export const getEmissionSourcesByStudyId = async (studyId: string) => {
     return []
   }
 
-  const user = await getUserByEmail(session.user.email)
-  if (!user) {
+  const account = await getAccountById(session.user.accountId)
+  if (!account) {
     return []
   }
 
-  const study = await getStudyById(studyId, user.organizationId)
+  const study = await getStudyById(studyId, account.organizationVersionId)
   if (!study) {
     return []
   }

@@ -3,8 +3,8 @@
 // @ts-nocheck
 import { FullStudy } from '@/db/study'
 import { Level, Prisma, Study, StudyResultUnit } from '@prisma/client'
-import { mockedOrganization, mockedOrganizationId } from './organization'
-import { mockedUser } from './user'
+import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
+import { mockedAccountId, mockedUser } from './user'
 
 export const mockedStudy = {
   id: 'mocked-study-id',
@@ -14,7 +14,8 @@ export const mockedStudy = {
   isPublic: true,
   level: Level.Initial,
   createdById: mockedUser.id,
-  organizationId: mockedOrganizationId,
+  createdBy: mockedAccountId,
+  organizationVersionId: mockedOrganizationVersionId,
   resultsUnit: StudyResultUnit.K,
 }
 
@@ -38,7 +39,7 @@ export const mockedFullStudy = {
   sites: [],
   emissionFactorVersions: [],
   exports: [],
-  organization: mockedOrganization,
+  organizationVersion: mockedOrganizationVersion,
   openingHours: [],
 }
 
@@ -82,7 +83,7 @@ export const getMockedFullStudy = (props?: Partial<FullStudy>): FullStudy => ({
 })
 export const getMockedStudyCreateInput = (props: Partial<Prisma.StudyCreateInput>): Prisma.StudyCreateInput => ({
   ...mockedDdStudy,
-  organization: { connect: { id: mockedOrganizationId } },
+  organizationVersion: { connect: { id: mockedOrganizationVersionId } },
   createdBy: { connect: { id: mockedUser.id } },
   ...props,
 })

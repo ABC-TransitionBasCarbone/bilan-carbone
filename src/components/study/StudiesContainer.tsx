@@ -1,7 +1,8 @@
 import {
+  getAllowedStudiesByAccount,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
-  getAllowedStudiesByAccount } from '@/db/study'
+} from '@/db/study'
 import { default as CUTStudyHomeMessage } from '@/environments/cut/study/StudyHomeMessage'
 import AddIcon from '@mui/icons-material/Add'
 import { Box as MUIBox } from '@mui/material'

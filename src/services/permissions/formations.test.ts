@@ -1,4 +1,4 @@
-import { getMockedUserSesssion } from '@/tests/utils/models'
+import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
 import { Level, UserSource } from '@prisma/client'
 import * as featuresModule from '../serverFunctions/deactivableFeatures'
@@ -21,25 +21,25 @@ describe('Formation permissions service', () => {
       })
 
       it('"Advanced" level user should be able to access the formation view', async () => {
-        const user = getMockedUserSesssion({ level: Level.Advanced })
+        const user = getMockedAuthUser({ level: Level.Advanced })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(true)
       })
 
       it('"Standard" level user should be able to access the formation view', async () => {
-        const user = getMockedUserSesssion({ level: Level.Standard })
+        const user = getMockedAuthUser({ level: Level.Standard })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(true)
       })
 
       it('"Initial" level user should be able to access the formation view', async () => {
-        const user = getMockedUserSesssion({ level: Level.Initial })
+        const user = getMockedAuthUser({ level: Level.Initial })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(true)
       })
 
       it('Untrained user should not be able to access the formation view', async () => {
-        const user = getMockedUserSesssion({ level: null })
+        const user = getMockedAuthUser({ level: null })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
@@ -53,25 +53,25 @@ describe('Formation permissions service', () => {
       })
 
       it('"Advanced" level user should not be able to access the formation view', async () => {
-        const user = getMockedUserSesssion({ level: Level.Advanced })
+        const user = getMockedAuthUser({ level: Level.Advanced })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
       it('"Standard" level user should not be able to access the formation view', async () => {
-        const user = getMockedUserSesssion({ level: Level.Standard })
+        const user = getMockedAuthUser({ level: Level.Standard })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
       it('"Initial" level user should not be able to access the formation view', async () => {
-        const user = getMockedUserSesssion({ level: Level.Initial })
+        const user = getMockedAuthUser({ level: Level.Initial })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
       it('Untrained user should not be able to access the formation view', async () => {
-        const user = getMockedUserSesssion({ level: null })
+        const user = getMockedAuthUser({ level: null })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
@@ -85,14 +85,14 @@ describe('Formation permissions service', () => {
 
       it('User should not be able to access the formation view', async () => {
         mockGetUserSource.mockResolvedValue(null)
-        const user = getMockedUserSesssion({ level: Level.Advanced })
+        const user = getMockedAuthUser({ level: Level.Advanced })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
       it('Foreign users should not be able to access the formation view', async () => {
         mockGetUserSource.mockResolvedValue(UserSource.TUNISIE)
-        const user = getMockedUserSesssion({ level: Level.Advanced })
+        const user = getMockedAuthUser({ level: Level.Advanced })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })

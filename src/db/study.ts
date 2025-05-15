@@ -370,7 +370,7 @@ export const deleteContributor = async (studyId: string, contributor: StudyContr
     const subPosts = subPostsByPost[contributor.post as Post]
     where.subPost = { in: subPosts }
   }
-  
+
   return prismaClient.contributors.deleteMany({ where })
 }
 

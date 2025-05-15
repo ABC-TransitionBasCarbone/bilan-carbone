@@ -10,7 +10,6 @@ import {
   getAccountById,
   getAccountFromUserOrganization,
 } from '@/db/account'
-import { prismaClient } from '@/db/client'
 import { getOrganizationVersionById, isOrganizationVersionCR } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
@@ -21,11 +20,10 @@ import {
   finalizeUserChecklist,
   getUserApplicationSettings,
   getUserFormationFormStart,
-  getUserFromUserOrganization,
   getUsersCheckedSteps,
-  startUserFormationForm,
   getUserSourceById,
   organizationVersionActiveAccountsCount,
+  startUserFormationForm,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
   validateUser,
@@ -396,5 +394,5 @@ export const changeUserRoleOnOnboarding = async () => {
   }
 
   const newRole = session.user.level ? Role.ADMIN : Role.GESTIONNAIRE
-  await changeUserRole(session.user.email, newRole)
+  await changeAccountRole(session.user.accountId, newRole)
 }

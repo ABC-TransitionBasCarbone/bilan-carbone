@@ -27,17 +27,16 @@ import {
   createStudyEmissionSource,
   createStudyExport,
   createUserOnStudy,
+  deleteAccountOnStudy,
   deleteContributor,
   deleteStudy,
   deleteStudyExport,
-  deleteUserOnStudy,
   downgradeStudyUserRoles,
   FullStudy,
   getStudiesFromSites,
   getStudyById,
   getStudyNameById,
   getStudySites,
-  getUsersLevel,
   getUsersOnStudy,
   updateEmissionSourceEmissionFactor,
   updateStudy,
@@ -729,7 +728,7 @@ export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], st
     return NOT_AUTHORIZED
   }
 
-  await deleteUserOnStudy(studyId, member.accountId)
+  await deleteAccountOnStudy(studyId, member.accountId)
 }
 
 export const deleteStudyContributor = async (contributor: StudyContributorRow, studyId: string) => {

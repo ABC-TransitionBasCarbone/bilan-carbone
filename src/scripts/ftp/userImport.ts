@@ -58,7 +58,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   if (companyNumber) {
     let organization = dbAccount?.organizationVersion
       ? await getRawOrganizationById(dbAccount.organizationVersion?.organizationId)
-      : await getRawOrganizationBySiret(siretOrSiren)
+      : await getRawOrganizationBySiret(companyNumber)
 
     organization = await createOrUpdateOrganization(
       {
@@ -78,7 +78,6 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     )
     user.account.organizationVersion = organizationVersion ? { connect: { id: organizationVersion.id } } : undefined
   }
-
 
   if (dbAccount) {
     await updateAccount(
