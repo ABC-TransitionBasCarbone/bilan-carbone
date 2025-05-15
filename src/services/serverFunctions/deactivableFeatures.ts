@@ -37,7 +37,7 @@ export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeatu
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await createOrUpdateDeactivableFeature(feature, status, session.user.id)
+    await createOrUpdateDeactivableFeature(feature, status, session.user.accountId)
   })
 
 export const isDeactivableFeatureActive = async (feature: DeactivatableFeature) => isFeatureActive(feature)
