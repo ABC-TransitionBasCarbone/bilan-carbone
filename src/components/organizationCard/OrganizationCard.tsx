@@ -13,11 +13,20 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import LinkButton from '../base/LinkButton'
 import styles from './OrganizationCard.module.css'
+import { Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
 
 interface Props {
   account: UserSession
   organizationVersions: OrganizationVersionWithOrganization[]
 }
+
+const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  backgroundColor: theme.palette.primary.light,
+  color: theme.palette.text.primary,
+  borderBottom: theme.custom.navbar.organizationToolbar?.border,
+}))
 
 const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const t = useTranslations('organization.card')
@@ -34,7 +43,7 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const [hasAccess, hasEditionRole] = useMemo(
     () =>
       organizationVersion &&
-      organizationVersions.map((organizationVersion) => organizationVersion.id).includes(organizationVersion.id)
+        organizationVersions.map((organizationVersion) => organizationVersion.id).includes(organizationVersion.id)
         ? [true, isAdmin(account.role) || account.role === Role.GESTIONNAIRE || defaultOrganizationVersion.isCR]
         : [false, false],
     [account.role, organizationVersions, defaultOrganizationVersion, organizationVersion],
@@ -86,8 +95,27 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
       : 'myClient'
 
   return (
-    <div className={classNames(styles.organizationCard, 'flex w100')}>
-      <div className="grow p2 justify-between align-center">
+    <OrganizationToolbar>
+      <Box display='flex' alignItems='center' gap={2}>
+        <HomeIcon />
+        <Typography>{organizationVersion.name}</Typography>
+        {hasAccess && (
+          <Button color='secondary' href={organizationVersionLink} variant='outlined'>{t(linkLabel)}</Button>
+        )}
+      </Box>
+      {!isCut && (
+        <Button
+          color="secondary"
+          target="_blank"
+          rel="noreferrer noopener"
+          href="https://www.bilancarbone-methode.com/"
+          variant="outlined"
+          startIcon={<MenuBookIcon />}
+        >
+          {t('method')}
+        </Button>
+      )}
+      {/* <div className="grow p2 justify-between align-center">
         <div className={classNames(styles.gapped, 'align-center')}>
           <HomeIcon />
           <span>{organizationVersion.organization.name}</span>
@@ -111,8 +139,8 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
             </LinkButton>
           </div>
         )}
-      </div>
-    </div>
+      </div> */}
+    </OrganizationToolbar>
   )
 }
 

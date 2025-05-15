@@ -14,6 +14,9 @@ declare module '@mui/material/styles' {
         movieTheater: { light: string }
       }
       navbar: {
+        organizationToolbar?: {
+          border?: string
+        }
         text: {
           color: string
           fontWeight: number
@@ -36,6 +39,9 @@ declare module '@mui/material/styles' {
         movieTheater: { light: string }
       }
       navbar: {
+        organizationToolbar?: {
+          border?: string
+        }
         text: {
           color: string
           fontWeight: number

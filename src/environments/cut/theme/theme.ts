@@ -1,9 +1,19 @@
 import { createTheme } from '@mui/material/styles'
 
 const cutTheme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1360,
+      xl: 1536
+    }
+  },
   palette: {
     primary: {
       main: '#63EA90',
+      light: '#E0FBE8',
       contrastText: '#2C303A',
     },
     grey: {
@@ -36,6 +46,13 @@ const cutTheme = createTheme({
       paper: '#e9eff9',
     },
   },
+  shadows: [
+    'none', 'none', 'none', 'none', 'none',
+    'none', 'none', 'none', 'none', 'none',
+    'none', 'none', 'none', 'none', 'none',
+    'none', 'none', 'none', 'none', 'none',
+    'none', 'none', 'none', 'none', 'none'
+  ],
   typography: {
     fontFamily: '"Gilroy-Regular", sans-serif',
   },

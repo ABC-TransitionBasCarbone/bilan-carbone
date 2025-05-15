@@ -1,9 +1,17 @@
+import { ThemeContext } from '@emotion/react'
 import { createTheme } from '@mui/material/styles'
 
-const theme = createTheme({
+const base = createTheme({
   palette: {
+    background: {
+      default: '#3880ff0d',
+    },
     primary: {
       main: '#272768',
+      light: '#ebf2ff'
+    },
+    secondary: {
+      main: '#346fef'
     },
     grey: {
       50: '#e9eff9',
@@ -30,17 +38,45 @@ const theme = createTheme({
     info: {
       main: '#272768',
     },
+  }
+})
+
+const theme = createTheme(base, {
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1360,
+      xl: 1536
+    }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        outlined: {
+          backgroundColor: base.palette.common.white,
+          textTransform: 'none'
+        }
+      }
+    }
   },
   typography: {
     fontFamily: '"Gilroy-Regular", sans-serif',
   },
   custom: {
     navbar: {
+      organizationToolbar: {
+        border: '0.125rem solid rgba(27, 91, 245, 0.1)'
+      },
       text: {
         color: '#FFFFFF',
         fontWeight: 600,
         textTransform: 'uppercase',
         fontSize: '1rem',
+        '&:hover': {
+          color: base.palette.secondary.main
+        }
       },
     },
   },
