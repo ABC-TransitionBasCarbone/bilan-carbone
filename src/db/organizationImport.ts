@@ -23,7 +23,6 @@ export const createOrUpdateOrganization = async (
     where: { id: organization.id ?? '' },
     update: {
       importedFileDate,
-      activatedLicence: activatedLicence || organization.activatedLicence,
     },
     create: {
       ...organization,
@@ -45,8 +44,8 @@ export const createOrUpdateOrganization = async (
     },
     update: {
       isCR: isCR || organizationVersion?.isCR || false,
-      activatedLicence,
       updatedAt: new Date(),
+      activatedLicence: activatedLicence || organizationVersion?.activatedLicence,
     },
     create: {
       organizationId: updatedOrganization.id,

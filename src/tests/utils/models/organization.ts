@@ -1,4 +1,5 @@
 export const mockedOrganizationId = 'mocked-organization-id'
+export const mockedOrganizationVersionId = 'mocked-organization-version-id'
 
 export const mockedSite = {
   id: 'mocked-site-id',
@@ -19,6 +20,13 @@ export const mockedDbSite = {
 export const mockedOrganization = {
   id: mockedOrganizationId,
   name: 'Mocked Organization',
+}
+
+export const mockedOrganizationVersion = {
+  id: mockedOrganizationVersionId,
+  organizationId: mockedOrganizationId,
+  name: 'Mocked Organization Version',
   isCR: true,
   parentId: null,
+  organization: mockedOrganization,
 }

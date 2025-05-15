@@ -1,12 +1,8 @@
 import * as dbAccountModule from '@/db/account'
 import * as dbStudyModule from '@/db/study'
+import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedStudyCreateInput } from '@/tests/utils/models/study'
-import {
-  getMockedDbAccount,
-  mockedAccountId,
-  mockedOrganizationVersionId,
-  mockedUserId,
-} from '@/tests/utils/models'
+import { getMockedDbAccount, mockedAccountId, mockedUserId } from '@/tests/utils/models/user'
 import * as studyUtils from '@/utils/study'
 import { expect } from '@jest/globals'
 import { Level, Role, StudyRole } from '@prisma/client'
