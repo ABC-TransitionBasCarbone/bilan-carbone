@@ -13,11 +13,20 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import LinkButton from '../base/LinkButton'
 import styles from './OrganizationCard.module.css'
+import { Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
 
 interface Props {
   user: User
   organizations: Organization[]
 }
+
+const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  backgroundColor: theme.palette.primary.light,
+  color: theme.palette.text.primary,
+  borderBottom: theme.custom.navbar.organizationToolbar?.border,
+}))
 
 const OrganizationCard = ({ user, organizations }: Props) => {
   const t = useTranslations('organization.card')
@@ -80,8 +89,27 @@ const OrganizationCard = ({ user, organizations }: Props) => {
       : 'myClient'
 
   return (
-    <div className={classNames(styles.organizationCard, 'flex w100')}>
-      <div className="grow p2 justify-between align-center">
+    <OrganizationToolbar>
+      <Box display='flex' alignItems='center' gap={2}>
+        <HomeIcon />
+        <Typography>{organization.name}</Typography>
+        {hasAccess && (
+          <Button color='secondary' href={organizationLink} variant='outlined'>{t(linkLabel)}</Button>
+        )}
+      </Box>
+      {!isCut && (
+        <Button
+          color="secondary"
+          target="_blank"
+          rel="noreferrer noopener"
+          href="https://www.bilancarbone-methode.com/"
+          variant="outlined"
+          startIcon={<MenuBookIcon />}
+        >
+          {t('method')}
+        </Button>
+      )}
+      {/* <div className="grow p2 justify-between align-center">
         <div className={classNames(styles.gapped, 'align-center')}>
           <HomeIcon />
           <span>{organization.name}</span>
@@ -105,8 +133,8 @@ const OrganizationCard = ({ user, organizations }: Props) => {
             </LinkButton>
           </div>
         )}
-      </div>
-    </div>
+      </div> */}
+    </OrganizationToolbar>
   )
 }
 
