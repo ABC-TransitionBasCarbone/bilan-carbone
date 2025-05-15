@@ -1,5 +1,5 @@
 import { getEmissionFactorById } from '@/db/emissionFactors'
-import { FullStudy, getStudyById } from '@/db/study'
+import { FullStudy, getStudyById, getStudySites } from '@/db/study'
 import { getUserRoleOnStudy } from '@/utils/study'
 import { StudyEmissionSource, StudyRole, SubPost, User } from '@prisma/client'
 import { canBeValidated } from '../emissionSource'
@@ -38,6 +38,11 @@ export const canCreateEmissionSource = async (
 ) => {
   const dbStudy = study || (await getStudyById(emissionSource.studyId, user.organizationId))
   if (!dbStudy) {
+    return false
+  }
+
+  const studySites = await getStudySites(emissionSource.studyId)
+  if (!studySites.map((studySite) => studySite.id).includes(emissionSource.studySiteId)) {
     return false
   }
 
