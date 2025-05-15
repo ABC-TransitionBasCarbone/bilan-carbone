@@ -1,4 +1,4 @@
-import { Prisma, StudyEmissionSource, SubPost } from '@prisma/client'
+import { StudyEmissionSource, SubPost } from '@prisma/client'
 
 export const mockedEmissionSource = {
   id: 'mocked-emission-source-id',
@@ -37,12 +37,7 @@ export const mockedDbEmissionSource = {
   feCompleteness: null,
 }
 
-export const getMockedEmissionSource = (
-  props?: Partial<Prisma.StudyEmissionSourceCreateInput> & {
-    createdAt?: Date
-    updatedAt?: Date
-  },
-): StudyEmissionSource => ({
+export const getMockedEmissionSource = (props?: Partial<StudyEmissionSource>): StudyEmissionSource => ({
   ...mockedDbEmissionSource,
   ...props,
 })

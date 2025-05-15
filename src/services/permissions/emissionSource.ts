@@ -17,7 +17,7 @@ export const hasStudyBasicRights = async (
     return false
   }
 
-  if (!study.sites.find((site) => site.id === emissionSource.studySiteId)) {
+  if (!study.sites.find((studySite) => studySite.id === emissionSource.studySiteId)) {
     return false
   }
 
