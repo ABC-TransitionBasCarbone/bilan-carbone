@@ -9,11 +9,16 @@ model Document {
   studyId String @map("study_id")
   study   Study  @relation(fields: [studyId], references: [id])
 
-  uploaderId String @map("uploader_id")
-  uploader   User   @relation(fields: [uploaderId], references: [id])
+  uploaderId String  @map("uploader_account_id")
+  uploader   Account @relation(fields: [uploaderId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // TO DELETE
+  uploaderUserId String? @map("uploader_id")
+  uploaderUser   User?   @relation(fields: [uploaderUserId], references: [id])
+  // END TO DELETE
 
   @@map("documents")
 }

@@ -4,32 +4,73 @@ enum SiteCAUnit {
   M // Million (1000000)
 }
 
+enum Environment {
+  BC
+  CUT
+  TILT
+}
+
 model Organization {
   id               String    @id @default(uuid())
   oldBCId          String?   @map("old_bc_id")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
   importedFileDate DateTime? @map("imported_file_date")
 
-  name             String
-  siret            String?
-  isCR             Boolean @map("is_cr")
-  activatedLicence Boolean @map("activated_licence")
-  onboarded        Boolean @default(false)
-  onboarderId      String? @map("onboarder_id")
-  onboarder        User?   @relation("organizationOnboarder", fields: [onboarderId], references: [id])
+  name        String
+  wordpressId String? @map("wordpress_id")
 
-  users     User[]
   sites     Site[]
-  studies   Study[]
   emissions EmissionFactor[]
+
+  organizationVersions OrganizationVersion[]
+
+  // TO DELETE
+  siret            String?
+  isCR             Boolean? @default(false) @map("is_cr")
+  activatedLicence Boolean? @default(false) @map("activated_licence")
+
+  users   User[]
+  studies Study[]
+
+  onboarded   Boolean? @default(false)
+  onboarderId String?  @map("onboarder_id")
+  onboarder   User?    @relation("organizationOnboarder", fields: [onboarderId], references: [id])
 
   parentId String?        @map("parent_id")
   parent   Organization?  @relation("childOrganizations", fields: [parentId], references: [id])
   childs   Organization[] @relation("childOrganizations")
+  // END TO DELETE
 
+  @@map("organizations")
+}
+
+model OrganizationVersion {
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@map("organizations")
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  isCR             Boolean @default(false) @map("is_cr")
+  activatedLicence Boolean @default(false) @map("activated_licence")
+
+  userAccounts Account[]
+  studies      Study[]
+
+  onboarded   Boolean  @default(false)
+  onboarderId String?  @map("onboarder_id")
+  onboarder   Account? @relation("organizationVersionOnboarder", fields: [onboarderId], references: [id])
+
+  parentId String?               @map("parent_id")
+  parent   OrganizationVersion?  @relation("childOrganizationVersions", fields: [parentId], references: [id])
+  childs   OrganizationVersion[] @relation("childOrganizationVersions")
+
+  environment Environment
+
+  @@unique([organizationId, environment])
+  @@map("organization_versions")
 }
 
 model Site {
