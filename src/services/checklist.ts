@@ -1,6 +1,6 @@
 import { hasEditionRole } from '@/utils/organization'
+import { isAdmin } from '@/utils/user'
 import { Role, UserChecklist } from '@prisma/client'
-import { isAdmin } from './permissions/user'
 
 export const mandatoryParentSteps = (step: UserChecklist, userRole: Role, isCr: boolean) => {
   let steps: UserChecklist[]

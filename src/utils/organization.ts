@@ -1,4 +1,4 @@
-import { isAdmin } from '@/services/permissions/user'
+import { isAdmin } from '@/utils/user'
 import { Organization, Role } from '@prisma/client'
 import { User } from 'next-auth'
 

@@ -1,8 +1,8 @@
 'use client'
 
 import { hasAccessToFormation } from '@/services/permissions/formations'
-import { isAdmin } from '@/services/permissions/user'
 import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { isAdmin } from '@/utils/user'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'

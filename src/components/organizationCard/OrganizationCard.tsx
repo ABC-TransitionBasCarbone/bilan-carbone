@@ -1,9 +1,9 @@
 'use client'
 
-import { isAdmin } from '@/services/permissions/user'
 import { getStudyOrganization } from '@/services/serverFunctions/organization'
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { isAdmin } from '@/utils/user'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { Organization, Role } from '@prisma/client'

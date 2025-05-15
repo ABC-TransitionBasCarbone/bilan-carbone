@@ -43,6 +43,7 @@ import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { isAdmin } from '@/utils/user'
 import {
   ControlMode,
   User as DBUser,
@@ -82,7 +83,6 @@ import {
   canUpgradeSourceVersion,
   isAdminOnStudyOrga,
 } from '../permissions/study'
-import { isAdmin } from '../permissions/user'
 import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
 import {
