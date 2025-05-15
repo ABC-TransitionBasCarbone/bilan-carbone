@@ -4,12 +4,12 @@ import { hasAccessToFormation } from '@/services/permissions/formations'
 import { isAdmin } from '@/services/permissions/user'
 import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
-import { AppBar, Box, MenuItem, Toolbar } from '@mui/material'
+import { AppBar, Box, Container, MenuItem, Toolbar } from '@mui/material'
 import { Role } from '@prisma/client'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { MouseEvent, useEffect, useMemo, useState } from 'react'
+import { MouseEvent, ReactNode, useEffect, useMemo, useState } from 'react'
 import { Logo } from '../base/Logo'
 import styles from './Navbar.module.css'
 import NavbarButton from './NavbarButton'
@@ -23,9 +23,10 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 
 interface Props {
   user: User
+  children?: ReactNode
 }
 
-const Navbar = ({ user }: Props) => {
+const Navbar = ({ children, user }: Props) => {
   const t = useTranslations('navigation')
   const [hasFormation, setHasFormation] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -45,80 +46,83 @@ const Navbar = ({ user }: Props) => {
   const isCut = useMemo(() => environment === CUT, [environment])
 
   return (
-    <AppBar position="static">
-      <Toolbar className={styles.toolbarContainer}>
-        <Box className={styles.buttonContainer}>
-          <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
-            <Logo />
-          </NavbarLink>
-          {user.organizationId && (
-            <Box>
-              <NavbarButton color="inherit" onMouseEnter={handleClickMenu}>
-                {t('organization')}
-              </NavbarButton>
-              <NavbarOrganizationMenu
-                id="navbar-organisation-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                slotProps={{
-                  list: {
-                    onMouseLeave: handleClose,
-                  },
-                }}
-              >
-                {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+    <AppBar position="static" elevation={0}>
+      <Toolbar variant='dense'>
+        <Container maxWidth='lg' className={styles.toolbarContainer}>
+          <Box className={styles.buttonContainer}>
+            <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
+              <Logo />
+            </NavbarLink>
+            {user.organizationId && (
+              <Box>
+                <NavbarButton color="inherit" onMouseEnter={handleClickMenu}>
+                  {t('organization')}
+                </NavbarButton>
+                <NavbarOrganizationMenu
+                  id="navbar-organisation-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  slotProps={{
+                    list: {
+                      onMouseLeave: handleClose,
+                    },
+                  }}
+                >
+                  {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+                    <MenuItem onClick={handleClose}>
+                      <NavbarLink href={`/organisations/${user.organizationId}/modifier`}>{t('information')}</NavbarLink>
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={handleClose}>
-                    <NavbarLink href={`/organisations/${user.organizationId}/modifier`}>{t('information')}</NavbarLink>
+                    <NavbarLink href="/equipe">{t('team')}</NavbarLink>
                   </MenuItem>
-                )}
-                <MenuItem onClick={handleClose}>
-                  <NavbarLink href="/equipe">{t('team')}</NavbarLink>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <NavbarLink href="/organisations">{t('organizations')}</NavbarLink>
-                </MenuItem>
-              </NavbarOrganizationMenu>
-            </Box>
-          )}
-          {!isCut && (
-            <NavbarButton href="/facteurs-d-emission">
-              <span className={styles.big}>{t('factors')}</span>
-              <span className={styles.small}>{t('fe')}</span>
-            </NavbarButton>
-          )}
-          {hasFormation && !isCut && <NavbarButton href="/formation">{t('formation')}</NavbarButton>}
-        </Box>
-        <Box className={styles.buttonContainer}>
-          <NavbarButton
-            rel="noreferrer noopener"
-            href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''}
-            aria-label={t('help')}
-          >
-            <HelpOutlineIcon />
-          </NavbarButton>
-          {!isCut && (
-            <NavbarButton aria-label={t('settings')} href="/parametres">
-              <SettingsIcon />
-            </NavbarButton>
-          )}
-          <NavbarButton aria-label={t('profile')} href="/profil">
-            <AccountCircleIcon />
-          </NavbarButton>
-          {!isCut && (
+                  <MenuItem onClick={handleClose}>
+                    <NavbarLink href="/organisations">{t('organizations')}</NavbarLink>
+                  </MenuItem>
+                </NavbarOrganizationMenu>
+              </Box>
+            )}
+            {!isCut && (
+              <NavbarButton href="/facteurs-d-emission">
+                <span className={styles.big}>{t('factors')}</span>
+                <span className={styles.small}>{t('fe')}</span>
+              </NavbarButton>
+            )}
+            {hasFormation && !isCut && <NavbarButton href="/formation">{t('formation')}</NavbarButton>}
+          </Box>
+          <Box className={styles.buttonContainer}>
             <NavbarButton
-              aria-label={t('methodology')}
               rel="noreferrer noopener"
-              href="https://www.bilancarbone-methode.com/"
+              href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''}
+              aria-label={t('help')}
             >
-              <MenuBookIcon />
+              <HelpOutlineIcon />
             </NavbarButton>
-          )}
-          <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOut()}>
-            <PowerSettingsNewIcon />
-          </NavbarButton>
-        </Box>
+            {!isCut && (
+              <NavbarButton aria-label={t('settings')} href="/parametres">
+                <SettingsIcon />
+              </NavbarButton>
+            )}
+            <NavbarButton aria-label={t('profile')} href="/profil">
+              <AccountCircleIcon />
+            </NavbarButton>
+            {!isCut && (
+              <NavbarButton
+                aria-label={t('methodology')}
+                rel="noreferrer noopener"
+                href="https://www.bilancarbone-methode.com/"
+              >
+                <MenuBookIcon />
+              </NavbarButton>
+            )}
+            <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOut()}>
+              <PowerSettingsNewIcon />
+            </NavbarButton>
+          </Box>
+        </Container>
       </Toolbar>
+      {children}
     </AppBar>
   )
 }

@@ -19,8 +19,9 @@ const NavLayout = async ({ children, user }: Props & UserProps) => {
 
   return (
     <div className="flex-col h100">
-      <Navbar user={user} />
-      {user.organizationId && <OrganizationCard user={user} organizations={organizations} />}
+      <Navbar user={user}>
+        {user.organizationId && <OrganizationCard user={user} organizations={organizations} />}
+      </Navbar>
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: user.organizationId })}>
         {children}
       </main>
