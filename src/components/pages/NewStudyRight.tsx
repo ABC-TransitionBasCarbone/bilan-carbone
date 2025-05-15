@@ -1,7 +1,7 @@
 import { getOrganizationUsers } from '@/db/organization'
 import { FullStudy } from '@/db/study'
-import { isAdmin } from '@/services/permissions/user'
 import { getUserRoleOnStudy } from '@/utils/study'
+import { isAdmin } from '@/utils/user'
 import { User } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
