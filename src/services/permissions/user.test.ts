@@ -70,7 +70,7 @@ describe('User permission functions', () => {
       expect(result).toBe(true)
     })
 
-    it('returns ctrue if user is Gestionnaire', () => {
+    it('returns true if user is Gestionnaire', () => {
       mockCanEditMemberRole.mockReturnValue(true)
       const result = canAddMember(
         getMockedAuthUser({ role: Role.GESTIONNAIRE, organizationId: mockedOrganizationId }),
