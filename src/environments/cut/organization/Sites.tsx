@@ -11,6 +11,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import styles from '../../base/organization/Sites.module.css'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
@@ -48,7 +49,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
               ) : (
                 <FormTextField
                   data-testid="edit-site-name"
-                  className="w100"
+                  className={styles.field}
                   control={control}
                   translation={t}
                   name={`sites.${row.index}.name`}
@@ -72,6 +73,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
               ) : (
                 <FormTextField
                   data-testid="edit-site-postal-code"
+                  className={styles.field}
                   control={control}
                   translation={t}
                   name={`sites.${row.index}.postalCode`}
@@ -95,6 +97,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
               ) : (
                 <FormTextField
                   data-testid="edit-site-city"
+                  className={styles.field}
                   control={control}
                   translation={t}
                   name={`sites.${row.index}.city`}

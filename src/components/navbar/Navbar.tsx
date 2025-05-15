@@ -13,9 +13,9 @@ import classNames from 'classnames'
 import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
+import Image from '../document/Image'
 import styles from './Navbar.module.css'
 
 interface Props {

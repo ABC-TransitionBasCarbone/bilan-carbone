@@ -124,7 +124,7 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
           />
           {canEdit && (
             <>
-              {value && (
+              {selectedFactor && (
                 <button
                   className={styles.clear}
                   aria-label={t('clear')}

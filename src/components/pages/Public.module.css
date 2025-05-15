@@ -62,6 +62,10 @@
   border: 0.125rem solid var(--primary-800);
 }
 
+.link {
+  color: white;
+}
+
 .image {
   height: auto;
 }

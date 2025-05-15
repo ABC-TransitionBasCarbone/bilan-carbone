@@ -16,10 +16,15 @@ const nextConfig = {
     remotePatterns: [{ hostname: scalewayUrl }],
   },
   experimental: {
-    serverActions: {
-      bodySizeLimit: '5mb',
-    },
+    serverActions: { bodySizeLimit: '5mb' },
   },
+  reactStrictMode: true,
+  headers: async () => [
+    {
+      source: '/(.*)',
+      headers: [{ key: 'X-Frame-Options', value: 'SAMEORIGIN' }],
+    },
+  ],
 }
 
 export default withNextIntl(nextConfig)

@@ -38,25 +38,6 @@ export const getUserRoleOnStudy = (
   return null
 }
 
-export const colors: Record<string, { dark: string; light: string }> = {
-  darkBlue: {
-    dark: 'var(--post-darkBlue-dark)',
-    light: 'var(--post-darkBlue-light)',
-  },
-  green: {
-    dark: 'var(--post-green-dark)',
-    light: 'var(--post-green-light)',
-  },
-  blue: {
-    dark: 'var(--post-blue-dark)',
-    light: 'var(--post-blue-light)',
-  },
-  orange: {
-    dark: 'var(--post-orange-dark)',
-    light: 'var(--post-orange-light)',
-  },
-}
-
 export const postColors: Record<Post, string> = {
   [Post.Energies]: 'darkBlue',
   [Post.AutresEmissionsNonEnergetiques]: 'darkBlue',

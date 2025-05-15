@@ -8,8 +8,8 @@ const Button = ({ className, fullWidth, ...rest }: ButtonProps) => {
       className={classNames(styles.button, className, {
         [styles.secondary]: rest.color === 'secondary',
         [styles.error]: rest.color === 'error',
+        w100: fullWidth,
       })}
-      fullWidth={fullWidth}
       {...rest}
     />
   )
