@@ -13,7 +13,7 @@ export const canAddMember = (
     return false
   }
 
-  if (user.role === Role.COLLABORATOR) {
+  if (!canEditMemberRole(user)) {
     return false
   }
 
@@ -32,7 +32,11 @@ export const canDeleteMember = (user: User, member: DbUser | null) => {
     return false
   }
 
-  if (user.role === Role.COLLABORATOR) {
+  if (user.organizationId !== member.organizationId) {
+    return false
+  }
+
+  if (!canEditMemberRole(user)) {
     return false
   }
 
