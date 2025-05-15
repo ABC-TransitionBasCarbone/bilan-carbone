@@ -1,7 +1,7 @@
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getUserRoleOnStudy } from '@/utils/study'
-import { StudyEmissionSource, StudyRole, User } from '@prisma/client'
+import { StudyEmissionSource, StudyRole, SubPost, User } from '@prisma/client'
 import { canBeValidated } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 import { canReadStudy, isAdminOnStudyOrga } from './study'
@@ -79,7 +79,10 @@ export const canUpdateEmissionSource = async (
     }
   }
 
-  if (change.depreciationPeriod && !subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)) {
+  if (
+    change.depreciationPeriod &&
+    ![...subPostsByPost[Post.Immobilisations], SubPost.Electromenager].includes(emissionSource.subPost)
+  ) {
     return false
   }
 
