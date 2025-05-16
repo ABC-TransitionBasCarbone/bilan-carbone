@@ -1,5 +1,5 @@
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
-import { ControlMode, EmissionFactor, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
+import { ControlMode, Import, Level, Prisma, Export as StudyExport, SubPost, Unit } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {
@@ -47,6 +47,7 @@ interface EmissionSource {
   temporalRepresentativeness: number
   completeness: number
   emissionSourceImportedId: string
+  emissionFactorConsoValue: number
   CO2f: number
 }
 
@@ -230,8 +231,9 @@ const parseEmissionSources = (
           temporalRepresentativeness: incertitudeDA,
           completeness: incertitudeDA,
           emissionSourceImportedId: String(row.emissionSourceImportedId),
-        },
+          emissionFactorConsoValue: row.emissionFactorConsoValue as number,
           CO2f: row.CO2f as number,
+        },
       ]
     })
     .reduce((accumulator, currentValue) => {
@@ -440,7 +442,6 @@ export const uploadStudies = async (
     where: { OR: [{ importedId: { in: emissionSourceImportedIds } }, { oldBCId: { in: emissionFactorOldBCIds } }] },
     include: {
       version: true,
-      importedId: { in: emissionSourceImportedIds },
     },
   })
   const emissionFactorsMap = emissionFactors.reduce(
@@ -449,6 +450,7 @@ export const uploadStudies = async (
         const emissionFactors = emissionFactorsMap.get(emissionFactor.importedId)
         const emissionFactorItem = {
           id: emissionFactor.id,
+          unit: emissionFactor.unit,
           version: emissionFactor.version
             ? {
                 id: emissionFactor.version.id,
@@ -471,6 +473,7 @@ export const uploadStudies = async (
       string,
       {
         id: string
+        unit: string | null
         version: { id: string; source: string; createdAt: Date } | null
         importedId: string
         co2f: number | null
@@ -510,6 +513,7 @@ export const uploadStudies = async (
             }
             let emissionFactor: {
               id: string
+              unit: string | null
               version: { id: string; source: string; createdAt: Date } | null
               importedId: string
               co2f: number | null
@@ -572,6 +576,8 @@ export const uploadStudies = async (
               temporalRepresentativeness: studyEmissionSource.temporalRepresentativeness,
               completeness: studyEmissionSource.completeness,
               emissionFactorId: emissionFactor ? emissionFactor.id : emissionFactorId,
+              duration: emissionFactor?.unit === Unit.HA_YEAR ? 20 : null,
+              hectare: emissionFactor?.unit === Unit.HA_YEAR ? studyEmissionSource.emissionFactorConsoValue / 20 : null,
             }
           })
           .filter((studyEmissionSource) => studyEmissionSource !== null)
