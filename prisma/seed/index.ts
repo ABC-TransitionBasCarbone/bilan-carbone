@@ -288,9 +288,7 @@ const users = async () => {
       return prisma.study.create({
         include: { sites: true },
         data: {
-          // TO DELETE AND UNCOMMENT NEXT
-          createdByUserId: creator.id,
-          // createdById: creator.id,
+          createdById: creator.id,
           startDate: new Date(),
           endDate: faker.date.future(),
           isPublic: faker.datatype.boolean(),
@@ -329,9 +327,7 @@ const users = async () => {
       include: { sites: true },
       data: {
         id: '88c93e88-7c80-4be4-905b-f0bbd2ccc779',
-        // TO DELETE AND UNCOMMENT
-        createdByUserId: defaultUser.id,
-        // createdById: defaultUser.id,
+        createdById: defaultUser.id,
         startDate: new Date(),
         endDate: faker.date.future(),
         isPublic: false,

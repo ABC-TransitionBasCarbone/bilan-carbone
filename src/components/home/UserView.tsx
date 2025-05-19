@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { getUserOrganizations, hasUserToValidateInOrganization } from '@/db/user'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { CUT, getServerEnvironment } from '@/store/AppEnvironment'

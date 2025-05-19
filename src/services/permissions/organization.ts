@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { getOrganizationById } from '@/db/organization'
 import { getUserByEmail } from '@/db/userImport'
 import { canEditOrganization, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'

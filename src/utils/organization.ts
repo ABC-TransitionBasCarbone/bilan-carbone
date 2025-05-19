@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { isAdmin } from '@/services/permissions/user'
 import { Organization, Role } from '@prisma/client'
 import { User } from 'next-auth'

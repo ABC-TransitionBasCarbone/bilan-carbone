@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import Label from '@/components/base/Label'
 import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
