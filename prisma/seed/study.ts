@@ -26,16 +26,8 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
   await getEmissionFactorsFromCSV('test', './prisma/seed/Base_Carbone_Test.csv')
   await prisma.emissionFactorImportVersion.createMany({
     data: [
-      {
-        internId: 'Legifrance_Test.csv',
-        name: 'test',
-        source: Import.Legifrance,
-      },
-      {
-        internId: 'Negaoctet_Test.csv',
-        name: 'test',
-        source: Import.NegaOctet,
-      },
+      { internId: 'Legifrance_Test.csv', name: 'test', source: Import.Legifrance },
+      { internId: 'Negaoctet_Test.csv', name: 'test', source: Import.NegaOctet },
     ],
   })
 
@@ -65,9 +57,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
     return null
   }
 
-  const emissionFactors = await prisma.emissionFactor.findMany({
-    where: { versionId: version.id },
-  })
+  const emissionFactors = await prisma.emissionFactor.findMany({ where: { versionId: version.id } })
 
   const papier = await prisma.emissionFactor.create({
     data: {
@@ -84,10 +74,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       unit: Unit.TON,
       subPosts: [SubPost.DechetsDEmballagesEtPlastiques],
       metaData: {
-        create: {
-          language: 'fr',
-          title: 'Papier, moyenne',
-        },
+        create: { language: 'fr', title: 'Papier, moyenne' },
       },
     },
   })
@@ -104,16 +91,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       createdBy: { connect: { id: creator.id } },
       organizationVersion: { connect: { id: creator.organizationVersionId } },
       sites: {
-        createMany: {
-          data: [
-            {
-              id: studySiteId,
-              siteId,
-              etp: 35,
-              ca: 1_000_000,
-            },
-          ],
-        },
+        createMany: { data: [{ id: studySiteId, siteId, etp: 35, ca: 1_000_000 }] },
       },
     },
   })
@@ -124,13 +102,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       .map((source) => addSourceToStudies(source, prisma)),
   )
 
-  await prisma.userOnStudy.create({
-    data: {
-      role: StudyRole.Validator,
-      accountId: creator.id,
-      studyId,
-    },
-  })
+  await prisma.userOnStudy.create({ data: { role: StudyRole.Validator, accountId: creator.id, studyId } })
 
   await prisma.studyEmissionSource.createMany({
     data: [

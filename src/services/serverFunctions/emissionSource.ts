@@ -9,7 +9,7 @@ import {
   updateEmissionSourceOnStudy,
 } from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
-import { UserChecklist } from '@prisma/client'
+import { Import, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -17,6 +17,7 @@ import {
   canDeleteEmissionSource,
   canUpdateEmissionSource,
 } from '../permissions/emissionSource'
+import { isInOrgaOrParentFromId } from '../permissions/organization'
 import { CreateEmissionSourceCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
 import { addUserChecklistItem } from './user'
 
@@ -91,6 +92,14 @@ export const updateEmissionSource = async ({
     !study.emissionFactorVersions
       .map((emissionFactorVersion) => emissionFactorVersion.importVersionId)
       .includes(emissionFactor.version.id)
+  ) {
+    return NOT_AUTHORIZED
+  }
+
+  if (
+    emissionFactor?.importedFrom === Import.Manual &&
+    emissionFactor.organizationId &&
+    !(await isInOrgaOrParentFromId(emissionFactor.organizationId, study.organizationVersion.organization.id))
   ) {
     return NOT_AUTHORIZED
   }
