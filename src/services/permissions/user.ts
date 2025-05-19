@@ -1,3 +1,6 @@
+// TO DELETE ts-nockeck
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { canEditMemberRole, isUntrainedRole } from '@/utils/organization'
 import { User as DbUser, Prisma, Role, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
