@@ -1,7 +1,7 @@
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
-import { isAdmin } from '@/utils/user'
 import { getAccountRoleOnStudy } from '@/utils/study'
+import { isAdmin } from '@/utils/user'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'

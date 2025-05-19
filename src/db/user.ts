@@ -1,5 +1,4 @@
 import { signPassword } from '@/services/auth'
-import { findUserInfo } from '@/utils/user'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
 import { getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'

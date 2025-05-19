@@ -1,7 +1,6 @@
 'use client'
 
 import { OrganizationVersionWithOrganization } from '@/db/organization'
-import { isAdmin } from '@/services/permissions/user'
 import { getStudyOrganizationVersion } from '@/services/serverFunctions/organization'
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'

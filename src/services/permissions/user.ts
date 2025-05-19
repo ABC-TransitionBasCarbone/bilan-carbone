@@ -1,6 +1,6 @@
 import { AccountWithUser } from '@/db/account'
 import { canEditMemberRole, isUntrainedRole } from '@/utils/organization'
-import { User as DbUser, Prisma, Role, UserStatus } from '@prisma/client'
+import { Prisma, Role, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
 export const canEditSelfRole = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.GESTIONNAIRE
@@ -28,12 +28,12 @@ export const canAddMember = (
   return true
 }
 
-export const canDeleteMember = (user: UserSession, member: DbUser | null) => {
+export const canDeleteMember = (user: UserSession, member: AccountWithUser | null) => {
   if (!member) {
     return false
   }
 
-  if (user.organizationId !== member.organizationId) {
+  if (user.organizationVersionId !== member.organizationVersionId) {
     return false
   }
 
@@ -41,7 +41,7 @@ export const canDeleteMember = (user: UserSession, member: DbUser | null) => {
     return false
   }
 
-  if (member.status === UserStatus.ACTIVE) {
+  if (member.user.status === UserStatus.ACTIVE) {
     return false
   }
 

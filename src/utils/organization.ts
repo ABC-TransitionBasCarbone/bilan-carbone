@@ -1,6 +1,6 @@
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { isAdmin } from '@/utils/user'
 import { Role } from '@prisma/client'
-import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { UserSession } from 'next-auth'
 
 export const isAdminOnOrga = (account: UserSession, organizationVersion: OrganizationVersionWithOrganization) =>

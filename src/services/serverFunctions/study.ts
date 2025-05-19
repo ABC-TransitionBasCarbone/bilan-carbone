@@ -47,8 +47,8 @@ import { getUserByEmail } from '@/db/userImport'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { isAdmin } from '@/utils/user'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
   ControlMode,
