@@ -10,7 +10,7 @@ import {
   UpdateEmissionSourceCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
-import { getQualityRating, getStandardDeviationRating } from '@/services/uncertainty'
+import { getStandardDeviationRating } from '@/services/uncertainty'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
@@ -133,7 +133,6 @@ const EmissionSource = ({
   }, [emissionSource.emissionFactor, emissionFactors])
 
   const status = useMemo(() => getEmissionSourceStatus(study, emissionSource), [study, emissionSource])
-  const sourceRating = useMemo(() => getQualityRating(emissionSource), [emissionSource])
   const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
 
   const isFromOldImport = useMemo(
@@ -163,15 +162,14 @@ const EmissionSource = ({
         aria-controls={detailId}
         onClick={() => setDisplay(!display)}
       >
-        <div className={classNames(styles.header, styles.gapped, 'grow justify-between')}>
-          <div className={classNames(styles.name, 'align-center grow')}>
+        <div className={classNames(styles.header, styles.gapped, 'justify-between')}>
+          <div className={classNames(styles.name, 'align-center')}>
             {emissionSource.validated || withoutDetail ? (
               <p data-testid="validated-emission-source-name">{emissionSource.name}</p>
             ) : (
               <>
                 {!emissionSource.name && <FormLabel component="legend">{t('label')}</FormLabel>}
                 <TextField
-                  className="grow"
                   disabled={!canEdit}
                   defaultValue={emissionSource.name}
                   data-testid="emission-source-name"
@@ -184,18 +182,15 @@ const EmissionSource = ({
           </div>
           <div className={classNames(styles.gapped, 'align-center')}>
             {/* activity data */}
-            <div className="flex-col justify-center text-center">
+            <div className={classNames(styles.emissionSource, 'flex-col justify-center text-center')}>
               {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
-                <>
-                  <p>{t('emissionSource')}</p>
-                  <p>
-                    {formatNumber(emissionSource.value)}{' '}
-                    {selectedFactor &&
-                      (selectedFactor.unit === Unit.CUSTOM
-                        ? selectedFactor.customUnit
-                        : tUnits(selectedFactor.unit || ''))}
-                  </p>
-                </>
+                <p>
+                  {formatNumber(emissionSource.value)}{' '}
+                  {selectedFactor &&
+                    (selectedFactor.unit === Unit.CUSTOM
+                      ? selectedFactor.customUnit
+                      : tUnits(selectedFactor.unit || ''))}
+                </p>
               )}
             </div>
             {/* emission factor */}
@@ -294,41 +289,6 @@ const EmissionSource = ({
                 isFromOldImport={isFromOldImport}
                 currentBEVersion={currentBEVersion}
               />
-            )}
-            {emissionResults && (
-              <div className={styles.results} data-testid="emission-source-result">
-                <p>{t('results.title')}</p>
-                <div className={classNames(styles.row, 'flex')}>
-                  <div>
-                    <p>{t('results.emission')}</p>
-                    <p>
-                      {formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])}{' '}
-                      {tResultstUnits(study.resultsUnit)}
-                    </p>
-                  </div>
-                  {sourceRating && (
-                    <div>
-                      <p>{tQuality('name')}</p>
-                      <p>{tQuality(sourceRating.toString())}</p>
-                    </div>
-                  )}
-                  {emissionResults.confidenceInterval && (
-                    <div>
-                      <p>{t('results.confiance')}</p>
-                      <p>
-                        [{formatNumber(emissionResults.confidenceInterval[0], 2)};{' '}
-                        {formatNumber(emissionResults.confidenceInterval[1], 2)}]
-                      </p>
-                    </div>
-                  )}
-                  {emissionResults.alpha !== null && (
-                    <div>
-                      <p>{t('results.alpha')}</p>
-                      <p>{formatNumber(emissionResults.alpha, 2)}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
             )}
           </div>
         )}

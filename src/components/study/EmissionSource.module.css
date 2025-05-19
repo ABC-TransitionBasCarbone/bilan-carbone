@@ -1,12 +1,19 @@
 .container {
   &:not(:last-child) {
-    border-bottom: solid 1px var(--neutral-300);
+    border-bottom: solid 1px var(--grayscale-700);
+  }
+  &:hover {
+    background-color: var(--primary-50);
   }
 }
 
 .header {
   .name {
-    max-width: 50%;
+    width: 50%;
+  }
+
+  .emissionSource {
+    width: 15%
   }
 
   @media screen and (max-width: 60rem) {
@@ -41,8 +48,6 @@
   gap: 1rem;
   flex-wrap: wrap;
   &:hover {
-    background-color: var(--primary-50);
-
     .editIcon {
       display: block;
     }
@@ -133,6 +138,7 @@
 
 .gapped {
   gap: 1rem;
+  flex: 1;
 }
 
 .optionnalFields {
@@ -166,7 +172,10 @@
 }
 
 .results {
-  margin-top: 2rem;
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
 }
 
 .saved {

@@ -1,6 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { getEmissionResults } from '@/services/emissionSource'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -13,7 +14,7 @@ import {
   specificFEQualityKeys,
 } from '@/services/uncertainty'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
-import { formatEmissionFactorNumber } from '@/utils/number'
+import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
@@ -103,6 +104,8 @@ const EmissionSourceForm = ({
 
   const qualities = qualityKeys.map((column) => emissionSource[column])
   const specificFEQualities = specificFEQualityKeys.map((column) => emissionSource[column])
+
+  const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
 
   const qualityRating = useMemo(
     () => (selectedFactor ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource)) : null),
@@ -398,18 +401,39 @@ const EmissionSourceForm = ({
           clearable
         />
       </div>
-      <div className={classNames(styles.gapped, 'justify-end mt1 w100')}>
-        {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
-        {canValidate && (
-          <Button
-            color={emissionSource.validated ? 'secondary' : 'primary'}
-            onClick={() => update('validated', !emissionSource.validated)}
-            data-testid="emission-source-validate"
-            disabled={status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor}
-          >
-            {t(emissionSource.validated ? 'unvalidate' : 'validate')}
-          </Button>
+      <div className="flex-row justify-between">
+        {emissionResults && (
+          <div className={classNames(styles.row, 'flex', styles.results)} data-testid="emission-source-result">
+            {emissionResults.confidenceInterval && (
+              <div>
+                <p>{t('results.confiance')}</p>
+                <p>
+                  [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
+                  {formatNumber(emissionResults.confidenceInterval[1])}]
+                </p>
+              </div>
+            )}
+            {emissionResults.alpha !== null && (
+              <div>
+                <p>{t('results.alpha')}</p>
+                <p>{formatNumber(emissionResults.alpha, 2)}</p>
+              </div>
+            )}
+          </div>
         )}
+        <div className={classNames(styles.gapped, 'justify-end mt1')}>
+          {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
+          {canValidate && (
+            <Button
+              color={emissionSource.validated ? 'secondary' : 'primary'}
+              onClick={() => update('validated', !emissionSource.validated)}
+              data-testid="emission-source-validate"
+              disabled={status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor}
+            >
+              {t(emissionSource.validated ? 'unvalidate' : 'validate')}
+            </Button>
+          )}
+        </div>
       </div>
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
