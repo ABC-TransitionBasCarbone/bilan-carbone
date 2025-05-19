@@ -1,5 +1,6 @@
 'use server'
 
+import { getAccountById } from '@/db/account'
 import { prismaClient } from '@/db/client'
 import {
   createEmissionFactorWithParts,
@@ -10,7 +11,7 @@ import {
   getEmissionFactorDetailsById,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
-import { getUserByEmail } from '@/db/userImport'
+import { getOrganizationVersionById } from '@/db/organization'
 import { getLocale } from '@/i18n/locale'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
@@ -18,7 +19,7 @@ import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
 import { canReadStudy } from '../permissions/study'
-import { getStudyParentOrganization } from '../study'
+import { getStudyParentOrganizationVersionId } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
@@ -34,10 +35,19 @@ export const getEmissionFactors = async (studyId?: string) => {
     if (!(await canReadStudy(session.user, studyId))) {
       return []
     }
-    const emissionFactorOrganizationId = await getStudyParentOrganization(studyId, session.user.organizationId)
+    const organizationVersionId = await getStudyParentOrganizationVersionId(studyId, session.user.organizationVersionId)
+    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+    if (!organizationVersion) {
+      return []
+    }
+    const emissionFactorOrganizationId = organizationVersion.organizationId
     emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId)
   } else {
-    emissionFactors = await getAllEmissionFactors(session.user.organizationId)
+    const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+    if (!organizationVersion) {
+      return []
+    }
+    emissionFactors = await getAllEmissionFactors(organizationVersion.organizationId)
   }
 
   return emissionFactors
@@ -55,13 +65,13 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
 
     const session = await auth()
 
-    if (!session || !session.user.organizationId || !(await canReadStudy(session.user, studyId))) {
+    if (!session || !session.user.organizationVersionId || !(await canReadStudy(session.user, studyId))) {
       return []
     }
 
-    const emissionFactorOrganization = (await getStudyParentOrganization(
+    const emissionFactorOrganization = (await getStudyParentOrganizationVersionId(
       studyId,
-      session.user.organizationId,
+      session.user.organizationVersionId,
     )) as string
 
     const emissionFactors = await getAllEmissionFactorsByIds(ids, emissionFactorOrganization)
@@ -84,7 +94,9 @@ export const getDetailedEmissionFactor = async (id: string) => {
     return null
   }
 
-  if (!emissionFactor.organizationId || emissionFactor.organizationId !== session.user.organizationId) {
+  const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+
+  if (!emissionFactor.organizationId || emissionFactor.organizationId !== organizationVersion?.organizationId) {
     return null
   }
 
@@ -115,9 +127,9 @@ export const createEmissionFactorCommand = async ({
     return NOT_AUTHORIZED
   }
 
-  const user = await getUserByEmail(session.user.email)
+  const account = await getAccountById(session.user.accountId)
 
-  if (!user || !user.organizationId) {
+  if (!account || !account.organizationVersionId) {
     return NOT_AUTHORIZED
   }
 
@@ -130,7 +142,7 @@ export const createEmissionFactorCommand = async ({
       ...command,
       importedFrom: Import.Manual,
       status: EmissionFactorStatus.Valid,
-      organization: { connect: { id: user.organizationId } },
+      organization: { connect: { id: account.organizationVersion?.organizationId } },
       unit: unit as Unit,
       subPosts: flattenSubposts(subPosts),
       metaData: { create: { language: local, title: name, attribute, comment } },

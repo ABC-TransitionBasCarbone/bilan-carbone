@@ -1,35 +1,35 @@
-import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
-import { getOrganizationUsers } from '@/db/organization'
-import { getUserOrganizations } from '@/db/user'
+import { getAccountOrganizationVersions } from '@/db/account'
+import { getOrganizationVersionAccounts } from '@/db/organization'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 interface Props {
   params: Promise<{ id: string }>
 }
 
-const NewStudyInOrganization = async (props: Props & UserProps) => {
+const NewStudyInOrganization = async (props: Props & UserSessionProps) => {
   const params = await props.params
 
   const id = params.id
-  if (!id || !props.user.organizationId || !props.user.level) {
+  if (!id || !props.user.organizationVersionId || !props.user.level) {
     return <NotFound />
   }
 
-  const [organizations, users] = await Promise.all([
-    getUserOrganizations(props.user.email),
-    getOrganizationUsers(props.user.organizationId),
+  const [organizationVersions, accounts] = await Promise.all([
+    getAccountOrganizationVersions(props.user.accountId),
+    getOrganizationVersionAccounts(props.user.organizationVersionId),
   ])
 
   const caUnit = (await getUserSettings())?.caUnit || defaultCAUnit
 
   return (
     <NewStudyPage
-      organizations={organizations}
+      organizationVersions={organizationVersions}
       user={props.user}
-      users={users}
-      defaultOrganization={organizations.find((organization) => organization.id === id)}
+      accounts={accounts}
+      defaultOrganizationVersion={organizationVersions.find((organizationVersion) => organizationVersion.id === id)}
       caUnit={caUnit}
     />
   )

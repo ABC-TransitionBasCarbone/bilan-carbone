@@ -1,8 +1,6 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 'use server'
 
+import { AccountWithUser, getAccountById } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import {
   createEmissionSourceOnStudy,
@@ -11,7 +9,6 @@ import {
   updateEmissionSourceOnStudy,
 } from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
-import { getUserByEmail } from '@/db/userImport'
 import { UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -34,17 +31,17 @@ export const createEmissionSource = async ({
     return NOT_AUTHORIZED
   }
 
-  const user = await getUserByEmail(session.user.email)
-  if (!user) {
+  const account = await getAccountById(session.user.accountId)
+  if (!account) {
     return NOT_AUTHORIZED
   }
 
-  if (!(await canCreateEmissionSource(user, { studyId, studySiteId, ...command }))) {
+  if (!(await canCreateEmissionSource(account as AccountWithUser, { studyId, studySiteId, ...command }))) {
     return NOT_AUTHORIZED
   }
 
   const [study, emissionFactor] = await Promise.all([
-    getStudyById(studyId, user.organizationId),
+    getStudyById(studyId, account.organizationVersionId),
     emissionFactorId ? getEmissionFactorById(emissionFactorId) : undefined,
   ])
 
@@ -75,17 +72,17 @@ export const updateEmissionSource = async ({
     return NOT_AUTHORIZED
   }
 
-  const [user, emissionSource, emissionFactor] = await Promise.all([
-    getUserByEmail(session.user.email),
+  const [account, emissionSource, emissionFactor] = await Promise.all([
+    getAccountById(session.user.accountId),
     getEmissionSourceById(emissionSourceId),
     emissionFactorId ? getEmissionFactorById(emissionFactorId) : undefined,
   ])
-  if (!user || !emissionSource) {
+  if (!account || !emissionSource) {
     return NOT_AUTHORIZED
   }
 
-  const study = await getStudyById(emissionSource.studyId, user.organizationId)
-  if (!study || !(await canUpdateEmissionSource(user, emissionSource, command, study))) {
+  const study = await getStudyById(emissionSource.studyId, account.organizationVersionId)
+  if (!study || !(await canUpdateEmissionSource(account as AccountWithUser, emissionSource, command, study))) {
     return NOT_AUTHORIZED
   }
 
@@ -98,7 +95,8 @@ export const updateEmissionSource = async ({
     return NOT_AUTHORIZED
   }
   const isContributor = study.contributors.some(
-    (contributor) => contributor.user.email === user.email && contributor.subPost === emissionSource.subPost,
+    (contributor) =>
+      contributor.account.user.email === account.user.email && contributor.subPost === emissionSource.subPost,
   )
 
   const data = {
@@ -117,7 +115,7 @@ export const updateEmissionSource = async ({
 
   await updateEmissionSourceOnStudy(
     emissionSourceId,
-    isContributor ? { ...data, contributor: { connect: { id: user.id } } } : data,
+    isContributor ? { ...data, contributor: { connect: { id: account.id } } } : data,
   )
   addUserChecklistItem(UserChecklist.CreateFirstEmissionSource)
 }
@@ -128,16 +126,16 @@ export const deleteEmissionSource = async (emissionSourceId: string) => {
     return NOT_AUTHORIZED
   }
 
-  const [user, emissionSource] = await Promise.all([
-    getUserByEmail(session.user.email),
+  const [account, emissionSource] = await Promise.all([
+    getAccountById(session.user.accountId),
     getEmissionSourceById(emissionSourceId),
   ])
-  if (!user || !emissionSource) {
+  if (!account || !emissionSource) {
     return NOT_AUTHORIZED
   }
-  const study = await getStudyById(emissionSource.studyId, user.organizationId)
+  const study = await getStudyById(emissionSource.studyId, account.organizationVersionId)
 
-  if (!study || !(await canDeleteEmissionSource(user, study))) {
+  if (!study || !(await canDeleteEmissionSource(account as AccountWithUser, study))) {
     return NOT_AUTHORIZED
   }
 
@@ -150,12 +148,12 @@ export const getEmissionSourcesByStudyId = async (studyId: string) => {
     return []
   }
 
-  const user = await getUserByEmail(session.user.email)
-  if (!user) {
+  const account = await getAccountById(session.user.accountId)
+  if (!account) {
     return []
   }
 
-  const study = await getStudyById(studyId, user.organizationId)
+  const study = await getStudyById(studyId, account.organizationVersionId)
   if (!study) {
     return []
   }

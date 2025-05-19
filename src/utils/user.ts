@@ -1,21 +1,26 @@
 import { Prisma, Role, UserStatus } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 
 export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
 
-export const findUserInfo = (user: User) =>
+export const findUserInfo = (user: UserSession) =>
   ({
     select: {
-      email: true,
-      firstName: true,
-      lastName: true,
+      user: {
+        select: {
+          email: true,
+          firstName: true,
+          lastName: true,
+          level: true,
+          status: true,
+          updatedAt: true,
+        },
+      },
       role: true,
-      level: true,
-      status: true,
       updatedAt: true,
     },
     where:
       user.role === Role.COLLABORATOR
-        ? { status: UserStatus.ACTIVE, organizationId: user.organizationId }
-        : { organizationId: user.organizationId },
-  }) satisfies Prisma.UserFindManyArgs
+        ? { user: { status: UserStatus.ACTIVE }, organizationVersionId: user.organizationVersionId }
+        : { organizationVersionId: user.organizationVersionId },
+  }) satisfies Prisma.AccountFindManyArgs

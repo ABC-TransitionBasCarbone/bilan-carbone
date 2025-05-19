@@ -1,10 +1,10 @@
 'use client'
 import HelpIcon from '@/components/base/HelpIcon'
-import { TeamMember } from '@/db/user'
+import { TeamMember } from '@/db/account'
 import { canEditMemberRole } from '@/utils/organization'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import Block from '../base/Block'
@@ -12,7 +12,7 @@ import Modal from '../modals/Modal'
 import SelectRole from './SelectRole'
 
 interface Props {
-  user: User
+  user: UserSession
   team: TeamMember[]
   crOrga: boolean
 }
@@ -28,11 +28,11 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     () => [
       {
         header: t('firstName'),
-        accessorKey: 'firstName',
+        accessorKey: 'user.firstName',
       },
-      { header: t('lastName'), accessorKey: 'lastName' },
-      { header: t('email'), accessorKey: 'email' },
-      { header: t('level'), accessorFn: (member: TeamMember) => (member.level ? tLevel(member.level) : '') },
+      { header: t('lastName'), accessorKey: 'user.lastName' },
+      { header: t('email'), accessorKey: 'user.email' },
+      { header: t('level'), accessorFn: (member: TeamMember) => (member.user.level ? tLevel(member.user.level) : '') },
       {
         header: t('role'),
         accessorKey: 'role',
@@ -42,8 +42,8 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             <SelectRole
               currentUserEmail={user.email}
               currentRole={role}
-              email={context.row.original.email}
-              level={context.row.original.level}
+              email={context.row.original.user.email}
+              level={context.row.original.user.level}
             />
           ) : (
             <>{tRole(role)}</>

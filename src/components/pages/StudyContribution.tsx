@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 'use client'
 
 import { FullStudy } from '@/db/study'
@@ -27,10 +24,10 @@ const StudyContributionPage = ({ study }: Props) => {
         current={tStudyNav('dataEntry')}
         links={[
           { label: tNav('home'), link: '/' },
-          study.organization.isCR
+          study.organizationVersion.isCR
             ? {
-                label: study.organization.name,
-                link: `/organisations/${study.organization.id}`,
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
               }
             : undefined,
 

@@ -4,11 +4,12 @@ import HelpIcon from '@/components/base/HelpIcon'
 import IconLabel from '@/components/base/IconLabel'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import { OrganizationWithSites } from '@/db/account'
 import { FullStudy } from '@/db/study'
-import { OrganizationWithSites } from '@/db/user'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
+
 import {
   changeStudyDates,
   changeStudyExports,
@@ -40,14 +41,14 @@ import styles from './StudyPerimeter.module.css'
 
 interface Props {
   study: FullStudy
-  organization: OrganizationWithSites
+  organizationVersion: OrganizationWithSites
   userRoleOnStudy: StudyRole
   caUnit: SiteCAUnit
 }
 
 const dateFormat = { year: 'numeric', month: 'long', day: 'numeric' } as const
 
-const StudyPerimeter = ({ study, organization, userRoleOnStudy, caUnit }: Props) => {
+const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }: Props) => {
   const format = useFormatter()
   const tForm = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
@@ -93,7 +94,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy, caUnit }: Props)
 
   const siteList = useMemo(
     () =>
-      organization.sites
+      organizationVersion.organization.sites
         .map((site) => {
           const existingStudySite = study.sites.find((studySite) => studySite.site.id === site.id)
           return existingStudySite
@@ -109,7 +110,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy, caUnit }: Props)
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
-    [organization.sites, study.sites],
+    [organizationVersion.organization.sites, study.sites],
   )
 
   const siteForm = useForm<ChangeStudySitesCommand>({
@@ -117,7 +118,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy, caUnit }: Props)
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
-      organizationId: organization.id,
+      organizationId: organizationVersion.organization.id,
       sites: siteList,
     },
   })
@@ -136,7 +137,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy, caUnit }: Props)
     const deletedSites = sites.filter((site) => {
       return !site.selected && study.sites.some((studySite) => studySite.site.id === site.id)
     })
-    const hasActivity = await hasActivityData(study.id, deletedSites, organization.id)
+    const hasActivity = await hasActivityData(study.id, deletedSites, organizationVersion.id)
     if (hasActivity) {
       setOpen(true)
       setDeleting(deletedSites.length)

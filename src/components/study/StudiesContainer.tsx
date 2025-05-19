@@ -1,5 +1,5 @@
 import {
-  getAllowedStudiesByUser,
+  getAllowedStudiesByAccount,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { Box as MUIBox } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 import Box from '../base/Box'
@@ -19,42 +19,42 @@ import Studies from './Studies'
 import styles from './StudiesContainer.module.css'
 
 interface Props {
-  user: User
-  organizationId?: string
+  user: UserSession
+  organizationVersionId?: string
   isCR?: boolean
 }
 
-const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
+const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) => {
   const t = await getTranslations('study')
 
-  const studies = organizationId
-    ? await getAllowedStudiesByUserAndOrganization(user, organizationId)
+  const studies = organizationVersionId
+    ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId)
     : isCR
       ? await getExternalAllowedStudiesByUser(user)
-      : await getAllowedStudiesByUser(user)
+      : await getAllowedStudiesByAccount(user)
 
   const [orgaStudies, otherStudies] = studies.reduce(
     (res, study) => {
-      res[study.organizationId === user.organizationId ? 0 : 1].push(study)
+      res[study.organizationVersionId === user.organizationVersionId ? 0 : 1].push(study)
       return res
     },
     [[] as Study[], [] as Study[]],
   )
 
-  const isOrgaHomePage = !organizationId && !isCR
+  const isOrgaHomePage = !organizationVersionId && !isCR
   const mainStudies = isOrgaHomePage ? orgaStudies : studies
   const collaborations = isOrgaHomePage ? otherStudies : []
 
-  const creationUrl = organizationId ? `/organisations/${organizationId}/etudes/creer` : '/etudes/creer'
+  const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
 
-  const canCreateStudy = !!user.level && !!user.organizationId
-  const mainStudyOrganizationId = organizationId ?? user.organizationId
+  const canCreateStudy = !!user.level && !!user.organizationVersionId
+  const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
   return studies.length ? (
     <>
-      {mainStudyOrganizationId && !isCR && (
+      {mainStudyOrganizationVersionId && !isCR && (
         <Suspense>
-          <ResultsContainerForUser user={user} mainStudyOrganizationId={mainStudyOrganizationId} />
+          <ResultsContainerForUser user={user} mainStudyOrganizationVersionId={mainStudyOrganizationVersionId} />
         </Suspense>
       )}
       {!!mainStudies.length && (
@@ -63,7 +63,7 @@ const StudiesContainer = async ({ user, organizationId, isCR }: Props) => {
           canAddStudy={canCreateStudy && !isCR}
           creationUrl={creationUrl}
           user={user}
-          collaborations={!organizationId && isCR}
+          collaborations={!organizationVersionId && isCR}
         />
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}

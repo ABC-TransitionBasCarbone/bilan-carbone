@@ -1,44 +1,45 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 'use client'
 
-import { getStudyOrganization } from '@/services/serverFunctions/organization'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { getStudyOrganizationVersion } from '@/services/serverFunctions/organization'
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { isAdmin } from '@/utils/user'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
-import { Organization, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import LinkButton from '../base/LinkButton'
 import styles from './OrganizationCard.module.css'
 
 interface Props {
-  user: User
-  organizations: Organization[]
+  account: UserSession
+  organizationVersions: OrganizationVersionWithOrganization[]
 }
 
-const OrganizationCard = ({ user, organizations }: Props) => {
+const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const t = useTranslations('organization.card')
 
   const { environment } = useAppEnvironmentStore()
   const isCut = useMemo(() => environment === CUT, [environment])
 
-  const defaultOrganization = organizations.find(
-    (organization) => organization.id === user.organizationId,
-  ) as Organization
-  const [organization, setOrganization] = useState<Pick<Organization, 'id' | 'name'> | undefined>(undefined)
+  const defaultOrganizationVersion = organizationVersions.find(
+    (organizationVersion) => organizationVersion.id === account.organizationVersionId,
+  ) as OrganizationVersionWithOrganization
+  const [organizationVersion, setOrganizationVersion] = useState<
+    Pick<OrganizationVersionWithOrganization, 'id' | 'organization'> | undefined
+  >(undefined)
 
   const [hasAccess, hasEditionRole] = useMemo(
     () =>
-      organization && organizations.map((organization) => organization.id).includes(organization.id)
-        ? [true, isAdmin(user.role) || user.role === Role.GESTIONNAIRE || defaultOrganization.isCR]
+      organizationVersion &&
+      organizationVersions.map((organizationVersion) => organizationVersion.id).includes(organizationVersion.id)
+        ? [true, isAdmin(account.role) || account.role === Role.GESTIONNAIRE || defaultOrganizationVersion.isCR]
         : [false, false],
-    [user.role, organizations, defaultOrganization, organization],
+    [account.role, organizationVersions, defaultOrganizationVersion, organizationVersion],
   )
 
   const { context, contextId } = useAppContextStore()
@@ -49,36 +50,38 @@ const OrganizationCard = ({ user, organizations }: Props) => {
     } else if (context === ORGANIZATION) {
       handleOrganizationContext(contextId)
     } else {
-      setOrganization(defaultOrganization)
+      setOrganizationVersion(defaultOrganizationVersion)
     }
   }, [context, contextId])
 
   const handleStudyContext = async (studyId: string) => {
-    const organization = await getStudyOrganization(studyId)
-    setOrganization(organization || undefined)
+    const organizationVersion = (await getStudyOrganizationVersion(studyId)) as OrganizationVersionWithOrganization
+    setOrganizationVersion(organizationVersion || undefined)
   }
 
-  const handleOrganizationContext = async (organizationId: string) => {
-    const organization = organizations.find((organization) => organization.id === organizationId)
-    setOrganization(organization)
+  const handleOrganizationContext = async (organizationVersionId: string) => {
+    const organizationVersion = organizationVersions.find(
+      (organizationVersion) => organizationVersion.id === organizationVersionId,
+    ) as OrganizationVersionWithOrganization
+    setOrganizationVersion(organizationVersion)
   }
 
-  const organizationLink = useMemo(() => {
-    const targetOrganization = organization || defaultOrganization
+  const organizationVersionLink = useMemo(() => {
+    const targetOrganizationVersion = organizationVersion || defaultOrganizationVersion
     return hasEditionRole
-      ? `/organisations/${targetOrganization.id}/modifier`
-      : `/organisations/${targetOrganization.id}`
-  }, [organization, defaultOrganization, hasEditionRole])
+      ? `/organisations/${targetOrganizationVersion.id}/modifier`
+      : `/organisations/${targetOrganizationVersion.id}`
+  }, [organizationVersion, defaultOrganizationVersion, hasEditionRole])
 
-  if (!organization) {
+  if (!organizationVersion) {
     return null
   }
 
   const linkLabel = hasEditionRole
-    ? organization.id === defaultOrganization.id
+    ? organizationVersion.id === defaultOrganizationVersion.id
       ? 'update'
       : 'updateClient'
-    : organization.id === defaultOrganization.id
+    : organizationVersion.id === defaultOrganizationVersion.id
       ? 'myOrganization'
       : 'myClient'
 
@@ -87,9 +90,9 @@ const OrganizationCard = ({ user, organizations }: Props) => {
       <div className="grow p2 justify-between align-center">
         <div className={classNames(styles.gapped, 'align-center')}>
           <HomeIcon />
-          <span>{organization.name}</span>
+          <span>{organizationVersion.organization.name}</span>
           {hasAccess && (
-            <LinkButton color="secondary" href={organizationLink}>
+            <LinkButton color="secondary" href={organizationVersionLink}>
               {t(linkLabel)}
             </LinkButton>
           )}

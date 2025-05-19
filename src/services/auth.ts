@@ -1,11 +1,14 @@
+import { getOrganizationVersionById } from '@/db/organization'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { getUserByEmail } from '@/db/userImport'
-import { Level, Role, UserStatus } from '@prisma/client'
+import { Level, PrismaClient, Role, UserStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { DAY } from '../utils/time'
+
+const prisma = new PrismaClient()
 
 export const signPassword = async (password: string) => {
   const salt = await bcrypt.genSalt(10)
@@ -26,39 +29,87 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, trigger, user }) {
       if (user) {
-        return {
-          ...token,
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          role: user.role,
-          organizationId: user.organizationId,
-          level: user.level,
+        // TODO GET THE RIGHT ACCOUNT
+        const accounts = await prisma.account.findMany({
+          where: { userId: user.id },
+          select: {
+            id: true,
+            role: true,
+            organizationVersionId: true,
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                level: true,
+                email: true,
+              },
+            },
+            organizationVersion: {
+              select: {
+                organizationId: true,
+              },
+            },
+          },
+        })
+
+        const account = accounts?.[accounts.length - 1]
+
+        if (account) {
+          return {
+            ...token,
+            id: account.user.id,
+            userId: account.user.id,
+            accountId: account.id,
+            firstName: account.user.firstName,
+            lastName: account.user.lastName,
+            organizationVersionId: account.organizationVersionId,
+            organizationId: account?.organizationVersion?.organizationId,
+            role: account.role,
+            level: account.user.level,
+          }
         }
       }
+
       if (trigger === 'update') {
         const dbUser = await getUserByEmail(token.email || '')
+
+        // TODO GET THE RIGHT ACCOUNT
+        const account = dbUser?.accounts[dbUser.accounts.length - 1] || {
+          id: '',
+          role: Role.DEFAULT,
+          organizationVersionId: '',
+        }
+
         return dbUser
           ? {
               ...token,
               id: dbUser.id,
+              userId: dbUser.id,
+              accountId: account.id,
               firstName: dbUser.firstName,
               lastName: dbUser.lastName,
-              role: dbUser.role,
-              organizationId: dbUser.organizationId,
+              role: account.role,
+              organizationVersionId: account.organizationVersionId,
+              organizationId: '',
               level: dbUser.level,
             }
           : token
       }
+
       return token
     },
     async session({ session, token }) {
+      // TODO GET THE RIGHT ACCOUNT
       if (session.user) {
         session.user = {
           ...session.user,
           id: token.id as string,
+          userId: token.id as string,
+          accountId: token.accountId as string,
           firstName: token.firstName as string,
           lastName: token.lastName as string,
+          organizationVersionId: token.organizationVersionId as string,
           organizationId: token.organizationId as string,
           role: token.role as Role,
           level: token.level as Level,
@@ -81,6 +132,9 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await getUserByEmailWithSensibleInformations(credentials.email)
+        // TODO GET THE RIGHT ACCOUNT
+        const account = user?.accounts[user.accounts.length - 1]
+
         if (!user || !user.password || user.status !== UserStatus.ACTIVE) {
           return null
         }
@@ -90,13 +144,21 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
+        if (!account?.organizationVersionId) {
+          return null
+        }
+        const organizationVersion = await getOrganizationVersionById(account?.organizationVersionId)
+
         return {
           id: user.id,
+          userId: user.id,
+          accountId: account?.id,
           firstName: user.firstName,
           lastName: user.lastName,
-          role: user.role,
+          role: account?.role,
           email: user.email,
-          organizationId: user.organizationId,
+          organizationVersionId: account?.organizationVersionId,
+          organizationId: organizationVersion?.organizationId,
           level: user.level,
         }
       },

@@ -1,10 +1,6 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { signPassword } from '@/services/auth'
-import { findUserInfo } from '@/utils/user'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
-import { User } from 'next-auth'
+import { getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
@@ -13,12 +9,11 @@ export const getUserByEmailWithSensibleInformations = (email: string) =>
       id: true,
       firstName: true,
       lastName: true,
-      role: true,
       email: true,
-      organizationId: true,
       level: true,
       password: true,
       resetToken: true,
+      accounts: true,
       status: true,
     },
     where: { email },
@@ -27,10 +22,13 @@ export const getUserByEmailWithSensibleInformations = (email: string) =>
 export const getUserSourceById = (id: string) =>
   prismaClient.user.findUnique({ where: { id }, select: { source: true } })
 
-export const getUserByEmailWithAllowedStudies = (email: string) =>
-  prismaClient.user.findUnique({ where: { email }, include: { allowedStudies: true, contributors: true } })
+export const getUserById = (id: string) =>
+  prismaClient.user.findUnique({ where: { id }, select: { firstName: true, lastName: true, email: true } })
 
-export type UserWithAllowedStudies = AsyncReturnType<typeof getUserByEmailWithAllowedStudies>
+export const getAccountByIdWithAllowedStudies = (id: string) =>
+  prismaClient.account.findUnique({ where: { id }, include: { allowedStudies: true, contributors: true } })
+
+export type UserWithAllowedStudies = AsyncReturnType<typeof getAccountByIdWithAllowedStudies>
 
 export const updateUserPasswordForEmail = async (email: string, password: string) => {
   const signedPassword = await signPassword(password)
@@ -38,11 +36,17 @@ export const updateUserPasswordForEmail = async (email: string, password: string
     where: { email },
     data: { resetToken: null, password: signedPassword, status: UserStatus.ACTIVE },
   })
-  await prismaClient.userCheckedStep.upsert({
-    where: { userId_step: { userId: user.id, step: UserChecklist.CreateAccount } },
-    update: {},
-    create: { userId: user.id, step: UserChecklist.CreateAccount },
-  })
+  const accounts = await prismaClient.account.findMany({ where: { userId: user.id } })
+
+  await Promise.all(
+    accounts.map((account) =>
+      prismaClient.userCheckedStep.upsert({
+        where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
+        update: {},
+        create: { accountId: account.id, step: UserChecklist.CreateAccount },
+      }),
+    ),
+  )
   return user
 }
 
@@ -52,49 +56,34 @@ export const updateUserResetTokenForEmail = async (email: string, resetToken: st
     data: { resetToken },
   })
 
-export const getUserOrganizations = async (email: string) => {
-  if (!email) {
-    return []
-  }
-
-  const organizationSelect = {
-    include: { sites: { select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true } } },
-  }
-
-  const user = await prismaClient.user.findUnique({
-    select: { role: true, organization: organizationSelect },
-    where: { email },
-  })
-
-  if (!user) {
-    return []
-  }
-
-  if (user.organization && user.organization.isCR) {
-    const childOrganizations = await prismaClient.organization.findMany({
-      ...organizationSelect,
-      where: { parentId: user.organization.id },
-    })
-    return [user.organization, ...childOrganizations]
-  }
-
-  return user.organization ? [user.organization] : []
-}
-
-export type OrganizationWithSites = AsyncReturnType<typeof getUserOrganizations>[0]
-
-export const getUserFromUserOrganization = (user: User) =>
-  prismaClient.user.findMany({ ...findUserInfo(user), orderBy: { email: 'asc' } })
-export type TeamMember = AsyncReturnType<typeof getUserFromUserOrganization>[0]
-
 export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
-  prismaClient.user.create({ data: user })
-
-export const deleteUserFromOrga = (email: string) =>
-  prismaClient.user.update({
-    where: { email },
-    data: { status: UserStatus.IMPORTED, organizationId: null },
+  prismaClient.user.create({
+    data: user,
+    select: {
+      accounts: {
+        select: {
+          id: true,
+        },
+      },
+    },
   })
+
+export const deleteUserFromOrga = async (email: string, organizationVersionId: string | null) => {
+  const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
+  if (!account) {
+    return null
+  }
+
+  await prismaClient.account.update({
+    where: { id: account.id },
+    data: { organizationVersionId: null },
+  })
+
+  return prismaClient.user.update({
+    where: { email },
+    data: { status: UserStatus.IMPORTED },
+  })
+}
 
 export const validateUser = (email: string) =>
   prismaClient.user.update({
@@ -102,42 +91,39 @@ export const validateUser = (email: string) =>
     data: { status: UserStatus.VALIDATED },
   })
 
-export const changeUserRole = (email: string, role: Role) =>
-  prismaClient.user.update({
-    data: { role },
-    where: { email },
+export const hasAccountToValidateInOrganization = async (organizationVersionId: string | null) =>
+  organizationVersionId
+    ? prismaClient.account.count({
+        where: { organizationVersionId, user: { status: UserStatus.PENDING_REQUEST } },
+      })
+    : 0
+
+export const organizationVersionActiveAccountsCount = async (organizationVersionId: string) =>
+  prismaClient.account.count({
+    where: { organizationVersionId, user: { status: UserStatus.ACTIVE } },
   })
-
-export const hasUserToValidateInOrganization = async (organizationId: string | null) =>
-  organizationId ? prismaClient.user.count({ where: { organizationId, status: UserStatus.PENDING_REQUEST } }) : 0
-
-export const organizationActiveUsersCount = async (organizationId: string) =>
-  prismaClient.user.count({ where: { organizationId, status: UserStatus.ACTIVE } })
 
 export const changeStatus = (userId: string, newStatus: UserStatus) =>
   prismaClient.user.update({ where: { id: userId }, data: { status: newStatus } })
 
-export const getUserApplicationSettings = (userId: string) =>
-  prismaClient.userApplicationSettings.upsert({ where: { userId }, update: {}, create: { userId } })
-
-export const updateUserApplicationSettings = (userId: string, data: Prisma.UserApplicationSettingsUpdateInput) =>
-  prismaClient.userApplicationSettings.update({ where: { userId }, data })
+export const getUserApplicationSettings = (accountId: string) =>
+  prismaClient.userApplicationSettings.upsert({ where: { accountId }, update: {}, create: { accountId } })
 
 export const getUsers = () => prismaClient.user.findMany({ select: { id: true, email: true } })
 
-export const getUsersCheckedSteps = async (userId: string) =>
-  prismaClient.userCheckedStep.findMany({ where: { userId } })
+export const getUsersCheckedSteps = async (accountId: string) =>
+  prismaClient.userCheckedStep.findMany({ where: { accountId } })
 
-export const finalizeUserChecklist = async (userId: string) =>
+export const finalizeUserChecklist = async (accountId: string) =>
   prismaClient.userCheckedStep.create({
-    data: { userId, step: UserChecklist.Completed },
+    data: { accountId, step: UserChecklist.Completed },
   })
 
-export const createOrUpdateUserCheckedStep = async (userId: string, step: UserChecklist) =>
+export const createOrUpdateUserCheckedStep = async (accountId: string, step: UserChecklist) =>
   prismaClient.userCheckedStep.upsert({
-    where: { userId_step: { userId, step } },
+    where: { accountId_step: { accountId, step } },
     update: {},
-    create: { userId, step },
+    create: { accountId, step },
   })
 
 export const getUserFormationFormStart = async (userId: string) =>
@@ -146,3 +132,14 @@ export const getUserFormationFormStart = async (userId: string) =>
 
 export const startUserFormationForm = async (userId: string, date: Date) =>
   prismaClient.user.update({ where: { id: userId }, data: { formationFormStartTime: date } })
+
+export const updateUserApplicationSettings = (accountId: string, data: Prisma.UserApplicationSettingsUpdateInput) =>
+  prismaClient.userApplicationSettings.update({
+    where: { accountId },
+    data,
+  })
+
+export const getUserByIdWithAccounts = (id: string) =>
+  prismaClient.user.findUnique({ where: { id }, include: { accounts: true } })
+
+export type UserWithAccounts = AsyncReturnType<typeof getUserByIdWithAccounts>

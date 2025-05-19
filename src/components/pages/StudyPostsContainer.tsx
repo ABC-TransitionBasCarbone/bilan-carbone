@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 'use client'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
@@ -28,10 +25,10 @@ const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
         current={tPost(post)}
         links={[
           { label: tNav('home'), link: '/' },
-          study.organization.isCR
+          study.organizationVersion.isCR
             ? {
-                label: study.organization.name,
-                link: `/organisations/${study.organization.id}`,
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
               }
             : undefined,
 

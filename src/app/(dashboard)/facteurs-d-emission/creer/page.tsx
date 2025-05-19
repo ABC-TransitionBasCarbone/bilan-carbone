@@ -1,14 +1,14 @@
 import withAuth from '@/components/hoc/withAuth'
 import NewEmissionFactorPage from '@/components/pages/NewEmissionFactor'
 import NotFound from '@/components/pages/NotFound'
-import { User } from '@prisma/client'
+import { UserSession } from 'next-auth'
 
 interface Props {
-  user: User
+  user: UserSession
 }
 
 const NewEmissionFactor = async ({ user }: Props) => {
-  if (!user.organizationId) {
+  if (!user.organizationVersionId) {
     return <NotFound />
   }
   return <NewEmissionFactorPage />

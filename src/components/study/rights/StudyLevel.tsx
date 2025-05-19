@@ -10,7 +10,7 @@ import { getAllowedLevels } from '@/services/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { Level } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -19,7 +19,7 @@ import { useForm } from 'react-hook-form'
 import styles from './StudyParams.module.css'
 
 interface Props {
-  user: User
+  user: UserSession
   study: FullStudy
   disabled: boolean
 }

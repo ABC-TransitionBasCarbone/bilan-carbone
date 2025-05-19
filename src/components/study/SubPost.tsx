@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { FullStudy } from '@/db/study'
 import { caracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
@@ -63,7 +60,7 @@ const SubPost = ({
         ? null
         : study.contributors
             .filter((contributor) => contributor.subPost === subPost)
-            .map((contributor) => contributor.user.email),
+            .map((contributor) => contributor.account.user.email),
     [study, subPost, withoutDetail],
   )
 

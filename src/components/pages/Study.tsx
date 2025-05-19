@@ -1,24 +1,24 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 'use server'
 
 import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import { canDeleteStudy } from '@/services/permissions/study'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyDetails from '../study/StudyDetails'
 
 interface Props {
   study: FullStudy
-  user: User
+  user: UserSession
 }
 
 const StudyPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
-  const [canDelete, settings] = await Promise.all([canDeleteStudy(study.id), getUserApplicationSettings(user.id)])
+  const [canDelete, settings] = await Promise.all([
+    canDeleteStudy(study.id),
+    getUserApplicationSettings(user.accountId),
+  ])
 
   return (
     <>
@@ -26,10 +26,10 @@ const StudyPage = async ({ study, user }: Props) => {
         current={study.name}
         links={[
           { label: tNav('home'), link: '/' },
-          study.organization.isCR
+          study.organizationVersion.isCR
             ? {
-                label: study.organization.name,
-                link: `/organisations/${study.organization.id}`,
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
               }
             : undefined,
         ].filter((link) => link !== undefined)}

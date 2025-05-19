@@ -1,15 +1,13 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import { onboardOrganizationCommand } from '@/services/serverFunctions/organization'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { onboardOrganizationVersionCommand } from '@/services/serverFunctions/organization'
 import { changeUserRoleOnOnboarding } from '@/services/serverFunctions/user'
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button as MUIButton } from '@mui/material'
-import { Organization, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -26,11 +24,11 @@ import Step2 from './OnboardingStep2'
 interface Props {
   open: boolean
   onClose: () => void
-  user: User
-  organization: Organization
+  user: UserSession
+  organizationVersion: OrganizationVersionWithOrganization
 }
 
-const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
+const OnboardingModal = ({ open, onClose, user, organizationVersion }: Props) => {
   const t = useTranslations('onboarding')
   const { update: updateSession } = useSession()
   const router = useRouter()
@@ -51,10 +49,10 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      organizationId: organization.id,
+      organizationVersionId: organizationVersion.id,
       firstName: user.firstName || '',
       lastName: user.lastName || '',
-      companyName: organization.name || '',
+      companyName: organizationVersion.organization.name || '',
       collaborators: [{ email: '' }],
     },
   })
@@ -74,7 +72,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
     values.collaborators = (values.collaborators || []).filter(
       (collaborator) => collaborator.email || collaborator.role,
     )
-    await onboardOrganizationCommand(values)
+    await onboardOrganizationVersionCommand(values)
     setLoading(false)
     onCloseModal()
   }
@@ -102,7 +100,7 @@ const OnboardingModal = ({ open, onClose, user, organization }: Props) => {
             </>
           </DialogTitle>
           <DialogContent className="noSpacing">
-            <Step form={form} role={newRole} isCr={organization.isCR} />
+            <Step form={form} role={newRole} isCr={organizationVersion.isCR} />
           </DialogContent>
           <DialogActions className="noSpacing">
             {activeStep > 1 && <Button onClick={goToPreviousStep}>{t('previous')}</Button>}

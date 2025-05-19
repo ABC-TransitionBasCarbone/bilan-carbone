@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { FullStudy } from '@/db/study'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -21,10 +18,10 @@ const NewStudyContributorPage = async ({ study }: Props) => {
         current={tNav('newStudyContributor')}
         links={[
           { label: tNav('home'), link: '/' },
-          study.organization.isCR
+          study.organizationVersion.isCR
             ? {
-                label: study.organization.name,
-                link: `/organisations/${study.organization.id}`,
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
               }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },

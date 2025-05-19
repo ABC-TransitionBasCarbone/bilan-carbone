@@ -9,12 +9,12 @@ import { FormRadio } from '@/components/form/Radio'
 import { FormSelect } from '@/components/form/Select'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { getOrganizationUsers } from '@/db/organization'
+import { getOrganizationVersionAccounts } from '@/db/organization'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
 import { FormControlLabel, MenuItem, Radio } from '@mui/material'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -25,13 +25,13 @@ import StudyExportsForm from '../perimeter/StudyExportsForm'
 import styles from './Form.module.css'
 
 interface Props {
-  user: User
-  users: Awaited<ReturnType<typeof getOrganizationUsers>>
+  user: UserSession
+  accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
   form: UseFormReturn<CreateStudyCommand>
   children?: React.ReactNode
 }
 
-const NewStudyForm = ({ user, users, form, children }: Props) => {
+const NewStudyForm = ({ user, accounts, form, children }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
@@ -70,7 +70,7 @@ const NewStudyForm = ({ user, users, form, children }: Props) => {
           data-testid="new-validator-name"
           control={form.control}
           translation={t}
-          options={users.map((user) => user.email)}
+          options={accounts.map((user) => user.user.email)}
           name="validator"
           label={t('validator')}
           icon={<HelpIcon onClick={() => setGlossary('validatorEmail')} label={tGlossary('title')} />}

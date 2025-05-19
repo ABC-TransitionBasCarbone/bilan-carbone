@@ -25,23 +25,6 @@ model Organization {
 
   organizationVersions OrganizationVersion[]
 
-  // TO DELETE
-  siret            String?
-  isCR             Boolean? @default(false) @map("is_cr")
-  activatedLicence Boolean? @default(false) @map("activated_licence")
-
-  users   User[]
-  studies Study[]
-
-  onboarded   Boolean? @default(false)
-  onboarderId String?  @map("onboarder_id")
-  onboarder   User?    @relation("organizationOnboarder", fields: [onboarderId], references: [id])
-
-  parentId String?        @map("parent_id")
-  parent   Organization?  @relation("childOrganizations", fields: [parentId], references: [id])
-  childs   Organization[] @relation("childOrganizations")
-  // END TO DELETE
-
   @@map("organizations")
 }
 

@@ -1,13 +1,10 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudy, { StudyProps } from '@/components/hoc/withStudy'
 import NotFound from '@/components/pages/NotFound'
 import StudyPostsPageContainer from '@/components/pages/StudyPostsContainer'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
-import { getUserRoleOnStudy } from '@/utils/study'
+import { getAccountRoleOnStudy } from '@/utils/study'
 
 interface Props {
   params: Promise<{
@@ -15,7 +12,7 @@ interface Props {
   }>
 }
 
-const StudyPost = async (props: Props & StudyProps & UserProps) => {
+const StudyPost = async (props: Props & StudyProps & UserSessionProps) => {
   const params = await props.params
 
   const post = Object.keys(Post).find((key) => key === params.post)
@@ -27,7 +24,7 @@ const StudyPost = async (props: Props & StudyProps & UserProps) => {
     return <NotFound />
   }
 
-  const userRole = getUserRoleOnStudy(props.user, props.study)
+  const userRole = getAccountRoleOnStudy(props.user, props.study)
   if (!userRole) {
     return <NotFound />
   }

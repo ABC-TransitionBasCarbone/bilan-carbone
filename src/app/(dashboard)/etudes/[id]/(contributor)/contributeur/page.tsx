@@ -1,15 +1,12 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudy, { StudyProps } from '@/components/hoc/withStudy'
 import NotFound from '@/components/pages/NotFound'
 import StudyContributorPage from '@/components/pages/StudyContributor'
 import { canReadStudy, canReadStudyDetail, filterStudyDetail } from '@/services/permissions/study'
-import { getUserRoleOnStudy } from '@/utils/study'
+import { getAccountRoleOnStudy } from '@/utils/study'
 import { redirect } from 'next/navigation'
 
-const StudyView = async ({ user, study }: StudyProps & UserProps) => {
+const StudyView = async ({ user, study }: StudyProps & UserSessionProps) => {
   if (!(await canReadStudy(user, study.id))) {
     return <NotFound />
   }
@@ -18,7 +15,7 @@ const StudyView = async ({ user, study }: StudyProps & UserProps) => {
     return redirect(`/etudes/${study.id}`)
   }
 
-  const userRole = getUserRoleOnStudy(user, study)
+  const userRole = getAccountRoleOnStudy(user, study)
 
   const studyWithoutDetail = filterStudyDetail(user, study)
   return <StudyContributorPage study={studyWithoutDetail} userRole={userRole} />

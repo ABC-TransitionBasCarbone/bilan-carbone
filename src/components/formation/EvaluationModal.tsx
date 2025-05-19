@@ -2,7 +2,7 @@ import { MIN, TIME_IN_MS } from '@/utils/time'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Countdown from 'react-countdown'
@@ -11,7 +11,7 @@ import styles from './Formation.module.css'
 dayjs.extend(utc)
 
 interface Props {
-  user: User
+  user: UserSession
   organizationName: string
   startTime: number
 }

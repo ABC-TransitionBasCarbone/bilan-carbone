@@ -1,6 +1,7 @@
-import { getMockedDbUser } from '@/tests/utils/models/user'
+import { AccountWithUser } from '@/db/account'
+import { getMockedDbAccount } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
-import { EmissionFactor, Import, User } from '@prisma/client'
+import { EmissionFactor, Import } from '@prisma/client'
 import * as emissionFactorModule from '../serverFunctions/emissionFactor'
 import { canEditEmissionFactor, canReadEmissionFactor } from './emissionFactor'
 
@@ -10,30 +11,30 @@ const mockIsFromEmissionFactorOrganization = emissionFactorModule.isFromEmission
 describe('EmissionFactor permissions service', () => {
   describe('canReadEmissionFactor', () => {
     it('returns true if emission factor is not manually imported', () => {
-      const user = getMockedDbUser({}) as User
+      const account = getMockedDbAccount({}) as AccountWithUser
       const emissionFactor = { importedFrom: Import.BaseEmpreinte } as EmissionFactor
 
-      expect(canReadEmissionFactor(user, emissionFactor)).toBe(true)
+      expect(canReadEmissionFactor(account, emissionFactor)).toBe(true)
     })
 
     it('returns true if manually imported and user belongs to same organization', () => {
-      const user = getMockedDbUser({ organizationId: 'mocked-organization-id' }) as User
+      const account = getMockedDbAccount({ organizationVersionId: 'mocked-organization-version-id' }) as AccountWithUser
       const emissionFactor = {
         importedFrom: Import.Manual,
         organizationId: 'mocked-organization-id',
       } as EmissionFactor
 
-      expect(canReadEmissionFactor(user, emissionFactor)).toBe(true)
+      expect(canReadEmissionFactor(account, emissionFactor)).toBe(true)
     })
 
     it('returns false if manually imported and user belongs to different organization', () => {
-      const user = getMockedDbUser({ organizationId: 'mocked-organization-id' }) as User
+      const account = getMockedDbAccount({ organizationVersionId: 'mocked-organization-version-id' }) as AccountWithUser
       const emissionFactor = {
         importedFrom: Import.Manual,
         organizationId: 'mocked-other-organization-id',
       } as EmissionFactor
 
-      expect(canReadEmissionFactor(user, emissionFactor)).toBe(false)
+      expect(canReadEmissionFactor(account, emissionFactor)).toBe(false)
     })
   })
 

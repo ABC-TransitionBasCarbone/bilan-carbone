@@ -1,3 +1,10 @@
+import { getAccountByEmailAndOrganizationVersionId } from '@/db/account'
+import {
+  getOrganizationVersionById,
+  getOrganizationWithSitesById,
+  OrganizationVersionWithOrganization,
+} from '@/db/organization'
+import { Environment } from '@prisma/client'
 import { prismaClient } from '../../../db/client'
 import { uploadEmissionFactors } from './emissionFactors'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
@@ -5,17 +12,30 @@ import { OldBCWorkSheetsReader } from './oldBCWorkSheetsReader'
 import { uploadOrganizations } from './organizations'
 import { uploadStudies } from './studies'
 
-export const uploadOldBCInformations = async (file: string, email: string, organizationId: string) => {
+export const uploadOldBCInformations = async (file: string, email: string, organizationVersionId: string) => {
   const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
 
-  const user = await prismaClient.user.findUnique({ where: { email } })
-  if (!user || user.organizationId !== organizationId) {
+  const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
+  if (!account) {
     console.log("L'utilisateur n'existe pas ou n'appartient pas à l'organisation spécifiée")
     return
   }
-  const userOrganization = await prismaClient.organization.findUnique({ where: { id: user.organizationId } })
-  if (!userOrganization) {
-    throw new Error(`L'organisation de l'utilisateur n'existe pas.`)
+
+  const accountOrganizationVersion = (await getOrganizationVersionById(
+    account.organizationVersionId,
+  )) as OrganizationVersionWithOrganization
+
+  if (!accountOrganizationVersion) {
+    throw new Error(`La version de l'organisation de l'utilisateur n'existe pas.`)
+  }
+
+  if (!(accountOrganizationVersion.environment === Environment.BC)) {
+    throw new Error(`L'organisation de l'utilisateur n'est pas dans l'environnement BC+.`)
+  }
+
+  const accountOrganization = await getOrganizationWithSitesById(accountOrganizationVersion.organizationId)
+  if (!accountOrganization) {
+    throw new Error("L'organisation de l'utilisateur est introuvable.")
   }
 
   const oldBCWorksheetsReader = new OldBCWorkSheetsReader(file)
@@ -23,21 +43,22 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
   let hasStudiesWarning = false
+
   await prismaClient.$transaction(async (transaction) => {
     hasOrganizationsWarning = await uploadOrganizations(
       transaction,
       oldBCWorksheetsReader.organizationsWorksheet,
-      userOrganization,
+      accountOrganizationVersion,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
       oldBCWorksheetsReader.emissionFactorsWorksheet,
-      organizationId,
+      accountOrganizationVersion,
     )
     hasStudiesWarning = await uploadStudies(
       transaction,
-      user.id,
-      organizationId,
+      account.id,
+      organizationVersionId,
       postAndSubPostsOldNewMapping,
       oldBCWorksheetsReader,
     )

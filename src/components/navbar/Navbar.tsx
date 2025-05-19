@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 'use client'
 
 import { hasAccessToFormation } from '@/services/permissions/formations'
@@ -13,7 +10,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { Role } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -22,7 +19,7 @@ import Image from '../document/Image'
 import styles from './Navbar.module.css'
 
 interface Props {
-  user: User
+  user: UserSession
 }
 
 const Navbar = ({ user }: Props) => {
@@ -52,7 +49,7 @@ const Navbar = ({ user }: Props) => {
           <Link href="/" aria-label={t('home')} title={t('home')}>
             <Image src="/logos/logo_BC_2025_blanc.png" width={200} height={48} alt="" className={styles.logo} />
           </Link>
-          {user.organizationId && (
+          {user.organizationVersionId && (
             <div className="flex-col">
               <div
                 className={classNames(styles.link, styles.notClickable)}
@@ -69,7 +66,7 @@ const Navbar = ({ user }: Props) => {
                   onMouseLeave={handleMouseLeave}
                 >
                   {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
-                    <Link href={`/organisations/${user.organizationId}/modifier`} className={styles.link}>
+                    <Link href={`/organisations/${user.organizationVersionId}/modifier`} className={styles.link}>
                       {t('information')}
                     </Link>
                   )}

@@ -1,13 +1,10 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import Label from '@/components/base/Label'
 import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
-import { getUserRoleOnStudy } from '@/utils/study'
+import { getAccountRoleOnStudy } from '@/utils/study'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Box from '../../base/Box'
 import LinkButton from '../../base/LinkButton'
@@ -17,7 +14,7 @@ import StudyName from './StudyName'
 
 interface Props {
   study: Study
-  user: User
+  user: UserSession
 }
 
 const StudyCard = async ({ study, user }: Props) => {
@@ -29,11 +26,11 @@ const StudyCard = async ({ study, user }: Props) => {
     return null
   }
 
-  const userRoleOnStudy = fullStudy.contributors.some((contributor) => contributor.userId === user.id)
+  const accountRoleOnStudy = fullStudy.contributors.some((contributor) => contributor.accountId === user.accountId)
     ? 'Contributor'
-    : getUserRoleOnStudy(user, fullStudy)
+    : getAccountRoleOnStudy(user, fullStudy)
 
-  if (!userRoleOnStudy) {
+  if (!accountRoleOnStudy) {
     return null
   }
   const percent = values.validated ? Math.floor((values.validated / values.total) * 100) : 0
@@ -45,7 +42,7 @@ const StudyCard = async ({ study, user }: Props) => {
           <StudyName name={study.name} />
         </div>
         <div className="justify-center">
-          <Label className={styles[userRoleOnStudy.toLowerCase()]}>{t(`role.${userRoleOnStudy}`)}</Label>
+          <Label className={styles[accountRoleOnStudy.toLowerCase()]}>{t(`role.${accountRoleOnStudy}`)}</Label>
         </div>
         <Box>
           <p className="mb1 align-center">
@@ -71,7 +68,7 @@ const StudyCard = async ({ study, user }: Props) => {
           <ProgressBar value={percent} barClass={`${styles.progressBar}${percent === 100 ? '-success' : ''}`} />
         </Box>
         <div className="justify-end">
-          <LinkButton href={`/etudes/${study.id}${userRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>
+          <LinkButton href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>
             {t('see')}
           </LinkButton>
         </div>
