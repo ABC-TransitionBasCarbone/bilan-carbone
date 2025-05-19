@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getUserRoleOnStudy } from '@/utils/study'

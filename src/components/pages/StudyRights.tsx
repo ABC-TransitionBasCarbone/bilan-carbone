@@ -1,6 +1,3 @@
-// TO DELETE ts-nockeck
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { getEmissionFactorSources } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicStudyRights from '@/environments/core/study/DynamicStudyRights'
