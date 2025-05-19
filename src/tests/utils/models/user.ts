@@ -1,10 +1,11 @@
-import { Level, Role, User, UserSource, UserStatus } from '@prisma/client'
+import { User as DBUser, Level, Role, UserSource, UserStatus } from '@prisma/client'
+import { User } from 'next-auth'
 import { mockedOrganizationId } from './organization'
 
 export const mockedUser = {
   id: '6d2af85f-f6f8-42ec-9fa4-965405e52d12',
   email: 'mocked@email.com',
-  firstName: 'Mocke',
+  firstName: 'Mocked',
   lastName: 'User',
   organizationId: mockedOrganizationId,
   role: Role.ADMIN,
@@ -23,4 +24,6 @@ export const mockedDbUser = {
   source: UserSource.CRON,
 }
 
-export const getMockedDbUser = (props?: Partial<User>): User => ({ ...mockedDbUser, ...props })
+export const getMockedAuthUser = (props?: Partial<User>): User => ({ ...mockedUser, ...props })
+
+export const getMockedDbUser = (props?: Partial<DBUser>): DBUser => ({ ...mockedDbUser, ...props })

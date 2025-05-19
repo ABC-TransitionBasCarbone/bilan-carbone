@@ -1,5 +1,5 @@
 import { signPassword } from '@/services/auth'
-import { findUserInfo } from '@/services/permissions/user'
+import { findUserInfo } from '@/utils/user'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
 import { User } from 'next-auth'
 import { prismaClient } from './client'
