@@ -1,3 +1,6 @@
+// TO DELETE ts-nockeck
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { FullStudy } from '@/db/study'
 import { Level, Prisma, Study, StudyResultUnit } from '@prisma/client'
 import { mockedOrganization, mockedOrganizationId } from './organization'

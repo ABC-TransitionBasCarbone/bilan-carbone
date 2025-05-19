@@ -92,7 +92,9 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       isPublic: true,
       level: Level.Initial,
       exports: { createMany: { data: [{ type: Export.Beges, control: ControlMode.Operational }] } },
-      createdBy: { connect: { id: creator.id } },
+      // TO DELETE AND UNCOMMENT NEXT
+      createdByUser: { connect: { id: creator.id } },
+      // createdBy: { connect: { id: creator.id } },
       organization: { connect: { id: creator.organizationId } },
       sites: {
         createMany: {

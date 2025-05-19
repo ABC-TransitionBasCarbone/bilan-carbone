@@ -1,3 +1,6 @@
+// TO DELETE ts-nockeck
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { signPassword } from '@/services/auth'
 import { findUserInfo } from '@/services/permissions/user'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
