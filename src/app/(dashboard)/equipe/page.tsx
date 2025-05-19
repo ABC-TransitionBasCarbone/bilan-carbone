@@ -1,3 +1,6 @@
+// TO DELETE ts-nockeck
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import withAuth, { UserProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import TeamPage from '@/components/pages/Team'

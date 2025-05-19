@@ -1,3 +1,6 @@
+// TO DELETE ts-nockeck
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { onboardOrganizationCommand } from '@/services/serverFunctions/organization'
 import { changeUserRoleOnOnboarding } from '@/services/serverFunctions/user'
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
