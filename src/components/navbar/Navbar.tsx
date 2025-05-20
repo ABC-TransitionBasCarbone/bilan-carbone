@@ -115,7 +115,7 @@ const Navbar = ({ user }: Props) => {
           <Link className={classNames(styles.link, 'align-center')} aria-label={t('profile')} href="/profil">
             <AccountCircleIcon />
           </Link>
-          {!isCut && (
+          {!isCut && !user.organizationId && (
             <Link
               className={classNames(styles.link, 'align-center')}
               aria-label={t('methodology')}
