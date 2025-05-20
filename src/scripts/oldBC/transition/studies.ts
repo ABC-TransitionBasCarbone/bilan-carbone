@@ -582,16 +582,48 @@ export const uploadStudies = async (
         return emissionFactorVersionsMap
           .entries()
           .map(([importedFrom, emissionFactorVersions]) => {
-            const emissionFactorVersion = emissionFactorVersions.sort(
-              (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
-            )[0]
+            const emissionFactorVersionsCounters = emissionFactorVersions.reduce(
+              (emissionFactorVersionsCountersMap, emissionFactorVersion) => {
+                const counter = emissionFactorVersionsCountersMap.get(emissionFactorVersion.id)?.counter ?? 0
+                emissionFactorVersionsCountersMap.set(emissionFactorVersion.id, {
+                  emissionFactorVersion: emissionFactorVersion,
+                  counter: counter + 1,
+                })
+                return emissionFactorVersionsCountersMap
+              },
+              new Map<string, { emissionFactorVersion: { id: string; createdAt: Date }; counter: number }>(),
+            )
+            const moreFrequentEmissionFactorVersionsIds = emissionFactorVersionsCounters
+              .entries()
+              .reduce<{ counter: number; emissionFactorVersionIds: string[] }>(
+                (moreFrequentEmissionFactorVersionsCounter, [emissionFactorVersionId, emissionFactorVersion]) => {
+                  if (emissionFactorVersion.counter > moreFrequentEmissionFactorVersionsCounter.counter) {
+                    return {
+                      counter: moreFrequentEmissionFactorVersionsCounter.counter,
+                      emissionFactorVersionIds: [emissionFactorVersionId],
+                    }
+                  } else if (emissionFactorVersion.counter == moreFrequentEmissionFactorVersionsCounter.counter) {
+                    return {
+                      counter: emissionFactorVersion.counter,
+                      emissionFactorVersionIds:
+                        moreFrequentEmissionFactorVersionsCounter.emissionFactorVersionIds.concat([
+                          emissionFactorVersionId,
+                        ]),
+                    }
+                  } else {
+                    return moreFrequentEmissionFactorVersionsCounter
+                  }
+                },
+                { counter: 0, emissionFactorVersionIds: [] },
+              ).emissionFactorVersionIds
+            const emissionFactorVersion = moreFrequentEmissionFactorVersionsIds[0]
             const foundImport = Object.values(Import).find((importValue) => importValue === importedFrom)
             if (!foundImport) {
               return null
             }
             return {
               studyId: studyId,
-              importVersionId: emissionFactorVersion.id,
+              importVersionId: emissionFactorVersion,
               source: foundImport,
             }
           })
