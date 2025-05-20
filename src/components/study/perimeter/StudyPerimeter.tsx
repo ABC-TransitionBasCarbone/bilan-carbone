@@ -307,7 +307,7 @@ const StudyPerimeter = ({ study, organization, userRoleOnStudy, caUnit }: Props)
         showControl={showControl}
         setGlossary={setGlossary}
         t={t}
-        disabled={!hasEditionRights}
+        disabled={!hasEditionRole}
       />
       <DeleteStudySiteModal
         open={open}
