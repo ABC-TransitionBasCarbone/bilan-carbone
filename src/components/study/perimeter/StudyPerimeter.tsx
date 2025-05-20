@@ -308,7 +308,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
         showControl={showControl}
         setGlossary={setGlossary}
         t={t}
-        disabled={!hasEditionRights}
+        disabled={!hasEditionRole}
       />
       <DeleteStudySiteModal
         open={open}
