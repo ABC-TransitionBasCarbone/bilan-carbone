@@ -8,7 +8,7 @@ export const isAdminOnOrga = (user: User, organization: Pick<Organization, 'id' 
 export const isInOrgaOrParent = (
   userOrganizationId: string | null,
   organization: Pick<Organization, 'id' | 'parentId'>,
-) => userOrganizationId === organization.id || userOrganizationId === organization.parentId
+) => userOrganizationId && (userOrganizationId === organization.id || userOrganizationId === organization.parentId)
 
 export const hasEditionRole = (isCR: boolean, userRole: Role) =>
   isCR ? userRole !== Role.DEFAULT : isAdmin(userRole) || userRole === Role.GESTIONNAIRE
