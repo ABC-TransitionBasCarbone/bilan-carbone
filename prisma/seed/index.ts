@@ -48,6 +48,7 @@ const users = async () => {
   await prisma.emissionFactorImportVersion.deleteMany()
 
   await prisma.site.deleteMany()
+  await prisma.userCheckedStep.deleteMany()
   await prisma.userApplicationSettings.deleteMany()
   await prisma.account.deleteMany()
   await prisma.user.deleteMany()
@@ -205,7 +206,7 @@ const users = async () => {
   })
 
   const organizations = await prisma.organization.createManyAndReturn({
-    data: Array.from({ length: 10 }).map((_) => ({
+    data: Array.from({ length: 10 }).map(() => ({
       name: faker.company.name(),
       wordpressId: faker.finance.accountNumber(14),
     })),
