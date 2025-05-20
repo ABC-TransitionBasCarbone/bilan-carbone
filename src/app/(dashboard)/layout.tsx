@@ -37,12 +37,14 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
         {children}
       </main>
-      <ChecklistButton
-        accountOrganizationVersion={accountOrganizationVersion}
-        clientId={clientId}
-        studyId={studyId}
-        userRole={account.role}
-      />
+      {accountOrganizationVersion && (
+        <ChecklistButton
+          accountOrganizationVersion={accountOrganizationVersion}
+          clientId={clientId}
+          studyId={studyId}
+          userRole={account.role}
+        />
+      )}
     </div>
   )
 }
