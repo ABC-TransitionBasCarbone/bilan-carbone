@@ -39,6 +39,7 @@ export const FormDatePicker = <T extends FieldValues>({
               },
               field: { clearable },
             }}
+            sx={{ backgroundColor: 'white' }}
             onChange={(date) => {
               if (date && date.isValid()) {
                 onChange(date.utc(true).format())
