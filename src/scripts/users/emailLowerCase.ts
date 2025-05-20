@@ -1,5 +1,5 @@
+import { lowercaseUsersEmails } from '@/services/serverFunctions/user'
 import { Command } from 'commander'
-import { lowercaseUsersEmails } from '../../services/users/users'
 
 const program = new Command()
 

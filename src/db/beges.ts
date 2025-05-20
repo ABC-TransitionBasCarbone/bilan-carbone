@@ -1,6 +1,6 @@
+import { begesRules } from '@/utils/beges.config'
 import { Export } from '@prisma/client'
-import { prismaClient } from '../../db/client'
-import { begesRules } from '../../utils/beges.config'
+import { prismaClient } from './client'
 
 export const reCreateBegesRules = async () => {
   await prismaClient.exportRule.deleteMany({ where: { export: Export.Beges } })

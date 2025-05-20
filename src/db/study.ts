@@ -527,7 +527,7 @@ export const getStudyValidatedEmissionsSources = async (studyId: string) => {
   }
 }
 
-const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
+export const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
   (transaction || prismaClient).emissionFactorImportVersion.findFirst({
     select: { id: true, source: true },
     where: { source },

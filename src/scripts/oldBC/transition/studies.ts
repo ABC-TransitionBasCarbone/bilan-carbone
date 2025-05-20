@@ -1,6 +1,6 @@
+import { getEmissionQuality } from '@/services/importEmissionFactor/import'
 import { ControlMode, Level, Prisma, Export as StudyExport, SubPost } from '@prisma/client'
 import { getJsDateFromExcel } from 'excel-date-to-js'
-import { getEmissionQuality } from '../../../services/importEmissionFactor/import'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {
   EmissionSourceRow,

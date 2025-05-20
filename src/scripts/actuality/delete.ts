@@ -1,5 +1,5 @@
+import { deleteActuality } from '@/db/actuality'
 import { Command } from 'commander'
-import { deleteActuality } from '../../db/actuality'
 
 const program = new Command()
 

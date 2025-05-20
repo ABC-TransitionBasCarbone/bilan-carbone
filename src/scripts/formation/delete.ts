@@ -1,5 +1,5 @@
+import { deleteFormation } from '@/db/formation'
 import { Command } from 'commander'
-import { removeFormation } from '../../services/formations/formation'
 
 const program = new Command()
 
@@ -11,5 +11,10 @@ program
   .parse(process.argv)
 
 const params = program.opts()
+
+const removeFormation = async (name: string) => {
+  const result = await deleteFormation(name)
+  console.log('Formation supprimée : ', result.name)
+}
 
 removeFormation(params.name)

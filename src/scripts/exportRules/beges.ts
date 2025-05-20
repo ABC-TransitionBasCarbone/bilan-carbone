@@ -1,3 +1,3 @@
-import { reCreateBegesRules } from '../../services/exportRules/beges'
+import { reCreateBegesRules } from '@/db/beges'
 
 reCreateBegesRules()

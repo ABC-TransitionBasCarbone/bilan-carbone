@@ -1,3 +1,4 @@
+import { getSourceLatestImportVersionId } from '@/db/study'
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
@@ -384,13 +385,6 @@ export const cleanImport = async (transaction: Prisma.TransactionClient, version
     })
   }
 }
-
-const getSourceLatestImportVersionId = async (source: Import, transaction: Prisma.TransactionClient) =>
-  transaction.emissionFactorImportVersion.findFirst({
-    select: { id: true, source: true },
-    where: { source },
-    orderBy: { createdAt: 'desc' },
-  })
 
 export const addSourceToStudies = async (source: Import, transaction: Prisma.TransactionClient) => {
   const [studies, importVersion] = await Promise.all([

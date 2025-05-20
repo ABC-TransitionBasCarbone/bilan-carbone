@@ -9,10 +9,14 @@ import {
   getAllEmissionFactorsByIds,
   getEmissionFactorById,
   getEmissionFactorDetailsById,
+  getManualEmissionFactors,
+  setEmissionFactorUnitAsCustom,
   updateEmissionFactor,
 } from '@/db/emissionFactors'
 import { getOrganizationVersionById } from '@/db/organization'
 import { getLocale } from '@/i18n/locale'
+import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
+import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
 import { auth } from '../auth'
@@ -189,3 +193,15 @@ export const getEmissionFactorByImportedId = async (id: string) =>
       metaData: true,
     },
   })
+
+export const fixUnits = async () => {
+  const units = Object.values(Unit).filter((unit) => !ManualEmissionFactorUnitList.includes(unit))
+  const emissionFactors = await getManualEmissionFactors(units)
+  await Promise.all(
+    emissionFactors.map((emissionFactor) => {
+      const entry = Object.entries(unitsMatrix).find((entry) => entry[1] === emissionFactor.unit)
+      return setEmissionFactorUnitAsCustom(emissionFactor.id, entry ? entry[0] : '')
+    }),
+  )
+  console.log(`Fait : ${emissionFactors.length} facteurs mis à jour`)
+}
