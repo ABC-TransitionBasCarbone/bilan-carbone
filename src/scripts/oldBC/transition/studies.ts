@@ -51,6 +51,14 @@ interface EmissionSource {
   CO2f: number
 }
 
+interface EmissionFactor {
+  id: string
+  unit: string | null
+  version: { id: string; source: string; createdAt: Date } | null
+  importedId: string
+  emissionFactorConsoValue: number | null
+}
+
 const parseStudies = (studiesWorksheet: StudiesWorkSheet): Study[] => {
   return studiesWorksheet
     .getRows()
@@ -444,42 +452,30 @@ export const uploadStudies = async (
       version: true,
     },
   })
-  const emissionFactorsMap = emissionFactors.reduce(
-    (emissionFactorsMap, emissionFactor) => {
-      if (emissionFactor.importedId) {
-        const emissionFactors = emissionFactorsMap.get(emissionFactor.importedId)
-        const emissionFactorItem = {
-          id: emissionFactor.id,
-          unit: emissionFactor.unit,
-          version: emissionFactor.version
-            ? {
-                id: emissionFactor.version.id,
-                source: emissionFactor.version.source,
-                createdAt: emissionFactor.version.createdAt,
-              }
-            : null,
-          importedId: emissionFactor.importedId,
-          co2f: emissionFactor.co2f,
-        }
-        if (emissionFactors) {
-          emissionFactors.push(emissionFactorItem)
-        } else {
-          emissionFactorsMap.set(emissionFactor.importedId, [emissionFactorItem])
-        }
+  const emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissionFactor) => {
+    if (emissionFactor.importedId) {
+      const emissionFactors = emissionFactorsMap.get(emissionFactor.importedId)
+      const emissionFactorItem = {
+        id: emissionFactor.id,
+        unit: emissionFactor.unit,
+        version: emissionFactor.version
+          ? {
+              id: emissionFactor.version.id,
+              source: emissionFactor.version.source,
+              createdAt: emissionFactor.version.createdAt,
+            }
+          : null,
+        importedId: emissionFactor.importedId,
+        emissionFactorConsoValue: emissionFactor.totalCo2,
       }
-      return emissionFactorsMap
-    },
-    new Map<
-      string,
-      {
-        id: string
-        unit: string | null
-        version: { id: string; source: string; createdAt: Date } | null
-        importedId: string
-        co2f: number | null
-      }[]
-    >(),
-  )
+      if (emissionFactors) {
+        emissionFactors.push(emissionFactorItem)
+      } else {
+        emissionFactorsMap.set(emissionFactor.importedId, [emissionFactorItem])
+      }
+    }
+    return emissionFactorsMap
+  }, new Map<string, EmissionFactor[]>())
 
   const studiesEmissionFactorVersionsMap = new Map<string, Map<string, { id: string; createdAt: Date }[]>>()
   await transaction.studyEmissionSource.createMany({
@@ -511,13 +507,7 @@ export const uploadStudies = async (
               console.warn(`Impossible de retrouver le studySite d'id: ${existingSiteId}`)
               return null
             }
-            let emissionFactor: {
-              id: string
-              unit: string | null
-              version: { id: string; source: string; createdAt: Date } | null
-              importedId: string
-              co2f: number | null
-            } | null = null
+            let emissionFactor: EmissionFactor | null = null
             let emissionFactorId: string | null = null
             if (studyEmissionSource.emissionSourceImportedId !== '0') {
               const emissionFactorList = emissionFactorsMap.get(studyEmissionSource.emissionSourceImportedId)
@@ -528,11 +518,12 @@ export const uploadStudies = async (
                   const sortedByVersionNameEmissionFactors = emissionFactorList.sort((a, b) =>
                     a.version && b.version ? b.version.createdAt.getTime() - a.version.createdAt.getTime() : 1,
                   )
-                  const filteredByCO2fEmissionFactors = sortedByVersionNameEmissionFactors.filter(
-                    (emissionFactor) => emissionFactor.co2f === studyEmissionSource.CO2f,
+                  const filteredByConsoValueEmissionFactors = sortedByVersionNameEmissionFactors.filter(
+                    (emissionFactor) =>
+                      emissionFactor.emissionFactorConsoValue === studyEmissionSource.emissionFactorConsoValue,
                   )
-                  if (filteredByCO2fEmissionFactors.length > 0) {
-                    emissionFactor = filteredByCO2fEmissionFactors[0]
+                  if (filteredByConsoValueEmissionFactors.length > 0) {
+                    emissionFactor = filteredByConsoValueEmissionFactors[0]
                   } else {
                     emissionFactor = sortedByVersionNameEmissionFactors[0]
                   }
