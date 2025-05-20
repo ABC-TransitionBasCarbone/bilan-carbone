@@ -45,7 +45,7 @@ export const canCreateEmissionSource = async (
   }
 
   const studySites = await getStudySites(emissionSource.studyId)
-  if (!studySites.map((studySite) => studySite.id).includes(emissionSource.studySiteId)) {
+  if (!studySites.some((studySite) => studySite.id === emissionSource.studySiteId)) {
     return false
   }
 
