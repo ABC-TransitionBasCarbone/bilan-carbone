@@ -1,14 +1,13 @@
 'use client'
 
 import { hasAccessToFormation } from '@/services/permissions/formations'
-import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { isAdmin } from '@/utils/user'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { Role } from '@prisma/client'
+import { Environment, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
@@ -36,8 +35,7 @@ const Navbar = ({ user }: Props) => {
     getFormationAccess()
   })
 
-  const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === CUT, [environment])
+  const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
 
   const handleMouseEnter = () => setShowSubMenu(true)
   const handleMouseLeave = () => setShowSubMenu(false)

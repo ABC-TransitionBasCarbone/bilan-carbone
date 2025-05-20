@@ -5,6 +5,7 @@ import OrganizationCard from '@/components/organizationCard/OrganizationCard'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
+import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import classNames from 'classnames'
 import styles from './layout.module.css'
 
@@ -45,6 +46,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
           userRole={account.role}
         />
       )}
+      <EnvironmentInitializer user={account} />
     </div>
   )
 }

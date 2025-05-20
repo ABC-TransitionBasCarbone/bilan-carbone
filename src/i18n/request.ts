@@ -1,5 +1,5 @@
-import { BASE } from '@/store/AppEnvironment'
 import { mergeObjects } from '@/utils/object'
+import { Environment } from '@prisma/client'
 import fs from 'fs'
 import { getRequestConfig } from 'next-intl/server'
 import path from 'path'
@@ -13,14 +13,14 @@ export default getRequestConfig(async () => {
   const environment = await getEnvironment()
   const baseMessages = (await import(`./${locale}.json`)).default
 
-  if (!environment || environment === BASE) {
+  if (!environment || environment === Environment.BC) {
     return {
       locale,
       messages: baseMessages,
     }
   }
 
-  const overrideFilePath = path.join(process.cwd(), 'src/i18n', `${locale}-${environment}.json`)
+  const overrideFilePath = path.join(process.cwd(), 'src/i18n', `${locale}-${environment.toLocaleLowerCase()}.json`)
   let overrideMessages = {}
   if (fs.existsSync(overrideFilePath)) {
     overrideMessages = JSON.parse(fs.readFileSync(overrideFilePath, 'utf-8'))

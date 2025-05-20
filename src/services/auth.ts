@@ -1,3 +1,4 @@
+import { AccountWithUser, getAccountById } from '@/db/account'
 import { getOrganizationVersionById } from '@/db/organization'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { getUserByEmail } from '@/db/userImport'
@@ -48,6 +49,7 @@ export const authOptions: NextAuthOptions = {
             organizationVersion: {
               select: {
                 organizationId: true,
+                environment: true,
               },
             },
           },
@@ -67,6 +69,7 @@ export const authOptions: NextAuthOptions = {
             organizationId: account?.organizationVersion?.organizationId,
             role: account.role,
             level: account.user.level,
+            environment: account?.organizationVersion?.environment,
           }
         }
       }
@@ -79,7 +82,12 @@ export const authOptions: NextAuthOptions = {
           id: '',
           role: Role.DEFAULT,
           organizationVersionId: '',
+          organizationVersion: {
+            environment: '',
+          },
         }
+
+        const dbAccount = (await getAccountById(account.id)) as AccountWithUser
 
         return dbUser
           ? {
@@ -89,10 +97,11 @@ export const authOptions: NextAuthOptions = {
               accountId: account.id,
               firstName: dbUser.firstName,
               lastName: dbUser.lastName,
-              role: account.role,
-              organizationVersionId: account.organizationVersionId,
+              role: dbAccount?.role,
+              organizationVersionId: dbAccount?.organizationVersionId,
               organizationId: '',
               level: dbUser.level,
+              environment: dbAccount?.organizationVersion?.environment,
             }
           : token
       }
@@ -113,6 +122,7 @@ export const authOptions: NextAuthOptions = {
           organizationId: token.organizationId as string,
           role: token.role as Role,
           level: token.level as Level,
+          environment: token.environment as string,
         }
       }
       return session
@@ -160,6 +170,7 @@ export const authOptions: NextAuthOptions = {
           organizationVersionId: account?.organizationVersionId,
           organizationId: organizationVersion?.organizationId,
           level: user.level,
+          environment: organizationVersion?.environment,
         }
       },
     }),

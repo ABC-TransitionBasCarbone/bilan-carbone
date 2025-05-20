@@ -1,10 +1,11 @@
 import { CutPost, Post } from '@/services/posts'
-import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { Environment } from '@prisma/client'
 
 export function useListPosts(): Array<CutPost | Post> {
   const { environment } = useAppEnvironmentStore()
   switch (environment) {
-    case CUT:
+    case Environment.CUT:
       return [
         CutPost.Dechets,
         CutPost.BilletterieEtCommunication,

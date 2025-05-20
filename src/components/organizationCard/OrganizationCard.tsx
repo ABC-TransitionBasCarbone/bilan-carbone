@@ -3,11 +3,10 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getStudyOrganizationVersion } from '@/services/serverFunctions/organization'
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
-import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { isAdmin } from '@/utils/user'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
-import { Role } from '@prisma/client'
+import { Environment, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -23,8 +22,7 @@ interface Props {
 const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const t = useTranslations('organization.card')
 
-  const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === CUT, [environment])
+  const isCut = useMemo(() => account.environment === Environment.CUT, [account?.environment])
 
   const defaultOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,

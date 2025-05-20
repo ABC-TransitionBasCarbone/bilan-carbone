@@ -1,9 +1,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
-import { BASE, Environment } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
+import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
@@ -303,7 +302,7 @@ export const formatConsolidatedStudyResultsForExport = (
   tQuality: ReturnType<typeof useTranslations>,
   tUnits: ReturnType<typeof useTranslations>,
   validatedEmissionSourcesOnly?: boolean,
-  environment: Environment = BASE,
+  environment: Environment = Environment.BC,
 ) => {
   const dataForExport = []
 
@@ -444,7 +443,7 @@ export const downloadStudyResults = async (
   tQuality: ReturnType<typeof useTranslations>,
   tBeges: ReturnType<typeof useTranslations>,
   tUnits: ReturnType<typeof useTranslations>,
-  environment: Environment = BASE,
+  environment: Environment = Environment.BC,
 ) => {
   const data = []
 
