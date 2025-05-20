@@ -5,8 +5,7 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { default as AllResultsCUT } from '@/environments/cut/study/results/AllResults'
-import { CUT } from '@/store/AppEnvironment'
-import { ExportRule } from '@prisma/client'
+import { Environment, ExportRule } from '@prisma/client'
 
 interface Props {
   study: FullStudy
@@ -19,7 +18,7 @@ const DynamicAllResults = ({ study, rules, emissionFactorsWithParts, validatedOn
   return (
     <DynamicComponent
       environmentComponents={{
-        [CUT]: (
+        [Environment.CUT]: (
           <AllResultsCUT
             emissionFactorsWithParts={emissionFactorsWithParts}
             study={study}

@@ -3,7 +3,7 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import AllPostsInfographyCut from '@/environments/cut/study/infography/AllPostsInfography'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
-import { CUT } from '@/store/AppEnvironment'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import AllPostsInfography from './AllPostsInfography'
@@ -37,7 +37,7 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
   return (
     <DynamicComponent
       defaultComponent={<AllPostsInfography study={study} data={data} />}
-      environmentComponents={{ [CUT]: <AllPostsInfographyCut study={study} data={data} /> }}
+      environmentComponents={{ [Environment.CUT]: <AllPostsInfographyCut study={study} data={data} /> }}
     />
   )
 }

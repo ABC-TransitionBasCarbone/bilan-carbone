@@ -2,8 +2,8 @@ import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
-import { CUT, getServerEnvironment } from '@/store/AppEnvironment'
 import { canEditMemberRole } from '@/utils/organization'
+import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
@@ -16,7 +16,6 @@ interface Props {
 }
 
 const UserView = async ({ account }: Props) => {
-  const environment = getServerEnvironment()
   const [organizationVersions, hasUserToValidate] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     hasAccountToValidateInOrganization(account.organizationVersionId),
@@ -45,7 +44,7 @@ const UserView = async ({ account }: Props) => {
       )}
       <StudiesContainer user={account} isCR={isCR} />
 
-      {environment !== CUT && <ActualitiesCards />}
+      {account.environment !== Environment.CUT && <ActualitiesCards />}
       <CUTLogosHome />
       {userOrganizationVersion && !userOrganizationVersion.onboarded && (
         <Onboarding user={account} organizationVersion={userOrganizationVersion} />

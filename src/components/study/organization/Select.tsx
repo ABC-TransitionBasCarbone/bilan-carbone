@@ -8,10 +8,9 @@ import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { CUT } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
-import { SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
@@ -93,7 +92,9 @@ const SelectOrganization = ({ organizationVersions, selectOrganizationVersion, f
         (organizationVersion.organization.sites.length > 0 ? (
           <>
             <DynamicComponent
-              environmentComponents={{ [CUT]: <SitesCut sites={sites} form={form} caUnit={caUnit} withSelection /> }}
+              environmentComponents={{
+                [Environment.CUT]: <SitesCut sites={sites} form={form} caUnit={caUnit} withSelection />,
+              }}
               defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} withSelection />}
             />
             <div className="mt2">

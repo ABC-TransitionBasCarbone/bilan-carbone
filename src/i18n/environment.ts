@@ -1,13 +1,13 @@
 'use server'
 
-import { defaultEnvironment, Environment } from '@/store/AppEnvironment'
+import { Environment } from '@prisma/client'
 import { cookies as getCookies } from 'next/headers'
 
 const COOKIE_NAME = 'ENVIRONMENT'
 
 export const getEnvironment = async (): Promise<Environment> => {
   const cookies = await getCookies()
-  return (cookies.get(COOKIE_NAME)?.value as Environment) || defaultEnvironment
+  return (cookies.get(COOKIE_NAME)?.value as Environment) || Environment.BC
 }
 
 export const switchEnvironment = async (value: Environment) => {

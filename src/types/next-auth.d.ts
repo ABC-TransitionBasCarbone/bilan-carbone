@@ -13,5 +13,6 @@ declare module 'next-auth' {
     email: PrismaUser['email']
     accountId: string
     organizationId: string | null
+    environment: PrismaOrganizationVersion['environment']
   }
 }

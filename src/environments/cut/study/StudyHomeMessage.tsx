@@ -1,13 +1,14 @@
 'use client'
-import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Alert, List, ListItem, ListItemText, Typography } from '@mui/material'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './StudyHomeMessage.module.css'
 
 const StudyHomeMessage = () => {
   const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === CUT, [environment])
+  const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const t = useTranslations('home.message')
   return isCut ? (

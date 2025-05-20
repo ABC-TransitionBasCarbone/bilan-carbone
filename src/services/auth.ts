@@ -1,3 +1,4 @@
+import { AccountWithUser, getAccountById } from '@/db/account'
 import { getOrganizationVersionById } from '@/db/organization'
 import { getUserByEmail, getUserByEmailWithSensibleInformations } from '@/db/user'
 import { Environment, Level, PrismaClient, Role, UserStatus } from '@prisma/client'
@@ -68,6 +69,7 @@ export const authOptions: NextAuthOptions = {
             environment: account.organizationVersion?.environment,
             role: account.role,
             level: account.user.level,
+            environment: account?.organizationVersion?.environment,
           }
         }
       }
@@ -80,7 +82,12 @@ export const authOptions: NextAuthOptions = {
           id: '',
           role: Role.DEFAULT,
           organizationVersionId: '',
+          organizationVersion: {
+            environment: '',
+          },
         }
+
+        const dbAccount = (await getAccountById(account.id)) as AccountWithUser
 
         return dbUser
           ? {
@@ -90,10 +97,11 @@ export const authOptions: NextAuthOptions = {
               accountId: account.id,
               firstName: dbUser.firstName,
               lastName: dbUser.lastName,
-              role: account.role,
-              organizationVersionId: account.organizationVersionId,
+              role: dbAccount?.role,
+              organizationVersionId: dbAccount?.organizationVersionId,
               organizationId: '',
               level: dbUser.level,
+              environment: dbAccount?.organizationVersion?.environment,
             }
           : token
       }
@@ -115,6 +123,7 @@ export const authOptions: NextAuthOptions = {
           organizationId: token.organizationId as string,
           role: token.role as Role,
           level: token.level as Level,
+          environment: token.environment as string,
         }
       }
       return session

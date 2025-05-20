@@ -14,12 +14,11 @@ import {
   UpdateOrganizationCommandValidation,
 } from '@/services/serverFunctions/organization.command'
 import { findStudiesWithSites } from '@/services/serverFunctions/study'
-import { CUT } from '@/store/AppEnvironment'
 import { handleWarningText } from '@/utils/components'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { IsSuccess } from '@/utils/serverResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SiteCAUnit } from '@prisma/client'
+import { Environment, SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -92,7 +91,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
         label={t('name')}
       />
       <DynamicComponent
-        environmentComponents={{ [CUT]: <SitesCut sites={sites} form={form} caUnit={caUnit} /> }}
+        environmentComponents={{ [Environment.CUT]: <SitesCut sites={sites} form={form} caUnit={caUnit} /> }}
         defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} />}
       />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
