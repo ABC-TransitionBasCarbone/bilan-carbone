@@ -31,12 +31,12 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
     () => computeBegesResult(study, begesRules, emissionFactorsWithParts, studySite, true, validatedOnly),
     [study, begesRules, emissionFactorsWithParts, studySite, validatedOnly],
   )
-  const begesTotal = formatNumber(beges.find((result) => result.rule === 'total')?.total, 5)
+  const begesTotal = formatNumber(beges.find((result) => result.rule === 'total')?.total, 0)
   const computedResults = useMemo(
     () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
     [study, studySite, validatedOnly],
   )
-  const computedTotal = formatNumber(computedResults.find((result) => result.post === 'total')?.value, 5)
+  const computedTotal = formatNumber(computedResults.find((result) => result.post === 'total')?.value, 0)
 
   const utilisationEnDependance = computedResults
     .find((result) => result.post === Post.UtilisationEtDependance)
