@@ -51,8 +51,8 @@ export type BegesLine = {
   uncertainty: number | null
 }
 
-const getRulePost = (rule: ExportRule, caracterisation: EmissionSourceCaracterisation | null) => {
-  if (caracterisation === null) {
+const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => {
+  if (caracterisation === null || !rule) {
     return null
   }
 
@@ -147,7 +147,7 @@ const getDefaultRule = (rules: ExportRule[], caracterisation: EmissionSourceCara
     return null
   }
 
-  return getRulePost(rule, caracterisation)
+  return getRulePost(caracterisation, rule)
 }
 
 export const computeBegesResult = (
@@ -209,15 +209,14 @@ export const computeBegesResult = (
         }
       } else {
         emissionFactor.emissionFactorParts.forEach((part) => {
-          let post: string | null = null
           const rule = subPostRules.find((rule) => rule.type === part.type)
-          if (!rule) {
+          let post = getRulePost(caracterisation, rule)
+
+          if (!post) {
             // On a pas de regle specifique pour cette composante => on ventile selon la regle par default
             post = getDefaultRule(subPostRules, caracterisation)
-          } else {
-            // On ventile selon la regle specifique
-            post = getRulePost(rule, caracterisation)
           }
+
           if (post) {
             // Et on ajoute la valeur selon la composante quoi qu'il arrive
             results[post].push({
