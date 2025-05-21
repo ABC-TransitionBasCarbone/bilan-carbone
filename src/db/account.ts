@@ -4,7 +4,10 @@ import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
 import { OrganizationVersionWithOrganizationSelect } from './organization'
 
-export type AccountWithUser = Account & { user: User; organizationVersion: { organizationId: string } }
+export type AccountWithUser = Account & {
+  user: User
+  organizationVersion: { organizationId: string; environment: Environment }
+}
 
 export const AccountWithUserSelect = {
   id: true,
@@ -16,10 +19,7 @@ export const AccountWithUserSelect = {
   environment: true,
   organizationVersionId: true,
   organizationVersion: {
-    select: {
-      id: true,
-      organizationId: true,
-    },
+    select: { id: true, organizationId: true, environment: true },
   },
   role: true,
   user: {
@@ -36,7 +36,6 @@ export const AccountWithUserSelect = {
       status: true,
       source: true,
       formationFormStartTime: true,
-      deactivatedFeatures: true,
     },
   },
 }

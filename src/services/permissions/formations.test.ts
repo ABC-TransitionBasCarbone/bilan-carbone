@@ -1,14 +1,18 @@
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
-import { Level, UserSource } from '@prisma/client'
+import { Environment, Level, UserSource } from '@prisma/client'
 import * as featuresModule from '../serverFunctions/deactivableFeatures'
 import * as userModule from '../serverFunctions/user'
 import { hasAccessToFormation } from './formations'
 
-jest.mock('../serverFunctions/deactivableFeatures', () => ({ isDeactivableFeatureActive: jest.fn() }))
+jest.mock('../serverFunctions/deactivableFeatures', () => ({
+  isDeactivableFeatureActive: jest.fn(),
+  getDeactivableFeatureRestrictions: jest.fn(),
+}))
 jest.mock('../serverFunctions/user', () => ({ getUserSource: jest.fn() }))
 
 const mockIsFeatureActive = featuresModule.isDeactivableFeatureActive as jest.Mock
+const mockGetDeactivableFeatureRestrictions = featuresModule.getDeactivableFeatureRestrictions as jest.Mock
 const mockGetUserSource = userModule.getUserSource as jest.Mock
 
 describe('Formation permissions service', () => {
@@ -18,6 +22,10 @@ describe('Formation permissions service', () => {
         jest.clearAllMocks()
         mockIsFeatureActive.mockResolvedValue(true)
         mockGetUserSource.mockResolvedValue(UserSource.CRON)
+        mockGetDeactivableFeatureRestrictions.mockResolvedValue({
+          deactivatedSources: [UserSource.TUNISIE],
+          deactivatedEnvironments: [Environment.CUT],
+        })
       })
 
       it('"Advanced" level user should be able to access the formation view', async () => {
@@ -81,18 +89,28 @@ describe('Formation permissions service', () => {
       beforeEach(() => {
         jest.clearAllMocks()
         mockIsFeatureActive.mockResolvedValue(true)
+        mockGetDeactivableFeatureRestrictions.mockResolvedValue({
+          deactivatedSources: [UserSource.TUNISIE],
+          deactivatedEnvironments: [Environment.CUT],
+        })
       })
 
-      it('User should not be able to access the formation view', async () => {
+      it('User should not be able to access the formation view when not found', async () => {
         mockGetUserSource.mockResolvedValue(null)
         const user = getMockedAuthUser({ level: Level.Advanced })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
-      it('Foreign users should not be able to access the formation view', async () => {
+      it('User from restricted source should not be able to access the formation view', async () => {
+        const user = getMockedAuthUser({ level: Level.Standard })
+        const result = await hasAccessToFormation(user)
         mockGetUserSource.mockResolvedValue(UserSource.TUNISIE)
-        const user = getMockedAuthUser({ level: Level.Advanced })
+        expect(result).toBe(false)
+      })
+
+      it('User from restricted environment should not be able to access the formation view', async () => {
+        const user = getMockedAuthUser({ level: Level.Standard, environment: Environment.CUT })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })

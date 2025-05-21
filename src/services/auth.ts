@@ -1,6 +1,6 @@
 import { getOrganizationVersionById } from '@/db/organization'
 import { getUserByEmail, getUserByEmailWithSensibleInformations } from '@/db/user'
-import { Level, PrismaClient, Role, UserStatus } from '@prisma/client'
+import { Environment, Level, PrismaClient, Role, UserStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions } from 'next-auth'
@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
             organizationVersion: {
               select: {
                 organizationId: true,
+                environment: true,
               },
             },
           },
@@ -64,6 +65,7 @@ export const authOptions: NextAuthOptions = {
             lastName: account.user.lastName,
             organizationVersionId: account.organizationVersionId,
             organizationId: account?.organizationVersion?.organizationId,
+            environment: account.organizationVersion?.environment,
             role: account.role,
             level: account.user.level,
           }
@@ -109,6 +111,7 @@ export const authOptions: NextAuthOptions = {
           firstName: token.firstName as string,
           lastName: token.lastName as string,
           organizationVersionId: token.organizationVersionId as string,
+          environment: token.environment as Environment,
           organizationId: token.organizationId as string,
           role: token.role as Role,
           level: token.level as Level,

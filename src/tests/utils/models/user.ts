@@ -11,7 +11,6 @@ export const mockedUser = {
   firstName: 'Mocked',
   lastName: 'User',
   level: Level.Initial,
-  deactivatedFeatures: [],
 }
 
 export const mockedDbUser = {
@@ -48,7 +47,6 @@ const mockedDbAccount = {
     email: 'mocked.user@email.com',
     level: Level.Initial,
     status: UserStatus.ACTIVE,
-    deactivatedFeatures: [],
     createdAt: '2025-01-01T00:00:00.000Z',
     updatedAt: '2025-01-01T00:00:00.000Z',
   },
@@ -68,6 +66,7 @@ export const getMockedAuthUser = (props?: Partial<UserSession>): UserSession => 
   role: mockedDbAccount.role,
   ...mockedDbAccount.user,
   ...props,
+  environment: Environment.BC,
 })
 
 export const getMockedDbUser = (props?: Partial<User>): User => ({ ...mockedDbUser, ...props })
