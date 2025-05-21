@@ -4,6 +4,7 @@ import {
   createDeactivableFeatures,
   createOrUpdateDeactivableFeature,
   getDeactivableFeatures,
+  getFeatureRestictions,
   isFeatureActive,
 } from '@/db/deactivableFeatures'
 import { withServerResponse } from '@/utils/serverResponse'
@@ -41,3 +42,5 @@ export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeatu
   })
 
 export const isDeactivableFeatureActive = async (feature: DeactivatableFeature) => isFeatureActive(feature)
+
+export const getDeactivableFeatureRestrictions = async (feature: DeactivatableFeature) => getFeatureRestictions(feature)

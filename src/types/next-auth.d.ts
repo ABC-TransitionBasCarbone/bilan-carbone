@@ -1,4 +1,4 @@
-import { Account as PrismaAccount, User as PrismaUser } from '@prisma/client'
+import { OrganizationVersion, Account as PrismaAccount, User as PrismaUser } from '@prisma/client'
 import 'next-auth'
 
 declare module 'next-auth' {
@@ -8,7 +8,8 @@ declare module 'next-auth' {
 
   interface UserSession
     extends Pick<PrismaAccount, 'id' | 'userId' | 'role' | 'organizationVersionId'>,
-      Pick<PrismaUser, 'firstName' | 'lastName' | 'level'> {
+      Pick<PrismaUser, 'firstName' | 'lastName' | 'level'>,
+      Pick<OrganizationVersion, 'environment'> {
     email: PrismaUser['email']
     accountId: string
     organizationId: string | null
