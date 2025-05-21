@@ -11,6 +11,7 @@ export const mockedUser = {
   firstName: 'Mocked',
   lastName: 'User',
   level: Level.Initial,
+  deactivatedFeatures: [],
 }
 
 export const mockedDbUser = {
@@ -47,6 +48,7 @@ const mockedDbAccount = {
     email: 'mocked.user@email.com',
     level: Level.Initial,
     status: UserStatus.ACTIVE,
+    deactivatedFeatures: [],
     createdAt: '2025-01-01T00:00:00.000Z',
     updatedAt: '2025-01-01T00:00:00.000Z',
   },

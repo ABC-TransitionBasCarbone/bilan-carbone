@@ -36,6 +36,7 @@ export const AccountWithUserSelect = {
       status: true,
       source: true,
       formationFormStartTime: true,
+      deactivatedFeatures: true,
     },
   },
 }
