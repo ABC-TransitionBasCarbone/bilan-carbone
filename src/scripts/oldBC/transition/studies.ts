@@ -581,12 +581,18 @@ export const uploadStudies = async (
                 )
               if (emissionFactor) {
                 studiesEmissionFactorVersionsMap.addEmissionFactor(existingStudy.id, emissionFactor)
+                emissionFactorId = emissionFactor.id
               }
             } else {
               const existingEmissionFactor = existingEmissionFactorNames.get(studyEmissionSource.emissionFactorOldBCId)
               if (existingEmissionFactor) {
                 emissionFactorId = existingEmissionFactor.id
               }
+            }
+            if (!emissionFactorId) {
+              console.warn(
+                `Pas de facteur d'émission retrouvé pour l'étude de oldBCId ${studyOldBCId}, d'EFV_GUID ${studyEmissionSource.emissionFactorOldBCId} et d'ID_Source_Ref ${studyEmissionSource.emissionSourceImportedId}`,
+              )
             }
             return {
               studyId: existingStudy.id,
@@ -602,7 +608,7 @@ export const uploadStudies = async (
               geographicRepresentativeness: studyEmissionSource.geographicRepresentativeness,
               temporalRepresentativeness: studyEmissionSource.temporalRepresentativeness,
               completeness: studyEmissionSource.completeness,
-              emissionFactorId: emissionFactor ? emissionFactor.id : emissionFactorId,
+              emissionFactorId: emissionFactorId,
               duration: emissionFactor?.unit === Unit.HA_YEAR ? 20 : null,
               hectare: emissionFactor?.unit === Unit.HA_YEAR ? studyEmissionSource.emissionFactorConsoValue / 20 : null,
             }
