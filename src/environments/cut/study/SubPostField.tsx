@@ -116,7 +116,9 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
   useEffect(() => {
     const fetchEmissionFactor = async () => {
       const result = await getEmissionFactorByImportedId(question.importedEmissionFactorId)
-      setEmissionFactor(result as EmissionFactorWithMetaData | null)
+      if (result.success) {
+        setEmissionFactor(result.data as EmissionFactorWithMetaData | null)
+      }
     }
 
     if (question.importedEmissionFactorId) {

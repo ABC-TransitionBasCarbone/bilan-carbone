@@ -163,7 +163,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
           {t(button)}
         </LoadingButton>
       </div>
-      {error && <p>{error}</p>}
+      {error && <p>{t(error)}</p>}
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-factor" t={tGlossary}>
           <p className="mb-2">
