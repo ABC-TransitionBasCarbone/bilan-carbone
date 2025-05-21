@@ -73,7 +73,7 @@ export const sendUserOnStudyInvitationEmail = async (
   organizationName: string,
   creatorName: string,
   userName: string,
-  role: string,
+  roleOnStudy: string,
 ) => {
   const html = await getHtml('user-on-study-invitation', {
     link: process.env.NEXTAUTH_URL,
@@ -83,7 +83,7 @@ export const sendUserOnStudyInvitationEmail = async (
     studyLink: `${process.env.NEXTAUTH_URL}/etudes/${studyId}`,
     organizationName,
     creatorName,
-    role,
+    role: roleOnStudy,
   })
   return send([toEmail], `Ajout sur l'étude ${studyName}`, html)
 }
