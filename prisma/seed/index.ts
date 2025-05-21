@@ -544,24 +544,8 @@ const actualities = async () => {
   await prisma.actuality.createMany({ data: ACTUALITIES })
 }
 
-const licenses = async () => {
-  await prisma.license.deleteMany()
-  await prisma.license.createMany({
-    data: [
-      {
-        name: 'Exploitation',
-        rights: [Role.ADMIN],
-      },
-      {
-        name: 'Utilisation',
-        rights: [Role.ADMIN],
-      },
-    ],
-  })
-}
-
 const main = async (params: Params) => {
-  await Promise.all([actualities(), licenses(), users(), reCreateBegesRules()])
+  await Promise.all([actualities(), users(), reCreateBegesRules()])
   if (params.importFactors) {
     await getEmissionFactorsFromAPI(params.importFactors)
   }
