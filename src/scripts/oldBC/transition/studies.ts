@@ -319,32 +319,77 @@ interface EmissionFactorWithVersion extends EmissionFactorPrismaModel {
   version: EmissionFactorImportVersion | null
 }
 
-const mapEmissionFactorsByImportedId = (emissionFactors: EmissionFactorWithVersion[]) => {
-  const emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissionFactor) => {
-    if (emissionFactor.importedId) {
-      const emissionFactors = emissionFactorsMap.get(emissionFactor.importedId)
-      const emissionFactorItem = {
-        id: emissionFactor.id,
-        unit: emissionFactor.unit,
-        version: emissionFactor.version
-          ? {
-              id: emissionFactor.version.id,
-              source: emissionFactor.version.source,
-              createdAt: emissionFactor.version.createdAt,
-            }
-          : null,
-        importedId: emissionFactor.importedId,
-        emissionFactorConsoValue: emissionFactor.totalCo2,
+class EmissionFactorsByImportedIdMap {
+  emissionFactorsMap: Map<string, EmissionFactor[]>
+
+  constructor(emissionFactors: EmissionFactorWithVersion[]) {
+    this.emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissionFactor) => {
+      if (emissionFactor.importedId) {
+        const emissionFactors = emissionFactorsMap.get(emissionFactor.importedId)
+        const emissionFactorItem = {
+          id: emissionFactor.id,
+          unit: emissionFactor.unit,
+          version: emissionFactor.version
+            ? {
+                id: emissionFactor.version.id,
+                source: emissionFactor.version.source,
+                createdAt: emissionFactor.version.createdAt,
+              }
+            : null,
+          importedId: emissionFactor.importedId,
+          emissionFactorConsoValue: emissionFactor.totalCo2,
+        }
+        if (emissionFactors) {
+          emissionFactors.push(emissionFactorItem)
+        } else {
+          emissionFactorsMap.set(emissionFactor.importedId, [emissionFactorItem])
+        }
       }
-      if (emissionFactors) {
-        emissionFactors.push(emissionFactorItem)
-      } else {
-        emissionFactorsMap.set(emissionFactor.importedId, [emissionFactorItem])
-      }
+      return emissionFactorsMap
+    }, new Map<string, EmissionFactor[]>())
+  }
+
+  retrieveEmissionFactorMatchingConsoValueOrTakeMoreRecentOne(
+    emissionSourceImportedId: string,
+    emissionFactorConsoValue: number,
+  ) {
+    const emissionFactorList = this.emissionFactorsMap.get(emissionSourceImportedId)
+    if (!emissionFactorList) {
+      return null
     }
-    return emissionFactorsMap
-  }, new Map<string, EmissionFactor[]>())
-  return emissionFactorsMap
+    const sortedByCreatedAtEmissionFactors = emissionFactorList.sort((a, b) =>
+      a.version && b.version ? b.version.createdAt.getTime() - a.version.createdAt.getTime() : 1,
+    )
+    const filteredByConsoValueEmissionFactors = sortedByCreatedAtEmissionFactors.filter(
+      (emissionFactor) => emissionFactor.emissionFactorConsoValue === emissionFactorConsoValue,
+    )
+    if (filteredByConsoValueEmissionFactors.length > 0) {
+      return filteredByConsoValueEmissionFactors[0]
+    } else {
+      return sortedByCreatedAtEmissionFactors[0]
+    }
+  }
+}
+
+class StudiesEmissionFactorVersionsMap {
+  studiesEmissionFactorVersionsMap = new Map<string, Map<string, { id: string; createdAt: Date }[]>>()
+
+  getMap() {
+    return this.studiesEmissionFactorVersionsMap
+  }
+
+  addEmissionFactor(studyId: string, emissionFactor: EmissionFactor) {
+    const emissionFactorVersionsMap =
+      this.studiesEmissionFactorVersionsMap.get(studyId) ?? new Map<string, { id: string; createdAt: Date }[]>()
+    if (emissionFactor.version) {
+      const emissionFactorItem = {
+        id: emissionFactor.version.id,
+        createdAt: emissionFactor.version.createdAt,
+      }
+      const emissionFactorVersions = emissionFactorVersionsMap.get(emissionFactor.version.source) ?? []
+      emissionFactorVersionsMap.set(emissionFactor.version.source, emissionFactorVersions.concat(emissionFactorItem))
+    }
+  }
 }
 
 export const uploadStudies = async (
@@ -494,8 +539,8 @@ export const uploadStudies = async (
     emissionSourceImportedIds,
     emissionFactorOldBCIds,
   )
-  const emissionFactorsByImportedIdMap = mapEmissionFactorsByImportedId(emissionFactors)
-  const studiesEmissionFactorVersionsMap = new Map<string, Map<string, { id: string; createdAt: Date }[]>>()
+  const emissionFactorsByImportedIdMap = new EmissionFactorsByImportedIdMap(emissionFactors)
+  const studiesEmissionFactorVersionsMap = new StudiesEmissionFactorVersionsMap()
   await transaction.studyEmissionSource.createMany({
     data: Array.from(
       studyEmissionSources.entries().flatMap(([studyOldBCId, studyEmissionSources]) => {
@@ -525,47 +570,17 @@ export const uploadStudies = async (
               console.warn(`Impossible de retrouver le studySite d'id: ${existingSiteId}`)
               return null
             }
+
             let emissionFactor: EmissionFactor | null = null
             let emissionFactorId: string | null = null
-
-            const retrieveEmissionFactorMatchingConsoValueOrTakeMoreRecentOne = (
-              emissionFactorList: EmissionFactor[],
-            ) => {
-              const sortedByCreatedAtEmissionFactors = emissionFactorList.sort((a, b) =>
-                a.version && b.version ? b.version.createdAt.getTime() - a.version.createdAt.getTime() : 1,
-              )
-              const filteredByConsoValueEmissionFactors = sortedByCreatedAtEmissionFactors.filter(
-                (emissionFactor) =>
-                  emissionFactor.emissionFactorConsoValue === studyEmissionSource.emissionFactorConsoValue,
-              )
-              if (filteredByConsoValueEmissionFactors.length > 0) {
-                return filteredByConsoValueEmissionFactors[0]
-              } else {
-                return sortedByCreatedAtEmissionFactors[0]
-              }
-            }
-
             if (studyEmissionSource.emissionSourceImportedId !== '0') {
-              const emissionFactorList = emissionFactorsByImportedIdMap.get(
-                studyEmissionSource.emissionSourceImportedId,
-              )
-              if (emissionFactorList) {
-                emissionFactor = retrieveEmissionFactorMatchingConsoValueOrTakeMoreRecentOne(emissionFactorList)
-                if (emissionFactor.version) {
-                  const emissionFactorVersionsMap =
-                    studiesEmissionFactorVersionsMap.get(existingStudy.id) ??
-                    new Map<string, { id: string; createdAt: Date }[]>()
-                  const emissionFactorItem = {
-                    id: emissionFactor.version.id,
-                    createdAt: emissionFactor.version.createdAt,
-                  }
-                  const emissionFactorVersions = emissionFactorVersionsMap.get(emissionFactor.version.source) ?? []
-                  emissionFactorVersionsMap.set(
-                    emissionFactor.version.source,
-                    emissionFactorVersions.concat(emissionFactorItem),
-                  )
-                  studiesEmissionFactorVersionsMap.set(existingStudy.id, emissionFactorVersionsMap)
-                }
+              emissionFactor =
+                emissionFactorsByImportedIdMap.retrieveEmissionFactorMatchingConsoValueOrTakeMoreRecentOne(
+                  studyEmissionSource.emissionSourceImportedId,
+                  studyEmissionSource.emissionFactorConsoValue,
+                )
+              if (emissionFactor) {
+                studiesEmissionFactorVersionsMap.addEmissionFactor(existingStudy.id, emissionFactor)
               }
             } else {
               const existingEmissionFactor = existingEmissionFactorNames.get(studyEmissionSource.emissionFactorOldBCId)
@@ -599,57 +614,60 @@ export const uploadStudies = async (
 
   await transaction.studyEmissionFactorVersion.createMany({
     data: Array.from(
-      studiesEmissionFactorVersionsMap.entries().flatMap(([studyId, emissionFactorVersionsMap]) => {
-        return emissionFactorVersionsMap
-          .entries()
-          .map(([importedFrom, emissionFactorVersions]) => {
-            const emissionFactorVersionsCounters = emissionFactorVersions.reduce(
-              (emissionFactorVersionsCountersMap, emissionFactorVersion) => {
-                const counter = emissionFactorVersionsCountersMap.get(emissionFactorVersion.id)?.counter ?? 0
-                emissionFactorVersionsCountersMap.set(emissionFactorVersion.id, {
-                  emissionFactorVersion: emissionFactorVersion,
-                  counter: counter + 1,
-                })
-                return emissionFactorVersionsCountersMap
-              },
-              new Map<string, { emissionFactorVersion: { id: string; createdAt: Date }; counter: number }>(),
-            )
-            const moreFrequentEmissionFactorVersionsIds = emissionFactorVersionsCounters
-              .entries()
-              .reduce<{ counter: number; emissionFactorVersionIds: string[] }>(
-                (moreFrequentEmissionFactorVersionsCounter, [emissionFactorVersionId, emissionFactorVersion]) => {
-                  if (emissionFactorVersion.counter > moreFrequentEmissionFactorVersionsCounter.counter) {
-                    return {
-                      counter: moreFrequentEmissionFactorVersionsCounter.counter,
-                      emissionFactorVersionIds: [emissionFactorVersionId],
-                    }
-                  } else if (emissionFactorVersion.counter == moreFrequentEmissionFactorVersionsCounter.counter) {
-                    return {
-                      counter: emissionFactorVersion.counter,
-                      emissionFactorVersionIds:
-                        moreFrequentEmissionFactorVersionsCounter.emissionFactorVersionIds.concat([
-                          emissionFactorVersionId,
-                        ]),
-                    }
-                  } else {
-                    return moreFrequentEmissionFactorVersionsCounter
-                  }
+      studiesEmissionFactorVersionsMap
+        .getMap()
+        .entries()
+        .flatMap(([studyId, emissionFactorVersionsMap]) => {
+          return emissionFactorVersionsMap
+            .entries()
+            .map(([importedFrom, emissionFactorVersions]) => {
+              const emissionFactorVersionsCounters = emissionFactorVersions.reduce(
+                (emissionFactorVersionsCountersMap, emissionFactorVersion) => {
+                  const counter = emissionFactorVersionsCountersMap.get(emissionFactorVersion.id)?.counter ?? 0
+                  emissionFactorVersionsCountersMap.set(emissionFactorVersion.id, {
+                    emissionFactorVersion: emissionFactorVersion,
+                    counter: counter + 1,
+                  })
+                  return emissionFactorVersionsCountersMap
                 },
-                { counter: 0, emissionFactorVersionIds: [] },
-              ).emissionFactorVersionIds
-            const emissionFactorVersion = moreFrequentEmissionFactorVersionsIds[0]
-            const foundImport = Object.values(Import).find((importValue) => importValue === importedFrom)
-            if (!foundImport) {
-              return null
-            }
-            return {
-              studyId: studyId,
-              importVersionId: emissionFactorVersion,
-              source: foundImport,
-            }
-          })
-          .filter((studyEmissionFactor) => studyEmissionFactor !== null)
-      }),
+                new Map<string, { emissionFactorVersion: { id: string; createdAt: Date }; counter: number }>(),
+              )
+              const moreFrequentEmissionFactorVersionsIds = emissionFactorVersionsCounters
+                .entries()
+                .reduce<{ counter: number; emissionFactorVersionIds: string[] }>(
+                  (moreFrequentEmissionFactorVersionsCounter, [emissionFactorVersionId, emissionFactorVersion]) => {
+                    if (emissionFactorVersion.counter > moreFrequentEmissionFactorVersionsCounter.counter) {
+                      return {
+                        counter: moreFrequentEmissionFactorVersionsCounter.counter,
+                        emissionFactorVersionIds: [emissionFactorVersionId],
+                      }
+                    } else if (emissionFactorVersion.counter == moreFrequentEmissionFactorVersionsCounter.counter) {
+                      return {
+                        counter: emissionFactorVersion.counter,
+                        emissionFactorVersionIds:
+                          moreFrequentEmissionFactorVersionsCounter.emissionFactorVersionIds.concat([
+                            emissionFactorVersionId,
+                          ]),
+                      }
+                    } else {
+                      return moreFrequentEmissionFactorVersionsCounter
+                    }
+                  },
+                  { counter: 0, emissionFactorVersionIds: [] },
+                ).emissionFactorVersionIds
+              const emissionFactorVersion = moreFrequentEmissionFactorVersionsIds[0]
+              const foundImport = Object.values(Import).find((importValue) => importValue === importedFrom)
+              if (!foundImport) {
+                return null
+              }
+              return {
+                studyId: studyId,
+                importVersionId: emissionFactorVersion,
+                source: foundImport,
+              }
+            })
+            .filter((studyEmissionFactor) => studyEmissionFactor !== null)
+        }),
     ),
   })
 
