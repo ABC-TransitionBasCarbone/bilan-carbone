@@ -16,7 +16,8 @@ const NewStudy = async ({ user }: UserSessionProps) => {
     getOrganizationVersionAccounts(user.organizationVersionId),
   ])
 
-  const caUnit = (await getUserSettings())?.caUnit || defaultCAUnit
+  const userSettings = await getUserSettings()
+  const caUnit = userSettings.success ? userSettings.data?.caUnit || defaultCAUnit : defaultCAUnit
 
   return <NewStudyPage organizationVersions={organizationVersions} user={user} accounts={accounts} caUnit={caUnit} />
 }

@@ -453,7 +453,10 @@ export const downloadStudyResults = async (
     ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
   ]
 
-  const validatedEmissionSourcesOnly = (await getUserSettings())?.validatedEmissionSourcesOnly
+  const userSettings = await getUserSettings()
+  const validatedEmissionSourcesOnly = userSettings.success
+    ? userSettings.data?.validatedEmissionSourcesOnly
+    : undefined
 
   data.push(
     formatConsolidatedStudyResultsForExport(
