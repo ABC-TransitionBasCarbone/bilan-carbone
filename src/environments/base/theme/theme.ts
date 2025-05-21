@@ -38,7 +38,10 @@ const base = createTheme({
     info: {
       main: '#272768',
     },
-  }
+  },
+  typography: {
+    fontFamily: '"Gilroy-Regular", sans-serif',
+  },
 })
 
 const theme = createTheme(base, {
@@ -54,15 +57,16 @@ const theme = createTheme(base, {
   components: {
     MuiButton: {
       styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+          textTransform: 'none',
+        },
         outlined: {
           backgroundColor: base.palette.common.white,
-          textTransform: 'none'
+          fontFamily: base.typography.fontFamily,
         }
       }
     }
-  },
-  typography: {
-    fontFamily: '"Gilroy-Regular", sans-serif',
   },
   custom: {
     navbar: {
