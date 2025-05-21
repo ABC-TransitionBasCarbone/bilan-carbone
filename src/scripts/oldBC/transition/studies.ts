@@ -11,6 +11,7 @@ import {
   StudySitesWorkSheet,
 } from './oldBCWorkSheetsReader'
 import {
+  getExistingEmissionFactors,
   getExistingEmissionFactorsNames as getExistingEmissionFactorsNamesFromRepository,
   getExistingSitesIds,
 } from './repositories'
@@ -446,12 +447,11 @@ export const uploadStudies = async (
         studyEmissionSources.map((studyEmissionSource) => studyEmissionSource.emissionFactorOldBCId),
       ),
   )
-  const emissionFactors = await transaction.emissionFactor.findMany({
-    where: { OR: [{ importedId: { in: emissionSourceImportedIds } }, { oldBCId: { in: emissionFactorOldBCIds } }] },
-    include: {
-      version: true,
-    },
-  })
+  const emissionFactors = await getExistingEmissionFactors(
+    transaction,
+    emissionSourceImportedIds,
+    emissionFactorOldBCIds,
+  )
   const emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissionFactor) => {
     if (emissionFactor.importedId) {
       const emissionFactors = emissionFactorsMap.get(emissionFactor.importedId)
