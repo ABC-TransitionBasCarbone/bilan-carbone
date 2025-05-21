@@ -1,8 +1,0 @@
-{
-  "jobs": [
-    {
-      "command": "*/10 * * * * yarn user:import",
-      "description": "Import users from FTP server at midnight"
-    }
-  ]
-}
