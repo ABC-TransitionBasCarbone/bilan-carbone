@@ -667,14 +667,16 @@ export const addFlowToStudy = async (studyId: string, file: File) => {
     return NOT_AUTHORIZED
   }
   const butcketUploadResult = await uploadFileToBucket(file)
-  await createDocument({
-    name: file.name,
-    type: file.type,
-    uploader: { connect: { id: session?.user.accountId } },
-    study: { connect: { id: studyId } },
-    bucketKey: butcketUploadResult.key,
-    bucketETag: butcketUploadResult.ETag || '',
-  })
+  if (butcketUploadResult.success) {
+    await createDocument({
+      name: file.name,
+      type: file.type,
+      uploader: { connect: { id: session?.user.accountId } },
+      study: { connect: { id: studyId } },
+      bucketKey: butcketUploadResult.data.key,
+      bucketETag: butcketUploadResult.data.ETag || '',
+    })
+  }
 }
 
 export const deleteFlowFromStudy = async (document: Document, studyId: string) => {
@@ -682,7 +684,7 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
     return NOT_AUTHORIZED
   }
   const bucketDelete = await deleteFileFromBucket(document.bucketKey)
-  if (bucketDelete) {
+  if (bucketDelete.success) {
     await deleteDocument(document.id)
   }
 }
