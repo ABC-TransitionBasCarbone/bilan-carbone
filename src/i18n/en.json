@@ -744,7 +744,8 @@
         "totalCo2": "Please provide a total emission",
         "type": "Please select a post type",
         "subPost": "Please select a sub post"
-      }
+      },
+      "Not authorized": "You are not allowed to do this action"
     },
     "title": "Emission factors",
     "loading": "Loading emission factors",

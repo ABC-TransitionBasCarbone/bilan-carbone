@@ -1,10 +1,14 @@
 import { auth } from '@/services/auth'
 
+export type SuccessResponse<T> = {
+  success: true
+  data: T
+}
+
+export type IsSuccess<T> = T extends SuccessResponse<infer U> ? U : never
+
 export type ApiResponse<T = unknown> =
-  | {
-      success: true
-      data: T
-    }
+  | SuccessResponse<T>
   | {
       success: false
       errorMessage: string

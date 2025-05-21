@@ -744,7 +744,8 @@
         "totalCo2": "Veuillez renseigner une émission totale",
         "type": "Veuillez renseigner un type de poste",
         "unit": "Veuillez renseigner une unité"
-      }
+      },
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
     },
     "title": "Facteurs d'émission",
     "loading": "Chargement des facteurs d'émission",
