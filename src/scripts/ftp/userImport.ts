@@ -1,13 +1,10 @@
 'use server'
+
 import { getAccountByEmailAndEnvironment } from '@/db/account'
 import { getOrganizationVersionByOrganizationIdAndEnvironment } from '@/db/organization'
+import { createOrUpdateOrganization, getRawOrganizationById, getRawOrganizationBySiret } from '@/db/organizationImport'
+import { createUsersWithAccount, updateAccount } from '@/db/userImport'
 import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
-import {
-  createOrUpdateOrganization,
-  getRawOrganizationById,
-  getRawOrganizationBySiret,
-} from '../../db/organizationImport'
-import { createUsersWithAccount, updateAccount } from '../../db/userImport'
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
   const {

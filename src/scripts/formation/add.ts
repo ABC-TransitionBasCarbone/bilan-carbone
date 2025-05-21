@@ -1,5 +1,5 @@
+import { createFormation } from '@/db/formation'
 import { Command } from 'commander'
-import { addFormation } from '../../services/formations/formation'
 
 const program = new Command()
 
@@ -13,4 +13,9 @@ program
 
 const params = program.opts()
 
-addFormation(params.name, params.link)
+const addFormation = async () => {
+  const result = await createFormation(params.name, params.link)
+  console.log('Formation ajoutée : ', result.name)
+}
+
+addFormation()

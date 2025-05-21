@@ -1,5 +1,5 @@
+import { reCreateBegesRules } from '@/db/beges'
 import { signPassword } from '@/services/auth'
-import { reCreateBegesRules } from '@/services/exportRules/beges'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
 import { faker } from '@faker-js/faker'
 import {
