@@ -15,7 +15,6 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
-import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
 import { EmissionSourceCaracterisation, Import, Level, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
@@ -160,7 +159,7 @@ const EmissionSource = ({
         className={classNames(styles.line, 'flex-col')}
         aria-expanded={display}
         aria-controls={detailId}
-        onClick={() => setDisplay(!display)}
+        onClick={() => setDisplay((prevDisplay) => !prevDisplay)}
       >
         <div className={classNames(styles.header, styles.gapped, 'justify-between')}>
           <div className={classNames(styles.name, 'align-center')}>
@@ -182,37 +181,43 @@ const EmissionSource = ({
           </div>
           <div className={classNames(styles.gapped, 'align-center')}>
             {/* activity data */}
-            <div className={classNames(styles.emissionSource, 'flex-col justify-center text-center')}>
+            <div className={classNames(styles.emissionSource, 'flex-col justify-center align-center')}>
               {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
-                <p>
-                  {formatNumber(emissionSource.value)}{' '}
-                  {selectedFactor &&
-                    (selectedFactor.unit === Unit.CUSTOM
-                      ? selectedFactor.customUnit
-                      : tUnits(selectedFactor.unit || ''))}
-                </p>
+                <>
+                  <p className="ellipsis fit-content justify-center">{formatNumber(emissionSource.value)} </p>
+                  <p className="ellipsis fit-content justify-center">
+                    {selectedFactor &&
+                      (selectedFactor.unit === Unit.CUSTOM
+                        ? selectedFactor.customUnit
+                        : tUnits(selectedFactor.unit || ''))}
+                  </p>
+                </>
               )}
             </div>
             {/* emission factor */}
             {selectedFactor && (
-              <div className="flex-col justify-center text-center">
-                <p>{t('emissionFactor')}</p>
-                <p>
-                  {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}
-                  {tResultstUnits(StudyResultUnit.K)}/
-                  {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
-                </p>
+              <div className={classNames(styles.emissionFactor, 'flex-col justify-center align-center')}>
+                <>
+                  <p className="ellipsis fit-content justify-center">
+                    {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}
+                  </p>
+                  <p className="ellipsis fit-content justify-center">
+                    {tResultstUnits(StudyResultUnit.K)}/
+                    {selectedFactor.unit === Unit.CUSTOM
+                      ? selectedFactor.customUnit
+                      : tUnits(selectedFactor.unit || '')}
+                  </p>
+                </>
               </div>
             )}
             {/* result */}
             {emissionResults && (
-              <div className="flex-col justify-center text-center">
-                <p
-                  className={styles.result}
-                  data-testid="emission-source-value"
-                >{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}</p>
+              <div className={classNames(styles.result, 'flex-col flex-end align-end')}>
+                <p className={styles.resultText} data-testid="emission-source-value">
+                  {`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
+                </p>
                 {emissionResults.standardDeviation && (
-                  <p className={styles.status} data-testid="emission-source-quality">
+                  <p className={classNames(styles.status, styles.resultText)} data-testid="emission-source-quality">
                     {tQuality('name')}{' '}
                     {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
                   </p>
@@ -236,7 +241,7 @@ const EmissionSource = ({
               className={classNames(
                 styles.statusLabel,
                 status === EmissionSourcesStatus.Valid ? styles.validated : styles.working,
-                'text-center ml1',
+                'text-center',
               )}
             >
               {t(`status.${status}`)}
@@ -248,9 +253,6 @@ const EmissionSource = ({
             {emissionSource.contributor.user.email}
           </p>
         )}
-        <div className={styles.editIcon}>
-          <EditIcon />
-        </div>
       </button>
       <div id={detailId} className={classNames(styles.detail, { [styles.displayed]: display })} ref={ref}>
         {display && (

@@ -161,3 +161,13 @@ table {
 .pointer {
   cursor: pointer;
 }
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fit-content {
+  width: -moz-available;
+}

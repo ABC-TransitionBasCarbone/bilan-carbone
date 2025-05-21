@@ -1,4 +1,5 @@
 .container {
+  background-color: white;
   &:not(:last-child) {
     border-bottom: solid 1px var(--grayscale-700);
   }
@@ -13,7 +14,11 @@
   }
 
   .emissionSource {
-    width: 15%
+    width: 20%
+  }
+
+  .emissionFactor {
+    width: 35%;
   }
 
   @media screen and (max-width: 60rem) {
@@ -27,24 +32,19 @@
   }
 }
 
-.editIcon {
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  display: none;
-  color: var(--primary-500);
-}
-
 .line {
-  position: relative;
+  position: sticky;
+  top: 89px;
+  z-index: 9;
+  background-color: inherit;
+  border-bottom: solid 1px var(--neutral-200) !important;
+
   cursor: pointer;
   text-align: left;
-  background-color: transparent;
   border: none;
   width: 100%;
   line-height: 1rem;
-  padding: 1rem 3.5rem 1rem 1rem;
+  padding: 1rem;
   gap: 1rem;
   flex-wrap: wrap;
   &:hover {
@@ -59,6 +59,12 @@
 }
 
 .result {
+  flex: 1;
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
+
+.resultText {
   font-size: 1.25rem;
 }
 
@@ -99,6 +105,8 @@
   height: 0;
   overflow: hidden;
   transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding-right: 1rem;
+  padding-left: 1rem;
 }
 
 .displayed {
@@ -107,7 +115,6 @@
 }
 
 .detailContent {
-  border-top: solid 1px var(--neutral-200);
   margin: -0.25rem 0 0.5rem 0;
   padding: 1rem;
 }

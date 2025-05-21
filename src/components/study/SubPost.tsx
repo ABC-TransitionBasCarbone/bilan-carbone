@@ -69,6 +69,7 @@ const SubPost = ({
     <div>
       <Accordion>
         <AccordionSummary
+          className={styles.subPostContainer}
           expandIcon={<ExpandMoreIcon />}
           aria-controls={`panel-${subPost}-content`}
           data-testid="subpost"
@@ -87,14 +88,14 @@ const SubPost = ({
             <span className={classNames(styles.value, 'ml1')}>
               {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
             </span>
+            {contributors && contributors.length > 0 && (
+              <p className={styles.contributors}>
+                {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
+              </p>
+            )}
           </p>
         </AccordionSummary>
-        <AccordionDetails id={`panel-${subPost}-content`}>
-          {contributors && contributors.length > 0 && (
-            <p className={styles.contributors}>
-              {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
-            </p>
-          )}
+        <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
           {emissionSources.map((emissionSource) =>
             // Dirty hack to force type on EmissionSource
             withoutDetail ? (
