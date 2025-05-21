@@ -11,7 +11,8 @@ export const getDocumentUrl = async (document: Document, studyId: string) =>
     if (!(await canAccessFlowFromStudy(document.id, studyId))) {
       return ''
     }
-    return getFileUrlFromBucket(document.bucketKey)
+    const res = await getFileUrlFromBucket(document.bucketKey)
+    return res.success ? res.data : ''
   })
 
 export const prepareExcel = async (

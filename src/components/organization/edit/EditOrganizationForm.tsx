@@ -17,6 +17,7 @@ import { findStudiesWithSites } from '@/services/serverFunctions/study'
 import { CUT } from '@/store/AppEnvironment'
 import { handleWarningText } from '@/utils/components'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
+import { IsSuccess } from '@/utils/serverResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -30,6 +31,8 @@ interface Props {
   caUnit: SiteCAUnit
 }
 
+type StudiesWithSites = IsSuccess<AsyncReturnType<typeof findStudiesWithSites>>
+
 const emptySitesOnError = { authorizedStudySites: [], unauthorizedStudySites: [] }
 
 const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
@@ -37,7 +40,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
   const t = useTranslations('organization.form')
   const tStudySites = useTranslations('organization.studySites')
   const [error, setError] = useState('')
-  const [sitesOnError, setSitesOnError] = useState<AsyncReturnType<typeof findStudiesWithSites>>(emptySitesOnError)
+  const [sitesOnError, setSitesOnError] = useState<StudiesWithSites>(emptySitesOnError)
 
   const form = useForm<UpdateOrganizationCommand>({
     resolver: zodResolver(UpdateOrganizationCommandValidation),
@@ -62,10 +65,11 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
       .map((site) => site.id)
     const deletedSitesOnStudies = await findStudiesWithSites(deletedSiteIds)
     if (
-      deletedSitesOnStudies.authorizedStudySites.length > 0 ||
-      deletedSitesOnStudies.unauthorizedStudySites.length > 0
+      deletedSitesOnStudies.success &&
+      (deletedSitesOnStudies.data.authorizedStudySites.length > 0 ||
+        deletedSitesOnStudies.data.unauthorizedStudySites.length > 0)
     ) {
-      setSitesOnError(deletedSitesOnStudies)
+      setSitesOnError(deletedSitesOnStudies.data)
     } else {
       const result = await updateOrganizationCommand(command)
       if (!result.success) {

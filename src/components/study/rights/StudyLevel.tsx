@@ -46,8 +46,8 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
 
   const onSubmit = async (command: ChangeStudyLevelCommand) => {
     const result = await changeStudyLevel(command)
-    if (result) {
-      setError(result)
+    if (!result.success) {
+      setError(result.errorMessage)
     } else {
       router.refresh()
     }
