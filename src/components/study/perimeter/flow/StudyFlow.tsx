@@ -68,7 +68,9 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     }
     setDownloading(true)
     const url = await getDocumentUrl(selectedFlow, study.id)
-    downloadFromUrl(url, selectedFlow.name)
+    if (url.success) {
+      downloadFromUrl(url.data, selectedFlow.name)
+    }
     setDownloading(false)
   }
 
