@@ -21,7 +21,7 @@ describe('Formation permissions service', () => {
       beforeEach(() => {
         jest.clearAllMocks()
         mockIsFeatureActive.mockResolvedValue(true)
-        mockGetUserSource.mockResolvedValue(UserSource.CRON)
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
         mockGetDeactivableFeatureRestrictions.mockResolvedValue({
           deactivatedSources: [UserSource.TUNISIE],
           deactivatedEnvironments: [Environment.CUT],
@@ -57,7 +57,7 @@ describe('Formation permissions service', () => {
       beforeEach(() => {
         jest.clearAllMocks()
         mockIsFeatureActive.mockResolvedValue(false)
-        mockGetUserSource.mockResolvedValue(UserSource.CRON)
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
       })
 
       it('"Advanced" level user should not be able to access the formation view', async () => {
@@ -95,21 +95,21 @@ describe('Formation permissions service', () => {
         })
       })
 
-      it('User should not be able to access the formation view when not found', async () => {
-        mockGetUserSource.mockResolvedValue(null)
-        const user = getMockedAuthUser({ level: Level.Advanced })
+      it('User should not be able to access the formation view when not trained', async () => {
+        const user = getMockedAuthUser({ level: null })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
       it('User from restricted source should not be able to access the formation view', async () => {
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.TUNISIE })
         const user = getMockedAuthUser({ level: Level.Standard })
         const result = await hasAccessToFormation(user)
-        mockGetUserSource.mockResolvedValue(UserSource.TUNISIE)
         expect(result).toBe(false)
       })
 
       it('User from restricted environment should not be able to access the formation view', async () => {
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
         const user = getMockedAuthUser({ level: Level.Standard, environment: Environment.CUT })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)

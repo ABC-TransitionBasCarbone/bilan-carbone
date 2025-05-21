@@ -22,7 +22,8 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
   }, [])
 
   const applyUserSettings = async () => {
-    const validatedOnlySetting = (await getUserSettings())?.validatedEmissionSourcesOnly
+    const userSettings = await getUserSettings()
+    const validatedOnlySetting = userSettings.success ? userSettings.data?.validatedEmissionSourcesOnly : undefined
     if (validatedOnlySetting !== undefined) {
       setValidatedOnly(validatedOnlySetting)
     }

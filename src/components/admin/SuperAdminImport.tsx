@@ -14,7 +14,12 @@ const SuperAdminImport = () => {
         if (typeof event.target?.result === 'string') {
           try {
             const userUuid = prompt("Veuillez entrer l'UUID :")
-            if (!userUuid || (await verifyPasswordAndProcessUsers(userUuid))) {
+            if (!userUuid) {
+              console.error('Non-concordance des UUID. Processus annulé.')
+              return
+            }
+            const passwordAndProcessUsersVerification = await verifyPasswordAndProcessUsers(userUuid)
+            if (passwordAndProcessUsersVerification.success && !passwordAndProcessUsersVerification.data) {
               console.error('Non-concordance des UUID. Processus annulé.')
               return
             }

@@ -46,15 +46,15 @@ const ActivationForm = () => {
     setMessage('')
     setSubmitting(true)
 
-    const { error, message } = await activateEmail(getValues().email)
+    const activation = await activateEmail(getValues().email)
     setSubmitting(false)
 
-    if (error) {
-      setSuccess(false)
-      setMessage(message)
-    } else {
+    if (activation.success) {
       setSuccess(true)
-      setMessage(message)
+      setMessage(activation.data)
+    } else {
+      setSuccess(false)
+      setMessage(activation.errorMessage)
     }
   }
 

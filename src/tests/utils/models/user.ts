@@ -64,9 +64,9 @@ export const getMockedAuthUser = (props?: Partial<UserSession>): UserSession => 
   organizationVersionId: mockedDbAccount.organizationVersionId,
   organizationId: mockedDbAccount.organizationVersion.organizationId,
   role: mockedDbAccount.role,
+  environment: Environment.BC,
   ...mockedDbAccount.user,
   ...props,
-  environment: Environment.BC,
 })
 
 export const getMockedDbUser = (props?: Partial<User>): User => ({ ...mockedDbUser, ...props })
