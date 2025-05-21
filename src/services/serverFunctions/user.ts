@@ -6,6 +6,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
   getAccountFromUserOrganization,
+  getAccountsFromUser,
 } from '@/db/account'
 import { getOrganizationVersionById, isOrganizationVersionCR } from '@/db/organization'
 import { FullStudy } from '@/db/study'
@@ -450,4 +451,14 @@ export const lowercaseUsersEmails = async () => {
     await Promise.all(capitalizedUsers.map((user) => updateUser(user.id, { email: user.email.toLowerCase() })))
     console.log(`Fait : ${capitalizedUsers.length} utilisateurs mis à jour`)
   }
+}
+
+export const getUserAccounts = async () => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return []
+  }
+
+  const accounts = await getAccountsFromUser(session.user)
+  return accounts
 }

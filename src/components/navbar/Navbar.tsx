@@ -1,10 +1,12 @@
 'use client'
 
 import { hasAccessToFormation } from '@/services/permissions/formations'
+import { getUserAccounts } from '@/services/serverFunctions/user'
 import { isAdmin } from '@/utils/user'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
+import PeopleIcon from '@mui/icons-material/People'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { Environment, Role } from '@prisma/client'
@@ -25,6 +27,7 @@ const Navbar = ({ user }: Props) => {
   const t = useTranslations('navigation')
   const [showSubMenu, setShowSubMenu] = useState(false)
   const [hasFormation, setHasFormation] = useState(false)
+  const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
 
   useEffect(() => {
     const getFormationAccess = async () => {
@@ -32,6 +35,12 @@ const Navbar = ({ user }: Props) => {
       setHasFormation(hasAccess)
     }
 
+    const hasMultipleAccounts = async () => {
+      const userAccounts = await getUserAccounts()
+      setHasMultipleAccounts((userAccounts && userAccounts?.length > 1) || false)
+    }
+
+    hasMultipleAccounts()
     getFormationAccess()
   })
 
@@ -91,6 +100,16 @@ const Navbar = ({ user }: Props) => {
           )}
         </div>
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
+          {hasMultipleAccounts && (
+            <Link
+              className={classNames(styles.link, 'align-center')}
+              aria-label={t('selectAccount')}
+              href="/selection-du-compte"
+            >
+              <PeopleIcon />
+            </Link>
+          )}
+
           {user.role === Role.SUPER_ADMIN && (
             <Link className={styles.link} href="/super-admin">
               {t('admin')}

@@ -14,6 +14,14 @@ interface Props {
 }
 
 const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
+  if (account.needsAccountSelection) {
+    return (
+      <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
+        {children}
+      </main>
+    )
+  }
+
   const [organizationVersions, studyId] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     getAllowedStudyIdByAccount(account),

@@ -115,3 +115,6 @@ export const getAccountsUserLevel = (ids: string[]) =>
     where: { id: { in: ids } },
     select: { id: true, user: { select: { level: true } } },
   })
+
+export const getAccountsFromUser = (user: UserSession) =>
+  prismaClient.account.findMany({ where: { userId: user.userId } })
