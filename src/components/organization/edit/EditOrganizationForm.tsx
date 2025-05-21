@@ -68,8 +68,8 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
       setSitesOnError(deletedSitesOnStudies)
     } else {
       const result = await updateOrganizationCommand(command)
-      if (result) {
-        setError(result)
+      if (!result.success) {
+        setError(result.errorMessage)
       } else {
         router.push(`/organisations/${organizationVersion.id}`)
         router.refresh()
