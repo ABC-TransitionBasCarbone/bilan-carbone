@@ -981,6 +981,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
   [SubPost.ReseauxDeFroid]: [],
   [SubPost.Electricite]: [
     '15714',
+    '43642',
     '34820',
     '34820',
     '34820',
@@ -14257,6 +14258,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '20593',
   ],
   [SubPost.UtilisationEnResponsabilite]: [
+    '43642',
     '43619',
     '43595',
     '43579',
@@ -15777,6 +15779,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '43576',
   ],
   [SubPost.UtilisationEnDependance]: [
+    '43642',
     '43619',
     '43595',
     '43579',
