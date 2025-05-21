@@ -435,8 +435,7 @@ const getOrCreateUserAndSendStudyInvite = async (
   organizationVersion: OrganizationVersionWithOrganization,
   creator: UserSession,
   existingUser: UserWithAccounts | null,
-  existingAccount: AccountWithUser | null,
-  role?: StudyRole,
+  newRoleOnStudy?: StudyRole,
 ) => {
   let accountId = ''
   const t = await getTranslations('study.role')
@@ -455,7 +454,13 @@ const getOrCreateUserAndSendStudyInvite = async (
       },
     })
 
-    await sendInvitation(email, study, organizationVersion.organization, creator, role ? t(role).toLowerCase() : '')
+    await sendInvitation(
+      email,
+      study,
+      organizationVersion.organization,
+      creator,
+      newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
+    )
 
     accountId = newUser.accounts[0].id
   } else {
@@ -466,7 +471,7 @@ const getOrCreateUserAndSendStudyInvite = async (
       study,
       organizationVersion.organization,
       creator,
-      role ? t(role).toLowerCase() : '',
+      newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
       account,
     )
     accountId = account.id
@@ -528,7 +533,6 @@ export const newStudyRight = async (right: NewStudyRightCommand) => {
     organizationVersion as OrganizationVersionWithOrganization,
     session.user,
     existingUser,
-    existingAccount as AccountWithUser,
     right.role,
   )
 
@@ -619,7 +623,6 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
     organizationVersion as OrganizationVersionWithOrganization,
     session.user,
     existingUser,
-    existingAccount as AccountWithUser,
   )
 
   const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
