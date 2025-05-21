@@ -57,7 +57,7 @@ interface EmissionSource {
   geographicRepresentativeness: number
   temporalRepresentativeness: number
   completeness: number
-  emissionSourceImportedId: string
+  emissionFactorImportedId: string
   emissionFactorConsoValue: number
 }
 
@@ -248,7 +248,7 @@ const parseEmissionSources = (
           geographicRepresentativeness: incertitudeDA,
           temporalRepresentativeness: incertitudeDA,
           completeness: incertitudeDA,
-          emissionSourceImportedId: String(row.emissionSourceImportedId),
+          emissionFactorImportedId: String(row.emissionFactorImportedId),
           emissionFactorConsoValue: row.emissionFactorConsoValue as number,
         },
       ]
@@ -348,10 +348,10 @@ class EmissionFactorsByImportedIdMap {
   }
 
   retrieveEmissionFactorMatchingConsoValueOrTakeMoreRecentOne(
-    emissionSourceImportedId: string,
+    emissionFactorImportedId: string,
     emissionFactorConsoValue: number,
   ) {
-    const emissionFactorList = this.emissionFactorsMap.get(emissionSourceImportedId)
+    const emissionFactorList = this.emissionFactorsMap.get(emissionFactorImportedId)
     if (!emissionFactorList) {
       return null
     }
@@ -518,11 +518,11 @@ export const uploadStudies = async (
     ),
   )
 
-  const emissionSourceImportedIds = Array.from(
+  const emissionFactorImportedIds = Array.from(
     studyEmissionSources
       .values()
       .flatMap((studyEmissionSources) =>
-        studyEmissionSources.map((studyEmissionSource) => studyEmissionSource.emissionSourceImportedId),
+        studyEmissionSources.map((studyEmissionSource) => studyEmissionSource.emissionFactorImportedId),
       ),
   )
   const emissionFactorOldBCIds = Array.from(
@@ -534,7 +534,7 @@ export const uploadStudies = async (
   )
   const emissionFactors = await getExistingEmissionFactors(
     transaction,
-    emissionSourceImportedIds,
+    emissionFactorImportedIds,
     emissionFactorOldBCIds,
   )
   const emissionFactorsByImportedIdMap = new EmissionFactorsByImportedIdMap(emissionFactors)
@@ -571,10 +571,10 @@ export const uploadStudies = async (
 
             let emissionFactor: EmissionFactor | null = null
             let emissionFactorId: string | null = null
-            if (studyEmissionSource.emissionSourceImportedId !== '0') {
+            if (studyEmissionSource.emissionFactorImportedId !== '0') {
               emissionFactor =
                 emissionFactorsByImportedIdMap.retrieveEmissionFactorMatchingConsoValueOrTakeMoreRecentOne(
-                  studyEmissionSource.emissionSourceImportedId,
+                  studyEmissionSource.emissionFactorImportedId,
                   studyEmissionSource.emissionFactorConsoValue,
                 )
               if (emissionFactor) {
@@ -589,7 +589,7 @@ export const uploadStudies = async (
             }
             if (!emissionFactorId) {
               console.warn(
-                `Pas de facteur d'émission retrouvé pour l'étude de oldBCId ${studyOldBCId}, d'EFV_GUID ${studyEmissionSource.emissionFactorOldBCId} et d'ID_Source_Ref ${studyEmissionSource.emissionSourceImportedId}`,
+                `Pas de facteur d'émission retrouvé pour l'étude de oldBCId ${studyOldBCId}, d'EFV_GUID ${studyEmissionSource.emissionFactorOldBCId} et d'ID_Source_Ref ${studyEmissionSource.emissionFactorImportedId}`,
               )
             }
             return {
