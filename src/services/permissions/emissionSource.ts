@@ -1,7 +1,7 @@
 import { AccountWithUser } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
-import { FullStudy, getStudyById } from '@/db/study'
+import { FullStudy, getStudyById, getStudySites } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { StudyEmissionSource, StudyRole, SubPost } from '@prisma/client'
@@ -41,6 +41,11 @@ export const canCreateEmissionSource = async (
 ) => {
   const dbStudy = study || (await getStudyById(emissionSource.studyId, account.organizationVersionId))
   if (!dbStudy) {
+    return false
+  }
+
+  const studySites = await getStudySites(emissionSource.studyId)
+  if (!studySites.some((studySite) => studySite.id === emissionSource.studySiteId)) {
     return false
   }
 
