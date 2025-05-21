@@ -4,7 +4,6 @@ import DebouncedInput from '@/components/base/DebouncedInput'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { getEmissionResultsCut } from '@/services/emissionSource'
-import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { EmissionFactorWithMetaData, getEmissionFactorByImportedId } from '@/services/serverFunctions/emissionFactor'
 import {
   createEmissionSource,
@@ -166,7 +165,7 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
           emissionFactorId: emissionFactor?.id,
           depreciationPeriod,
         })
-        if (!(result === NOT_AUTHORIZED)) {
+        if (result.success) {
           setNewEmissionSources((prev) => [...prev, { ...result, fakeId: id }])
           const fakeId = `new-${Date.now()}`
           setPendingEmissionSource({ fakeId })
