@@ -12,7 +12,7 @@ import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 
 export const getDeactivableFeaturesStatuses = async () =>
-  withServerResponse(async () => {
+  withServerResponse('getDeactivableFeaturesStatuses', async () => {
     const session = await auth()
     if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
@@ -31,7 +31,7 @@ export const getDeactivableFeaturesStatuses = async () =>
   })
 
 export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeature, status: boolean) =>
-  withServerResponse(async () => {
+  withServerResponse('changeDeactivableFeatureStatus', async () => {
     const session = await auth()
     if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
