@@ -6,6 +6,7 @@ import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { computeBegesResult } from '@/services/results/beges'
 import { computeResultsByPost } from '@/services/results/consolidated'
+import { formatNumber } from '@/utils/number'
 import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
 import { Export, ExportRule, SubPost } from '@prisma/client'
 import classNames from 'classnames'
@@ -30,12 +31,12 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
     () => computeBegesResult(study, begesRules, emissionFactorsWithParts, studySite, true, validatedOnly),
     [study, begesRules, emissionFactorsWithParts, studySite, validatedOnly],
   )
-  const begesTotal = beges.find((result) => result.rule === 'total')?.total
+  const begesTotal = formatNumber(beges.find((result) => result.rule === 'total')?.total, 0)
   const computedResults = useMemo(
     () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
     [study, studySite, validatedOnly],
   )
-  const computedTotal = computedResults.find((result) => result.post === 'total')?.value
+  const computedTotal = formatNumber(computedResults.find((result) => result.post === 'total')?.value, 0)
 
   const utilisationEnDependance = computedResults
     .find((result) => result.post === Post.UtilisationEtDependance)

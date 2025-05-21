@@ -1,8 +1,8 @@
 import { SiteCAUnit } from '@prisma/client'
 import Big from 'big.js'
 
-export const formatNumber = (value: number, dec = 0) =>
-  value.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: dec })
+export const formatNumber = (value?: number, dec = 0) =>
+  (value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: dec })
 
 const countZerosAfterDecimal = (value: number): number => {
   if (value >= 1 || value <= -1) {
