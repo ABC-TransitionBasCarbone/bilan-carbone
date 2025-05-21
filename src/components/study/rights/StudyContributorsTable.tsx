@@ -130,8 +130,8 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     const result = await deleteStudyContributor(contributor, study.id)
     setDeleting(false)
     setToDelete(undefined)
-    if (result) {
-      setToast({ text: result, color: 'error' })
+    if (!result.success) {
+      setToast({ text: result.errorMessage, color: 'error' })
     } else {
       router.refresh()
     }

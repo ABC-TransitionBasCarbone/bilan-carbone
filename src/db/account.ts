@@ -105,3 +105,9 @@ export const addAccount = (account: Prisma.AccountCreateInput & { role: Exclude<
     data: account,
     select: AccountWithUserSelect,
   })
+
+export const getAccountsUserLevel = (ids: string[]) =>
+  prismaClient.account.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, user: { select: { level: true } } },
+  })

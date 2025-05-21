@@ -39,10 +39,10 @@ import { OnboardingCommand } from './user.command'
 export const getStudyOrganizationVersion = async (studyId: string) =>
   withServerResponse('getStudyOrganizationVersion', async () => {
     const study = await getStudy(studyId)
-    if (!study) {
+    if (!study.success || !study.data) {
       return null
     }
-    return getOrganizationNameByOrganizationVersionId(study.organizationVersionId)
+    return getOrganizationNameByOrganizationVersionId(study.data.organizationVersionId)
   })
 
 export const createOrganizationCommand = async (command: CreateOrganizationCommand) =>

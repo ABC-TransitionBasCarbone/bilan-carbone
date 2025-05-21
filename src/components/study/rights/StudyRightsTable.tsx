@@ -97,8 +97,8 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
     const result = await deleteStudyMember(member, study.id)
     setDeleting(false)
     setToDelete(undefined)
-    if (result) {
-      setToast({ text: result, color: 'error' })
+    if (!result.success) {
+      setToast({ text: result.errorMessage, color: 'error' })
     } else {
       router.refresh()
     }

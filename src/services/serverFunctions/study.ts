@@ -6,8 +6,8 @@ import {
   addAccount,
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
+  getAccountsUserLevel,
 } from '@/db/account'
-import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
@@ -51,6 +51,7 @@ import { addUser, getUserApplicationSettings, getUserByEmail, UserWithAccounts }
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
+import { withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
@@ -108,18 +109,19 @@ import {
 } from './study.command'
 import { addUserChecklistItem, sendInvitation } from './user'
 
-export const getStudy = async (studyId: string) => {
-  const session = await auth()
-  if (!studyId || !session || !session.user) {
-    return null
-  }
-  const study = await getStudyById(studyId, session.user.organizationVersionId)
-  if (!study || !hasAccessToStudy(session.user, study)) {
-    return null
-  }
+export const getStudy = async (studyId: string) =>
+  withServerResponse('getStudy', async () => {
+    const session = await auth()
+    if (!studyId || !session || !session.user) {
+      return null
+    }
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    if (!study || !hasAccessToStudy(session.user, study)) {
+      return null
+    }
 
-  return study
-}
+    return study
+  })
 
 export const createStudyCommand = async ({
   organizationVersionId,
@@ -127,117 +129,121 @@ export const createStudyCommand = async ({
   sites,
   openingHoursHoliday,
   ...command
-}: CreateStudyCommand): Promise<{ message: string; success: false } | { id: string; success: true }> => {
-  const session = await auth()
+}: CreateStudyCommand) =>
+  withServerResponse('createStudyCommand', async () => {
+    const session = await auth()
 
-  if (!session || !session.user) {
-    return { success: false, message: NOT_AUTHORIZED }
-  }
-
-  const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
-  if (validator === session.user.email) {
-    rights.push({
-      role: StudyRole.Validator,
-      accountId: session.user.accountId,
-    })
-  } else {
-    const accountValidator = await getAccountByEmailAndOrganizationVersionId(
-      validator,
-      session.user.organizationVersionId,
-    )
-    if (!accountValidator) {
-      return { success: false, message: NOT_AUTHORIZED }
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
     }
 
-    rights.push({
-      role: isAdmin(session.user.role) ? StudyRole.Validator : StudyRole.Editor,
-      accountId: session.user.accountId,
-    })
-    rights.push({
-      role: StudyRole.Validator,
-      accountId: accountValidator.id,
-    })
-  }
+    const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
+    if (validator === session.user.email) {
+      rights.push({
+        role: StudyRole.Validator,
+        accountId: session.user.accountId,
+      })
+    } else {
+      const accountValidator = await getAccountByEmailAndOrganizationVersionId(
+        validator,
+        session.user.organizationVersionId,
+      )
+      if (!accountValidator) {
+        throw new Error(NOT_AUTHORIZED)
+      }
 
-  const activeVersion = await getEmissionFactorsImportActiveVersion(Import.BaseEmpreinte)
-  if (!activeVersion) {
-    return { success: false, message: `noActiveVersion_${Import.BaseEmpreinte}` }
-  }
+      rights.push({
+        role: isAdmin(session.user.role) ? StudyRole.Validator : StudyRole.Editor,
+        accountId: session.user.accountId,
+      })
+      rights.push({
+        role: StudyRole.Validator,
+        accountId: accountValidator.id,
+      })
+    }
 
-  const studySites = sites.filter((site) => site.selected)
-  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-  if (!organizationVersion) {
-    return { success: false, message: NOT_AUTHORIZED }
-  }
+    const activeVersion = await getEmissionFactorsImportActiveVersion(Import.BaseEmpreinte)
+    if (!activeVersion) {
+      throw new Error(`noActiveVersion_${Import.BaseEmpreinte}`)
+    }
 
-  if (
-    studySites.some((site) =>
-      organizationVersion.organization.sites.every((organizationSite) => organizationSite.id !== site.id),
-    )
-  ) {
-    return { success: false, message: NOT_AUTHORIZED }
-  }
+    const studySites = sites.filter((site) => site.selected)
+    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+    if (!organizationVersion) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
-  const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
+    if (
+      studySites.some((site) =>
+        organizationVersion.organization.sites.every((organizationSite) => organizationSite.id !== site.id),
+      )
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const mergedOpeningHours = [...Object.values(command.openingHours || {}), ...Object.values(openingHoursHoliday || {})]
+    const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
+    const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
-  const study = {
-    ...command,
-    createdBy: { connect: { id: session.user.accountId } },
-    organizationVersion: { connect: { id: organizationVersionId } },
-    isPublic: command.isPublic === 'true',
-    openingHours: {
-      create: mergedOpeningHours,
-    },
-    allowedUsers: {
-      createMany: { data: rights },
-    },
-    exports: {
-      createMany: {
-        data: Object.entries(command.exports)
-          .filter(([, value]) => value)
-          .map(([key, value]) => ({
-            type: key as Export,
-            control: value as ControlMode,
-          })),
+    const mergedOpeningHours = [
+      ...Object.values(command.openingHours || {}),
+      ...Object.values(openingHoursHoliday || {}),
+    ]
+
+    const study = {
+      ...command,
+      createdBy: { connect: { id: session.user.accountId } },
+      organizationVersion: { connect: { id: organizationVersionId } },
+      isPublic: command.isPublic === 'true',
+      openingHours: {
+        create: mergedOpeningHours,
       },
-    },
-    sites: {
-      createMany: {
-        data: studySites
-          .map((site) => {
-            const organizationSite = organizationVersion.organization.sites.find(
-              (organizationSite) => organizationSite.id === site.id,
-            )
-            if (!organizationSite) {
-              return undefined
-            }
-            return {
-              siteId: site.id,
-              etp: site.etp || organizationSite.etp,
-              ca: site.ca ? site.ca * caUnit : organizationSite.ca,
-            }
-          })
-          .filter((site) => site !== undefined),
+      allowedUsers: {
+        createMany: { data: rights },
       },
-    },
-  } satisfies Prisma.StudyCreateInput
+      exports: {
+        createMany: {
+          data: Object.entries(command.exports)
+            .filter(([, value]) => value)
+            .map(([key, value]) => ({
+              type: key as Export,
+              control: value as ControlMode,
+            })),
+        },
+      },
+      sites: {
+        createMany: {
+          data: studySites
+            .map((site) => {
+              const organizationSite = organizationVersion.organization.sites.find(
+                (organizationSite) => organizationSite.id === site.id,
+              )
+              if (!organizationSite) {
+                return undefined
+              }
+              return {
+                siteId: site.id,
+                etp: site.etp || organizationSite.etp,
+                ca: site.ca ? site.ca * caUnit : organizationSite.ca,
+              }
+            })
+            .filter((site) => site !== undefined),
+        },
+      },
+    } satisfies Prisma.StudyCreateInput
 
-  if (!(await canCreateStudy(session.user.accountId, study, organizationVersionId))) {
-    return { success: false, message: NOT_AUTHORIZED }
-  }
+    if (!(await canCreateStudy(session.user.accountId, study, organizationVersionId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  try {
-    const createdStudy = await createStudy(study)
-    addUserChecklistItem(UserChecklist.CreateFirstStudy)
-    return { success: true, id: createdStudy.id }
-  } catch (e) {
-    console.error(e)
-    return { success: false, message: 'default' }
-  }
-}
+    try {
+      const createdStudy = await createStudy(study)
+      addUserChecklistItem(UserChecklist.CreateFirstStudy)
+      return { id: createdStudy.id }
+    } catch (e) {
+      console.error(e)
+      throw new Error('default')
+    }
+  })
 
 const getStudyRightsInformations = async (studyId: string) => {
   const session = await auth()
@@ -253,108 +259,112 @@ const getStudyRightsInformations = async (studyId: string) => {
   return { user: session.user, studyWithRights }
 }
 
-export const changeStudyPublicStatus = async ({ studyId, ...command }: ChangeStudyPublicStatusCommand) => {
-  const informations = await getStudyRightsInformations(studyId)
-  if (informations === null) {
-    return NOT_AUTHORIZED
-  }
-  if (!canChangePublicStatus(informations.user, informations.studyWithRights)) {
-    return NOT_AUTHORIZED
-  }
-  await updateStudy(studyId, { isPublic: command.isPublic === 'true' })
-}
-
-export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevelCommand) => {
-  const informations = await getStudyRightsInformations(studyId)
-  if (informations === null) {
-    return NOT_AUTHORIZED
-  }
-
-  if (!(await canChangeLevel(informations.user, informations.studyWithRights, command.level))) {
-    return NOT_AUTHORIZED
-  }
-  await updateStudy(studyId, command)
-
-  const usersOnStudy = await getUsersOnStudy(studyId)
-  const accountsLevel = await prismaClient.account.findMany({
-    where: { id: { in: usersOnStudy.map((account) => account.accountId) } },
-    select: { id: true, user: { select: { level: true } } },
+export const changeStudyPublicStatus = async ({ studyId, ...command }: ChangeStudyPublicStatusCommand) =>
+  withServerResponse('changeStudyPublicStatus', async () => {
+    const informations = await getStudyRightsInformations(studyId)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!canChangePublicStatus(informations.user, informations.studyWithRights)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await updateStudy(studyId, { isPublic: command.isPublic === 'true' })
   })
-  const accountsRoleToDowngrade = accountsLevel
-    .filter((accountLevel) => !checkLevel(accountLevel.user.level, command.level))
-    .map((accountLevel) => accountLevel.id)
-  if (accountsRoleToDowngrade.length) {
-    await downgradeStudyUserRoles(studyId, accountsRoleToDowngrade)
-  }
-}
 
-export const changeStudyResultsUnit = async ({ studyId, ...command }: ChangeStudyResultsUnitCommand) => {
-  const informations = await getStudyRightsInformations(studyId)
-  if (informations === null) {
-    return NOT_AUTHORIZED
-  }
+export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevelCommand) =>
+  withServerResponse('changeStudyLevel', async () => {
+    const informations = await getStudyRightsInformations(studyId)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (!(await canChangeResultsUnit(informations.user, informations.studyWithRights))) {
-    return NOT_AUTHORIZED
-  }
+    if (!(await canChangeLevel(informations.user, informations.studyWithRights, command.level))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await updateStudy(studyId, command)
 
-  await updateStudy(studyId, command)
-}
+    const usersOnStudy = await getUsersOnStudy(studyId)
+    const accountsLevel = await getAccountsUserLevel(usersOnStudy.map((account) => account.accountId))
+    const accountsRoleToDowngrade = accountsLevel
+      .filter((accountLevel) => !checkLevel(accountLevel.user.level, command.level))
+      .map((accountLevel) => accountLevel.id)
+    if (accountsRoleToDowngrade.length) {
+      await downgradeStudyUserRoles(studyId, accountsRoleToDowngrade)
+    }
+  })
 
-export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDatesCommand) => {
-  const informations = await getStudyRightsInformations(studyId)
-  if (informations === null) {
-    return NOT_AUTHORIZED
-  }
+export const changeStudyResultsUnit = async ({ studyId, ...command }: ChangeStudyResultsUnitCommand) =>
+  withServerResponse('changeStudyResultsUnit', async () => {
+    const informations = await getStudyRightsInformations(studyId)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (!(await canChangeDates(informations.user, informations.studyWithRights))) {
-    return NOT_AUTHORIZED
-  }
-  await updateStudy(studyId, command)
-}
+    if (!(await canChangeResultsUnit(informations.user, informations.studyWithRights))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCommand) => {
-  const informations = await getStudyRightsInformations(studyId)
-  if (informations === null) {
-    return NOT_AUTHORIZED
-  }
+    await updateStudy(studyId, command)
+  })
 
-  if (!canChangeName(informations.user, informations.studyWithRights)) {
-    return NOT_AUTHORIZED
-  }
+export const changeStudyDates = async ({ studyId, ...command }: ChangeStudyDatesCommand) =>
+  withServerResponse('changeStudyDates', async () => {
+    const informations = await getStudyRightsInformations(studyId)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  await updateStudy(studyId, { name: command.name })
-}
+    if (!(await canChangeDates(informations.user, informations.studyWithRights))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await updateStudy(studyId, command)
+  })
 
-export const changeStudyCinema = async ({ studyId, ...command }: ChangeStudyCinemaCommand) => {
-  const informations = await getStudyRightsInformations(studyId)
-  if (informations === null) {
-    return NOT_AUTHORIZED
-  }
-  const { openingHours, openingHoursHoliday, ...updateData } = command
+export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCommand) =>
+  withServerResponse('changeStudyName', async () => {
+    const informations = await getStudyRightsInformations(studyId)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
-    return NOT_AUTHORIZED
-  }
+    if (!canChangeName(informations.user, informations.studyWithRights)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  await updateStudyOpeningHours(studyId, openingHours, openingHoursHoliday)
-  await updateStudy(studyId, updateData)
-}
+    await updateStudy(studyId, { name: command.name })
+  })
+
+export const changeStudyCinema = async ({ studyId, ...command }: ChangeStudyCinemaCommand) =>
+  withServerResponse('changeStudyCinema', async () => {
+    const informations = await getStudyRightsInformations(studyId)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const { openingHours, openingHoursHoliday, ...updateData } = command
+
+    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateStudyOpeningHours(studyId, openingHours, openingHoursHoliday)
+    await updateStudy(studyId, updateData)
+  })
 
 export const hasActivityData = async (
   studyId: string,
   deletedSites: ChangeStudySitesCommand['sites'],
   organizationVersionId: string,
-) => {
-  const study = await getStudyById(studyId, organizationVersionId)
-  if (!study) {
-    return false
-  }
-  const emissionSources = await Promise.all(deletedSites.map((site) => hasEmissionSources(study, site.id)))
-  return emissionSources.some((emissionSource) => emissionSource)
-}
+) =>
+  withServerResponse('hasActivityData', async () => {
+    const study = await getStudyById(studyId, organizationVersionId)
+    if (!study) {
+      return false
+    }
+    const emissionSources = await Promise.all(deletedSites.map((site) => hasEmissionSources(study, site.id)))
+    return emissionSources.some((emissionSource) => emissionSource)
+  })
 
-export const hasEmissionSources = async (study: FullStudy, siteId: string) => {
+const hasEmissionSources = async (study: FullStudy, siteId: string) => {
   if (!study) {
     return false
   }
@@ -372,66 +382,68 @@ export const hasEmissionSources = async (study: FullStudy, siteId: string) => {
   return true
 }
 
-export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) => {
-  const [organization, session] = await Promise.all([getOrganizationWithSitesById(organizationId), auth()])
+export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) =>
+  withServerResponse('changeStudySites', async () => {
+    const [organization, session] = await Promise.all([getOrganizationWithSitesById(organizationId), auth()])
 
-  if (!organization || !session) {
-    return NOT_AUTHORIZED
-  }
+    if (!organization || !session) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
-  const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
+    const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
+    const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
-  const selectedSites = command.sites
-    .filter((site) => site.selected)
-    .map((site) => {
-      const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === site.id)
-      if (!organizationSite) {
-        return undefined
-      }
-      return {
-        studyId,
-        siteId: site.id,
-        etp: site.etp || organizationSite.etp,
-        ca: site.ca * caUnit || organizationSite.ca,
-      }
-    })
-    .filter((site) => site !== undefined)
-  if (
-    selectedSites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.siteId))
-  ) {
-    return NOT_AUTHORIZED
-  }
+    const selectedSites = command.sites
+      .filter((site) => site.selected)
+      .map((site) => {
+        const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === site.id)
+        if (!organizationSite) {
+          return undefined
+        }
+        return {
+          studyId,
+          siteId: site.id,
+          etp: site.etp || organizationSite.etp,
+          ca: site.ca * caUnit || organizationSite.ca,
+        }
+      })
+      .filter((site) => site !== undefined)
+    if (
+      selectedSites.some((site) => organization.sites.every((organizationSite) => organizationSite.id !== site.siteId))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const informations = await getStudyRightsInformations(studyId)
-  if (informations === null) {
-    return NOT_AUTHORIZED
-  }
+    const informations = await getStudyRightsInformations(studyId)
+    if (informations === null) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (!canChangeSites(informations.user, informations.studyWithRights)) {
-    return NOT_AUTHORIZED
-  }
+    if (!canChangeSites(informations.user, informations.studyWithRights)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const existingSites = await getStudySites(studyId)
-  const deletedSiteIds = existingSites
-    .filter((existingStudySite) => !selectedSites.find((studySite) => studySite.siteId === existingStudySite.siteId))
-    .map((studySite) => studySite.id)
-  await updateStudySites(studyId, selectedSites, deletedSiteIds)
-}
+    const existingSites = await getStudySites(studyId)
+    const deletedSiteIds = existingSites
+      .filter((existingStudySite) => !selectedSites.find((studySite) => studySite.siteId === existingStudySite.siteId))
+      .map((studySite) => studySite.id)
+    await updateStudySites(studyId, selectedSites, deletedSiteIds)
+  })
 
-export const changeStudyExports = async (studyId: string, type: Export, control: ControlMode | false) => {
-  const [session, study] = await Promise.all([auth(), getStudy(studyId)])
-  if (!session || !session.user || !study) {
-    return NOT_AUTHORIZED
-  }
-  if (!hasEditionRights(getAccountRoleOnStudy(session.user, study))) {
-    return NOT_AUTHORIZED
-  }
-  if (control === false) {
-    return deleteStudyExport(studyId, type)
-  }
-  return createStudyExport(studyId, type, control)
-}
+export const changeStudyExports = async (studyId: string, type: Export, control: ControlMode | false) =>
+  withServerResponse('changeStudyExports', async () => {
+    const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+    if (!session || !session.user || !study.success || !study.data) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (control === false) {
+      return deleteStudyExport(studyId, type)
+    }
+    return createStudyExport(studyId, type, control)
+  })
 
 const getOrCreateUserAndSendStudyInvite = async (
   email: string,
@@ -453,7 +465,8 @@ const getOrCreateUserAndSendStudyInvite = async (
       accounts: {
         create: {
           role: Role.COLLABORATOR,
-          environment: organizationVersion.environment,
+          organizationVersionId: organizationVersion.id,
+          environment: study.organizationVersion.environment,
         },
       },
     })
@@ -492,202 +505,212 @@ const getOrCreateUserAndSendStudyInvite = async (
   return accountId
 }
 
-export const newStudyRight = async (right: NewStudyRightCommand) => {
-  const session = await auth()
-  if (!session || !session.user) {
-    return NOT_AUTHORIZED
-  }
+export const newStudyRight = async (right: NewStudyRightCommand) =>
+  withServerResponse('newStudyRight', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const [studyWithRights, existingAccount, existingUser] = await Promise.all([
-    getStudyById(right.studyId, session.user.organizationVersionId),
-    getAccountByEmailAndOrganizationVersionId(right.email, session.user.organizationVersionId),
-    getUserByEmail(right.email),
-  ])
+    const [studyWithRights, existingAccount, existingUser] = await Promise.all([
+      getStudyById(right.studyId, session.user.organizationVersionId),
+      getAccountByEmailAndOrganizationVersionId(right.email, session.user.organizationVersionId),
+      getUserByEmail(right.email),
+    ])
 
-  if (!studyWithRights) {
-    return NOT_AUTHORIZED
-  }
+    if (!studyWithRights) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (!existingUser || !checkLevel(existingUser.level, studyWithRights.level)) {
-    right.role = StudyRole.Reader
-  }
+    if (!existingUser || !checkLevel(existingUser.level, studyWithRights.level)) {
+      right.role = StudyRole.Reader
+    }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, right.role)) {
-    return NOT_AUTHORIZED
-  }
+    if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, right.role)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const organizationVersion = await getOrganizationVersionById(studyWithRights.organizationVersionId)
-  if (!organizationVersion) {
-    return NOT_AUTHORIZED
-  }
+    const organizationVersion = await getOrganizationVersionById(studyWithRights.organizationVersionId)
+    if (!organizationVersion) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (
-    studyWithRights.allowedUsers.some((allowedUser) => allowedUser.accountId === existingAccount?.id) ||
-    studyWithRights.contributors.some((contributor) => contributor.accountId === existingAccount?.id)
-  ) {
-    return ALREADY_IN_STUDY
-  }
+    if (
+      studyWithRights.allowedUsers.some((allowedUser) => allowedUser.accountId === existingAccount?.id) ||
+      studyWithRights.contributors.some((contributor) => contributor.accountId === existingAccount?.id)
+    ) {
+      throw new Error(ALREADY_IN_STUDY)
+    }
 
-  if (
-    existingAccount &&
-    isAdminOnStudyOrga(
-      accountWithUserToUserSession(existingAccount as AccountWithUser),
-      studyWithRights.organizationVersion as OrganizationVersionWithOrganization,
-    ) &&
-    checkLevel(existingAccount.user.level, studyWithRights.level)
-  ) {
-    right.role = StudyRole.Validator
-  }
+    if (
+      existingAccount &&
+      isAdminOnStudyOrga(
+        accountWithUserToUserSession(existingAccount as AccountWithUser),
+        studyWithRights.organizationVersion as OrganizationVersionWithOrganization,
+      ) &&
+      checkLevel(existingAccount.user.level, studyWithRights.level)
+    ) {
+      right.role = StudyRole.Validator
+    }
 
-  const accountId = await getOrCreateUserAndSendStudyInvite(
-    right.email,
-    studyWithRights,
-    organizationVersion as OrganizationVersionWithOrganization,
-    session.user,
-    existingUser,
-    right.role,
-  )
+    const accountId = await getOrCreateUserAndSendStudyInvite(
+      right.email,
+      studyWithRights,
+      organizationVersion as OrganizationVersionWithOrganization,
+      session.user,
+      existingUser,
+      right.role,
+    )
 
-  await createUserOnStudy({
-    account: { connect: { id: accountId } },
-    study: { connect: { id: studyWithRights.id } },
-    role: right.role,
+    if (accountId) {
+      await createUserOnStudy({
+        account: { connect: { id: accountId } },
+        study: { connect: { id: studyWithRights.id } },
+        role: right.role,
+      })
+    }
   })
-}
 
-export const changeStudyRole = async (studyId: string, email: string, studyRole: StudyRole) => {
-  const session = await auth()
-  if (!session || !session.user || !session.user.organizationVersionId) {
-    return NOT_AUTHORIZED
-  }
+export const changeStudyRole = async (studyId: string, email: string, studyRole: StudyRole) =>
+  withServerResponse('changeStudyRole', async () => {
+    const session = await auth()
+    if (!session || !session.user || !session.user.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const [studyWithRights, existingAccount, existingUser] = await Promise.all([
-    getStudyById(studyId, session.user.organizationVersionId),
-    getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId),
-    getUserByEmail(email),
-  ])
+    const [studyWithRights, existingAccount, existingUser] = await Promise.all([
+      getStudyById(studyId, session.user.organizationVersionId),
+      getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId),
+      getUserByEmail(email),
+    ])
 
-  if (!studyWithRights || !existingAccount) {
-    return NOT_AUTHORIZED
-  }
+    if (!studyWithRights || !existingAccount) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole)) {
-    return NOT_AUTHORIZED
-  }
+    if (!canAddRightOnStudy(session.user, studyWithRights, existingUser, studyRole)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (
-    existingAccount &&
-    isAdminOnStudyOrga(
-      accountWithUserToUserSession(existingAccount as AccountWithUser),
-      studyWithRights.organizationVersion as OrganizationVersionWithOrganization,
-    ) &&
-    studyRole !== StudyRole.Validator
-  ) {
-    return NOT_AUTHORIZED
-  }
+    if (
+      existingAccount &&
+      isAdminOnStudyOrga(
+        accountWithUserToUserSession(existingAccount as AccountWithUser),
+        studyWithRights.organizationVersion as OrganizationVersionWithOrganization,
+      ) &&
+      studyRole !== StudyRole.Validator
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (
-    existingAccount &&
-    !checkLevel(existingAccount.user.level, studyWithRights.level) &&
-    studyRole !== StudyRole.Reader
-  ) {
-    return NOT_AUTHORIZED
-  }
+    if (
+      existingAccount &&
+      !checkLevel(existingAccount.user.level, studyWithRights.level) &&
+      studyRole !== StudyRole.Reader
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  await updateUserOnStudy(existingAccount.id, studyWithRights.id, studyRole)
-}
+    await updateUserOnStudy(existingAccount.id, studyWithRights.id, studyRole)
+  })
 
-export const newStudyContributor = async ({ email, subPosts, ...command }: NewStudyContributorCommand) => {
-  const session = await auth()
-  if (!session || !session.user || !session.user.organizationVersionId) {
-    return NOT_AUTHORIZED
-  }
+export const newStudyContributor = async ({ email, subPosts, ...command }: NewStudyContributorCommand) =>
+  withServerResponse('newStudyContributor', async () => {
+    const session = await auth()
+    if (!session || !session.user || !session.user.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const [studyWithRights, existingAccount, existingUser] = await Promise.all([
-    getStudyById(command.studyId, session.user.organizationVersionId),
-    getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId),
-    getUserByEmail(email),
-  ])
+    const [studyWithRights, existingAccount, existingUser] = await Promise.all([
+      getStudyById(command.studyId, session.user.organizationVersionId),
+      getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId),
+      getUserByEmail(email),
+    ])
 
-  if (!studyWithRights) {
-    return NOT_AUTHORIZED
-  }
+    if (!studyWithRights) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const organizationVersion = await getOrganizationVersionById(studyWithRights.organizationVersionId)
-  if (!organizationVersion) {
-    return NOT_AUTHORIZED
-  }
+    const organizationVersion = await getOrganizationVersionById(studyWithRights.organizationVersionId)
+    if (!organizationVersion) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (!canAddContributorOnStudy(session.user, studyWithRights)) {
-    return NOT_AUTHORIZED
-  }
+    if (!canAddContributorOnStudy(session.user, studyWithRights)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (
-    existingAccount &&
-    getAccountRoleOnStudy(accountWithUserToUserSession(existingAccount as AccountWithUser), studyWithRights)
-  ) {
-    return ALREADY_IN_STUDY
-  }
+    if (
+      existingAccount &&
+      getAccountRoleOnStudy(accountWithUserToUserSession(existingAccount as AccountWithUser), studyWithRights)
+    ) {
+      throw new Error(ALREADY_IN_STUDY)
+    }
 
-  const accountId = await getOrCreateUserAndSendStudyInvite(
-    email,
-    studyWithRights,
-    organizationVersion as OrganizationVersionWithOrganization,
-    session.user,
-    existingUser,
-  )
+    const accountId = await getOrCreateUserAndSendStudyInvite(
+      email,
+      studyWithRights,
+      organizationVersion as OrganizationVersionWithOrganization,
+      session.user,
+      existingUser,
+    )
 
-  const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
-  await createContributorOnStudy(accountId, selectedSubposts, command)
-}
+    if (accountId) {
+      const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
+      await createContributorOnStudy(accountId, selectedSubposts, command)
+    }
+  })
 
-export const deleteStudyCommand = async ({ id, name }: DeleteCommand) => {
-  if (!(await canDeleteStudy(id))) {
-    return NOT_AUTHORIZED
-  }
-  const studyName = await getStudyNameById(id)
-  if (!studyName) {
-    return NOT_AUTHORIZED
-  }
+export const deleteStudyCommand = async ({ id, name }: DeleteCommand) =>
+  withServerResponse('deleteStudyCommand', async () => {
+    if (!(await canDeleteStudy(id))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const studyName = await getStudyNameById(id)
+    if (!studyName) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (studyName.toLowerCase() !== name.toLowerCase()) {
-    return 'wrongName'
-  }
-  await deleteStudy(id)
-}
+    if (studyName.toLowerCase() !== name.toLowerCase()) {
+      throw new Error('wrongName')
+    }
+    await deleteStudy(id)
+  })
 
-export const addFlowToStudy = async (studyId: string, file: File) => {
-  const session = await auth()
-  const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
-  if (!allowedType) {
-    return 'invalidFileType'
-  }
-  const allowedUserId = await canEditStudyFlows(studyId)
-  if (!allowedUserId) {
-    return NOT_AUTHORIZED
-  }
-  const butcketUploadResult = await uploadFileToBucket(file)
-  if (butcketUploadResult.success) {
-    await createDocument({
-      name: file.name,
-      type: file.type,
-      uploader: { connect: { id: session?.user.accountId } },
-      study: { connect: { id: studyId } },
-      bucketKey: butcketUploadResult.data.key,
-      bucketETag: butcketUploadResult.data.ETag || '',
-    })
-  }
-}
+export const addFlowToStudy = async (studyId: string, file: File) =>
+  withServerResponse('addFlowToStudy', async () => {
+    const session = await auth()
+    const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
+    if (!allowedType) {
+      throw new Error('invalidFileType')
+    }
+    const allowedUserId = await canEditStudyFlows(studyId)
+    if (!allowedUserId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const butcketUploadResult = await uploadFileToBucket(file)
+    if (butcketUploadResult.success) {
+      await createDocument({
+        name: file.name,
+        type: file.type,
+        uploader: { connect: { id: session?.user.accountId } },
+        study: { connect: { id: studyId } },
+        bucketKey: butcketUploadResult.data.key,
+        bucketETag: butcketUploadResult.data.ETag || '',
+      })
+    }
+  })
 
-export const deleteFlowFromStudy = async (document: Document, studyId: string) => {
-  if (!(await canAccessFlowFromStudy(document.id, studyId)) || !(await canEditStudyFlows(studyId))) {
-    return NOT_AUTHORIZED
-  }
-  const bucketDelete = await deleteFileFromBucket(document.bucketKey)
-  if (bucketDelete.success) {
-    await deleteDocument(document.id)
-  }
-}
+export const deleteFlowFromStudy = async (document: Document, studyId: string) =>
+  withServerResponse('deleteFlowFromStudy', async () => {
+    if (!(await canAccessFlowFromStudy(document.id, studyId)) || !(await canEditStudyFlows(studyId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const bucketDelete = await deleteFileFromBucket(document.bucketKey)
+    if (bucketDelete.success) {
+      await deleteDocument(document.id)
+    }
+  })
 
 const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) => {
   // The function does not return the user's role, which is sensitive information.
@@ -704,212 +727,230 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
   )
 }
 
-export const findStudiesWithSites = async (siteIds: string[]) => {
-  const [session, studySites] = await Promise.all([auth(), getStudiesFromSites(siteIds)])
+export const findStudiesWithSites = async (siteIds: string[]) =>
+  withServerResponse('findStudiesWithSites', async () => {
+    const [session, studySites] = await Promise.all([auth(), getStudiesFromSites(siteIds)])
 
-  const user = session?.user
-  const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
-  const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site' | 'study'> & {
-    count: number
-  })[] = []
+    const user = session?.user
+    const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
+    const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site' | 'study'> & {
+      count: number
+    })[] = []
 
-  studySites.forEach((studySite) => {
-    if (user && hasAccessToStudy(user, studySite.study)) {
-      authorizedStudySites.push(studySite)
-    } else {
-      const targetedSite = unauthorizedStudySites.find(
-        (unauthorizedStudySite) =>
-          unauthorizedStudySite.site.name === studySite.site.name &&
-          unauthorizedStudySite.site.organization.id === studySite.site.organization.id,
-      )
-      if (!targetedSite) {
-        unauthorizedStudySites.push({ site: studySite.site, study: studySite.study, count: 1 })
+    studySites.forEach((studySite) => {
+      if (user && hasAccessToStudy(user, studySite.study)) {
+        authorizedStudySites.push(studySite)
       } else {
-        targetedSite.count++
+        const targetedSite = unauthorizedStudySites.find(
+          (unauthorizedStudySite) =>
+            unauthorizedStudySite.site.name === studySite.site.name &&
+            unauthorizedStudySite.site.organization.id === studySite.site.organization.id,
+        )
+        if (!targetedSite) {
+          unauthorizedStudySites.push({ site: studySite.site, study: studySite.study, count: 1 })
+        } else {
+          targetedSite.count++
+        }
       }
+    })
+
+    return {
+      authorizedStudySites,
+      unauthorizedStudySites,
     }
   })
 
-  return {
-    authorizedStudySites,
-    unauthorizedStudySites,
-  }
-}
+export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], studyId: string) =>
+  withServerResponse('deleteStudyMember', async () => {
+    const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+    if (
+      !session?.user ||
+      !study.success ||
+      !study.data ||
+      !hasEditionRights(getAccountRoleOnStudy(session.user, study.data))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], studyId: string) => {
-  const [session, study] = await Promise.all([auth(), getStudy(studyId)])
-  if (!session?.user || !study || !hasEditionRights(getAccountRoleOnStudy(session.user, study))) {
-    return NOT_AUTHORIZED
-  }
+    await deleteAccountOnStudy(studyId, member.accountId)
+  })
 
-  await deleteAccountOnStudy(studyId, member.accountId)
-}
+export const deleteStudyContributor = async (contributor: StudyContributorRow, studyId: string) =>
+  withServerResponse('deleteStudyContributor', async () => {
+    const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+    if (
+      !session?.user ||
+      !study.success ||
+      !study.data ||
+      !hasEditionRights(getAccountRoleOnStudy(session.user, study.data))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    await deleteContributor(studyId, contributor)
+  })
 
-export const deleteStudyContributor = async (contributor: StudyContributorRow, studyId: string) => {
-  const [session, study] = await Promise.all([auth(), getStudy(studyId)])
-  if (!session?.user || !study || !hasEditionRights(getAccountRoleOnStudy(session.user, study))) {
-    return NOT_AUTHORIZED
-  }
-  await deleteContributor(studyId, contributor)
-}
-
-export const getStudyEmissionFactorImportVersions = async (studyId: string) => {
-  const study = await getStudy(studyId)
-  if (!study) {
-    return []
-  }
-  return getStudyEmissionFactorSources(studyId)
-}
+export const getStudyEmissionFactorImportVersions = async (studyId: string) =>
+  withServerResponse('getStudyEmissionFactorImportVersions', async () => {
+    const study = await getStudy(studyId)
+    if (!study.success) {
+      return []
+    }
+    return getStudyEmissionFactorSources(studyId)
+  })
 
 export const getOrganizationStudiesFromOtherUsers = async (organizationVersionId: string, accountId: string) =>
-  countOrganizationStudiesFromOtherUsers(organizationVersionId, accountId)
+  withServerResponse('getOrganizationStudiesFromOtherUsers', async () =>
+    countOrganizationStudiesFromOtherUsers(organizationVersionId, accountId),
+  )
 
 const getMetaData = (emissionFactor: AsyncReturnType<typeof getEmissionFactorsByIdsAndSource>[0], locale: LocaleType) =>
   emissionFactor.metaData.find((metadata) => metadata.language === locale) ?? emissionFactor.metaData[0]
 
-export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, source: Import) => {
-  const [session, study, importVersions, locale] = await Promise.all([
-    auth(),
-    getStudyById(studyId, null),
-    getEmissionFactorVersionsBySource(source),
-    getLocale(),
-  ])
-  if (!session || !session.user || !study || !importVersions.length) {
-    return { success: false }
-  }
+export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, source: Import) =>
+  withServerResponse('simulateStudyEmissionFactorSourceUpgrade', async () => {
+    const [session, study, importVersions, locale] = await Promise.all([
+      auth(),
+      getStudyById(studyId, null),
+      getEmissionFactorVersionsBySource(source),
+      getLocale(),
+    ])
+    if (!session || !session.user || !study || !importVersions.length) {
+      throw new Error('data not found')
+    }
 
-  if (!(await canUpgradeSourceVersion(session.user, study))) {
-    return { success: false, message: NOT_AUTHORIZED }
-  }
+    if (!(await canUpgradeSourceVersion(session.user, study))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const latestSourceVersion = importVersions[0]
-  if (
-    latestSourceVersion.id ===
-    study.emissionFactorVersions.find((version) => version.source === source)?.importVersionId
-  ) {
-    return { success: false, message: 'latest' }
-  }
+    const latestSourceVersion = importVersions[0]
+    if (
+      latestSourceVersion.id ===
+      study.emissionFactorVersions.find((version) => version.source === source)?.importVersionId
+    ) {
+      throw new Error('latest')
+    }
 
-  const targetedEmissionSources = study.emissionSources.filter(
-    (emissionSource) => emissionSource.emissionFactor?.importedFrom === source,
-  )
-  const emissionFactors = await getEmissionFactorsByIdsAndSource(
-    targetedEmissionSources.map((emissionSource) => emissionSource.emissionFactorId).filter((id) => id !== null),
-    source,
-  )
-  const upgradedEmissionFactors = await getEmissionFactorsByImportedIdsAndVersion(
-    emissionFactors.map((emissionFactor) => emissionFactor.importedId).filter((importedId) => importedId !== null),
-    latestSourceVersion.id,
-  )
-
-  const deletedEmissionFactors = emissionFactors
-    .filter(
-      (emissionFactor) =>
-        !upgradedEmissionFactors
-          .map((upgradedEmissionFactor) => upgradedEmissionFactor.importedId)
-          .includes(emissionFactor.importedId),
+    const targetedEmissionSources = study.emissionSources.filter(
+      (emissionSource) => emissionSource.emissionFactor?.importedFrom === source,
     )
-    .map((emissionFactor) => ({
-      ...emissionFactor,
-      metaData: getMetaData(emissionFactor, locale),
-    }))
+    const emissionFactors = await getEmissionFactorsByIdsAndSource(
+      targetedEmissionSources.map((emissionSource) => emissionSource.emissionFactorId).filter((id) => id !== null),
+      source,
+    )
+    const upgradedEmissionFactors = await getEmissionFactorsByImportedIdsAndVersion(
+      emissionFactors.map((emissionFactor) => emissionFactor.importedId).filter((importedId) => importedId !== null),
+      latestSourceVersion.id,
+    )
 
-  const updatedEmissionFactors = emissionFactors
-    .filter((emissionFactor) => {
-      const upgradedVersion = upgradedEmissionFactors.find(
-        (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
+    const deletedEmissionFactors = emissionFactors
+      .filter(
+        (emissionFactor) =>
+          !upgradedEmissionFactors
+            .map((upgradedEmissionFactor) => upgradedEmissionFactor.importedId)
+            .includes(emissionFactor.importedId),
       )
-      return upgradedVersion && upgradedVersion.totalCo2 !== emissionFactor.totalCo2
-    })
-    .map((emissionFactor) => ({
-      ...emissionFactor,
-      metaData: getMetaData(emissionFactor, locale),
-      newValue: (
-        upgradedEmissionFactors.find(
+      .map((emissionFactor) => ({
+        ...emissionFactor,
+        metaData: getMetaData(emissionFactor, locale),
+      }))
+
+    const updatedEmissionFactors = emissionFactors
+      .filter((emissionFactor) => {
+        const upgradedVersion = upgradedEmissionFactors.find(
           (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
-        ) as EmissionFactor
-      ).totalCo2,
-    }))
+        )
+        return upgradedVersion && upgradedVersion.totalCo2 !== emissionFactor.totalCo2
+      })
+      .map((emissionFactor) => ({
+        ...emissionFactor,
+        metaData: getMetaData(emissionFactor, locale),
+        newValue: (
+          upgradedEmissionFactors.find(
+            (upgradedEmissionFactor) => upgradedEmissionFactor.importedId === emissionFactor.importedId,
+          ) as EmissionFactor
+        ).totalCo2,
+      }))
 
-  return {
-    success: true,
-    emissionSources: targetedEmissionSources,
-    deleted: deletedEmissionFactors,
-    updated: updatedEmissionFactors,
-    latestSourceVersion,
-  }
-}
+    return {
+      emissionSources: targetedEmissionSources,
+      deleted: deletedEmissionFactors,
+      updated: updatedEmissionFactors,
+      latestSourceVersion,
+    }
+  })
 
-export const upgradeStudyEmissionFactorSource = async (studyId: string, source: Import) => {
-  const simulationResults = await simulateStudyEmissionFactorSourceUpgrade(studyId, source)
-  if (!simulationResults.success) {
-    return simulationResults
-  }
+export const upgradeStudyEmissionFactorSource = async (studyId: string, source: Import) =>
+  withServerResponse('upgradeStudyEmissionFactorSource', async () => {
+    const simulationResults = await simulateStudyEmissionFactorSourceUpgrade(studyId, source)
+    if (!simulationResults.success) {
+      throw new Error(simulationResults.errorMessage)
+    }
 
-  const importedIds = (simulationResults.emissionSources || [])
-    .map((emissionSource) => emissionSource.emissionFactor?.importedId)
-    .filter((importId) => importId !== null && importId !== undefined)
+    const importedIds = (simulationResults.data.emissionSources || [])
+      .map((emissionSource) => emissionSource.emissionFactor?.importedId)
+      .filter((importId) => importId !== null && importId !== undefined)
 
-  const upgradedEmissionFactors = await getEmissionFactorsByImportedIdsAndVersion(
-    importedIds,
-    (simulationResults.latestSourceVersion as EmissionFactorImportVersion).id,
-  )
-
-  const updatePromises = (simulationResults.emissionSources || []).reduce((promises, emissionSource) => {
-    const newEmissionFactor = (upgradedEmissionFactors || []).find(
-      (emissionFactor) => emissionFactor.importedId === emissionSource.emissionFactor?.importedId,
+    const upgradedEmissionFactors = await getEmissionFactorsByImportedIdsAndVersion(
+      importedIds,
+      (simulationResults.data.latestSourceVersion as EmissionFactorImportVersion).id,
     )
-    return promises.concat(
-      newEmissionFactor ? [updateEmissionSourceEmissionFactor(emissionSource.id, newEmissionFactor.id)] : [],
-    )
-  }, [] as Prisma.PrismaPromise<StudyEmissionSource>[])
-  const deletePromises = (simulationResults.deleted || []).reduce((promises, emissionFactor) => {
-    const emissionSources =
-      simulationResults.emissionSources?.filter(
-        (emissionSource) => emissionSource.emissionFactor?.id === emissionFactor.id,
-      ) || []
-    return promises.concat(
-      emissionSources.map((emissionSource) => clearEmissionSourceEmissionFactor(emissionSource.id)),
-    )
-  }, [] as Prisma.PrismaPromise<StudyEmissionSource>[])
-  await Promise.all(updatePromises.concat(deletePromises))
 
-  await updateStudyEmissionFactorVersion(studyId, source, simulationResults.latestSourceVersion?.id)
+    const updatePromises = (simulationResults.data.emissionSources || []).reduce((promises, emissionSource) => {
+      const newEmissionFactor = (upgradedEmissionFactors || []).find(
+        (emissionFactor) => emissionFactor.importedId === emissionSource.emissionFactor?.importedId,
+      )
+      return promises.concat(
+        newEmissionFactor ? [updateEmissionSourceEmissionFactor(emissionSource.id, newEmissionFactor.id)] : [],
+      )
+    }, [] as Prisma.PrismaPromise<StudyEmissionSource>[])
+    const deletePromises = (simulationResults.data.deleted || []).reduce((promises, emissionFactor) => {
+      const emissionSources =
+        simulationResults.data.emissionSources?.filter(
+          (emissionSource) => emissionSource.emissionFactor?.id === emissionFactor.id,
+        ) || []
+      return promises.concat(
+        emissionSources.map((emissionSource) => clearEmissionSourceEmissionFactor(emissionSource.id)),
+      )
+    }, [] as Prisma.PrismaPromise<StudyEmissionSource>[])
+    await Promise.all(updatePromises.concat(deletePromises))
 
-  return { success: true }
-}
+    await updateStudyEmissionFactorVersion(studyId, source, simulationResults.data.latestSourceVersion?.id)
+
+    return undefined
+  })
 
 export const duplicateStudyEmissionSource = async (
   studyId: string,
   emissionSource: FullStudy['emissionSources'][0],
   studySite: string,
-) => {
-  const session = await auth()
-  if (!session || !session.user) {
-    return NOT_AUTHORIZED
-  }
-  const study = await getStudyById(studyId, session.user.organizationVersionId)
+) =>
+  withServerResponse('duplicateStudyEmissionSource', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
 
-  if (
-    !study ||
-    !getAccountRoleOnStudy(session.user, study) ||
-    !hasEditionRights(getAccountRoleOnStudy(session.user, study))
-  ) {
-    return NOT_AUTHORIZED
-  }
+    if (
+      !study ||
+      !getAccountRoleOnStudy(session.user, study) ||
+      !hasEditionRights(getAccountRoleOnStudy(session.user, study))
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const data = {
-    ...emissionSource,
-    id: uuidv4(),
-    study: { connect: { id: studyId } },
-    emissionFactor: emissionSource.emissionFactor ? { connect: { id: emissionSource.emissionFactor.id } } : undefined,
-    emissionFactorId: undefined,
-    contributor: emissionSource.contributor ? { connect: { id: emissionSource.contributor.id } } : undefined,
-    contributorId: undefined,
-    studySite: { connect: { id: studySite } },
-    studySiteId: undefined,
-    validated: false,
-  } as Prisma.StudyEmissionSourceCreateInput
+    const data = {
+      ...emissionSource,
+      id: uuidv4(),
+      study: { connect: { id: studyId } },
+      emissionFactor: emissionSource.emissionFactor ? { connect: { id: emissionSource.emissionFactor.id } } : undefined,
+      emissionFactorId: undefined,
+      contributor: emissionSource.contributor ? { connect: { id: emissionSource.contributor.id } } : undefined,
+      contributorId: undefined,
+      studySite: { connect: { id: studySite } },
+      studySiteId: undefined,
+      validated: false,
+    } as Prisma.StudyEmissionSourceCreateInput
 
-  await createStudyEmissionSource(data)
-}
+    await createStudyEmissionSource(data)
+  })
