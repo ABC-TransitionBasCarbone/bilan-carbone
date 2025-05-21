@@ -527,29 +527,30 @@ export const uploadStudies = async (
             }
             let emissionFactor: EmissionFactor | null = null
             let emissionFactorId: string | null = null
+
+            const retrieveEmissionFactorMatchingConsoValueOrTakeMoreRecentOne = (
+              emissionFactorList: EmissionFactor[],
+            ) => {
+              const sortedByCreatedAtEmissionFactors = emissionFactorList.sort((a, b) =>
+                a.version && b.version ? b.version.createdAt.getTime() - a.version.createdAt.getTime() : 1,
+              )
+              const filteredByConsoValueEmissionFactors = sortedByCreatedAtEmissionFactors.filter(
+                (emissionFactor) =>
+                  emissionFactor.emissionFactorConsoValue === studyEmissionSource.emissionFactorConsoValue,
+              )
+              if (filteredByConsoValueEmissionFactors.length > 0) {
+                return filteredByConsoValueEmissionFactors[0]
+              } else {
+                return sortedByCreatedAtEmissionFactors[0]
+              }
+            }
+
             if (studyEmissionSource.emissionSourceImportedId !== '0') {
               const emissionFactorList = emissionFactorsByImportedIdMap.get(
                 studyEmissionSource.emissionSourceImportedId,
               )
               if (emissionFactorList) {
-                if (emissionFactorList.length === 1) {
-                  emissionFactor = emissionFactorList[0]
-                } else if (emissionFactorList.length > 1) {
-                  const sortedByVersionNameEmissionFactors = emissionFactorList.sort((a, b) =>
-                    a.version && b.version ? b.version.createdAt.getTime() - a.version.createdAt.getTime() : 1,
-                  )
-                  const filteredByConsoValueEmissionFactors = sortedByVersionNameEmissionFactors.filter(
-                    (emissionFactor) =>
-                      emissionFactor.emissionFactorConsoValue === studyEmissionSource.emissionFactorConsoValue,
-                  )
-                  if (filteredByConsoValueEmissionFactors.length > 0) {
-                    emissionFactor = filteredByConsoValueEmissionFactors[0]
-                  } else {
-                    emissionFactor = sortedByVersionNameEmissionFactors[0]
-                  }
-                }
-              }
-              if (emissionFactor) {
+                emissionFactor = retrieveEmissionFactorMatchingConsoValueOrTakeMoreRecentOne(emissionFactorList)
                 if (emissionFactor.version) {
                   const emissionFactorVersionsMap =
                     studiesEmissionFactorVersionsMap.get(existingStudy.id) ??
