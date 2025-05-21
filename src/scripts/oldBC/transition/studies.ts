@@ -59,7 +59,6 @@ interface EmissionSource {
   completeness: number
   emissionSourceImportedId: string
   emissionFactorConsoValue: number
-  CO2f: number
 }
 
 interface EmissionFactor {
@@ -251,7 +250,6 @@ const parseEmissionSources = (
           completeness: incertitudeDA,
           emissionSourceImportedId: String(row.emissionSourceImportedId),
           emissionFactorConsoValue: row.emissionFactorConsoValue as number,
-          CO2f: row.CO2f as number,
         },
       ]
     })
