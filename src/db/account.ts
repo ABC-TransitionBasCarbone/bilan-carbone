@@ -108,3 +108,6 @@ export const addAccount = (account: Prisma.AccountCreateInput & { role: Exclude<
     data: account,
     select: AccountWithUserSelect,
   })
+
+export const getAccountsFromUser = (user: UserSession) =>
+  prismaClient.account.findMany({ where: { userId: user.userId } })

@@ -13,5 +13,12 @@ declare module 'next-auth' {
     accountId: string
     organizationId: string | null
     environment: PrismaOrganizationVersion['environment']
+    needsAccountSelection?: boolean
+  }
+
+  interface User extends DefaultUser {
+    userId?: string
+    accountId?: string
+    needsAccountSelection?: boolean
   }
 }
