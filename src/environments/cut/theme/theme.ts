@@ -1,31 +1,17 @@
 import { createTheme } from '@mui/material/styles'
 
-const cutTheme = createTheme({
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 900,
-      lg: 1360,
-      xl: 1536
-    }
-  },
+const base = createTheme({
   palette: {
     primary: {
       main: '#63EA90',
-      light: '#E0FBE8',
+      light: '#D0F8DE',
       contrastText: '#2C303A',
     },
+    secondary: {
+      main: '#1D1D1B'
+    },
     grey: {
-      50: '#e9eff9',
-      100: '#dbe5f6',
-      200: '#eae5e8',
-      300: '#c6d8f5',
-      400: '#9fbff3',
-      500: '#0a0317',
-      600: '#080212',
-      800: '#040109',
-      900: '#020105',
+
     },
     success: {
       main: '#1d9c5c',
@@ -43,7 +29,7 @@ const cutTheme = createTheme({
     },
     background: {
       default: '#ebf2ff',
-      paper: '#e9eff9',
+      paper: '#FBFCFC',
     },
   },
   shadows: [
@@ -55,6 +41,32 @@ const cutTheme = createTheme({
   ],
   typography: {
     fontFamily: '"Gilroy-Regular", sans-serif',
+  }
+})
+
+const cutTheme = createTheme(base, {
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1360,
+      xl: 1536
+    }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+          textTransform: 'none',
+        },
+        outlined: {
+          backgroundColor: base.palette.common.white,
+          fontFamily: base.typography.fontFamily,
+        }
+      }
+    }
   },
   custom: {
     postColors: {

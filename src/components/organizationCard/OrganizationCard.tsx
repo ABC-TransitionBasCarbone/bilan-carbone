@@ -7,12 +7,9 @@ import { isAdmin } from '@/utils/user'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { Environment, Role } from '@prisma/client'
-import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
-import LinkButton from '../base/LinkButton'
-import styles from './OrganizationCard.module.css'
 import { Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
 
 interface Props {
@@ -100,7 +97,13 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
         <HomeIcon />
         <Typography>{organizationVersion.name}</Typography>
         {hasAccess && (
-          <Button color='secondary' href={organizationVersionLink} variant='outlined'>{t(linkLabel)}</Button>
+          <Button
+            color='secondary'
+            href={organizationVersionLink}
+            variant='outlined'
+          >
+            {t(linkLabel)}
+          </Button>
         )}
       </Box>
       {!isCut && (
