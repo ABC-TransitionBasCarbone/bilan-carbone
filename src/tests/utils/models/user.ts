@@ -1,4 +1,4 @@
-import { Account, Level, Prisma, Role, User, UserSource, UserStatus } from '@prisma/client'
+import { Account, Environment, Level, Prisma, Role, User, UserSource, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { mockedOrganizationId, mockedOrganizationVersionId } from './organization'
 
@@ -65,6 +65,7 @@ export const getMockedAuthUser = (props?: Partial<UserSession>): UserSession => 
   role: mockedDbAccount.role,
   ...mockedDbAccount.user,
   ...props,
+  environment: Environment.BC,
 })
 
 export const getMockedDbUser = (props?: Partial<User>): User => ({ ...mockedDbUser, ...props })
