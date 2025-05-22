@@ -2,7 +2,6 @@
   Warnings:
 
   - A unique constraint covering the columns `[account_id]` on the table `user_application_settings` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `uploader_account_id` to the `documents` table without a default value. This is not possible if the table is not empty.
 
 */
 -- CreateEnum
@@ -27,7 +26,7 @@ ALTER TABLE "contributors" ADD COLUMN     "account_id" TEXT;
 ALTER TABLE "deactivable_features_statuses" ADD COLUMN     "updated_by_account" TEXT;
 
 -- AlterTable
-ALTER TABLE "documents" ADD COLUMN     "uploader_account_id" TEXT NOT NULL,
+ALTER TABLE "documents" ADD COLUMN     "uploader_account_id" TEXT,
 ALTER COLUMN "uploader_id" DROP NOT NULL;
 
 -- AlterTable
@@ -100,7 +99,7 @@ CREATE UNIQUE INDEX "accounts_user_id_organizationVersion_id_key" ON "accounts"(
 CREATE UNIQUE INDEX "user_application_settings_account_id_key" ON "user_application_settings"("account_id");
 
 -- AddForeignKey
-ALTER TABLE "documents" ADD CONSTRAINT "documents_uploader_account_id_fkey" FOREIGN KEY ("uploader_account_id") REFERENCES "accounts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "documents" ADD CONSTRAINT "documents_uploader_account_id_fkey" FOREIGN KEY ("uploader_account_id") REFERENCES "accounts"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "documents" ADD CONSTRAINT "documents_uploader_id_fkey" FOREIGN KEY ("uploader_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
