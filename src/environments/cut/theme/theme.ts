@@ -71,6 +71,15 @@ const cutTheme = createTheme(base, {
     }
   },
   custom: {
+    box: {
+      backgroundColor: base.palette.background.paper,
+      color: base.palette.text.primary,
+      borderRadius: '1rem',
+      borderStyle: 'solid',
+      borderWidth: '0.0125rem',
+      borderColor: base.palette.grey[300],
+      padding: '1rem'
+    },
     postColors: {
       functioning: { light: '#FF8145' },
       mobility: { light: '#FEBC0C' },
