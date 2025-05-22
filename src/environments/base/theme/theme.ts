@@ -25,7 +25,7 @@ const base = createTheme({
       900: '#020105',
     },
     success: {
-      main: '#1d9c5c',
+      main: '#94ebbf',
     },
     error: {
       light: '#e04949',
