@@ -626,56 +626,61 @@ export const uploadStudies = async (
             .entries()
             .map(([importedFrom, emissionFactorVersions]) => {
               // on compte le nombre d'utilisations des versions des facteurs d'émissions
-              const emissionFactorVersionsCounters = emissionFactorVersions.reduce(
-                // je parcours les versions des facteurs d'émissions
-                (emissionFactorVersionsCountersMap, emissionFactorVersion) => {
-                  // pour une version de facteur d'émission, je recupère le nombre de fois que la version est déjà utilisée, 0 si pas retrouvée car c'est la première fois
-                  const counter = emissionFactorVersionsCountersMap.get(emissionFactorVersion.id)?.counter ?? 0
-                  // je stocke cette version de facteur d'émission et j'incrémente son compteur
-                  emissionFactorVersionsCountersMap.set(emissionFactorVersion.id, {
-                    emissionFactorVersion: emissionFactorVersion,
-                    counter: counter + 1,
-                  })
-                  return emissionFactorVersionsCountersMap
-                },
-                new Map<string, { emissionFactorVersion: { id: string; createdAt: Date }; counter: number }>(),
-              )
-              // on récupère les facteurs d'émissions les plus utilisés (il y en a potentiellement plusieurs utilisés le même nombre de fois)
-              const moreFrequentEmissionFactorVersionsIds = emissionFactorVersionsCounters
-                .entries()
-                .reduce<{ counter: number; emissionFactorVersionIds: string[] }>(
-                  // je parcours les versions des facteurs d'émissions, et leur nombre d'utilisations
-                  (moreFrequentEmissionFactorVersionsCounter, [emissionFactorVersionId, emissionFactorVersion]) => {
-                    if (emissionFactorVersion.counter > moreFrequentEmissionFactorVersionsCounter.counter) {
-                      // si j'ai une version de facteur d'émission utilisée plus de fois que celles en mémoire, alors je mets celle-ci en mémoire
-                      return {
-                        counter: moreFrequentEmissionFactorVersionsCounter.counter,
-                        emissionFactorVersionIds: [emissionFactorVersionId],
-                      }
-                    } else if (emissionFactorVersion.counter == moreFrequentEmissionFactorVersionsCounter.counter) {
-                      // si j'ai une version de facteur d'émission utilisée le même nombre de fois que celles en mémoire, alors je la rajoute à la liste en mémoire.
-                      return {
-                        counter: emissionFactorVersion.counter,
-                        emissionFactorVersionIds:
-                          moreFrequentEmissionFactorVersionsCounter.emissionFactorVersionIds.concat([
-                            emissionFactorVersionId,
-                          ]),
-                      }
-                    } else {
-                      // sinon, c'est que ma version de facteur d'émission est moins utilisées, et donc je l'ignore et je garde celles en mémoire
-                      return moreFrequentEmissionFactorVersionsCounter
-                    }
+              const emissionFactorVersionsCounters = emissionFactorVersions
+                .reduce(
+                  // je parcours les versions des facteurs d'émissions
+                  (emissionFactorVersionsCountersMap, emissionFactorVersion) => {
+                    // pour une version de facteur d'émission, je recupère le nombre de fois que la version est déjà utilisée, 0 si pas retrouvée car c'est la première fois
+                    const counter = emissionFactorVersionsCountersMap.get(emissionFactorVersion.id)?.counter ?? 0
+                    // je stocke cette version de facteur d'émission et j'incrémente son compteur
+                    emissionFactorVersionsCountersMap.set(emissionFactorVersion.id, {
+                      emissionFactorVersion: emissionFactorVersion,
+                      counter: counter + 1,
+                    })
+                    return emissionFactorVersionsCountersMap
                   },
-                  { counter: 0, emissionFactorVersionIds: [] },
-                ).emissionFactorVersionIds // à la fin, je récupère la liste des versions des facteurs d'émissions les plus utilisées
-              const emissionFactorVersion = moreFrequentEmissionFactorVersionsIds[0]
+                  new Map<string, { emissionFactorVersion: { id: string; createdAt: Date }; counter: number }>(),
+                )
+                .values()
+              // on récupère les facteurs d'émissions les plus utilisés (il y en a potentiellement plusieurs utilisés le même nombre de fois)
+              const moreFrequentEmissionFactorVersionsIds = emissionFactorVersionsCounters.reduce<{
+                counter: number
+                emissionFactorVersions: { id: string; createdAt: Date }[]
+              }>(
+                // je parcours les versions des facteurs d'émissions, et leur nombre d'utilisations
+                (moreFrequentEmissionFactorVersionsCounter, emissionFactorVersion) => {
+                  if (emissionFactorVersion.counter > moreFrequentEmissionFactorVersionsCounter.counter) {
+                    // si j'ai une version de facteur d'émission utilisée plus de fois que celles en mémoire, alors je mets celle-ci en mémoire
+                    return {
+                      counter: moreFrequentEmissionFactorVersionsCounter.counter,
+                      emissionFactorVersions: [emissionFactorVersion.emissionFactorVersion],
+                    }
+                  } else if (emissionFactorVersion.counter == moreFrequentEmissionFactorVersionsCounter.counter) {
+                    // si j'ai une version de facteur d'émission utilisée le même nombre de fois que celles en mémoire, alors je la rajoute à la liste en mémoire.
+                    return {
+                      counter: emissionFactorVersion.counter,
+                      emissionFactorVersions: moreFrequentEmissionFactorVersionsCounter.emissionFactorVersions.concat([
+                        emissionFactorVersion.emissionFactorVersion,
+                      ]),
+                    }
+                  } else {
+                    // sinon, c'est que ma version de facteur d'émission est moins utilisées, et donc je l'ignore et je garde celles en mémoire
+                    return moreFrequentEmissionFactorVersionsCounter
+                  }
+                },
+                { counter: 0, emissionFactorVersions: [] },
+              ).emissionFactorVersions // à la fin, je récupère la liste des versions des facteurs d'émissions les plus utilisées
+              // et je prends la plus récente
+              const emissionFactorVersion = moreFrequentEmissionFactorVersionsIds.sort(
+                (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+              )[0]
               const foundImport = Object.values(Import).find((importValue) => importValue === importedFrom)
               if (!foundImport) {
                 return null
               }
               return {
                 studyId: studyId,
-                importVersionId: emissionFactorVersion,
+                importVersionId: emissionFactorVersion.id,
                 source: foundImport,
               }
             })
