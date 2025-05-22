@@ -1341,14 +1341,8 @@
   "deactivableFeatures": {
     "title": "Fonctionnalités désactivables",
     "Formation": "Formation",
-    "true": "Active",
-    "false": "Désactivée",
-    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
-  },
-  "deactivatedFeaturesRestrictions": {
-    "title": "Restrictions des fonctionnalités",
-    "source": "Source",
-    "environment": "Environnement",
+    "source": "Sources",
+    "environment": "Environnements",
     "true": "Active",
     "false": "Désactivée",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
