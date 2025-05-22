@@ -1,10 +1,7 @@
 import { DeactivatableFeature, Environment, Prisma, UserSource } from '@prisma/client'
 import { prismaClient } from './client'
 
-const selector = { id: true, feature: true, active: true }
 export type RestrictionsTypes = UserSource | Environment
-
-export const getDeactivableFeatures = async () => prismaClient.deactivatableFeatureStatus.findMany({ select: selector })
 
 export const isFeatureActive = async (feature: DeactivatableFeature) => {
   const featureStatus = await prismaClient.deactivatableFeatureStatus.findUnique({ where: { feature } })

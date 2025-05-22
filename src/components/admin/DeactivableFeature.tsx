@@ -1,7 +1,10 @@
 'use client'
 
 import { getFeaturesRestictions, RestrictionsTypes } from '@/db/deactivableFeatures'
-import { changeDeactivableFeatureRestriction } from '@/services/serverFunctions/deactivableFeatures'
+import {
+  changeDeactivableFeatureRestriction,
+  changeDeactivableFeatureStatus,
+} from '@/services/serverFunctions/deactivableFeatures'
 import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
 import { Environment, UserSource } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -19,13 +22,23 @@ type Factor<TValue> = {
   values: TValue[]
 }
 
-const DeactivatedFeatureRestrictions = ({ restrictions }: Props) => {
-  const t = useTranslations('deactivatedFeaturesRestrictions')
+const DeactivableFeature = ({ restrictions }: Props) => {
+  const t = useTranslations('deactivableFeatures')
   const tFeatures = useTranslations('deactivableFeatures')
   const tSource = useTranslations('source')
   const tEnvironment = useTranslations('environment')
   const [error, setError] = useState('')
   const router = useRouter()
+
+  const changeFeatureStatus = async (status: boolean) => {
+    setError('')
+    const result = await changeDeactivableFeatureStatus(restrictions.feature, status)
+    if (!result.success) {
+      setError(result.errorMessage)
+    } else {
+      router.refresh()
+    }
+  }
 
   const updateDeactivatedFeatureRestrictions = async (value: RestrictionsTypes, checked: boolean) => {
     setError('')
@@ -58,7 +71,21 @@ const DeactivatedFeatureRestrictions = ({ restrictions }: Props) => {
 
   return (
     <>
-      <h4 className="mt2 flex-col">{tFeatures(restrictions.feature)}</h4>
+      <div className="mt2 align-center">
+        <h4 className="flex-col mr1">{tFeatures(restrictions.feature)}</h4>
+        <FormControl>
+          <FormControlLabel
+            control={
+              <Switch
+                aria-label={t(restrictions.active.toString())}
+                checked={restrictions.active}
+                onChange={(event) => changeFeatureStatus(event.target.checked)}
+              />
+            }
+            label={t(restrictions.active.toString())}
+          />
+        </FormControl>
+      </div>
       {factors.map(({ title, t: tFactor, values, factorRestrictions }) => (
         <div className="wrap align-center" key={title}>
           {t(title)} :
@@ -87,4 +114,4 @@ const DeactivatedFeatureRestrictions = ({ restrictions }: Props) => {
   )
 }
 
-export default DeactivatedFeatureRestrictions
+export default DeactivableFeature

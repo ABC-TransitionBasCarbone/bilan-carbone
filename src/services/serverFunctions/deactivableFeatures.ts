@@ -3,7 +3,6 @@
 import {
   createDeactivableFeatures,
   createOrUpdateDeactivableFeature,
-  getDeactivableFeatures,
   getFeatureRestictions,
   getFeaturesRestictions,
   isFeatureActive,
@@ -15,14 +14,13 @@ import { DeactivatableFeature, Environment, Role, UserSource } from '@prisma/cli
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 
-export const getDeactivableFeaturesStatuses = async () =>
+export const getDeactivableFeaturesRestrictionValues = async () =>
   withServerResponse(async () => {
     const session = await auth()
     if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
     }
-
-    const featuresStatuses = await getDeactivableFeatures()
+    const featuresStatuses = await getFeaturesRestictions()
     if (featuresStatuses.length === Object.values(DeactivatableFeature).length) {
       return featuresStatuses
     }
@@ -30,16 +28,6 @@ export const getDeactivableFeaturesStatuses = async () =>
       (feature) => !featuresStatuses.map((featuresStatus) => featuresStatus.feature).includes(feature),
     )
     await createDeactivableFeatures(missing.map((feature) => ({ feature })))
-
-    return getDeactivableFeatures()
-  })
-
-export const getDeactivableFeaturesRestrictionValues = async () =>
-  withServerResponse(async () => {
-    const session = await auth()
-    if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
-      throw new Error(NOT_AUTHORIZED)
-    }
     return getFeaturesRestictions()
   })
 
