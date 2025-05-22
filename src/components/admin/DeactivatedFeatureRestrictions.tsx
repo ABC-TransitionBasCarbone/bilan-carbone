@@ -1,6 +1,7 @@
 'use client'
 
-import { getFeaturesRestictions } from '@/db/deactivableFeatures'
+import { getFeaturesRestictions, RestrictionsTypes } from '@/db/deactivableFeatures'
+import { changeDeactivableFeatureRestriction } from '@/services/serverFunctions/deactivableFeatures'
 import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
 import { Environment, UserSource } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -11,14 +12,11 @@ interface Props {
   restrictions: AsyncReturnType<typeof getFeaturesRestictions>[number]
 }
 
-type RestrictionsTypes = UserSource | Environment
-
 type Factor<TValue> = {
   title: string
   restrictions: TValue[]
   t: (value: string) => string
   values: TValue[]
-  fn: (value: TValue, checked: boolean) => Promise<void>
 }
 
 const DeactivatedFeatureRestrictions = ({ restrictions }: Props) => {
@@ -29,42 +27,38 @@ const DeactivatedFeatureRestrictions = ({ restrictions }: Props) => {
   const [error, setError] = useState('')
   const router = useRouter()
 
-  const updateDeactivatedFeatureForSource = async (value: UserSource, checked: boolean) => {
-    console.log('updateDeactivatedFeatureForSource : ', restrictions.feature, value, checked)
+  const updateDeactivatedFeatureRestrictions = async (value: RestrictionsTypes, checked: boolean) => {
     setError('')
-    router.refresh()
-  }
-
-  const updateDeactivatedFeatureForEnvironment = async (value: Environment, checked: boolean) => {
-    console.log('updateDeactivatedFeatureForEnvironment : ', restrictions.feature, value, checked)
-    setError('')
-    router.refresh()
+    const result = await changeDeactivableFeatureRestriction(restrictions.feature, value, !checked)
+    if (!result.success) {
+      setError(result.errorMessage)
+    } else {
+      router.refresh()
+    }
   }
 
   const factors: Array<Factor<UserSource> | Factor<Environment>> = [
     {
       title: 'source',
-      restrictions: restrictions.sources,
+      restrictions: restrictions.deactivatedSources,
       t: tSource,
       values: Object.values(UserSource),
-      fn: updateDeactivatedFeatureForSource,
     },
     {
       title: 'environment',
-      restrictions: restrictions.environments,
+      restrictions: restrictions.deactivatedEnvironments,
       t: tEnvironment,
       values: Object.values(Environment),
-      fn: updateDeactivatedFeatureForEnvironment,
     },
   ]
 
   const isValueAllowed = (restrictions: RestrictionsTypes[], value: RestrictionsTypes) =>
-    !restrictions.length || (typeof restrictions[0] === typeof value && !restrictions.includes(value))
+    (restrictions && !restrictions.length) || (typeof restrictions[0] === typeof value && !restrictions.includes(value))
 
   return (
     <>
       <h4 className="mt2 flex-col">{tFeatures(restrictions.feature)}</h4>
-      {factors.map(({ title, t: tFactor, values, restrictions, fn }) => (
+      {factors.map(({ title, t: tFactor, values, restrictions }) => (
         <div className="flex align-center" key={title}>
           {t(title)} :
           {(values as typeof restrictions).map((value) => (
@@ -76,7 +70,7 @@ const DeactivatedFeatureRestrictions = ({ restrictions }: Props) => {
                     <Switch
                       aria-label={t(isValueAllowed(restrictions, value).toString())}
                       checked={isValueAllowed(restrictions, value)}
-                      onChange={(event) => (fn as Factor<RestrictionsTypes>['fn'])(value, event.target.checked)}
+                      onChange={(event) => updateDeactivatedFeatureRestrictions(value, event.target.checked)}
                     />
                   }
                   label={t(isValueAllowed(restrictions, value).toString())}

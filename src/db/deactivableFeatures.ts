@@ -1,7 +1,8 @@
-import { DeactivatableFeature, Prisma } from '@prisma/client'
+import { DeactivatableFeature, Environment, Prisma, UserSource } from '@prisma/client'
 import { prismaClient } from './client'
 
 const selector = { id: true, feature: true, active: true }
+export type RestrictionsTypes = UserSource | Environment
 
 export const getDeactivableFeatures = async () => prismaClient.deactivatableFeatureStatus.findMany({ select: selector })
 
@@ -14,8 +15,8 @@ export const getFeaturesRestictions = async () => {
   const deactivableFeatures = await prismaClient.deactivatableFeatureStatus.findMany()
   return deactivableFeatures.map((feature) => ({
     feature: feature.feature,
-    sources: feature.deactivatedSources,
-    environments: feature.deactivatedEnvironments,
+    deactivatedSources: feature.deactivatedSources,
+    deactivatedEnvironments: feature.deactivatedEnvironments,
   }))
 }
 
@@ -27,10 +28,14 @@ export const getFeatureRestictions = async (feature: DeactivatableFeature) => {
   }
 }
 
+export const updateFeatureRestictions = async (
+  feature: DeactivatableFeature,
+  target: 'deactivatedSources' | 'deactivatedEnvironments',
+  value: RestrictionsTypes[],
+) => prismaClient.deactivatableFeatureStatus.update({ where: { feature }, data: { [target]: value } })
+
 export const createDeactivableFeatures = async (data: Prisma.DeactivatableFeatureStatusCreateManyInput[]) =>
-  prismaClient.deactivatableFeatureStatus.createMany({
-    data,
-  })
+  prismaClient.deactivatableFeatureStatus.createMany({ data })
 
 export const createOrUpdateDeactivableFeature = async (
   feature: DeactivatableFeature,
