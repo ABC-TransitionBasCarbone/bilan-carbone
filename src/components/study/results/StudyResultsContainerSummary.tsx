@@ -2,7 +2,7 @@
 
 import Box from '@/components/base/Box'
 import HelpIcon from '@/components/base/HelpIcon'
-import LinkButton from '@/components/base/LinkButton'
+import SpaIcon from '@mui/icons-material/Spa';
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
@@ -15,9 +15,9 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import StudyName from '../card/StudyName'
 import Result from './Result'
 import styles from './ResultsContainer.module.css'
+import { Button, Chip } from '@mui/material'
 
 interface Props {
   study: FullStudy
@@ -76,11 +76,12 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   return (
     <>
       {withDependencies === undefined && showTitle && (
-        <div className="justify-between mb2">
-          <Link className={styles.studyNameLink} href={`/etudes/${study.id}`}>
+        <div className={`${styles.header} justify-between mb2`}>
+          {/* <Link className={styles.studyNameLink} href={`/etudes/${study.id}`}>
             <StudyName name={study.name} />
-          </Link>
-          <LinkButton href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</LinkButton>
+          </Link> */}
+          <Chip color="primary" icon={<SpaIcon color="primary" />} label={study.name} component="a" href={`/etudes/${study.id}`} clickable />
+          <Button variant="contained" href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</Button>
         </div>
       )}
       <div className={styles.container}>

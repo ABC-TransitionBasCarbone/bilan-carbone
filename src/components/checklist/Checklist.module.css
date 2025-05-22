@@ -7,21 +7,6 @@
   z-index: 10;
 }
 
-.openDrawerButton {
-  height: 4rem;
-  width: 4rem;
-  background-color: var(--background-300) !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  color: white !important;
-
-  &:hover {
-    background-color: var(--primary-800) !important;
-  }
-}
-
 .checklistContainer {
   max-height: 60vh !important;
   height: fit-content !important;
@@ -33,6 +18,7 @@
   overflow-x: hidden !important;
   border: var(--border) !important;
   padding: 0.5rem;
+
   hr {
     color: var(--neutral-300) !important;
   }

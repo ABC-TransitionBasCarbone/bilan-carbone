@@ -2,6 +2,10 @@
   text-decoration: none;
 }
 
+.header {
+  align-items: end;
+}
+
 .container {
   position: relative;
   border-radius: 1rem;
