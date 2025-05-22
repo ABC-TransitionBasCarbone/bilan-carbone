@@ -684,7 +684,7 @@ export const uploadStudies = async (
                 source: foundImport,
               }
             })
-            .filter((studyEmissionFactor) => studyEmissionFactor !== null)
+            .filter((studyEmissionFactorVersion) => studyEmissionFactorVersion !== null)
         }),
     ),
   })
