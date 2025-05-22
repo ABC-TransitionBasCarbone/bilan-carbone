@@ -70,41 +70,42 @@ export const sendInvitation = async (
   email: string,
   study: FullStudy,
   organization: Organization,
-  user: UserSession,
-  role: string,
-  newAccount?: AccountWithUser,
+  creator: UserSession,
+  roleOnStudy: string,
+  existingAccount?: AccountWithUser,
 ) => {
-  if (newAccount) {
-    return role
+  if (existingAccount && existingAccount.user.status === UserStatus.ACTIVE) {
+    return roleOnStudy
       ? sendUserOnStudyInvitationEmail(
           email,
           study.name,
           study.id,
           organization.name,
-          `${user.firstName} ${user.lastName}`,
-          newAccount.user.firstName,
-          role,
+          `${creator.firstName} ${creator.lastName}`,
+          existingAccount.user.firstName,
+          roleOnStudy,
         )
       : sendContributorInvitationEmail(
           email,
           study.name,
           study.id,
           organization.name,
-          `${user.firstName} ${user.lastName}`,
-          newAccount.user.firstName,
+          `${creator.firstName} ${creator.lastName}`,
+          existingAccount.user.firstName,
         )
   }
 
   const token = await updateUserResetToken(email, 1 * DAY)
-  return role
+
+  return roleOnStudy
     ? sendNewUserOnStudyInvitationEmail(
         email,
         token,
         study.name,
         study.id,
         organization.name,
-        `${user.firstName} ${user.lastName}`,
-        role,
+        `${creator.firstName} ${creator.lastName}`,
+        roleOnStudy,
       )
     : sendNewContributorInvitationEmail(
         email,
@@ -112,7 +113,7 @@ export const sendInvitation = async (
         study.name,
         study.id,
         organization.name,
-        `${user.firstName} ${user.lastName}`,
+        `${creator.firstName} ${creator.lastName}`,
       )
 }
 
