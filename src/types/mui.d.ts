@@ -1,9 +1,11 @@
 import '@mui/material/styles'
+import { CSSObject } from '@mui/material/styles'
 import { CSSProperties } from 'react'
 
 declare module '@mui/material/styles' {
   interface Theme {
     custom: {
+      box: CSSObject,
       postColors: {
         functioning: { light: string }
         mobility: { light: string }
@@ -29,6 +31,7 @@ declare module '@mui/material/styles' {
 
   interface ThemeOptions {
     custom?: {
+      box: CSSObject,
       postColors?: {
         functioning: { light: string }
         mobility: { light: string }

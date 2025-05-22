@@ -78,6 +78,15 @@ const theme = createTheme(base, {
     }
   },
   custom: {
+    box: {
+      backgroundColor: base.palette.background.paper,
+      color: base.palette.text.primary,
+      borderRadius: '1rem',
+      borderStyle: 'solid',
+      borderWidth: '0.0125rem',
+      borderColor: base.palette.grey[300],
+      padding: '1rem'
+    },
     navbar: {
       organizationToolbar: {
         border: '0.125rem solid rgba(27, 91, 245, 0.1)'
