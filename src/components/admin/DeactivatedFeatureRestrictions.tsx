@@ -59,7 +59,7 @@ const DeactivatedFeatureRestrictions = ({ restrictions }: Props) => {
     <>
       <h4 className="mt2 flex-col">{tFeatures(restrictions.feature)}</h4>
       {factors.map(({ title, t: tFactor, values, restrictions }) => (
-        <div className="flex align-center" key={title}>
+        <div className="wrap align-center" key={title}>
           {t(title)} :
           {(values as typeof restrictions).map((value) => (
             <div key={value} className="ml2">
