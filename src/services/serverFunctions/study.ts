@@ -1,7 +1,7 @@
 'use server'
 
 import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
-import { AccountWithUser, getAccountByEmailAndOrganizationVersionId, getAccountById } from '@/db/account'
+import { AccountWithUser, getAccountByEmailAndOrganizationVersionId } from '@/db/account'
 import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -464,8 +464,7 @@ const getOrCreateUserAndSendStudyInvite = async (
 
     accountId = newUser.accounts[0].id
   } else {
-    // TODO récupérer le bon account
-    const account = (await getAccountById(existingUser.accounts[0].id)) as AccountWithUser
+    const account = (await getAccountByEmailAndOrganizationVersionId(email, organizationVersion.id)) as AccountWithUser
     await sendInvitation(
       email,
       study,
