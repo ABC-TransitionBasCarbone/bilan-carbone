@@ -263,7 +263,6 @@ export enum RequiredStudyEmissionSourcesColumns {
   ID_Source_Ref = 'emissionFactorImportedId',
   EFV_GUID = 'emissionFactorOldBCId',
   EF_VAL_Conso = 'emissionFactorConsoValue',
-  EF_VAL_CO2f = 'CO2f',
 }
 
 export type EmissionSourceRow = {
@@ -294,7 +293,6 @@ export class EmissionSourcesWorkSheet extends OldBCWorkSheetReader {
       emissionFactorImportedId: row[this.indexes.ID_Source_Ref],
       emissionFactorOldBCId: row[this.indexes.EFV_GUID],
       emissionFactorConsoValue: row[this.indexes.EF_VAL_Conso],
-      CO2f: row[this.indexes.EF_VAL_CO2f],
     }))
   }
 }
