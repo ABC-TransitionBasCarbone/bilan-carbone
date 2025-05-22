@@ -9,16 +9,21 @@
 }
 
 .header {
-  .name {
-    width: 50%;
-  }
-
   .emissionSource {
-    width: 20%
+    width: 25%;
+    min-width: 5rem;
   }
 
   .emissionFactor {
     width: 35%;
+    min-width: 7rem;
+  }
+
+  .status {
+    font-size: 0.875rem;
+    width: 9rem;
+    line-height: 1.25rem;
+    color: var(--neutral-500);
   }
 
   @media screen and (max-width: 60rem) {
@@ -34,7 +39,7 @@
 
 .line {
   position: sticky;
-  top: 89px;
+  top: 69px;
   z-index: 9;
   background-color: inherit;
   border-bottom: solid 1px var(--neutral-200) !important;
@@ -66,12 +71,13 @@
 
 .resultText {
   font-size: 1.25rem;
-}
-
-.status {
-  font-size: 0.875rem;
+  width: 9rem;
   line-height: 1.25rem;
   color: var(--neutral-500);
+}
+
+.resultQuality {
+  font-size: 1rem;
 }
 
 @keyframes grid-expand {

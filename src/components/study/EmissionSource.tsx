@@ -162,7 +162,7 @@ const EmissionSource = ({
         onClick={() => setDisplay((prevDisplay) => !prevDisplay)}
       >
         <div className={classNames(styles.header, styles.gapped, 'justify-between')}>
-          <div className={classNames(styles.name, 'align-center')}>
+          <div className="grow align-center">
             {emissionSource.validated || withoutDetail ? (
               <p data-testid="validated-emission-source-name">{emissionSource.name}</p>
             ) : (
@@ -175,17 +175,18 @@ const EmissionSource = ({
                   onBlur={(event) => update('name', event.target.value)}
                   onClick={(e) => e.stopPropagation()}
                   placeholder={t('addPlaceholder')}
+                  className="grow"
                 />
               </>
             )}
           </div>
           <div className={classNames(styles.gapped, 'align-center')}>
             {/* activity data */}
-            <div className={classNames(styles.emissionSource, 'flex-col justify-center align-center')}>
+            <div className={classNames(styles.emissionSource, 'flex-col justify-center align-center text-center')}>
               {typeof emissionSource.value === 'number' && emissionSource.value !== 0 && (
                 <>
-                  <p className="ellipsis fit-content justify-center">{formatNumber(emissionSource.value)} </p>
-                  <p className="ellipsis fit-content justify-center">
+                  <p className="text-center">{formatNumber(emissionSource.value)} </p>
+                  <p className="text-center">
                     {selectedFactor &&
                       (selectedFactor.unit === Unit.CUSTOM
                         ? selectedFactor.customUnit
@@ -196,12 +197,10 @@ const EmissionSource = ({
             </div>
             {/* emission factor */}
             {selectedFactor && (
-              <div className={classNames(styles.emissionFactor, 'flex-col justify-center align-center')}>
+              <div className={classNames(styles.emissionFactor, 'flex-col justify-center align-center text-center')}>
                 <>
-                  <p className="ellipsis fit-content justify-center">
-                    {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}
-                  </p>
-                  <p className="ellipsis fit-content justify-center">
+                  <p className="text-center">{formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}</p>
+                  <p className="text-center">
                     {tResultstUnits(StudyResultUnit.K)}/
                     {selectedFactor.unit === Unit.CUSTOM
                       ? selectedFactor.customUnit
@@ -212,12 +211,15 @@ const EmissionSource = ({
             )}
             {/* result */}
             {emissionResults && (
-              <div className={classNames(styles.result, 'flex-col flex-end align-end')}>
+              <div className={classNames(styles.result, 'flex-col flex-end align-end text-center')}>
                 <p className={styles.resultText} data-testid="emission-source-value">
                   {`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
                 </p>
                 {emissionResults.standardDeviation && (
-                  <p className={classNames(styles.status, styles.resultText)} data-testid="emission-source-quality">
+                  <p
+                    className={classNames(styles.resultQuality, styles.resultText)}
+                    data-testid="emission-source-quality"
+                  >
                     {tQuality('name')}{' '}
                     {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
                   </p>
