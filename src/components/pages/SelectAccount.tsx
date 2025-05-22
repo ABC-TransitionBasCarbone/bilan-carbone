@@ -28,7 +28,7 @@ const SelectAccount = ({ user, userWithAccountsAndOrganizations }: Props) => {
 
   return (
     <div className="grow justify-center">
-      <Block title={t('selectAccount')}>
+      <Block title={t('selectAccount')} data-testid="select-account">
         <List>
           {userWithAccountsAndOrganizations?.accounts.map((account) => (
             <ListItem disablePadding key={account.id}>
@@ -36,6 +36,7 @@ const SelectAccount = ({ user, userWithAccountsAndOrganizations }: Props) => {
                 selected={user?.accountId === account.id}
                 disabled={user?.accountId === account.id}
                 onClick={() => onSelectAccount(account.id)}
+                data-testid={`account-${account.organizationVersion?.environment.toLowerCase()}`}
               >
                 <ListItemIcon>
                   <PermIdentityIcon />

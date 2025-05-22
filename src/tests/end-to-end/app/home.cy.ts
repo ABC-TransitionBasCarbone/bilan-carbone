@@ -1,8 +1,4 @@
 describe('Home page - BC+ environment', () => {
-  beforeEach(() => {
-    Cypress.env('NEXT_PUBLIC_DEFAULT_ENVIRONMENT', 'bilancarbon')
-  })
-
   it('Should display the list of actualities as a simple user', () => {
     cy.login()
 
@@ -38,34 +34,27 @@ describe('Home page - BC+ environment', () => {
     cy.getByTestId('home-organizations').should('be.visible')
     cy.getByTestId('home-organizations').contains('Mes clients actuels')
   })
+
+  it('Should display the CUT logos block', () => {
+    cy.login('cut-env-admin-0@yopmail.com', 'password-0')
+    cy.getByTestId('home-cut-logo').should('exist')
+  })
+
+  it('Should contain République Française logo', () => {
+    cy.login('cut-env-admin-0@yopmail.com', 'password-0')
+    cy.getByTestId('home-cut-logo').scrollIntoView()
+    cy.getByTestId('home-cut-logo').find('img[alt="Logo de la république française"]').should('be.visible')
+  })
+
+  it('Should contain France 3 logo', () => {
+    cy.login('cut-env-admin-0@yopmail.com', 'password-0')
+    cy.getByTestId('home-cut-logo').scrollIntoView()
+    cy.getByTestId('home-cut-logo').find('img[alt="Logo de france 3"]').should('be.visible')
+  })
+
+  it('Should contain Caisse des dépôts logo', () => {
+    cy.login('cut-env-admin-0@yopmail.com', 'password-0')
+    cy.getByTestId('home-cut-logo').scrollIntoView()
+    cy.getByTestId('home-cut-logo').find('img[alt="Logo du groupe la caisse des dépots"]').should('be.visible')
+  })
 })
-
-// TODO: Uncomment when environment is base on user
-
-// describe('Home page - CUT environment', () => {
-//   beforeEach(() => {
-//     Cypress.env('NEXT_PUBLIC_DEFAULT_ENVIRONMENT', 'cut')
-//   })
-
-//   it('Should display the CUT logos block', () => {
-//     cy.getByTestId('home-cut-logo').should('exist')
-//   })
-
-//   it('Should contain République Française logo', () => {
-//     cy.getByTestId('home-cut-logo')
-//       .find('img[alt="Logo de la république française"]')
-//       .should('be.visible')
-//   })
-
-//   it('Should contain France 3 logo', () => {
-//     cy.getByTestId('home-cut-logo')
-//       .find('img[alt="Logo de france 3"]')
-//       .should('be.visible')
-//   })
-
-//   it('Should contain Caisse des dépôts logo', () => {
-//     cy.getByTestId('home-cut-logo')
-//       .find('img[alt="Logo du groupe la caisse des dépots"]')
-//       .should('be.visible')
-//   })
-// })
