@@ -67,6 +67,7 @@ interface Props {
   studySites: FullStudy['sites']
   isFromOldImport: boolean
   currentBEVersion: string
+  studyUnit: StudyResultUnit
 }
 
 const EmissionSourceForm = ({
@@ -86,6 +87,7 @@ const EmissionSourceForm = ({
   studySites,
   isFromOldImport,
   currentBEVersion,
+  studyUnit,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -403,25 +405,28 @@ const EmissionSourceForm = ({
       </div>
       <div className="flex-row justify-between">
         {emissionResults && (
-          <div className={classNames(styles.row, 'flex', styles.results)} data-testid="emission-source-result">
+          <div
+            className={classNames(styles.row, 'flex mr-2 grow', styles.results)}
+            data-testid="emission-source-result"
+          >
             {emissionResults.confidenceInterval && (
-              <div>
+              <div className="flex-col">
                 <p>{t('results.confiance')}</p>
                 <p>
                   [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
-                  {formatNumber(emissionResults.confidenceInterval[1])}]
+                  {formatNumber(emissionResults.confidenceInterval[1])}] (en {tResultUnits(studyUnit)})
                 </p>
               </div>
             )}
             {emissionResults.alpha !== null && (
-              <div>
+              <div className={styles.alpha}>
                 <p>{t('results.alpha')}</p>
-                <p>{formatNumber(emissionResults.alpha, 2)}</p>
+                <p>{formatNumber(emissionResults.alpha * 100, 2)}%</p>
               </div>
             )}
           </div>
         )}
-        <div className={classNames(styles.gapped, 'justify-end mt1')}>
+        <div className={classNames(styles.gapped, styles.button, 'justify-end mt1')}>
           {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
           {canValidate && (
             <Button

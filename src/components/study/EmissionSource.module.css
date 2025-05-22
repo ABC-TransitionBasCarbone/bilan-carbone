@@ -21,7 +21,7 @@
 
   .status {
     font-size: 0.875rem;
-    width: 9rem;
+    width: 10rem;
     line-height: 1.25rem;
     color: var(--neutral-500);
   }
@@ -39,7 +39,7 @@
 
 .line {
   position: sticky;
-  top: 69px;
+  top: 5rem;
   z-index: 9;
   background-color: inherit;
   border-bottom: solid 1px var(--neutral-200) !important;
@@ -210,4 +210,9 @@
 
 .expandButton {
   height: 3.5rem;
+}
+
+.alpha {
+  flex: 0;
+  width: 5rem;
 }

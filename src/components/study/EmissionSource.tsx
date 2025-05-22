@@ -228,26 +228,31 @@ const EmissionSource = ({
             )}
           </div>
           <div data-testid="emission-source-status" className={classNames(styles.status, 'flex-cc')}>
-            {loading && (
+            {loading || saved ? (
               <>
-                {t('saving')} <CircularProgress size="1rem" />
+                {loading && (
+                  <>
+                    {t('saving')} <CircularProgress size="1rem" />
+                  </>
+                )}
+                {saved && (
+                  <span className={classNames(styles.saved, 'align-center')}>
+                    <SavedIcon />
+                    {t('saved')}
+                  </span>
+                )}
               </>
+            ) : (
+              <Label
+                className={classNames(
+                  styles.statusLabel,
+                  status === EmissionSourcesStatus.Valid ? styles.validated : styles.working,
+                  'text-center',
+                )}
+              >
+                {t(`status.${status}`)}
+              </Label>
             )}
-            {saved && (
-              <span className={classNames(styles.saved, 'align-center')}>
-                <SavedIcon />
-                {t('saved')}
-              </span>
-            )}
-            <Label
-              className={classNames(
-                styles.statusLabel,
-                status === EmissionSourcesStatus.Valid ? styles.validated : styles.working,
-                'text-center',
-              )}
-            >
-              {t(`status.${status}`)}
-            </Label>
           </div>
         </div>
         {emissionSource.contributor && (
@@ -292,6 +297,7 @@ const EmissionSource = ({
                 studySites={study.sites}
                 isFromOldImport={isFromOldImport}
                 currentBEVersion={currentBEVersion}
+                studyUnit={study.resultsUnit}
               />
             )}
           </div>
