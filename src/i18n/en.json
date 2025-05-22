@@ -864,6 +864,15 @@
     "Not authorized": "You are not allowed to do this action",
     "More than one": "There must be at least one admin or manager in the organization"
   },
+  "environment": {
+    "BC": "Bilan Carbone",
+    "CUT": "Count",
+    "TILT": "Tilt"
+  },
+  "source": {
+    "CRON": "Cron",
+    "TUNISIE": "Tunisia"
+  },
   "team": {
     "title": "My Organization",
     "pending": "Pending invitations",
@@ -1335,5 +1344,12 @@
     "true": "Activated",
     "false": "Deactivated",
     "Not authorized": "You are not allowed to do this action"
+  },
+  "deactivatedFeaturesRestrictions": {
+    "title": "Features restrictions",
+    "source": "Source",
+    "environment": "Environment",
+    "true": "Activated",
+    "false": "Deactivated"
   }
 }
