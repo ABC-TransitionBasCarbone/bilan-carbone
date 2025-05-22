@@ -6,7 +6,11 @@ const ActivationPage = async () => {
   const session = await auth()
 
   if (session) {
-    redirect('/')
+    if (session.user.needsAccountSelection) {
+      redirect('/selection-du-compte')
+    } else {
+      redirect('/')
+    }
   }
 
   return <ActivationForm />
