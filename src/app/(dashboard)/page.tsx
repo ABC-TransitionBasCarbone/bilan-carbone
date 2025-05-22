@@ -7,7 +7,6 @@ export const revalidate = 0
 
 const Home = async ({ user: account }: UserSessionProps) => {
   if (account) {
-    console.log('account use seefect', account)
     const needsAccountSelection = account?.needsAccountSelection
     if (needsAccountSelection) {
       redirect('/selection-du-compte')

@@ -6,10 +6,11 @@ import { getFormationVideos } from '@/db/formation'
 import { getOrganizationVersionById } from '@/db/organization'
 import { auth } from '@/services/auth'
 import { hasAccessToFormation } from '@/services/permissions/formations'
+import { Environment } from '@prisma/client'
 
 const Formation = async () => {
   const session = await auth()
-  if (!session?.user || !(await hasAccessToFormation(session.user))) {
+  if (!session?.user || !(await hasAccessToFormation(session.user)) || !(session.user.environment === Environment.BC)) {
     return <NotFound />
   }
 
