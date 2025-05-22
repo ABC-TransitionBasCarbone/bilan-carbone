@@ -39,8 +39,19 @@ const base = createTheme({
       main: '#272768',
     },
   },
+  shadows: [
+    'none', 'none', 'none', 'none', 'none',
+    'none', 'none', 'none', 'none', 'none',
+    'none', 'none', 'none', 'none', 'none',
+    'none', 'none', 'none', 'none', 'none',
+    'none', 'none', 'none', 'none', 'none'
+  ],
   typography: {
     fontFamily: '"Gilroy-Regular", sans-serif',
+    button: {
+      textTransform: 'none',
+      fontFamily: '"Gilroy-Regular", sans-serif',
+    }
   },
 })
 
@@ -59,11 +70,9 @@ const theme = createTheme(base, {
       styleOverrides: {
         root: {
           borderRadius: '0.5rem',
-          textTransform: 'none',
         },
         outlined: {
           backgroundColor: base.palette.common.white,
-          fontFamily: base.typography.fontFamily,
         }
       }
     }

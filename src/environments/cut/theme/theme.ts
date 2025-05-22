@@ -41,6 +41,10 @@ const base = createTheme({
   ],
   typography: {
     fontFamily: '"Gilroy-Regular", sans-serif',
+    button: {
+      textTransform: 'none',
+      fontFamily: '"Gilroy-Regular", sans-serif',
+    }
   }
 })
 
@@ -59,11 +63,9 @@ const cutTheme = createTheme(base, {
       styleOverrides: {
         root: {
           borderRadius: '0.5rem',
-          textTransform: 'none',
         },
         outlined: {
           backgroundColor: base.palette.common.white,
-          fontFamily: base.typography.fontFamily,
         }
       }
     }
