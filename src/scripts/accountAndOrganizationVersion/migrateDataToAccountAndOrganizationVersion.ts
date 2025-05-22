@@ -150,7 +150,7 @@ const firstPassCreateVersions = async () => {
       }
 
       if (onboarderAccount) {
-        data.onboarder = { connect: { id: onboarderAccount.id } }
+        data.onboarderId = onboarderAccount.id
       }
 
       try {
