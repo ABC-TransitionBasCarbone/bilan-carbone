@@ -43,3 +43,17 @@ export const getExistingEmissionFactorsNames = async (transaction: Prisma.Transa
     return map
   }, new Map<string, { name: string; id: string }>())
 }
+
+export const getExistingEmissionFactors = async (
+  transaction: Prisma.TransactionClient,
+  importedIds: string[],
+  oldBCIds: string[],
+) => {
+  const emissionFactors = await transaction.emissionFactor.findMany({
+    where: { OR: [{ importedId: { in: importedIds } }, { oldBCId: { in: oldBCIds } }] },
+    include: {
+      version: true,
+    },
+  })
+  return emissionFactors
+}

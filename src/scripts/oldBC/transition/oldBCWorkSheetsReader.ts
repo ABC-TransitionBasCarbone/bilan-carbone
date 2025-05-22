@@ -260,7 +260,9 @@ export enum RequiredStudyEmissionSourcesColumns {
   NOM_SOUS_CATEGORIE = 'subCategory',
   NOM_POSTE = 'post',
   NOM_SOUS_POSTE = 'subPost',
+  ID_Source_Ref = 'emissionFactorImportedId',
   EFV_GUID = 'emissionFactorOldBCId',
+  EF_VAL_Conso = 'emissionFactorConsoValue',
 }
 
 export type EmissionSourceRow = {
@@ -288,7 +290,9 @@ export class EmissionSourcesWorkSheet extends OldBCWorkSheetReader {
       subCategory: row[this.indexes.NOM_SOUS_CATEGORIE],
       post: row[this.indexes.NOM_POSTE],
       subPost: row[this.indexes.NOM_SOUS_POSTE],
+      emissionFactorImportedId: row[this.indexes.ID_Source_Ref],
       emissionFactorOldBCId: row[this.indexes.EFV_GUID],
+      emissionFactorConsoValue: row[this.indexes.EF_VAL_Conso],
     }))
   }
 }
