@@ -37,8 +37,8 @@ const NewMemberForm = () => {
 
   const onSubmit = async (command: AddMemberCommand) => {
     const result = await addMember(command)
-    if (result) {
-      setError(result)
+    if (!result.success) {
+      setError(result.errorMessage)
     } else {
       router.push('/equipe')
       router.refresh()

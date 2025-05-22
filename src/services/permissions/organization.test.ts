@@ -203,7 +203,7 @@ describe('Organization permissions', () => {
       mockAuth.mockResolvedValue({ user: getMockedAuthUser({ organizationVersionId: 'mocked-organization-parent' }) })
       mockGetOrganizationVersionById.mockResolvedValue({ parentId: 'mocked-organization-parent' })
       mockHasEditionRole.mockReturnValue(true)
-      mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue(0)
+      mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue({ success: true, data: 0 })
 
       const result = await canDeleteOrganizationVersion('mocked-organization-child')
       expect(result).toBe(true)
@@ -239,11 +239,11 @@ describe('Organization permissions', () => {
 
     it('returns false if user has no edition role', async () => {
       mockAuth.mockResolvedValue({
-        user: { id: 'mocked-user-id', organizationVersionId: 'mocked-organization-parent', role: 'viewer' },
+        user: { id: 'mocked-user-id', organizationVersionId: 'mocked-organization-parent', role: Role.COLLABORATOR },
       })
       mockGetOrganizationVersionById.mockResolvedValue({ parentId: 'mocked-organization-parent' })
       mockHasEditionRole.mockReturnValue(false)
-      mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue(0)
+      mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue({ success: true, data: 0 })
 
       const result = await canDeleteOrganizationVersion('mocked-organization-child')
       expect(result).toBe(false)
@@ -251,16 +251,16 @@ describe('Organization permissions', () => {
       expect(mockAuth).toBeCalledTimes(1)
       expect(mockGetOrganizationVersionById).toBeCalledTimes(1)
       expect(mockHasEditionRole).toBeCalledTimes(1)
-      expect(mockGetOrganizationStudiesFromOtherUsers).toBeCalledTimes(0)
+      expect(mockGetOrganizationStudiesFromOtherUsers).toBeCalledTimes(1)
     })
 
     it('returns false if studies from other users exists', async () => {
       mockAuth.mockResolvedValue({
-        user: { id: 'mocked-user-id', organizationVersionId: 'mocked-organization-parent', role: 'viewer' },
+        user: { id: 'mocked-user-id', organizationVersionId: 'mocked-organization-parent', role: Role.COLLABORATOR },
       })
       mockGetOrganizationVersionById.mockResolvedValue({ parentId: 'mocked-organization-parent' })
       mockHasEditionRole.mockReturnValue(true)
-      mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue(1)
+      mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue({ success: true, data: 1 })
 
       const result = await canDeleteOrganizationVersion('mocked-organization-child')
       expect(result).toBe(false)
@@ -276,7 +276,7 @@ describe('Organization permissions', () => {
       })
       mockGetOrganizationVersionById.mockResolvedValue({ parentId: 'mocked-parent-organization-id' })
       mockHasEditionRole.mockReturnValue(true)
-      mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue(0)
+      mockGetOrganizationStudiesFromOtherUsers.mockResolvedValue({ success: true, data: 0 })
 
       const result = await canDeleteOrganizationVersion('mocked-child-organization-id')
       expect(result).toBe(false)

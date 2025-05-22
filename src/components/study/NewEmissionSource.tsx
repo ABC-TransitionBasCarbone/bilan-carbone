@@ -1,6 +1,5 @@
 'use client'
 import { FullStudy } from '@/db/study'
-import { NOT_AUTHORIZED } from '@/services/permissions/check'
 import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
 import AddIcon from '@mui/icons-material/Add'
 import { FormLabel, TextField } from '@mui/material'
@@ -42,7 +41,7 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySite }: Prop
           studySiteId: studySite,
           caracterisation: caracterisations.length === 1 ? caracterisations[0] : undefined,
         })
-        if (!(result === NOT_AUTHORIZED)) {
+        if (result.success) {
           setValue('')
           router.refresh()
         }

@@ -88,8 +88,8 @@ const EmissionSource = ({
           const parsed = UpdateEmissionSourceCommandValidation.safeParse(command)
           if (parsed.success) {
             const result = await updateEmissionSource(parsed.data)
-            if (result) {
-              setError(result)
+            if (!result.success) {
+              setError(result.errorMessage)
             } else {
               setSaved(true)
               setTimeout(() => setSaved(false), 3000)

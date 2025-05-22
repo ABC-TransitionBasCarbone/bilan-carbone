@@ -8,7 +8,9 @@ export const hasAccessToFormation = async (user: UserSession) => {
     return false
   }
 
-  if ((await getUserSource()) !== UserSource.CRON) {
+  const userSource = await getUserSource()
+
+  if (!userSource.success || userSource.data !== UserSource.CRON) {
     return false
   }
 

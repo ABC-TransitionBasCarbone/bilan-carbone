@@ -61,8 +61,8 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
         return
       }
       const result = await changeStudyName(data)
-      if (result) {
-        setError(result)
+      if (!result.success) {
+        setError(result.errorMessage)
         return
       }
       setEditTitle(false)

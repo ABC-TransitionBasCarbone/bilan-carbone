@@ -42,7 +42,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
           setValidating(true)
           const result = await validateMember(member.user.email)
           setValidating(false)
-          if (!result) {
+          if (result.success) {
             router.refresh()
           }
         }}
@@ -59,7 +59,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
           setDeleting(true)
           const result = await deleteMember(member.user.email)
           setDeleting(false)
-          if (!result) {
+          if (result.success) {
             router.refresh()
           }
         }}

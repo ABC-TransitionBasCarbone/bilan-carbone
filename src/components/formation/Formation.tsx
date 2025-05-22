@@ -34,9 +34,9 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
   useEffect(() => {
     const getStartTime = async () => {
       const startDate = await getFormationFormStart(user.userId)
-      if (startDate) {
+      if (startDate.success && startDate.data) {
         setCheckedUnique(true)
-        setFormStartTime(startDate.getTime())
+        setFormStartTime(startDate.data.getTime())
       }
     }
     getStartTime()

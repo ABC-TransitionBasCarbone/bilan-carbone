@@ -42,9 +42,9 @@ const NewStudyForm = ({ user, accounts, form, children }: Props) => {
   const onSubmit = async (command: CreateStudyCommand) => {
     const result = await createStudyCommand(command)
     if (!result.success) {
-      setError(result.message)
+      setError(result.errorMessage)
     } else {
-      router.push(`/etudes/${result.id}`)
+      router.push(`/etudes/${result.data.id}`)
       router.refresh()
     }
   }

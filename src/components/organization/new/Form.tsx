@@ -32,9 +32,9 @@ const NewOrganizationForm = () => {
   const onSubmit = async (command: CreateOrganizationCommand) => {
     const result = await createOrganizationCommand(command)
     if (!result.success) {
-      setError(result.message)
+      setError(result.errorMessage)
     } else {
-      router.push(`/organisations/${result.id}`)
+      router.push(`/organisations/${result.data.id}`)
       router.refresh()
     }
   }

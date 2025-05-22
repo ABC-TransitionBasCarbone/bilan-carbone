@@ -38,8 +38,8 @@ const NewEmissionFactorForm = () => {
     form.setValue('parts', hasParts ? form.getValues('parts').slice(0, partsCount) : [])
     form.handleSubmit(async (data) => {
       const result = await createEmissionFactorCommand(data)
-      if (result) {
-        setError(result)
+      if (!result.success) {
+        setError(result.errorMessage)
       } else {
         router.push('/facteurs-d-emission')
         router.refresh()

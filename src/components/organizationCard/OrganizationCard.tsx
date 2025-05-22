@@ -55,8 +55,10 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
   }, [context, contextId])
 
   const handleStudyContext = async (studyId: string) => {
-    const organizationVersion = (await getStudyOrganizationVersion(studyId)) as OrganizationVersionWithOrganization
-    setOrganizationVersion(organizationVersion || undefined)
+    const organizationVersion = await getStudyOrganizationVersion(studyId)
+    if (organizationVersion.success) {
+      setOrganizationVersion((organizationVersion.data as OrganizationVersionWithOrganization) || undefined)
+    }
   }
 
   const handleOrganizationContext = async (organizationVersionId: string) => {

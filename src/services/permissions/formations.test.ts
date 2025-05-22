@@ -17,7 +17,7 @@ describe('Formation permissions service', () => {
       beforeEach(() => {
         jest.clearAllMocks()
         mockIsFeatureActive.mockResolvedValue(true)
-        mockGetUserSource.mockResolvedValue(UserSource.CRON)
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
       })
 
       it('"Advanced" level user should be able to access the formation view', async () => {
@@ -49,7 +49,7 @@ describe('Formation permissions service', () => {
       beforeEach(() => {
         jest.clearAllMocks()
         mockIsFeatureActive.mockResolvedValue(false)
-        mockGetUserSource.mockResolvedValue(UserSource.CRON)
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.CRON })
       })
 
       it('"Advanced" level user should not be able to access the formation view', async () => {
@@ -84,14 +84,14 @@ describe('Formation permissions service', () => {
       })
 
       it('User should not be able to access the formation view', async () => {
-        mockGetUserSource.mockResolvedValue(null)
+        mockGetUserSource.mockResolvedValue({ success: true, data: null })
         const user = getMockedAuthUser({ level: Level.Advanced })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)
       })
 
       it('Foreign users should not be able to access the formation view', async () => {
-        mockGetUserSource.mockResolvedValue(UserSource.TUNISIE)
+        mockGetUserSource.mockResolvedValue({ success: true, data: UserSource.TUNISIE })
         const user = getMockedAuthUser({ level: Level.Advanced })
         const result = await hasAccessToFormation(user)
         expect(result).toBe(false)

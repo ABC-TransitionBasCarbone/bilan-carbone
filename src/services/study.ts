@@ -241,12 +241,12 @@ export const downloadStudyPost = async (
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
 
-  const emissionFactors = await getEmissionFactorsByIds(emissionFactorIds, study.id)
+  const emissionFactorsData = await getEmissionFactorsByIds(emissionFactorIds, study.id)
 
   const fileName = getFileName(study, post)
   const csvContent = getEmissionSourcesCSVContent(
     emissionSources,
-    emissionFactors,
+    emissionFactorsData.success ? emissionFactorsData.data : [],
     study.resultsUnit,
     t,
     tCaracterisations,
@@ -275,12 +275,12 @@ export const downloadStudyEmissionSources = async (
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
 
-  const emissionFactors = await getEmissionFactorsByIds(emissionFactorIds, study.id)
+  const emissionFactorsData = await getEmissionFactorsByIds(emissionFactorIds, study.id)
 
   const fileName = getFileName(study)
   const csvContent = getEmissionSourcesCSVContent(
     emissionSources,
-    emissionFactors,
+    emissionFactorsData.success ? emissionFactorsData.data : [],
     study.resultsUnit,
     t,
     tCaracterisations,
@@ -453,7 +453,10 @@ export const downloadStudyResults = async (
     ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
   ]
 
-  const validatedEmissionSourcesOnly = (await getUserSettings())?.validatedEmissionSourcesOnly
+  const userSettings = await getUserSettings()
+  const validatedEmissionSourcesOnly = userSettings.success
+    ? userSettings.data?.validatedEmissionSourcesOnly
+    : undefined
 
   data.push(
     formatConsolidatedStudyResultsForExport(

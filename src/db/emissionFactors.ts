@@ -317,3 +317,17 @@ export const getEmissionFactorsImportActiveVersion = async (source: Import) =>
     where: { source },
     orderBy: { createdAt: 'desc' },
   })
+
+export const findEmissionFactorByImportedId = (id: string) =>
+  prismaClient.emissionFactor.findFirst({
+    where: { importedId: id },
+    select: {
+      id: true,
+      versionId: true,
+      importedId: true,
+      unit: true,
+      customUnit: true,
+      version: { select: { id: true } },
+      metaData: true,
+    },
+  })

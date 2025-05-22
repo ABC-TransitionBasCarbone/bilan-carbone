@@ -24,7 +24,9 @@ const StudyFlowViewer = ({ studyId, selectedFlow }: Props) => {
   const fetchAndSetFlowUrl = async (document: Document) => {
     setLoading(true)
     const url = await getDocumentUrl(document, studyId)
-    setDocumentUrl(url || '')
+    if (url.success) {
+      setDocumentUrl(url.data || '')
+    }
     setLoading(false)
   }
 

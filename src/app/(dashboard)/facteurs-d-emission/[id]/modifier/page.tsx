@@ -11,17 +11,18 @@ interface Props {
 
 const EditEmissionFactor = async (props: Props) => {
   const params = await props.params
-  const emissionFactor = await getDetailedEmissionFactor(params.id)
-
-  if (!emissionFactor) {
-    return <NotFound />
-  }
 
   if (!(await canEditEmissionFactor(params.id))) {
     redirect('/facteurs-d-emission')
   }
 
-  return <EditEmissionFactorPage emissionFactor={emissionFactor} />
+  const emissionFactor = await getDetailedEmissionFactor(params.id)
+
+  if (!emissionFactor.success || !emissionFactor.data) {
+    return <NotFound />
+  }
+
+  return <EditEmissionFactorPage emissionFactor={emissionFactor.data} />
 }
 
 export default withAuth(EditEmissionFactor)
