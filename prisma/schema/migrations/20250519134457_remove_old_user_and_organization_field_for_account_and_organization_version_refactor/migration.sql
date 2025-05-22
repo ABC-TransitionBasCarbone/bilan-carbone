@@ -23,6 +23,7 @@
   - You are about to drop the column `user_id` on the `users_on_study` table. All the data in the column will be lost.
   - A unique constraint covering the columns `[account_id,step]` on the table `user_checked_steps` will be added. If there are existing duplicate values, this will fail.
   - Made the column `account_id` on table `contributors` required. This step will fail if there are existing NULL values in that column.
+  - Made the column `uploader_account_id` on table `documents` required. This step will fail if there are existing NULL values in that column.
   - Made the column `created_by_account_id` on table `studies` required. This step will fail if there are existing NULL values in that column.
   - Made the column `organizationVersion_id` on table `studies` required. This step will fail if there are existing NULL values in that column.
   - Made the column `account_id` on table `user_checked_steps` required. This step will fail if there are existing NULL values in that column.
@@ -37,6 +38,9 @@ ALTER TABLE "contributors" DROP CONSTRAINT "contributors_user_id_fkey";
 
 -- DropForeignKey
 ALTER TABLE "deactivable_features_statuses" DROP CONSTRAINT "deactivable_features_statuses_updated_by_fkey";
+
+-- DropForeignKey
+ALTER TABLE "documents" DROP CONSTRAINT "documents_uploader_account_id_fkey";
 
 -- DropForeignKey
 ALTER TABLE "documents" DROP CONSTRAINT "documents_uploader_id_fkey";
@@ -90,7 +94,8 @@ ADD CONSTRAINT "contributors_pkey" PRIMARY KEY ("study_id", "account_id", "subPo
 ALTER TABLE "deactivable_features_statuses" DROP COLUMN "updated_by";
 
 -- AlterTable
-ALTER TABLE "documents" DROP COLUMN "uploader_id";
+ALTER TABLE "documents" DROP COLUMN "uploader_id",
+ALTER COLUMN "uploader_account_id" SET NOT NULL;
 
 -- AlterTable
 ALTER TABLE "organizations" DROP COLUMN "activated_licence",
@@ -129,6 +134,9 @@ ADD CONSTRAINT "users_on_study_pkey" PRIMARY KEY ("study_id", "account_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_checked_steps_account_id_step_key" ON "user_checked_steps"("account_id", "step");
+
+-- AddForeignKey
+ALTER TABLE "documents" ADD CONSTRAINT "documents_uploader_account_id_fkey" FOREIGN KEY ("uploader_account_id") REFERENCES "accounts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "studies" ADD CONSTRAINT "studies_created_by_account_id_fkey" FOREIGN KEY ("created_by_account_id") REFERENCES "accounts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
