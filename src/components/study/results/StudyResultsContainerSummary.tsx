@@ -1,7 +1,6 @@
 'use client'
 
 import Box from '@/components/base/Box'
-import HelpIcon from '@/components/base/HelpIcon'
 import SpaIcon from '@mui/icons-material/Spa';
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
@@ -18,6 +17,7 @@ import { useMemo, useState } from 'react'
 import Result from './Result'
 import styles from './ResultsContainer.module.css'
 import { Button, Chip } from '@mui/material'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 interface Props {
   study: FullStudy
@@ -77,10 +77,11 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     <>
       {withDependencies === undefined && showTitle && (
         <div className={`${styles.header} justify-between mb1`}>
-          <Chip color="primary" icon={<SpaIcon color="primary" />} label={study.name} component="a" href={`/etudes/${study.id}`} clickable />
+          <Chip color="success" icon={<SpaIcon color="success" />} label={study.name} component="a" href={`/etudes/${study.id}`} clickable />
           <Button variant="contained" href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</Button>
         </div>
       )}
+
       <div className={styles.container}>
         <fieldset className={classNames(styles.selector, 'flex grow')} aria-label={t('results.withDependencies')}>
           <label>
@@ -92,13 +93,13 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(true)}
               className={styles.hidden}
             />
-            <Box className={classNames(styles.card, 'flex-col flex-cc pointer', { [styles.selected]: withDep })}>
+            <Box selected={withDep} className={classNames(styles.card, 'flex-col flex-cc m2 px3')}>
               <h3 className="text-center">
                 {withDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="align-center text-center">
                 {t('results.withDependencies')}
-                <HelpIcon className="ml-4" onClick={() => setGlossary('withDependencies')} label={t('information')} />
+                <HelpOutlineOutlinedIcon color='primary' className="ml-4" onClick={() => setGlossary('withDependencies')} />
               </span>
             </Box>
           </label>
@@ -111,7 +112,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(false)}
               className={styles.hidden}
             />
-            <Box className={classNames(styles.card, 'flex-col flex-cc pointer', { [styles.selected]: !withDep })}>
+            <Box selected={!withDep} className={classNames(styles.card, 'flex-col flex-cc pointer')}>
               <h3 className="text-center">
                 {withoutDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
