@@ -5,6 +5,7 @@ import {
   createOrUpdateDeactivableFeature,
   getDeactivableFeatures,
   getFeatureRestictions,
+  getFeaturesRestictions,
   isFeatureActive,
 } from '@/db/deactivableFeatures'
 import { withServerResponse } from '@/utils/serverResponse'
@@ -29,6 +30,15 @@ export const getDeactivableFeaturesStatuses = async () =>
     await createDeactivableFeatures(missing.map((feature) => ({ feature })))
 
     return getDeactivableFeatures()
+  })
+
+export const getDeactivableFeaturesRestrictionValues = async () =>
+  withServerResponse(async () => {
+    const session = await auth()
+    if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    return getFeaturesRestictions()
   })
 
 export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeature, status: boolean) =>

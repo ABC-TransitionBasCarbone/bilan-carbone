@@ -864,6 +864,15 @@
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
     "More than one": "Il doit y avoir au moins un administrateur ou gestionnaire dans l'organisation"
   },
+  "environment": {
+    "BC": "Bilan Carbone",
+    "CUT": "Count",
+    "TILT": "Tilt"
+  },
+  "source": {
+    "CRON": "Cron",
+    "TUNISIE": "Tunisie"
+  },
   "team": {
     "title": "Mon organisation",
     "pending": "Invitations en attentes",
@@ -1335,5 +1344,12 @@
     "true": "Active",
     "false": "Désactivée",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+  },
+  "deactivatedFeaturesRestrictions": {
+    "title": "Restrictions des fonctionnalités",
+    "source": "Source",
+    "environment": "Environnement",
+    "true": "Active",
+    "false": "Désactivée"
   }
 }
