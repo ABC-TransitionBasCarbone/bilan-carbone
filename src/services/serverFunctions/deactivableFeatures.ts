@@ -64,6 +64,11 @@ export const changeDeactivableFeatureRestriction = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const active = await isFeatureActive(feature)
+    if (!active) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     let targetRestriction: 'deactivatedSources' | 'deactivatedEnvironments'
     if (new Set(Object.values(UserSource)).has(restriction as UserSource)) {
       targetRestriction = 'deactivatedSources'

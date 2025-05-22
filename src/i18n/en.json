@@ -1350,6 +1350,7 @@
     "source": "Source",
     "environment": "Environment",
     "true": "Activated",
-    "false": "Deactivated"
+    "false": "Deactivated",
+    "Not authorized": "You are not allowed to do this action"
   }
 }
