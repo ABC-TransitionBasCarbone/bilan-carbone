@@ -25,7 +25,8 @@ const base = createTheme({
       900: '#020105',
     },
     success: {
-      main: '#94ebbf',
+      main: '#94EBBF',
+      light: '#E0FBE8'
     },
     error: {
       light: '#e04949',
@@ -73,6 +74,7 @@ const theme = createTheme(base, {
         },
         outlined: {
           backgroundColor: base.palette.common.white,
+          borderStyle: 'solid'
         }
       }
     },

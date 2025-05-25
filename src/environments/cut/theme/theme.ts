@@ -14,7 +14,7 @@ const base = createTheme({
 
     },
     success: {
-      main: '#94ebbf',
+      main: '#94EBBF',
     },
     error: {
       light: '#e04949',
@@ -43,6 +43,7 @@ const base = createTheme({
     fontFamily: '"Gilroy-Regular", sans-serif',
     button: {
       textTransform: 'none',
+      fontWeight: 600,
       fontFamily: '"Gilroy-Regular", sans-serif',
     }
   }
@@ -100,6 +101,12 @@ const cutTheme = createTheme(base, {
       garbage: { light: '#9A61FA' },
       ticketOffice: { light: '#FF4052' },
       movieTheater: { light: '#6AA8FF' },
+    },
+    roles: {
+      validator: '#ffc966',
+      editor: '#89d7b0',
+      reader: '#eae5e8',
+      contributor: '#c4d1dd'
     },
     navbar: {
       text: {

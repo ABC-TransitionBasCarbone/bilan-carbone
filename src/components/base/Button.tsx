@@ -5,11 +5,7 @@ import styles from './Button.module.css'
 const Button = ({ className, fullWidth, ...rest }: ButtonProps) => {
   return (
     <ButtonMUI
-      className={classNames(styles.button, className, {
-        [styles.secondary]: rest.color === 'secondary',
-        [styles.error]: rest.color === 'error',
-        w100: fullWidth,
-      })}
+      fullWidth={fullWidth}
       {...rest}
     />
   )

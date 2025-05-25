@@ -1,10 +1,9 @@
-import { ButtonProps } from '@mui/material'
+import { Button, ButtonProps } from '@mui/material'
 import classNames from 'classnames'
 import { LinkProps } from 'next/link'
 
 import { AnchorHTMLAttributes, ReactNode } from 'react'
 import styles from './Block.module.css'
-import Button from './Button'
 import IconLabel from './IconLabel'
 import LinkButton from './LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
@@ -63,7 +62,7 @@ const Block = ({
             <div className={classNames(styles.actions, 'flex')}>
               {actions.map(({ actionType, ...action }, index) =>
                 actionType === 'button' ? (
-                  <Button key={index} {...(action as ButtonProps)} />
+                  <Button key={index} {...(action as ButtonProps)} variant="outlined" />
                 ) : actionType === 'loadingButton' ? (
                   <LoadingButton key={index} {...(action as LoadingButtonProps)} />
                 ) : (

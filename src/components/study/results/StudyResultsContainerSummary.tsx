@@ -18,6 +18,7 @@ import Result from './Result'
 import styles from './ResultsContainer.module.css'
 import { Button, Chip } from '@mui/material'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import StyledChip from '@/components/base/StyledChip';
 
 interface Props {
   study: FullStudy
@@ -77,7 +78,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     <>
       {withDependencies === undefined && showTitle && (
         <div className={`${styles.header} justify-between mb1`}>
-          <Chip color="success" icon={<SpaIcon color="success" />} label={study.name} component="a" href={`/etudes/${study.id}`} clickable />
+          <StyledChip icon={<SpaIcon />} color="success" label={study.name} component="a" href={`/etudes/${study.id}`} clickable />
           <Button variant="contained" href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</Button>
         </div>
       )}
