@@ -68,7 +68,19 @@ const cutTheme = createTheme(base, {
           backgroundColor: base.palette.common.white,
         }
       }
-    }
+    },
+    MuiLinearProgress: {
+      styleOverrides: {
+        root: {
+          backgroundColor: base.palette.grey[200],
+          borderRadius: 4,
+        },
+        bar: {
+          borderRadius: 4,
+          backgroundColor: base.palette.primary.main,
+        },
+      },
+    },
   },
   custom: {
     box: {

@@ -65,9 +65,9 @@ const StudyCard = async ({ study, user }: Props) => {
               {t('validatedOnlyDescription')}
             </GlossaryIconModal>
           </p>
-          <ProgressBar
+          <LinearProgress
+            variant="determinate"
             value={percent}
-            barClass={classNames(styles.progressBar, { [styles.success]: percent === 100 })}
           />
         </Box>
         <div className="justify-end">
