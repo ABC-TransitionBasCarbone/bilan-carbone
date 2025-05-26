@@ -3045,7 +3045,7 @@
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-"@tokenizer/inflate@^0.2.6":
+"@tokenizer/inflate@^0.2.7":
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/@tokenizer/inflate/-/inflate-0.2.7.tgz#32dd9dfc9abe457c89b3d9b760fc0690c85a103b"
   integrity sha512-MADQgmZT1eKjp06jpI2yozxaU9uVs4GzzgSL+uEq7bVcJ9V1ZXQkeGNql1fsSI0gMy1vhvNTNbUqrx+pZfJVmg==
@@ -4314,10 +4314,10 @@ combined-stream@^1.0.8, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@^13.1.0:
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-13.1.0.tgz#776167db68c78f38dcce1f9b8d7b8b9a488abf46"
-  integrity sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==
+commander@^14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-14.0.0.tgz#f244fc74a92343514e56229f16ef5c5e22ced5e9"
+  integrity sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==
 
 commander@^6.2.1:
   version "6.2.1"
@@ -5468,13 +5468,13 @@ file-entry-cache@^8.0.0:
   dependencies:
     flat-cache "^4.0.0"
 
-file-type@^20.5.0:
-  version "20.5.0"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-20.5.0.tgz#616e90564e6ffabab22ad9763e28efcc5c95aee0"
-  integrity sha512-BfHZtG/l9iMm4Ecianu7P8HRD2tBHLtjXinm4X62XBOYzi7CYA7jyqfJzOvXHqzVrVPYqBo2/GvbARMaaJkKVg==
+file-type@^21.0.0:
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-21.0.0.tgz#b6c5990064bc4b704f8e5c9b6010c59064d268bc"
+  integrity sha512-ek5xNX2YBYlXhiUXui3D/BXa3LdqPmoLJ7rqEx2bKJ7EAUEfmXgW0Das7Dc6Nr9MvqaOnIqiPV0mZk/r/UpNAg==
   dependencies:
-    "@tokenizer/inflate" "^0.2.6"
-    strtok3 "^10.2.0"
+    "@tokenizer/inflate" "^0.2.7"
+    strtok3 "^10.2.2"
     token-types "^6.0.0"
     uint8array-extras "^1.4.0"
 
@@ -7183,10 +7183,10 @@ node-xlsx@^0.24.0:
   dependencies:
     xlsx "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
 
-nodemailer@^6.10.1:
-  version "6.10.1"
-  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.10.1.tgz#cbc434c54238f83a51c07eabd04e2b3e832da623"
-  integrity sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==
+nodemailer@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-7.0.3.tgz#c098ce79ac60c7c111a86949eed2f99bd00cdac3"
+  integrity sha512-Ajq6Sz1x7cIK3pN6KesGTah+1gnwMnx5gKl3piQlQQE/PwyJ4Mbc8is2psWYxK3RJTVeqsDaCv8ZzXLCDHMTZw==
 
 normalize-path@^3.0.0:
   version "3.0.0"
@@ -8568,7 +8568,7 @@ strnum@^1.0.5:
   resolved "https://registry.yarnpkg.com/strnum/-/strnum-1.1.2.tgz#57bca4fbaa6f271081715dbc9ed7cee5493e28e4"
   integrity sha512-vrN+B7DBIoTTZjnPNewwhx6cBA/H+IS7rfW68n7XxC1y7uoiGQBxaKzqucGUgavX15dJgiGztLJ8vxuEzwqBdA==
 
-strtok3@^10.2.0:
+strtok3@^10.2.2:
   version "10.2.2"
   resolved "https://registry.yarnpkg.com/strtok3/-/strtok3-10.2.2.tgz#a4c6d78d15db02c5eb20d92af3eedf81edaf09d2"
   integrity sha512-Xt18+h4s7Z8xyZ0tmBoRmzxcop97R4BAh+dXouUDCYn+Em+1P3qpkUfI5ueWLT8ynC5hZ+q4iPEmGG1urvQGBg==
