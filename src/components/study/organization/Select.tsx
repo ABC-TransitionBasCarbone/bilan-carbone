@@ -8,6 +8,7 @@ import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
 import { Environment, SiteCAUnit } from '@prisma/client'
@@ -27,6 +28,7 @@ const SelectOrganization = ({ organizationVersions, selectOrganizationVersion, f
   const [error, setError] = useState('')
   const sites = form.watch('sites')
   const organizationVersionId = form.watch('organizationVersionId')
+  const { environment } = useAppEnvironmentStore()
 
   const organizationVersion = useMemo(
     () => organizationVersions.find((organizationVersion) => organizationVersion.id === organizationVersionId),
@@ -58,9 +60,16 @@ const SelectOrganization = ({ organizationVersions, selectOrganizationVersion, f
       setError(t('validation.sites'))
     } else {
       if (
+        !(environment !== Environment.CUT) &&
         sites
           .filter((site) => site.selected)
-          .some((site) => Number.isNaN(site.etp) || site.etp <= 0 || Number.isNaN(site.ca) || site.ca <= 0)
+          .some(
+            (site) =>
+              Number.isNaN(site.etp) ||
+              (site?.etp && site?.etp <= 0) ||
+              Number.isNaN(site.ca) ||
+              (site?.ca && site?.ca <= 0),
+          )
       ) {
         setError(t('validation.etpCa'))
       } else {
