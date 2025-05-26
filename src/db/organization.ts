@@ -271,3 +271,58 @@ export const deleteClient = async (id: string) => {
     await transaction.organization.delete({ where: { id: organizationVersion.organizationId } })
   })
 }
+export const getRawOrganizationVersionById = (id: string | null) =>
+  id ? prismaClient.organizationVersion.findUnique({ where: { id } }) : null
+
+export const getRawOrganizationBySiret = (siret: string | null) =>
+  siret ? prismaClient.organization.findFirst({ where: { wordpressId: { startsWith: siret } } }) : null
+
+export const getRawOrganizationById = (id: string | null) =>
+  id ? prismaClient.organization.findUnique({ where: { id } }) : null
+
+export const createOrUpdateOrganization = async (
+  organization: Prisma.OrganizationCreateInput & { id?: string },
+  isCR?: boolean,
+  activatedLicence?: boolean,
+  importedFileDate?: Date,
+  environment: Environment = Environment.BC,
+) => {
+  const updatedOrganization = await prismaClient.organization.upsert({
+    where: { id: organization.id ?? '' },
+    update: {
+      importedFileDate,
+    },
+    create: {
+      ...organization,
+      importedFileDate,
+    },
+  })
+
+  const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
+    updatedOrganization.id,
+    environment,
+  )
+
+  await prismaClient.organizationVersion.upsert({
+    where: {
+      organizationId_environment: {
+        organizationId: updatedOrganization.id,
+        environment,
+      },
+    },
+    update: {
+      isCR: isCR || organizationVersion?.isCR || false,
+      updatedAt: new Date(),
+      activatedLicence: activatedLicence || organizationVersion?.activatedLicence,
+    },
+    create: {
+      organizationId: updatedOrganization.id,
+      isCR: isCR || false,
+      activatedLicence,
+      onboarded: false,
+      environment,
+    },
+  })
+
+  return updatedOrganization
+}
