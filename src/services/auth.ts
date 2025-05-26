@@ -162,6 +162,7 @@ export const authOptions: NextAuthOptions = {
           organizationVersionId: account?.organizationVersionId,
           organizationId: organizationVersion?.organizationId,
           level: user.level,
+          environment: organizationVersion?.environment,
         }
       },
     }),
