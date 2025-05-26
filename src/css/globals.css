@@ -161,7 +161,3 @@ table {
 .pointer {
   cursor: pointer;
 }
-
-.fit-content {
-  width: -moz-available;
-}

@@ -38,7 +38,6 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
   )
   const computedTotal = formatNumber(computedResults.find((result) => result.post === 'total')?.value, 0)
 
-  console.log(begesTotal, computedTotal)
   const utilisationEnDependance = computedResults
     .find((result) => result.post === Post.UtilisationEtDependance)
     ?.subPosts.find((subPost) => subPost.post === SubPost.UtilisationEnDependance)
