@@ -68,7 +68,7 @@ export const changeDeactivableFeatureRestriction = async (
 
     const restrictions = await getFeatureRestictions(feature)
 
-    const targetRestrictions = restrictions[targetRestriction] || []
+    const targetRestrictions = restrictions ? restrictions[targetRestriction] || [] : []
 
     const newRestrictions = status
       ? [...targetRestrictions, restriction]
