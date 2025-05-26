@@ -8,23 +8,16 @@ export const isFeatureActive = async (feature: DeactivatableFeature) => {
   return !!featureStatus?.active
 }
 
-export const getFeaturesRestictions = async () => {
-  const deactivableFeatures = await prismaClient.deactivatableFeatureStatus.findMany()
-  return deactivableFeatures.map((feature) => ({
-    feature: feature.feature,
-    active: feature.active,
-    deactivatedSources: feature.deactivatedSources,
-    deactivatedEnvironments: feature.deactivatedEnvironments,
-  }))
-}
+export const getFeaturesRestictions = async () =>
+  prismaClient.deactivatableFeatureStatus.findMany({
+    select: { feature: true, active: true, deactivatedSources: true, deactivatedEnvironments: true },
+  })
 
-export const getFeatureRestictions = async (feature: DeactivatableFeature) => {
-  const deactivableFeature = await prismaClient.deactivatableFeatureStatus.findUnique({ where: { feature } })
-  return {
-    deactivatedSources: deactivableFeature?.deactivatedSources,
-    deactivatedEnvironments: deactivableFeature?.deactivatedEnvironments,
-  }
-}
+export const getFeatureRestictions = async (feature: DeactivatableFeature) =>
+  prismaClient.deactivatableFeatureStatus.findUnique({
+    where: { feature },
+    select: { deactivatedSources: true, deactivatedEnvironments: true },
+  })
 
 export const updateFeatureRestictions = async (
   feature: DeactivatableFeature,
