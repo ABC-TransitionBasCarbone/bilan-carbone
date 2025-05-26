@@ -15,9 +15,9 @@ interface Props {
   restrictions: AsyncReturnType<typeof getFeaturesRestictions>[number]
 }
 
-type Factor<TValue> = {
+type DeactivationCriteria<TValue> = {
   title: string
-  factorRestrictions: TValue[]
+  criterias: TValue[]
   t: (value: string) => string
   values: TValue[]
 }
@@ -50,24 +50,23 @@ const DeactivableFeature = ({ restrictions }: Props) => {
     }
   }
 
-  const factors: Array<Factor<UserSource> | Factor<Environment>> = [
+  const featureDeactivationCriterias: Array<DeactivationCriteria<UserSource> | DeactivationCriteria<Environment>> = [
     {
       title: 'source',
-      factorRestrictions: restrictions.deactivatedSources,
+      criterias: restrictions.deactivatedSources,
       t: tSource,
       values: Object.values(UserSource),
     },
     {
       title: 'environment',
-      factorRestrictions: restrictions.deactivatedEnvironments,
+      criterias: restrictions.deactivatedEnvironments,
       t: tEnvironment,
       values: Object.values(Environment),
     },
   ]
 
-  const isValueAllowed = (factorRestrictions: RestrictionsTypes[], value: RestrictionsTypes) =>
-    (factorRestrictions && !factorRestrictions.length) ||
-    (typeof factorRestrictions[0] === typeof value && !factorRestrictions.includes(value))
+  const isCriteriaActive = (criterias: RestrictionsTypes[], value: RestrictionsTypes) =>
+    (criterias && !criterias.length) || !criterias.includes(value)
 
   return (
     <>
@@ -86,23 +85,23 @@ const DeactivableFeature = ({ restrictions }: Props) => {
           />
         </FormControl>
       </div>
-      {factors.map(({ title, t: tFactor, values, factorRestrictions }) => (
+      {featureDeactivationCriterias.map(({ title, t: tFactor, values, criterias }) => (
         <div className="wrap align-center" key={title}>
           {t(title)} :
-          {(values as typeof factorRestrictions).map((value) => (
+          {(values as typeof criterias).map((value) => (
             <div key={value} className="ml2">
               <FormControl className="flex-row align-center" sx={{ gap: 1 }}>
                 <FormLabel>{tFactor(value)}</FormLabel>
                 <FormControlLabel
                   control={
                     <Switch
-                      aria-label={t(isValueAllowed(factorRestrictions, value).toString())}
-                      checked={isValueAllowed(factorRestrictions, value)}
+                      aria-label={t(isCriteriaActive(criterias, value).toString())}
+                      checked={isCriteriaActive(criterias, value)}
                       onChange={(event) => updateDeactivatedFeatureRestrictions(value, event.target.checked)}
                     />
                   }
                   disabled={!restrictions.active}
-                  label={t(isValueAllowed(factorRestrictions, value).toString())}
+                  label={t(isCriteriaActive(criterias, value).toString())}
                 />
               </FormControl>
             </div>
