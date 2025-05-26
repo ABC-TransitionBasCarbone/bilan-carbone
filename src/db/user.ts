@@ -204,10 +204,6 @@ export const updateAccount = (
     where: { id: accountId },
     data: {
       ...data,
-      user: {
-        update: {
-          ...userData,
-        },
-      },
+      user: { update: { ...userData } },
     },
   })
