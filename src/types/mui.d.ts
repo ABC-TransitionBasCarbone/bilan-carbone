@@ -15,6 +15,12 @@ declare module '@mui/material/styles' {
         ticketOffice: { light: string }
         movieTheater: { light: string }
       }
+      roles: {
+        validator: string
+        editor: string
+        reader: string
+        contributor: string
+      }
       navbar: {
         organizationToolbar?: {
           border?: string
@@ -40,6 +46,12 @@ declare module '@mui/material/styles' {
         garbage: { light: string }
         ticketOffice: { light: string }
         movieTheater: { light: string }
+      }
+      roles: {
+        validator: string
+        editor: string
+        reader: string
+        contributor: string
       }
       navbar: {
         organizationToolbar?: {

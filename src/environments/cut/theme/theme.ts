@@ -43,7 +43,6 @@ const base = createTheme({
     fontFamily: '"Gilroy-Regular", sans-serif',
     button: {
       textTransform: 'none',
-      fontWeight: 600,
       fontFamily: '"Gilroy-Regular", sans-serif',
     }
   }
@@ -66,7 +65,7 @@ const cutTheme = createTheme(base, {
           borderRadius: '0.5rem',
         },
         outlined: {
-          backgroundColor: base.palette.common.white,
+
         }
       }
     },
