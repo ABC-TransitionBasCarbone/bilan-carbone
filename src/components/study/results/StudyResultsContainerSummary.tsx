@@ -1,7 +1,7 @@
 'use client'
 
 import Box from '@/components/base/Box'
-import SpaIcon from '@mui/icons-material/Spa';
+import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
@@ -9,6 +9,9 @@ import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import SpaIcon from '@mui/icons-material/Spa'
+import { Button } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -16,9 +19,6 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import Result from './Result'
 import styles from './ResultsContainer.module.css'
-import { Button, Chip } from '@mui/material'
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import StyledChip from '@/components/base/StyledChip';
 
 interface Props {
   study: FullStudy
@@ -78,8 +78,17 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     <>
       {withDependencies === undefined && showTitle && (
         <div className={`${styles.header} justify-between mb1`}>
-          <StyledChip icon={<SpaIcon />} color="success" label={study.name} component="a" href={`/etudes/${study.id}`} clickable />
-          <Button variant="contained" href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</Button>
+          <StyledChip
+            icon={<SpaIcon />}
+            color="success"
+            label={study.name}
+            component="a"
+            href={`/etudes/${study.id}`}
+            clickable
+          />
+          <Button variant="contained" color="secondary" href={`/etudes/${study.id}/comptabilisation/resultats`}>
+            {t('seeResults')}
+          </Button>
         </div>
       )}
 
@@ -100,7 +109,11 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               </h3>
               <span className="align-center text-center">
                 {t('results.withDependencies')}
-                <HelpOutlineOutlinedIcon color='primary' className="ml-4" onClick={() => setGlossary('withDependencies')} />
+                <HelpOutlineOutlinedIcon
+                  color="primary"
+                  className="ml-4"
+                  onClick={() => setGlossary('withDependencies')}
+                />
               </span>
             </Box>
           </label>

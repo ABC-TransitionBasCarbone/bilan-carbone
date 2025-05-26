@@ -19,6 +19,7 @@ import NavbarLink from './NavbarLink'
 import NavbarOrganizationMenu from './NavbarOrganizationMenu'
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import SettingsIcon from '@mui/icons-material/Settings'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
@@ -58,8 +59,8 @@ const Navbar = ({ children, user }: Props) => {
 
   return (
     <AppBar position="static" elevation={0}>
-      <Toolbar variant='dense'>
-        <Container maxWidth='lg' className={styles.toolbarContainer}>
+      <Toolbar variant="dense">
+        <Container maxWidth="lg" className={styles.toolbarContainer}>
           <Box className={styles.buttonContainer}>
             <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
               <Logo />
@@ -83,7 +84,9 @@ const Navbar = ({ children, user }: Props) => {
                   {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
                     <MenuItem onClick={handleClose}>
                       <NavbarLink href={`/organisations/${user.organizationVersionId}/modifier`}>
+
                         {t('information')}
+
                       </NavbarLink>
                     </MenuItem>
                   )}

@@ -1,7 +1,7 @@
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import { SvgIconProps } from '@mui/material'
 import classNames from 'classnames'
 import { MouseEventHandler } from 'react'
-import { SvgIconProps } from '@mui/material'
 
 interface Props extends SvgIconProps {
   className?: string

@@ -1,6 +1,7 @@
 import Label from '@/components/base/Label'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
+import { Button, LinearProgress } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
@@ -9,7 +10,7 @@ import Box from '../../base/Box'
 import GlossaryIconModal from '../../modals/GlossaryIconModal'
 import styles from './StudyCard.module.css'
 import StudyName from './StudyName'
-import { Button, LinearProgress } from '@mui/material'
+
 interface Props {
   study: Study
   user: UserSession
@@ -63,13 +64,14 @@ const StudyCard = async ({ study, user }: Props) => {
               {t('validatedOnlyDescription')}
             </GlossaryIconModal>
           </p>
-          <LinearProgress
-            variant="determinate"
-            value={percent}
-          />
+          <LinearProgress variant="determinate" value={percent} />
         </Box>
         <div className="justify-end">
-          <Button variant='contained' href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>
+          <Button
+            variant="contained"
+            color="secondary"
+            href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}
+          >
             {t('see')}
           </Button>
         </div>

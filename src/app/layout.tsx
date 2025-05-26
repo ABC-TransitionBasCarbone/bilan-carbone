@@ -34,10 +34,7 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
   return (
     <html lang={locale} className={environment}>
       <head>
-        <link
-          href="https://fonts.cdnfonts.com/css/gilroy-bold"
-          rel="stylesheet"
-        />
+        <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet" />
       </head>
       <body>
         <AppRouterCacheProvider options={providerOptions}>

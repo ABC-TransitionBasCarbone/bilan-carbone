@@ -1,14 +1,14 @@
 'use client'
+import { BoxProps, Box as MuiBox, Palette, PaletteColor, styled } from '@mui/material'
 import classNames from 'classnames'
 import styles from './Box.module.css'
-import { styled, Box as MuiBox, BoxProps, Palette, PaletteColor } from '@mui/material'
 interface Props extends BoxProps {
-  selected?: boolean,
+  selected?: boolean
   color?: keyof Palette
 }
 
 const StyledBox = styled(MuiBox, {
-  shouldForwardProp: (prop) => prop !== 'selected'
+  shouldForwardProp: (prop) => prop !== 'selected',
 })<Props>(({ theme, selected, color = 'primary' }) => {
   const paletteColor = theme.palette[color] as PaletteColor
   return {

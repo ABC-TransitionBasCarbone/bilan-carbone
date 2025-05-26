@@ -1,4 +1,3 @@
-import { ThemeContext } from '@emotion/react'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({
@@ -8,10 +7,10 @@ const base = createTheme({
     },
     primary: {
       main: '#272768',
-      light: '#ebf2ff'
+      light: '#ebf2ff',
     },
     secondary: {
-      main: '#346fef'
+      main: '#346fef',
     },
     grey: {
       50: '#e9eff9',
@@ -26,7 +25,7 @@ const base = createTheme({
     },
     success: {
       main: '#94EBBF',
-      light: '#E0FBE8'
+      light: '#E0FBE8',
     },
     error: {
       light: '#e04949',
@@ -41,18 +40,38 @@ const base = createTheme({
     },
   },
   shadows: [
-    'none', 'none', 'none', 'none', 'none',
-    'none', 'none', 'none', 'none', 'none',
-    'none', 'none', 'none', 'none', 'none',
-    'none', 'none', 'none', 'none', 'none',
-    'none', 'none', 'none', 'none', 'none'
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
   ],
   typography: {
     fontFamily: '"Gilroy-Regular", sans-serif',
     button: {
       textTransform: 'none',
       fontFamily: '"Gilroy-Regular", sans-serif',
-    }
+    },
   },
 })
 
@@ -63,8 +82,8 @@ const theme = createTheme(base, {
       sm: 600,
       md: 900,
       lg: 1360,
-      xl: 1536
-    }
+      xl: 1536,
+    },
   },
   components: {
     MuiButton: {
@@ -74,9 +93,9 @@ const theme = createTheme(base, {
         },
         outlined: {
           backgroundColor: base.palette.common.white,
-          borderStyle: 'solid'
-        }
-      }
+          borderStyle: 'solid',
+        },
+      },
     },
     MuiLinearProgress: {
       styleOverrides: {
@@ -99,11 +118,11 @@ const theme = createTheme(base, {
       borderStyle: 'solid',
       borderWidth: '0.0125rem',
       borderColor: base.palette.grey[300],
-      padding: '1rem'
+      padding: '1rem',
     },
     navbar: {
       organizationToolbar: {
-        border: '0.125rem solid rgba(27, 91, 245, 0.1)'
+        border: '0.125rem solid rgba(27, 91, 245, 0.1)',
       },
       text: {
         color: '#FFFFFF',
@@ -111,8 +130,8 @@ const theme = createTheme(base, {
         textTransform: 'uppercase',
         fontSize: '1rem',
         '&:hover': {
-          color: base.palette.secondary.main
-        }
+          color: base.palette.secondary.main,
+        },
       },
     },
   },

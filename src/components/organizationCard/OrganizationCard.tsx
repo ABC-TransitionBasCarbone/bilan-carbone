@@ -6,11 +6,12 @@ import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { isAdmin } from '@/utils/user'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
+import { Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
+import { Role } from '@prisma/client'
 import { Environment, Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
-import { Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
 
 interface Props {
   account: UserSession
@@ -93,15 +94,11 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
 
   return (
     <OrganizationToolbar>
-      <Box display='flex' alignItems='center' gap={2}>
+      <Box display="flex" alignItems="center" gap={2}>
         <HomeIcon />
-        <Typography>{organizationVersion.name}</Typography>
+        <Typography>{organizationVersion.organization.name}</Typography>
         {hasAccess && (
-          <Button
-            color='secondary'
-            href={organizationVersionLink}
-            variant='outlined'
-          >
+          <Button color="secondary" href={organizationVersionLink} variant="outlined">
             {t(linkLabel)}
           </Button>
         )}

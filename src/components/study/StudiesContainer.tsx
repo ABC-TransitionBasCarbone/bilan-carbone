@@ -78,7 +78,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
           <p>{t('firstStudyMessage')}</p>
           <LinkButton
             data-testid="new-organization"
-            className={classNames(styles.linkButton, 'w100 justify-center mb1')}
+            className={classNames('w100 justify-center mb1')}
             href={creationUrl}
           >
             <AddIcon />

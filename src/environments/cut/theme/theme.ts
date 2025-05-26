@@ -8,11 +8,9 @@ const base = createTheme({
       contrastText: '#2C303A',
     },
     secondary: {
-      main: '#1D1D1B'
+      main: '#1D1D1B',
     },
-    grey: {
-
-    },
+    grey: {},
     success: {
       main: '#94EBBF',
     },
@@ -33,19 +31,39 @@ const base = createTheme({
     },
   },
   shadows: [
-    'none', 'none', 'none', 'none', 'none',
-    'none', 'none', 'none', 'none', 'none',
-    'none', 'none', 'none', 'none', 'none',
-    'none', 'none', 'none', 'none', 'none',
-    'none', 'none', 'none', 'none', 'none'
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
   ],
   typography: {
     fontFamily: '"Gilroy-Regular", sans-serif',
     button: {
       textTransform: 'none',
       fontFamily: '"Gilroy-Regular", sans-serif',
-    }
-  }
+    },
+  },
 })
 
 const cutTheme = createTheme(base, {
@@ -55,8 +73,8 @@ const cutTheme = createTheme(base, {
       sm: 600,
       md: 900,
       lg: 1360,
-      xl: 1536
-    }
+      xl: 1536,
+    },
   },
   components: {
     MuiButton: {
@@ -64,10 +82,8 @@ const cutTheme = createTheme(base, {
         root: {
           borderRadius: '0.5rem',
         },
-        outlined: {
-
-        }
-      }
+        outlined: {},
+      },
     },
     MuiLinearProgress: {
       styleOverrides: {
@@ -90,7 +106,7 @@ const cutTheme = createTheme(base, {
       borderStyle: 'solid',
       borderWidth: '0.0125rem',
       borderColor: base.palette.grey[300],
-      padding: '1rem'
+      padding: '1rem',
     },
     postColors: {
       functioning: { light: '#FF8145' },
@@ -105,7 +121,7 @@ const cutTheme = createTheme(base, {
       validator: '#ffc966',
       editor: '#89d7b0',
       reader: '#eae5e8',
-      contributor: '#c4d1dd'
+      contributor: '#c4d1dd',
     },
     navbar: {
       text: {

@@ -1,13 +1,12 @@
-import Link from 'next/link'
 import { Button, ButtonProps } from '@mui/material'
-import { forwardRef } from 'react'
+import Link from 'next/link'
 
 interface LinkButtonProps extends ButtonProps {
-  href: string
+  href?: string
 }
 
-const LinkButton = ({ href, ...props }: LinkButtonProps) => (
-  <Button component={Link} variant='outlined' href={href} {...props} />
+const LinkButton = ({ href = '#', ...props }: LinkButtonProps) => (
+  <Button component={Link} href={href} variant="outlined" {...props} />
 )
 
 export default LinkButton

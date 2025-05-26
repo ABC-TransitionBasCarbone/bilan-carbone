@@ -1,15 +1,7 @@
 'use client'
 import CloseIcon from '@mui/icons-material/Close'
-import {
-  ButtonProps,
-  IconButton,
-  Button,
-  Modal as MUIModal,
-  Typography,
-} from '@mui/material'
+import { Button, ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
 import classNames from 'classnames'
-import { LinkProps } from 'next/link'
-import { AnchorHTMLAttributes } from 'react'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from '../base/LoadingButton'
@@ -29,7 +21,7 @@ export interface Props {
 type ModalAction =
   | (ButtonProps & { actionType?: 'button' | 'submit'; 'data-testid'?: string })
   | (LoadingButtonProps & { actionType: 'loadingButton'; 'data-testid'?: string })
-  | (LinkProps & AnchorHTMLAttributes<HTMLAnchorElement> & { actionType: 'link'; 'data-testid'?: string })
+  | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 
 const Modal = ({ className, label, open, onClose, title, children, actions, big }: Props) => (
   <MUIModal
@@ -45,38 +37,37 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
         </IconButton>
       </div>
 
-      <Typography
-        id={`${label}-modal-title`}
-        variant="h6"
-        sx={{ fontWeight: 'bold', mb: 2 }}
-      >
+      <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
         {title}
       </Typography>
 
-      <div
-        className={classNames(styles.content, 'flex-col grow mb1')}
-        id={`${label}-modal-description`}
-      >
+      <div className={classNames(styles.content, 'flex-col grow mb1')} id={`${label}-modal-description`}>
         {children}
       </div>
 
       {actions && actions?.length > 0 && (
         <div className={classNames(styles.actions, 'justify-end')}>
-          {
-            actions.map((action, index) => {
-              switch (action.actionType) {
-                case 'loadingButton':
-                  const { actionType, ...loadingProps } = action
-                  return <LoadingButton key={index} {...loadingProps} />
-                case 'link':
-                  const { actionType: _, ...linkProps } = action
-                  return <LinkButton key={index} {...linkProps} />
-                default:
-                  const { actionType: __, ...buttonProps } = action
-                  return <Button key={index} variant='contained' type={action.actionType === 'submit' ? 'submit' : 'button'} {...buttonProps} />
-              }
-            })
-          }
+          {actions.map((action, index) => {
+            switch (action.actionType) {
+              case 'loadingButton':
+                const { actionType, ...loadingProps } = action
+                return <LoadingButton key={index} color="secondary" {...loadingProps} />
+              case 'link':
+                const { actionType: _, ...linkProps } = action
+                return <LinkButton key={index} color="secondary" {...linkProps} />
+              default:
+                const { actionType: __, ...buttonProps } = action
+                return (
+                  <Button
+                    key={index}
+                    variant="contained"
+                    color="secondary"
+                    type={action.actionType === 'submit' ? 'submit' : 'button'}
+                    {...buttonProps}
+                  />
+                )
+            }
+          })}
         </div>
       )}
     </Box>

@@ -3,7 +3,7 @@
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
-import { Drawer, Fab, IconButton } from '@mui/material'
+import { Drawer, Fab } from '@mui/material'
 import { OrganizationVersion, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -67,7 +67,7 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
   return (
     <div className={styles.checklistButton}>
       <Fab
-        color='primary'
+        color="primary"
         data-testid="checklist-button"
         aria-label={t('title')}
         title={t('title')}
