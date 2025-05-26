@@ -6,9 +6,9 @@ import { isAdmin } from '@/utils/user'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
-import PeopleIcon from '@mui/icons-material/People'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SettingsIcon from '@mui/icons-material/Settings'
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 import { Environment, Role } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
@@ -106,7 +106,7 @@ const Navbar = ({ user }: Props) => {
               aria-label={t('selectAccount')}
               href="/selection-du-compte"
             >
-              <PeopleIcon />
+              <SwapHorizIcon />
             </Link>
           )}
 

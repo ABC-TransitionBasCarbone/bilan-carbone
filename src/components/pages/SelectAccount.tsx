@@ -21,7 +21,7 @@ const SelectAccount = ({ user, userWithAccountsAndOrganizations }: Props) => {
   const onSelectAccount = async (accountId: string) => {
     const result = await accountHandler(accountId)
     if (result && !result?.error) {
-      router.push('/?fromAccountSelection')
+      router.push('/')
       router.refresh()
     }
   }
