@@ -45,7 +45,8 @@ const LoginForm = () => {
     setErrorMessage('')
     setSubmitting(true)
 
-    const result = await signIn('credentials', { ...getValues(), redirect: false })
+    const values = getValues()
+    const result = await signIn('credentials', { ...values, email: values.email.toLowerCase(), redirect: false })
 
     if (result?.error) {
       setSubmitting(false)
