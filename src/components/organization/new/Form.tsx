@@ -52,7 +52,7 @@ const NewOrganizationForm = () => {
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-organization-create-button">
           {t('create')}
         </LoadingButton>
-        {error && <p>{error}</p>}
+        {error && <p>{t(error)}</p>}
       </Form>
     </Block>
   )

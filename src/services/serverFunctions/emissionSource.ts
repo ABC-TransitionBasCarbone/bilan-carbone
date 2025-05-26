@@ -157,7 +157,7 @@ export const deleteEmissionSource = async (emissionSourceId: string) =>
   })
 
 export const getEmissionSourcesByStudyId = async (studyId: string) =>
-  withServerResponse('', async () => {
+  withServerResponse('getEmissionSourcesByStudyId', async () => {
     const session = await auth()
     if (!session || !session.user) {
       return []

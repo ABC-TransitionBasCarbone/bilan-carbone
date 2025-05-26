@@ -17,7 +17,7 @@ import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import { Environment, Prisma, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
-import { NOT_AUTHORIZED } from '../permissions/check'
+import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
 import {
   canCreateOrganization,
   canDeleteOrganizationVersion,
@@ -72,7 +72,7 @@ export const createOrganizationCommand = async (command: CreateOrganizationComma
       return { id: createdOrganizationVersion.id }
     } catch (e) {
       console.error(e)
-      throw new Error('Something went wrong...')
+      throw new Error(UNKNOWN_ERROR)
     }
   })
 
@@ -125,7 +125,7 @@ export const setOnboardedOrganizationVersion = async (organizationVersionId: str
   })
 
 export const onboardOrganizationVersionCommand = async (command: OnboardingCommand) =>
-  withServerResponse('', async () => {
+  withServerResponse('onboardOrganizationVersionCommand', async () => {
     const session = await auth()
     const organizationVersionId = session?.user.organizationVersionId
 

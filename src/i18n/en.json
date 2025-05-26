@@ -1085,7 +1085,8 @@
       "editTitle": "Edit my organization",
       "edit": "Validate modification",
       "name": "Organization name",
-      "title": "Information about the new organization"
+      "title": "Information about the new organization",
+      "Unknown error": "An unknwon error happened. Please contact the support"
     },
     "sites": {
       "title": "The organization's sites concerned by this study",

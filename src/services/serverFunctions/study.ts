@@ -562,13 +562,11 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       right.role,
     )
 
-    if (accountId) {
-      await createUserOnStudy({
-        account: { connect: { id: accountId } },
-        study: { connect: { id: studyWithRights.id } },
-        role: right.role,
-      })
-    }
+    await createUserOnStudy({
+      account: { connect: { id: accountId } },
+      study: { connect: { id: studyWithRights.id } },
+      role: right.role,
+    })
   })
 
 export const changeStudyRole = async (studyId: string, email: string, studyRole: StudyRole) =>
@@ -655,10 +653,8 @@ export const newStudyContributor = async ({ email, subPosts, ...command }: NewSt
       existingUser,
     )
 
-    if (accountId) {
-      const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
-      await createContributorOnStudy(accountId, selectedSubposts, command)
-    }
+    const selectedSubposts = Object.values(subPosts).reduce((res, subPosts) => res.concat(subPosts), [])
+    await createContributorOnStudy(accountId, selectedSubposts, command)
   })
 
 export const deleteStudyCommand = async ({ id, name }: DeleteCommand) =>
