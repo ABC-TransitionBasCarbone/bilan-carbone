@@ -1,8 +1,8 @@
 'use client'
-import { BASE, CUT, useAppEnvironmentStore } from '@/store/AppEnvironment';
+import { BASE, CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Box, BoxProps, Link, Breadcrumbs as MUIBreadcrumbs, styled, Typography } from '@mui/material'
-import { useMemo } from 'react';
+import { useMemo } from 'react'
 
 interface Props {
   links: { label: string; link: string }[]
@@ -29,8 +29,10 @@ const Breadcrumbs = ({ links, current }: Props) => {
     <nav role="navigation" aria-label="Breadcrumb" className="main-container">
       <StyledContainer className="flex-cc">
         <MUIBreadcrumbs separator={<KeyboardArrowRightIcon />}>
-          {links.map(({ link, label }) => (
-            <Link href={link} color={isCut ? 'primary.contrastText' : 'primary'}>{label}</Link>
+          {links.map(({ link, label }, index) => (
+            <Link key={index} href={link} color={isCut ? 'primary.contrastText' : 'primary'}>
+              {label}
+            </Link>
           ))}
           <Typography>{current}</Typography>
         </MUIBreadcrumbs>

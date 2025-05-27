@@ -2,7 +2,7 @@
 
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import MenuIcon from '@mui/icons-material/Menu'
-import { Divider, Drawer, Fab, IconButton } from '@mui/material'
+import { Divider, Drawer, Fab } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { UUID } from 'crypto'

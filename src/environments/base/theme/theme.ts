@@ -38,7 +38,7 @@ const base = createTheme({
     info: {
       main: '#272768',
     },
-    divider: '#1b5bf51a'
+    divider: '#1b5bf51a',
   },
   shadows: [
     'none',

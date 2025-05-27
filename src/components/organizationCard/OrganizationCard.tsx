@@ -41,7 +41,7 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const [hasAccess, hasEditionRole] = useMemo(
     () =>
       organizationVersion &&
-        organizationVersions.map((organizationVersion) => organizationVersion.id).includes(organizationVersion.id)
+      organizationVersions.map((organizationVersion) => organizationVersion.id).includes(organizationVersion.id)
         ? [true, isAdmin(account.role) || account.role === Role.GESTIONNAIRE || defaultOrganizationVersion.isCR]
         : [false, false],
     [account.role, organizationVersions, defaultOrganizationVersion, organizationVersion],
