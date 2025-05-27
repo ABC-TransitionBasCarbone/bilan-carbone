@@ -41,7 +41,7 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const [hasAccess, hasEditionRole] = useMemo(
     () =>
       organizationVersion &&
-      organizationVersions.map((organizationVersion) => organizationVersion.id).includes(organizationVersion.id)
+        organizationVersions.map((organizationVersion) => organizationVersion.id).includes(organizationVersion.id)
         ? [true, isAdmin(account.role) || account.role === Role.GESTIONNAIRE || defaultOrganizationVersion.isCR]
         : [false, false],
     [account.role, organizationVersions, defaultOrganizationVersion, organizationVersion],
@@ -115,31 +115,6 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
           {t('method')}
         </Button>
       )}
-      {/* <div className="grow p2 justify-between align-center">
-        <div className={classNames(styles.gapped, 'align-center')}>
-          <HomeIcon />
-          <span>{organizationVersion.organization.name}</span>
-          {hasAccess && (
-            <LinkButton color="secondary" href={organizationVersionLink}>
-              {t(linkLabel)}
-            </LinkButton>
-          )}
-        </div>
-        {!isCut && (
-          <div>
-            <LinkButton
-              className="align-end"
-              color="secondary"
-              target="_blank"
-              rel="noreferrer noopener"
-              href="https://www.bilancarbone-methode.com/"
-            >
-              <MenuBookIcon />
-              <span className="ml-2">{t('method')}</span>
-            </LinkButton>
-          </div>
-        )}
-      </div> */}
     </OrganizationToolbar>
   )
 }

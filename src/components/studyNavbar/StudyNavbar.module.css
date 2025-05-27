@@ -10,16 +10,10 @@
 .openDrawerButton {
   height: 4rem;
   width: 4rem;
-  background-color: var(--background-300) !important;
   border-radius: 50% !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  color: white !important;
-
-  &:hover {
-    background-color: var(--primary-800) !important;
-  }
 }
 
 .studyNavbarContainer {
@@ -32,6 +26,7 @@
   top: calc(50vh - 10rem) !important;
   overflow: hidden !important;
   border: var(--border) !important;
+
   hr {
     color: var(--neutral-300) !important;
   }
@@ -80,6 +75,7 @@
 .disabled {
   color: var(--grayscale-800);
   cursor: not-allowed;
+
   &:hover {
     background-color: white;
   }
