@@ -9,7 +9,7 @@ import { Environment } from '@prisma/client'
 import { uploadEmissionFactors } from './emissionFactors'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import { OldBCWorkSheetsReader } from './oldBCWorkSheetsReader'
-import { uploadOrganizations } from './organizations'
+import { checkOrganization, uploadOrganizations } from './organizations'
 import { uploadStudies } from './studies'
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationVersionId: string) => {
@@ -43,6 +43,8 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   let hasOrganizationsWarning = false
   let hasEmissionFactorsWarning = false
   let hasStudiesWarning = false
+
+  await checkOrganization(oldBCWorksheetsReader.organizationsWorksheet, accountOrganizationVersion, prismaClient, false)
 
   await prismaClient.$transaction(async (transaction) => {
     hasOrganizationsWarning = await uploadOrganizations(

@@ -1,5 +1,7 @@
 import { OrganizationVersionWithOrganization, OrganizationVersionWithOrganizationSelect } from '@/db/organization'
 import { Environment, Prisma } from '@prisma/client'
+import { stdin as input, stdout as output } from 'node:process'
+import * as readline from 'node:readline/promises'
 import { OrganizationRow, OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
 import { getExistingSitesIds } from './repositories'
 
@@ -16,6 +18,17 @@ interface Organization {
   oldBCId: string
   name: string
   siret: string
+}
+
+interface BddSite {
+  id: string
+  oldBCId: string | null
+  name: string
+  organizationId: string
+  etp: number
+  ca: number
+  postalCode: string | null
+  city: string | null
 }
 
 interface Site {
@@ -40,15 +53,59 @@ function mapRowToSite(row: OrganizationRow) {
   }
 }
 
-async function checkUserOrganizationHaveNoNewSites(transaction: Prisma.TransactionClient, userOrganizationId: string) {
-  const numberOfNewUserOrganizationSites = await transaction.site.count({
-    where: {
-      AND: [{ organizationId: userOrganizationId }, { oldBCId: null }],
-    },
-  })
-  if (numberOfNewUserOrganizationSites > 0) {
-    throw new Error(`L'organisation de l'utilisateur contient ${numberOfNewUserOrganizationSites} nouveau(x) site(s).`)
+function compareString(a: string, b: string): boolean {
+  return a.toLocaleLowerCase().trim() === b.toLocaleLowerCase().trim()
+}
+
+async function handleUserOrganizationSites(
+  existingSites: BddSite[],
+  oldBCOrganizationSites: Site[],
+  skipCheck: boolean = false,
+) {
+  if (oldBCOrganizationSites.length === 0) {
+    return { sitesToUpdate: [], sitesToCreate: [] }
   }
+
+  const sitesToCreate: Site[] = []
+  const sitesToUpdate: { id: string; oldBCId: string; name: string }[] = []
+
+  if (existingSites.length > 0) {
+    console.log("L'organisation de l’utilisateur a déjà des sites, on trouve la correspondance")
+    for (const oldBCSite of oldBCOrganizationSites) {
+      const site = existingSites.find((s) => compareString(s.name, oldBCSite.name))
+      if (site) {
+        sitesToUpdate.push({ id: site.id, oldBCId: oldBCSite.oldBCId, name: site.name })
+      } else {
+        sitesToCreate.push(oldBCSite)
+      }
+    }
+  }
+
+  if (!skipCheck && sitesToUpdate.length + sitesToCreate.length < existingSites.length) {
+    const rl = readline.createInterface({ input, output })
+
+    const doWeContinue = await rl.question(
+      `Il y a des sites sur le BC+ qui n'ont pas de correspondances dans l'ancien : 
+          NEW : ${existingSites.map((s) => s.name).join(', ')} 
+          OLD : ${oldBCOrganizationSites.map((s) => s.name).join(', ')}
+          Ceux qui correspondent : ${sitesToUpdate.map((s) => s.name).join(', ')}
+          Sites qui vont être créé : ${sitesToCreate.map((s) => s.name).join(', ')}
+          
+          Est-ce qu'on continue ? (oui/non) `,
+    )
+
+    if (doWeContinue?.toLocaleLowerCase() !== 'oui') {
+      throw new Error(
+        `On arrête le programme pour éviter de créer des sites en doublon. Mettre à jour les sites sur l'une des deux plateformes (BC+ ou OldBC+).`,
+      )
+    } else {
+      console.log('On ignore les sites qui n’ont pas de correspondance')
+    }
+
+    rl.close()
+  }
+
+  return { sitesToUpdate, sitesToCreate }
 }
 
 const getOrganizationsOldBCIdsIdsMap = async (
@@ -78,14 +135,14 @@ const getOrganizationsOldBCIdsIdsMap = async (
   return createdOrganizationsMap
 }
 
-export const uploadOrganizations = async (
-  transaction: Prisma.TransactionClient,
+export const checkOrganization = async (
   organizationWorksheet: OrganizationsWorkSheet,
   userOrganizationVersion: OrganizationVersionWithOrganization,
+  transactionOrPrisma: Prisma.TransactionClient,
+  skipCheck = false,
 ) => {
-  console.log('Import des organisations...')
-
   const userOrganizationsRows: { oldBCId: string; name: string }[] = []
+  const userOrganizationsSites: Site[] = []
   const organizations: Organization[] = []
   const sites: Site[] = []
   organizationWorksheet
@@ -93,11 +150,14 @@ export const uploadOrganizations = async (
     // On ignore les parentID supprimés
     .filter((row) => (row.ID_ENTITE_MERE as string) !== '00000000-0000-0000-0000-000000000000')
     .forEach((row) => {
-      if ((row.IS_USER_ORGA as number) === 1) {
+      if ((row.IS_USER_ORGA as number) === 1 && row.ID_ENTITE_MERE === row.ID_ENTITE) {
         userOrganizationsRows.push({
           oldBCId: row.ID_ENTITE as string,
           name: row.NOM_ENTITE as string,
         })
+        userOrganizationsSites.push(mapRowToSite(row))
+      } else if (row.IS_USER_ORGA === 1 && row.ID_ENTITE_MERE !== row.ID_ENTITE) {
+        userOrganizationsSites.push(mapRowToSite(row))
       } else if (row.ID_ENTITE === row.ID_ENTITE_MERE) {
         organizations.push(mapRowToOrganization(row))
       } else {
@@ -105,12 +165,53 @@ export const uploadOrganizations = async (
       }
     })
 
+  if (!userOrganizationVersion.isCR && organizations.length > 0) {
+    throw new Error("L'utilisateur n'est pas une organisation CR, il ne peut pas importer d'autres organisations.")
+  }
+
   if (userOrganizationsRows.length !== 1) {
     throw new Error("Il faut exactement 1 organisation rattachée à l'utilisateur !")
   }
   const userOrganizationRow = userOrganizationsRows[0]
 
-  await checkUserOrganizationHaveNoNewSites(transaction, userOrganizationVersion.organizationId)
+  let existingSites: BddSite[] = []
+  existingSites = await transactionOrPrisma.site.findMany({
+    where: {
+      AND: [{ organizationId: userOrganizationVersion.organizationId }, { oldBCId: null }],
+    },
+  })
+
+  const userOrgaSites = await handleUserOrganizationSites(existingSites, userOrganizationsSites, skipCheck)
+
+  return {
+    organizations,
+    userOrganizationRow,
+    userOrganizationVersion,
+    sites,
+    userOrgaSites,
+  }
+}
+
+export const uploadOrganizations = async (
+  transaction: Prisma.TransactionClient,
+  organizationWorksheet: OrganizationsWorkSheet,
+  userOrganizationVersion: OrganizationVersionWithOrganization,
+) => {
+  console.log('Import des organisations...')
+
+  const { organizations, userOrganizationRow, sites, userOrgaSites } = await checkOrganization(
+    organizationWorksheet,
+    userOrganizationVersion,
+    transaction,
+    true, // skipCheck
+  )
+
+  for (const site of userOrgaSites.sitesToUpdate) {
+    await transaction.site.update({
+      where: { id: site.id },
+      data: { oldBCId: site.oldBCId },
+    })
+  }
 
   const existingOrganizationVersions = await transaction.organizationVersion.findMany({
     where: {
@@ -128,15 +229,6 @@ export const uploadOrganizations = async (
         ({ organization: existingOrganization }) => existingOrganization.oldBCId === organization.oldBCId,
       ),
   )
-
-  // Je crée un site par défaut pour mon organization
-  await transaction.site.create({
-    data: {
-      oldBCId: userOrganizationRow.oldBCId,
-      organizationId: userOrganizationVersion.organizationId,
-      name: userOrganizationRow.name,
-    },
-  })
 
   // Je crée toutes les organisations sauf la mienne
   if (newOrganizations.length > 0) {
@@ -199,7 +291,7 @@ export const uploadOrganizations = async (
     sites.map((site) => site.oldBCId),
   )
   // Et je crée tous les autres sites
-  const sitesToCreate = sites
+  const sitesToCreate = [...userOrgaSites.sitesToCreate, ...sites]
     .filter((site) => !existingSitesIds.has(site.oldBCId))
     .map((site) => {
       const existingParentOrganisationId = organizationsOldBCIdsIdsMap.get(site.organizationOldBCId)
