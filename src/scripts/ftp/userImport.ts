@@ -1,9 +1,9 @@
 'use server'
 
-import { getAccountByEmailAndEnvironment } from '@/db/account'
+import { getAccountByEmailAndEnvironment, getAccountById } from '@/db/account'
 import { getOrganizationVersionByOrganizationIdAndEnvironment } from '@/db/organization'
 import { createOrUpdateOrganization, getRawOrganizationById, getRawOrganizationBySiret } from '@/db/organizationImport'
-import { createUsersWithAccount, updateAccount } from '@/db/userImport'
+import { createUsersWithAccount, getUserByEmail, updateAccount } from '@/db/userImport'
 import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
@@ -19,8 +19,10 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
     User_Source: source,
-    Environment: environment,
+    Environment: dataEnvironment,
   } = value
+
+  const environment = (dataEnvironment || Environment.BC) as Environment
 
   const email = value['User_Email'].replace(/ /g, '').toLowerCase()
 
@@ -28,10 +30,17 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
 
-  const dbAccount = await getAccountByEmailAndEnvironment(email, (environment as Environment) || Environment.BC)
+  const dbUser = await getUserByEmail(email)
+  const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
+  let account = null
+  if (dbAccount) {
+    account = dbAccount
+  } else if (dbUser && dbUser.accounts && dbUser.accounts.length > 0) {
+    account = await getAccountById(dbUser.accounts[0].id)
+  }
 
   const user: Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput } = {
-    id: dbAccount?.user.id,
+    id: account?.user.id,
     email,
     firstName,
     lastName,
@@ -53,8 +62,8 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   }
 
   if (companyNumber) {
-    let organization = dbAccount?.organizationVersion
-      ? await getRawOrganizationById(dbAccount.organizationVersion?.organizationId)
+    let organization = account?.organizationVersion
+      ? await getRawOrganizationById(account.organizationVersion?.organizationId)
       : await getRawOrganizationBySiret(companyNumber)
 
     organization = await createOrUpdateOrganization(
@@ -66,27 +75,29 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       isCR,
       activatedLicence,
       importedFileDate,
-      environment as Environment,
+      environment,
     )
+
+    console.log(`Organization ${organization.name} (${organization.id}) created or updated`)
 
     const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
       organization?.id,
-      environment as Environment,
+      environment,
     )
     user.account.organizationVersion = organizationVersion ? { connect: { id: organizationVersion.id } } : undefined
   }
 
-  if (dbAccount) {
+  if (account) {
     await updateAccount(
-      dbAccount.id || '',
+      account.id,
       {
-        ...(dbAccount.user.status === UserStatus.IMPORTED && {
+        ...(account.user.status === UserStatus.IMPORTED && {
           role: user.account.role as Exclude<Role, 'SUPER_ADMIN'>,
           organizationVersion: user.account.organizationVersion,
         }),
       },
       {
-        ...dbAccount.user,
+        ...account.user,
         level: user.level,
       },
     )
@@ -108,6 +119,7 @@ export const processUsers = async (values: Record<string, string>[], importedFil
       console.log(`${i}/${values.length}`)
     }
   }
-  const created = await createUsersWithAccount(usersWithAccount)
-  console.log(`${created.count} users created`)
+  const { newUsers, newAccounts } = await createUsersWithAccount(usersWithAccount)
+  console.log(`${newUsers.count} users created`)
+  console.log(`${newAccounts.count} accounts created`)
 }

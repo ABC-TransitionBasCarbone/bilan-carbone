@@ -32,6 +32,7 @@ export const createUsersWithAccount = async (
     where: { email: { in: emails } },
   })
 
+  let newAccountCount = 0
   for (const user of createdUsers) {
     const originalUser = users.find((u) => u.email === user.email)
     if (!originalUser) {
@@ -46,9 +47,10 @@ export const createUsersWithAccount = async (
         },
       },
     })
+    newAccountCount++
   }
 
-  return newUsers
+  return { newUsers, newAccounts: { count: newAccountCount } }
 }
 
 export const updateAccount = (
