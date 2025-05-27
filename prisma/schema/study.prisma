@@ -91,7 +91,7 @@ model Study {
   exports              StudyExport[]
 
   organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id])
-  organizationVersionId String              @map("organizationVersion_id")
+  organizationVersionId String              @map("organization_version_id")
 
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
@@ -105,8 +105,8 @@ model Study {
   numberOfOpenDays       Int?
   openingHours           OpeningHours[]
 
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("studies")
 }
@@ -204,8 +204,8 @@ model StudyEmissionSource {
   feTemporalRepresentativeness   Int? @map("fe_temporal_representativeness")
   feCompleteness                 Int? @map("fe_completeness")
 
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("study_emission_sources")
 }
