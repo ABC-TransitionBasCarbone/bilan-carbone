@@ -20,7 +20,7 @@ export interface Props {
 
 type ModalAction =
   | (ButtonProps & { actionType?: 'button' | 'submit'; 'data-testid'?: string })
-  | (LoadingButtonProps & { actionType: 'loadingButton'; 'data-testid'?: string })
+  | (LoadingButtonProps & { actionType: 'loadingButton'; onClick: VoidFunction; 'data-testid'?: string })
   | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 
 const Modal = ({ className, label, open, onClose, title, children, actions, big }: Props) => (

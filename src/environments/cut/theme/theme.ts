@@ -8,16 +8,17 @@ const base = createTheme({
       contrastText: '#2C303A',
     },
     secondary: {
-      main: '#1D1D1B',
+      main: '#63EA90',
+
     },
-    grey: {},
+    grey: {
+      "500": '#2C303A'
+    },
     success: {
       main: '#94EBBF',
     },
     error: {
-      light: '#e04949',
-      main: '#cd2323',
-      dark: '#641111',
+      main: '#FF4052',
     },
     warning: {
       main: '#fc8514',
@@ -61,6 +62,7 @@ const base = createTheme({
     fontFamily: '"Gilroy-Regular", sans-serif',
     button: {
       textTransform: 'none',
+      fontWeight: 600,
       fontFamily: '"Gilroy-Regular", sans-serif',
     },
   },
@@ -82,7 +84,14 @@ const cutTheme = createTheme(base, {
         root: {
           borderRadius: '0.5rem',
         },
-        outlined: {},
+        outlined: {
+          borderColor: base.palette.grey['500'],
+          backgroundColor: base.palette.common.white,
+          color: base.palette.primary.contrastText,
+          '&:hover': {
+            backgroundColor: base.palette.grey['50']
+          }
+        },
       },
     },
     MuiLinearProgress: {
