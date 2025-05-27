@@ -54,7 +54,9 @@ model Account {
   flows                      Document[]
   userApplicationSettings    UserApplicationSettings?
 
-  @@unique([userId, organizationVersionId])
+  environment Environment
+
+  @@unique([userId, environment])
   @@map("accounts")
 }
 
