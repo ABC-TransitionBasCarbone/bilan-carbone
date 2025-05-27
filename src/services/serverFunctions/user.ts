@@ -16,17 +16,18 @@ import {
   deleteUserFromOrga,
   finalizeUserChecklist,
   getUserApplicationSettings,
+  getUserByEmail,
   getUserFormationFormStart,
   getUsers,
   getUsersCheckedSteps,
   getUserSourceById,
   organizationVersionActiveAccountsCount,
   startUserFormationForm,
+  updateUser,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
-import { getUserByEmail, updateUser } from '@/db/userImport'
 import { processUsers } from '@/scripts/ftp/userImport'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'

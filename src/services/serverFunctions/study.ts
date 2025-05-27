@@ -42,8 +42,7 @@ import {
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserApplicationSettings, UserWithAccounts } from '@/db/user'
-import { getUserByEmail } from '@/db/userImport'
+import { addUser, getUserApplicationSettings, getUserByEmail, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'

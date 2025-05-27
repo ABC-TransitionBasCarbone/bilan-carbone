@@ -11,7 +11,7 @@ import * as organizationModule from './organization'
 import { canCreateStudy, canDeleteStudy } from './study'
 
 // mocked called function
-jest.mock('@/db/userImport', () => ({ getUserByEmail: jest.fn() }))
+jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
 jest.mock('@/db/study', () => ({ getStudyById: jest.fn() }))
 jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
 jest.mock('@/utils/study', () => ({ getAccountRoleOnStudy: jest.fn() }))
