@@ -26,7 +26,7 @@ const base = createTheme({
       main: '#272768',
     },
     background: {
-      default: '#ebf2ff',
+      default: '#FBFCFC',
       paper: '#FBFCFC',
     },
   },
