@@ -48,25 +48,26 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
       {actions && actions?.length > 0 && (
         <div className={classNames(styles.actions, 'justify-end')}>
           {actions.map((action, index) => {
-            switch (action.actionType) {
-              case 'loadingButton':
-                const { actionType, ...loadingProps } = action
-                return <LoadingButton key={index} color="secondary" {...loadingProps} />
-              case 'link':
-                const { actionType: _, ...linkProps } = action
-                return <LinkButton key={index} color="secondary" {...linkProps} />
-              default:
-                const { actionType: __, ...buttonProps } = action
-                return (
-                  <Button
-                    key={index}
-                    variant="contained"
-                    color="secondary"
-                    type={action.actionType === 'submit' ? 'submit' : 'button'}
-                    {...buttonProps}
-                  />
-                )
+            if (action.actionType === 'loadingButton') {
+              const { ...loadingProps } = action
+              return <LoadingButton key={index} color="secondary" {...loadingProps} />
             }
+
+            if (action.actionType === 'link') {
+              const { ...linkProps } = action
+              return <LinkButton key={index} color="secondary" {...linkProps} />
+            }
+
+            const { actionType, ...buttonProps } = action
+            return (
+              <Button
+                key={index}
+                variant="contained"
+                color="secondary"
+                type={actionType === 'submit' ? 'submit' : 'button'}
+                {...buttonProps}
+              />
+            )
           })}
         </div>
       )}

@@ -22,7 +22,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import SettingsIcon from '@mui/icons-material/Settings'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 
 interface Props {
   user: UserSession
@@ -84,9 +83,7 @@ const Navbar = ({ children, user }: Props) => {
                   {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
                     <MenuItem onClick={handleClose}>
                       <NavbarLink href={`/organisations/${user.organizationVersionId}/modifier`}>
-
                         {t('information')}
-
                       </NavbarLink>
                     </MenuItem>
                   )}

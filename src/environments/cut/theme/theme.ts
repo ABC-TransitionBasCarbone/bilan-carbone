@@ -9,10 +9,9 @@ const base = createTheme({
     },
     secondary: {
       main: '#63EA90',
-
     },
     grey: {
-      "500": '#2C303A'
+      '500': '#2C303A',
     },
     success: {
       main: '#94EBBF',
@@ -89,8 +88,8 @@ const cutTheme = createTheme(base, {
           backgroundColor: base.palette.common.white,
           color: base.palette.primary.contrastText,
           '&:hover': {
-            backgroundColor: base.palette.grey['50']
-          }
+            backgroundColor: base.palette.grey['50'],
+          },
         },
       },
     },
