@@ -211,7 +211,7 @@ const EmissionSource = ({
             )}
             {/* result */}
             {emissionResults && (
-              <div className={classNames(styles.result, 'flex-col flex-end align-end text-center')}>
+              <div className={classNames(styles.result, 'flex-col flex-end align-end text-center grow')}>
                 <p className={styles.resultText} data-testid="emission-source-value">
                   {`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}
                 </p>

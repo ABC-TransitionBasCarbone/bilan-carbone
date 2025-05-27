@@ -64,7 +64,6 @@
 }
 
 .result {
-  flex: 1;
   margin-right: 1rem;
   margin-left: 1rem;
 }
@@ -185,7 +184,6 @@
 }
 
 .results {
-  flex: 1;
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;

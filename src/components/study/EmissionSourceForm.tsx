@@ -406,7 +406,7 @@ const EmissionSourceForm = ({
       <div className="flex-row justify-between">
         {emissionResults && (
           <div
-            className={classNames(styles.row, 'flex mr-2 grow', styles.results)}
+            className={classNames(styles.row, 'flex mr-2 grow justify-start align-end')}
             data-testid="emission-source-result"
           >
             {emissionResults.confidenceInterval && (
