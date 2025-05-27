@@ -1,6 +1,5 @@
 import { getOrganizationVersionById } from '@/db/organization'
-import { getUserByEmailWithSensibleInformations } from '@/db/user'
-import { getUserByEmail } from '@/db/userImport'
+import { getUserByEmail, getUserByEmailWithSensibleInformations } from '@/db/user'
 import { Level, PrismaClient, Role, UserStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
