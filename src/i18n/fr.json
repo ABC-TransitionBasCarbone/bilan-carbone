@@ -365,6 +365,7 @@
         "email": "Email",
         "role": "Droit",
         "create": "Ajouter la personne",
+        "clear": "Supprimer la valeur",
         "Already in study": "Cette personne a déjà accès à l'étude.",
         "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
         "validation": {

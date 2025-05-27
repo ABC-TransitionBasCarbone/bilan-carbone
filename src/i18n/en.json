@@ -365,6 +365,7 @@
         "email": "Email",
         "role": "Role",
         "create": "Add person",
+        "clear": "Clear value",
         "Already in study": "This person already has access to the study.",
         "Not authorized": "Action not authorized. You can see <link>the FAQ</link> or <support>contact-us</support> if you think it is an error.",
         "validation": {
