@@ -5,21 +5,25 @@ import {
   createOrganizationWithVersion,
   deleteClient,
   getOrganizationNameByOrganizationVersionId,
+  getOrganizationVersionAccounts,
   getOrganizationVersionById,
   getRawOrganizationVersionById,
   onboardOrganizationVersion,
   setOnboarded,
   updateOrganization,
 } from '@/db/organization'
-import { getUserApplicationSettings } from '@/db/user'
+import { deleteStudyMemberFromOrganization, getAllowedStudiesByAccountIdAndOrganizationId } from '@/db/study'
+import { getUserApplicationSettings, getUserByEmail, updateAccount } from '@/db/user'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
+import { isAdmin } from '@/utils/user'
 import { Environment, Prisma, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
 import {
   canCreateOrganization,
+  canDeleteMember,
   canDeleteOrganizationVersion,
   canUpdateOrganizationVersion,
 } from '../permissions/organization'
@@ -158,4 +162,53 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
     }
 
     await onboardOrganizationVersion(session.user.accountId, { ...command, collaborators }, existingCollaborators)
+  })
+
+export const deleteOrganizationMember = async (email: string) =>
+  withServerResponse('deleteOrganizationMember', async () => {
+    const session = await auth()
+    if (!session || !(await canDeleteMember(email))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const targetMember = await getUserByEmail(email)
+
+    const targetMemberAccount = targetMember?.accounts.find(
+      (account) => account.organizationVersionId === session.user.organizationVersionId,
+    )
+
+    if (!targetMemberAccount || !targetMemberAccount.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (targetMemberAccount && isAdmin(targetMemberAccount.role)) {
+      const [organizationAccounts, organizationStudies] = await Promise.all([
+        getOrganizationVersionAccounts(targetMemberAccount.organizationVersionId),
+        getAllowedStudiesByAccountIdAndOrganizationId(
+          targetMemberAccount.id,
+          targetMemberAccount.organizationVersionId,
+        ),
+      ])
+      const organizationAdmins = organizationAccounts.filter(
+        (account) => isAdmin(account.role) && account.user.email !== email,
+      )
+      if (organizationStudies.length) {
+        const studiesWithOnlyValidator = organizationStudies.filter(
+          (study) =>
+            study.allowedUsers.length === 1 &&
+            study.allowedUsers[0].accountId === targetMemberAccount.id &&
+            !organizationAdmins.length,
+        )
+        if (studiesWithOnlyValidator.length) {
+          return {
+            code: 'necessaryAdmin',
+            studies: studiesWithOnlyValidator,
+          }
+        }
+      }
+    }
+
+    await deleteStudyMemberFromOrganization(targetMemberAccount.id, targetMemberAccount.organizationVersionId)
+    await updateAccount(targetMemberAccount.id, { organizationVersion: { disconnect: true } }, {})
+    return null
   })

@@ -889,7 +889,14 @@
       "lastName": "Nom",
       "email": "Email",
       "level": "Formation",
-      "role": "Droits"
+      "role": "Droits",
+      "action": " ",
+      "deleteMember": "Supprimer le membre",
+      "userDeletion": "Suppression d'un utilisateur",
+      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet utilisateur ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
+      "close": "Annuler",
+      "confirm": "Confirmer",
+      "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur des études suivantes : "
     }
   },
   "newMember": {

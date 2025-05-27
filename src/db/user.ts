@@ -197,8 +197,8 @@ export const createUsersWithAccount = async (
 
 export const updateAccount = (
   accountId: string,
-  data: Partial<Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
-  userData: Prisma.UserCreateInput,
+  data: Partial<Prisma.AccountUpdateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
+  userData: Partial<Prisma.UserUpdateInput>,
 ) =>
   prismaClient.account.update({
     where: { id: accountId },

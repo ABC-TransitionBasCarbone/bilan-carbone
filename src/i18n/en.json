@@ -889,7 +889,14 @@
       "lastName": "Last Name",
       "email": "Email",
       "level": "Training",
-      "role": "Rights"
+      "role": "Rights",
+      "action": " ",
+      "deleteMember": "Delete member",
+      "userDeletion": "User deletion",
+      "userDeletionDescription": "Are you sure you want to delete this user? He will no longer have access to your organisation's account, but will still have access to the studies for which he has been invited by other organisations.",
+      "close": "Cancel",
+      "confirm": "Confirm",
+      "necessaryAdmin": "This administrator cannot be removed. He/she is the sole validator of the following studies: "
     }
   },
   "newMember": {
