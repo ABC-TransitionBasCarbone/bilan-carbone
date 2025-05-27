@@ -1,6 +1,10 @@
 'use server'
 
-import { AccountWithUser, getAccountByEmailAndOrganizationVersionId } from '@/db/account'
+import {
+  AccountWithUser,
+  getAccountByEmailAndOrganizationVersionId,
+  getAccountOrganizationVersions,
+} from '@/db/account'
 import {
   createOrganizationWithVersion,
   deleteClient,
@@ -18,7 +22,7 @@ import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
-import { Environment, Prisma, UserChecklist } from '@prisma/client'
+import { Environment, Prisma, StudyRole, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
 import {
@@ -180,35 +184,38 @@ export const deleteOrganizationMember = async (email: string) =>
     if (!targetMemberAccount || !targetMemberAccount.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
+    const organizationVersions = await getAccountOrganizationVersions(targetMemberAccount.id)
 
     if (targetMemberAccount && isAdmin(targetMemberAccount.role)) {
-      const [organizationAccounts, organizationStudies] = await Promise.all([
-        getOrganizationVersionAccounts(targetMemberAccount.organizationVersionId),
-        getAllowedStudiesByAccountIdAndOrganizationId(
-          targetMemberAccount.id,
-          targetMemberAccount.organizationVersionId,
-        ),
-      ])
+      const organizationAccounts = await getOrganizationVersionAccounts(targetMemberAccount.organizationVersionId)
       const organizationAdmins = organizationAccounts.filter(
         (account) => isAdmin(account.role) && account.user.email !== email,
       )
-      if (organizationStudies.length) {
-        const studiesWithOnlyValidator = organizationStudies.filter(
-          (study) =>
-            study.allowedUsers.length === 1 &&
-            study.allowedUsers[0].accountId === targetMemberAccount.id &&
-            !organizationAdmins.length,
+      // errors occurs only if no other ADMIN exists in the organization
+      if (!organizationAdmins.length) {
+        const organizationStudies = await getAllowedStudiesByAccountIdAndOrganizationId(
+          organizationVersions.map((organizationVersion) => organizationVersion.id),
         )
-        if (studiesWithOnlyValidator.length) {
-          return {
-            code: 'necessaryAdmin',
-            studies: studiesWithOnlyValidator,
+
+        if (organizationStudies.length) {
+          const studiesWithOnlyValidator = organizationStudies.filter((study) => {
+            const validators = study.allowedUsers.filter((member) => member.role === StudyRole.Validator)
+            return !validators.length || (validators.length === 1 && validators[0].accountId === targetMemberAccount.id)
+          })
+
+          if (studiesWithOnlyValidator.length) {
+            return {
+              code: 'necessaryAdmin',
+              studies: studiesWithOnlyValidator,
+            }
           }
         }
       }
     }
-
-    await deleteStudyMemberFromOrganization(targetMemberAccount.id, targetMemberAccount.organizationVersionId)
+    await deleteStudyMemberFromOrganization(
+      targetMemberAccount.id,
+      organizationVersions.map((organizationVersion) => organizationVersion.id),
+    )
     await updateAccount(targetMemberAccount.id, { organizationVersion: { disconnect: true } }, {})
     return null
   })

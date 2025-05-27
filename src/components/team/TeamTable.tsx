@@ -113,6 +113,12 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     }
   }
 
+  const onClose = () => {
+    setDeletingMember('')
+    setDeletionError('')
+    setDeletionErrorData(undefined)
+  }
+
   return (
     <>
       <Block
@@ -183,12 +189,12 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         open={!!deletingMember}
         label="member-deletion"
         title={t('userDeletion')}
-        onClose={() => setDeletingMember('')}
+        onClose={onClose}
         actions={[
           {
             actionType: 'button',
             ['data-testid']: 'delete-member-cancel',
-            onClick: () => setDeletingMember(''),
+            onClick: onClose,
             className: 'secondary',
             children: t('close'),
           },

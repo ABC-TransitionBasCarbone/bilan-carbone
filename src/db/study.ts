@@ -246,10 +246,7 @@ export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
   return filterAllowedStudies(user, studies)
 }
 
-export const getAllowedStudiesByAccountIdAndOrganizationId = async (
-  accountId: string,
-  organizationVersionId: string,
-) => {
+export const getAllowedStudiesByAccountIdAndOrganizationId = async (organizationVersionIds: string[]) => {
   return prismaClient.study.findMany({
     select: {
       id: true,
@@ -258,7 +255,9 @@ export const getAllowedStudiesByAccountIdAndOrganizationId = async (
       organizationVersionId: true,
       organizationVersion: { select: { organization: { select: { name: true } } } },
     },
-    where: { allowedUsers: { some: { accountId: accountId, role: StudyRole.Validator } }, organizationVersionId },
+    where: {
+      organizationVersionId: { in: organizationVersionIds },
+    },
   })
 }
 
@@ -601,8 +600,8 @@ export const updateStudyOpeningHours = async (
   })
 }
 
-export const deleteStudyMemberFromOrganization = async (accountId: string, organizationVersionId: string) => {
-  const studies = await getAllowedStudiesByAccountIdAndOrganizationId(accountId, organizationVersionId)
+export const deleteStudyMemberFromOrganization = async (accountId: string, organizationVersionIds: string[]) => {
+  const studies = await getAllowedStudiesByAccountIdAndOrganizationId(organizationVersionIds)
   return prismaClient.userOnStudy.deleteMany({
     where: { accountId, studyId: { in: studies.map((study) => study.id) } },
   })
