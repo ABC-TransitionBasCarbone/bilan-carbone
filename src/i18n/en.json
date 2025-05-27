@@ -865,7 +865,7 @@
     "More than one": "There must be at least one admin or manager in the organization"
   },
   "environment": {
-    "BC": "Bilan Carbone",
+    "BC": "BC",
     "CUT": "Count",
     "TILT": "Tilt"
   },
