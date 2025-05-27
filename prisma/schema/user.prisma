@@ -53,7 +53,9 @@ model Account {
   flows                      Document[]
   userApplicationSettings    UserApplicationSettings?
 
-  @@unique([userId, organizationVersionId])
+  environment Environment
+
+  @@unique([userId, environment])
   @@map("accounts")
 }
 
@@ -98,7 +100,7 @@ model User {
 
 model UserApplicationSettings {
   id                           String     @id @default(uuid())
-  accountId                    String?     @unique @map("account_id")
+  accountId                    String?    @unique @map("account_id")
   account                      Account?   @relation(fields: [accountId], references: [id])
   validatedEmissionSourcesOnly Boolean    @default(true) @map("validated_emission_sources_only")
   caUnit                       SiteCAUnit @default(K) @map("ca_unit")
