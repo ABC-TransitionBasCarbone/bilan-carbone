@@ -11,7 +11,9 @@ import Fuse from 'fuse.js'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Path } from 'react-hook-form'
+import Button from '../base/Button'
 import DebouncedInput from '../base/DebouncedInput'
+import Modal from '../modals/Modal'
 import styles from './EmissionSourceFactor.module.css'
 import EmissionSourceFactorModal from './EmissionSourceFactorModal'
 
@@ -51,15 +53,28 @@ interface Props {
   selectedFactor?: EmissionFactorWithMetaData | null
   canEdit: boolean | null
   getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
+
+  isFromOldImport: boolean
+  currentBCVersion: string
 }
 
-const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor, canEdit, getDetail }: Props) => {
+const EmissionSourceFactor = ({
+  emissionFactors,
+  subPost,
+  update,
+  selectedFactor,
+  canEdit,
+  getDetail,
+  isFromOldImport,
+  currentBCVersion,
+}: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tResultUnits = useTranslations('study.results.units')
 
   const [advancedSearch, setAdvancedSearch] = useState(false)
   const [display, setDisplay] = useState(false)
+  const [oldFactorAction, setOldFactorAction] = useState<'search' | 'clear' | undefined>(undefined)
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
@@ -98,6 +113,9 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
     )
   }, [emissionFactors])
 
+  const searchNewEmissionFactor = () => setAdvancedSearch(true)
+  const clearEmissionFactor = () => update('emissionFactorId', null)
+
   useEffect(() => {
     setResults(
       value
@@ -111,7 +129,7 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
 
   return (
     <div ref={containerRef}>
-      <div className={classNames(styles.factor, 'align-center')}>
+      <div className={classNames(styles.gapped, 'align-center')}>
         <div className={classNames(styles.inputContainer, 'grow', { [styles.withSearch]: canEdit })}>
           <DebouncedInput
             disabled={!canEdit}
@@ -129,7 +147,7 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
                   className={styles.clear}
                   aria-label={t('clear')}
                   title={t('clear')}
-                  onClick={() => update('emissionFactorId', null)}
+                  onClick={() => (isFromOldImport ? setOldFactorAction('clear') : clearEmissionFactor())}
                 >
                   <ClearIcon />
                 </button>
@@ -138,7 +156,7 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
                 className={styles.search}
                 aria-label={t('advancedSearch')}
                 title={t('advancedSearch')}
-                onClick={() => setAdvancedSearch(true)}
+                onClick={() => (isFromOldImport ? setOldFactorAction('search') : searchNewEmissionFactor())}
               >
                 <SearchIcon />
               </button>
@@ -191,6 +209,31 @@ const EmissionSourceFactor = ({ emissionFactors, subPost, update, selectedFactor
           }}
         />
       )}
+      <Modal
+        open={!!oldFactorAction}
+        title={t('glossary.version')}
+        label="old-version-action"
+        onClose={() => setOldFactorAction(undefined)}
+      >
+        <>
+          {t('glossary.versionDescription', { bcVersion: currentBCVersion })}
+          <div className={classNames(styles.gapped, 'justify-end mt1')}>
+            <Button onClick={() => setOldFactorAction(undefined)}>{t('duplicateDialog.cancel')}</Button>
+            <Button
+              onClick={() => {
+                if (oldFactorAction === 'clear') {
+                  clearEmissionFactor()
+                } else if (oldFactorAction === 'search') {
+                  searchNewEmissionFactor()
+                }
+                setOldFactorAction(undefined)
+              }}
+            >
+              {t('duplicateDialog.confirm')}
+            </Button>
+          </div>
+        </>
+      </Modal>
     </div>
   )
 }

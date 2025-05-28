@@ -194,6 +194,8 @@ const EmissionSourceForm = ({
           subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
+          isFromOldImport={isFromOldImport}
+          currentBCVersion={currentBCVersion}
         />
         {isCAS ? (
           <>
