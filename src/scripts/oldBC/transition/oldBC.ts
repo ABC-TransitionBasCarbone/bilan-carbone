@@ -8,9 +8,11 @@ import {
 import { Environment } from '@prisma/client'
 import { stdin as input, stdout as output } from 'node:process'
 import * as readline from 'node:readline/promises'
+import { uploadEmissionFactors } from './emissionFactors'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import { OldBCWorkSheetsReader } from './oldBCWorkSheetsReader'
 import { uploadOrganizations } from './organizations'
+import { uploadStudies } from './studies'
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationVersionId: string) => {
   const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
@@ -40,9 +42,9 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
 
   const oldBCWorksheetsReader = new OldBCWorkSheetsReader(file)
 
-  const hasOrganizationsWarning = false
-  const hasEmissionFactorsWarning = false
-  const hasStudiesWarning = false
+  let hasOrganizationsWarning = false
+  let hasEmissionFactorsWarning = false
+  let hasStudiesWarning = false
 
   await uploadOrganizations(
     prismaClient,
@@ -61,33 +63,25 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   }
   rl.close()
 
-  // await checkEmissionFactors(
-  //   oldBCWorksheetsReader.organizationsWorksheet,
-  //   accountOrganizationVersion,
-  //   prismaClient,
-  //   false,
-  // )
-  // await checkStudies(account.id, organizationVersionId, postAndSubPostsOldNewMapping, oldBCWorksheetsReader)
-
-  // await prismaClient.$transaction(async (transaction) => {
-  //   hasOrganizationsWarning = await uploadOrganizations(
-  //     transaction,
-  //     oldBCWorksheetsReader.organizationsWorksheet,
-  //     accountOrganizationVersion,
-  //   )
-  //   hasEmissionFactorsWarning = await uploadEmissionFactors(
-  //     transaction,
-  //     oldBCWorksheetsReader.emissionFactorsWorksheet,
-  //     accountOrganizationVersion,
-  //   )
-  //   hasStudiesWarning = await uploadStudies(
-  //     transaction,
-  //     account.id,
-  //     organizationVersionId,
-  //     postAndSubPostsOldNewMapping,
-  //     oldBCWorksheetsReader,
-  //   )
-  // })
+  await prismaClient.$transaction(async (transaction) => {
+    hasOrganizationsWarning = await uploadOrganizations(
+      transaction,
+      oldBCWorksheetsReader.organizationsWorksheet,
+      accountOrganizationVersion,
+    )
+    hasEmissionFactorsWarning = await uploadEmissionFactors(
+      transaction,
+      oldBCWorksheetsReader.emissionFactorsWorksheet,
+      accountOrganizationVersion,
+    )
+    hasStudiesWarning = await uploadStudies(
+      transaction,
+      account.id,
+      organizationVersionId,
+      postAndSubPostsOldNewMapping,
+      oldBCWorksheetsReader,
+    )
+  })
 
   if (hasOrganizationsWarning) {
     console.log(

@@ -209,13 +209,11 @@ const buildEmissionSourceName = (
 
 const parseEmissionSources = (
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
-  studyEmissionSourcesWorkSheet: EmissionSourcesWorkSheet,
+  studyEmissionSourcesWorkSheet: EmissionSourceRow[],
   emissionFactorsNames: Map<string, { name: string; id: string }>,
-): Map<string, EmissionSource[]> => {
-  return studyEmissionSourcesWorkSheet
-    .getRows()
-    .slice(1)
-    .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
+): [Map<string, EmissionSource[]>, boolean] => {
+  let error = false
+  const emissionsSources = studyEmissionSourcesWorkSheet
     .map<[string, EmissionSource] | null>((row) => {
       const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
         domain: row.domain as string,
@@ -229,7 +227,8 @@ const parseEmissionSources = (
       try {
         subPost = mapToSubPost(newPostAndSubPost.newSubPost)
       } catch (e) {
-        // console.warn("l'émission n'a pas été créée car ", e)
+        console.warn("l'émission n'a pas été créée", e)
+        error = true
         return null
       }
       const incertitudeDA = getEmissionQuality((row.incertitudeDA as number) * 100)
@@ -266,6 +265,8 @@ const parseEmissionSources = (
       }
       return accumulator
     }, new Map<string, EmissionSource[]>())
+
+  return [emissionsSources, error]
 }
 
 const getExistingStudies = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
@@ -407,11 +408,21 @@ export const uploadStudies = async (
     oldBCWorksheetReader.emissionSourcesWorksheet,
     transaction,
   )
-  const studyEmissionSources = parseEmissionSources(
+
+  const studyEmissionSourcesWorksheet = oldBCWorksheetReader.emissionSourcesWorksheet
+    .getRows()
+    .slice(1)
+    .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
+
+  const [studyEmissionSources, error] = parseEmissionSources(
     postAndSubPostsOldNewMapping,
-    oldBCWorksheetReader.emissionSourcesWorksheet,
+    studyEmissionSourcesWorksheet,
     existingEmissionFactorNames,
   )
+
+  if (error) {
+    throw new Error("Certaines sources d'émissions sont en erreurs, on arrête tout.")
+  }
 
   const alreadyImportedStudyIds = await transaction.study.findMany({
     where: {
