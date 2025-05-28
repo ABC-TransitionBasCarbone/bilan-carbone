@@ -149,6 +149,7 @@ const users = async () => {
       organizationVersionId: unOnboardedOrganizationVersion.id,
       role: Role.COLLABORATOR,
       userId: onboarding.id,
+      environment: Environment.BC,
     },
   })
   const onboardingNotTrained = await prisma.user.create({
@@ -166,6 +167,7 @@ const users = async () => {
       organizationVersionId: unOnboardedOrganizationVersion.id,
       role: Role.COLLABORATOR,
       userId: onboardingNotTrained.id,
+      environment: Environment.BC,
     },
   })
 
@@ -202,6 +204,7 @@ const users = async () => {
       organizationVersionId: clientLessOrganizationVersion.id,
       role: Role.COLLABORATOR,
       userId: clientLessUser.id,
+      environment: Environment.BC,
     },
   })
 
@@ -273,6 +276,7 @@ const users = async () => {
             organizationVersionId: regularOrganizationVersions[index % regularOrganizationVersions.length].id,
             role: role as Role,
             userId: user.id,
+            environment: Environment.BC,
           },
         })
 
@@ -303,6 +307,7 @@ const users = async () => {
             organizationVersionId: crOrganizationVersions[index % crOrganizationVersions.length].id,
             role: role as Role,
             userId: user.id,
+            environment: Environment.BC,
           },
         })
         if (!account.organizationVersionId) {
@@ -333,6 +338,7 @@ const users = async () => {
           organizationVersionId: regularOrganizationVersions[index % regularOrganizationVersions.length].id,
           role: Role.COLLABORATOR,
           userId: user.id,
+          environment: Environment.BC,
         },
       })
       if (!account.organizationVersionId) {
@@ -353,6 +359,7 @@ const users = async () => {
       data: {
         organizationVersionId: organizationVersions[0].id,
         role: Role.COLLABORATOR,
+        environment: Environment.BC,
         userId: (
           await prisma.user.create({
             data: {
@@ -371,6 +378,7 @@ const users = async () => {
       data: {
         organizationVersionId: regularOrganizationVersions[1].id,
         role: Role.DEFAULT,
+        environment: Environment.BC,
         userId: (
           await prisma.user.create({
             data: {
@@ -399,6 +407,7 @@ const users = async () => {
     .then(async (user) => {
       await prisma.account.create({
         data: {
+          environment: Environment.BC,
           organizationVersionId: regularOrganizationVersions[0].id,
           role: Role.COLLABORATOR,
           userId: user.id,
