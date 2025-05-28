@@ -1,24 +1,32 @@
--- Fonction qui vérifie que l'environnement de l'account correspond à celui de l'organization_version
-CREATE OR REPLACE FUNCTION check_account_organization_version_environment()
-RETURNS TRIGGER AS $$
-BEGIN
-  IF NEW.organization_version_id IS NOT NULL THEN
-    PERFORM 1
-    FROM organization_versions ov
-    WHERE ov.id = NEW.organization_version_id
-      AND ov.environment = NEW.environment;
+-- DROP TRIGGER IF EXISTS trg_validate_account_org_env ON accounts;
+-- DROP FUNCTION IF EXISTS validate_account_organization_version_env;
+-- -- Fonction qui vérifie que l'environnement de l'account correspond à celui de l'organization_version
 
-    IF NOT FOUND THEN
-      RAISE EXCEPTION 'Account Environment is different from Organization Environment';
-    END IF;
-  END IF;
+-- CREATE OR REPLACE FUNCTION validate_account_organization_version_env()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--   IF NEW.organization_version_id IS NULL THEN
+--     RETURN NEW;
+--   END IF;
 
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+--   IF EXISTS (
+--     SELECT 1
+--     FROM organization_versions
+--     WHERE id = NEW.organization_version_id
+--       AND environment = NEW.environment
+--   ) THEN
+--     RETURN NEW;
+--   ELSE
+--     RAISE EXCEPTION 'Account.environment (%) must match OrganizationVersion.environment (%) for orgVersionId %',
+--       NEW.environment,
+--       (SELECT environment FROM organization_versions WHERE id = NEW.organization_version_id),
+--       NEW.organization_version_id;
+--   END IF;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
--- Trigger avant INSERT/UPDATE
-CREATE TRIGGER check_same_environment_account_organization_version
-BEFORE INSERT OR UPDATE ON accounts
-FOR EACH ROW
-EXECUTE FUNCTION check_account_organization_version_environment();
+-- -- Trigger avant INSERT/UPDATE
+-- CREATE TRIGGER trg_validate_account_org_env
+-- BEFORE INSERT OR UPDATE ON accounts
+-- FOR EACH ROW
+-- EXECUTE FUNCTION validate_account_organization_version_env();
