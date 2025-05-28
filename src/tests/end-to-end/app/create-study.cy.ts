@@ -16,8 +16,10 @@ describe('Create study', () => {
 
     cy.getByTestId('new-study-organization-title').should('be.visible')
     cy.getByTestId('new-study-organization-select').should('not.exist')
+    cy.getByTestId('new-study-organization-button').should('be.disabled')
     cy.getByTestId('organization-sites-checkbox').first().click()
 
+    cy.getByTestId('new-study-organization-button').should('not.be.disabled')
     cy.getByTestId('new-study-organization-button').click()
 
     cy.getByTestId('new-study-name').type('My new study')

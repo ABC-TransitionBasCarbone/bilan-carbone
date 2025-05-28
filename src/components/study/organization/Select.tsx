@@ -35,19 +35,22 @@ const SelectOrganization = ({ organizationVersions, selectOrganizationVersion, f
   )
 
   useEffect(() => {
-    if (organizationVersion) {
-      form.setValue(
-        'sites',
-        organizationVersion.organization.sites.map((site) => ({
-          ...site,
-          ca: site.ca ? displayCA(site.ca, CA_UNIT_VALUES[caUnit]) : 0,
-          selected: false,
-          postalCode: site.postalCode ?? '',
-          city: site.city ?? '',
-        })),
-      )
-    } else {
+    if (!organizationVersion) {
       form.setValue('sites', [])
+    } else {
+      const newSites = organizationVersion.organization.sites.map((site) => site.id)
+      if (JSON.stringify(form.getValues('sites').map((site) => site.id)) !== JSON.stringify(newSites)) {
+        form.setValue(
+          'sites',
+          organizationVersion.organization.sites.map((site) => ({
+            ...site,
+            ca: site.ca ? displayCA(site.ca, CA_UNIT_VALUES[caUnit]) : 0,
+            selected: false,
+            postalCode: site.postalCode ?? '',
+            city: site.city ?? '',
+          })),
+        )
+      }
     }
   }, [organizationVersion, caUnit])
 
@@ -94,7 +97,11 @@ const SelectOrganization = ({ organizationVersions, selectOrganizationVersion, f
               defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} withSelection />}
             />
             <div className="mt2">
-              <Button data-testid="new-study-organization-button" onClick={next}>
+              <Button
+                disabled={!sites.some((site) => site.selected)}
+                data-testid="new-study-organization-button"
+                onClick={next}
+              >
                 {t('next')}
               </Button>
               {error && <FormHelperText error>{error}</FormHelperText>}
