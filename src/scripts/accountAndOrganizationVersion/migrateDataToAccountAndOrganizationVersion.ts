@@ -38,6 +38,7 @@ const migrateUsersToAccounts = async () => {
           userId: user.id,
           role: user?.role || Role.DEFAULT,
           importedFileDate: user.importedFileDate,
+          environment: defaultEnvironment,
         },
       })
 
