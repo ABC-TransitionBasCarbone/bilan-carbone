@@ -24,11 +24,21 @@ const migrateUsersToAccounts = async () => {
 
   for (const user of users) {
     await prisma.$transaction(async (tx) => {
+      const existingAccount = await tx.account.findFirst({
+        where: { userId: user.id },
+      })
+
+      if (existingAccount) {
+        console.log(`Déjà migré account: ${existingAccount.id} pour ${user.email}`)
+        return
+      }
+
       const newAccount = await tx.account.create({
         data: {
           userId: user.id,
           role: user?.role || Role.DEFAULT,
           importedFileDate: user.importedFileDate,
+          environment: defaultEnvironment,
         },
       })
 
@@ -150,7 +160,7 @@ const firstPassCreateVersions = async () => {
       }
 
       if (onboarderAccount) {
-        data.onboarder = { connect: { id: onboarderAccount.id } }
+        data.onboarderId = onboarderAccount.id
       }
 
       try {
