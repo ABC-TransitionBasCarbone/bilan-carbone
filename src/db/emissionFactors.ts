@@ -63,7 +63,7 @@ const getDefaultEmissionFactors = (versionIds?: string[]) =>
     orderBy: { createdAt: 'desc' },
   })
 
-const getEmissionFactorFromIdsExeptVersions = (ids: string[], versionIds: string[]) =>
+const getEmissionFactorsFromIdsExceptVersions = (ids: string[], versionIds: string[]) =>
   prismaClient.emissionFactor.findMany({
     where: { id: { in: ids }, versionId: { notIn: versionIds } },
     select: selectEmissionFactor,
@@ -103,7 +103,7 @@ export const getAllEmissionFactors = async (organizationId: string | null, study
       .map((emissionSource) => emissionSource.emissionFactorId)
       .filter((id) => id !== null)
 
-    studyOldEmissionFactors = await getEmissionFactorFromIdsExeptVersions(selectedEmissionFactors, versionIds)
+    studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
   }
   const organizationEmissionFactor = organizationId
     ? await prismaClient.emissionFactor.findMany({

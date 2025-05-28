@@ -53,7 +53,6 @@ interface Props {
   selectedFactor?: EmissionFactorWithMetaData | null
   canEdit: boolean | null
   getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
-
   isFromOldImport: boolean
   currentBCVersion: string
 }
