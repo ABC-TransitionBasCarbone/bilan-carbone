@@ -54,7 +54,7 @@
       "editTitle": "Modifier mes cinémas"
     },
     "sites": {
-      "title": "Les cinemas de l'organisation concernés par l'étude",
+      "title": "Les établissements enregistrés",
       "noSites": "Il n'y a pas de cinemas configurés sur l'organisation",
       "name": "Nom",
       "namePlaceholder": "Nom du cinema",
