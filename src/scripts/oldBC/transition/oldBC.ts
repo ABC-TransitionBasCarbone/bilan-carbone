@@ -6,11 +6,11 @@ import {
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
 import { Environment } from '@prisma/client'
-import { uploadEmissionFactors } from './emissionFactors'
+import { stdin as input, stdout as output } from 'node:process'
+import * as readline from 'node:readline/promises'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import { OldBCWorkSheetsReader } from './oldBCWorkSheetsReader'
-import { checkOrganization, uploadOrganizations } from './organizations'
-import { uploadStudies } from './studies'
+import { uploadOrganizations } from './organizations'
 
 export const uploadOldBCInformations = async (file: string, email: string, organizationVersionId: string) => {
   const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
@@ -40,31 +40,54 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
 
   const oldBCWorksheetsReader = new OldBCWorkSheetsReader(file)
 
-  let hasOrganizationsWarning = false
-  let hasEmissionFactorsWarning = false
-  let hasStudiesWarning = false
+  const hasOrganizationsWarning = false
+  const hasEmissionFactorsWarning = false
+  const hasStudiesWarning = false
 
-  await checkOrganization(oldBCWorksheetsReader.organizationsWorksheet, accountOrganizationVersion, prismaClient, false)
+  await uploadOrganizations(
+    prismaClient,
+    oldBCWorksheetsReader.organizationsWorksheet,
+    accountOrganizationVersion,
+    true,
+  )
 
-  await prismaClient.$transaction(async (transaction) => {
-    hasOrganizationsWarning = await uploadOrganizations(
-      transaction,
-      oldBCWorksheetsReader.organizationsWorksheet,
-      accountOrganizationVersion,
-    )
-    hasEmissionFactorsWarning = await uploadEmissionFactors(
-      transaction,
-      oldBCWorksheetsReader.emissionFactorsWorksheet,
-      accountOrganizationVersion,
-    )
-    hasStudiesWarning = await uploadStudies(
-      transaction,
-      account.id,
-      organizationVersionId,
-      postAndSubPostsOldNewMapping,
-      oldBCWorksheetsReader,
-    )
-  })
+  const rl = readline.createInterface({ input, output })
+  const doWeContinue = await rl.question('Malgrès tous les avertissements, voulez-vous continuer ? (oui/non) ')
+
+  if (doWeContinue?.toLocaleLowerCase() !== 'oui') {
+    throw new Error('On arrête le programme')
+  } else {
+    console.log("C'est parti pour la migration !")
+  }
+  rl.close()
+
+  // await checkEmissionFactors(
+  //   oldBCWorksheetsReader.organizationsWorksheet,
+  //   accountOrganizationVersion,
+  //   prismaClient,
+  //   false,
+  // )
+  // await checkStudies(account.id, organizationVersionId, postAndSubPostsOldNewMapping, oldBCWorksheetsReader)
+
+  // await prismaClient.$transaction(async (transaction) => {
+  //   hasOrganizationsWarning = await uploadOrganizations(
+  //     transaction,
+  //     oldBCWorksheetsReader.organizationsWorksheet,
+  //     accountOrganizationVersion,
+  //   )
+  //   hasEmissionFactorsWarning = await uploadEmissionFactors(
+  //     transaction,
+  //     oldBCWorksheetsReader.emissionFactorsWorksheet,
+  //     accountOrganizationVersion,
+  //   )
+  //   hasStudiesWarning = await uploadStudies(
+  //     transaction,
+  //     account.id,
+  //     organizationVersionId,
+  //     postAndSubPostsOldNewMapping,
+  //     oldBCWorksheetsReader,
+  //   )
+  // })
 
   if (hasOrganizationsWarning) {
     console.log(
