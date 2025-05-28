@@ -864,6 +864,15 @@
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
     "More than one": "Il doit y avoir au moins un administrateur ou gestionnaire dans l'organisation"
   },
+  "environment": {
+    "BC": "BC",
+    "CUT": "Count",
+    "TILT": "Tilt"
+  },
+  "source": {
+    "CRON": "Cron",
+    "TUNISIE": "Tunisie"
+  },
   "team": {
     "title": "Mon organisation",
     "pending": "Invitations en attentes",
@@ -1332,6 +1341,8 @@
   "deactivableFeatures": {
     "title": "Fonctionnalités désactivables",
     "Formation": "Formation",
+    "source": "Sources",
+    "environment": "Environnements",
     "true": "Active",
     "false": "Désactivée",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
