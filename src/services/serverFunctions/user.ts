@@ -16,17 +16,18 @@ import {
   deleteUserFromOrga,
   finalizeUserChecklist,
   getUserApplicationSettings,
+  getUserByEmail,
   getUserFormationFormStart,
   getUsers,
   getUsersCheckedSteps,
   getUserSourceById,
   organizationVersionActiveAccountsCount,
   startUserFormationForm,
+  updateUser,
   updateUserApplicationSettings,
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
-import { getUserByEmail, updateUser } from '@/db/userImport'
 import { processUsers } from '@/scripts/ftp/userImport'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
@@ -146,6 +147,12 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
+  const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+  if (!organizationVersion) {
+    // TODO use session instead in next pr
+    return NOT_AUTHORIZED
+  }
+
   if (!memberExists) {
     const { role, ...rest } = member
     const newMember = {
@@ -157,6 +164,7 @@ export const addMember = async (member: AddMemberCommand) => {
         create: {
           role: role === Role.ADMIN || member.role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT,
           organizationVersionId: session.user.organizationVersionId,
+          environment: organizationVersion.environment,
         },
       },
     }

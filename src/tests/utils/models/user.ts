@@ -1,4 +1,4 @@
-import { Account, Level, Prisma, Role, User, UserSource, UserStatus } from '@prisma/client'
+import { Account, Environment, Level, Prisma, Role, User, UserSource, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { mockedOrganizationId, mockedOrganizationVersionId } from './organization'
 
@@ -32,6 +32,7 @@ const mockedAccount = {
     id: mockedOrganizationVersionId,
     organizationId: mockedOrganizationId,
   },
+  environment: Environment.BC,
   role: Role.ADMIN,
 }
 const mockedDbAccount = {

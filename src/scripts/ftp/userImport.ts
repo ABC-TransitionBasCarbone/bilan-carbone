@@ -3,7 +3,7 @@
 import { getAccountByEmailAndEnvironment } from '@/db/account'
 import { getOrganizationVersionByOrganizationIdAndEnvironment } from '@/db/organization'
 import { createOrUpdateOrganization, getRawOrganizationById, getRawOrganizationBySiret } from '@/db/organizationImport'
-import { createUsersWithAccount, updateAccount } from '@/db/userImport'
+import { createUsersWithAccount, updateAccount } from '@/db/user'
 import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
@@ -19,8 +19,10 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
     User_Source: source,
-    Environment: environment,
+    Environment: dataEnvironment,
   } = value
+
+  const environment = (dataEnvironment || Environment.BC) as Environment
 
   const email = value['User_Email'].replace(/ /g, '').toLowerCase()
 
@@ -28,7 +30,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
 
-  const dbAccount = await getAccountByEmailAndEnvironment(email, (environment as Environment) || Environment.BC)
+  const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
   const user: Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput } = {
     id: dbAccount?.user.id,
@@ -40,6 +42,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     account: {
       role: Role.COLLABORATOR,
       importedFileDate,
+      environment,
       user: {
         create: undefined,
         connectOrCreate: undefined,
@@ -66,24 +69,27 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       isCR,
       activatedLicence,
       importedFileDate,
-      environment as Environment,
+      environment,
     )
+
+    console.log(`Organization ${organization.name} (${organization.id}) created or updated`)
 
     const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
       organization?.id,
-      environment as Environment,
+      environment,
     )
     user.account.organizationVersion = organizationVersion ? { connect: { id: organizationVersion.id } } : undefined
   }
 
   if (dbAccount) {
     await updateAccount(
-      dbAccount.id || '',
+      dbAccount.id,
       {
         ...(dbAccount.user.status === UserStatus.IMPORTED && {
           role: user.account.role as Exclude<Role, 'SUPER_ADMIN'>,
-          organizationVersion: user.account.organizationVersion,
+          organizationVersion: user.account?.organizationVersion,
         }),
+        environment,
       },
       {
         ...dbAccount.user,
@@ -108,6 +114,7 @@ export const processUsers = async (values: Record<string, string>[], importedFil
       console.log(`${i}/${values.length}`)
     }
   }
-  const created = await createUsersWithAccount(usersWithAccount)
-  console.log(`${created.count} users created`)
+  const { newUsers, newAccounts } = await createUsersWithAccount(usersWithAccount)
+  console.log(`${newUsers.count} users created`)
+  console.log(`${newAccounts.count} accounts created`)
 }
