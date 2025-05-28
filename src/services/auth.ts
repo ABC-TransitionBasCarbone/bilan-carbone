@@ -143,10 +143,10 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        if (!account?.organizationVersionId) {
-          return null
+        let organizationVersion = null
+        if (account?.organizationVersionId) {
+          organizationVersion = await getOrganizationVersionById(account.organizationVersionId)
         }
-        const organizationVersion = await getOrganizationVersionById(account?.organizationVersionId)
 
         return {
           id: user.id,
