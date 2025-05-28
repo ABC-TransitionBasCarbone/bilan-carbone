@@ -1,3 +1,5 @@
+import { Environment } from '@prisma/client'
+
 export const mockedOrganizationId = 'mocked-organization-id'
 export const mockedOrganizationVersionId = 'mocked-organization-version-id'
 
@@ -29,4 +31,5 @@ export const mockedOrganizationVersion = {
   isCR: true,
   parentId: null,
   organization: mockedOrganization,
+  environment: Environment.BC,
 }

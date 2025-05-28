@@ -147,6 +147,12 @@ export const addMember = async (member: AddMemberCommand) => {
     return NOT_AUTHORIZED
   }
 
+  const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+  if (!organizationVersion) {
+    // TODO use session instead in next pr
+    return NOT_AUTHORIZED
+  }
+
   if (!memberExists) {
     const { role, ...rest } = member
     const newMember = {
@@ -158,6 +164,7 @@ export const addMember = async (member: AddMemberCommand) => {
         create: {
           role: role === Role.ADMIN || member.role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT,
           organizationVersionId: session.user.organizationVersionId,
+          environment: organizationVersion.environment,
         },
       },
     }

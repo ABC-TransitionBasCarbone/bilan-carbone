@@ -203,6 +203,7 @@ export const onboardOrganizationVersion = async (
         data: {
           role: collaborator.role,
           organizationVersion: { connect: { id: collaborator.organizationVersionId } },
+          environment: organizationVersion.environment,
           user: {
             create: {
               firstName: collaborator.user.firstName,
