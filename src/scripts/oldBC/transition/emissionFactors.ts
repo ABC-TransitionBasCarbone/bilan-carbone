@@ -154,7 +154,7 @@ export const uploadEmissionFactors = async (
   })
 
   if (inconsistentGuids.length > 0) {
-    console.log(`${inconsistentGuids.length} facteurs d'émissions avec des parties incohérentes, donc ignorées`)
+    throw new Error(`${inconsistentGuids.length} facteurs d'émissions avec des parties incohérentes, donc ignorées`)
   }
 
   const filteredEmissionFactorPartsToCreate = emissionFactorPartsToCreate
