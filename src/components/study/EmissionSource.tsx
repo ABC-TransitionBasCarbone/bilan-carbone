@@ -254,6 +254,7 @@ const EmissionSource = ({
                 subPost={subPost}
                 emissionFactors={emissionFactors}
                 update={update}
+                studyImportVersions={study.emissionFactorVersions}
               />
             ) : (
               <EmissionSourceForm

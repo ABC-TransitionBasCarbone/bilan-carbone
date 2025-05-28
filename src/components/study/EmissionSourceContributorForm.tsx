@@ -9,9 +9,10 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
-import { StudyResultUnit, SubPost, Unit } from '@prisma/client'
+import { Import, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import { Path } from 'react-hook-form'
 import LinkButton from '../base/LinkButton'
 import QualitySelect from '../form/QualitySelect'
@@ -24,15 +25,42 @@ interface Props {
   selectedFactor?: EmissionFactorWithMetaData
   subPost: SubPost
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
+  studyImportVersions: { id: string; source: Import; importVersionId: string }[]
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 
-const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPost, selectedFactor, update }: Props) => {
+const EmissionSourceContributorForm = ({
+  emissionSource,
+  emissionFactors,
+  subPost,
+  selectedFactor,
+  update,
+  studyImportVersions,
+}: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
   const tUnits = useTranslations('units')
+
+  const isFromOldImport = useMemo(
+    () =>
+      !!selectedFactor?.version?.id &&
+      !studyImportVersions
+        .map((studyImportVersion) => studyImportVersion.importVersionId)
+        .includes(selectedFactor.version.id),
+    [selectedFactor, studyImportVersions],
+  )
+
+  const currentBCVersion = useMemo(() => {
+    const versionId = isFromOldImport
+      ? studyImportVersions.find((studyImportVersion) => studyImportVersion.source === Import.BaseEmpreinte)
+          ?.importVersionId || ''
+      : ''
+    return isFromOldImport
+      ? emissionFactors.find((factor) => factor?.version?.id === versionId)?.version?.name || ''
+      : ''
+  }, [studyImportVersions, isFromOldImport, emissionFactors])
 
   return (
     <>
@@ -44,6 +72,8 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPos
           subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
+          isFromOldImport={isFromOldImport}
+          currentBCVersion={currentBCVersion}
         />
         <div className={classNames(styles.gapped, 'flex')}>
           <div className={classNames(styles.inputWithUnit, 'flex grow')}>
