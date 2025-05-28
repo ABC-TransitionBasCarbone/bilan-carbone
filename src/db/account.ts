@@ -13,6 +13,7 @@ export const AccountWithUserSelect = {
   userId: true,
   importedFileDate: true,
   deactivatableFeatureStatus: true,
+  environment: true,
   organizationVersionId: true,
   organizationVersion: {
     select: {

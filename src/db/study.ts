@@ -544,6 +544,7 @@ export const countOrganizationStudiesFromOtherUsers = async (organizationVersion
   prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })
 
 export const updateStudyOpeningHours = async (
+  studyId: string,
   openingHours: ChangeStudyCinemaCommand['openingHours'],
   openingHoursHoliday: ChangeStudyCinemaCommand['openingHoursHoliday'],
 ) => {

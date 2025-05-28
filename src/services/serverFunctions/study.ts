@@ -1,7 +1,12 @@
 'use server'
 
 import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
-import { AccountWithUser, getAccountByEmailAndOrganizationVersionId, getAccountById } from '@/db/account'
+import {
+  AccountWithUser,
+  addAccount,
+  getAccountByEmailAndEnvironment,
+  getAccountByEmailAndOrganizationVersionId,
+} from '@/db/account'
 import { prismaClient } from '@/db/client'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -332,7 +337,7 @@ export const changeStudyCinema = async ({ studyId, ...command }: ChangeStudyCine
     return NOT_AUTHORIZED
   }
 
-  await updateStudyOpeningHours(openingHours, openingHoursHoliday)
+  await updateStudyOpeningHours(studyId, openingHours, openingHoursHoliday)
   await updateStudy(studyId, updateData)
 }
 
@@ -448,7 +453,7 @@ const getOrCreateUserAndSendStudyInvite = async (
       accounts: {
         create: {
           role: Role.COLLABORATOR,
-          organizationVersionId: organizationVersion.id,
+          environment: organizationVersion.environment,
         },
       },
     })
@@ -463,8 +468,16 @@ const getOrCreateUserAndSendStudyInvite = async (
 
     accountId = newUser.accounts[0].id
   } else {
-    // TODO récupérer le bon account
-    const account = (await getAccountById(existingUser.accounts[0].id)) as AccountWithUser
+    let account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
+
+    if (!account) {
+      account = (await addAccount({
+        user: { connect: { id: existingUser.id } },
+        role: Role.COLLABORATOR,
+        environment: organizationVersion.environment,
+      })) as AccountWithUser
+    }
+
     await sendInvitation(
       email,
       study,
