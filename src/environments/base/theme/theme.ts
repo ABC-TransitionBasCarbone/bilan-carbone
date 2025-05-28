@@ -68,10 +68,10 @@ const base = createTheme({
     'none',
   ],
   typography: {
-    fontFamily: '"Gilroy-Regular", sans-serif',
+    fontFamily: 'Gilroy, sans-serif',
     button: {
       textTransform: 'none',
-      fontFamily: '"Gilroy-Regular", sans-serif',
+      fontFamily: 'Gilroy, sans-serif',
     },
   },
 })

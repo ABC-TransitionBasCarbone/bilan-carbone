@@ -33,9 +33,6 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
   const providerOptions = { key: 'mui', nonce: (await headers()).get('x-nonce') || undefined, prepend: true }
   return (
     <html lang={locale} className={environment}>
-      <head>
-        <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet" />
-      </head>
       <body>
         <AppRouterCacheProvider options={providerOptions}>
           <NextIntlClientProvider messages={messages}>

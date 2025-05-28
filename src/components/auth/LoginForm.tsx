@@ -36,9 +36,15 @@ const LoginForm = () => {
   })
 
   useEffect(() => {
-    const { unsubscribe } = watch((values) => setEmail(values.email ?? ''))
+    setEmail(getValues('email') ?? '')
 
-    return () => unsubscribe()
+    const subscription = watch((values) => {
+      if (values.email !== email) {
+        setEmail(values.email ?? '')
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [watch])
 
   const onSubmit = async () => {
@@ -98,7 +104,7 @@ const LoginForm = () => {
         >
           {t('forgotPassword')}
         </Link>
-        <LoadingButton variant="contained" data-testid="login-button" type="submit" loading={submitting} fullWidth>
+        <LoadingButton variant="contained" color="secondary" data-testid="login-button" type="submit" loading={submitting} fullWidth>
           {t('login')}
         </LoadingButton>
         {errorMessage && (

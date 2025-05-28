@@ -13,12 +13,7 @@ describe('Authentication', () => {
     cy.visit('/')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
-      'bc-collaborator-1@yopmail.com',
-    )
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('test1')
+    cy.login('bc-collaborator-1@yopmail.com', 'test1')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
@@ -31,12 +26,7 @@ describe('Authentication', () => {
     cy.visit('/')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
-      'bc-collaborator-1@yopmail.com',
-    )
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('password-1')
+    cy.login('bc-collaborator-1@yopmail.com', 'password-1')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
@@ -47,10 +37,10 @@ describe('Authentication', () => {
   it('does reset password', () => {
     cy.visit('/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
-      'bc-collaborator-1@yopmail.com',
-    )
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('bc-collaborator-1@yopmail.com')
     cy.getByTestId('reset-password-link').click()
 
     cy.url().should('include', '/reset-password')
@@ -59,11 +49,13 @@ describe('Authentication', () => {
       'have.value',
       'bc-collaborator-1@yopmail.com',
     )
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').clear()
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
-      'bc-collaborator-2@yopmail.com',
-    )
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .clear()
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type(
+        'bc-collaborator-2@yopmail.com',
+      )
     cy.getByTestId('reset-button').click()
 
     cy.visit('http://localhost:1080')
@@ -85,39 +77,53 @@ describe('Authentication', () => {
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
     cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').should('have.value', '')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
-      'bc-collaborator-2@yopmail.com',
-    )
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('new-Password-2')
-    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('new-Password-2')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type(
+        'bc-collaborator-2@yopmail.com',
+      )
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('new-Password-2')
+    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('new-Password-2')
 
     cy.getByTestId('reset-button').click()
 
     cy.wait('@reset-password')
     cy.url({ timeout: 8000 }).should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
-      'bc-collaborator-2@yopmail.com',
-    )
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('password-2')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type(
+        'bc-collaborator-2@yopmail.com',
+      )
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('password-2')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should(
-      'have.value',
-      'bc-collaborator-2@yopmail.com',
-    )
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').clear()
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('new-Password-2')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .should(
+        'have.value',
+        'bc-collaborator-2@yopmail.com',
+      )
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .clear()
+      .type('new-Password-2')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
@@ -128,10 +134,14 @@ describe('Authentication', () => {
     cy.visit('/')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('bc-new-1@yopmail.com')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').should('be.visible')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('password-1')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('bc-new-1@yopmail.com')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('password-1')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
@@ -144,8 +154,14 @@ describe('Authentication', () => {
     cy.visit('/')
     cy.url().should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('imported@yopmail.com')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('imported@yopmail.com')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('Password-0')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
@@ -153,14 +169,22 @@ describe('Authentication', () => {
     cy.visit('/')
     cy.url().should('include', '/login')
 
-    cy.getByTestId('activation-button').should('be.visible')
+    cy.getByTestId('activation-button')
+      .should('be.visible')
     cy.getByTestId('activation-button').click()
     cy.url().should('include', '/activation')
 
-    cy.getByTestId('activation-email').should('be.visible')
-    cy.getByTestId('activation-button').should('be.visible')
+    cy.getByTestId('activation-email')
+      .should('be.visible')
+      .should('not.be.disabled')
+    cy.getByTestId('activation-button')
+      .should('be.visible')
+      .should('not.be.disabled')
 
-    cy.getByTestId('activation-email').type('imported@yopmail.co')
+    cy.getByTestId('activation-email')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('imported@yopmail.co')
     cy.getByTestId('activation-form-message').should('not.exist')
     cy.getByTestId('activation-button').click()
 
@@ -168,7 +192,10 @@ describe('Authentication', () => {
 
     cy.getByTestId('activation-form-message').should('be.visible')
 
-    cy.getByTestId('activation-email').type('m')
+    cy.getByTestId('activation-email')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('m')
     cy.getByTestId('activation-button').click()
     cy.getByTestId('activation-form-message').should('not.exist')
 
@@ -223,17 +250,32 @@ describe('Authentication', () => {
         })
     })
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('imported@yopmail.com')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
-    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('imported@yopmail.com')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('Password-0')
+    cy.get('[data-testid="input-confirm-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('Password-0')
 
     cy.getByTestId('reset-button').click()
 
     cy.wait('@reset-password')
     cy.url({ timeout: 8000 }).should('include', '/login')
 
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type('imported@yopmail.com')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('Password-0')
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('imported@yopmail.com')
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .type('Password-0')
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')

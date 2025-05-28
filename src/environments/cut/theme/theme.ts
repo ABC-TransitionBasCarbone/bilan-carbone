@@ -58,11 +58,11 @@ const base = createTheme({
     'none',
   ],
   typography: {
-    fontFamily: '"Gilroy-Regular", sans-serif',
+    fontFamily: '"Gilroy", sans-serif',
     button: {
       textTransform: 'none',
       fontWeight: 600,
-      fontFamily: '"Gilroy-Regular", sans-serif',
+      fontFamily: 'Gilroy, sans-serif',
     },
   },
 })
