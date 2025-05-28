@@ -1,7 +1,5 @@
 import { OrganizationVersionWithOrganization, OrganizationVersionWithOrganizationSelect } from '@/db/organization'
 import { Environment, Prisma } from '@prisma/client'
-import { stdin as input, stdout as output } from 'node:process'
-import * as readline from 'node:readline/promises'
 import { OrganizationRow, OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
 import { getExistingSitesIds } from './repositories'
 
@@ -60,8 +58,10 @@ function compareString(a: string, b: string): boolean {
 async function handleUserOrganizationSites(
   existingSites: BddSite[],
   oldBCOrganizationSites: Site[],
-  skipCheck: boolean = false,
+  onlyChecking: boolean = true,
 ) {
+  console.log('Organisations')
+
   if (oldBCOrganizationSites.length === 0) {
     return { sitesToUpdate: [], sitesToCreate: [] }
   }
@@ -70,7 +70,6 @@ async function handleUserOrganizationSites(
   const sitesToUpdate: { id: string; oldBCId: string; name: string }[] = []
 
   if (existingSites.length > 0) {
-    console.log("L'organisation de l’utilisateur a déjà des sites, on trouve la correspondance")
     for (const oldBCSite of oldBCOrganizationSites) {
       const site = existingSites.find((s) => compareString(s.name, oldBCSite.name))
       if (site) {
@@ -81,28 +80,12 @@ async function handleUserOrganizationSites(
     }
   }
 
-  if (!skipCheck && sitesToUpdate.length + sitesToCreate.length < existingSites.length) {
-    const rl = readline.createInterface({ input, output })
-
-    const doWeContinue = await rl.question(
-      `Il y a des sites sur le BC+ qui n'ont pas de correspondances dans l'ancien : 
+  if (onlyChecking && sitesToUpdate.length + sitesToCreate.length < existingSites.length) {
+    console.log(`Il y a des sites sur le BC+ qui n'ont pas de correspondances dans l'ancien : 
           NEW : ${existingSites.map((s) => s.name).join(', ')} 
           OLD : ${oldBCOrganizationSites.map((s) => s.name).join(', ')}
           Ceux qui correspondent : ${sitesToUpdate.map((s) => s.name).join(', ')}
-          Sites qui vont être créé : ${sitesToCreate.map((s) => s.name).join(', ')}
-          
-          Est-ce qu'on continue ? (oui/non) `,
-    )
-
-    if (doWeContinue?.toLocaleLowerCase() !== 'oui') {
-      throw new Error(
-        `On arrête le programme pour éviter de créer des sites en doublon. Mettre à jour les sites sur l'une des deux plateformes (BC+ ou OldBC+).`,
-      )
-    } else {
-      console.log('On ignore les sites qui n’ont pas de correspondance')
-    }
-
-    rl.close()
+          Sites qui vont être créé : ${sitesToCreate.map((s) => s.name).join(', ')}`)
   }
 
   return { sitesToUpdate, sitesToCreate }
@@ -139,7 +122,7 @@ export const checkOrganization = async (
   organizationWorksheet: OrganizationsWorkSheet,
   userOrganizationVersion: OrganizationVersionWithOrganization,
   transactionOrPrisma: Prisma.TransactionClient,
-  skipCheck = false,
+  onlyChecking = true,
 ) => {
   const userOrganizationsRows: { oldBCId: string; name: string }[] = []
   const userOrganizationsSites: Site[] = []
@@ -181,7 +164,7 @@ export const checkOrganization = async (
     },
   })
 
-  const userOrgaSites = await handleUserOrganizationSites(existingSites, userOrganizationsSites, skipCheck)
+  const userOrgaSites = await handleUserOrganizationSites(existingSites, userOrganizationsSites, onlyChecking)
 
   return {
     organizations,
@@ -196,6 +179,7 @@ export const uploadOrganizations = async (
   transaction: Prisma.TransactionClient,
   organizationWorksheet: OrganizationsWorkSheet,
   userOrganizationVersion: OrganizationVersionWithOrganization,
+  onlyChecking: boolean = true,
 ) => {
   console.log('Import des organisations...')
 
@@ -203,15 +187,19 @@ export const uploadOrganizations = async (
     organizationWorksheet,
     userOrganizationVersion,
     transaction,
-    true, // skipCheck
+    onlyChecking,
   )
 
-  for (const site of userOrgaSites.sitesToUpdate) {
-    await transaction.site.update({
-      where: { id: site.id },
-      data: { oldBCId: site.oldBCId },
-    })
+  if (!onlyChecking) {
+    for (const site of userOrgaSites.sitesToUpdate) {
+      await transaction.site.update({
+        where: { id: site.id },
+        data: { oldBCId: site.oldBCId },
+      })
+    }
   }
+
+  console.log("nombres d'organisations à importer : ", organizations.length)
 
   const existingOrganizationVersions = await transaction.organizationVersion.findMany({
     where: {
@@ -231,7 +219,7 @@ export const uploadOrganizations = async (
   )
 
   // Je crée toutes les organisations sauf la mienne
-  if (newOrganizations.length > 0) {
+  if (newOrganizations.length > 0 && !onlyChecking) {
     console.log(`Import de ${newOrganizations.length} organisations`)
     const createdOrganizations = await transaction.organization.createManyAndReturn({
       data: newOrganizations.map((organization) => ({
@@ -265,25 +253,28 @@ export const uploadOrganizations = async (
     userOrganizationRow.oldBCId,
   )
 
+  const orgasNotFoundList = new Set<string>()
   if (newOrganizations.length > 0) {
     console.log(`Ajout de ${newOrganizations.length} sites par défaut`)
     // Et pour toutes les organisations j'ajoute un site par defaut
-    await transaction.site.createMany({
-      data: newOrganizations
-        .map((organization) => {
-          const createdOrganisationId = organizationsOldBCIdsIdsMap.get(organization.oldBCId)
-          if (!createdOrganisationId) {
-            console.warn(`Impossible de retrouver l'organization avec l'ancien BC id ${organization.oldBCId}`)
-            return null
-          }
-          return {
-            oldBCId: organization.oldBCId,
-            organizationId: createdOrganisationId,
-            name: organization.name,
-          }
-        })
-        .filter((organization) => organization !== null),
-    })
+    const data = newOrganizations
+      .map((organization) => {
+        const createdOrganisationId = organizationsOldBCIdsIdsMap.get(organization.oldBCId)
+        if (!createdOrganisationId) {
+          orgasNotFoundList.add(organization.oldBCId)
+          return null
+        }
+        return {
+          oldBCId: organization.oldBCId,
+          organizationId: createdOrganisationId,
+          name: organization.name,
+        }
+      })
+      .filter((organization) => organization !== null)
+
+    if (!onlyChecking) {
+      await transaction.site.createMany({ data })
+    }
   }
 
   const existingSitesIds = await getExistingSitesIds(
@@ -294,19 +285,19 @@ export const uploadOrganizations = async (
   const sitesToCreate = [...userOrgaSites.sitesToCreate, ...sites]
     .filter((site) => !existingSitesIds.has(site.oldBCId))
     .map((site) => {
-      const existingParentOrganisationId = organizationsOldBCIdsIdsMap.get(site.organizationOldBCId)
-      if (!existingParentOrganisationId) {
-        console.warn(`Impossible de retrouver l'organization avec le oldBCId ${site.organizationOldBCId}`)
+      const existingOrga = organizationsOldBCIdsIdsMap.get(site.organizationOldBCId)
+      if (!existingOrga) {
+        orgasNotFoundList.add(site.organizationOldBCId)
         return null
       }
       return {
         oldBCId: site.oldBCId,
-        organizationId: existingParentOrganisationId,
+        organizationId: existingOrga,
         name: site.name,
       }
     })
     .filter((site) => site !== null)
-  if (sitesToCreate.length > 0) {
+  if (sitesToCreate.length > 0 && !onlyChecking) {
     console.log(`Import de ${sitesToCreate.length} sites`)
     await transaction.site.createMany({ data: sitesToCreate })
   }
@@ -314,5 +305,25 @@ export const uploadOrganizations = async (
   if (existingOrganizationVersions.length > 0) {
     console.log(`${existingOrganizationVersions.length} organisations ignorées car déjà existantes`)
   }
+
+  if (!onlyChecking) {
+    // On check les orga qui n'ont pas été trouvées
+    const notFoundButOk = []
+    for (const orgaNotFound of orgasNotFoundList) {
+      const orga = organizations.find((organization) => organization.oldBCId === orgaNotFound)
+      if (orga) {
+        console.warn(
+          "L'organisation existe dans l'ancien BC+ mais n'a pas été trouvée dans la base de données : ",
+          orga,
+        )
+      } else {
+        notFoundButOk.push(orgaNotFound)
+      }
+    }
+    console.log(
+      `${notFoundButOk.length} organisations ont des sites dans l'excel sans avoir l'orga mère dans l'ancien BC+ donc on ignore, ${notFoundButOk.join(', ')}`,
+    )
+  }
+
   return existingOrganizationVersions.length > 0
 }

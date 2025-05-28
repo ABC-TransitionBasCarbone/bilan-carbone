@@ -130,6 +130,7 @@ const getControl = (control: string) => {
 const parseStudyExports = (studyExportsWorksheet: StudyExportsWorkSheet): Map<string, Export[]> => {
   return studyExportsWorksheet
     .getRows()
+    .filter((row) => row.type !== 'NULL')
     .map<[string, Export | null]>((row) => {
       const type = getType(row.type as string)
       const control = getControl(row.control as string)
@@ -228,7 +229,7 @@ const parseEmissionSources = (
       try {
         subPost = mapToSubPost(newPostAndSubPost.newSubPost)
       } catch (e) {
-        console.warn(e)
+        // console.warn("l'émission n'a pas été créée car ", e)
         return null
       }
       const incertitudeDA = getEmissionQuality((row.incertitudeDA as number) * 100)
