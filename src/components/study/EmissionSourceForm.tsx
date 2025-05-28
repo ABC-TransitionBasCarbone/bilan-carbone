@@ -372,7 +372,7 @@ const EmissionSourceForm = ({
 
       <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('optionalFields')}</p>
       <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
-        <div className={classNames(styles.gapped, styles.optionnalFields, 'flex')}>
+        <div className={classNames(styles.gapped, styles.optionnalFields, 'grow flex')}>
           <TextField
             className="grow"
             disabled={!canEdit}
@@ -426,7 +426,7 @@ const EmissionSourceForm = ({
             )}
           </div>
         )}
-        <div className={classNames(styles.gapped, styles.button, 'justify-end mt1')}>
+        <div className={classNames(styles.gapped, styles.button, 'grow justify-end mt1')}>
           {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
           {canValidate && (
             <Button
@@ -474,7 +474,7 @@ const EmissionSourceForm = ({
             ))}
           </Select>
         </div>
-        <div className={classNames(styles.gapped, 'justify-end mt1')}>
+        <div className={classNames(styles.gapped, 'grow justify-end mt1')}>
           <Button onClick={() => setOpen(false)}>{t('duplicateDialog.cancel')}</Button>
           <Button onClick={duplicateEmissionSource}>{t('duplicateDialog.confirm')}</Button>
         </div>

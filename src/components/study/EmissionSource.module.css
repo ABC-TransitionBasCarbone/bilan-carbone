@@ -150,7 +150,6 @@
 
 .gapped {
   gap: 1rem;
-  flex: 1;
 }
 
 .optionnalFields {
@@ -181,12 +180,6 @@
   top: 50%;
   right: 2rem;
   transform: translateY(-50%);
-}
-
-.results {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
 }
 
 .saved {
