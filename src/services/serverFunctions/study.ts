@@ -37,7 +37,7 @@ import {
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserApplicationSettings } from '@/db/user'
+import { addUser, getUserApplicationSettings, getUserSourceById } from '@/db/user'
 import { getUserByEmail } from '@/db/userImport'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
@@ -422,6 +422,7 @@ const getOrCreateUserAndSendStudyInvite = async (
 ) => {
   let userId = ''
   const t = await getTranslations('study.role')
+  const creatorDBUser = await getUserSourceById(creator.id)
 
   if (!existingUser) {
     const newUser = await addUser({
@@ -430,6 +431,7 @@ const getOrCreateUserAndSendStudyInvite = async (
       role: Role.COLLABORATOR,
       firstName: '',
       lastName: '',
+      source: creatorDBUser?.source,
     })
 
     await sendInvitation(email, study, organization, creator, role ? t(role).toLowerCase() : '')

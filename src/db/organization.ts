@@ -78,7 +78,10 @@ export const onboardOrganization = async (
   if (!dbUser) {
     return
   }
-  const newCollaborators: Pick<User, 'firstName' | 'lastName' | 'email' | 'role' | 'status' | 'organizationId'>[] = []
+  const newCollaborators: Pick<
+    User,
+    'firstName' | 'lastName' | 'email' | 'role' | 'status' | 'organizationId' | 'source'
+  >[] = []
   for (const collaborator of collaborators) {
     newCollaborators.push({
       firstName: '',
@@ -86,6 +89,7 @@ export const onboardOrganization = async (
       email: collaborator.email?.toLowerCase() || '',
       role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       status: UserStatus.VALIDATED,
+      source: dbUser.source,
       organizationId,
     })
   }
