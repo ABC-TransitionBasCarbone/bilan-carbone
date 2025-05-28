@@ -151,9 +151,7 @@ const EmissionSource = ({
           (emissionFactorVersion) => emissionFactorVersion.source === Import.BaseEmpreinte,
         )?.importVersionId || ''
       : ''
-    return isFromOldImport
-      ? emissionFactors.find((factor) => factor?.version?.id === versionId)?.version?.name || ''
-      : ''
+    return versionId ? emissionFactors.find((factor) => factor?.version?.id === versionId)?.version?.name || '' : ''
   }, [study.emissionFactorVersions, isFromOldImport, emissionFactors])
 
   return (
