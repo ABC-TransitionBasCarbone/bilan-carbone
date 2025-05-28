@@ -65,6 +65,19 @@
   --post-orange-dark: #c88938;
   --post-orange-light: #fbbc6b;
 
+  --post-yellow-dark: #febc0c;
+  --post-yellow-light: #fbbc6b;
+  --post-turquoise-dark: #3ccdb4;
+  --post-turquoise-light: #5ed6c2;
+  --post-lightBlue-dark: #6aa8ff;
+  --post-lightBlue-light: #8bb8ff;
+  --post-pink-dark: #ff49a2;
+  --post-pink-light: #ff6eb4;
+  --post-purple-dark: #9a61fa;
+  --post-purple-light: #9a61fa;
+  --post-red-dark: #ff4052;
+  --post-red-light: #ff4052;
+
   --validator-background: #ffc966;
   --editor-background: #89d7b0;
   --reader-background: var(--neutral-200);
