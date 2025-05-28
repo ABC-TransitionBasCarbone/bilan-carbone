@@ -43,7 +43,12 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
   return (
     <>
       <div className={classNames(styles.select, 'flex')}>
-        <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
+        <SelectStudySite
+          study={study}
+          allowAll={study.sites.length > 1}
+          studySite={study.sites.length > 1 && studySite ? studySite : study.sites[0].id}
+          setSite={setSite}
+        />
         <FormControl>
           <InputLabel id="result-type-selector-label">{t('type')}</InputLabel>
           <Select
