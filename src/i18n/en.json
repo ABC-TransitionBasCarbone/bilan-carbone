@@ -1163,6 +1163,8 @@
     "optionalFields": "Optional information",
     "resetFESpecific": "Reset to default values",
     "duplicate": "Duplicate the emission source",
+    "information": "Information",
+    "oldVersion": "Emission factor from deprecated version",
     "glossary": {
       "title": "Glossary",
       "type": "Type",
@@ -1170,6 +1172,8 @@
       "quality": "Quality",
       "qualityDescription": "Uncertainties are now calculated using qualitative notes on the quality of the emission factor and the quality of the activity data. The scores for the emission factor are taken directly from the databases, but those for the activity data must be entered. For more information on how scores are awarded, please consult <link>this page</link>.",
       "specificEmissionFactorQuality": "You can specifically adjust the quality of the emission factor in your emission source. The generic value of the emission factor is indicated by the {marker} symbol.",
+      "version": "Emission factor from older version",
+      "versionDescription": "You are modifying a study from the old BC+. As this emission factor does not exist in the version linked to your study ({bcVersion}), if you modify it, you will never be able to put it back.",
       "close": "Fermer"
     },
     "deleteDialog": {

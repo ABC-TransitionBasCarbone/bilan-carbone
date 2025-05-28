@@ -23,6 +23,7 @@ import { FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceType,
+  Import,
   StudyResultUnit,
   StudyRole,
   SubPost,
@@ -64,6 +65,7 @@ interface Props {
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
   studySites: FullStudy['sites']
+  studyImportVersions: { id: string; source: Import; importVersionId: string }[]
 }
 
 const EmissionSourceForm = ({
@@ -81,6 +83,7 @@ const EmissionSourceForm = ({
   mandatoryCaracterisation,
   status,
   studySites,
+  studyImportVersions,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -111,6 +114,25 @@ const EmissionSourceForm = ({
   const specificFEDefaultQuality = specificFEQualities.find((quality) => quality)
   const canShrinkSpecificFEQuality =
     !specificFEDefaultQuality || specificFEQualities.every((quality) => quality === specificFEDefaultQuality)
+
+  const isFromOldImport = useMemo(
+    () =>
+      !!selectedFactor?.version?.id &&
+      !studyImportVersions
+        .map((studyImportVersion) => studyImportVersion.importVersionId)
+        .includes(selectedFactor.version.id),
+    [selectedFactor, studyImportVersions],
+  )
+
+  const currentBCVersion = useMemo(() => {
+    const versionId = isFromOldImport
+      ? studyImportVersions.find((studyImportVersion) => studyImportVersion.source === Import.BaseEmpreinte)
+          ?.importVersionId || ''
+      : ''
+    return isFromOldImport
+      ? emissionFactors.find((factor) => factor?.version?.id === versionId)?.version?.name || ''
+      : ''
+  }, [studyImportVersions, isFromOldImport, emissionFactors])
 
   const handleUpdate = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (Number(event.target.value) > 0) {
@@ -295,6 +317,12 @@ const EmissionSourceForm = ({
       </div>
       {selectedFactor ? (
         <div className={styles.row} data-testid="emission-source-factor">
+          {isFromOldImport && (
+            <p className="align-center warning">
+              {t('oldVersion')}
+              <HelpIcon onClick={() => setGlossary('version')} label={t('information')} />
+            </p>
+          )}
           <p className={classNames(emissionFactorStyles.header, 'align-end')}>
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
@@ -408,6 +436,7 @@ const EmissionSourceForm = ({
                   {children}
                 </Link>
               ),
+              bcVersion: currentBCVersion,
             })}
           </p>
           {glossary === 'quality' && (

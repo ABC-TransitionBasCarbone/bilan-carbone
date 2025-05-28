@@ -271,6 +271,7 @@ const EmissionSource = ({
                 mandatoryCaracterisation={study.exports.length > 0}
                 status={status}
                 studySites={study.sites}
+                studyImportVersions={study.emissionFactorVersions}
               />
             )}
             {emissionResults && (
