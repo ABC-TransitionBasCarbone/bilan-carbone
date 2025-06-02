@@ -13,6 +13,7 @@ import { getOrganizationVersionAccounts } from '@/db/organization'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
+import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { FormControlLabel, MenuItem, Radio } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -52,6 +53,9 @@ const NewStudyForm = ({ user, accounts, form, children }: Props) => {
   const exports = useWatch(form).exports
   const showControl = useMemo(() => Object.values(exports || {}).some((value) => value), [exports])
 
+  const { environment } = useAppEnvironmentStore()
+  const isCut = useMemo(() => environment === CUT, [environment])
+
   const Help = (name: string) => (
     <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
   )
@@ -66,16 +70,18 @@ const NewStudyForm = ({ user, accounts, form, children }: Props) => {
           name="name"
           label={t('name')}
         />
-        <FormAutocomplete
-          data-testid="new-validator-name"
-          control={form.control}
-          translation={t}
-          options={accounts.map((user) => user.user.email)}
-          name="validator"
-          label={t('validator')}
-          icon={<HelpIcon onClick={() => setGlossary('validatorEmail')} label={tGlossary('title')} />}
-          iconPosition="after"
-        />
+        {!isCut && (
+          <FormAutocomplete
+            data-testid="new-validator-name"
+            control={form.control}
+            translation={t}
+            options={accounts.map((user) => user.user.email)}
+            name="validator"
+            label={t('validator')}
+            icon={<HelpIcon onClick={() => setGlossary('validatorEmail')} label={tGlossary('title')} />}
+            iconPosition="after"
+          />
+        )}
         <div>
           <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
             <span className="inputLabel bold">{t('studyDates')}</span>
@@ -91,56 +97,61 @@ const NewStudyForm = ({ user, accounts, form, children }: Props) => {
             />
           </div>
         </div>
-        <div>
-          <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">
-            <span className="inputLabel bold">{t('realizationDates')}</span>
-          </IconLabel>
-          <div className={styles.dates}>
-            <FormDatePicker
+        {!isCut && (
+          <>
+            <div>
+              <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">
+                <span className="inputLabel bold">{t('realizationDates')}</span>
+              </IconLabel>
+              <div className={styles.dates}>
+                <FormDatePicker
+                  control={form.control}
+                  translation={t}
+                  name="realizationStartDate"
+                  label={t('start')}
+                  clearable
+                />
+                <FormDatePicker
+                  control={form.control}
+                  translation={t}
+                  name="realizationEndDate"
+                  label={t('end')}
+                  data-testid="new-study-realizationEndDate"
+                  clearable
+                />
+              </div>
+            </div>
+            <FormSelect
               control={form.control}
               translation={t}
-              name="realizationStartDate"
-              label={t('start')}
-              clearable
-            />
-            <FormDatePicker
+              name="level"
+              label={t('level')}
+              data-testid="new-study-level"
+              icon={<HelpIcon onClick={() => setGlossary('type')} label={tGlossary('title')} />}
+              iconPosition="after"
+              defaultValue={isCut ? 'Initial' : undefined}
+            >
+              {getAllowedLevels(user.level).map((key) => (
+                <MenuItem key={key} value={key}>
+                  {tLevel(key)}
+                </MenuItem>
+              ))}
+            </FormSelect>
+            <FormRadio
               control={form.control}
               translation={t}
-              name="realizationEndDate"
-              label={t('end')}
-              data-testid="new-study-realizationEndDate"
-              clearable
-            />
-          </div>
-        </div>
-        <FormSelect
-          control={form.control}
-          translation={t}
-          name="level"
-          label={t('level')}
-          data-testid="new-study-level"
-          icon={<HelpIcon onClick={() => setGlossary('type')} label={tGlossary('title')} />}
-          iconPosition="after"
-        >
-          {getAllowedLevels(user.level).map((key) => (
-            <MenuItem key={key} value={key}>
-              {tLevel(key)}
-            </MenuItem>
-          ))}
-        </FormSelect>
-        <FormRadio
-          control={form.control}
-          translation={t}
-          name="isPublic"
-          row
-          label={t('isPublicTitle')}
-          icon={<HelpIcon onClick={() => setGlossary('visibility')} label={tGlossary('title')} />}
-          iconPosition="after"
-        >
-          <FormControlLabel value="true" control={<Radio />} label={t('public')} />
-          <FormControlLabel value="false" control={<Radio />} label={t('private')} />
-        </FormRadio>
-        <StudyExportsForm form={form} showControl={showControl} setGlossary={setGlossary} t={t} />
+              name="isPublic"
+              row
+              label={t('isPublicTitle')}
+              icon={<HelpIcon onClick={() => setGlossary('visibility')} label={tGlossary('title')} />}
+              iconPosition="after"
+            >
+              <FormControlLabel value="true" control={<Radio />} label={t('public')} />
+              <FormControlLabel value="false" control={<Radio />} label={t('private')} />
+            </FormRadio>
+            <StudyExportsForm form={form} showControl={showControl} setGlossary={setGlossary} t={t} />
+          </>
+        )}
         {children}
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
           {t('create')}

@@ -24,6 +24,9 @@
     "navigation": {
       "framing": "Données générales"
     },
+    "new": {
+      "studyDates": "Année de référence du Bilan"
+    },
     "perimeter": {
       "editSites": "Modifier la liste de cinémas",
       "deleteDialog": {

@@ -6,14 +6,14 @@ import NewStudyForm from '@/environments/base/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
-import { CUT } from '@/store/AppEnvironment'
+import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Export, SiteCAUnit } from '@prisma/client'
+import { ControlMode, Export, Level, SiteCAUnit } from '@prisma/client'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 
@@ -28,6 +28,9 @@ interface Props {
 const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizationVersion, caUnit }: Props) => {
   const [organizationVersion, setOrganizationVersion] = useState<OrganizationWithSites>()
   const tNav = useTranslations('nav')
+
+  const { environment } = useAppEnvironmentStore()
+  const isCut = useMemo(() => environment === CUT, [environment])
 
   const form = useForm<CreateStudyCommand>({
     resolver: zodResolver(CreateStudyCommandValidation),
@@ -48,8 +51,9 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
           postalCode: site.postalCode ?? '',
           city: site.city ?? '',
         })) || [],
+      level: isCut ? Level.Initial : undefined,
       exports: {
-        [Export.Beges]: false,
+        [Export.Beges]: isCut && ControlMode.Operational,
         [Export.GHGP]: false,
         [Export.ISO14069]: false,
       },
