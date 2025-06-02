@@ -241,13 +241,15 @@
       "homepage": "Homepage",
       "framing": "Framing",
       "scope": "Scope",
-      "mobilisation": "Mobilisation",
+      "mobilisation": "Mobilization",
       "accounting": "Accounting",
       "dataEntry": "Data entry",
       "results": "Results",
       "transitionPlan": "Transition plan",
       "menu": "Open the study navigation menu",
-      "coming": "coming"
+      "coming": "coming",
+      "organizations": "My organization",
+      "team": "My team"
     },
     "new": {
       "title": "Information about the new study",
