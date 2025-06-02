@@ -17,11 +17,11 @@ import { useChartData, useComputedResults } from '@/hooks/useComputedResults'
 import { useListPosts } from '@/hooks/useListPosts'
 import { CutPost } from '@/services/posts'
 import { downloadStudyResults } from '@/services/study'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
 
 import { formatNumber } from '@/utils/number'
+import { Environment } from '@prisma/client'
 import styles from './AllResults.module.css'
 
 interface Props {
@@ -86,8 +86,6 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
     return `${formatNumber(safeValue / STUDY_UNIT_VALUES[unit], precision)} ${tUnits(unit)}`
   }
 
-  const { environment } = useAppEnvironmentStore()
-
   useEffect(() => {
     setLoading(true)
 
@@ -118,7 +116,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               tQuality,
               tBeges,
               tUnits,
-              environment,
+              Environment.CUT,
             )
           }
         >
