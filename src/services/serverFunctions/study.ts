@@ -467,7 +467,6 @@ const getOrCreateUserAndSendStudyInvite = async (
       accounts: {
         create: {
           role: Role.COLLABORATOR,
-          organizationVersionId: organizationVersion.id,
           environment: study.organizationVersion.environment,
         },
       },
