@@ -134,13 +134,16 @@ const getEmissionSourcesRows = (
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
 
+      const withDeprecation = subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)
+
       return initCols
         .concat([
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
           ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) /
-            STUDY_UNIT_VALUES[resultsUnit] || '0',
+            STUDY_UNIT_VALUES[resultsUnit] /
+            (withDeprecation ? emissionSource.depreciationPeriod || 1 : 1) || '0',
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
