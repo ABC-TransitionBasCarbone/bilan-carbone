@@ -48,7 +48,7 @@ export const getOrganizationVersionById = (id: string | null) =>
     : null
 
 export const isOrganizationVersionCR = async (id: string | null) =>
-  (await prismaClient.organizationVersion.findUnique({ where: { id: id || '' } }))?.isCR
+  id ? (await prismaClient.organizationVersion.findUnique({ where: { id } }))?.isCR : undefined
 
 export const getOrganizationVersionAccounts = (id: string | null) =>
   id
