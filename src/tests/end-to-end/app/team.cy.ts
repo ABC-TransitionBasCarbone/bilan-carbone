@@ -65,49 +65,49 @@ describe('Team', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
     cy.visit('/equipe')
 
-    cy.getByTestId('team-table-line').eq(0).contains('bc-admin-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(5).contains('bc-admin-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
-      .eq(0)
+      .eq(5)
       .within(() => {
         cy.get('input').should('have.value', Role.ADMIN)
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(1).contains('bc-collaborator-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(6).contains('bc-collaborator-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
-      .eq(1)
+      .eq(6)
       .within(() => {
         cy.get('input').should('have.value', Role.COLLABORATOR)
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(2).contains('bc-default-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(7).contains('bc-default-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
-      .eq(2)
+      .eq(7)
       .within(() => {
         cy.get('input').should('have.value', Role.DEFAULT)
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(3).contains('bc-gestionnaire-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(8).contains('bc-gestionnaire-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
-      .eq(3)
+      .eq(8)
       .within(() => {
         cy.get('input').should('have.value', Role.GESTIONNAIRE)
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(4).contains('bc-super_admin-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(9).contains('bc-super_admin-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
-      .eq(4)
+      .eq(9)
       .within(() => {
         cy.get('input').should('have.value', Role.SUPER_ADMIN)
         cy.get('input').should('be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(1).contains('bc-collaborator-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(6).contains('bc-collaborator-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
-      .eq(1)
+      .eq(6)
       .within(() => {
         cy.get('input').should('have.value', Role.COLLABORATOR)
         cy.get('.MuiSelect-select').click()
@@ -117,9 +117,9 @@ describe('Team', () => {
 
     cy.reload()
 
-    cy.getByTestId('team-table-line').eq(1).contains('bc-collaborator-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(6).contains('bc-collaborator-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
-      .eq(1)
+      .eq(6)
       .within(() => {
         cy.get('input').should('have.value', Role.GESTIONNAIRE)
       })
