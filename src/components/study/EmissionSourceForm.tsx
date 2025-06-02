@@ -15,7 +15,7 @@ import {
 } from '@/services/uncertainty'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
-import { hasEditionRights } from '@/utils/study'
+import { hasEditionRights, isCAS } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
@@ -131,13 +131,10 @@ const EmissionSourceForm = ({
     }
   }
 
-  const isCAS =
-    emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
-    emissionSource.emissionFactor &&
-    emissionSource.emissionFactor.unit === Unit.HA_YEAR
+  const isCas = isCAS(emissionSource)
 
   useEffect(() => {
-    if (isCAS) {
+    if (isCas) {
       update('value', (emissionSource.hectare || 0) * (emissionSource.duration || 0))
     }
   }, [emissionSource.hectare, emissionSource.duration])
@@ -184,7 +181,7 @@ const EmissionSourceForm = ({
           isFromOldImport={isFromOldImport}
           currentBEVersion={currentBEVersion}
         />
-        {isCAS ? (
+        {isCas ? (
           <>
             <TextField
               className="grow"
