@@ -24,7 +24,6 @@ const EditEmissionFactor = async (props: Props) => {
     redirect('/facteurs-d-emission')
   }
 
-
   if (!emissionFactor.success || !emissionFactor.data) {
     return <NotFound />
   }

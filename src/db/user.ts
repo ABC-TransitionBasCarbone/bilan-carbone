@@ -36,6 +36,7 @@ export const getUserWithAccountsAndOrganizationsById = (id: string) =>
       accounts: {
         select: {
           id: true,
+          environment: true,
           organizationVersion: {
             select: {
               id: true,

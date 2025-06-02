@@ -1,5 +1,5 @@
 import { AccountWithUser, getAccountById } from '@/db/account'
-import {  getUserByEmailWithSensibleInformations } from '@/db/user'
+import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { Environment, Level, Role, UserStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
@@ -48,7 +48,7 @@ export const authOptions: NextAuthOptions = {
             organizationId: account?.organizationVersion?.organizationId,
             role: account.role,
             level: account.user.level,
-            environment: account?.organizationVersion?.environment,
+            environment: account.environment,
             needsAccountSelection: false,
           }
         }
@@ -131,7 +131,7 @@ export const authOptions: NextAuthOptions = {
             organizationVersionId: account.organizationVersionId,
             organizationId: account.organizationVersion?.organizationId,
             level: account.user.level,
-            environment: account.organizationVersion?.environment,
+            environment: account.environment,
             needsAccountSelection: false,
           }
         }

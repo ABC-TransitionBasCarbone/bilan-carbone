@@ -36,7 +36,7 @@ const SelectAccount = ({ user, userWithAccountsAndOrganizations }: Props) => {
                 selected={user?.accountId === account.id}
                 disabled={user?.accountId === account.id}
                 onClick={() => onSelectAccount(account.id)}
-                data-testid={`account-${account.organizationVersion?.environment.toLowerCase()}`}
+                data-testid={`account-${account.environment.toLowerCase()}`}
               >
                 <ListItemIcon>
                   <PermIdentityIcon />
@@ -45,7 +45,7 @@ const SelectAccount = ({ user, userWithAccountsAndOrganizations }: Props) => {
                   <p className="bold mr1">{account.organizationVersion?.organization.name}</p>
                 </ListItemText>
                 <ListItemText>
-                  <Chip className="bold" variant="outlined" label={account.organizationVersion?.environment} />
+                  <Chip className="bold" variant="outlined" label={account.environment} />
                 </ListItemText>
               </ListItemButton>
             </ListItem>
