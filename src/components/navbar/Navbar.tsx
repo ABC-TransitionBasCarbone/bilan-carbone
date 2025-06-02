@@ -38,7 +38,9 @@ const Navbar = ({ user }: Props) => {
 
     const hasMultipleAccounts = async () => {
       const userAccounts = await getUserAccounts()
-      setHasMultipleAccounts((userAccounts && userAccounts?.length > 1) || false)
+      if (userAccounts.success) {
+        setHasMultipleAccounts((userAccounts && userAccounts.data.length > 1) || false)
+      }
     }
 
     hasMultipleAccounts()

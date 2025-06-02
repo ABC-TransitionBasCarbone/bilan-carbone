@@ -447,12 +447,12 @@ export const lowercaseUsersEmails = async () => {
   }
 }
 
-export const getUserAccounts = async () => {
-  const session = await auth()
-  if (!session || !session.user) {
-    return []
-  }
-
-  const accounts = await getAccountsFromUser(session.user)
-  return accounts
-}
+export const getUserAccounts = async () =>
+  withServerResponse('getUserAccounts', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      return []
+    }
+    const accounts = await getAccountsFromUser(session.user)
+    return accounts
+  })
