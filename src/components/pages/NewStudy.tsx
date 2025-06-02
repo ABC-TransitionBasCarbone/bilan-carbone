@@ -76,6 +76,7 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
         />
       ) : (
         <SelectOrganization
+          user={user}
           organizationVersions={organizationVersions}
           selectOrganizationVersion={setOrganizationVersion}
           form={form}

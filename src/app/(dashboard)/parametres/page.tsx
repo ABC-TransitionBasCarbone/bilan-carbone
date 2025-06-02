@@ -4,13 +4,13 @@ import Block from '@/components/base/Block'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import SettingsPage from '@/components/pages/Settings'
-import { Environment } from '@prisma/client'
+import { hasAccessToSettings } from '@/utils/permissions'
 import { useTranslations } from 'next-intl'
 
 const Settings = ({ user }: UserSessionProps) => {
   const t = useTranslations('settings')
 
-  if (!(user.environment === Environment.BC)) {
+  if (!hasAccessToSettings(user.environment)) {
     return <NotFound />
   }
   return (

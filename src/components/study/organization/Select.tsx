@@ -8,27 +8,28 @@ import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
+import { hasAccessToEnvironment } from '@/utils/userAccounts'
 import { FormHelperText, MenuItem } from '@mui/material'
 import { Environment, SiteCAUnit } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
+  user: UserSession
   organizationVersions: OrganizationWithSites[]
   selectOrganizationVersion: Dispatch<SetStateAction<OrganizationWithSites | undefined>>
   form: UseFormReturn<CreateStudyCommand>
   caUnit: SiteCAUnit
 }
 
-const SelectOrganization = ({ organizationVersions, selectOrganizationVersion, form, caUnit }: Props) => {
+const SelectOrganization = ({ user, organizationVersions, selectOrganizationVersion, form, caUnit }: Props) => {
   const t = useTranslations('study.organization')
   const [error, setError] = useState('')
   const sites = form.watch('sites')
   const organizationVersionId = form.watch('organizationVersionId')
-  const { environment } = useAppEnvironmentStore()
 
   const organizationVersion = useMemo(
     () => organizationVersions.find((organizationVersion) => organizationVersion.id === organizationVersionId),
@@ -60,7 +61,7 @@ const SelectOrganization = ({ organizationVersions, selectOrganizationVersion, f
       setError(t('validation.sites'))
     } else {
       if (
-        !(environment !== Environment.CUT) &&
+        hasAccessToEnvironment(user, Environment.CUT) &&
         sites
           .filter((site) => site.selected)
           .some(

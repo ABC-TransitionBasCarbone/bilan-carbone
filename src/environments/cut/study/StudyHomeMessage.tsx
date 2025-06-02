@@ -1,14 +1,14 @@
 'use client'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { UserSessionProps } from '@/components/hoc/withAuth'
+import { hasAccessToEnvironment } from '@/utils/userAccounts'
 import { Alert, List, ListItem, ListItemText, Typography } from '@mui/material'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './StudyHomeMessage.module.css'
 
-const StudyHomeMessage = () => {
-  const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === Environment.CUT, [environment])
+const StudyHomeMessage = ({ user }: UserSessionProps) => {
+  const isCut = useMemo(() => hasAccessToEnvironment(user, Environment.CUT), [user?.environment])
 
   const t = useTranslations('home.message')
   return isCut ? (

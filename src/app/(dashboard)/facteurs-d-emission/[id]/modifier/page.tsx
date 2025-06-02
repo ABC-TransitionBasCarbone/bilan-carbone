@@ -3,7 +3,7 @@ import EditEmissionFactorPage from '@/components/pages/EditEmissionFactor'
 import NotFound from '@/components/pages/NotFound'
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { getDetailedEmissionFactor } from '@/services/serverFunctions/emissionFactor'
-import { Environment } from '@prisma/client'
+import { hasAccessToEmissionFactor } from '@/utils/permissions'
 import { UserSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 
@@ -16,7 +16,7 @@ const EditEmissionFactor = async (props: Props) => {
   const params = await props.params
   const emissionFactor = await getDetailedEmissionFactor(params.id)
 
-  if (!emissionFactor || !(props.user.environment === Environment.BC)) {
+  if (!emissionFactor || !hasAccessToEmissionFactor(props.user.environment)) {
     return <NotFound />
   }
 

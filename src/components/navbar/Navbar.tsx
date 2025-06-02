@@ -3,6 +3,7 @@
 import { hasAccessToFormation } from '@/services/permissions/formations'
 import { getUserAccounts } from '@/services/serverFunctions/user'
 import { isAdmin } from '@/utils/user'
+import { hasAccessToEnvironment } from '@/utils/userAccounts'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -44,7 +45,7 @@ const Navbar = ({ user }: Props) => {
     getFormationAccess()
   })
 
-  const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
+  const isCut = useMemo(() => hasAccessToEnvironment(user, Environment.CUT), [user?.environment])
 
   const handleMouseEnter = () => setShowSubMenu(true)
   const handleMouseLeave = () => setShowSubMenu(false)

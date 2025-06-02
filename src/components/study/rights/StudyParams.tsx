@@ -9,6 +9,7 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { changeStudyName } from '@/services/serverFunctions/study'
 import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/serverFunctions/study.command'
+import { hasAccessToEnvironment } from '@/utils/userAccounts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import EditIcon from '@mui/icons-material/Edit'
 import { EmissionFactorImportVersion, Environment } from '@prisma/client'
@@ -70,7 +71,7 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
     [name, study, form],
   )
 
-  const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
+  const isCut = useMemo(() => hasAccessToEnvironment(user, Environment.CUT), [user?.environment])
 
   return (
     <>

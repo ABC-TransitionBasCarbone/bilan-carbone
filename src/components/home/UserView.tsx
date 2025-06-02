@@ -3,7 +3,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { canEditMemberRole } from '@/utils/organization'
-import { Environment } from '@prisma/client'
+import { hasAccessToActualityCards } from '@/utils/permissions'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
@@ -44,8 +44,8 @@ const UserView = async ({ account }: Props) => {
       )}
       <StudiesContainer user={account} isCR={isCR} />
 
-      {account.environment !== Environment.CUT && <ActualitiesCards />}
-      <CUTLogosHome />
+      {hasAccessToActualityCards(account.environment) && <ActualitiesCards />}
+      <CUTLogosHome user={account} />
       {userOrganizationVersion && !userOrganizationVersion.onboarded && (
         <Onboarding user={account} organizationVersion={userOrganizationVersion} />
       )}

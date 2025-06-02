@@ -1,9 +1,13 @@
-import { DeactivatableFeature } from '@prisma/client'
+import { DeactivatableFeature, Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getDeactivableFeatureRestrictions, isDeactivableFeatureActive } from '../serverFunctions/deactivableFeatures'
 import { getUserSource } from '../serverFunctions/user'
 
 export const hasAccessToFormation = async (user: UserSession) => {
+  if (user.environment !== Environment.BC) {
+    return false
+  }
+
   if (!user.level) {
     return false
   }
