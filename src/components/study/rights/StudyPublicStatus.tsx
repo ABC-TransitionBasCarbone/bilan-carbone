@@ -42,8 +42,8 @@ const StudyPublicStatus = ({ study, disabled }: Props) => {
 
   const onSubmit = async (command: ChangeStudyPublicStatusCommand) => {
     const result = await changeStudyPublicStatus(command)
-    if (result) {
-      setError(result)
+    if (!result.success) {
+      setError(result.errorMessage)
     }
   }
 

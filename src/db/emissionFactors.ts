@@ -63,6 +63,13 @@ const getDefaultEmissionFactors = (versionIds?: string[]) =>
     orderBy: { createdAt: 'desc' },
   })
 
+const getEmissionFactorsFromIdsExceptVersions = (ids: string[], versionIds: string[]) =>
+  prismaClient.emissionFactor.findMany({
+    where: { id: { in: ids }, versionId: { notIn: versionIds } },
+    select: selectEmissionFactor,
+    orderBy: { createdAt: 'desc' },
+  })
+
 const filterVersionedEmissionFactor = (
   emissionFactor: AsyncReturnType<typeof getDefaultEmissionFactors>[0],
   versionIds?: string[],
@@ -82,15 +89,21 @@ const getCachedDefaultEmissionFactors = async (versionIds?: string[]) => {
 
 export const getAllEmissionFactors = async (organizationId: string | null, studyId?: string) => {
   let versionIds
+  let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
   if (studyId) {
     const study = await prismaClient.study.findFirst({
       where: { id: studyId },
-      include: { emissionFactorVersions: true },
+      include: { emissionFactorVersions: true, emissionSources: true },
     })
     if (!study) {
       return []
     }
     versionIds = study.emissionFactorVersions.map((version) => version.importVersionId)
+    const selectedEmissionFactors = study.emissionSources
+      .map((emissionSource) => emissionSource.emissionFactorId)
+      .filter((id) => id !== null)
+
+    studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
   }
   const organizationEmissionFactor = organizationId
     ? await prismaClient.emissionFactor.findMany({
@@ -104,7 +117,7 @@ export const getAllEmissionFactors = async (organizationId: string | null, study
     ? getDefaultEmissionFactors(versionIds)
     : getCachedDefaultEmissionFactors(versionIds))
 
-  return organizationEmissionFactor.concat(defaultEmissionFactors)
+  return organizationEmissionFactor.concat(defaultEmissionFactors).concat(studyOldEmissionFactors)
 }
 
 export const getEmissionFactorById = (id: string) =>
@@ -316,4 +329,18 @@ export const getEmissionFactorsImportActiveVersion = async (source: Import) =>
   prismaClient.emissionFactorImportVersion.findFirst({
     where: { source },
     orderBy: { createdAt: 'desc' },
+  })
+
+export const findEmissionFactorByImportedId = (id: string) =>
+  prismaClient.emissionFactor.findFirst({
+    where: { importedId: id },
+    select: {
+      id: true,
+      versionId: true,
+      importedId: true,
+      unit: true,
+      customUnit: true,
+      version: { select: { id: true } },
+      metaData: true,
+    },
   })

@@ -19,5 +19,6 @@ export const canCreateEmissionFactor = () => {
 }
 
 export const canEditEmissionFactor = async (id: string) => {
-  return isFromEmissionFactorOrganization(id)
+  const emissionFactorRequest = await isFromEmissionFactorOrganization(id)
+  return emissionFactorRequest.success && !!emissionFactorRequest.data
 }

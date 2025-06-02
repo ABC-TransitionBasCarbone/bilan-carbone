@@ -39,8 +39,8 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
     const newRole = event.target.value as Role
     if (newRole !== role) {
       const result = await changeRole(email, newRole)
-      if (result) {
-        setToast({ text: result, color: 'error' })
+      if (!result.success) {
+        setToast({ text: result.errorMessage, color: 'error' })
       } else {
         const duration = 3 * SEC * TIME_IN_MS
         setRole(newRole)

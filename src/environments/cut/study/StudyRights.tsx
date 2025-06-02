@@ -74,8 +74,8 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
   const onStudyCinemaUpdate = useCallback(
     form.handleSubmit(async (data) => {
       const result = await changeStudyCinema(data)
-      if (result) {
-        setError(result)
+      if (!result.success) {
+        setError(result.errorMessage)
         return
       }
     }),

@@ -138,7 +138,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
       return !site.selected && study.sites.some((studySite) => studySite.site.id === site.id)
     })
     const hasActivity = await hasActivityData(study.id, deletedSites, organizationVersion.id)
-    if (hasActivity) {
+    if (hasActivity.success && hasActivity.data) {
       setOpen(true)
       setDeleting(deletedSites.length)
     } else {
@@ -150,8 +150,8 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
     setOpen(false)
 
     const result = await changeStudySites(study.id, siteForm.getValues())
-    if (result) {
-      setError(result)
+    if (!result.success) {
+      setError(result.errorMessage)
     } else {
       router.refresh()
       setIsEditing(false)

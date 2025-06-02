@@ -6,6 +6,7 @@ import {
   simulateStudyEmissionFactorSourceUpgrade,
   upgradeStudyEmissionFactorSource,
 } from '@/services/serverFunctions/study'
+import { IsSuccess } from '@/utils/serverResponse'
 import { EmissionFactorImportVersion, Import, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -19,9 +20,13 @@ interface Props {
   canUpdate: boolean
 }
 
+type SimulateStudyEmissionFactorSourceUpgradeResponse = IsSuccess<
+  AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>
+>
+
 type SimulationResult = {
-  updated: Exclude<AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>['updated'], undefined> | []
-  deleted: Exclude<AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>['deleted'], undefined> | []
+  updated: Exclude<SimulateStudyEmissionFactorSourceUpgradeResponse['updated'], undefined> | []
+  deleted: Exclude<SimulateStudyEmissionFactorSourceUpgradeResponse['deleted'], undefined> | []
 }
 
 const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
@@ -58,9 +63,9 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
     setSource(source)
     const res = await simulateStudyEmissionFactorSourceUpgrade(study.id, source)
     if (!res.success) {
-      setError(res.message || '')
+      setError(res.errorMessage || '')
     } else {
-      setSimulationResult({ updated: res.updated || [], deleted: res.deleted || [] })
+      setSimulationResult({ updated: res.data.updated || [], deleted: res.data.deleted || [] })
     }
   }
 
@@ -69,7 +74,7 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
     const res = await upgradeStudyEmissionFactorSource(study.id, source)
     setUpgrading(false)
     if (!res.success) {
-      setError(res.message || '')
+      setError(res.errorMessage || '')
     } else {
       setSource(null)
       router.refresh()
@@ -77,10 +82,7 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
   }
 
   const getEmissionFactorName = (
-    metaData: Exclude<
-      AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>['updated'],
-      undefined
-    >[0]['metaData'],
+    metaData: Exclude<SimulateStudyEmissionFactorSourceUpgradeResponse['updated'], undefined>[0]['metaData'],
   ) =>
     `${metaData.title}${metaData.attribute ? ` - ${metaData.attribute}` : ''}${metaData.frontiere ? ` - ${metaData.frontiere}` : ''}${metaData.location ? ` - ${metaData.location}` : ''}`
 

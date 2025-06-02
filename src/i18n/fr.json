@@ -367,6 +367,7 @@
         "email": "Email",
         "role": "Droit",
         "create": "Ajouter la personne",
+        "clear": "Supprimer la valeur",
         "Already in study": "Cette personne a déjà accès à l'étude.",
         "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
@@ -746,7 +747,8 @@
         "totalCo2": "Veuillez renseigner une émission totale",
         "type": "Veuillez renseigner un type de poste",
         "unit": "Veuillez renseigner une unité"
-      }
+      },
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
     },
     "title": "Facteurs d'émission",
     "loading": "Chargement des facteurs d'émission",
@@ -890,7 +892,14 @@
       "lastName": "Nom",
       "email": "Email",
       "level": "Formation",
-      "role": "Droits"
+      "role": "Droits",
+      "action": " ",
+      "deleteMember": "Supprimer le membre",
+      "userDeletion": "Suppression d'un utilisateur",
+      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet utilisateur ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
+      "close": "Annuler",
+      "confirm": "Confirmer",
+      "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur des études suivantes : "
     }
   },
   "newMember": {
@@ -1086,7 +1095,8 @@
       "editTitle": "Modifier mon organisation",
       "edit": "Valider la modification",
       "name": "Nom de l'organisation",
-      "title": "Informations sur la nouvelle organisation"
+      "title": "Informations sur la nouvelle organisation",
+      "Unknown error": "Une erreur inconnue s'est produite. Veuillez contacter le support"
     },
     "sites": {
       "title": "Les sites de l'organisation concernés par l'étude",
@@ -1163,6 +1173,8 @@
     "optionalFields": "Informations optionnelles",
     "resetFESpecific": "Réinitialiser les valeurs par défaut",
     "duplicate": "Dupliquer la source d'émission",
+    "information": "Information",
+    "oldVersion": "Facteur d'émission issue d'une version dépréciée",
     "glossary": {
       "title": "Glossaire",
       "type": "Type",
@@ -1170,6 +1182,8 @@
       "quality": "Qualité",
       "qualityDescription": "Les incertitudes sont dorénavant calculées grâce à des notes qualitatives apportées sur la qualité du facteur d'émission et la qualité de la donnée d'activité. Les notes associées au facteur d'émission sont directement issues des bases de données, mais celles liées à la donnée d'activité doivent être saisies. Pour plus d'informations sur l'attribution des notes, nous vous invitons à consulter <link>cette page</link>.",
       "specificEmissionFactorQuality": "Vous pouvez spécifiquement ajuster la qualité du facteur d'émission dans votre source d'émission. La valeur générique du facteur d'émission est indiquée par le symbole {marker}.",
+      "version": "Facteur d'émission d'une ancienne version",
+      "versionDescription": "Vous modifiez une étude qui provient de l'ancien BC+. Ce facteur d'émission n'existant pas dans la version de la base empreinte liée à votre étude ({bcVersion}), si vous le modifiez, vous ne pourrez jamais le remettre.",
       "close": "Fermer"
     },
     "deleteDialog": {

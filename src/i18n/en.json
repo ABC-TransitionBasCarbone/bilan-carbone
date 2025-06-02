@@ -367,6 +367,7 @@
         "email": "Email",
         "role": "Role",
         "create": "Add person",
+        "clear": "Clear value",
         "Already in study": "This person already has access to the study.",
         "Not authorized": "Action not authorized. You can see <link>the FAQ</link> or <support>contact-us</support> if you think it is an error.",
         "validation": {
@@ -746,7 +747,8 @@
         "totalCo2": "Please provide a total emission",
         "type": "Please select a post type",
         "subPost": "Please select a sub post"
-      }
+      },
+      "Not authorized": "You are not allowed to do this action"
     },
     "title": "Emission factors",
     "loading": "Loading emission factors",
@@ -890,7 +892,14 @@
       "lastName": "Last Name",
       "email": "Email",
       "level": "Training",
-      "role": "Rights"
+      "role": "Rights",
+      "action": " ",
+      "deleteMember": "Delete member",
+      "userDeletion": "User deletion",
+      "userDeletionDescription": "Are you sure you want to delete this user? He will no longer have access to your organisation's account, but will still have access to the studies for which he has been invited by other organisations.",
+      "close": "Cancel",
+      "confirm": "Confirm",
+      "necessaryAdmin": "This administrator cannot be removed. He/she is the sole validator of the following studies: "
     }
   },
   "newMember": {
@@ -1086,7 +1095,8 @@
       "editTitle": "Edit my organization",
       "edit": "Validate modification",
       "name": "Organization name",
-      "title": "Information about the new organization"
+      "title": "Information about the new organization",
+      "Unknown error": "An unknwon error happened. Please contact the support"
     },
     "sites": {
       "title": "The organization's sites concerned by this study",
@@ -1163,6 +1173,8 @@
     "optionalFields": "Optional information",
     "resetFESpecific": "Reset to default values",
     "duplicate": "Duplicate the emission source",
+    "information": "Information",
+    "oldVersion": "Emission factor from deprecated version",
     "glossary": {
       "title": "Glossary",
       "type": "Type",
@@ -1170,6 +1182,8 @@
       "quality": "Quality",
       "qualityDescription": "Uncertainties are now calculated using qualitative notes on the quality of the emission factor and the quality of the activity data. The scores for the emission factor are taken directly from the databases, but those for the activity data must be entered. For more information on how scores are awarded, please consult <link>this page</link>.",
       "specificEmissionFactorQuality": "You can specifically adjust the quality of the emission factor in your emission source. The generic value of the emission factor is indicated by the {marker} symbol.",
+      "version": "Emission factor from older version",
+      "versionDescription": "You are modifying a study from the old BC+. As this emission factor does not exist in the version linked to your study ({bcVersion}), if you modify it, you will never be able to put it back.",
       "close": "Fermer"
     },
     "deleteDialog": {

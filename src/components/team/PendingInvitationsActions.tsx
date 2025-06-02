@@ -26,7 +26,7 @@ const PendingInvitationsActions = ({ member }: Props) => {
           setSending(true)
           const result = await resendInvitation(member.user.email)
           setSending(false)
-          if (!result) {
+          if (result.success) {
             router.refresh()
           }
         }}

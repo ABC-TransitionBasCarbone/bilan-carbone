@@ -50,8 +50,8 @@ const Profile = ({ version }: Props) => {
   const onSubmit = async () => {
     form.clearErrors()
     const result = await updateUserProfile(form.getValues())
-    if (result) {
-      setError(result)
+    if (!result.success) {
+      setError(result.errorMessage)
     } else {
       setEditing(false)
       await updateSession()

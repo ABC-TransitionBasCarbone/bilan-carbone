@@ -1,8 +1,12 @@
 'use server'
 
 import { getAccountByEmailAndEnvironment } from '@/db/account'
-import { getOrganizationVersionByOrganizationIdAndEnvironment } from '@/db/organization'
-import { createOrUpdateOrganization, getRawOrganizationById, getRawOrganizationBySiret } from '@/db/organizationImport'
+import {
+  createOrUpdateOrganization,
+  getOrganizationVersionByOrganizationIdAndEnvironment,
+  getRawOrganizationById,
+  getRawOrganizationBySiret,
+} from '@/db/organization'
 import { createUsersWithAccount, updateAccount } from '@/db/user'
 import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
 

@@ -17,7 +17,7 @@ import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
 import SavedIcon from '@mui/icons-material/CloudUpload'
 import EditIcon from '@mui/icons-material/Edit'
 import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
-import { EmissionSourceCaracterisation, Level, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
+import { EmissionSourceCaracterisation, Import, Level, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -88,8 +88,8 @@ const EmissionSource = ({
           const parsed = UpdateEmissionSourceCommandValidation.safeParse(command)
           if (parsed.success) {
             const result = await updateEmissionSource(parsed.data)
-            if (result) {
-              setError(result)
+            if (!result.success) {
+              setError(result.errorMessage)
             } else {
               setSaved(true)
               setTimeout(() => setSaved(false), 3000)
@@ -135,6 +135,24 @@ const EmissionSource = ({
   const status = useMemo(() => getEmissionSourceStatus(study, emissionSource), [study, emissionSource])
   const sourceRating = useMemo(() => getQualityRating(emissionSource), [emissionSource])
   const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
+
+  const isFromOldImport = useMemo(
+    () =>
+      !!selectedFactor?.version?.id &&
+      !study.emissionFactorVersions
+        .map((studyImportVersion) => studyImportVersion.importVersionId)
+        .includes(selectedFactor.version.id),
+    [selectedFactor, study.emissionFactorVersions],
+  )
+
+  const currentBEVersion = useMemo(() => {
+    const versionId = isFromOldImport
+      ? study.emissionFactorVersions.find(
+          (emissionFactorVersion) => emissionFactorVersion.source === Import.BaseEmpreinte,
+        )?.importVersionId || ''
+      : ''
+    return versionId ? emissionFactors.find((factor) => factor?.version?.id === versionId)?.version?.name || '' : ''
+  }, [study.emissionFactorVersions, isFromOldImport, emissionFactors])
 
   return (
     <div className={styles.container}>
@@ -254,6 +272,8 @@ const EmissionSource = ({
                 subPost={subPost}
                 emissionFactors={emissionFactors}
                 update={update}
+                isFromOldImport={isFromOldImport}
+                currentBEVersion={currentBEVersion}
               />
             ) : (
               <EmissionSourceForm
@@ -271,6 +291,8 @@ const EmissionSource = ({
                 mandatoryCaracterisation={study.exports.length > 0}
                 status={status}
                 studySites={study.sites}
+                isFromOldImport={isFromOldImport}
+                currentBEVersion={currentBEVersion}
               />
             )}
             {emissionResults && (

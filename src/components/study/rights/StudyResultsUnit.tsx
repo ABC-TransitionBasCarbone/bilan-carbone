@@ -39,8 +39,8 @@ const StudyResultsUnit = ({ study, disabled }: Props) => {
 
   const onSubmit = async (command: ChangeStudyResultsUnitCommand) => {
     const result = await changeStudyResultsUnit(command)
-    if (result) {
-      setError(result)
+    if (!result.success) {
+      setError(result.errorMessage)
     }
   }
 

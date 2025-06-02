@@ -1,24 +1,33 @@
 'use server'
 
-import { AccountWithUser, getAccountByEmailAndOrganizationVersionId } from '@/db/account'
+import {
+  AccountWithUser,
+  getAccountByEmailAndOrganizationVersionId,
+  getAccountOrganizationVersions,
+} from '@/db/account'
 import {
   createOrganizationWithVersion,
   deleteClient,
   getOrganizationNameByOrganizationVersionId,
+  getOrganizationVersionAccounts,
   getOrganizationVersionById,
+  getRawOrganizationVersionById,
   onboardOrganizationVersion,
   setOnboarded,
   updateOrganization,
 } from '@/db/organization'
-import { getRawOrganizationVersionById } from '@/db/organizationImport'
-import { getUserApplicationSettings } from '@/db/user'
+import { deleteStudyMemberFromOrganization, getAllowedStudiesByAccountIdAndOrganizationId } from '@/db/study'
+import { getUserApplicationSettings, getUserByEmail, updateAccount } from '@/db/user'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
-import { Environment, Prisma, UserChecklist } from '@prisma/client'
+import { withServerResponse } from '@/utils/serverResponse'
+import { isAdmin } from '@/utils/user'
+import { Account, Environment, Prisma, StudyRole, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
-import { NOT_AUTHORIZED } from '../permissions/check'
+import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
 import {
   canCreateOrganization,
+  canDeleteMember,
   canDeleteOrganizationVersion,
   canUpdateOrganizationVersion,
 } from '../permissions/organization'
@@ -35,122 +44,191 @@ import { OnboardingCommand } from './user.command'
  * The security and authorization checks are made in the getStudy function
  * Chloé, if you consider refactoring this function, do not forget to add the security and authorization checks
  */
-export const getStudyOrganizationVersion = async (studyId: string) => {
-  const study = await getStudy(studyId)
-  if (!study) {
+export const getStudyOrganizationVersion = async (studyId: string) =>
+  withServerResponse('getStudyOrganizationVersion', async () => {
+    const study = await getStudy(studyId)
+    if (!study.success || !study.data) {
+      return null
+    }
+    return getOrganizationNameByOrganizationVersionId(study.data.organizationVersionId)
+  })
+
+export const createOrganizationCommand = async (command: CreateOrganizationCommand) =>
+  withServerResponse('createOrganizationCommand', async () => {
+    const session = await auth()
+    if (!session || !session.user.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const organization = {
+      ...command,
+    } satisfies Prisma.OrganizationCreateInput
+
+    const organizationVersion = {
+      // TODO Récupérer l'environnement de la bonne manière
+      environment: Environment.BC,
+      parent: { connect: { id: session.user.organizationVersionId } },
+    } satisfies Omit<Prisma.OrganizationVersionCreateInput, 'organization'>
+
+    if (!(await canCreateOrganization(session.user))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    try {
+      const createdOrganizationVersion = await createOrganizationWithVersion(organization, organizationVersion)
+      addUserChecklistItem(UserChecklist.AddClient)
+      return { id: createdOrganizationVersion.id }
+    } catch (e) {
+      console.error(e)
+      throw new Error(UNKNOWN_ERROR)
+    }
+  })
+
+export const updateOrganizationCommand = async (command: UpdateOrganizationCommand) =>
+  withServerResponse('updateOrganizationCommand', async () => {
+    const session = await auth()
+    if (!session || !session.user.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await canUpdateOrganizationVersion(session.user, command.organizationVersionId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
+    const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
+
+    await updateOrganization(command, caUnit)
+    const organizationVersion = await getOrganizationVersionById(command.organizationVersionId)
+    addUserChecklistItem(organizationVersion?.isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
+  })
+
+export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) =>
+  withServerResponse('deleteOrganizationCommand', async () => {
+    if (!(await canDeleteOrganizationVersion(id))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const organizationVersion = await getOrganizationNameByOrganizationVersionId(id)
+    if (!organizationVersion) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (organizationVersion.organization.name.toLowerCase() !== name.toLowerCase()) {
+      throw new Error('wrongName')
+    }
+
+    return deleteClient(id)
+  })
+
+export const setOnboardedOrganizationVersion = async (organizationVersionId: string) =>
+  withServerResponse('setOnboardedOrganizationVersion', async () => {
+    const session = await auth()
+    const userOrganizationVersionId = session?.user.organizationVersionId
+
+    if (!session || !userOrganizationVersionId || userOrganizationVersionId !== organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await setOnboarded(organizationVersionId, session.user.accountId)
+  })
+
+export const onboardOrganizationVersionCommand = async (command: OnboardingCommand) =>
+  withServerResponse('onboardOrganizationVersionCommand', async () => {
+    const session = await auth()
+    const organizationVersionId = session?.user.organizationVersionId
+
+    if (!session || !organizationVersionId || organizationVersionId !== command.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const organizationVersion = await getRawOrganizationVersionById(command.organizationVersionId)
+
+    if (!organizationVersion || organizationVersion.onboarderId !== session.user.accountId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    // filter duplicatd email
+    let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'email')
+    const existingCollaborators: AccountWithUser[] = []
+
+    // filter existing accounts
+    for (const collaborator of collaborators) {
+      const existingAccount = (await getAccountByEmailAndOrganizationVersionId(
+        collaborator.email || '',
+        organizationVersionId,
+      )) as AccountWithUser
+      if (existingAccount) {
+        collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
+        if (existingAccount.organizationVersionId === organizationVersionId) {
+          existingCollaborators.push(existingAccount)
+        }
+      }
+    }
+
+    await onboardOrganizationVersion(session.user.accountId, { ...command, collaborators }, existingCollaborators)
+  })
+
+export const deleteOrganizationMember = async (email: string) =>
+  withServerResponse('deleteOrganizationMember', async () => {
+    const session = await auth()
+    if (!session || !(await canDeleteMember(email))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const targetMember = await getUserByEmail(email)
+
+    const targetMemberAccount = targetMember?.accounts.find(
+      (account) => account.organizationVersionId === session.user.organizationVersionId,
+    )
+
+    if (!targetMemberAccount || !targetMemberAccount.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const organizationVersions = await getAccountOrganizationVersions(targetMemberAccount.id)
+
+    const blockingStudies = await getStudiesWithOnlyValidator(email, targetMemberAccount, organizationVersions)
+    if (blockingStudies.length) {
+      return {
+        code: 'necessaryAdmin',
+        studies: blockingStudies,
+      }
+    }
+
+    await deleteStudyMemberFromOrganization(
+      targetMemberAccount.id,
+      organizationVersions.map((organizationVersion) => organizationVersion.id),
+    )
+    await updateAccount(targetMemberAccount.id, { organizationVersion: { disconnect: true } }, {})
     return null
-  }
-  return getOrganizationNameByOrganizationVersionId(study.organizationVersionId)
-}
+  })
 
-export const createOrganizationCommand = async (
-  command: CreateOrganizationCommand,
-): Promise<{ message: string; success: false } | { id: string; success: true }> => {
-  const session = await auth()
-  if (!session || !session.user.organizationVersionId) {
-    return { success: false, message: NOT_AUTHORIZED }
-  }
+const getStudiesWithOnlyValidator = async (
+  email: string,
+  account: Account,
+  organizationVersions: Awaited<ReturnType<typeof getAccountOrganizationVersions>>,
+) => {
+  if (account && isAdmin(account.role)) {
+    const organizationAccounts = await getOrganizationVersionAccounts(account.organizationVersionId)
+    const organizationAdmins = organizationAccounts.filter(
+      (account) => isAdmin(account.role) && account.user.email !== email,
+    )
+    // errors occurs only if no other ADMIN exists in the organization
+    if (!organizationAdmins.length) {
+      const organizationStudies = await getAllowedStudiesByAccountIdAndOrganizationId(
+        organizationVersions.map((organizationVersion) => organizationVersion.id),
+      )
 
-  const organization = {
-    ...command,
-  } satisfies Prisma.OrganizationCreateInput
+      if (organizationStudies.length) {
+        const organizationStudiesWithOnlyValidator = organizationStudies.filter((study) => {
+          const validators = study.allowedUsers.filter((member) => member.role === StudyRole.Validator)
+          return !validators.length || (validators.length === 1 && validators[0].accountId === account.id)
+        })
 
-  const organizationVersion = {
-    // TODO Récupérer l'environnement de la bonne manière
-    environment: Environment.BC,
-    parent: { connect: { id: session.user.organizationVersionId } },
-  } satisfies Omit<Prisma.OrganizationVersionCreateInput, 'organization'>
-
-  if (!(await canCreateOrganization(session.user))) {
-    return { success: false, message: NOT_AUTHORIZED }
-  }
-
-  try {
-    const createdOrganizationVersion = await createOrganizationWithVersion(organization, organizationVersion)
-    addUserChecklistItem(UserChecklist.AddClient)
-    return { success: true, id: createdOrganizationVersion.id }
-  } catch (e) {
-    console.error(e)
-    return { success: false, message: 'Something went wrong...' }
-  }
-}
-
-export const updateOrganizationCommand = async (command: UpdateOrganizationCommand) => {
-  const session = await auth()
-  if (!session || !session.user.organizationVersionId) {
-    return NOT_AUTHORIZED
-  }
-
-  if (!(await canUpdateOrganizationVersion(session.user, command.organizationVersionId))) {
-    return NOT_AUTHORIZED
-  }
-
-  const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
-  const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
-
-  await updateOrganization(command, caUnit)
-  const organizationVersion = await getOrganizationVersionById(command.organizationVersionId)
-  addUserChecklistItem(organizationVersion?.isCR ? UserChecklist.AddSiteCR : UserChecklist.AddSiteOrga)
-}
-
-export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) => {
-  if (!(await canDeleteOrganizationVersion(id))) {
-    return NOT_AUTHORIZED
-  }
-  const organizationVersion = await getOrganizationNameByOrganizationVersionId(id)
-  if (!organizationVersion) {
-    return NOT_AUTHORIZED
-  }
-
-  if (organizationVersion.organization.name.toLowerCase() !== name.toLowerCase()) {
-    return 'wrongName'
-  }
-
-  return deleteClient(id)
-}
-
-export const setOnboardedOrganizationVersion = async (organizationVersionId: string) => {
-  const session = await auth()
-  const userOrganizationVersionId = session?.user.organizationVersionId
-
-  if (!session || !userOrganizationVersionId || userOrganizationVersionId !== organizationVersionId) {
-    return NOT_AUTHORIZED
-  }
-
-  await setOnboarded(organizationVersionId, session.user.accountId)
-}
-
-export const onboardOrganizationVersionCommand = async (command: OnboardingCommand) => {
-  const session = await auth()
-  const organizationVersionId = session?.user.organizationVersionId
-
-  if (!session || !organizationVersionId || organizationVersionId !== command.organizationVersionId) {
-    return NOT_AUTHORIZED
-  }
-
-  const organizationVersion = await getRawOrganizationVersionById(command.organizationVersionId)
-
-  if (!organizationVersion || organizationVersion.onboarderId !== session.user.accountId) {
-    return NOT_AUTHORIZED
-  }
-
-  // filter duplicatd email
-  let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'email')
-  const existingCollaborators: AccountWithUser[] = []
-
-  // filter existing accounts
-  for (const collaborator of collaborators) {
-    const existingAccount = (await getAccountByEmailAndOrganizationVersionId(
-      collaborator.email || '',
-      organizationVersionId,
-    )) as AccountWithUser
-    if (existingAccount) {
-      collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
-      if (existingAccount.organizationVersionId === organizationVersionId) {
-        existingCollaborators.push(existingAccount)
+        if (organizationStudiesWithOnlyValidator.length) {
+          return organizationStudiesWithOnlyValidator
+        }
       }
     }
   }
-
-  await onboardOrganizationVersion(session.user.accountId, { ...command, collaborators }, existingCollaborators)
+  return []
 }

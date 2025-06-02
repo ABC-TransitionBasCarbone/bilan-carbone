@@ -1,0 +1,1 @@
+DROP TRIGGER  IF EXISTS trg_validate_emission_source_emission_factor_version ON study_emission_sources;
