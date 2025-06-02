@@ -82,6 +82,10 @@ export const canDeleteOrganizationVersion = async (organizationVersionId: string
   return targetOrganizationVersion.parentId === session.user.organizationVersionId
 }
 
+/**
+ * This function does not take into account the fact that you cannot delete a member if it is the only validator on some studies
+ * If you want to add the check, you need to call the getStudiesWithOnlyValidator function (return the list of studies where the user is the only validator)
+ */
 export const canDeleteMember = async (email: string) => {
   const session = await auth()
   if (!session || !session.user) {
