@@ -12,9 +12,6 @@ describe('Create study emission source', () => {
     cy.getByTestId('subpost').first().click()
 
     cy.getByTestId('new-emission-source').first().type('My new emission source{enter}')
-    // needed to wait for the emission source to be created, can't make it with intercept because of next server functions
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(8000)
 
     cy.getByTestId('emission-source-My new emission source').should('exist')
     cy.getByTestId('emission-source-My new emission source').within(() => {
@@ -49,9 +46,7 @@ describe('Create study emission source', () => {
 
     cy.getByTestId('emission-source-My new emission source').should('not.exist')
 
-    // needed to wait for the emission source to be created, can't make it with intercept because of next server functions
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(8000)
+    cy.getByTestId('emission-source-status').invoke('text').should('contain', 'Enregistré')
 
     cy.getByTestId('emission-source-My emission source name').should('exist')
 
@@ -68,9 +63,7 @@ describe('Create study emission source', () => {
     })
     cy.getByTestId('emission-source-reliability').click()
     cy.get('[data-value="4"]').click()
-    // needed to wait for the emission source to be created, can't make it with intercept because of next server functions
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(8000)
+    cy.getByTestId('emission-source-status').invoke('text').should('contain', 'Enregistré')
 
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
@@ -97,9 +90,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-comment').type('My comment')
 
     cy.getByTestId('emission-source-validate').click()
-    // needed to wait for the emission source to be created, can't make it with intercept because of next server functions
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(8000)
+    cy.getByTestId('emission-source-status').invoke('text').should('contain', 'Enregistré')
 
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', 'Validée')
@@ -109,9 +100,7 @@ describe('Create study emission source', () => {
       cy.getByTestId('validated-emission-source-name').should('have.text', 'My emission source name')
     })
     cy.getByTestId('emission-source-validate').click()
-    // needed to wait for the emission source to be created, can't make it with intercept because of next server functions
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(8000)
+    cy.getByTestId('emission-source-status').invoke('text').should('contain', 'Enregistré')
 
     cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
 
@@ -192,9 +181,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-value-da').clear()
     cy.getByTestId('emission-source-value-da').type('789')
     cy.get('[data-testid="emission-source-value-da"] > .MuiInputBase-root > .MuiInputBase-input').blur()
-    // needed to wait for the emission source to be created, can't make it with intercept because of next server functions
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(8000)
+    cy.getByTestId('emission-source-status').invoke('text').should('contain', 'Enregistré')
 
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')

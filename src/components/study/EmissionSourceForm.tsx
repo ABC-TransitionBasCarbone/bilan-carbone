@@ -414,7 +414,7 @@ const EmissionSourceForm = ({
                 <p>{t('results.confiance')}</p>
                 <p>
                   [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
-                  {formatNumber(emissionResults.confidenceInterval[1])}] (en {tResultUnits(studyUnit)})
+                  {formatNumber(emissionResults.confidenceInterval[1])}] ({t('in')} {tResultUnits(studyUnit)})
                 </p>
               </div>
             )}
