@@ -250,6 +250,7 @@ export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
     exports: study.exports,
     contributors: undefined,
     allowedUser: undefined,
+    emissionFactorVersions: study.emissionFactorVersions,
   }
 }
 export type StudyWithoutDetail = ReturnType<typeof filterStudyDetail>

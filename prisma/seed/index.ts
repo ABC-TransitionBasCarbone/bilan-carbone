@@ -1,6 +1,7 @@
 import { reCreateBegesRules } from '@/db/beges'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
+import { getAllowedLevels } from '@/services/study'
 import { faker } from '@faker-js/faker'
 import {
   Account,
@@ -440,7 +441,7 @@ const users = async () => {
           startDate: new Date(),
           endDate: faker.date.future(),
           isPublic: faker.datatype.boolean(),
-          level: faker.helpers.enumValue(Level),
+          level: faker.helpers.arrayElement(getAllowedLevels(creator.user.level)),
           name: faker.lorem.words({ min: 2, max: 5 }),
           organizationVersionId: creator.account.organizationVersionId as string,
           sites: {

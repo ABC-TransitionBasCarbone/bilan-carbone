@@ -129,6 +129,10 @@ table {
   color: var(--error-100);
 }
 
+.warning {
+  color: var(--warning);
+}
+
 .inputLabel {
   color: black !important;
 }

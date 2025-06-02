@@ -64,6 +64,8 @@ interface Props {
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
   studySites: FullStudy['sites']
+  isFromOldImport: boolean
+  currentBEVersion: string
 }
 
 const EmissionSourceForm = ({
@@ -81,6 +83,8 @@ const EmissionSourceForm = ({
   mandatoryCaracterisation,
   status,
   studySites,
+  isFromOldImport,
+  currentBEVersion,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -172,6 +176,8 @@ const EmissionSourceForm = ({
           subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
+          isFromOldImport={isFromOldImport}
+          currentBEVersion={currentBEVersion}
         />
         {isCAS ? (
           <>
@@ -295,6 +301,12 @@ const EmissionSourceForm = ({
       </div>
       {selectedFactor ? (
         <div className={styles.row} data-testid="emission-source-factor">
+          {isFromOldImport && (
+            <p className="align-center warning">
+              {t('oldVersion')}
+              <HelpIcon onClick={() => setGlossary('version')} label={t('information')} />
+            </p>
+          )}
           <p className={classNames(emissionFactorStyles.header, 'align-end')}>
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
@@ -408,6 +420,7 @@ const EmissionSourceForm = ({
                   {children}
                 </Link>
               ),
+              bcVersion: currentBEVersion,
             })}
           </p>
           {glossary === 'quality' && (
