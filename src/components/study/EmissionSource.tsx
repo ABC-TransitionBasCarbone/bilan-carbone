@@ -227,7 +227,7 @@ const EmissionSource = ({
               </div>
             )}
           </div>
-          <div data-testid="emission-source-status" className={classNames(styles.status, 'flex-cc')}>
+          <div className={classNames(styles.status, 'flex-cc')} data-testid="emission-source-status">
             {loading || saved ? (
               <>
                 {loading && (

@@ -1,3 +1,5 @@
+'use client'
+
 import { FullStudy } from '@/db/study'
 import { caracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
@@ -89,9 +91,9 @@ const SubPost = ({
               {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
             </span>
             {contributors && contributors.length > 0 && (
-              <p className={styles.contributors}>
+              <span className={styles.contributors}>
                 {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
-              </p>
+              </span>
             )}
           </p>
         </AccordionSummary>
