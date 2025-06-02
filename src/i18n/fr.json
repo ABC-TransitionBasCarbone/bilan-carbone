@@ -474,6 +474,7 @@
     "results": {
       "type": "Type",
       "post": "Poste",
+      "download": "Télécharger les résultats",
       "value": "Émissions ({unit})",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
@@ -512,6 +513,7 @@
       "noFactor": "Aucun facteur d'émission",
       "post": "Poste",
       "quality": "Qualité",
+      "site": "Site",
       "sourceCharacterization": "Caractérisation de la source d'émission",
       "sourceName": "Nom de la source d'émission",
       "sourceQuality": "Qualité de la source d'émission",

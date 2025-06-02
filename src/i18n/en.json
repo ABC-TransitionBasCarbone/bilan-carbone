@@ -474,6 +474,7 @@
     "results": {
       "type": "Type",
       "post": "Post",
+      "download": "Download results",
       "value": "Emissions ({unit})",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
@@ -512,6 +513,7 @@
       "noFactor": "No emission factor",
       "post": "Post",
       "quality": "Quality",
+      "site": "Site",
       "sourceCharacterization": "Emission source characterization",
       "sourceName": "Emission source name",
       "sourceQuality": "Emission source quality",

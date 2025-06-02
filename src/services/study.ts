@@ -90,7 +90,7 @@ const getEmissionSourcesRows = (
   tResultUnits: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
 ) => {
-  const initCols = []
+  const initCols = ['site']
   if (type === 'Post') {
     initCols.push('subPost')
   } else if (type === 'Study') {
@@ -122,7 +122,7 @@ const getEmissionSourcesRows = (
     .sort((a, b) => a.subPost.localeCompare(b.subPost))
     .map((emissionSource) => {
       const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
-      const initCols: (string | number)[] = []
+      const initCols: (string | number)[] = [emissionSource.studySite.site.name]
       if (type === 'Post') {
         initCols.push(tPost(emissionSource.subPost))
       } else if (type === 'Study') {
@@ -204,7 +204,7 @@ const getEmissionSourcesCSVContent = (
     type,
   )
 
-  const emptyFieldsCount = type === 'Study' ? 3 : type === 'Post' ? 2 : 1
+  const emptyFieldsCount = type === 'Study' ? 4 : type === 'Post' ? 3 : 2
   const emptyFields = (count: number) => Array(count).fill('')
 
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources) / STUDY_UNIT_VALUES[resultsUnit]
