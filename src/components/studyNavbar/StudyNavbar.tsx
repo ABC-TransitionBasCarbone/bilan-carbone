@@ -8,7 +8,7 @@ import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import styles from './StudyNavbar.module.css'
 
 const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
@@ -18,7 +18,7 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
   const [open, setOpen] = useState<boolean>(true)
 
   const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === CUT, [environment])
+  const isCut = environment === CUT
 
   return (
     <>

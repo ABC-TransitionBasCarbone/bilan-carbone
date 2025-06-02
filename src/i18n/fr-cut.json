@@ -37,6 +37,9 @@
     "export": {
       "export": "Exporter mes cinémas"
     },
+    "rights": {
+      "title": "Données générales de l'étude : {name}"
+    },
     "organization": {
       "site": "Cinéma",
       "allSites": "Tous les cinémas",
