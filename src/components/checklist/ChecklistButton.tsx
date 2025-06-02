@@ -48,10 +48,12 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
   const getCheckList = async () => {
     const checkList = await getUserCheckedItems()
     setFetchedCheckedSteps(true)
-    if (checkList.some((item) => item.step === UserChecklist.Completed)) {
-      setCompleted(true)
-    } else {
-      setChecklist(checkList.map((item) => item.step))
+    if (checkList.success) {
+      if (checkList.data.some((item) => item.step === UserChecklist.Completed)) {
+        setCompleted(true)
+      } else {
+        setChecklist(checkList.data.map((item) => item.step))
+      }
     }
   }
 

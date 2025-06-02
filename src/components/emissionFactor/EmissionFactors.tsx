@@ -26,7 +26,7 @@ const EmissionFactors = async ({ userOrganizationId }: Props) => {
 
   return (
     <EmissionFactorsTable
-      emissionFactors={emissionFactors}
+      emissionFactors={emissionFactors.success ? emissionFactors.data : []}
       userOrganizationId={userOrganizationId}
       importVersions={importVersions.concat([manualImport])}
       initialSelectedSources={initialSelectedSources.concat([manualImport.id])}

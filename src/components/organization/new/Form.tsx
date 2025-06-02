@@ -32,9 +32,9 @@ const NewOrganizationForm = () => {
   const onSubmit = async (command: CreateOrganizationCommand) => {
     const result = await createOrganizationCommand(command)
     if (!result.success) {
-      setError(result.message)
+      setError(result.errorMessage)
     } else {
-      router.push(`/organisations/${result.id}`)
+      router.push(`/organisations/${result.data.id}`)
       router.refresh()
     }
   }
@@ -52,7 +52,7 @@ const NewOrganizationForm = () => {
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-organization-create-button">
           {t('create')}
         </LoadingButton>
-        {error && <p>{error}</p>}
+        {error && <p>{t(error)}</p>}
       </Form>
     </Block>
   )

@@ -55,8 +55,8 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     setUploading(true)
     const result = await addFlowToStudy(study.id, file)
     setUploading(false)
-    if (result) {
-      setError(t(result))
+    if (!result.success) {
+      setError(t(result.errorMessage))
       return
     }
     router.refresh()
@@ -68,7 +68,9 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     }
     setDownloading(true)
     const url = await getDocumentUrl(selectedFlow, study.id)
-    downloadFromUrl(url, selectedFlow.name)
+    if (url.success) {
+      downloadFromUrl(url.data, selectedFlow.name)
+    }
     setDownloading(false)
   }
 
@@ -80,8 +82,8 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     setDeleting(true)
     const result = await deleteFlowFromStudy(selectedFlow, study.id)
     setDeleting(false)
-    if (result) {
-      setError(t(result))
+    if (!result.success) {
+      setError(t(result.errorMessage))
       return
     }
     router.refresh()

@@ -39,8 +39,8 @@ const Settings = ({ userSettings }: Props) => {
   const onSubmit = async () => {
     form.clearErrors()
     const result = await updateUserSettings(form.getValues())
-    if (result) {
-      setError(result)
+    if (!result.success) {
+      setError(result.errorMessage)
     }
     form.reset(form.getValues())
   }

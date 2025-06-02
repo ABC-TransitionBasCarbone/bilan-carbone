@@ -744,7 +744,8 @@
         "totalCo2": "Veuillez renseigner une émission totale",
         "type": "Veuillez renseigner un type de poste",
         "unit": "Veuillez renseigner une unité"
-      }
+      },
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
     },
     "title": "Facteurs d'émission",
     "loading": "Chargement des facteurs d'émission",
@@ -1084,7 +1085,8 @@
       "editTitle": "Modifier mon organisation",
       "edit": "Valider la modification",
       "name": "Nom de l'organisation",
-      "title": "Informations sur la nouvelle organisation"
+      "title": "Informations sur la nouvelle organisation",
+      "Unknown error": "Une erreur inconnue s'est produite. Veuillez contacter le support"
     },
     "sites": {
       "title": "Les sites de l'organisation concernés par l'étude",

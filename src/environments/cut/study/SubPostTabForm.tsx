@@ -22,8 +22,8 @@ const SubPostTabForm = ({ subPost, emissionSources, study }: Props) => {
 
   const refetchEmissionSources = useCallback(async () => {
     const refetchedEmissionSources = await getEmissionSourcesByStudyId(study.id)
-    if (refetchedEmissionSources) {
-      setNewEmissionSources(refetchedEmissionSources)
+    if (refetchedEmissionSources.success) {
+      setNewEmissionSources(refetchedEmissionSources.data)
     }
     setIsLoading(false)
   }, [study])

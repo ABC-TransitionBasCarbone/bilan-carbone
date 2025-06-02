@@ -17,7 +17,7 @@ export const hasAccessToFormation = async (user: UserSession) => {
     return false
   }
 
-  if (!userSource || (restrictions?.deactivatedSources || []).includes(userSource)) {
+  if (!userSource.success || !userSource.data || (restrictions?.deactivatedSources || []).includes(userSource.data)) {
     return false
   }
 

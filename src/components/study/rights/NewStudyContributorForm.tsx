@@ -42,8 +42,8 @@ const NewStudyContributorForm = ({ study }: Props) => {
 
   const onSubmit = async (command: NewStudyContributorCommand) => {
     const result = await newStudyContributor(command)
-    if (result) {
-      setError(result)
+    if (!result.success) {
+      setError(result.errorMessage)
     } else {
       router.push(`/etudes/${study.id}/cadrage`)
       router.refresh()

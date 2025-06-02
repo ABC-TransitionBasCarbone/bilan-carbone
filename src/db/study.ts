@@ -151,6 +151,7 @@ const fullStudyInclude = {
       id: true,
       isCR: true,
       parentId: true,
+      environment: true,
       organization: {
         select: {
           id: true,

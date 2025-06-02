@@ -6,10 +6,10 @@ import NotFound from './NotFound'
 
 const SettingsPage = async () => {
   const userSettings = await getUserSettings()
-  if (!userSettings) {
+  if (!userSettings.success || !userSettings.data) {
     return <NotFound />
   }
-  return <Settings userSettings={userSettings} />
+  return <Settings userSettings={userSettings.data} />
 }
 
 export default SettingsPage

@@ -145,9 +145,9 @@ const EmissionSourceForm = ({
   }, [glossary])
 
   const duplicateEmissionSource = async () => {
-    const err = await duplicateStudyEmissionSource(studyId, emissionSource, duplicationSite)
+    const res = await duplicateStudyEmissionSource(studyId, emissionSource, duplicationSite)
     setOpen(false)
-    if (!err) {
+    if (res.success) {
       router.refresh()
     }
   }
