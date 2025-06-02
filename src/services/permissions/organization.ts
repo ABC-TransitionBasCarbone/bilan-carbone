@@ -1,6 +1,7 @@
 import { getAccountById } from '@/db/account'
 import { getOrganizationVersionById, OrganizationVersionWithOrganization } from '@/db/organization'
-import { canEditOrganizationVersion, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
+import { getUserByEmail } from '@/db/user'
+import { canEditMemberRole, canEditOrganizationVersion, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
 import { UserSession } from 'next-auth'
 import { auth } from '../auth'
 import { getOrganizationStudiesFromOtherUsers } from '../serverFunctions/study'
@@ -79,4 +80,32 @@ export const canDeleteOrganizationVersion = async (organizationVersionId: string
   }
 
   return targetOrganizationVersion.parentId === session.user.organizationVersionId
+}
+
+/**
+ * This function does not take into account the fact that you cannot delete a member if it is the only validator on some studies
+ * If you want to add the check, you need to call the getStudiesWithOnlyValidator function (return the list of studies where the user is the only validator)
+ */
+export const canDeleteMember = async (email: string) => {
+  const session = await auth()
+  if (!session || !session.user) {
+    return false
+  }
+
+  if (!canEditMemberRole(session.user)) {
+    return false
+  }
+
+  const targetMember = await getUserByEmail(email)
+  if (!targetMember || targetMember.accounts[0].userId === session.user.id) {
+    return false
+  }
+
+  const targetMemberAccount = targetMember.accounts.find(
+    (account) => account.organizationVersionId === session.user.organizationVersionId,
+  )
+  if (!targetMemberAccount) {
+    return false
+  }
+  return true
 }

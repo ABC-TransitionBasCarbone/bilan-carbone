@@ -1,25 +1,33 @@
 'use server'
 
-import { AccountWithUser, getAccountByEmailAndOrganizationVersionId } from '@/db/account'
+import {
+  AccountWithUser,
+  getAccountByEmailAndOrganizationVersionId,
+  getAccountOrganizationVersions,
+} from '@/db/account'
 import {
   createOrganizationWithVersion,
   deleteClient,
   getOrganizationNameByOrganizationVersionId,
+  getOrganizationVersionAccounts,
   getOrganizationVersionById,
+  getRawOrganizationVersionById,
   onboardOrganizationVersion,
   setOnboarded,
   updateOrganization,
 } from '@/db/organization'
-import { getRawOrganizationVersionById } from '@/db/organizationImport'
-import { getUserApplicationSettings } from '@/db/user'
+import { deleteStudyMemberFromOrganization, getAllowedStudiesByAccountIdAndOrganizationId } from '@/db/study'
+import { getUserApplicationSettings, getUserByEmail, updateAccount } from '@/db/user'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Environment, Prisma, UserChecklist } from '@prisma/client'
+import { isAdmin } from '@/utils/user'
+import { Account, Environment, Prisma, StudyRole, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
 import {
   canCreateOrganization,
+  canDeleteMember,
   canDeleteOrganizationVersion,
   canUpdateOrganizationVersion,
 } from '../permissions/organization'
@@ -159,3 +167,68 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
 
     await onboardOrganizationVersion(session.user.accountId, { ...command, collaborators }, existingCollaborators)
   })
+
+export const deleteOrganizationMember = async (email: string) =>
+  withServerResponse('deleteOrganizationMember', async () => {
+    const session = await auth()
+    if (!session || !(await canDeleteMember(email))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const targetMember = await getUserByEmail(email)
+
+    const targetMemberAccount = targetMember?.accounts.find(
+      (account) => account.organizationVersionId === session.user.organizationVersionId,
+    )
+
+    if (!targetMemberAccount || !targetMemberAccount.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const organizationVersions = await getAccountOrganizationVersions(targetMemberAccount.id)
+
+    const blockingStudies = await getStudiesWithOnlyValidator(email, targetMemberAccount, organizationVersions)
+    if (blockingStudies.length) {
+      return {
+        code: 'necessaryAdmin',
+        studies: blockingStudies,
+      }
+    }
+
+    await deleteStudyMemberFromOrganization(
+      targetMemberAccount.id,
+      organizationVersions.map((organizationVersion) => organizationVersion.id),
+    )
+    await updateAccount(targetMemberAccount.id, { organizationVersion: { disconnect: true } }, {})
+    return null
+  })
+
+const getStudiesWithOnlyValidator = async (
+  email: string,
+  account: Account,
+  organizationVersions: Awaited<ReturnType<typeof getAccountOrganizationVersions>>,
+) => {
+  if (account && isAdmin(account.role)) {
+    const organizationAccounts = await getOrganizationVersionAccounts(account.organizationVersionId)
+    const organizationAdmins = organizationAccounts.filter(
+      (account) => isAdmin(account.role) && account.user.email !== email,
+    )
+    // errors occurs only if no other ADMIN exists in the organization
+    if (!organizationAdmins.length) {
+      const organizationStudies = await getAllowedStudiesByAccountIdAndOrganizationId(
+        organizationVersions.map((organizationVersion) => organizationVersion.id),
+      )
+
+      if (organizationStudies.length) {
+        const organizationStudiesWithOnlyValidator = organizationStudies.filter((study) => {
+          const validators = study.allowedUsers.filter((member) => member.role === StudyRole.Validator)
+          return !validators.length || (validators.length === 1 && validators[0].accountId === account.id)
+        })
+
+        if (organizationStudiesWithOnlyValidator.length) {
+          return organizationStudiesWithOnlyValidator
+        }
+      }
+    }
+  }
+  return []
+}

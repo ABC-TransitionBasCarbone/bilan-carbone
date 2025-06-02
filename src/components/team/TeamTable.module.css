@@ -1,0 +1,9 @@
+.studiesList {
+  list-style-position: inside;
+  list-style-type: initial;
+
+  a {
+    text-decoration: none;
+    color: unset;
+  }
+}
