@@ -47,7 +47,7 @@ import {
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
-import { addUser, getUserApplicationSettings, getUserByEmail, UserWithAccounts } from '@/db/user'
+import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
@@ -455,6 +455,7 @@ const getOrCreateUserAndSendStudyInvite = async (
 ) => {
   let accountId = ''
   const t = await getTranslations('study.role')
+  const creatorDBUser = await getUserSourceById(creator.id)
 
   if (!existingUser) {
     const newUser = await addUser({
@@ -462,6 +463,7 @@ const getOrCreateUserAndSendStudyInvite = async (
       status: UserStatus.VALIDATED,
       firstName: '',
       lastName: '',
+      source: creatorDBUser?.source,
       accounts: {
         create: {
           role: Role.COLLABORATOR,

@@ -1,7 +1,16 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { sendNewUser } from '@/services/serverFunctions/user'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import { Environment, Organization, OrganizationVersion, Prisma, Role, Site, UserStatus } from '@prisma/client'
+import {
+  Environment,
+  Organization,
+  OrganizationVersion,
+  Prisma,
+  Role,
+  Site,
+  UserSource,
+  UserStatus,
+} from '@prisma/client'
 import { AccountWithUser } from './account'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
@@ -159,8 +168,9 @@ export const onboardOrganizationVersion = async (
     return
   }
   const newCollaborators: (Pick<AccountWithUser, 'role' | 'organizationVersionId'> & {
-    user: { firstName: string; lastName: string; email: string; status: UserStatus }
+    user: { firstName: string; lastName: string; email: string; status: UserStatus; source: UserSource }
   })[] = []
+
   for (const collaborator of collaborators) {
     newCollaborators.push({
       user: {
@@ -168,6 +178,7 @@ export const onboardOrganizationVersion = async (
         lastName: '',
         email: collaborator.email?.toLowerCase() || '',
         status: UserStatus.VALIDATED,
+        source: dbUser.source,
       },
       role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       organizationVersionId,
