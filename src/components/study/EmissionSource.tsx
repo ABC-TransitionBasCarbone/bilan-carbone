@@ -145,7 +145,7 @@ const EmissionSource = ({
     [selectedFactor, study.emissionFactorVersions],
   )
 
-  const currentBCVersion = useMemo(() => {
+  const currentBEVersion = useMemo(() => {
     const versionId = isFromOldImport
       ? study.emissionFactorVersions.find(
           (emissionFactorVersion) => emissionFactorVersion.source === Import.BaseEmpreinte,
@@ -273,7 +273,7 @@ const EmissionSource = ({
                 emissionFactors={emissionFactors}
                 update={update}
                 isFromOldImport={isFromOldImport}
-                currentBCVersion={currentBCVersion}
+                currentBEVersion={currentBEVersion}
               />
             ) : (
               <EmissionSourceForm
@@ -292,7 +292,7 @@ const EmissionSource = ({
                 status={status}
                 studySites={study.sites}
                 isFromOldImport={isFromOldImport}
-                currentBCVersion={currentBCVersion}
+                currentBEVersion={currentBEVersion}
               />
             )}
             {emissionResults && (

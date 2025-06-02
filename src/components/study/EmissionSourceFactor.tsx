@@ -54,7 +54,7 @@ interface Props {
   canEdit: boolean | null
   getDetail: (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) => string
   isFromOldImport: boolean
-  currentBCVersion: string
+  currentBEVersion: string
 }
 
 const EmissionSourceFactor = ({
@@ -65,7 +65,7 @@ const EmissionSourceFactor = ({
   canEdit,
   getDetail,
   isFromOldImport,
-  currentBCVersion,
+  currentBEVersion,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -215,7 +215,7 @@ const EmissionSourceFactor = ({
         onClose={() => setOldFactorAction(undefined)}
       >
         <>
-          {t('glossary.versionDescription', { bcVersion: currentBCVersion })}
+          {t('glossary.versionDescription', { bcVersion: currentBEVersion })}
           <div className={classNames(styles.gapped, 'justify-end mt1')}>
             <Button onClick={() => setOldFactorAction(undefined)}>{t('duplicateDialog.cancel')}</Button>
             <Button

@@ -25,7 +25,7 @@ interface Props {
   subPost: SubPost
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
   isFromOldImport: boolean
-  currentBCVersion: string
+  currentBEVersion: string
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -38,7 +38,7 @@ const EmissionSourceContributorForm = ({
   selectedFactor,
   update,
   isFromOldImport,
-  currentBCVersion,
+  currentBEVersion,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
@@ -55,7 +55,7 @@ const EmissionSourceContributorForm = ({
           selectedFactor={selectedFactor}
           getDetail={getDetail}
           isFromOldImport={isFromOldImport}
-          currentBCVersion={currentBCVersion}
+          currentBEVersion={currentBEVersion}
         />
         <div className={classNames(styles.gapped, 'flex')}>
           <div className={classNames(styles.inputWithUnit, 'flex grow')}>

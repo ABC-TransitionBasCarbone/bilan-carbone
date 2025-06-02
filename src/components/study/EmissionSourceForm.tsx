@@ -65,7 +65,7 @@ interface Props {
   status: EmissionSourcesStatus
   studySites: FullStudy['sites']
   isFromOldImport: boolean
-  currentBCVersion: string
+  currentBEVersion: string
 }
 
 const EmissionSourceForm = ({
@@ -84,7 +84,7 @@ const EmissionSourceForm = ({
   status,
   studySites,
   isFromOldImport,
-  currentBCVersion,
+  currentBEVersion,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -177,7 +177,7 @@ const EmissionSourceForm = ({
           selectedFactor={selectedFactor}
           getDetail={getDetail}
           isFromOldImport={isFromOldImport}
-          currentBCVersion={currentBCVersion}
+          currentBEVersion={currentBEVersion}
         />
         {isCAS ? (
           <>
@@ -420,7 +420,7 @@ const EmissionSourceForm = ({
                   {children}
                 </Link>
               ),
-              bcVersion: currentBCVersion,
+              bcVersion: currentBEVersion,
             })}
           </p>
           {glossary === 'quality' && (
