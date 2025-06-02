@@ -163,7 +163,12 @@ export const onboardOrganizationVersion = async (
   { organizationVersionId, companyName, firstName, lastName, collaborators = [] }: OnboardingCommand,
   existingCollaborators: AccountWithUser[],
 ) => {
-  const dbUser = await prismaClient.user.findUnique({ where: { id: accountId } })
+  const userAccount = await prismaClient.account.findUnique({ where: { id: accountId } })
+  if (!userAccount) {
+    return
+  }
+  const dbUser = await prismaClient.user.findUnique({ where: { id: userAccount.userId } })
+
   if (!dbUser) {
     return
   }
@@ -221,6 +226,7 @@ export const onboardOrganizationVersion = async (
               lastName: collaborator.user.lastName,
               email: collaborator.user.email,
               status: collaborator.user.status,
+              source: collaborator.user.source,
             },
           },
         },
