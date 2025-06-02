@@ -9,9 +9,15 @@ describe('Create study emission source', () => {
     cy.login()
 
     cy.visit(`/etudes/${studyId}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`)
-    cy.getByTestId('subpost').first().click()
 
-    cy.getByTestId('new-emission-source').first().type('My new emission source{enter}')
+    cy.getByTestId('subpost')
+    .first()
+    .scrollIntoView()
+    .click({ force: true })
+
+    cy.getByTestId('new-emission-source').first()
+    
+    cy.getByTestId('new-emission-source').first().scrollIntoView().type('My new emission source{enter}')
 
     cy.getByTestId('emission-source-My new emission source').should('exist')
     cy.getByTestId('emission-source-My new emission source').within(() => {

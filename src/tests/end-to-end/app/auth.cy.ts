@@ -14,9 +14,6 @@ describe('Authentication', () => {
     cy.url().should('include', '/login')
 
     cy.login('bc-collaborator-1@yopmail.com', 'test1')
-    cy.getByTestId('login-button').click()
-
-    cy.wait('@login')
 
     cy.visit('/')
     cy.url().should('include', '/login')
@@ -27,9 +24,6 @@ describe('Authentication', () => {
     cy.url().should('include', '/login')
 
     cy.login('bc-collaborator-1@yopmail.com', 'password-1')
-    cy.getByTestId('login-button').click()
-
-    cy.wait('@login')
 
     cy.url().should('not.include', '/login')
   })
@@ -49,13 +43,16 @@ describe('Authentication', () => {
       'have.value',
       'bc-collaborator-1@yopmail.com',
     )
+
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
-      .clear()
       .should('be.visible')
       .should('not.be.disabled')
-      .type(
-        'bc-collaborator-2@yopmail.com',
-      )
+      .clear()
+
+    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input').type(
+      'bc-collaborator-2@yopmail.com',
+    )
+
     cy.getByTestId('reset-button').click()
 
     cy.visit('http://localhost:1080')
@@ -80,9 +77,7 @@ describe('Authentication', () => {
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
       .should('not.be.disabled')
-      .type(
-        'bc-collaborator-2@yopmail.com',
-      )
+      .type('bc-collaborator-2@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
       .should('not.be.disabled')
@@ -95,14 +90,13 @@ describe('Authentication', () => {
     cy.getByTestId('reset-button').click()
 
     cy.wait('@reset-password')
+
     cy.url({ timeout: 8000 }).should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
       .should('not.be.disabled')
-      .type(
-        'bc-collaborator-2@yopmail.com',
-      )
+      .type('bc-collaborator-2@yopmail.com')
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
       .should('not.be.disabled')
@@ -110,28 +104,31 @@ describe('Authentication', () => {
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
+
     cy.url().should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
       .should('not.be.disabled')
-      .should(
-        'have.value',
-        'bc-collaborator-2@yopmail.com',
-      )
+      .should('have.value', 'bc-collaborator-2@yopmail.com')
+
     cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
       .should('not.be.disabled')
       .clear()
-      .type('new-Password-2')
+
+    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input').type('new-Password-2')
+
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
+
     cy.url().should('not.include', '/login')
   })
 
   it('does not authorize inactive user', () => {
     cy.visit('/')
+
     cy.url().should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
@@ -147,55 +144,38 @@ describe('Authentication', () => {
     cy.wait('@login')
 
     cy.visit('/')
+
     cy.url().should('include', '/login')
   })
 
   it('does activate account', () => {
     cy.visit('/')
+
     cy.url().should('include', '/login')
-
-    cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
-      .should('be.visible')
-      .should('not.be.disabled')
-      .type('imported@yopmail.com')
-    cy.get('[data-testid="input-password"] > .MuiInputBase-root > .MuiInputBase-input')
-      .should('be.visible')
-      .should('not.be.disabled')
-      .type('Password-0')
-    cy.getByTestId('login-button').click()
-
-    cy.wait('@login')
+    cy.login('imported@yopmail.com', 'Password-0')
 
     cy.visit('/')
+
     cy.url().should('include', '/login')
 
-    cy.getByTestId('activation-button')
-      .should('be.visible')
+    cy.getByTestId('activation-button').should('be.visible').should('not.be.disabled')
+
     cy.getByTestId('activation-button').click()
+
     cy.url().should('include', '/activation')
 
-    cy.getByTestId('activation-email')
-      .should('be.visible')
-      .should('not.be.disabled')
-    cy.getByTestId('activation-button')
-      .should('be.visible')
-      .should('not.be.disabled')
+    cy.getByTestId('activation-email').should('be.visible').should('not.be.disabled')
+    cy.getByTestId('activation-button').should('be.visible').should('not.be.disabled')
 
-    cy.getByTestId('activation-email')
-      .should('be.visible')
-      .should('not.be.disabled')
-      .type('imported@yopmail.co')
+    cy.getByTestId('activation-email').should('be.visible').should('not.be.disabled').type('imported@yopmail.co')
     cy.getByTestId('activation-form-message').should('not.exist')
     cy.getByTestId('activation-button').click()
 
     cy.wait('@activate')
 
-    cy.getByTestId('activation-form-message').should('be.visible')
+    cy.getByTestId('activation-form-message').should('be.visible').should('not.be.disabled')
 
-    cy.getByTestId('activation-email')
-      .should('be.visible')
-      .should('not.be.disabled')
-      .type('m')
+    cy.getByTestId('activation-email').should('be.visible').should('not.be.disabled').type('m')
     cy.getByTestId('activation-button').click()
     cy.getByTestId('activation-form-message').should('not.exist')
 
@@ -232,6 +212,7 @@ describe('Authentication', () => {
     cy.getByTestId('pending-invitation').contains('imported@yopmail.com').should('be.visible')
 
     cy.logout()
+
     cy.url().should('include', '/login')
 
     cy.visit('http://localhost:1080')
@@ -242,6 +223,7 @@ describe('Authentication', () => {
         .then((link) => {
           const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
           cy.visit(hmtlUrl)
+
           cy.url().should('include', hmtlUrl)
 
           cy.get('a')
@@ -266,7 +248,8 @@ describe('Authentication', () => {
     cy.getByTestId('reset-button').click()
 
     cy.wait('@reset-password')
-    cy.url({ timeout: 8000 }).should('include', '/login')
+
+    cy.url().should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')
@@ -279,6 +262,7 @@ describe('Authentication', () => {
     cy.getByTestId('login-button').click()
 
     cy.wait('@login')
+
     cy.url().should('not.include', '/login')
   })
 })

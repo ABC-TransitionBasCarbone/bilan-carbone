@@ -24,8 +24,8 @@ import MenuBookIcon from '@mui/icons-material/MenuBook'
 import SettingsIcon from '@mui/icons-material/Settings'
 
 interface Props {
+  children?: ReactNode,
   user: UserSession
-  children?: ReactNode
 }
 
 const Navbar = ({ children, user }: Props) => {
@@ -57,7 +57,7 @@ const Navbar = ({ children, user }: Props) => {
   const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
 
   return (
-    <AppBar position="static" elevation={0}>
+    <AppBar position="sticky" elevation={0}>
       <Toolbar variant="dense">
         <Container maxWidth="lg" className={styles.toolbarContainer}>
           <Box className={styles.buttonContainer}>

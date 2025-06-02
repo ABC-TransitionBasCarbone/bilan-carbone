@@ -6,7 +6,7 @@ import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { isAdmin } from '@/utils/user'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
-import { Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
+import { AppBar, Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
 import { Role } from '@prisma/client'
 import { Environment, Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -93,7 +93,8 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
       : 'myClient'
 
   return (
-    <OrganizationToolbar>
+    <AppBar position='sticky'>
+      <OrganizationToolbar>
       <Box display="flex" alignItems="center" gap={2}>
         <HomeIcon />
         <Typography>{organizationVersion.organization.name}</Typography>
@@ -116,6 +117,7 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
         </Button>
       )}
     </OrganizationToolbar>
+    </AppBar>
   )
 }
 

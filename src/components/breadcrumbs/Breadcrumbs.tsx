@@ -14,7 +14,7 @@ const StyledContainer = styled(Box)<BoxProps>(({ theme }) => {
   return {
     backgroundColor: theme.palette.primary.light,
     borderRadius: '0 0 1rem 1rem',
-    borderColor: environment === BASE ? theme.palette.divider : theme.palette.primary.dark,
+    borderColor: theme.palette.divider,
     borderStyle: 'solid',
     borderWidth: '0.125rem',
     gap: '0.5rem',
