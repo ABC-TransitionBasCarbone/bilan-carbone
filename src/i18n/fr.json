@@ -247,7 +247,9 @@
       "results": "Résultats",
       "transitionPlan": "Plan de transition",
       "menu": "Ouvrir le menu de navigation de l'étude",
-      "coming": "à venir"
+      "coming": "à venir",
+      "organizations": "Mon organisation",
+      "team": "Mon équipe"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
