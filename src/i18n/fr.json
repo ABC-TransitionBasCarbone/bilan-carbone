@@ -115,6 +115,7 @@
   },
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® +",
+    "subtext": "",
     "explaination": "L'outil dédié à l'application de la méthode Bilan Carbone®, développé par l'Association pour la transition Bas Carbone (ABC), et accessible à l'ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
     "question": "Une question ? Lisez la <link>FAQ</link> ou <support>contactez-nous</support> !",
     "form": {
@@ -162,6 +163,24 @@
     "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
     "validation": {
       "email": "Veuillez entrer un email"
+    }
+  },
+  "signupCut": {
+    "description": "Créez un compte sur CUT en entrant votre email ainsi qu'un Siret/CNC",
+    "email": "Email",
+    "emailPlaceholder": "Votre adresse email",
+    "emailRequired": "Veuillez entrer un email",
+    "siretOrCNC": "Siret ou CNC",
+    "siretOrCNCPlaceholder": "Votre Siret/CNC",
+    "siretOrCNCRequired": "Veuillez entrer un Siret/CNC",
+    "validate": "Valider",
+    "Unknown CNC": "Ce code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
+    "Not authorized": "Cet email est déjà inscrit avec un compte CUT ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "validation": {
+      "email": "Veuillez entrer un email",
+      "siretOrCNC": "Veuillez entrer un Siret/CNC"
     }
   },
   "navigation": {
