@@ -75,7 +75,12 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
         {error && <p>{t(`error.${error}`)}</p>}
       </Form>
       {glossary && (
-        <GlossaryModal glossary={glossary} onClose={() => setGlossary && setGlossary('')} label="emission-source" t={tGlossary}>
+        <GlossaryModal
+          glossary={glossary}
+          onClose={() => setGlossary && setGlossary('')}
+          label="emission-source"
+          t={tGlossary}
+        >
           <p className="mb-2">
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (
