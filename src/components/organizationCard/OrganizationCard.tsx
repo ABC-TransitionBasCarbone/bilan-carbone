@@ -93,30 +93,30 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
       : 'myClient'
 
   return (
-    <AppBar position='sticky'>
+    <AppBar position="sticky">
       <OrganizationToolbar>
-      <Box display="flex" alignItems="center" gap={2}>
-        <HomeIcon />
-        <Typography>{organizationVersion.organization.name}</Typography>
-        {hasAccess && (
-          <Button color="secondary" href={organizationVersionLink} variant="outlined">
-            {t(linkLabel)}
+        <Box display="flex" alignItems="center" gap={2}>
+          <HomeIcon />
+          <Typography>{organizationVersion.organization.name}</Typography>
+          {hasAccess && (
+            <Button color="secondary" href={organizationVersionLink} variant="outlined">
+              {t(linkLabel)}
+            </Button>
+          )}
+        </Box>
+        {!isCut && (
+          <Button
+            color="secondary"
+            target="_blank"
+            rel="noreferrer noopener"
+            href="https://www.bilancarbone-methode.com/"
+            variant="outlined"
+            startIcon={<MenuBookIcon />}
+          >
+            {t('method')}
           </Button>
         )}
-      </Box>
-      {!isCut && (
-        <Button
-          color="secondary"
-          target="_blank"
-          rel="noreferrer noopener"
-          href="https://www.bilancarbone-methode.com/"
-          variant="outlined"
-          startIcon={<MenuBookIcon />}
-        >
-          {t('method')}
-        </Button>
-      )}
-    </OrganizationToolbar>
+      </OrganizationToolbar>
     </AppBar>
   )
 }

@@ -24,7 +24,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook'
 import SettingsIcon from '@mui/icons-material/Settings'
 
 interface Props {
-  children?: ReactNode,
+  children?: ReactNode
   user: UserSession
 }
 

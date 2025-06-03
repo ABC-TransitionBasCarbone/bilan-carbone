@@ -1,5 +1,5 @@
 'use client'
-import { BASE, CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Box, BoxProps, Link, Breadcrumbs as MUIBreadcrumbs, styled, Typography } from '@mui/material'
 import { useMemo } from 'react'

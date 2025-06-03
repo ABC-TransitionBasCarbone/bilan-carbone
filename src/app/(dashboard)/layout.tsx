@@ -38,11 +38,11 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
     <div className="flex-col h100">
       <Navbar user={account} />
       {account.organizationVersionId && (
-          <OrganizationCard
-            account={account}
-            organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
-          />
-        )}
+        <OrganizationCard
+          account={account}
+          organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
+        />
+      )}
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
         {children}
       </main>
