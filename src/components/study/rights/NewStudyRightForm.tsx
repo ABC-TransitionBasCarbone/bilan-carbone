@@ -108,7 +108,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
           (accountRole === StudyRole.Validator || role !== StudyRole.Validator) &&
           (!readerOnly || role === StudyRole.Reader),
       ),
-    [readerOnly],
+    [accountRole, readerOnly],
   )
 
   return (

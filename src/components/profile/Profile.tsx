@@ -1,3 +1,4 @@
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateUserProfile } from '@/services/serverFunctions/user'
 import { EditProfileCommand, EditProfileCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -27,7 +28,7 @@ const Profile = ({ version }: Props) => {
   const t = useTranslations('profile')
   const [editing, setEditing] = useState(false)
   const [nameClick, setNameClick] = useState(0)
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<EditProfileCommand>({
     resolver: zodResolver(EditProfileCommandValidation),
@@ -41,7 +42,7 @@ const Profile = ({ version }: Props) => {
 
   useEffect(() => {
     form.reset({ firstName: session?.user.firstName, lastName: session?.user.lastName })
-  }, [session])
+  }, [form, session])
 
   if (!session) {
     return null
@@ -49,13 +50,12 @@ const Profile = ({ version }: Props) => {
 
   const onSubmit = async () => {
     form.clearErrors()
-    const result = await updateUserProfile(form.getValues())
-    if (!result.success) {
-      setError(result.errorMessage)
-    } else {
-      setEditing(false)
-      await updateSession()
-    }
+    await callServerFunction(() => updateUserProfile(form.getValues()), {
+      onSuccess: async () => {
+        setEditing(false)
+        await updateSession()
+      },
+    })
   }
 
   const onCancel = () => {
@@ -104,7 +104,6 @@ const Profile = ({ version }: Props) => {
                   <DoneIcon />
                 </LoadingButton>
               </div>
-              {error && <p>{t(error)}</p>}
             </Form>
           ) : (
             <div className="align-center">

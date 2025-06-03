@@ -2,6 +2,7 @@
 
 import Form from '@/components/base/Form'
 import { FormTextField } from '@/components/form/TextField'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { addMember } from '@/services/serverFunctions/user'
 import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverFunctions/user.command'
 import { getEnvironmentRoles } from '@/utils/user'
@@ -9,14 +10,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { Environment, Role } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import LoadingButton from '../base/LoadingButton'
 import { FormSelect } from '../form/Select'
-
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 
 interface Props {
   environment: Environment
@@ -25,8 +22,7 @@ const NewMemberForm = ({ environment }: Props) => {
   const router = useRouter()
   const t = useTranslations('newMember')
   const tRole = useTranslations('role')
-
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<AddMemberCommand>({
     resolver: zodResolver(AddMemberCommandValidation),
@@ -40,13 +36,11 @@ const NewMemberForm = ({ environment }: Props) => {
   })
 
   const onSubmit = async (command: AddMemberCommand) => {
-    const result = await addMember(command)
-    if (!result.success) {
-      setError(result.errorMessage)
-    } else {
-      router.push('/equipe')
-      router.refresh()
-    }
+    await callServerFunction(() => addMember(command), {
+      onSuccess: () => {
+        router.push('/equipe')
+      },
+    })
   }
 
   return (
@@ -87,13 +81,6 @@ const NewMemberForm = ({ environment }: Props) => {
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-member-create-button">
         {t('create')}
       </LoadingButton>
-      {error && (
-        <p className="error">
-          {t.rich(error, {
-            link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-          })}
-        </p>
-      )}
     </Form>
   )
 }

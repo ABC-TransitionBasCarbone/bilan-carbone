@@ -2,9 +2,9 @@
 
 import Block from '@/components/base/Block'
 import HelpIcon from '@/components/base/HelpIcon'
-import Toast, { ToastColors } from '@/components/base/Toast'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { Post, subPostsByPost } from '@/services/posts'
 import { deleteStudyContributor } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Cancel'
@@ -27,21 +27,18 @@ export interface StudyContributorRow {
   accountId: string
 }
 
-const emptyToast = { text: '', color: 'error' } as const
-const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
-
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
-
 const allPosts = Object.values(Post)
+
 const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const t = useTranslations('study.rights.contributorsTable')
   const tDeleting = useTranslations('study.rights.contributorsTable.deleting')
   const tRole = useTranslations('study.rights.contributorsTable.role')
   const tPost = useTranslations('emissionFactors.post')
   const [displayRoles, setDisplayRoles] = useState(false)
-  const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const [contributorToDelete, setToDelete] = useState<StudyContributorRow | undefined>(undefined)
   const [deleting, setDeleting] = useState(false)
+  const { callServerFunction } = useServerFunction()
 
   const router = useRouter()
 
@@ -116,7 +113,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
           },
         ])
       : columns
-  }, [canAddContributor])
+  }, [canAddContributor, t, tPost])
 
   const table = useReactTable({
     columns,
@@ -127,14 +124,15 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
 
   const deleteContributor = async (contributor: StudyContributorRow) => {
     setDeleting(true)
-    const result = await deleteStudyContributor(contributor, study.id)
+
+    await callServerFunction(() => deleteStudyContributor(contributor, study.id), {
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
+
     setDeleting(false)
     setToDelete(undefined)
-    if (!result.success) {
-      setToast({ text: result.errorMessage, color: 'error' })
-    } else {
-      router.refresh()
-    }
   }
 
   return (
@@ -222,16 +220,6 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         >
           {tDeleting('confirmation', { email: contributorToDelete.email })}
         </Modal>
-      )}
-      {toast.text && (
-        <Toast
-          position={toastPosition}
-          onClose={() => setToast(emptyToast)}
-          message={tDeleting(toast.text)}
-          color={toast.color}
-          toastKey="delete-contributor-toast"
-          open
-        />
       )}
     </>
   )

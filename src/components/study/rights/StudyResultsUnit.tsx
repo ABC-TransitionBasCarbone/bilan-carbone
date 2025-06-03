@@ -2,6 +2,7 @@
 
 import { FormSelect } from '@/components/form/Select'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyResultsUnit } from '@/services/serverFunctions/study'
 import {
   ChangeStudyResultsUnitCommand,
@@ -11,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyParams.module.css'
 
@@ -23,7 +24,7 @@ interface Props {
 const StudyResultsUnit = ({ study, disabled }: Props) => {
   const t = useTranslations('study.new')
   const tUnits = useTranslations('study.results.units')
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<ChangeStudyResultsUnitCommand>({
     resolver: zodResolver(ChangeStudyResultsUnitCommandValidation),
@@ -37,18 +38,15 @@ const StudyResultsUnit = ({ study, disabled }: Props) => {
 
   const resultsUnit = form.watch('resultsUnit')
 
-  const onSubmit = async (command: ChangeStudyResultsUnitCommand) => {
-    const result = await changeStudyResultsUnit(command)
-    if (!result.success) {
-      setError(result.errorMessage)
-    }
-  }
-
   useEffect(() => {
+    const onSubmit = async (command: ChangeStudyResultsUnitCommand) => {
+      await callServerFunction(() => changeStudyResultsUnit(command))
+    }
+
     if (resultsUnit !== study.resultsUnit) {
       onSubmit(form.getValues())
     }
-  }, [resultsUnit, form, study])
+  }, [resultsUnit, form, study, callServerFunction])
 
   return (
     <div className="grow">
@@ -67,7 +65,6 @@ const StudyResultsUnit = ({ study, disabled }: Props) => {
           </MenuItem>
         ))}
       </FormSelect>
-      {error && <p>{error}</p>}
     </div>
   )
 }

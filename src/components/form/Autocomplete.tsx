@@ -1,13 +1,5 @@
 import ClearIcon from '@mui/icons-material/Clear'
-import {
-  Autocomplete,
-  AutocompleteProps,
-  FormControl,
-  FormHelperText,
-  IconButton,
-  InputAdornment,
-  TextField,
-} from '@mui/material'
+import { Autocomplete, AutocompleteProps, FormControl, IconButton, InputAdornment, TextField } from '@mui/material'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import IconLabel from '../base/IconLabel'
 import styles from './Form.module.css'
@@ -92,9 +84,6 @@ export const FormAutocomplete = <T extends FieldValues>({
               />
             )}
           />
-          <FormHelperText className={styles.helper}>
-            {error?.message ? translation('validation.' + error.message) : ' '}
-          </FormHelperText>
         </FormControl>
       )}
     />
