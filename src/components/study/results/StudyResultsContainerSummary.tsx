@@ -31,7 +31,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
-  const [glossaryOpen, setGlossaryOpen] = useState(false)
+  const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
 
   const allComputedResults = useMemo(
@@ -103,7 +103,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               </h3>
               <span className="align-center text-center">
                 {t('results.withDependencies')}
-                <HelpIcon className="ml-4" onClick={() => setGlossaryOpen(!glossaryOpen)} label={t('information')} />
+                <HelpIcon className="ml-4" onClick={() => setGlossary('withDependencies')} label={t('information')} />
               </span>
             </Box>
           </label>
@@ -125,22 +125,34 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
           </label>
           <Box className={classNames(styles.card, 'flex-col flex-cc')}>
             <h3 className="text-center">{monetaryRatio} %</h3>
-            <span className="text-center">{t('results.monetaryRatio')}</span>
+            <span className="text-center align-center">
+              {t('results.monetaryRatio')}
+              <HelpIcon className="ml-4" onClick={() => setGlossary('monetaryRatio')} label={t('information')} />
+            </span>
           </Box>
         </fieldset>
         <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
       </div>
       <GlossaryModal
-        glossary={glossaryOpen ? 'results.withDependencies' : ''}
-        onClose={() => setGlossaryOpen(false)}
-        label="withDependencies"
+        glossary={glossary ? `results.${glossary}` : ''}
+        onClose={() => setGlossary('')}
+        label="withDependestudy-results-glossary"
         t={t}
       >
         <span>
-          {t.rich('withDependencies', {
+          {t.rich(`${glossary}Description`, {
             link: (children) => (
               <Link
                 href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {children}
+              </Link>
+            ),
+            monetaryLink: (children) => (
+              <Link
+                href="https://www.bilancarbone-methode.com/4-comptabilisation/4.3-methode-de-selection-des-facteurs-demission#fe-en-ratios-monetaires"
                 target="_blank"
                 rel="noreferrer noopener"
               >
