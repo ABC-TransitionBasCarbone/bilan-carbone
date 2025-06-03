@@ -12,27 +12,15 @@ const mockCanEditMemberRole = organizationModule.canEditMemberRole as jest.Mock
 
 describe('userUtils functions', () => {
   describe('isAdmin', () => {
-    test('should return true for ADMIN role', () => {
+    test('should return true for ADMIN roles', () => {
       expect(isAdmin(Role.ADMIN)).toBe(true)
-    })
-
-    test('should return true for SUPER_ADMIN role', () => {
       expect(isAdmin(Role.SUPER_ADMIN)).toBe(true)
     })
 
-    test('should return false for GESTIONNAIRE role', () => {
+    test('should return false for non-ADMIN role', () => {
       expect(isAdmin(Role.GESTIONNAIRE)).toBe(false)
-    })
-
-    test('should return false for COLLABORATOR role', () => {
       expect(isAdmin(Role.COLLABORATOR)).toBe(false)
-    })
-
-    test('should return false for DEFAULT role', () => {
       expect(isAdmin(Role.DEFAULT)).toBe(false)
-    })
-
-    test('should return false for any other role', () => {
       expect(isAdmin('OTHER_ROLE' as Role)).toBe(false)
     })
   })
