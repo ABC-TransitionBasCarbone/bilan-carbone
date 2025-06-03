@@ -110,11 +110,14 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
             name="unit"
             fullWidth
           >
-            {units.map((unit) => (
-              <MenuItem key={unit} value={unit}>
-                {tUnit(unit)}
-              </MenuItem>
-            ))}
+            <MenuItem value={Unit.CUSTOM}>{tUnit(Unit.CUSTOM)}</MenuItem>
+            {units
+              .filter((unit) => unit !== Unit.CUSTOM)
+              .map((unit) => (
+                <MenuItem key={unit} value={unit}>
+                  {tUnit(unit)}
+                </MenuItem>
+              ))}
           </FormSelect>
         </div>
         {unit === Unit.CUSTOM && (
