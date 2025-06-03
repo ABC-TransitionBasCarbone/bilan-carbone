@@ -57,7 +57,7 @@ const EmissionSourceContributorForm = ({
           isFromOldImport={isFromOldImport}
           currentBEVersion={currentBEVersion}
         />
-        <div className={classNames(styles.gapped, 'flex')}>
+        <div className={classNames(styles.gapped, 'grow flex')}>
           <div className={classNames(styles.inputWithUnit, 'flex grow')}>
             <TextField
               className="grow"

@@ -391,7 +391,7 @@ export const addUserChecklistItem = async (step: UserChecklist) =>
     if (!session || !session.user) {
       return
     }
-    const isCR = isOrganizationVersionCR(session.user.organizationVersionId)
+    const isCR = await isOrganizationVersionCR(session.user.organizationVersionId)
     const checklist = getUserCheckList(session.user.role, !!isCR)
     if (!Object.values(checklist).includes(step)) {
       return

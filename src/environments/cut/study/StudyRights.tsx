@@ -131,6 +131,7 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
           label={t('numberOfSessions')}
           translation={t}
           type="number"
+          className={styles.formTextField}
         />
         <FormTextField
           control={form.control}
@@ -139,6 +140,7 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
           label={t('numberOfTickets')}
           translation={t}
           type="number"
+          className={styles.formTextField}
         />
         <FormTextField
           control={form.control}
@@ -147,6 +149,7 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
           label={t('numberOfOpenDays')}
           translation={t}
           type="number"
+          className={styles.formTextField}
         />
       </Block>
       <Block title={t('openingHours')}>
