@@ -106,5 +106,5 @@ model Cnc {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   Site      Site[]
 
-  @@map("Cncs")
+  @@map("cncs")
 }

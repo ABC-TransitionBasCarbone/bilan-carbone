@@ -19,6 +19,9 @@ Créer les règles de gestion du BEGES :
 Importer les actualités depuis un CSV :
 `npx tsx src/scripts/actuality/add.ts -f ${pathToCSVFileActuality}`
 
+Importer les Donnée cartographie depuis un [CSV du CNC](https://www.cnc.fr/cinema/etudes-et-rapports/statistiques/geolocalisation-des-cinemas-actifs-en-france) :
+`npx tsx src/scripts/cnc/add.ts -f ${pathToCSVFileCNC}`
+
 ## Prisma
 
 Update :
