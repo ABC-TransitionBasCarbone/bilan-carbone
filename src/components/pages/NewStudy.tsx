@@ -29,9 +29,6 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
   const [organizationVersion, setOrganizationVersion] = useState<OrganizationWithSites>()
   const tNav = useTranslations('nav')
 
-  const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === CUT, [environment])
-
   const form = useForm<CreateStudyCommand>({
     resolver: zodResolver(CreateStudyCommandValidation),
     mode: 'onBlur',
@@ -51,9 +48,8 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
           postalCode: site.postalCode ?? '',
           city: site.city ?? '',
         })) || [],
-      level: isCut ? Level.Initial : undefined,
       exports: {
-        [Export.Beges]: isCut && ControlMode.Operational,
+        [Export.Beges]: false,
         [Export.GHGP]: false,
         [Export.ISO14069]: false,
       },
@@ -68,9 +64,9 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
           { label: tNav('home'), link: '/' },
           defaultOrganizationVersion && defaultOrganizationVersion.isCR
             ? {
-                label: defaultOrganizationVersion.organization.name,
-                link: `/organisations/${defaultOrganizationVersion.id}`,
-              }
+              label: defaultOrganizationVersion.organization.name,
+              link: `/organisations/${defaultOrganizationVersion.id}`,
+            }
             : undefined,
         ].filter((link) => link !== undefined)}
       />
