@@ -42,7 +42,6 @@ const NewEmissionFactorForm = () => {
       await callServerFunction(() => createEmissionFactorCommand(data), {
         onSuccess: () => {
           router.push('/facteurs-d-emission')
-          router.refresh()
         },
       })
     })()

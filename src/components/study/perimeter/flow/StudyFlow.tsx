@@ -1,7 +1,9 @@
 'use client'
 
 import LoadingButton from '@/components/base/LoadingButton'
+import { useToast } from '@/components/base/ToastProvider'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { addFlowToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
@@ -28,9 +30,10 @@ interface Props {
 const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => {
   const t = useTranslations('study.flow')
   const tUpload = useTranslations('upload')
+  const { callServerFunction } = useServerFunction()
+  const { showErrorToast } = useToast()
 
   const router = useRouter()
-  const [error, setError] = useState('')
   const [uploading, setUploading] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -41,25 +44,24 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
   }, [initialDocument])
 
   const addFlow = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError('')
     const file = event.target.files?.[0]
     if (!file) {
-      setError(tUpload('noFileSelected'))
+      showErrorToast(tUpload('noFileSelected'))
       return
     }
     if (file.size > maxAllowedFileSize) {
-      setError(tUpload('fileTooBig', { size: maxAllowedFileSize / MB }))
+      showErrorToast(tUpload('fileTooBig', { size: maxAllowedFileSize / MB }))
       return
     }
 
     setUploading(true)
-    const result = await addFlowToStudy(study.id, file)
+    await callServerFunction(() => addFlowToStudy(study.id, file), {
+      translationFn: t,
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
     setUploading(false)
-    if (!result.success) {
-      setError(t(result.errorMessage))
-      return
-    }
-    router.refresh()
   }
 
   const downloadDocument = async () => {
@@ -67,26 +69,27 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
       return
     }
     setDownloading(true)
-    const url = await getDocumentUrl(selectedFlow, study.id)
-    if (url.success) {
-      downloadFromUrl(url.data, selectedFlow.name)
-    }
+    await callServerFunction(() => getDocumentUrl(selectedFlow, study.id), {
+      translationFn: t,
+      onSuccess: (url) => {
+        downloadFromUrl(url, selectedFlow.name)
+      },
+    })
     setDownloading(false)
   }
 
   const removeDocument = async () => {
-    setError('')
     if (!selectedFlow) {
       return
     }
     setDeleting(true)
-    const result = await deleteFlowFromStudy(selectedFlow, study.id)
+    await callServerFunction(() => deleteFlowFromStudy(selectedFlow, study.id), {
+      translationFn: t,
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
     setDeleting(false)
-    if (!result.success) {
-      setError(t(result.errorMessage))
-      return
-    }
-    router.refresh()
   }
 
   return (
@@ -121,7 +124,6 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
           : undefined
       }
     >
-      {error && <div className="error mb1">{error}</div>}
       {selectedFlow ? (
         <div className="flex-col">
           <div className="flex-col mb1">

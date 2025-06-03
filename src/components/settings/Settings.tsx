@@ -1,5 +1,6 @@
 'use client'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateUserSettings } from '@/services/serverFunctions/user'
 import { EditSettingsCommand, EditSettingsCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,7 +24,7 @@ const Settings = ({ userSettings }: Props) => {
   const t = useTranslations('settings')
   const tGlossary = useTranslations('settings.glossary')
   const tUnit = useTranslations('settings.caUnit')
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
   const [glossary, setGlossary] = useState('')
 
   const form = useForm<EditSettingsCommand>({
@@ -38,11 +39,11 @@ const Settings = ({ userSettings }: Props) => {
 
   const onSubmit = async () => {
     form.clearErrors()
-    const result = await updateUserSettings(form.getValues())
-    if (!result.success) {
-      setError(result.errorMessage)
-    }
-    form.reset(form.getValues())
+    await callServerFunction(() => updateUserSettings(form.getValues()), {
+      onSuccess: () => {
+        form.reset(form.getValues())
+      },
+    })
   }
 
   return (
@@ -97,7 +98,6 @@ const Settings = ({ userSettings }: Props) => {
           </LoadingButton>
         </Form>
       </div>
-      {error && <p className="error">{t(error)}</p>}
       {glossary && (
         <GlossaryModal
           glossary={glossary}

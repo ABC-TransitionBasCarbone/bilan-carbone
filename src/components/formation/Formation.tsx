@@ -1,5 +1,6 @@
 'use client'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
 import { MIN, TIME_IN_MS } from '@/utils/time'
 import { Checkbox } from '@mui/material'
@@ -27,26 +28,33 @@ const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
 const FormationView = ({ formations, user, organizationName }: Props) => {
   const t = useTranslations('formation')
   const tLevel = useTranslations('level')
+  const { callServerFunction } = useServerFunction()
   const [open, setOpen] = useState(false)
   const [formStartTime, setFormStartTime] = useState<number | undefined>(undefined)
   const [checkedUnique, setCheckedUnique] = useState(false)
 
   useEffect(() => {
     const getStartTime = async () => {
-      const startDate = await getFormationFormStart(user.userId)
-      if (startDate.success && startDate.data) {
-        setCheckedUnique(true)
-        setFormStartTime(startDate.data.getTime())
-      }
+      await callServerFunction(() => getFormationFormStart(user.userId), {
+        onSuccess: (startDate) => {
+          if (startDate) {
+            setCheckedUnique(true)
+            setFormStartTime(startDate.getTime())
+          }
+        },
+      })
     }
     getStartTime()
-  }, [user])
+  }, [user, callServerFunction])
 
   const openFormationForm = () => {
     const now = new Date()
     if (!formStartTime) {
-      startFormationForm(user.userId, now)
-      setFormStartTime(now.getTime())
+      callServerFunction(() => startFormationForm(user.userId, now), {
+        onSuccess: () => {
+          setFormStartTime(now.getTime())
+        },
+      })
     }
     setOpen(true)
   }
