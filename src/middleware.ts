@@ -2,7 +2,7 @@ import { getToken } from 'next-auth/jwt'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-const publicRoutes = ['/login', '/reset-password', '/activation']
+const publicRoutes = ['/login', '/reset-password', '/activation', '/count']
 
 const bucketName = process.env.SCW_BUCKET_NAME as string
 const region = process.env.SCW_REGION
