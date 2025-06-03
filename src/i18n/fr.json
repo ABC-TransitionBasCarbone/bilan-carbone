@@ -247,7 +247,9 @@
       "results": "Résultats",
       "transitionPlan": "Plan de transition",
       "menu": "Ouvrir le menu de navigation de l'étude",
-      "coming": "à venir"
+      "coming": "à venir",
+      "organizations": "Mon organisation",
+      "team": "Mon équipe"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -267,9 +269,9 @@
       "private": "Privée",
       "public": "Publique",
       "resultsUnit": "Unité des resultats de l'étude",
-      "numberOfSessions": "Nombre de séances",
-      "numberOfTickets": "Nombre d'entrées",
-      "numberOfOpenDays": "Nombre de jours d'ouverture",
+      "numberOfSessions": "Nombre de séances (par ans)",
+      "numberOfTickets": "Nombre d'entrées (par ans)",
+      "numberOfOpenDays": "Nombre de jours d'ouverture (par ans)",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
       "clear": "Supprimer la valeur",

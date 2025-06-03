@@ -1,5 +1,6 @@
 'use client'
 
+import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import MenuIcon from '@mui/icons-material/Menu'
 import { Divider, Drawer, IconButton } from '@mui/material'
 import classNames from 'classnames'
@@ -15,6 +16,9 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
 
   const t = useTranslations('study.navigation')
   const [open, setOpen] = useState<boolean>(true)
+
+  const { environment } = useAppEnvironmentStore()
+  const isCut = environment === CUT
 
   return (
     <>
@@ -42,26 +46,42 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
           {t('homepage')}
         </Link>
         <Divider />
-        <Link
-          className={classNames(styles.link, { [styles.active]: pathName.includes('cadrage') })}
-          href={`/etudes/${studyId}/cadrage`}
-          data-testid="study-cadrage-link"
-        >
-          {t('framing')}
-        </Link>
-        <Divider />
-        <Link
-          className={classNames(styles.link, { [styles.active]: pathName.includes('perimetre') })}
-          href={`/etudes/${studyId}/perimetre`}
-          data-testid="study-perimetre-link"
-        >
-          {t('scope')}
-        </Link>
-        <Divider />
-        <button className={classNames(styles.link, styles.disabled)} onClick={() => setOpen(false)}>
-          {t('mobilisation')} (<em>{t('coming')}</em>)
-        </button>
-        <Divider />
+        {isCut ? (
+          <>
+            <Link href="/organisations" className={styles.link}>
+              {t('organizations')}
+            </Link>
+            <Divider />
+            <Link href="/equipe" className={styles.link}>
+              {t('team')}
+            </Link>
+            <Divider />
+          </>
+        ) : (
+          <>
+            <Link
+              className={classNames(styles.link, { [styles.active]: pathName.includes('cadrage') })}
+              href={`/etudes/${studyId}/cadrage`}
+              data-testid="study-cadrage-link"
+            >
+              {t('framing')}
+            </Link>
+            <Divider />
+            <Link
+              className={classNames(styles.link, { [styles.active]: pathName.includes('perimetre') })}
+              href={`/etudes/${studyId}/perimetre`}
+              data-testid="study-perimetre-link"
+            >
+              {t('scope')}
+            </Link>
+            <Divider />
+            <button className={classNames(styles.link, styles.disabled)} onClick={() => setOpen(false)}>
+              {t('mobilisation')} (<em>{t('coming')}</em>)
+            </button>
+            <Divider />
+          </>
+        )}
+
         <div>
           <div
             className={classNames(
@@ -74,6 +94,22 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
           </div>
 
           <Divider />
+          {isCut && (
+            <>
+              <Link
+                className={classNames(
+                  styles.link,
+                  { [styles.active]: pathName.includes('cadrage') },
+                  styles.childrenLink,
+                )}
+                href={`/etudes/${studyId}/cadrage`}
+                data-testid="study-cadrage-link"
+              >
+                {t('framing')}
+              </Link>
+              <Divider />
+            </>
+          )}
           <Link
             className={classNames(styles.link, { [styles.active]: pathName.includes('saisie') }, styles.childrenLink)}
             href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees`}
@@ -93,9 +129,11 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
           </Link>
         </div>
         <Divider />
-        <button className={classNames(styles.button, styles.disabled)}>
-          {t('transitionPlan')} (<em>{t('coming')}</em>)
-        </button>
+        {!isCut && (
+          <button className={classNames(styles.button, styles.disabled)}>
+            {t('transitionPlan')} (<em>{t('coming')}</em>)
+          </button>
+        )}
       </Drawer>
     </>
   )

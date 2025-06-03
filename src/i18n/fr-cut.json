@@ -2,7 +2,8 @@
   "navigation": {
     "organization": "Mes cinémas",
     "organizations": "Mes Bilans",
-    "information": "Données générales"
+    "information": "Données générales",
+    "team": "Mes collaborateurs"
   },
   "home": {
     "message": {
@@ -22,7 +23,10 @@
     "validatedOnlyDescription": "Pour chaque Bilan, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
     "selectSite": "Avant de remplir les données, choisissez un cinéma",
     "navigation": {
-      "framing": "Données générales"
+      "framing": "Données générales",
+      "organizations": "Mes cinémas",
+      "team": "Mes collaborateurs",
+      "accounting": "Mes Bilans"
     },
     "perimeter": {
       "editSites": "Modifier la liste de cinémas",
@@ -32,6 +36,9 @@
     },
     "export": {
       "export": "Exporter mes cinémas"
+    },
+    "rights": {
+      "title": "Données générales de l'étude : {name}"
     },
     "organization": {
       "site": "Cinéma",
