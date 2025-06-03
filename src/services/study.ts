@@ -103,6 +103,7 @@ const getEmissionSourcesRows = (
       'sourceName',
       'sourceCharacterization',
       'sourceValue',
+      'sourceDeprecation',
       'sourceUnit',
       'sourceQuality',
       'activityDataValue',
@@ -144,6 +145,7 @@ const getEmissionSourcesRows = (
           ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) /
             STUDY_UNIT_VALUES[resultsUnit] /
             (withDeprecation ? emissionSource.depreciationPeriod || 1 : 1) || '0',
+          withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',

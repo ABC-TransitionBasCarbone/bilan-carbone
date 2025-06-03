@@ -515,6 +515,7 @@
       "quality": "Quality",
       "site": "Site",
       "sourceCharacterization": "Emission source characterization",
+      "sourceDeprecation": "Depreciation duration (years)",
       "sourceName": "Emission source name",
       "sourceQuality": "Emission source quality",
       "sourceUnit": "Emission source unit",

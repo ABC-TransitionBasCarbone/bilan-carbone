@@ -515,6 +515,7 @@
       "quality": "Qualité",
       "site": "Site",
       "sourceCharacterization": "Caractérisation de la source d'émission",
+      "sourceDeprecation": "Durée d'amortissement (années)",
       "sourceName": "Nom de la source d'émission",
       "sourceQuality": "Qualité de la source d'émission",
       "sourceUnit": "Unité de la source d'émission",
