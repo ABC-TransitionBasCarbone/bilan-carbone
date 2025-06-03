@@ -50,3 +50,5 @@ export const ManualEmissionFactorUnitList: Unit[] = [
   Unit.YEAR,
   Unit.CUSTOM,
 ]
+
+export const monetaryUnits: Unit[] = [Unit.DOLLAR, Unit.EURO, Unit.CNY, Unit.JPY]

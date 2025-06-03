@@ -1,5 +1,6 @@
 import { LocaleType } from '@/i18n/config'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { monetaryUnits } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
@@ -16,6 +17,7 @@ const selectEmissionFactor = {
   source: true,
   unit: true,
   customUnit: true,
+  isMonetary: true,
   importedFrom: true,
   importedId: true,
   organizationId: true,
@@ -170,8 +172,10 @@ export const createEmissionFactorWithParts = (
   parts: EmissionFactorCommand['parts'],
   local: LocaleType,
 ) => {
+  const isMonetary =
+    (emissionFactor.customUnit && emissionFactor.isMonetary) || monetaryUnits.includes(emissionFactor.unit as Unit)
   return prismaClient.$transaction(async (transaction) => {
-    const createdEmissionFactor = await transaction.emissionFactor.create({ data: emissionFactor })
+    const createdEmissionFactor = await transaction.emissionFactor.create({ data: { ...emissionFactor, isMonetary } })
     await Promise.all(
       parts.map(({ name, ...part }) =>
         transaction.emissionFactorPart.create({
@@ -193,12 +197,14 @@ export const updateEmissionFactor = async (
 ) => {
   const accountOrganizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
 
+  const isMonetary = (command.customUnit && command.isMonetary) || monetaryUnits.includes(unit)
   const emissionFactor = {
     ...command,
     importedFrom: Import.Manual,
     status: EmissionFactorStatus.Valid,
     organization: { connect: { id: accountOrganizationVersion?.organizationId } },
     unit: unit as Unit,
+    isMonetary,
     subPosts: flattenSubposts(subPosts),
   }
   await prismaClient.$transaction(async (transaction) => {

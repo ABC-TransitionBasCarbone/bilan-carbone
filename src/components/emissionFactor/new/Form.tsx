@@ -29,6 +29,7 @@ const NewEmissionFactorForm = () => {
       totalCo2: 0,
       parts: Array.from({ length: maxParts }, () => ({ name: '', totalCo2: 0 })),
       comment: '',
+      isMonetary: false,
     },
   })
 

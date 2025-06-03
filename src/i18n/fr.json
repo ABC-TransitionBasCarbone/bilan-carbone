@@ -690,6 +690,7 @@
       "unit": "Unité",
       "customUnit": "Unité personalisée",
       "customUnitPlaceholder": "Votre unité personalisée",
+      "monetaryUnit": "Unité monétaire",
       "source": "Source",
       "detailedGES": "Décomposition des GES",
       "multiple": "Facteur d'émission désagrégé",

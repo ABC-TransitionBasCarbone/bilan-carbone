@@ -690,6 +690,7 @@
       "unit": "Unit",
       "customUnit": "Custom unit",
       "customUnitPlaceholder": "Your custom unit",
+      "monetaryUnit": "Monetary unit",
       "source": "Source",
       "detailedGES": "Breakdown of GHG",
       "subPartsCount": "Number of parts",

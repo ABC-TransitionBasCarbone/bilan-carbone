@@ -9,7 +9,7 @@ import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
-import { MenuItem } from '@mui/material'
+import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
 import { Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -57,13 +57,14 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
   const control = form.control as Control<EmissionFactorCommand>
   const setValue = form.setValue as UseFormSetValue<EmissionFactorCommand>
 
-  const update = (column: (typeof qualityKeys)[number], value: string | number | boolean) => {
-    if (typeof value === 'number') {
+  const update = (column: (typeof qualityKeys)[number] | 'isMonetary', value: string | number | boolean) => {
+    if (typeof value === 'number' || (column === 'isMonetary' && typeof value === 'boolean')) {
       setValue(column, value)
     }
   }
 
   const unit = useWatch({ control, name: 'unit' })
+  const isMonetary = useWatch({ control, name: 'isMonetary' })
 
   const [
     reliability,
@@ -117,17 +118,35 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
           </FormSelect>
         </div>
         {unit === Unit.CUSTOM && (
-          <div className="grow">
-            <FormTextField
-              data-testid="emission-factor-custom-unit"
-              control={control}
-              translation={t}
-              name="customUnit"
-              label={t('customUnit')}
-              placeholder={t('customUnitPlaceholder')}
-              fullWidth
-            />
-          </div>
+          <>
+            <div className="grow">
+              <FormTextField
+                data-testid="emission-factor-custom-unit"
+                control={control}
+                translation={t}
+                name="customUnit"
+                label={t('customUnit')}
+                placeholder={t('customUnitPlaceholder')}
+                fullWidth
+              />
+            </div>
+            <div>
+              <FormLabel id="monetaryUnit-radio-group-label" component="legend" className="inputLabel align-center">
+                <span className="bold">{t('monetaryUnit')}</span>
+              </FormLabel>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isMonetary}
+                    name="isMonetary"
+                    onChange={(event) => update('isMonetary', event.target.checked)}
+                    data-testid="emission-factor-is-monetary-unit"
+                  />
+                }
+                label={t(isMonetary ? 'yes' : 'no')}
+              />
+            </div>
+          </>
         )}
       </div>
 

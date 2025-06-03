@@ -37,6 +37,7 @@ export const EmissionFactorCommandValidation = z.intersection(
       name: z.string({ required_error: 'name' }).trim().min(1, 'name'),
       unit: z.nativeEnum(Unit, { required_error: 'unit' }),
       customUnit: z.string().nullable().optional(),
+      isMonetary: z.boolean(),
       source: z.string({ required_error: 'source' }).trim().min(1, 'source'),
       totalCo2: z.number({ invalid_type_error: 'totalCo2', required_error: 'totalCo2' }).min(0, 'totalCo2'),
       reliability: z.number({ required_error: 'required' }),
