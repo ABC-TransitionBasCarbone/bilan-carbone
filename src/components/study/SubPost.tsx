@@ -1,3 +1,5 @@
+'use client'
+
 import { FullStudy } from '@/db/study'
 import { caracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
@@ -69,6 +71,7 @@ const SubPost = ({
     <div>
       <Accordion>
         <AccordionSummary
+          className={styles.subPostContainer}
           expandIcon={<ExpandMoreIcon />}
           aria-controls={`panel-${subPost}-content`}
           data-testid="subpost"
@@ -87,14 +90,14 @@ const SubPost = ({
             <span className={classNames(styles.value, 'ml1')}>
               {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
             </span>
+            {contributors && contributors.length > 0 && (
+              <span className={styles.contributors}>
+                {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
+              </span>
+            )}
           </p>
         </AccordionSummary>
-        <AccordionDetails id={`panel-${subPost}-content`}>
-          {contributors && contributors.length > 0 && (
-            <p className={styles.contributors}>
-              {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
-            </p>
-          )}
+        <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
           {emissionSources.map((emissionSource) =>
             // Dirty hack to force type on EmissionSource
             withoutDetail ? (

@@ -1,6 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { getEmissionResults } from '@/services/emissionSource'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
@@ -13,7 +14,7 @@ import {
   specificFEQualityKeys,
 } from '@/services/uncertainty'
 import { emissionFactorDefautQualityStar, getEmissionFactorValue } from '@/utils/emissionFactors'
-import { formatEmissionFactorNumber } from '@/utils/number'
+import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
@@ -66,6 +67,7 @@ interface Props {
   studySites: FullStudy['sites']
   isFromOldImport: boolean
   currentBEVersion: string
+  studyUnit: StudyResultUnit
 }
 
 const EmissionSourceForm = ({
@@ -85,6 +87,7 @@ const EmissionSourceForm = ({
   studySites,
   isFromOldImport,
   currentBEVersion,
+  studyUnit,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -103,6 +106,8 @@ const EmissionSourceForm = ({
 
   const qualities = qualityKeys.map((column) => emissionSource[column])
   const specificFEQualities = specificFEQualityKeys.map((column) => emissionSource[column])
+
+  const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
 
   const qualityRating = useMemo(
     () => (selectedFactor ? getQualityRating(getSpecificEmissionFactorQuality(emissionSource)) : null),
@@ -367,7 +372,7 @@ const EmissionSourceForm = ({
 
       <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('optionalFields')}</p>
       <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
-        <div className={classNames(styles.gapped, styles.optionnalFields, 'flex')}>
+        <div className={classNames(styles.gapped, styles.optionnalFields, 'grow flex')}>
           <TextField
             className="grow"
             disabled={!canEdit}
@@ -398,18 +403,42 @@ const EmissionSourceForm = ({
           clearable
         />
       </div>
-      <div className={classNames(styles.gapped, 'justify-end mt1 w100')}>
-        {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
-        {canValidate && (
-          <Button
-            color={emissionSource.validated ? 'secondary' : 'primary'}
-            onClick={() => update('validated', !emissionSource.validated)}
-            data-testid="emission-source-validate"
-            disabled={status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor}
+      <div className="flex-row justify-between">
+        {emissionResults && (
+          <div
+            className={classNames(styles.row, 'flex mr-2 grow justify-start align-end')}
+            data-testid="emission-source-result"
           >
-            {t(emissionSource.validated ? 'unvalidate' : 'validate')}
-          </Button>
+            {emissionResults.confidenceInterval && (
+              <div className="flex-col">
+                <p>{t('results.confiance')}</p>
+                <p>
+                  [{formatNumber(emissionResults.confidenceInterval[0])};{' '}
+                  {formatNumber(emissionResults.confidenceInterval[1])}] ({t('in')} {tResultUnits(studyUnit)})
+                </p>
+              </div>
+            )}
+            {emissionResults.alpha !== null && (
+              <div className={styles.alpha}>
+                <p>{t('results.alpha')}</p>
+                <p>{formatNumber(emissionResults.alpha * 100, 2)}%</p>
+              </div>
+            )}
+          </div>
         )}
+        <div className={classNames(styles.gapped, styles.button, 'grow justify-end mt1')}>
+          {canEdit && <DeleteEmissionSource emissionSource={emissionSource} />}
+          {canValidate && (
+            <Button
+              color={emissionSource.validated ? 'secondary' : 'primary'}
+              onClick={() => update('validated', !emissionSource.validated)}
+              data-testid="emission-source-validate"
+              disabled={status === EmissionSourcesStatus.Waiting || status === EmissionSourcesStatus.WaitingContributor}
+            >
+              {t(emissionSource.validated ? 'unvalidate' : 'validate')}
+            </Button>
+          )}
+        </div>
       </div>
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
@@ -445,7 +474,7 @@ const EmissionSourceForm = ({
             ))}
           </Select>
         </div>
-        <div className={classNames(styles.gapped, 'justify-end mt1')}>
+        <div className={classNames(styles.gapped, 'grow justify-end mt1')}>
           <Button onClick={() => setOpen(false)}>{t('duplicateDialog.cancel')}</Button>
           <Button onClick={duplicateEmissionSource}>{t('duplicateDialog.confirm')}</Button>
         </div>
