@@ -116,6 +116,7 @@ export const updateUserResetTokenForEmail = async (email: string, resetToken: st
     data: { resetToken },
   })
 
+
 export const deleteUserFromOrga = async (email: string, organizationVersionId: string | null) => {
   const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
   if (!account) {
@@ -244,7 +245,7 @@ export const createUsersWithAccount = async (
 export const updateAccount = (
   accountId: string,
   data: Partial<Prisma.AccountUpdateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
-  userData: Partial<Prisma.UserUpdateInput>,
+  userData?: Partial<Prisma.UserUpdateInput>,
 ) =>
   prismaClient.account.update({
     where: { id: accountId },
@@ -266,6 +267,7 @@ export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclu
   prismaClient.user.create({
     data: newMember,
     select: {
+      id: true,
       accounts: {
         select: {
           id: true,
