@@ -93,7 +93,7 @@ const SelectOrganization = ({ organizationVersions, selectOrganizationVersion, f
         (organizationVersion.organization.sites.length > 0 ? (
           <>
             <DynamicComponent
-              environmentComponents={{ [CUT]: <SitesCut sites={sites} form={form} caUnit={caUnit} withSelection /> }}
+              environmentComponents={{ [CUT]: <SitesCut sites={sites} form={form} withSelection /> }}
               defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} withSelection />}
             />
             <div className="mt2">

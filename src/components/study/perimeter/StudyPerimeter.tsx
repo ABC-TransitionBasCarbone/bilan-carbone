@@ -274,7 +274,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
                     }))
               }
               form={isEditing ? siteForm : undefined}
-              caUnit={caUnit}
               withSelection
             />
           ),
