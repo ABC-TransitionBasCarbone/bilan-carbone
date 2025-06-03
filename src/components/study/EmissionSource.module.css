@@ -8,6 +8,11 @@
   }
 }
 
+.emissionsSourceName {
+  /* Useful because we want to align the validated text with text in input (padding added by mui) */
+  padding-left: 14px;
+}
+
 .header {
   .emissionSource {
     width: 25%;
