@@ -140,26 +140,30 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
         t={t}
       >
         <span>
-          {t.rich(`${glossary}Description`, {
-            link: (children) => (
-              <Link
-                href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {children}
-              </Link>
-            ),
-            monetaryLink: (children) => (
-              <Link
-                href="https://www.bilancarbone-methode.com/4-comptabilisation/4.3-methode-de-selection-des-facteurs-demission#fe-en-ratios-monetaires"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {children}
-              </Link>
-            ),
-          })}
+          {glossary && (
+            <>
+              {t.rich(`${glossary}Description`, {
+                link: (children) => (
+                  <Link
+                    href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {children}
+                  </Link>
+                ),
+                monetaryLink: (children) => (
+                  <Link
+                    href="https://www.bilancarbone-methode.com/4-comptabilisation/4.3-methode-de-selection-des-facteurs-demission#fe-en-ratios-monetaires"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {children}
+                  </Link>
+                ),
+              })}
+            </>
+          )}
         </span>
       </GlossaryModal>
     </>
