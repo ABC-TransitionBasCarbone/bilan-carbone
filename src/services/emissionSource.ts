@@ -104,6 +104,13 @@ const getEmissionSourceEmission = (emissionSource: (FullStudy | StudyWithoutDeta
   return emission
 }
 
+const getEmissionSourceMonetaryEmission = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
+  if (!emissionSource.emissionFactor || !emissionSource.emissionFactor.isMonetary) {
+    return null
+  }
+  return getEmissionSourceEmission(emissionSource)
+}
+
 export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
   const emission = getEmissionSourceEmission(emissionSource)
   if (emission === null) {
@@ -150,6 +157,9 @@ export const sumEmissionSourcesUncertainty = (emissionSource: (FullStudy | Study
 
 export const getEmissionSourcesTotalCo2 = (emissionSources: FullStudy['emissionSources']) =>
   emissionSources.reduce((sum, emissionSource) => sum + (getEmissionSourceEmission(emissionSource) || 0), 0)
+
+export const getEmissionSourcesTotalMonetaryCo2 = (emissionSources: FullStudy['emissionSources']) =>
+  emissionSources.reduce((sum, emissionSource) => sum + (getEmissionSourceMonetaryEmission(emissionSource) || 0), 0)
 
 export const getEmissionResultsCut = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
   const result = getEmissionResults(emissionSource)

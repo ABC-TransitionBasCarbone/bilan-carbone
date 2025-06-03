@@ -478,6 +478,7 @@
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
+      "monetaryRatio": "Monetary ratio",
       "coming": "coming",
       "units": {
         "K": "kgCO₂e",

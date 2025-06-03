@@ -478,6 +478,7 @@
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
+      "monetaryRatio": "Ratio monétaire",
       "coming": "à venir",
       "units": {
         "K": "kgCO₂e",
