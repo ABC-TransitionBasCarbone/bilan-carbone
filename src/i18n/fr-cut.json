@@ -28,6 +28,9 @@
       "team": "Mes collaborateurs",
       "accounting": "Mes Bilans"
     },
+    "new": {
+      "studyDates": "Année de référence du Bilan"
+    },
     "perimeter": {
       "editSites": "Modifier la liste de cinémas",
       "deleteDialog": {

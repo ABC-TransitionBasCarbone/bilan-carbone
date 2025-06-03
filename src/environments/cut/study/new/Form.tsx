@@ -6,7 +6,7 @@ import WeekScheduleForm from '@/components/form/WeekScheduleForm'
 import GlobalNewStudyForm from '@/components/study/new/Form'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { DayOfWeek } from '@prisma/client'
+import { ControlMode, DayOfWeek, Export, Level } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -30,6 +30,13 @@ const NewStudyForm = ({ user, accounts, form }: Props) => {
   )
 
   useEffect(() => {
+    form.setValue('level', Level.Initial)
+    form.setValue('exports', {
+      [Export.Beges]: ControlMode.Operational,
+      [Export.GHGP]: false,
+      [Export.ISO14069]: false,
+    })
+
     if (!form.getValues('openingHours')) {
       const defaultOpeningHours = Object.values(DayOfWeek).reduce(
         (acc, day) => {
@@ -58,7 +65,7 @@ const NewStudyForm = ({ user, accounts, form }: Props) => {
 
   return (
     <Block title={t('title')} as="h1">
-      <GlobalNewStudyForm user={user} accounts={accounts} form={form}>
+      <GlobalNewStudyForm form={form} t={t}>
         <WeekScheduleForm
           label={t('openingHours')}
           days={days}
