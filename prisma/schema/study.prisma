@@ -125,7 +125,6 @@ model StudyExport {
 }
 
 model UserOnStudy {
-  // @@id([studyId, accountId]) // TO UNCOMMENT
   study     Study   @relation(fields: [studyId], references: [id])
   studyId   String  @map("study_id")
   account   Account @relation(fields: [accountId], references: [id])
