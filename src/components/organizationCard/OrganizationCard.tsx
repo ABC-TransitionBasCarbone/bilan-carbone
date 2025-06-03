@@ -4,7 +4,6 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getStudyOrganizationVersion } from '@/services/serverFunctions/organization'
 import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { isAdmin } from '@/utils/user'
-import { hasAccessToEnvironment } from '@/utils/userAccounts'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { Environment, Role } from '@prisma/client'
@@ -23,7 +22,7 @@ interface Props {
 const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const t = useTranslations('organization.card')
 
-  const isCut = useMemo(() => hasAccessToEnvironment(account, Environment.CUT), [account?.environment])
+  const isCut = useMemo(() => account.environment === Environment.CUT, [account?.environment])
 
   const defaultOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,

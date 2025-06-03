@@ -9,7 +9,6 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import { hasAccessToEnvironment } from '@/utils/userAccounts'
 import { FormHelperText, MenuItem } from '@mui/material'
 import { Environment, SiteCAUnit } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -61,7 +60,7 @@ const SelectOrganization = ({ user, organizationVersions, selectOrganizationVers
       setError(t('validation.sites'))
     } else {
       if (
-        hasAccessToEnvironment(user, Environment.CUT) &&
+        user.environment === Environment.CUT &&
         sites
           .filter((site) => site.selected)
           .some(

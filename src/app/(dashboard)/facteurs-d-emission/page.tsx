@@ -2,7 +2,7 @@ import withAuth from '@/components/hoc/withAuth'
 import EmissionsFactorPage from '@/components/pages/EmissionFactors'
 import NotFound from '@/components/pages/NotFound'
 import { getOrganizationVersionById } from '@/db/organization'
-import { hasAccessToEmissionFactor } from '@/utils/permissions'
+import { hasAccessToEmissionFactor } from '@/services/permissions/environment'
 import { UserSession } from 'next-auth'
 
 interface Props {

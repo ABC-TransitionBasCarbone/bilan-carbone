@@ -1,7 +1,6 @@
 'use client'
 import Image from '@/components/document/Image'
 import { UserSessionProps } from '@/components/hoc/withAuth'
-import { hasAccessToEnvironment } from '@/utils/userAccounts'
 import { Box } from '@mui/material'
 import { Environment } from '@prisma/client'
 import { useMemo } from 'react'
@@ -14,7 +13,7 @@ const logos = [
 ]
 
 const LogosHome = ({ user }: UserSessionProps) => {
-  const isCut = useMemo(() => hasAccessToEnvironment(user, Environment.CUT), [user?.environment])
+  const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
   return (
     isCut && (
       <Box data-testid={'home-cut-logo'} className={styles.container}>

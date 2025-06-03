@@ -1,7 +1,7 @@
 'use client'
 
 import { getUserWithAccountsAndOrganizationsById } from '@/db/user'
-import accountHandler from '@/services/auth'
+import { accountHandler } from '@/services/auth'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import { Chip, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { UserSession } from 'next-auth'

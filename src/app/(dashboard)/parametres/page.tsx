@@ -4,7 +4,7 @@ import Block from '@/components/base/Block'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import NotFound from '@/components/pages/NotFound'
 import SettingsPage from '@/components/pages/Settings'
-import { hasAccessToSettings } from '@/utils/permissions'
+import { hasAccessToSettings } from '@/services/permissions/environment'
 import { useTranslations } from 'next-intl'
 
 const Settings = ({ user }: UserSessionProps) => {

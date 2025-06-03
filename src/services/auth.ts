@@ -178,7 +178,7 @@ export function auth(
   return getServerSession(...args, authOptions)
 }
 
-export default async function accountHandler(accountId: string) {
+export async function accountHandler(accountId: string) {
   return await signIn('credentials', {
     redirect: false,
     accountId,

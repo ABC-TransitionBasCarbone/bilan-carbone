@@ -1,5 +1,5 @@
 import { AccountWithUser } from '@/db/account'
-import { Environment, User } from '@prisma/client'
+import { User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
 export const accountWithUserToUserSession = (account: AccountWithUser) =>
@@ -24,10 +24,3 @@ export const userSessionToDbUser = (userSession: UserSession) =>
     lastName: userSession.lastName,
     level: userSession.level,
   }) as unknown as User
-
-export const hasAccessToEnvironment = (userSession: UserSession | undefined, environment: Environment) => {
-  if (!userSession || !userSession.environment) {
-    return false
-  }
-  return userSession.environment === environment
-}
