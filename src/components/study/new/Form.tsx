@@ -20,7 +20,7 @@ interface Props {
   form: UseFormReturn<CreateStudyCommand>
   children?: React.ReactNode
   glossary?: string
-  setGlossary: (glossary: string) => void
+  setGlossary?: (glossary: string) => void
   t: (key: string) => string
 }
 
@@ -40,7 +40,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
   }
 
   const Help = (name: string) => (
-    <HelpIcon className="ml-4" onClick={() => setGlossary(name)} label={tGlossary('title')} />
+    <HelpIcon className="ml-4" onClick={() => setGlossary && setGlossary(name)} label={tGlossary('title')} />
   )
 
   return (
@@ -53,7 +53,6 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
           name="name"
           label={t('name')}
         />
-
         <div>
           <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
             <span className="inputLabel bold">{t('studyDates')}</span>
@@ -76,7 +75,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
         {error && <p>{t(`error.${error}`)}</p>}
       </Form>
       {glossary && (
-        <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
+        <GlossaryModal glossary={glossary} onClose={() => setGlossary && setGlossary('')} label="emission-source" t={tGlossary}>
           <p className="mb-2">
             {tGlossary.rich(`${glossary}Description`, {
               link: (children) => (

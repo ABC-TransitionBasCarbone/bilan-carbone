@@ -33,8 +33,8 @@ const NewStudyForm = ({ user, accounts, form }: Props) => {
     form.setValue('level', Level.Initial)
     form.setValue('exports', {
       [Export.Beges]: ControlMode.Operational,
-      GHGP: false,
-      ISO14069: false,
+      [Export.GHGP]: false,
+      [Export.ISO14069]: false,
     })
 
     if (!form.getValues('openingHours')) {
@@ -65,7 +65,7 @@ const NewStudyForm = ({ user, accounts, form }: Props) => {
 
   return (
     <Block title={t('title')} as="h1">
-      <GlobalNewStudyForm form={form} t={t} setGlossary={() => {}}>
+      <GlobalNewStudyForm form={form} t={t}>
         <WeekScheduleForm
           label={t('openingHours')}
           days={days}
