@@ -51,4 +51,17 @@ export const ManualEmissionFactorUnitList: Unit[] = [
   Unit.CUSTOM,
 ]
 
-export const monetaryUnits: Unit[] = [Unit.DOLLAR, Unit.EURO, Unit.CNY, Unit.JPY]
+export const monetaryUnits: Unit[] = [
+  Unit.DOLLAR,
+  Unit.EURO,
+  Unit.CNY,
+  Unit.JPY,
+  Unit.KEURO,
+  Unit.KEURO_2019_HT,
+  Unit.KEURO_2020_HT,
+  Unit.KEURO_2021_HT,
+  Unit.KEURO_2022_HT,
+  Unit.KEURO_2023_HT,
+  Unit.EURO_SPENT,
+  Unit.FRANC_CFP,
+]
