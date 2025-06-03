@@ -68,9 +68,9 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
 
     const formatedTotal = formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])
     const formatedDiff = formatNumber((total - dependenciesValue) / STUDY_UNIT_VALUES[study.resultsUnit])
-    const monetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
+    const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
 
-    return [formatedTotal, formatedDiff, monetaryRatio]
+    return [formatedTotal, formatedDiff, formatedMonetaryRatio]
   }, [study, studySite, validatedOnly])
 
   return (
