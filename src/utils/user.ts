@@ -1,4 +1,4 @@
-import { CutRole } from '@/services/roles'
+import { CutRoles } from '@/services/roles'
 import { CUT } from '@/store/AppEnvironment'
 import { Prisma, Role, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -29,7 +29,7 @@ export const findUserInfo = (user: UserSession) =>
 
 export const getEnvironmentRoles = () => {
   if (process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT === CUT) {
-    return CutRole
+    return CutRoles
   }
   return Role
 }
@@ -44,9 +44,10 @@ export const getRoleToSetForUntrained = (role: Exclude<Role, 'SUPER_ADMIN'>) => 
 
 const getUntrainedRoles = () => {
   if (process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT === CUT) {
-    return CutRole
+    return Object.keys(CutRoles)
   }
+
   return [Role.GESTIONNAIRE, Role.DEFAULT]
 }
 
-export const isUntrainedRole = (role: Role) => Object.keys(getUntrainedRoles()).includes(role)
+export const canBeUntrainedRole = (role: Role) => getUntrainedRoles().includes(role)

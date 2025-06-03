@@ -1,6 +1,6 @@
 import { Role } from '@prisma/client'
 
-export const CutRole = {
+export const CutRoles = {
   ADMIN: Role.ADMIN,
   DEFAULT: Role.DEFAULT,
 }

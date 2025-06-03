@@ -3,7 +3,7 @@
 import { canEditSelfRole } from '@/services/permissions/user'
 import { changeRole } from '@/services/serverFunctions/user'
 import { SEC, TIME_IN_MS } from '@/utils/time'
-import { getEnvironmentRoles, isUntrainedRole } from '@/utils/user'
+import { canBeUntrainedRole, getEnvironmentRoles } from '@/utils/user'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { Level, Role } from '@prisma/client'
 import { useSession } from 'next-auth/react'
@@ -66,7 +66,7 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
         </MenuItem>
         {Object.keys(getEnvironmentRoles())
           .filter((role) => role !== Role.SUPER_ADMIN)
-          .filter((role) => level || isUntrainedRole(role as Role))
+          .filter((role) => level || canBeUntrainedRole(role as Role))
           .map((role) => (
             <MenuItem key={role} value={role}>
               {t(role)}

@@ -2,10 +2,9 @@
 
 import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/account'
-import { CutRole } from '@/services/roles'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
-import { BASE } from '@/store/AppEnvironment'
 import { canEditMemberRole } from '@/utils/organization'
+import { getEnvironmentRoles } from '@/utils/user'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -179,7 +178,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
           },
         ]}
       >
-        {Object.keys(process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT === BASE ? Role : CutRole)
+        {Object.keys(getEnvironmentRoles())
           .filter((role) => role !== Role.SUPER_ADMIN)
           .map((role) => (
             <p key={role} className="mb-2">
