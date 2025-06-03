@@ -164,7 +164,7 @@ const EmissionSource = ({
         <div className={classNames(styles.header, styles.gapped, 'grow justify-between')}>
           <div className="grow align-center">
             {emissionSource.validated || withoutDetail ? (
-              <p data-testid="validated-emission-source-name" className={styles.addedPadding}>
+              <p data-testid="validated-emission-source-name" className={styles.emissionsSourceName}>
                 {emissionSource.name}
               </p>
             ) : (
