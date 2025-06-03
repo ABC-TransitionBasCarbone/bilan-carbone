@@ -8,6 +8,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountsUserLevel,
 } from '@/db/account'
+import { getCNCById } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
@@ -952,3 +953,5 @@ export const duplicateStudyEmissionSource = async (
 
     await createStudyEmissionSource(data)
   })
+
+export const getCNCCodeById = async (id: string) => getCNCById(id)

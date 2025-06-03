@@ -71,7 +71,7 @@ model Site {
   organizationId String       @map("organization_id")
   studies        StudySite[]
 
-  cnc   Cnc?    @relation(fields: [cncId], references: [id])
+  cnc   Cnc?    @relation(fields: [cncId], references: [numeroAuto])
   cncId String? @map("cnc_id")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -83,20 +83,21 @@ model Site {
 model Cnc {
   id String @id @default(uuid())
 
-  regionCNC        String?  @map("regionCNC")
-  numeroAuto       String?  @map("numeroAuto")
+  regionCNC        String?  @map("region_cnc")
+  numeroAuto       String?  @unique @map("numero_auto")
   nom              String?  @map("nom")
   adresse          String?  @map("adresse")
+  codeInsee        String?  @map("code_insee")
   commune          String?  @map("commune")
   dep              String?  @map("dep")
   ecrans           Int?     @map("ecrans")
   fauteuils        Int?     @map("fauteuils")
-  semainesActivite Int?     @map("semainesActivite")
+  semainesActivite Int?     @map("semaines_activite")
   seances          Int?     @map("seances")
   entrees2023      Int?     @map("entrees2023")
   entrees2022      Int?     @map("entrees2022")
-  evolutionEntrees Float?   @map("evolutionEntrees")
-  trancheEntrees   String?  @map("trancheEntrees")
+  evolutionEntrees Float?   @map("evolution_entrees")
+  trancheEntrees   String?  @map("tranche_entrees")
   genre            String?  @map("genre")
   multiplexe       Boolean? @map("multiplexe")
   latitude         Float?   @map("latitude")

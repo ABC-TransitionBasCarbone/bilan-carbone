@@ -41,7 +41,18 @@ export const FormTextField = <T extends FieldValues>({
           <TextField
             {...textFieldProps}
             error={!!error || !!customError}
-            onChange={textFieldProps.type === 'number' ? (event) => onChange(parseFloat(event.target.value)) : onChange}
+            onChange={(event) => {
+              // Call react-hook-form's onChange
+              if (textFieldProps.type === 'number') {
+                onChange(parseFloat(event.target.value))
+              } else {
+                onChange(event)
+              }
+              // Call custom onChange if provided
+              if (typeof textFieldProps.onChange === 'function') {
+                textFieldProps.onChange(event)
+              }
+            }}
             value={(textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined ? '' : value}
             slotProps={{
               input: {

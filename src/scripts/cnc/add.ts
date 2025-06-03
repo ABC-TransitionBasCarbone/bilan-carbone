@@ -6,7 +6,7 @@ import fs from 'fs'
 import { getEncoding } from '../../utils/csv'
 
 const addCNC = async (file: string) => {
-  const cncs: Prisma.CNCCreateInput[] = []
+  const cncs: Prisma.CncCreateInput[] = []
   await new Promise<void>((resolve, reject) => {
     fs.createReadStream(file)
       .pipe(
@@ -26,6 +26,7 @@ const addCNC = async (file: string) => {
               'nauto',
               'nom',
               'adresse',
+              'codeinsee',
               'commune',
               'dep',
               'ecrans',
@@ -58,6 +59,7 @@ const addCNC = async (file: string) => {
           nauto?: string
           nom?: string
           adresse?: string
+          codeinsee?: string
           commune?: string
           dep?: string
           ecrans?: number
@@ -78,6 +80,7 @@ const addCNC = async (file: string) => {
             numeroAuto: row.nauto,
             nom: row.nom,
             adresse: row.adresse,
+            codeInsee: row.codeinsee,
             commune: row.commune,
             dep: row.dep,
             ecrans: row.ecrans ? parseInt(row.ecrans.toString(), 10) : undefined,

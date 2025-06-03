@@ -4,9 +4,9 @@ import Button from '@/components/base/Button'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
+import { getCNCCodeById } from '@/services/serverFunctions/study'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { SiteCAUnit } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -17,22 +17,34 @@ interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
   sites: SitesCommand['sites']
   withSelection?: boolean
-  caUnit: SiteCAUnit
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>) => {
   const t = useTranslations('organization.sites')
 
   const control = form?.control as Control<SitesCommand>
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
   const getValues = form?.getValues as UseFormGetValues<SitesCommand>
 
+  const getCncData = async (cncId: string, index: number) => {
+    if (!cncId && cncId.length < 2) {
+      return null
+    }
+    const cnc = await getCNCCodeById(cncId)
+    if (!cnc) {
+      return null
+    }
+    cnc.nom && setValue(`sites.${index}.name`, cnc.nom)
+    cnc.codeInsee && setValue(`sites.${index}.postalCode`, cnc.codeInsee)
+    cnc.commune && setValue(`sites.${index}.city`, cnc.commune)
+  }
+
   const columns = useMemo(() => {
     const columns = [
       {
-        id: 'name',
-        header: t('name'),
-        accessorKey: 'name',
+        id: 'cncId',
+        header: t('cnc'),
+        accessorKey: 'cncId',
         cell: ({ row, getValue }) =>
           form ? (
             <>
@@ -46,6 +58,31 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
                   />
                   {getValue<string>()}
                 </div>
+              ) : (
+                <FormTextField
+                  data-testid="edit-site-cnc"
+                  className={styles.field}
+                  control={control}
+                  translation={t}
+                  name={`sites.${row.index}.cncId`}
+                  placeholder={t('cncPlaceholder')}
+                  onChange={(e) => getCncData(e.target.value, row.index)}
+                />
+              )}
+            </>
+          ) : (
+            getValue<string>()
+          ),
+      },
+      {
+        id: 'name',
+        header: t('name'),
+        accessorKey: 'name',
+        cell: ({ row, getValue }) =>
+          row.original.cncId && form ? (
+            <>
+              {withSelection ? (
+                <div className="align-center">{getValue<string>()}</div>
               ) : (
                 <FormTextField
                   data-testid="edit-site-name"
@@ -66,7 +103,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
         header: t('postalCode'),
         accessorKey: 'postalCode',
         cell: ({ row, getValue }) =>
-          form ? (
+          row.original.cncId && form ? (
             <>
               {withSelection ? (
                 <div className="align-center">{getValue<string>()}</div>
@@ -90,7 +127,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
         header: t('city'),
         accessorKey: 'city',
         cell: ({ row, getValue }) =>
-          form ? (
+          row.original.cncId && form ? (
             <>
               {withSelection ? (
                 <div className="align-center">{getValue<string>()}</div>
@@ -138,7 +175,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
     return columns
   }, [t, form])
 
-  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} caUnit={caUnit} />
+  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} />
 }
 
 export default Sites
