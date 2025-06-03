@@ -2,17 +2,20 @@ import { AccountWithUser } from '@/db/account'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser, getMockedDbAccount, mockedAccountId } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
+import * as userUtils from '@/utils/user'
 import { expect } from '@jest/globals'
 import { Role, UserStatus } from '@prisma/client'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from './user'
 
 jest.mock('@/utils/organization', () => ({
   canEditMemberRole: jest.fn(),
+}))
+jest.mock('@/utils/user', () => ({
   isUntrainedRole: jest.fn(),
 }))
 
 const mockCanEditMemberRole = organizationUtils.canEditMemberRole as jest.Mock
-const mockIsUntrainedRole = organizationUtils.isUntrainedRole as unknown as jest.Mock
+const mockIsUntrainedRole = userUtils.isUntrainedRole as unknown as jest.Mock
 
 const adminUser = getMockedAuthUser({ role: Role.ADMIN })
 

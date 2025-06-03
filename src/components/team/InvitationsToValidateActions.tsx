@@ -24,7 +24,8 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
   const [validating, setValidating] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
-  const role = member.user.level ? member.role : Role.GESTIONNAIRE
+  const role = member.user.level ? member.role : Role.DEFAULT
+
   return (
     <div className={classNames(styles.buttons, 'flex')}>
       <SelectRole

@@ -12,6 +12,11 @@ export const getUserRoleOnPublicStudy = (user: UserSession, studyLevel: Level) =
   if (isAdmin(user.role)) {
     return checkLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
   }
+
+  if (process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT === 'CUT') {
+    return StudyRole.Editor
+  }
+
   return user.role === Role.COLLABORATOR && checkLevel(user.level, studyLevel) ? StudyRole.Editor : StudyRole.Reader
 }
 

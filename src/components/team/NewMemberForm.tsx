@@ -4,6 +4,7 @@ import Form from '@/components/base/Form'
 import { FormTextField } from '@/components/form/TextField'
 import { addMember } from '@/services/serverFunctions/user'
 import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverFunctions/user.command'
+import { getEnvironmentRoles } from '@/utils/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { Role } from '@prisma/client'
@@ -72,7 +73,7 @@ const NewMemberForm = () => {
         label={t('email')}
       />
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="new-member-role">
-        {Object.keys(Role)
+        {Object.keys(getEnvironmentRoles())
           .filter((role) => role !== Role.SUPER_ADMIN)
           .map((key) => (
             <MenuItem key={key} value={key}>
