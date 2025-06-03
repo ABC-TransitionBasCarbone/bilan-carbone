@@ -102,13 +102,18 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
   return send([toEmail], 'Vous avez activé votre compte sur le BC+', html)
 }
 
-export const sendActivationRequest = async (toEmailList: string[], emailToActivate: string, userToActivate: string) => {
-  const html = await getHtml('activation-request', {
+export const sendActivationRequest = async (
+  toEmailList: string[],
+  emailToActivate: string,
+  userToActivate: string,
+  env: Environment = Environment.BC,
+) => {
+  const html = await getHtml(`activation-request-${env.toLowerCase()}`, {
     support: process.env.MAIL_USER,
     emailToActivate,
     userToActivate,
   })
-  return send(toEmailList, "Demande d'accès à votre organisation BC+", html)
+  return send(toEmailList, `Demande d'accès à votre organisation ${env === Environment.BC ? 'BC+' : env}`, html)
 }
 
 export const sendUserOnStudyInvitationEmail = async (
@@ -203,4 +208,12 @@ export const sendAddedUsersByFile = async (results: Record<string, string>[]) =>
   }
   const html = await getHtml('authorization-import-users', { results })
   return send([process.env.MAIL_USER], `Autorisation pour l'ajout d'utilisateurs`, html)
+}
+
+export const sendNewCutUserActivationEmail = async (toEmail: string, token: string, siretOrCNC: string) => {
+  const html = await getHtml('new-user-cut-activation', {
+    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+    support: process.env.MAIL_USER,
+  })
+  return send([toEmail], `Vous avez créé un compte CUT - ${siretOrCNC}`, html)
 }
