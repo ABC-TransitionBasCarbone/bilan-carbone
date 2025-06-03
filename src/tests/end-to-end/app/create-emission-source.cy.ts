@@ -96,6 +96,7 @@ describe('Create study emission source', () => {
       cy.getByTestId('validated-emission-source-name').should('have.text', 'My emission source name')
     })
     cy.getByTestId('emission-source-validate').click()
+    cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
 
     // Editor can add source, edit but not validate
     cy.logout()
