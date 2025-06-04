@@ -60,7 +60,6 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
   })
 
   const onSubmit = async (command: UpdateOrganizationCommand) => {
-    console.log('Submitting organization update command:', command)
     setSitesOnError(emptySitesOnError)
     const deletedSiteIds = organizationVersion.organization.sites
       .filter((site) => !command.sites.find((s) => s.id === site.id))

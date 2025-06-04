@@ -27,7 +27,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
   const getValues = form?.getValues as UseFormGetValues<SitesCommand>
 
   const getCncData = async (cncId: string, index: number) => {
-    if (!cncId && cncId.length < 2) {
+    if (!cncId || cncId.length < 2) {
       return null
     }
     const cnc = await getCNCCodeById(cncId)
