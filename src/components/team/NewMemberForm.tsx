@@ -7,7 +7,7 @@ import { AddMemberCommand, AddMemberCommandValidation } from '@/services/serverF
 import { getEnvironmentRoles } from '@/utils/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
-import { Role } from '@prisma/client'
+import { Environment, Role } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -18,7 +18,10 @@ import { FormSelect } from '../form/Select'
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 
-const NewMemberForm = () => {
+interface Props {
+  environment: Environment
+}
+const NewMemberForm = ({ environment }: Props) => {
   const router = useRouter()
   const t = useTranslations('newMember')
   const tRole = useTranslations('role')
@@ -73,7 +76,7 @@ const NewMemberForm = () => {
         label={t('email')}
       />
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="new-member-role">
-        {Object.keys(getEnvironmentRoles())
+        {Object.keys(getEnvironmentRoles(environment))
           .filter((role) => role !== Role.SUPER_ADMIN)
           .map((key) => (
             <MenuItem key={key} value={key}>

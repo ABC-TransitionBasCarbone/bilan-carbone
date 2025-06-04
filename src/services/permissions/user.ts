@@ -70,7 +70,7 @@ export const canChangeRole = (user: UserSession, member: AccountWithUser | null,
     return false
   }
 
-  if (!member.user.level && !canBeUntrainedRole(newRole)) {
+  if (!member.user.level && !canBeUntrainedRole(newRole, user.environment)) {
     return false
   }
 

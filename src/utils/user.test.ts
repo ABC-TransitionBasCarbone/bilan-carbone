@@ -1,8 +1,7 @@
 import { CutRoles } from '@/services/roles'
-import { BASE, CUT } from '@/store/AppEnvironment'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
-import { Role, UserStatus } from '@prisma/client'
+import { Environment, Role, UserStatus } from '@prisma/client'
 import * as organizationModule from './organization'
 import { canBeUntrainedRole, findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
 
@@ -79,54 +78,46 @@ describe('userUtils functions', () => {
 
   describe('getEnvironmentRoles', () => {
     test('should return CutRoles when NEXT_PUBLIC_DEFAULT_ENVIRONMENT is CUT', () => {
-      process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT = CUT
-      expect(getEnvironmentRoles()).toEqual(CutRoles)
+      expect(getEnvironmentRoles(Environment.CUT)).toEqual(CutRoles)
     })
 
     test('should return Role when NEXT_PUBLIC_DEFAULT_ENVIRONMENT is not CUT', () => {
-      process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT = BASE
-      expect(getEnvironmentRoles()).toEqual(Role)
+      expect(getEnvironmentRoles(Environment.BC)).toEqual(Role)
     })
   })
 
   describe('getRoleToSetForUntrained', () => {
     test('should return the same role for CUT environment', () => {
-      process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT = CUT
-      expect(getRoleToSetForUntrained(Role.ADMIN)).toBe(Role.ADMIN)
-      expect(getRoleToSetForUntrained(Role.DEFAULT)).toBe(Role.DEFAULT)
+      expect(getRoleToSetForUntrained(Role.ADMIN, Environment.CUT)).toBe(Role.ADMIN)
+      expect(getRoleToSetForUntrained(Role.DEFAULT, Environment.CUT)).toBe(Role.DEFAULT)
     })
 
     test('should return GESTIONNAIRE for ADMIN and GESTIONNAIRE roles in BASE environment', () => {
-      process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT = BASE
-      expect(getRoleToSetForUntrained(Role.ADMIN)).toBe(Role.GESTIONNAIRE)
-      expect(getRoleToSetForUntrained(Role.GESTIONNAIRE)).toBe(Role.GESTIONNAIRE)
+      expect(getRoleToSetForUntrained(Role.ADMIN, Environment.BC)).toBe(Role.GESTIONNAIRE)
+      expect(getRoleToSetForUntrained(Role.GESTIONNAIRE, Environment.BC)).toBe(Role.GESTIONNAIRE)
     })
 
     test('should return DEFAULT for other roles in BASE environment', () => {
-      process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT = BASE
-      expect(getRoleToSetForUntrained(Role.COLLABORATOR)).toBe(Role.DEFAULT)
-      expect(getRoleToSetForUntrained(Role.DEFAULT)).toBe(Role.DEFAULT)
+      expect(getRoleToSetForUntrained(Role.COLLABORATOR, Environment.BC)).toBe(Role.DEFAULT)
+      expect(getRoleToSetForUntrained(Role.DEFAULT, Environment.BC)).toBe(Role.DEFAULT)
     })
   })
 
   describe('canBeUntrainedRole', () => {
     test('should return true for all roles in CUT environment', () => {
-      process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT = CUT
-      expect(canBeUntrainedRole(Role.ADMIN)).toBe(true)
-      expect(canBeUntrainedRole(Role.DEFAULT)).toBe(true)
+      expect(canBeUntrainedRole(Role.ADMIN, Environment.CUT)).toBe(true)
+      expect(canBeUntrainedRole(Role.DEFAULT, Environment.CUT)).toBe(true)
     })
 
     test('should return true for GESTIONNAIRE and DEFAULT roles in BASE environment', () => {
-      process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT = BASE
-      expect(canBeUntrainedRole(Role.GESTIONNAIRE)).toBe(true)
-      expect(canBeUntrainedRole(Role.DEFAULT)).toBe(true)
+      expect(canBeUntrainedRole(Role.GESTIONNAIRE, Environment.BC)).toBe(true)
+      expect(canBeUntrainedRole(Role.DEFAULT, Environment.BC)).toBe(true)
     })
 
     test('should return false for other roles in BASE environment', () => {
-      process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT = BASE
-      expect(canBeUntrainedRole(Role.ADMIN)).toBe(false)
-      expect(canBeUntrainedRole(Role.COLLABORATOR)).toBe(false)
-      expect(canBeUntrainedRole(Role.SUPER_ADMIN)).toBe(false)
+      expect(canBeUntrainedRole(Role.ADMIN, Environment.BC)).toBe(false)
+      expect(canBeUntrainedRole(Role.COLLABORATOR, Environment.BC)).toBe(false)
+      expect(canBeUntrainedRole(Role.SUPER_ADMIN, Environment.BC)).toBe(false)
     })
   })
 })

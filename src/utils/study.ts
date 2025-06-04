@@ -4,7 +4,7 @@ import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { checkLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
-import { Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
+import { Environment, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { isInOrgaOrParent } from './organization'
 
@@ -13,7 +13,7 @@ export const getUserRoleOnPublicStudy = (user: UserSession, studyLevel: Level) =
     return checkLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
   }
 
-  if (process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT === 'CUT') {
+  if (user.environment === Environment.CUT) {
     return StudyRole.Editor
   }
 

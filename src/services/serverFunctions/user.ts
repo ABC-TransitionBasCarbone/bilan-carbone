@@ -161,7 +161,7 @@ export const addMember = async (member: AddMemberCommand) =>
         source: userFromDb.source,
         accounts: {
           create: {
-            role: getRoleToSetForUntrained(role),
+            role: getRoleToSetForUntrained(role, session.user.environment),
             organizationVersionId: session.user.organizationVersionId,
             environment: session.user.environment,
           },
@@ -179,7 +179,9 @@ export const addMember = async (member: AddMemberCommand) =>
         ...member,
         status: UserStatus.VALIDATED,
         level: memberExists.user.level ? memberExists.user.level : null,
-        role: memberExists.user.level ? memberExists.role : getRoleToSetForUntrained(memberExists.role),
+        role: memberExists.user.level
+          ? memberExists.role
+          : getRoleToSetForUntrained(memberExists.role, session.user.environment),
         organizationVersionId: session.user.organizationVersionId,
       }
       await updateUser(memberExists.id, updateMember)
@@ -422,7 +424,7 @@ export const changeUserRoleOnOnboarding = async () =>
       return
     }
 
-    const newRole = session.user.level ? Role.ADMIN : getRoleToSetForUntrained(Role.ADMIN)
+    const newRole = session.user.level ? Role.ADMIN : getRoleToSetForUntrained(Role.ADMIN, session.user.environment)
     await changeAccountRole(session.user.accountId, newRole)
   })
 

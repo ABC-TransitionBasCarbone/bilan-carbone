@@ -5,7 +5,7 @@ import { changeRole } from '@/services/serverFunctions/user'
 import { SEC, TIME_IN_MS } from '@/utils/time'
 import { canBeUntrainedRole, getEnvironmentRoles } from '@/utils/user'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import { Level, Role } from '@prisma/client'
+import { Environment, Level, Role } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -18,12 +18,13 @@ interface Props {
   currentRole: Role
   email: string
   level: Level | null
+  environment: Environment
 }
 
 const emptyToast = { text: '', color: 'info' } as const
 const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
-const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
+const SelectRole = ({ currentUserEmail, email, currentRole, level, environment }: Props) => {
   const t = useTranslations('role')
   const [role, setRole] = useState(currentRole)
   const [toast, setToast] = useState<{ text: string; color: ToastColors; duration?: number }>(emptyToast)
@@ -64,9 +65,9 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level }: Props) => {
         <MenuItem value={Role.SUPER_ADMIN} className={styles.hidden} aria-hidden="true">
           {t(Role.SUPER_ADMIN)}
         </MenuItem>
-        {Object.keys(getEnvironmentRoles())
+        {Object.keys(getEnvironmentRoles(environment))
           .filter((role) => role !== Role.SUPER_ADMIN)
-          .filter((role) => level || canBeUntrainedRole(role as Role))
+          .filter((role) => level || canBeUntrainedRole(role as Role, environment))
           .map((role) => (
             <MenuItem key={role} value={role}>
               {t(role)}

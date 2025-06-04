@@ -33,6 +33,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
         email={member.user.email}
         currentRole={role}
         level={member.user.level}
+        environment={user.environment}
       />
       <LoadingButton
         data-testid="validate-invitation"

@@ -62,6 +62,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
               currentRole={role}
               email={context.row.original.user.email}
               level={context.row.original.user.level}
+              environment={user.environment}
             />
           ) : (
             <>{tRole(role)}</>
@@ -178,7 +179,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
           },
         ]}
       >
-        {Object.keys(getEnvironmentRoles())
+        {Object.keys(getEnvironmentRoles(user.environment))
           .filter((role) => role !== Role.SUPER_ADMIN)
           .map((role) => (
             <p key={role} className="mb-2">
