@@ -1,5 +1,5 @@
 'use client'
-import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Box, BoxProps, Link, Breadcrumbs as MUIBreadcrumbs, styled, Typography } from '@mui/material'
 import { useMemo } from 'react'
@@ -24,7 +24,7 @@ const StyledContainer = styled(Box)<BoxProps>(({ theme }) => {
 
 const Breadcrumbs = ({ links, current }: Props) => {
   const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === CUT, [environment])
+  const isCut = useMemo(() => environment === 'CUT', [environment])
   return (
     <nav role="navigation" aria-label="Breadcrumb" className="main-container">
       <StyledContainer className="flex-cc">

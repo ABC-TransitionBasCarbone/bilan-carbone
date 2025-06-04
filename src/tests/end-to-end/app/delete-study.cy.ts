@@ -14,8 +14,11 @@ describe('Delete study', () => {
     cy.login()
 
     cy.visit('/etudes/creer')
-    cy.getByTestId('organization-sites-checkbox').first().click()
-    cy.getByTestId('new-study-organization-button').click()
+    cy.getByTestId('organization-sites-checkbox').first().scrollIntoView()
+    cy.getByTestId('organization-sites-checkbox').first().click({ force: true })
+
+    cy.getByTestId('new-study-organization-button').scrollIntoView()
+    cy.getByTestId('new-study-organization-button').click({ force: true })
 
     cy.getByTestId('new-study-name').type('My study to delete')
     cy.getByTestId('new-validator-name').type('bc-collaborator-0@yopmail.com')

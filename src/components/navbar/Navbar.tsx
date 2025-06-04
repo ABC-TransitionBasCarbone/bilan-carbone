@@ -7,7 +7,6 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 import { AppBar, Box, Container, MenuItem, Toolbar } from '@mui/material'
 import { Environment, Role } from '@prisma/client'
-import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
@@ -105,6 +104,13 @@ const Navbar = ({ children, user }: Props) => {
             {hasFormation && !isCut && <NavbarButton href="/formation">{t('formation')}</NavbarButton>}
           </Box>
           <Box className={styles.buttonContainer}>
+            {hasMultipleAccounts && (
+              <NavbarButton aria-label={t('selectAccount')} href="/selection-du-compte">
+                <SwapHorizIcon />
+              </NavbarButton>
+            )}
+
+            {user.role === Role.SUPER_ADMIN && <NavbarLink href="/super-admin">{t('admin')}</NavbarLink>}
             <NavbarButton
               rel="noreferrer noopener"
               href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''}
