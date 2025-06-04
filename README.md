@@ -33,7 +33,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
    ```bash
    # Push all migrations to the database
    npx prisma migrate deploy
-   
+
    # Seed the database
    npx prisma db seed
    ```
