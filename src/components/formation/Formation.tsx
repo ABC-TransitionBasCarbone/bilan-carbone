@@ -47,14 +47,11 @@ const FormationView = ({ formations, user, organizationName }: Props) => {
     getStartTime()
   }, [user, callServerFunction])
 
-  const openFormationForm = () => {
+  const openFormationForm = async () => {
     const now = new Date()
     if (!formStartTime) {
-      callServerFunction(() => startFormationForm(user.userId, now), {
-        onSuccess: () => {
-          setFormStartTime(now.getTime())
-        },
-      })
+      await callServerFunction(() => startFormationForm(user.userId, now))
+      setFormStartTime(now.getTime())
     }
     setOpen(true)
   }

@@ -370,7 +370,7 @@
         "create": "Ajouter la personne",
         "clear": "Supprimer la valeur",
         "Already in study": "Cette personne a déjà accès à l'étude.",
-        "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+        "Not authorized": "Action non autorisée. N'hésitez pas à consulter la FAQ ou à contacter le support si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
           "email": "Veuillez utiliser un email valide",
           "emailRequired": "Veuillez entrer un email",
@@ -392,7 +392,7 @@
         "subPost": "Sous poste",
         "create": "Ajouter la personne",
         "Already in study": "Cette personne a déjà accès à l'étude.",
-        "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+        "Not authorized": "Action non autorisée. N'hésitez pas à consulter la FAQ ou à contacter le support si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
           "email": "Veuillez renseigner un email valide",
           "post": "Veuillez selectionner un poste"
@@ -755,8 +755,7 @@
         "totalCo2": "Veuillez renseigner une émission totale",
         "type": "Veuillez renseigner un type de poste",
         "unit": "Veuillez renseigner une unité"
-      },
-      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+      }
     },
     "title": "Facteurs d'émission",
     "loading": "Chargement des facteurs d'émission",
@@ -1160,7 +1159,7 @@
       "confirm": "Confirmer",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "wrongName": "Le nom du client ne correspond pas",
-      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le <support>support</support>."
+      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le support."
     }
   },
   "emissionSource": {
