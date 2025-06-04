@@ -71,9 +71,12 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
     [openingHoursHoliday],
   )
 
-  const onStudyCinemaUpdate = form.handleSubmit(async (data) => {
-    await callServerFunction(() => changeStudyCinema(data))
-  })
+  const onStudyCinemaUpdate = useCallback(
+    form.handleSubmit(async (data) => {
+      await callServerFunction(() => changeStudyCinema(data))
+    }),
+    [form, callServerFunction],
+  )
 
   const handleCheckDay = useCallback(
     (day: DayOfWeek) => {

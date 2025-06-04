@@ -46,13 +46,12 @@ const StudyPublicStatus = ({ study, disabled }: Props) => {
   const onSubmit = useCallback(
     async (command: ChangeStudyPublicStatusCommand) => {
       await callServerFunction(() => changeStudyPublicStatus(command), {
-        getSuccessMessage: () => tForm('saved'),
         onSuccess: () => {
           router.refresh()
         },
       })
     },
-    [callServerFunction, router, tForm],
+    [callServerFunction, router],
   )
 
   useEffect(() => {

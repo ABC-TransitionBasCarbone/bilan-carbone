@@ -12,7 +12,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { StudyResultUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyParams.module.css'
 
@@ -25,6 +26,7 @@ const StudyResultsUnit = ({ study, disabled }: Props) => {
   const t = useTranslations('study.new')
   const tUnits = useTranslations('study.results.units')
   const { callServerFunction } = useServerFunction()
+  const router = useRouter()
 
   const form = useForm<ChangeStudyResultsUnitCommand>({
     resolver: zodResolver(ChangeStudyResultsUnitCommandValidation),
@@ -38,15 +40,22 @@ const StudyResultsUnit = ({ study, disabled }: Props) => {
 
   const resultsUnit = form.watch('resultsUnit')
 
-  useEffect(() => {
-    const onSubmit = async (command: ChangeStudyResultsUnitCommand) => {
-      await callServerFunction(() => changeStudyResultsUnit(command))
-    }
+  const onSubmit = useCallback(
+    async (command: ChangeStudyResultsUnitCommand) => {
+      await callServerFunction(() => changeStudyResultsUnit(command), {
+        onSuccess: () => {
+          router.refresh()
+        },
+      })
+    },
+    [callServerFunction, router],
+  )
 
+  useEffect(() => {
     if (resultsUnit !== study.resultsUnit) {
       onSubmit(form.getValues())
     }
-  }, [resultsUnit, form, study, callServerFunction])
+  }, [resultsUnit, form, study])
 
   return (
     <div className="grow">
