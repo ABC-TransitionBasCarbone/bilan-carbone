@@ -77,11 +77,11 @@ describe('userUtils functions', () => {
   })
 
   describe('getEnvironmentRoles', () => {
-    test('should return CutRoles when NEXT_PUBLIC_DEFAULT_ENVIRONMENT is CUT', () => {
+    test('should return CutRoles when environment is CUT', () => {
       expect(getEnvironmentRoles(Environment.CUT)).toEqual(CutRoles)
     })
 
-    test('should return Role when NEXT_PUBLIC_DEFAULT_ENVIRONMENT is not CUT', () => {
+    test('should return Role when environment is not CUT', () => {
       expect(getEnvironmentRoles(Environment.BC)).toEqual(Role)
     })
   })
