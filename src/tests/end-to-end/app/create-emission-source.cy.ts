@@ -1,3 +1,5 @@
+import { fileURLToPath } from "url"
+
 const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
 
 describe('Create study emission source', () => {
@@ -12,7 +14,7 @@ describe('Create study emission source', () => {
 
     cy.getByTestId('subpost').first().scrollIntoView()
 
-    cy.getByTestId('subpost').click({ force: true })
+    cy.getByTestId('subpost').first().click({ force: true })
 
     cy.getByTestId('new-emission-source').first().scrollIntoView()
     cy.getByTestId('new-emission-source').type('My new emission source{enter}')
