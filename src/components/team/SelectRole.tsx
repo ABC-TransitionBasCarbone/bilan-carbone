@@ -36,7 +36,7 @@ const SelectRole = ({ currentUserEmail, email, currentRole, level, environment }
     const newRole = event.target.value as Role
     if (newRole !== role) {
       await callServerFunction(() => changeRole(email, newRole), {
-        successMessage: t('saved'),
+        setSuccessMessage: () => t('saved'),
         onSuccess: () => {
           setRole(newRole)
           if (email === currentUserEmail) {
