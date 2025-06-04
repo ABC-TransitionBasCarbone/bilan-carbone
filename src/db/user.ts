@@ -25,6 +25,31 @@ export const getUserSourceById = (id: string) =>
 export const getUserById = (id: string) =>
   prismaClient.user.findUnique({ where: { id }, select: { firstName: true, lastName: true, email: true } })
 
+export const getUserWithAccountsAndOrganizationsById = (id: string) =>
+  prismaClient.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      accounts: {
+        select: {
+          id: true,
+          environment: true,
+          organizationVersion: {
+            select: {
+              id: true,
+              environment: true,
+              activatedLicence: true,
+              organization: { select: { id: true, name: true } },
+            },
+          },
+        },
+      },
+    },
+  })
+
 export const getAccountByIdWithAllowedStudies = (id: string) =>
   prismaClient.account.findUnique({ where: { id }, include: { allowedStudies: true, contributors: true } })
 

@@ -20,7 +20,7 @@ interface Props {
 const StudyCard = async ({ study, user }: Props) => {
   const t = await getTranslations('study')
   const values = await getStudyValidatedEmissionsSources(study.id)
-  const fullStudy = await getStudyById(study.id, user.organizationId)
+  const fullStudy = await getStudyById(study.id, user.organizationVersionId)
 
   if (!values || !fullStudy) {
     return null

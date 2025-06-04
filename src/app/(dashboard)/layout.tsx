@@ -5,6 +5,7 @@ import OrganizationCard from '@/components/organizationCard/OrganizationCard'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
+import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import classNames from 'classnames'
 import styles from './layout.module.css'
 
@@ -13,6 +14,14 @@ interface Props {
 }
 
 const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
+  if (account.needsAccountSelection) {
+    return (
+      <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
+        {children}
+      </main>
+    )
+  }
+
   const [organizationVersions, studyId] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     getAllowedStudyIdByAccount(account),
@@ -45,6 +54,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
           userRole={account.role}
         />
       )}
+      <EnvironmentInitializer user={account} />
     </div>
   )
 }

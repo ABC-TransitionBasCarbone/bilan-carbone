@@ -25,11 +25,10 @@ import {
   StudyExportsCommand,
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
-import { CUT } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ControlMode, Export, SiteCAUnit, StudyRole } from '@prisma/client'
+import { ControlMode, Environment, Export, SiteCAUnit, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -260,7 +259,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
       )}
       <DynamicComponent
         environmentComponents={{
-          [CUT]: (
+          [Environment.CUT]: (
             <SitesCut
               sites={
                 isEditing

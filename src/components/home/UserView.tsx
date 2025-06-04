@@ -2,7 +2,7 @@ import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
-import { CUT, getServerEnvironment } from '@/store/AppEnvironment'
+import { hasAccessToActualityCards } from '@/services/permissions/environment'
 import { canEditMemberRole } from '@/utils/organization'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
@@ -16,7 +16,6 @@ interface Props {
 }
 
 const UserView = async ({ account }: Props) => {
-  const environment = getServerEnvironment()
   const [organizationVersions, hasUserToValidate] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     hasAccountToValidateInOrganization(account.organizationVersionId),
@@ -45,8 +44,8 @@ const UserView = async ({ account }: Props) => {
       )}
       <StudiesContainer user={account} isCR={isCR} />
 
-      {environment !== CUT && <ActualitiesCards />}
-      <CUTLogosHome />
+      {hasAccessToActualityCards(account.environment) && <ActualitiesCards />}
+      <CUTLogosHome user={account} />
       {userOrganizationVersion && !userOrganizationVersion.onboarded && (
         <Onboarding user={account} organizationVersion={userOrganizationVersion} />
       )}

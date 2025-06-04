@@ -6,6 +6,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
   getAccountFromUserOrganization,
+  getAccountsFromUser,
 } from '@/db/account'
 import { getOrganizationVersionById, isOrganizationVersionCR } from '@/db/organization'
 import { FullStudy } from '@/db/study'
@@ -150,12 +151,6 @@ export const addMember = async (member: AddMemberCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-    if (!organizationVersion) {
-      // TODO use session instead in next pr
-      return NOT_AUTHORIZED
-    }
-
     if (!memberExists) {
       const { role, ...rest } = member
       const newMember = {
@@ -167,7 +162,7 @@ export const addMember = async (member: AddMemberCommand) =>
           create: {
             role: role === Role.ADMIN || member.role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT,
             organizationVersionId: session.user.organizationVersionId,
-            environment: organizationVersion.environment,
+            environment: session.user.environment,
           },
         },
       }
@@ -451,3 +446,13 @@ export const lowercaseUsersEmails = async () => {
     console.log(`Fait : ${capitalizedUsers.length} utilisateurs mis à jour`)
   }
 }
+
+export const getUserAccounts = async () =>
+  withServerResponse('getUserAccounts', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      return []
+    }
+    const accounts = await getAccountsFromUser(session.user)
+    return accounts
+  })

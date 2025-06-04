@@ -180,7 +180,8 @@
     "settings": "Settings",
     "team": "My team",
     "information": "Global informations",
-    "formation": "Training"
+    "formation": "Training",
+    "selectAccount": "Select account"
   },
   "profile": {
     "title": "My profile",
