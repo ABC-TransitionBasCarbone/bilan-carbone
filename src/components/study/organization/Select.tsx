@@ -49,6 +49,7 @@ const SelectOrganization = ({ user, organizationVersions, selectOrganizationVers
             selected: false,
             postalCode: site.postalCode ?? '',
             city: site.city ?? '',
+            cncId: site.cncId ?? '',
           })),
         )
       }

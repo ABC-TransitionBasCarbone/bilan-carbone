@@ -122,7 +122,6 @@ export const updateOrganization = async (
   { organizationVersionId, sites, ...data }: UpdateOrganizationCommand,
   caUnit: number,
 ) => {
-  console.log('SITES : ', sites)
   const organizationVersion = await getOrganizationVersionById(organizationVersionId)
   if (!organizationVersion) {
     return
