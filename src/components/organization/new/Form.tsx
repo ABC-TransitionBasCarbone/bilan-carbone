@@ -33,7 +33,6 @@ const NewOrganizationForm = () => {
     await callServerFunction(() => createOrganizationCommand(command), {
       onSuccess: (data) => {
         router.push(`/organisations/${data.id}`)
-        router.refresh()
       },
     })
   }
