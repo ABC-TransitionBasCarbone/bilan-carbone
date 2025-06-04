@@ -39,7 +39,7 @@ const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) 
 
   const onDelete = async () => {
     await callServerFunction(() => deleteOrganizationCommand(form.getValues()), {
-      setErrorMessage: (error) => t(error),
+      getErrorMessage: (error) => t(error),
       onSuccess: () => {
         router.push('/')
       },

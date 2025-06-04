@@ -27,8 +27,8 @@ export const useServerFunction = () => {
     async <T>(
       serverFunction: () => Promise<ApiResponse<T>>,
       options?: {
-        setSuccessMessage?: (data: T) => string
-        setErrorMessage?: (errorMessage: string) => string
+        getSuccessMessage?: (data: T) => string
+        getErrorMessage?: (errorMessage: string) => string
         onSuccess?: (data: T) => void
         onError?: (errorMessage: string) => void
       },
@@ -36,8 +36,8 @@ export const useServerFunction = () => {
       const result = await serverFunction()
 
       if (result.success) {
-        if (options?.setSuccessMessage) {
-          const successMessage = options.setSuccessMessage(result.data)
+        if (options?.getSuccessMessage) {
+          const successMessage = options.getSuccessMessage(result.data)
           showSuccessToast(successMessage)
         }
         options?.onSuccess?.(result.data)
@@ -45,8 +45,8 @@ export const useServerFunction = () => {
         const resultErrorMessage = result.errorMessage
         let errorMessage = generalErrorMessage
 
-        if (options?.setErrorMessage) {
-          errorMessage = options.setErrorMessage(resultErrorMessage)
+        if (options?.getErrorMessage) {
+          errorMessage = options.getErrorMessage(resultErrorMessage)
         } else if (tGeneralError.has(resultErrorMessage)) {
           // Fallback to general error translations
           errorMessage = tGeneralError(resultErrorMessage)

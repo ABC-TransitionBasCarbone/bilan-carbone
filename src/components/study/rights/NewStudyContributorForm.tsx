@@ -37,7 +37,7 @@ const NewStudyContributorForm = ({ study }: Props) => {
 
   const onSubmit = async (command: NewStudyContributorCommand) => {
     await callServerFunction(() => newStudyContributor(command), {
-      setErrorMessage: (error) => t(error),
+      getErrorMessage: (error) => t(error),
       onSuccess: () => {
         router.push(`/etudes/${study.id}/cadrage`)
       },

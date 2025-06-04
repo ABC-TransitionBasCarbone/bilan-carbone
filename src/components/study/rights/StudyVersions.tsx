@@ -62,7 +62,7 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
   const simulateSourceUpgrade = async (source: Import) => {
     setSource(source)
     await callServerFunction(() => simulateStudyEmissionFactorSourceUpgrade(study.id, source), {
-      setErrorMessage: (error) => t(error, { name: tSources(source || '') }),
+      getErrorMessage: (error) => t(error, { name: tSources(source || '') }),
       onSuccess: (data) => {
         setSimulationResult({ updated: data.updated || [], deleted: data.deleted || [] })
       },
@@ -72,7 +72,7 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
   const upgradeSource = async (source: Import) => {
     setUpgrading(true)
     await callServerFunction(() => upgradeStudyEmissionFactorSource(study.id, source), {
-      setErrorMessage: (error) => t(error, { name: tSources(source || '') }),
+      getErrorMessage: (error) => t(error, { name: tSources(source || '') }),
       onSuccess: () => {
         setSource(null)
         router.refresh()

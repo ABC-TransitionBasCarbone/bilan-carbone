@@ -36,7 +36,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
         router.push(`/etudes/${data.id}`)
         router.refresh()
       },
-      setErrorMessage: (error) => tError(error),
+      getErrorMessage: (error) => tError(error),
     })
   }
 

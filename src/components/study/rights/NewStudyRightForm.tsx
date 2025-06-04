@@ -72,8 +72,9 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
 
   const saveRight = async (command: NewStudyRightCommand) => {
     await callServerFunction(() => newStudyRight(command), {
-      setErrorMessage: (error) => t(error),
+      getErrorMessage: (error) => t(error),
       onSuccess: () => {
+        setOtherOrganizationVersion(false)
         router.push(`/etudes/${study.id}/cadrage`)
       },
     })

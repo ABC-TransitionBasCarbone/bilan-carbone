@@ -36,7 +36,7 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
         onSuccess: () => {
           setRole(newRole)
         },
-        setSuccessMessage: () => t('saved'),
+        getSuccessMessage: () => t('saved'),
       })
     }
   }

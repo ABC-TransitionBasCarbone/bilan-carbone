@@ -51,7 +51,7 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
 
   const onDelete = async () => {
     await callServerFunction(() => deleteStudyCommand(form.getValues()), {
-      setErrorMessage: (error) => tStudyDelete(error),
+      getErrorMessage: (error) => tStudyDelete(error),
       onSuccess: () => {
         router.push('/')
       },

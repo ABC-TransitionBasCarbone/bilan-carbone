@@ -14,7 +14,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControlLabel, Radio } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface Props {
@@ -28,6 +29,7 @@ const StudyPublicStatus = ({ study, disabled }: Props) => {
   const tGlossary = useTranslations('study.new.glossary')
   const [glossary, setGlossary] = useState('')
   const { callServerFunction } = useServerFunction()
+  const router = useRouter()
 
   const form = useForm<ChangeStudyPublicStatusCommand>({
     resolver: zodResolver(ChangeStudyPublicStatusCommandValidation),
@@ -41,15 +43,23 @@ const StudyPublicStatus = ({ study, disabled }: Props) => {
 
   const isPublic = form.watch('isPublic')
 
-  useEffect(() => {
-    const onSubmit = async (command: ChangeStudyPublicStatusCommand) => {
-      await callServerFunction(() => changeStudyPublicStatus(command))
-    }
+  const onSubmit = useCallback(
+    async (command: ChangeStudyPublicStatusCommand) => {
+      await callServerFunction(() => changeStudyPublicStatus(command), {
+        getSuccessMessage: () => tForm('saved'),
+        onSuccess: () => {
+          router.refresh()
+        },
+      })
+    },
+    [callServerFunction, router, tForm],
+  )
 
+  useEffect(() => {
     if (isPublic !== study.isPublic.toString()) {
       onSubmit(form.getValues())
     }
-  }, [isPublic, study, form, callServerFunction])
+  }, [isPublic, study.isPublic, form])
 
   return (
     <div className="grow">
