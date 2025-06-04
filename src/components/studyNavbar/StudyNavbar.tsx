@@ -1,8 +1,9 @@
 'use client'
 
-import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import MenuIcon from '@mui/icons-material/Menu'
 import { Divider, Drawer, IconButton } from '@mui/material'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { UUID } from 'crypto'
 import { useTranslations } from 'next-intl'
@@ -18,7 +19,7 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
   const [open, setOpen] = useState<boolean>(true)
 
   const { environment } = useAppEnvironmentStore()
-  const isCut = environment === CUT
+  const isCut = environment === Environment.CUT
 
   return (
     <>

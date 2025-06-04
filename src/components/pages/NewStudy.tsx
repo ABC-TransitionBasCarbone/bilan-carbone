@@ -6,10 +6,9 @@ import NewStudyForm from '@/environments/base/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
-import { CUT } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Export, SiteCAUnit } from '@prisma/client'
+import { Environment, Export, SiteCAUnit } from '@prisma/client'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -72,11 +71,12 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
       />
       {organizationVersion ? (
         <DynamicComponent
-          environmentComponents={{ [CUT]: <NewStudyFormCut user={user} accounts={accounts} form={form} /> }}
+          environmentComponents={{ [Environment.CUT]: <NewStudyFormCut user={user} accounts={accounts} form={form} /> }}
           defaultComponent={<NewStudyForm user={user} accounts={accounts} form={form} />}
         />
       ) : (
         <SelectOrganization
+          user={user}
           organizationVersions={organizationVersions}
           selectOrganizationVersion={setOrganizationVersion}
           form={form}

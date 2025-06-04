@@ -1,30 +1,20 @@
 'use client'
 
 import { switchEnvironment } from '@/i18n/environment'
-import { CUT, Environment, useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { usePathname, useRouter } from 'next/navigation'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { UserSession } from 'next-auth'
 import { useEffect } from 'react'
 
-const RESTRICTED_ROUTES: Partial<Record<Environment, string[]>> = {
-  [CUT]: ['/parametres', '/facteurs-d-emission', '/formation'],
-}
-
-const EnvironmentInitializer = () => {
-  const { environment } = useAppEnvironmentStore()
-  const router = useRouter()
-  const pathname = usePathname()
+const EnvironmentInitializer = ({ user }: { user: UserSession }) => {
+  const { setEnvironment } = useAppEnvironmentStore()
 
   useEffect(() => {
-    switchEnvironment(environment)
-  }, [environment])
-
-  useEffect(() => {
-    const restrictedRoutes = RESTRICTED_ROUTES[environment] || []
-    const isRestricted = restrictedRoutes.some((route) => pathname.startsWith(route))
-    if (isRestricted) {
-      router.push('/')
+    if (!user || !user.environment) {
+      return
     }
-  }, [environment, pathname])
+    setEnvironment(user.environment)
+    switchEnvironment(user.environment)
+  }, [user?.environment])
 
   return <></>
 }

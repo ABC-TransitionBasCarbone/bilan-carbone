@@ -404,7 +404,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
           studyId,
           siteId: site.id,
           etp: site.etp || organizationSite.etp,
-          ca: site.ca * caUnit || organizationSite.ca,
+          ca: (site?.ca || 0) * caUnit || organizationSite.ca,
         }
       })
       .filter((site) => site !== undefined)
@@ -466,8 +466,7 @@ const getOrCreateUserAndSendStudyInvite = async (
       source: creatorDBUser?.source,
       accounts: {
         create: {
-          role: Role.COLLABORATOR,
-          organizationVersionId: organizationVersion.id,
+          role: Role.DEFAULT,
           environment: study.organizationVersion.environment,
         },
       },

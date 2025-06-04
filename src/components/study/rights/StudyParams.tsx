@@ -9,10 +9,9 @@ import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
 import { changeStudyName } from '@/services/serverFunctions/study'
 import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/serverFunctions/study.command'
-import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { zodResolver } from '@hookform/resolvers/zod'
 import EditIcon from '@mui/icons-material/Edit'
-import { EmissionFactorImportVersion } from '@prisma/client'
+import { EmissionFactorImportVersion, Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
@@ -71,8 +70,7 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
     [name, study, form],
   )
 
-  const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === CUT, [environment])
+  const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
 
   return (
     <>
