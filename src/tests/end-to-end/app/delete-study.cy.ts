@@ -35,16 +35,16 @@ describe('Delete study', () => {
     cy.get('#delete-study-modale-content').should('be.visible')
 
     cy.getByTestId('delete-study-name-field').type('my study to delet')
-    cy.getByTestId('study-deletion-error').should('not.exist')
+    cy.getByTestId('alert-toaster').should('not.exist')
     cy.getByTestId('confirm-study-deletion').click()
-    cy.getByTestId('study-deletion-error').should('be.visible')
-    cy.getByTestId('study-deletion-error').should('have.text', "Le nom de l'étude ne correspond pas")
+    cy.getByTestId('alert-toaster').should('be.visible')
+    cy.getByTestId('alert-toaster').should('contain.text', "Le nom de l'étude ne correspond pas")
 
     cy.getByTestId('delete-study-name-field').type('e')
 
     cy.url().then((savedUrl) => {
       cy.getByTestId('confirm-study-deletion').click()
-      cy.getByTestId('study-deletion-error').should('not.exist')
+      cy.getByTestId('alert-toaster').should('not.exist')
 
       cy.wait('@delete')
       cy.url().should('eq', `${Cypress.config().baseUrl}/`)
