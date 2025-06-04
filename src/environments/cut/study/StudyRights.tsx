@@ -7,6 +7,7 @@ import StudyContributorsTable from '@/components/study/rights/StudyContributorsT
 import StudyParams from '@/components/study/rights/StudyParams'
 import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,7 +15,7 @@ import { DayOfWeek, EmissionFactorImportVersion, OpeningHours, StudyRole } from 
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
 
@@ -28,6 +29,7 @@ interface Props {
 
 const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFactorSources }: Props) => {
   const t = useTranslations('study.new')
+  const { callServerFunction } = useServerFunction()
 
   const openingHoursToObject = (openingHoursArr: OpeningHours[], isHoliday: boolean = false) => {
     return openingHoursArr.reduce(
@@ -69,18 +71,9 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
     [openingHoursHoliday],
   )
 
-  const [error, setError] = useState('')
-
-  const onStudyCinemaUpdate = useCallback(
-    form.handleSubmit(async (data) => {
-      const result = await changeStudyCinema(data)
-      if (!result.success) {
-        setError(result.errorMessage)
-        return
-      }
-    }),
-    [openingHours, openingHoursHoliday, study, form],
-  )
+  const onStudyCinemaUpdate = form.handleSubmit(async (data) => {
+    await callServerFunction(() => changeStudyCinema(data))
+  })
 
   const handleCheckDay = useCallback(
     (day: DayOfWeek) => {
@@ -170,7 +163,6 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
             control={form.control}
             disabled={editionDisabled}
           />
-          {error && <p>{error}</p>}
         </div>
       </Block>
       <StudyRightsTable study={study} user={user} canAddMember={!editionDisabled} userRoleOnStudy={userRoleOnStudy} />

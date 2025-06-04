@@ -34,8 +34,8 @@ const NewPasswordForm = () => {
     setSubmitting(true)
 
     await callServerFunction(() => resetPassword(getValues().email.toLowerCase()), {
-      successMessage: t('emailSent'),
-      translationFn: t,
+      setSuccessMessage: () => t('emailSent'),
+      setErrorMessage: (error) => t(error),
       onSuccess: () => {
         router.push('/login')
       },

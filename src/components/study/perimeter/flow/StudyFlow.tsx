@@ -56,7 +56,7 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
 
     setUploading(true)
     await callServerFunction(() => addFlowToStudy(study.id, file), {
-      translationFn: t,
+      setErrorMessage: (error) => t(error),
       onSuccess: () => {
         router.refresh()
       },
@@ -70,7 +70,7 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     }
     setDownloading(true)
     await callServerFunction(() => getDocumentUrl(selectedFlow, study.id), {
-      translationFn: t,
+      setErrorMessage: (error) => t(error),
       onSuccess: (url) => {
         downloadFromUrl(url, selectedFlow.name)
       },
@@ -84,7 +84,7 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     }
     setDeleting(true)
     await callServerFunction(() => deleteFlowFromStudy(selectedFlow, study.id), {
-      translationFn: t,
+      setErrorMessage: (error) => t(error),
       onSuccess: () => {
         router.refresh()
       },

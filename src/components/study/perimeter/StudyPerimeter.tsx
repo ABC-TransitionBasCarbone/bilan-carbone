@@ -10,6 +10,7 @@ import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   changeStudyDates,
   changeStudyExports,
@@ -57,9 +58,9 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
   const [exportsValues, setExportsValues] = useState<Record<Export, ControlMode | false> | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
   const [deleting, setDeleting] = useState(0)
-  const [error, setError] = useState<string | null>(null)
   const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
   const router = useRouter()
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),
@@ -148,13 +149,12 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
   const updateStudySites = async () => {
     setOpen(false)
 
-    const result = await changeStudySites(study.id, siteForm.getValues())
-    if (!result.success) {
-      setError(result.errorMessage)
-    } else {
-      router.refresh()
-      setIsEditing(false)
-    }
+    await callServerFunction(() => changeStudySites(study.id, siteForm.getValues()), {
+      onSuccess: () => {
+        router.refresh()
+        setIsEditing(false)
+      },
+    })
   }
 
   const [startDate, endDate, realizationStartDate, realizationEndDate] = form.watch([
@@ -320,7 +320,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
           <p className="mb-2">{tGlossary(`${glossary}Description`)}</p>
         </GlossaryModal>
       )}
-      {error && <p>{error}</p>}
     </>
   )
 }
