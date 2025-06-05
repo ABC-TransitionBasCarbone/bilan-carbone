@@ -23,7 +23,7 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
   const environment = await getEnvironment()
 
   const locale = environment === Environment.CUT ? Locale.FR : await getLocale()
-  if (environment === Environment.CUT) setRequestLocale(Locale.FR)
+  environment === Environment.CUT && setRequestLocale(Locale.FR)
 
   // Providing all messages to the client
   // side is the easiest way to get started
