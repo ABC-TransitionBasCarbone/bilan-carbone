@@ -6,6 +6,8 @@ import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
+import Footer from '@/environments/cut/layout/footer'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import styles from './layout.module.css'
 
@@ -45,6 +47,8 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
       )}
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
         {children}
+
+        {account.environment === Environment.CUT && <Footer />}
       </main>
       {accountOrganizationVersion && (
         <ChecklistButton
