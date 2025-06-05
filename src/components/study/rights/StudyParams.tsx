@@ -53,8 +53,8 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
     setEditTitle(false)
   }, [form, study])
 
-  const onSubmit = useCallback(
-    form.handleSubmit(async (data) => {
+  const handleSubmit = useCallback(
+    async (data: ChangeStudyNameCommand) => {
       if (name === study.name) {
         resetInput()
         return
@@ -66,8 +66,8 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
           study.name = name
         },
       })
-    }),
-    [name, study, callServerFunction, resetInput, form],
+    },
+    [name, study, callServerFunction, resetInput],
   )
 
   const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
@@ -109,7 +109,7 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
         label={'edit-study-title'}
         title={t('edit')}
         onClose={resetInput}
-        actions={[{ actionType: 'button', onClick: onSubmit, children: t('edit') }]}
+        actions={[{ actionType: 'button', onClick: form.handleSubmit(handleSubmit), children: t('edit') }]}
       >
         <FormTextField name="name" translation={tValidation} control={form.control} required />
       </Modal>
