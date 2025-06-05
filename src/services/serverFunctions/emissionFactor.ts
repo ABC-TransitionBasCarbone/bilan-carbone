@@ -28,7 +28,7 @@ import { getStudyParentOrganizationVersionId } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
-export const getEmissionFactors = async (studyId?: string) =>
+export const getEmissionFactors = async (studyId?: string, withCut: boolean = false) =>
   withServerResponse('getEmissionFactors', async () => {
     const session = await auth()
     if (!session || !session.user) {
@@ -50,13 +50,13 @@ export const getEmissionFactors = async (studyId?: string) =>
         return []
       }
       const emissionFactorOrganizationId = organizationVersion.organizationId
-      emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId)
+      emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId, withCut)
     } else {
       const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
       if (!organizationVersion) {
         return []
       }
-      emissionFactors = await getAllEmissionFactors(organizationVersion.organizationId)
+      emissionFactors = await getAllEmissionFactors(organizationVersion.organizationId, undefined, withCut)
     }
 
     return emissionFactors
