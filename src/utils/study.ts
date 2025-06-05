@@ -8,7 +8,7 @@ import { Level, Role, StudyResultUnit, StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { isInOrgaOrParent } from './organization'
 
-export const getUserRoleOnPublicStudy = (user: UserSession, studyLevel: Level) => {
+export const getUserRoleOnPublicStudy = (user: Pick<UserSession, 'role' | 'level'>, studyLevel: Level) => {
   if (isAdmin(user.role)) {
     return checkLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
   }

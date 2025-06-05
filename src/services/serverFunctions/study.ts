@@ -52,7 +52,7 @@ import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { getAccountRoleOnStudy, getUserRoleOnPublicStudy, hasEditionRights } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
@@ -552,6 +552,22 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       checkLevel(existingAccount.user.level, studyWithRights.level)
     ) {
       right.role = StudyRole.Validator
+    }
+
+    if (
+      existingUser &&
+      studyWithRights.isPublic &&
+      studyWithRights.organizationVersionId === existingAccount?.organizationVersionId
+    ) {
+      const defaultRole = getUserRoleOnPublicStudy(
+        { role: existingAccount.role, level: existingUser?.level },
+        studyWithRights.level,
+      )
+      if (defaultRole === StudyRole.Validator) {
+        right.role = StudyRole.Validator
+      } else if (defaultRole === StudyRole.Editor && right.role === StudyRole.Reader) {
+        right.role = StudyRole.Editor
+      }
     }
 
     const accountId = await getOrCreateUserAndSendStudyInvite(
