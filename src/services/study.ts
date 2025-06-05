@@ -1,7 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -90,7 +90,7 @@ const getEmissionSourcesRows = (
   tResultUnits: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
 ) => {
-  const initCols = []
+  const initCols = ['site']
   if (type === 'Post') {
     initCols.push('subPost')
   } else if (type === 'Study') {
@@ -103,6 +103,9 @@ const getEmissionSourcesRows = (
       'sourceName',
       'sourceCharacterization',
       'sourceValue',
+      'sourceDeprecation',
+      'sourceSurface',
+      'sourceDuration',
       'sourceUnit',
       'sourceQuality',
       'activityDataValue',
@@ -122,7 +125,7 @@ const getEmissionSourcesRows = (
     .sort((a, b) => a.subPost.localeCompare(b.subPost))
     .map((emissionSource) => {
       const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
-      const initCols: (string | number)[] = []
+      const initCols: (string | number)[] = [emissionSource.studySite.site.name]
       if (type === 'Post') {
         initCols.push(tPost(emissionSource.subPost))
       } else if (type === 'Study') {
@@ -134,13 +137,19 @@ const getEmissionSourcesRows = (
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
 
+      const withDeprecation = subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)
+
       return initCols
         .concat([
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
           ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) /
-            STUDY_UNIT_VALUES[resultsUnit] || '0',
+            STUDY_UNIT_VALUES[resultsUnit] /
+            (withDeprecation ? emissionSource.depreciationPeriod || 1 : 1) || '0',
+          withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
+          isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
+          isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
@@ -204,7 +213,7 @@ const getEmissionSourcesCSVContent = (
     type,
   )
 
-  const emptyFieldsCount = type === 'Study' ? 3 : type === 'Post' ? 2 : 1
+  const emptyFieldsCount = type === 'Study' ? 4 : type === 'Post' ? 3 : 2
   const emptyFields = (count: number) => Array(count).fill('')
 
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources) / STUDY_UNIT_VALUES[resultsUnit]

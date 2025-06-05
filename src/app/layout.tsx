@@ -1,11 +1,13 @@
 import RouteChangeListener from '@/components/RouteChangeListener'
 import '@/css/index.css'
+import { Locale } from '@/i18n/config'
 import { getEnvironment } from '@/i18n/environment'
 import Providers from '@/services/providers/Providers'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
+import { Environment } from '@prisma/client'
 import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
+import { getLocale, getMessages, setRequestLocale } from 'next-intl/server'
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
@@ -18,9 +20,10 @@ interface Props {
 }
 
 const RootLayout = async ({ children }: Readonly<Props>) => {
-  const locale = await getLocale()
-
   const environment = await getEnvironment()
+
+  const locale = environment === Environment.CUT ? Locale.FR : await getLocale()
+  environment === Environment.CUT && setRequestLocale(Locale.FR)
 
   // Providing all messages to the client
   // side is the easiest way to get started

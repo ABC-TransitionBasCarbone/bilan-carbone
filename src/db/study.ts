@@ -53,6 +53,9 @@ const fullStudyInclude = {
       studySite: {
         select: {
           id: true,
+          site: {
+            select: { name: true },
+          },
         },
       },
       emissionFactorId: true,
