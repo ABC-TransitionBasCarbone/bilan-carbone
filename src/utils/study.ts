@@ -4,7 +4,7 @@ import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { checkLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
-import { Level, Role, StudyResultUnit, StudyRole } from '@prisma/client'
+import { Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { isInOrgaOrParent } from './organization'
 
@@ -59,6 +59,11 @@ export const postColors: Record<Post, string> = {
 export const hasEditionRights = (userRoleOnStudy: StudyRole | null) => {
   return userRoleOnStudy && userRoleOnStudy !== StudyRole.Reader
 }
+
+export const isCAS = (emissionSource: FullStudy['emissionSources'][number]) =>
+  emissionSource.subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas &&
+  emissionSource.emissionFactor &&
+  emissionSource.emissionFactor.unit === Unit.HA_YEAR
 
 export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
   K: 1,
