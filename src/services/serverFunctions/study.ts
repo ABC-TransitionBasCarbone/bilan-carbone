@@ -626,6 +626,24 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       throw new Error(NOT_AUTHORIZED)
     }
 
+    if (
+      existingAccount &&
+      existingUser &&
+      studyWithRights.isPublic &&
+      existingAccount.organizationVersionId == studyWithRights.organizationVersionId
+    ) {
+      const defaultRole = getUserRoleOnPublicStudy(
+        { role: existingAccount.role, level: existingUser?.level },
+        studyWithRights.level,
+      )
+      if (defaultRole === StudyRole.Validator && studyRole !== StudyRole.Validator) {
+        throw new Error(NOT_AUTHORIZED)
+      }
+      if (defaultRole === StudyRole.Editor && studyRole === StudyRole.Reader) {
+        throw new Error(NOT_AUTHORIZED)
+      }
+    }
+
     await updateUserOnStudy(existingAccount.id, studyWithRights.id, studyRole)
   })
 
