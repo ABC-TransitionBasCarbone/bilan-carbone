@@ -11,12 +11,12 @@ import {
 } from '@/db/deactivableFeatures'
 import { withServerResponse } from '@/utils/serverResponse'
 import { DeactivatableFeature, Environment, Role, UserSource } from '@prisma/client'
-import { auth } from '../auth'
+import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 
 export const getDeactivableFeaturesRestrictionValues = async () =>
   withServerResponse('getDeactivableFeaturesRestrictionValues', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -33,7 +33,7 @@ export const getDeactivableFeaturesRestrictionValues = async () =>
 
 export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeature, status: boolean) =>
   withServerResponse('changeDeactivableFeatureStatus', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -47,7 +47,7 @@ export const changeDeactivableFeatureRestriction = async (
   status: boolean,
 ) =>
   withServerResponse('changeDeactivableFeatureRestriction', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
     }

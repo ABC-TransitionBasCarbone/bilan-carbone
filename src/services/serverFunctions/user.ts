@@ -36,7 +36,7 @@ import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userA
 import { Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
-import { auth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
 import {
   sendActivationEmail,
@@ -128,7 +128,7 @@ const sendActivation = async (email: string, fromReset: boolean) => {
 
 export const addMember = async (member: AddMemberCommand) =>
   withServerResponse('addMember', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId || member.role === Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -193,7 +193,7 @@ export const addMember = async (member: AddMemberCommand) =>
 
 export const validateMember = async (email: string) =>
   withServerResponse('validateMember', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -209,7 +209,7 @@ export const validateMember = async (email: string) =>
 
 export const resendInvitation = async (email: string) =>
   withServerResponse('resendInvitation', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -224,7 +224,7 @@ export const resendInvitation = async (email: string) =>
 
 export const deleteMember = async (email: string) =>
   withServerResponse('deleteMember', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -238,7 +238,7 @@ export const deleteMember = async (email: string) =>
 
 export const changeRole = async (email: string, role: Role) =>
   withServerResponse('changeRole', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -382,7 +382,7 @@ export const getUserCheckedItems = async () =>
 
 export const addUserChecklistItem = async (step: UserChecklist) =>
   withServerResponse('addUserChecklistItem', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user) {
       return
     }
@@ -449,7 +449,7 @@ export const lowercaseUsersEmails = async () => {
 
 export const getUserAccounts = async () =>
   withServerResponse('getUserAccounts', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user) {
       return []
     }
