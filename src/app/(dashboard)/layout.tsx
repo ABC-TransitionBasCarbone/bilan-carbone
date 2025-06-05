@@ -7,6 +7,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import Footer from '@/environments/cut/layout/footer'
+import { Box } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import styles from './layout.module.css'
@@ -37,7 +38,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
   )?.id
 
   return (
-    <div className="flex-col h100">
+    <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar user={account} />
       {account.organizationVersionId && (
         <OrganizationCard
@@ -45,10 +46,9 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
           organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
         />
       )}
-      <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
+      <Box component="main" flex="1" className={styles.content}>
         {children}
-        {account.environment === Environment.CUT && <Footer />}
-      </main>
+      </Box>
       {accountOrganizationVersion && (
         <ChecklistButton
           accountOrganizationVersion={accountOrganizationVersion}
@@ -58,7 +58,8 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
         />
       )}
       <EnvironmentInitializer user={account} />
-    </div>
+      {account.environment === Environment.CUT && <Footer />}
+    </Box>
   )
 }
 

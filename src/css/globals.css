@@ -6,7 +6,7 @@ body {
   background: var(--background-50);
   height: 100vh;
   line-height: 1.25;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .title-h1,
@@ -84,6 +84,7 @@ table {
       &:nth-child(even) {
         background: white;
       }
+
       &:nth-child(odd) {
         background: var(--background-150);
       }
@@ -104,6 +105,7 @@ table {
   tr:first-child th:first-child {
     border-top-left-radius: 0.25rem;
   }
+
   tr:first-child th:last-child {
     border-top-right-radius: 0.25rem;
   }
@@ -111,6 +113,7 @@ table {
   tr:last-child td:first-child {
     border-bottom-left-radius: 0.25rem;
   }
+
   tr:last-child td:last-child {
     border-bottom-right-radius: 0.25rem;
   }

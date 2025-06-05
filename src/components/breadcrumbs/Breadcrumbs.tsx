@@ -5,7 +5,7 @@ import styles from './Breadcrumbs.module.css'
 
 const Breadcrumbs = ({ links, current }: { links: { label: string; link: string }[]; current: string }) => {
   return (
-    <nav role="navigation" aria-label="Breadcrumb" className="main-container">
+    <nav role="navigation" aria-label="Breadcrumb" className={classNames(styles.navigation, "main-container")}>
       <ol className={classNames(styles.container, 'flex-cc')}>
         {links.map(({ label, link }) => (
           <li key={label} className={classNames(styles.previousPage, 'flex-cc')}>
