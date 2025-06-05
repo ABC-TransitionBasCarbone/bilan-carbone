@@ -26,7 +26,7 @@ const TeamPage = ({ user, team, crOrga = false }: Props) => {
       <Breadcrumbs current={tNav('team')} links={[{ label: tNav('home'), link: '/' }]} />
       <Block title={t('title')} as="h1" />
       <InvitationsToValidate
-        team={team.filter((member) => member.user.status === UserStatus.PENDING_REQUEST)}
+        usersToValidate={team.filter((member) => member.user.status === UserStatus.PENDING_REQUEST)}
         user={user}
       />
       <PendingInvitations team={team.filter((member) => member.user.status === UserStatus.VALIDATED)} user={user} />

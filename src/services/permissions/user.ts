@@ -1,5 +1,6 @@
 import { AccountWithUser } from '@/db/account'
-import { canEditMemberRole, isUntrainedRole } from '@/utils/organization'
+import { canEditMemberRole } from '@/utils/organization'
+import { canBeUntrainedRole } from '@/utils/user'
 import { Prisma, Role, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
 
@@ -69,7 +70,7 @@ export const canChangeRole = (user: UserSession, member: AccountWithUser | null,
     return false
   }
 
-  if (!member.user.level && !isUntrainedRole(newRole)) {
+  if (!member.user.level && !canBeUntrainedRole(newRole, user.environment)) {
     return false
   }
 

@@ -91,5 +91,10 @@
   },
   "actuality": {
     "title": "Les actualités de COUNT"
+  },
+  "role": {
+    "DEFAULT": "Collaborateur",
+    "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées).",
+    "DEFAULT_description": "Un collaborateur peut modifier des études. Il n'a pas accès aux paramètres de l'organisation."
   }
 }

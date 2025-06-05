@@ -2,17 +2,20 @@ import { AccountWithUser } from '@/db/account'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser, getMockedDbAccount, mockedAccountId } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
+import * as userUtils from '@/utils/user'
 import { expect } from '@jest/globals'
 import { Role, UserStatus } from '@prisma/client'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from './user'
 
 jest.mock('@/utils/organization', () => ({
   canEditMemberRole: jest.fn(),
-  isUntrainedRole: jest.fn(),
+}))
+jest.mock('@/utils/user', () => ({
+  canBeUntrainedRole: jest.fn(),
 }))
 
 const mockCanEditMemberRole = organizationUtils.canEditMemberRole as jest.Mock
-const mockIsUntrainedRole = organizationUtils.isUntrainedRole as unknown as jest.Mock
+const mockCanBeUntrainedRole = userUtils.canBeUntrainedRole as unknown as jest.Mock
 
 const adminUser = getMockedAuthUser({ role: Role.ADMIN })
 
@@ -211,7 +214,7 @@ describe('User permission functions', () => {
       const result = canChangeRole(adminUser, null, Role.ADMIN)
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toBeCalledTimes(0)
-      expect(mockIsUntrainedRole).toBeCalledTimes(0)
+      expect(mockCanBeUntrainedRole).toBeCalledTimes(0)
     })
 
     it('returns false if editing own role without proper rights', () => {
@@ -228,7 +231,7 @@ describe('User permission functions', () => {
       )
       expect(memberResult).toBe(false)
       expect(mockCanEditMemberRole).toBeCalledTimes(0)
-      expect(mockIsUntrainedRole).toBeCalledTimes(0)
+      expect(mockCanBeUntrainedRole).toBeCalledTimes(0)
     })
 
     it('returns false if cannot edit member roles', () => {
@@ -236,7 +239,7 @@ describe('User permission functions', () => {
       const result = canChangeRole(adminUser, getMockedDbAccount() as AccountWithUser, Role.ADMIN)
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toBeCalledTimes(1)
-      expect(mockIsUntrainedRole).toBeCalledTimes(0)
+      expect(mockCanBeUntrainedRole).toBeCalledTimes(0)
     })
 
     it('returns false if user is from another organization', () => {
@@ -248,7 +251,7 @@ describe('User permission functions', () => {
       )
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toBeCalledTimes(1)
-      expect(mockIsUntrainedRole).toBeCalledTimes(0)
+      expect(mockCanBeUntrainedRole).toBeCalledTimes(0)
     })
 
     it('returns false if assigning SUPER_ADMIN', () => {
@@ -256,21 +259,21 @@ describe('User permission functions', () => {
       const result = canChangeRole(adminUser, getMockedDbAccount() as AccountWithUser, Role.SUPER_ADMIN)
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toBeCalledTimes(1)
-      expect(mockIsUntrainedRole).toBeCalledTimes(0)
+      expect(mockCanBeUntrainedRole).toBeCalledTimes(0)
     })
 
     it('returns false if member has no level and role is not untrained', () => {
       mockCanEditMemberRole.mockReturnValue(true)
-      mockIsUntrainedRole.mockReturnValue(false)
+      mockCanBeUntrainedRole.mockReturnValue(false)
       const result = canChangeRole(adminUser, getMockedDbAccount({}, { level: null }) as AccountWithUser, Role.ADMIN)
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toBeCalledTimes(1)
-      expect(mockIsUntrainedRole).toBeCalledTimes(1)
+      expect(mockCanBeUntrainedRole).toBeCalledTimes(1)
     })
 
     it('returns true when all checks pass', () => {
       mockCanEditMemberRole.mockReturnValue(true)
-      mockIsUntrainedRole.mockReturnValue(true)
+      mockCanBeUntrainedRole.mockReturnValue(true)
       const untrainedResult = canChangeRole(
         adminUser,
         getMockedDbAccount({}, { level: null }) as AccountWithUser,
@@ -278,10 +281,10 @@ describe('User permission functions', () => {
       )
       expect(untrainedResult).toBe(true)
       expect(mockCanEditMemberRole).toBeCalledTimes(1)
-      expect(mockIsUntrainedRole).toBeCalledTimes(1)
+      expect(mockCanBeUntrainedRole).toBeCalledTimes(1)
 
       mockCanEditMemberRole.mockReturnValue(true)
-      mockIsUntrainedRole.mockReturnValue(false)
+      mockCanBeUntrainedRole.mockReturnValue(false)
       const trainedResult = canChangeRole(adminUser, getMockedDbAccount() as AccountWithUser, Role.ADMIN)
       expect(trainedResult).toBe(true)
       expect(mockCanEditMemberRole).toBeCalledTimes(2)

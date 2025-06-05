@@ -21,6 +21,7 @@ import {
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { createRealStudy } from './study'
+import { getCutRoleFromBase } from './utils'
 
 const program = new Command()
 type Params = {
@@ -257,14 +258,14 @@ const users = async () => {
     })),
   })
 
+  const crOrganizationVersions = organizationVersions.filter((organization) => organization.isCR)
+  const regularOrganizationVersions = organizationVersions.filter((organization) => !organization.isCR)
+
   const environmentOrganizationVersions = {
-    [Environment.BC]: organizationVersions,
+    [Environment.BC]: regularOrganizationVersions,
     [Environment.CUT]: organizationVersionsCUT,
     [Environment.TILT]: organizationVersionsTILT,
   }
-
-  const crOrganizationVersions = organizationVersions.filter((organization) => organization.isCR)
-  const regularOrganizationVersions = organizationVersions.filter((organization) => !organization.isCR)
 
   const childOrganizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 50 }).map(() => ({
@@ -408,7 +409,7 @@ const users = async () => {
           const account = await prisma.account.create({
             data: {
               organizationVersionId: organizationVersionArray[index % organizationVersionArray.length].id,
-              role: role as Role,
+              role: getCutRoleFromBase(role as Role),
               userId: user.id,
               environment: environment as Environment,
             },
@@ -445,7 +446,7 @@ const users = async () => {
           },
           {
             organizationVersionId: organizationVersionsCUT[index % organizationVersionsCUT.length].id,
-            role: role as Role,
+            role: getCutRoleFromBase(role as Role),
             userId: user.id,
             environment: Environment.CUT,
           },

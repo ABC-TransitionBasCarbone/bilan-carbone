@@ -32,6 +32,7 @@ import {
 import { processUsers } from '@/scripts/ftp/userImport'
 import { withServerResponse } from '@/utils/serverResponse'
 import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
+import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
 import { Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
@@ -160,7 +161,7 @@ export const addMember = async (member: AddMemberCommand) =>
         source: userFromDb.source,
         accounts: {
           create: {
-            role: role === Role.ADMIN || member.role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT,
+            role: getRoleToSetForUntrained(role, session.user.environment),
             organizationVersionId: session.user.organizationVersionId,
             environment: session.user.environment,
           },
@@ -180,9 +181,7 @@ export const addMember = async (member: AddMemberCommand) =>
         level: memberExists.user.level ? memberExists.user.level : null,
         role: memberExists.user.level
           ? memberExists.role
-          : member.role === Role.ADMIN || member.role === Role.GESTIONNAIRE
-            ? Role.GESTIONNAIRE
-            : Role.DEFAULT,
+          : getRoleToSetForUntrained(memberExists.role, session.user.environment),
         organizationVersionId: session.user.organizationVersionId,
       }
       await updateUser(memberExists.id, updateMember)
@@ -425,7 +424,7 @@ export const changeUserRoleOnOnboarding = async () =>
       return
     }
 
-    const newRole = session.user.level ? Role.ADMIN : Role.GESTIONNAIRE
+    const newRole = session.user.level ? Role.ADMIN : getRoleToSetForUntrained(Role.ADMIN, session.user.environment)
     await changeAccountRole(session.user.accountId, newRole)
   })
 
