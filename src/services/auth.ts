@@ -195,6 +195,7 @@ export async function dbActualizedAuth(
       ...session.user,
       role: account.role,
       organizationVersionId: account.organizationVersionId,
+      level: account.user.level,
     },
   }
 }
