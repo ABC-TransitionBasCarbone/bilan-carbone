@@ -1,13 +1,14 @@
 import { Role } from '@prisma/client'
 
 export const getCutRoleFromBase = (role: Role): Role => {
-  const cutRoles = {
-    [Role.ADMIN]: Role.ADMIN,
-    [Role.GESTIONNAIRE]: Role.ADMIN,
-    [Role.COLLABORATOR]: Role.DEFAULT,
-    [Role.DEFAULT]: Role.DEFAULT,
-    [Role.SUPER_ADMIN]: Role.ADMIN,
+  switch (role) {
+    case Role.ADMIN:
+    case Role.GESTIONNAIRE:
+    case Role.SUPER_ADMIN:
+      return Role.ADMIN
+    case Role.COLLABORATOR:
+    case Role.DEFAULT:
+    default:
+      return Role.DEFAULT
   }
-
-  return cutRoles[role] || Role.DEFAULT
 }
