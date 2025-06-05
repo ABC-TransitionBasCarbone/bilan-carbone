@@ -1,4 +1,5 @@
 import { getSourceLatestImportVersionId } from '@/db/study'
+import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
@@ -256,6 +257,11 @@ export const mapEmissionFactors = (
   temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
   completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
   unit: getUnit(emissionFactor.Unité_français),
+  isMonetary: isMonetaryEmissionFactor({
+    unit: getUnit(emissionFactor.Unité_français),
+    customUnit: '',
+    isMonetary: false,
+  }),
   subPosts: getSubPost(emissionFactor),
   metaData: {
     createMany: {

@@ -31,7 +31,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
-  const [glossaryOpen, setGlossaryOpen] = useState(false)
+  const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
 
   const allComputedResults = useMemo(
@@ -50,9 +50,10 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     [allComputedResults, withDep],
   )
 
-  const [withDepValue, withoutDepValue] = useMemo(() => {
+  const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, studySite, true, validatedOnly)
     const total = computedResults.find((result) => result.post === 'total')?.value || 0
+    const monetaryTotal = computedResults.find((result) => result.post === 'total')?.monetaryValue || 0
 
     const dependenciesSubPost = SubPost.UtilisationEnDependance
 
@@ -65,7 +66,11 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
         .find((result) => result.post === dependenciesPost)
         ?.subPosts.find((subPost) => subPost.post === dependenciesSubPost)?.value || 0
 
-    return [total, total - dependenciesValue].map((value) => formatNumber(value / STUDY_UNIT_VALUES[study.resultsUnit]))
+    const formatedTotal = formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])
+    const formatedDiff = formatNumber((total - dependenciesValue) / STUDY_UNIT_VALUES[study.resultsUnit])
+    const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
+
+    return [formatedTotal, formatedDiff, formatedMonetaryRatio]
   }, [study, studySite, validatedOnly])
 
   return (
@@ -92,13 +97,13 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(true)}
               className={styles.hidden}
             />
-            <Box className={classNames(styles.card, 'flex-col flex-cc m2 px3', { [styles.selected]: withDep })}>
+            <Box className={classNames(styles.card, 'flex-col flex-cc pointer', { [styles.selected]: withDep })}>
               <h3 className="text-center">
                 {withDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="align-center text-center">
                 {t('results.withDependencies')}
-                <HelpIcon className="ml-4" onClick={() => setGlossaryOpen(!glossaryOpen)} label={t('information')} />
+                <HelpIcon className="ml-4" onClick={() => setGlossary('withDependencies')} label={t('information')} />
               </span>
             </Box>
           </label>
@@ -111,34 +116,54 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(false)}
               className={styles.hidden}
             />
-            <Box className={classNames(styles.card, 'flex-col flex-cc m2 px3', { [styles.selected]: !withDep })}>
+            <Box className={classNames(styles.card, 'flex-col flex-cc pointer', { [styles.selected]: !withDep })}>
               <h3 className="text-center">
                 {withoutDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="text-center">{t('results.withoutDependencies')}</span>
             </Box>
           </label>
+          <Box className={classNames(styles.card, styles.disabled, 'flex-col flex-cc')}>
+            <h3 className="text-center">{monetaryRatio} %</h3>
+            <span className="text-center align-center">
+              {t('results.monetaryRatio')}
+              <HelpIcon className="ml-4" onClick={() => setGlossary('monetaryRatio')} label={t('information')} />
+            </span>
+          </Box>
         </fieldset>
         <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
       </div>
       <GlossaryModal
-        glossary={glossaryOpen ? 'results.withDependencies' : ''}
-        onClose={() => setGlossaryOpen(false)}
-        label="withDependencies"
+        glossary={glossary ? `results.${glossary}` : ''}
+        onClose={() => setGlossary('')}
+        label="withDependestudy-results-glossary"
         t={t}
       >
         <span>
-          {t.rich('withDependencies', {
-            link: (children) => (
-              <Link
-                href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {children}
-              </Link>
-            ),
-          })}
+          {glossary && (
+            <>
+              {t.rich(`${glossary}Description`, {
+                link: (children) => (
+                  <Link
+                    href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {children}
+                  </Link>
+                ),
+                monetaryLink: (children) => (
+                  <Link
+                    href="https://www.bilancarbone-methode.com/4-comptabilisation/4.3-methode-de-selection-des-facteurs-demission#fe-en-ratios-monetaires"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {children}
+                  </Link>
+                ),
+              })}
+            </>
+          )}
         </span>
       </GlossaryModal>
     </>

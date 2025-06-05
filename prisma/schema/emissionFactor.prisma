@@ -185,6 +185,7 @@ model EmissionFactor {
   otherGES   Float?  @map("other_ges")
   unit       Unit?
   customUnit String?
+  isMonetary Boolean @map("is_monetary")
 
   subPosts            SubPost[]             @map("sub_posts")
   studyEmissionSource StudyEmissionSource[]
