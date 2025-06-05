@@ -123,7 +123,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               <span className="text-center">{t('results.withoutDependencies')}</span>
             </Box>
           </label>
-          <Box className={classNames(styles.card, 'flex-col flex-cc')}>
+          <Box className={classNames(styles.card, styles.disabled, 'flex-col flex-cc')}>
             <h3 className="text-center">{monetaryRatio} %</h3>
             <span className="text-center align-center">
               {t('results.monetaryRatio')}

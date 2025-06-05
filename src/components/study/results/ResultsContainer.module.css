@@ -42,6 +42,10 @@
   &.selected {
     border-color: var(--primary-500);
   }
+
+  &.disabled {
+    background-color: var(--grayscale-100);
+  }
 }
 
 .hidden {
