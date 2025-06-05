@@ -28,11 +28,11 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
 
   const getCncData = async (cncId: string, index: number) => {
     if (!cncId || cncId.length < 2) {
-      return null
+      return
     }
     const cnc = await getCNCCodeById(cncId)
     if (!cnc) {
-      return null
+      return
     }
     cnc.nom && setValue(`sites.${index}.name`, cnc.nom)
     cnc.codeInsee && setValue(`sites.${index}.postalCode`, cnc.codeInsee)
@@ -64,6 +64,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                   className={styles.field}
                   control={control}
                   translation={t}
+                  debounce
                   name={`sites.${row.index}.cncId`}
                   placeholder={t('cncPlaceholder')}
                   onChange={(e) => getCncData(e.target.value, row.index)}

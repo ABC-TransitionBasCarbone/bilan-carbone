@@ -3,6 +3,8 @@ import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import IconLabel from '../base/IconLabel'
 import styles from './Form.module.css'
+import DebouncedInput from '../base/DebouncedInput'
+import { ChangeEvent } from 'react'
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
@@ -12,7 +14,8 @@ interface Props<T extends FieldValues> {
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
   endAdornment?: React.ReactNode
-  customError?: string
+  customError?: string,
+  debounce?: boolean
 }
 
 export const FormTextField = <T extends FieldValues>({
@@ -24,6 +27,7 @@ export const FormTextField = <T extends FieldValues>({
   iconPosition = 'before',
   endAdornment,
   customError,
+  debounce,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -38,20 +42,16 @@ export const FormTextField = <T extends FieldValues>({
               <span className="inputLabel bold">{label}</span>
             </IconLabel>
           ) : null}
-          <TextField
-            {...textFieldProps}
+          <DebouncedInput
+            {...Object.fromEntries(Object.entries(textFieldProps).filter(([key]) => key !== 'size'))}
             error={!!error || !!customError}
+            debounce={debounce ? 500 : 0}
             onChange={(event) => {
-              // Call react-hook-form's onChange
-              if (textFieldProps.type === 'number') {
-                onChange(parseFloat(event.target.value))
-              } else {
-                onChange(event)
-              }
-              // Call custom onChange if provided
-              if (typeof textFieldProps.onChange === 'function') {
-                textFieldProps.onChange(event)
-              }
+              const val = textFieldProps.type === 'number' ? parseFloat(event) : event
+              onChange(val)
+              textFieldProps.onChange?.({
+                target: { value: event },
+              } as unknown as ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
             }}
             value={(textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined ? '' : value}
             slotProps={{
