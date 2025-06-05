@@ -63,9 +63,9 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
           { label: tNav('home'), link: '/' },
           defaultOrganizationVersion && defaultOrganizationVersion.isCR
             ? {
-              label: defaultOrganizationVersion.organization.name,
-              link: `/organisations/${defaultOrganizationVersion.id}`,
-            }
+                label: defaultOrganizationVersion.organization.name,
+                link: `/organisations/${defaultOrganizationVersion.id}`,
+              }
             : undefined,
         ].filter((link) => link !== undefined)}
       />
