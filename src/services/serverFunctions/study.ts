@@ -1,6 +1,6 @@
 'use server'
 
-import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
+import { StudyContributorPostRow } from '@/components/study/rights/StudyContributorsTable'
 import {
   AccountWithUser,
   addAccount,
@@ -811,7 +811,7 @@ export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], st
     await deleteAccountOnStudy(studyId, member.accountId)
   })
 
-export const deleteStudyContributor = async (contributor: StudyContributorRow, studyId: string) =>
+export const deleteStudyContributor = async (contributor: StudyContributorPostRow, studyId: string) =>
   withServerResponse('deleteStudyContributor', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (

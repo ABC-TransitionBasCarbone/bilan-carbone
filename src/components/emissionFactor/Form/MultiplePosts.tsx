@@ -16,6 +16,14 @@ interface Props<T extends SubPostsCommand> {
   context: 'emissionFactor' | 'studyContributor'
 }
 
+// Constants
+const ALL_POSTS_VALUE = 'ALL_POSTS'
+
+// Utility functions
+const hasAllPostsSelected = (posts: Record<string, SubPost[]>): boolean => {
+  return Object.keys(posts).includes(ALL_POSTS_VALUE)
+}
+
 const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
@@ -24,64 +32,94 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
   const control = form.control as Control<SubPostsCommand>
   const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
 
-  const posts: Record<Post, SubPost[]> = (form.watch('subPosts' as FieldPath<T>) as Record<Post, SubPost[]>) || {}
   const [glossary, setGlossary] = useState('')
+
+  const posts: Record<Post, SubPost[]> = useMemo(
+    () => (form.watch('subPosts' as FieldPath<T>) as Record<Post, SubPost[]>) || {},
+    [form],
+  )
 
   useEffect(() => {
     if (!form.formState.isSubmitted) {
       return
     }
     form.trigger('subPosts' as FieldPath<T>)
-  }, [posts])
+  }, [posts, form])
 
-  const postSelection: BCPost[] = useMemo(
+  // Get available posts that haven't been selected yet
+  const availablePosts: BCPost[] = useMemo(
     () =>
       Object.keys(BCPost)
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-        .filter((p) => !Object.keys(posts).includes(p)) as BCPost[],
-    [posts],
+        .filter((postKey) => !Object.keys(posts).includes(postKey)) as BCPost[],
+    [posts, tPost],
   )
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
-    const selectedPost = event.target.value as Post
-    const currentSubPosts = { ...posts, [selectedPost]: [] }
-    setValue('subPosts', currentSubPosts)
+    const selectedPost = event.target.value as string
+
+    if (selectedPost === ALL_POSTS_VALUE) {
+      // Add "Tous les postes" as a special post with empty sub-posts array
+      const currentSubPosts = { ...posts, [ALL_POSTS_VALUE]: [] }
+      setValue('subPosts', currentSubPosts as Record<string, SubPost[]>)
+    } else {
+      // Original behavior for regular posts
+      const currentSubPosts = { ...posts, [selectedPost as Post]: [] }
+      setValue('subPosts', currentSubPosts)
+    }
   }
+
+  // Check if "Tous les postes" is already selected
+  const hasAllPosts = hasAllPostsSelected(posts)
 
   return (
     <div className="flex-col">
       {Object.keys(posts).map((postKey) => (
         <Box key={postKey} className={styles.postContainer}>
-          <Posts postOptions={postSelection} form={form} post={postKey as Post} subPosts={posts[postKey as Post]} />
+          <Posts
+            postOptions={postKey === ALL_POSTS_VALUE ? Object.values(BCPost) : availablePosts}
+            form={form}
+            post={postKey === ALL_POSTS_VALUE ? undefined : (postKey as Post)}
+            subPosts={posts[postKey as Post]}
+            isAllPosts={postKey === ALL_POSTS_VALUE}
+          />
         </Box>
       ))}
 
-      <Controller
-        name={'subPosts' as FieldPath<T>}
-        control={control}
-        render={({ fieldState: { error } }) => (
-          <FormControl className={styles.selectForm} error={error && Object.keys(posts).length === 0}>
-            <Select
-              name={'post'}
-              onChange={handleSelectPost}
-              data-testid="emission-factor-post"
-              label={t('posts')}
-              fullWidth
-              icon={<HelpIcon onClick={() => setGlossary(`post_${context}`)} label={tGlossary('title')} />}
-              iconPosition="after"
-            >
-              {postSelection.map((post) => (
-                <MenuItem key={post} value={post}>
-                  {tPost(post)}
-                </MenuItem>
-              ))}
-            </Select>
-            {error && error.message && Object.keys(posts).length === 0 && (
-              <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>
-            )}
-          </FormControl>
-        )}
-      />
+      {/* Only show the post selector if "Tous les postes" is not already selected */}
+      {!hasAllPosts && (
+        <Controller
+          name={'subPosts' as FieldPath<T>}
+          control={control}
+          render={({ fieldState: { error } }) => (
+            <FormControl className={styles.selectForm} error={error && Object.keys(posts).length === 0}>
+              <Select
+                name={'post'}
+                onChange={handleSelectPost}
+                data-testid="emission-factor-post"
+                label={t('posts')}
+                fullWidth
+                icon={<HelpIcon onClick={() => setGlossary(`post_${context}`)} label={tGlossary('title')} />}
+                iconPosition="after"
+              >
+                {Object.keys(posts).length === 0 && (
+                  <MenuItem key={ALL_POSTS_VALUE} value={ALL_POSTS_VALUE}>
+                    {tPost('allPost')}
+                  </MenuItem>
+                )}
+                {availablePosts.map((post) => (
+                  <MenuItem key={post} value={post}>
+                    {tPost(post)}
+                  </MenuItem>
+                ))}
+              </Select>
+              {error && error.message && Object.keys(posts).length === 0 && (
+                <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>
+              )}
+            </FormControl>
+          )}
+        />
+      )}
 
       {glossary && (
         <GlossaryModal glossary="post" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>
