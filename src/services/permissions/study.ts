@@ -7,7 +7,7 @@ import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
-import { auth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth'
 import { checkLevel } from '../study'
 import { isInOrgaOrParentFromId } from './organization'
 
@@ -182,7 +182,7 @@ export const canAddContributorOnStudy = (user: UserSession, study: FullStudy) =>
 }
 
 export const canDeleteStudy = async (studyId: string) => {
-  const session = await auth()
+  const session = await dbActualizedAuth()
 
   if (!session) {
     return false

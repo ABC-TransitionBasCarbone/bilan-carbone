@@ -3,7 +3,7 @@ import { getOrganizationVersionById, OrganizationVersionWithOrganization } from 
 import { getUserByEmail } from '@/db/user'
 import { canEditMemberRole, canEditOrganizationVersion, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
 import { UserSession } from 'next-auth'
-import { auth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth'
 import { getOrganizationStudiesFromOtherUsers } from '../serverFunctions/study'
 
 export const isInOrgaOrParentFromId = async (
@@ -60,7 +60,7 @@ export const canUpdateOrganizationVersion = async (account: UserSession, organiz
 
 export const canDeleteOrganizationVersion = async (organizationVersionId: string) => {
   const [session, targetOrganizationVersion] = await Promise.all([
-    auth(),
+    dbActualizedAuth(),
     getOrganizationVersionById(organizationVersionId),
   ])
   if (!session || !session.user || !targetOrganizationVersion) {

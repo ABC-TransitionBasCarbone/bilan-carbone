@@ -23,7 +23,7 @@ import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
 import { Account, Environment, Prisma, StudyRole, UserChecklist } from '@prisma/client'
-import { auth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
 import {
   canCreateOrganization,
@@ -55,7 +55,7 @@ export const getStudyOrganizationVersion = async (studyId: string) =>
 
 export const createOrganizationCommand = async (command: CreateOrganizationCommand) =>
   withServerResponse('createOrganizationCommand', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -122,7 +122,7 @@ export const deleteOrganizationCommand = async ({ id, name }: DeleteCommand) =>
 
 export const setOnboardedOrganizationVersion = async (organizationVersionId: string) =>
   withServerResponse('setOnboardedOrganizationVersion', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     const userOrganizationVersionId = session?.user.organizationVersionId
 
     if (!session || !userOrganizationVersionId || userOrganizationVersionId !== organizationVersionId) {
@@ -134,7 +134,7 @@ export const setOnboardedOrganizationVersion = async (organizationVersionId: str
 
 export const onboardOrganizationVersionCommand = async (command: OnboardingCommand) =>
   withServerResponse('onboardOrganizationVersionCommand', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     const organizationVersionId = session?.user.organizationVersionId
 
     if (!session || !organizationVersionId || organizationVersionId !== command.organizationVersionId) {
@@ -170,7 +170,7 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
 
 export const deleteOrganizationMember = async (email: string) =>
   withServerResponse('deleteOrganizationMember', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !(await canDeleteMember(email))) {
       throw new Error(NOT_AUTHORIZED)
     }

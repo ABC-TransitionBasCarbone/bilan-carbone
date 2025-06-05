@@ -20,7 +20,7 @@ import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
-import { auth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
 import { canReadStudy } from '../permissions/study'
@@ -116,7 +116,7 @@ export const getDetailedEmissionFactor = async (id: string) =>
 
 export const isFromEmissionFactorOrganization = async (id: string) =>
   withServerResponse('isFromEmissionFactorOrganization', async () => {
-    const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorById(id)])
+    const [session, emissionFactor] = await Promise.all([dbActualizedAuth(), getEmissionFactorById(id)])
 
     if (!emissionFactor || !session || !session.user) {
       return false
