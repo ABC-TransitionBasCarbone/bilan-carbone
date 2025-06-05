@@ -4,6 +4,7 @@ import { activateEmail } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -23,6 +24,7 @@ const ActivationForm = () => {
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
+  const [env, setEnv] = useState<Environment | undefined>()
 
   const searchParams = useSearchParams()
 
@@ -40,13 +42,18 @@ const ActivationForm = () => {
     if (email) {
       setValue('email', email)
     }
-  }, [searchParams, setValue])
+    const environment = searchParams.get('env')
+    if (environment && Object.keys(Environment).includes(environment)) {
+      setEnv(environment as Environment)
+    }
+  }, [env, searchParams, setValue])
 
   const onSubmit = async () => {
     setMessage('')
     setSubmitting(true)
 
-    const activation = await activateEmail(getValues().email)
+    const activation = await activateEmail(getValues().email, env)
+
     setSubmitting(false)
 
     if (activation.success) {

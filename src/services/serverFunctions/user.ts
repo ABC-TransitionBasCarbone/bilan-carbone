@@ -38,7 +38,7 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@/utils/time'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
-import { DeactivatableFeature, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
+import { DeactivatableFeature, Environment, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { auth, dbActualizedAuth } from '../auth'
@@ -285,12 +285,12 @@ export const updateUserProfile = async (command: EditProfileCommand) =>
     await updateUser(session.user.userId, command)
   })
 
-export const resetPassword = async (email: string) =>
+export const resetPassword = async (email: string, env: Environment) =>
   withServerResponse('resetPassword', async () => {
     const user = await getUserByEmail(email)
 
     if (!user || user.accounts.every((a) => a.status !== UserStatus.ACTIVE)) {
-      const activation = await activateEmail(email, true)
+      const activation = await activateEmail(email, env, true)
       if (activation.success) {
         return activation.data
       } else {
@@ -312,10 +312,16 @@ export const resetPassword = async (email: string) =>
     }
   })
 
-export const activateEmail = async (email: string, fromReset: boolean = false) =>
+export const activateEmail = async (email: string, env: Environment | undefined, fromReset: boolean = false) =>
   withServerResponse('activateEmail', async () => {
+    if (!env) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     const user = await getUserByEmail(email)
-    const account = (await getAccountById(user?.accounts[0]?.id || '')) as AccountWithUser
+    const account = (await getAccountById(
+      user?.accounts.find((a) => a.environment === env)?.id || '',
+    )) as AccountWithUser
     if (
       !user ||
       !account ||
@@ -332,7 +338,7 @@ export const activateEmail = async (email: string, fromReset: boolean = false) =
 
     if (
       (await organizationVersionActiveAccountsCount(account.organizationVersionId)) &&
-      user.status !== UserStatus.VALIDATED
+      account.status !== UserStatus.VALIDATED
     ) {
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(account))
       await sendActivationRequest(

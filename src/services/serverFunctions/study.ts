@@ -490,7 +490,12 @@ const getOrCreateUserAndSendStudyInvite = async (
       newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
     )
 
-    accountId = newUser.accounts[0].id
+    const newAccountId = newUser.accounts.find((a) => a.environment === organizationVersion.environment)?.id
+    if (!newAccountId) {
+      throw new Error()
+    }
+
+    accountId = newAccountId
   } else {
     let account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
 

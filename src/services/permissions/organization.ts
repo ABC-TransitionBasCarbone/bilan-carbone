@@ -97,6 +97,7 @@ export const canDeleteMember = async (email: string) => {
   }
 
   const targetMember = await getUserByEmail(email)
+  // Ici c'est normal de récupérer le premier account, on a juste besoin du userId
   if (!targetMember || targetMember.accounts[0].userId === session.user.id) {
     return false
   }

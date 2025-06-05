@@ -165,6 +165,7 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
+        // L'utilisateur n'a qu'un seul compte donc on peut prendre le premier
         const account = (await getAccountById(accounts[0].id)) as AccountWithUser
         return buildSession(account)
       },

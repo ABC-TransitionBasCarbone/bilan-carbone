@@ -99,6 +99,7 @@ export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'S
       accounts: {
         select: {
           id: true,
+          environment: true,
         },
       },
     },
