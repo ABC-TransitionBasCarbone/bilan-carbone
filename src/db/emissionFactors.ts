@@ -87,7 +87,11 @@ const getCachedDefaultEmissionFactors = async (versionIds?: string[]) => {
   return emissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
 }
 
-export const getAllEmissionFactors = async (organizationId: string | null, studyId?: string) => {
+export const getAllEmissionFactors = async (
+  organizationId: string | null,
+  studyId?: string,
+  withCut: boolean = false,
+) => {
   let versionIds
   let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
   if (studyId) {
@@ -117,7 +121,12 @@ export const getAllEmissionFactors = async (organizationId: string | null, study
     ? getDefaultEmissionFactors(versionIds)
     : getCachedDefaultEmissionFactors(versionIds))
 
-  return organizationEmissionFactor.concat(defaultEmissionFactors).concat(studyOldEmissionFactors)
+  const allEmissionFactors = organizationEmissionFactor.concat(defaultEmissionFactors).concat(studyOldEmissionFactors)
+  if (withCut) {
+    return allEmissionFactors
+  }
+
+  return allEmissionFactors.filter((emissionFactor) => emissionFactor.importedFrom !== Import.CUT)
 }
 
 export const getEmissionFactorById = (id: string) =>
@@ -302,18 +311,26 @@ export const getEmissionFactorDetailsById = async (id: string) =>
   })
 export type DetailedEmissionFactor = AsyncReturnType<typeof getEmissionFactorDetailsById>
 
-export const getEmissionFactorSources = async () => {
-  return prismaClient.emissionFactorImportVersion.findMany()
+export const getEmissionFactorSources = async (withCut: boolean = false) => {
+  if (withCut) {
+    return prismaClient.emissionFactorImportVersion.findMany()
+  }
+  return prismaClient.emissionFactorImportVersion.findMany({ where: { source: { not: Import.CUT } } })
 }
 
-export const getStudyEmissionFactorSources = async (studyId: string) => {
+export const getStudyEmissionFactorSources = async (studyId: string, withCut: boolean = false) => {
   const versionIds = (
     await prismaClient.studyEmissionFactorVersion.findMany({
       where: { studyId },
       select: { importVersionId: true },
     })
   ).map((studyVersion) => studyVersion.importVersionId)
-  return prismaClient.emissionFactorImportVersion.findMany({ where: { id: { in: versionIds } } })
+  if (withCut) {
+    return prismaClient.emissionFactorImportVersion.findMany({ where: { id: { in: versionIds } } })
+  }
+  return prismaClient.emissionFactorImportVersion.findMany({
+    where: { id: { in: versionIds }, source: { not: Import.CUT } },
+  })
 }
 
 export const getEmissionFactorVersionsBySource = async (source: Import) =>
