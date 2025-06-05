@@ -1,6 +1,6 @@
 import { signPassword } from '@/services/auth'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
-import { getAccountByEmailAndOrganizationVersionId } from './account'
+import { getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
@@ -201,20 +201,26 @@ export const createUsersWithAccount = async (
 
   let newAccountCount = 0
   for (const user of createdUsers) {
-    const originalUser = users.find((u) => u.email === user.email)
-    if (!originalUser) {
+    const originalUsers = users.filter((u) => u.email === user.email)
+    if (!originalUsers.length) {
       throw new Error(`No account info for user ${user.email}`)
     }
 
-    await prismaClient.account.create({
-      data: {
-        ...originalUser.account,
-        user: {
-          connect: { id: user.id },
+    for (const originalUser of originalUsers) {
+      const accoutAlreadyExists = await getAccountByEmailAndEnvironment(user.email, originalUser.account.environment)
+      if (accoutAlreadyExists) {
+        continue
+      }
+      await prismaClient.account.create({
+        data: {
+          ...originalUser.account,
+          user: {
+            connect: { id: user.id },
+          },
         },
-      },
-    })
-    newAccountCount++
+      })
+      newAccountCount++
+    }
   }
 
   return { newUsers, newAccounts: { count: newAccountCount } }
