@@ -1,5 +1,6 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import { signPassword } from '@/services/auth'
+import { AuthorizedInOrgaUserStatus } from '@/services/users'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
 import { getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
@@ -15,7 +16,6 @@ export const getUserByEmailWithSensibleInformations = (email: string) =>
       password: true,
       resetToken: true,
       accounts: true,
-      status: true,
     },
     where: { email },
   })
@@ -60,10 +60,15 @@ export const updateUserPasswordForEmail = async (email: string, password: string
   const signedPassword = await signPassword(password)
   const user = await prismaClient.user.update({
     where: { email },
-    data: { resetToken: null, password: signedPassword, status: UserStatus.ACTIVE },
+    data: { resetToken: null, password: signedPassword },
   })
+
   const accounts = await prismaClient.account.findMany({
-    where: { userId: user.id, environment: { in: environmentsWithChecklist } },
+    where: {
+      userId: user.id,
+      environment: { in: environmentsWithChecklist },
+      status: { in: AuthorizedInOrgaUserStatus },
+    },
   })
 
   if (accounts.length > 0) {
@@ -107,35 +112,30 @@ export const deleteUserFromOrga = async (email: string, organizationVersionId: s
 
   await prismaClient.account.update({
     where: { id: account.id },
-    data: { organizationVersionId: null },
-  })
-
-  return prismaClient.user.update({
-    where: { email },
-    data: { status: UserStatus.IMPORTED },
+    data: { organizationVersionId: null, status: UserStatus.IMPORTED },
   })
 }
 
-export const validateUser = (email: string) =>
-  prismaClient.user.update({
-    where: { email },
+export const validateUser = (accountId: string) =>
+  prismaClient.account.update({
+    where: { id: accountId },
     data: { status: UserStatus.VALIDATED },
   })
 
 export const hasAccountToValidateInOrganization = async (organizationVersionId: string | null) =>
   organizationVersionId
     ? prismaClient.account.count({
-        where: { organizationVersionId, user: { status: UserStatus.PENDING_REQUEST } },
+        where: { organizationVersionId, status: UserStatus.PENDING_REQUEST },
       })
     : 0
 
 export const organizationVersionActiveAccountsCount = async (organizationVersionId: string) =>
   prismaClient.account.count({
-    where: { organizationVersionId, user: { status: UserStatus.ACTIVE } },
+    where: { organizationVersionId, status: UserStatus.ACTIVE },
   })
 
-export const changeStatus = (userId: string, newStatus: UserStatus) =>
-  prismaClient.user.update({ where: { id: userId }, data: { status: newStatus } })
+export const changeStatus = (accountId: string, newStatus: UserStatus) =>
+  prismaClient.account.update({ where: { id: accountId }, data: { status: newStatus } })
 
 export const getUserApplicationSettings = (accountId: string) =>
   prismaClient.userApplicationSettings.upsert({ where: { accountId }, update: {}, create: { accountId } })

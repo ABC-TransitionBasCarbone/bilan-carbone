@@ -83,7 +83,7 @@ export const sendInvitation = async (
   existingAccount?: AccountWithUser,
 ) =>
   withServerResponse('sendInvitation', async () => {
-    if (existingAccount && existingAccount.user.status === UserStatus.ACTIVE) {
+    if (existingAccount && existingAccount.status === UserStatus.ACTIVE) {
       return roleOnStudy
         ? sendUserOnStudyInvitationEmail(
             email,
@@ -160,12 +160,12 @@ export const addMember = async (member: AddMemberCommand) =>
       const { role, ...rest } = member
       const newMember = {
         ...rest,
-        status: UserStatus.VALIDATED,
         level: null,
         source: userFromDb.source,
         accounts: {
           create: {
             role: getRoleToSetForUntrained(role, session.user.environment),
+            status: UserStatus.VALIDATED,
             organizationVersionId: session.user.organizationVersionId,
             environment: session.user.environment,
           },
@@ -175,7 +175,7 @@ export const addMember = async (member: AddMemberCommand) =>
       await addUser(newMember)
       addUserChecklistItem(UserChecklist.AddCollaborator)
     } else {
-      if (memberExists.user.status === UserStatus.ACTIVE && memberExists.organizationVersionId) {
+      if (memberExists.status === UserStatus.ACTIVE && memberExists.organizationVersionId) {
         throw new Error(NOT_AUTHORIZED)
       }
 
@@ -288,7 +288,8 @@ export const updateUserProfile = async (command: EditProfileCommand) =>
 export const resetPassword = async (email: string) =>
   withServerResponse('resetPassword', async () => {
     const user = await getUserByEmail(email)
-    if (!user || user.status !== UserStatus.ACTIVE) {
+
+    if (!user || user.accounts.every((a) => a.status !== UserStatus.ACTIVE)) {
       const activation = await activateEmail(email, true)
       if (activation.success) {
         return activation.data
@@ -315,7 +316,12 @@ export const activateEmail = async (email: string, fromReset: boolean = false) =
   withServerResponse('activateEmail', async () => {
     const user = await getUserByEmail(email)
     const account = (await getAccountById(user?.accounts[0]?.id || '')) as AccountWithUser
-    if (!user || !account || !account.organizationVersionId || user.status === UserStatus.ACTIVE) {
+    if (
+      !user ||
+      !account ||
+      !account.organizationVersionId ||
+      user.accounts.every((a) => a.status === UserStatus.ACTIVE)
+    ) {
       throw new Error(NOT_AUTHORIZED)
     }
 

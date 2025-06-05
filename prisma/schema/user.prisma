@@ -55,6 +55,7 @@ model Account {
   userApplicationSettings    UserApplicationSettings?
 
   environment Environment
+  status     UserStatus
 
   @@unique([userId, environment])
   @@map("accounts")
@@ -69,7 +70,6 @@ model User {
   password   String?
   resetToken String?    @map("reset_token")
   accounts   Account[]
-  status     UserStatus
   source     UserSource @default(CRON)
 
   formationFormStartTime DateTime? @map("formation_form_start_time")

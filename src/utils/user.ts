@@ -14,16 +14,16 @@ export const findUserInfo = (user: UserSession) =>
           firstName: true,
           lastName: true,
           level: true,
-          status: true,
           updatedAt: true,
         },
       },
+      status: true,
       role: true,
       updatedAt: true,
     },
     where: canEditMemberRole(user)
       ? { organizationVersionId: user.organizationVersionId }
-      : { user: { status: UserStatus.ACTIVE }, organizationVersionId: user.organizationVersionId },
+      : { status: UserStatus.ACTIVE, organizationVersionId: user.organizationVersionId },
   }) satisfies Prisma.AccountFindManyArgs
 
 export const getEnvironmentRoles = (environment: Environment) => {

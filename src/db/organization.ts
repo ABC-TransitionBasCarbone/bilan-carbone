@@ -63,7 +63,7 @@ export const getOrganizationVersionAccounts = (id: string | null) =>
   id
     ? prismaClient.account.findMany({
         select: { user: { select: { email: true, firstName: true, lastName: true, level: true } }, role: true },
-        where: { organizationVersionId: id, user: { status: UserStatus.ACTIVE } },
+        where: { organizationVersionId: id, status: UserStatus.ACTIVE },
         orderBy: { user: { email: 'asc' } },
       })
     : []
@@ -180,8 +180,8 @@ export const onboardOrganizationVersion = async (
   if (!dbUser) {
     return
   }
-  const newCollaborators: (Pick<AccountWithUser, 'role' | 'organizationVersionId'> & {
-    user: { firstName: string; lastName: string; email: string; status: UserStatus; source: UserSource }
+  const newCollaborators: (Pick<AccountWithUser, 'role' | 'organizationVersionId' | 'status'> & {
+    user: { firstName: string; lastName: string; email: string; source: UserSource }
   })[] = []
 
   for (const collaborator of collaborators) {
@@ -190,9 +190,9 @@ export const onboardOrganizationVersion = async (
         firstName: '',
         lastName: '',
         email: collaborator.email?.toLowerCase() || '',
-        status: UserStatus.VALIDATED,
         source: dbUser.source,
       },
+      status: UserStatus.VALIDATED,
       role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       organizationVersionId,
     })
@@ -228,12 +228,12 @@ export const onboardOrganizationVersion = async (
           role: collaborator.role,
           organizationVersion: { connect: { id: collaborator.organizationVersionId } },
           environment: organizationVersion.environment,
+          status: collaborator.status,
           user: {
             create: {
               firstName: collaborator.user.firstName,
               lastName: collaborator.user.lastName,
               email: collaborator.user.email,
-              status: collaborator.user.status,
               source: collaborator.user.source,
             },
           },
@@ -253,9 +253,7 @@ export const onboardOrganizationVersion = async (
               : collaborator.role === Role.ADMIN
                 ? Role.GESTIONNAIRE
                 : Role.COLLABORATOR,
-          user: {
-            update: { status: UserStatus.VALIDATED },
-          },
+          status: UserStatus.VALIDATED,
         },
       })
     })

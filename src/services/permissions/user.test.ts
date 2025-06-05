@@ -152,7 +152,7 @@ describe('User permission functions', () => {
       mockCanEditMemberRole.mockReturnValue(true)
       const result = canDeleteMember(
         getMockedAuthUser({ role: Role.SUPER_ADMIN }),
-        getMockedDbAccount({}, { status: UserStatus.IMPORTED }) as AccountWithUser,
+        getMockedDbAccount({ status: UserStatus.IMPORTED }) as AccountWithUser,
       )
       expect(result).toBe(true)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
@@ -162,7 +162,7 @@ describe('User permission functions', () => {
       mockCanEditMemberRole.mockReturnValue(true)
       const result = canDeleteMember(
         getMockedAuthUser({ role: Role.ADMIN }),
-        getMockedDbAccount({}, { status: UserStatus.IMPORTED }) as AccountWithUser,
+        getMockedDbAccount({ status: UserStatus.IMPORTED }) as AccountWithUser,
       )
       expect(result).toBe(true)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
@@ -172,7 +172,7 @@ describe('User permission functions', () => {
       mockCanEditMemberRole.mockReturnValue(true)
       const result = canDeleteMember(
         getMockedAuthUser({ role: Role.GESTIONNAIRE }),
-        getMockedDbAccount({}, { status: UserStatus.IMPORTED }) as AccountWithUser,
+        getMockedDbAccount({ status: UserStatus.IMPORTED }) as AccountWithUser,
       )
       expect(result).toBe(true)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
@@ -182,7 +182,7 @@ describe('User permission functions', () => {
       mockCanEditMemberRole.mockReturnValue(false)
       const result = canDeleteMember(
         getMockedAuthUser({ role: Role.COLLABORATOR }),
-        getMockedDbAccount({}, { status: UserStatus.IMPORTED }) as AccountWithUser,
+        getMockedDbAccount({ status: UserStatus.IMPORTED }) as AccountWithUser,
       )
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
@@ -192,7 +192,7 @@ describe('User permission functions', () => {
       mockCanEditMemberRole.mockReturnValue(false)
       const result = canDeleteMember(
         getMockedAuthUser({ role: Role.DEFAULT }),
-        getMockedDbAccount({}, { status: UserStatus.IMPORTED }) as AccountWithUser,
+        getMockedDbAccount({ status: UserStatus.IMPORTED }) as AccountWithUser,
       )
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)
@@ -202,7 +202,7 @@ describe('User permission functions', () => {
       mockCanEditMemberRole.mockReturnValue(true)
       const result = canDeleteMember(
         getMockedAuthUser({ role: Role.DEFAULT }),
-        getMockedDbAccount({}, { status: UserStatus.ACTIVE }) as AccountWithUser,
+        getMockedDbAccount({ status: UserStatus.ACTIVE }) as AccountWithUser,
       )
       expect(result).toBe(false)
       expect(mockCanEditMemberRole).toHaveBeenCalledTimes(1)

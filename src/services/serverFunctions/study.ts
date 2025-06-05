@@ -470,12 +470,12 @@ const getOrCreateUserAndSendStudyInvite = async (
   if (!existingUser) {
     const newUser = await addUser({
       email: email,
-      status: UserStatus.VALIDATED,
       firstName: '',
       lastName: '',
       source: creatorDBUser?.source,
       accounts: {
         create: {
+          status: UserStatus.VALIDATED,
           role: Role.DEFAULT,
           environment: study.organizationVersion.environment,
         },
@@ -499,6 +499,7 @@ const getOrCreateUserAndSendStudyInvite = async (
         user: { connect: { id: existingUser.id } },
         role: Role.COLLABORATOR,
         environment: organizationVersion.environment,
+        status: UserStatus.VALIDATED,
       })) as AccountWithUser
     }
 
