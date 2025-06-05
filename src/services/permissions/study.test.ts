@@ -16,7 +16,7 @@ jest.mock('@/db/study', () => ({ getStudyById: jest.fn() }))
 jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
 jest.mock('@/utils/study', () => ({ getAccountRoleOnStudy: jest.fn() }))
 jest.mock('./organization', () => ({ isInOrgaOrParentFromId: jest.fn() }))
-jest.mock('../auth', () => ({ auth: jest.fn() }))
+jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -24,7 +24,7 @@ jest.mock('../serverFunctions/emissionFactor', () => ({ getEmissionFactorsByIds:
 
 const mockedStudyId = 'mocked-study-id'
 
-const mockAuth = authModule.auth as jest.Mock
+const mockDBActualizedAuth = authModule.dbActualizedAuth as jest.Mock
 const mockGetStudyById = dbStudyModule.getStudyById as jest.Mock
 const mockGetAccountRoleOnStudy = studyUtils.getAccountRoleOnStudy as jest.Mock
 const mockIsInOrgaOrParentFromId = organizationModule.isInOrgaOrParentFromId as jest.Mock
@@ -127,7 +127,7 @@ describe('Study permissions service', () => {
 
     it('Creator can delete its study', async () => {
       mockGetStudyById.mockResolvedValue(mockedStudyToDelete)
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: { id: mockedUserId, accountId: mockedAccountId, organizationVersionId: mockedOrganizationVersionId },
       })
       const result = await canDeleteStudy(mockedStudyId)
@@ -136,7 +136,7 @@ describe('Study permissions service', () => {
 
     it('Validator can delete study', async () => {
       mockGetStudyById.mockResolvedValue(mockedStudyToDelete)
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-random-account-id',
           id: 'mocked-random-user-id',
@@ -151,7 +151,7 @@ describe('Study permissions service', () => {
 
     it('Editor cannot delete study', async () => {
       mockGetStudyById.mockResolvedValue(mockedStudyToDelete)
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-random-acount-id',
           id: 'mocked-random-user-id',
@@ -166,7 +166,7 @@ describe('Study permissions service', () => {
 
     it('Reader cannot delete study', async () => {
       mockGetStudyById.mockResolvedValue(mockedStudyToDelete)
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-random-account-id',
           id: 'mocked-random-user-id',
@@ -181,7 +181,7 @@ describe('Study permissions service', () => {
 
     it('Organization Admin can delete public study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(true))
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-account-admin-id',
           id: 'mocked-user-admin-id',
@@ -196,7 +196,7 @@ describe('Study permissions service', () => {
 
     it('Organization Super-Admin can delete public study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(true))
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-account-super-admin-id',
           id: 'mocked-user-super-admin-id',
@@ -211,7 +211,7 @@ describe('Study permissions service', () => {
 
     it('Organization gestionnaire cannot delete public study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(true))
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-gestionnaire-user-id',
           id: 'mocked-gestionnaire-user-id',
@@ -226,7 +226,7 @@ describe('Study permissions service', () => {
 
     it('Organization default cannot delete public study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(true))
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-default-account-id',
           id: 'mocked-default-user-id',
@@ -241,7 +241,7 @@ describe('Study permissions service', () => {
 
     it('Organization Admin can delete private study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(false))
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-account-admin-id',
           id: 'mocked-user-admin-id',
@@ -256,7 +256,7 @@ describe('Study permissions service', () => {
 
     it('Organization Super-Admin can delete private study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(false))
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-account-super-admin-id',
           id: 'mocked-user-super-admin-id',
@@ -271,7 +271,7 @@ describe('Study permissions service', () => {
 
     it('Other organization user cannot delete public study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(true))
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-other-organization-account-id',
           id: 'mocked-other-organization-super-admin-user-id',
@@ -286,7 +286,7 @@ describe('Study permissions service', () => {
 
     it('Other organization user cannot delete private study', async () => {
       mockGetStudyById.mockResolvedValue(getStudyWithPublicStatus(false))
-      mockAuth.mockResolvedValue({
+      mockDBActualizedAuth.mockResolvedValue({
         user: {
           accountId: 'mocked-other-organization-account-id',
           id: 'mocked-other-organization-super-admin-user-id',
