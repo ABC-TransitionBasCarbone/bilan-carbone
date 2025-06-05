@@ -3,7 +3,7 @@ import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { Environment, Level, Role, UserStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession, NextAuthOptions } from 'next-auth'
+import { getServerSession, NextAuthOptions, Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { signIn } from 'next-auth/react'
 import { DAY } from '../utils/time'
@@ -176,6 +176,27 @@ export function auth(
   ...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []
 ) {
   return getServerSession(...args, authOptions)
+}
+
+export async function dbActualizedAuth(
+  ...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []
+): Promise<Session | null> {
+  const session = await getServerSession(...args, authOptions)
+  if (!session || !session.user) {
+    return null
+  }
+  const account = await getAccountById(session.user.accountId)
+  if (!account) {
+    return null
+  }
+  return {
+    ...session,
+    user: {
+      ...session.user,
+      role: account.role,
+      organizationVersionId: account.organizationVersionId,
+    },
+  }
 }
 
 export async function accountHandler(accountId: string) {
