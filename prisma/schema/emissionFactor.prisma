@@ -23,6 +23,7 @@ enum Import {
   Legifrance
   NegaOctet
   Manual
+  CUT
 }
 
 enum EmissionFactorStatus {

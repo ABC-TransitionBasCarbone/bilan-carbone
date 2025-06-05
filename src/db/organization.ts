@@ -283,7 +283,7 @@ export const deleteClient = async (id: string) => {
   }
   return prismaClient.$transaction(async (transaction) => {
     const studies = await transaction.study.findMany({
-      where: { organizationVersionId: organizationVersion.organizationId },
+      where: { organizationVersionId: organizationVersion.id },
     })
     await Promise.all(studies.map((study) => deleteStudy(study.id)))
     await transaction.organizationVersion.delete({ where: { id } })
