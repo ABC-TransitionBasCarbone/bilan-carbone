@@ -75,6 +75,7 @@ const users = async () => {
         reliability: 5,
         importedId: '1',
         unit: Unit.KG,
+        isMonetary: false,
         subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
@@ -94,6 +95,7 @@ const users = async () => {
         reliability: 5,
         importedId: '2',
         unit: Unit.KG_DRY_MATTER,
+        isMonetary: false,
         subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
@@ -113,6 +115,7 @@ const users = async () => {
         reliability: 3,
         importedId: '3',
         unit: Unit.CAR_KM,
+        isMonetary: false,
         subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {

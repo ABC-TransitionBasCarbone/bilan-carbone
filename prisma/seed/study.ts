@@ -72,6 +72,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       reliability: 5,
       importedId: '1',
       unit: Unit.TON,
+      isMonetary: false,
       subPosts: [SubPost.DechetsDEmballagesEtPlastiques],
       metaData: {
         create: { language: 'fr', title: 'Papier, moyenne' },
