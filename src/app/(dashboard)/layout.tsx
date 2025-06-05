@@ -47,7 +47,6 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
       )}
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
         {children}
-
         {account.environment === Environment.CUT && <Footer />}
       </main>
       {accountOrganizationVersion && (
