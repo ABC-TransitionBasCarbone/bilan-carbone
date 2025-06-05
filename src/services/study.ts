@@ -1,7 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -104,6 +104,8 @@ const getEmissionSourcesRows = (
       'sourceCharacterization',
       'sourceValue',
       'sourceDeprecation',
+      'sourceSurface',
+      'sourceDuration',
       'sourceUnit',
       'sourceQuality',
       'activityDataValue',
@@ -146,6 +148,8 @@ const getEmissionSourcesRows = (
             STUDY_UNIT_VALUES[resultsUnit] /
             (withDeprecation ? emissionSource.depreciationPeriod || 1 : 1) || '0',
           withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
+          isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
+          isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
