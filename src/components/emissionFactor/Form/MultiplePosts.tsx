@@ -34,9 +34,10 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
 
   const [glossary, setGlossary] = useState('')
 
+  const watchedSubPosts = form.watch('subPosts' as FieldPath<T>)
   const posts: Record<Post, SubPost[]> = useMemo(
-    () => (form.watch('subPosts' as FieldPath<T>) as Record<Post, SubPost[]>) || {},
-    [form],
+    () => (watchedSubPosts as Record<Post, SubPost[]>) || {},
+    [watchedSubPosts],
   )
 
   useEffect(() => {
