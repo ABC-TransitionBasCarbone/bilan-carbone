@@ -1,6 +1,7 @@
 'use client'
 
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { Environment } from '@prisma/client'
 import Image from 'next/image'
 
 type LogoConfig = {
@@ -12,10 +13,10 @@ export const Logo = () => {
   const { environment } = useAppEnvironmentStore()
 
   const logos: Record<string, LogoConfig> = {
-    cut: { src: '/logos/cut/logo.svg', alt: 'Logo de COUNT' },
-    default: { src: '/logos/logo_BC_2025_blanc.png', alt: 'Logo de bilan carbone 2025' },
+    [Environment.CUT]: { src: '/logos/cut/logo.svg', alt: 'Logo de COUNT' },
+    [Environment.BC]: { src: '/logos/logo_BC_2025_blanc.png', alt: 'Logo de bilan carbone 2025' },
   }
-  const { src, alt } = logos[environment] ?? logos['default']
+  const { src, alt } = logos[typeof environment === 'string' && environment in logos ? environment : Environment.BC]
 
   return <Image src={src} alt={alt} width={98} height={48} />
 }
