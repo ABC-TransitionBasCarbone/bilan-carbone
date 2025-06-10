@@ -1377,6 +1377,7 @@
     "body": " Si vous avez 5 minutes, nous serions ravis d'avoir vos retours sur le BC+ ! Ceux-ci nous permettront de répondre aux mieux à vos besoins avec nos prochains développements. Si ce n'est pas le bon moment, vous pouvez retrouver ce formulaire à tout moment dans le menu.",
     "reject": "Ne pas répondre",
     "delay": "Plus tard",
-    "answer": "Je donne mon avis"
+    "answer": "Je donne mon avis",
+    "close": "Fermer"
   }
 }

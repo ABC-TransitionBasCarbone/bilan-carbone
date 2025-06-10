@@ -4,10 +4,12 @@ import { answerFeeback, delayFeeback } from '@/services/serverFunctions/user'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Modal from '../modals/Modal'
+import FeedbackModal from './FeedbackModal'
 
 const UserFeedback = () => {
   const t = useTranslations('feedback')
   const [open, setOpen] = useState(true)
+  const [displayForm, setDisplayForm] = useState(false)
 
   const reject = () => {
     answerFeeback()
@@ -21,7 +23,7 @@ const UserFeedback = () => {
 
   const answer = () => {
     answerFeeback()
-    setOpen(false)
+    setDisplayForm(true)
   }
 
   return (
@@ -29,15 +31,19 @@ const UserFeedback = () => {
       <Modal
         label="feedback"
         open={open}
-        onClose={() => {}}
+        onClose={reject}
         title={t('title')}
-        actions={[
-          { actionType: 'button', children: t('reject'), onClick: reject },
-          { actionType: 'button', children: t('delay'), onClick: delay },
-          { actionType: 'button', children: t('answer'), onClick: answer },
-        ]}
+        actions={
+          displayForm
+            ? [{ actionType: 'button', children: t('close'), onClick: reject }]
+            : [
+                { actionType: 'button', children: t('reject'), onClick: reject },
+                { actionType: 'button', children: t('delay'), onClick: delay },
+                { actionType: 'button', children: t('answer'), onClick: answer },
+              ]
+        }
       >
-        {t('body')}
+        {displayForm ? <FeedbackModal /> : <>{t('body')}</>}
       </Modal>
     </>
   )
