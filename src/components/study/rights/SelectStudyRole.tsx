@@ -38,6 +38,7 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
       const result = await changeStudyRole(study.id, rowUser.user.email, newRole)
       if (!result.success) {
         setToast({ text: result.errorMessage, color: 'error' })
+        setRole(currentRole)
       } else {
         setToast({ text: 'saved', color: 'success' })
       }
