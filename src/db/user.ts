@@ -26,8 +26,8 @@ export const getUserSourceById = (id: string) =>
 export const getUserById = (id: string) =>
   prismaClient.user.findUnique({ where: { id }, select: { firstName: true, lastName: true, email: true } })
 
-export const getUserWithAccountsAndOrganizationsById = (id: string) =>
-  prismaClient.user.findUnique({
+export const getUserWithAccountsAndOrganizationsById = async (id: string) => {
+  const user = await prismaClient.user.findUnique({
     where: { id },
     select: {
       id: true,
@@ -38,6 +38,7 @@ export const getUserWithAccountsAndOrganizationsById = (id: string) =>
         select: {
           id: true,
           environment: true,
+          status: true,
           organizationVersion: {
             select: {
               id: true,
@@ -50,6 +51,15 @@ export const getUserWithAccountsAndOrganizationsById = (id: string) =>
       },
     },
   })
+
+  if (!user) {
+    throw new Error(`User with id ${id} not found`)
+  }
+
+  const userWithOnlyActiveAccounts = { ...user, accounts: user.accounts.filter((a) => a.status === UserStatus.ACTIVE) }
+
+  return userWithOnlyActiveAccounts
+}
 
 export const getAccountByIdWithAllowedStudies = (id: string) =>
   prismaClient.account.findUnique({ where: { id }, include: { allowedStudies: true, contributors: true } })

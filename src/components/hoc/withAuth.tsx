@@ -12,9 +12,10 @@ const withAuth = (WrappedComponent: React.ComponentType<any & UserSessionProps>)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any) => {
     const session = await auth()
-    if (!session || !session.user) {
+    if (!session || !session.user || session.user.needsAccountSelection) {
       return <NotFound />
     }
+
     return <WrappedComponent {...props} user={session.user} />
   }
   Component.displayName = 'WithAuth'

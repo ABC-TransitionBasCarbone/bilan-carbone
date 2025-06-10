@@ -356,7 +356,9 @@ export const activateEmail = async (email: string, userEnv: Environment | undefi
     ) {
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(account))
       await sendActivationRequest(
-        accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
+        accounts
+          .filter((a) => (a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN) && a.status == UserStatus.ACTIVE)
+          .map((a) => a.user.email),
         email.toLowerCase(),
         `${user.firstName} ${user.lastName}`,
       )
@@ -479,14 +481,14 @@ export const lowercaseUsersEmails = async () => {
   }
 }
 
-export const getUserAccounts = async () =>
-  withServerResponse('getUserAccounts', async () => {
+export const getUserActiveAccounts = async () =>
+  withServerResponse('getUserActiveAccounts', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
       return []
     }
     const accounts = await getAccountsFromUser(session.user)
-    return accounts
+    return accounts.filter((account) => account.status === UserStatus.ACTIVE)
   })
 
 export const displayFeedBackForm = async () =>

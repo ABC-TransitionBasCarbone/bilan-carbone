@@ -152,7 +152,7 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        const accounts = user.accounts
+        const accounts = user.accounts.filter((a) => a.status === UserStatus.ACTIVE)
 
         if (accounts.length > 1) {
           return {
