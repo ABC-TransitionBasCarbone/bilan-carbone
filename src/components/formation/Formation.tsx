@@ -23,7 +23,7 @@ interface Props {
 }
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
+const timer = Number(process.env.NEXT_PUBLIC_FORMATION_TYPEFORM_DURATION)
 
 const FormationView = ({ formations, user, organizationName }: Props) => {
   const t = useTranslations('formation')

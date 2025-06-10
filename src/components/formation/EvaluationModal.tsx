@@ -16,8 +16,8 @@ interface Props {
   startTime: number
 }
 
-const typeformId = process.env.NEXT_PUBLIC_TYPEFORM_ID
-const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
+const typeformId = process.env.NEXT_PUBLIC_FORMATION_TYPEFORM_ID
+const timer = Number(process.env.NEXT_PUBLIC_FORMATION_TYPEFORM_DURATION)
 
 const EvaluationModal = ({ user, organizationName, startTime }: Props) => {
   const t = useTranslations('formation')
