@@ -61,6 +61,11 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
   // BEGES doesn't include "Utilisation en dépendance", BC does, so BEGES - BC = negative
   const utilisationEnDependanceDifference = utilisationEnDependance ? -(utilisationEnDependance.value / 1000) : 0
 
+  // Find an emission source for the "en dépendance" sub-post to use in navigation
+  const utilisationEnDependanceEmissionSource = study.emissionSources.find(
+    (emissionSource) => emissionSource.subPost === SubPost.UtilisationEnDependance,
+  )
+
   const wasteEmissionSourcesOnStudy = study.emissionSources.filter(
     (emissionSource) =>
       emissionSource.emissionFactor &&
@@ -152,6 +157,20 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
               </div>
               <div className={styles.cardContent}>
                 <p className={styles.cardDescription}>{t('dependance')}</p>
+                <div className={styles.cardActions}>
+                  <Button
+                    onClick={() =>
+                      navigateToEmissionSource(
+                        utilisationEnDependanceEmissionSource?.id || '',
+                        SubPost.UtilisationEnDependance,
+                      )
+                    }
+                    color="secondary"
+                    size="small"
+                  >
+                    {t('goToSubPost')}
+                  </Button>
+                </div>
               </div>
             </div>
           )}
@@ -234,13 +253,15 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
                   {missingCaract
                     .filter((_, i) => i < maxListedEmissionSources)
                     .map((emissionSource) => (
-                      <span
+                      <Button
                         key={`caract-emission-source-${emissionSource.id}`}
-                        className={classNames(styles.missingSourceTag, styles.clickableTag)}
                         onClick={() => navigateToEmissionSource(emissionSource.id, emissionSource.subPost)}
+                        color="secondary"
+                        size="small"
+                        className={styles.missingSourceButton}
                       >
                         {emissionSource.name}
-                      </span>
+                      </Button>
                     ))}
                   {missingCaract.length > maxListedEmissionSources && (
                     <span className={styles.additionalCount}>
