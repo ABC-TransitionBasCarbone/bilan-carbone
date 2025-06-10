@@ -52,7 +52,12 @@ import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
-import { getAccountRoleOnStudy, getUserRoleOnPublicStudy, hasEditionRights } from '@/utils/study'
+import {
+  getAccountRoleOnStudy,
+  getAllowedRolesFromDefaultRole,
+  getUserRoleOnPublicStudy,
+  hasEditionRights,
+} from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
@@ -75,6 +80,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { auth } from '../auth'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
+import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
   canAddContributorOnStudy,
@@ -555,18 +561,17 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
     }
 
     if (
+      existingAccount &&
       existingUser &&
       studyWithRights.isPublic &&
-      studyWithRights.organizationVersionId === existingAccount?.organizationVersionId
+      (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
     ) {
       const defaultRole = getUserRoleOnPublicStudy(
         { role: existingAccount.role, level: existingUser?.level },
         studyWithRights.level,
       )
-      if (defaultRole === StudyRole.Validator) {
-        right.role = StudyRole.Validator
-      } else if (defaultRole === StudyRole.Editor && right.role === StudyRole.Reader) {
-        right.role = StudyRole.Editor
+      if (!getAllowedRolesFromDefaultRole(defaultRole).includes(right.role)) {
+        right.role = defaultRole
       }
     }
 
@@ -630,16 +635,13 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       existingAccount &&
       existingUser &&
       studyWithRights.isPublic &&
-      existingAccount.organizationVersionId == studyWithRights.organizationVersionId
+      (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
     ) {
       const defaultRole = getUserRoleOnPublicStudy(
         { role: existingAccount.role, level: existingUser?.level },
         studyWithRights.level,
       )
-      if (defaultRole === StudyRole.Validator && studyRole !== StudyRole.Validator) {
-        throw new Error(NOT_AUTHORIZED)
-      }
-      if (defaultRole === StudyRole.Editor && studyRole === StudyRole.Reader) {
+      if (!getAllowedRolesFromDefaultRole(defaultRole).includes(studyRole)) {
         throw new Error(NOT_AUTHORIZED)
       }
     }

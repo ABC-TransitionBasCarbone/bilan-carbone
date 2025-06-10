@@ -35,6 +35,17 @@ export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
   return null
 }
 
+export const getAllowedRolesFromDefaultRole = (role: StudyRole) => {
+  switch (role) {
+    case StudyRole.Validator:
+      return [StudyRole.Validator]
+    case StudyRole.Editor:
+      return [StudyRole.Editor, StudyRole.Validator]
+    default:
+      return Object.values(StudyRole)
+  }
+}
+
 export const postColors: Record<Post, string> = {
   [Post.Energies]: 'darkBlue',
   [Post.AutresEmissionsNonEnergetiques]: 'darkBlue',
