@@ -20,6 +20,7 @@ import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import { ALL_POSTS_VALUE, ALL_SUB_POSTS_VALUE } from './MultiplePosts'
 import styles from './Posts.module.css'
 
 interface Props<T extends SubPostsCommand> {
@@ -29,10 +30,6 @@ interface Props<T extends SubPostsCommand> {
   form: UseFormReturn<T>
   isAllPosts?: boolean
 }
-
-// Constants
-const ALL_POSTS_VALUE = 'ALL_POSTS'
-const ALL_SUB_POSTS_VALUE = 'ALL_SUB_POSTS'
 
 // Utility functions
 const isAllSubPostsSelected = (selectedSubPosts: SubPost[] | undefined, allSubPosts: SubPost[]): boolean => {

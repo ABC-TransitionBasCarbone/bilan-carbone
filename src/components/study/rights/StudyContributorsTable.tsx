@@ -213,21 +213,13 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
           }))
 
         // Check if contributor has access to all posts AND all sub-posts
-        // Method 1: Check if marked as allSubPost for all posts
-        const hasAllPostsMethod1 =
-          posts.length === allPosts.length &&
-          posts.every(({ subPosts }) => subPosts.length === 1 && subPosts[0] === 'allSubPost')
-
-        // Method 2: Check if contributor actually has access to ALL possible sub-posts
         const allPossibleSubPosts = allPosts.flatMap((post) => subPostsByPost[post])
         const contributorSubPosts = posts.flatMap(({ post, subPosts }) =>
           subPosts[0] === 'allSubPost' ? subPostsByPost[post] : subPosts,
         )
-        const hasAllPostsMethod2 =
+        const hasAllPosts =
           posts.length === allPosts.length &&
           allPossibleSubPosts.every((subPost) => contributorSubPosts.includes(subPost))
-
-        const hasAllPosts = hasAllPostsMethod1 || hasAllPostsMethod2
 
         return {
           ...contributor,
@@ -363,9 +355,8 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
             // For post sub-rows, show the specific sub-posts
             const subPostRow = rowData as StudyContributorPostRow
             if (subPostRow.subPosts.length === 1 && subPostRow.subPosts[0] === 'allSubPost') {
-              // If this post has all sub-posts, show all sub-posts for this specific post
-              const allSubPostsForThisPost = subPostsByPost[subPostRow.post as Post]
-              return <span>{allSubPostsForThisPost.map((subPost) => tPost(subPost)).join(', ')}</span>
+              // If this post has all sub-posts, show "Tous les sous postes"
+              return <span>{tPost('allSubPost')}</span>
             } else {
               // Show the specific sub-posts
               return <span>{subPostRow.subPosts.map((subPost: string) => tPost(subPost)).join(', ')}</span>
@@ -487,11 +478,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         }
       >
         <div style={{ overflowX: 'auto' }}>
-          <table
-            aria-labelledby="study-rights-table-title"
-            className="mb2"
-            style={{ minWidth: '1020px', tableLayout: 'fixed' }}
-          >
+          <table aria-labelledby="study-rights-table-title" className="mb2">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>

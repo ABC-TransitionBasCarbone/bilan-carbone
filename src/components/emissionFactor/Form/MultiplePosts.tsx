@@ -17,7 +17,8 @@ interface Props<T extends SubPostsCommand> {
 }
 
 // Constants
-const ALL_POSTS_VALUE = 'ALL_POSTS'
+export const ALL_POSTS_VALUE = 'ALL_POSTS'
+export const ALL_SUB_POSTS_VALUE = 'ALL_SUB_POSTS'
 
 // Utility functions
 const hasAllPostsSelected = (posts: Record<string, SubPost[]>): boolean => {
@@ -60,7 +61,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
     const selectedPost = event.target.value as string
 
     if (selectedPost === ALL_POSTS_VALUE) {
-      // Add "Tous les postes" as a special post with empty sub-posts array
+      // Add "All posts" as a special post with empty sub-posts array
       const currentSubPosts = { ...posts, [ALL_POSTS_VALUE]: [] }
       setValue('subPosts', currentSubPosts as Record<string, SubPost[]>)
     } else {
@@ -70,7 +71,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
     }
   }
 
-  // Check if "Tous les postes" is already selected
+  // Check if "All posts" is already selected
   const hasAllPosts = hasAllPostsSelected(posts)
 
   return (
@@ -87,7 +88,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
         </Box>
       ))}
 
-      {/* Only show the post selector if "Tous les postes" is not already selected */}
+      {/* Only show the post selector if "All posts" is not already selected */}
       {!hasAllPosts && (
         <Controller
           name={'subPosts' as FieldPath<T>}
