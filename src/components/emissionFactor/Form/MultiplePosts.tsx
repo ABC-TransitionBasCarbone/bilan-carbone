@@ -20,11 +20,6 @@ interface Props<T extends SubPostsCommand> {
 export const ALL_POSTS_VALUE = 'ALL_POSTS'
 export const ALL_SUB_POSTS_VALUE = 'ALL_SUB_POSTS'
 
-// Utility functions
-const hasAllPostsSelected = (posts: Record<string, SubPost[]>): boolean => {
-  return Object.keys(posts).includes(ALL_POSTS_VALUE)
-}
-
 const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
@@ -36,7 +31,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
   const [glossary, setGlossary] = useState('')
 
   const watchedSubPosts = form.watch('subPosts' as FieldPath<T>)
-  const posts: Record<Post, SubPost[]> = useMemo(
+  const selectedPosts: Record<Post, SubPost[]> = useMemo(
     () => (watchedSubPosts as Record<Post, SubPost[]>) || {},
     [watchedSubPosts],
   )
@@ -46,43 +41,40 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
       return
     }
     form.trigger('subPosts' as FieldPath<T>)
-  }, [posts, form])
+  }, [selectedPosts, form])
 
   // Get available posts that haven't been selected yet
   const availablePosts: BCPost[] = useMemo(
     () =>
       Object.keys(BCPost)
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-        .filter((postKey) => !Object.keys(posts).includes(postKey)) as BCPost[],
-    [posts, tPost],
+        .filter((postKey) => !Object.keys(selectedPosts).includes(postKey)) as BCPost[],
+    [selectedPosts, tPost],
   )
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
     const selectedPost = event.target.value as string
 
-    if (selectedPost === ALL_POSTS_VALUE) {
-      // Add "All posts" as a special post with empty sub-posts array
-      const currentSubPosts = { ...posts, [ALL_POSTS_VALUE]: [] }
-      setValue('subPosts', currentSubPosts as Record<string, SubPost[]>)
-    } else {
-      // Original behavior for regular posts
-      const currentSubPosts = { ...posts, [selectedPost as Post]: [] }
-      setValue('subPosts', currentSubPosts)
+    const currentSubPosts = {
+      ...selectedPosts,
+      [selectedPost]: [],
     }
+
+    setValue('subPosts', currentSubPosts as Record<string, SubPost[]>)
   }
 
   // Check if "All posts" is already selected
-  const hasAllPosts = hasAllPostsSelected(posts)
+  const hasAllPosts = useMemo(() => Object.keys(selectedPosts).includes(ALL_POSTS_VALUE), [selectedPosts])
 
   return (
     <div className="flex-col">
-      {Object.keys(posts).map((postKey) => (
+      {Object.keys(selectedPosts).map((postKey) => (
         <Box key={postKey} className={styles.postContainer}>
           <Posts
             postOptions={postKey === ALL_POSTS_VALUE ? Object.values(BCPost) : availablePosts}
             form={form}
             post={postKey === ALL_POSTS_VALUE ? undefined : (postKey as Post)}
-            subPosts={posts[postKey as Post]}
+            subPosts={selectedPosts[postKey as Post]}
             isAllPosts={postKey === ALL_POSTS_VALUE}
           />
         </Box>
@@ -94,7 +86,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
           name={'subPosts' as FieldPath<T>}
           control={control}
           render={({ fieldState: { error } }) => (
-            <FormControl className={styles.selectForm} error={error && Object.keys(posts).length === 0}>
+            <FormControl className={styles.selectForm} error={error && Object.keys(selectedPosts).length === 0}>
               <Select
                 name={'post'}
                 onChange={handleSelectPost}
@@ -104,7 +96,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
                 icon={<HelpIcon onClick={() => setGlossary(`post_${context}`)} label={tGlossary('title')} />}
                 iconPosition="after"
               >
-                {Object.keys(posts).length === 0 && (
+                {Object.keys(selectedPosts).length === 0 && (
                   <MenuItem key={ALL_POSTS_VALUE} value={ALL_POSTS_VALUE}>
                     {tPost('allPost')}
                   </MenuItem>
@@ -115,7 +107,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
                   </MenuItem>
                 ))}
               </Select>
-              {error && error.message && Object.keys(posts).length === 0 && (
+              {error && error.message && Object.keys(selectedPosts).length === 0 && (
                 <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>
               )}
             </FormControl>

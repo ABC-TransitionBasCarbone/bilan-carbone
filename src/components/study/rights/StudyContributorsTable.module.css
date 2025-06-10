@@ -1,0 +1,65 @@
+/* Table Container */
+.container {
+  overflow-x: auto;
+}
+
+/* Table Header */
+.header {
+  text-align: left;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--neutral-300);
+}
+
+/* Column width constraints to prevent shifting */
+.headerWidth {
+  width: 30%;
+}
+
+/* Table Rows */
+.parentRow {
+  background-color: var(--background-100);
+}
+
+.childRow {
+  background-color: white;
+  border-left: 3px solid var(--primary-100);
+}
+
+/* Table Cells */
+.parentCell {
+  padding: 20px 8px;
+  border-bottom: 1px solid var(--neutral-200);
+  vertical-align: middle;
+}
+
+.childCell {
+  padding: 8px 8px;
+  border-bottom: 1px solid var(--neutral-200);
+  vertical-align: middle;
+}
+
+/* Expandable Cell */
+.expandable {
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Email Cell Content */
+.emailContent {
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+}
+
+.iconButton {
+  padding: 4px;
+  margin-right: 8px;
+}
+
+/* Child Row Content */
+.childRowContent {
+  padding-left: 40px;
+  color: var(--neutral-600);
+}

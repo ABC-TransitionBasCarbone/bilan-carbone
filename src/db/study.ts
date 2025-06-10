@@ -1,4 +1,4 @@
-import { StudyContributorPostRow } from '@/components/study/rights/StudyContributorsTable'
+import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
@@ -376,7 +376,7 @@ export const deleteAccountOnStudy = async (studyId: string, accountId: string) =
     where: { studyId_accountId: { studyId, accountId } },
   })
 
-export const deleteContributor = async (studyId: string, contributor: StudyContributorPostRow) => {
+export const deleteContributor = async (studyId: string, contributor: StudyContributorDeleteParams) => {
   const where: Prisma.ContributorsWhereInput = {
     studyId,
     accountId: contributor.accountId,

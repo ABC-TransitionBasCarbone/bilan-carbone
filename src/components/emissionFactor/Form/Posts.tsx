@@ -31,7 +31,8 @@ interface Props<T extends SubPostsCommand> {
   isAllPosts?: boolean
 }
 
-// Utility functions
+type SubPostValue = SubPost | typeof ALL_SUB_POSTS_VALUE
+
 const isAllSubPostsSelected = (selectedSubPosts: SubPost[] | undefined, allSubPosts: SubPost[]): boolean => {
   return selectedSubPosts?.length === allSubPosts.length
 }
@@ -72,12 +73,11 @@ const Posts = <T extends SubPostsCommand>({
 
   const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
 
-  // Get all posts sorted alphabetically
   const sortedPosts = useMemo(() => Object.keys(BCPost).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
 
   // For regular posts, show sub-posts for that specific post
   // For "All Posts", show all sub-posts grouped by their parent posts
-  const subPosts = useMemo<SubPost[]>(() => {
+  const sortedSubPosts = useMemo<SubPost[]>(() => {
     if (isAllPosts) {
       // Return all sub-posts from all posts
       return Object.values(BCPost)
@@ -88,7 +88,7 @@ const Posts = <T extends SubPostsCommand>({
   }, [post, tPost, isAllPosts])
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
-    const selectedPost = event.target.value as string
+    const selectedPost = event.target.value as Post | typeof ALL_POSTS_VALUE
     setSelectedSubPosts([])
 
     let currentSubPosts: Record<string, SubPost[]> =
@@ -101,11 +101,11 @@ const Posts = <T extends SubPostsCommand>({
     }
 
     // Only add the new post if it's not empty (i.e., not cleared)
-    if (selectedPost && selectedPost !== '') {
+    if (selectedPost) {
       currentSubPosts = createUpdatedSubPosts(currentSubPosts, selectedPost, [])
 
       if (selectedPost !== ALL_POSTS_VALUE) {
-        setPost(selectedPost as Post)
+        setPost(selectedPost)
       }
     } else {
       // If cleared, set post to undefined which will cause this component to disappear
@@ -126,16 +126,15 @@ const Posts = <T extends SubPostsCommand>({
     }
   }
 
-  const handleSelectSubPost = (subPostsArr: string[]) => {
-    const newSubPosts = subPostsArr as SubPost[]
-    setSelectedSubPosts(newSubPosts)
+  const handleSelectSubPost = (subPostsArr: SubPost[]) => {
+    setSelectedSubPosts(subPostsArr)
 
     const currentSubPosts: Record<string, SubPost[]> =
       (form.getValues('subPosts' as Path<T>) as Record<string, SubPost[]>) || {}
 
     const key = isAllPosts ? ALL_POSTS_VALUE : post
     if (key) {
-      const updatedSubPosts = createUpdatedSubPosts(currentSubPosts, key, newSubPosts)
+      const updatedSubPosts = createUpdatedSubPosts(currentSubPosts, key, subPostsArr)
       setValue('subPosts', updatedSubPosts)
     }
   }
@@ -160,12 +159,12 @@ const Posts = <T extends SubPostsCommand>({
     }
 
     const handleChange = (event: SelectChangeEvent<unknown>) => {
-      const value = event.target.value as string[]
+      const value = event.target.value as SubPostValue[]
 
       if (value.includes(ALL_SUB_POSTS_VALUE)) {
         handleSelectAllToggle()
       } else {
-        handleSelectSubPost(value)
+        handleSelectSubPost(value as SubPost[])
       }
     }
 
@@ -210,7 +209,7 @@ const Posts = <T extends SubPostsCommand>({
         return [renderSelectAllMenuItem(), ...renderGroupedMenuItems()]
       }
 
-      return [renderSelectAllMenuItem(), ...subPosts.map(renderSubPostMenuItem)]
+      return [renderSelectAllMenuItem(), ...sortedSubPosts.map(renderSubPostMenuItem)]
     }
 
     return (

@@ -16,51 +16,41 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
+import styles from './StudyContributorsTable.module.css'
 
 interface Props {
   study: FullStudy
   canAddContributor: boolean
 }
 
-export interface StudyContributorRow {
-  email: string
-  accountId: string
-  posts: {
-    post: string
-    subPosts: string[]
-  }[]
-  hasAllPosts?: boolean // Flag to indicate if user has access to all posts
-  isContributorRow?: boolean // Main contributor row
-}
-
-export interface StudyContributorPostRow {
-  email: string
+export interface StudyContributorDeleteParams {
   accountId: string
   post: string
   subPosts: string[]
-  isPostRow?: boolean // Individual post assignment row
 }
+
+export type StudyContributorTableRow =
+  | {
+      type: 'parent'
+      email: string
+      accountId: string
+      posts: {
+        post: string
+        subPosts: string[]
+      }[]
+      hasAllPosts?: boolean // Flag to indicate if user has access to all posts
+    }
+  | {
+      type: 'child'
+      email: string
+      accountId: string
+      post: string
+      subPosts: string[]
+    }
 
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
-
-// Type guards
-const isContributorRow = (row: StudyContributorRow | StudyContributorPostRow): row is StudyContributorRow => {
-  return 'isContributorRow' in row && row.isContributorRow === true
-}
-
-const isPostRow = (row: StudyContributorRow | StudyContributorPostRow): row is StudyContributorPostRow => {
-  return 'isPostRow' in row && row.isPostRow === true
-}
-
-// Constants
 const PREVIEW_MAX_LINES = 2
 const SUBPOST_PREVIEW_LIMIT = 3
-const TABLE_COLUMN_WIDTHS = {
-  email: '250px',
-  post: '300px',
-  subPosts: '350px',
-  actions: '120px',
-} as const
 
 const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const t = useTranslations('study.rights.contributorsTable')
@@ -68,9 +58,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const tRole = useTranslations('study.rights.contributorsTable.role')
   const tPost = useTranslations('emissionFactors.post')
   const [displayRoles, setDisplayRoles] = useState(false)
-  const [contributorToDelete, setToDelete] = useState<StudyContributorRow | StudyContributorPostRow | undefined>(
-    undefined,
-  )
+  const [contributorToDelete, setToDelete] = useState<StudyContributorTableRow | undefined>(undefined)
   const [deleting, setDeleting] = useState(false)
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
   const { callServerFunction } = useServerFunction()
@@ -92,35 +80,34 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
     })
   }, [])
 
+  const ExpandableCell = useCallback(
+    ({ email, children, className = '' }: { email: string; children: React.ReactNode; className?: string }) => (
+      <div className={`${styles.expandable} ${className}`} onClick={() => toggleRowExpansion(email)}>
+        {children}
+      </div>
+    ),
+    [toggleRowExpansion],
+  )
+
+  const getActualSubPosts = useCallback((posts: { post: string; subPosts: string[] }[]) => {
+    return posts.flatMap((postData) =>
+      postData.subPosts[0] === 'allSubPost' ? subPostsByPost[postData.post as Post] : postData.subPosts,
+    )
+  }, [])
+
   const generatePostPreview = useCallback(
-    (posts: StudyContributorRow['posts'], maxLines = 2, isExpanded = false, hasAllPosts = false) => {
+    (posts: { post: string; subPosts: string[] }[], maxLines = 2, isExpanded = false, hasAllPosts = false) => {
       if (hasAllPosts && !isExpanded) {
-        return {
-          text: tPost('allPost'),
-          hasMore: false,
-          totalCount: posts.length,
-        }
+        return { text: tPost('allPost'), hasMore: false, totalCount: posts.length }
       }
 
-      // Create preview lines with just post names (no sub-posts)
-      const lines: string[] = []
-      let processedPosts = 0
-
-      for (const postData of posts) {
-        const postLabel = tPost(postData.post)
-        lines.push(postLabel)
-
-        processedPosts++
-        if (lines.length >= maxLines && !isExpanded) {
-          break
-        }
-      }
-
-      const hasMore = processedPosts < posts.length && !isExpanded
-      const remainingPosts = posts.length - processedPosts
+      const postLabels = posts.map((p) => tPost(p.post))
+      const visiblePosts = isExpanded ? postLabels : postLabels.slice(0, maxLines)
+      const hasMore = !isExpanded && postLabels.length > maxLines
+      const remainingPosts = postLabels.length - visiblePosts.length
 
       return {
-        text: lines.join(', '),
+        text: visiblePosts.join(', '),
         hasMore,
         remainingPosts,
         totalCount: posts.length,
@@ -130,59 +117,102 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   )
 
   const generateSubPostPreview = useCallback(
-    (posts: StudyContributorRow['posts'], hasAllPosts = false) => {
+    (posts: { post: string; subPosts: string[] }[], hasAllPosts = false) => {
       if (hasAllPosts) {
-        return {
-          text: tPost('allSubPost'),
-          totalSubPosts: allSubPosts.length,
-        }
+        return { text: tPost('allSubPost'), totalSubPosts: allSubPosts.length }
       }
 
-      // Calculate actual sub-posts the contributor has access to
-      let actualSubPosts: string[] = []
-
-      posts.forEach((postData) => {
-        if (postData.subPosts.length === 1 && postData.subPosts[0] === 'allSubPost') {
-          // If this post has "all sub-posts", add all sub-posts for this post
-          actualSubPosts = actualSubPosts.concat(subPostsByPost[postData.post as Post])
-        } else {
-          // Add the specific sub-posts
-          actualSubPosts = actualSubPosts.concat(postData.subPosts)
-        }
-      })
-
-      // Get all possible sub-posts from all posts the contributor has access to
-      const allPossibleSubPosts = posts.flatMap((postData) => subPostsByPost[postData.post as Post])
-
-      const uniqueActualSubPosts = [...new Set(actualSubPosts)]
-      const uniquePossibleSubPosts = [...new Set(allPossibleSubPosts)]
+      const actualSubPosts = getActualSubPosts(posts)
+      const allPossibleSubPosts = posts.flatMap((p) => subPostsByPost[p.post as Post])
 
       // Check if contributor has access to ALL possible sub-posts
-      const hasAllSubPosts = uniquePossibleSubPosts.every((sp) => uniqueActualSubPosts.includes(sp))
+      const hasAllSubPosts = allPossibleSubPosts.every((sp) => actualSubPosts.includes(sp))
 
       if (hasAllSubPosts) {
-        return {
-          text: tPost('allSubPost'),
-          totalSubPosts: uniqueActualSubPosts.length,
-        }
+        return { text: tPost('allSubPost'), totalSubPosts: actualSubPosts.length }
       }
 
-      // Show preview of sub-posts
-      const previewSubPosts = uniqueActualSubPosts
-        .slice(0, SUBPOST_PREVIEW_LIMIT)
-        .map((sp) => tPost(sp))
-        .join(', ')
-      const hasMore = uniqueActualSubPosts.length > SUBPOST_PREVIEW_LIMIT
-      const suffix = hasMore
-        ? ` ${t('andXOthers', { count: uniqueActualSubPosts.length - SUBPOST_PREVIEW_LIMIT })}`
-        : ''
+      const visibleSubPosts = actualSubPosts.slice(0, SUBPOST_PREVIEW_LIMIT).map((sp) => tPost(sp))
+      const hasMore = actualSubPosts.length > SUBPOST_PREVIEW_LIMIT
+      const suffix = hasMore ? ` ${t('andXOthers', { count: actualSubPosts.length - SUBPOST_PREVIEW_LIMIT })}` : ''
 
       return {
-        text: `${previewSubPosts}${suffix}`,
-        totalSubPosts: uniqueActualSubPosts.length,
+        text: `${visibleSubPosts.join(', ')}${suffix}`,
+        totalSubPosts: actualSubPosts.length,
       }
     },
-    [tPost, t, allSubPosts],
+    [tPost, t, allSubPosts, getActualSubPosts],
+  )
+
+  const renderEmailCell = useCallback(
+    (rowData: StudyContributorTableRow) => {
+      if (rowData.type === 'parent') {
+        const isExpanded = expandedRows.has(rowData.email)
+        return (
+          <ExpandableCell email={rowData.email}>
+            <div className={styles.emailContent}>
+              <IconButton size="small" className={styles.iconButton} aria-label={isExpanded ? 'Collapse' : 'Expand'}>
+                {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+              </IconButton>
+              <span>{rowData.email}</span>
+            </div>
+          </ExpandableCell>
+        )
+      }
+      return <div className={styles.childRowContent}>{/* Empty for sub-rows */}</div>
+    },
+    [expandedRows, ExpandableCell],
+  )
+
+  const renderPostCell = useCallback(
+    (rowData: StudyContributorTableRow) => {
+      if (rowData.type === 'parent') {
+        const isExpanded = expandedRows.has(rowData.email)
+        const preview = generatePostPreview(rowData.posts, PREVIEW_MAX_LINES, isExpanded, rowData.hasAllPosts)
+
+        return (
+          <ExpandableCell email={rowData.email}>
+            <div>
+              {isExpanded && rowData.hasAllPosts
+                ? tPost('allPost')
+                : isExpanded
+                  ? `${preview.totalCount} post(s)`
+                  : preview.text}
+              {!isExpanded && preview.hasMore && ` ${t('andXOthers', { count: preview.remainingPosts || 0 })}`}
+            </div>
+          </ExpandableCell>
+        )
+      }
+      return <span>{tPost(rowData.post)}</span>
+    },
+    [expandedRows, generatePostPreview, ExpandableCell, t, tPost],
+  )
+
+  const renderSubPostCell = useCallback(
+    (rowData: StudyContributorTableRow) => {
+      if (rowData.type === 'parent') {
+        const isExpanded = expandedRows.has(rowData.email)
+        const subPostPreview = generateSubPostPreview(rowData.posts, rowData.hasAllPosts)
+
+        return (
+          <ExpandableCell email={rowData.email}>
+            <div>
+              {isExpanded && rowData.hasAllPosts
+                ? tPost('allSubPost')
+                : isExpanded
+                  ? `${subPostPreview.totalSubPosts} sous-poste${subPostPreview.totalSubPosts > 1 ? 's' : ''}`
+                  : subPostPreview.text}
+            </div>
+          </ExpandableCell>
+        )
+      }
+
+      if (rowData.subPosts.length === 1 && rowData.subPosts[0] === 'allSubPost') {
+        return <span>{tPost('allSubPost')}</span>
+      }
+      return <span>{rowData.subPosts.map((subPost) => tPost(subPost)).join(', ')}</span>
+    },
+    [expandedRows, generateSubPostPreview, ExpandableCell, tPost],
   )
 
   // Create flattened data structure with contributor rows and expandable post sub-rows
@@ -222,29 +252,26 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
           allPossibleSubPosts.every((subPost) => contributorSubPosts.includes(subPost))
 
         return {
+          type: 'parent' as const,
           ...contributor,
           posts,
-          hasAllPosts, // Add this flag to track if user has all posts
-          isContributorRow: true,
+          hasAllPosts,
         }
       })
 
-    // Flatten the data: contributor rows + their expanded post rows
-    const flattenedData: (StudyContributorRow | StudyContributorPostRow)[] = []
+    const flattenedData: StudyContributorTableRow[] = []
 
     contributorData.forEach((contributor) => {
-      // Add main contributor row
       flattenedData.push(contributor)
 
-      // If expanded, add post sub-rows
       if (expandedRows.has(contributor.email)) {
         contributor.posts.forEach((postData) => {
           flattenedData.push({
+            type: 'child' as const,
             email: contributor.email,
             accountId: contributor.accountId,
             post: postData.post,
             subPosts: postData.subPosts,
-            isPostRow: true,
           })
         })
       }
@@ -254,115 +281,18 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   }, [study.contributors, allPosts, expandedRows])
 
   const columns = useMemo(() => {
-    const columns: ColumnDef<StudyContributorRow | StudyContributorPostRow>[] = [
+    const columns: ColumnDef<StudyContributorTableRow>[] = [
       {
         header: t('email'),
-        cell: ({ row }) => {
-          const rowData = row.original
-
-          if (isContributorRow(rowData)) {
-            // Main contributor row with expand/collapse
-            const isExpanded = expandedRows.has(rowData.email)
-
-            return (
-              <div
-                className="flex align-center"
-                style={{
-                  cursor: 'pointer',
-                  padding: '4px 0',
-                }}
-                onClick={() => toggleRowExpansion(rowData.email)}
-              >
-                <IconButton
-                  size="small"
-                  style={{ padding: '4px', marginRight: '8px' }}
-                  aria-label={isExpanded ? 'Collapse' : 'Expand'}
-                >
-                  {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
-                </IconButton>
-                <span>{rowData.email}</span>
-              </div>
-            )
-          } else {
-            // Post sub-row - indented, no email display
-            return <div style={{ paddingLeft: '40px', color: '#666' }}>{/* Empty for sub-rows */}</div>
-          }
-        },
+        cell: ({ row }) => renderEmailCell(row.original),
       },
       {
         header: t('post'),
-        cell: ({ row }) => {
-          const rowData = row.original
-
-          if (isContributorRow(rowData)) {
-            // For contributor rows, show preview with truncation
-            const isExpanded = expandedRows.has(rowData.email)
-            const preview = generatePostPreview(rowData.posts, PREVIEW_MAX_LINES, isExpanded, rowData.hasAllPosts)
-
-            return (
-              <div
-                style={{
-                  maxWidth: TABLE_COLUMN_WIDTHS.post,
-                  cursor: 'pointer',
-                }}
-                onClick={() => toggleRowExpansion(rowData.email)}
-              >
-                <div>
-                  {isExpanded && rowData.hasAllPosts
-                    ? tPost('allPost')
-                    : isExpanded
-                      ? `${preview.totalCount} post(s)`
-                      : preview.text}
-                  {!isExpanded && preview.hasMore && ` ${t('andXOthers', { count: preview.remainingPosts || 0 })}`}
-                </div>
-              </div>
-            )
-          } else {
-            // For post sub-rows, show the specific post
-            const postRow = rowData as StudyContributorPostRow
-            return <span>{tPost(postRow.post)}</span>
-          }
-        },
+        cell: ({ row }) => renderPostCell(row.original),
       },
       {
         header: t('subPosts'),
-        cell: ({ row }) => {
-          const rowData = row.original
-
-          if (isContributorRow(rowData)) {
-            // For contributor rows, show sub-posts preview and count
-            const isExpanded = expandedRows.has(rowData.email)
-            const subPostPreview = generateSubPostPreview(rowData.posts, rowData.hasAllPosts)
-
-            return (
-              <div
-                style={{
-                  maxWidth: TABLE_COLUMN_WIDTHS.subPosts,
-                  cursor: 'pointer',
-                }}
-                onClick={() => toggleRowExpansion(rowData.email)}
-              >
-                <div>
-                  {isExpanded && rowData.hasAllPosts
-                    ? tPost('allSubPost')
-                    : isExpanded
-                      ? `${subPostPreview.totalSubPosts} sous-poste${subPostPreview.totalSubPosts > 1 ? 's' : ''}`
-                      : subPostPreview.text}
-                </div>
-              </div>
-            )
-          } else {
-            // For post sub-rows, show the specific sub-posts
-            const subPostRow = rowData as StudyContributorPostRow
-            if (subPostRow.subPosts.length === 1 && subPostRow.subPosts[0] === 'allSubPost') {
-              // If this post has all sub-posts, show "Tous les sous postes"
-              return <span>{tPost('allSubPost')}</span>
-            } else {
-              // Show the specific sub-posts
-              return <span>{subPostRow.subPosts.map((subPost: string) => tPost(subPost)).join(', ')}</span>
-            }
-          }
-        },
+        cell: ({ row }) => renderSubPostCell(row.original),
       },
     ]
 
@@ -373,7 +303,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
             cell: ({ row }) => {
               const rowData = row.original
 
-              if (isContributorRow(rowData)) {
+              if (rowData.type === 'parent') {
                 // Delete entire contributor
                 return (
                   <div className="flex-cc">
@@ -389,13 +319,12 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
                 )
               } else {
                 // Delete specific post assignment
-                const postRow = rowData as StudyContributorPostRow
                 return (
                   <div className="flex-cc">
                     <Button
                       aria-label={t('delete')}
-                      title={`Delete ${tPost(postRow.post)}`}
-                      onClick={() => setToDelete(postRow)}
+                      title={`Delete ${tPost(rowData.post)}`}
+                      onClick={() => setToDelete(rowData)}
                       data-testid={`delete-study-contributor-post-button`}
                       size="small"
                     >
@@ -408,43 +337,39 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
           },
         ])
       : columns
-  }, [canAddContributor, expandedRows, t, tPost, toggleRowExpansion, generatePostPreview, generateSubPostPreview])
+  }, [canAddContributor, t, tPost, renderEmailCell, renderPostCell, renderSubPostCell])
 
   const table = useReactTable({
     columns,
     getRowId: (row) => {
-      if (isContributorRow(row)) {
-        return `contributor-${row.email}`
+      if (row.type === 'parent') {
+        return `parent-${row.email}`
       } else {
-        const postRow = row as StudyContributorPostRow
-        return `post-${row.email}-${postRow.post}`
+        return `child-${row.email}-${row.post}`
       }
     },
     data,
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const deleteContributor = async (contributor: StudyContributorRow | StudyContributorPostRow) => {
+  const deleteContributor = async (contributor: StudyContributorTableRow) => {
     setDeleting(true)
 
-    let contributorToDelete: StudyContributorPostRow
+    let contributorToDelete: StudyContributorDeleteParams
 
-    if (isContributorRow(contributor)) {
-      // Delete entire contributor (all posts)
+    if (contributor.type === 'parent') {
+      // Delete all contributors related to this account
       contributorToDelete = {
-        email: contributor.email,
         accountId: contributor.accountId,
-        post: 'allPost', // This signals to delete all posts for this contributor
+        post: 'allPost',
         subPosts: ['allSubPost'],
       }
     } else {
       // Delete specific post assignment
-      const postRow = contributor as StudyContributorPostRow
       contributorToDelete = {
-        email: contributor.email,
         accountId: contributor.accountId,
-        post: postRow.post,
-        subPosts: postRow.subPosts,
+        post: contributor.post,
+        subPosts: contributor.subPosts,
       }
     }
 
@@ -477,28 +402,13 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
             : undefined
         }
       >
-        <div style={{ overflowX: 'auto' }}>
+        <div className={styles.container}>
           <table aria-labelledby="study-rights-table-title" className="mb2">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header, index) => (
-                    <th
-                      key={header.id}
-                      style={{
-                        textAlign: 'left',
-                        padding: '12px 8px',
-                        borderBottom: '1px solid #e0e0e0',
-                        width:
-                          index === 0
-                            ? TABLE_COLUMN_WIDTHS.email
-                            : index === 1
-                              ? TABLE_COLUMN_WIDTHS.post
-                              : index === 2
-                                ? TABLE_COLUMN_WIDTHS.subPosts
-                                : TABLE_COLUMN_WIDTHS.actions,
-                      }}
-                    >
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id} className={styles.headerWidth}>
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </th>
                   ))}
@@ -508,37 +418,16 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
             <tbody>
               {table.getRowModel().rows.map((row) => {
                 const rowData = row.original
-                const isContributorRowType = isContributorRow(rowData)
-                const isPostRowType = isPostRow(rowData)
+                const isParentRow = rowData.type === 'parent'
 
                 return (
                   <tr
                     key={row.id}
                     data-testid="study-contributors-table-line"
-                    style={{
-                      backgroundColor: isContributorRowType ? '#f8f9fa' : '#ffffff',
-                      borderLeft: isPostRowType ? '3px solid #e3f2fd' : 'none',
-                    }}
+                    className={isParentRow ? styles.parentRow : styles.childRow}
                   >
-                    {row.getVisibleCells().map((cell, index) => (
-                      <td
-                        key={cell.id}
-                        style={{
-                          padding: isContributorRowType ? '20px 8px' : '8px 8px',
-                          borderBottom: '1px solid #f0f0f0',
-                          verticalAlign: 'top',
-                          width:
-                            index === 0
-                              ? TABLE_COLUMN_WIDTHS.email
-                              : index === 1
-                                ? TABLE_COLUMN_WIDTHS.post
-                                : index === 2
-                                  ? TABLE_COLUMN_WIDTHS.subPosts
-                                  : TABLE_COLUMN_WIDTHS.actions,
-
-                          minHeight: isContributorRowType ? '60px' : 'auto',
-                        }}
-                      >
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className={isParentRow ? styles.parentCell : styles.childCell}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
@@ -589,11 +478,11 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
             },
           ]}
         >
-          {isContributorRow(contributorToDelete)
+          {contributorToDelete.type === 'parent'
             ? tDeleting('confirmation', { email: contributorToDelete.email })
             : tDeleting('confirmationPost', {
                 email: contributorToDelete.email,
-                post: tPost((contributorToDelete as StudyContributorPostRow).post),
+                post: tPost(contributorToDelete.post),
               })}
         </Modal>
       )}
