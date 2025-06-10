@@ -64,6 +64,7 @@ const fullStudyInclude = {
           id: true,
           totalCo2: true,
           unit: true,
+          isMonetary: true,
           reliability: true,
           technicalRepresentativeness: true,
           geographicRepresentativeness: true,

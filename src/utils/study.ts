@@ -4,14 +4,19 @@ import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { checkLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
-import { Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
+import { Environment, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { isInOrgaOrParent } from './organization'
 
-export const getUserRoleOnPublicStudy = (user: UserSession, studyLevel: Level) => {
+export const getUserRoleOnPublicStudy = (user: Pick<UserSession, 'role' | 'level'>, studyLevel: Level) => {
   if (isAdmin(user.role)) {
     return checkLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
   }
+
+  if (user.environment === Environment.CUT) {
+    return StudyRole.Editor
+  }
+
   return user.role === Role.COLLABORATOR && checkLevel(user.level, studyLevel) ? StudyRole.Editor : StudyRole.Reader
 }
 
@@ -33,6 +38,17 @@ export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
   }
 
   return null
+}
+
+export const getAllowedRolesFromDefaultRole = (role: StudyRole) => {
+  switch (role) {
+    case StudyRole.Validator:
+      return [StudyRole.Validator]
+    case StudyRole.Editor:
+      return [StudyRole.Editor, StudyRole.Validator]
+    default:
+      return Object.values(StudyRole)
+  }
 }
 
 export const postColors: Record<Post, string> = {

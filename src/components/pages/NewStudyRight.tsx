@@ -1,7 +1,6 @@
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import { isAdmin } from '@/utils/user'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -25,9 +24,6 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
   }
 
   const existingAccounts = study.allowedUsers.map((allowedUser) => allowedUser.account.user.email)
-  const filteredAccounts = accounts
-    .filter((account) => !existingAccounts.includes(account.user.email))
-    .filter((account) => !isAdmin(account.role))
 
   return (
     <>
@@ -48,7 +44,7 @@ const NewStudyRightPage = async ({ study, user }: Props) => {
       <Block title={t('title', { name: study.name })} as="h1">
         <NewStudyRightForm
           study={study}
-          accounts={filteredAccounts}
+          accounts={accounts}
           existingAccounts={existingAccounts}
           accountRole={accountRole}
         />

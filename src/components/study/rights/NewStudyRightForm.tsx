@@ -10,6 +10,7 @@ import { ALREADY_IN_STUDY } from '@/services/permissions/check'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
 import { checkLevel } from '@/services/study'
+import { isAdmin } from '@/utils/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { StudyRole } from '@prisma/client'
@@ -38,6 +39,14 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
   const [error, setError] = useState('')
   const [readerOnly, setReaderOnly] = useState(false)
   const [otherOrganizationVersion, setOtherOrganizationVersion] = useState(false)
+
+  const filteredAccounts = useMemo(
+    () =>
+      accounts
+        .filter((account) => !existingAccounts.includes(account.user.email))
+        .filter((account) => !isAdmin(account.role)),
+    [accounts],
+  )
 
   const form = useForm<NewStudyRightCommand>({
     resolver: zodResolver(NewStudyRightCommandValidation),
@@ -85,11 +94,11 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
 
   const usersOptions = useMemo(
     () =>
-      accounts.map((account) => ({
+      filteredAccounts.map((account) => ({
         label: `${account.user.firstName} ${account.user.lastName.toUpperCase()} - ${account.user.email}`,
         value: account.user.email,
       })),
-    [accounts],
+    [filteredAccounts],
   )
 
   const allowedRoles = useMemo(

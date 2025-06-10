@@ -4,6 +4,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/account'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { canEditMemberRole } from '@/utils/organization'
+import { getEnvironmentRoles } from '@/utils/user'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -61,6 +62,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
               currentRole={role}
               email={context.row.original.user.email}
               level={context.row.original.user.level}
+              environment={user.environment}
             />
           ) : (
             <>{tRole(role)}</>
@@ -177,7 +179,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
           },
         ]}
       >
-        {Object.keys(Role)
+        {Object.keys(getEnvironmentRoles(user.environment))
           .filter((role) => role !== Role.SUPER_ADMIN)
           .map((role) => (
             <p key={role} className="mb-2">

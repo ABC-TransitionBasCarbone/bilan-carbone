@@ -28,5 +28,3 @@ export const canEditOrganizationVersion = (
 }
 
 export const canEditMemberRole = (account: UserSession) => isAdmin(account.role) || account.role === Role.GESTIONNAIRE
-
-export const isUntrainedRole = (role: Role) => role === Role.GESTIONNAIRE || role === Role.DEFAULT

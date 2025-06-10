@@ -53,7 +53,12 @@ import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import {
+  getAccountRoleOnStudy,
+  getAllowedRolesFromDefaultRole,
+  getUserRoleOnPublicStudy,
+  hasEditionRights,
+} from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
@@ -73,9 +78,10 @@ import {
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { v4 as uuidv4 } from 'uuid'
-import { auth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
+import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
   canAddContributorOnStudy,
@@ -112,7 +118,7 @@ import { addUserChecklistItem, sendInvitation } from './user'
 
 export const getStudy = async (studyId: string) =>
   withServerResponse('getStudy', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!studyId || !session || !session.user) {
       return null
     }
@@ -132,7 +138,7 @@ export const createStudyCommand = async ({
   ...command
 }: CreateStudyCommand) =>
   withServerResponse('createStudyCommand', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
 
     if (!session || !session.user) {
       throw new Error(NOT_AUTHORIZED)
@@ -247,7 +253,7 @@ export const createStudyCommand = async ({
   })
 
 const getStudyRightsInformations = async (studyId: string) => {
-  const session = await auth()
+  const session = await dbActualizedAuth()
   if (!session || !session.user) {
     return null
   }
@@ -385,7 +391,10 @@ const hasEmissionSources = async (study: FullStudy, siteId: string) => {
 
 export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) =>
   withServerResponse('changeStudySites', async () => {
-    const [organization, session] = await Promise.all([getOrganizationWithSitesById(organizationId), auth()])
+    const [organization, session] = await Promise.all([
+      getOrganizationWithSitesById(organizationId),
+      dbActualizedAuth(),
+    ])
 
     if (!organization || !session) {
       throw new Error(NOT_AUTHORIZED)
@@ -433,7 +442,7 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
 
 export const changeStudyExports = async (studyId: string, type: Export, control: ControlMode | false) =>
   withServerResponse('changeStudyExports', async () => {
-    const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+    const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -509,7 +518,7 @@ const getOrCreateUserAndSendStudyInvite = async (
 
 export const newStudyRight = async (right: NewStudyRightCommand) =>
   withServerResponse('newStudyRight', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -555,6 +564,21 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       right.role = StudyRole.Validator
     }
 
+    if (
+      existingAccount &&
+      existingUser &&
+      studyWithRights.isPublic &&
+      (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
+    ) {
+      const defaultRole = getUserRoleOnPublicStudy(
+        { role: existingAccount.role, level: existingUser?.level },
+        studyWithRights.level,
+      )
+      if (!getAllowedRolesFromDefaultRole(defaultRole).includes(right.role)) {
+        right.role = defaultRole
+      }
+    }
+
     const accountId = await getOrCreateUserAndSendStudyInvite(
       right.email,
       studyWithRights,
@@ -573,7 +597,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
 
 export const changeStudyRole = async (studyId: string, email: string, studyRole: StudyRole) =>
   withServerResponse('changeStudyRole', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -611,12 +635,27 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       throw new Error(NOT_AUTHORIZED)
     }
 
+    if (
+      existingAccount &&
+      existingUser &&
+      studyWithRights.isPublic &&
+      (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
+    ) {
+      const defaultRole = getUserRoleOnPublicStudy(
+        { role: existingAccount.role, level: existingUser?.level },
+        studyWithRights.level,
+      )
+      if (!getAllowedRolesFromDefaultRole(defaultRole).includes(studyRole)) {
+        throw new Error(NOT_AUTHORIZED)
+      }
+    }
+
     await updateUserOnStudy(existingAccount.id, studyWithRights.id, studyRole)
   })
 
 export const newStudyContributor = async ({ email, subPosts, ...command }: NewStudyContributorCommand) =>
   withServerResponse('newStudyContributor', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user || !session.user.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -727,7 +766,7 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
 
 export const findStudiesWithSites = async (siteIds: string[]) =>
   withServerResponse('findStudiesWithSites', async () => {
-    const [session, studySites] = await Promise.all([auth(), getStudiesFromSites(siteIds)])
+    const [session, studySites] = await Promise.all([dbActualizedAuth(), getStudiesFromSites(siteIds)])
 
     const user = session?.user
     const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
@@ -760,7 +799,7 @@ export const findStudiesWithSites = async (siteIds: string[]) =>
 
 export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], studyId: string) =>
   withServerResponse('deleteStudyMember', async () => {
-    const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+    const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (
       !session?.user ||
       !study.success ||
@@ -775,7 +814,7 @@ export const deleteStudyMember = async (member: FullStudy['allowedUsers'][0], st
 
 export const deleteStudyContributor = async (contributor: StudyContributorRow, studyId: string) =>
   withServerResponse('deleteStudyContributor', async () => {
-    const [session, study] = await Promise.all([auth(), getStudy(studyId)])
+    const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (
       !session?.user ||
       !study.success ||
@@ -807,7 +846,7 @@ const getMetaData = (emissionFactor: AsyncReturnType<typeof getEmissionFactorsBy
 export const simulateStudyEmissionFactorSourceUpgrade = async (studyId: string, source: Import) =>
   withServerResponse('simulateStudyEmissionFactorSourceUpgrade', async () => {
     const [session, study, importVersions, locale] = await Promise.all([
-      auth(),
+      dbActualizedAuth(),
       getStudyById(studyId, null),
       getEmissionFactorVersionsBySource(source),
       getLocale(),
@@ -923,7 +962,7 @@ export const duplicateStudyEmissionSource = async (
   studySite: string,
 ) =>
   withServerResponse('duplicateStudyEmissionSource', async () => {
-    const session = await auth()
+    const session = await dbActualizedAuth()
     if (!session || !session.user) {
       throw new Error(NOT_AUTHORIZED)
     }
