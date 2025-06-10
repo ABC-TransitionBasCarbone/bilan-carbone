@@ -5,6 +5,7 @@ import { resetPassword } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -17,6 +18,7 @@ import authStyles from './Auth.module.css'
 const NewPasswordForm = () => {
   const t = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
+  const [env, setEnv] = useState<Environment | undefined>()
   const searchParams = useSearchParams()
   const { callServerFunction } = useServerFunction()
   const router = useRouter()
@@ -33,7 +35,7 @@ const NewPasswordForm = () => {
   const onSubmit = async () => {
     setSubmitting(true)
 
-    await callServerFunction(() => resetPassword(getValues().email.toLowerCase()), {
+    await callServerFunction(() => resetPassword(getValues().email.toLowerCase(), env), {
       getSuccessMessage: () => t('emailSent'),
       getErrorMessage: (error) => t(error),
       onSuccess: () => {
@@ -47,6 +49,10 @@ const NewPasswordForm = () => {
     const email = searchParams.get('email')
     if (email) {
       setValue('email', email)
+    }
+    const environment = searchParams.get('env')
+    if (environment && Object.keys(Environment).includes(environment)) {
+      setEnv(environment as Environment)
     }
   }, [searchParams, setValue])
 

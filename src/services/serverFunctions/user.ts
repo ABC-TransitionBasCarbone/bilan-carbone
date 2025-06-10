@@ -206,7 +206,7 @@ export const validateMember = async (email: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await validateUser(email)
+    await validateUser(member.id)
     await sendNewUser(member.user.email.toLowerCase(), userSessionToDbUser(session.user), member.user.firstName)
   })
 
@@ -285,8 +285,12 @@ export const updateUserProfile = async (command: EditProfileCommand) =>
     await updateUser(session.user.userId, command)
   })
 
-export const resetPassword = async (email: string, env: Environment) =>
+export const resetPassword = async (email: string, env: Environment | undefined) =>
   withServerResponse('resetPassword', async () => {
+    if (!env) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     const user = await getUserByEmail(email)
 
     if (!user || user.accounts.every((a) => a.status !== UserStatus.ACTIVE)) {
@@ -347,11 +351,11 @@ export const activateEmail = async (email: string, env: Environment | undefined,
         `${user.firstName} ${user.lastName}`,
       )
 
-      await changeStatus(user.id, UserStatus.PENDING_REQUEST)
+      await changeStatus(account.id, UserStatus.PENDING_REQUEST)
 
       return REQUEST_SENT
     } else {
-      await validateUser(email)
+      await validateUser(account.id)
       await sendActivation(email, fromReset)
 
       return EMAIL_SENT
