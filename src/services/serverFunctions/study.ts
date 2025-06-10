@@ -52,7 +52,12 @@ import { LocaleType } from '@/i18n/config'
 import { getLocale } from '@/i18n/locale'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import {
+  getAccountRoleOnStudy,
+  getAllowedRolesFromDefaultRole,
+  getUserRoleOnPublicStudy,
+  hasEditionRights,
+} from '@/utils/study'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
@@ -75,6 +80,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
+import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
   canAddContributorOnStudy,
@@ -557,6 +563,21 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       right.role = StudyRole.Validator
     }
 
+    if (
+      existingAccount &&
+      existingUser &&
+      studyWithRights.isPublic &&
+      (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
+    ) {
+      const defaultRole = getUserRoleOnPublicStudy(
+        { role: existingAccount.role, level: existingUser?.level },
+        studyWithRights.level,
+      )
+      if (!getAllowedRolesFromDefaultRole(defaultRole).includes(right.role)) {
+        right.role = defaultRole
+      }
+    }
+
     const accountId = await getOrCreateUserAndSendStudyInvite(
       right.email,
       studyWithRights,
@@ -611,6 +632,21 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       studyRole !== StudyRole.Reader
     ) {
       throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (
+      existingAccount &&
+      existingUser &&
+      studyWithRights.isPublic &&
+      (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
+    ) {
+      const defaultRole = getUserRoleOnPublicStudy(
+        { role: existingAccount.role, level: existingUser?.level },
+        studyWithRights.level,
+      )
+      if (!getAllowedRolesFromDefaultRole(defaultRole).includes(studyRole)) {
+        throw new Error(NOT_AUTHORIZED)
+      }
     }
 
     await updateUserOnStudy(existingAccount.id, studyWithRights.id, studyRole)

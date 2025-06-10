@@ -8,7 +8,7 @@ import { Environment, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } f
 import { UserSession } from 'next-auth'
 import { isInOrgaOrParent } from './organization'
 
-export const getUserRoleOnPublicStudy = (user: UserSession, studyLevel: Level) => {
+export const getUserRoleOnPublicStudy = (user: Pick<UserSession, 'role' | 'level'>, studyLevel: Level) => {
   if (isAdmin(user.role)) {
     return checkLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
   }
@@ -38,6 +38,17 @@ export const getAccountRoleOnStudy = (user: UserSession, study: FullStudy) => {
   }
 
   return null
+}
+
+export const getAllowedRolesFromDefaultRole = (role: StudyRole) => {
+  switch (role) {
+    case StudyRole.Validator:
+      return [StudyRole.Validator]
+    case StudyRole.Editor:
+      return [StudyRole.Editor, StudyRole.Validator]
+    default:
+      return Object.values(StudyRole)
+  }
 }
 
 export const postColors: Record<Post, string> = {
