@@ -2,16 +2,13 @@
   max-width: 20rem;
   background-color: var(--background-200);
   color: var(--primary-800);
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   cursor: pointer;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .modalContent {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-height: 70vh;
+  gap: 2rem;
   overflow-y: auto;
   padding-right: 1rem;
 }
@@ -19,77 +16,63 @@
 .differenceCard {
   background: var(--background-50);
   border: 1px solid var(--background-200);
-  border-radius: 0.75rem;
-  padding: 1.25rem;
+  border-radius: 1rem;
+  padding: 1rem;
 }
 
 .cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
 .cardHeaderWithValue {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
 .cardHeaderLeft {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.cardHeaderRight {
-  display: flex;
-  align-items: center;
+  gap: 1rem;
 }
 
 .cardIcon {
   color: var(--primary-600);
-  font-size: 1.125rem;
+  font-size: 1rem;
 }
 
 .differenceValue {
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--success-600);
   background: var(--success-50);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 .differenceValueNegative {
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--error-600);
   background: var(--error-background);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 .cardHeader h4,
 .cardHeaderWithValue h4 {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-800);
 }
 
 .cardContent {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .cardDescription {
   margin: 0;
   font-style: italic;
   color: var(--text-600);
-  font-size: 0.875rem;
+  font-size: 1rem;
   line-height: 1.4;
 }
 
@@ -100,32 +83,32 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   border: 1px solid var(--background-200);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .table th {
   background: var(--background-100);
   color: var(--text-700);
   font-weight: 600;
-  padding: 0.75rem;
+  padding: 1rem;
   text-align: left;
   border-bottom: 2px solid var(--background-200);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .table th:nth-child(3),
 .table th:nth-child(4),
 .table th:nth-child(5) {
-  min-width: 70px;
+  min-width: 5rem;
 }
 
 .table td {
-  padding: 0.75rem;
+  padding: 1rem;
   border-bottom: 1px solid var(--background-200);
   vertical-align: top;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .table tbody tr:hover {
@@ -152,17 +135,15 @@
 }
 
 .missingSourcesList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .additionalCount {
   background: var(--primary-100);
   color: var(--primary-800);
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 1rem;
   font-weight: 600;
   border: 1px solid var(--primary-200);
 }
@@ -171,9 +152,4 @@
 .wasteList {
   list-style-position: inside;
   list-style-type: initial;
-}
-
-.modalActions {
-  display: flex;
-  justify-content: flex-end;
 }

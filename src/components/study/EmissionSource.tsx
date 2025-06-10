@@ -71,7 +71,6 @@ const EmissionSource = ({
 
   const detailId = `${emissionSource.id}-detail`
 
-  // Check if this emission source should be opened based on URL hash
   useEffect(() => {
     const hash = window.location.hash
     if (hash === `#emission-source-${emissionSource.id}`) {

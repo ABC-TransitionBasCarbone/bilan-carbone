@@ -140,22 +140,21 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
         {t('button')}
       </div>
       <Modal open={open} title={t('modalTitle')} label="computed-beges-difference" onClose={() => setOpen(false)}>
-        <div className={styles.modalContent}>
-          {/* Main Differences - Remove Summary Section */}
+        <div className={classNames(styles.modalContent, 'flex-col')}>
           {hasUtilisationEnDependance && (
             <div className={styles.differenceCard}>
-              <div className={styles.cardHeaderWithValue}>
-                <div className={styles.cardHeaderLeft}>
+              <div className={classNames(styles.cardHeaderWithValue, 'align-center justify-between')}>
+                <div className={classNames(styles.cardHeaderLeft, 'align-center')}>
                   <TrendingUpIcon className={styles.cardIcon} />
                   <h4>{t('dependanceTitle')}</h4>
                 </div>
-                <div className={styles.cardHeaderRight}>
+                <div className={'align-center'}>
                   <span className={styles.differenceValueNegative}>
                     {formatNumber(utilisationEnDependanceDifference, 1)} {unit}
                   </span>
                 </div>
               </div>
-              <div className={styles.cardContent}>
+              <div className={classNames(styles.cardContent, 'flex-col')}>
                 <p className={styles.cardDescription}>{t('dependance')}</p>
                 <div className={styles.cardActions}>
                   <Button
@@ -177,19 +176,19 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
 
           {!!wasteSourcesWithDifferences.length && (
             <div className={styles.differenceCard}>
-              <div className={styles.cardHeaderWithValue}>
-                <div className={styles.cardHeaderLeft}>
+              <div className={classNames(styles.cardHeaderWithValue, 'align-center justify-between')}>
+                <div className={classNames(styles.cardHeaderLeft, 'align-center')}>
                   <TrendingUpIcon className={styles.cardIcon} />
                   <h4>{t('wasteTitle')}</h4>
                 </div>
-                <div className={styles.cardHeaderRight}>
+                <div className={'align-center'}>
                   <span className={wasteTotalDifference >= 0 ? styles.differenceValue : styles.differenceValueNegative}>
                     {wasteTotalDifference > 0 ? '+' : ''}
                     {formatNumber(wasteTotalDifference, 1)} {unit}
                   </span>
                 </div>
               </div>
-              <div className={styles.cardContent}>
+              <div className={classNames(styles.cardContent, 'flex-col')}>
                 <p className={styles.cardDescription}>{t('waste')}</p>
                 <div className={styles.wasteTable}>
                   <table className={styles.table}>
@@ -232,24 +231,24 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
 
           {!!missingCaract.length && (
             <div className={styles.differenceCard}>
-              <div className={styles.cardHeaderWithValue}>
-                <div className={styles.cardHeaderLeft}>
+              <div className={classNames(styles.cardHeaderWithValue, 'align-center justify-between')}>
+                <div className={classNames(styles.cardHeaderLeft, 'align-center')}>
                   <WarningAmberIcon className={styles.cardIcon} />
                   <h4>{t('missingCaractTitle')}</h4>
                 </div>
-                <div className={styles.cardHeaderRight}>
+                <div className={'align-center'}>
                   <span className={styles.differenceValueNegative}>
                     {formatNumber(missingCaractDifference, 1)} {unit}
                   </span>
                 </div>
               </div>
-              <div className={styles.cardContent}>
+              <div className={classNames(styles.cardContent, 'flex-col')}>
                 <p className={styles.cardDescription}>
                   {t('missingCaract1')}
                   <br />
                   {t('missingCaract2')}
                 </p>
-                <div className={styles.missingSourcesList}>
+                <div className={classNames(styles.missingSourcesList, 'wrap')}>
                   {missingCaract
                     .filter((_, i) => i < maxListedEmissionSources)
                     .map((emissionSource) => (
@@ -273,7 +272,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
             </div>
           )}
 
-          <div className={styles.modalActions}>
+          <div className={'justify-end'}>
             <Button onClick={() => setOpen(false)}>{t('close')}</Button>
           </div>
         </div>

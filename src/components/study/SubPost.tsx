@@ -79,12 +79,6 @@ const SubPost = ({
 
       if (hasTargetEmissionSource) {
         setExpanded(true)
-        setTimeout(() => {
-          const element = document.getElementById(hash.substring(1))
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          }
-        }, 600) // Delay to ensure both accordion and emission source are expanded
       }
     }
   }, [emissionSources])
