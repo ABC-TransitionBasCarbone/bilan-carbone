@@ -38,7 +38,9 @@ describe('Create study', () => {
 
   it('should create a study on an organization as a CR user', () => {
     cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
-    cy.visit('/etudes/creer')
+
+    cy.getByTestId('new-study').click()
+
     cy.getByTestId('new-study-organization-title').should('be.visible')
     cy.getByTestId('new-study-organization-select').click()
     cy.get('[role="option"]').first().click()

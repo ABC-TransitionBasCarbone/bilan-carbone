@@ -1,6 +1,7 @@
 'use client'
 
 import Box from '@/components/base/Box'
+import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
