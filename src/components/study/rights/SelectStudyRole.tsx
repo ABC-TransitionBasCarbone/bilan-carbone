@@ -8,7 +8,7 @@ import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Toast, { ToastColors } from '../../base/Toast'
 
 const emptyToast = { text: '', color: 'info' } as const
@@ -27,19 +27,14 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
   const [role, setRole] = useState(currentRole)
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
 
-  useEffect(() => {
-    setRole(currentRole)
-  }, [currentRole])
-
   const selectNewRole = async (event: SelectChangeEvent<StudyRole>) => {
     const newRole = event.target.value as StudyRole
-    setRole(newRole)
     if (newRole !== role) {
       const result = await changeStudyRole(study.id, rowUser.user.email, newRole)
       if (!result.success) {
         setToast({ text: result.errorMessage, color: 'error' })
-        setRole(currentRole)
       } else {
+        setRole(newRole)
         setToast({ text: 'saved', color: 'success' })
       }
     }
