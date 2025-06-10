@@ -84,7 +84,7 @@ const SubPost = ({
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'center' })
           }
-        }, 700) // Slightly longer delay to ensure both accordion and emission source are expanded
+        }, 600) // Delay to ensure both accordion and emission source are expanded
       }
     }
   }, [emissionSources])
