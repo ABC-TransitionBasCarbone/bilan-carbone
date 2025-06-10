@@ -68,10 +68,10 @@ const updateUserResetToken = async (email: string, duration: number) => {
   return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
 }
 
-export const sendNewUser = async (email: string, user: User, newUserName: string) =>
+export const sendNewUser = async (email: string, user: User, newUserName: string, env: Environment) =>
   withServerResponse('sendNewUser', async () => {
     const token = await updateUserResetToken(email, 1 * DAY)
-    return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName)
+    return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName, env)
   })
 
 export const sendInvitation = async (
@@ -80,6 +80,7 @@ export const sendInvitation = async (
   organization: Organization,
   creator: UserSession,
   roleOnStudy: string,
+  env: Environment,
   existingAccount?: AccountWithUser,
 ) =>
   withServerResponse('sendInvitation', async () => {
@@ -101,6 +102,7 @@ export const sendInvitation = async (
             organization.name,
             `${creator.firstName} ${creator.lastName}`,
             existingAccount.user.firstName,
+            env,
           )
     }
 
@@ -115,6 +117,7 @@ export const sendInvitation = async (
           organization.name,
           `${creator.firstName} ${creator.lastName}`,
           roleOnStudy,
+          env,
         )
       : sendNewContributorInvitationEmail(
           email,
@@ -123,12 +126,13 @@ export const sendInvitation = async (
           study.id,
           organization.name,
           `${creator.firstName} ${creator.lastName}`,
+          env,
         )
   })
 
-const sendActivation = async (email: string, fromReset: boolean) => {
+const sendActivation = async (email: string, fromReset: boolean, env: Environment) => {
   const token = await updateUserResetToken(email, 1 * HOUR)
-  return sendActivationEmail(email, token, fromReset)
+  return sendActivationEmail(email, token, fromReset, env)
 }
 
 export const addMember = async (member: AddMemberCommand) =>
@@ -191,7 +195,12 @@ export const addMember = async (member: AddMemberCommand) =>
       await updateUser(memberExists.id, updateMember)
     }
 
-    await sendNewUser(member.email.toLowerCase(), userSessionToDbUser(session.user), member.firstName)
+    await sendNewUser(
+      member.email.toLowerCase(),
+      userSessionToDbUser(session.user),
+      member.firstName,
+      session.user.environment,
+    )
   })
 
 export const validateMember = async (email: string) =>
@@ -207,7 +216,12 @@ export const validateMember = async (email: string) =>
     }
 
     await validateUser(member.id)
-    await sendNewUser(member.user.email.toLowerCase(), userSessionToDbUser(session.user), member.user.firstName)
+    await sendNewUser(
+      member.user.email.toLowerCase(),
+      userSessionToDbUser(session.user),
+      member.user.firstName,
+      session.user.environment,
+    )
   })
 
 export const resendInvitation = async (email: string) =>
@@ -222,7 +236,12 @@ export const resendInvitation = async (email: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await sendNewUser(member.user.email, userSessionToDbUser(session.user), member.user.firstName)
+    await sendNewUser(
+      member.user.email,
+      userSessionToDbUser(session.user),
+      member.user.firstName,
+      session.user.environment,
+    )
   })
 
 export const deleteMember = async (email: string) =>
@@ -285,12 +304,9 @@ export const updateUserProfile = async (command: EditProfileCommand) =>
     await updateUser(session.user.userId, command)
   })
 
-export const resetPassword = async (email: string, env: Environment | undefined) =>
+export const resetPassword = async (email: string, userEnv: Environment | undefined) =>
   withServerResponse('resetPassword', async () => {
-    if (!env) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
+    const env = userEnv || Environment.BC
     const user = await getUserByEmail(email)
 
     if (!user || user.accounts.every((a) => a.status !== UserStatus.ACTIVE)) {
@@ -311,27 +327,21 @@ export const resetPassword = async (email: string, env: Environment | undefined)
 
         const token = jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
         await updateUserResetTokenForEmail(email, resetToken)
-        await sendResetPassword(email, token)
+        await sendResetPassword(email, token, env)
       }
     }
   })
 
-export const activateEmail = async (email: string, env: Environment | undefined, fromReset: boolean = false) =>
+export const activateEmail = async (email: string, userEnv: Environment | undefined, fromReset: boolean = false) =>
   withServerResponse('activateEmail', async () => {
-    if (!env) {
-      throw new Error(NOT_AUTHORIZED)
-    }
+    const env = userEnv || Environment.BC
 
     const user = await getUserByEmail(email)
     const account = (await getAccountById(
       user?.accounts.find((a) => a.environment === env)?.id || '',
     )) as AccountWithUser
-    if (
-      !user ||
-      !account ||
-      !account.organizationVersionId ||
-      user.accounts.every((a) => a.status === UserStatus.ACTIVE)
-    ) {
+
+    if (!user || !account || !account.organizationVersionId || account.status === UserStatus.ACTIVE) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -356,7 +366,7 @@ export const activateEmail = async (email: string, env: Environment | undefined,
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
-      await sendActivation(email, fromReset)
+      await sendActivation(email, fromReset, env)
 
       return EMAIL_SENT
     }

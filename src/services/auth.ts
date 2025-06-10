@@ -142,6 +142,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await getUserByEmailWithSensibleInformations(credentials.email)
+
         if (!user || !user.password || user.accounts.every((a) => a.status !== UserStatus.ACTIVE)) {
           return null
         }

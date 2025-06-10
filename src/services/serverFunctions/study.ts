@@ -488,6 +488,7 @@ const getOrCreateUserAndSendStudyInvite = async (
       organizationVersion.organization,
       creator,
       newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
+      study.organizationVersion.environment,
     )
 
     const newAccountId = newUser.accounts.find((a) => a.environment === organizationVersion.environment)?.id
@@ -514,6 +515,7 @@ const getOrCreateUserAndSendStudyInvite = async (
       organizationVersion.organization,
       creator,
       newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
+      organizationVersion.environment,
       account,
     )
     accountId = account.id

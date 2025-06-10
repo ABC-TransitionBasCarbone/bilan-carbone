@@ -1,7 +1,7 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import { signPassword } from '@/services/auth'
 import { AuthorizedInOrgaUserStatus } from '@/services/users'
-import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
+import { Environment, Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
 import { getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
 
@@ -56,12 +56,16 @@ export const getAccountByIdWithAllowedStudies = (id: string) =>
 
 export type UserWithAllowedStudies = AsyncReturnType<typeof getAccountByIdWithAllowedStudies>
 
-export const updateUserPasswordForEmail = async (email: string, password: string) => {
+export const updateUserPasswordForEmail = async (email: string, password: string, env: Environment) => {
   const signedPassword = await signPassword(password)
   const user = await prismaClient.user.update({
     where: { email },
     data: { resetToken: null, password: signedPassword },
   })
+
+  if (!user) {
+    throw new Error(`User with email ${email} not found`)
+  }
 
   const accounts = await prismaClient.account.findMany({
     where: {
@@ -72,7 +76,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
   })
 
   if (accounts.length > 0) {
-    await Promise.all(
+    await Promise.all([
       accounts.map((account) =>
         prismaClient.userCheckedStep.upsert({
           where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
@@ -80,7 +84,11 @@ export const updateUserPasswordForEmail = async (email: string, password: string
           create: { accountId: account.id, step: UserChecklist.CreateAccount },
         }),
       ),
-    )
+      prismaClient.account.update({
+        where: { userId_environment: { userId: user.id, environment: env } },
+        data: { status: UserStatus.ACTIVE },
+      }),
+    ])
   }
 
   return user

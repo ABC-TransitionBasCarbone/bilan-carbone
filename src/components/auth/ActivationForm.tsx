@@ -42,6 +42,7 @@ const ActivationForm = () => {
     if (email) {
       setValue('email', email)
     }
+
     const environment = searchParams.get('env')
     if (environment && Object.keys(Environment).includes(environment)) {
       setEnv(environment as Environment)

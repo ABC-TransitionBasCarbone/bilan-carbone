@@ -263,7 +263,7 @@ export const onboardOrganizationVersion = async (
 
   const allCollaborators = [...newCollaborators, ...existingCollaborators]
   allCollaborators.forEach((collab) =>
-    sendNewUser(collab.user.email.toLowerCase(), dbUser, collab.user.firstName ?? ''),
+    sendNewUser(collab.user.email.toLowerCase(), dbUser, collab.user.firstName ?? '', organizationVersion.environment),
   )
 }
 
