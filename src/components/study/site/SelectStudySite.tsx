@@ -23,7 +23,7 @@ const SelectStudySite = ({ study, allowAll, studySite, setSite, withLabel = true
       <Select
         labelId="study-site-select"
         label={withLabel ? t('site') : undefined}
-        value={studySite === 'all' && !allowAll ? '' : studySite}
+        value={study.sites.length === 1 || (studySite === 'all' && !allowAll) ? study.sites[0].id : studySite}
         onChange={(event) => setSite(event.target.value)}
         disabled={study.sites.length === 1 && !allowAll}
       >
