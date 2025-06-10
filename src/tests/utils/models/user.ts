@@ -22,6 +22,7 @@ export const mockedDbUser = {
   password: null,
   resetToken: null,
   formationFormStartTime: null,
+  feedbackDate: null,
   source: UserSource.CRON,
 }
 
