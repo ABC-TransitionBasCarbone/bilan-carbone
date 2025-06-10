@@ -238,3 +238,5 @@ export const updateAccount = (
       user: { update: { ...userData } },
     },
   })
+
+export const resetUserFeedbackDate = async () => prismaClient.user.updateMany({ data: { feedbackDate: null } })
