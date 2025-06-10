@@ -99,7 +99,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   return (
     <Container>
       <Box component="section" sx={{ display: 'flex', gap: '1rem' }}>
-        <SelectStudySite study={study} allowAll={study.sites.length > 1} studySite={studySite} setSite={setSite} />
+        <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
         <Button
           variant="outlined"
           size="large"

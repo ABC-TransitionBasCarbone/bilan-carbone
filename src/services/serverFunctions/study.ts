@@ -570,7 +570,7 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
       (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
     ) {
       const defaultRole = getUserRoleOnPublicStudy(
-        { role: existingAccount.role, level: existingUser?.level },
+        { role: existingAccount.role, level: existingUser?.level, environment: existingAccount.environment },
         studyWithRights.level,
       )
       if (!getAllowedRolesFromDefaultRole(defaultRole).includes(right.role)) {
@@ -641,7 +641,7 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
       (await isInOrgaOrParentFromId(existingAccount.organizationVersionId, studyWithRights.organizationVersionId))
     ) {
       const defaultRole = getUserRoleOnPublicStudy(
-        { role: existingAccount.role, level: existingUser?.level },
+        { role: existingAccount.role, level: existingUser?.level, environment: existingAccount.environment },
         studyWithRights.level,
       )
       if (!getAllowedRolesFromDefaultRole(defaultRole).includes(studyRole)) {

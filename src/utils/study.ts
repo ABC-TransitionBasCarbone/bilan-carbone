@@ -8,7 +8,10 @@ import { Environment, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } f
 import { UserSession } from 'next-auth'
 import { isInOrgaOrParent } from './organization'
 
-export const getUserRoleOnPublicStudy = (user: Pick<UserSession, 'role' | 'level'>, studyLevel: Level) => {
+export const getUserRoleOnPublicStudy = (
+  user: Pick<UserSession, 'role' | 'level' | 'environment'>,
+  studyLevel: Level,
+) => {
   if (isAdmin(user.role)) {
     return checkLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
   }
