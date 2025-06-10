@@ -7,7 +7,198 @@
   gap: 0.5rem;
 }
 
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.differenceCard {
+  background: var(--background-50);
+  border: 1px solid var(--background-200);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cardHeaderWithValue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.cardHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cardHeaderRight {
+  display: flex;
+  align-items: center;
+}
+
+.cardIcon {
+  color: var(--primary-600);
+  font-size: 1.125rem;
+}
+
+.differenceValue {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--success-600);
+  background: var(--success-50);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.differenceValueNegative {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--error-600);
+  background: var(--error-background);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.cardHeader h4,
+.cardHeaderWithValue h4 {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-800);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cardDescription {
+  margin: 0;
+  font-style: italic;
+  color: var(--text-600);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.wasteTable {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 0.75rem;
+  border: 1px solid var(--background-200);
+  font-size: 0.875rem;
+}
+
+.table th {
+  background: var(--background-100);
+  color: var(--text-700);
+  font-weight: 600;
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 2px solid var(--background-200);
+  font-size: 0.875rem;
+}
+
+.table th:nth-child(3),
+.table th:nth-child(4),
+.table th:nth-child(5) {
+  min-width: 70px;
+}
+
+.table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--background-200);
+  vertical-align: top;
+  font-size: 0.875rem;
+}
+
+.table tbody tr:hover {
+  background: var(--background-50);
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clickableRow:hover {
+  background: var(--background-100) !important;
+}
+
+.differenceCell {
+  color: var(--success-100) !important;
+  font-weight: 600;
+}
+
+.differenceCellNegative {
+  color: var(--error-50) !important;
+  font-weight: 600;
+}
+
+.missingSourcesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.missingSourceTag {
+  background: var(--background-100);
+  color: var(--text-700);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--background-300);
+  transition: all 0.2s ease;
+}
+
+.missingSourceTag:hover {
+  background: var(--background-200);
+  border-color: var(--background-400);
+}
+
+.clickableTag {
+  cursor: pointer;
+}
+
+.clickableTag:hover {
+  background: var(--primary-100) !important;
+  border-color: var(--primary-300) !important;
+  color: var(--primary-800) !important;
+}
+
+.additionalCount {
+  background: var(--primary-100);
+  color: var(--primary-800);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid var(--primary-200);
+}
+
+/* Legacy styles for compatibility */
 .wasteList {
   list-style-position: inside;
   list-style-type: initial;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
 }

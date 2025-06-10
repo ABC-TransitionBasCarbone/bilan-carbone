@@ -26,7 +26,7 @@
     "NotHeldSupported": "Non détenu, supporté",
     "NotHeldNotSupported": "Non détenue, non supporté",
     "UsedByIntermediary": "Utilisé par un intermédiaire",
-    "LandUse": "Utilisation des terres, changement d’affectation des terres et foresterie (UTCATF)"
+    "LandUse": "Utilisation des terres, changement d'affectation des terres et foresterie (UTCATF)"
   },
   "beges": {
     "rule": "Règle",
@@ -115,7 +115,7 @@
   },
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® +",
-    "explaination": "L'outil dédié à l’application de la méthode Bilan Carbone®, développé par l’Association pour la transition Bas Carbone (ABC), et accessible à l’ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
+    "explaination": "L'outil dédié à l'application de la méthode Bilan Carbone®, développé par l'Association pour la transition Bas Carbone (ABC), et accessible à l'ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
     "question": "Une question ? Lisez la <link>FAQ</link> ou <support>contactez-nous</support> !",
     "form": {
       "activate": "Activer mon compte",
@@ -486,11 +486,22 @@
         "T": "tCO₂e"
       },
       "difference": {
-        "button": "Explication des différences entre le Bilan Carbone® et l’export Beges",
+        "button": "Explication des différences entre le Bilan Carbone® et l'export Beges",
         "modalTitle": "Explication de la différence entre les résultats",
+        "dependanceTitle": "Utilisation en dépendance",
+        "wasteTitle": "Traitement des déchets",
+        "missingCaractTitle": "Caractérisations manquantes",
+        "tableHeaders": {
+          "emissionSource": "Source d'émission",
+          "post": "Poste",
+          "bilanCarbone": "Bilan Carbone®",
+          "beges": "BEGES",
+          "difference": "Différence"
+        },
         "dependance": "Le Bilan GES règlementaire n'intègre pas le sous-poste \"Utilisation en dépendance\", car la notion de dépendance n'est pas existante dans la méthode BEGES-R",
         "waste": "Le Bilan GES règlementaire intègre l'ensemble des émissions dues au recyclage des déchets dans le bilan de l'émetteur des déchets, tandis que le Bilan Carbone® ne fait porter sur l'émetteur des déchets que le poids de la collecte et du transport des déchets. Ainsi, les facteurs d'émission ayant pour valeur 41 kgCO₂e/t au sein de l'outil sont ceux utilisés pour le Bilan Carbone®, tandis que les valeurs intégrant la régénération des matériaux (le processus de recyclage, pour les facteur d'émission \"Recyclage\" ou \"Fin de vie moyenne\") sont utilisés pour le BEGES-R. Le facteur d'émission affiché sur le BC+ est uniquement celui utilisé pour le Bilan Carbone®, mais les calculs de l'export BEGES-R se font bien avec les facteurs d'émission liés au recyclage ou à la fin de vie moyenne de l'ADEME. Voici les sources d'émissions liées à ce sujet : ",
-        "missingCaract": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
+        "missingCaract1": "Les sources d'émissions non caractérisées ne sont pas comptabilisées au sein du BEGES-R, ce qui entraine des différences indues avec le Bilan Carbone® dans le cas où vous auriez choisi de visualiser les sources d'émissions non validées.",
+        "missingCaract2": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
       },
@@ -760,7 +771,7 @@
     "title": "Facteurs d'émission",
     "loading": "Chargement des facteurs d'émission",
     "table": {
-      "subTitle": "Vous pouvez parcourir l’ensemble des facteurs d’émission disponibles, et en créer de nouveaux",
+      "subTitle": "Vous pouvez parcourir l'ensemble des facteurs d'émission disponibles, et en créer de nouveaux",
       "Valid": "Valide",
       "Archived": "Archivé",
       "selectLine": "Selectionner ce facteur d'émission",
@@ -824,7 +835,7 @@
       "modal": {
         "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
         "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
-        "title": "Modifier un facteur d’émission",
+        "title": "Modifier un facteur d'émission",
         "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
         "confirm": "Confirmer",
         "close": "Annuler"

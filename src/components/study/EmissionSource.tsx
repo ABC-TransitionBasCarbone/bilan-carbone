@@ -70,6 +70,21 @@ const EmissionSource = ({
   const { callServerFunction } = useServerFunction()
 
   const detailId = `${emissionSource.id}-detail`
+
+  // Check if this emission source should be opened based on URL hash
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash === `#emission-source-${emissionSource.id}`) {
+      setDisplay(true)
+      setTimeout(() => {
+        const element = document.getElementById(`emission-source-${emissionSource.id}`)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, 600)
+    }
+  }, [emissionSource.id])
+
   const canEdit = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
   const canValidate = userRoleOnStudy === StudyRole.Validator
 
@@ -153,7 +168,7 @@ const EmissionSource = ({
   }, [study.emissionFactorVersions, isFromOldImport, emissionFactors])
 
   return (
-    <div className={styles.container}>
+    <div id={`emission-source-${emissionSource.id}`} className={styles.container}>
       <button
         data-testid={`emission-source-${emissionSource.name}`}
         className={classNames(styles.line, 'flex-col')}

@@ -69,4 +69,6 @@
   --editor-background: #89d7b0;
   --reader-background: var(--neutral-200);
   --contributor-background: var(--grayscale-300);
+
+  --error-background: #f6b8b8;
 }
