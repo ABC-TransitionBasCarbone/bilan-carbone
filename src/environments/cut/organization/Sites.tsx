@@ -10,8 +10,9 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import { Control, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
+import { Control, Controller, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from '../../base/organization/Sites.module.css'
+import DebouncedInput from '@/components/base/DebouncedInput'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
@@ -59,15 +60,23 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                   {getValue<string>()}
                 </div>
               ) : (
-                <FormTextField
-                  data-testid="edit-site-cnc"
-                  className={styles.field}
-                  control={control}
-                  translation={t}
-                  debounce
+                <Controller
                   name={`sites.${row.index}.cncId`}
-                  placeholder={t('cncPlaceholder')}
-                  onChange={(e) => getCncData(e.target.value, row.index)}
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <DebouncedInput
+                      data-testid="edit-site-cnc"
+                      className={styles.field}
+                      debounce={200}
+                      label={t('cnc')}
+                      value={value ?? ''}
+                      onChange={(newValue: string) => {
+                        onChange(newValue)
+                        newValue && getCncData(newValue, row.index)
+                      }}
+                      placeholder={t('cncPlaceholder')}
+                    />
+                  )}
                 />
               )}
             </>

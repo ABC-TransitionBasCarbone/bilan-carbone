@@ -1,8 +1,6 @@
 import { FormControl, FormHelperText } from '@mui/material'
-import { TextFieldProps } from '@mui/material/TextField'
-import { ChangeEvent } from 'react'
+import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
-import DebouncedInput from '../base/DebouncedInput'
 import IconLabel from '../base/IconLabel'
 import styles from './Form.module.css'
 
@@ -15,7 +13,6 @@ interface Props<T extends FieldValues> {
   iconPosition?: 'before' | 'after'
   endAdornment?: React.ReactNode
   customError?: string
-  debounce?: boolean
 }
 
 export const FormTextField = <T extends FieldValues>({
@@ -27,7 +24,6 @@ export const FormTextField = <T extends FieldValues>({
   iconPosition = 'before',
   endAdornment,
   customError,
-  debounce,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -42,17 +38,10 @@ export const FormTextField = <T extends FieldValues>({
               <span className="inputLabel bold">{label}</span>
             </IconLabel>
           ) : null}
-          <DebouncedInput
-            {...Object.fromEntries(Object.entries(textFieldProps).filter(([key]) => key !== 'size'))}
+          <TextField
+            {...textFieldProps}
             error={!!error || !!customError}
-            debounce={debounce ? 500 : 0}
-            onChange={(event) => {
-              const val = textFieldProps.type === 'number' ? parseFloat(event) : event
-              onChange(val)
-              textFieldProps.onChange?.({
-                target: { value: event },
-              } as unknown as ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
-            }}
+            onChange={textFieldProps.type === 'number' ? (event) => onChange(parseFloat(event.target.value)) : onChange}
             value={(textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined ? '' : value}
             slotProps={{
               input: {
