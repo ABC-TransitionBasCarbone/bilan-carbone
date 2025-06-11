@@ -1,3 +1,4 @@
+import { appendForm } from '@/utils/form'
 import { MIN, TIME_IN_MS } from '@/utils/time'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
@@ -6,7 +7,6 @@ import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import Countdown from 'react-countdown'
-import styles from './Formation.module.css'
 
 dayjs.extend(utc)
 
@@ -24,13 +24,7 @@ const EvaluationModal = ({ user, organizationName, startTime }: Props) => {
   const [isEnding, setIsEnding] = useState(false)
 
   useEffect(() => {
-    const script = document.createElement('script')
-    script.src = '//embed.typeform.com/next/embed.js'
-    script.async = true
-    document.body.appendChild(script)
-    return () => {
-      document.body.removeChild(script)
-    }
+    appendForm()
   }, [])
 
   const params = {
@@ -69,7 +63,7 @@ const EvaluationModal = ({ user, organizationName, startTime }: Props) => {
         />
       </span>
       <div
-        className={styles.form}
+        className="typeform"
         data-tf-live={typeformId}
         data-tf-hidden={[
           `name=${params.name}`,

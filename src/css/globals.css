@@ -161,3 +161,10 @@ table {
 .pointer {
   cursor: pointer;
 }
+
+.typeform {
+  height: 500px;
+  div {
+    height: 100%;
+  }
+}

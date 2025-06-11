@@ -34,7 +34,7 @@ import {
 } from '@/db/user'
 import { processUsers } from '@/scripts/ftp/userImport'
 import { withServerResponse } from '@/utils/serverResponse'
-import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
+import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@/utils/time'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
 import { DeactivatableFeature, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
@@ -498,6 +498,6 @@ export const answerFeeback = async () =>
       throw new Error(NOT_AUTHORIZED)
     }
     const now = new Date()
-    const feedbackDate = new Date(now.getTime() + 10 * 365 * DAY * TIME_IN_MS) // set to 1 year later
+    const feedbackDate = new Date(now.getTime() + 10 * YEAR * TIME_IN_MS)
     updateUserFeedbackDate(session.user.id, feedbackDate)
   })

@@ -1,17 +1,22 @@
 'use client'
 
 import { answerFeeback, delayFeeback } from '@/services/serverFunctions/user'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import Modal from '../modals/Modal'
-import FeedbackModal from './FeedbackModal'
+import FeedbackForm from './FeedbackForm'
 
-const UserFeedback = () => {
+interface Props {
+  environment: Environment
+}
+
+const UserFeedback = ({ environment }: Props) => {
   const t = useTranslations('feedback')
   const [open, setOpen] = useState(true)
   const [displayForm, setDisplayForm] = useState(false)
 
-  const reject = () => {
+  const onClose = () => {
     answerFeeback()
     setOpen(false)
   }
@@ -31,19 +36,19 @@ const UserFeedback = () => {
       <Modal
         label="feedback"
         open={open}
-        onClose={reject}
+        onClose={onClose}
         title={t('title')}
         actions={
           displayForm
-            ? [{ actionType: 'button', children: t('close'), onClick: reject }]
+            ? [{ actionType: 'button', children: t('close'), onClick: onClose }]
             : [
-                { actionType: 'button', children: t('reject'), onClick: reject },
+                { actionType: 'button', children: t('reject'), onClick: onClose },
                 { actionType: 'button', children: t('delay'), onClick: delay },
                 { actionType: 'button', children: t('answer'), onClick: answer },
               ]
         }
       >
-        {displayForm ? <FeedbackModal /> : <>{t('body')}</>}
+        {displayForm ? <FeedbackForm environment={environment} /> : <>{t('body')}</>}
       </Modal>
     </>
   )

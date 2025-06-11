@@ -52,7 +52,7 @@ const UserView = async ({ account }: Props) => {
       {userOrganizationVersion && !userOrganizationVersion.onboarded && (
         <Onboarding user={account} organizationVersion={userOrganizationVersion} />
       )}
-      {displayFeedback.success && displayFeedback.data && <UserFeedback />}
+      {displayFeedback.success && displayFeedback.data && <UserFeedback environment={account.environment} />}
     </>
   )
 }
