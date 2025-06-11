@@ -23,29 +23,12 @@
   padding: 1.25rem;
 }
 
-.cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
 .cardHeaderWithValue {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
 .cardHeaderLeft {
-  display: flex;
-  align-items: center;
   gap: 0.75rem;
-}
-
-.cardHeaderRight {
-  display: flex;
-  align-items: center;
 }
 
 .cardIcon {
@@ -161,10 +144,4 @@
   font-size: 1rem;
   font-weight: 600;
   border: 1px solid var(--primary-200);
-}
-
-/* Legacy styles for compatibility */
-.wasteList {
-  list-style-position: inside;
-  list-style-type: initial;
 }

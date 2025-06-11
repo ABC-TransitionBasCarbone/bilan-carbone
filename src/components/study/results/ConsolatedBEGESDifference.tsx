@@ -132,9 +132,8 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
         return total
       }
 
-      const begesTotal = Math.round(getBegesEmissionTotal(emissionSource, emissionFactor) / unitValue)
-
-      return total - begesTotal
+      const bcEmissionTotal = Math.round(getEmissionSourcesTotalCo2([emissionSource]) / unitValue)
+      return total - bcEmissionTotal
     }, 0)
   }, [missingCaract, emissionFactorsWithParts, unitValue])
 
