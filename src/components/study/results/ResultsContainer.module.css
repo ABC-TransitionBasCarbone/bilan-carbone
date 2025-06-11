@@ -24,7 +24,7 @@
 
 .selector {
   flex-direction: column;
-  padding: 2rem;
+  padding: 0 2rem;
   gap: 1rem;
 
   @media screen and (max-width: 60rem) {

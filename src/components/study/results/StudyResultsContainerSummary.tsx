@@ -76,7 +76,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   return (
     <>
       {withDependencies === undefined && showTitle && (
-        <div className="justify-between mb1">
+        <div className="justify-between mb2">
           <Link className={styles.studyNameLink} href={`/etudes/${study.id}`}>
             <StudyName name={study.name} />
           </Link>
@@ -84,10 +84,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
         </div>
       )}
       <div className={styles.container}>
-        <fieldset
-          className={classNames(styles.selector, 'grow justify-around')}
-          aria-label={t('results.withDependencies')}
-        >
+        <fieldset className={classNames(styles.selector, 'flex grow')} aria-label={t('results.withDependencies')}>
           <label>
             <input
               type="radio"
