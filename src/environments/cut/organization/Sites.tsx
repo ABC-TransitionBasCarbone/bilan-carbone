@@ -1,6 +1,7 @@
 'use client'
 
 import Button from '@/components/base/Button'
+import DebouncedInput from '@/components/base/DebouncedInput'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
@@ -12,7 +13,6 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { Control, Controller, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from '../../base/organization/Sites.module.css'
-import DebouncedInput from '@/components/base/DebouncedInput'
 
 interface Props<T extends SitesCommand> {
   form?: UseFormReturn<T>
