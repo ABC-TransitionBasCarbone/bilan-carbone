@@ -34,6 +34,7 @@ const StudyCard = async ({ study, user }: Props) => {
     return null
   }
   const percent = values.validated ? Math.floor((values.validated / values.total) * 100) : 0
+  const progressBarClass = `${styles.progressBar}${percent === 100 ? 'Success' : ''}`
 
   return (
     <li data-testid="study" className="flex">
@@ -65,10 +66,7 @@ const StudyCard = async ({ study, user }: Props) => {
               {t('validatedOnlyDescription')}
             </GlossaryIconModal>
           </p>
-          <ProgressBar
-            value={percent}
-            barClass={classNames(`${styles.progressBar}${percent === 100 ? 'Success' : ''}`)}
-          />
+          <ProgressBar value={percent} barClass={progressBarClass} />
         </Box>
         <div className="justify-end">
           <LinkButton href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>
