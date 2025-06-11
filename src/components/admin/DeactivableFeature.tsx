@@ -1,6 +1,7 @@
 'use client'
 
 import { getFeaturesRestictions, RestrictionsTypes } from '@/db/deactivableFeatures'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   changeDeactivableFeatureRestriction,
   changeDeactivableFeatureStatus,
@@ -9,7 +10,6 @@ import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
 import { Environment, UserSource } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
 interface Props {
   restrictions: AsyncReturnType<typeof getFeaturesRestictions>[number]
@@ -24,30 +24,25 @@ type DeactivationCriteria<TValue> = {
 
 const DeactivableFeature = ({ restrictions }: Props) => {
   const t = useTranslations('deactivableFeatures')
-  const tFeatures = useTranslations('deactivableFeatures')
   const tSource = useTranslations('source')
   const tEnvironment = useTranslations('environment')
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
   const router = useRouter()
 
   const changeFeatureStatus = async (status: boolean) => {
-    setError('')
-    const result = await changeDeactivableFeatureStatus(restrictions.feature, status)
-    if (!result.success) {
-      setError(result.errorMessage)
-    } else {
-      router.refresh()
-    }
+    await callServerFunction(() => changeDeactivableFeatureStatus(restrictions.feature, status), {
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
   }
 
   const updateDeactivatedFeatureRestrictions = async (value: RestrictionsTypes, checked: boolean) => {
-    setError('')
-    const result = await changeDeactivableFeatureRestriction(restrictions.feature, value, !checked)
-    if (!result.success) {
-      setError(result.errorMessage)
-    } else {
-      router.refresh()
-    }
+    await callServerFunction(() => changeDeactivableFeatureRestriction(restrictions.feature, value, !checked), {
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
   }
 
   const featureDeactivationCriterias: Array<DeactivationCriteria<UserSource> | DeactivationCriteria<Environment>> = [
@@ -71,7 +66,7 @@ const DeactivableFeature = ({ restrictions }: Props) => {
   return (
     <>
       <div className="mt2 align-center">
-        <h4 className="flex-col mr1">{tFeatures(restrictions.feature)}</h4>
+        <h4 className="flex-col mr1">{t(restrictions.feature)}</h4>
         <FormControl>
           <FormControlLabel
             control={
@@ -108,7 +103,6 @@ const DeactivableFeature = ({ restrictions }: Props) => {
           ))}
         </div>
       ))}
-      {error && <p className="error">{t(error)}</p>}
     </>
   )
 }

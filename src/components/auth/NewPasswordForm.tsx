@@ -1,12 +1,12 @@
 'use client'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { resetPassword } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
@@ -14,14 +14,12 @@ import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-
 const NewPasswordForm = () => {
   const t = useTranslations('login.form')
-  const [errorMessage, setErrorMessage] = useState('')
-  const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const searchParams = useSearchParams()
+  const { callServerFunction } = useServerFunction()
+  const router = useRouter()
 
   const { control, getValues, handleSubmit, setValue } = useForm<EmailCommand>({
     resolver: zodResolver(EmailCommandValidation),
@@ -34,12 +32,15 @@ const NewPasswordForm = () => {
 
   const onSubmit = async () => {
     setSubmitting(true)
-    setMessage('')
-    setErrorMessage('')
 
-    await resetPassword(getValues().email.toLowerCase())
+    await callServerFunction(() => resetPassword(getValues().email.toLowerCase()), {
+      getSuccessMessage: () => t('emailSent'),
+      getErrorMessage: (error) => t(error),
+      onSuccess: () => {
+        router.push('/login')
+      },
+    })
     setSubmitting(false)
-    setMessage('emailSent')
   }
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const NewPasswordForm = () => {
     if (email) {
       setValue('email', email)
     }
-  }, [searchParams])
+  }, [searchParams, setValue])
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
@@ -64,14 +65,6 @@ const NewPasswordForm = () => {
         <LoadingButton type="submit" data-testid="reset-button" loading={submitting} fullWidth>
           {t('reset')}
         </LoadingButton>
-        {errorMessage && (
-          <p className="error">
-            {t.rich(errorMessage, {
-              link: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-            })}
-          </p>
-        )}
-        {message && <p>{t(message)}</p>}
       </FormControl>
     </Form>
   )

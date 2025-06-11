@@ -357,7 +357,6 @@
       "Editor_description": "A tous les droits sur l'étude à l'exception de la validation des sources d'émission.",
       "Reader_description": "Peut uniquement accéder en lecture à l'étude et exporter les informations de celle-ci.",
       "close": "Fermer",
-      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "saved": "Nouveau rôle sauvegardé"
     },
     "title": "Étude",
@@ -371,7 +370,7 @@
         "create": "Ajouter la personne",
         "clear": "Supprimer la valeur",
         "Already in study": "Cette personne a déjà accès à l'étude.",
-        "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+        "Not authorized": "Action non autorisée. N'hésitez pas à consulter la FAQ ou à contacter le support si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
           "email": "Veuillez utiliser un email valide",
           "emailRequired": "Veuillez entrer un email",
@@ -393,7 +392,7 @@
         "subPost": "Sous poste",
         "create": "Ajouter la personne",
         "Already in study": "Cette personne a déjà accès à l'étude.",
-        "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+        "Not authorized": "Action non autorisée. N'hésitez pas à consulter la FAQ ou à contacter le support si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
           "email": "Veuillez renseigner un email valide",
           "post": "Veuillez selectionner un poste"
@@ -756,8 +755,7 @@
         "totalCo2": "Veuillez renseigner une émission totale",
         "type": "Veuillez renseigner un type de poste",
         "unit": "Veuillez renseigner une unité"
-      },
-      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+      }
     },
     "title": "Facteurs d'émission",
     "loading": "Chargement des facteurs d'émission",
@@ -1163,7 +1161,7 @@
       "confirm": "Confirmer",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "wrongName": "Le nom du client ne correspond pas",
-      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le <support>support</support>."
+      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le support."
     }
   },
   "emissionSource": {
@@ -1358,7 +1356,7 @@
     "videos": "Vidéos",
     "videoExplanation": "Notez bien que l’évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d’obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
     "evaluation": "Evaluation des connaissances",
-    "evaluationEnded": "Vous avez déjà répondu au quesitonnaire",
+    "evaluationEnded": "Vous avez déjà répondu au questionnaire",
     "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><red> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l’outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</red>",
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre aux questions. Je suis dans les bonnes conditions pour commencer mon test.",
     "answer": "Répondre au questionnaire",
@@ -1372,7 +1370,6 @@
     "source": "Sources",
     "environment": "Environnements",
     "true": "Active",
-    "false": "Désactivée",
-    "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+    "false": "Désactivée"
   }
 }

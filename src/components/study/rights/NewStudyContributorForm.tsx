@@ -5,6 +5,7 @@ import LoadingButton from '@/components/base/LoadingButton'
 import MultiplePosts from '@/components/emissionFactor/Form/MultiplePosts'
 import { FormTextField } from '@/components/form/TextField'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { newStudyContributor } from '@/services/serverFunctions/study'
 import {
   NewStudyContributorCommand,
@@ -12,23 +13,17 @@ import {
 } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface Props {
   study: FullStudy
 }
 
-const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-
 const NewStudyContributorForm = ({ study }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.newContributor')
-
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<NewStudyContributorCommand>({
     resolver: zodResolver(NewStudyContributorCommandValidation),
@@ -41,13 +36,12 @@ const NewStudyContributorForm = ({ study }: Props) => {
   })
 
   const onSubmit = async (command: NewStudyContributorCommand) => {
-    const result = await newStudyContributor(command)
-    if (!result.success) {
-      setError(result.errorMessage)
-    } else {
-      router.push(`/etudes/${study.id}/cadrage`)
-      router.refresh()
-    }
+    await callServerFunction(() => newStudyContributor(command), {
+      getErrorMessage: (error) => t(error),
+      onSuccess: () => {
+        router.push(`/etudes/${study.id}/cadrage`)
+      },
+    })
   }
 
   return (
@@ -63,18 +57,6 @@ const NewStudyContributorForm = ({ study }: Props) => {
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-contributor-create-button">
         {t('create')}
       </LoadingButton>
-      {error && (
-        <p>
-          {t.rich(error, {
-            support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-            link: (children) => (
-              <Link href={faq} target="_blank" rel="noreferrer noopener">
-                {children}
-              </Link>
-            ),
-          })}
-        </p>
-      )}
     </Form>
   )
 }

@@ -26,13 +26,6 @@ const ActivationForm = () => {
 
   const searchParams = useSearchParams()
 
-  useEffect(() => {
-    const email = searchParams.get('email')
-    if (email) {
-      setValue('email', email)
-    }
-  }, [searchParams])
-
   const { control, getValues, setValue, handleSubmit } = useForm<EmailCommand>({
     resolver: zodResolver(EmailCommandValidation),
     mode: 'onBlur',
@@ -41,6 +34,13 @@ const ActivationForm = () => {
       email: searchParams.get('email') ?? '',
     },
   })
+
+  useEffect(() => {
+    const email = searchParams.get('email')
+    if (email) {
+      setValue('email', email)
+    }
+  }, [searchParams, setValue])
 
   const onSubmit = async () => {
     setMessage('')

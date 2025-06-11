@@ -23,7 +23,6 @@ import MultiplePosts from './MultiplePosts'
 interface Props<T extends EmissionFactorCommand> {
   form: UseFormReturn<T>
   detailedGES?: boolean
-  error: string
   hasParts: boolean
   setHasParts: (hasParts: boolean) => void
   partsCount: number
@@ -38,7 +37,6 @@ type EmissionFactorQuality = Partial<
 const EmissionFactorForm = <T extends EmissionFactorCommand>({
   form,
   detailedGES,
-  error,
   hasParts,
   setHasParts,
   partsCount,
@@ -185,7 +183,6 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
           {t(button)}
         </LoadingButton>
       </div>
-      {error && <p>{t(error)}</p>}
       {glossary && (
         <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-factor" t={tGlossary}>
           <p className="mb-2">

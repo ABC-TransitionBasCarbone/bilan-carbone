@@ -2,6 +2,7 @@ import Button from '@/components/base/Button'
 import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   simulateStudyEmissionFactorSourceUpgrade,
   upgradeStudyEmissionFactorSource,
@@ -34,11 +35,11 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
   const tSources = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const unit = useTranslations('study.results.units')(StudyResultUnit.K)
-  const [error, setError] = useState('')
   const [source, setSource] = useState<Import | null>(null)
   const [upgrading, setUpgrading] = useState(false)
   const [simulationResult, setSimulationResult] = useState<SimulationResult>({ updated: [], deleted: [] })
   const router = useRouter()
+  const { callServerFunction } = useServerFunction()
 
   const isUpgradable = (source: EmissionFactorImportVersion) =>
     emissionFactorSources.some(
@@ -59,26 +60,25 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
     }))
 
   const simulateSourceUpgrade = async (source: Import) => {
-    setError('')
     setSource(source)
-    const res = await simulateStudyEmissionFactorSourceUpgrade(study.id, source)
-    if (!res.success) {
-      setError(res.errorMessage || '')
-    } else {
-      setSimulationResult({ updated: res.data.updated || [], deleted: res.data.deleted || [] })
-    }
+    await callServerFunction(() => simulateStudyEmissionFactorSourceUpgrade(study.id, source), {
+      getErrorMessage: (error) => t(error, { name: tSources(source || '') }),
+      onSuccess: (data) => {
+        setSimulationResult({ updated: data.updated || [], deleted: data.deleted || [] })
+      },
+    })
   }
 
   const upgradeSource = async (source: Import) => {
     setUpgrading(true)
-    const res = await upgradeStudyEmissionFactorSource(study.id, source)
+    await callServerFunction(() => upgradeStudyEmissionFactorSource(study.id, source), {
+      getErrorMessage: (error) => t(error, { name: tSources(source || '') }),
+      onSuccess: () => {
+        setSource(null)
+        router.refresh()
+      },
+    })
     setUpgrading(false)
-    if (!res.success) {
-      setError(res.errorMessage || '')
-    } else {
-      setSource(null)
-      router.refresh()
-    }
   }
 
   const getEmissionFactorName = (
@@ -172,8 +172,6 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
           )}
         </Modal>
       )}
-
-      {error && <p className="error">{t(error, { name: tSources(source || '') })}</p>}
     </div>
   )
 }

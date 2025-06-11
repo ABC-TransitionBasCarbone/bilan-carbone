@@ -1,5 +1,6 @@
 'use client'
 
+import { ToastProvider } from '@/components/base/ToastProvider'
 import theme from '@/environments/base/theme/theme'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import cutTheme from '@/environments/cut/theme/theme'
@@ -16,12 +17,14 @@ interface Props {
 
 const Providers = ({ children }: Props) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
-      <DynamicComponent
-        defaultComponent={<ThemeProvider theme={theme}>{children}</ThemeProvider>}
-        environmentComponents={{ [Environment.CUT]: <ThemeProvider theme={cutTheme}>{children}</ThemeProvider> }}
-      />
-    </LocalizationProvider>
+    <ToastProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+        <DynamicComponent
+          defaultComponent={<ThemeProvider theme={theme}>{children}</ThemeProvider>}
+          environmentComponents={{ [Environment.CUT]: <ThemeProvider theme={cutTheme}>{children}</ThemeProvider> }}
+        />
+      </LocalizationProvider>
+    </ToastProvider>
   )
 }
 
