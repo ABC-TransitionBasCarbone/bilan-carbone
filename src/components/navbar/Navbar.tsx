@@ -81,7 +81,7 @@ const Navbar = ({ children, user }: Props) => {
                 >
                   {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
                     <MenuItem onClick={handleClose}>
-                      <NavbarLink href={`/organisations/${user.organizationVersionId}/modifier`}>
+                      <NavbarLink data-testid="link-edit-organisation" href={`/organisations/${user.organizationVersionId}/modifier`}>
                         {t('information')}
                       </NavbarLink>
                     </MenuItem>
@@ -90,7 +90,7 @@ const Navbar = ({ children, user }: Props) => {
                     <NavbarLink href="/equipe">{t('team')}</NavbarLink>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
-                    <NavbarLink href="/organisations">{t('organizations')}</NavbarLink>
+                    <NavbarLink data-testid="link-organisation" href="/organisations">{t('organizations')}</NavbarLink>
                   </MenuItem>
                 </NavbarOrganizationMenu>
               </Box>
