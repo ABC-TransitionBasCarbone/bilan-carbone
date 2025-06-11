@@ -43,7 +43,6 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
     form.trigger('subPosts' as FieldPath<T>)
   }, [selectedPosts, form])
 
-  // Get available posts that haven't been selected yet
   const availablePosts: BCPost[] = useMemo(
     () =>
       Object.keys(BCPost)
@@ -75,7 +74,6 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
             form={form}
             post={postKey === ALL_POSTS_VALUE ? undefined : (postKey as Post)}
             subPosts={selectedPosts[postKey as Post]}
-            isAllPosts={postKey === ALL_POSTS_VALUE}
           />
         </Box>
       ))}

@@ -82,7 +82,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
 
   const ExpandableCell = useCallback(
     ({ email, children, className = '' }: { email: string; children: React.ReactNode; className?: string }) => (
-      <div className={`${styles.expandable} ${className}`} onClick={() => toggleRowExpansion(email)}>
+      <div className={`${styles.expandable} align-center ${className}`} onClick={() => toggleRowExpansion(email)}>
         {children}
       </div>
     ),
@@ -150,7 +150,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
         const isExpanded = expandedRows.has(rowData.email)
         return (
           <ExpandableCell email={rowData.email}>
-            <div className={styles.emailContent}>
+            <div className="align-center">
               <IconButton size="small" className={styles.iconButton} aria-label={isExpanded ? 'Collapse' : 'Expand'}>
                 {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
               </IconButton>

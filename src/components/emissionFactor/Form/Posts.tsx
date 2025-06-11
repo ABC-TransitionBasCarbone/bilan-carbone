@@ -6,35 +6,20 @@ import { BCPost, Post, subPostsByPost } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { getPost } from '@/utils/post'
 import DeleteIcon from '@mui/icons-material/Delete'
-import {
-  Box,
-  Checkbox,
-  FormControl,
-  FormHelperText,
-  ListItemText,
-  ListSubheader,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material'
+import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
-import { ALL_POSTS_VALUE, ALL_SUB_POSTS_VALUE } from './MultiplePosts'
+import { ALL_POSTS_VALUE } from './MultiplePosts'
 import styles from './Posts.module.css'
+import SubPostSelector from './SubPostSelector'
 
 interface Props<T extends SubPostsCommand> {
   post?: Post
   postOptions: Post[]
   subPosts?: SubPost[]
   form: UseFormReturn<T>
-  isAllPosts?: boolean
-}
-
-type SubPostValue = SubPost | typeof ALL_SUB_POSTS_VALUE
-
-const isAllSubPostsSelected = (selectedSubPosts: SubPost[] | undefined, allSubPosts: SubPost[]): boolean => {
-  return selectedSubPosts?.length === allSubPosts.length
 }
 
 const createUpdatedSubPosts = (
@@ -62,11 +47,12 @@ const Posts = <T extends SubPostsCommand>({
   subPosts: initalSubPosts,
   post: initialPost,
   postOptions,
-  isAllPosts = false,
 }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
+
+  const isAllPosts = !initialPost
 
   const control = form.control as Control<SubPostsCommand>
   const [post, setPost] = useState<Post | undefined>(getPost(initalSubPosts?.[0]) || initialPost)
@@ -139,94 +125,6 @@ const Posts = <T extends SubPostsCommand>({
     }
   }
 
-  const renderSubPostSelector = () => {
-    const allSubPostsValues = isAllPosts
-      ? Object.values(BCPost).flatMap((postKey) => subPostsByPost[postKey])
-      : post
-        ? subPostsByPost[post]
-        : []
-
-    const allSelected = isAllSubPostsSelected(selectedSubPosts, allSubPostsValues)
-    const label = isAllPosts ? tPost('allSubPost') : t('subPost')
-    const emptyText = isAllPosts ? tPost('allSubPost') : t('subPost')
-
-    const handleSelectAllToggle = () => {
-      if (allSelected) {
-        handleSelectSubPost([])
-      } else {
-        handleSelectSubPost(allSubPostsValues)
-      }
-    }
-
-    const handleChange = (event: SelectChangeEvent<unknown>) => {
-      const value = event.target.value as SubPostValue[]
-
-      if (value.includes(ALL_SUB_POSTS_VALUE)) {
-        handleSelectAllToggle()
-      } else {
-        handleSelectSubPost(value as SubPost[])
-      }
-    }
-
-    const renderValue = () => {
-      if (!selectedSubPosts || selectedSubPosts.length === 0) {
-        return <em>{emptyText}</em>
-      }
-      if (allSelected) {
-        return tPost('allSubPost')
-      }
-      return selectedSubPosts.map((subPost) => tPost(subPost)).join(', ')
-    }
-
-    const renderSelectAllMenuItem = () => (
-      <MenuItem key={ALL_SUB_POSTS_VALUE} value={ALL_SUB_POSTS_VALUE}>
-        <Checkbox checked={allSelected} />
-        <ListItemText primary={tPost('allSubPost')} />
-      </MenuItem>
-    )
-
-    const renderSubPostMenuItem = (subPost: SubPost) => (
-      <MenuItem key={subPost} value={subPost}>
-        <Checkbox checked={selectedSubPosts?.includes(subPost) || false} />
-        <ListItemText primary={tPost(subPost)} />
-      </MenuItem>
-    )
-
-    const renderGroupedMenuItems = () => {
-      return Object.values(BCPost)
-        .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-        .map((postKey) => [
-          <ListSubheader key={`header-${postKey}`} disableSticky>
-            {tPost(postKey)}
-          </ListSubheader>,
-          ...subPostsByPost[postKey].sort((a, b) => tPost(a).localeCompare(tPost(b))).map(renderSubPostMenuItem),
-        ])
-        .flat()
-    }
-
-    const renderMenuItems = () => {
-      if (isAllPosts) {
-        return [renderSelectAllMenuItem(), ...renderGroupedMenuItems()]
-      }
-
-      return [renderSelectAllMenuItem(), ...sortedSubPosts.map(renderSubPostMenuItem)]
-    }
-
-    return (
-      <Select
-        name="subPosts"
-        data-testid="emission-factor-subPost"
-        label={label}
-        value={selectedSubPosts || []}
-        onChange={handleChange}
-        multiple
-        renderValue={renderValue}
-      >
-        {renderMenuItems()}
-      </Select>
-    )
-  }
-
   return (
     <Box className="w100 align-end justify-between">
       <FormControl className={styles.selectForm}>
@@ -252,7 +150,13 @@ const Posts = <T extends SubPostsCommand>({
         control={control}
         render={({ fieldState: { error } }) => (
           <FormControl className={styles.multiSelectForm} error={error && selectedSubPosts?.length === 0}>
-            {renderSubPostSelector()}
+            <SubPostSelector
+              isAllPosts={isAllPosts}
+              post={post}
+              selectedSubPosts={selectedSubPosts}
+              sortedSubPosts={sortedSubPosts}
+              onSelectSubPost={handleSelectSubPost}
+            />
             {error && error.message && selectedSubPosts?.length === 0 && (
               <FormHelperText className={styles.errorSubposts} color="red">
                 {t('validation.' + error.message)}
