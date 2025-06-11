@@ -406,9 +406,11 @@
         "subPosts": "Sub posts",
         "title": "Contributors",
         "newContributorLink": "Add a contributor",
+        "andXOthers": "and {count} others",
         "deleting": {
           "title": "Confirmation",
           "confirmation": "Are you sure you want to remove {email} from this study's contributors ?",
+          "confirmationPost": "Are you sure you want to remove {email}'s access to {post}?",
           "yes": "Yes",
           "no": "No",
           "Not authorized": "You are not allowed to do this action"
