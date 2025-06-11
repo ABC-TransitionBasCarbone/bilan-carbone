@@ -73,7 +73,7 @@ const EmissionSourceFactor = ({
 
   const [advancedSearch, setAdvancedSearch] = useState(false)
   const [display, setDisplay] = useState(false)
-  const [oldFactorAction, setOldFactorAction] = useState<'search' | 'clear' | undefined>(undefined)
+  const [oldFactorAction, setOldFactorAction] = useState<'fieldSearch' | 'search' | 'clear' | undefined>(undefined)
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
@@ -137,7 +137,7 @@ const EmissionSourceFactor = ({
             value={value}
             onChange={setValue}
             label={`${t('form.emissionFactor')} *`}
-            onFocus={() => setDisplay(true)}
+            onClick={() => (isFromOldImport ? setOldFactorAction('fieldSearch') : setDisplay(true))}
           />
           {canEdit && (
             <>
@@ -224,6 +224,8 @@ const EmissionSourceFactor = ({
                   clearEmissionFactor()
                 } else if (oldFactorAction === 'search') {
                   searchNewEmissionFactor()
+                } else if (oldFactorAction === 'fieldSearch') {
+                  setDisplay(true)
                 }
                 setOldFactorAction(undefined)
               }}
