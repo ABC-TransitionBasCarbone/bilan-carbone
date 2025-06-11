@@ -36,7 +36,7 @@ export const OrganizationVersionWithOrganizationSelect = {
       id: true,
       name: true,
       sites: {
-        select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
+        select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true, cncId: true },
         orderBy: { createdAt: Prisma.SortOrder.asc },
       },
     },
@@ -138,6 +138,7 @@ export const updateOrganization = async (
           ca: (site?.ca || 0) * caUnit,
           postalCode: site.postalCode,
           city: site.city,
+          cncId: site.cncId || undefined,
         },
         update: {
           name: site.name,
@@ -145,6 +146,7 @@ export const updateOrganization = async (
           ca: (site?.ca || 0) * caUnit,
           postalCode: site.postalCode,
           city: site.city,
+          cncId: site.cncId || undefined,
         },
       }),
     ),

@@ -49,6 +49,7 @@ const SelectOrganization = ({ user, organizationVersions, selectOrganizationVers
             selected: false,
             postalCode: site.postalCode ?? '',
             city: site.city ?? '',
+            cncId: site.cncId ?? '',
           })),
         )
       }
@@ -102,7 +103,7 @@ const SelectOrganization = ({ user, organizationVersions, selectOrganizationVers
           <>
             <DynamicComponent
               environmentComponents={{
-                [Environment.CUT]: <SitesCut sites={sites} form={form} caUnit={caUnit} withSelection />,
+                [Environment.CUT]: <SitesCut sites={sites} form={form} withSelection />,
               }}
               defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} withSelection />}
             />

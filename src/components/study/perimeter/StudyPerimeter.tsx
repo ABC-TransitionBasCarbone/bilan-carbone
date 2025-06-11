@@ -106,7 +106,13 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
                 postalCode: existingStudySite.site.postalCode ?? '',
                 city: existingStudySite.site.city ?? '',
               }
-            : { ...site, selected: false, postalCode: site.postalCode ?? '', city: site.city ?? '' }
+            : {
+                ...site,
+                selected: false,
+                postalCode: site.postalCode ?? '',
+                city: site.city ?? '',
+                cncId: site.cncId ?? '',
+              }
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
@@ -273,7 +279,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
                     }))
               }
               form={isEditing ? siteForm : undefined}
-              caUnit={caUnit}
               withSelection
             />
           ),

@@ -55,6 +55,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
         ca: site.ca ? displayCA(site.ca, CA_UNIT_VALUES[caUnit]) : 0,
         postalCode: site.postalCode ?? '',
         city: site.city ?? '',
+        cncId: site.cncId ?? '',
       })),
     },
   })
@@ -91,7 +92,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
         label={t('name')}
       />
       <DynamicComponent
-        environmentComponents={{ [Environment.CUT]: <SitesCut sites={sites} form={form} caUnit={caUnit} /> }}
+        environmentComponents={{ [Environment.CUT]: <SitesCut sites={sites} form={form} /> }}
         defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} />}
       />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">

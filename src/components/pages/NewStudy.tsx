@@ -46,6 +46,7 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
           selected: false,
           postalCode: site.postalCode ?? '',
           city: site.city ?? '',
+          cncId: site.cncId ?? '',
         })) || [],
       exports: {
         [Export.Beges]: false,
