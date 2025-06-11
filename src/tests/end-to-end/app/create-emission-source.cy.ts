@@ -38,6 +38,7 @@ describe('Create study emission source', () => {
       cy.getByTestId('emission-source-name').type('My emission source name')
     })
 
+    // TODO : Revoir ce test.
     // cy.getByTestId('emission-source-factor').should('not.exist')
     // cy.getByTestId('emission-source-factor-search').scrollIntoView().type('acier ou fer blanc')
     // cy.getByTestId('emission-source-factor-suggestion').first().click()

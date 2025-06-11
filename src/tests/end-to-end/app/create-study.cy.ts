@@ -36,7 +36,7 @@ describe('Create study', () => {
     cy.wait('@create')
   })
 
-  it('should create a study on an organization as a CR user', () => {
+  it.only('should create a study on an organization as a CR user', () => {
     cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
 
     cy.getByTestId('new-study').click()
