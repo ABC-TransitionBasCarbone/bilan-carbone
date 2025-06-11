@@ -1365,9 +1365,19 @@
   "deactivableFeatures": {
     "title": "Deactivable functionnalities",
     "Formation": "Formation",
+    "Feedback": "Feedback",
     "source": "Sources",
     "environment": "Environments",
     "true": "Activated",
-    "false": "Deactivated"
+    "false": "Deactivated",
+    "Not authorized": "You are not allowed to do this action"
+  },
+  "feedback": {
+    "title": "Give your opinion about BC+ !",
+    "body": " If you have 5 minutes, we'd love to hear your feedback on BC+! This will help us to meet your needs as effectively as possible in our future developments. If this isn't a good time, you can find this form at any time in the menu.",
+    "reject": "Do not answer",
+    "delay": "Later",
+    "answer": "Let's go",
+    "close": "Close"
   }
 }

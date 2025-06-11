@@ -3,12 +3,14 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
 import { hasAccessToActualityCards } from '@/services/permissions/environment'
+import { displayFeedBackForm } from '@/services/serverFunctions/user'
 import { canEditMemberRole } from '@/utils/organization'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
 import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
+import UserFeedback from './UserFeedback'
 import UserToValidate from './UserToValidate'
 
 interface Props {
@@ -16,9 +18,10 @@ interface Props {
 }
 
 const UserView = async ({ account }: Props) => {
-  const [organizationVersions, hasUserToValidate] = await Promise.all([
+  const [organizationVersions, hasUserToValidate, displayFeedback] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     hasAccountToValidateInOrganization(account.organizationVersionId),
+    displayFeedBackForm(),
   ])
 
   const userOrganizationVersion = organizationVersions.find(
@@ -49,6 +52,7 @@ const UserView = async ({ account }: Props) => {
       {userOrganizationVersion && !userOrganizationVersion.onboarded && (
         <Onboarding user={account} organizationVersion={userOrganizationVersion} />
       )}
+      {displayFeedback.success && displayFeedback.data && <UserFeedback environment={account.environment} />}
     </>
   )
 }

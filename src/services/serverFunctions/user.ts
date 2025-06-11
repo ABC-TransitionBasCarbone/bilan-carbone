@@ -8,6 +8,7 @@ import {
   getAccountFromUserOrganization,
   getAccountsFromUser,
 } from '@/db/account'
+import { isFeatureActive } from '@/db/deactivableFeatures'
 import { getOrganizationVersionById, isOrganizationVersionCR } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
@@ -18,6 +19,7 @@ import {
   finalizeUserChecklist,
   getUserApplicationSettings,
   getUserByEmail,
+  getUserFeedbackDate,
   getUserFormationFormStart,
   getUsers,
   getUsersCheckedSteps,
@@ -26,15 +28,16 @@ import {
   startUserFormationForm,
   updateUser,
   updateUserApplicationSettings,
+  updateUserFeedbackDate,
   updateUserResetTokenForEmail,
   validateUser,
 } from '@/db/user'
 import { processUsers } from '@/scripts/ftp/userImport'
 import { withServerResponse } from '@/utils/serverResponse'
-import { DAY, HOUR, MIN, TIME_IN_MS } from '@/utils/time'
+import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@/utils/time'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userAccounts'
-import { Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
+import { DeactivatableFeature, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { auth, dbActualizedAuth } from '../auth'
@@ -454,4 +457,47 @@ export const getUserAccounts = async () =>
     }
     const accounts = await getAccountsFromUser(session.user)
     return accounts
+  })
+
+export const displayFeedBackForm = async () =>
+  withServerResponse('displayFeedBackForm', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      return false
+    }
+
+    const [userFeedbackDate, activeFeature] = await Promise.all([
+      getUserFeedbackDate(session.user.userId),
+      isFeatureActive(DeactivatableFeature.Feedback),
+    ])
+
+    if (!userFeedbackDate || !activeFeature) {
+      return false
+    }
+    if (!userFeedbackDate.feedbackDate || new Date() > new Date(userFeedbackDate.feedbackDate)) {
+      return true
+    }
+    return false
+  })
+
+export const delayFeeback = async () =>
+  withServerResponse('delayFeeback', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const now = new Date()
+    const feedbackDate = new Date(now.getTime() + 2 * DAY * TIME_IN_MS)
+    updateUserFeedbackDate(session.user.id, feedbackDate)
+  })
+
+export const answerFeeback = async () =>
+  withServerResponse('answerFeeback', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const now = new Date()
+    const feedbackDate = new Date(now.getTime() + 10 * YEAR * TIME_IN_MS)
+    updateUserFeedbackDate(session.user.id, feedbackDate)
   })

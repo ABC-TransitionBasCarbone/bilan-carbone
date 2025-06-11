@@ -238,3 +238,11 @@ export const updateAccount = (
       user: { update: { ...userData } },
     },
   })
+
+export const resetUserFeedbackDate = async () => prismaClient.user.updateMany({ data: { feedbackDate: null } })
+
+export const getUserFeedbackDate = async (userId: string) =>
+  prismaClient.user.findUnique({ select: { feedbackDate: true }, where: { id: userId } })
+
+export const updateUserFeedbackDate = async (userId: string, feedbackDate: Date) =>
+  prismaClient.user.update({ where: { id: userId }, data: { feedbackDate } })
