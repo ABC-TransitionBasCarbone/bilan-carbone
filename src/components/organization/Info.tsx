@@ -1,6 +1,7 @@
 'use client'
 
 import { OrganizationWithSites } from '@/db/account'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteOrganizationCommand } from '@/services/serverFunctions/organization'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,8 +22,8 @@ interface Props {
 const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) => {
   const t = useTranslations('organization')
   const tDelete = useTranslations('organization.delete')
+  const { callServerFunction } = useServerFunction()
   const [deleting, setDeleting] = useState(false)
-  const [error, setError] = useState('')
 
   const router = useRouter()
 
@@ -37,14 +38,12 @@ const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) 
   })
 
   const onDelete = async () => {
-    setError('')
-    const result = await deleteOrganizationCommand(form.getValues())
-    if (!result.success) {
-      setError(result.errorMessage)
-    } else {
-      router.push('/')
-      router.refresh()
-    }
+    await callServerFunction(() => deleteOrganizationCommand(form.getValues()), {
+      getErrorMessage: (error) => tDelete(error),
+      onSuccess: () => {
+        router.push('/')
+      },
+    })
   }
 
   const deleteAction: BlockProps['actions'] = canDelete
@@ -84,7 +83,6 @@ const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) 
           onDelete={onDelete}
           onClose={() => setDeleting(false)}
           t={tDelete}
-          error={error}
         />
       )}
     </>

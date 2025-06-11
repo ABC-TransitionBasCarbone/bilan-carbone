@@ -1,6 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteStudyCommand } from '@/services/serverFunctions/study'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
 import { downloadStudyEmissionSources } from '@/services/study'
@@ -25,7 +26,7 @@ interface Props {
 }
 const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props) => {
   const [deleting, setDeleting] = useState(false)
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
   const format = useFormatter()
   const tStudyDelete = useTranslations('study.delete')
   const tStudyExport = useTranslations('study.export')
@@ -49,14 +50,12 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
   })
 
   const onDelete = async () => {
-    setError('')
-    const result = await deleteStudyCommand(form.getValues())
-    if (!result.success) {
-      setError(result.errorMessage)
-    } else {
-      router.push('/')
-      router.refresh()
-    }
+    await callServerFunction(() => deleteStudyCommand(form.getValues()), {
+      getErrorMessage: (error) => tStudyDelete(error),
+      onSuccess: () => {
+        router.push('/')
+      },
+    })
   }
 
   const deleteAction: BlockProps['actions'] = canDeleteStudy
@@ -112,7 +111,6 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
           onDelete={onDelete}
           onClose={() => setDeleting(false)}
           t={tStudyDelete}
-          error={error}
         />
       )}
     </Block>

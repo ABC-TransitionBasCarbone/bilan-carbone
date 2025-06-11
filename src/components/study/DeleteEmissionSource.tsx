@@ -2,6 +2,7 @@
 
 import Button from '@/components/base/Button'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { handleWarningText } from '@/utils/components'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -19,16 +20,17 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [disabled, setDisabled] = useState(false)
+  const { callServerFunction } = useServerFunction()
 
   const onAccept = useCallback(async () => {
-    try {
-      setDisabled(true)
-      await deleteEmissionSource(emissionSource.id)
-      router.refresh()
-    } finally {
-      setDisabled(false)
-    }
-  }, [emissionSource])
+    setDisabled(true)
+    await callServerFunction(() => deleteEmissionSource(emissionSource.id), {
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
+    setDisabled(false)
+  }, [callServerFunction, emissionSource.id, router])
 
   return (
     <>

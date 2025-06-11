@@ -1,6 +1,7 @@
 'use client'
 
 import { TeamMember } from '@/db/account'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteMember, validateMember } from '@/services/serverFunctions/user'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -21,6 +22,7 @@ interface Props {
 
 const InvitationsToValidateActions = ({ user, member }: Props) => {
   const t = useTranslations('team')
+  const { callServerFunction } = useServerFunction()
   const [validating, setValidating] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
@@ -42,11 +44,12 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
         loading={validating}
         onClick={async () => {
           setValidating(true)
-          const result = await validateMember(member.user.email)
+          await callServerFunction(() => validateMember(member.user.email), {
+            onSuccess: () => {
+              router.refresh()
+            },
+          })
           setValidating(false)
-          if (result.success) {
-            router.refresh()
-          }
         }}
         iconButton
       >
@@ -59,11 +62,12 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
         loading={deleting}
         onClick={async () => {
           setDeleting(true)
-          const result = await deleteMember(member.user.email)
+          await callServerFunction(() => deleteMember(member.user.email), {
+            onSuccess: () => {
+              router.refresh()
+            },
+          })
           setDeleting(false)
-          if (result.success) {
-            router.refresh()
-          }
         }}
         iconButton
       >

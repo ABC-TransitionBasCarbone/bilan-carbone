@@ -1,6 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
@@ -66,6 +67,7 @@ const EmissionSource = ({
   const tQuality = useTranslations('quality')
   const router = useRouter()
   const [display, setDisplay] = useState(false)
+  const { callServerFunction } = useServerFunction()
 
   const detailId = `${emissionSource.id}-detail`
   const canEdit = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
@@ -86,15 +88,13 @@ const EmissionSource = ({
           }
           const parsed = UpdateEmissionSourceCommandValidation.safeParse(command)
           if (parsed.success) {
-            const result = await updateEmissionSource(parsed.data)
-            if (!result.success) {
-              setError(result.errorMessage)
-            } else {
-              setSaved(true)
-              setTimeout(() => setSaved(false), 3000)
-            }
-            setLoading(false)
-            router.refresh()
+            await callServerFunction(() => updateEmissionSource(parsed.data), {
+              onSuccess: () => {
+                setSaved(true)
+                setTimeout(() => setSaved(false), 3000)
+                router.refresh()
+              },
+            })
           }
         } catch {
           setError('default')
@@ -103,7 +103,7 @@ const EmissionSource = ({
         }
       }
     },
-    [emissionSource, router],
+    [emissionSource, router, callServerFunction],
   )
 
   useEffect(() => {
