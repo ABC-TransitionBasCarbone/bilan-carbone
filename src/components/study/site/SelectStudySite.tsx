@@ -25,7 +25,7 @@ const SelectStudySite = ({ study, allowAll, studySite, setSite, withLabel = true
         label={withLabel ? t('site') : undefined}
         value={study.sites.length === 1 || (studySite === 'all' && !allowAll) ? study.sites[0].id : studySite}
         onChange={(event) => setSite(event.target.value)}
-        disabled={study.sites.length === 1 && !allowAll}
+        disabled={study.sites.length === 1}
       >
         {allowAll && <MenuItem value={'all'}>{t('allSites')}</MenuItem>}
         {study.sites.map((site) => (
