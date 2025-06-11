@@ -23,7 +23,6 @@ const config = [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
-    'plugin:cypress/recommended',
     'next/core-web-vitals',
     'next/typescript',
   ),
@@ -35,17 +34,8 @@ const config = [
       cypress,
       mocha,
     },
-
-    languageOptions: {
-      parser: tsParser,
-    },
-
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-
+    languageOptions: { parser: tsParser },
+    settings: { react: { version: 'detect' } },
     rules: {
       'no-irregular-whitespace': 'off',
       'mocha/no-exclusive-tests': 'error',
@@ -53,21 +43,18 @@ const config = [
       'react/no-unescaped-entities': 'off',
       'react/self-closing-comp': 'error',
       curly: 'error',
-      'prettier/prettier': [
-        'error',
-        {
-          endOfLine: 'auto',
-        },
-      ],
-
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
       'react/jsx-tag-spacing': [
         'error',
-        {
-          beforeSelfClosing: 'always',
-          afterOpening: 'never',
-          beforeClosing: 'never',
-        },
+        { beforeSelfClosing: 'always', afterOpening: 'never', beforeClosing: 'never' },
       ],
+    },
+  },
+  {
+    files: ['cypress/**/*.{js,ts,jsx,tsx}'],
+    plugins: { cypress },
+    rules: {
+      ...cypress.configs.recommended.rules,
     },
   },
 ]
