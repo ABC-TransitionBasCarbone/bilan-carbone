@@ -65,7 +65,10 @@ const StudyCard = async ({ study, user }: Props) => {
               {t('validatedOnlyDescription')}
             </GlossaryIconModal>
           </p>
-          <ProgressBar value={percent} barClass={`${styles.progressBar}${percent === 100 ? '-success' : ''}`} />
+          <ProgressBar
+            value={percent}
+            barClass={classNames(`${styles.progressBar}${percent === 100 ? 'Success' : ''}`)}
+          />
         </Box>
         <div className="justify-end">
           <LinkButton href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>
