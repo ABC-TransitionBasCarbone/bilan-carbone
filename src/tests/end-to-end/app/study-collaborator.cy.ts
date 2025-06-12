@@ -54,11 +54,8 @@ describe('Study collaborators', () => {
         .first()
         .invoke('attr', 'href')
         .then((link) => {
-          console.log('link : ', link)
-
           const hmtlUrl = `http://localhost:1080${(link as string).replace('#/', '/')}/html`
           cy.visit(hmtlUrl)
-          console.log('hmtlUrl : ', hmtlUrl)
           cy.url().should('include', hmtlUrl)
 
           cy.get('a').then(($as) => {
