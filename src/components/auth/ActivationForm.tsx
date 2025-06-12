@@ -47,7 +47,7 @@ const ActivationForm = () => {
     if (environment && Object.keys(Environment).includes(environment)) {
       setEnv(environment as Environment)
     }
-  }, [env, searchParams, setValue])
+  }, [searchParams, setValue])
 
   const onSubmit = async () => {
     setMessage('')
