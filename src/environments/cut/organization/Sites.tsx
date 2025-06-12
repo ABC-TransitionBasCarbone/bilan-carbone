@@ -66,9 +66,8 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                   render={({ field: { onChange, value } }) => (
                     <DebouncedInput
                       data-testid="edit-site-cnc"
-                      className={styles.field}
+                      className={styles.cnc}
                       debounce={200}
-                      label={t('cnc')}
                       value={value ?? ''}
                       onChange={(newValue: string) => {
                         onChange(newValue)
@@ -119,7 +118,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 <div className="align-center">{getValue<string>()}</div>
               ) : (
                 <FormTextField
-                  data-testid="edit-site-postal-code"
+                  data-testid="organization-sites-postal-code"
                   className={styles.field}
                   control={control}
                   translation={t}
@@ -143,7 +142,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 <div className="align-center">{getValue<string>()}</div>
               ) : (
                 <FormTextField
-                  data-testid="edit-site-city"
+                  data-testid="organization-sites-city"
                   className={styles.field}
                   control={control}
                   translation={t}
@@ -185,7 +184,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
     return columns
   }, [t, form])
 
-  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} />
+  return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} isCut={true} />
 }
 
 export default Sites

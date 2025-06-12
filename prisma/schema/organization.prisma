@@ -71,8 +71,7 @@ model Site {
   organizationId String       @map("organization_id")
   studies        StudySite[]
 
-  cnc   Cnc?    @relation(fields: [cncId], references: [numeroAuto])
-  cncId String? @map("cnc_id")
+  cncId String?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -105,7 +104,6 @@ model Cnc {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  Site      Site[]
 
   @@map("cncs")
 }
