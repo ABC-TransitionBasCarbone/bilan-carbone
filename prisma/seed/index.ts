@@ -66,6 +66,8 @@ const users = async () => {
   await prisma.organizationVersion.deleteMany()
   await prisma.organization.deleteMany()
 
+  await prisma.cnc.deleteMany()
+
   await prisma.cnc.create({
     data: {
       numeroAuto: '321',

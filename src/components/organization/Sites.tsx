@@ -18,9 +18,10 @@ interface Props<T extends SitesCommand> {
   withSelection?: boolean
   columns: ColumnDef<SitesCommand['sites'][0]>[]
   caUnit?: SiteCAUnit
+  isCut?: boolean
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, caUnit }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, caUnit, isCut }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const tGlossary = useTranslations('organization.sites.glossary')
   const tUnit = useTranslations('settings.caUnit')
@@ -46,7 +47,9 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
         <div className="justify-between align-center">
           <p className="title-h3">
             {t('title')}
-            <Help className="ml-4" onClick={() => setShowGlossary(!showGlossary)} label={tGlossary('title')} />
+            {isCut || (
+              <Help className="ml-4" onClick={() => setShowGlossary(!showGlossary)} label={tGlossary('title')} />
+            )}
           </p>
           {form && !withSelection && (
             <Button onClick={() => setValue('sites', [...sites, newSite()])} data-testid="add-site-button">
