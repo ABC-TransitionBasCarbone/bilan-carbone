@@ -26,8 +26,8 @@
 
 .progressBar {
   background: var(--warning);
-}
 
-.progressBarSuccess {
-  background: var(--success-100);
+  &.success {
+    background: var(--success-100);
+  }
 }
