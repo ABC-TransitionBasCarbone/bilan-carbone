@@ -21,7 +21,7 @@ const StudyResultsContainerSummaryCut = ({ study, studySite }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const t = useTranslations('study')
 
-  const allComputedResults = useMemo(() => computeResultsByPost(study, tPost, studySite, true, false), [studySite])
+  const allComputedResults = useMemo(() => computeResultsByPost(study, tPost, studySite, true, false), [study, tPost, studySite])
 
   const computedResults = useMemo(
     () =>
