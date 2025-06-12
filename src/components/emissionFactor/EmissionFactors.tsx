@@ -6,7 +6,7 @@ import { EmissionFactorImportVersion, Import } from '@prisma/client'
 import EmissionFactorsTable from './Table'
 
 interface Props {
-  userOrganizationId: string | null
+  userOrganizationId?: string
 }
 
 const EmissionFactors = async ({ userOrganizationId }: Props) => {

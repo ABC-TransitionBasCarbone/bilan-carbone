@@ -65,6 +65,7 @@ const Navbar = ({ user }: Props) => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onClick={() => setShowSubMenu(!showSubMenu)}
+                data-testid="navbar-organization"
               >
                 {t('organization')}
               </div>
@@ -90,7 +91,7 @@ const Navbar = ({ user }: Props) => {
             </div>
           )}
           {!isCut && (
-            <Link className={styles.link} href="/facteurs-d-emission">
+            <Link className={styles.link} href="/facteurs-d-emission" data-testid="navbar-factors">
               <span className={styles.big}>{t('factors')}</span>
               <span className={styles.small}>{t('fe')}</span>
             </Link>
@@ -107,13 +108,14 @@ const Navbar = ({ user }: Props) => {
               className={classNames(styles.link, 'align-center')}
               aria-label={t('selectAccount')}
               href="/selection-du-compte"
+              data-testid="navbar-switch-accounts"
             >
               <SwapHorizIcon />
             </Link>
           )}
 
           {user.role === Role.SUPER_ADMIN && (
-            <Link className={styles.link} href="/super-admin">
+            <Link className={styles.link} href="/super-admin" data-testid="navbar-admin">
               {t('admin')}
             </Link>
           )}

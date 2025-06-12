@@ -12,11 +12,11 @@ interface Props {
 const EmissionFactors = async ({ user }: Props) => {
   const userOrganizationVersion = await getOrganizationVersionById(user.organizationVersionId)
 
-  if (!userOrganizationVersion || !hasAccessToEmissionFactor(user.environment)) {
+  if (!hasAccessToEmissionFactor(user.environment)) {
     return <NotFound />
   }
 
-  return <EmissionsFactorPage userOrganizationId={userOrganizationVersion.organizationId} />
+  return <EmissionsFactorPage userOrganizationId={userOrganizationVersion?.organizationId} />
 }
 
 export default withAuth(EmissionFactors)
