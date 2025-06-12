@@ -938,7 +938,8 @@
       "lastName": "Please enter a last name",
       "level": "Please enter a training level",
       "role": "Please enter a role"
-    }
+    },
+    "addedMember": "The user has been successfully invited to your organization."
   },
   "units": {
     "selectAll": "Select all",

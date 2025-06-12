@@ -279,6 +279,7 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
   const environment = creator.environment
   const memberExists = await getUserByEmail(newUser.email.toLowerCase())
 
+  const isMemberActiveInSomeEnv = memberExists?.accounts.some((a) => a.status === UserStatus.ACTIVE)
   const memberAccountForEnv = memberExists?.accounts.find((a) => a.environment === environment)
 
   if (memberAccountForEnv?.role === Role.SUPER_ADMIN || newUser.role === Role.SUPER_ADMIN) {
@@ -312,7 +313,7 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
     await addUserChecklistItem(UserChecklist.AddCollaborator)
   } else if (!memberAccountForEnv) {
     await addAccount({
-      status: UserStatus.VALIDATED,
+      status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
       role: getRoleToSetForUntrained(newUser.role, environment),
       environment,
       user: { connect: { id: memberExists.id } },
@@ -329,7 +330,7 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
     }
 
     const updateMemberAccount = {
-      status: UserStatus.VALIDATED,
+      status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
       role: memberExists.level
         ? memberAccountForEnv.role
         : getRoleToSetForUntrained(memberAccountForEnv.role, creator.environment),

@@ -40,6 +40,7 @@ const NewMemberForm = ({ environment }: Props) => {
       onSuccess: () => {
         router.push('/equipe')
       },
+      getSuccessMessage: () => t('addedMember'),
     })
   }
 
