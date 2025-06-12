@@ -172,7 +172,7 @@ export const addMember = async (member: AddMemberCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    handleAddingUser(session.user, member)
+    await handleAddingUser(session.user, member)
   })
 
 export const validateMember = async (email: string) =>
