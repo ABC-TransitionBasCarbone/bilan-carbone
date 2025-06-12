@@ -206,7 +206,7 @@ describe('Authentication', () => {
       cy.getByTestId('invitation')
         .filter((_index, el) => Cypress.$(el).text().includes('imported@yopmail.com'))
         .getByTestId('validate-invitation')
-        .click()
+        .click({ force: true })
     })
 
     cy.getByTestId('pending-invitation').contains('imported@yopmail.com').should('be.visible')
