@@ -7,9 +7,10 @@ import EmissionFactorsTable from './Table'
 
 interface Props {
   userOrganizationId?: string
+  manualOnly: boolean
 }
 
-const EmissionFactors = async ({ userOrganizationId }: Props) => {
+const EmissionFactors = async ({ userOrganizationId, manualOnly }: Props) => {
   const [emissionFactors, importVersions] = await Promise.all([getEmissionFactors(), getEmissionFactorSources()])
   const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
 
@@ -17,10 +18,11 @@ const EmissionFactors = async ({ userOrganizationId }: Props) => {
     .filter((importVersion) =>
       importVersion.source === Import.Manual
         ? true
-        : importVersion.id ===
-          importVersions
-            .filter((version) => version.source === importVersion.source)
-            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id,
+        : !manualOnly &&
+          importVersion.id ===
+            importVersions
+              .filter((version) => version.source === importVersion.source)
+              .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0].id,
     )
     .map((importVersion) => importVersion.id)
 
