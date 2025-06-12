@@ -21,7 +21,7 @@ export const useServerFunction = () => {
 
   const { showErrorToast, showSuccessToast } = useToast()
   const tGeneralError = useTranslations('error')
-  const generalErrorMessage = tGeneralError('default')
+  const defaultErrorMessage = tGeneralError('default')
 
   const callServerFunction = useCallback(
     async <T>(
@@ -43,10 +43,12 @@ export const useServerFunction = () => {
         options?.onSuccess?.(result.data)
       } else {
         const resultErrorMessage = result.errorMessage
-        let errorMessage = generalErrorMessage
+        let errorMessage = defaultErrorMessage
+        const customErrorMessage = options?.getErrorMessage?.(resultErrorMessage)
 
-        if (options?.getErrorMessage) {
-          errorMessage = options.getErrorMessage(resultErrorMessage)
+        // Check if we have a valid custom error message (not a next-intl fallback like "namespace.key")
+        if (customErrorMessage && !customErrorMessage.endsWith(`.${resultErrorMessage}`)) {
+          errorMessage = customErrorMessage
         } else if (tGeneralError.has(resultErrorMessage)) {
           // Fallback to general error translations
           errorMessage = tGeneralError(resultErrorMessage)
@@ -58,7 +60,7 @@ export const useServerFunction = () => {
 
       return result
     },
-    [generalErrorMessage, showErrorToast, showSuccessToast, tGeneralError],
+    [defaultErrorMessage, showErrorToast, showSuccessToast, tGeneralError],
   )
 
   return { callServerFunction }

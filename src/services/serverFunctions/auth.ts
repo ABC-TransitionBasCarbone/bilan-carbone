@@ -1,6 +1,7 @@
 'use server'
 
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
+import { withServerResponse } from '@/utils/serverResponse'
 import { Environment } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { computePasswordValidation } from '../utils'
@@ -24,23 +25,25 @@ export const checkToken = async (token: string) => {
   }
 }
 
-export const reset = async (email: string, password: string, token: string, userEnv: Environment | undefined) => {
-  const env = userEnv || Environment.BC
+export const reset = async (email: string, password: string, token: string, userEnv: Environment | undefined) =>
+  withServerResponse('reset', async () => {
+    const env = userEnv || Environment.BC
 
-  const tokenValues = jwt.verify(token, process.env.NEXTAUTH_SECRET as string) as {
-    email: string
-    resetToken: string
-  }
+    const tokenValues = jwt.verify(token, process.env.NEXTAUTH_SECRET as string) as {
+      email: string
+      resetToken: string
+    }
 
-  if (tokenValues && tokenValues.email === email) {
-    const user = await getUserByEmailWithSensibleInformations(email)
-    if (user && user.resetToken && user.resetToken === tokenValues.resetToken) {
-      const passwordValidation = computePasswordValidation(password)
-      if (Object.values(passwordValidation).every((value) => value)) {
-        await updateUserPasswordForEmail(email, password, env)
-        return true
+    if (tokenValues && tokenValues.email === email) {
+      const user = await getUserByEmailWithSensibleInformations(email)
+      if (user && user.resetToken && user.resetToken === tokenValues.resetToken) {
+        const passwordValidation = computePasswordValidation(password)
+        if (Object.values(passwordValidation).every((value) => value)) {
+          await updateUserPasswordForEmail(email, password, env)
+          return true
+        }
       }
     }
-  }
-  return false
-}
+
+    throw new Error('Email or token is invalid')
+  })
