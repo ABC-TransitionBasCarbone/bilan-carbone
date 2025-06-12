@@ -3,6 +3,7 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import {
   AccountWithUser,
+  addAccount,
   changeAccountRole,
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
@@ -27,6 +28,7 @@ import {
   getUserSourceById,
   organizationVersionActiveAccountsCount,
   startUserFormationForm,
+  updateAccount,
   updateUser,
   updateUserApplicationSettings,
   updateUserFeedbackDate,
@@ -146,12 +148,12 @@ export const addMember = async (member: AddMemberCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const memberExists = await getAccountByEmailAndOrganizationVersionId(
-      member.email.toLowerCase(),
-      session.user.organizationVersionId,
-    )
+    const environment = session.user.environment
+    const memberExists = await getUserByEmail(member.email.toLowerCase())
 
-    if (memberExists?.role === Role.SUPER_ADMIN) {
+    const memberAccountForEnv = memberExists?.accounts.find((a) => a.environment === environment)
+
+    if (memberAccountForEnv?.role === Role.SUPER_ADMIN) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -161,38 +163,50 @@ export const addMember = async (member: AddMemberCommand) =>
     }
 
     if (!memberExists) {
-      const { role, ...rest } = member
       const newMember = {
-        ...rest,
+        firstName: member.firstName,
+        lastName: member.lastName,
+        email: member.email.toLowerCase(),
         level: null,
         source: userFromDb.source,
         accounts: {
           create: {
-            role: getRoleToSetForUntrained(role, session.user.environment),
+            role: getRoleToSetForUntrained(member.role, environment),
             status: UserStatus.VALIDATED,
             organizationVersionId: session.user.organizationVersionId,
-            environment: session.user.environment,
+            environment: environment,
           },
         },
       }
 
       await addUser(newMember)
       addUserChecklistItem(UserChecklist.AddCollaborator)
+    } else if (!memberAccountForEnv) {
+      addAccount({
+        status: UserStatus.VALIDATED,
+        role: getRoleToSetForUntrained(member.role, environment),
+        environment,
+        user: { connect: { id: memberExists.id } },
+        organizationVersion: { connect: { id: session.user.organizationVersionId } },
+      })
     } else {
-      if (memberExists.status === UserStatus.ACTIVE && memberExists.organizationVersionId) {
+      if (memberAccountForEnv.status === UserStatus.ACTIVE && memberAccountForEnv.organizationVersionId) {
         throw new Error(NOT_AUTHORIZED)
       }
 
       const updateMember = {
-        ...member,
-        status: UserStatus.VALIDATED,
-        level: memberExists.user.level ? memberExists.user.level : null,
-        role: memberExists.user.level
-          ? memberExists.role
-          : getRoleToSetForUntrained(memberExists.role, session.user.environment),
-        organizationVersionId: session.user.organizationVersionId,
+        firstName: member.firstName,
+        lastName: member.lastName,
       }
-      await updateUser(memberExists.id, updateMember)
+
+      const updateMemberAccount = {
+        status: UserStatus.VALIDATED,
+        role: memberExists.level
+          ? memberAccountForEnv.role
+          : getRoleToSetForUntrained(memberAccountForEnv.role, session.user.environment),
+        organizationVersion: { connect: { id: session.user.organizationVersionId } },
+      }
+      await updateAccount(memberAccountForEnv.id, updateMemberAccount, updateMember)
     }
 
     await sendNewUser(

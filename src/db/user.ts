@@ -197,10 +197,7 @@ export type UserWithAccounts = AsyncReturnType<typeof getUserByIdWithAccounts>
 export const getUserByEmail = (email: string) =>
   prismaClient.user.findUnique({ where: { email }, include: { accounts: true } })
 
-export const updateUser = (
-  userId: string,
-  data: Partial<Prisma.UserCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
-) =>
+export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>) =>
   prismaClient.user.update({
     where: { id: userId },
     data,
