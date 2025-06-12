@@ -12,7 +12,7 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
@@ -67,9 +67,25 @@ const SubPost = ({
   )
 
   const caracterisations = useMemo(() => caracterisationsBySubPost[subPost], [subPost])
+
+  const [expanded, setExpanded] = useState(false)
+
+  // Check if any emission source in this subpost should be opened by URL hash
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash.startsWith('#emission-source-')) {
+      const emissionSourceId = hash.replace('#emission-source-', '')
+      const hasTargetEmissionSource = emissionSources.some((source) => source.id === emissionSourceId)
+
+      if (hasTargetEmissionSource) {
+        setExpanded(true)
+      }
+    }
+  }, [emissionSources])
+
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div>
-      <Accordion>
+      <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)}>
         <AccordionSummary
           className={styles.subPostContainer}
           expandIcon={<ExpandMoreIcon />}
