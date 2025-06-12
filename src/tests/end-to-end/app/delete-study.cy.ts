@@ -12,7 +12,7 @@ describe('Delete study', () => {
 
   /**
    * TODO
-   * 
+   *
    * Enlever la parti création d’une étude et la mocker
    */
   it('should be able to delete a study', () => {
@@ -21,9 +21,11 @@ describe('Delete study', () => {
     cy.getByTestId('new-study').click()
 
     cy.getByTestId('organization-sites-checkbox').first().scrollIntoView()
-    cy.getByTestId('organization-sites-checkbox').first().within(() => {
-      cy.get('input').click({ force: true })
-    })
+    cy.getByTestId('organization-sites-checkbox')
+      .first()
+      .within(() => {
+        cy.get('input').click({ force: true })
+      })
 
     cy.getByTestId('new-study-organization-button').scrollIntoView()
     cy.getByTestId('new-study-organization-button').click({ force: true })

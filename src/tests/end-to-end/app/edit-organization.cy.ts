@@ -5,7 +5,6 @@ describe('Edit organization', () => {
     cy.intercept('POST', '/organisations/*/modifier').as('update')
   })
 
-
   /**
    * TODO: A revoir pass 1/XX
    */
