@@ -262,7 +262,20 @@ export const getUserFeedbackDate = async (userId: string) =>
 export const updateUserFeedbackDate = async (userId: string, feedbackDate: Date) =>
   prismaClient.user.update({ where: { id: userId }, data: { feedbackDate } })
 
-export const addUser = async (creator: UserSession, newUser: AddMemberCommand) => {
+export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
+  prismaClient.user.create({
+    data: newMember,
+    select: {
+      accounts: {
+        select: {
+          id: true,
+          environment: true,
+        },
+      },
+    },
+  })
+
+export const handleAddingUser = async (creator: UserSession, newUser: AddMemberCommand) => {
   const environment = creator.environment
   const memberExists = await getUserByEmail(newUser.email.toLowerCase())
 
@@ -294,17 +307,7 @@ export const addUser = async (creator: UserSession, newUser: AddMemberCommand) =
       },
     }
 
-    prismaClient.user.create({
-      data: newMember,
-      select: {
-        accounts: {
-          select: {
-            id: true,
-            environment: true,
-          },
-        },
-      },
-    })
+    await addUser(newMember)
 
     await addUserChecklistItem(UserChecklist.AddCollaborator)
   } else if (!memberAccountForEnv) {

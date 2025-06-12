@@ -17,7 +17,6 @@ import {
 } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
-  addUser,
   changeStatus,
   createOrUpdateUserCheckedStep,
   deleteUserFromOrga,
@@ -29,6 +28,7 @@ import {
   getUsers,
   getUsersCheckedSteps,
   getUserSourceById,
+  handleAddingUser,
   organizationVersionActiveAccountsCount,
   startUserFormationForm,
   updateUser,
@@ -172,7 +172,7 @@ export const addMember = async (member: AddMemberCommand) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    addUser(session.user, member)
+    handleAddingUser(session.user, member)
   })
 
 export const validateMember = async (email: string) =>
