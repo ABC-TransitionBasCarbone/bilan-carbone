@@ -90,7 +90,9 @@ const Navbar = ({ children, user }: Props) => {
                     </MenuItem>
                   )}
                   <MenuItem onClick={handleClose}>
-                    <NavbarLink href="/equipe">{t('team')}</NavbarLink>
+                    <NavbarLink data-testid="link-equipe" href="/equipe">
+                      {t('team')}
+                    </NavbarLink>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <NavbarLink data-testid="link-organisation" href="/organisations">
