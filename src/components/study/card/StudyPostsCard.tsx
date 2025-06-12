@@ -60,7 +60,7 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
               ),
             })}
           </p>
-          <ProgressBar value={percent} barClass={`${styles.progressBar}${percent === 100 ? '-success' : ''}`} />
+          <ProgressBar value={percent} barClass={styles[`progressBar${percent === 100 ? 'Success' : ''}`]} />
         </Box>
       </Box>
     </div>
