@@ -3,7 +3,9 @@
 import Block from '@/components/base/Block'
 import { getOrganizationVersionStudiesOrderedByStartDate } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
+import StudyResultsContainerSummaryCut from '@/environments/cut/study/results/StudyResultsContainerSummaryCut'
 import { canReadStudy } from '@/services/permissions/study'
+import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import StudyResultsContainerSummary from './StudyResultsContainerSummary'
 
@@ -28,12 +30,16 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }:
   return (
     <Block>
       {mainStudy ? (
-        <StudyResultsContainerSummary
-          study={mainStudy}
-          studySite="all"
-          showTitle
-          validatedOnly={settings.validatedEmissionSourcesOnly}
-        />
+        user.environment === Environment.CUT ? (
+          <StudyResultsContainerSummaryCut study={mainStudy} studySite="all" />
+        ) : (
+          <StudyResultsContainerSummary
+            study={mainStudy}
+            studySite="all"
+            showTitle
+            validatedOnly={settings.validatedEmissionSourcesOnly}
+          />
+        )
       ) : null}
     </Block>
   )

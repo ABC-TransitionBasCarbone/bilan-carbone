@@ -58,48 +58,64 @@ const Navbar = ({ user }: Props) => {
           <Link href="/" aria-label={t('home')} title={t('home')}>
             <Image src="/logos/logo_BC_2025_blanc.png" width={200} height={48} alt="" className={styles.logo} />
           </Link>
-          {user.organizationVersionId && (
-            <div className="flex-col">
-              <div
-                className={classNames(styles.link, styles.notClickable)}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onClick={() => setShowSubMenu(!showSubMenu)}
-                data-testid="navbar-organization"
-              >
-                {t('organization')}
-              </div>
-              {showSubMenu && (
-                <div
-                  className={classNames(styles.subMenu, 'flex-cc')}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
-                    <Link href={`/organisations/${user.organizationVersionId}/modifier`} className={styles.link}>
-                      {t('information')}
-                    </Link>
+          {isCut ? (
+            <>
+              {isAdmin(user.role) && (
+                <Link href={`/organisations/${user.organizationVersionId}/modifier`} className={styles.link}>
+                  {t('information')}
+                </Link>
+              )}
+              <Link href="/equipe" className={styles.link}>
+                {t('team')}
+              </Link>
+              <Link href="/organisations" className={styles.link}>
+                {t('organizations')}
+              </Link>
+            </>
+          ) : (
+            <>
+              {user.organizationVersionId && (
+                <div className="flex-col">
+                  <div
+                    className={classNames(styles.link, styles.notClickable)}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    onClick={() => setShowSubMenu(!showSubMenu)}
+                    data-testid="navbar-organization"
+                  >
+                    {t('organization')}
+                  </div>
+                  {showSubMenu && (
+                    <div
+                      className={classNames(styles.subMenu, 'flex-cc')}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+                        <Link href={`/organisations/${user.organizationVersionId}/modifier`} className={styles.link}>
+                          {t('information')}
+                        </Link>
+                      )}
+                      <Link href="/equipe" className={styles.link}>
+                        {t('team')}
+                      </Link>
+                      <Link href="/organisations" className={styles.link}>
+                        {t('organizations')}
+                      </Link>
+                    </div>
                   )}
-                  <Link href="/equipe" className={styles.link}>
-                    {t('team')}
-                  </Link>
-                  <Link href="/organisations" className={styles.link}>
-                    {t('organizations')}
-                  </Link>
                 </div>
               )}
-            </div>
-          )}
-          {!isCut && (
-            <Link className={styles.link} href="/facteurs-d-emission" data-testid="navbar-factors">
-              <span className={styles.big}>{t('factors')}</span>
-              <span className={styles.small}>{t('fe')}</span>
-            </Link>
-          )}
-          {hasFormation && !isCut && (
-            <Link className={styles.link} href="/formation">
-              <span>{t('formation')}</span>
-            </Link>
+              <Link className={styles.link} href="/facteurs-d-emission" data-testid="navbar-factors">
+                <span className={styles.big}>{t('factors')}</span>
+                <span className={styles.small}>{t('fe')}</span>
+              </Link>
+              {hasFormation && (
+                <Link className={styles.link} href="/formation">
+                  <span>{t('formation')}</span>
+                </Link>
+              )}
+            </>
           )}
         </div>
         <div className={classNames(styles.navbarContainer, 'flex-cc')}>
@@ -113,7 +129,6 @@ const Navbar = ({ user }: Props) => {
               <SwapHorizIcon />
             </Link>
           )}
-
           {user.role === Role.SUPER_ADMIN && (
             <Link className={styles.link} href="/super-admin" data-testid="navbar-admin">
               {t('admin')}

@@ -80,7 +80,7 @@ const SelectOrganization = ({ user, organizationVersions, selectOrganizationVers
   }
 
   return (
-    <Block title={t('title')} as="h1" data-testid="new-study-organization-title">
+    <Block title={organizationVersions.length > 1 && t('title')} as="h1" data-testid="new-study-organization-title">
       {organizationVersions.length === 1 ? (
         <p className="title-h2">{organizationVersions[0].organization.name}</p>
       ) : (

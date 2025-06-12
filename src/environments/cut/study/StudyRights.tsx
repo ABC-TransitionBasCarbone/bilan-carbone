@@ -3,7 +3,6 @@
 import Block from '@/components/base/Block'
 import { FormTextField } from '@/components/form/TextField'
 import WeekScheduleForm from '@/components/form/WeekScheduleForm'
-import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
 import StudyParams from '@/components/study/rights/StudyParams'
 import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
 import { FullStudy } from '@/db/study'
@@ -173,7 +172,6 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
         </div>
       </Block>
       <StudyRightsTable study={study} user={user} canAddMember={!editionDisabled} userRoleOnStudy={userRoleOnStudy} />
-      <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />
     </>
   )
 }
