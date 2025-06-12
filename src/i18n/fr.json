@@ -862,6 +862,13 @@
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion à la centrale",
       "Pertes": "Pertes"
+    },
+    "missingQualities": {
+      "title": "Ajout de la qualité pour les facteurs d'émission manuels",
+      "body": "Vous avez ajouté des facteurs d'émission manuels avant notre réparation du bug qui faisait que vous ne pouviez pas renseigner d'incertitudes pour ceux-ci. Merci d'aller la renseigner en modifiant le FE <link>sur la page des facteurs d'émission</link>. Attention, tant que vous ne le faites pas, ces facteurs d'émission sont considérés comme n'ayant pas d'incertitude et celle ci ne sera donc pas calculé sur vos bilans pour ces sources d'émissions.",
+      "list": "Voici la liste des facteurs d'émission concernés :",
+      "close": "Fermer",
+      "correct": "Corriger"
     }
   },
   "level": {

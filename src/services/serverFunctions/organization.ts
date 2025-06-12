@@ -2,6 +2,7 @@
 
 import { getAccountOrganizationVersions } from '@/db/account'
 import { prismaClient } from '@/db/client'
+import { getEmissionFactorWithoutQuality } from '@/db/emissionFactors'
 import {
   createOrganizationWithVersion,
   deleteClient,
@@ -15,6 +16,7 @@ import {
 } from '@/db/organization'
 import { deleteStudyMemberFromOrganization, getAllowedStudiesByAccountIdAndOrganizationId } from '@/db/study'
 import { getUserApplicationSettings, getUserByEmail, updateAccount } from '@/db/user'
+import { getLocale } from '@/i18n/locale'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
@@ -203,6 +205,23 @@ export const deleteOrganizationMember = async (email: string) =>
     )
     await updateAccount(targetMemberAccount.id, { organizationVersion: { disconnect: true } }, {})
     return null
+  })
+
+export const hasQualitylessEmissionFactors = async () =>
+  withServerResponse('hasQualitylessEmissionFactors', async () => {
+    const [session, locale] = await Promise.all([dbActualizedAuth(), getLocale()])
+    if (!session || !session.user || !session.user.organizationId) {
+      return []
+    }
+
+    const emissionFactors = await getEmissionFactorWithoutQuality(session.user.organizationId)
+    return emissionFactors
+      .map(
+        (emissionFactor) =>
+          emissionFactor.metaData.find((metadata) => metadata.language === locale) || emissionFactor.metaData[0],
+      )
+      .map((emissionFactor) => emissionFactor.title)
+      .filter((emissionFactor) => emissionFactor !== null)
   })
 
 const getStudiesWithOnlyValidator = async (
