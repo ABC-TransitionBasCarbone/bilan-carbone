@@ -1,8 +1,14 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import { signPassword } from '@/services/auth'
+import { NOT_AUTHORIZED } from '@/services/permissions/check'
+import { addUserChecklistItem, sendEmailToAddedUser } from '@/services/serverFunctions/user'
+import { AddMemberCommand } from '@/services/serverFunctions/user.command'
 import { AuthorizedInOrgaUserStatus } from '@/services/users'
+import { getRoleToSetForUntrained } from '@/utils/user'
+import { userSessionToDbUser } from '@/utils/userAccounts'
 import { Environment, Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
-import { getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
+import { UserSession } from 'next-auth'
+import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
@@ -108,19 +114,6 @@ export const updateUserResetTokenForEmail = async (email: string, resetToken: st
   prismaClient.user.update({
     where: { email: email.toLowerCase() },
     data: { resetToken },
-  })
-
-export const addUser = (user: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
-  prismaClient.user.create({
-    data: user,
-    select: {
-      accounts: {
-        select: {
-          id: true,
-          environment: true,
-        },
-      },
-    },
   })
 
 export const deleteUserFromOrga = async (email: string, organizationVersionId: string | null) => {
@@ -268,3 +261,85 @@ export const getUserFeedbackDate = async (userId: string) =>
 
 export const updateUserFeedbackDate = async (userId: string, feedbackDate: Date) =>
   prismaClient.user.update({ where: { id: userId }, data: { feedbackDate } })
+
+export const addUser = async (creator: UserSession, newUser: AddMemberCommand) => {
+  const environment = creator.environment
+  const memberExists = await getUserByEmail(newUser.email.toLowerCase())
+
+  const memberAccountForEnv = memberExists?.accounts.find((a) => a.environment === environment)
+
+  if (memberAccountForEnv?.role === Role.SUPER_ADMIN || newUser.role === Role.SUPER_ADMIN) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const userFromDb = await getUserByEmail(creator.email)
+  if (!userFromDb || !creator.organizationVersionId) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  if (!memberExists) {
+    const newMember = {
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email.toLowerCase(),
+      level: null,
+      source: userFromDb.source,
+      accounts: {
+        create: {
+          role: getRoleToSetForUntrained(newUser.role, environment),
+          status: UserStatus.VALIDATED,
+          organizationVersionId: creator.organizationVersionId,
+          environment: environment,
+        },
+      },
+    }
+
+    prismaClient.user.create({
+      data: newMember,
+      select: {
+        accounts: {
+          select: {
+            id: true,
+            environment: true,
+          },
+        },
+      },
+    })
+
+    await addUserChecklistItem(UserChecklist.AddCollaborator)
+  } else if (!memberAccountForEnv) {
+    await addAccount({
+      status: UserStatus.VALIDATED,
+      role: getRoleToSetForUntrained(newUser.role, environment),
+      environment,
+      user: { connect: { id: memberExists.id } },
+      organizationVersion: { connect: { id: creator.organizationVersionId } },
+    })
+  } else {
+    if (memberAccountForEnv.status === UserStatus.ACTIVE && memberAccountForEnv.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const updateMember = {
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+    }
+
+    const updateMemberAccount = {
+      status: UserStatus.VALIDATED,
+      role: memberExists.level
+        ? memberAccountForEnv.role
+        : getRoleToSetForUntrained(memberAccountForEnv.role, creator.environment),
+      organizationVersion: { connect: { id: creator.organizationVersionId } },
+    }
+    await updateAccount(memberAccountForEnv.id, updateMemberAccount, updateMember)
+  }
+
+  await sendEmailToAddedUser(
+    newUser.email.toLowerCase(),
+    userSessionToDbUser(creator),
+    newUser.firstName,
+    creator.environment,
+    creator.organizationVersionId,
+  )
+}
