@@ -78,6 +78,7 @@ const ActivationForm = () => {
           label={t('email')}
           placeholder={t('emailPlaceholder')}
           data-testid="activation-email"
+          trim
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
           {t('validate')}

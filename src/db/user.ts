@@ -87,7 +87,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
 
   if (accounts.length > 0) {
     await Promise.all([
-      accounts.map((account) =>
+      ...accounts.map((account) =>
         prismaClient.userCheckedStep.upsert({
           where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
           update: {},

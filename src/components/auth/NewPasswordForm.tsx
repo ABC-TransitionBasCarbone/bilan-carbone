@@ -67,6 +67,7 @@ const NewPasswordForm = () => {
           name="email"
           translation={t}
           data-testid="input-email"
+          trim
         />
         <LoadingButton type="submit" data-testid="reset-button" loading={submitting} fullWidth>
           {t('reset')}

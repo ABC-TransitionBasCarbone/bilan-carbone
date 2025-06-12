@@ -84,6 +84,7 @@ const LoginForm = () => {
           placeholder={t('emailPlaceholder')}
           translation={t}
           data-testid="input-email"
+          trim
         />
         <FormTextField
           className={classNames(authStyles.input, 'grow')}

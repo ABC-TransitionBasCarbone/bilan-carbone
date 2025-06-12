@@ -119,6 +119,7 @@ const ResetForm = ({ user, token }: Props) => {
           label={t('email')}
           placeholder={t('emailPlaceholder')}
           translation={t}
+          trim
         />
         <FormTextField
           control={control}

@@ -1,5 +1,6 @@
 import { FormControl, FormHelperText } from '@mui/material'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
+import { useCallback } from 'react'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import IconLabel from '../base/IconLabel'
 import styles from './Form.module.css'
@@ -13,6 +14,7 @@ interface Props<T extends FieldValues> {
   iconPosition?: 'before' | 'after'
   endAdornment?: React.ReactNode
   customError?: string
+  trim?: boolean
 }
 
 export const FormTextField = <T extends FieldValues>({
@@ -24,9 +26,24 @@ export const FormTextField = <T extends FieldValues>({
   iconPosition = 'before',
   endAdornment,
   customError,
+  trim,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, onChange: (...event: any[]) => void) => {
+      if (textFieldProps.type === 'number') {
+        return onChange(parseFloat(event.target.value))
+      }
+      if (trim) {
+        return onChange(event.target.value.trim())
+      }
+      return onChange(event.target.value)
+    },
+    [textFieldProps.type, trim],
+  )
+
   return (
     <Controller
       name={name}
@@ -41,7 +58,7 @@ export const FormTextField = <T extends FieldValues>({
           <TextField
             {...textFieldProps}
             error={!!error || !!customError}
-            onChange={textFieldProps.type === 'number' ? (event) => onChange(parseFloat(event.target.value)) : onChange}
+            onChange={(event) => handleChange(event, onChange)}
             value={(textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined ? '' : value}
             slotProps={{
               input: {
