@@ -160,7 +160,7 @@ describe('Authentication', () => {
 
     cy.getByTestId('activation-button').should('be.visible').should('not.be.disabled')
 
-    cy.getByTestId('activation-button').click()
+    cy.getByTestId('activation-button').click({ force: true })
 
     cy.url().should('include', '/activation')
 

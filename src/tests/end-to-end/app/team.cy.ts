@@ -127,6 +127,7 @@ describe('Team', () => {
 
   it('should add a new member', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
+    cy.getByTestId('button-menu-my-organization').click()
     cy.getByTestId('link-equipe').click()
 
     cy.getByTestId('pending-invitation').should('not.exist')

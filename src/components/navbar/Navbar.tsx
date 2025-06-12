@@ -65,7 +65,7 @@ const Navbar = ({ children, user }: Props) => {
             </NavbarLink>
             {user.organizationVersionId && (
               <Box>
-                <NavbarButton color="inherit" onMouseEnter={handleClickMenu}>
+                <NavbarButton data-testid="button-menu-my-organization" color="inherit" onMouseEnter={handleClickMenu}>
                   {t('organization')}
                 </NavbarButton>
                 <NavbarOrganizationMenu
