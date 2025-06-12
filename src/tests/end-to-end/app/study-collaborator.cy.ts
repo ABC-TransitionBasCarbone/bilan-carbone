@@ -110,8 +110,8 @@ describe('Study collaborators', () => {
 
   it('Invited collaborators have access to emission factors list', () => {
     cy.login('contributor@test.fr', 'Password-1')
-    cy.getByTestId('navbar-factors').should('exist')
-    cy.getByTestId('navbar-factors').click()
+    cy.getByTestId('navbar-facteur-demission').should('exist')
+    cy.getByTestId('navbar-facteur-demission').click()
 
     cy.getByTestId('cell-emission-name').should('exist')
     cy.getByTestId('new-emission').should('not.exist')

@@ -103,7 +103,7 @@ const Navbar = ({ children, user }: Props) => {
               </Box>
             )}
             {!isCut && (
-              <NavbarButton href="/facteurs-d-emission" data-testid="facteur-demission">
+              <NavbarButton href="/facteurs-d-emission" data-testid="navbar-facteur-demission">
                 <span className={styles.big}>{t('factors')}</span>
                 <span className={styles.small}>{t('fe')}</span>
               </NavbarButton>

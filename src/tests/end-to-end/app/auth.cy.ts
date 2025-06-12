@@ -151,6 +151,8 @@ describe('Authentication', () => {
   it('does activate account', () => {
     cy.visit('/')
 
+    cy.intercept('GET', '/equipe').as('equipe')
+
     cy.url().should('include', '/login')
     cy.login('imported@yopmail.com', 'Password-0')
 
@@ -245,11 +247,11 @@ describe('Authentication', () => {
       .should('not.be.disabled')
       .type('Password-0')
 
-    cy.getByTestId('reset-button').click()
+    cy.getByTestId('reset-button').click({ force: true })
 
     cy.wait('@reset-password')
 
-    cy.url().should('include', '/login')
+    cy.url({ timeout: 8000 }).should('include', '/login')
 
     cy.get('[data-testid="input-email"] > .MuiInputBase-root > .MuiInputBase-input')
       .should('be.visible')

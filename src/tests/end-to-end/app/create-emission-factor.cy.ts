@@ -10,7 +10,7 @@ describe('Create emission factor', () => {
   it('should create an emission factor with total CO2 on your organization', () => {
     cy.login()
 
-    cy.getByTestId('facteur-demission').click({ force: true })
+    cy.getByTestId('navbar-facteur-demission').click({ force: true })
 
     cy.getByTestId('new-emission').click({ force: true })
 
@@ -42,12 +42,12 @@ describe('Create emission factor', () => {
 
     cy.logout()
     cy.login('bc-collaborator-2@yopmail.com', 'password-2')
-    cy.getByTestId('facteur-demission').click()
+    cy.getByTestId('navbar-facteur-demission').click()
   })
 
   it('should create an emission factor with detailed CO2 on your organization', () => {
     cy.login()
-    cy.getByTestId('facteur-demission').click()
+    cy.getByTestId('navbar-facteur-demission').click()
 
     cy.getByTestId('new-emission').click({ force: true })
 
@@ -117,7 +117,7 @@ describe('Create emission factor', () => {
 
   it('should create an emission factor with total CO2 and multiple parts on your organization', () => {
     cy.login()
-    cy.getByTestId('facteur-demission').click()
+    cy.getByTestId('navbar-facteur-demission').click()
 
     cy.getByTestId('new-emission').click({ force: true })
 
@@ -190,7 +190,7 @@ describe('Create emission factor', () => {
 
   it('should create an emission factor with detailed CO2 and multiple parts on your organization', () => {
     cy.login()
-    cy.getByTestId('facteur-demission').click()
+    cy.getByTestId('navbar-facteur-demission').click()
 
     cy.getByTestId('new-emission').click({ force: true })
 
@@ -288,7 +288,7 @@ describe('Create emission factor', () => {
 
   it('should render emission parts in accordions', () => {
     cy.login()
-    cy.getByTestId('facteur-demission').click()
+    cy.getByTestId('navbar-facteur-demission').click()
 
     cy.getByTestId('new-emission').click({ force: true })
 
@@ -360,7 +360,7 @@ describe('Create emission factor', () => {
 
   it('should not delete parts from form when switch off detailed ges', () => {
     cy.login()
-    cy.getByTestId('facteur-demission').click()
+    cy.getByTestId('navbar-facteur-demission').click()
 
     cy.getByTestId('new-emission').click({ force: true })
 
