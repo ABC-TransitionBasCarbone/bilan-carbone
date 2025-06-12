@@ -233,6 +233,39 @@ const users = async () => {
     },
   })
 
+  const organizationVersionCutSignup = await prisma.organizationVersion.create({
+    data: {
+      environment: Environment.CUT,
+      organizationId: (
+        await prisma.organization.create({
+          data: {
+            name: faker.company.name(),
+            wordpressId: '1234567891234',
+          },
+        })
+      ).id,
+    },
+  })
+
+  await prisma.account.create({
+    data: {
+      organizationVersionId: organizationVersionCutSignup.id,
+      role: Role.ADMIN,
+      environment: Environment.CUT,
+      userId: (
+        await prisma.user.create({
+          data: {
+            email: 'cut-admin-test@yopmail.com',
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            password: await signPassword('password'),
+            status: UserStatus.ACTIVE,
+          },
+        })
+      ).id,
+    },
+  })
+
   const organizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 10 }).map(() => ({
       name: faker.company.name(),
