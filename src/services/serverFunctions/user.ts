@@ -11,7 +11,11 @@ import {
   getAccountsFromUser,
 } from '@/db/account'
 import { isFeatureActive } from '@/db/deactivableFeatures'
-import { getOrganizationVersionById, isOrganizationVersionCR } from '@/db/organization'
+import {
+  getOrganizationNameByOrganizationVersionId,
+  getOrganizationVersionById,
+  isOrganizationVersionCR,
+} from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import {
   addUser,
@@ -48,6 +52,7 @@ import { getUserCheckList } from '../checklist'
 import {
   sendActivationEmail,
   sendActivationRequest,
+  sendAddedActiveUserEmail,
   sendAddedUsersByFile,
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
@@ -70,8 +75,29 @@ const updateUserResetToken = async (email: string, duration: number) => {
   return jwt.sign(payload, process.env.NEXTAUTH_SECRET as string)
 }
 
-export const sendNewUser = async (email: string, user: User, newUserName: string, env: Environment) =>
-  withServerResponse('sendNewUser', async () => {
+export const sendEmailToAddedUser = async (
+  email: string,
+  user: User,
+  newUserName: string,
+  env: Environment,
+  orgaVersionId: string,
+) =>
+  withServerResponse('sendEmailToAddedUser', async () => {
+    const addedMember = await getUserByEmail(email)
+    const activeAccounts = addedMember?.accounts.filter((account) => account.status === UserStatus.ACTIVE)
+    const orga = await getOrganizationNameByOrganizationVersionId(orgaVersionId)
+
+    if (activeAccounts?.length && activeAccounts.length > 0) {
+      return sendAddedActiveUserEmail(
+        email,
+        `${user.firstName} ${user.lastName}`,
+        newUserName,
+        env,
+        activeAccounts.map((account) => account.environment),
+        orga?.organization.name || '',
+      )
+    }
+
     const token = await updateUserResetToken(email, 1 * DAY)
     return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName, env)
   })
@@ -180,9 +206,9 @@ export const addMember = async (member: AddMemberCommand) =>
       }
 
       await addUser(newMember)
-      addUserChecklistItem(UserChecklist.AddCollaborator)
+      await addUserChecklistItem(UserChecklist.AddCollaborator)
     } else if (!memberAccountForEnv) {
-      addAccount({
+      await addAccount({
         status: UserStatus.VALIDATED,
         role: getRoleToSetForUntrained(member.role, environment),
         environment,
@@ -209,11 +235,12 @@ export const addMember = async (member: AddMemberCommand) =>
       await updateAccount(memberAccountForEnv.id, updateMemberAccount, updateMember)
     }
 
-    await sendNewUser(
+    await sendEmailToAddedUser(
       member.email.toLowerCase(),
       userSessionToDbUser(session.user),
       member.firstName,
       session.user.environment,
+      session.user.organizationVersionId,
     )
   })
 
@@ -230,11 +257,13 @@ export const validateMember = async (email: string) =>
     }
 
     await validateUser(member.id)
-    await sendNewUser(
+
+    await sendEmailToAddedUser(
       member.user.email.toLowerCase(),
       userSessionToDbUser(session.user),
       member.user.firstName,
       session.user.environment,
+      session.user.organizationVersionId,
     )
   })
 
@@ -250,11 +279,12 @@ export const resendInvitation = async (email: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await sendNewUser(
+    await sendEmailToAddedUser(
       member.user.email,
       userSessionToDbUser(session.user),
       member.user.firstName,
       session.user.environment,
+      session.user.organizationVersionId,
     )
   })
 

@@ -32,7 +32,10 @@ export const FormTextField = <T extends FieldValues>({
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, onChange: (...event: any[]) => void) => {
+    (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      onChange: (...event: (string | number)[]) => void,
+    ) => {
       if (textFieldProps.type === 'number') {
         return onChange(parseFloat(event.target.value))
       }

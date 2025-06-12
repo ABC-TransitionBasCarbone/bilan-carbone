@@ -1,5 +1,5 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
-import { sendNewUser } from '@/services/serverFunctions/user'
+import { sendEmailToAddedUser } from '@/services/serverFunctions/user'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
 import {
   Environment,
@@ -262,8 +262,15 @@ export const onboardOrganizationVersion = async (
   })
 
   const allCollaborators = [...newCollaborators, ...existingCollaborators]
+  // TODO : a fusionner
   allCollaborators.forEach((collab) =>
-    sendNewUser(collab.user.email.toLowerCase(), dbUser, collab.user.firstName ?? '', organizationVersion.environment),
+    sendEmailToAddedUser(
+      collab.user.email.toLowerCase(),
+      dbUser,
+      collab.user.firstName ?? '',
+      organizationVersion.environment,
+      organizationVersion.id,
+    ),
   )
 }
 

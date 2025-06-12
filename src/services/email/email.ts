@@ -1,3 +1,4 @@
+import { EnvironmentNames } from '@/constants/environments'
 import { Environment } from '@prisma/client'
 import ejs, { Data } from 'ejs'
 import nodemailer from 'nodemailer'
@@ -48,6 +49,29 @@ export const sendNewUserEmail = async (
     creatorName,
   })
   return send([toEmail], 'Vous avez été invité au BC+', html)
+}
+
+export const sendAddedActiveUserEmail = async (
+  toEmail: string,
+  creatorName: string,
+  userName: string,
+  newEnv: Environment,
+  oldEnvs: Environment[],
+  orga: string,
+) => {
+  const html = await getHtml('added-active-user', {
+    link: `${process.env.NEXTAUTH_URL}/login`,
+    support: process.env.MAIL_USER,
+    userName,
+    creatorName,
+    newEnv: EnvironmentNames[newEnv],
+    oldEnvs:
+      oldEnvs.length > 1
+        ? `aux environnements ${oldEnvs.map((env) => EnvironmentNames[env]).join(', ')}`
+        : `à l'environnement ${EnvironmentNames[oldEnvs[0]]}`,
+    orga,
+  })
+  return send([toEmail], 'Vous avez été invité sur un nouvel environnement du BC+', html)
 }
 
 export const sendActivationEmail = async (toEmail: string, token: string, fromReset: boolean, env: Environment) => {
