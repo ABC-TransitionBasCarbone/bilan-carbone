@@ -66,6 +66,15 @@ const users = async () => {
   await prisma.organizationVersion.deleteMany()
   await prisma.organization.deleteMany()
 
+  await prisma.cnc.create({
+    data: {
+      numeroAuto: '321',
+      nom: 'PATHE',
+      codeInsee: '75102',
+      commune: 'Paris 2e Arrondissement',
+    },
+  })
+
   await Promise.all([
     prisma.emissionFactor.create({
       data: {

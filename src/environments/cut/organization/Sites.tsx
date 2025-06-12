@@ -119,7 +119,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 <div className="align-center">{getValue<string>()}</div>
               ) : (
                 <FormTextField
-                  data-testid="edit-site-postal-code"
+                  data-testid="organization-sites-postal-code"
                   className={styles.field}
                   control={control}
                   translation={t}
@@ -143,7 +143,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                 <div className="align-center">{getValue<string>()}</div>
               ) : (
                 <FormTextField
-                  data-testid="edit-site-city"
+                  data-testid="organization-sites-city"
                   className={styles.field}
                   control={control}
                   translation={t}
