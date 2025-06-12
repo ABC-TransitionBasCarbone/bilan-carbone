@@ -51,6 +51,17 @@ export const sendNewUserEmail = async (
   return send([toEmail], 'Vous avez été invité au BC+', html)
 }
 
+const getEnvInfo = (env: Environment) => {
+  switch (env) {
+    case Environment.BC:
+      return "sur lequel vous pourrez donc réaliser ou participer à la réalisation d'un ou plusieurs Bilan Carbone®."
+    case Environment.CUT:
+      return "sur lequel vous pourrez réaliser l'empreinte carbone simplifiée de votre cinéma."
+    default:
+      return '.'
+  }
+}
+
 export const sendAddedActiveUserEmail = async (
   toEmail: string,
   creatorName: string,
@@ -69,6 +80,7 @@ export const sendAddedActiveUserEmail = async (
       oldEnvs.length > 1
         ? `aux environnements ${oldEnvs.map((env) => EnvironmentNames[env]).join(', ')}`
         : `à l'environnement ${EnvironmentNames[oldEnvs[0]]}`,
+    envInfo: getEnvInfo(newEnv),
     orga,
   })
   return send([toEmail], 'Vous avez été invité sur un nouvel environnement du BC+', html)
