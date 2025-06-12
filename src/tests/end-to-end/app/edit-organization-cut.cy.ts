@@ -16,7 +16,7 @@ describe('Edit organization', () => {
       cy.get('input').type('My new name')
     })
 
-    cy.getByTestId('add-site-button').type('click')
+    cy.getByTestId('add-site-button').click()
     cy.getByTestId('edit-site-name').last().type('My new site 0')
     cy.getByTestId('organization-sites-postal-code').last().type('76000')
     cy.getByTestId('organization-sites-city').last().type('Rouen')
@@ -28,7 +28,7 @@ describe('Edit organization', () => {
 
     cy.getByTestId('edit-organization-button').click()
 
-    cy.getByTestId('add-site-button').type('click')
+    cy.getByTestId('add-site-button').click()
     cy.getByTestId('edit-site-name').last().type('My new site 1')
     cy.getByTestId('organization-sites-postal-code').last().type('75000')
     cy.getByTestId('organization-sites-city').last().type('Paris')
