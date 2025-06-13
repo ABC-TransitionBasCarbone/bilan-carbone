@@ -9,12 +9,15 @@ type EnvironmentMap = {
 interface Props {
   defaultComponent: ReactNode
   environmentComponents?: EnvironmentMap
+  forceEnvironment?: Environment
 }
 
-const DynamicComponent = ({ defaultComponent, environmentComponents = {} }: Props) => {
+const DynamicComponent = ({ defaultComponent, environmentComponents = {}, forceEnvironment }: Props) => {
   const { environment } = useAppEnvironmentStore()
 
-  return environmentComponents[environment || Environment.BC] || defaultComponent
+  const environmentToUse = forceEnvironment || environment
+
+  return environmentComponents[environmentToUse || Environment.BC] || defaultComponent
 }
 
 export default DynamicComponent

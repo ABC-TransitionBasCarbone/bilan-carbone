@@ -13,15 +13,17 @@ import { ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
+  environment: Environment
 }
 
-const Providers = ({ children }: Props) => {
+const Providers = ({ children, environment }: Props) => {
   return (
     <ToastProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
         <DynamicComponent
           defaultComponent={<ThemeProvider theme={theme}>{children}</ThemeProvider>}
           environmentComponents={{ [Environment.CUT]: <ThemeProvider theme={cutTheme}>{children}</ThemeProvider> }}
+          forceEnvironment={environment}
         />
       </LocalizationProvider>
     </ToastProvider>

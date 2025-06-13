@@ -2,7 +2,7 @@
 
 import Box from '@/components/base/Box'
 import HelpIcon from '@/components/base/HelpIcon'
-import LinkButton from '@/components/base/LinkButton'
+import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
@@ -10,12 +10,14 @@ import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import SpaIcon from '@mui/icons-material/Spa'
+import { Button } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import StudyName from '../card/StudyName'
 import Result from './Result'
 import styles from './ResultsContainer.module.css'
 
@@ -76,13 +78,21 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   return (
     <>
       {withDependencies === undefined && showTitle && (
-        <div className="justify-between mb2">
-          <Link className={styles.studyNameLink} href={`/etudes/${study.id}`}>
-            <StudyName name={study.name} />
-          </Link>
-          <LinkButton href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</LinkButton>
+        <div className={`${styles.header} justify-between mb1`}>
+          <StyledChip
+            icon={<SpaIcon />}
+            color="success"
+            label={study.name}
+            component="a"
+            href={`/etudes/${study.id}`}
+            clickable
+          />
+          <Button variant="contained" color="secondary" href={`/etudes/${study.id}/comptabilisation/resultats`}>
+            {t('seeResults')}
+          </Button>
         </div>
       )}
+
       <div className={styles.container}>
         <fieldset className={classNames(styles.selector, 'flex grow')} aria-label={t('results.withDependencies')}>
           <label>
@@ -94,13 +104,17 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(true)}
               className={styles.hidden}
             />
-            <Box className={classNames(styles.card, 'flex-col flex-cc pointer', { [styles.selected]: withDep })}>
+            <Box selected={withDep} className={classNames(styles.card, 'flex-col flex-cc m2 px3')}>
               <h3 className="text-center">
                 {withDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="align-center text-center">
                 {t('results.withDependencies')}
-                <HelpIcon className="ml-4" onClick={() => setGlossary('withDependencies')} label={t('information')} />
+                <HelpOutlineOutlinedIcon
+                  color="primary"
+                  className="ml-4"
+                  onClick={() => setGlossary('withDependencies')}
+                />
               </span>
             </Box>
           </label>
@@ -113,7 +127,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(false)}
               className={styles.hidden}
             />
-            <Box className={classNames(styles.card, 'flex-col flex-cc pointer', { [styles.selected]: !withDep })}>
+            <Box selected={!withDep} className={classNames(styles.card, 'flex-col flex-cc pointer')}>
               <h3 className="text-center">
                 {withoutDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
