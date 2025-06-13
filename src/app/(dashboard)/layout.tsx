@@ -7,6 +7,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import { getEnvironment } from '@/i18n/environment'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import styles from './layout.module.css'
 
