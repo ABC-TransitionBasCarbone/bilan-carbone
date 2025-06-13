@@ -2,7 +2,7 @@
 
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import MenuIcon from '@mui/icons-material/Menu'
-import { Divider, Drawer, IconButton } from '@mui/material'
+import { Divider, Drawer, Fab } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { UUID } from 'crypto'
@@ -24,7 +24,8 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
   return (
     <>
       <div className={styles.toolbarContainer}>
-        <IconButton
+        <Fab
+          color="primary"
           data-testid="study-navbar-button"
           className={styles.openDrawerButton}
           aria-label={t('menu')}
@@ -32,7 +33,7 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
           onClick={() => setOpen((prev) => !prev)}
         >
           <MenuIcon />
-        </IconButton>
+        </Fab>
       </div>
       <Drawer
         className={open ? styles.opened : ''}

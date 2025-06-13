@@ -1,10 +1,8 @@
-import { ButtonProps } from '@mui/material'
+import { Button, ButtonProps } from '@mui/material'
 import classNames from 'classnames'
-import { LinkProps } from 'next/link'
 
-import { AnchorHTMLAttributes, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import styles from './Block.module.css'
-import Button from './Button'
 import IconLabel from './IconLabel'
 import LinkButton from './LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
@@ -12,7 +10,7 @@ import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
 export type Action =
   | (ButtonProps & { actionType: 'button'; 'data-testid'?: string })
   | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton' })
-  | (AnchorHTMLAttributes<HTMLAnchorElement> & { actionType: 'link'; 'data-testid'?: string })
+  | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 
 export interface Props {
   children?: ReactNode
@@ -63,11 +61,11 @@ const Block = ({
             <div className={classNames(styles.actions, 'flex')}>
               {actions.map(({ actionType, ...action }, index) =>
                 actionType === 'button' ? (
-                  <Button key={index} {...(action as ButtonProps)} />
+                  <Button key={index} {...(action as ButtonProps)} variant="outlined" />
                 ) : actionType === 'loadingButton' ? (
                   <LoadingButton key={index} {...(action as LoadingButtonProps)} />
                 ) : (
-                  <LinkButton key={index} {...(action as LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>)} />
+                  <LinkButton key={index} {...(action as ButtonProps & { href: string })} />
                 ),
               )}
             </div>

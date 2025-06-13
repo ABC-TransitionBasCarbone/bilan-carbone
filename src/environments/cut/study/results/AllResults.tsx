@@ -101,7 +101,8 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
       <Box component="section" sx={{ display: 'flex', gap: '1rem' }}>
         <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
         <Button
-          variant="outlined"
+          variant="contained"
+          color="primary"
           size="large"
           endIcon={<DownloadIcon />}
           onClick={() =>

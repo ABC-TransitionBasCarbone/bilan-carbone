@@ -6,12 +6,15 @@
 .validator {
   background-color: var(--validator-background);
 }
+
 .editor {
   background-color: var(--editor-background);
 }
+
 .reader {
   background-color: var(--reader-background);
 }
+
 .contributor {
   background-color: var(--contributor-background);
 }

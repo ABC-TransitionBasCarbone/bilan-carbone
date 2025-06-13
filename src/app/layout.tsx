@@ -3,6 +3,7 @@ import '@/css/index.css'
 import { Locale } from '@/i18n/config'
 import { getEnvironment } from '@/i18n/environment'
 import Providers from '@/services/providers/Providers'
+import { CssBaseline } from '@mui/material'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import { Environment } from '@prisma/client'
 import type { Metadata } from 'next'
@@ -36,7 +37,10 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
         <AppRouterCacheProvider options={providerOptions}>
           <NextIntlClientProvider messages={messages}>
             <RouteChangeListener />
-            <Providers>{children}</Providers>
+            <Providers environment={environment}>
+              <CssBaseline />
+              {children}
+            </Providers>
           </NextIntlClientProvider>
         </AppRouterCacheProvider>
       </body>

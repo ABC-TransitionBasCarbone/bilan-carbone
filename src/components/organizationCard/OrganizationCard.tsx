@@ -6,18 +6,24 @@ import { ORGANIZATION, STUDY, useAppContextStore } from '@/store/AppContext'
 import { isAdmin } from '@/utils/user'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
+import { AppBar, Box, Button, styled, Toolbar, ToolbarProps, Typography } from '@mui/material'
 import { Environment, Role } from '@prisma/client'
-import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
-import LinkButton from '../base/LinkButton'
-import styles from './OrganizationCard.module.css'
 
 interface Props {
   account: UserSession
   organizationVersions: OrganizationVersionWithOrganization[]
 }
+
+const OrganizationToolbar = styled(Toolbar)<ToolbarProps>(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  backgroundColor: theme.palette.primary.light,
+  color: theme.palette.text.primary,
+  borderBottom: theme.custom.navbar.organizationToolbar?.border,
+}))
 
 const OrganizationCard = ({ account, organizationVersions }: Props) => {
   const t = useTranslations('organization.card')
@@ -86,33 +92,31 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
       : 'myClient'
 
   return (
-    <div className={classNames(styles.organizationCard, 'flex w100')}>
-      <div className="grow p2 justify-between align-center">
-        <div className={classNames(styles.gapped, 'align-center')}>
+    <AppBar position="sticky">
+      <OrganizationToolbar>
+        <Box display="flex" alignItems="center" gap={2}>
           <HomeIcon />
-          <span>{organizationVersion.organization.name}</span>
+          <Typography>{organizationVersion.organization.name}</Typography>
           {hasAccess && (
-            <LinkButton color="secondary" href={organizationVersionLink}>
+            <Button color="secondary" href={organizationVersionLink} variant="outlined">
               {t(linkLabel)}
-            </LinkButton>
+            </Button>
           )}
-        </div>
+        </Box>
         {!isCut && (
-          <div>
-            <LinkButton
-              className="align-end"
-              color="secondary"
-              target="_blank"
-              rel="noreferrer noopener"
-              href="https://www.bilancarbone-methode.com/"
-            >
-              <MenuBookIcon />
-              <span className="ml-2">{t('method')}</span>
-            </LinkButton>
-          </div>
+          <Button
+            color="secondary"
+            target="_blank"
+            rel="noreferrer noopener"
+            href="https://www.bilancarbone-methode.com/"
+            variant="outlined"
+            startIcon={<MenuBookIcon />}
+          >
+            {t('method')}
+          </Button>
         )}
-      </div>
-    </div>
+      </OrganizationToolbar>
+    </AppBar>
   )
 }
 

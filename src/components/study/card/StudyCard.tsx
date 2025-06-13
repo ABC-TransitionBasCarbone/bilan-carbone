@@ -1,13 +1,12 @@
 import Label from '@/components/base/Label'
-import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
+import { Button, LinearProgress } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Box from '../../base/Box'
-import LinkButton from '../../base/LinkButton'
 import GlossaryIconModal from '../../modals/GlossaryIconModal'
 import styles from './StudyCard.module.css'
 import StudyName from './StudyName'
@@ -65,15 +64,16 @@ const StudyCard = async ({ study, user }: Props) => {
               {t('validatedOnlyDescription')}
             </GlossaryIconModal>
           </p>
-          <ProgressBar
-            value={percent}
-            barClass={classNames(styles.progressBar, { [styles.success]: percent === 100 })}
-          />
+          <LinearProgress variant="determinate" value={percent} />
         </Box>
         <div className="justify-end">
-          <LinkButton href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>
+          <Button
+            variant="contained"
+            color="secondary"
+            href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}
+          >
             {t('see')}
-          </LinkButton>
+          </Button>
         </div>
       </Box>
     </li>

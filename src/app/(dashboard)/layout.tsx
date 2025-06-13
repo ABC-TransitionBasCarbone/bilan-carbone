@@ -6,7 +6,7 @@ import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
-import { Environment } from '@prisma/client'
+import { getEnvironment } from '@/i18n/environment'
 import classNames from 'classnames'
 import styles from './layout.module.css'
 
@@ -15,6 +15,7 @@ interface Props {
 }
 
 const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
+  const environment = await getEnvironment()
   if (account.needsAccountSelection) {
     return (
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
@@ -40,7 +41,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
 
   return (
     <div className="flex-col h100">
-      <Navbar user={account} />
+      <Navbar user={account} environment={environment} />
       {shouldDisplayOrgaCard && (
         <OrganizationCard
           account={account}
