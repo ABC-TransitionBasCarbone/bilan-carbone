@@ -1,4 +1,4 @@
-import { environmentWithOnboarding } from '@/constants/users'
+import { environmentWithOnboarding } from '@/constants/environments'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
@@ -52,7 +52,7 @@ const UserView = async ({ account }: Props) => {
       <CUTLogosHome user={account} />
       {userOrganizationVersion &&
         !userOrganizationVersion.onboarded &&
-        environmentWithOnboarding.some((env) => env === userOrganizationVersion.environment) && (
+        environmentWithOnboarding.includes(userOrganizationVersion.environment) && (
           <Onboarding user={account} organizationVersion={userOrganizationVersion} />
         )}
       {displayFeedback.success && displayFeedback.data && <UserFeedback environment={account.environment} />}
