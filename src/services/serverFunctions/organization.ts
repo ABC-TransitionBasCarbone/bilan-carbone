@@ -147,7 +147,7 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
 
     const organizationVersion = await getRawOrganizationVersionById(command.organizationVersionId)
 
-    if (!organizationVersion || organizationVersion.onboarderId !== session.user.accountId) {
+    if (!organizationVersion || organizationVersion.id !== session.user.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
 

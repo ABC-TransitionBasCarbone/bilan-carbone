@@ -314,7 +314,7 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
   } else if (!memberAccountForEnv) {
     await addAccount({
       status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
-      role: getRoleToSetForUntrained(newUser.role, environment),
+      role: memberExists.level ? newUser.role : getRoleToSetForUntrained(newUser.role, environment),
       environment,
       user: { connect: { id: memberExists.id } },
       organizationVersion: { connect: { id: creator.organizationVersionId } },
