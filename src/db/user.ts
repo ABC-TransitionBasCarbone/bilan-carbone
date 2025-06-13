@@ -1,3 +1,4 @@
+import { environmentsWithChecklist } from '@/constants/userCheckedSteps'
 import { signPassword } from '@/services/auth'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
 import { getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
@@ -61,17 +62,18 @@ export const updateUserPasswordForEmail = async (email: string, password: string
     where: { email },
     data: { resetToken: null, password: signedPassword, status: UserStatus.ACTIVE },
   })
-  const accounts = await prismaClient.account.findMany({ where: { userId: user.id } })
+  const account = await prismaClient.account.findFirst({
+    where: { userId: user.id, environment: { in: environmentsWithChecklist } },
+  })
 
-  await Promise.all(
-    accounts.map((account) =>
-      prismaClient.userCheckedStep.upsert({
-        where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
-        update: {},
-        create: { accountId: account.id, step: UserChecklist.CreateAccount },
-      }),
-    ),
-  )
+  if (account) {
+    await prismaClient.userCheckedStep.upsert({
+      where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
+      update: {},
+      create: { accountId: account.id, step: UserChecklist.CreateAccount },
+    })
+  }
+
   return user
 }
 

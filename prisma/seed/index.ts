@@ -1,3 +1,4 @@
+import { environmentsWithChecklist } from '@/constants/userCheckedSteps'
 import { reCreateBegesRules } from '@/db/beges'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
@@ -549,10 +550,12 @@ const users = async () => {
 
   const activeAccounts = await prisma.account.findMany({
     where: { user: { status: UserStatus.ACTIVE } },
-    select: { id: true },
+    select: { id: true, environment: true },
   })
   await prisma.userCheckedStep.createMany({
-    data: activeAccounts.map((account) => ({ accountId: account.id, step: UserChecklist.CreateAccount })),
+    data: activeAccounts
+      .filter((account) => environmentsWithChecklist.some((env) => account.environment === env))
+      .map((account) => ({ accountId: account.id, step: UserChecklist.CreateAccount })),
   })
 
   const subPosts = Object.keys(SubPost)
