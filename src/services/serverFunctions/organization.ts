@@ -133,7 +133,6 @@ const onboardUser = async (user: AddMemberCommand) => {
     await addMember(user)
   } catch (e) {
     console.error('Error during user onboarding, but still continue onboarding and adding other users:', e)
-    throw new Error(UNKNOWN_ERROR)
   }
 }
 
@@ -167,7 +166,7 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
           lastName: '',
         }))
 
-        await Promise.all(collaborators.map(async (collaborator) => onboardUser(collaborator)))
+        await Promise.all(collaborators.map(onboardUser))
       }
     })
   })
