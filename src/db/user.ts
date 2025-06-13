@@ -62,16 +62,20 @@ export const updateUserPasswordForEmail = async (email: string, password: string
     where: { email },
     data: { resetToken: null, password: signedPassword, status: UserStatus.ACTIVE },
   })
-  const account = await prismaClient.account.findFirst({
+  const accounts = await prismaClient.account.findMany({
     where: { userId: user.id, environment: { in: environmentsWithChecklist } },
   })
 
-  if (account) {
-    await prismaClient.userCheckedStep.upsert({
-      where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
-      update: {},
-      create: { accountId: account.id, step: UserChecklist.CreateAccount },
-    })
+  if (accounts.length > 0) {
+    await Promise.all(
+      accounts.map((account) =>
+        prismaClient.userCheckedStep.upsert({
+          where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
+          update: {},
+          create: { accountId: account.id, step: UserChecklist.CreateAccount },
+        }),
+      ),
+    )
   }
 
   return user
