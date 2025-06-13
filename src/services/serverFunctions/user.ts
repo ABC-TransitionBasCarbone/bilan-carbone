@@ -1,5 +1,6 @@
 'use server'
 
+import { environmentsWithChecklist } from '@/constants/environments'
 import {
   AccountWithUser,
   changeAccountRole,
@@ -385,15 +386,18 @@ export const getUserCheckedItems = async () =>
 export const addUserChecklistItem = async (step: UserChecklist) =>
   withServerResponse('addUserChecklistItem', async () => {
     const session = await dbActualizedAuth()
-    if (!session || !session.user) {
+    if (!session || !session.user || !environmentsWithChecklist.includes(session.user.environment)) {
       return
     }
+
     const isCR = await isOrganizationVersionCR(session.user.organizationVersionId)
     const checklist = getUserCheckList(session.user.role, !!isCR)
     if (!Object.values(checklist).includes(step)) {
       return
     }
+
     await createOrUpdateUserCheckedStep(session.user.accountId, step)
+
     const userChecklist = await getUserCheckedItems()
     if (userChecklist.success && userChecklist.data.length === Object.values(checklist).length - 1) {
       setTimeout(
