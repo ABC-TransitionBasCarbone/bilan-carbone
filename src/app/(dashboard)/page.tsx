@@ -12,6 +12,7 @@ const Home = async ({ user: account }: UserSessionProps) => {
       redirect('/selection-du-compte')
     }
   }
+
   return (
     <>
       <Block>
