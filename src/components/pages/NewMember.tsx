@@ -1,9 +1,10 @@
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import { UserSessionProps } from '../hoc/withAuth'
 import NewMemberForm from '../team/NewMemberForm'
 
-const NewMemberPage = () => {
+const NewMemberPage = ({ user }: UserSessionProps) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('newMember')
   return (
@@ -16,7 +17,7 @@ const NewMemberPage = () => {
         ]}
       />
       <Block title={t('title')} as="h1">
-        <NewMemberForm />
+        <NewMemberForm environment={user.environment} />
       </Block>
     </>
   )

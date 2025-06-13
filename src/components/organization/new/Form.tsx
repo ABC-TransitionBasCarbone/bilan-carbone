@@ -4,6 +4,7 @@ import Block from '@/components/base/Block'
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { createOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
   CreateOrganizationCommand,
@@ -12,13 +13,12 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 const NewOrganizationForm = () => {
   const router = useRouter()
   const t = useTranslations('organization.form')
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<CreateOrganizationCommand>({
     resolver: zodResolver(CreateOrganizationCommandValidation),
@@ -30,13 +30,11 @@ const NewOrganizationForm = () => {
   })
 
   const onSubmit = async (command: CreateOrganizationCommand) => {
-    const result = await createOrganizationCommand(command)
-    if (!result.success) {
-      setError(result.message)
-    } else {
-      router.push(`/organisations/${result.id}`)
-      router.refresh()
-    }
+    await callServerFunction(() => createOrganizationCommand(command), {
+      onSuccess: (data) => {
+        router.push(`/organisations/${data.id}`)
+      },
+    })
   }
 
   return (
@@ -52,7 +50,6 @@ const NewOrganizationForm = () => {
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-organization-create-button">
           {t('create')}
         </LoadingButton>
-        {error && <p>{error}</p>}
       </Form>
     </Block>
   )

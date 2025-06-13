@@ -1,4 +1,4 @@
-import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
+import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
@@ -53,6 +53,9 @@ const fullStudyInclude = {
       studySite: {
         select: {
           id: true,
+          site: {
+            select: { name: true },
+          },
         },
       },
       emissionFactorId: true,
@@ -61,6 +64,7 @@ const fullStudyInclude = {
           id: true,
           totalCo2: true,
           unit: true,
+          isMonetary: true,
           reliability: true,
           technicalRepresentativeness: true,
           geographicRepresentativeness: true,
@@ -151,6 +155,7 @@ const fullStudyInclude = {
       id: true,
       isCR: true,
       parentId: true,
+      environment: true,
       organization: {
         select: {
           id: true,
@@ -243,6 +248,21 @@ export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
     },
   })
   return filterAllowedStudies(user, studies)
+}
+
+export const getAllowedStudiesByAccountIdAndOrganizationId = async (organizationVersionIds: string[]) => {
+  return prismaClient.study.findMany({
+    select: {
+      id: true,
+      name: true,
+      allowedUsers: true,
+      organizationVersionId: true,
+      organizationVersion: { select: { organization: { select: { name: true } } } },
+    },
+    where: {
+      organizationVersionId: { in: organizationVersionIds },
+    },
+  })
 }
 
 export const getAllowedStudyIdByAccount = async (account: UserSession) => {
@@ -356,7 +376,7 @@ export const deleteAccountOnStudy = async (studyId: string, accountId: string) =
     where: { studyId_accountId: { studyId, accountId } },
   })
 
-export const deleteContributor = async (studyId: string, contributor: StudyContributorRow) => {
+export const deleteContributor = async (studyId: string, contributor: StudyContributorDeleteParams) => {
   const where: Prisma.ContributorsWhereInput = {
     studyId,
     accountId: contributor.accountId,
@@ -450,6 +470,7 @@ export const deleteStudy = async (id: string) => {
       transaction.document.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
       transaction.studyExport.deleteMany({ where: { studyId: id } }),
+      transaction.openingHours.deleteMany({ where: { studyId: id } }),
     ])
     await transaction.study.delete({ where: { id } })
   })
@@ -544,6 +565,7 @@ export const countOrganizationStudiesFromOtherUsers = async (organizationVersion
   prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })
 
 export const updateStudyOpeningHours = async (
+  studyId: string,
   openingHours: ChangeStudyCinemaCommand['openingHours'],
   openingHoursHoliday: ChangeStudyCinemaCommand['openingHoursHoliday'],
 ) => {
@@ -580,5 +602,12 @@ export const updateStudyOpeningHours = async (
         ),
       )
     })
+  })
+}
+
+export const deleteStudyMemberFromOrganization = async (accountId: string, organizationVersionIds: string[]) => {
+  const studies = await getAllowedStudiesByAccountIdAndOrganizationId(organizationVersionIds)
+  return prismaClient.userOnStudy.deleteMany({
+    where: { accountId, studyId: { in: studies.map((study) => study.id) } },
   })
 }

@@ -1,9 +1,28 @@
-* {
-  font-family: 'gilroy-regular', sans-serif !important;
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/gilroy/Gilroy-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/gilroy/Gilroy-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/gilroy/Gilroy-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 body {
-  background: var(--background-50);
   height: 100vh;
   line-height: 1.25;
   overflow: hidden;
@@ -84,6 +103,7 @@ table {
       &:nth-child(even) {
         background: white;
       }
+
       &:nth-child(odd) {
         background: var(--background-150);
       }
@@ -104,6 +124,7 @@ table {
   tr:first-child th:first-child {
     border-top-left-radius: 0.25rem;
   }
+
   tr:first-child th:last-child {
     border-top-right-radius: 0.25rem;
   }
@@ -111,6 +132,7 @@ table {
   tr:last-child td:first-child {
     border-bottom-left-radius: 0.25rem;
   }
+
   tr:last-child td:last-child {
     border-bottom-right-radius: 0.25rem;
   }
@@ -127,6 +149,10 @@ table {
 
 .error {
   color: var(--error-100);
+}
+
+.warning {
+  color: var(--warning);
 }
 
 .inputLabel {
@@ -156,4 +182,11 @@ table {
 
 .pointer {
   cursor: pointer;
+}
+
+.typeform {
+  height: 500px;
+  div {
+    height: 100%;
+  }
 }

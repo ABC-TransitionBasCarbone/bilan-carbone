@@ -5,7 +5,7 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
 
 interface Props {
-  userOrganizationId: string | null
+  userOrganizationId?: string
 }
 
 const EmissionFactorsPage = ({ userOrganizationId }: Props) => {

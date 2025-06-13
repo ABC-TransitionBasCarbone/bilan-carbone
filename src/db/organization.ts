@@ -1,7 +1,16 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
 import { sendNewUser } from '@/services/serverFunctions/user'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import { Environment, Organization, OrganizationVersion, Prisma, Role, Site, UserStatus } from '@prisma/client'
+import {
+  Environment,
+  Organization,
+  OrganizationVersion,
+  Prisma,
+  Role,
+  Site,
+  UserSource,
+  UserStatus,
+} from '@prisma/client'
 import { AccountWithUser } from './account'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
@@ -27,7 +36,7 @@ export const OrganizationVersionWithOrganizationSelect = {
       id: true,
       name: true,
       sites: {
-        select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
+        select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true, cncId: true },
         orderBy: { createdAt: Prisma.SortOrder.asc },
       },
     },
@@ -48,7 +57,7 @@ export const getOrganizationVersionById = (id: string | null) =>
     : null
 
 export const isOrganizationVersionCR = async (id: string | null) =>
-  (await prismaClient.organizationVersion.findUnique({ where: { id: id || '' } }))?.isCR
+  id ? (await prismaClient.organizationVersion.findUnique({ where: { id } }))?.isCR : undefined
 
 export const getOrganizationVersionAccounts = (id: string | null) =>
   id
@@ -126,11 +135,19 @@ export const updateOrganization = async (
           organizationId: organizationVersion.organizationId,
           name: site.name,
           etp: site.etp,
-          ca: site.ca * caUnit,
+          ca: (site?.ca || 0) * caUnit,
           postalCode: site.postalCode,
           city: site.city,
+          cncId: site.cncId || undefined,
         },
-        update: { name: site.name, etp: site.etp, ca: site.ca * caUnit, postalCode: site.postalCode, city: site.city },
+        update: {
+          name: site.name,
+          etp: site.etp,
+          ca: (site?.ca || 0) * caUnit,
+          postalCode: site.postalCode,
+          city: site.city,
+          cncId: site.cncId || undefined,
+        },
       }),
     ),
     prismaClient.site.deleteMany({
@@ -154,13 +171,19 @@ export const onboardOrganizationVersion = async (
   { organizationVersionId, companyName, firstName, lastName, collaborators = [] }: OnboardingCommand,
   existingCollaborators: AccountWithUser[],
 ) => {
-  const dbUser = await prismaClient.user.findUnique({ where: { id: accountId } })
+  const userAccount = await prismaClient.account.findUnique({ where: { id: accountId } })
+  if (!userAccount) {
+    return
+  }
+  const dbUser = await prismaClient.user.findUnique({ where: { id: userAccount.userId } })
+
   if (!dbUser) {
     return
   }
   const newCollaborators: (Pick<AccountWithUser, 'role' | 'organizationVersionId'> & {
-    user: { firstName: string; lastName: string; email: string; status: UserStatus }
+    user: { firstName: string; lastName: string; email: string; status: UserStatus; source: UserSource }
   })[] = []
+
   for (const collaborator of collaborators) {
     newCollaborators.push({
       user: {
@@ -168,6 +191,7 @@ export const onboardOrganizationVersion = async (
         lastName: '',
         email: collaborator.email?.toLowerCase() || '',
         status: UserStatus.VALIDATED,
+        source: dbUser.source,
       },
       role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
       organizationVersionId,
@@ -203,12 +227,14 @@ export const onboardOrganizationVersion = async (
         data: {
           role: collaborator.role,
           organizationVersion: { connect: { id: collaborator.organizationVersionId } },
+          environment: organizationVersion.environment,
           user: {
             create: {
               firstName: collaborator.user.firstName,
               lastName: collaborator.user.lastName,
               email: collaborator.user.email,
               status: collaborator.user.status,
+              source: collaborator.user.source,
             },
           },
         },
@@ -257,7 +283,7 @@ export const deleteClient = async (id: string) => {
   }
   return prismaClient.$transaction(async (transaction) => {
     const studies = await transaction.study.findMany({
-      where: { organizationVersionId: organizationVersion.organizationId },
+      where: { organizationVersionId: organizationVersion.id },
     })
     await Promise.all(studies.map((study) => deleteStudy(study.id)))
     await transaction.organizationVersion.delete({ where: { id } })
@@ -269,4 +295,59 @@ export const deleteClient = async (id: string) => {
     await transaction.site.deleteMany({ where: { organizationId: organizationVersion.organizationId } })
     await transaction.organization.delete({ where: { id: organizationVersion.organizationId } })
   })
+}
+export const getRawOrganizationVersionById = (id: string | null) =>
+  id ? prismaClient.organizationVersion.findUnique({ where: { id } }) : null
+
+export const getRawOrganizationBySiret = (siret: string | null) =>
+  siret ? prismaClient.organization.findFirst({ where: { wordpressId: { startsWith: siret } } }) : null
+
+export const getRawOrganizationById = (id: string | null) =>
+  id ? prismaClient.organization.findUnique({ where: { id } }) : null
+
+export const createOrUpdateOrganization = async (
+  organization: Prisma.OrganizationCreateInput & { id?: string },
+  isCR?: boolean,
+  activatedLicence?: boolean,
+  importedFileDate?: Date,
+  environment: Environment = Environment.BC,
+) => {
+  const updatedOrganization = await prismaClient.organization.upsert({
+    where: { id: organization.id ?? '' },
+    update: {
+      importedFileDate,
+    },
+    create: {
+      ...organization,
+      importedFileDate,
+    },
+  })
+
+  const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
+    updatedOrganization.id,
+    environment,
+  )
+
+  await prismaClient.organizationVersion.upsert({
+    where: {
+      organizationId_environment: {
+        organizationId: updatedOrganization.id,
+        environment,
+      },
+    },
+    update: {
+      isCR: isCR || organizationVersion?.isCR || false,
+      updatedAt: new Date(),
+      activatedLicence: activatedLicence || organizationVersion?.activatedLicence,
+    },
+    create: {
+      organizationId: updatedOrganization.id,
+      isCR: isCR || false,
+      activatedLicence,
+      onboarded: false,
+      environment,
+    },
+  })
+
+  return updatedOrganization
 }

@@ -1,5 +1,4 @@
-import { BASE, CUT } from '@/store/AppEnvironment'
-import { SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 
 export enum BCPost {
   Energies = 'Energies',
@@ -102,6 +101,7 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
 }
 
 export const environmentPostMapping = {
-  [BASE]: BCPost,
-  [CUT]: CutPost,
+  [Environment.BC]: BCPost,
+  [Environment.CUT]: CutPost,
+  [Environment.TILT]: BCPost,
 }

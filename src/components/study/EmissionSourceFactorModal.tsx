@@ -28,7 +28,9 @@ const EmissionSourceFactorModal = ({ close, open, emissionFactors, subPost, sele
 
   const fetchSources = async (studyId: string) => {
     const versions = await getStudyEmissionFactorImportVersions(studyId)
-    setEmissionFactorVersions(versions)
+    if (versions.success) {
+      setEmissionFactorVersions(versions.data)
+    }
   }
 
   const initialSelectedSources = (emissionFactorVersions || [])

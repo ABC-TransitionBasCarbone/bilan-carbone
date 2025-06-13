@@ -70,7 +70,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
     </>
   ) : canCreateStudy && !isCR ? (
     <MUIBox component="section">
-      <CUTStudyHomeMessage />
+      <CUTStudyHomeMessage user={user} />
       <div className="justify-center">
         <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
           <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />
@@ -78,7 +78,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
           <p>{t('firstStudyMessage')}</p>
           <LinkButton
             data-testid="new-organization"
-            className={classNames(styles.linkButton, 'w100 justify-center mb1')}
+            className={classNames('w100 justify-center mb1')}
             href={creationUrl}
           >
             <AddIcon />

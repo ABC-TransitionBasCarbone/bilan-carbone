@@ -1,33 +1,22 @@
+import { Environment } from '@prisma/client'
 import { create } from 'zustand'
 
-export const BASE = 'base'
-export const CUT = 'cut'
-
-export type Environment = typeof CUT | typeof BASE
-
-// TODO DELETE THE .ENV LOGIC WHEN WE CAN GET ENVIRONMENT FROM USER
-export const defaultEnvironment: Environment = (process.env.NEXT_PUBLIC_DEFAULT_ENVIRONMENT as Environment) || BASE
-
 interface AppEnvironmentState {
-  environment: Environment
+  environment?: Environment
   setEnvironment: (newEnvironment: Environment) => void
+  isLoading: boolean
+  setIsLoading: (isLoading: boolean) => void
 }
 
 export const useAppEnvironmentStore = create<AppEnvironmentState>((set) => {
   return {
-    environment: defaultEnvironment,
+    environment: undefined,
     setEnvironment: (newEnvironment: Environment) => {
       set({ environment: newEnvironment })
     },
+    isLoading: false,
+    setIsLoading: (isLoading: boolean) => {
+      set({ isLoading })
+    },
   }
 })
-
-/**
- * NOTE: Méthode à supprimer quand l'environment pourra être récupéré
- * depuis la session
- *
- * @returns Environment
- */
-export const getServerEnvironment = () => {
-  return defaultEnvironment
-}

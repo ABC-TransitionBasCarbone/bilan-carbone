@@ -24,12 +24,22 @@ interface Props {
   selectedFactor?: EmissionFactorWithMetaData
   subPost: SubPost
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
+  isFromOldImport: boolean
+  currentBEVersion: string
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 
-const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPost, selectedFactor, update }: Props) => {
+const EmissionSourceContributorForm = ({
+  emissionSource,
+  emissionFactors,
+  subPost,
+  selectedFactor,
+  update,
+  isFromOldImport,
+  currentBEVersion,
+}: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
   const tUnits = useTranslations('units')
@@ -44,8 +54,10 @@ const EmissionSourceContributorForm = ({ emissionSource, emissionFactors, subPos
           subPost={subPost}
           selectedFactor={selectedFactor}
           getDetail={getDetail}
+          isFromOldImport={isFromOldImport}
+          currentBEVersion={currentBEVersion}
         />
-        <div className={classNames(styles.gapped, 'flex')}>
+        <div className={classNames(styles.gapped, 'grow flex')}>
           <div className={classNames(styles.inputWithUnit, 'flex grow')}>
             <TextField
               className="grow"

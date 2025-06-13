@@ -51,6 +51,20 @@ export type BegesLine = {
   uncertainty: number | null
 }
 
+interface EmissionFactor {
+  ch4f: number | null
+  co2b: number | null
+  co2f: number | null
+  n2o: number | null
+  pfc: number | null
+  hfc: number | null
+  sf6: number | null
+  otherGES: number | null
+  totalCo2: number | null
+}
+
+type EmissionSource = Pick<FullStudy['emissionSources'][0], 'value' | 'subPost' | 'depreciationPeriod'>
+
 const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule?: ExportRule) => {
   if (caracterisation === null || !rule) {
     return null
@@ -94,26 +108,32 @@ const getRulePost = (caracterisation: EmissionSourceCaracterisation | null, rule
   }
 }
 
-const getBegesLine = (
-  value: number,
-  emissionFactor: {
-    ch4f: number | null
-    co2b: number | null
-    co2f: number | null
-    n2o: number | null
-    pfc: number | null
-    hfc: number | null
-    sf6: number | null
-    otherGES: number | null
-    totalCo2: number | null
-  },
-): Omit<BegesLine, 'rule' | 'uncertainty'> => {
+export const getBegesEmissionValue = (emissionSource: EmissionSource): number => {
+  if (!emissionSource.value) {
+    return 0
+  }
+
+  let value = emissionSource.value
+  if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && emissionSource.depreciationPeriod) {
+    value = value / emissionSource.depreciationPeriod
+  }
+  return value
+}
+
+export const getBegesEmissionTotal = (emissionSource: EmissionSource, emissionFactor: EmissionFactor) => {
+  const value = getBegesEmissionValue(emissionSource)
+  return getBegesLine(value, emissionFactor).total
+}
+
+const getBegesLine = (value: number, emissionFactor: EmissionFactor): Omit<BegesLine, 'rule' | 'uncertainty'> => {
   const ch4 = emissionFactor.ch4f || 0
   const n2o = emissionFactor.n2o || 0
   const other =
     (emissionFactor.otherGES || 0) + (emissionFactor.pfc || 0) + (emissionFactor.hfc || 0) + (emissionFactor.sf6 || 0)
-  const total = ch4 + n2o + other
-  const co2 = (emissionFactor.totalCo2 || 0) - total
+  const totalOtherGas = ch4 + n2o + other
+
+  // co2f is not always available
+  const co2 = (emissionFactor.totalCo2 || 0) - totalOtherGas
   const co2b = emissionFactor.co2b || 0
 
   return {
@@ -121,7 +141,7 @@ const getBegesLine = (
     ch4: value * ch4,
     n2o: value * n2o,
     other: value * other,
-    total: value * (total + co2),
+    total: value * (totalOtherGas + co2),
     co2b: value * co2b,
   }
 }
@@ -177,10 +197,7 @@ export const computeBegesResult = (
 
       const id = emissionSource.emissionFactor.id
       const caracterisation = emissionSource.caracterisation
-      let value = emissionSource.value
-      if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && emissionSource.depreciationPeriod) {
-        value = value / emissionSource.depreciationPeriod
-      }
+      const value = getBegesEmissionValue(emissionSource)
 
       const emissionFactor = emissionFactorsWithParts.find(
         (emissionFactorsWithParts) => emissionFactorsWithParts.id === id,

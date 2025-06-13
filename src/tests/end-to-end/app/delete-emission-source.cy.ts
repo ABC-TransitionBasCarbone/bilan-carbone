@@ -7,7 +7,7 @@ describe('Delete emission source', () => {
     cy.login()
 
     cy.visit('/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccc779/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres')
-    cy.getByTestId('subpost').first().click()
+    cy.getByTestId('subpost').first().click({ force: true })
 
     cy.getByTestId('new-emission-source').first().type('My temp emission source{enter}')
 

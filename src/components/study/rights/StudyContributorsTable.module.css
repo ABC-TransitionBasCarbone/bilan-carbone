@@ -1,0 +1,48 @@
+.container {
+  overflow-x: auto;
+}
+
+.header {
+  text-align: left;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid var(--neutral-300);
+}
+
+.headerWidth {
+  width: 30%;
+}
+
+.parentRow {
+  background-color: var(--background-100);
+}
+
+.childRow {
+  background-color: white;
+}
+
+.parentCell {
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid var(--neutral-200);
+  vertical-align: middle;
+}
+
+.childCell {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--neutral-200);
+  vertical-align: middle;
+}
+
+.expandable {
+  cursor: pointer;
+  width: 100%;
+}
+
+.iconButton {
+  padding: 0.25rem;
+  margin-right: 0.5rem;
+}
+
+.childRowContent {
+  padding-left: 2.5rem;
+  color: var(--neutral-600);
+}

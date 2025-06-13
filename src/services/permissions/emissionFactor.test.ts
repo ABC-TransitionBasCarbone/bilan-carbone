@@ -40,13 +40,13 @@ describe('EmissionFactor permissions service', () => {
 
   describe('canEditEmissionFactor', () => {
     it('User from same organization should be able to edit emission factor', async () => {
-      mockIsFromEmissionFactorOrganization.mockResolvedValue(true)
+      mockIsFromEmissionFactorOrganization.mockResolvedValue({ success: true, data: true })
       const result = await canEditEmissionFactor('mocked-id')
       expect(result).toBe(true)
     })
 
     it('User from other organization should not be able to edit emission factor', async () => {
-      mockIsFromEmissionFactorOrganization.mockResolvedValue(false)
+      mockIsFromEmissionFactorOrganization.mockResolvedValue({ success: true, data: false })
       const result = await canEditEmissionFactor('mocked-id')
       expect(result).toBe(false)
     })

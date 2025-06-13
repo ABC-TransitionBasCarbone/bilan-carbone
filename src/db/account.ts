@@ -4,7 +4,10 @@ import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
 import { OrganizationVersionWithOrganizationSelect } from './organization'
 
-export type AccountWithUser = Account & { user: User; organizationVersion: { organizationId: string } }
+export type AccountWithUser = Account & {
+  user: User
+  organizationVersion: { organizationId: string; environment: Environment }
+}
 
 export const AccountWithUserSelect = {
   id: true,
@@ -13,11 +16,13 @@ export const AccountWithUserSelect = {
   userId: true,
   importedFileDate: true,
   deactivatableFeatureStatus: true,
+  environment: true,
   organizationVersionId: true,
   organizationVersion: {
     select: {
       id: true,
       organizationId: true,
+      environment: true,
     },
   },
   role: true,
@@ -35,6 +40,7 @@ export const AccountWithUserSelect = {
       status: true,
       source: true,
       formationFormStartTime: true,
+      feedbackDate: true,
     },
   },
 }
@@ -88,7 +94,7 @@ export const getAccountOrganizationVersions = async (accountId: string) => {
 
 export const getAccountByEmailAndEnvironment = (email: string, environment: Environment) => {
   return prismaClient.account.findFirst({
-    where: { user: { email }, organizationVersion: { environment } },
+    where: { user: { email }, environment },
     select: AccountWithUserSelect,
   })
 }
@@ -104,3 +110,12 @@ export const addAccount = (account: Prisma.AccountCreateInput & { role: Exclude<
     data: account,
     select: AccountWithUserSelect,
   })
+
+export const getAccountsUserLevel = (ids: string[]) =>
+  prismaClient.account.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, user: { select: { level: true } } },
+  })
+
+export const getAccountsFromUser = (user: UserSession) =>
+  prismaClient.account.findMany({ where: { userId: user.userId } })

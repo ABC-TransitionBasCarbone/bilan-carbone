@@ -1,32 +1,33 @@
 'use client'
 
 import { switchEnvironment } from '@/i18n/environment'
-import { CUT, Environment, useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { usePathname, useRouter } from 'next/navigation'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { CircularProgress } from '@mui/material'
+import { UserSession } from 'next-auth'
 import { useEffect } from 'react'
+import styles from './EnvironmentInitializer.module.css'
 
-const RESTRICTED_ROUTES: Partial<Record<Environment, string[]>> = {
-  [CUT]: ['/parametres', '/facteurs-d-emission', '/formation'],
-}
-
-const EnvironmentInitializer = () => {
-  const { environment } = useAppEnvironmentStore()
-  const router = useRouter()
-  const pathname = usePathname()
+const EnvironmentInitializer = ({ user }: { user: UserSession }) => {
+  const { setEnvironment, setIsLoading, isLoading } = useAppEnvironmentStore()
 
   useEffect(() => {
-    switchEnvironment(environment)
-  }, [environment])
-
-  useEffect(() => {
-    const restrictedRoutes = RESTRICTED_ROUTES[environment] || []
-    const isRestricted = restrictedRoutes.some((route) => pathname.startsWith(route))
-    if (isRestricted) {
-      router.push('/')
+    if (!user || !user.environment) {
+      return
     }
-  }, [environment, pathname])
+    setEnvironment(user.environment)
+    switchEnvironment(user.environment)
+    setIsLoading(false)
+  }, [user?.environment])
 
-  return <></>
+  if (isLoading) {
+    return (
+      <div className={styles.loading}>
+        <CircularProgress variant="indeterminate" color="primary" size={200} />
+      </div>
+    )
+  }
+
+  return null
 }
 
 export default EnvironmentInitializer

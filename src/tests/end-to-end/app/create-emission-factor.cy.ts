@@ -9,9 +9,10 @@ describe('Create emission factor', () => {
 
   it('should create an emission factor with total CO2 on your organization', () => {
     cy.login()
-    cy.visit('/facteurs-d-emission')
 
-    cy.getByTestId('new-emission').click()
+    cy.getByTestId('navbar-facteur-demission').click({ force: true })
+
+    cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new FE')
     cy.getByTestId('emission-factor-unit').click()
@@ -41,14 +42,14 @@ describe('Create emission factor', () => {
 
     cy.logout()
     cy.login('bc-collaborator-2@yopmail.com', 'password-2')
-    cy.visit('/facteurs-d-emission')
+    cy.getByTestId('navbar-facteur-demission').click()
   })
 
   it('should create an emission factor with detailed CO2 on your organization', () => {
     cy.login()
-    cy.visit('/facteurs-d-emission')
+    cy.getByTestId('navbar-facteur-demission').click()
 
-    cy.getByTestId('new-emission').click()
+    cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new detailed FE')
 
@@ -116,9 +117,9 @@ describe('Create emission factor', () => {
 
   it('should create an emission factor with total CO2 and multiple parts on your organization', () => {
     cy.login()
-    cy.visit('/facteurs-d-emission')
+    cy.getByTestId('navbar-facteur-demission').click()
 
-    cy.getByTestId('new-emission').click()
+    cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new multiple FE')
     cy.getByTestId('emission-factor-unit').click()
@@ -189,9 +190,9 @@ describe('Create emission factor', () => {
 
   it('should create an emission factor with detailed CO2 and multiple parts on your organization', () => {
     cy.login()
-    cy.visit('/facteurs-d-emission')
+    cy.getByTestId('navbar-facteur-demission').click()
 
-    cy.getByTestId('new-emission').click()
+    cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new multiple detailed FE')
     cy.getByTestId('emission-factor-unit').click()
@@ -287,9 +288,9 @@ describe('Create emission factor', () => {
 
   it('should render emission parts in accordions', () => {
     cy.login()
-    cy.visit('/facteurs-d-emission')
+    cy.getByTestId('navbar-facteur-demission').click()
 
-    cy.getByTestId('new-emission').click()
+    cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-part-0-header').should('not.exist')
     cy.getByTestId('emission-factor-totalCo2').within(() => {
@@ -359,9 +360,9 @@ describe('Create emission factor', () => {
 
   it('should not delete parts from form when switch off detailed ges', () => {
     cy.login()
-    cy.visit('/facteurs-d-emission')
+    cy.getByTestId('navbar-facteur-demission').click()
 
-    cy.getByTestId('new-emission').click()
+    cy.getByTestId('new-emission').click({ force: true })
 
     cy.getByTestId('emission-factor-name').type('My new FE without parts')
     cy.getByTestId('emission-factor-unit').click()

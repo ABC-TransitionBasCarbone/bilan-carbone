@@ -1,6 +1,7 @@
 'use client'
 
 import { TeamMember } from '@/db/account'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -15,6 +16,7 @@ interface Props {
 
 const PendingInvitationsActions = ({ member }: Props) => {
   const t = useTranslations('team')
+  const { callServerFunction } = useServerFunction()
   const [sending, setSending] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
@@ -24,11 +26,12 @@ const PendingInvitationsActions = ({ member }: Props) => {
         loading={sending}
         onClick={async () => {
           setSending(true)
-          const result = await resendInvitation(member.user.email)
+          await callServerFunction(() => resendInvitation(member.user.email), {
+            onSuccess: () => {
+              router.refresh()
+            },
+          })
           setSending(false)
-          if (!result) {
-            router.refresh()
-          }
         }}
       >
         {t('resend')}
@@ -38,11 +41,12 @@ const PendingInvitationsActions = ({ member }: Props) => {
         loading={deleting}
         onClick={async () => {
           setDeleting(true)
-          const result = await deleteMember(member.user.email)
+          await callServerFunction(() => deleteMember(member.user.email), {
+            onSuccess: () => {
+              router.refresh()
+            },
+          })
           setDeleting(false)
-          if (!result) {
-            router.refresh()
-          }
         }}
       >
         {t('delete')}

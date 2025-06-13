@@ -41,7 +41,7 @@ model Account {
 
   organizationVersion           OrganizationVersion?  @relation(fields: [organizationVersionId], references: [id])
   onboardedOrganizationVersions OrganizationVersion[] @relation("organizationVersionOnboarder")
-  organizationVersionId         String?               @map("organizationVersion_id")
+  organizationVersionId         String?               @map("organization_version_id")
 
   deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
 
@@ -54,7 +54,9 @@ model Account {
   flows                      Document[]
   userApplicationSettings    UserApplicationSettings?
 
-  @@unique([userId, organizationVersionId])
+  environment Environment
+
+  @@unique([userId, environment])
   @@map("accounts")
 }
 
@@ -72,14 +74,17 @@ model User {
 
   formationFormStartTime DateTime? @map("formation_form_start_time")
 
+  feedbackDate DateTime? @map("feedback_date")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   @@map("users")
 }
 
 model UserApplicationSettings {
   id                           String     @id @default(uuid())
-  accountId                    String?     @unique @map("account_id")
+  accountId                    String?    @unique @map("account_id")
   account                      Account?   @relation(fields: [accountId], references: [id])
   validatedEmissionSourcesOnly Boolean    @default(true) @map("validated_emission_sources_only")
   caUnit                       SiteCAUnit @default(K) @map("ca_unit")

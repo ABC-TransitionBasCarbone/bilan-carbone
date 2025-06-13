@@ -1,6 +1,7 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
+import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma } from '@prisma/client'
 import { v4 } from 'uuid'
 import { EmissionFactorsWorkSheet } from './oldBCWorkSheetsReader'
@@ -49,6 +50,9 @@ export const uploadEmissionFactors = async (
         location: `${getStringValue(row.NOM_PAYS)} ${getStringValue(row.NOM_REGION)} ${getStringValue(row.NOM_DEPARTEMENT)}`,
       })
 
+      const unit = unitsMatrix[getStringValue(row.Unité_Nom)]
+      const isMonetary = isMonetaryEmissionFactor({ unit, customUnit: '', isMonetary: false })
+
       return {
         id,
         organizationId: organizationVersion.organizationId,
@@ -60,7 +64,8 @@ export const uploadEmissionFactors = async (
         geographicRepresentativeness: getEmissionQuality(row.Incertitude as number),
         temporalRepresentativeness: getEmissionQuality(row.Incertitude as number),
         completeness: getEmissionQuality(row.Incertitude as number),
-        unit: unitsMatrix[getStringValue(row.Unité_Nom)],
+        unit,
+        isMonetary,
         totalCo2: row.Total_CO2e as number,
         co2f: row.CO2f as number,
         ch4f: row.CH4f as number,

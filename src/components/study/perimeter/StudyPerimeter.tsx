@@ -10,6 +10,7 @@ import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   changeStudyDates,
   changeStudyExports,
@@ -25,11 +26,10 @@ import {
   StudyExportsCommand,
   StudyExportsCommandValidation,
 } from '@/services/serverFunctions/study.command'
-import { CUT } from '@/store/AppEnvironment'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { hasEditionRights } from '@/utils/study'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ControlMode, Export, SiteCAUnit, StudyRole } from '@prisma/client'
+import { ControlMode, Environment, Export, SiteCAUnit, StudyRole } from '@prisma/client'
 import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -58,9 +58,9 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
   const [exportsValues, setExportsValues] = useState<Record<Export, ControlMode | false> | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
   const [deleting, setDeleting] = useState(0)
-  const [error, setError] = useState<string | null>(null)
   const hasEditionRole = useMemo(() => hasEditionRights(userRoleOnStudy), [userRoleOnStudy])
   const router = useRouter()
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<ChangeStudyDatesCommand>({
     resolver: zodResolver(ChangeStudyDatesCommandValidation),
@@ -106,7 +106,13 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
                 postalCode: existingStudySite.site.postalCode ?? '',
                 city: existingStudySite.site.city ?? '',
               }
-            : { ...site, selected: false, postalCode: site.postalCode ?? '', city: site.city ?? '' }
+            : {
+                ...site,
+                selected: false,
+                postalCode: site.postalCode ?? '',
+                city: site.city ?? '',
+                cncId: site.cncId ?? '',
+              }
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
@@ -138,7 +144,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
       return !site.selected && study.sites.some((studySite) => studySite.site.id === site.id)
     })
     const hasActivity = await hasActivityData(study.id, deletedSites, organizationVersion.id)
-    if (hasActivity) {
+    if (hasActivity.success && hasActivity.data) {
       setOpen(true)
       setDeleting(deletedSites.length)
     } else {
@@ -149,13 +155,12 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
   const updateStudySites = async () => {
     setOpen(false)
 
-    const result = await changeStudySites(study.id, siteForm.getValues())
-    if (result) {
-      setError(result)
-    } else {
-      router.refresh()
-      setIsEditing(false)
-    }
+    await callServerFunction(() => changeStudySites(study.id, siteForm.getValues()), {
+      onSuccess: () => {
+        router.refresh()
+        setIsEditing(false)
+      },
+    })
   }
 
   const [startDate, endDate, realizationStartDate, realizationEndDate] = form.watch([
@@ -260,7 +265,7 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
       )}
       <DynamicComponent
         environmentComponents={{
-          [CUT]: (
+          [Environment.CUT]: (
             <SitesCut
               sites={
                 isEditing
@@ -274,7 +279,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
                     }))
               }
               form={isEditing ? siteForm : undefined}
-              caUnit={caUnit}
               withSelection
             />
           ),
@@ -321,7 +325,6 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
           <p className="mb-2">{tGlossary(`${glossary}Description`)}</p>
         </GlossaryModal>
       )}
-      {error && <p>{error}</p>}
     </>
   )
 }

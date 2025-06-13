@@ -1,10 +1,10 @@
 'use server'
 
 import { getAccountById } from '@/db/account'
-import { prismaClient } from '@/db/client'
 import {
   createEmissionFactorWithParts,
   deleteEmissionFactorAndDependencies,
+  findEmissionFactorByImportedId,
   getAllEmissionFactors,
   getAllEmissionFactorsByIds,
   getEmissionFactorById,
@@ -18,8 +18,9 @@ import { getLocale } from '@/i18n/locale'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
+import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
-import { auth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
 import { canReadStudy } from '../permissions/study'
@@ -27,58 +28,33 @@ import { getStudyParentOrganizationVersionId } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
-export const getEmissionFactors = async (studyId?: string) => {
-  const session = await auth()
-  if (!session || !session.user) {
-    return []
-  }
-
-  const locale = await getLocale()
-  let emissionFactors
-  if (studyId) {
-    if (!(await canReadStudy(session.user, studyId))) {
-      return []
-    }
-    const organizationVersionId = await getStudyParentOrganizationVersionId(studyId, session.user.organizationVersionId)
-    const organizationVersion = await getOrganizationVersionById(organizationVersionId)
-    if (!organizationVersion) {
-      return []
-    }
-    const emissionFactorOrganizationId = organizationVersion.organizationId
-    emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId)
-  } else {
-    const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-    if (!organizationVersion) {
-      return []
-    }
-    emissionFactors = await getAllEmissionFactors(organizationVersion.organizationId)
-  }
-
-  return emissionFactors
-    .map((emissionFactor) => ({
-      ...emissionFactor,
-      metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
-    }))
-    .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
-}
-export type EmissionFactorWithMetaData = AsyncReturnType<typeof getEmissionFactors>[0]
-
-export const getEmissionFactorsByIds = async (ids: string[], studyId: string) => {
-  try {
-    const locale = await getLocale()
-
+export const getEmissionFactors = async (studyId?: string, withCut: boolean = false) =>
+  withServerResponse('getEmissionFactors', async () => {
     const session = await auth()
-
-    if (!session || !session.user.organizationVersionId || !(await canReadStudy(session.user, studyId))) {
+    if (!session || !session.user) {
       return []
     }
 
-    const emissionFactorOrganization = (await getStudyParentOrganizationVersionId(
-      studyId,
-      session.user.organizationVersionId,
-    )) as string
-
-    const emissionFactors = await getAllEmissionFactorsByIds(ids, emissionFactorOrganization)
+    const locale = await getLocale()
+    let emissionFactors
+    if (studyId) {
+      if (!(await canReadStudy(session.user, studyId))) {
+        return []
+      }
+      const organizationVersionId = await getStudyParentOrganizationVersionId(
+        studyId,
+        session.user.organizationVersionId,
+      )
+      const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+      if (!organizationVersion) {
+        return []
+      }
+      const emissionFactorOrganizationId = organizationVersion.organizationId
+      emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId, withCut)
+    } else {
+      const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+      emissionFactors = await getAllEmissionFactors(organizationVersion?.organizationId || null, undefined, withCut)
+    }
 
     return emissionFactors
       .map((emissionFactor) => ({
@@ -86,35 +62,64 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
         metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
       }))
       .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
-  } catch {
-    return []
-  }
-}
+  })
+export type EmissionFactorWithMetaData = IsSuccess<AsyncReturnType<typeof getEmissionFactors>>[number]
 
-export const getDetailedEmissionFactor = async (id: string) => {
-  const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorDetailsById(id)])
+export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
+  withServerResponse('getEmissionFactorsByIds', async () => {
+    try {
+      const locale = await getLocale()
 
-  if (!emissionFactor || !session) {
-    return null
-  }
+      const session = await auth()
 
-  const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+      if (!session || !session.user.organizationVersionId || !(await canReadStudy(session.user, studyId))) {
+        return []
+      }
 
-  if (!emissionFactor.organizationId || emissionFactor.organizationId !== organizationVersion?.organizationId) {
-    return null
-  }
+      const emissionFactorOrganization = (await getStudyParentOrganizationVersionId(
+        studyId,
+        session.user.organizationVersionId,
+      )) as string
 
-  return emissionFactor
-}
+      const emissionFactors = await getAllEmissionFactorsByIds(ids, emissionFactorOrganization)
 
-export const isFromEmissionFactorOrganization = async (id: string) => {
-  const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorById(id)])
+      return emissionFactors
+        .map((emissionFactor) => ({
+          ...emissionFactor,
+          metaData: emissionFactor.metaData.find((metadata) => metadata.language === locale),
+        }))
+        .sort((a, b) => sortAlphabetically(a?.metaData?.title, b?.metaData?.title))
+    } catch {
+      return []
+    }
+  })
 
-  if (!emissionFactor || !session || !session.user) {
-    return false
-  }
-  return emissionFactor.organizationId === session.user.organizationId
-}
+export const getDetailedEmissionFactor = async (id: string) =>
+  withServerResponse('getDetailedEmissionFactor', async () => {
+    const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorDetailsById(id)])
+
+    if (!emissionFactor || !session) {
+      return null
+    }
+
+    const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+
+    if (!emissionFactor.organizationId || emissionFactor.organizationId !== organizationVersion?.organizationId) {
+      return null
+    }
+
+    return emissionFactor
+  })
+
+export const isFromEmissionFactorOrganization = async (id: string) =>
+  withServerResponse('isFromEmissionFactorOrganization', async () => {
+    const [session, emissionFactor] = await Promise.all([dbActualizedAuth(), getEmissionFactorById(id)])
+
+    if (!emissionFactor || !session || !session.user) {
+      return false
+    }
+    return emissionFactor.organizationId === session.user.organizationId
+  })
 
 export const createEmissionFactorCommand = async ({
   name,
@@ -124,75 +129,65 @@ export const createEmissionFactorCommand = async ({
   parts,
   subPosts,
   ...command
-}: EmissionFactorCommand) => {
-  const session = await auth()
-  const local = await getLocale()
-  if (!session || !session.user) {
-    return NOT_AUTHORIZED
-  }
+}: EmissionFactorCommand) =>
+  withServerResponse('createEmissionFactorCommand', async () => {
+    const session = await auth()
+    const local = await getLocale()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const account = await getAccountById(session.user.accountId)
+    const account = await getAccountById(session.user.accountId)
 
-  if (!account || !account.organizationVersionId) {
-    return NOT_AUTHORIZED
-  }
+    if (!account || !account.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  if (!canCreateEmissionFactor()) {
-    return NOT_AUTHORIZED
-  }
+    if (!canCreateEmissionFactor()) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  await createEmissionFactorWithParts(
-    {
-      ...command,
-      importedFrom: Import.Manual,
-      status: EmissionFactorStatus.Valid,
-      organization: { connect: { id: account.organizationVersion?.organizationId } },
-      unit: unit as Unit,
-      subPosts: flattenSubposts(subPosts),
-      metaData: { create: { language: local, title: name, attribute, comment } },
-    },
-    parts,
-    local,
-  )
-}
+    await createEmissionFactorWithParts(
+      {
+        ...command,
+        importedFrom: Import.Manual,
+        status: EmissionFactorStatus.Valid,
+        organization: { connect: { id: account.organizationVersion?.organizationId } },
+        unit: unit as Unit,
+        subPosts: flattenSubposts(subPosts),
+        metaData: { create: { language: local, title: name, attribute, comment } },
+      },
+      parts,
+      local,
+    )
+  })
 
-export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorCommand) => {
-  if (!isFromEmissionFactorOrganization(command.id)) {
-    return NOT_AUTHORIZED
-  }
+export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorCommand) =>
+  withServerResponse('updateEmissionFactorCommand', async () => {
+    if (!isFromEmissionFactorOrganization(command.id)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  const [session, local] = await Promise.all([auth(), getLocale()])
+    const [session, local] = await Promise.all([auth(), getLocale()])
 
-  if (!session) {
-    return NOT_AUTHORIZED
-  }
+    if (!session) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  await updateEmissionFactor(session, local, command)
-}
+    await updateEmissionFactor(session, local, command)
+  })
 
-export const deleteEmissionFactor = async (id: string) => {
-  if (!isFromEmissionFactorOrganization(id)) {
-    return NOT_AUTHORIZED
-  }
+export const deleteEmissionFactor = async (id: string) =>
+  withServerResponse('deleteEmissionFactor', async () => {
+    if (!isFromEmissionFactorOrganization(id)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
 
-  await deleteEmissionFactorAndDependencies(id)
-}
+    await deleteEmissionFactorAndDependencies(id)
+  })
 
 export const getEmissionFactorByImportedId = async (id: string) =>
-  prismaClient.emissionFactor.findFirst({
-    where: {
-      importedId: id,
-    },
-    select: {
-      id: true,
-      versionId: true,
-      importedId: true,
-      unit: true,
-      customUnit: true,
-      version: { select: { id: true } },
-      metaData: true,
-    },
-  })
+  withServerResponse('getEmissionFactorByImportedId', async () => findEmissionFactorByImportedId(id))
 
 export const fixUnits = async () => {
   const units = Object.values(Unit).filter((unit) => !ManualEmissionFactorUnitList.includes(unit))

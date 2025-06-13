@@ -21,3 +21,6 @@ Comment bien tester ce ticket ?
 ## Stratégie technique
 
 Quelle strat technique adopter pour ce ticket ?
+
+- [ ] Ajout de tests unitaires
+- [ ] Ajout de tests cypress

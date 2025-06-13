@@ -4,6 +4,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { FormRadio } from '@/components/form/Radio'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyPublicStatus } from '@/services/serverFunctions/study'
 import {
   ChangeStudyPublicStatusCommand,
@@ -13,7 +14,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControlLabel, Radio } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface Props {
@@ -25,8 +27,9 @@ interface Props {
 const StudyPublicStatus = ({ study, disabled }: Props) => {
   const tForm = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
-  const [error, setError] = useState('')
   const [glossary, setGlossary] = useState('')
+  const { callServerFunction } = useServerFunction()
+  const router = useRouter()
 
   const form = useForm<ChangeStudyPublicStatusCommand>({
     resolver: zodResolver(ChangeStudyPublicStatusCommandValidation),
@@ -40,18 +43,22 @@ const StudyPublicStatus = ({ study, disabled }: Props) => {
 
   const isPublic = form.watch('isPublic')
 
-  const onSubmit = async (command: ChangeStudyPublicStatusCommand) => {
-    const result = await changeStudyPublicStatus(command)
-    if (result) {
-      setError(result)
-    }
-  }
+  const onSubmit = useCallback(
+    async (command: ChangeStudyPublicStatusCommand) => {
+      await callServerFunction(() => changeStudyPublicStatus(command), {
+        onSuccess: () => {
+          router.refresh()
+        },
+      })
+    },
+    [callServerFunction, router],
+  )
 
   useEffect(() => {
     if (isPublic !== study.isPublic.toString()) {
       onSubmit(form.getValues())
     }
-  }, [isPublic, study, form])
+  }, [isPublic, study.isPublic, form])
 
   return (
     <div className="grow">
@@ -70,7 +77,6 @@ const StudyPublicStatus = ({ study, disabled }: Props) => {
       <GlossaryModal label="study-status" glossary={glossary} onClose={() => setGlossary('')} t={tGlossary}>
         <span>{tGlossary('visibilityDescription')}</span>
       </GlossaryModal>
-      {error && <p>{error}</p>}
     </div>
   )
 }

@@ -1,9 +1,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
-import { BASE, Environment } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
+import { isCAS, STUDY_UNIT_VALUES } from '@/utils/study'
+import { Environment, Export, ExportRule, Level, StudyResultUnit, SubPost } from '@prisma/client'
 import dayjs from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { canBeValidated, getEmissionSourcesTotalCo2, getStandardDeviation } from './emissionSource'
@@ -91,7 +90,7 @@ const getEmissionSourcesRows = (
   tResultUnits: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
 ) => {
-  const initCols = []
+  const initCols = ['site']
   if (type === 'Post') {
     initCols.push('subPost')
   } else if (type === 'Study') {
@@ -104,6 +103,9 @@ const getEmissionSourcesRows = (
       'sourceName',
       'sourceCharacterization',
       'sourceValue',
+      'sourceDeprecation',
+      'sourceSurface',
+      'sourceDuration',
       'sourceUnit',
       'sourceQuality',
       'activityDataValue',
@@ -123,7 +125,7 @@ const getEmissionSourcesRows = (
     .sort((a, b) => a.subPost.localeCompare(b.subPost))
     .map((emissionSource) => {
       const emissionFactor = emissionFactors.find((factor) => factor.id === emissionSource.emissionFactor?.id)
-      const initCols: (string | number)[] = []
+      const initCols: (string | number)[] = [emissionSource.studySite.site.name]
       if (type === 'Post') {
         initCols.push(tPost(emissionSource.subPost))
       } else if (type === 'Study') {
@@ -135,13 +137,19 @@ const getEmissionSourcesRows = (
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
 
+      const withDeprecation = subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)
+
       return initCols
         .concat([
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
           ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) /
-            STUDY_UNIT_VALUES[resultsUnit] || '0',
+            STUDY_UNIT_VALUES[resultsUnit] /
+            (withDeprecation ? emissionSource.depreciationPeriod || 1 : 1) || '0',
+          withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
+          isCAS(emissionSource) ? emissionSource.hectare || '1' : ' ',
+          isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
           emissionSource.value || '0',
@@ -205,7 +213,7 @@ const getEmissionSourcesCSVContent = (
     type,
   )
 
-  const emptyFieldsCount = type === 'Study' ? 3 : type === 'Post' ? 2 : 1
+  const emptyFieldsCount = type === 'Study' ? 4 : type === 'Post' ? 3 : 2
   const emptyFields = (count: number) => Array(count).fill('')
 
   const totalEmissions = getEmissionSourcesTotalCo2(emissionSources) / STUDY_UNIT_VALUES[resultsUnit]
@@ -241,12 +249,12 @@ export const downloadStudyPost = async (
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
 
-  const emissionFactors = await getEmissionFactorsByIds(emissionFactorIds, study.id)
+  const emissionFactorsData = await getEmissionFactorsByIds(emissionFactorIds, study.id)
 
   const fileName = getFileName(study, post)
   const csvContent = getEmissionSourcesCSVContent(
     emissionSources,
-    emissionFactors,
+    emissionFactorsData.success ? emissionFactorsData.data : [],
     study.resultsUnit,
     t,
     tCaracterisations,
@@ -275,12 +283,12 @@ export const downloadStudyEmissionSources = async (
     .map((emissionSource) => emissionSource.emissionFactor?.id)
     .filter((emissionFactorId) => emissionFactorId !== undefined)
 
-  const emissionFactors = await getEmissionFactorsByIds(emissionFactorIds, study.id)
+  const emissionFactorsData = await getEmissionFactorsByIds(emissionFactorIds, study.id)
 
   const fileName = getFileName(study)
   const csvContent = getEmissionSourcesCSVContent(
     emissionSources,
-    emissionFactors,
+    emissionFactorsData.success ? emissionFactorsData.data : [],
     study.resultsUnit,
     t,
     tCaracterisations,
@@ -303,7 +311,7 @@ export const formatConsolidatedStudyResultsForExport = (
   tQuality: ReturnType<typeof useTranslations>,
   tUnits: ReturnType<typeof useTranslations>,
   validatedEmissionSourcesOnly?: boolean,
-  environment: Environment = BASE,
+  environment: Environment = Environment.BC,
 ) => {
   const dataForExport = []
 
@@ -444,7 +452,7 @@ export const downloadStudyResults = async (
   tQuality: ReturnType<typeof useTranslations>,
   tBeges: ReturnType<typeof useTranslations>,
   tUnits: ReturnType<typeof useTranslations>,
-  environment: Environment = BASE,
+  environment: Environment = Environment.BC,
 ) => {
   const data = []
 
@@ -453,7 +461,10 @@ export const downloadStudyResults = async (
     ...study.sites.map((s) => ({ name: s.site.name, id: s.id })),
   ]
 
-  const validatedEmissionSourcesOnly = (await getUserSettings())?.validatedEmissionSourcesOnly
+  const userSettings = await getUserSettings()
+  const validatedEmissionSourcesOnly = userSettings.success
+    ? userSettings.data?.validatedEmissionSourcesOnly
+    : undefined
 
   data.push(
     formatConsolidatedStudyResultsForExport(

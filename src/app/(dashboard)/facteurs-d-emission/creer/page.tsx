@@ -1,6 +1,7 @@
 import withAuth from '@/components/hoc/withAuth'
 import NewEmissionFactorPage from '@/components/pages/NewEmissionFactor'
 import NotFound from '@/components/pages/NotFound'
+import { hasAccessToEmissionFactor } from '@/services/permissions/environment'
 import { UserSession } from 'next-auth'
 
 interface Props {
@@ -8,7 +9,7 @@ interface Props {
 }
 
 const NewEmissionFactor = async ({ user }: Props) => {
-  if (!user.organizationVersionId) {
+  if (!user.organizationVersionId || !hasAccessToEmissionFactor(user.environment)) {
     return <NotFound />
   }
   return <NewEmissionFactorPage />

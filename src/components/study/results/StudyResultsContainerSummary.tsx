@@ -2,7 +2,7 @@
 
 import Box from '@/components/base/Box'
 import HelpIcon from '@/components/base/HelpIcon'
-import LinkButton from '@/components/base/LinkButton'
+import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
@@ -10,12 +10,14 @@ import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import SpaIcon from '@mui/icons-material/Spa'
+import { Button } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import StudyName from '../card/StudyName'
 import Result from './Result'
 import styles from './ResultsContainer.module.css'
 
@@ -31,7 +33,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
-  const [glossaryOpen, setGlossaryOpen] = useState(false)
+  const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
 
   const allComputedResults = useMemo(
@@ -50,9 +52,10 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     [allComputedResults, withDep],
   )
 
-  const [withDepValue, withoutDepValue] = useMemo(() => {
+  const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, studySite, true, validatedOnly)
     const total = computedResults.find((result) => result.post === 'total')?.value || 0
+    const monetaryTotal = computedResults.find((result) => result.post === 'total')?.monetaryValue || 0
 
     const dependenciesSubPost = SubPost.UtilisationEnDependance
 
@@ -65,24 +68,33 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
         .find((result) => result.post === dependenciesPost)
         ?.subPosts.find((subPost) => subPost.post === dependenciesSubPost)?.value || 0
 
-    return [total, total - dependenciesValue].map((value) => formatNumber(value / STUDY_UNIT_VALUES[study.resultsUnit]))
+    const formatedTotal = formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])
+    const formatedDiff = formatNumber((total - dependenciesValue) / STUDY_UNIT_VALUES[study.resultsUnit])
+    const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
+
+    return [formatedTotal, formatedDiff, formatedMonetaryRatio]
   }, [study, studySite, validatedOnly])
 
   return (
     <>
       {withDependencies === undefined && showTitle && (
-        <div className="justify-between mb1">
-          <Link className={styles.studyNameLink} href={`/etudes/${study.id}`}>
-            <StudyName name={study.name} />
-          </Link>
-          <LinkButton href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</LinkButton>
+        <div className={`${styles.header} justify-between mb1`}>
+          <StyledChip
+            icon={<SpaIcon />}
+            color="success"
+            label={study.name}
+            component="a"
+            href={`/etudes/${study.id}`}
+            clickable
+          />
+          <Button variant="contained" color="secondary" href={`/etudes/${study.id}/comptabilisation/resultats`}>
+            {t('seeResults')}
+          </Button>
         </div>
       )}
+
       <div className={styles.container}>
-        <fieldset
-          className={classNames(styles.selector, 'grow justify-around')}
-          aria-label={t('results.withDependencies')}
-        >
+        <fieldset className={classNames(styles.selector, 'flex grow')} aria-label={t('results.withDependencies')}>
           <label>
             <input
               type="radio"
@@ -92,13 +104,17 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(true)}
               className={styles.hidden}
             />
-            <Box className={classNames(styles.card, 'flex-col flex-cc m2 px3', { [styles.selected]: withDep })}>
+            <Box selected={withDep} className={classNames(styles.card, 'flex-col flex-cc m2 px3')}>
               <h3 className="text-center">
                 {withDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="align-center text-center">
                 {t('results.withDependencies')}
-                <HelpIcon className="ml-4" onClick={() => setGlossaryOpen(!glossaryOpen)} label={t('information')} />
+                <HelpOutlineOutlinedIcon
+                  color="primary"
+                  className="ml-4"
+                  onClick={() => setGlossary('withDependencies')}
+                />
               </span>
             </Box>
           </label>
@@ -111,34 +127,54 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(false)}
               className={styles.hidden}
             />
-            <Box className={classNames(styles.card, 'flex-col flex-cc m2 px3', { [styles.selected]: !withDep })}>
+            <Box selected={!withDep} className={classNames(styles.card, 'flex-col flex-cc pointer')}>
               <h3 className="text-center">
                 {withoutDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="text-center">{t('results.withoutDependencies')}</span>
             </Box>
           </label>
+          <Box className={classNames(styles.card, styles.disabled, 'flex-col flex-cc')}>
+            <h3 className="text-center">{monetaryRatio} %</h3>
+            <span className="text-center align-center">
+              {t('results.monetaryRatio')}
+              <HelpIcon className="ml-4" onClick={() => setGlossary('monetaryRatio')} label={t('information')} />
+            </span>
+          </Box>
         </fieldset>
         <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
       </div>
       <GlossaryModal
-        glossary={glossaryOpen ? 'results.withDependencies' : ''}
-        onClose={() => setGlossaryOpen(false)}
-        label="withDependencies"
+        glossary={glossary ? `results.${glossary}` : ''}
+        onClose={() => setGlossary('')}
+        label="withDependestudy-results-glossary"
         t={t}
       >
         <span>
-          {t.rich('withDependencies', {
-            link: (children) => (
-              <Link
-                href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {children}
-              </Link>
-            ),
-          })}
+          {glossary && (
+            <>
+              {t.rich(`${glossary}Description`, {
+                link: (children) => (
+                  <Link
+                    href="https://www.bilancarbone-methode.com/annexes/annexes/annexe-1-grands-principes-de-comptabilisation-du-bilan-carbone-r#zoom-sur-les-sous-postes-utilisation-en-responsabilite-et-utilisation-en-dependance"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {children}
+                  </Link>
+                ),
+                monetaryLink: (children) => (
+                  <Link
+                    href="https://www.bilancarbone-methode.com/4-comptabilisation/4.3-methode-de-selection-des-facteurs-demission#fe-en-ratios-monetaires"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {children}
+                  </Link>
+                ),
+              })}
+            </>
+          )}
         </span>
       </GlossaryModal>
     </>

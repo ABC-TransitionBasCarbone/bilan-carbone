@@ -1,13 +1,14 @@
 'use client'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
-import { Drawer, IconButton } from '@mui/material'
+import { Drawer, Fab } from '@mui/material'
 import { OrganizationVersion, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from './Checklist.module.css'
 import ChecklistDrawer from './ChecklistDrawer'
 
@@ -20,6 +21,7 @@ interface Props {
 
 const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRole }: Props) => {
   const t = useTranslations('checklist')
+  const { callServerFunction } = useServerFunction()
   const [open, setOpen] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [checklist, setChecklist] = useState<UserChecklist[]>([])
@@ -27,6 +29,19 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
   const [fetchedCheckedSteps, setFetchedCheckedSteps] = useState(false)
   const searchParams = useSearchParams()
   const pathname = usePathname()
+
+  const getCheckList = useCallback(async () => {
+    await callServerFunction(() => getUserCheckedItems(), {
+      onSuccess: (checkList) => {
+        setFetchedCheckedSteps(true)
+        if (checkList.some((item) => item.step === UserChecklist.Completed)) {
+          setCompleted(true)
+        } else {
+          setChecklist(checkList.map((item) => item.step))
+        }
+      },
+    })
+  }, [callServerFunction])
 
   useEffect(() => {
     if (searchParams.get('fromLogin') !== null) {
@@ -39,21 +54,11 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
     if (pathname !== previousPath) {
       setOpen(false)
     }
-  }, [pathname])
+  }, [pathname, previousPath])
 
   useEffect(() => {
     getCheckList()
-  }, [open])
-
-  const getCheckList = async () => {
-    const checkList = await getUserCheckedItems()
-    setFetchedCheckedSteps(true)
-    if (checkList.some((item) => item.step === UserChecklist.Completed)) {
-      setCompleted(true)
-    } else {
-      setChecklist(checkList.map((item) => item.step))
-    }
-  }
+  }, [open, getCheckList])
 
   if (completed || !fetchedCheckedSteps) {
     return null
@@ -61,15 +66,15 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
 
   return (
     <div className={styles.checklistButton}>
-      <IconButton
+      <Fab
+        color="primary"
         data-testid="checklist-button"
-        className={styles.openDrawerButton}
         aria-label={t('title')}
         title={t('title')}
         onClick={() => setOpen(!open)}
       >
         <CheckCircleOutlineIcon />
-      </IconButton>
+      </Fab>
       <Drawer
         open={open}
         anchor="right"

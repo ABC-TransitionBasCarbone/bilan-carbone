@@ -1,6 +1,7 @@
+import { environmentsWithChecklist } from '@/constants/environments'
 import { signPassword } from '@/services/auth'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
-import { getAccountByEmailAndOrganizationVersionId } from './account'
+import { getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
@@ -25,6 +26,31 @@ export const getUserSourceById = (id: string) =>
 export const getUserById = (id: string) =>
   prismaClient.user.findUnique({ where: { id }, select: { firstName: true, lastName: true, email: true } })
 
+export const getUserWithAccountsAndOrganizationsById = (id: string) =>
+  prismaClient.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      accounts: {
+        select: {
+          id: true,
+          environment: true,
+          organizationVersion: {
+            select: {
+              id: true,
+              environment: true,
+              activatedLicence: true,
+              organization: { select: { id: true, name: true } },
+            },
+          },
+        },
+      },
+    },
+  })
+
 export const getAccountByIdWithAllowedStudies = (id: string) =>
   prismaClient.account.findUnique({ where: { id }, include: { allowedStudies: true, contributors: true } })
 
@@ -36,17 +62,22 @@ export const updateUserPasswordForEmail = async (email: string, password: string
     where: { email },
     data: { resetToken: null, password: signedPassword, status: UserStatus.ACTIVE },
   })
-  const accounts = await prismaClient.account.findMany({ where: { userId: user.id } })
+  const accounts = await prismaClient.account.findMany({
+    where: { userId: user.id, environment: { in: environmentsWithChecklist } },
+  })
 
-  await Promise.all(
-    accounts.map((account) =>
-      prismaClient.userCheckedStep.upsert({
-        where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
-        update: {},
-        create: { accountId: account.id, step: UserChecklist.CreateAccount },
-      }),
-    ),
-  )
+  if (accounts.length > 0) {
+    await Promise.all(
+      accounts.map((account) =>
+        prismaClient.userCheckedStep.upsert({
+          where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
+          update: {},
+          create: { accountId: account.id, step: UserChecklist.CreateAccount },
+        }),
+      ),
+    )
+  }
+
   return user
 }
 
@@ -143,3 +174,81 @@ export const getUserByIdWithAccounts = (id: string) =>
   prismaClient.user.findUnique({ where: { id }, include: { accounts: true } })
 
 export type UserWithAccounts = AsyncReturnType<typeof getUserByIdWithAccounts>
+
+export const getUserByEmail = (email: string) =>
+  prismaClient.user.findUnique({ where: { email }, include: { accounts: true } })
+
+export const updateUser = (
+  userId: string,
+  data: Partial<Prisma.UserCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
+) =>
+  prismaClient.user.update({
+    where: { id: userId },
+    data,
+  })
+
+export const createUsers = (users: Prisma.UserCreateManyInput[]) =>
+  prismaClient.user.createMany({ data: users, skipDuplicates: true })
+
+export const createUsersWithAccount = async (
+  users: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[],
+) => {
+  const newUsers = await prismaClient.user.createMany({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    data: users.map(({ account, ...user }) => user),
+    skipDuplicates: true,
+  })
+
+  const emails = users.map(({ email }) => email)
+
+  const createdUsers = await prismaClient.user.findMany({
+    where: { email: { in: emails } },
+  })
+
+  let newAccountCount = 0
+  for (const user of createdUsers) {
+    const originalUsers = users.filter((u) => u.email === user.email)
+    if (!originalUsers.length) {
+      throw new Error(`No account info for user ${user.email}`)
+    }
+
+    for (const originalUser of originalUsers) {
+      const accoutAlreadyExists = await getAccountByEmailAndEnvironment(user.email, originalUser.account.environment)
+      if (accoutAlreadyExists) {
+        continue
+      }
+      await prismaClient.account.create({
+        data: {
+          ...originalUser.account,
+          user: {
+            connect: { id: user.id },
+          },
+        },
+      })
+      newAccountCount++
+    }
+  }
+
+  return { newUsers, newAccounts: { count: newAccountCount } }
+}
+
+export const updateAccount = (
+  accountId: string,
+  data: Partial<Prisma.AccountUpdateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
+  userData: Partial<Prisma.UserUpdateInput>,
+) =>
+  prismaClient.account.update({
+    where: { id: accountId },
+    data: {
+      ...data,
+      user: { update: { ...userData } },
+    },
+  })
+
+export const resetUserFeedbackDate = async () => prismaClient.user.updateMany({ data: { feedbackDate: null } })
+
+export const getUserFeedbackDate = async (userId: string) =>
+  prismaClient.user.findUnique({ select: { feedbackDate: true }, where: { id: userId } })
+
+export const updateUserFeedbackDate = async (userId: string, feedbackDate: Date) =>
+  prismaClient.user.update({ where: { id: userId }, data: { feedbackDate } })

@@ -1,9 +1,7 @@
-import Button from '@/components/base/Button'
+'use client'
 import CloseIcon from '@mui/icons-material/Close'
-import { ButtonProps, Button as MUIButton, Modal as MUIModal, Typography } from '@mui/material'
+import { Button, ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
 import classNames from 'classnames'
-import { LinkProps } from 'next/link'
-import { AnchorHTMLAttributes } from 'react'
 import Box from '../base/Box'
 import LinkButton from '../base/LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from '../base/LoadingButton'
@@ -17,44 +15,60 @@ export interface Props {
   children: React.ReactNode
   className?: string
   big?: boolean
-  actions?: (
-    | (ButtonProps & { actionType: 'button' | 'submit'; 'data-testid'?: string })
-    | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton'; 'data-testid'?: string })
-    // No idea why i have to add data-testid here :/
-    | (LinkProps & AnchorHTMLAttributes<HTMLAnchorElement> & { actionType: 'link'; 'data-testid'?: string })
-  )[]
+  actions?: ModalAction[]
 }
+
+type ModalAction =
+  | (ButtonProps & { actionType?: 'button' | 'submit'; 'data-testid'?: string })
+  | (LoadingButtonProps & { actionType: 'loadingButton'; onClick: VoidFunction; 'data-testid'?: string })
+  | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 
 const Modal = ({ className, label, open, onClose, title, children, actions, big }: Props) => (
   <MUIModal
     open={open}
     onClose={onClose}
-    aria-labelledby={`${label}-modale-title`}
-    aria-describedby={`${label}-modale-description`}
+    aria-labelledby={`${label}-modal-title`}
+    aria-describedby={`${label}-modal-description`}
   >
     <Box className={classNames(styles.box, className, 'flex-col', { [styles.big]: big })}>
       <div className="justify-end">
-        <MUIButton className={styles.closeIcon} onClick={onClose}>
+        <IconButton color="primary" onClick={onClose}>
           <CloseIcon />
-        </MUIButton>
+        </IconButton>
       </div>
-      <Typography id={`${label}-modale-title`} variant="h6" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+
+      <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
         {title}
       </Typography>
-      <div className={classNames(styles.content, 'flex-col grow mb1')} id={`${label}-modale-description`}>
+
+      <div className={classNames(styles.content, 'flex-col grow mb1')} id={`${label}-modal-description`}>
         {children}
       </div>
-      {actions && (
+
+      {actions && actions?.length > 0 && (
         <div className={classNames(styles.actions, 'justify-end')}>
-          {actions.map(({ actionType, ...action }, index) =>
-            actionType === 'button' || actionType === 'submit' ? (
-              <Button key={index} type={actionType} {...(action as ButtonProps)} />
-            ) : actionType === 'loadingButton' ? (
-              <LoadingButton key={index} {...(action as LoadingButtonProps)} />
-            ) : (
-              <LinkButton key={index} {...(action as LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>)} />
-            ),
-          )}
+          {actions.map((action, index) => {
+            if (action.actionType === 'loadingButton') {
+              const { ...loadingProps } = action
+              return <LoadingButton key={index} color="secondary" {...loadingProps} />
+            }
+
+            if (action.actionType === 'link') {
+              const { ...linkProps } = action
+              return <LinkButton key={index} color="secondary" {...linkProps} />
+            }
+
+            const { actionType, ...buttonProps } = action
+            return (
+              <Button
+                key={index}
+                variant="contained"
+                color="secondary"
+                type={actionType === 'submit' ? 'submit' : 'button'}
+                {...buttonProps}
+              />
+            )
+          })}
         </div>
       )}
     </Box>

@@ -61,6 +61,7 @@ export const mockedDbFullStudySite = {
     name: 'Mocked Site',
     postalCode: null,
     city: null,
+    cncId: null,
   },
 }
 

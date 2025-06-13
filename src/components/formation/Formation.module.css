@@ -7,10 +7,3 @@
 .video {
   max-width: 100%;
 }
-
-.form {
-  height: 500px;
-  div {
-    height: 100%;
-  }
-}

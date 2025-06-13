@@ -1,20 +1,22 @@
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import { SvgIconProps } from '@mui/material'
 import classNames from 'classnames'
 import { MouseEventHandler } from 'react'
-import styles from './HelpIcon.module.css'
 
-interface Props {
+interface Props extends SvgIconProps {
   className?: string
   onClick: MouseEventHandler<SVGSVGElement>
   label: string
 }
 
-const HelpIcon = ({ className, onClick, label }: Props) => (
+const HelpIcon = ({ className, onClick, label, ...props }: Props) => (
   <HelpOutlineIcon
-    className={classNames(styles.helpIcon, className)}
+    color="primary"
+    className={classNames(className)}
     onClick={onClick}
     aria-label={label}
     titleAccess={label}
+    {...props}
   />
 )
 

@@ -8,14 +8,19 @@ export const SitesCommandValidation = z.object({
   sites: z.array(
     z.object({
       id: z.string(),
+      cncId: z.string().optional(),
       name: z
         .string({
           required_error: 'name',
         })
         .trim()
         .min(1, 'name'),
-      etp: z.number({ required_error: 'etp', invalid_type_error: 'etp' }).int('etp').min(0, { message: 'etp' }),
-      ca: z.number({ required_error: 'ca', invalid_type_error: 'ca' }).min(0, { message: 'ca' }),
+      etp: z
+        .number({ required_error: 'etp', invalid_type_error: 'etp' })
+        .int('etp')
+        .min(0, { message: 'etp' })
+        .optional(),
+      ca: z.number({ required_error: 'ca', invalid_type_error: 'ca' }).min(0, { message: 'ca' }).optional(),
       selected: z.boolean().optional(),
       postalCode: z.string().optional(),
       city: z.string().optional(),

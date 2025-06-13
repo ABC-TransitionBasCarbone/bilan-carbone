@@ -1,14 +1,17 @@
+import { environmentWithOnboarding } from '@/constants/environments'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { default as CUTLogosHome } from '@/environments/cut/home/LogosHome'
-import { CUT, getServerEnvironment } from '@/store/AppEnvironment'
+import { hasAccessToActualityCards } from '@/services/permissions/environment'
+import { displayFeedBackForm } from '@/services/serverFunctions/user'
 import { canEditMemberRole } from '@/utils/organization'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
 import StudiesContainer from '../study/StudiesContainer'
 import CRClientsList from './CRClientsList'
+import UserFeedback from './UserFeedback'
 import UserToValidate from './UserToValidate'
 
 interface Props {
@@ -16,10 +19,10 @@ interface Props {
 }
 
 const UserView = async ({ account }: Props) => {
-  const environment = getServerEnvironment()
-  const [organizationVersions, hasUserToValidate] = await Promise.all([
+  const [organizationVersions, hasUserToValidate, displayFeedback] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     hasAccountToValidateInOrganization(account.organizationVersionId),
+    displayFeedBackForm(),
   ])
 
   const userOrganizationVersion = organizationVersions.find(
@@ -45,11 +48,14 @@ const UserView = async ({ account }: Props) => {
       )}
       <StudiesContainer user={account} isCR={isCR} />
 
-      {environment !== CUT && <ActualitiesCards />}
-      <CUTLogosHome />
-      {userOrganizationVersion && !userOrganizationVersion.onboarded && (
-        <Onboarding user={account} organizationVersion={userOrganizationVersion} />
-      )}
+      {hasAccessToActualityCards(account.environment) && <ActualitiesCards />}
+      <CUTLogosHome user={account} />
+      {userOrganizationVersion &&
+        !userOrganizationVersion.onboarded &&
+        environmentWithOnboarding.includes(userOrganizationVersion.environment) && (
+          <Onboarding user={account} organizationVersion={userOrganizationVersion} />
+        )}
+      {displayFeedback.success && displayFeedback.data && <UserFeedback environment={account.environment} />}
     </>
   )
 }

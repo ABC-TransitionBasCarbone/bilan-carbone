@@ -5,6 +5,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteStudyMember } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import { Button } from '@mui/material'
@@ -34,6 +35,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const [memberToDelete, setToDelete] = useState<FullStudy['allowedUsers'][0] | undefined>(undefined)
   const [deleting, setDeleting] = useState(false)
+  const { callServerFunction } = useServerFunction()
 
   const router = useRouter()
 
@@ -94,14 +96,13 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
 
   const deleteMember = async (member: FullStudy['allowedUsers'][0]) => {
     setDeleting(true)
-    const result = await deleteStudyMember(member, study.id)
+    await callServerFunction(() => deleteStudyMember(member, study.id), {
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
     setDeleting(false)
     setToDelete(undefined)
-    if (result) {
-      setToast({ text: result, color: 'error' })
-    } else {
-      router.refresh()
-    }
   }
 
   return (
