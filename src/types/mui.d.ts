@@ -22,6 +22,9 @@ declare module '@mui/material/styles' {
         }
         text: CSSProperties
       }
+      publicContainer: {
+        background?: string
+      }
     }
   }
 

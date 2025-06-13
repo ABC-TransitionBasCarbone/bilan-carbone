@@ -7,14 +7,6 @@
   height: auto;
 }
 
-.container {
-  position: absolute;
-  width: 75%;
-  max-width: 62rem;
-  max-height: calc(100% - 2rem);
-  overflow-y: auto;
-}
-
 .loginForm {
   padding: 2rem;
   border: var(--border-dark);

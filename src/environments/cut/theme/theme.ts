@@ -144,6 +144,9 @@ const cutTheme = createTheme(base, {
         fontSize: '1rem',
       },
     },
+    publicContainer: {
+      background: '#E0FBE8',
+    },
   },
 })
 
