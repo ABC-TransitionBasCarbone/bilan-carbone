@@ -5,8 +5,7 @@ import StudyName from '@/components/study/card/StudyName'
 import Result from '@/components/study/results/Result'
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { filterWithDependencies } from '@/services/results/utils'
-import { SubPost } from '@prisma/client'
+import { mapResultsByPost } from '@/services/results/utils'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo } from 'react'
@@ -21,18 +20,12 @@ const StudyResultsContainerSummaryCut = ({ study, studySite }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const t = useTranslations('study')
 
-  const allComputedResults = useMemo(() => computeResultsByPost(study, tPost, studySite, true, false), [study, tPost, studySite])
-
-  const computedResults = useMemo(
-    () =>
-      allComputedResults
-        .map((post) => ({
-          ...post,
-          subPosts: post.subPosts.filter((subPost) => filterWithDependencies(subPost.post as SubPost, true)),
-        }))
-        .map((post) => ({ ...post, value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0) })),
-    [allComputedResults],
+  const allComputedResults = useMemo(
+    () => computeResultsByPost(study, tPost, studySite, true, false),
+    [study, tPost, studySite],
   )
+
+  const computedResults = useMemo(() => mapResultsByPost(allComputedResults, true), [allComputedResults])
 
   return (
     <>

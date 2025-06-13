@@ -47,18 +47,7 @@ const StudyNavbar = ({ studyId }: { studyId: UUID }) => {
           {t('homepage')}
         </Link>
         <Divider />
-        {isCut ? (
-          <>
-            <Link href="/organisations" className={styles.link}>
-              {t('organizations')}
-            </Link>
-            <Divider />
-            <Link href="/equipe" className={styles.link}>
-              {t('team')}
-            </Link>
-            <Divider />
-          </>
-        ) : (
+        {!isCut && (
           <>
             <Link
               className={classNames(styles.link, { [styles.active]: pathName.includes('cadrage') })}
