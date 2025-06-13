@@ -1,6 +1,6 @@
 'use server'
 
-import { environmentsWithChecklist } from '@/constants/userCheckedSteps'
+import { environmentsWithChecklist } from '@/constants/environments'
 import {
   AccountWithUser,
   changeAccountRole,
@@ -386,7 +386,7 @@ export const getUserCheckedItems = async () =>
 export const addUserChecklistItem = async (step: UserChecklist) =>
   withServerResponse('addUserChecklistItem', async () => {
     const session = await dbActualizedAuth()
-    if (!session || !session.user || !environmentsWithChecklist.some((env) => env === session.user.environment)) {
+    if (!session || !session.user || !environmentsWithChecklist.includes(session.user.environment)) {
       return
     }
 

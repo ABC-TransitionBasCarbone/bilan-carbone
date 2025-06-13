@@ -1,4 +1,4 @@
-import { environmentsWithChecklist } from '@/constants/userCheckedSteps'
+import { environmentsWithChecklist } from '@/constants/environments'
 import { signPassword } from '@/services/auth'
 import { Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
 import { getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
