@@ -253,7 +253,7 @@ const users = async () => {
     data: organizations.map((organization) => ({
       organizationId: organization.id,
       isCR: false,
-      onboarded: true,
+      onboarded: false,
       activatedLicence: true,
       environment: Environment.CUT,
     })),
@@ -263,7 +263,7 @@ const users = async () => {
     data: organizations.map((organization, index) => ({
       organizationId: organization.id,
       isCR: index % 2 === 0,
-      onboarded: true,
+      onboarded: false,
       activatedLicence: true,
       environment: Environment.TILT,
     })),
