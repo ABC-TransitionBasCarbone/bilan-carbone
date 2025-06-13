@@ -25,9 +25,10 @@ import SettingsIcon from '@mui/icons-material/Settings'
 interface Props {
   children?: ReactNode
   user: UserSession
+  environment: Environment
 }
 
-const Navbar = ({ children, user }: Props) => {
+const Navbar = ({ children, user, environment }: Props) => {
   const t = useTranslations('navigation')
   const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
@@ -61,7 +62,7 @@ const Navbar = ({ children, user }: Props) => {
         <Container maxWidth="lg" className={styles.toolbarContainer}>
           <Box className={styles.buttonContainer}>
             <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
-              <Logo />
+              <Logo environment={environment} />
             </NavbarLink>
             {user.organizationVersionId && (
               <Box>
