@@ -6,9 +6,9 @@ import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
+import { getEnvironment } from '@/i18n/environment'
 import classNames from 'classnames'
 import styles from './layout.module.css'
-import { getEnvironment } from '@/i18n/environment'
 
 interface Props {
   children: React.ReactNode

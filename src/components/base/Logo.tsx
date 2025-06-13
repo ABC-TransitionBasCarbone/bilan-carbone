@@ -1,5 +1,3 @@
-
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Environment } from '@prisma/client'
 import Image from 'next/image'
 
