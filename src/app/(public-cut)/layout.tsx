@@ -1,4 +1,4 @@
-import PublicPage from '@/components/pages/Public'
+import PublicCutPage from '@/components/pages/PublicCut'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { Environment } from '@prisma/client'
 import { ReactNode } from 'react'
@@ -9,9 +9,9 @@ interface Props {
 
 const PublicLayout = ({ children }: Props) => {
   return (
-    <DynamicTheme environment={Environment.BC}>
+    <DynamicTheme environment={Environment.CUT}>
       <main className="h100">
-        <PublicPage>{children}</PublicPage>
+        <PublicCutPage>{children}</PublicCutPage>
       </main>
     </DynamicTheme>
   )
