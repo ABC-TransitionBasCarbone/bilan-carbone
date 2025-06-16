@@ -69,6 +69,8 @@ const users = async () => {
 
   await prisma.cnc.deleteMany()
 
+  await prisma.deactivatableFeatureStatus.deleteMany()
+
   await prisma.cnc.create({
     data: {
       numeroAuto: '321',
@@ -694,6 +696,41 @@ const users = async () => {
         },
         contributors: {
           create: { accountId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
+        },
+      },
+    }),
+  )
+
+  studies.push(
+    await prisma.study.create({
+      include: { sites: true },
+      data: {
+        id: '88c93e88-7c80-4be4-905b-f0bbd2ccc840',
+        createdById: defaultUserWithAccount.accounts[0].account.id,
+        startDate: new Date(),
+        endDate: faker.date.future(),
+        isPublic: false,
+        level: Level.Initial,
+        name: 'Study to delete',
+        organizationVersionId: defaultUserWithAccount.accounts[0].account.organizationVersionId as string,
+        sites: {
+          createMany: {
+            data: faker.helpers
+              .arrayElements(organizationVersionSites, { min: 1, max: organizationVersionSites.length })
+              .map((site) => ({
+                siteId: site.id,
+                etp: faker.helpers.maybe(() => faker.number.int({ min: 1, max: 100 })) || site.etp,
+                ca:
+                  faker.helpers.maybe(
+                    () => Math.round(faker.number.float({ min: 100_000, max: 1_000_000_000 })) / 100,
+                  ) || site.ca,
+              })),
+          },
+        },
+        allowedUsers: {
+          createMany: {
+            data: [{ role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id }],
+          },
         },
       },
     }),
