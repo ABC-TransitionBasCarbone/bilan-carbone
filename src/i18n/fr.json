@@ -862,6 +862,12 @@
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion à la centrale",
       "Pertes": "Pertes"
+    },
+    "missingQualities": {
+      "title": "Ajout de la qualité pour les facteurs d'émission manuels",
+      "body": "Bonjour, d'après nos informations, vous aviez ajouté des facteurs d'émissions manuellement lorsqu'il était encore impossible de renseigner leur incertitude. Par défaut, pour ces facteurs d'émissions, les qualités sont considérées comme étant \"Très bonne\", ce qui correspond à une incertitude nulle sur le facteur d'émission. Ce bug étant dorénavant résolu, nous vous recommandons fortement de mettre à jour les facteurs d'émissions concernés qui sont les suivants :",
+      "close": "Fermer",
+      "correct": "Corriger"
     }
   },
   "level": {
