@@ -5,16 +5,21 @@ import { getOrganizationVersionAccounts } from '@/db/organization'
 import NewStudyForm from '@/environments/base/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
+import { useDuplicateStudy } from '@/hooks/useDuplicateStudy'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
+import CircularProgress from '@mui/material/CircularProgress'
+import Typography from '@mui/material/Typography'
 import { Environment, Export, SiteCAUnit } from '@prisma/client'
+import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import styles from './NewStudy.module.css'
 
 interface Props {
   user: UserSession
@@ -22,11 +27,21 @@ interface Props {
   organizationVersions: OrganizationWithSites[]
   defaultOrganizationVersion?: OrganizationWithSites
   caUnit: SiteCAUnit
+  duplicateStudyId: string | null
 }
 
-const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizationVersion, caUnit }: Props) => {
+const NewStudyPage = ({
+  organizationVersions,
+  user,
+  accounts,
+  defaultOrganizationVersion,
+  caUnit,
+  duplicateStudyId,
+}: Props) => {
   const [organizationVersion, setOrganizationVersion] = useState<OrganizationWithSites>()
   const tNav = useTranslations('nav')
+  const tStudy = useTranslations('study')
+  const tSpinner = useTranslations('spinner')
 
   const form = useForm<CreateStudyCommand>({
     resolver: zodResolver(CreateStudyCommandValidation),
@@ -56,10 +71,21 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
     },
   })
 
+  const { targetOrganizationVersionId, isLoading } = useDuplicateStudy({ duplicateStudyId, form, user, caUnit })
+
+  if (isLoading) {
+    return (
+      <div className={classNames(styles.loadingContainer, 'flex-cc', 'flex-col')}>
+        <CircularProgress className={styles.spinner} />
+        <Typography>{tSpinner('loading')}</Typography>
+      </div>
+    )
+  }
+
   return (
     <>
       <Breadcrumbs
-        current={tNav('newStudy')}
+        current={duplicateStudyId ? tStudy('duplicate') : tNav('newStudy')}
         links={[
           { label: tNav('home'), link: '/' },
           defaultOrganizationVersion && defaultOrganizationVersion.isCR
@@ -72,8 +98,12 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
       />
       {organizationVersion ? (
         <DynamicComponent
-          environmentComponents={{ [Environment.CUT]: <NewStudyFormCut form={form} /> }}
-          defaultComponent={<NewStudyForm user={user} accounts={accounts} form={form} />}
+          environmentComponents={{
+            [Environment.CUT]: <NewStudyFormCut form={form} duplicateStudyId={duplicateStudyId} />,
+          }}
+          defaultComponent={
+            <NewStudyForm user={user} accounts={accounts} form={form} duplicateStudyId={duplicateStudyId} />
+          }
         />
       ) : (
         <SelectOrganization
@@ -82,6 +112,8 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
           selectOrganizationVersion={setOrganizationVersion}
           form={form}
           caUnit={caUnit}
+          duplicateStudyId={duplicateStudyId}
+          targetOrganizationVersionId={targetOrganizationVersionId}
         />
       )}
     </>
