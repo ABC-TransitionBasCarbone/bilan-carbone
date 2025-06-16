@@ -70,6 +70,7 @@ const base = createTheme({
   typography: {
     fontFamily: 'gilroy-regular, sans-serif',
     button: {
+      fontSize: '1rem',
       textTransform: 'none',
       fontFamily: 'gilroy-regular, sans-serif',
     },
@@ -152,7 +153,7 @@ const theme = createTheme(base, {
         border: '0.125rem solid rgba(27, 91, 245, 0.1)',
       },
       text: {
-        fontFamily: 'gilroy-medium, sans-serif',
+        fontFamily: 'gilroy-regular, sans-serif',
         color: '#FFFFFF',
         fontWeight: 600,
         textTransform: 'uppercase',
