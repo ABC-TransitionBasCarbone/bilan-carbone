@@ -96,14 +96,14 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   }, [])
 
   const generatePostPreview = useCallback(
-    (posts: { post: string; subPosts: string[] }[], maxLines = 2, isExpanded = false, hasAllPosts = false) => {
-      if (hasAllPosts && !isExpanded) {
+    (posts: { post: string; subPosts: string[] }[], maxLines = 2, hasAllPosts = false) => {
+      if (hasAllPosts) {
         return { text: tPost('allPost'), hasMore: false, totalCount: posts.length }
       }
 
       const postLabels = posts.map((p) => tPost(p.post))
-      const visiblePosts = isExpanded ? postLabels : postLabels.slice(0, maxLines)
-      const hasMore = !isExpanded && postLabels.length > maxLines
+      const visiblePosts = postLabels.slice(0, maxLines)
+      const hasMore = postLabels.length > maxLines
       const remainingPosts = postLabels.length - visiblePosts.length
 
       return {
@@ -167,25 +167,20 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
   const renderPostCell = useCallback(
     (rowData: StudyContributorTableRow) => {
       if (rowData.type === 'parent') {
-        const isExpanded = expandedRows.has(rowData.email)
-        const preview = generatePostPreview(rowData.posts, PREVIEW_MAX_LINES, isExpanded, rowData.hasAllPosts)
+        const preview = generatePostPreview(rowData.posts, PREVIEW_MAX_LINES, rowData.hasAllPosts)
 
         return (
           <ExpandableCell email={rowData.email}>
             <div>
-              {isExpanded && rowData.hasAllPosts
-                ? tPost('allPost')
-                : isExpanded
-                  ? `${preview.totalCount} post(s)`
-                  : preview.text}
-              {!isExpanded && preview.hasMore && ` ${t('andXOthers', { count: preview.remainingPosts || 0 })}`}
+              {rowData.hasAllPosts ? tPost('allPost') : preview.text}
+              {preview.hasMore && ` ${t('andXOthers', { count: preview.remainingPosts || 0 })}`}
             </div>
           </ExpandableCell>
         )
       }
       return <span>{tPost(rowData.post)}</span>
     },
-    [expandedRows, generatePostPreview, ExpandableCell, t, tPost],
+    [generatePostPreview, ExpandableCell, t, tPost],
   )
 
   const renderSubPostCell = useCallback(
@@ -196,13 +191,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
 
         return (
           <ExpandableCell email={rowData.email}>
-            <div>
-              {isExpanded && rowData.hasAllPosts
-                ? tPost('allSubPost')
-                : isExpanded
-                  ? `${subPostPreview.totalSubPosts} sous-poste${subPostPreview.totalSubPosts > 1 ? 's' : ''}`
-                  : subPostPreview.text}
-            </div>
+            <div>{isExpanded && rowData.hasAllPosts ? tPost('allSubPost') : subPostPreview.text}</div>
           </ExpandableCell>
         )
       }
