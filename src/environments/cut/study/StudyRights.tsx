@@ -3,9 +3,7 @@
 import Block from '@/components/base/Block'
 import { FormTextField } from '@/components/form/TextField'
 import WeekScheduleForm from '@/components/form/WeekScheduleForm'
-import StudyContributorsTable from '@/components/study/rights/StudyContributorsTable'
 import StudyParams from '@/components/study/rights/StudyParams'
-import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema } from '@/services/serverFunctions/study'
@@ -163,17 +161,17 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
             onCheckDay={handleCheckDay}
             isChecked={isChecked}
           />
-          <WeekScheduleForm
-            label={t('openingHoursHoliday')}
-            days={daysHoliday}
-            name={'openingHoursHoliday'}
-            control={form.control}
-            disabled={editionDisabled}
-          />
+          {openingHoursHoliday && Object.keys(openingHoursHoliday).length !== 0 && (
+            <WeekScheduleForm
+              label={t('openingHoursHoliday')}
+              days={daysHoliday}
+              name={'openingHoursHoliday'}
+              control={form.control}
+              disabled={editionDisabled}
+            />
+          )}
         </div>
       </Block>
-      <StudyRightsTable study={study} user={user} canAddMember={!editionDisabled} userRoleOnStudy={userRoleOnStudy} />
-      <StudyContributorsTable study={study} canAddContributor={!editionDisabled} />
     </>
   )
 }

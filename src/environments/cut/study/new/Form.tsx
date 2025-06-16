@@ -69,12 +69,14 @@ const NewStudyForm = ({ form }: Props) => {
           control={form.control}
           onCheckDay={handleCheckDay}
         />
-        <WeekScheduleForm
-          label={t('openingHoursHoliday')}
-          days={daysHoliday}
-          name={'openingHoursHoliday'}
-          control={form.control}
-        />
+        {openingHoursHoliday && Object.keys(openingHoursHoliday).length !== 0 && (
+          <WeekScheduleForm
+            label={t('openingHoursHoliday')}
+            days={daysHoliday}
+            name={'openingHoursHoliday'}
+            control={form.control}
+          />
+        )}
         <FormTextField
           control={form.control}
           name="numberOfSessions"
