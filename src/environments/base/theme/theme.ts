@@ -68,10 +68,36 @@ const base = createTheme({
     'none',
   ],
   typography: {
-    fontFamily: 'Gilroy, sans-serif',
+    fontFamily: 'gilroy-regular, sans-serif',
     button: {
       textTransform: 'none',
-      fontFamily: 'Gilroy, sans-serif',
+      fontFamily: 'gilroy-regular, sans-serif',
+    },
+    h1: {
+      fontSize: '2.5rem',
+      lineHeight: '3.25rem',
+      fontWeight: 800,
+    },
+    h2: {
+      fontWeight: 700,
+      fontSize: '2rem',
+      lineHeight: '2.75rem',
+    },
+    h3: {
+      fontSize: '1.75rem',
+      lineHeight: '2.25rem',
+    },
+    h4: {
+      fontSize: '1.5rem',
+      lineHeight: '2rem',
+    },
+    h5: {
+      fontSize: '1.375rem',
+      lineHeight: '1.75rem',
+    },
+    h6: {
+      fontSize: '1.25rem',
+      lineHeight: '1.75rem',
     },
   },
 })
@@ -126,6 +152,7 @@ const theme = createTheme(base, {
         border: '0.125rem solid rgba(27, 91, 245, 0.1)',
       },
       text: {
+        fontFamily: 'gilroy-medium, sans-serif',
         color: '#FFFFFF',
         fontWeight: 600,
         textTransform: 'uppercase',

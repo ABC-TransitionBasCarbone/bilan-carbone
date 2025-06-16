@@ -5,11 +5,13 @@ import Link from 'next/link'
 
 const NavbarLink = ({ ...props }: LinkProps) => {
   const theme = useTheme()
+  console.log({ text: theme.custom.navbar.text })
   return (
     <MuiLink
       component={Link}
       {...props}
       sx={{
+        fontFamily: theme.custom.navbar.text.fontFamily,
         color: theme.custom.navbar.text.color,
         fontWeight: theme.custom.navbar.text.fontWeight,
         textDecoration: 'none',
