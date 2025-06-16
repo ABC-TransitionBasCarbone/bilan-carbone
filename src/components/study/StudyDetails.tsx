@@ -24,7 +24,7 @@ const StudyDetails = ({ canDeleteStudy, study, validatedOnly }: Props) => {
       <Block>
         <DynamicComponent
           environmentComponents={{
-            [Environment.CUT]: <StudyResultsContainerSummaryCut study={study} studySite="all" />,
+            [Environment.CUT]: <StudyResultsContainerSummaryCut study={study} />,
           }}
           defaultComponent={
             <StudyResultsContainerSummary study={study} studySite={studySite} validatedOnly={validatedOnly} />

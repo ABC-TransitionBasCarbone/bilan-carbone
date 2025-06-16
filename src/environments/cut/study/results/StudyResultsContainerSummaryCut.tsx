@@ -13,17 +13,15 @@ import styles from './ResultsContainer.module.css'
 
 interface Props {
   study: FullStudy
-  studySite: string
 }
 
-const StudyResultsContainerSummaryCut = ({ study, studySite }: Props) => {
+const StudyResultsContainerSummaryCut = ({ study }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const t = useTranslations('study')
 
-  const allComputedResults = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, false),
-    [study, tPost, studySite],
-  )
+  const studySite = 'all'
+
+  const allComputedResults = useMemo(() => computeResultsByPost(study, tPost, studySite, true, false), [study, tPost])
 
   const computedResults = useMemo(() => mapResultsByPost(allComputedResults, true), [allComputedResults])
 
