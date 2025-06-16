@@ -124,6 +124,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
           <div className="w100 flex-cc">
             <Button
               data-testid="delete-site-button"
+              color="error"
               title={t('delete')}
               aria-label={t('delete')}
               onClick={() => {

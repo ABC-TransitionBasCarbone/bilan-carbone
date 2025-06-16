@@ -57,6 +57,7 @@ const InvitationsToValidateActions = ({ user, member }: Props) => {
       </LoadingButton>
       <LoadingButton
         data-testid="delete-invitation"
+        color="error"
         aria-label={t('delete')}
         title={t('delete')}
         loading={deleting}
