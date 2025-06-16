@@ -865,8 +865,7 @@
     },
     "missingQualities": {
       "title": "Ajout de la qualité pour les facteurs d'émission manuels",
-      "body": "Vous avez ajouté des facteurs d'émission manuels avant notre réparation du bug qui faisait que vous ne pouviez pas renseigner d'incertitudes pour ceux-ci. Merci d'aller la renseigner en modifiant le FE <link>sur la page des facteurs d'émission</link>. Attention, tant que vous ne le faites pas, ces facteurs d'émission sont considérés comme ayant une uncertitude \"Très bonne\" et impacteront vos bilans pour ces sources d'émissions.",
-      "list": "Voici la liste des facteurs d'émission concernés :",
+      "body": "Bonjour, d'après nos informations, vous aviez ajouté des facteurs d'émissions manuellement lorsqu'il était encore impossible de renseigner leur incertitude. Par défaut, pour ces facteurs d'émissions, les qualités sont considérées comme étant \"Très bonne\", ce qui correspond à une incertitude nulle sur le facteur d'émission. Ce bug étant dorénavant résolu, nous vous recommandons fortement de mettre à jour les facteurs d'émissions concernés qui sont les suivants :",
       "close": "Fermer",
       "correct": "Corriger"
     }

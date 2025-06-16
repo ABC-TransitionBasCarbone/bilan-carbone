@@ -29,7 +29,6 @@ const EmissionFactorsWarning = ({ emissionFactors }: Props) => {
         ]}
       >
         <p>{t.rich('body', { link: (children) => <a href="/facteurs-d-emission?manual">{children}</a> })}</p>
-        <p className="mt-2">{t('list')}</p>
         <ul className="mt-2">
           {emissionFactors.map((emissionFactor) => (
             <li key={emissionFactor}>{emissionFactor}</li>
