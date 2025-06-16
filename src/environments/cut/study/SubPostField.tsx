@@ -259,7 +259,7 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
             )}
           </div>
           {emissionSource?.id && (
-            <Button className={styles.deleteButton} onClick={() => handleDelete(emissionSource.id)} color="error">
+            <Button className={styles.deleteButton} onClick={() => handleDelete(emissionSource.id)}>
               <DeleteIcon />
             </Button>
           )}

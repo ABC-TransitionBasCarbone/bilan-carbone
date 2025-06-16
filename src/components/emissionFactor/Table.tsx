@@ -273,9 +273,8 @@ const EmissionFactorsTable = ({
                           editEmissionFactor(row.original.id, 'delete')
                         }}
                         data-testid={`delete-emission-factor-button`}
-                        color="error"
                       >
-                        <DeleteIcon color="error" />
+                        <DeleteIcon />
                       </MuiButton>
                     </>
                   )}

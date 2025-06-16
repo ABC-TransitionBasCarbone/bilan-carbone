@@ -78,11 +78,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         cell: ({ row }) =>
           row.original.user.email !== user.email ? (
             <div className="justify-center">
-              <Button
-                onClick={() => setDeletingMember(row.original.user.email)}
-                title={t('deleteMember')}
-                color="error"
-              >
+              <Button onClick={() => setDeletingMember(row.original.user.email)} title={t('deleteMember')}>
                 <DeleteIcon />
               </Button>
             </div>

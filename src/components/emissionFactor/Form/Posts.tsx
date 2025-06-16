@@ -171,7 +171,6 @@ const Posts = <T extends SubPostsCommand>({
         title={t('delete')}
         aria-label={t('delete')}
         onClick={handleDelete}
-        color="error"
       >
         <DeleteIcon />
       </Button>

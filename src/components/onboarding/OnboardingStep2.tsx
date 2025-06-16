@@ -83,7 +83,7 @@ const OnboardingStep = ({ form, isCr }: Props) => {
                 ))}
             </FormSelect>
           </div>
-          <Button className={styles.deleteButton} onClick={() => removeCollaborator(index)} color="error">
+          <Button className={styles.deleteButton} onClick={() => removeCollaborator(index)}>
             <DeleteIcon />
           </Button>
         </div>
