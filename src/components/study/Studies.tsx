@@ -32,6 +32,7 @@ const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations
                 actionType: 'link',
                 href: creationUrl,
                 color: 'secondary',
+                variant: 'outlined',
                 ['data-testid']: 'new-study',
                 children: (
                   <>

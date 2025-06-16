@@ -127,13 +127,14 @@ const theme = createTheme(base, {
     },
     MuiLinearProgress: {
       styleOverrides: {
-        root: {
-          backgroundColor: base.palette.grey[200],
-          borderRadius: 4,
+        '& .MuiLinearProgress-bar1': {
+          backgroundColor: base.palette.success.main,
         },
-        bar: {
-          borderRadius: 4,
-          backgroundColor: base.palette.primary.main,
+        '& .MuiLinearProgress-bar2': {
+          backgroundColor: base.palette.grey[200],
+        },
+        '& .MuiLinearProgress-barColorPrimary': {
+          backgroundColor: base.palette.success.main,
         },
       },
     },

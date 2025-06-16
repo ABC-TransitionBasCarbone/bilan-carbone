@@ -65,7 +65,7 @@ const Block = ({
                 ) : actionType === 'loadingButton' ? (
                   <LoadingButton key={index} {...(action as LoadingButtonProps)} />
                 ) : (
-                  <LinkButton key={index} {...(action as ButtonProps & { href: string })} />
+                  <LinkButton key={index} variant="contained" {...(action as ButtonProps & { href: string })} />
                 ),
               )}
             </div>
