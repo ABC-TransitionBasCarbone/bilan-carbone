@@ -116,7 +116,10 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
   const missingCaract = useMemo(
     () =>
       study.emissionSources.filter(
-        (emissionSource) => (emissionSource.validated || !validatedOnly) && !emissionSource.caracterisation,
+        (emissionSource) =>
+          (emissionSource.validated || !validatedOnly) &&
+          !emissionSource.caracterisation &&
+          emissionSource.subPost !== SubPost.UtilisationEnDependance,
       ),
     [study.emissionSources, validatedOnly],
   )
