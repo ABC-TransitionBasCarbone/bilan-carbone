@@ -1,7 +1,7 @@
 import { Button as ButtonMUI, ButtonProps } from '@mui/material'
 
-const Button = ({ fullWidth, ...rest }: ButtonProps) => {
-  return <ButtonMUI fullWidth={fullWidth} {...rest} />
+const Button = ({ fullWidth, variant = 'contained', ...rest }: ButtonProps) => {
+  return <ButtonMUI fullWidth={fullWidth} variant={variant} {...rest} />
 }
 
 export default Button

@@ -13,7 +13,7 @@ export interface Props {
 const LoadingButton = ({ children, loading, disabled, iconButton, ...rest }: Props & ButtonProps) => {
   const t = useTranslations('spinner')
   return (
-    <Button disabled={disabled || loading} {...rest}>
+    <Button disabled={disabled || loading} {...rest} variant="contained">
       {(!loading || !iconButton) && <>{children}</>}
       {loading && (
         <>
