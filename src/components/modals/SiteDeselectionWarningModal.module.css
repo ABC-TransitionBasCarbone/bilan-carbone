@@ -3,22 +3,10 @@
 }
 
 .sitesSection {
-  margin: 16px 0;
-  padding: 12px;
   background-color: var(--background-200);
-  border-radius: 6px;
+  border-radius: 0.5rem;
 }
 
 .sitesTitle {
-  margin: 0 0 8px 0;
   font-weight: 600;
-}
-
-.sitesList {
-  margin: 0;
-  padding-left: 20px;
-}
-
-.siteItem {
-  margin-bottom: 4px;
 }
