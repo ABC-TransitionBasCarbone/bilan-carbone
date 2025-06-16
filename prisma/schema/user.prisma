@@ -45,6 +45,8 @@ model Account {
 
   deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
 
+  feedbackDate DateTime? @map("feedback_date")
+
   role Role
 
   createdStudies             Study[]
@@ -55,7 +57,7 @@ model Account {
   userApplicationSettings    UserApplicationSettings?
 
   environment Environment
-  status     UserStatus
+  status      UserStatus
 
   @@unique([userId, environment])
   @@map("accounts")
@@ -73,8 +75,6 @@ model User {
   source     UserSource @default(CRON)
 
   formationFormStartTime DateTime? @map("formation_form_start_time")
-
-  feedbackDate DateTime? @map("feedback_date")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
