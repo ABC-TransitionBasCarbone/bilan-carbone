@@ -1,7 +1,8 @@
 import Label from '@/components/base/Label'
+import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import { Button, LinearProgress } from '@mui/material'
+import { Button } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
@@ -64,7 +65,11 @@ const StudyCard = async ({ study, user }: Props) => {
               {t('validatedOnlyDescription')}
             </GlossaryIconModal>
           </p>
-          <LinearProgress variant="determinate" value={percent} />
+          <ProgressBar
+            value={percent}
+            barClass={classNames(styles.progressBar, { [styles.success]: percent === 100 })}
+          />
+          {/* <LinearProgress color="success" variant="determinate" value={percent} /> */}
         </Box>
         <div className="justify-end">
           <Button

@@ -80,6 +80,8 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
           onClick: () =>
             downloadStudyEmissionSources(study, tStudyExport, tCaracterisations, tPost, tQuality, tUnit, tResultUnits),
           disabled: study.emissionSources.length === 0,
+          variant: 'contained',
+          color: 'primary',
           children: (
             <>
               {tStudyExport('download')}
