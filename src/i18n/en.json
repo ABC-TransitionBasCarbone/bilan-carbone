@@ -865,7 +865,7 @@
     },
     "missingQualities": {
       "title": "Add quality for manual emission factors",
-      "body": "You added manual emission factors before we fixed the bug that meant you could not enter uncertainties for them. Please enter it by modifying the emission factor <link>on the emission factors page</link>. Please note that as long as you do not do this, these emission factors are considered as having no uncertainty, which will therefore not be calculated on your balances for these emission sources.",
+      "body": "You added manual emission factors before we fixed the bug that meant you could not enter uncertainties for them. Please enter it by modifying the emission factor <link>on the emission factors page</link>. Please note that as long as you do not do this, these emission factors are considered to have a \"very good\" uncertainty and will have an impact on your balances for these emission sources.",
       "list": "Here is the list of the concerned emission factors:",
       "close": "Close",
       "correct": "Correct"
