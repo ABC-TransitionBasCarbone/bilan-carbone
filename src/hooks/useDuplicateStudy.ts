@@ -20,17 +20,12 @@ interface UseDuplicateStudyProps {
 }
 
 export const useDuplicateStudy = ({ duplicateStudyId, form, user, caUnit }: UseDuplicateStudyProps) => {
-  if (!duplicateStudyId) {
-    return { targetOrganizationVersionId: null, isLoading: false }
-  }
-
   const tStudy = useTranslations('study')
   const { callServerFunction } = useServerFunction()
   const [isLoading, setIsLoading] = useState(true)
   const [targetOrganizationVersionId, setTargetOrganizationVersionId] = useState<string | null>(null)
 
   const getOriginalStudy = useCallback(async () => {
-    console.log('getOriginalStudy', duplicateStudyId)
     if (!duplicateStudyId) {
       return
     }
@@ -56,6 +51,10 @@ export const useDuplicateStudy = ({ duplicateStudyId, form, user, caUnit }: UseD
   useEffect(() => {
     getOriginalStudy()
   }, [getOriginalStudy])
+
+  if (!duplicateStudyId) {
+    return { targetOrganizationVersionId: null, isLoading: false }
+  }
 
   return { targetOrganizationVersionId, isLoading }
 }
