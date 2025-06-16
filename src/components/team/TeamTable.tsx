@@ -6,7 +6,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { canEditMemberRole } from '@/utils/organization'
 import { getEnvironmentRoles } from '@/utils/user'
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
@@ -78,8 +78,12 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         cell: ({ row }) =>
           row.original.user.email !== user.email ? (
             <div className="justify-center">
-              <Button onClick={() => setDeletingMember(row.original.user.email)} title={t('deleteMember')}>
-                <DeleteOutlineIcon />
+              <Button
+                onClick={() => setDeletingMember(row.original.user.email)}
+                title={t('deleteMember')}
+                color="error"
+              >
+                <DeleteIcon />
               </Button>
             </div>
           ) : (
