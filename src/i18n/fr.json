@@ -406,7 +406,7 @@
         "subPosts": "Sous postes",
         "title": "Contributeurs",
         "newContributorLink": "Ajouter un contributeur",
-        "andXOthers": "et {count} autres",
+        "andXOthers": "et {count, plural, =1 {1 autre} other {# autres}}",
         "deleting": {
           "title": "Confirmation",
           "confirmation": "Êtes vous sûr de vouloir supprimer {email} des contributeurs de cette étude ?",
