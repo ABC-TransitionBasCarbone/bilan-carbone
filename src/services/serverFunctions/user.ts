@@ -494,7 +494,7 @@ export const delayFeeback = async () =>
       throw new Error(NOT_AUTHORIZED)
     }
     const now = new Date()
-    const feedbackDate = new Date(now.getTime() + 2 * DAY * TIME_IN_MS)
+    const feedbackDate = new Date(now.getTime() + Number(process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_DELAY))
     updateUserFeedbackDate(session.user.id, feedbackDate)
   })
 

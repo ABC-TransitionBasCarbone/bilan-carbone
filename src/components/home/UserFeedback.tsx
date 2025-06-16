@@ -1,6 +1,7 @@
 'use client'
 
 import { answerFeeback, delayFeeback } from '@/services/serverFunctions/user'
+import { DAY, TIME_IN_MS } from '@/utils/time'
 import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
@@ -10,6 +11,8 @@ import FeedbackForm from './FeedbackForm'
 interface Props {
   environment: Environment
 }
+
+const delayDuration = process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_DELAY
 
 const UserFeedback = ({ environment }: Props) => {
   const t = useTranslations('feedback')
@@ -43,7 +46,11 @@ const UserFeedback = ({ environment }: Props) => {
             ? [{ actionType: 'button', children: t('close'), onClick: onClose }]
             : [
                 { actionType: 'button', children: t('reject'), onClick: onClose },
-                { actionType: 'button', children: t('delay'), onClick: delay },
+                {
+                  actionType: 'button',
+                  children: t('delay', { time: Number(delayDuration) / (DAY * TIME_IN_MS) }),
+                  onClick: delay,
+                },
                 { actionType: 'button', children: t('answer'), onClick: answer },
               ]
         }
