@@ -82,7 +82,9 @@ const SelectOrganization = ({ user, organizationVersions, selectOrganizationVers
   return (
     <Block>
       {organizationVersions.length === 1 ? (
-        <p className="title-h2">{organizationVersions[0].organization.name}</p>
+        <p data-testid="new-study-organization-title" className="title-h2">
+          {organizationVersions[0].organization.name}
+        </p>
       ) : (
         <>
           <p data-testid="new-study-organization-title" className="title-h1">

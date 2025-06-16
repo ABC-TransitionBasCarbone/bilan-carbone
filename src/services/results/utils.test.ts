@@ -1,25 +1,19 @@
+import { expect } from '@jest/globals'
 import { ResultsByPost } from './consolidated'
 import { mapResultsByPost } from './utils'
-
-// Mock filterWithDependencies
-jest.mock('./filterWithDependencies', () => ({
-  filterWithDependencies: jest.fn((subPost, withDependencies) => (withDependencies ? subPost.include : true)),
-}))
-
-// Removed unused SubPost type
 
 describe('mapResultsByPost', () => {
   it('should filter subPosts and sum their values', () => {
     const input: ResultsByPost[] = [
       {
-        post: 'total',
+        post: 'Fret',
         value: 0,
         monetaryValue: 0,
         numberOfEmissionSource: 0,
         numberOfValidatedEmissionSource: 0,
         subPosts: [
           {
-            post: 'total',
+            post: 'FretEntrant',
             value: 10,
             monetaryValue: 0,
             numberOfEmissionSource: 0,
@@ -27,7 +21,7 @@ describe('mapResultsByPost', () => {
             subPosts: [],
           },
           {
-            post: 'total',
+            post: 'FretSortant',
             value: 20,
             monetaryValue: 0,
             numberOfEmissionSource: 0,
@@ -37,14 +31,14 @@ describe('mapResultsByPost', () => {
         ],
       },
       {
-        post: 'total',
+        post: 'AutresEmissionsNonEnergetiques',
         value: 0,
         monetaryValue: 0,
         numberOfEmissionSource: 0,
         numberOfValidatedEmissionSource: 0,
         subPosts: [
           {
-            post: { include: true } as any,
+            post: 'Agriculture',
             value: 5,
             monetaryValue: 0,
             numberOfEmissionSource: 0,
@@ -52,7 +46,7 @@ describe('mapResultsByPost', () => {
             subPosts: [],
           },
           {
-            post: { include: true } as any,
+            post: 'EmissionsLieesAuChangementDAffectationDesSolsCas',
             value: 15,
             monetaryValue: 0,
             numberOfEmissionSource: 0,
@@ -65,19 +59,56 @@ describe('mapResultsByPost', () => {
 
     // withDependencies = true: only include subPosts where post.include is true
     const result = mapResultsByPost(input, true)
-    expect(result).equal([
+    expect(result).toEqual([
       {
-        postId: '1',
-        subPosts: [{ post: { include: true }, value: 10 }],
-        value: 10,
+        post: 'Fret',
+        value: 30,
+        monetaryValue: 0,
+        numberOfEmissionSource: 0,
+        numberOfValidatedEmissionSource: 0,
+        subPosts: [
+          {
+            monetaryValue: 0,
+            numberOfEmissionSource: 0,
+            numberOfValidatedEmissionSource: 0,
+            post: 'FretEntrant',
+            subPosts: [],
+            value: 10,
+          },
+          {
+            monetaryValue: 0,
+            numberOfEmissionSource: 0,
+            numberOfValidatedEmissionSource: 0,
+            post: 'FretSortant',
+            subPosts: [],
+            value: 20,
+          },
+        ],
       },
       {
-        postId: '2',
-        subPosts: [
-          { post: { include: true }, value: 5 },
-          { post: { include: true }, value: 15 },
-        ],
+        post: 'AutresEmissionsNonEnergetiques',
         value: 20,
+        monetaryValue: 0,
+        numberOfEmissionSource: 0,
+        numberOfValidatedEmissionSource: 0,
+        subPosts: [
+          {
+            monetaryValue: 0,
+            numberOfEmissionSource: 0,
+            numberOfValidatedEmissionSource: 0,
+            post: 'Agriculture',
+            subPosts: [],
+            value: 5,
+          },
+          {
+            monetaryValue: 0,
+            numberOfEmissionSource: 0,
+            numberOfValidatedEmissionSource: 0,
+            post: 'EmissionsLieesAuChangementDAffectationDesSolsCas',
+            subPosts: [],
+            value: 15,
+          },
+        ],
       },
     ])
   })
@@ -85,14 +116,14 @@ describe('mapResultsByPost', () => {
   it('should include all subPosts if withDependencies is false', () => {
     const input: ResultsByPost[] = [
       {
-        post: 'total',
+        post: 'Fret',
         value: 0,
         monetaryValue: 0,
         numberOfEmissionSource: 0,
         numberOfValidatedEmissionSource: 0,
         subPosts: [
           {
-            post: { include: true } as any,
+            post: 'FretEntrant',
             value: 10,
             monetaryValue: 0,
             numberOfEmissionSource: 0,
@@ -100,7 +131,7 @@ describe('mapResultsByPost', () => {
             subPosts: [],
           },
           {
-            post: { include: false } as any,
+            post: 'FretSortant',
             value: 20,
             monetaryValue: 0,
             numberOfEmissionSource: 0,
@@ -113,18 +144,36 @@ describe('mapResultsByPost', () => {
 
     // withDependencies = false: include all subPosts
     const result = mapResultsByPost(input, false)
-    expect(result).equal([
+    expect(result).toEqual([
       {
-        subPosts: [
-          { post: { include: true }, value: 10 },
-          { post: { include: false }, value: 20 },
-        ],
+        post: 'Fret',
         value: 30,
+        monetaryValue: 0,
+        numberOfEmissionSource: 0,
+        numberOfValidatedEmissionSource: 0,
+        subPosts: [
+          {
+            post: 'FretEntrant',
+            value: 10,
+            monetaryValue: 0,
+            numberOfEmissionSource: 0,
+            numberOfValidatedEmissionSource: 0,
+            subPosts: [],
+          },
+          {
+            post: 'FretSortant',
+            value: 20,
+            monetaryValue: 0,
+            numberOfEmissionSource: 0,
+            numberOfValidatedEmissionSource: 0,
+            subPosts: [],
+          },
+        ],
       },
     ])
   })
 
   it('should handle empty input', () => {
-    expect(mapResultsByPost([], true)).equal([])
+    expect(mapResultsByPost([], true)).toEqual([])
   })
 })
