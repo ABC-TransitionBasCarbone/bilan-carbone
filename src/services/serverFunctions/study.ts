@@ -73,6 +73,7 @@ import {
   Role,
   StudyEmissionSource,
   StudyRole,
+  SubPost,
   UserChecklist,
   UserStatus,
 } from '@prisma/client'
@@ -483,6 +484,7 @@ const getOrCreateUserAndSendStudyInvite = async (
   creator: UserSession,
   existingUser: UserWithAccounts | null,
   newRoleOnStudy?: StudyRole,
+  skipInviteEmail = false,
 ) => {
   let accountId = ''
   const t = await getTranslations('study.role')
@@ -503,14 +505,16 @@ const getOrCreateUserAndSendStudyInvite = async (
       },
     })
 
-    await sendInvitation(
-      email,
-      study,
-      organizationVersion.organization,
-      creator,
-      newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
-      study.organizationVersion.environment,
-    )
+    if (!skipInviteEmail) {
+      await sendInvitation(
+        email,
+        study,
+        organizationVersion.organization,
+        creator,
+        newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
+        study.organizationVersion.environment,
+      )
+    }
 
     const newAccountId = newUser.accounts.find((a) => a.environment === organizationVersion.environment)?.id
     if (!newAccountId) {
@@ -530,15 +534,17 @@ const getOrCreateUserAndSendStudyInvite = async (
       })) as AccountWithUser
     }
 
-    await sendInvitation(
-      email,
-      study,
-      organizationVersion.organization,
-      creator,
-      newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
-      organizationVersion.environment,
-      account,
-    )
+    if (!skipInviteEmail) {
+      await sendInvitation(
+        email,
+        study,
+        organizationVersion.organization,
+        creator,
+        newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
+        organizationVersion.environment,
+        account,
+      )
+    }
     accountId = account.id
   }
 
@@ -983,6 +989,154 @@ export const upgradeStudyEmissionFactorSource = async (studyId: string, source: 
     await updateStudyEmissionFactorVersion(studyId, source, simulationResults.data.latestSourceVersion?.id)
 
     return undefined
+  })
+
+export const duplicateStudyCommand = async (
+  sourceStudyId: string,
+  studyCommand: CreateStudyCommand,
+  inviteExistingTeam = false,
+  inviteExistingContributors = false,
+) =>
+  withServerResponse('duplicateStudyCommand', async () => {
+    const session = await dbActualizedAuth()
+
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const sourceStudy = await getStudyById(sourceStudyId, session.user.organizationVersionId)
+    if (!sourceStudy || !hasEditionRights(getAccountRoleOnStudy(session.user, sourceStudy))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const createResult = await createStudyCommand(studyCommand)
+    if (!createResult.success) {
+      throw new Error(createResult.errorMessage || 'Failed to create study')
+    }
+
+    const createdStudyId = createResult.data.id
+
+    const createdStudyWithSites = await getStudyById(createdStudyId, session.user.organizationVersionId)
+    if (!createdStudyWithSites) {
+      throw new Error('Failed to retrieve created study')
+    }
+
+    const studySites = await getStudySites(createdStudyId)
+
+    for (const sourceVersion of sourceStudy.emissionFactorVersions) {
+      await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId)
+    }
+
+    const sourceEmissionSources = sourceStudy.emissionSources
+    for (const sourceEmissionSource of sourceEmissionSources) {
+      const sourceSiteName = sourceEmissionSource.studySite.site.name
+      const targetStudySite = createdStudyWithSites.sites.find((studySite) => studySite.site.name === sourceSiteName)
+      const targetStudySiteId = studySites.find((site) => targetStudySite && site.id === targetStudySite.id)?.id
+
+      if (targetStudySiteId) {
+        const emissionSourceData = {
+          name: sourceEmissionSource.name,
+          value: sourceEmissionSource.value,
+          subPost: sourceEmissionSource.subPost,
+          type: sourceEmissionSource.type,
+          source: sourceEmissionSource.source,
+          comment: sourceEmissionSource.comment,
+          depreciationPeriod: sourceEmissionSource.depreciationPeriod,
+          hectare: sourceEmissionSource.hectare,
+          duration: sourceEmissionSource.duration,
+          reliability: sourceEmissionSource.reliability,
+          technicalRepresentativeness: sourceEmissionSource.technicalRepresentativeness,
+          geographicRepresentativeness: sourceEmissionSource.geographicRepresentativeness,
+          temporalRepresentativeness: sourceEmissionSource.temporalRepresentativeness,
+          completeness: sourceEmissionSource.completeness,
+          feReliability: sourceEmissionSource.feReliability,
+          feTechnicalRepresentativeness: sourceEmissionSource.feTechnicalRepresentativeness,
+          feGeographicRepresentativeness: sourceEmissionSource.feGeographicRepresentativeness,
+          feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
+          feCompleteness: sourceEmissionSource.feCompleteness,
+          caracterisation: sourceEmissionSource.caracterisation,
+          study: { connect: { id: createdStudyId } },
+          emissionFactor: sourceEmissionSource.emissionFactor
+            ? { connect: { id: sourceEmissionSource.emissionFactor.id } }
+            : undefined,
+          studySite: { connect: { id: targetStudySiteId } },
+          validated: false,
+        } as Prisma.StudyEmissionSourceCreateInput
+
+        await createStudyEmissionSource(emissionSourceData)
+      }
+    }
+
+    if (inviteExistingTeam) {
+      const organizationVersion = await getOrganizationVersionById(createdStudyWithSites.organizationVersionId)
+      if (organizationVersion) {
+        for (const teamMember of sourceStudy.allowedUsers) {
+          // Skip the current user since they're already added as the creator
+          if (teamMember.account.user.email === session.user.email) {
+            continue
+          }
+
+          const existingUser = await getUserByEmail(teamMember.account.user.email)
+          const accountId = await getOrCreateUserAndSendStudyInvite(
+            teamMember.account.user.email,
+            createdStudyWithSites,
+            organizationVersion as OrganizationVersionWithOrganization,
+            session.user,
+            existingUser,
+            teamMember.role,
+            true,
+          )
+
+          await createUserOnStudy({
+            account: { connect: { id: accountId } },
+            study: { connect: { id: createdStudyId } },
+            role: teamMember.role,
+          })
+        }
+      }
+    }
+
+    if (inviteExistingContributors) {
+      const organizationVersion = await getOrganizationVersionById(createdStudyWithSites.organizationVersionId)
+      if (organizationVersion) {
+        const contributorsByEmail = sourceStudy.contributors.reduce(
+          (acc, contributor) => {
+            const email = contributor.account.user.email
+            if (!acc[email]) {
+              acc[email] = []
+            }
+            acc[email].push(contributor.subPost)
+            return acc
+          },
+          {} as Record<string, SubPost[]>,
+        )
+
+        for (const [email, subPosts] of Object.entries(contributorsByEmail)) {
+          // Skip the current user since they're already added as the creator
+          if (email === session.user.email) {
+            continue
+          }
+
+          const existingUser = await getUserByEmail(email)
+          const accountId = await getOrCreateUserAndSendStudyInvite(
+            email,
+            createdStudyWithSites,
+            organizationVersion as OrganizationVersionWithOrganization,
+            session.user,
+            existingUser,
+            undefined,
+            true,
+          )
+
+          await createContributorOnStudy(accountId, subPosts, {
+            studyId: createdStudyId,
+          })
+        }
+      }
+    }
+
+    addUserChecklistItem(UserChecklist.CreateFirstStudy)
+    return { id: createdStudyId }
   })
 
 export const duplicateStudyEmissionSource = async (

@@ -1,0 +1,21 @@
+.duplicationLabel {
+  margin-bottom: 0.5rem;
+}
+
+.duplicationOptions {
+  gap: 0.5rem;
+}
+
+.container {
+  height: 3.5rem;
+  gap: 2rem;
+}
+
+.checkbox {
+  padding-left: 0 !important;
+}
+
+.field {
+  width: 15rem;
+  margin: 0 !important;
+}
