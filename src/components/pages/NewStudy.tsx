@@ -12,7 +12,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import { Environment, Export, SiteCAUnit } from '@prisma/client'
-import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -75,7 +74,7 @@ const NewStudyPage = ({
 
   if (isLoading) {
     return (
-      <div className={classNames(styles.loadingContainer, 'flex-cc', 'flex-col')}>
+      <div className={`${styles.loadingContainer} flex-cc flex-col p10`}>
         <CircularProgress className={styles.spinner} />
         <Typography>{tSpinner('loading')}</Typography>
       </div>

@@ -37,11 +37,11 @@ const SiteDeselectionWarningModal = ({ isOpen, onClose, onConfirm, sitesWithSour
       <div>
         <p>{t('description')}</p>
 
-        <div className={styles.sitesSection}>
-          <p className={styles.sitesTitle}>{t('affectedSites')}:</p>
-          <ul className={styles.sitesList}>
+        <div className={`${styles.sitesSection} my1 p1`}>
+          <p className={`${styles.sitesTitle} mb-2`}>{t('affectedSites')}:</p>
+          <ul className="m0 px-2">
             {sitesWithSources.map((site, index) => (
-              <li key={index} className={styles.siteItem}>
+              <li key={index} className="mb-2">
                 <strong>{site.name}</strong>: {t('sourcesCount', { count: site.emissionSourcesCount })}
               </li>
             ))}
