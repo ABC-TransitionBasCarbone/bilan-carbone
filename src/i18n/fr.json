@@ -140,11 +140,11 @@
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",
       "backToHome": "Retour a l'accueil",
-      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous sur l'adresse email",
+      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous.",
       "emailRequired": "Veuillez entrer un email",
       "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
       "emailSent": "Si votre email est correct, vous allez recevoir un mail pour réinitialiser votre mot de passe",
-      "validated": "Votre mot de passe a été réinitialisé, vous allez être redirigé vers la page de <link>connexion</link>.",
+      "validated": "Votre mot de passe a été réinitialisé",
       "validation": {
         "email": "Veuillez entrer un email",
         "password": "Veuillez entrer un mot de passe"
