@@ -96,6 +96,9 @@ const cutTheme = createTheme(base, {
             backgroundColor: base.palette.grey['50'],
           },
         },
+        contained: {
+          color: '#F4F7F9',
+        },
       },
     },
     MuiLinearProgress: {
