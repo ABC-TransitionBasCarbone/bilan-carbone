@@ -65,3 +65,20 @@
 .title {
   margin-bottom: 1rem !important;
 }
+
+.divider {
+  width: 30%;
+}
+
+.explaination {
+  font-size: 1.2rem;
+}
+
+.explaination b {
+  font-size: 1.2rem;
+}
+
+.france2030Logo {
+  height: fit-content;
+  width: 20%;
+}

@@ -1,6 +1,8 @@
 'use client'
 import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
+import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -22,6 +24,7 @@ const PublicPage = ({ children }: Props) => {
 
   useEffect(() => {
     getLocale().then(setLocale)
+    switchEnvironment(Environment.BC)
   }, [])
 
   const languages = [
@@ -33,7 +36,7 @@ const PublicPage = ({ children }: Props) => {
     <PublicContainer>
       <div className={classNames(styles.info, 'grow p2 text-center')}>
         <p className="title-h4 mb1">{t('welcome')}</p>
-        <p>{t('explaination')}</p>
+        <p>{t.rich('explaination', { b: (children) => <b>{children}</b> })}</p>
         <Image
           src="/logos/monogramme_BC_noir.png"
           alt="logo"

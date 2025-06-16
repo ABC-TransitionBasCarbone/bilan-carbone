@@ -79,7 +79,7 @@ const SignUpFormCut = () => {
           placeholder={t('siretOrCNCPlaceholder')}
           data-testid="activation-siretOrCNC"
         />
-        <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
+        <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
           {t('validate')}
         </LoadingButton>
         {message && (

@@ -1,20 +1,35 @@
 'use client'
 import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
+import { switchEnvironment } from '@/i18n/environment'
 import { getLocale, switchLocale } from '@/i18n/locale'
+import { alpha, Box, Container, Divider, styled, Typography } from '@mui/material'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { ReactNode, useEffect, useState } from 'react'
 import PublicContainer from '../base/PublicContainer'
 import Image from '../document/Image'
 import styles from './Public.module.css'
 
+const StyledPublicCutPage = styled(Box)(({ theme }) => ({
+  background: theme.palette.primary.main,
+  border: '3px',
+  borderRadius: '1rem 0 0 1rem',
+  color: theme.palette.primary.contrastText,
+  minWidth: '50%',
+}))
+
+const StyledLoginForm = styled(Container)(({ theme }) => ({
+  border: `4px solid ${theme.palette.primary.main}`,
+  borderLeft: '0px',
+  borderRadius: '0 1rem 1rem 0',
+  padding: '1.5rem',
+  background: alpha(theme.palette.primary.main, 0.05),
+}))
+
 interface Props {
   children: ReactNode
 }
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
-
 const PublicCutPage = ({ children }: Props) => {
   const t = useTranslations('login')
   const tLocale = useTranslations('locale')
@@ -22,41 +37,50 @@ const PublicCutPage = ({ children }: Props) => {
 
   useEffect(() => {
     getLocale().then(setLocale)
+    switchEnvironment(Environment.CUT)
   }, [])
 
-  const languages = [
-    { name: tLocale('en'), code: 'GB', target: Locale.EN },
-    { name: tLocale('fr'), code: 'FR', target: Locale.FR },
-  ]
+  const languages = [{ name: tLocale('fr'), code: 'FR', target: Locale.FR }]
 
   return (
     <PublicContainer>
-      <div className={classNames(styles.info, 'grow p2 text-center')}>
-        <p className="title-h4 mb1">{t('welcome')}</p>
-        <p>{t('explaination')}</p>
-        <Image
-          src="/logos/monogramme_BC_noir.png"
-          alt="logo"
-          width={400}
-          height={400}
-          className={classNames(styles.image, 'w100')}
-        />
-        <p>
-          {t.rich('question', {
-            link: (children) => (
-              <Link href={faq} className={styles.link} target="_blank" rel="noreferrer noopener">
-                {children}
-              </Link>
-            ),
-            support: (children) => (
-              <Link href={`mailto:${contactMail}`} className={styles.link}>
-                {children}
-              </Link>
-            ),
-          })}
-        </p>
-      </div>
-      <div className={classNames(styles.loginForm, 'grow flex-col')}>
+      <StyledPublicCutPage className={classNames('grow text-center')}>
+        <Box p="1.5rem" borderBottom="1px solid" borderColor="success.light">
+          <Box className="justify-around flex-col" minHeight="600px" px="2rem" py="5rem">
+            <Typography className="title-h2">{t('welcome')}</Typography>
+            <Image
+              src="/logos/cut/logo-filled.svg"
+              alt="logo"
+              width={400}
+              height={400}
+              className={classNames(styles.image, 'w100')}
+            />
+            <Typography className="title-h6 bold">{t('subtext')}</Typography>
+            <div className="justify-center">
+              <Divider sx={{ borderColor: 'primary.contrastText' }} className={styles.divider} />
+            </div>
+            <Typography className={styles.explaination}>
+              {t.rich('explaination', { b: (children) => <b>{children}</b> })}
+            </Typography>
+          </Box>
+        </Box>
+        <Box className="justify-between" padding="2rem">
+          <Image
+            className={styles.france2030Logo}
+            src="/logos/cut/france_2030.png"
+            alt="logo"
+            width={204}
+            height={198}
+          />
+          <Typography textAlign="justify" width="75%" fontSize="0.8rem">
+            {t.rich('question', {
+              link: () => '',
+              support: () => '',
+            })}
+          </Typography>
+        </Box>
+      </StyledPublicCutPage>
+      <StyledLoginForm className={classNames('grow flex-col')}>
         <div className={classNames(styles.header, 'justify-between')}>
           <div className={classNames(styles.locales, 'flex')}>
             {languages.map((language) => (
@@ -85,7 +109,7 @@ const PublicCutPage = ({ children }: Props) => {
           />
         </div>
         {children}
-      </div>
+      </StyledLoginForm>
     </PublicContainer>
   )
 }
