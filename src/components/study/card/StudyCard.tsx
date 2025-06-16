@@ -71,7 +71,10 @@ const StudyCard = async ({ study, user }: Props) => {
           />
         </Box>
         <div className="justify-end">
-          <Button href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>
+          <Button
+            href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}
+            data-testid="study-link"
+          >
             {t('see')}
           </Button>
         </div>
