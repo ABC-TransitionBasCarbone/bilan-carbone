@@ -249,6 +249,27 @@ export const canDeleteStudy = async (studyId: string) => {
   return false
 }
 
+export const canDuplicateStudy = async (studyId: string) => {
+  const session = await dbActualizedAuth()
+
+  if (!session) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
+
+  if (!study) {
+    return false
+  }
+
+  if (study.createdById === session.user.accountId) {
+    return true
+  }
+
+  const accountRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
+  return hasEditionRights(accountRoleOnStudy) ?? false
+}
+
 export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
   const availableSubPosts = study.contributors
     .filter((contributor) => contributor.account.user.email === user.email)

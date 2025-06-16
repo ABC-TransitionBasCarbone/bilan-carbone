@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Typography } from '@mui/material'
+import { Button, ButtonProps, Tooltip, Typography } from '@mui/material'
 import classNames from 'classnames'
 
 import { ReactNode } from 'react'
@@ -8,9 +8,9 @@ import LinkButton from './LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from './LoadingButton'
 
 export type Action =
-  | (ButtonProps & { actionType: 'button'; 'data-testid'?: string })
-  | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton' })
-  | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
+  | (ButtonProps & { actionType: 'button'; 'data-testid'?: string; tooltip?: string })
+  | (LoadingButtonProps & ButtonProps & { actionType: 'loadingButton'; tooltip?: string })
+  | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string; tooltip?: string })
 
 export interface Props {
   children?: ReactNode
@@ -63,15 +63,24 @@ const Block = ({
           <div className={classNames(styles.header, 'align-center justify-between', bold && 'bold')}>
             {titleDiv}
             <div className={classNames(styles.actions, 'flex')}>
-              {actions.map(({ actionType, ...action }, index) =>
-                actionType === 'button' ? (
-                  <Button key={index} variant="outlined" {...(action as ButtonProps)} />
-                ) : actionType === 'loadingButton' ? (
-                  <LoadingButton key={index} {...(action as LoadingButtonProps)} />
+              {actions.map(({ actionType, tooltip, ...action }, index) => {
+                const buttonElement =
+                  actionType === 'button' ? (
+                    <Button key={index} variant="outlined" {...(action as ButtonProps)} />
+                  ) : actionType === 'loadingButton' ? (
+                    <LoadingButton key={index} {...(action as LoadingButtonProps)} />
+                  ) : (
+                    <LinkButton key={index} variant="contained" {...(action as ButtonProps & { href: string })} />
+                  )
+
+                return tooltip ? (
+                  <Tooltip key={index} title={tooltip} arrow>
+                    {buttonElement}
+                  </Tooltip>
                 ) : (
-                  <LinkButton key={index} variant="contained" {...(action as ButtonProps & { href: string })} />
-                ),
-              )}
+                  buttonElement
+                )
+              })}
             </div>
           </div>
         ) : (

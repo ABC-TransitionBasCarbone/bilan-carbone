@@ -266,6 +266,14 @@
   },
   "study": {
     "create": "Ajouter un Bilan Carbone®",
+    "duplicate": "Dupliquer l'étude",
+    "duplicateCopy": " - Copie",
+    "duplicateDialog": {
+      "title": "Duplication de l'étude",
+      "description": "Souhaitez vous dupliquer cette étude ? Vous serez redirigé vers la page de création d'une étude, tous les champs seront pré-remplis avec les informations de cette étude, et une fois validé, toute l'étude et ses sources d'émissions seront dupliquées.",
+      "cancel": "Annuler",
+      "confirm": "Dupliquer"
+    },
     "myCollaborations": "Mes collaborations",
     "myStudies": "Mes Bilans Carbone®",
     "createFirstStudy": "Créer mon premier Bilan Carbone®",
@@ -331,6 +339,20 @@
         "DifferentHoursHoliday": "Horaires différents pendant les vacances scolaires"
       },
       "create": "Créer l'étude",
+      "duplicate": "Dupliquer l'étude",
+      "duplicationOptions": "Options de duplication",
+      "inviteTeam": "Inviter la même équipe",
+      "inviteContributors": "Inviter les mêmes contributeurs",
+      "siteDeselectionModal": {
+        "title": "Attention : Sites avec sources d'émission",
+        "description": "Vous tentez de désélectionner des sites qui contiennent des sources d'émission dans l'étude originale.",
+        "affectedSites": "Sites affectés",
+        "sourcesCount": "{count, plural, =1 {1 source d'émission} other {# sources d'émission}}",
+        "totalSources": "{count, plural, =1 {Au total, 1 source d'émission ne sera pas dupliquée.} other {Au total, # sources d'émission ne seront pas dupliquées.}}",
+        "confirmation": "Êtes-vous sûr de vouloir continuer ?",
+        "cancel": "Annuler",
+        "proceed": "Continuer sans ces sources"
+      },
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Email du validateur",
@@ -347,6 +369,8 @@
         "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
         "control": "Mode de contrôle",
         "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone®) les émissions vont se ventiler. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émission varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
+        "duplicationOptions": "Options de duplication",
+        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et contributeurs de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration.",
         "close": "Fermer"
       },
       "validation": {

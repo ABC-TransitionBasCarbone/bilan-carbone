@@ -1,0 +1,10 @@
+.loadingContainer {
+  padding: 10rem;
+  gap: 1rem;
+}
+
+.spinner {
+  color: #1976d2;
+  width: 2rem;
+  height: 2rem;
+}
