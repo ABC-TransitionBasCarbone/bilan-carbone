@@ -1,17 +1,6 @@
 import { UpdateOrganizationCommand } from '@/services/serverFunctions/organization.command'
-import { sendNewUser } from '@/services/serverFunctions/user'
 import { OnboardingCommand } from '@/services/serverFunctions/user.command'
-import {
-  Environment,
-  Organization,
-  OrganizationVersion,
-  Prisma,
-  Role,
-  Site,
-  UserSource,
-  UserStatus,
-} from '@prisma/client'
-import { AccountWithUser } from './account'
+import { Environment, Organization, OrganizationVersion, Prisma, Site, UserStatus } from '@prisma/client'
 import { prismaClient } from './client'
 import { deleteStudy } from './study'
 
@@ -63,7 +52,7 @@ export const getOrganizationVersionAccounts = (id: string | null) =>
   id
     ? prismaClient.account.findMany({
         select: { user: { select: { email: true, firstName: true, lastName: true, level: true } }, role: true },
-        where: { organizationVersionId: id, user: { status: UserStatus.ACTIVE } },
+        where: { organizationVersionId: id, status: UserStatus.ACTIVE },
         orderBy: { user: { email: 'asc' } },
       })
     : []
@@ -168,8 +157,8 @@ export const setOnboarded = (organizationVersionId: string, accountId: string) =
 
 export const onboardOrganizationVersion = async (
   accountId: string,
-  { organizationVersionId, companyName, firstName, lastName, collaborators = [] }: OnboardingCommand,
-  existingCollaborators: AccountWithUser[],
+  { organizationVersionId, companyName, firstName, lastName }: Omit<OnboardingCommand, 'collaborators'>,
+  transaction: Prisma.TransactionClient,
 ) => {
   const userAccount = await prismaClient.account.findUnique({ where: { id: accountId } })
   if (!userAccount) {
@@ -180,93 +169,26 @@ export const onboardOrganizationVersion = async (
   if (!dbUser) {
     return
   }
-  const newCollaborators: (Pick<AccountWithUser, 'role' | 'organizationVersionId'> & {
-    user: { firstName: string; lastName: string; email: string; status: UserStatus; source: UserSource }
-  })[] = []
-
-  for (const collaborator of collaborators) {
-    newCollaborators.push({
-      user: {
-        firstName: '',
-        lastName: '',
-        email: collaborator.email?.toLowerCase() || '',
-        status: UserStatus.VALIDATED,
-        source: dbUser.source,
-      },
-      role: collaborator.role === Role.ADMIN ? Role.GESTIONNAIRE : (collaborator.role ?? Role.DEFAULT),
-      organizationVersionId,
-    })
-  }
   const organizationVersion = (await getOrganizationVersionById(
     organizationVersionId,
   )) as OrganizationVersionWithOrganization
 
-  await prismaClient.$transaction(async (transaction) => {
-    await transaction.organization.update({
-      where: { id: organizationVersion.organizationId },
-      data: { name: companyName },
-    })
-
-    await transaction.account.update({
-      where: { id: accountId },
-      data: {
-        user: {
-          update: {
-            firstName,
-            lastName,
-          },
-        },
-      },
-    })
-
-    const collaboratorCreations = newCollaborators.map((collaborator) => {
-      if (!collaborator.organizationVersionId) {
-        return
-      }
-      return transaction.account.create({
-        data: {
-          role: collaborator.role,
-          organizationVersion: { connect: { id: collaborator.organizationVersionId } },
-          environment: organizationVersion.environment,
-          user: {
-            create: {
-              firstName: collaborator.user.firstName,
-              lastName: collaborator.user.lastName,
-              email: collaborator.user.email,
-              status: collaborator.user.status,
-              source: collaborator.user.source,
-            },
-          },
-        },
-      })
-    })
-
-    await Promise.all(collaboratorCreations)
-
-    const collaboratorUpdates = existingCollaborators.map((collaborator) => {
-      return transaction.account.update({
-        where: { id: collaborator.id },
-        data: {
-          role:
-            collaborator.user.level || collaborator.role !== Role.ADMIN
-              ? collaborator.role
-              : collaborator.role === Role.ADMIN
-                ? Role.GESTIONNAIRE
-                : Role.COLLABORATOR,
-          user: {
-            update: { status: UserStatus.VALIDATED },
-          },
-        },
-      })
-    })
-
-    await Promise.all(collaboratorUpdates)
+  await transaction.organization.update({
+    where: { id: organizationVersion.organizationId },
+    data: { name: companyName },
   })
 
-  const allCollaborators = [...newCollaborators, ...existingCollaborators]
-  allCollaborators.forEach((collab) =>
-    sendNewUser(collab.user.email.toLowerCase(), dbUser, collab.user.firstName ?? ''),
-  )
+  await transaction.account.update({
+    where: { id: accountId },
+    data: {
+      user: {
+        update: {
+          firstName,
+          lastName,
+        },
+      },
+    },
+  })
 }
 
 export const deleteClient = async (id: string) => {

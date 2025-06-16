@@ -1,6 +1,7 @@
 'use server'
 
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
+import { Environment } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { computePasswordValidation } from '../utils'
 
@@ -23,7 +24,9 @@ export const checkToken = async (token: string) => {
   }
 }
 
-export const reset = async (email: string, password: string, token: string) => {
+export const reset = async (email: string, password: string, token: string, userEnv: Environment | undefined) => {
+  const env = userEnv || Environment.BC
+
   const tokenValues = jwt.verify(token, process.env.NEXTAUTH_SECRET as string) as {
     email: string
     resetToken: string
@@ -34,7 +37,7 @@ export const reset = async (email: string, password: string, token: string) => {
     if (user && user.resetToken && user.resetToken === tokenValues.resetToken) {
       const passwordValidation = computePasswordValidation(password)
       if (Object.values(passwordValidation).every((value) => value)) {
-        await updateUserPasswordForEmail(email, password)
+        await updateUserPasswordForEmail(email, password, env)
         return true
       }
     }

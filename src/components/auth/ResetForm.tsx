@@ -6,11 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { FormControl, IconButton, InputAdornment } from '@mui/material'
+import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
@@ -54,6 +55,9 @@ const ResetForm = ({ user, token }: Props) => {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(false)
   const [validated, setValidated] = useState(false)
+  const [env, setEnv] = useState<Environment | undefined>()
+
+  const searchParams = useSearchParams()
 
   const { getValues, control, watch, handleSubmit } = useForm<ResetPasswordCommand>({
     resolver: zodResolver(ResetPasswordCommandValidation),
@@ -63,6 +67,13 @@ const ResetForm = ({ user, token }: Props) => {
       email: '',
     },
   })
+
+  useEffect(() => {
+    const environment = searchParams.get('env')
+    if (environment && Object.keys(Environment).includes(environment)) {
+      setEnv(environment as Environment)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     const { unsubscribe } = watch((values) => setPasswordValidation(computePasswordValidation(values.password ?? '')))
@@ -79,12 +90,16 @@ const ResetForm = ({ user, token }: Props) => {
     setError(false)
 
     const { email, password } = getValues()
-    const result = await reset(email.toLowerCase(), password, token)
+    const result = await reset(email.toLowerCase(), password, token, env)
     if (result) {
       setSubmitting(false)
       setValidated(true)
       setTimeout(() => {
-        router.push('/login')
+        if (env) {
+          router.push(`/login?env=${env}`)
+        } else {
+          router.push(`/login`)
+        }
       }, 5000)
     } else {
       setError(true)
@@ -104,6 +119,7 @@ const ResetForm = ({ user, token }: Props) => {
           label={t('email')}
           placeholder={t('emailPlaceholder')}
           translation={t}
+          trim
         />
         <FormTextField
           control={control}
@@ -178,7 +194,13 @@ const ResetForm = ({ user, token }: Props) => {
         >
           {t('reset')}
         </LoadingButton>
-        {validated && <p>{t.rich('validated', { link: (children) => <Link href="/login">{children}</Link> })}</p>}
+        {validated && (
+          <p>
+            {t.rich('validated', {
+              link: (children) => <Link href={env ? `/login?env=${env}` : '/login'}>{children}</Link>,
+            })}
+          </p>
+        )}
       </FormControl>
     </Form>
   )

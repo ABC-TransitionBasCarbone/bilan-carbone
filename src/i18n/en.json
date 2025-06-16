@@ -890,7 +890,7 @@
     "More than one": "There must be at least one admin or manager in the organization"
   },
   "environment": {
-    "BC": "BC",
+    "BC": "BC+ 2.0",
     "CUT": "Count",
     "TILT": "Tilt"
   },
@@ -938,7 +938,8 @@
       "lastName": "Please enter a last name",
       "level": "Please enter a training level",
       "role": "Please enter a role"
-    }
+    },
+    "addedMember": "The user has been successfully invited to your organization."
   },
   "units": {
     "selectAll": "Select all",

@@ -1,5 +1,6 @@
 'use client'
 
+import { EnvironmentNames } from '@/constants/environments'
 import { getUserWithAccountsAndOrganizationsById } from '@/db/user'
 import { switchEnvironment } from '@/i18n/environment'
 import { accountHandler } from '@/services/auth'
@@ -51,7 +52,7 @@ const SelectAccount = ({ user, userWithAccountsAndOrganizations }: Props) => {
                   <p className="bold mr1">{account.organizationVersion?.organization.name}</p>
                 </ListItemText>
                 <ListItemText>
-                  <Chip className="bold" variant="outlined" label={account.environment} />
+                  <Chip className="bold" variant="outlined" label={EnvironmentNames[account.environment]} />
                 </ListItemText>
               </ListItemButton>
             </ListItem>

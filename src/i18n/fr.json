@@ -890,7 +890,7 @@
     "More than one": "Il doit y avoir au moins un administrateur ou gestionnaire dans l'organisation"
   },
   "environment": {
-    "BC": "BC",
+    "BC": "BC+ 2.0",
     "CUT": "Count",
     "TILT": "Tilt"
   },
@@ -938,7 +938,8 @@
       "lastName": "Veuillez renseigner un nom",
       "level": "Veuillez renseigner un niveau de formation",
       "role": "Veuillez renseigner un rôle"
-    }
+    },
+    "addedMember": "L'utilisateur a bien été ajouté à votre organisation"
   },
   "units": {
     "selectAll": "Tout sélectionner",

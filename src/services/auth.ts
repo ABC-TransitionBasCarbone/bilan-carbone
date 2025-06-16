@@ -142,7 +142,8 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await getUserByEmailWithSensibleInformations(credentials.email)
-        if (!user || !user.password || user.status !== UserStatus.ACTIVE) {
+
+        if (!user || !user.password || user.accounts.every((a) => a.status !== UserStatus.ACTIVE)) {
           return null
         }
 
@@ -151,7 +152,7 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        const accounts = user.accounts
+        const accounts = user.accounts.filter((a) => a.status === UserStatus.ACTIVE)
 
         if (accounts.length > 1) {
           return {
@@ -165,6 +166,7 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
+        // L'utilisateur n'a qu'un seul compte donc on peut prendre le premier
         const account = (await getAccountById(accounts[0].id)) as AccountWithUser
         return buildSession(account)
       },

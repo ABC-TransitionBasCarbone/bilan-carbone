@@ -40,6 +40,7 @@ const NewMemberForm = ({ environment }: Props) => {
       onSuccess: () => {
         router.push('/equipe')
       },
+      getSuccessMessage: () => t('addedMember'),
     })
   }
 
@@ -68,6 +69,7 @@ const NewMemberForm = ({ environment }: Props) => {
         translation={t}
         name="email"
         label={t('email')}
+        trim
       />
       <FormSelect control={form.control} translation={t} name="role" label={t('role')} data-testid="new-member-role">
         {Object.keys(getEnvironmentRoles(environment))
