@@ -3,6 +3,7 @@ import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import LinkButton from '@/components/base/LinkButton'
 import { FormSelect } from '@/components/form/Select'
+import SiteDeselectionWarningModal from '@/components/modals/SiteDeselectionWarningModal'
 import { OrganizationWithSites } from '@/db/account'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
@@ -22,12 +23,28 @@ interface Props {
   selectOrganizationVersion: Dispatch<SetStateAction<OrganizationWithSites | undefined>>
   form: UseFormReturn<CreateStudyCommand>
   caUnit: SiteCAUnit
+  duplicateStudyId?: string | null
+  targetOrganizationVersionId?: string | null
 }
 
-const SelectOrganization = ({ user, organizationVersions, selectOrganizationVersion, form, caUnit }: Props) => {
+const SelectOrganization = ({
+  user,
+  organizationVersions,
+  selectOrganizationVersion,
+  form,
+  caUnit,
+  duplicateStudyId,
+  targetOrganizationVersionId,
+}: Props) => {
   const t = useTranslations('study.organization')
   const tOrganizationSites = useTranslations('organization.sites')
   const [error, setError] = useState('')
+  const [showWarningModal, setShowWarningModal] = useState(false)
+  const [originalSelectedSites, setOriginalSelectedSites] = useState<string[]>([])
+  const [pendingDeselectedSites, setPendingDeselectedSites] = useState<
+    Array<{ name: string; emissionSourcesCount: number }>
+  >([])
+
   const sites = form.watch('sites')
   const organizationVersionId = form.watch('organizationVersionId')
   const isCut = useMemo(() => user.environment === Environment.CUT, [user.environment])
@@ -38,8 +55,15 @@ const SelectOrganization = ({ user, organizationVersions, selectOrganizationVers
   )
 
   useEffect(() => {
+    if (duplicateStudyId && targetOrganizationVersionId && !organizationVersionId) {
+      form.setValue('organizationVersionId', targetOrganizationVersionId)
+    }
+  }, [duplicateStudyId, targetOrganizationVersionId, organizationVersionId, form])
+
+  useEffect(() => {
     if (!organizationVersion) {
       form.setValue('sites', [])
+      setOriginalSelectedSites([])
     } else {
       const newSites = organizationVersion.organization.sites.map((site) => site.id)
       if (JSON.stringify(form.getValues('sites').map((site) => site.id)) !== JSON.stringify(newSites)) {
@@ -56,84 +80,139 @@ const SelectOrganization = ({ user, organizationVersions, selectOrganizationVers
         )
       }
     }
-  }, [organizationVersion, caUnit])
+  }, [organizationVersion, caUnit, form])
+
+  // Track original selected sites when duplicating a study
+  useEffect(() => {
+    if (duplicateStudyId && sites.length > 0) {
+      const selectedSiteIds = sites.filter((site) => site.selected).map((site) => site.id)
+      if (selectedSiteIds.length > 0 && originalSelectedSites.length === 0) {
+        setOriginalSelectedSites(selectedSiteIds)
+      }
+    }
+  }, [duplicateStudyId, sites, originalSelectedSites.length])
+
+  const handleConfirmDeselection = () => {
+    setShowWarningModal(false)
+    setPendingDeselectedSites([])
+    selectOrganizationVersion(organizationVersion)
+  }
+
+  const handleCancelDeselection = () => {
+    setShowWarningModal(false)
+    setPendingDeselectedSites([])
+  }
 
   const next = () => {
     if (!sites.some((site) => site.selected)) {
       setError(t('validation.sites'))
-    } else {
-      if (
-        user.environment === Environment.CUT &&
-        sites
-          .filter((site) => site.selected)
-          .some(
-            (site) =>
-              Number.isNaN(site.etp) ||
-              (site?.etp && site?.etp <= 0) ||
-              Number.isNaN(site.ca) ||
-              (site?.ca && site?.ca <= 0),
-          )
-      ) {
-        setError(t('validation.etpCa'))
-      } else {
-        selectOrganizationVersion(organizationVersion)
+      return
+    }
+
+    if (
+      user.environment === Environment.CUT &&
+      sites
+        .filter((site) => site.selected)
+        .some(
+          (site) =>
+            Number.isNaN(site.etp) ||
+            (site?.etp && site?.etp <= 0) ||
+            Number.isNaN(site.ca) ||
+            (site?.ca && site?.ca <= 0),
+        )
+    ) {
+      setError(t('validation.etpCa'))
+      return
+    }
+
+    // Check for deselected sites with emission sources when duplicating
+    if (duplicateStudyId) {
+      const currentSelectedSiteIds = sites.filter((site) => site.selected).map((site) => site.id)
+      const deselectedSitesWithSources = sites
+        .filter((site) => {
+          const wasOriginallySelected = originalSelectedSites.includes(site.id)
+          const isCurrentlySelected = currentSelectedSiteIds.includes(site.id)
+          const hasEmissionSources = site.emissionSourcesCount && site.emissionSourcesCount > 0
+
+          return wasOriginallySelected && !isCurrentlySelected && hasEmissionSources
+        })
+        .map((site) => ({
+          name: site.name,
+          emissionSourcesCount: site.emissionSourcesCount || 0,
+        }))
+
+      if (deselectedSitesWithSources.length > 0) {
+        setPendingDeselectedSites(deselectedSitesWithSources)
+        setShowWarningModal(true)
+        return
       }
     }
+
+    selectOrganizationVersion(organizationVersion)
   }
 
   return (
-    <Block>
-      {organizationVersions.length === 1 ? (
-        <p data-testid="new-study-organization-title" className="title-h2">
-          {!isCut ? organizationVersions[0].organization.name : tOrganizationSites('title')}
-        </p>
-      ) : (
-        <>
-          <p data-testid="new-study-organization-title" className="title-h1">
-            {t('title')}
+    <>
+      <Block>
+        {organizationVersions.length === 1 ? (
+          <p data-testid="new-study-organization-title" className="title-h2">
+            {!isCut ? organizationVersions[0].organization.name : tOrganizationSites('title')}
           </p>
-          <FormSelect
-            data-testid="new-study-organization-select"
-            name="organizationVersionId"
-            control={form.control}
-            translation={t}
-            label={t('select')}
-          >
-            {organizationVersions.map((organizationVersion) => (
-              <MenuItem key={organizationVersion.id} value={organizationVersion.id}>
-                {organizationVersion.organization.name}
-              </MenuItem>
-            ))}
-          </FormSelect>
-        </>
-      )}
-      {organizationVersion &&
-        (organizationVersion.organization.sites.length > 0 ? (
-          <>
-            <DynamicComponent
-              environmentComponents={{
-                [Environment.CUT]: <SitesCut sites={sites} form={form} withSelection />,
-              }}
-              defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} withSelection />}
-            />
-            <div className="mt2">
-              <Button
-                disabled={!sites.some((site) => site.selected)}
-                data-testid="new-study-organization-button"
-                onClick={next}
-              >
-                {t('next')}
-              </Button>
-              {error && <FormHelperText error>{error}</FormHelperText>}
-            </div>
-          </>
         ) : (
           <>
-            <p className="title-h3 mt1 mb-2">{t('noSites')}</p>
-            <LinkButton href={`/organisations/${organizationVersion.id}/modifier`}>{t('addSite')}</LinkButton>
+            <p data-testid="new-study-organization-title" className="title-h1">
+              {t('title')}
+            </p>
+            <FormSelect
+              data-testid="new-study-organization-select"
+              name="organizationVersionId"
+              control={form.control}
+              translation={t}
+              label={t('select')}
+            >
+              {organizationVersions.map((organizationVersion) => (
+                <MenuItem key={organizationVersion.id} value={organizationVersion.id}>
+                  {organizationVersion.organization.name}
+                </MenuItem>
+              ))}
+            </FormSelect>
           </>
-        ))}
-    </Block>
+        )}
+        {organizationVersion &&
+          (organizationVersion.organization.sites.length > 0 ? (
+            <>
+              <DynamicComponent
+                environmentComponents={{
+                  [Environment.CUT]: <SitesCut sites={sites} form={form} withSelection />,
+                }}
+                defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} withSelection />}
+              />
+              <div className="mt2">
+                <Button
+                  disabled={!sites.some((site) => site.selected)}
+                  data-testid="new-study-organization-button"
+                  onClick={next}
+                >
+                  {t('next')}
+                </Button>
+                {error && <FormHelperText error>{error}</FormHelperText>}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="title-h3 mt1 mb-2">{t('noSites')}</p>
+              <LinkButton href={`/organisations/${organizationVersion.id}/modifier`}>{t('addSite')}</LinkButton>
+            </>
+          ))}
+      </Block>
+
+      <SiteDeselectionWarningModal
+        isOpen={showWarningModal}
+        onClose={handleCancelDeselection}
+        onConfirm={handleConfirmDeselection}
+        sitesWithSources={pendingDeselectedSites}
+      />
+    </>
   )
 }
 

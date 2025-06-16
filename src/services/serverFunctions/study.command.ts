@@ -24,6 +24,7 @@ export const SitesCommandValidation = z.object({
       selected: z.boolean().optional(),
       postalCode: z.string().optional(),
       city: z.string().optional(),
+      emissionSourcesCount: z.number().optional(),
     }),
   ),
 })
@@ -39,55 +40,47 @@ export const StudyExportsCommandValidation = z.object({
 
 export type StudyExportsCommand = z.infer<typeof StudyExportsCommandValidation>
 
+const dateValidation = (field: string) =>
+  z.string({ required_error: field }).refine((val) => dayjs(val).isValid(), field)
+
+const optionalDateValidation = (field: string) =>
+  z
+    .string()
+    .optional()
+    .nullable()
+    .refine((val) => val === null || dayjs(val).isValid(), field)
+
+const BaseStudyValidation = z.object({
+  organizationVersionId: z.string(),
+  name: z
+    .string({
+      required_error: 'name',
+    })
+    .trim()
+    .min(1, 'name'),
+  validator: z
+    .string({
+      required_error: 'validator',
+      invalid_type_error: 'validator',
+    })
+    .email('validator')
+    .trim(),
+  startDate: dateValidation('startDate'),
+  endDate: dateValidation('endDate'),
+  realizationStartDate: optionalDateValidation('startDate'),
+  realizationEndDate: optionalDateValidation('endDate'),
+  level: z.nativeEnum(Level, { required_error: 'level' }),
+  isPublic: z.string(),
+  resultsUnit: z.nativeEnum(StudyResultUnit).optional(),
+  numberOfSessions: z.number().optional(),
+  numberOfTickets: z.number().optional(),
+  numberOfOpenDays: z.number().optional(),
+  openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
+  openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
+})
+
 export const CreateStudyCommandValidation = z
-  .intersection(
-    z.intersection(
-      z.object({
-        organizationVersionId: z.string(),
-        name: z
-          .string({
-            required_error: 'name',
-          })
-          .trim()
-          .min(1, 'name'),
-        validator: z
-          .string({
-            required_error: 'validator',
-            invalid_type_error: 'validator',
-          })
-          .email('validator')
-          .trim(),
-        startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
-          const date = dayjs(val)
-          return date.isValid()
-        }, 'startDate'),
-        endDate: z.string({ required_error: 'endDate' }).refine((val) => {
-          const date = dayjs(val)
-          return date.isValid()
-        }, 'endDate'),
-        realizationStartDate: z
-          .string()
-          .optional()
-          .nullable()
-          .refine((val) => {
-            const date = dayjs(val)
-            return val === null || date.isValid()
-          }, 'startDate'),
-        realizationEndDate: z
-          .string()
-          .optional()
-          .nullable()
-          .refine((val) => {
-            const date = dayjs(val)
-            return val === null || date.isValid()
-          }, 'endDate'),
-        level: z.nativeEnum(Level, { required_error: 'level' }),
-        isPublic: z.string(),
-      }),
-      StudyExportsCommandValidation,
-    ),
-    SitesCommandValidation,
-  )
+  .intersection(z.intersection(BaseStudyValidation, StudyExportsCommandValidation), SitesCommandValidation)
   .refine((data) => dayjs(data.endDate).isAfter(dayjs(data.startDate)), {
     message: 'endDateBeforStartDate',
     path: ['endDate'],
@@ -102,9 +95,7 @@ export const CreateStudyCommandValidation = z
       path: ['realizationEndDate'],
     },
   )
-  .refine(({ sites }) => {
-    return sites.some((site) => site.selected)
-  }, 'sites')
+  .refine(({ sites }) => sites.some((site) => site.selected), 'sites')
 
 export type CreateStudyCommand = z.infer<typeof CreateStudyCommandValidation>
 
@@ -142,30 +133,10 @@ export type ChangeStudyResultsUnitCommand = z.infer<typeof ChangeStudyResultsUni
 export const ChangeStudyDatesCommandValidation = z
   .object({
     studyId: z.string(),
-    startDate: z.string({ required_error: 'stardDate' }).refine((val) => {
-      const date = dayjs(val)
-      return date.isValid()
-    }, 'startDate'),
-    endDate: z.string({ required_error: 'endDate' }).refine((val) => {
-      const date = dayjs(val)
-      return date.isValid()
-    }, 'endDate'),
-    realizationStartDate: z
-      .string()
-      .optional()
-      .nullable()
-      .refine((val) => {
-        const date = dayjs(val)
-        return val === null || date.isValid()
-      }, 'startDate'),
-    realizationEndDate: z
-      .string()
-      .optional()
-      .nullable()
-      .refine((val) => {
-        const date = dayjs(val)
-        return val === null || date.isValid()
-      }, 'endDate'),
+    startDate: dateValidation('startDate'),
+    endDate: dateValidation('endDate'),
+    realizationStartDate: optionalDateValidation('startDate'),
+    realizationEndDate: optionalDateValidation('endDate'),
   })
   .refine((data) => dayjs(data.endDate).isAfter(dayjs(data.startDate)), {
     message: 'endDateBeforStartDate',
