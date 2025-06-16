@@ -474,7 +474,7 @@ export const displayFeedBackForm = async () =>
     }
 
     const [userFeedbackDate, activeFeature] = await Promise.all([
-      getUserFeedbackDate(session.user.userId),
+      getUserFeedbackDate(session.user.accountId),
       isFeatureActive(DeactivatableFeature.Feedback),
     ])
 
@@ -495,7 +495,7 @@ export const delayFeeback = async () =>
     }
     const now = new Date()
     const feedbackDate = new Date(now.getTime() + Number(process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_DELAY))
-    updateUserFeedbackDate(session.user.id, feedbackDate)
+    updateUserFeedbackDate(session.user.accountId, feedbackDate)
   })
 
 export const answerFeeback = async () =>
@@ -506,5 +506,5 @@ export const answerFeeback = async () =>
     }
     const now = new Date()
     const feedbackDate = new Date(now.getTime() + 10 * YEAR * TIME_IN_MS)
-    updateUserFeedbackDate(session.user.id, feedbackDate)
+    updateUserFeedbackDate(session.user.accountId, feedbackDate)
   })

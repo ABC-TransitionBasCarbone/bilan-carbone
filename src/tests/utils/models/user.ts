@@ -21,7 +21,6 @@ export const mockedDbUser = {
   password: null,
   resetToken: null,
   formationFormStartTime: null,
-  feedbackDate: null,
   source: UserSource.CRON,
 }
 
@@ -35,6 +34,7 @@ const mockedAccount = {
   environment: Environment.BC,
   role: Role.ADMIN,
   status: UserStatus.ACTIVE,
+  feedbackDate: null,
 }
 const mockedDbAccount = {
   ...mockedAccount,

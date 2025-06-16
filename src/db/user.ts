@@ -254,13 +254,13 @@ export const updateAccount = (
     },
   })
 
-export const resetUserFeedbackDate = async () => prismaClient.user.updateMany({ data: { feedbackDate: null } })
+export const resetUserFeedbackDate = async () => prismaClient.account.updateMany({ data: { feedbackDate: null } })
 
-export const getUserFeedbackDate = async (userId: string) =>
-  prismaClient.user.findUnique({ select: { feedbackDate: true }, where: { id: userId } })
+export const getUserFeedbackDate = async (accountId: string) =>
+  prismaClient.account.findUnique({ select: { feedbackDate: true }, where: { id: accountId } })
 
-export const updateUserFeedbackDate = async (userId: string, feedbackDate: Date) =>
-  prismaClient.user.update({ where: { id: userId }, data: { feedbackDate } })
+export const updateUserFeedbackDate = async (accountId: string, feedbackDate: Date) =>
+  prismaClient.account.update({ where: { id: accountId }, data: { feedbackDate } })
 
 export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
   prismaClient.user.create({

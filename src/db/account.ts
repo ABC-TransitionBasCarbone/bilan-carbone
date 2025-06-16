@@ -18,6 +18,7 @@ export const AccountWithUserSelect = {
   deactivatableFeatureStatus: true,
   environment: true,
   status: true,
+  feedbackDate: true,
   organizationVersionId: true,
   organizationVersion: {
     select: {
@@ -40,7 +41,6 @@ export const AccountWithUserSelect = {
       resetToken: true,
       source: true,
       formationFormStartTime: true,
-      feedbackDate: true,
     },
   },
 }
