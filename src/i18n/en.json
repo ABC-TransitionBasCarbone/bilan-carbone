@@ -1391,7 +1391,7 @@
   },
   "feedback": {
     "title": "Give your opinion about BC+ !",
-    "body": " If you have 5 minutes, we'd love to hear your feedback on BC+! This will help us to meet your needs as effectively as possible in our future developments. If this isn't a good time, you can find this form at any time in the menu.",
+    "body": " If you have 5 minutes, we'd love to hear your feedback on BC+! This will help us to meet your needs as effectively as possible in our future developments. If this isn't a good time, you can delay your answer.",
     "reject": "Do not answer",
     "delay": "Later ({time} days)",
     "answer": "Let's go",
