@@ -274,6 +274,7 @@ const EmissionFactorsTable = ({
                         }}
                         data-testid={`delete-emission-factor-button`}
                         color="error"
+                        variant="text"
                       >
                         <DeleteIcon />
                       </Button>
