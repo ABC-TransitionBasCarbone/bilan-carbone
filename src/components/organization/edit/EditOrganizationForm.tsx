@@ -107,7 +107,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
           { actionType: 'button', onClick: () => setSitesOnError(emptySitesOnError), children: tStudySites('close') },
         ]}
       >
-        <div id="delete-site-with-studies-modale-description" className="flex-col">
+        <div id="delete-site-with-studies-modal-description" className="flex-col">
           {handleWarningText(tStudySites, 'description')}
           <ul>
             {sitesOnError &&

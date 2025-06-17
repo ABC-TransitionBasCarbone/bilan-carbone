@@ -81,8 +81,8 @@ const OnboardingModal = ({ open, onClose, user, organizationVersion }: Props) =>
     <Dialog
       open={open}
       data-testid="onboarding-modal"
-      aria-labelledby="onboarding-modale-title"
-      aria-describedby="onboarding-modale-description"
+      aria-labelledby="onboarding-modal-title"
+      aria-describedby="onboarding-modal-description"
       classes={{ paper: styles.dialog }}
     >
       <div className={styles.container}>
