@@ -252,6 +252,7 @@ const users = async () => {
       organizationVersionId: organizationVersionCutSignup.id,
       role: Role.ADMIN,
       environment: Environment.CUT,
+      status: UserStatus.ACTIVE,
       userId: (
         await prisma.user.create({
           data: {
@@ -259,7 +260,6 @@ const users = async () => {
             firstName: faker.person.firstName(),
             lastName: faker.person.lastName(),
             password: await signPassword('password'),
-            status: UserStatus.ACTIVE,
           },
         })
       ).id,

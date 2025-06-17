@@ -3,6 +3,7 @@ import { Environment } from '@prisma/client'
 import ejs, { Data } from 'ejs'
 import nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
+import { getEnvResetLink } from './utils'
 
 const mailTransport = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
@@ -30,7 +31,7 @@ const send = (toEmail: string[], subject: string, html: string) => {
 
 export const sendResetPassword = async (toEmail: string, token: string, env: Environment) => {
   const html = await getHtml('reset-password', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
+    link: getEnvResetLink('reset-password', token, env),
   })
   return send([toEmail], 'Mot de passe oublié', html)
 }
@@ -43,7 +44,7 @@ export const sendNewUserEmail = async (
   env: Environment,
 ) => {
   const html = await getHtml('new-user', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
+    link: getEnvResetLink('reset-password', token, env),
     support: process.env.MAIL_USER,
     userName,
     creatorName,
@@ -90,12 +91,12 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
   let html
   if (fromReset) {
     html = await getHtml('activate-account-from-reset', {
-      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
+      link: getEnvResetLink('reset-password', token, env),
       support: process.env.MAIL_USER,
     })
   } else {
     html = await getHtml('activate-account', {
-      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
+      link: getEnvResetLink('reset-password', token, env),
       support: process.env.MAIL_USER,
     })
   }
@@ -149,7 +150,7 @@ export const sendNewUserOnStudyInvitationEmail = async (
   env: Environment,
 ) => {
   const html = await getHtml('new-user-on-study-invitation', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
+    link: getEnvResetLink('reset-password', token, env),
     studyName,
     studyId,
     studyLink: `${process.env.NEXTAUTH_URL}/etudes/${studyId}`,
@@ -191,7 +192,7 @@ export const sendNewContributorInvitationEmail = async (
   env: Environment,
 ) => {
   const html = await getHtml('new-contributor-invitation', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
+    link: getEnvResetLink('reset-password', token, env),
     studyName,
     studyId,
     studyLink: `${process.env.NEXTAUTH_URL}/etudes/${studyId}`,
@@ -208,12 +209,4 @@ export const sendAddedUsersByFile = async (results: Record<string, string>[]) =>
   }
   const html = await getHtml('authorization-import-users', { results })
   return send([process.env.MAIL_USER], `Autorisation pour l'ajout d'utilisateurs`, html)
-}
-
-export const sendNewCutUserActivationEmail = async (toEmail: string, token: string, siretOrCNC: string) => {
-  const html = await getHtml('new-user-cut-activation', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
-    support: process.env.MAIL_USER,
-  })
-  return send([toEmail], `Vous avez créé un compte CUT - ${siretOrCNC}`, html)
 }
