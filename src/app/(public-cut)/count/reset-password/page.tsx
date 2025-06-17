@@ -1,5 +1,6 @@
 import NewPasswordForm from '@/components/auth/NewPasswordForm'
 import { auth } from '@/services/auth'
+import { Environment } from '@prisma/client'
 import { redirect } from 'next/navigation'
 
 const NewPasswordPage = async () => {
@@ -8,7 +9,7 @@ const NewPasswordPage = async () => {
     redirect('/')
   }
 
-  return <NewPasswordForm />
+  return <NewPasswordForm environment={Environment.CUT} />
 }
 
 export default NewPasswordPage

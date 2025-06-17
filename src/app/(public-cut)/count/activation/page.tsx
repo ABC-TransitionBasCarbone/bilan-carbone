@@ -1,5 +1,6 @@
 import ActivationForm from '@/components/auth/ActivationForm'
 import { auth } from '@/services/auth'
+import { Environment } from '@prisma/client'
 import { redirect } from 'next/navigation'
 
 const ActivationPage = async () => {
@@ -9,7 +10,7 @@ const ActivationPage = async () => {
     redirect('/')
   }
 
-  return <ActivationForm />
+  return <ActivationForm environment={Environment.CUT} />
 }
 
 export default ActivationPage

@@ -14,8 +14,8 @@ import {
 import { getCNCById } from '@/db/cnc'
 import { isFeatureActive } from '@/db/deactivableFeatures'
 import {
-  getOrganizationNameByOrganizationVersionId,
   createOrganizationWithVersion,
+  getOrganizationNameByOrganizationVersionId,
   getOrganizationVersionById,
   getOrganizationVersionByOrganizationIdAndEnvironment,
   getRawOrganizationBySiret,
@@ -25,6 +25,7 @@ import {
 import { addSite } from '@/db/site'
 import { FullStudy } from '@/db/study'
 import {
+  addUser,
   changeStatus,
   createOrUpdateUserCheckedStep,
   deleteUserFromOrga,
@@ -63,7 +64,6 @@ import {
   sendAddedActiveUserEmail,
   sendAddedUsersByFile,
   sendNewContributorInvitationEmail,
-  sendNewCutUserActivationEmail,
   sendNewUserEmail,
   sendNewUserOnStudyInvitationEmail,
   sendResetPassword,
@@ -332,7 +332,7 @@ export const activateEmail = async (email: string, userEnv: Environment | undefi
     }
 
     const accountOrgaVersion = await getOrganizationVersionById(account.organizationVersionId)
-    if (!accountOrgaVersion || !accountOrgaVersion.activatedLicence) {
+    if (!accountOrgaVersion || (!accountOrgaVersion.activatedLicence && env === Environment.BC)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -535,7 +535,6 @@ export const signUpCutUser = async (email: string, siretOrCNC: string) =>
         email,
         firstName: '',
         lastName: '',
-        status: UserStatus.PENDING_REQUEST,
       })) as UserWithAccounts
     }
     if (!user) {
@@ -546,8 +545,9 @@ export const signUpCutUser = async (email: string, siretOrCNC: string) =>
       accountAlreadyCreated ||
       ((await addAccount({
         user: { connect: { id: user.id } },
-        role: Role.COLLABORATOR,
+        role: Role.DEFAULT,
         environment: Environment.CUT,
+        status: UserStatus.PENDING_REQUEST,
       })) as AccountWithUser)
 
     if (!account) {
@@ -587,7 +587,6 @@ export const signUpCutUser = async (email: string, siretOrCNC: string) =>
     }
 
     await updateAccount(account.id, { organizationVersion: { connect: { id: organizationVersion.id } } })
-    const token = await updateUserResetToken(email, 1 * DAY)
     if (organization?.id) {
       const createdAccount = (await getAccountById(account.id || '')) as AccountWithUser
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(createdAccount))
@@ -599,8 +598,8 @@ export const signUpCutUser = async (email: string, siretOrCNC: string) =>
       )
       return REQUEST_SENT
     } else {
-      await validateUser(email)
-      await sendNewCutUserActivationEmail(email, token, siretOrCNC)
+      await validateUser(account.id)
+      await sendActivation(email, false, Environment.CUT)
     }
     return EMAIL_SENT
   })
