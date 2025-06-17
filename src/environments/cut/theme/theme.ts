@@ -5,10 +5,11 @@ const base = createTheme({
   palette: {
     primary: {
       main: '#63EA90',
-      light: '#D0F8DE',
+      light: '#E0FBE8',
       contrastText: '#2C303A',
     },
     secondary: {
+      light: '#F3FBF7',
       main: '#63EA90',
     },
     grey: {
@@ -68,6 +69,13 @@ const base = createTheme({
       textTransform: 'none',
       fontWeight: 600,
       fontFamily: 'Gilroy, sans-serif',
+    },
+    h4: {
+      fontFamily: 'Gilroy, sans-serif',
+      fontWeight: 700,
+      fontSize: '1.5rem',
+      lineHeight: '1.2rem',
+      letterSpacing: '0%',
     },
   },
 })
