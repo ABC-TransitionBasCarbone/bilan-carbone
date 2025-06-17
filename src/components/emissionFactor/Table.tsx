@@ -264,7 +264,7 @@ const EmissionFactorsTable = ({
                       >
                         <EditIcon color="info" />
                       </MuiButton>
-                      <MuiButton
+                      <Button
                         aria-label={t('delete')}
                         title={t('delete')}
                         className={styles.editButton}
@@ -273,9 +273,10 @@ const EmissionFactorsTable = ({
                           editEmissionFactor(row.original.id, 'delete')
                         }}
                         data-testid={`delete-emission-factor-button`}
+                        color="error"
                       >
                         <DeleteIcon />
-                      </MuiButton>
+                      </Button>
                     </>
                   )}
                 </span>

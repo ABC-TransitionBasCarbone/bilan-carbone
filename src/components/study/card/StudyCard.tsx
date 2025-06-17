@@ -57,7 +57,7 @@ const StudyCard = async ({ study, user }: Props) => {
             })}
             <GlossaryIconModal
               title="validatedOnly"
-              className="ml-2"
+              className={`ml-2 ${styles.helpIcon}`}
               iconLabel="information"
               label="study-card"
               tModal="study"

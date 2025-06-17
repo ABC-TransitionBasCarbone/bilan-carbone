@@ -88,6 +88,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
             )
           }
           title={t('download')}
+          color="secondary"
         >
           <DownloadIcon />
         </Button>

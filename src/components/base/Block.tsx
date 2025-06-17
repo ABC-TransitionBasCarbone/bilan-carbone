@@ -61,7 +61,7 @@ const Block = ({
             <div className={classNames(styles.actions, 'flex')}>
               {actions.map(({ actionType, ...action }, index) =>
                 actionType === 'button' ? (
-                  <Button key={index} {...(action as ButtonProps)} variant="outlined" />
+                  <Button key={index} variant="outlined" {...(action as ButtonProps)} />
                 ) : actionType === 'loadingButton' ? (
                   <LoadingButton key={index} {...(action as LoadingButtonProps)} />
                 ) : (

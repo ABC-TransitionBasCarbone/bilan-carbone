@@ -54,7 +54,7 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
               validated: validated,
               total: emissionSources.length,
               data: (children) => (
-                <span className={classNames(styles.vaPdated, 'mr-4', { [styles.success]: percent === 100 })}>
+                <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
                   {children}
                 </span>
               ),

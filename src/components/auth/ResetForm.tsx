@@ -182,6 +182,8 @@ const ResetForm = ({ user, token }: Props) => {
           </p>
         )}
         <LoadingButton
+          variant="contained"
+          color="secondary"
           fullWidth
           type="submit"
           data-testid="reset-button"

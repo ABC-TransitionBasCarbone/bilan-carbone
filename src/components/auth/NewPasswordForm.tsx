@@ -69,7 +69,14 @@ const NewPasswordForm = () => {
           data-testid="input-email"
           trim
         />
-        <LoadingButton type="submit" data-testid="reset-button" loading={submitting} fullWidth>
+        <LoadingButton
+          variant="contained"
+          color="secondary"
+          type="submit"
+          data-testid="reset-button"
+          loading={submitting}
+          fullWidth
+        >
           {t('reset')}
         </LoadingButton>
       </FormControl>

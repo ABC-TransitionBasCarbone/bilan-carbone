@@ -288,6 +288,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
                       title={t('delete')}
                       onClick={() => setToDelete(rowData)}
                       data-testid={`delete-study-contributor-button`}
+                      color="error"
                     >
                       <DeleteIcon />
                     </Button>
@@ -303,6 +304,7 @@ const StudyContributorsTable = ({ study, canAddContributor }: Props) => {
                       onClick={() => setToDelete(rowData)}
                       data-testid={`delete-study-contributor-post-button`}
                       size="small"
+                      color="error"
                     >
                       <DeleteIcon fontSize="small" />
                     </Button>

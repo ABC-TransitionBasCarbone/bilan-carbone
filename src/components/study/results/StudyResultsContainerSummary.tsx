@@ -104,15 +104,15 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(true)}
               className={styles.hidden}
             />
-            <Box selected={withDep} className={classNames(styles.card, 'flex-col flex-cc m2 px3')}>
+            <Box selected={withDep} color="secondary" className={classNames(styles.card, 'flex-col flex-cc pointer')}>
               <h3 className="text-center">
                 {withDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="align-center text-center">
                 {t('results.withDependencies')}
                 <HelpOutlineOutlinedIcon
-                  color="primary"
-                  className="ml-4"
+                  color="secondary"
+                  className={`ml-4 ${styles.helpIcon}`}
                   onClick={() => setGlossary('withDependencies')}
                 />
               </span>
@@ -127,7 +127,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(false)}
               className={styles.hidden}
             />
-            <Box selected={!withDep} className={classNames(styles.card, 'flex-col flex-cc pointer')}>
+            <Box selected={!withDep} color="secondary" className={classNames(styles.card, 'flex-col flex-cc pointer')}>
               <h3 className="text-center">
                 {withoutDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
@@ -138,7 +138,12 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             <h3 className="text-center">{monetaryRatio} %</h3>
             <span className="text-center align-center">
               {t('results.monetaryRatio')}
-              <HelpIcon className="ml-4" onClick={() => setGlossary('monetaryRatio')} label={t('information')} />
+              <HelpIcon
+                color="secondary"
+                className={`ml-4 ${styles.helpIcon}`}
+                onClick={() => setGlossary('monetaryRatio')}
+                label={t('information')}
+              />
             </span>
           </Box>
         </fieldset>

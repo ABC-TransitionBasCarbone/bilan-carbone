@@ -4,6 +4,7 @@ const base = createTheme({
   palette: {
     background: {
       default: '#3880ff0d',
+      paper: '#ffffff',
     },
     primary: {
       main: '#272768',
@@ -26,6 +27,7 @@ const base = createTheme({
     success: {
       main: '#94EBBF',
       light: '#E0FBE8',
+      dark: '#1d9c5c',
     },
     error: {
       light: '#e04949',
@@ -123,6 +125,11 @@ const theme = createTheme(base, {
           backgroundColor: base.palette.common.white,
           borderStyle: 'solid',
         },
+        containedSecondary: {
+          '&:hover': {
+            backgroundColor: '#002D7A',
+          },
+        },
       },
     },
     MuiLinearProgress: {
@@ -145,7 +152,7 @@ const theme = createTheme(base, {
       color: base.palette.text.primary,
       borderRadius: '1rem',
       borderStyle: 'solid',
-      borderWidth: '0.0125rem',
+      borderWidth: '0.0625rem',
       borderColor: base.palette.grey[300],
       padding: '1rem',
     },

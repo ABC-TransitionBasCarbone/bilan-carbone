@@ -80,7 +80,14 @@ const ActivationForm = () => {
           data-testid="activation-email"
           trim
         />
-        <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
+        <LoadingButton
+          variant="contained"
+          color="secondary"
+          data-testid="activation-button"
+          type="submit"
+          loading={submitting}
+          fullWidth
+        >
           {t('validate')}
         </LoadingButton>
         {message && (
