@@ -6,12 +6,12 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import HelpIcon from '../../base/HelpIcon'
 import styles from './Form.module.css'
@@ -26,17 +26,18 @@ interface Props {
 
 const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
   const router = useRouter()
+  const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
 
   const onSubmit = async (command: CreateStudyCommand) => {
-    const result = await createStudyCommand(command)
-    if (!result.success) {
-      setError(result.errorMessage)
-    } else {
-      router.push(`/etudes/${result.data.id}`)
-      router.refresh()
-    }
+    await callServerFunction(() => createStudyCommand(command), {
+      onSuccess: (data) => {
+        router.push(`/etudes/${data.id}`)
+        router.refresh()
+      },
+      getErrorMessage: (error) => tError(error),
+    })
   }
 
   const Help = (name: string) => (
@@ -72,7 +73,6 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
           {t('create')}
         </LoadingButton>
-        {error && <p>{t(`error.${error}`)}</p>}
       </Form>
       {glossary && (
         <GlossaryModal

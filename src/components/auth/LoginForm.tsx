@@ -5,11 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { FormControl, IconButton, InputAdornment } from '@mui/material'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
@@ -27,6 +28,9 @@ const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
+  const [env, setEnv] = useState<Environment | undefined>()
+
+  const searchParams = useSearchParams()
 
   const { getValues, control, watch, handleSubmit } = useForm<LoginCommand>({
     resolver: zodResolver(LoginCommandValidation),
@@ -36,10 +40,23 @@ const LoginForm = () => {
   })
 
   useEffect(() => {
-    const { unsubscribe } = watch((values) => setEmail(values.email ?? ''))
+    setEmail(getValues('email') ?? '')
 
-    return () => unsubscribe()
+    const subscription = watch((values) => {
+      if (values.email !== email) {
+        setEmail(values.email ?? '')
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [watch])
+
+  useEffect(() => {
+    const environment = searchParams.get('env')
+    if (environment && Object.keys(Environment).includes(environment)) {
+      setEnv(environment as Environment)
+    }
+  }, [searchParams])
 
   const onSubmit = async () => {
     setErrorMessage('')
@@ -67,6 +84,7 @@ const LoginForm = () => {
           placeholder={t('emailPlaceholder')}
           translation={t}
           data-testid="input-email"
+          trim
         />
         <FormTextField
           className={classNames(authStyles.input, 'grow')}
@@ -93,12 +111,19 @@ const LoginForm = () => {
         <Link
           data-testid="reset-password-link"
           className={styles.link}
-          href={`/reset-password?email=${email}`}
+          href={env ? `/reset-password?email=${email}&env=${env}` : `/reset-password?email=${email}`}
           prefetch={false}
         >
           {t('forgotPassword')}
         </Link>
-        <LoadingButton data-testid="login-button" type="submit" loading={submitting} fullWidth>
+        <LoadingButton
+          variant="contained"
+          color="secondary"
+          data-testid="login-button"
+          type="submit"
+          loading={submitting}
+          fullWidth
+        >
           {t('login')}
         </LoadingButton>
         {errorMessage && (
@@ -110,7 +135,12 @@ const LoginForm = () => {
         )}
         <div className={styles.activation}>
           {t('firstConnection')}
-          <Link data-testid="activation-button" className="ml-2" href={`/activation?email=${email}`} prefetch={false}>
+          <Link
+            data-testid="activation-button"
+            className="ml-2"
+            href={env ? `/activation?email=${email}&env=${env}` : `/activation?email=${email}`}
+            prefetch={false}
+          >
             {t('activate')}
           </Link>
         </div>

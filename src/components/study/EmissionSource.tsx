@@ -1,6 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
@@ -66,8 +67,23 @@ const EmissionSource = ({
   const tQuality = useTranslations('quality')
   const router = useRouter()
   const [display, setDisplay] = useState(false)
+  const { callServerFunction } = useServerFunction()
 
   const detailId = `${emissionSource.id}-detail`
+
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash === `#emission-source-${emissionSource.id}`) {
+      setDisplay(true)
+      setTimeout(() => {
+        const element = document.getElementById(`emission-source-${emissionSource.id}`)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }, 600)
+    }
+  }, [emissionSource.id])
+
   const canEdit = !emissionSource.validated && hasEditionRights(userRoleOnStudy)
   const canValidate = userRoleOnStudy === StudyRole.Validator
 
@@ -86,15 +102,13 @@ const EmissionSource = ({
           }
           const parsed = UpdateEmissionSourceCommandValidation.safeParse(command)
           if (parsed.success) {
-            const result = await updateEmissionSource(parsed.data)
-            if (!result.success) {
-              setError(result.errorMessage)
-            } else {
-              setSaved(true)
-              setTimeout(() => setSaved(false), 3000)
-            }
-            setLoading(false)
-            router.refresh()
+            await callServerFunction(() => updateEmissionSource(parsed.data), {
+              onSuccess: () => {
+                setSaved(true)
+                setTimeout(() => setSaved(false), 3000)
+                router.refresh()
+              },
+            })
           }
         } catch {
           setError('default')
@@ -103,7 +117,7 @@ const EmissionSource = ({
         }
       }
     },
-    [emissionSource, router],
+    [emissionSource, router, callServerFunction],
   )
 
   useEffect(() => {
@@ -153,7 +167,7 @@ const EmissionSource = ({
   }, [study.emissionFactorVersions, isFromOldImport, emissionFactors])
 
   return (
-    <div className={styles.container}>
+    <div id={`emission-source-${emissionSource.id}`} className={styles.container}>
       <button
         data-testid={`emission-source-${emissionSource.name}`}
         className={classNames(styles.line, 'flex-col')}

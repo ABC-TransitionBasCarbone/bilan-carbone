@@ -1,3 +1,4 @@
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getLink } from '@/services/checklist'
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import ValidatedIcon from '@mui/icons-material/CheckCircle'
@@ -35,12 +36,16 @@ const ChecklistItem = ({
   studyId,
 }: Props) => {
   const t = useTranslations('checklist')
+  const { callServerFunction } = useServerFunction()
   const [expanded, setExpanded] = useState(false)
   const link = useMemo(() => getLink(step, studyId), [step, studyId])
 
   const markAsDone = async () => {
-    await addUserChecklistItem(step)
-    getCheckList()
+    await callServerFunction(() => addUserChecklistItem(step), {
+      onSuccess: () => {
+        getCheckList()
+      },
+    })
   }
 
   return (

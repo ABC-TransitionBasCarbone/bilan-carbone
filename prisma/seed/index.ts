@@ -1,3 +1,4 @@
+import { environmentsWithChecklist } from '@/constants/environments'
 import { reCreateBegesRules } from '@/db/beges'
 import { signPassword } from '@/services/auth'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
@@ -21,6 +22,7 @@ import {
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { createRealStudy } from './study'
+import { getCutRoleFromBase } from './utils'
 
 const program = new Command()
 type Params = {
@@ -65,6 +67,17 @@ const users = async () => {
   await prisma.organizationVersion.deleteMany()
   await prisma.organization.deleteMany()
 
+  await prisma.cnc.deleteMany()
+
+  await prisma.cnc.create({
+    data: {
+      numeroAuto: '321',
+      nom: 'PATHE',
+      codeInsee: '75102',
+      commune: 'Paris 2e Arrondissement',
+    },
+  })
+
   await Promise.all([
     prisma.emissionFactor.create({
       data: {
@@ -75,6 +88,7 @@ const users = async () => {
         reliability: 5,
         importedId: '1',
         unit: Unit.KG,
+        isMonetary: false,
         subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
@@ -94,6 +108,7 @@ const users = async () => {
         reliability: 5,
         importedId: '2',
         unit: Unit.KG_DRY_MATTER,
+        isMonetary: false,
         subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
@@ -113,6 +128,7 @@ const users = async () => {
         reliability: 3,
         importedId: '3',
         unit: Unit.CAR_KM,
+        isMonetary: false,
         subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
@@ -149,7 +165,6 @@ const users = async () => {
       lastName: faker.person.lastName(),
       password: onboardingPassword,
       level: Level.Initial,
-      status: UserStatus.IMPORTED,
     },
   })
 
@@ -159,6 +174,7 @@ const users = async () => {
       role: Role.COLLABORATOR,
       userId: onboarding.id,
       environment: Environment.BC,
+      status: UserStatus.IMPORTED,
     },
   })
   const onboardingNotTrained = await prisma.user.create({
@@ -167,7 +183,6 @@ const users = async () => {
       password: onboardingPassword,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
-      status: UserStatus.IMPORTED,
     },
   })
 
@@ -177,6 +192,7 @@ const users = async () => {
       role: Role.COLLABORATOR,
       userId: onboardingNotTrained.id,
       environment: Environment.BC,
+      status: UserStatus.IMPORTED,
     },
   })
 
@@ -204,7 +220,6 @@ const users = async () => {
       lastName: faker.person.lastName(),
       password: await signPassword(`client1234`),
       level: Level.Initial,
-      status: UserStatus.ACTIVE,
     },
   })
 
@@ -214,6 +229,7 @@ const users = async () => {
       role: Role.COLLABORATOR,
       userId: clientLessUser.id,
       environment: Environment.BC,
+      status: UserStatus.ACTIVE,
     },
   })
 
@@ -238,7 +254,7 @@ const users = async () => {
     data: organizations.map((organization) => ({
       organizationId: organization.id,
       isCR: false,
-      onboarded: true,
+      onboarded: false,
       activatedLicence: true,
       environment: Environment.CUT,
     })),
@@ -248,20 +264,20 @@ const users = async () => {
     data: organizations.map((organization, index) => ({
       organizationId: organization.id,
       isCR: index % 2 === 0,
-      onboarded: true,
+      onboarded: false,
       activatedLicence: true,
       environment: Environment.TILT,
     })),
   })
 
+  const crOrganizationVersions = organizationVersions.filter((organization) => organization.isCR)
+  const regularOrganizationVersions = organizationVersions.filter((organization) => !organization.isCR)
+
   const environmentOrganizationVersions = {
-    [Environment.BC]: organizationVersions,
+    [Environment.BC]: regularOrganizationVersions,
     [Environment.CUT]: organizationVersionsCUT,
     [Environment.TILT]: organizationVersionsTILT,
   }
-
-  const crOrganizationVersions = organizationVersions.filter((organization) => organization.isCR)
-  const regularOrganizationVersions = organizationVersions.filter((organization) => !organization.isCR)
 
   const childOrganizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 50 }).map(() => ({
@@ -303,7 +319,6 @@ const users = async () => {
             lastName: faker.person.lastName(),
             password: await signPassword(`password-${index}`),
             level: levels[index % levels.length] as Level,
-            status: UserStatus.ACTIVE,
           },
         })
         const account = await prisma.account.create({
@@ -312,6 +327,7 @@ const users = async () => {
             role: role as Role,
             userId: user.id,
             environment: Environment.BC,
+            status: UserStatus.ACTIVE,
           },
         })
 
@@ -334,7 +350,6 @@ const users = async () => {
             lastName: faker.person.lastName(),
             password: await signPassword(`password-${index}`),
             level: levels[index % levels.length] as Level,
-            status: UserStatus.ACTIVE,
           },
         })
         const account = await prisma.account.create({
@@ -343,6 +358,7 @@ const users = async () => {
             role: role as Role,
             userId: user.id,
             environment: Environment.BC,
+            status: UserStatus.ACTIVE,
           },
         })
         if (!account.organizationVersionId) {
@@ -365,7 +381,6 @@ const users = async () => {
           lastName: faker.person.lastName(),
           password: await signPassword(`password-${index}`),
           level: levels[index % levels.length] as Level,
-          status: UserStatus.IMPORTED,
         },
       })
       const account = await prisma.account.create({
@@ -374,6 +389,7 @@ const users = async () => {
           role: Role.COLLABORATOR,
           userId: user.id,
           environment: Environment.BC,
+          status: UserStatus.IMPORTED,
         },
       })
       if (!account.organizationVersionId) {
@@ -397,7 +413,6 @@ const users = async () => {
               lastName: faker.person.lastName(),
               password: await signPassword(`password-${index}`),
               level: levels[index % levels.length] as Level,
-              status: UserStatus.ACTIVE,
             },
           })
 
@@ -405,9 +420,10 @@ const users = async () => {
           const account = await prisma.account.create({
             data: {
               organizationVersionId: organizationVersionArray[index % organizationVersionArray.length].id,
-              role: role as Role,
+              role: getCutRoleFromBase(role as Role),
               userId: user.id,
               environment: environment as Environment,
+              status: UserStatus.ACTIVE,
             },
           })
           if (!account.organizationVersionId) {
@@ -430,7 +446,6 @@ const users = async () => {
             lastName: faker.person.lastName(),
             password: await signPassword(`password-${index}`),
             level: levels[index % levels.length] as Level,
-            status: UserStatus.ACTIVE,
           },
         })
         const accountsData = [
@@ -439,12 +454,14 @@ const users = async () => {
             role: role as Role,
             userId: user.id,
             environment: Environment.BC,
+            status: UserStatus.ACTIVE,
           },
           {
             organizationVersionId: organizationVersionsCUT[index % organizationVersionsCUT.length].id,
-            role: role as Role,
+            role: getCutRoleFromBase(role as Role),
             userId: user.id,
             environment: Environment.CUT,
+            status: UserStatus.ACTIVE,
           },
         ]
         const accounts = await prisma.account.createManyAndReturn({
@@ -477,6 +494,7 @@ const users = async () => {
         organizationVersionId: organizationVersions[0].id,
         role: Role.COLLABORATOR,
         environment: Environment.BC,
+        status: UserStatus.ACTIVE,
         userId: (
           await prisma.user.create({
             data: {
@@ -485,7 +503,6 @@ const users = async () => {
               lastName: faker.person.lastName(),
               password: await signPassword('password'),
               level: Level.Initial,
-              status: UserStatus.ACTIVE,
             },
           })
         ).id,
@@ -496,6 +513,7 @@ const users = async () => {
         organizationVersionId: regularOrganizationVersions[1].id,
         role: Role.DEFAULT,
         environment: Environment.BC,
+        status: UserStatus.ACTIVE,
         userId: (
           await prisma.user.create({
             data: {
@@ -503,7 +521,6 @@ const users = async () => {
               firstName: faker.person.firstName(),
               lastName: faker.person.lastName(),
               password: await signPassword('password'),
-              status: UserStatus.ACTIVE,
             },
           })
         ).id,
@@ -518,7 +535,6 @@ const users = async () => {
         firstName: 'User',
         lastName: 'Imported',
         level: Level.Initial,
-        status: UserStatus.IMPORTED,
       },
     })
     .then(async (user) => {
@@ -528,23 +544,26 @@ const users = async () => {
           organizationVersionId: regularOrganizationVersions[0].id,
           role: Role.COLLABORATOR,
           userId: user.id,
+          status: UserStatus.IMPORTED,
         },
       })
     })
 
   const activeAccounts = await prisma.account.findMany({
-    where: { user: { status: UserStatus.ACTIVE } },
-    select: { id: true },
+    where: { status: UserStatus.ACTIVE },
+    select: { id: true, environment: true },
   })
   await prisma.userCheckedStep.createMany({
-    data: activeAccounts.map((account) => ({ accountId: account.id, step: UserChecklist.CreateAccount })),
+    data: activeAccounts
+      .filter((account) => environmentsWithChecklist.includes(account.environment))
+      .map((account) => ({ accountId: account.id, step: UserChecklist.CreateAccount })),
   })
 
   const subPosts = Object.keys(SubPost)
   const studies = await Promise.all(
     Array.from({ length: 20 }).map(() => {
       const creator = faker.helpers.arrayElement(
-        usersWithAccounts.filter((userWithAccount) => userWithAccount.user.status === UserStatus.ACTIVE),
+        usersWithAccounts.filter((userWithAccount) => userWithAccount.accounts[0].account.status === UserStatus.ACTIVE),
       )
 
       const organizationVersionSites = sites.filter(

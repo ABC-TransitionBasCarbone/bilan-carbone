@@ -46,6 +46,7 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
           selected: false,
           postalCode: site.postalCode ?? '',
           city: site.city ?? '',
+          cncId: site.cncId ?? '',
         })) || [],
       exports: {
         [Export.Beges]: false,
@@ -71,7 +72,7 @@ const NewStudyPage = ({ organizationVersions, user, accounts, defaultOrganizatio
       />
       {organizationVersion ? (
         <DynamicComponent
-          environmentComponents={{ [Environment.CUT]: <NewStudyFormCut user={user} accounts={accounts} form={form} /> }}
+          environmentComponents={{ [Environment.CUT]: <NewStudyFormCut form={form} /> }}
           defaultComponent={<NewStudyForm user={user} accounts={accounts} form={form} />}
         />
       ) : (

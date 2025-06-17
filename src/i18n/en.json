@@ -140,11 +140,11 @@
       "error": "Please check your email and your password",
       "expired": "This password reset link has expired",
       "backToHome": "Back to home",
-      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us at the email address",
+      "resetError": "Some information is not correct. If you think you have filled everything correctly, contact us.",
       "emailRequired": "Please enter an email",
       "emailAndPasswordRequired": "Please enter an email and a password",
       "emailSent": "if your email is correct, you will receive an email to reset your password",
-      "validated": "Your password has been reset, you will be redirected to the <link>login</link> page.",
+      "validated": "Your password has been reset",
       "validation": {
         "email": "Please enter an email",
         "password": "Please enter a password"
@@ -234,7 +234,8 @@
     "information": "Information",
     "validatedOnly": "Validated emission sources",
     "validatedOnlyDescription": "For each Bilan Carbone®, one or more validators can be defined. These validators are responsible for validating the sources of emissions once they have been entered by the study's contributors and editors. By default, only validated emissions appear in your results, but you can change this behaviour via the \"Settings\" menu.",
-    "withDependencies": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the \"Use in dependence\" sub-post, as the organization is generally not in a position to act easily on this sub-post. On the other hand, this sub-component remains crucial for understanding the risks to which the organization is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
+    "withDependenciesDescription": "The new Bilan Carbone® method introduces the concept of responsibility and dependency. It is strongly recommended that the results of the Bilan Carbone® are presented with and without the \"Use in dependence\" sub-post, as the organization is generally not in a position to act easily on this sub-post. On the other hand, this sub-component remains crucial for understanding the risks to which the organization is exposed, particularly if it is dependent on high-carbon sectors or activities. The final result should include dependency. For more information on these new concepts, please consult <link>this page</link>.",
+    "monetaryRatioDescription": "It is strongly discouraged to use emission factors in monetary ratio when an alternative is possible. You can find more information on the <monetaryLink>methodology</monetaryLink>.",
     "close": "Close",
     "selectSite": "Before filling in the details, choose a site",
     "see": "See my Bilan Carbone®",
@@ -356,7 +357,6 @@
       "Editor_description": "Has all rights to the study except for validation of emission sources.",
       "Reader_description": "Can only read the study and export its information.",
       "close": "Close",
-      "Not authorized": "You are not allowed to do this action",
       "saved": "New role saved"
     },
     "title": "Study",
@@ -370,7 +370,7 @@
         "create": "Add person",
         "clear": "Clear value",
         "Already in study": "This person already has access to the study.",
-        "Not authorized": "Action not authorized. You can see <link>the FAQ</link> or <support>contact-us</support> if you think it is an error.",
+        "Not authorized": "Action not authorized. You can see the FAQ or contact us if you think it is an error.",
         "validation": {
           "email": "Please use a valid email",
           "emailRequired": "Please enter an email",
@@ -392,7 +392,7 @@
         "subPost": "Sub post",
         "create": "Add person",
         "Already in study": "This person already has access to the study.",
-        "Not authorized": "Action not authorized. You can see <link>the FAQ</link> or <support>contact-us</support> if you think it is an error.",
+        "Not authorized": "Action not authorized. You can see the FAQ or contact us if you think it is an error.",
         "validation": {
           "email": "Please enter a valid email",
           "post": "Please select a post"
@@ -406,9 +406,11 @@
         "subPosts": "Sub posts",
         "title": "Contributors",
         "newContributorLink": "Add a contributor",
+        "andXOthers": "and {count, plural, =1 {1 other} other {# others}}",
         "deleting": {
           "title": "Confirmation",
           "confirmation": "Are you sure you want to remove {email} from this study's contributors ?",
+          "confirmationPost": "Are you sure you want to remove {email}'s access to {post}?",
           "yes": "Yes",
           "no": "No",
           "Not authorized": "You are not allowed to do this action"
@@ -474,10 +476,12 @@
     "results": {
       "type": "Type",
       "post": "Post",
+      "download": "Download results",
       "value": "Emissions ({unit})",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
+      "monetaryRatio": "Monetary ratio",
       "coming": "coming",
       "units": {
         "K": "kgCO₂e",
@@ -486,9 +490,21 @@
       "difference": {
         "button": "Explanation of the differences between Bilan Carbone® and Beges export",
         "modalTitle": "Explanation of the difference between the results",
+        "dependanceTitle": "Dependent use",
+        "wasteTitle": "Waste treatment",
+        "missingCaractTitle": "Missing characterizations",
+        "tableHeaders": {
+          "emissionSource": "Emission source",
+          "post": "Post",
+          "bilanCarbone": "Bilan Carbone®",
+          "beges": "BEGES",
+          "difference": "Difference"
+        },
         "dependance": "The regulatory GHG balance does not include the sub-item \"Dependent use\", as the concept of dependence does not exist in the BEGES-R method",
+        "goToSubPost": "Go to sub-post",
         "waste": "The regulatory Bilan GES includes all emissions due to waste recycling in the waste emitter's balance sheet, whereas the Bilan Carbone® only includes the weight of waste collection and transport in the waste emitter's balance sheet. Thus, the emission factors with a value of 41 kgCO₂e/t within the tool are those used for the Bilan Carbone®, while the values incorporating the regeneration of materials (the recycling process, for the emission factors \"Recycling\" or \"Average end of life\") are used for the BEGES-R. The emission factor displayed on the BC+ is only that used for the Bilan Carbone®, but the BEGES-R export calculations are made using the ADEME emission factors linked to recycling or average end-of-life. Here are the sources of emissions related to this topic: ",
-        "missingCaract": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
+        "missingCaract1": "Uncharacterized emission sources are not accounted for in the BEGES-R, which leads to undue differences with the Bilan Carbone® if you have chosen to visualize unvalidated emission sources.",
+        "missingCaract2": "You have not entered the characterizations for all the emission sources in your study. Please edit and add the characterization for the following emission sources:",
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "close": "Close"
       },
@@ -512,9 +528,13 @@
       "noFactor": "No emission factor",
       "post": "Post",
       "quality": "Quality",
+      "site": "Site",
       "sourceCharacterization": "Emission source characterization",
+      "sourceDeprecation": "Depreciation duration (years)",
+      "sourceDuration": "Duration (years)",
       "sourceName": "Emission source name",
       "sourceQuality": "Emission source quality",
+      "sourceSurface": "Surface (ha)",
       "sourceUnit": "Emission source unit",
       "sourceValue": "Emission source value",
       "subPost": "Sub post",
@@ -690,6 +710,7 @@
       "unit": "Unit",
       "customUnit": "Custom unit",
       "customUnitPlaceholder": "Your custom unit",
+      "monetaryUnit": "Monetary unit",
       "source": "Source",
       "detailedGES": "Breakdown of GHG",
       "subPartsCount": "Number of parts",
@@ -748,8 +769,7 @@
         "totalCo2": "Please provide a total emission",
         "type": "Please select a post type",
         "subPost": "Please select a sub post"
-      },
-      "Not authorized": "You are not allowed to do this action"
+      }
     },
     "title": "Emission factors",
     "loading": "Loading emission factors",
@@ -842,6 +862,12 @@
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion at the plant",
       "Pertes": "Losses"
+    },
+    "missingQualities": {
+      "title": "Add quality for manual emission factors",
+      "body": "Hello, according to our information, you added emission factors manually when it was still impossible to enter their uncertainty. By default, for these emission factors, the qualities are considered to be \"Very good\", which corresponds to zero uncertainty on the emission factor. Now that this bug has been resolved, we strongly recommend that you update the emission factors concerned, which are as follows: ",
+      "close": "Close",
+      "correct": "Correct"
     }
   },
   "level": {
@@ -870,7 +896,7 @@
     "More than one": "There must be at least one admin or manager in the organization"
   },
   "environment": {
-    "BC": "BC",
+    "BC": "BC+ 2.0",
     "CUT": "Count",
     "TILT": "Tilt"
   },
@@ -918,7 +944,8 @@
       "lastName": "Please enter a last name",
       "level": "Please enter a training level",
       "role": "Please enter a role"
-    }
+    },
+    "addedMember": "The user has been successfully invited to your organization."
   },
   "units": {
     "selectAll": "Select all",
@@ -1116,6 +1143,8 @@
       "delete": "Delete",
       "add": "Add a site",
       "update": "Update list",
+      "cnc": "Code CNC",
+      "cncPlaceholder": "Code CNC",
       "glossary": {
         "title": "Glossary",
         "etp": "Number of Full Time Equivalents",
@@ -1153,7 +1182,7 @@
       "confirm": "Confirm",
       "Not authorized": "You are not allowed to do this action",
       "wrongName": "Client's name does not match",
-      "unexpectedAssociations": "An unexpected event occurred when deleting this client. Please contact <support>support</support>."
+      "unexpectedAssociations": "An unexpected event occurred when deleting this client. Please contact support."
     }
   },
   "emissionSource": {
@@ -1359,10 +1388,19 @@
   "deactivableFeatures": {
     "title": "Deactivable functionnalities",
     "Formation": "Formation",
+    "Feedback": "Feedback",
     "source": "Sources",
     "environment": "Environments",
     "true": "Activated",
     "false": "Deactivated",
     "Not authorized": "You are not allowed to do this action"
+  },
+  "feedback": {
+    "title": "Give your opinion about BC+ !",
+    "body": " If you have 5 minutes, we'd love to hear your feedback on BC+! This will help us to meet your needs as effectively as possible in our future developments. If this isn't a good time, you can delay your answer.",
+    "reject": "Do not answer",
+    "delay": "Later ({time} days)",
+    "answer": "Let's go",
+    "close": "Close"
   }
 }

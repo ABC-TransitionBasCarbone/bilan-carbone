@@ -1,4 +1,4 @@
-import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
+import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import { filterAllowedStudies } from '@/services/permissions/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
@@ -53,6 +53,9 @@ const fullStudyInclude = {
       studySite: {
         select: {
           id: true,
+          site: {
+            select: { name: true },
+          },
         },
       },
       emissionFactorId: true,
@@ -61,6 +64,7 @@ const fullStudyInclude = {
           id: true,
           totalCo2: true,
           unit: true,
+          isMonetary: true,
           reliability: true,
           technicalRepresentativeness: true,
           geographicRepresentativeness: true,
@@ -372,7 +376,7 @@ export const deleteAccountOnStudy = async (studyId: string, accountId: string) =
     where: { studyId_accountId: { studyId, accountId } },
   })
 
-export const deleteContributor = async (studyId: string, contributor: StudyContributorRow) => {
+export const deleteContributor = async (studyId: string, contributor: StudyContributorDeleteParams) => {
   const where: Prisma.ContributorsWhereInput = {
     studyId,
     accountId: contributor.accountId,
@@ -466,6 +470,7 @@ export const deleteStudy = async (id: string) => {
       transaction.document.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
       transaction.studyExport.deleteMany({ where: { studyId: id } }),
+      transaction.openingHours.deleteMany({ where: { studyId: id } }),
     ])
     await transaction.study.delete({ where: { id } })
   })

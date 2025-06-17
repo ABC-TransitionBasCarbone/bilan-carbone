@@ -87,6 +87,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
               Environment.BC,
             )
           }
+          title={t('download')}
         >
           <DownloadIcon />
         </Button>

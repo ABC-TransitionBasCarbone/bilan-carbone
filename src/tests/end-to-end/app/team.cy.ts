@@ -89,17 +89,17 @@ describe('Team', () => {
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(8).contains('bc-gestionnaire-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(13).contains('bc-gestionnaire-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
-      .eq(8)
+      .eq(13)
       .within(() => {
         cy.get('input').should('have.value', Role.GESTIONNAIRE)
         cy.get('input').should('not.be.disabled')
       })
 
-    cy.getByTestId('team-table-line').eq(9).contains('bc-super_admin-1@yopmail.com').should('exist')
+    cy.getByTestId('team-table-line').eq(14).contains('bc-super_admin-1@yopmail.com').should('exist')
     cy.getByTestId('team-table-line')
-      .eq(9)
+      .eq(14)
       .within(() => {
         cy.get('input').should('have.value', Role.SUPER_ADMIN)
         cy.get('input').should('be.disabled')
@@ -127,7 +127,8 @@ describe('Team', () => {
 
   it('should add a new member', () => {
     cy.login('bc-admin-1@yopmail.com', 'password-1')
-    cy.visit('/equipe')
+    cy.getByTestId('button-menu-my-organization').click()
+    cy.getByTestId('link-equipe').click()
 
     cy.getByTestId('pending-invitation').should('not.exist')
     cy.getByTestId('add-member-link').click()

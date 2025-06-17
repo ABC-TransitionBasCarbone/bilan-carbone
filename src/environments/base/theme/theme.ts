@@ -1,8 +1,15 @@
 import { createTheme } from '@mui/material/styles'
 
-const theme = createTheme({
+const base = createTheme({
   palette: {
+    background: {
+      default: '#3880ff0d',
+    },
     primary: {
+      main: '#272768',
+      light: '#ebf2ff',
+    },
+    secondary: {
       main: '#346fef',
     },
     grey: {
@@ -17,7 +24,8 @@ const theme = createTheme({
       900: '#020105',
     },
     success: {
-      main: '#1d9c5c',
+      main: '#94EBBF',
+      light: '#E0FBE8',
     },
     error: {
       light: '#e04949',
@@ -30,24 +38,101 @@ const theme = createTheme({
     info: {
       main: '#272768',
     },
+    divider: '#1b5bf51a',
+  },
+  shadows: [
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+  ],
+  typography: {
+    fontFamily: 'Gilroy, sans-serif',
+    button: {
+      textTransform: 'none',
+      fontFamily: 'Gilroy, sans-serif',
+    },
+  },
+})
+
+const theme = createTheme(base, {
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1360,
+      xl: 1536,
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+        },
+        outlined: {
+          backgroundColor: base.palette.common.white,
+          borderStyle: 'solid',
+        },
+      },
+    },
+    MuiLinearProgress: {
+      styleOverrides: {
+        root: {
+          backgroundColor: base.palette.grey[200],
+          borderRadius: 4,
+        },
+        bar: {
+          borderRadius: 4,
+          backgroundColor: base.palette.primary.main,
+        },
+      },
+    },
   },
   custom: {
-    postColors: {
-      darkBlue: {
-        dark: '#0c2155',
-        light: '#3f5488',
+    box: {
+      backgroundColor: base.palette.background.paper,
+      color: base.palette.text.primary,
+      borderRadius: '1rem',
+      borderStyle: 'solid',
+      borderWidth: '0.0125rem',
+      borderColor: base.palette.grey[300],
+      padding: '1rem',
+    },
+    navbar: {
+      organizationToolbar: {
+        border: '0.125rem solid rgba(27, 91, 245, 0.1)',
       },
-      green: {
-        dark: '#469478',
-        light: '#79c7ab',
-      },
-      blue: {
-        dark: '#2c6498',
-        light: '#5e97cb',
-      },
-      orange: {
-        dark: '#c88938',
-        light: '#fbbc6b',
+      text: {
+        color: '#FFFFFF',
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        fontSize: '1rem',
+        '&:hover': {
+          color: base.palette.secondary.main,
+        },
       },
     },
   },

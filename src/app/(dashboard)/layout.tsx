@@ -2,11 +2,13 @@ import ChecklistButton from '@/components/checklist/ChecklistButton'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import Navbar from '@/components/navbar/Navbar'
 import OrganizationCard from '@/components/organizationCard/OrganizationCard'
+import { environmentsWithChecklist } from '@/constants/environments'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import Footer from '@/environments/cut/layout/footer'
+import { getEnvironment } from '@/i18n/environment'
 import { Box } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
@@ -17,6 +19,7 @@ interface Props {
 }
 
 const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
+  const environment = await getEnvironment()
   if (account.needsAccountSelection) {
     return (
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
@@ -39,7 +42,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
 
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
-      <Navbar user={account} />
+      <Navbar user={account} environment={environment} />
       {account.organizationVersionId && (
         <OrganizationCard
           account={account}
@@ -49,7 +52,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
       <Box component="main" flex="1" className={styles.content}>
         {children}
       </Box>
-      {accountOrganizationVersion && (
+      {accountOrganizationVersion && environmentsWithChecklist.includes(accountOrganizationVersion.environment) && (
         <ChecklistButton
           accountOrganizationVersion={accountOrganizationVersion}
           clientId={clientId}

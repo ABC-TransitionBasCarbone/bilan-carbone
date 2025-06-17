@@ -1,4 +1,5 @@
 import { getSourceLatestImportVersionId } from '@/db/study'
+import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
@@ -256,6 +257,11 @@ export const mapEmissionFactors = (
   temporalRepresentativeness: emissionFactor.Qualité_TiR || getEmissionQuality(emissionFactor.Incertitude),
   completeness: emissionFactor.Qualité_C || getEmissionQuality(emissionFactor.Incertitude),
   unit: getUnit(emissionFactor.Unité_français),
+  isMonetary: isMonetaryEmissionFactor({
+    unit: getUnit(emissionFactor.Unité_français),
+    customUnit: '',
+    isMonetary: false,
+  }),
   subPosts: getSubPost(emissionFactor),
   metaData: {
     createMany: {
@@ -389,7 +395,7 @@ export const cleanImport = async (transaction: Prisma.TransactionClient, version
 export const addSourceToStudies = async (source: Import, transaction: Prisma.TransactionClient) => {
   const [studies, importVersion] = await Promise.all([
     transaction.study.findMany({ select: { id: true } }),
-    getSourceLatestImportVersionId(source, transaction), // TODO : import from @/db/study
+    getSourceLatestImportVersionId(source, transaction),
   ])
 
   if (studies.length && !!importVersion) {

@@ -17,7 +17,6 @@ export const mockedDbUser = {
   ...mockedUser,
   createdAt: new Date('2025-01-01T00:00:00.000Z'),
   updatedAt: new Date('2025-01-01T00:00:00.000Z'),
-  status: UserStatus.ACTIVE,
   importedFileDate: null,
   password: null,
   resetToken: null,
@@ -34,6 +33,8 @@ const mockedAccount = {
   },
   environment: Environment.BC,
   role: Role.ADMIN,
+  status: UserStatus.ACTIVE,
+  feedbackDate: null,
 }
 const mockedDbAccount = {
   ...mockedAccount,
@@ -46,7 +47,6 @@ const mockedDbAccount = {
     lastName: 'User',
     email: 'mocked.user@email.com',
     level: Level.Initial,
-    status: UserStatus.ACTIVE,
     createdAt: '2025-01-01T00:00:00.000Z',
     updatedAt: '2025-01-01T00:00:00.000Z',
   },

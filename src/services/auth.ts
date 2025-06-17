@@ -3,7 +3,7 @@ import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { Environment, Level, Role, UserStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession, NextAuthOptions } from 'next-auth'
+import { getServerSession, NextAuthOptions, Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { signIn } from 'next-auth/react'
 import { DAY } from '../utils/time'
@@ -142,7 +142,8 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await getUserByEmailWithSensibleInformations(credentials.email)
-        if (!user || !user.password || user.status !== UserStatus.ACTIVE) {
+
+        if (!user || !user.password || user.accounts.every((a) => a.status !== UserStatus.ACTIVE)) {
           return null
         }
 
@@ -151,7 +152,7 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        const accounts = user.accounts
+        const accounts = user.accounts.filter((a) => a.status === UserStatus.ACTIVE)
 
         if (accounts.length > 1) {
           return {
@@ -165,6 +166,7 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
+        // L'utilisateur n'a qu'un seul compte donc on peut prendre le premier
         const account = (await getAccountById(accounts[0].id)) as AccountWithUser
         return buildSession(account)
       },
@@ -176,6 +178,28 @@ export function auth(
   ...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []
 ) {
   return getServerSession(...args, authOptions)
+}
+
+export async function dbActualizedAuth(
+  ...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []
+): Promise<Session | null> {
+  const session = await getServerSession(...args, authOptions)
+  if (!session || !session.user) {
+    return null
+  }
+  const account = await getAccountById(session.user.accountId)
+  if (!account) {
+    return null
+  }
+  return {
+    ...session,
+    user: {
+      ...session.user,
+      role: account.role,
+      organizationVersionId: account.organizationVersionId,
+      level: account.user.level,
+    },
+  }
 }
 
 export async function accountHandler(accountId: string) {

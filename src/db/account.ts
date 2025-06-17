@@ -17,6 +17,8 @@ export const AccountWithUserSelect = {
   importedFileDate: true,
   deactivatableFeatureStatus: true,
   environment: true,
+  status: true,
+  feedbackDate: true,
   organizationVersionId: true,
   organizationVersion: {
     select: {
@@ -37,7 +39,6 @@ export const AccountWithUserSelect = {
       updatedAt: true,
       password: true,
       resetToken: true,
-      status: true,
       source: true,
       formationFormStartTime: true,
     },

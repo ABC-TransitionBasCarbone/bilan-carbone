@@ -2,15 +2,17 @@
 
 import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/account'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
 import { canEditMemberRole } from '@/utils/organization'
+import { getEnvironmentRoles } from '@/utils/user'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Block from '../base/Block'
 import Button from '../base/Button'
 import Modal from '../modals/Modal'
@@ -38,6 +40,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const [deletionError, setDeletionError] = useState('')
   const [deletionErrorData, setDeletionErrorData] = useState<DeletionErrorData[] | undefined>(undefined)
   const canUpdateTeam = canEditMemberRole(user)
+  const { callServerFunction } = useServerFunction()
 
   const router = useRouter()
 
@@ -61,6 +64,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
               currentRole={role}
               email={context.row.original.user.email}
               level={context.row.original.user.level}
+              environment={user.environment}
             />
           ) : (
             <>{tRole(role)}</>
@@ -84,7 +88,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       })
     }
     return col
-  }, [t, user])
+  }, [canUpdateTeam, t, tLevel, tRole, user.email])
 
   const table = useReactTable({
     columns,
@@ -92,32 +96,32 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const deleteMember = async () => {
-    setDeletionError('')
+  const deleteMember = useCallback(async () => {
     setDeletionErrorData(undefined)
-    const result = await deleteOrganizationMember(deletingMember)
-    if (!result.success) {
-      setDeletionError(result.errorMessage)
-    } else if (result.data) {
-      setDeletionError(result.data.code)
-      setDeletionErrorData(
-        result.data.studies.map((study) => ({
-          id: study.id,
-          name: study.name,
-          organization: study.organizationVersion.organization.name,
-        })),
-      )
-    } else {
-      setDeletingMember('')
-      router.refresh()
-    }
-  }
+    await callServerFunction(() => deleteOrganizationMember(deletingMember), {
+      onSuccess: (data) => {
+        if (data) {
+          // Handle the case where deletion failed due to business rules
+          setDeletionError(data.code)
+          setDeletionErrorData(
+            data.studies.map((study) => ({
+              id: study.id,
+              name: study.name,
+              organization: study.organizationVersion.organization.name,
+            })),
+          )
+        } else {
+          setDeletingMember('')
+          router.refresh()
+        }
+      },
+    })
+  }, [deletingMember, callServerFunction, router])
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setDeletingMember('')
-    setDeletionError('')
     setDeletionErrorData(undefined)
-  }
+  }, [setDeletingMember, setDeletionErrorData])
 
   return (
     <>
@@ -177,7 +181,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
           },
         ]}
       >
-        {Object.keys(Role)
+        {Object.keys(getEnvironmentRoles(user.environment))
           .filter((role) => role !== Role.SUPER_ADMIN)
           .map((role) => (
             <p key={role} className="mb-2">
@@ -203,12 +207,12 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
             ['data-testid']: 'delete-member-validation',
             onClick: deleteMember,
             children: t('confirm'),
-            disabled: !!deletionError,
+            disabled: !!deletionErrorData,
           },
         ]}
       >
         {t('userDeletionDescription')}
-        {deletionError && (
+        {deletionErrorData && (
           <div className="error mt1">
             <span>{t(deletionError)}</span>
             <ul className={styles.studiesList}>

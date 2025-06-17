@@ -5,10 +5,11 @@ import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
 
 interface Props {
-  userOrganizationId: string | null
+  userOrganizationId?: string
+  manualOnly: boolean
 }
 
-const EmissionFactorsPage = ({ userOrganizationId }: Props) => {
+const EmissionFactorsPage = ({ userOrganizationId, manualOnly }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors')
   return (
@@ -31,7 +32,7 @@ const EmissionFactorsPage = ({ userOrganizationId }: Props) => {
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors userOrganizationId={userOrganizationId} />
+          <EmissionFactors userOrganizationId={userOrganizationId} manualOnly={manualOnly} />
         </Suspense>
       </Block>
     </>

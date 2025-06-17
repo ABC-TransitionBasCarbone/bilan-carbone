@@ -8,6 +8,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
   UpdateOrganizationCommand,
@@ -38,8 +39,9 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
   const tStudySites = useTranslations('organization.studySites')
-  const [error, setError] = useState('')
+
   const [sitesOnError, setSitesOnError] = useState<StudiesWithSites>(emptySitesOnError)
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<UpdateOrganizationCommand>({
     resolver: zodResolver(UpdateOrganizationCommandValidation),
@@ -53,6 +55,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
         ca: site.ca ? displayCA(site.ca, CA_UNIT_VALUES[caUnit]) : 0,
         postalCode: site.postalCode ?? '',
         city: site.city ?? '',
+        cncId: site.cncId ?? '',
       })),
     },
   })
@@ -70,13 +73,11 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
     ) {
       setSitesOnError(deletedSitesOnStudies.data)
     } else {
-      const result = await updateOrganizationCommand(command)
-      if (!result.success) {
-        setError(result.errorMessage)
-      } else {
-        router.push(`/organisations/${organizationVersion.id}`)
-        router.refresh()
-      }
+      await callServerFunction(() => updateOrganizationCommand(command), {
+        onSuccess: () => {
+          router.push(`/organisations/${organizationVersion.id}`)
+        },
+      })
     }
   }
 
@@ -91,13 +92,12 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
         label={t('name')}
       />
       <DynamicComponent
-        environmentComponents={{ [Environment.CUT]: <SitesCut sites={sites} form={form} caUnit={caUnit} /> }}
+        environmentComponents={{ [Environment.CUT]: <SitesCut sites={sites} form={form} /> }}
         defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} />}
       />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}
       </LoadingButton>
-      {error && <p>{error}</p>}
       <Modal
         open={!!sitesOnError.authorizedStudySites.length || !!sitesOnError.unauthorizedStudySites.length}
         label="delete-site-with-studies"

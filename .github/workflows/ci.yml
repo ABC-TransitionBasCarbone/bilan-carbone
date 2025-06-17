@@ -40,6 +40,8 @@ jobs:
         run: npx prisma db seed
       - name: Run build
         run: yarn build
+      - name: Run Typescript check
+        run: npx tsc --noEmit
       - name: Start server
         run: yarn start &
       - name: Launch unit tests

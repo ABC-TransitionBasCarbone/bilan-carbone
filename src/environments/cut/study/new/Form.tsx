@@ -4,21 +4,17 @@ import Block from '@/components/base/Block'
 import { FormTextField } from '@/components/form/TextField'
 import WeekScheduleForm from '@/components/form/WeekScheduleForm'
 import GlobalNewStudyForm from '@/components/study/new/Form'
-import { getOrganizationVersionAccounts } from '@/db/organization'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { ControlMode, DayOfWeek, Export, Level } from '@prisma/client'
-import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
-  user: UserSession
-  accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
   form: UseFormReturn<CreateStudyCommand>
 }
 
-const NewStudyForm = ({ user, accounts, form }: Props) => {
+const NewStudyForm = ({ form }: Props) => {
   const t = useTranslations('study.new')
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
@@ -73,12 +69,14 @@ const NewStudyForm = ({ user, accounts, form }: Props) => {
           control={form.control}
           onCheckDay={handleCheckDay}
         />
-        <WeekScheduleForm
-          label={t('openingHoursHoliday')}
-          days={daysHoliday}
-          name={'openingHoursHoliday'}
-          control={form.control}
-        />
+        {openingHoursHoliday && Object.keys(openingHoursHoliday).length !== 0 && (
+          <WeekScheduleForm
+            label={t('openingHoursHoliday')}
+            days={daysHoliday}
+            name={'openingHoursHoliday'}
+            control={form.control}
+          />
+        )}
         <FormTextField
           control={form.control}
           name="numberOfSessions"

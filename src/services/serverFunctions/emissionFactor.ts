@@ -20,7 +20,7 @@ import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
-import { auth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
 import { canReadStudy } from '../permissions/study'
@@ -28,7 +28,7 @@ import { getStudyParentOrganizationVersionId } from '../study'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 
-export const getEmissionFactors = async (studyId?: string) =>
+export const getEmissionFactors = async (studyId?: string, withCut: boolean = false) =>
   withServerResponse('getEmissionFactors', async () => {
     const session = await auth()
     if (!session || !session.user) {
@@ -50,13 +50,10 @@ export const getEmissionFactors = async (studyId?: string) =>
         return []
       }
       const emissionFactorOrganizationId = organizationVersion.organizationId
-      emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId)
+      emissionFactors = await getAllEmissionFactors(emissionFactorOrganizationId, studyId, withCut)
     } else {
       const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
-      if (!organizationVersion) {
-        return []
-      }
-      emissionFactors = await getAllEmissionFactors(organizationVersion.organizationId)
+      emissionFactors = await getAllEmissionFactors(organizationVersion?.organizationId || null, undefined, withCut)
     }
 
     return emissionFactors
@@ -116,7 +113,7 @@ export const getDetailedEmissionFactor = async (id: string) =>
 
 export const isFromEmissionFactorOrganization = async (id: string) =>
   withServerResponse('isFromEmissionFactorOrganization', async () => {
-    const [session, emissionFactor] = await Promise.all([auth(), getEmissionFactorById(id)])
+    const [session, emissionFactor] = await Promise.all([dbActualizedAuth(), getEmissionFactorById(id)])
 
     if (!emissionFactor || !session || !session.user) {
       return false

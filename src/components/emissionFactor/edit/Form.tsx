@@ -3,6 +3,7 @@
 import Form from '@/components/base/Form'
 import { gazKeys } from '@/constants/emissions'
 import { DetailedEmissionFactor } from '@/db/emissionFactors'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { Post } from '@/services/posts'
 import { updateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
@@ -50,7 +51,7 @@ const buildParts = (emissionFactor: EmissionFactor, partsCount: number) =>
 
 const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
   const router = useRouter()
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
   const [hasParts, setHasParts] = useState(!!(emissionFactor.emissionFactorParts.length > 0))
   const [partsCount, setPartsCount] = useState(emissionFactor.emissionFactorParts.length || 1)
 
@@ -82,6 +83,7 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       source: emissionFactor?.source || '',
       unit: emissionFactor?.unit || undefined,
       customUnit: emissionFactor.customUnit || undefined,
+      isMonetary: emissionFactor.isMonetary || false,
       subPosts: subPostObject,
       ...getGazValues(emissionFactor),
       totalCo2: emissionFactor?.totalCo2 || 0,
@@ -100,14 +102,11 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
 
     form.setValue('parts', hasParts ? form.getValues('parts').slice(0, partsCount) : [])
     form.handleSubmit(async (data) => {
-      const result = await updateEmissionFactorCommand(data)
-
-      if (!result.success) {
-        setError(result.errorMessage)
-      } else {
-        router.push('/facteurs-d-emission')
-        router.refresh()
-      }
+      await callServerFunction(() => updateEmissionFactorCommand(data), {
+        onSuccess: () => {
+          router.push('/facteurs-d-emission')
+        },
+      })
     })()
   }
 
@@ -116,7 +115,6 @@ const EditEmissionFactorForm = ({ emissionFactor }: Props) => {
       <EmissionFactorForm
         form={form}
         detailedGES={detailedGES}
-        error={error}
         hasParts={hasParts}
         setHasParts={setHasParts}
         partsCount={partsCount}

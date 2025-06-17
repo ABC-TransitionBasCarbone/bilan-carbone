@@ -2,13 +2,14 @@
 
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { changeStudyRole } from '@/services/serverFunctions/study'
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Toast, { ToastColors } from '../../base/Toast'
 
 const emptyToast = { text: '', color: 'info' } as const
@@ -24,23 +25,19 @@ interface Props {
 
 const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props) => {
   const t = useTranslations('study.role')
+  const { callServerFunction } = useServerFunction()
   const [role, setRole] = useState(currentRole)
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
 
-  useEffect(() => {
-    setRole(currentRole)
-  }, [currentRole])
-
   const selectNewRole = async (event: SelectChangeEvent<StudyRole>) => {
     const newRole = event.target.value as StudyRole
-    setRole(newRole)
     if (newRole !== role) {
-      const result = await changeStudyRole(study.id, rowUser.user.email, newRole)
-      if (!result.success) {
-        setToast({ text: result.errorMessage, color: 'error' })
-      } else {
-        setToast({ text: 'saved', color: 'success' })
-      }
+      await callServerFunction(() => changeStudyRole(study.id, rowUser.user.email, newRole), {
+        onSuccess: () => {
+          setRole(newRole)
+        },
+        getSuccessMessage: () => t('saved'),
+      })
     }
   }
 
@@ -74,7 +71,7 @@ const SelectStudyRole = ({ user, rowUser, study, currentRole, userRole }: Props)
           isDisabled ||
           role !== StudyRole.Validator,
       ),
-    [user.role, userRole, isDisabled],
+    [user, study.organizationVersion, userRole, isDisabled],
   )
 
   return (

@@ -1,12 +1,17 @@
 import { FullStudy } from '@/db/study'
 import { SubPost } from '@prisma/client'
-import { getEmissionSourcesTotalCo2, sumEmissionSourcesUncertainty } from '../emissionSource'
+import {
+  getEmissionSourcesTotalCo2,
+  getEmissionSourcesTotalMonetaryCo2,
+  sumEmissionSourcesUncertainty,
+} from '../emissionSource'
 import { BCPost, CutPost, Post, subPostsByPost } from '../posts'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 export type ResultsByPost = {
   post: Post | SubPost | 'total'
   value: number
+  monetaryValue: number
   numberOfEmissionSource: number
   numberOfValidatedEmissionSource: number
   uncertainty?: number
@@ -48,6 +53,9 @@ export const computeResultsByPost = (
           return {
             post: subPost,
             value: getEmissionSourcesTotalCo2(validatedOnly ? validatedEmissionSources : emissionSources),
+            monetaryValue: getEmissionSourcesTotalMonetaryCo2(
+              validatedOnly ? validatedEmissionSources : emissionSources,
+            ),
             numberOfEmissionSource: emissionSources.length,
             numberOfValidatedEmissionSource: validatedEmissionSources.length,
             uncertainty: sumEmissionSourcesUncertainty(validatedEmissionSources),
@@ -56,10 +64,14 @@ export const computeResultsByPost = (
         .filter((subPost) => subPost.numberOfEmissionSource > 0)
 
       const value = subPosts.flatMap((subPost) => subPost).reduce((acc, subPost) => acc + subPost.value, 0)
+      const monetaryValue = subPosts
+        .flatMap((subPost) => subPost)
+        .reduce((acc, subPost) => acc + subPost.monetaryValue, 0)
 
       return {
         post,
         value,
+        monetaryValue,
         uncertainty: subPosts.length > 0 ? computeUncertainty(subPosts, value) : undefined,
         subPosts: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
         numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),
@@ -76,6 +88,7 @@ export const computeResultsByPost = (
     {
       post: 'total',
       value,
+      monetaryValue: postInfos.reduce((acc, post) => acc + post.monetaryValue, 0),
       subPosts: [],
       uncertainty: computeUncertainty(postInfos, value),
       numberOfEmissionSource: postInfos.reduce((acc, post) => acc + post.numberOfEmissionSource, 0),

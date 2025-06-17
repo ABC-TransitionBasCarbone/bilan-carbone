@@ -4,6 +4,7 @@ import { activateEmail } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -23,15 +24,9 @@ const ActivationForm = () => {
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
+  const [env, setEnv] = useState<Environment | undefined>()
 
   const searchParams = useSearchParams()
-
-  useEffect(() => {
-    const email = searchParams.get('email')
-    if (email) {
-      setValue('email', email)
-    }
-  }, [searchParams])
 
   const { control, getValues, setValue, handleSubmit } = useForm<EmailCommand>({
     resolver: zodResolver(EmailCommandValidation),
@@ -42,11 +37,24 @@ const ActivationForm = () => {
     },
   })
 
+  useEffect(() => {
+    const email = searchParams.get('email')
+    if (email) {
+      setValue('email', email)
+    }
+
+    const environment = searchParams.get('env')
+    if (environment && Object.keys(Environment).includes(environment)) {
+      setEnv(environment as Environment)
+    }
+  }, [searchParams, setValue])
+
   const onSubmit = async () => {
     setMessage('')
     setSubmitting(true)
 
-    const activation = await activateEmail(getValues().email)
+    const activation = await activateEmail(getValues().email, env)
+
     setSubmitting(false)
 
     if (activation.success) {
@@ -70,6 +78,7 @@ const ActivationForm = () => {
           label={t('email')}
           placeholder={t('emailPlaceholder')}
           data-testid="activation-email"
+          trim
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
           {t('validate')}

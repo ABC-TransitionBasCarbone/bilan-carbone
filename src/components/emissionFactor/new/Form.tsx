@@ -1,5 +1,6 @@
 'use client'
 import Form from '@/components/base/Form'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { createEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor'
 import {
   EmissionFactorCommand,
@@ -14,7 +15,7 @@ import EmissionFactorForm from '../Form/EmissionFactorForm'
 
 const NewEmissionFactorForm = () => {
   const router = useRouter()
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
   const [hasParts, setHasParts] = useState(false)
   const [partsCount, setPartsCount] = useState(1)
 
@@ -29,6 +30,7 @@ const NewEmissionFactorForm = () => {
       totalCo2: 0,
       parts: Array.from({ length: maxParts }, () => ({ name: '', totalCo2: 0 })),
       comment: '',
+      isMonetary: false,
     },
   })
 
@@ -37,13 +39,11 @@ const NewEmissionFactorForm = () => {
 
     form.setValue('parts', hasParts ? form.getValues('parts').slice(0, partsCount) : [])
     form.handleSubmit(async (data) => {
-      const result = await createEmissionFactorCommand(data)
-      if (!result.success) {
-        setError(result.errorMessage)
-      } else {
-        router.push('/facteurs-d-emission')
-        router.refresh()
-      }
+      await callServerFunction(() => createEmissionFactorCommand(data), {
+        onSuccess: () => {
+          router.push('/facteurs-d-emission')
+        },
+      })
     })()
   }
 
@@ -51,7 +51,6 @@ const NewEmissionFactorForm = () => {
     <Form onSubmit={onSubmit}>
       <EmissionFactorForm
         form={form}
-        error={error}
         hasParts={hasParts}
         setHasParts={setHasParts}
         partsCount={partsCount}

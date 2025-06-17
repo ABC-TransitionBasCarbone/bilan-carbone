@@ -2,13 +2,11 @@ import { DeleteCommand } from '@/services/serverFunctions/study.command'
 import { handleWarningText } from '@/utils/components'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { Control, UseFormReturn, useWatch } from 'react-hook-form'
 import Button from '../base/Button'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
-import styles from './Modal.module.css'
 
 interface Props<T extends DeleteCommand> {
   form: UseFormReturn<T>
@@ -16,12 +14,9 @@ interface Props<T extends DeleteCommand> {
   onDelete: () => void
   onClose: () => void
   t: ReturnType<typeof useTranslations>
-  error?: string
 }
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-
-const DeletionModal = <T extends DeleteCommand>({ form, type, onDelete, onClose, t, error }: Props<T>) => {
+const DeletionModal = <T extends DeleteCommand>({ form, type, onDelete, onClose, t }: Props<T>) => {
   const control = form.control as Control<DeleteCommand>
   const disabled = !useWatch(form).name
   return (
@@ -41,17 +36,6 @@ const DeletionModal = <T extends DeleteCommand>({ form, type, onDelete, onClose,
               fullWidth
             />
           </div>
-          {error && (
-            <p data-testid={`${type}-deletion-error`} className={styles.error}>
-              {t.rich(error, {
-                support: (children) => (
-                  <Link className={styles.error} href={`mailto:${contactMail}`}>
-                    {children}
-                  </Link>
-                ),
-              })}
-            </p>
-          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>{t('cancel')}</Button>

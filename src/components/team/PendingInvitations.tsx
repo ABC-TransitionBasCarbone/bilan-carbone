@@ -1,5 +1,5 @@
 import { TeamMember } from '@/db/account'
-import { Role } from '@prisma/client'
+import { canEditMemberRole } from '@/utils/organization'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'
@@ -16,7 +16,7 @@ const PendingInvitations = ({ user, team }: Props) => {
   const t = useTranslations('team')
   const format = useFormatter()
 
-  return user.role === Role.COLLABORATOR || team.length === 0 ? null : (
+  return !canEditMemberRole(user) || team.length === 0 ? null : (
     <Block title={t('pending')}>
       <ul className={classNames(styles.members, 'flex-col')}>
         {team

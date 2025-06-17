@@ -2,7 +2,3 @@
   margin-top: 11.25rem;
   overflow-y: auto;
 }
-
-.withOrganizationCard {
-  margin-top: calc(var(--header-height) + var(--organization-height));
-}

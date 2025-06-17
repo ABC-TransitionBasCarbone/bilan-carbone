@@ -16,8 +16,10 @@ const Onboarding = ({ organizationVersion, user }: Props) => {
   const [open, setOpen] = useState(true)
 
   useEffect(() => {
-    setOnboardedOrganizationVersion(organizationVersion.id)
-  }, [])
+    if (!open) {
+      setOnboardedOrganizationVersion(organizationVersion.id)
+    }
+  }, [open])
 
   const onClose = () => setOpen(false)
 

@@ -9,6 +9,7 @@ import {
 } from '@/db/organization'
 import { createUsersWithAccount, updateAccount } from '@/db/user'
 import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
+import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
   const {
@@ -36,15 +37,17 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
+  const role = environment === Environment.CUT ? getCutRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
+
   const user: Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput } = {
     id: dbAccount?.user.id,
     email,
     firstName,
     lastName,
-    status: UserStatus.IMPORTED,
     source: source as UserSource,
     account: {
-      role: Role.COLLABORATOR,
+      role,
+      status: UserStatus.IMPORTED,
       importedFileDate,
       environment,
       user: {
@@ -89,7 +92,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     await updateAccount(
       dbAccount.id,
       {
-        ...(dbAccount.user.status === UserStatus.IMPORTED && {
+        ...(dbAccount.status === UserStatus.IMPORTED && {
           role: user.account.role as Exclude<Role, 'SUPER_ADMIN'>,
           organizationVersion: user.account?.organizationVersion,
         }),
