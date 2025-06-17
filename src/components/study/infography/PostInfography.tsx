@@ -1,16 +1,14 @@
 'use client'
 
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { CutPostInfography } from '@/environments/cut/study/infography/PostHeader'
+import { CutPostHeader } from '@/environments/cut/study/infography/PostHeader'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { postColors } from '@/utils/study'
 import { Environment, StudyResultUnit, SubPost } from '@prisma/client'
-import classNames from 'classnames'
-import Link from 'next/link'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PostHeader } from './PostHeader'
-import styles from './PostInfography.module.css'
+import { StyledLink } from './PostInfography'
 import { SubPostInfography } from './SubPostInfography'
 
 interface Props {
@@ -64,7 +62,9 @@ const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
 
   return (
     mainPost && (
-      <Link
+      <StyledLink
+        displayChildren={displayChildren}
+        post={mainPost}
         data-testid="post-infography"
         onMouseEnter={() => (displayTimeout.current = setTimeout(() => setDisplayChildren(true), 300))}
         onMouseLeave={() => {
@@ -74,11 +74,19 @@ const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
           setDisplayChildren(false)
         }}
         href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
-        className={classNames(styles[postColor], styles.link, { [styles.displayChildren]: displayChildren })}
       >
         <DynamicComponent
           environmentComponents={{
-            [Environment.CUT]: <CutPostInfography />,
+            [Environment.CUT]: (
+              <CutPostHeader
+                post={post}
+                mainPost={mainPost}
+                emissionValue={data?.value}
+                percent={percent}
+                color={postColor}
+                resultsUnit={resultsUnit}
+              />
+            ),
           }}
           defaultComponent={
             <PostHeader
@@ -92,7 +100,7 @@ const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
           }
         />
         <SubPostInfography subPosts={subPosts} ref={ref} />
-      </Link>
+      </StyledLink>
     )
   )
 }

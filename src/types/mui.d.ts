@@ -7,7 +7,7 @@ declare module '@mui/material/styles' {
     custom: {
       box: CSSObject
       postColors: {
-        [key: string]: string
+        [key: string]: { light: string; dark?: string }
       }
       roles: {
         validator: string
@@ -28,7 +28,7 @@ declare module '@mui/material/styles' {
     custom?: {
       box: CSSObject
       postColors?: {
-        [key: string]: string
+        [key: string]: { light: string; dark?: string }
       }
       roles: {
         validator: string
