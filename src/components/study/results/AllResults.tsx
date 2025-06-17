@@ -1,9 +1,10 @@
 'use client'
+import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { downloadStudyResults } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
-import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { ControlMode, Environment, Export, ExportRule } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -88,7 +89,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
             )
           }
           title={t('download')}
-          color="secondary"
         >
           <DownloadIcon />
         </Button>

@@ -57,6 +57,7 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
         onClick={() => setOpen(true)}
         aria-label={t('delete')}
         title={t('delete')}
+        color="error"
       >
         <DeleteIcon />
         {t('button')}

@@ -69,7 +69,6 @@ const StudyCard = async ({ study, user }: Props) => {
             value={percent}
             barClass={classNames(styles.progressBar, { [styles.success]: percent === 100 })}
           />
-          {/* <LinearProgress color="success" variant="determinate" value={percent} /> */}
         </Box>
         <div className="justify-end">
           <Button href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>

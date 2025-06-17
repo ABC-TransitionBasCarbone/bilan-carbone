@@ -39,6 +39,10 @@
     url('https://fonts.cdnfonts.com/s/16219/Gilroy-Regular.woff') format('woff');
 }
 
+* {
+  font-family: 'Gilroy-Regular', sans-serif;
+}
+
 body {
   height: 100vh;
   line-height: 1.25;

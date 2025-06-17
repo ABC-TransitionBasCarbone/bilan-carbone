@@ -47,6 +47,7 @@ const PendingInvitationsActions = ({ member }: Props) => {
           })
           setDeleting(false)
         }}
+        color="error"
       >
         {t('delete')}
       </LoadingButton>

@@ -147,6 +147,7 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
                 onClick={removeDocument}
                 loading={deleting}
                 iconButton
+                color="error"
               >
                 <DeleteIcon />
               </LoadingButton>
