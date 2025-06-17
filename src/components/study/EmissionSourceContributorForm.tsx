@@ -128,14 +128,6 @@ const EmissionSourceContributorForm = ({
             clearable
           />
         ))}
-        <QualitySelect
-          data-testid="emission-source-reliability"
-          id="reliability"
-          value={emissionSource.reliability || ''}
-          onChange={(event) => update('reliability', Number(event.target.value))}
-          label={t('form.reliability')}
-          clearable
-        />
       </div>
     </>
   )
