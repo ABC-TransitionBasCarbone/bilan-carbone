@@ -88,7 +88,7 @@ const OnboardingStep = ({ form, isCr }: Props) => {
           </Button>
         </div>
       ))}
-      <Button color="secondary" onClick={addCollaborator}>
+      <Button onClick={addCollaborator}>
         <AddIcon />
         {t('addCollaborator')}
       </Button>

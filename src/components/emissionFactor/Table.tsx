@@ -264,7 +264,7 @@ const EmissionFactorsTable = ({
                       >
                         <EditIcon color="info" />
                       </MuiButton>
-                      <MuiButton
+                      <Button
                         aria-label={t('delete')}
                         title={t('delete')}
                         className={styles.editButton}
@@ -273,9 +273,10 @@ const EmissionFactorsTable = ({
                           editEmissionFactor(row.original.id, 'delete')
                         }}
                         data-testid={`delete-emission-factor-button`}
+                        color="error"
                       >
-                        <DeleteIcon color="error" />
-                      </MuiButton>
+                        <DeleteIcon />
+                      </Button>
                     </>
                   )}
                 </span>
@@ -582,7 +583,7 @@ const EmissionFactorsTable = ({
         )}
         {fromModal && (
           <div className={classNames({ [styles.hideFiltersButton]: displayHideButton })}>
-            <Button color="secondary" onClick={() => setDisplayFilters(!displayFilters)}>
+            <Button onClick={() => setDisplayFilters(!displayFilters)}>
               {t(displayFilters ? 'hideFilters' : 'displayFilters')}
             </Button>
           </div>

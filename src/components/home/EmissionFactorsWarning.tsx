@@ -25,7 +25,7 @@ const EmissionFactorsWarning = ({ emissionFactors }: Props) => {
         title={t('title')}
         actions={[
           { actionType: 'button', children: t('close'), onClick: onClose },
-          { actionType: 'link', children: t('correct'), href: '/facteurs-d-emission?manual' },
+          { actionType: 'link', children: t('correct'), href: '/facteurs-d-emission?manual', variant: 'contained' },
         ]}
       >
         <p>{t.rich('body', { link: (children) => <a href="/facteurs-d-emission?manual">{children}</a> })}</p>

@@ -67,3 +67,11 @@
     width: 100%;
   }
 }
+
+.helpIcon {
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary-800);
+  }
+}

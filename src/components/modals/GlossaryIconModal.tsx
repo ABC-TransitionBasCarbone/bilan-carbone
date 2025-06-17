@@ -19,7 +19,7 @@ const GlossaryIconModal = ({ title, className, iconLabel, label, tModal, childre
   const [open, setOpen] = useState(false)
   return (
     <>
-      <HelpIcon color="info" className={className} onClick={() => setOpen(!open)} label={t(iconLabel)} />
+      <HelpIcon className={className} onClick={() => setOpen(!open)} label={t(iconLabel)} />
       <Modal
         open={open}
         label={`${label}-glossary`}

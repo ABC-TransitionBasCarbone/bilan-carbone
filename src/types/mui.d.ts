@@ -25,12 +25,7 @@ declare module '@mui/material/styles' {
         organizationToolbar?: {
           border?: string
         }
-        text: {
-          color: string
-          fontWeight: number
-          textTransform: CSSProperties['textTransform']
-          fontSize: string
-        }
+        text: CSSProperties
       }
     }
   }
@@ -57,12 +52,7 @@ declare module '@mui/material/styles' {
         organizationToolbar?: {
           border?: string
         }
-        text: {
-          color: string
-          fontWeight: number
-          textTransform: CSSProperties['textTransform']
-          fontSize: string
-        }
+        text: CSSProperties
       }
     }
   }
