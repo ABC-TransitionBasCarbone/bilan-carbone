@@ -64,53 +64,73 @@ const Navbar = ({ children, user, environment }: Props) => {
             <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
               <Logo environment={environment} />
             </NavbarLink>
-            {user.organizationVersionId && (
-              <Box>
-                <NavbarButton data-testid="button-menu-my-organization" color="inherit" onMouseEnter={handleClickMenu}>
-                  {t('organization')}
+            {isCut ? (
+              <>
+                {isAdmin(user.role) && (
+                  <NavbarLink href={`/organisations/${user.organizationVersionId}/modifier`} className={styles.link}>
+                    {t('information')}
+                  </NavbarLink>
+                )}
+                <NavbarLink href="/equipe" className={styles.link}>
+                  {t('team')}
+                </NavbarLink>
+                <NavbarLink href="/organisations" className={styles.link}>
+                  {t('organizations')}
+                </NavbarLink>
+              </>
+            ) : (
+              <>
+                {user.organizationVersionId && (
+                  <Box>
+                    <NavbarButton
+                      data-testid="button-menu-my-organization"
+                      color="inherit"
+                      onMouseEnter={handleClickMenu}
+                    >
+                      {t('organization')}
+                    </NavbarButton>
+                    <NavbarOrganizationMenu
+                      id="navbar-organisation-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      slotProps={{
+                        list: {
+                          onMouseLeave: handleClose,
+                        },
+                      }}
+                    >
+                      {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
+                        <MenuItem>
+                          <NavbarLink
+                            data-testid="link-edit-organisation"
+                            href={`/organisations/${user.organizationVersionId}/modifier`}
+                            onClick={handleClose}
+                          >
+                            {t('information')}
+                          </NavbarLink>
+                        </MenuItem>
+                      )}
+                      <MenuItem>
+                        <NavbarLink data-testid="link-equipe" href="/equipe" onClick={handleClose}>
+                          {t('team')}
+                        </NavbarLink>
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        <NavbarLink data-testid="link-organisation" href="/organisations" onClick={handleClose}>
+                          {t('organizations')}
+                        </NavbarLink>
+                      </MenuItem>
+                    </NavbarOrganizationMenu>
+                  </Box>
+                )}
+                <NavbarButton href="/facteurs-d-emission" data-testid="navbar-facteur-demission">
+                  <span className={styles.big}>{t('factors')}</span>
+                  <span className={styles.small}>{t('fe')}</span>
                 </NavbarButton>
-                <NavbarOrganizationMenu
-                  id="navbar-organisation-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  slotProps={{
-                    list: {
-                      onMouseLeave: handleClose,
-                    },
-                  }}
-                >
-                  {(isAdmin(user.role) || user.role === Role.GESTIONNAIRE) && (
-                    <MenuItem>
-                      <NavbarLink
-                        data-testid="link-edit-organisation"
-                        href={`/organisations/${user.organizationVersionId}/modifier`}
-                        onClick={handleClose}
-                      >
-                        {t('information')}
-                      </NavbarLink>
-                    </MenuItem>
-                  )}
-                  <MenuItem>
-                    <NavbarLink data-testid="link-equipe" href="/equipe" onClick={handleClose}>
-                      {t('team')}
-                    </NavbarLink>
-                  </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <NavbarLink data-testid="link-organisation" href="/organisations" onClick={handleClose}>
-                      {t('organizations')}
-                    </NavbarLink>
-                  </MenuItem>
-                </NavbarOrganizationMenu>
-              </Box>
+                {hasFormation && <NavbarButton href="/formation">{t('formation')}</NavbarButton>}
+              </>
             )}
-            {!isCut && (
-              <NavbarButton href="/facteurs-d-emission" data-testid="navbar-facteur-demission">
-                <span className={styles.big}>{t('factors')}</span>
-                <span className={styles.small}>{t('fe')}</span>
-              </NavbarButton>
-            )}
-            {hasFormation && !isCut && <NavbarButton href="/formation">{t('formation')}</NavbarButton>}
           </Box>
           <Box className={styles.buttonContainer}>
             {hasMultipleAccounts && (

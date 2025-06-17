@@ -7,7 +7,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { filterWithDependencies } from '@/services/results/utils'
+import { mapResultsByPost } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
@@ -41,16 +41,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     [studySite, validatedOnly],
   )
 
-  const computedResults = useMemo(
-    () =>
-      allComputedResults
-        .map((post) => ({
-          ...post,
-          subPosts: post.subPosts.filter((subPost) => filterWithDependencies(subPost.post as SubPost, withDep)),
-        }))
-        .map((post) => ({ ...post, value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0) })),
-    [allComputedResults, withDep],
-  )
+  const computedResults = useMemo(() => mapResultsByPost(allComputedResults, withDep), [allComputedResults, withDep])
 
   const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, studySite, true, validatedOnly)

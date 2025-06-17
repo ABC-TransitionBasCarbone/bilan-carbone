@@ -8,6 +8,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import { getEnvironment } from '@/i18n/environment'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import styles from './layout.module.css'
 
@@ -30,6 +31,9 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
     getAllowedStudyIdByAccount(account),
   ])
 
+  const shouldDisplayOrgaCard =
+    organizationVersions.find((org) => org.isCR || org.parentId) && account.environment !== Environment.CUT
+
   const accountOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
   ) as OrganizationVersionWithOrganization
@@ -40,13 +44,13 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
   return (
     <div className="flex-col h100">
       <Navbar user={account} environment={environment} />
-      {account.organizationVersionId && (
+      {shouldDisplayOrgaCard && (
         <OrganizationCard
           account={account}
           organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
         />
       )}
-      <main className={classNames(styles.content, { [styles.withOrganizationCard]: account.organizationVersionId })}>
+      <main className={classNames(styles.content, { [styles.withOrganizationCard]: shouldDisplayOrgaCard })}>
         {children}
       </main>
       {accountOrganizationVersion && environmentsWithChecklist.includes(accountOrganizationVersion.environment) && (
