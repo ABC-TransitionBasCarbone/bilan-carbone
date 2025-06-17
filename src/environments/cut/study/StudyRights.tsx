@@ -16,7 +16,6 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
-import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
 
 interface Props {
   user: UserSession
