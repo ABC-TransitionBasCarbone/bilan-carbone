@@ -46,7 +46,7 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
             disabled,
             children: t('accept'),
             onClick: onAccept,
-            ['data-testid']: 'delete-emission-source-modale-accept',
+            ['data-testid']: 'delete-emission-source-modal-accept',
           },
         ]}
       >

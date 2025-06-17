@@ -22,8 +22,8 @@ const DeletionModal = <T extends DeleteCommand>({ form, type, onDelete, onClose,
   return (
     <Dialog open aria-labelledby={`delete-${type}-title`} aria-describedby={`delete-${type}-description`}>
       <Form onSubmit={form.handleSubmit(onDelete)}>
-        <DialogTitle id={`delete-${type}-modale-title`}>{t('title')}</DialogTitle>
-        <DialogContent id={`delete-${type}-modale-content`}>
+        <DialogTitle id={`delete-${type}-modal-title`}>{t('title')}</DialogTitle>
+        <DialogContent id={`delete-${type}-modal-content`}>
           {handleWarningText(t, 'content')}
           <div className="flex mt1">
             <FormTextField
