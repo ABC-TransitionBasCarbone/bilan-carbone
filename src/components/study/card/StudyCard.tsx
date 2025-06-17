@@ -1,8 +1,8 @@
+import Button from '@/components/base/Button'
 import Label from '@/components/base/Label'
 import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import { Button } from '@mui/material'
 import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
@@ -72,11 +72,7 @@ const StudyCard = async ({ study, user }: Props) => {
           {/* <LinearProgress color="success" variant="determinate" value={percent} /> */}
         </Box>
         <div className="justify-end">
-          <Button
-            variant="contained"
-            color="secondary"
-            href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}
-          >
+          <Button href={`/etudes/${study.id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}>
             {t('see')}
           </Button>
         </div>

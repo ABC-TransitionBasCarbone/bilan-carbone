@@ -55,7 +55,6 @@ const DeleteEmissionSource = ({ emissionSource }: Props) => {
       <Button
         data-testid="emission-source-delete"
         onClick={() => setOpen(true)}
-        variant="contained"
         aria-label={t('delete')}
         title={t('delete')}
       >

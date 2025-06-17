@@ -583,7 +583,7 @@ const EmissionFactorsTable = ({
         )}
         {fromModal && (
           <div className={classNames({ [styles.hideFiltersButton]: displayHideButton })}>
-            <Button color="secondary" onClick={() => setDisplayFilters(!displayFilters)}>
+            <Button onClick={() => setDisplayFilters(!displayFilters)}>
               {t(displayFilters ? 'hideFilters' : 'displayFilters')}
             </Button>
           </div>

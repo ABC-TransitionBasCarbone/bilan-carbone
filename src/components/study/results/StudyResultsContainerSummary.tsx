@@ -1,6 +1,7 @@
 'use client'
 
 import Box from '@/components/base/Box'
+import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
@@ -12,7 +13,6 @@ import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SpaIcon from '@mui/icons-material/Spa'
-import { Button } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -87,9 +87,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             href={`/etudes/${study.id}`}
             clickable
           />
-          <Button variant="contained" color="secondary" href={`/etudes/${study.id}/comptabilisation/resultats`}>
-            {t('seeResults')}
-          </Button>
+          <Button href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</Button>
         </div>
       )}
 

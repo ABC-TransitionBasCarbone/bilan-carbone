@@ -1,8 +1,9 @@
 'use client'
 import CloseIcon from '@mui/icons-material/Close'
-import { Button, ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
+import { ButtonProps, IconButton, Modal as MUIModal, Typography } from '@mui/material'
 import classNames from 'classnames'
 import Box from '../base/Box'
+import Button from '../base/Button'
 import LinkButton from '../base/LinkButton'
 import LoadingButton, { Props as LoadingButtonProps } from '../base/LoadingButton'
 import styles from './Modal.module.css'
@@ -59,15 +60,7 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
             }
 
             const { actionType, ...buttonProps } = action
-            return (
-              <Button
-                key={index}
-                variant="contained"
-                color="secondary"
-                type={actionType === 'submit' ? 'submit' : 'button'}
-                {...buttonProps}
-              />
-            )
+            return <Button key={index} type={actionType === 'submit' ? 'submit' : 'button'} {...buttonProps} />
           })}
         </div>
       )}

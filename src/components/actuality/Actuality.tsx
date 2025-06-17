@@ -43,7 +43,7 @@ const ActualityRow = ({ actuality }: Props) => {
 
         {actuality.text.length > maxLength && (
           <div className="mt1">
-            <Button color="secondary" variant="outlined" onClick={() => setExpanded(!expanded)}>
+            <Button variant="outlined" onClick={() => setExpanded(!expanded)}>
               {expanded ? t('seeLess') : t('seeMore')}
             </Button>
           </div>

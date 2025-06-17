@@ -100,14 +100,14 @@ const ChecklistItem = ({
         <AccordionActions>
           {!validated && (
             <div className="justify-end">
-              <Button onClick={markAsDone} color="secondary">
+              <Button variant="outlined" onClick={markAsDone}>
                 {t('markAsDone')}
               </Button>
             </div>
           )}
           {link && (
             <div className="justify-end">
-              <LinkButton onClick={onClose} href={link}>
+              <LinkButton variant="contained" onClick={onClose} href={link}>
                 <span className="px-2">{t('go')}</span>
               </LinkButton>
             </div>

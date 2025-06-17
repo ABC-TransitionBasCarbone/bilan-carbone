@@ -54,11 +54,7 @@ const CRClients = ({ organizationVersions }: Props) => {
           <ClientCard key={organizationVersion.id} organizationVersion={organizationVersion} />
         ))}
       </ul>
-      {hiddenRows && (
-        <Button onClick={() => setShowAll(!showAll)} color="secondary">
-          {t(showAll ? 'seeLess' : 'seeMore')}
-        </Button>
-      )}
+      {hiddenRows && <Button onClick={() => setShowAll(!showAll)}>{t(showAll ? 'seeLess' : 'seeMore')}</Button>}
     </Block>
   )
 }
