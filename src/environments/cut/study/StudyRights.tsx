@@ -161,13 +161,15 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
             onCheckDay={handleCheckDay}
             isChecked={isChecked}
           />
-          <WeekScheduleForm
-            label={t('openingHoursHoliday')}
-            days={daysHoliday}
-            name={'openingHoursHoliday'}
-            control={form.control}
-            disabled={editionDisabled}
-          />
+          {openingHoursHoliday && Object.keys(openingHoursHoliday).length !== 0 && (
+            <WeekScheduleForm
+              label={t('openingHoursHoliday')}
+              days={daysHoliday}
+              name={'openingHoursHoliday'}
+              control={form.control}
+              disabled={editionDisabled}
+            />
+          )}
         </div>
       </Block>
     </>
