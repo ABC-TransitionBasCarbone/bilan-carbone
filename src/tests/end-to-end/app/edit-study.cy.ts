@@ -46,7 +46,10 @@ describe('Edit study', () => {
     /**
      * Revoir pourquoi le drawer n’est pas ouvert, comment l’ouvrir
      */
-    /*cy.getByTestId('study-perimetre-link').click()
+    /*cy.url().should('include', '/etudes/')
+    cy.getByTestId('study-perimetre-link').click()
+
+    cy.wait('@update')
 
     cy.getByTestId('sites-table-body').within(() => {
       cy.get('tr')

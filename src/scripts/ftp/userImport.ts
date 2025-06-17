@@ -44,10 +44,10 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     email,
     firstName,
     lastName,
-    status: UserStatus.IMPORTED,
     source: source as UserSource,
     account: {
       role,
+      status: UserStatus.IMPORTED,
       importedFileDate,
       environment,
       user: {
@@ -92,7 +92,7 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     await updateAccount(
       dbAccount.id,
       {
-        ...(dbAccount.user.status === UserStatus.IMPORTED && {
+        ...(dbAccount.status === UserStatus.IMPORTED && {
           role: user.account.role as Exclude<Role, 'SUPER_ADMIN'>,
           organizationVersion: user.account?.organizationVersion,
         }),

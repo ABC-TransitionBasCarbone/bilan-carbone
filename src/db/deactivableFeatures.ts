@@ -11,6 +11,7 @@ export const isFeatureActive = async (feature: DeactivatableFeature) => {
 export const getFeaturesRestictions = async () =>
   prismaClient.deactivatableFeatureStatus.findMany({
     select: { feature: true, active: true, deactivatedSources: true, deactivatedEnvironments: true },
+    orderBy: { feature: 'asc' },
   })
 
 export const getFeatureRestictions = async (feature: DeactivatableFeature) =>

@@ -365,3 +365,18 @@ export const findEmissionFactorByImportedId = (id: string) =>
       metaData: true,
     },
   })
+
+export const getEmissionFactorWithoutQuality = async (organizationId: string) =>
+  prismaClient.emissionFactor.findMany({
+    select: { metaData: { select: { language: true, title: true } } },
+    where: {
+      organizationId,
+      OR: [
+        { reliability: null },
+        { technicalRepresentativeness: null },
+        { geographicRepresentativeness: null },
+        { temporalRepresentativeness: null },
+        { completeness: null },
+      ],
+    },
+  })

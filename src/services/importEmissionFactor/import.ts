@@ -395,7 +395,7 @@ export const cleanImport = async (transaction: Prisma.TransactionClient, version
 export const addSourceToStudies = async (source: Import, transaction: Prisma.TransactionClient) => {
   const [studies, importVersion] = await Promise.all([
     transaction.study.findMany({ select: { id: true } }),
-    getSourceLatestImportVersionId(source, transaction), // TODO : import from @/db/study
+    getSourceLatestImportVersionId(source, transaction),
   ])
 
   if (studies.length && !!importVersion) {

@@ -58,7 +58,7 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
   })
 
   const onEmailChange = (_: SyntheticEvent, value: string | null) => {
-    form.setValue('email', value || '')
+    form.setValue('email', value?.trim() || '')
     if (value) {
       const organizationVersionAccount = accounts.find((account) => account.user.email === value)
       if (!organizationVersionAccount || checkLevel(organizationVersionAccount.user.level, study.level)) {

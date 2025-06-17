@@ -1,3 +1,5 @@
+import { EnvironmentNames } from '@/constants/environments'
+import { Environment } from '@prisma/client'
 import ejs, { Data } from 'ejs'
 import nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
@@ -26,14 +28,22 @@ const send = (toEmail: string[], subject: string, html: string) => {
   return mailTransport.sendMail(mail)
 }
 
-export const sendResetPassword = async (toEmail: string, token: string) => {
-  const html = await getHtml('reset-password', { link: `${process.env.NEXTAUTH_URL}/reset-password/${token}` })
+export const sendResetPassword = async (toEmail: string, token: string, env: Environment) => {
+  const html = await getHtml('reset-password', {
+    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
+  })
   return send([toEmail], 'Mot de passe oublié', html)
 }
 
-export const sendNewUserEmail = async (toEmail: string, token: string, creatorName: string, userName: string) => {
+export const sendNewUserEmail = async (
+  toEmail: string,
+  token: string,
+  creatorName: string,
+  userName: string,
+  env: Environment,
+) => {
   const html = await getHtml('new-user', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
     support: process.env.MAIL_USER,
     userName,
     creatorName,
@@ -41,16 +51,51 @@ export const sendNewUserEmail = async (toEmail: string, token: string, creatorNa
   return send([toEmail], 'Vous avez été invité au BC+', html)
 }
 
-export const sendActivationEmail = async (toEmail: string, token: string, fromReset: boolean) => {
+const getEnvInfo = (env: Environment) => {
+  switch (env) {
+    case Environment.BC:
+      return "sur lequel vous pourrez donc réaliser ou participer à la réalisation d'un ou plusieurs Bilan Carbone®."
+    case Environment.CUT:
+      return "sur lequel vous pourrez réaliser l'empreinte carbone simplifiée de votre cinéma."
+    default:
+      return '.'
+  }
+}
+
+export const sendAddedActiveUserEmail = async (
+  toEmail: string,
+  creatorName: string,
+  userName: string,
+  newEnv: Environment,
+  oldEnvs: Environment[],
+  orga: string,
+) => {
+  const html = await getHtml('added-active-user', {
+    link: `${process.env.NEXTAUTH_URL}/login`,
+    support: process.env.MAIL_USER,
+    userName,
+    creatorName,
+    newEnv: EnvironmentNames[newEnv],
+    oldEnvs:
+      oldEnvs.length > 1
+        ? `aux environnements ${oldEnvs.map((env) => EnvironmentNames[env]).join(', ')}`
+        : `à l'environnement ${EnvironmentNames[oldEnvs[0]]}`,
+    envInfo: getEnvInfo(newEnv),
+    orga,
+  })
+  return send([toEmail], 'Vous avez été invité sur un nouvel environnement du BC+', html)
+}
+
+export const sendActivationEmail = async (toEmail: string, token: string, fromReset: boolean, env: Environment) => {
   let html
   if (fromReset) {
     html = await getHtml('activate-account-from-reset', {
-      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
       support: process.env.MAIL_USER,
     })
   } else {
     html = await getHtml('activate-account', {
-      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+      link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
       support: process.env.MAIL_USER,
     })
   }
@@ -87,6 +132,7 @@ export const sendUserOnStudyInvitationEmail = async (
   })
   return send([toEmail], `Ajout sur l'étude ${studyName}`, html)
 }
+
 export const sendNewUserOnStudyInvitationEmail = async (
   toEmail: string,
   token: string,
@@ -95,9 +141,10 @@ export const sendNewUserOnStudyInvitationEmail = async (
   organizationName: string,
   creatorName: string,
   roleOnStudy: string,
+  env: Environment,
 ) => {
   const html = await getHtml('new-user-on-study-invitation', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
     studyName,
     studyId,
     studyLink: `${process.env.NEXTAUTH_URL}/etudes/${studyId}`,
@@ -136,9 +183,10 @@ export const sendNewContributorInvitationEmail = async (
   studyId: string,
   organizationName: string,
   creatorName: string,
+  env: Environment,
 ) => {
   const html = await getHtml('new-contributor-invitation', {
-    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
+    link: `${process.env.NEXTAUTH_URL}/reset-password/${token}?env=${env}`,
     studyName,
     studyId,
     studyLink: `${process.env.NEXTAUTH_URL}/etudes/${studyId}`,

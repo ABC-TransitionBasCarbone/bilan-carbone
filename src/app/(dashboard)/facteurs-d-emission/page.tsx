@@ -7,16 +7,19 @@ import { UserSession } from 'next-auth'
 
 interface Props {
   user: UserSession
+  searchParams: Promise<string>
 }
 
-const EmissionFactors = async ({ user }: Props) => {
+const EmissionFactors = async ({ user, searchParams }: Props) => {
   const userOrganizationVersion = await getOrganizationVersionById(user.organizationVersionId)
+  const searchParamsRes = await searchParams
+  const manualOnly = Object.keys(searchParamsRes).includes('manual')
 
   if (!hasAccessToEmissionFactor(user.environment)) {
     return <NotFound />
   }
 
-  return <EmissionsFactorPage userOrganizationId={userOrganizationVersion?.organizationId} />
+  return <EmissionsFactorPage userOrganizationId={userOrganizationVersion?.organizationId} manualOnly={manualOnly} />
 }
 
 export default withAuth(EmissionFactors)

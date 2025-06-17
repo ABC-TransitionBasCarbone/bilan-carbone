@@ -470,12 +470,12 @@ const getOrCreateUserAndSendStudyInvite = async (
   if (!existingUser) {
     const newUser = await addUser({
       email: email,
-      status: UserStatus.VALIDATED,
       firstName: '',
       lastName: '',
       source: creatorDBUser?.source,
       accounts: {
         create: {
+          status: UserStatus.VALIDATED,
           role: Role.DEFAULT,
           environment: study.organizationVersion.environment,
         },
@@ -488,9 +488,15 @@ const getOrCreateUserAndSendStudyInvite = async (
       organizationVersion.organization,
       creator,
       newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
+      study.organizationVersion.environment,
     )
 
-    accountId = newUser.accounts[0].id
+    const newAccountId = newUser.accounts.find((a) => a.environment === organizationVersion.environment)?.id
+    if (!newAccountId) {
+      throw new Error()
+    }
+
+    accountId = newAccountId
   } else {
     let account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
 
@@ -499,6 +505,7 @@ const getOrCreateUserAndSendStudyInvite = async (
         user: { connect: { id: existingUser.id } },
         role: Role.COLLABORATOR,
         environment: organizationVersion.environment,
+        status: UserStatus.VALIDATED,
       })) as AccountWithUser
     }
 
@@ -508,6 +515,7 @@ const getOrCreateUserAndSendStudyInvite = async (
       organizationVersion.organization,
       creator,
       newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
+      organizationVersion.environment,
       account,
     )
     accountId = account.id

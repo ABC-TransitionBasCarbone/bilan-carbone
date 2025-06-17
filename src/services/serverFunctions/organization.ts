@@ -1,10 +1,8 @@
 'use server'
 
-import {
-  AccountWithUser,
-  getAccountByEmailAndOrganizationVersionId,
-  getAccountOrganizationVersions,
-} from '@/db/account'
+import { getAccountOrganizationVersions } from '@/db/account'
+import { prismaClient } from '@/db/client'
+import { getEmissionFactorWithoutQuality } from '@/db/emissionFactors'
 import {
   createOrganizationWithVersion,
   deleteClient,
@@ -18,11 +16,12 @@ import {
 } from '@/db/organization'
 import { deleteStudyMemberFromOrganization, getAllowedStudiesByAccountIdAndOrganizationId } from '@/db/study'
 import { getUserApplicationSettings, getUserByEmail, updateAccount } from '@/db/user'
+import { getLocale } from '@/i18n/locale'
 import { uniqBy } from '@/utils/array'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
-import { Account, Environment, Prisma, StudyRole, UserChecklist } from '@prisma/client'
+import { Account, Environment, Prisma, StudyRole, User, UserChecklist } from '@prisma/client'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
 import {
@@ -34,8 +33,8 @@ import {
 import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
 import { getStudy } from './study'
 import { DeleteCommand } from './study.command'
-import { addUserChecklistItem } from './user'
-import { OnboardingCommand } from './user.command'
+import { addMember, addUserChecklistItem } from './user'
+import { AddMemberCommand, OnboardingCommand } from './user.command'
 
 /**
  *
@@ -56,7 +55,7 @@ export const getStudyOrganizationVersion = async (studyId: string) =>
 export const createOrganizationCommand = async (command: CreateOrganizationCommand) =>
   withServerResponse('createOrganizationCommand', async () => {
     const session = await dbActualizedAuth()
-    if (!session || !session.user.organizationVersionId) {
+    if (!session || !session.user.organizationVersionId || session.user.environment !== Environment.BC) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -65,7 +64,6 @@ export const createOrganizationCommand = async (command: CreateOrganizationComma
     } satisfies Prisma.OrganizationCreateInput
 
     const organizationVersion = {
-      // TODO Récupérer l'environnement de la bonne manière
       environment: Environment.BC,
       parent: { connect: { id: session.user.organizationVersionId } },
     } satisfies Omit<Prisma.OrganizationVersionCreateInput, 'organization'>
@@ -132,6 +130,14 @@ export const setOnboardedOrganizationVersion = async (organizationVersionId: str
     await setOnboarded(organizationVersionId, session.user.accountId)
   })
 
+const onboardUser = async (user: AddMemberCommand) => {
+  try {
+    await addMember(user)
+  } catch (e) {
+    console.error('Error during user onboarding, but still continue onboarding and adding other users:', e)
+  }
+}
+
 export const onboardOrganizationVersionCommand = async (command: OnboardingCommand) =>
   withServerResponse('onboardOrganizationVersionCommand', async () => {
     const session = await dbActualizedAuth()
@@ -143,29 +149,28 @@ export const onboardOrganizationVersionCommand = async (command: OnboardingComma
 
     const organizationVersion = await getRawOrganizationVersionById(command.organizationVersionId)
 
-    if (!organizationVersion || organizationVersion.onboarderId !== session.user.accountId) {
+    if (!organizationVersion || organizationVersion.id !== session.user.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    // filter duplicatd email
-    let collaborators = command.collaborators === undefined ? [] : uniqBy(command.collaborators, 'email')
-    const existingCollaborators: AccountWithUser[] = []
+    await prismaClient.$transaction(async (transaction) => {
+      await onboardOrganizationVersion(session.user.accountId, command, transaction)
 
-    // filter existing accounts
-    for (const collaborator of collaborators) {
-      const existingAccount = (await getAccountByEmailAndOrganizationVersionId(
-        collaborator.email || '',
-        organizationVersionId,
-      )) as AccountWithUser
-      if (existingAccount) {
-        collaborators = collaborators.filter((commandCollaborator) => commandCollaborator.email !== collaborator.email)
-        if (existingAccount.organizationVersionId === organizationVersionId) {
-          existingCollaborators.push(existingAccount)
-        }
+      let collaborators: AddMemberCommand[] = []
+      if (command.collaborators && command.collaborators?.length > 0) {
+        const fileredCollaborators = uniqBy(command.collaborators, 'email').filter(
+          (collaborator) => !!collaborator.email && !!collaborator.role,
+        ) as { email: User['email']; role: Account['role'] }[]
+
+        collaborators = fileredCollaborators.map((collaborator) => ({
+          ...collaborator,
+          firstName: '',
+          lastName: '',
+        }))
+
+        await Promise.all(collaborators.map(onboardUser))
       }
-    }
-
-    await onboardOrganizationVersion(session.user.accountId, { ...command, collaborators }, existingCollaborators)
+    })
   })
 
 export const deleteOrganizationMember = async (email: string) =>
@@ -200,6 +205,23 @@ export const deleteOrganizationMember = async (email: string) =>
     )
     await updateAccount(targetMemberAccount.id, { organizationVersion: { disconnect: true } }, {})
     return null
+  })
+
+export const hasQualitylessEmissionFactors = async () =>
+  withServerResponse('hasQualitylessEmissionFactors', async () => {
+    const [session, locale] = await Promise.all([dbActualizedAuth(), getLocale()])
+    if (!session || !session.user || !session.user.organizationId) {
+      return []
+    }
+
+    const emissionFactors = await getEmissionFactorWithoutQuality(session.user.organizationId)
+    return emissionFactors
+      .map(
+        (emissionFactor) =>
+          emissionFactor.metaData.find((metadata) => metadata.language === locale) || emissionFactor.metaData[0],
+      )
+      .map((emissionFactor) => emissionFactor.title)
+      .filter((emissionFactor) => emissionFactor !== null)
   })
 
 const getStudiesWithOnlyValidator = async (

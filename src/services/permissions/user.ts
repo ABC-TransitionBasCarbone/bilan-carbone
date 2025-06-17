@@ -42,7 +42,7 @@ export const canDeleteMember = (user: UserSession, member: AccountWithUser | nul
     return false
   }
 
-  if (member.user.status === UserStatus.ACTIVE) {
+  if (member.status === UserStatus.ACTIVE) {
     return false
   }
 

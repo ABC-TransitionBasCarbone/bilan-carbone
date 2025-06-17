@@ -38,10 +38,10 @@ describe('userUtils functions', () => {
               firstName: true,
               lastName: true,
               level: true,
-              status: true,
               updatedAt: true,
             },
           },
+          status: true,
           role: true,
           updatedAt: true,
         },
@@ -63,14 +63,14 @@ describe('userUtils functions', () => {
               firstName: true,
               lastName: true,
               level: true,
-              status: true,
               updatedAt: true,
             },
           },
+          status: true,
           role: true,
           updatedAt: true,
         },
-        where: { user: { status: UserStatus.ACTIVE }, organizationVersionId: user.organizationVersionId },
+        where: { status: UserStatus.ACTIVE, organizationVersionId: user.organizationVersionId },
       })
       expect(mockCanEditMemberRole).toHaveBeenCalledWith(user)
     })

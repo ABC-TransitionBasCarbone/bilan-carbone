@@ -4,7 +4,6 @@ import Block from '@/components/base/Block'
 import { FormTextField } from '@/components/form/TextField'
 import WeekScheduleForm from '@/components/form/WeekScheduleForm'
 import StudyParams from '@/components/study/rights/StudyParams'
-import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema } from '@/services/serverFunctions/study'
@@ -17,6 +16,7 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
+import StudyRightsTable from '@/components/study/rights/StudyRightsTable'
 
 interface Props {
   user: UserSession
@@ -171,7 +171,6 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
           />
         </div>
       </Block>
-      <StudyRightsTable study={study} user={user} canAddMember={!editionDisabled} userRoleOnStudy={userRoleOnStudy} />
     </>
   )
 }

@@ -140,11 +140,11 @@
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",
       "backToHome": "Retour a l'accueil",
-      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous sur l'adresse email",
+      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous.",
       "emailRequired": "Veuillez entrer un email",
       "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
       "emailSent": "Si votre email est correct, vous allez recevoir un mail pour réinitialiser votre mot de passe",
-      "validated": "Votre mot de passe a été réinitialisé, vous allez être redirigé vers la page de <link>connexion</link>.",
+      "validated": "Votre mot de passe a été réinitialisé",
       "validation": {
         "email": "Veuillez entrer un email",
         "password": "Veuillez entrer un mot de passe"
@@ -406,7 +406,7 @@
         "subPosts": "Sous postes",
         "title": "Contributeurs",
         "newContributorLink": "Ajouter un contributeur",
-        "andXOthers": "et {count} autres",
+        "andXOthers": "et {count, plural, =1 {1 autre} other {# autres}}",
         "deleting": {
           "title": "Confirmation",
           "confirmation": "Êtes vous sûr de vouloir supprimer {email} des contributeurs de cette étude ?",
@@ -862,6 +862,12 @@
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion à la centrale",
       "Pertes": "Pertes"
+    },
+    "missingQualities": {
+      "title": "Ajout de la qualité pour les facteurs d'émission manuels",
+      "body": "Bonjour, d'après nos informations, vous aviez ajouté des facteurs d'émissions manuellement lorsqu'il était encore impossible de renseigner leur incertitude. Par défaut, pour ces facteurs d'émissions, les qualités sont considérées comme étant \"Très bonne\", ce qui correspond à une incertitude nulle sur le facteur d'émission. Ce bug étant dorénavant résolu, nous vous recommandons fortement de mettre à jour les facteurs d'émissions concernés qui sont les suivants :",
+      "close": "Fermer",
+      "correct": "Corriger"
     }
   },
   "level": {
@@ -890,7 +896,7 @@
     "More than one": "Il doit y avoir au moins un administrateur ou gestionnaire dans l'organisation"
   },
   "environment": {
-    "BC": "BC",
+    "BC": "BC+ 2.0",
     "CUT": "Count",
     "TILT": "Tilt"
   },
@@ -938,7 +944,8 @@
       "lastName": "Veuillez renseigner un nom",
       "level": "Veuillez renseigner un niveau de formation",
       "role": "Veuillez renseigner un rôle"
-    }
+    },
+    "addedMember": "L'utilisateur a bien été ajouté à votre organisation"
   },
   "units": {
     "selectAll": "Tout sélectionner",
@@ -1390,9 +1397,9 @@
   },
   "feedback": {
     "title": "Donnez votre avis sur le BC+ !",
-    "body": " Si vous avez 5 minutes, nous serions ravis d'avoir vos retours sur le BC+ ! Ceux-ci nous permettront de répondre aux mieux à vos besoins avec nos prochains développements. Si ce n'est pas le bon moment, vous pouvez retrouver ce formulaire à tout moment dans le menu.",
+    "body": " Si vous avez 5 minutes, nous serions ravis d'avoir vos retours sur le BC+ ! Ceux-ci nous permettront de répondre aux mieux à vos besoins avec nos prochains développements. Si ce n'est pas le bon moment, vous pouvez reportez votre réponse.",
     "reject": "Ne pas répondre",
-    "delay": "Plus tard",
+    "delay": "Plus tard ({time} jours)",
     "answer": "Je donne mon avis",
     "close": "Fermer"
   }

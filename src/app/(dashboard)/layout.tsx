@@ -2,6 +2,7 @@ import ChecklistButton from '@/components/checklist/ChecklistButton'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import Navbar from '@/components/navbar/Navbar'
 import OrganizationCard from '@/components/organizationCard/OrganizationCard'
+import { environmentsWithChecklist } from '@/constants/environments'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
@@ -52,7 +53,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
       <main className={classNames(styles.content, { [styles.withOrganizationCard]: shouldDisplayOrgaCard })}>
         {children}
       </main>
-      {accountOrganizationVersion && (
+      {accountOrganizationVersion && environmentsWithChecklist.includes(accountOrganizationVersion.environment) && (
         <ChecklistButton
           accountOrganizationVersion={accountOrganizationVersion}
           clientId={clientId}

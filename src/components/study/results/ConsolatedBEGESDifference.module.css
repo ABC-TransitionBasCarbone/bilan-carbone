@@ -107,6 +107,10 @@
   font-size: 0.875rem;
 }
 
+.table tbody tr {
+  background: white !important;
+}
+
 .table tbody tr:hover {
   background: var(--background-50);
 }

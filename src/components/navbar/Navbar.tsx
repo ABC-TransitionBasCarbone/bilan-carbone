@@ -1,7 +1,7 @@
 'use client'
 
 import { hasAccessToFormation } from '@/services/permissions/formations'
-import { getUserAccounts } from '@/services/serverFunctions/user'
+import { getUserActiveAccounts } from '@/services/serverFunctions/user'
 import { isAdmin } from '@/utils/user'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
@@ -44,7 +44,7 @@ const Navbar = ({ children, user, environment }: Props) => {
     }
 
     const hasMultipleAccounts = async () => {
-      const userAccounts = await getUserAccounts()
+      const userAccounts = await getUserActiveAccounts()
       if (userAccounts.success) {
         setHasMultipleAccounts((userAccounts && userAccounts.data.length > 1) || false)
       }
