@@ -14,8 +14,44 @@ const AllPostsInfography = ({ study, data }: Props) => {
     <div className={classNames('flex', 'justify-between', 'align-center')}>
       <PostInfography
         studyId={study.id}
+        data={data.find((d) => d.post === Post.Fonctionnement)}
+        post={Post.Fonctionnement}
+        resultsUnit={study.resultsUnit}
+      />
+      <PostInfography
+        studyId={study.id}
+        data={data.find((d) => d.post === Post.MobiliteSpectateurs)}
+        post={Post.MobiliteSpectateurs}
+        resultsUnit={study.resultsUnit}
+      />
+      <PostInfography
+        studyId={study.id}
+        data={data.find((d) => d.post === Post.TourneesAvantPremiere)}
+        post={Post.TourneesAvantPremiere}
+        resultsUnit={study.resultsUnit}
+      />
+      <PostInfography
+        studyId={study.id}
+        data={data.find((d) => d.post === Post.SallesEtCabines)}
+        post={Post.SallesEtCabines}
+        resultsUnit={study.resultsUnit}
+      />
+      <PostInfography
+        studyId={study.id}
         data={data.find((d) => d.post === Post.ConfiseriesEtBoissons)}
         post={Post.ConfiseriesEtBoissons}
+        resultsUnit={study.resultsUnit}
+      />
+      <PostInfography
+        studyId={study.id}
+        data={data.find((d) => d.post === Post.Dechets)}
+        post={Post.Dechets}
+        resultsUnit={study.resultsUnit}
+      />
+      <PostInfography
+        studyId={study.id}
+        data={data.find((d) => d.post === Post.BilletterieEtCommunication)}
+        post={Post.BilletterieEtCommunication}
         resultsUnit={study.resultsUnit}
       />
     </div>
