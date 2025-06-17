@@ -18,7 +18,7 @@ describe('Register cut', () => {
         .within(() => {
           cy.get('.title')
             .invoke('text')
-            .should('match', /Vous avez créé un compte CUT - 321/)
+            .should('match', /Vous avez activé votre compte sur CUT/)
         })
     })
   })
@@ -38,7 +38,7 @@ describe('Register cut', () => {
         .within(() => {
           cy.get('.title')
             .invoke('text')
-            .should('match', /Vous avez créé un compte CUT - 123456789012/)
+            .should('match', /Vous avez activé votre compte sur CUT/)
         })
     })
   })

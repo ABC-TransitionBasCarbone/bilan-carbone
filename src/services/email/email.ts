@@ -100,7 +100,7 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
       support: process.env.MAIL_USER,
     })
   }
-  return send([toEmail], 'Vous avez activé votre compte sur le BC+', html)
+  return send([toEmail], `Vous avez activé votre compte sur ${env === Environment.BC ? 'le BC+' : env}`, html)
 }
 
 export const sendActivationRequest = async (
@@ -109,7 +109,7 @@ export const sendActivationRequest = async (
   userToActivate: string,
   env: Environment = Environment.BC,
 ) => {
-  const html = await getHtml(`activation-request-${env.toLowerCase()}`, {
+  const html = await getHtml(`activation-request`, {
     support: process.env.MAIL_USER,
     emailToActivate,
     userToActivate,
