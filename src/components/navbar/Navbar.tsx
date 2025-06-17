@@ -117,7 +117,7 @@ const Navbar = ({ children, user, environment }: Props) => {
                         </NavbarLink>
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
-                        <NavbarLink data-testid="link-organisation" href="/organisations" onClick={handleClose}>
+                        <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
                           {t('organizations')}
                         </NavbarLink>
                       </MenuItem>
