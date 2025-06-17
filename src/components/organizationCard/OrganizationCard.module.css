@@ -1,10 +1,7 @@
-.organizationCard {
-  background-color: var(--background-100);
-  z-index: 100;
-  position: fixed;
-  top: var(--header-height);
-  height: var(--organization-height);
-  border: var(--border);
+.appBar {
+  top: 3.375rem;
+  z-index: 1100;
+  position: sticky;
 }
 
 .gapped {

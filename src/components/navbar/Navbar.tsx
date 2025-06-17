@@ -57,7 +57,7 @@ const Navbar = ({ children, user, environment }: Props) => {
   const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
 
   return (
-    <AppBar position="sticky" elevation={0}>
+    <AppBar position="sticky" elevation={0} sx={{ zIndex: 1101 }}>
       <Toolbar variant="dense">
         <Container maxWidth="lg" className={styles.toolbarContainer}>
           <Box className={styles.buttonContainer}>
