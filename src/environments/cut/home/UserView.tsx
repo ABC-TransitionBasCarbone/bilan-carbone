@@ -4,6 +4,7 @@ import { Box, BoxProps, LinkProps, Link as MUILink, styled, Typography, useTheme
 
 import { grey } from '@mui/material/colors'
 import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import CinemaOutlinedIcon from '../icons/CinemaOutlinedIcon'
 import DiagramOutlinedIcon from '../icons/DiagramOutlinedIcon'
@@ -29,25 +30,28 @@ const StyledLink = ({ ...props }: LinkProps) => {
 }
 
 const UserView = () => {
+  const t = useTranslations('home')
+  const title = t('title')
+  const navigation = useTranslations('navigation')
   return (
     <Box component="section" className={styles.container}>
-      <Typography variant="h4">Faire votre bilan d’impact vous permettra de :</Typography>
+      <Typography variant="h4">{title}</Typography>
       <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
         <CheckCircleOutlineIcon sx={{ color: grey[300] }} fontSize="large" />
-        <Typography>Comprendre la mesure d’impact de votre établissement</Typography>
+        <Typography>{t('info.0')}</Typography>
       </StyledBox>
       <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
         <CheckCircleOutlineIcon sx={{ color: grey[500] }} fontSize="large" className={styles.checkIcon} />
-        <Typography>Indentifier les priorités d’action</Typography>
+        <Typography>{t('info.1')}</Typography>
       </StyledBox>
       <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
         <CheckCircleOutlineIcon sx={{ color: grey[500] }} fontSize="large" className={styles.checkIcon} />
-        <Typography>Construire une trajectoire de réduction</Typography>
+        <Typography>{t('info.2')}</Typography>
       </StyledBox>
       <Box className={styles.linkContainer}>
         <StyledLink color="info" href="/equipe" className={classNames(styles.styledBoxContainer, styles.styledBoxLink)}>
           <CinemaOutlinedIcon className={styles.icon} />
-          <Typography>Mes cinémas</Typography>
+          <Typography>{navigation('organization')}</Typography>
         </StyledLink>
         <StyledLink
           color="info"
@@ -55,7 +59,7 @@ const UserView = () => {
           className={classNames(styles.styledBoxContainer, styles.styledBoxLink)}
         >
           <DiagramOutlinedIcon className={styles.icon} />
-          <Typography>Mes bilans</Typography>
+          <Typography>{navigation('organizations')}</Typography>
         </StyledLink>
       </Box>
     </Box>
