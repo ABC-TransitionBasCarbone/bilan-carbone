@@ -16,8 +16,8 @@ const StyledLink = styled(Link, { shouldForwardProp: (prop) => prop !== 'visible
   textDecoration: 'none',
   outlineOffset: '0.375rem',
 
-  backgroundColor: theme.custom.postColors[post].light,
-  borderColor: theme.custom.postColors[post].dark,
+  backgroundColor: theme.custom.postColors[post]?.light,
+  borderColor: theme.custom.postColors[post]?.dark,
 
   '&:hover': {
     '.list': {

@@ -49,7 +49,7 @@ export const CutPostInfography = ({ post, mainPost, subPosts, data, studyId, per
 
       {subPosts && subPosts.length > 0 && (
         <StyledSubPostContainer isVisible={displayChildren}>
-          <div className="flex-col">
+          <div className="flex-col gap-1">
             {subPosts.map((subPost) => {
               const subPostData = data?.subPosts.find((sp) => sp.post === subPost)
               const isValidated = isPostValidated(subPostData)

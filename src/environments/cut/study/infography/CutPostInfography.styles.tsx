@@ -1,7 +1,6 @@
 import { Link, styled } from '@mui/material'
 
 export const StyledContainer = styled('div')(({ theme }) => ({
-  position: 'relative',
   backgroundColor: theme.palette.primary.light,
   borderRadius: '0.5rem',
   overflow: 'visible',
@@ -9,8 +8,8 @@ export const StyledContainer = styled('div')(({ theme }) => ({
 
   '&:hover': {
     gap: '0.5rem',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    transform: 'translateY(-0.125rem)',
+    boxShadow: '0 0.25rem 0.75rem',
     zIndex: 10,
   },
 
@@ -36,8 +35,8 @@ export const StyledSubPostItem = styled(Link, { shouldForwardProp: (prop) => pro
   validated?: boolean
 }>(({ theme, validated }) => ({
   gap: '0.75rem',
-  padding: '0.75rem 1rem',
-  margin: '0.25rem 0',
+  padding: '0.5rem 0.75rem',
+  margin: '0.125rem 0',
   textDecoration: 'none',
   color: theme.palette.primary.contrastText,
   backgroundColor: validated ? theme.palette.success.light : theme.palette.error.light,
@@ -49,9 +48,9 @@ export const StyledSubPostItem = styled(Link, { shouldForwardProp: (prop) => pro
   },
 }))
 
-export const StyledIconWrapper = styled('div')({
+export const StyledIconWrapper = styled('div')(({ theme }) => ({
   width: '1.5rem',
   height: '1.5rem',
-  color: 'black',
+  color: theme.palette.primary.contrastText,
   fontSize: '1rem',
-})
+}))
