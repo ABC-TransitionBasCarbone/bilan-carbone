@@ -1,6 +1,7 @@
 import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import DebouncedInput from '@/components/base/DebouncedInput'
+import TextUnitInput from '@/components/questions/TextUnitInput'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { getEmissionResultsCut } from '@/services/emissionSource'
@@ -16,7 +17,6 @@ import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import { Question } from '../services/post'
@@ -41,7 +41,6 @@ interface Props {
 
 const SubPostField = ({ subPost, emissionSources, study, question, callback, isLoading = false }: Props) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
-  const tUnits = useTranslations('units')
   const tResultstUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
   const tEmissionSource = useTranslations('emissionSource')
@@ -125,6 +124,13 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
     }
   }, [question])
 
+  const unit = useMemo(() => {
+    if (!emissionFactor) {
+      return null
+    }
+    return emissionFactor.unit === Unit.CUSTOM ? emissionFactor.customUnit : emissionFactor.unit
+  }, [emissionFactor])
+
   const handleUpdate = async (id: string | number, emissionSourceId?: string | null) => {
     const value = parseInt(currentValues[id] || '') || undefined
     const depreciationPeriod = parseInt(currentDepreciationPeriodValues[id] || '') || undefined
@@ -197,39 +203,27 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
     <Block title={tCutQuestions(question.key, { value: question?.value || '' })}>
       {extendedEmissionSources.map((emissionSource, index) => (
         <div key={emissionSource?.fakeId || emissionSource?.id || index} className="flex mt1">
-          <div className={classNames(styles.inputWithUnit, 'flex grow mr1')}>
-            <DebouncedInput
-              debounce={50}
-              className="grow"
-              disabled={isLoading}
-              type={question.type}
-              value={
-                currentValues[emissionSource?.id || emissionSource?.fakeId || index] ??
-                emissionSource?.value?.toString() ??
-                ''
-              }
-              onChange={(value) =>
-                setCurrentValues((prev) => ({
-                  ...prev,
-                  [emissionSource?.id || emissionSource?.fakeId || index]: value,
-                }))
-              }
-              onBlur={() => handleUpdate(emissionSource?.id || emissionSource?.fakeId || index, emissionSource?.id)}
-              label={`${tEmissionSource('cut.form.value')} *`}
-              helperText={error}
-              error={!!error}
-              slotProps={{
-                htmlInput: { min: 0 },
-                input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                inputLabel: { shrink: true },
-              }}
-            />
-            {emissionFactor && (
-              <div className={styles.unit}>
-                {emissionFactor.unit === Unit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}
-              </div>
-            )}
-          </div>
+          <TextUnitInput
+            unit={unit}
+            format={question.format}
+            className="grow"
+            disabled={isLoading}
+            value={
+              currentValues[emissionSource?.id || emissionSource?.fakeId || index] ??
+              emissionSource?.value?.toString() ??
+              ''
+            }
+            onChange={(value) =>
+              setCurrentValues((prev) => ({
+                ...prev,
+                [emissionSource?.id || emissionSource?.fakeId || index]: value,
+              }))
+            }
+            onUpdate={() => handleUpdate(emissionSource?.id || emissionSource?.fakeId || index, emissionSource?.id)}
+            label={`${tEmissionSource('cut.form.value')} *`}
+            helperText={error}
+            error={!!error}
+          />
           <div className="mr1">
             {question.depreciationPeriod && (
               <DebouncedInput
@@ -256,6 +250,11 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
                   inputLabel: { shrink: true },
                 }}
               />
+            )}
+            {emissionFactor && (
+              <div className={styles.unit}>
+                {emissionFactor.unit === Unit.CUSTOM ? emissionFactor.customUnit : emissionFactor.unit || ''}
+              </div>
             )}
           </div>
           {emissionSource?.id && (
