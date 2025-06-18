@@ -36,7 +36,9 @@ const UserView = () => {
 
   return (
     <Box component="section" className={styles.container}>
-      <Typography variant="h4">{title}</Typography>
+      <Typography data-testid="title" variant="h4">
+        {title}
+      </Typography>
       <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
         <CheckCircleOutlineIcon sx={{ color: grey[300] }} fontSize="large" />
         <Typography>{t('info.0')}</Typography>
