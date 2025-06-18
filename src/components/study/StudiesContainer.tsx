@@ -76,11 +76,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
           <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />
           <h5>{t('createFirstStudy')}</h5>
           <p>{t('firstStudyMessage')}</p>
-          <LinkButton
-            data-testid="new-organization"
-            className={classNames('w100 justify-center mb1')}
-            href={creationUrl}
-          >
+          <LinkButton data-testid="new-study" className={classNames('w100 justify-center mb1')} href={creationUrl}>
             <AddIcon />
             {t('createFirstStudy')}
           </LinkButton>
