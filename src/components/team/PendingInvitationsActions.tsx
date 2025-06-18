@@ -37,7 +37,6 @@ const PendingInvitationsActions = ({ member }: Props) => {
         {t('resend')}
       </LoadingButton>
       <LoadingButton
-        color="error"
         loading={deleting}
         onClick={async () => {
           setDeleting(true)
@@ -48,6 +47,7 @@ const PendingInvitationsActions = ({ member }: Props) => {
           })
           setDeleting(false)
         }}
+        color="error"
       >
         {t('delete')}
       </LoadingButton>

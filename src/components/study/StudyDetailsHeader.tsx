@@ -65,6 +65,8 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
           'data-testid': 'delete-study',
           onClick: () => setDeleting(true),
           children: tStudyDelete('delete'),
+          variant: 'contained',
+          color: 'secondary',
         },
       ]
     : []
@@ -80,6 +82,8 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
           onClick: () =>
             downloadStudyEmissionSources(study, tStudyExport, tCaracterisations, tPost, tQuality, tUnit, tResultUnits),
           disabled: study.emissionSources.length === 0,
+          variant: 'contained',
+          color: 'secondary',
           children: (
             <>
               {tStudyExport('download')}

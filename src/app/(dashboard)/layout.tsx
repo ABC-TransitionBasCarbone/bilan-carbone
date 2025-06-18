@@ -33,6 +33,9 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
     getAllowedStudyIdByAccount(account),
   ])
 
+  const shouldDisplayOrgaCard =
+    organizationVersions.find((org) => org.isCR || org.parentId) && account.environment !== Environment.CUT
+
   const accountOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
   ) as OrganizationVersionWithOrganization
@@ -43,7 +46,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar user={account} environment={environment} />
-      {account.organizationVersionId && (
+      {shouldDisplayOrgaCard && (
         <OrganizationCard
           account={account}
           organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}

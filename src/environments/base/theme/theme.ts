@@ -4,6 +4,7 @@ const base = createTheme({
   palette: {
     background: {
       default: '#3880ff0d',
+      paper: '#ffffff',
     },
     primary: {
       main: '#272768',
@@ -26,6 +27,7 @@ const base = createTheme({
     success: {
       main: '#94EBBF',
       light: '#E0FBE8',
+      dark: '#1d9c5c',
     },
     error: {
       light: '#e04949',
@@ -68,10 +70,37 @@ const base = createTheme({
     'none',
   ],
   typography: {
-    fontFamily: 'Gilroy, sans-serif',
+    fontFamily: 'gilroy-regular, sans-serif',
     button: {
+      fontSize: '1rem',
       textTransform: 'none',
-      fontFamily: 'Gilroy, sans-serif',
+      fontFamily: 'gilroy-regular, sans-serif',
+    },
+    h1: {
+      fontSize: '2.5rem',
+      lineHeight: '3.25rem',
+      fontWeight: 800,
+    },
+    h2: {
+      fontWeight: 700,
+      fontSize: '2rem',
+      lineHeight: '2.75rem',
+    },
+    h3: {
+      fontSize: '1.75rem',
+      lineHeight: '2.25rem',
+    },
+    h4: {
+      fontSize: '1.5rem',
+      lineHeight: '2rem',
+    },
+    h5: {
+      fontSize: '1.375rem',
+      lineHeight: '1.75rem',
+    },
+    h6: {
+      fontSize: '1.25rem',
+      lineHeight: '1.75rem',
     },
   },
 })
@@ -96,17 +125,23 @@ const theme = createTheme(base, {
           backgroundColor: base.palette.common.white,
           borderStyle: 'solid',
         },
+        containedSecondary: {
+          '&:hover': {
+            backgroundColor: '#002D7A',
+          },
+        },
       },
     },
     MuiLinearProgress: {
       styleOverrides: {
-        root: {
-          backgroundColor: base.palette.grey[200],
-          borderRadius: 4,
+        '& .MuiLinearProgress-bar1': {
+          backgroundColor: base.palette.success.main,
         },
-        bar: {
-          borderRadius: 4,
-          backgroundColor: base.palette.primary.main,
+        '& .MuiLinearProgress-bar2': {
+          backgroundColor: base.palette.grey[200],
+        },
+        '& .MuiLinearProgress-barColorPrimary': {
+          backgroundColor: base.palette.success.main,
         },
       },
     },
@@ -117,7 +152,7 @@ const theme = createTheme(base, {
       color: base.palette.text.primary,
       borderRadius: '1rem',
       borderStyle: 'solid',
-      borderWidth: '0.0125rem',
+      borderWidth: '0.0625rem',
       borderColor: base.palette.grey[300],
       padding: '1rem',
     },
@@ -126,6 +161,7 @@ const theme = createTheme(base, {
         border: '0.125rem solid rgba(27, 91, 245, 0.1)',
       },
       text: {
+        fontFamily: 'gilroy-regular, sans-serif',
         color: '#FFFFFF',
         fontWeight: 600,
         textTransform: 'uppercase',

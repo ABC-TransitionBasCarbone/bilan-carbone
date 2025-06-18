@@ -1,3 +1,7 @@
+.buttonFitContent {
+  width: fit-content;
+}
+
 .spinner {
   color: var(--neutral-500) !important;
 }

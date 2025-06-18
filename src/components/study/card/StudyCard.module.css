@@ -1,5 +1,4 @@
 .card {
-  background-color: var(--background-100);
   gap: 1rem;
 }
 
@@ -32,5 +31,14 @@
 
   &.success {
     background: var(--success-100);
+  }
+}
+
+.helpIcon {
+  cursor: pointer;
+  color: var(--primary-500);
+
+  &:hover {
+    color: var(--primary-800);
   }
 }

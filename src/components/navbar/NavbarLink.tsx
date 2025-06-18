@@ -10,6 +10,7 @@ const NavbarLink = ({ ...props }: LinkProps) => {
       component={Link}
       {...props}
       sx={{
+        fontFamily: theme.custom.navbar.text.fontFamily,
         color: theme.custom.navbar.text.color,
         fontWeight: theme.custom.navbar.text.fontWeight,
         textDecoration: 'none',

@@ -1,18 +1,18 @@
 'use client'
 
 import Box from '@/components/base/Box'
+import Button from '@/components/base/Button'
 import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { filterWithDependencies } from '@/services/results/utils'
+import { mapResultsByPost } from '@/services/results/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SpaIcon from '@mui/icons-material/Spa'
-import { Button } from '@mui/material'
 import { SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -41,16 +41,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     [studySite, validatedOnly],
   )
 
-  const computedResults = useMemo(
-    () =>
-      allComputedResults
-        .map((post) => ({
-          ...post,
-          subPosts: post.subPosts.filter((subPost) => filterWithDependencies(subPost.post as SubPost, withDep)),
-        }))
-        .map((post) => ({ ...post, value: post.subPosts.reduce((res, subPost) => res + subPost.value, 0) })),
-    [allComputedResults, withDep],
-  )
+  const computedResults = useMemo(() => mapResultsByPost(allComputedResults, withDep), [allComputedResults, withDep])
 
   const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, studySite, true, validatedOnly)
@@ -87,9 +78,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             href={`/etudes/${study.id}`}
             clickable
           />
-          <Button variant="contained" color="secondary" href={`/etudes/${study.id}/comptabilisation/resultats`}>
-            {t('seeResults')}
-          </Button>
+          <Button href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</Button>
         </div>
       )}
 
@@ -104,15 +93,15 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(true)}
               className={styles.hidden}
             />
-            <Box selected={withDep} className={classNames(styles.card, 'flex-col flex-cc m2 px3')}>
+            <Box selected={withDep} color="secondary" className={classNames(styles.card, 'flex-col flex-cc pointer')}>
               <h3 className="text-center">
                 {withDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
               <span className="align-center text-center">
                 {t('results.withDependencies')}
                 <HelpOutlineOutlinedIcon
-                  color="primary"
-                  className="ml-4"
+                  color="secondary"
+                  className={`ml-4 ${styles.helpIcon}`}
                   onClick={() => setGlossary('withDependencies')}
                 />
               </span>
@@ -127,7 +116,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
               onChange={() => setWithDependencies(false)}
               className={styles.hidden}
             />
-            <Box selected={!withDep} className={classNames(styles.card, 'flex-col flex-cc pointer')}>
+            <Box selected={!withDep} color="secondary" className={classNames(styles.card, 'flex-col flex-cc pointer')}>
               <h3 className="text-center">
                 {withoutDepValue} {tResultUnits(study.resultsUnit)}
               </h3>
@@ -138,7 +127,12 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             <h3 className="text-center">{monetaryRatio} %</h3>
             <span className="text-center align-center">
               {t('results.monetaryRatio')}
-              <HelpIcon className="ml-4" onClick={() => setGlossary('monetaryRatio')} label={t('information')} />
+              <HelpIcon
+                color="secondary"
+                className={`ml-4 ${styles.helpIcon}`}
+                onClick={() => setGlossary('monetaryRatio')}
+                label={t('information')}
+              />
             </span>
           </Box>
         </fieldset>

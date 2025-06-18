@@ -73,8 +73,9 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
                 title={t('delete')}
                 onClick={() => setToDelete(row.original)}
                 data-testid={`delete-study-member-button`}
+                color="error"
               >
-                <DeleteIcon color="error" />
+                <DeleteIcon />
               </Button>
             </div>
           ),
