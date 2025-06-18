@@ -69,7 +69,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   const { studySite, setSite } = useStudySite(study, true)
 
   const resultsByPost = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
+    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, CutPost),
     [study, studySite, tPost, validatedOnly],
   )
 
@@ -78,6 +78,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
     sx: { [`.${axisClasses.left} .${axisClasses.label}`]: { transform: 'translate(-1rem, 0)' } },
     borderRadius: 10,
   }
+
   const listCutPosts = useListPosts() as CutPost[]
   const computeResults = useComputedResults(resultsByPost, tPost, listCutPosts)
 
@@ -89,7 +90,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
     const precision = unit === 'K' ? 3 : 0
     return `${formatNumber(safeValue / STUDY_UNIT_VALUES[unit], precision)} ${tUnits(unit)}`
   }
-
+  console.log(barData.colors)
   useEffect(() => {
     setLoading(true)
 
@@ -155,11 +156,14 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                         tickLabelStyle: { angle: -20, textAnchor: 'end' },
                         tickPlacement: 'extremities',
                         tickLabelPlacement: 'middle',
+                        colorMap: {
+                          type: 'ordinal',
+                          values: barData.labels,
+                          colors: barData.colors,
+                        },
                       },
                     ]}
-                    series={[
-                      { color: theme.palette.primary.main, data: barData.values, valueFormatter: chartFormatter },
-                    ]}
+                    series={[{ data: barData.values, valueFormatter: chartFormatter }]}
                     grid={{ horizontal: true }}
                     yAxis={[{ label: tUnits(study.resultsUnit) }]}
                     axisHighlight={{ x: 'none' }}

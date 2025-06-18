@@ -1,4 +1,4 @@
-import { BCPost, CutPost } from '@/services/posts'
+import { BCPost, CutPost, Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
 import { Theme } from '@mui/material/styles'
@@ -7,6 +7,7 @@ import { useMemo } from 'react'
 
 interface ComputeResult {
   label: string
+  post: SubPost | Post | 'total'
   value: number
   subPosts: ResultsByPost[]
   numberOfEmissionSource: number
@@ -28,21 +29,23 @@ export const useComputedResults = (resultsByPost: ResultsByPost[], tPost: TFunct
           filterWithDependencies(subPost.post as SubPost, false),
         )
         const value = filteredSubPosts.reduce((res, subPost) => res + subPost.value, 0)
+        // const value = 23
 
         return { ...post, subPosts: filteredSubPosts, value }
       })
       .filter((post) => validPosts.has(post.post as PostKey))
-      .map(({ post, ...rest }) => ({ ...rest, label: tPost(post) }))
+      .map((post) => ({ ...post, label: tPost(post.post) }))
   }, [resultsByPost, tPost, listPosts])
 
 export const useChartData = (computeResults: ComputeResult[], theme: Theme) =>
   useMemo(() => {
     const pieData = computeResults
-      .map(({ label, value }) => ({ label, value, color: theme.palette.primary.main }))
+      .map(({ label, value, post }) => ({ label, value, color: theme.custom.postColors[post].light }))
       .filter((computeResult) => computeResult.value > 0)
     const barData = {
       labels: computeResults.map(({ label }) => label),
       values: computeResults.map(({ value }) => value),
+      colors: computeResults.map(({ post }) => theme.custom.postColors[post].light),
     }
     return { pieData, barData }
   }, [computeResults, theme])
