@@ -1,3 +1,4 @@
+import { QCM } from '@/components/questions/QCM'
 import { FullStudy } from '@/db/study'
 import { getEmissionSourcesByStudyId } from '@/services/serverFunctions/emissionSource'
 import { SubPost } from '@prisma/client'
@@ -14,7 +15,7 @@ interface Props {
 }
 
 const SubPostTabForm = ({ subPost, emissionSources, study }: Props) => {
-  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tCutQuestions = useTranslations('cutQuestions')
   const questions = subPostQuestions[subPost] || []
   const [newEmissionSources, setNewEmissionSources] = useState(emissionSources)
 
@@ -33,21 +34,26 @@ const SubPostTabForm = ({ subPost, emissionSources, study }: Props) => {
     refetchEmissionSources()
   }, [])
 
+  console.log(questions)
   return (
     <div>
       <div className={styles.container}>
         {subPostSubtitle?.[subPost] && <p className="title-h5 mt2 ml1">{tCutQuestions(subPostSubtitle[subPost])}</p>}
-        {questions.map((question) => (
-          <SubPostField
-            key={question.key}
-            isLoading={isLoading}
-            question={question}
-            emissionSources={newEmissionSources}
-            study={study}
-            subPost={subPost}
-            callback={refetchEmissionSources}
-          />
-        ))}
+        {questions.map((question) =>
+          question.type === 'qcm' ? (
+            <QCM question={question} key={question.key} />
+          ) : (
+            <SubPostField
+              key={question.key}
+              isLoading={isLoading}
+              question={question}
+              emissionSources={newEmissionSources}
+              study={study}
+              subPost={subPost}
+              callback={refetchEmissionSources}
+            />
+          ),
+        )}
       </div>
     </div>
   )

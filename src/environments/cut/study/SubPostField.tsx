@@ -26,7 +26,6 @@ interface Props {
 const SubPostField = ({ subPost, emissionSources, study, question, callback, isLoading = false }: Props) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const tResultstUnits = useTranslations('study.results.units')
-  const tQuality = useTranslations('quality')
   const tEmissionSource = useTranslations('emissionSource')
 
   const { studySite } = useStudySite(study)
@@ -62,15 +61,15 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
 
   useEffect(() => {
     const fetchEmissionFactor = async () => {
-      const result = await getEmissionFactorByImportedId(question.importedEmissionFactorId)
-      if (result.success) {
-        setEmissionFactor(result.data as EmissionFactorWithMetaData | null)
+      if (question.importedEmissionFactorId) {
+        const result = await getEmissionFactorByImportedId(question.importedEmissionFactorId)
+        if (result.success) {
+          setEmissionFactor(result.data as EmissionFactorWithMetaData | null)
+        }
       }
     }
 
-    if (question.importedEmissionFactorId) {
-      fetchEmissionFactor()
-    }
+    fetchEmissionFactor()
   }, [question])
 
   const unit = useMemo(() => {

@@ -1,6 +1,6 @@
 import { SubPost } from '@prisma/client'
 
-type QuestionType = 'number' | 'boolean' | 'text' | 'select' | 'file'
+export type QuestionType = 'number' | 'boolean' | 'text' | 'select' | 'file' | 'qcm'
 
 export enum InputFormat {
   Text = 'Text',
@@ -27,7 +27,7 @@ export interface Question {
   key: string
   type?: QuestionType
   format?: InputFormat
-  importedEmissionFactorId: string
+  importedEmissionFactorId?: string
   value?: string
   options?: string[]
 }
@@ -37,7 +37,13 @@ export const subPostSubtitle: Partial<Record<SubPost, string>> = {
 }
 
 export const subPostQuestions: Partial<Record<SubPost, Question[]>> = {
-  [SubPost.Achats]: [],
+  [SubPost.Achats]: [
+    {
+      key: 'Renovation',
+      type: 'qcm',
+      options: ['total', 'extension', 'otherBigRenovation'],
+    },
+  ],
   [SubPost.Fret]: [
     {
       key: 'FretProvenance',
