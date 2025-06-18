@@ -717,6 +717,7 @@
         "Congelateurs": "Freezers",
         "Warmers": "Warmers",
         "Distributeurs": "Snack / drink vending machines",
+        "Renovation": "What type of renovation was it? (Multiple answers possible)",
         "format": {
           "text": "Text",
           "postalCode": "Postal code",
