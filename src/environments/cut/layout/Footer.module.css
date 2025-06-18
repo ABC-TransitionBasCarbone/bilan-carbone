@@ -7,3 +7,10 @@
     flex-wrap: wrap;
   }
 }
+
+.font {
+  font-weight: 400;
+  font-size: 13;
+  line-height: '100%';
+  letter-spacing: 0;
+}
