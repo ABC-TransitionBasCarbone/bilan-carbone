@@ -138,7 +138,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
           <TabPanel value={value} index={0}>
-            <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} />
+            <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} hiddenUncertainty />
           </TabPanel>
           {resultsByPost.length !== 0 && (
             <>
