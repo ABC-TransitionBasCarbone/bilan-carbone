@@ -5,7 +5,7 @@ import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import DownloadIcon from '@mui/icons-material/Download'
-import { Box, Button, CircularProgress, Container, Tab, Tabs, Typography, useTheme } from '@mui/material'
+import { Box, Button, CircularProgress, Tab, Tabs, Typography, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent, useEffect, useMemo, useState } from 'react'
@@ -20,8 +20,10 @@ import { downloadStudyResults } from '@/services/study'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
 
+import Block from '@/components/base/Block'
 import { formatNumber } from '@/utils/number'
 import { Environment } from '@prisma/client'
+import classNames from 'classnames'
 import styles from './AllResults.module.css'
 
 interface Props {
@@ -39,7 +41,7 @@ const a11yProps = (index: number) => {
 
 const CircularProgressCenter = ({ message }: { message: string }) => {
   return (
-    <Box className={styles.circularContainer}>
+    <Box className={(styles.circularContainer, styles.gapped)}>
       <CircularProgress variant="indeterminate" color="primary" />
       <Typography>{message}</Typography>
     </Box>
@@ -56,11 +58,13 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   const t = useTranslations('study.results')
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
+  const tResults = useTranslations('study.results')
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
+  const tStudyNav = useTranslations('study.navigation')
 
   const { studySite, setSite } = useStudySite(study, true)
 
@@ -95,34 +99,36 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
 
     return () => clearTimeout(timeout)
   }, [resultsByPost])
-
   return (
-    <Container>
-      <Box component="section" sx={{ display: 'flex', gap: '1rem' }}>
-        <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          endIcon={<DownloadIcon />}
-          onClick={() =>
-            downloadStudyResults(
-              study,
-              [],
-              emissionFactorsWithParts,
-              t,
-              tExport,
-              tPost,
-              tOrga,
-              tQuality,
-              tBeges,
-              tUnits,
-              Environment.CUT,
-            )
-          }
-        >
-          {tExportButton('export')}
-        </Button>
+    <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
+      <Box component="section" className={classNames(styles.gapped, 'flex')}>
+        <div className={classNames(styles.gapped, 'flex flex-col')}>
+          <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            endIcon={<DownloadIcon />}
+            onClick={() =>
+              downloadStudyResults(
+                study,
+                [],
+                emissionFactorsWithParts,
+                t,
+                tExport,
+                tPost,
+                tOrga,
+                tQuality,
+                tBeges,
+                tUnits,
+                Environment.CUT,
+              )
+            }
+          >
+            {tExportButton('export')}
+          </Button>
+        </div>
+        <Typography className={classNames(styles.infoContainer, 'ml2')}>{tResults('info')}</Typography>
       </Box>
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
@@ -183,7 +189,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           )}
         </Box>
       </Box>
-    </Container>
+    </Block>
   )
 }
 
