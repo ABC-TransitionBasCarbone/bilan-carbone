@@ -1,69 +1,83 @@
+import PostIcon from '@/components/study/infography/icons/PostIcon'
 import { Post } from '@/services/posts'
 import { styled } from '@mui/material'
-import { StudyResultUnit, SubPost } from '@prisma/client'
+import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import { CutProgressBar } from './CutProgressBar'
 
 interface Props {
   post: Post | SubPost
   mainPost: Post | null
-  emissionValue?: number
+  emissionValue: string
   percent: number
-  color: string
-  resultsUnit: StudyResultUnit
 }
 
 const StyledPostHeader = styled('div', { shouldForwardProp: (prop) => prop !== 'post' })<{ post: Post }>(
   ({ theme, post }) => ({
     position: 'relative',
-    padding: '1rem',
-    gap: '0.5rem',
-    color: 'white',
-    backgroundColor: theme.custom.postColors[post],
-
-    '@media screen and (max-width: 64rem)': {
-      padding: '1rem 0.5rem',
-    },
-
-    span: {
-      '@media screen and (max-width: 90rem)': {
-        fontSize: '0.875rem',
-      },
-
-      '@media screen and (max-width: 64rem)': {
-        fontSize: '0.75rem',
-      },
-
-      '@media screen and (max-width: 55rem)': {
-        fontSize: '0.625rem',
-      },
-    },
+    display: 'grid',
+    gridTemplateColumns: '1fr 4fr',
+    color: 'black',
+    backgroundColor: theme.custom.postColors[post].light,
+    height: '7.75rem',
+    overflow: 'hidden',
+    borderRadius: '0.5rem',
   }),
 )
 
-export const CutPostHeader = ({ post, mainPost, emissionValue, percent, color, resultsUnit }: Props) => {
+const StyledIconColumn = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '1rem',
+  borderRight: `2px solid ${theme.palette.primary.light}`,
+}))
+
+const StyledContentColumn = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  gap: '0.25rem',
+  padding: '0rem 1rem',
+  position: 'relative',
+  height: '100%',
+  width: '100%',
+})
+
+const StyledTitle = styled('div')(({ theme }) => ({
+  color: theme.palette.primary.contrastText,
+  fontSize: '1.125rem',
+  fontWeight: 700,
+  textAlign: 'left',
+}))
+
+const StyledEmissionValue = styled('div')({
+  fontSize: '1.25rem',
+  fontWeight: 800,
+  textAlign: 'left',
+  color: 'white',
+})
+
+export const CutPostHeader = ({ post, mainPost, emissionValue, percent }: Props) => {
   const t = useTranslations('emissionFactors.post')
-  const tUnits = useTranslations('study.results.units')
 
   if (!mainPost) {
     return null
   }
 
   return (
-    <StyledPostHeader className="align-center flex-col" post={mainPost}>
-      {/* {percent > 0 && (
-        <div
-          className={classNames(styles.progress, styles[`progress-${color}`], progressStyles[`w${percent.toFixed(0)}`])}
-        />
-      )} */}
-      {/* <div className={styles.content}>
-        <div className={classNames(styles.title, 'flex-cc')}>
-          <span>{mainPost && <PostIcon className={styles.icon} post={mainPost} />}</span>
-          <span>{t(post)}</span>
+    <StyledPostHeader post={mainPost}>
+      <StyledIconColumn>
+        <PostIcon post={mainPost} />
+      </StyledIconColumn>
+      <StyledContentColumn>
+        <StyledTitle>{t(post)}</StyledTitle>
+        <StyledEmissionValue>{emissionValue}</StyledEmissionValue>
+        <div className="mt-2 w100">
+          <CutProgressBar value={percent} />
         </div>
-        <span>
-          {formatNumber((emissionValue || 0) / STUDY_UNIT_VALUES[resultsUnit])} {tUnits(resultsUnit)}
-        </span>
-      </div> */}
+      </StyledContentColumn>
     </StyledPostHeader>
   )
 }

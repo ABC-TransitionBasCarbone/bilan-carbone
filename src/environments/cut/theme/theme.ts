@@ -16,9 +16,13 @@ const base = createTheme({
     },
     success: {
       main: '#94EBBF',
+      light: '#63EA9080',
+      dark: '#5EDC7A',
     },
     error: {
       main: '#FF4052',
+      light: '#FFCCCC',
+      dark: '#F99',
     },
     warning: {
       main: '#fc8514',

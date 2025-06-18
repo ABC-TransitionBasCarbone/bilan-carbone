@@ -2,10 +2,12 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
+import { ResultsByPost } from '@/services/results/consolidated'
 import { checkLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
 import { Environment, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
+import { formatNumber } from './number'
 import { isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (
@@ -90,3 +92,32 @@ export const STUDY_UNIT_VALUES: Record<StudyResultUnit, number> = {
 }
 
 export const defaultStudyResultUnit = StudyResultUnit.T
+
+export const isPostValidated = (data?: ResultsByPost): boolean => {
+  if (!data) {
+    return false
+  }
+
+  return data.numberOfEmissionSource > 0 && data.numberOfValidatedEmissionSource === data.numberOfEmissionSource
+}
+
+export const getValidationPercentage = (data?: {
+  numberOfEmissionSource: number
+  numberOfValidatedEmissionSource: number
+}): number => {
+  if (!data || data.numberOfEmissionSource === 0) {
+    return 0
+  }
+
+  return (data.numberOfValidatedEmissionSource / data.numberOfEmissionSource) * 100
+}
+
+export const getEmissionValueString = (
+  value: number | null | undefined,
+  resultsUnit: StudyResultUnit,
+  unitLabel: string,
+  decimals: number = 0,
+): string => {
+  const safeValue = value ?? 0
+  return `${formatNumber(safeValue / STUDY_UNIT_VALUES[resultsUnit], decimals)} ${unitLabel}`
+}
