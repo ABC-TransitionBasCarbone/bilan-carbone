@@ -18744,7 +18744,9 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
   [SubPost.Fret]: [],
   [SubPost.MobiliteSpectateurs]: [],
   [SubPost.Energie]: [],
-  [SubPost.EquipesRecues]: [],
+  [SubPost.EquipesRecues]: [
+    'TourneesAvantPremiere > EquipesRecues'
+  ],
   [SubPost.MaterielTechnique]: [],
   [SubPost.AutreMateriel]: [],
   [SubPost.Achats]: [],
@@ -18752,7 +18754,9 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
   [SubPost.DechetsOrdinaires]: [],
   [SubPost.DechetsExceptionnels]: [],
   [SubPost.MaterielDistributeurs]: [],
-  [SubPost.MaterielCinema]: [],
+  [SubPost.MaterielCinema]: [
+    'BilletterieEtCommunication > MaterielCinema'
+  ],
   [SubPost.CommunicationDigitale]: [],
   [SubPost.CaissesEtBornes]: [],
 }
