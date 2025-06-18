@@ -14,7 +14,7 @@ const Home = async ({ user: account }: UserSessionProps) => {
       <Block>
         <DynamicComponent
           defaultComponent={<UserView account={account} />}
-          environmentComponents={{ [Environment.CUT]: <CUTUserView account={account} /> }}
+          environmentComponents={{ [Environment.CUT]: <CUTUserView /> }}
         />
       </Block>
       {account.environment === Environment.CUT && <Footer />}
