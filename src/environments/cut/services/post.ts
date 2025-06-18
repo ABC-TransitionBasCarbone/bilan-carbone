@@ -2,9 +2,14 @@ import { SubPost } from '@prisma/client'
 
 type QuestionType = 'number' | 'boolean' | 'text' | 'select' | 'file'
 
+export enum TextFormat {
+  PostalCode = 'PostalCode',
+}
+
 export interface Question {
   key: string
   type: QuestionType
+  format?: TextFormat
   importedEmissionFactorId: string
   value?: string
   options?: string[]
@@ -22,6 +27,7 @@ export const subPostQuestions: Partial<Record<SubPost, Question[]>> = {
       key: 'FretProvenance',
       type: 'text',
       importedEmissionFactorId: '28026',
+      format: TextFormat.PostalCode,
     },
   ],
   [SubPost.Electromenager]: [
