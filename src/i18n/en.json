@@ -1,6 +1,7 @@
 {
   "home": {
-    "userToValidate": "A user has been added to your organization because they have just been trained in the carbon assessment method. Go to <link>your team page</link> to validate their account"
+    "userToValidate": "A user has been added to your organization because they have just been trained in the carbon assessment method. Go to <link>your team page</link> to validate their account",
+    "message": ""
   },
   "exports": {
     "title": "Exports:",
