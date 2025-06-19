@@ -1,4 +1,4 @@
-import { TextFormat } from '@/environments/cut/services/post'
+import { InputFormat } from '@/environments/cut/services/post'
 import { TextFieldProps } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -11,7 +11,7 @@ interface Props {
   value: string
   onChange: (value: string) => void
   onUpdate: () => void
-  format?: TextFormat
+  format?: InputFormat
   unit?: string | null
 }
 
@@ -35,8 +35,15 @@ const TextUnitInput = ({
 
   useEffect(() => {
     switch (format) {
-      case TextFormat.PostalCode:
+      case InputFormat.PostalCode:
         if (value.length > 0 && value.length !== 5) {
+          setError(true)
+        } else {
+          setError(false)
+        }
+        break
+      case InputFormat.Year:
+        if (value.length > 0 && value.length !== 4) {
           setError(true)
         } else {
           setError(false)
@@ -53,7 +60,8 @@ const TextUnitInput = ({
       const isControlKey = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(e.key)
       const isDigit = /^\d$/.test(e.key)
       switch (format) {
-        case TextFormat.PostalCode:
+        case InputFormat.Year:
+        case InputFormat.PostalCode:
           if (!isDigit && !isControlKey) {
             e.preventDefault()
           }
@@ -68,12 +76,23 @@ const TextUnitInput = ({
 
   const inputProps: Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> = useMemo(() => {
     switch (format) {
-      case TextFormat.PostalCode:
+      case InputFormat.PostalCode:
         return {
           inputMode: 'numeric',
           maxLength: 5,
           minLength: 5,
           onKeyDown: handleKeyDown,
+        }
+      case InputFormat.Year:
+        return {
+          inputMode: 'numeric',
+          maxLength: 4,
+          minLength: 4,
+          onKeyDown: handleKeyDown,
+        }
+      case InputFormat.Number:
+        return {
+          type: 'number',
         }
       default:
         return {}

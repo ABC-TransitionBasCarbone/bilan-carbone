@@ -1,5 +1,6 @@
 import Block from '@/components/base/Block'
 import TextUnitInput from '@/components/questions/TextUnitInput'
+import TimePickerInput from '@/components/questions/TimePickerInput'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { getEmissionResultsCut } from '@/services/emissionSource'
@@ -11,8 +12,8 @@ import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
-import { Question } from '../services/post'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { InputCategories, InputCategory, InputFormat, Question } from '../services/post'
 import styles from './SubPostField.module.css'
 
 interface Props {
@@ -131,22 +132,47 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
     }
   }
 
+  const getInput = useCallback(() => {
+    if (!question.format) {
+      return
+    }
+    switch (InputCategories[question.format]) {
+      case InputCategory.Text:
+        return (
+          <TextUnitInput
+            unit={unit}
+            format={question.format || InputFormat.Text}
+            type={question.type}
+            className="grow"
+            disabled={isLoading}
+            value={currentValue ?? emissionSource?.value?.toString() ?? ''}
+            onChange={(value) => !isLoading && setCurrentValue(value)}
+            onUpdate={() => handleUpdate(emissionSource?.id)}
+            label={tCutQuestions(`format.${question.format || InputFormat.Text}`)}
+            helperText={error}
+            error={!!error}
+          />
+        )
+      case InputCategory.Time:
+        return (
+          <TimePickerInput
+            label={tCutQuestions(`format.${question.format}`)}
+            value={currentValue ?? ''}
+            onChange={setCurrentValue}
+            onUpdate={() => {
+              console.log('update time')
+            }}
+          />
+        )
+
+      default:
+        break
+    }
+  }, [question, isLoading, currentValue, error, unit, emissionSource, setCurrentValue])
+
   return (
     <Block title={tCutQuestions(question.key, { value: question?.value || '' })}>
-      <div className="flex mt1">
-        <TextUnitInput
-          unit={unit}
-          format={question.format}
-          className="grow"
-          disabled={isLoading}
-          value={currentValue ?? emissionSource?.value?.toString() ?? ''}
-          onChange={(value) => !isLoading && setCurrentValue(value)}
-          onUpdate={() => handleUpdate(emissionSource?.id)}
-          label={`${tEmissionSource('cut.form.value')} *`}
-          helperText={error}
-          error={!!error}
-        />
-      </div>
+      <div className="flex mt1">{getInput()}</div>
       {emissionResults && (
         <div className="mt1">
           <p>{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}</p>
