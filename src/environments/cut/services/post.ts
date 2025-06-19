@@ -8,11 +8,13 @@ export enum InputFormat {
   Number = 'Number',
   Year = 'Year',
   Hour = 'Hour',
+  Select = 'Select',
 }
 
 export enum InputCategory {
   Text = 'Text',
   Time = 'Time',
+  Select = 'Select',
 }
 
 export const InputCategories: Record<InputFormat, InputCategory> = {
@@ -21,6 +23,7 @@ export const InputCategories: Record<InputFormat, InputCategory> = {
   [InputFormat.Number]: InputCategory.Text,
   [InputFormat.Year]: InputCategory.Text,
   [InputFormat.Hour]: InputCategory.Time,
+  [InputFormat.Select]: InputCategory.Select,
 }
 
 export interface Question {

@@ -164,6 +164,10 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
             }}
           />
         )
+      case InputCategory.Select: {
+        // TODO: À revoir quand on aura la structure des questions et réponses possibles
+        return null
+      }
 
       default:
         break
