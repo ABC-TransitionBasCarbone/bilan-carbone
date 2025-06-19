@@ -121,6 +121,7 @@
     "form": {
       "activate": "Activate my account",
       "firstConnection": "First connection ?",
+      "alreadyRegistered": "Already Registered?",
       "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
       "login": "Log in",
       "email": "Email",

@@ -121,6 +121,7 @@
     "form": {
       "activate": "Activer mon compte",
       "firstConnection": "Première connexion ?",
+      "alreadyRegistered": "Déjà un compte ?",
       "resetTitle": "Vous avez demandé de créer ou réinitialiser votre mot de passe. Rentrez les informations demandées ci-dessous pour confirmer votre création de compte ou réinitialisation de mot de passe.",
       "login": "Se connecter",
       "email": "Email",
