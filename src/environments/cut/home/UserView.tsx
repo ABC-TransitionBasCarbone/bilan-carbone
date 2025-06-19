@@ -2,7 +2,6 @@
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Box, BoxProps, LinkProps, Link as MUILink, styled, Typography, useTheme } from '@mui/material'
 
-import { grey } from '@mui/material/colors'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -35,31 +34,47 @@ const UserView = () => {
   const navigation = useTranslations('navigation')
 
   return (
-    <Box component="section" className={styles.container}>
+    <Box component="section" className={classNames(styles.container, 'flex-col')}>
       <Typography data-testid="title" variant="h4">
         {title}
       </Typography>
       <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
-        <CheckCircleOutlineIcon sx={{ color: grey[300] }} fontSize="large" />
+        <CheckCircleOutlineIcon color="disabled" fontSize="large" className={styles.checkIcon} />
         <Typography>{t('info.0')}</Typography>
       </StyledBox>
       <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
-        <CheckCircleOutlineIcon sx={{ color: grey[500] }} fontSize="large" className={styles.checkIcon} />
+        <CheckCircleOutlineIcon color="disabled" fontSize="large" className={styles.checkIcon} />
         <Typography>{t('info.1')}</Typography>
       </StyledBox>
       <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
-        <CheckCircleOutlineIcon sx={{ color: grey[500] }} fontSize="large" className={styles.checkIcon} />
+        <CheckCircleOutlineIcon color="disabled" fontSize="large" className={styles.checkIcon} />
         <Typography>{t('info.2')}</Typography>
       </StyledBox>
       <Box className={styles.linkContainer}>
-        <StyledLink color="info" href="/equipe" className={classNames(styles.styledBoxContainer, styles.styledBoxLink)}>
+        <StyledLink
+          color="info"
+          href="/equipe"
+          className={classNames(
+            'flex-col',
+            'justify-center',
+            'align-center',
+            styles.styledBoxContainer,
+            styles.styledBoxLink,
+          )}
+        >
           <CinemaOutlinedIcon className={styles.icon} />
           <Typography>{navigation('organization')}</Typography>
         </StyledLink>
         <StyledLink
           color="info"
           href="/organisations"
-          className={classNames(styles.styledBoxContainer, styles.styledBoxLink)}
+          className={classNames(
+            'flex-col',
+            'justify-center',
+            'align-center',
+            styles.styledBoxContainer,
+            styles.styledBoxLink,
+          )}
         >
           <DiagramOutlinedIcon className={styles.icon} />
           <Typography>{navigation('organizations')}</Typography>
