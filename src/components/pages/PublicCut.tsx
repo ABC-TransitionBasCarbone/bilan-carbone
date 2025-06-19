@@ -100,13 +100,6 @@ const PublicCutPage = ({ children }: Props) => {
               </button>
             ))}
           </div>
-          <Image
-            className={classNames(styles.welcomeLogo, 'align-end')}
-            src="/logos/logo_BC_2025_noir.png"
-            alt="logo"
-            width={278}
-            height={136}
-          />
         </div>
         {children}
       </StyledLoginForm>
