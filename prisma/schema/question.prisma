@@ -1,22 +1,36 @@
 model Question {
-  id              String  @id @default(uuid())
-  idIntern        String  @default(uuid())
+  id              String       @id @default(uuid())
+  idIntern        String       @default(uuid())
   label           String
-  order           Int     @default(autoincrement())
+  order           Int          @default(autoincrement())
   subPost         SubPost
-  type            Type
-  PossibleAnswers Json?
+  type            QuestionType
+  possibleAnswers String[]
+  userAnswers     Answer[]
+
+  @@map("questions")
 }
 
-enum Type {
+enum QuestionType {
   QCM
   QCU
   SELECT
   TABLE
-  CP
+  POSTALCODE
   date
   number
   range
   tel
   text
+}
+
+model Answer {
+  id         String   @id @default(uuid())
+  response   Json
+  study      Study    @relation(fields: [studyId], references: [id])
+  studyId    String
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
+
+  @@map("answers")
 }
