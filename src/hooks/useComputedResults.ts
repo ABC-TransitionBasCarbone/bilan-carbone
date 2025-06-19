@@ -28,8 +28,8 @@ export const useComputedResults = (resultsByPost: ResultsByPost[], tPost: TFunct
         const filteredSubPosts = post.subPosts.filter((subPost) =>
           filterWithDependencies(subPost.post as SubPost, false),
         )
-        const value = filteredSubPosts.reduce((res, subPost) => res + subPost.value, 0)
-        // const value = 23
+        // const value = filteredSubPosts.reduce((res, subPost) => res + subPost.value, 0)
+        const value = 23
 
         return { ...post, subPosts: filteredSubPosts, value }
       })
@@ -37,15 +37,26 @@ export const useComputedResults = (resultsByPost: ResultsByPost[], tPost: TFunct
       .map((post) => ({ ...post, label: tPost(post.post) }))
   }, [resultsByPost, tPost, listPosts])
 
+const isPost = (post: Post | SubPost | 'total'): post is Post => {
+  return post in Post
+}
+
 export const useChartData = (computeResults: ComputeResult[], theme: Theme) =>
   useMemo(() => {
     const pieData = computeResults
-      .map(({ label, value, post }) => ({ label, value, color: theme.custom.postColors[post].light }))
+      .map(({ label, value, post }) => ({
+        label,
+        value,
+        color: isPost(post) ? theme.custom.postColors[post].light : theme.palette.primary.light,
+      }))
       .filter((computeResult) => computeResult.value > 0)
+
     const barData = {
       labels: computeResults.map(({ label }) => label),
       values: computeResults.map(({ value }) => value),
-      colors: computeResults.map(({ post }) => theme.custom.postColors[post].light),
+      colors: computeResults.map(({ post }) =>
+        isPost(post) ? theme.custom.postColors[post].light : theme.palette.primary.light,
+      ),
     }
     return { pieData, barData }
   }, [computeResults, theme])
