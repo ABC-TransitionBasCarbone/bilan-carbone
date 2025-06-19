@@ -7,6 +7,7 @@ import { hasAccessToActualityCards } from '@/services/permissions/environment'
 import { hasQualitylessEmissionFactors } from '@/services/serverFunctions/organization'
 import { displayFeedBackForm } from '@/services/serverFunctions/user'
 import { canEditMemberRole } from '@/utils/organization'
+import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import ActualitiesCards from '../actuality/ActualitiesCards'
 import Onboarding from '../onboarding/Onboarding'
@@ -58,7 +59,9 @@ const UserView = async ({ account }: Props) => {
         environmentWithOnboarding.includes(userOrganizationVersion.environment) && (
           <Onboarding user={account} organizationVersion={userOrganizationVersion} />
         )}
-      {displayFeedback.success && displayFeedback.data && <UserFeedback environment={account.environment} />}
+      {displayFeedback.success && displayFeedback.data && account.environment === Environment.BC && (
+        <UserFeedback environment={account.environment} />
+      )}
       {emissionFactorWarning.success && !!emissionFactorWarning.data.length && (
         <EmissionFactorsWarning emissionFactors={emissionFactorWarning.data} />
       )}
