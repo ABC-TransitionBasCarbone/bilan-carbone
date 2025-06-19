@@ -1,0 +1,21 @@
+model Question {
+  id              String  @id @default(uuid())
+  idIntern        String  @default(uuid())
+  label           String
+  order           Int
+  subPost         SubPost
+  type            Type
+  PossibleAnswers Json
+}
+
+enum Type {
+  QCM
+  QCU
+  SELECT
+  TABLE
+  date
+  number
+  range
+  tel
+  text
+}
