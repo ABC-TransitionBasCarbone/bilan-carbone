@@ -1,6 +1,6 @@
 describe('Home page - CUT environment', () => {
   beforeEach(() => {
-    cy.login('cut-env-admin-0@yopmail.com', 'password-0').wait(4000)
+    cy.login('cut-env-admin-0@yopmail.com', 'password-0')
   })
 
   it('should display the main title on the home page', () => {
