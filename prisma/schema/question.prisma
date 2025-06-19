@@ -2,10 +2,10 @@ model Question {
   id              String  @id @default(uuid())
   idIntern        String  @default(uuid())
   label           String
-  order           Int
+  order           Int     @default(autoincrement())
   subPost         SubPost
   type            Type
-  PossibleAnswers Json
+  PossibleAnswers Json?
 }
 
 enum Type {
@@ -13,6 +13,7 @@ enum Type {
   QCU
   SELECT
   TABLE
+  CP
   date
   number
   range
