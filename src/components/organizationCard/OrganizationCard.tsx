@@ -11,7 +11,6 @@ import { Environment, Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
-import styles from './OrganizationCard.module.css'
 
 interface Props {
   account: UserSession
@@ -93,7 +92,7 @@ const OrganizationCard = ({ account, organizationVersions }: Props) => {
       : 'myClient'
 
   return (
-    <AppBar className={styles.appBar}>
+    <AppBar position="sticky">
       <OrganizationToolbar>
         <Box display="flex" alignItems="center" gap={2}>
           <HomeIcon />
