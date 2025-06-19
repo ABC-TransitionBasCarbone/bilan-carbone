@@ -3,20 +3,29 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import {
   AccountWithUser,
+  addAccount,
   changeAccountRole,
+  getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
   getAccountFromUserOrganization,
   getAccountsFromUser,
 } from '@/db/account'
+import { getCNCById } from '@/db/cnc'
 import { isFeatureActive } from '@/db/deactivableFeatures'
 import {
+  createOrganizationWithVersion,
   getOrganizationNameByOrganizationVersionId,
   getOrganizationVersionById,
+  getOrganizationVersionByOrganizationIdAndEnvironment,
+  getRawOrganizationBySiret,
+  getRawOrganizationBySiteCNC,
   isOrganizationVersionCR,
 } from '@/db/organization'
+import { addSite } from '@/db/site'
 import { FullStudy } from '@/db/study'
 import {
+  addUser,
   changeStatus,
   createOrUpdateUserCheckedStep,
   deleteUserFromOrga,
@@ -31,10 +40,12 @@ import {
   handleAddingUser,
   organizationVersionActiveAccountsCount,
   startUserFormationForm,
+  updateAccount,
   updateUser,
   updateUserApplicationSettings,
   updateUserFeedbackDate,
   updateUserResetTokenForEmail,
+  UserWithAccounts,
   validateUser,
 } from '@/db/user'
 import { processUsers } from '@/scripts/ftp/userImport'
@@ -58,7 +69,7 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '../email/email'
-import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED, REQUEST_SENT } from '../permissions/check'
+import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED, REQUEST_SENT, UNKNOWN_CNC } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
@@ -321,7 +332,7 @@ export const activateEmail = async (email: string, userEnv: Environment | undefi
     }
 
     const accountOrgaVersion = await getOrganizationVersionById(account.organizationVersionId)
-    if (!accountOrgaVersion || !accountOrgaVersion.activatedLicence) {
+    if (!accountOrgaVersion || (!accountOrgaVersion.activatedLicence && env === Environment.BC)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -507,4 +518,91 @@ export const answerFeeback = async () =>
     const now = new Date()
     const feedbackDate = new Date(now.getTime() + 10 * YEAR * TIME_IN_MS)
     updateUserFeedbackDate(session.user.accountId, feedbackDate)
+  })
+
+export const signUpCutUser = async (email: string, siretOrCNC: string) =>
+  withServerResponse('signUpCutUser', async () => {
+    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, Environment.CUT)
+    if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    let user = (await getUserByEmail(email)) as UserWithAccounts
+    let organization = null
+
+    if (!user) {
+      user = (await addUser({
+        email,
+        firstName: '',
+        lastName: '',
+      })) as UserWithAccounts
+    }
+    if (!user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const account =
+      accountAlreadyCreated ||
+      ((await addAccount({
+        user: { connect: { id: user.id } },
+        role: Role.DEFAULT,
+        environment: Environment.CUT,
+        status: UserStatus.PENDING_REQUEST,
+      })) as AccountWithUser)
+
+    if (!account) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    let organizationVersion = null
+    if (siretOrCNC.length > 6) {
+      organization = await getRawOrganizationBySiret(siretOrCNC)
+      organizationVersion = organization?.id
+        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, Environment.CUT)
+        : await createOrganizationWithVersion({ wordpressId: siretOrCNC, name: '' }, { environment: Environment.CUT })
+    } else {
+      organization = await getRawOrganizationBySiteCNC(siretOrCNC)
+      organizationVersion = organization?.id
+        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, Environment.CUT)
+        : null
+      if (!organizationVersion) {
+        const CNC = await getCNCById(siretOrCNC)
+        if (!CNC) {
+          throw new Error(UNKNOWN_CNC)
+        }
+        organizationVersion = await createOrganizationWithVersion(
+          { name: CNC.nom || '' },
+          { environment: Environment.CUT },
+        )
+        await addSite({
+          name: CNC.nom || '',
+          cncId: siretOrCNC,
+          organization: { connect: { id: organizationVersion.organizationId } },
+        })
+      }
+    }
+
+    if (!organizationVersion) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateAccount(account.id, {
+      role: organization?.id ? Role.DEFAULT : Role.ADMIN,
+      organizationVersion: { connect: { id: organizationVersion.id } },
+    })
+    if (organization?.id) {
+      const createdAccount = (await getAccountById(account.id || '')) as AccountWithUser
+      const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(createdAccount))
+      await sendActivationRequest(
+        accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
+        email.toLowerCase(),
+        `${user.firstName} ${user.lastName}`,
+        Environment.CUT,
+      )
+      return REQUEST_SENT
+    } else {
+      await validateUser(account.id)
+      await sendActivation(email, false, Environment.CUT)
+    }
+    return EMAIL_SENT
   })

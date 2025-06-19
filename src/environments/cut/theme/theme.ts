@@ -15,6 +15,7 @@ const base = createTheme({
     },
     success: {
       main: '#94EBBF',
+      light: '#E0FBE8',
     },
     error: {
       main: '#FF4052',
@@ -91,6 +92,9 @@ const cutTheme = createTheme(base, {
             backgroundColor: base.palette.grey['50'],
           },
         },
+        contained: {
+          color: '#F4F7F9',
+        },
       },
     },
     MuiLinearProgress: {
@@ -138,6 +142,9 @@ const cutTheme = createTheme(base, {
         textTransform: 'uppercase',
         fontSize: '1rem',
       },
+    },
+    publicContainer: {
+      background: base.palette.success.light,
     },
   },
 })

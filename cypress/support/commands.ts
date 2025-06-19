@@ -15,3 +15,18 @@ Cypress.Commands.add('logout', () => {
   cy.visit('/logout')
   cy.wait(`@logout`)
 })
+
+Cypress.Commands.add('signupCut', (email = 'cut-cnc@yopmail.com', cncOrSiret = '321') => {
+  cy.visit('/count/register')
+
+  cy.getByTestId('activation-email').should('be.visible')
+  cy.getByTestId('activation-siretOrCNC').should('be.visible')
+  cy.getByTestId('activation-button').should('be.visible')
+
+  cy.getByTestId('activation-email').type(email)
+  cy.getByTestId('activation-siretOrCNC').type(cncOrSiret)
+  cy.getByTestId('activation-form-message').should('not.exist')
+  cy.getByTestId('activation-button').click()
+
+  cy.wait('@signupCut')
+})

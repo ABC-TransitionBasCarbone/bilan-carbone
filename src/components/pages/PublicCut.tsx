@@ -1,0 +1,110 @@
+'use client'
+import { defaultLocale, Locale, LocaleType } from '@/i18n/config'
+import { switchEnvironment } from '@/i18n/environment'
+import { getLocale, switchLocale } from '@/i18n/locale'
+import { alpha, Box, Container, Divider, styled, Typography } from '@mui/material'
+import { Environment } from '@prisma/client'
+import classNames from 'classnames'
+import { useTranslations } from 'next-intl'
+import { ReactNode, useEffect, useState } from 'react'
+import PublicContainer from '../base/PublicContainer'
+import Image from '../document/Image'
+import styles from './Public.module.css'
+
+const StyledPublicCutPage = styled(Box)(({ theme }) => ({
+  background: theme.palette.primary.main,
+  border: '3px',
+  borderRadius: '1rem 0 0 1rem',
+  color: theme.palette.primary.contrastText,
+  minWidth: '50%',
+}))
+
+const StyledLoginForm = styled(Container)(({ theme }) => ({
+  border: `4px solid ${theme.palette.primary.main}`,
+  borderLeft: '0px',
+  borderRadius: '0 1rem 1rem 0',
+  padding: '1.5rem',
+  background: alpha(theme.palette.primary.main, 0.05),
+}))
+
+interface Props {
+  children: ReactNode
+}
+const PublicCutPage = ({ children }: Props) => {
+  const t = useTranslations('login')
+  const tLocale = useTranslations('locale')
+  const [locale, setLocale] = useState<LocaleType>(defaultLocale)
+
+  useEffect(() => {
+    getLocale().then(setLocale)
+    switchEnvironment(Environment.CUT)
+  }, [])
+
+  const languages = [{ name: tLocale('fr'), code: 'FR', target: Locale.FR }]
+
+  return (
+    <PublicContainer>
+      <StyledPublicCutPage className={classNames('grow text-center')}>
+        <Box p="1.5rem" borderBottom="1px solid" borderColor="success.light">
+          <Box className="justify-around flex-col" minHeight="600px" px="2rem" py="5rem">
+            <Typography className="title-h2">{t('welcome')}</Typography>
+            <Image
+              src="/logos/cut/logo-filled.svg"
+              alt="logo"
+              width={400}
+              height={400}
+              className={classNames(styles.image, 'w100')}
+            />
+            <Typography className="title-h6 bold">{t('subtext')}</Typography>
+            <div className="justify-center">
+              <Divider sx={{ borderColor: 'primary.contrastText' }} className={styles.divider} />
+            </div>
+            <Typography className={styles.explaination}>
+              {t.rich('explaination', { b: (children) => <b>{children}</b> })}
+            </Typography>
+          </Box>
+        </Box>
+        <Box className="justify-between" padding="2rem">
+          <Image
+            className={styles.france2030Logo}
+            src="/logos/cut/france_2030.png"
+            alt="logo"
+            width={204}
+            height={198}
+          />
+          <Typography textAlign="justify" width="75%" fontSize="0.8rem">
+            {t.rich('question', {
+              link: () => '',
+              support: () => '',
+            })}
+          </Typography>
+        </Box>
+      </StyledPublicCutPage>
+      <StyledLoginForm className={classNames('grow flex-col')}>
+        <div className={classNames(styles.header, 'justify-between')}>
+          <div className={classNames(styles.locales, 'flex')}>
+            {languages.map((language) => (
+              <button
+                key={language.target}
+                title={language.name}
+                aria-label={language.name}
+                className={classNames(styles.flag, 'flex', {
+                  [styles.selected]: language.target === locale,
+                })}
+                onClick={() => {
+                  switchLocale(language.target)
+                  setLocale(language.target)
+                }}
+              >
+                <Image alt={language.name} src={`/logos/${language.code}.svg`} width={30} height={20} />
+              </button>
+            ))}
+          </div>
+        </div>
+        {children}
+      </StyledLoginForm>
+    </PublicContainer>
+  )
+}
+
+export default PublicCutPage
