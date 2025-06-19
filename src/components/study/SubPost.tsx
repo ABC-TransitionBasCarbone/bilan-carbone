@@ -1,3 +1,5 @@
+'use client'
+
 import { FullStudy } from '@/db/study'
 import { caracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
@@ -10,7 +12,7 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import HelpIcon from '../base/HelpIcon'
 import EmissionSource from './EmissionSource'
 import NewEmissionSource from './NewEmissionSource'
@@ -60,15 +62,32 @@ const SubPost = ({
         ? null
         : study.contributors
             .filter((contributor) => contributor.subPost === subPost)
-            .map((contributor) => contributor.user.email),
+            .map((contributor) => contributor.account.user.email),
     [study, subPost, withoutDetail],
   )
 
   const caracterisations = useMemo(() => caracterisationsBySubPost[subPost], [subPost])
+
+  const [expanded, setExpanded] = useState(false)
+
+  // Check if any emission source in this subpost should be opened by URL hash
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash.startsWith('#emission-source-')) {
+      const emissionSourceId = hash.replace('#emission-source-', '')
+      const hasTargetEmissionSource = emissionSources.some((source) => source.id === emissionSourceId)
+
+      if (hasTargetEmissionSource) {
+        setExpanded(true)
+      }
+    }
+  }, [emissionSources])
+
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div>
-      <Accordion>
+      <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)}>
         <AccordionSummary
+          className={styles.subPostContainer}
           expandIcon={<ExpandMoreIcon />}
           aria-controls={`panel-${subPost}-content`}
           data-testid="subpost"
@@ -87,14 +106,14 @@ const SubPost = ({
             <span className={classNames(styles.value, 'ml1')}>
               {formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])} {tUnits(study.resultsUnit)}
             </span>
+            {contributors && contributors.length > 0 && (
+              <span className={styles.contributors}>
+                {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
+              </span>
+            )}
           </p>
         </AccordionSummary>
-        <AccordionDetails id={`panel-${subPost}-content`}>
-          {contributors && contributors.length > 0 && (
-            <p className={styles.contributors}>
-              {t('contributorsList', { count: contributors.length })} {contributors.join(', ')}
-            </p>
-          )}
+        <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
           {emissionSources.map((emissionSource) =>
             // Dirty hack to force type on EmissionSource
             withoutDetail ? (

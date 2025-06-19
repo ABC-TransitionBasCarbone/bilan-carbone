@@ -1,12 +1,15 @@
 import RouteChangeListener from '@/components/RouteChangeListener'
 import '@/css/index.css'
-import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
+import { Locale } from '@/i18n/config'
 import { getEnvironment } from '@/i18n/environment'
 import Providers from '@/services/providers/Providers'
+import { CssBaseline } from '@mui/material'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
+import { Environment } from '@prisma/client'
 import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
+import { getLocale, getMessages, setRequestLocale } from 'next-intl/server'
+import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
   title: 'Bilan Carbone +',
@@ -18,23 +21,30 @@ interface Props {
 }
 
 const RootLayout = async ({ children }: Readonly<Props>) => {
-  const locale = await getLocale()
-
   const environment = await getEnvironment()
+
+  const locale = environment === Environment.CUT ? Locale.FR : await getLocale()
+  if (environment === Environment.CUT) {
+    setRequestLocale(Locale.FR)
+  }
 
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages()
+
+  const providerOptions = { key: 'mui', nonce: (await headers()).get('x-nonce') || undefined, prepend: true }
   return (
     <html lang={locale} className={environment}>
       <body>
-        <AppRouterCacheProvider>
+        <AppRouterCacheProvider options={providerOptions}>
           <NextIntlClientProvider messages={messages}>
             <RouteChangeListener />
-            <Providers>{children}</Providers>
+            <Providers environment={environment}>
+              <CssBaseline />
+              {children}
+            </Providers>
           </NextIntlClientProvider>
         </AppRouterCacheProvider>
-        <EnvironmentInitializer />
       </body>
     </html>
   )

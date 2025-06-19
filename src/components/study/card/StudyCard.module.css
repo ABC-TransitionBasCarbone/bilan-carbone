@@ -1,17 +1,19 @@
 .card {
-  background-color: var(--background-100);
   gap: 1rem;
 }
 
 .validator {
   background-color: var(--validator-background);
 }
+
 .editor {
   background-color: var(--editor-background);
 }
+
 .reader {
   background-color: var(--reader-background);
 }
+
 .contributor {
   background-color: var(--contributor-background);
 }
@@ -21,5 +23,22 @@
 
   &.success {
     color: var(--success-100);
+  }
+}
+
+.progressBar {
+  background: var(--warning);
+
+  &.success {
+    background: var(--success-100);
+  }
+}
+
+.helpIcon {
+  cursor: pointer;
+  color: var(--primary-500);
+
+  &:hover {
+    color: var(--primary-800);
   }
 }

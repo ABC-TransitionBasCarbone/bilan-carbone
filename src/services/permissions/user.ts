@@ -1,38 +1,21 @@
-import { canEditMemberRole, isUntrainedRole } from '@/utils/organization'
-import { User as DbUser, Prisma, Role, UserStatus } from '@prisma/client'
-import { User } from 'next-auth'
-
-export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
+import { AccountWithUser } from '@/db/account'
+import { canEditMemberRole } from '@/utils/organization'
+import { canBeUntrainedRole } from '@/utils/user'
+import { Prisma, Role, UserStatus } from '@prisma/client'
+import { UserSession } from 'next-auth'
 
 export const canEditSelfRole = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.GESTIONNAIRE
 
-export const findUserInfo = (user: User) =>
-  ({
-    select: {
-      email: true,
-      firstName: true,
-      lastName: true,
-      role: true,
-      level: true,
-      status: true,
-      updatedAt: true,
-    },
-    where:
-      user.role === Role.COLLABORATOR
-        ? { status: UserStatus.ACTIVE, organizationId: user.organizationId }
-        : { organizationId: user.organizationId },
-  }) satisfies Prisma.UserFindManyArgs
-
 export const canAddMember = (
-  user: User,
-  member: Pick<Prisma.UserCreateInput, 'role'>,
-  organizationId: string | null,
+  user: UserSession,
+  member: Pick<Prisma.AccountCreateInput, 'role'>,
+  organizationVersionId: string | null,
 ) => {
-  if (!organizationId) {
+  if (!organizationVersionId) {
     return false
   }
 
-  if (user.role === Role.COLLABORATOR) {
+  if (!canEditMemberRole(user)) {
     return false
   }
 
@@ -40,18 +23,22 @@ export const canAddMember = (
     return false
   }
 
-  if (organizationId !== user.organizationId) {
+  if (organizationVersionId !== user.organizationVersionId) {
     return false
   }
   return true
 }
 
-export const canDeleteMember = (user: User, member: DbUser | null) => {
+export const canDeleteMember = (user: UserSession, member: AccountWithUser | null) => {
   if (!member) {
     return false
   }
 
-  if (user.role === Role.COLLABORATOR) {
+  if (user.organizationVersionId !== member.organizationVersionId) {
+    return false
+  }
+
+  if (!canEditMemberRole(user)) {
     return false
   }
 
@@ -62,12 +49,12 @@ export const canDeleteMember = (user: User, member: DbUser | null) => {
   return true
 }
 
-export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) => {
+export const canChangeRole = (user: UserSession, member: AccountWithUser | null, newRole: Role) => {
   if (!member) {
     return false
   }
 
-  if (user.id === member.id && !canEditSelfRole(user.role)) {
+  if (user.accountId === member.id && !canEditSelfRole(user.role)) {
     return false
   }
 
@@ -75,7 +62,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (user.organizationId !== member.organizationId) {
+  if (user.organizationVersionId !== member.organizationVersionId) {
     return false
   }
 
@@ -83,7 +70,7 @@ export const canChangeRole = (user: User, member: DbUser | null, newRole: Role) 
     return false
   }
 
-  if (!member.level && !isUntrainedRole(newRole)) {
+  if (!member.user.level && !canBeUntrainedRole(newRole, user.environment)) {
     return false
   }
 

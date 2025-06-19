@@ -4,21 +4,17 @@ import Block from '@/components/base/Block'
 import { FormTextField } from '@/components/form/TextField'
 import WeekScheduleForm from '@/components/form/WeekScheduleForm'
 import GlobalNewStudyForm from '@/components/study/new/Form'
-import { getOrganizationUsers } from '@/db/organization'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { DayOfWeek } from '@prisma/client'
-import { User } from 'next-auth'
+import { ControlMode, DayOfWeek, Export, Level } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
-  user: User
-  users: Awaited<ReturnType<typeof getOrganizationUsers>>
   form: UseFormReturn<CreateStudyCommand>
 }
 
-const NewStudyForm = ({ user, users, form }: Props) => {
+const NewStudyForm = ({ form }: Props) => {
   const t = useTranslations('study.new')
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
@@ -30,6 +26,13 @@ const NewStudyForm = ({ user, users, form }: Props) => {
   )
 
   useEffect(() => {
+    form.setValue('level', Level.Initial)
+    form.setValue('exports', {
+      [Export.Beges]: ControlMode.Operational,
+      [Export.GHGP]: false,
+      [Export.ISO14069]: false,
+    })
+
     if (!form.getValues('openingHours')) {
       const defaultOpeningHours = Object.values(DayOfWeek).reduce(
         (acc, day) => {
@@ -58,7 +61,7 @@ const NewStudyForm = ({ user, users, form }: Props) => {
 
   return (
     <Block title={t('title')} as="h1">
-      <GlobalNewStudyForm user={user} users={users} form={form}>
+      <GlobalNewStudyForm form={form} t={t}>
         <WeekScheduleForm
           label={t('openingHours')}
           days={days}
@@ -66,12 +69,14 @@ const NewStudyForm = ({ user, users, form }: Props) => {
           control={form.control}
           onCheckDay={handleCheckDay}
         />
-        <WeekScheduleForm
-          label={t('openingHoursHoliday')}
-          days={daysHoliday}
-          name={'openingHoursHoliday'}
-          control={form.control}
-        />
+        {openingHoursHoliday && Object.keys(openingHoursHoliday).length !== 0 && (
+          <WeekScheduleForm
+            label={t('openingHoursHoliday')}
+            days={daysHoliday}
+            name={'openingHoursHoliday'}
+            control={form.control}
+          />
+        )}
         <FormTextField
           control={form.control}
           name="numberOfSessions"

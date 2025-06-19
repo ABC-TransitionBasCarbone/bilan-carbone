@@ -1,9 +1,11 @@
 import { LocaleType } from '@/i18n/config'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { EmissionFactorStatus, Import, Unit, type Prisma } from '@prisma/client'
 import { Session } from 'next-auth'
 import { prismaClient } from './client'
+import { getOrganizationVersionById } from './organization'
 
 let cachedEmissionFactors: AsyncReturnType<typeof getDefaultEmissionFactors> = []
 
@@ -15,6 +17,7 @@ const selectEmissionFactor = {
   source: true,
   unit: true,
   customUnit: true,
+  isMonetary: true,
   importedFrom: true,
   importedId: true,
   organizationId: true,
@@ -62,6 +65,13 @@ const getDefaultEmissionFactors = (versionIds?: string[]) =>
     orderBy: { createdAt: 'desc' },
   })
 
+const getEmissionFactorsFromIdsExceptVersions = (ids: string[], versionIds: string[]) =>
+  prismaClient.emissionFactor.findMany({
+    where: { id: { in: ids }, versionId: { notIn: versionIds } },
+    select: selectEmissionFactor,
+    orderBy: { createdAt: 'desc' },
+  })
+
 const filterVersionedEmissionFactor = (
   emissionFactor: AsyncReturnType<typeof getDefaultEmissionFactors>[0],
   versionIds?: string[],
@@ -79,17 +89,27 @@ const getCachedDefaultEmissionFactors = async (versionIds?: string[]) => {
   return emissionFactors.filter((emissionFactor) => filterVersionedEmissionFactor(emissionFactor, versionIds))
 }
 
-export const getAllEmissionFactors = async (organizationId: string | null, studyId?: string) => {
+export const getAllEmissionFactors = async (
+  organizationId: string | null,
+  studyId?: string,
+  withCut: boolean = false,
+) => {
   let versionIds
+  let studyOldEmissionFactors: Awaited<ReturnType<typeof getDefaultEmissionFactors>> = []
   if (studyId) {
     const study = await prismaClient.study.findFirst({
       where: { id: studyId },
-      include: { emissionFactorVersions: true },
+      include: { emissionFactorVersions: true, emissionSources: true },
     })
     if (!study) {
       return []
     }
     versionIds = study.emissionFactorVersions.map((version) => version.importVersionId)
+    const selectedEmissionFactors = study.emissionSources
+      .map((emissionSource) => emissionSource.emissionFactorId)
+      .filter((id) => id !== null)
+
+    studyOldEmissionFactors = await getEmissionFactorsFromIdsExceptVersions(selectedEmissionFactors, versionIds)
   }
   const organizationEmissionFactor = organizationId
     ? await prismaClient.emissionFactor.findMany({
@@ -103,7 +123,12 @@ export const getAllEmissionFactors = async (organizationId: string | null, study
     ? getDefaultEmissionFactors(versionIds)
     : getCachedDefaultEmissionFactors(versionIds))
 
-  return organizationEmissionFactor.concat(defaultEmissionFactors)
+  const allEmissionFactors = organizationEmissionFactor.concat(defaultEmissionFactors).concat(studyOldEmissionFactors)
+  if (withCut) {
+    return allEmissionFactors
+  }
+
+  return allEmissionFactors.filter((emissionFactor) => emissionFactor.importedFrom !== Import.CUT)
 }
 
 export const getEmissionFactorById = (id: string) =>
@@ -146,9 +171,11 @@ export const createEmissionFactorWithParts = (
   emissionFactor: Prisma.EmissionFactorCreateInput,
   parts: EmissionFactorCommand['parts'],
   local: LocaleType,
-) => {
-  return prismaClient.$transaction(async (transaction) => {
-    const createdEmissionFactor = await transaction.emissionFactor.create({ data: emissionFactor })
+) =>
+  prismaClient.$transaction(async (transaction) => {
+    const createdEmissionFactor = await transaction.emissionFactor.create({
+      data: { ...emissionFactor, isMonetary: isMonetaryEmissionFactor(emissionFactor) },
+    })
     await Promise.all(
       parts.map(({ name, ...part }) =>
         transaction.emissionFactorPart.create({
@@ -161,19 +188,21 @@ export const createEmissionFactorWithParts = (
       ),
     )
   })
-}
 
 export const updateEmissionFactor = async (
   session: Session,
   local: string,
   { id, name, unit, attribute, comment, parts, subPosts, ...command }: UpdateEmissionFactorCommand,
 ) => {
+  const accountOrganizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
+
   const emissionFactor = {
     ...command,
     importedFrom: Import.Manual,
     status: EmissionFactorStatus.Valid,
-    organization: { connect: { id: session?.user.organizationId as string } },
+    organization: { connect: { id: accountOrganizationVersion?.organizationId } },
     unit: unit as Unit,
+    isMonetary: isMonetaryEmissionFactor(command),
     subPosts: flattenSubposts(subPosts),
   }
   await prismaClient.$transaction(async (transaction) => {
@@ -286,18 +315,26 @@ export const getEmissionFactorDetailsById = async (id: string) =>
   })
 export type DetailedEmissionFactor = AsyncReturnType<typeof getEmissionFactorDetailsById>
 
-export const getEmissionFactorSources = async () => {
-  return prismaClient.emissionFactorImportVersion.findMany()
+export const getEmissionFactorSources = async (withCut: boolean = false) => {
+  if (withCut) {
+    return prismaClient.emissionFactorImportVersion.findMany()
+  }
+  return prismaClient.emissionFactorImportVersion.findMany({ where: { source: { not: Import.CUT } } })
 }
 
-export const getStudyEmissionFactorSources = async (studyId: string) => {
+export const getStudyEmissionFactorSources = async (studyId: string, withCut: boolean = false) => {
   const versionIds = (
     await prismaClient.studyEmissionFactorVersion.findMany({
       where: { studyId },
       select: { importVersionId: true },
     })
   ).map((studyVersion) => studyVersion.importVersionId)
-  return prismaClient.emissionFactorImportVersion.findMany({ where: { id: { in: versionIds } } })
+  if (withCut) {
+    return prismaClient.emissionFactorImportVersion.findMany({ where: { id: { in: versionIds } } })
+  }
+  return prismaClient.emissionFactorImportVersion.findMany({
+    where: { id: { in: versionIds }, source: { not: Import.CUT } },
+  })
 }
 
 export const getEmissionFactorVersionsBySource = async (source: Import) =>
@@ -313,4 +350,33 @@ export const getEmissionFactorsImportActiveVersion = async (source: Import) =>
   prismaClient.emissionFactorImportVersion.findFirst({
     where: { source },
     orderBy: { createdAt: 'desc' },
+  })
+
+export const findEmissionFactorByImportedId = (id: string) =>
+  prismaClient.emissionFactor.findFirst({
+    where: { importedId: id },
+    select: {
+      id: true,
+      versionId: true,
+      importedId: true,
+      unit: true,
+      customUnit: true,
+      version: { select: { id: true } },
+      metaData: true,
+    },
+  })
+
+export const getEmissionFactorWithoutQuality = async (organizationId: string) =>
+  prismaClient.emissionFactor.findMany({
+    select: { metaData: { select: { language: true, title: true } } },
+    where: {
+      organizationId,
+      OR: [
+        { reliability: null },
+        { technicalRepresentativeness: null },
+        { geographicRepresentativeness: null },
+        { temporalRepresentativeness: null },
+        { completeness: null },
+      ],
+    },
   })

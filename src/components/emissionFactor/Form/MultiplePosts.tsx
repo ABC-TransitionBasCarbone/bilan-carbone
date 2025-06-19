@@ -16,6 +16,10 @@ interface Props<T extends SubPostsCommand> {
   context: 'emissionFactor' | 'studyContributor'
 }
 
+// Constants
+export const ALL_POSTS_VALUE = 'ALL_POSTS'
+export const ALL_SUB_POSTS_VALUE = 'ALL_SUB_POSTS'
+
 const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) => {
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
@@ -24,64 +28,90 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
   const control = form.control as Control<SubPostsCommand>
   const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
 
-  const posts: Record<Post, SubPost[]> = (form.watch('subPosts' as FieldPath<T>) as Record<Post, SubPost[]>) || {}
   const [glossary, setGlossary] = useState('')
+
+  const watchedSubPosts = form.watch('subPosts' as FieldPath<T>)
+  const selectedPosts: Record<Post, SubPost[]> = useMemo(
+    () => (watchedSubPosts as Record<Post, SubPost[]>) || {},
+    [watchedSubPosts],
+  )
 
   useEffect(() => {
     if (!form.formState.isSubmitted) {
       return
     }
     form.trigger('subPosts' as FieldPath<T>)
-  }, [posts])
+  }, [selectedPosts, form])
 
-  const postSelection: BCPost[] = useMemo(
+  const availablePosts: BCPost[] = useMemo(
     () =>
       Object.keys(BCPost)
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-        .filter((p) => !Object.keys(posts).includes(p)) as BCPost[],
-    [posts],
+        .filter((postKey) => !Object.keys(selectedPosts).includes(postKey)) as BCPost[],
+    [selectedPosts, tPost],
   )
 
   const handleSelectPost = (event: SelectChangeEvent<unknown>) => {
-    const selectedPost = event.target.value as Post
-    const currentSubPosts = { ...posts, [selectedPost]: [] }
-    setValue('subPosts', currentSubPosts)
+    const selectedPost = event.target.value as string
+
+    const currentSubPosts = {
+      ...selectedPosts,
+      [selectedPost]: [],
+    }
+
+    setValue('subPosts', currentSubPosts as Record<string, SubPost[]>)
   }
+
+  // Check if "All posts" is already selected
+  const hasAllPosts = useMemo(() => Object.keys(selectedPosts).includes(ALL_POSTS_VALUE), [selectedPosts])
 
   return (
     <div className="flex-col">
-      {Object.keys(posts).map((postKey) => (
+      {Object.keys(selectedPosts).map((postKey) => (
         <Box key={postKey} className={styles.postContainer}>
-          <Posts postOptions={postSelection} form={form} post={postKey as Post} subPosts={posts[postKey as Post]} />
+          <Posts
+            postOptions={postKey === ALL_POSTS_VALUE ? Object.values(BCPost) : availablePosts}
+            form={form}
+            post={postKey === ALL_POSTS_VALUE ? undefined : (postKey as Post)}
+            subPosts={selectedPosts[postKey as Post]}
+          />
         </Box>
       ))}
 
-      <Controller
-        name={'subPosts' as FieldPath<T>}
-        control={control}
-        render={({ fieldState: { error } }) => (
-          <FormControl className={styles.selectForm} error={error && Object.keys(posts).length === 0}>
-            <Select
-              name={'post'}
-              onChange={handleSelectPost}
-              data-testid="emission-factor-post"
-              label={t('posts')}
-              fullWidth
-              icon={<HelpIcon onClick={() => setGlossary(`post_${context}`)} label={tGlossary('title')} />}
-              iconPosition="after"
-            >
-              {postSelection.map((post) => (
-                <MenuItem key={post} value={post}>
-                  {tPost(post)}
-                </MenuItem>
-              ))}
-            </Select>
-            {error && error.message && Object.keys(posts).length === 0 && (
-              <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>
-            )}
-          </FormControl>
-        )}
-      />
+      {/* Only show the post selector if "All posts" is not already selected */}
+      {!hasAllPosts && (
+        <Controller
+          name={'subPosts' as FieldPath<T>}
+          control={control}
+          render={({ fieldState: { error } }) => (
+            <FormControl className={styles.selectForm} error={error && Object.keys(selectedPosts).length === 0}>
+              <Select
+                name={'post'}
+                onChange={handleSelectPost}
+                data-testid="emission-factor-post"
+                label={t('posts')}
+                fullWidth
+                icon={<HelpIcon onClick={() => setGlossary(`post_${context}`)} label={tGlossary('title')} />}
+                iconPosition="after"
+              >
+                {Object.keys(selectedPosts).length === 0 && (
+                  <MenuItem key={ALL_POSTS_VALUE} value={ALL_POSTS_VALUE}>
+                    {tPost('allPost')}
+                  </MenuItem>
+                )}
+                {availablePosts.map((post) => (
+                  <MenuItem key={post} value={post}>
+                    {tPost(post)}
+                  </MenuItem>
+                ))}
+              </Select>
+              {error && error.message && Object.keys(selectedPosts).length === 0 && (
+                <FormHelperText color="red">{t('validation.' + error.message)}</FormHelperText>
+              )}
+            </FormControl>
+          )}
+        />
+      )}
 
       {glossary && (
         <GlossaryModal glossary="post" label="emission-factor-post" t={tGlossary} onClose={() => setGlossary('')}>

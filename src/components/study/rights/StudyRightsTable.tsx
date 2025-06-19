@@ -5,19 +5,20 @@ import HelpIcon from '@/components/base/HelpIcon'
 import Toast, { ToastColors } from '@/components/base/Toast'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteStudyMember } from '@/services/serverFunctions/study'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import { Button } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import SelectStudyRole from './SelectStudyRole'
 
 interface Props {
-  user: User
+  user: UserSession
   study: FullStudy
   canAddMember: boolean
   userRoleOnStudy: StudyRole
@@ -34,6 +35,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
   const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const [memberToDelete, setToDelete] = useState<FullStudy['allowedUsers'][0] | undefined>(undefined)
   const [deleting, setDeleting] = useState(false)
+  const { callServerFunction } = useServerFunction()
 
   const router = useRouter()
 
@@ -41,7 +43,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
     const columns: ColumnDef<FullStudy['allowedUsers'][0]>[] = [
       {
         header: t('email'),
-        accessorKey: 'user.email',
+        accessorKey: 'account.user.email',
       },
     ]
     if (canAddMember) {
@@ -55,7 +57,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
               user={user}
               userRole={userRoleOnStudy}
               currentRole={role}
-              rowUser={context.row.original.user}
+              rowUser={context.row.original.account}
               study={study}
             />
           )
@@ -64,15 +66,16 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
       columns.push({
         header: t('actions'),
         cell: ({ row }) =>
-          user.id !== row.original.userId && (
+          user.accountId !== row.original.accountId && (
             <div className="flex-cc">
               <Button
                 aria-label={t('delete')}
                 title={t('delete')}
                 onClick={() => setToDelete(row.original)}
                 data-testid={`delete-study-member-button`}
+                color="error"
               >
-                <DeleteIcon color="error" />
+                <DeleteIcon />
               </Button>
             </div>
           ),
@@ -94,14 +97,13 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
 
   const deleteMember = async (member: FullStudy['allowedUsers'][0]) => {
     setDeleting(true)
-    const result = await deleteStudyMember(member, study.id)
+    await callServerFunction(() => deleteStudyMember(member, study.id), {
+      onSuccess: () => {
+        router.refresh()
+      },
+    })
     setDeleting(false)
     setToDelete(undefined)
-    if (result) {
-      setToast({ text: result, color: 'error' })
-    } else {
-      router.refresh()
-    }
   }
 
   return (
@@ -184,7 +186,7 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
             },
           ]}
         >
-          {tDeleting('confirmation', { email: memberToDelete.user.email })}
+          {tDeleting('confirmation', { email: memberToDelete.account.user.email })}
         </Modal>
       )}
       {toast.text && (

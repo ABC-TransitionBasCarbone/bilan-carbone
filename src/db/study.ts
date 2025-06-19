@@ -1,16 +1,16 @@
-import { StudyContributorRow } from '@/components/study/rights/StudyContributorsTable'
+import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import { filterAllowedStudies } from '@/services/permissions/study'
-import { isAdmin } from '@/services/permissions/user'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { checkLevel, getAllowedLevels } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
+import { isAdmin } from '@/utils/user'
 import { ControlMode, Export, Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
+import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
-import { getOrganizationById } from './organization'
-import { getUserOrganizations } from './user'
+import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
 
 export const createStudy = async (data: Prisma.StudyCreateInput) => {
   const dbStudy = await prismaClient.study.create({ data })
@@ -53,6 +53,9 @@ const fullStudyInclude = {
       studySite: {
         select: {
           id: true,
+          site: {
+            select: { name: true },
+          },
         },
       },
       emissionFactorId: true,
@@ -61,6 +64,7 @@ const fullStudyInclude = {
           id: true,
           totalCo2: true,
           unit: true,
+          isMonetary: true,
           reliability: true,
           technicalRepresentativeness: true,
           geographicRepresentativeness: true,
@@ -73,7 +77,12 @@ const fullStudyInclude = {
       contributor: {
         select: {
           id: true,
-          email: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
         },
       },
     },
@@ -81,32 +90,42 @@ const fullStudyInclude = {
   },
   contributors: {
     select: {
-      userId: true,
-      user: {
+      accountId: true,
+      account: {
         select: {
           id: true,
-          email: true,
-          organizationId: true,
+          organizationVersionId: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
         },
       },
       subPost: true,
     },
-    orderBy: { user: { email: 'asc' } },
+    orderBy: { account: { user: { email: 'asc' } } },
   },
   allowedUsers: {
     select: {
-      userId: true,
-      user: {
+      accountId: true,
+      account: {
         select: {
           id: true,
-          email: true,
-          organizationId: true,
-          level: true,
+          organizationVersionId: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+              level: true,
+            },
+          },
         },
       },
       role: true,
     },
-    orderBy: { user: { email: 'asc' } },
+    orderBy: { account: { user: { email: 'asc' } } },
   },
   sites: {
     select: {
@@ -131,46 +150,60 @@ const fullStudyInclude = {
     },
   },
   exports: { select: { type: true, control: true } },
-  organization: { select: { id: true, name: true, isCR: true, parentId: true } },
+  organizationVersion: {
+    select: {
+      id: true,
+      isCR: true,
+      parentId: true,
+      environment: true,
+      organization: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  },
   openingHours: true,
 } satisfies Prisma.StudyInclude
 
 const normalizeAllowedUsers = (
   allowedUsers: Prisma.StudyGetPayload<{ include: typeof fullStudyInclude }>['allowedUsers'],
   studyLevel: Level,
-  organizationId: string | null,
+  organizationVersionId: string | null,
 ) =>
   allowedUsers.map((allowedUser) => {
-    const readerOnly = !allowedUser.user.organizationId || !checkLevel(allowedUser.user.level, studyLevel)
-    return organizationId && allowedUser.user.organizationId === organizationId
-      ? { ...allowedUser, user: { ...allowedUser.user, readerOnly } }
+    const readerOnly =
+      !allowedUser.account.organizationVersionId || !checkLevel(allowedUser.account.user.level, studyLevel)
+    return organizationVersionId && allowedUser.account.organizationVersionId === organizationVersionId
+      ? { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
       : {
           ...allowedUser,
-          user: {
-            ...allowedUser.user,
-            organizationId: undefined,
+          account: {
+            ...allowedUser.account,
+            organizationVersionId: undefined,
             level: undefined,
             readerOnly,
           },
         }
   })
 
-export const getOrganizationStudiesOrderedByStartDate = async (organizationId: string) => {
+export const getOrganizationVersionStudiesOrderedByStartDate = async (organizationVersionId: string) => {
   const studies = await prismaClient.study.findMany({
     where: {
-      organizationId,
+      organizationVersionId,
     },
     include: fullStudyInclude,
     orderBy: { startDate: 'desc' },
   })
   return studies.map((study) => ({
     ...study,
-    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId),
+    allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId),
   }))
 }
 
-export const getAllowedStudiesByUser = async (user: User) => {
-  const userOrganizations = await getUserOrganizations(user.email)
+export const getAllowedStudiesByAccount = async (user: UserSession) => {
+  const accountOrganizationVersions = await getAccountOrganizationVersions(user.accountId)
 
   // Be carefull: study on this query is shown to a lot of user
   // Never display sensitive data here (like emission source)
@@ -179,44 +212,77 @@ export const getAllowedStudiesByUser = async (user: User) => {
       OR: [
         {
           AND: [
-            { organizationId: { in: userOrganizations.map((organization) => organization.id) } },
+            {
+              organizationVersionId: {
+                in: accountOrganizationVersions.map((organizationVersion) => organizationVersion.id),
+              },
+            },
             ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
           ],
         },
-        { allowedUsers: { some: { userId: user.id } } },
-        { contributors: { some: { userId: user.id } } },
+        { allowedUsers: { some: { accountId: user.accountId } } },
+        { contributors: { some: { accountId: user.accountId } } },
       ],
     },
   })
   return filterAllowedStudies(user, studies)
 }
 
-export const getExternalAllowedStudiesByUser = async (user: User) => {
-  const userOrganizations = await getUserOrganizations(user.email)
+export const getExternalAllowedStudiesByUser = async (user: UserSession) => {
+  const userOrganizationVersions = await getAccountOrganizationVersions(user.accountId)
   const studies = await prismaClient.study.findMany({
     where: {
       AND: [
-        { organizationId: { notIn: userOrganizations.map((organization) => organization.id) } },
-        { OR: [{ allowedUsers: { some: { userId: user.id } } }, { contributors: { some: { userId: user.id } } }] },
+        {
+          organizationVersionId: {
+            notIn: userOrganizationVersions.map((organizationVersion) => organizationVersion.id),
+          },
+        },
+        {
+          OR: [
+            { allowedUsers: { some: { accountId: user.accountId } } },
+            { contributors: { some: { accountId: user.accountId } } },
+          ],
+        },
       ],
     },
   })
   return filterAllowedStudies(user, studies)
 }
 
-export const getAllowedStudyIdByUser = async (user: User) => {
-  const organizationIds = (await getUserOrganizations(user.email)).map((organization) => organization.id)
-  const isAllowedOnPublicStudies = user.level && getUserRoleOnPublicStudy(user, user.level) !== StudyRole.Reader
+export const getAllowedStudiesByAccountIdAndOrganizationId = async (organizationVersionIds: string[]) => {
+  return prismaClient.study.findMany({
+    select: {
+      id: true,
+      name: true,
+      allowedUsers: true,
+      organizationVersionId: true,
+      organizationVersion: { select: { organization: { select: { name: true } } } },
+    },
+    where: {
+      organizationVersionId: { in: organizationVersionIds },
+    },
+  })
+}
+
+export const getAllowedStudyIdByAccount = async (account: UserSession) => {
+  const organizationVersionIds = (await getAccountOrganizationVersions(account.accountId)).map(
+    (organizationVersion) => organizationVersion.id,
+  )
+  const isAllowedOnPublicStudies =
+    account.level && getUserRoleOnPublicStudy(account, account.level) !== StudyRole.Reader
   const study = await prismaClient.study.findFirst({
     where: {
       OR: [
-        { allowedUsers: { some: { userId: user.id, role: { notIn: [StudyRole.Reader] } } } },
+        { allowedUsers: { some: { accountId: account.id, role: { notIn: [StudyRole.Reader] } } } },
         ...(isAllowedOnPublicStudies
           ? [
               {
                 AND: [
-                  { organizationId: { in: organizationIds } },
-                  ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
+                  { organizationVersionId: { in: organizationVersionIds } },
+                  ...(isAdmin(account.role)
+                    ? []
+                    : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
                 ],
               },
             ]
@@ -228,36 +294,41 @@ export const getAllowedStudyIdByUser = async (user: User) => {
   return study?.id
 }
 
-export const getAllowedStudiesByUserAndOrganization = async (user: User, organizationId: string) => {
-  const childOrganizations = await prismaClient.organization.findMany({
-    where: { parentId: user.organizationId },
+export const getAllowedStudiesByUserAndOrganization = async (account: UserSession, organizationVersionId: string) => {
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+
+  if (!account.organizationVersionId) {
+    return []
+  }
+  const childOrganizations = await prismaClient.organizationVersion.findMany({
+    where: { parentId: account.organizationVersionId },
     select: { id: true },
   })
 
-  const userOrga = await getOrganizationById(user.organizationId)
-  if (!userOrga) {
-    return []
-  }
-
   const studies = await prismaClient.study.findMany({
     where: {
-      organizationId,
-      ...(isAdminOnOrga(user, userOrga)
+      organizationVersionId,
+      ...(isAdminOnOrga(account, organizationVersion as OrganizationVersionWithOrganization)
         ? {}
         : {
             OR: [
-              { allowedUsers: { some: { userId: user.id } } },
-              { contributors: { some: { userId: user.id } } },
-              { isPublic: true, organizationId: user.organizationId as string },
-              { isPublic: true, organizationId: { in: childOrganizations.map((organization) => organization.id) } },
+              { allowedUsers: { some: { accountId: account.id } } },
+              { contributors: { some: { accountId: account.id } } },
+              { isPublic: true, organizationVersionId: account.organizationVersionId as string },
+              {
+                isPublic: true,
+                organizationVersionId: {
+                  in: childOrganizations.map((organizationVersion) => organizationVersion.id),
+                },
+              },
             ],
           }),
     },
   })
-  return filterAllowedStudies(user, studies)
+  return filterAllowedStudies(account, studies)
 }
 
-export const getStudyById = async (id: string, organizationId: string | null) => {
+export const getStudyById = async (id: string, organizationVersionId: string | null) => {
   const study = await prismaClient.study.findUnique({
     where: { id },
     include: fullStudyInclude,
@@ -265,7 +336,7 @@ export const getStudyById = async (id: string, organizationId: string | null) =>
   if (!study) {
     return null
   }
-  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationId) }
+  return { ...study, allowedUsers: normalizeAllowedUsers(study.allowedUsers, study.level, organizationVersionId) }
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
@@ -285,11 +356,11 @@ export const createUserOnStudy = async (right: Prisma.UserOnStudyCreateInput) =>
     data: right,
   })
 
-export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRole) =>
+export const updateUserOnStudy = (accountId: string, studyId: string, role: StudyRole) =>
   prismaClient.userOnStudy.update({
     where: {
-      studyId_userId: {
-        userId,
+      studyId_accountId: {
+        accountId,
         studyId,
       },
     },
@@ -300,15 +371,15 @@ export const updateUserOnStudy = (userId: string, studyId: string, role: StudyRo
 
 export const getUsersOnStudy = async (studyId: string) => prismaClient.userOnStudy.findMany({ where: { studyId } })
 
-export const deleteUserOnStudy = async (studyId: string, userId: string) =>
+export const deleteAccountOnStudy = async (studyId: string, accountId: string) =>
   prismaClient.userOnStudy.delete({
-    where: { studyId_userId: { studyId, userId } },
+    where: { studyId_accountId: { studyId, accountId } },
   })
 
-export const deleteContributor = async (studyId: string, contributor: StudyContributorRow) => {
+export const deleteContributor = async (studyId: string, contributor: StudyContributorDeleteParams) => {
   const where: Prisma.ContributorsWhereInput = {
     studyId,
-    userId: contributor.userId,
+    accountId: contributor.accountId,
   }
   if (contributor.subPosts[0] !== 'allSubPost') {
     where.subPost = contributor.subPosts[0] as SubPost
@@ -316,6 +387,7 @@ export const deleteContributor = async (studyId: string, contributor: StudyContr
     const subPosts = subPostsByPost[contributor.post as Post]
     where.subPost = { in: subPosts }
   }
+
   return prismaClient.contributors.deleteMany({ where })
 }
 
@@ -328,11 +400,11 @@ export const getUsersLevel = async (userIds: string[]) =>
 export const updateStudy = (id: string, data: Prisma.StudyUpdateInput) =>
   prismaClient.study.update({ where: { id }, data })
 
-export const downgradeStudyUserRoles = (studyId: string, userIds: string[]) =>
+export const downgradeStudyUserRoles = (studyId: string, accountIds: string[]) =>
   Promise.all(
-    userIds.map((userId) =>
+    accountIds.map((accountId) =>
       prismaClient.userOnStudy.update({
-        where: { studyId_userId: { studyId, userId } },
+        where: { studyId_accountId: { studyId, accountId } },
         data: { role: StudyRole.Reader },
       }),
     ),
@@ -398,18 +470,19 @@ export const deleteStudy = async (id: string) => {
       transaction.document.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
       transaction.studyExport.deleteMany({ where: { studyId: id } }),
+      transaction.openingHours.deleteMany({ where: { studyId: id } }),
     ])
     await transaction.study.delete({ where: { id } })
   })
 }
 
 export const createContributorOnStudy = (
-  userId: string,
+  accountId: string,
   subPosts: SubPost[],
-  data: Omit<Prisma.ContributorsCreateManyInput, 'userId' | 'subPost'>,
+  data: Omit<Prisma.ContributorsCreateManyInput, 'accountId' | 'subPost'>,
 ) =>
   prismaClient.contributors.createMany({
-    data: subPosts.map((subPost) => ({ ...data, userId, subPost })),
+    data: subPosts.map((subPost) => ({ ...data, accountId, subPost })),
     skipDuplicates: true,
   })
 
@@ -426,13 +499,17 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
           name: true,
           isPublic: true,
           level: true,
-          allowedUsers: { select: { userId: true } },
-          contributors: { select: { userId: true } },
-          organizationId: true,
-          organization: {
+          allowedUsers: { select: { accountId: true } },
+          contributors: { select: { accountId: true } },
+          organizationVersionId: true,
+          organizationVersion: {
             select: {
               id: true,
+              isCR: true,
               parentId: true,
+              organization: {
+                select: { id: true },
+              },
             },
           },
         },
@@ -441,7 +518,15 @@ export const getStudiesFromSites = async (siteIds: string[]) =>
         select: {
           name: true,
           organization: {
-            select: { id: true, isCR: true, name: true },
+            select: {
+              id: true,
+              name: true,
+              organizationVersions: {
+                select: {
+                  isCR: true,
+                },
+              },
+            },
           },
         },
       },
@@ -463,7 +548,7 @@ export const getStudyValidatedEmissionsSources = async (studyId: string) => {
   }
 }
 
-const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
+export const getSourceLatestImportVersionId = async (source: Import, transaction?: Prisma.TransactionClient) =>
   (transaction || prismaClient).emissionFactorImportVersion.findFirst({
     select: { id: true, source: true },
     where: { source },
@@ -476,10 +561,11 @@ export const createStudyExport = async (studyId: string, type: Export, control: 
 export const deleteStudyExport = async (studyId: string, type: Export) =>
   prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })
 
-export const countOrganizationStudiesFromOtherUsers = async (organizationId: string, userId: string) =>
-  prismaClient.study.count({ where: { organizationId, createdById: { not: userId } } })
+export const countOrganizationStudiesFromOtherUsers = async (organizationVersionId: string, accountId: string) =>
+  prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })
 
 export const updateStudyOpeningHours = async (
+  studyId: string,
   openingHours: ChangeStudyCinemaCommand['openingHours'],
   openingHoursHoliday: ChangeStudyCinemaCommand['openingHoursHoliday'],
 ) => {
@@ -516,5 +602,12 @@ export const updateStudyOpeningHours = async (
         ),
       )
     })
+  })
+}
+
+export const deleteStudyMemberFromOrganization = async (accountId: string, organizationVersionIds: string[]) => {
+  const studies = await getAllowedStudiesByAccountIdAndOrganizationId(organizationVersionIds)
+  return prismaClient.userOnStudy.deleteMany({
+    where: { accountId, studyId: { in: studies.map((study) => study.id) } },
   })
 }

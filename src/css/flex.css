@@ -18,6 +18,11 @@
   align-items: center;
 }
 
+.justify-start {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .justify-center {
   display: flex;
   justify-content: center;

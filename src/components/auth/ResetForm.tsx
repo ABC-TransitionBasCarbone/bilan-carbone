@@ -1,4 +1,5 @@
 'use client'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { checkToken, reset } from '@/services/serverFunctions/auth'
 import { ResetPasswordCommand, ResetPasswordCommandValidation } from '@/services/serverFunctions/user.command'
 import { computePasswordValidation } from '@/services/utils'
@@ -6,11 +7,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { FormControl, IconButton, InputAdornment } from '@mui/material'
-import { User } from 'next-auth'
+import { Environment } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
@@ -19,10 +20,8 @@ import { FormTextField } from '../form/TextField'
 import ResetLinkAlreadyUsed from '../pages/ResetLinkAlreadyUsed'
 import authStyles from './Auth.module.css'
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-
 interface Props {
-  user?: User
+  user?: UserSession
   token: string
 }
 
@@ -31,7 +30,7 @@ const ResetForm = ({ user, token }: Props) => {
     checkToken(token).then((invalidtoken) => {
       setInvalidResetLink(invalidtoken)
     })
-  }, [])
+  }, [token])
 
   useEffect(() => {
     if (user) {
@@ -52,8 +51,10 @@ const ResetForm = ({ user, token }: Props) => {
     digit: false,
   })
   const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState(false)
-  const [validated, setValidated] = useState(false)
+  const [env, setEnv] = useState<Environment | undefined>()
+  const { callServerFunction } = useServerFunction()
+
+  const searchParams = useSearchParams()
 
   const { getValues, control, watch, handleSubmit } = useForm<ResetPasswordCommand>({
     resolver: zodResolver(ResetPasswordCommandValidation),
@@ -63,6 +64,13 @@ const ResetForm = ({ user, token }: Props) => {
       email: '',
     },
   })
+
+  useEffect(() => {
+    const environment = searchParams.get('env')
+    if (environment && Object.keys(Environment).includes(environment)) {
+      setEnv(environment as Environment)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     const { unsubscribe } = watch((values) => setPasswordValidation(computePasswordValidation(values.password ?? '')))
@@ -76,20 +84,24 @@ const ResetForm = ({ user, token }: Props) => {
 
   const onSubmit = async () => {
     setSubmitting(true)
-    setError(false)
 
     const { email, password } = getValues()
-    const result = await reset(email.toLowerCase(), password, token)
-    if (result) {
-      setSubmitting(false)
-      setValidated(true)
-      setTimeout(() => {
-        router.push('/login')
-      }, 5000)
-    } else {
-      setError(true)
-      setSubmitting(false)
-    }
+    await callServerFunction(() => reset(email.toLowerCase(), password, token, env), {
+      getSuccessMessage: () => t('validated'),
+      getErrorMessage: () => t('resetError'),
+      onSuccess: () => {
+        setSubmitting(false)
+
+        if (env) {
+          router.push(`/login?env=${env}`)
+        } else {
+          router.push(`/login`)
+        }
+      },
+      onError: () => {
+        setSubmitting(false)
+      },
+    })
   }
 
   return (
@@ -104,6 +116,7 @@ const ResetForm = ({ user, token }: Props) => {
           label={t('email')}
           placeholder={t('emailPlaceholder')}
           translation={t}
+          trim
         />
         <FormTextField
           control={control}
@@ -159,12 +172,6 @@ const ResetForm = ({ user, token }: Props) => {
               : ''
           }
         />
-        {error && (
-          <p className={authStyles.red}>
-            {t('resetError')}
-            <Link href={`mailto:${contactMail}`}>{contactMail}</Link>
-          </p>
-        )}
         <LoadingButton
           fullWidth
           type="submit"
@@ -172,13 +179,11 @@ const ResetForm = ({ user, token }: Props) => {
           loading={submitting}
           disabled={
             getValues().password !== getValues().confirmPassword ||
-            Object.values(passwordValidation).some((rule) => !rule) ||
-            validated
+            Object.values(passwordValidation).some((rule) => !rule)
           }
         >
           {t('reset')}
         </LoadingButton>
-        {validated && <p>{t.rich('validated', { link: (children) => <Link href="/login">{children}</Link> })}</p>}
       </FormControl>
     </Form>
   )

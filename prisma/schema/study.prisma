@@ -77,8 +77,8 @@ model Study {
   id      String  @id @default(uuid())
   oldBCId String? @map("old_bc_id")
 
-  createdById String @map("created_by_id")
-  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String  @map("created_by_account_id")
+  createdBy   Account @relation(fields: [createdById], references: [id])
 
   name                 String
   isPublic             Boolean         @map("is_public")
@@ -90,8 +90,8 @@ model Study {
   resultsUnit          StudyResultUnit @default(T) @map("results_unit")
   exports              StudyExport[]
 
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId String       @map("organization_id")
+  organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id])
+  organizationVersionId String              @map("organization_version_id")
 
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
@@ -125,32 +125,32 @@ model StudyExport {
 }
 
 model UserOnStudy {
-  study   Study  @relation(fields: [studyId], references: [id])
-  studyId String @map("study_id")
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @map("user_id")
+  study     Study   @relation(fields: [studyId], references: [id])
+  studyId   String  @map("study_id")
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String  @map("account_id")
 
   role StudyRole
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@id([studyId, userId])
+  @@id([studyId, accountId])
   @@map("users_on_study")
 }
 
 model Contributors {
-  study   Study  @relation(fields: [studyId], references: [id])
-  studyId String @map("study_id")
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String @map("user_id")
+  study     Study   @relation(fields: [studyId], references: [id])
+  studyId   String  @map("study_id")
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String  @map("account_id")
 
   subPost SubPost
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@id([studyId, userId, subPost])
+  @@id([studyId, accountId, subPost])
   @@map("contributors")
 }
 
@@ -194,8 +194,8 @@ model StudyEmissionSource {
   duration           Int? @default(20)
   hectare            Int?
 
-  contributorId String? @map("contributor_id")
-  contributor   User?   @relation(fields: [contributorId], references: [id])
+  contributorId String?  @map("contributor_account_id")
+  contributor   Account? @relation(fields: [contributorId], references: [id])
 
   feReliability                  Int? @map("fe_reliability")
   feTechnicalRepresentativeness  Int? @map("fe_technical_representativeness")

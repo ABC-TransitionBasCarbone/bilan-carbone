@@ -1,18 +1,27 @@
-import { DeactivatableFeature, UserSource } from '@prisma/client'
-import { User } from 'next-auth'
-import { isDeactivableFeatureActive } from '../serverFunctions/deactivableFeatures'
+import { DeactivatableFeature } from '@prisma/client'
+import { UserSession } from 'next-auth'
+import { getDeactivableFeatureRestrictions, isDeactivableFeatureActive } from '../serverFunctions/deactivableFeatures'
 import { getUserSource } from '../serverFunctions/user'
 
-export const hasAccessToFormation = async (user: User) => {
+export const hasAccessToFormation = async (user: UserSession) => {
   if (!user.level) {
     return false
   }
 
-  if ((await getUserSource()) !== UserSource.CRON) {
+  const [activeFeature, userSource, restrictions] = await Promise.all([
+    isDeactivableFeatureActive(DeactivatableFeature.Formation),
+    getUserSource(),
+    getDeactivableFeatureRestrictions(DeactivatableFeature.Formation),
+  ])
+  if (!activeFeature) {
     return false
   }
 
-  if (!(await isDeactivableFeatureActive(DeactivatableFeature.Formation))) {
+  if (!userSource.success || !userSource.data || (restrictions?.deactivatedSources || []).includes(userSource.data)) {
+    return false
+  }
+
+  if ((restrictions?.deactivatedEnvironments || []).includes(user.environment)) {
     return false
   }
 

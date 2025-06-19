@@ -1,7 +1,9 @@
+import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
+import { getEmissionQuality } from '@/services/importEmissionFactor/import'
+import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma } from '@prisma/client'
 import { v4 } from 'uuid'
-import { unitsMatrix } from '../../../services/importEmissionFactor/historyUnits'
-import { getEmissionQuality } from '../../../services/importEmissionFactor/import'
 import { EmissionFactorsWorkSheet } from './oldBCWorkSheetsReader'
 
 const getStringValue = (value: string | number) => {
@@ -14,7 +16,7 @@ const getStringValue = (value: string | number) => {
 export const uploadEmissionFactors = async (
   transaction: Prisma.TransactionClient,
   emissionFactorsWorksheet: EmissionFactorsWorkSheet,
-  organizationId: string,
+  organizationVersion: OrganizationVersionWithOrganization,
 ) => {
   console.log("Import des facteurs d'émissions...")
   const ids = emissionFactorsWorksheet.getRows().map((row) => row.EFV_GUID as string)
@@ -48,9 +50,12 @@ export const uploadEmissionFactors = async (
         location: `${getStringValue(row.NOM_PAYS)} ${getStringValue(row.NOM_REGION)} ${getStringValue(row.NOM_DEPARTEMENT)}`,
       })
 
+      const unit = unitsMatrix[getStringValue(row.Unité_Nom)]
+      const isMonetary = isMonetaryEmissionFactor({ unit, customUnit: '', isMonetary: false })
+
       return {
         id,
-        organizationId,
+        organizationId: organizationVersion.organizationId,
         importedFrom: Import.Manual,
         status: EmissionFactorStatus.Valid,
         oldBCId: getStringValue(row.EFV_GUID),
@@ -59,7 +64,8 @@ export const uploadEmissionFactors = async (
         geographicRepresentativeness: getEmissionQuality(row.Incertitude as number),
         temporalRepresentativeness: getEmissionQuality(row.Incertitude as number),
         completeness: getEmissionQuality(row.Incertitude as number),
-        unit: unitsMatrix[getStringValue(row.Unité_Nom)],
+        unit,
+        isMonetary,
         totalCo2: row.Total_CO2e as number,
         co2f: row.CO2f as number,
         ch4f: row.CH4f as number,

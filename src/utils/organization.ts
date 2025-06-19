@@ -1,26 +1,30 @@
-import { isAdmin } from '@/services/permissions/user'
-import { Organization, Role } from '@prisma/client'
-import { User } from 'next-auth'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
+import { isAdmin } from '@/utils/user'
+import { Role } from '@prisma/client'
+import { UserSession } from 'next-auth'
 
-export const isAdminOnOrga = (user: User, organization: Pick<Organization, 'id' | 'parentId'>) =>
-  isAdmin(user.role) && isInOrgaOrParent(user.organizationId, organization)
+export const isAdminOnOrga = (account: UserSession, organizationVersion: OrganizationVersionWithOrganization) =>
+  isAdmin(account.role) && isInOrgaOrParent(account.organizationVersionId, organizationVersion)
 
 export const isInOrgaOrParent = (
-  userOrganizationId: string | null,
-  organization: Pick<Organization, 'id' | 'parentId'>,
-) => userOrganizationId === organization.id || userOrganizationId === organization.parentId
+  userOrganizationVersionId: string | null,
+  organizationVersion: OrganizationVersionWithOrganization,
+) =>
+  userOrganizationVersionId &&
+  (userOrganizationVersionId === organizationVersion.id || userOrganizationVersionId === organizationVersion.parentId)
 
 export const hasEditionRole = (isCR: boolean, userRole: Role) =>
   isCR ? userRole !== Role.DEFAULT : isAdmin(userRole) || userRole === Role.GESTIONNAIRE
 
-export const canEditOrganization = (user: User, organization?: Pick<Organization, 'id' | 'parentId' | 'isCR'>) => {
-  if (organization && !isInOrgaOrParent(user.organizationId, organization)) {
+export const canEditOrganizationVersion = (
+  account: UserSession,
+  organizationVersion?: OrganizationVersionWithOrganization,
+) => {
+  if (organizationVersion && !isInOrgaOrParent(account.organizationVersionId, organizationVersion)) {
     return false
   }
-  const isCR = !!organization?.isCR || organization?.parentId === user.organizationId
-  return hasEditionRole(isCR, user.role)
+  const isCR = !!organizationVersion?.isCR || organizationVersion?.parentId === account.organizationVersionId
+  return hasEditionRole(isCR, account.role)
 }
 
-export const canEditMemberRole = (user: User) => isAdmin(user.role) || user.role === Role.GESTIONNAIRE
-
-export const isUntrainedRole = (role: Role) => role === Role.GESTIONNAIRE || role === Role.DEFAULT
+export const canEditMemberRole = (account: UserSession) => isAdmin(account.role) || account.role === Role.GESTIONNAIRE

@@ -3,8 +3,7 @@ import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import StudyPostsPageCut from '@/environments/cut/pages/StudyPosts'
 import { Post } from '@/services/posts'
-import { CUT } from '@/store/AppEnvironment'
-import { StudyRole } from '@prisma/client'
+import { Environment, StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import StudyPostsPage from './StudyPosts'
@@ -25,10 +24,10 @@ const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
         current={tPost(post)}
         links={[
           { label: tNav('home'), link: '/' },
-          study.organization.isCR
+          study.organizationVersion.isCR
             ? {
-                label: study.organization.name,
-                link: `/organisations/${study.organization.id}`,
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
               }
             : undefined,
 
@@ -37,7 +36,7 @@ const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
       />
       <DynamicComponent
         defaultComponent={<StudyPostsPage post={post} study={study} userRole={userRole} />}
-        environmentComponents={{ [CUT]: <StudyPostsPageCut /> }}
+        environmentComponents={{ [Environment.CUT]: <StudyPostsPageCut post={post} study={study} /> }}
       />
     </>
   )

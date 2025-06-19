@@ -64,16 +64,20 @@
 
 .green {
   border-color: var(--post-green-dark);
+  background-color: var(--post-green-light);
 }
 
 .darkBlue {
   border-color: var(--post-darkBlue-dark);
+  background-color: var(--post-darkBlue-light);
 }
 
 .blue {
   border-color: var(--post-blue-dark);
+  background-color: var(--post-blue-light);
 }
 
 .orange {
   border-color: var(--post-orange-dark);
+  background-color: var(--post-orange-light);
 }

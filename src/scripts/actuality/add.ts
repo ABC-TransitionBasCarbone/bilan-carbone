@@ -1,8 +1,8 @@
+import { createActualities } from '@/db/actuality'
 import { Prisma } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
-import { createActualities } from '../../db/actuality'
 import { getEncoding } from '../../utils/csv'
 
 const addActualities = async (file: string) => {

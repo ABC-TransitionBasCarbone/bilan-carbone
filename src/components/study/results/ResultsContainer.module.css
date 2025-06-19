@@ -2,6 +2,10 @@
   text-decoration: none;
 }
 
+.header {
+  align-items: end;
+}
+
 .container {
   position: relative;
   border-radius: 1rem;
@@ -24,7 +28,7 @@
 
 .selector {
   flex-direction: column;
-  padding: 2rem;
+  padding: 0 2rem;
   gap: 1rem;
 
   @media screen and (max-width: 60rem) {
@@ -35,13 +39,16 @@
 }
 
 .card {
-  gap: 2rem;
-  cursor: pointer;
+  gap: 1rem;
   padding-right: 3rem;
   padding-left: 3rem;
 
   &.selected {
     border-color: var(--primary-500);
+  }
+
+  &.disabled {
+    background-color: var(--grayscale-100);
   }
 }
 
@@ -58,5 +65,13 @@
 
   @media screen and (max-width: 60rem) {
     width: 100%;
+  }
+}
+
+.helpIcon {
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary-800);
   }
 }

@@ -1,6 +1,7 @@
 import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromCSV'
 import { addSourceToStudies } from '@/services/importEmissionFactor/import'
 import {
+  Account,
   ControlMode,
   EmissionFactorStatus,
   EmissionSourceCaracterisation,
@@ -11,39 +12,39 @@ import {
   StudyRole,
   SubPost,
   Unit,
-  User,
 } from '@prisma/client'
 
 const studyId = '91bb3826-2be7-4d56-bb9b-363f4d9af62f'
 const siteId = 'c3f2b8d4-7a0c-4b3f-8c5b-5b5e7b6f3e3b'
 const studySiteId = 'ca3e68bd-dee6-400a-b3cb-b3e11725282e'
 
-export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
-  if (!creator.organizationId) {
+export const createRealStudy = async (prisma: PrismaClient, creator: Account) => {
+  if (!creator.organizationVersionId) {
     return null
   }
 
   await getEmissionFactorsFromCSV('test', './prisma/seed/Base_Carbone_Test.csv')
   await prisma.emissionFactorImportVersion.createMany({
     data: [
-      {
-        internId: 'Legifrance_Test.csv',
-        name: 'test',
-        source: Import.Legifrance,
-      },
-      {
-        internId: 'Negaoctet_Test.csv',
-        name: 'test',
-        source: Import.NegaOctet,
-      },
+      { internId: 'Legifrance_Test.csv', name: 'test', source: Import.Legifrance },
+      { internId: 'Negaoctet_Test.csv', name: 'test', source: Import.NegaOctet },
     ],
   })
+
+  const creatorOrganizationVersion = await prisma.organizationVersion.findFirst({
+    where: {
+      id: creator.organizationVersionId,
+    },
+  })
+  if (!creatorOrganizationVersion) {
+    return null
+  }
 
   await prisma.site.create({
     data: {
       id: siteId,
       name: 'Bourges',
-      organizationId: creator.organizationId,
+      organizationId: creatorOrganizationVersion.organizationId,
       etp: 35,
       ca: 1_000_000,
     },
@@ -56,14 +57,12 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
     return null
   }
 
-  const emissionFactors = await prisma.emissionFactor.findMany({
-    where: { versionId: version.id },
-  })
+  const emissionFactors = await prisma.emissionFactor.findMany({ where: { versionId: version.id } })
 
   const papier = await prisma.emissionFactor.create({
     data: {
       importedFrom: Import.Manual,
-      organizationId: creator.organizationId,
+      organizationId: creatorOrganizationVersion.organizationId,
       status: EmissionFactorStatus.Valid,
       co2b: 345,
       co2f: 34,
@@ -71,14 +70,16 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       n2o: 2,
       totalCo2: 320,
       reliability: 5,
+      technicalRepresentativeness: 5,
+      geographicRepresentativeness: 5,
+      temporalRepresentativeness: 5,
+      completeness: 5,
       importedId: '1',
       unit: Unit.TON,
+      isMonetary: false,
       subPosts: [SubPost.DechetsDEmballagesEtPlastiques],
       metaData: {
-        create: {
-          language: 'fr',
-          title: 'Papier, moyenne',
-        },
+        create: { language: 'fr', title: 'Papier, moyenne' },
       },
     },
   })
@@ -93,18 +94,9 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       level: Level.Initial,
       exports: { createMany: { data: [{ type: Export.Beges, control: ControlMode.Operational }] } },
       createdBy: { connect: { id: creator.id } },
-      organization: { connect: { id: creator.organizationId } },
+      organizationVersion: { connect: { id: creator.organizationVersionId } },
       sites: {
-        createMany: {
-          data: [
-            {
-              id: studySiteId,
-              siteId,
-              etp: 35,
-              ca: 1_000_000,
-            },
-          ],
-        },
+        createMany: { data: [{ id: studySiteId, siteId, etp: 35, ca: 1_000_000 }] },
       },
     },
   })
@@ -115,13 +107,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: User) => {
       .map((source) => addSourceToStudies(source, prisma)),
   )
 
-  await prisma.userOnStudy.create({
-    data: {
-      role: StudyRole.Validator,
-      userId: creator.id,
-      studyId,
-    },
-  })
+  await prisma.userOnStudy.create({ data: { role: StudyRole.Validator, accountId: creator.id, studyId } })
 
   await prisma.studyEmissionSource.createMany({
     data: [

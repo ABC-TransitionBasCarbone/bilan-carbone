@@ -7,7 +7,143 @@
   gap: 0.5rem;
 }
 
-.wasteList {
-  list-style-position: inside;
-  list-style-type: initial;
+.modalContent {
+  gap: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.differenceCard {
+  background: var(--background-50);
+  border: 1px solid var(--background-200);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+}
+
+.cardHeaderWithValue {
+  margin-bottom: 1rem;
+}
+
+.cardHeaderLeft {
+  gap: 0.75rem;
+}
+
+.cardIcon {
+  color: var(--primary-600);
+  font-size: 1.25rem;
+}
+
+.differenceValue {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--success-600);
+  background: var(--success-50);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.differenceValueNegative {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--error-600);
+  background: var(--error-background);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.cardHeader h4,
+.cardHeaderWithValue h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-800);
+}
+
+.cardContent {
+  gap: 1rem;
+}
+
+.cardDescription {
+  margin: 0;
+  font-style: italic;
+  color: var(--text-600);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.wasteTable {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 0.5rem;
+  border: 1px solid var(--background-200);
+  font-size: 1rem;
+}
+
+.table th {
+  background: var(--background-100);
+  color: var(--text-700);
+  font-weight: 600;
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 2px solid var(--background-200);
+  font-size: 0.875rem;
+}
+
+.table th:nth-child(3),
+.table th:nth-child(4),
+.table th:nth-child(5) {
+  min-width: 4.5rem;
+}
+
+.table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--background-200);
+  vertical-align: top;
+  font-size: 0.875rem;
+}
+
+.table tbody tr {
+  background: white !important;
+}
+
+.table tbody tr:hover {
+  background: var(--background-50);
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clickableRow:hover {
+  background: var(--background-100) !important;
+}
+
+.differenceCell {
+  color: var(--success-100) !important;
+  font-weight: 600;
+}
+
+.differenceCellNegative {
+  color: var(--error-50) !important;
+  font-weight: 600;
+}
+
+.missingSourcesList {
+  gap: 0.5rem;
+}
+
+.additionalCount {
+  background: var(--primary-100);
+  color: var(--primary-800);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid var(--primary-200);
 }

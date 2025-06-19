@@ -1,11 +1,15 @@
 'use server'
-import { Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
+
+import { getAccountByEmailAndEnvironment } from '@/db/account'
 import {
   createOrUpdateOrganization,
+  getOrganizationVersionByOrganizationIdAndEnvironment,
   getRawOrganizationById,
   getRawOrganizationBySiret,
-} from '../../db/organizationImport'
-import { createUsers, getUserByEmail, updateUser } from '../../db/userImport'
+} from '@/db/organization'
+import { createUsersWithAccount, updateAccount } from '@/db/user'
+import { Environment, Level, Prisma, Role, UserSource, UserStatus } from '@prisma/client'
+import { getCutRoleFromBase } from '../../../prisma/seed/utils'
 
 const processUser = async (value: Record<string, string>, importedFileDate: Date) => {
   const {
@@ -20,7 +24,10 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
     Purchased_Products: purchasedProducts,
     Membership_Year: membershipYear,
     User_Source: source,
+    Environment: dataEnvironment,
   } = value
+
+  const environment = (dataEnvironment || Environment.BC) as Environment
 
   const email = value['User_Email'].replace(/ /g, '').toLowerCase()
 
@@ -28,17 +35,27 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts)
   const activatedLicence = membershipYear.includes(new Date().getFullYear().toString())
 
-  const dbUser = await getUserByEmail(email)
+  const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
-  const user: Prisma.UserCreateManyInput = {
-    id: dbUser?.id,
+  const role = environment === Environment.CUT ? getCutRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
+
+  const user: Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput } = {
+    id: dbAccount?.user.id,
     email,
     firstName,
     lastName,
-    role: Role.COLLABORATOR,
-    status: UserStatus.IMPORTED,
-    importedFileDate,
     source: source as UserSource,
+    account: {
+      role,
+      status: UserStatus.IMPORTED,
+      importedFileDate,
+      environment,
+      user: {
+        create: undefined,
+        connectOrCreate: undefined,
+        connect: undefined,
+      },
+    },
   }
 
   if (sessionCodeTraining) {
@@ -46,32 +63,47 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
   }
 
   if (companyNumber) {
-    let organization = dbUser?.organizationId
-      ? await getRawOrganizationById(dbUser.organizationId)
+    let organization = dbAccount?.organizationVersion
+      ? await getRawOrganizationById(dbAccount.organizationVersion?.organizationId)
       : await getRawOrganizationBySiret(companyNumber)
 
     organization = await createOrUpdateOrganization(
       {
         id: organization?.id,
         name,
-        siret: companyNumber,
+        wordpressId: companyNumber,
       } as Prisma.OrganizationCreateInput,
       isCR,
       activatedLicence,
       importedFileDate,
+      environment,
     )
 
-    user.organizationId = organization?.id
+    console.log(`Organization ${organization.name} (${organization.id}) created or updated`)
+
+    const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
+      organization?.id,
+      environment,
+    )
+    user.account.organizationVersion = organizationVersion ? { connect: { id: organizationVersion.id } } : undefined
   }
 
-  if (dbUser) {
-    await updateUser(dbUser.id || '', {
-      level: user.level,
-      ...(dbUser.status === UserStatus.IMPORTED && {
-        role: user.role as Exclude<Role, 'SUPER_ADMIN'>,
-        organizationId: user.organizationId,
-      }),
-    })
+  if (dbAccount) {
+    await updateAccount(
+      dbAccount.id,
+      {
+        ...(dbAccount.status === UserStatus.IMPORTED && {
+          role: user.account.role as Exclude<Role, 'SUPER_ADMIN'>,
+          organizationVersion: user.account?.organizationVersion,
+        }),
+        environment,
+      },
+      {
+        ...dbAccount.user,
+        level: user.level,
+      },
+    )
+    console.log(`Updating ${email} because already exists`)
     return null
   }
 
@@ -79,16 +111,17 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
 }
 
 export const processUsers = async (values: Record<string, string>[], importedFileDate: Date) => {
-  const users: Prisma.UserCreateManyInput[] = []
+  const usersWithAccount: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[] = []
   for (let i = 0; i < values.length; i++) {
-    const user = await processUser(values[i] as Record<string, string>, importedFileDate)
-    if (user) {
-      users.push(user)
+    const userWithAccount = await processUser(values[i] as Record<string, string>, importedFileDate)
+    if (userWithAccount) {
+      usersWithAccount.push(userWithAccount)
     }
     if (i % 50 === 0) {
       console.log(`${i}/${values.length}`)
     }
   }
-  const created = await createUsers(users)
-  console.log(`${created.count} users created`)
+  const { newUsers, newAccounts } = await createUsersWithAccount(usersWithAccount)
+  console.log(`${newUsers.count} users created`)
+  console.log(`${newAccounts.count} accounts created`)
 }

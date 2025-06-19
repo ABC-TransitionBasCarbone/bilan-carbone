@@ -1,11 +1,12 @@
 'use client'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getFormationFormStart, startFormationForm } from '@/services/serverFunctions/user'
 import { MIN, TIME_IN_MS } from '@/utils/time'
 import { Checkbox } from '@mui/material'
 import { Formation } from '@prisma/client'
 import classNames from 'classnames'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
@@ -17,35 +18,39 @@ import Video from './Video'
 
 interface Props {
   formations: Formation[]
-  user: User
+  user: UserSession
   organizationName: string
 }
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-const timer = Number(process.env.NEXT_PUBLIC_TYPEFORM_DURATION)
+const timer = Number(process.env.NEXT_PUBLIC_FORMATION_TYPEFORM_DURATION)
 
 const FormationView = ({ formations, user, organizationName }: Props) => {
   const t = useTranslations('formation')
   const tLevel = useTranslations('level')
+  const { callServerFunction } = useServerFunction()
   const [open, setOpen] = useState(false)
   const [formStartTime, setFormStartTime] = useState<number | undefined>(undefined)
   const [checkedUnique, setCheckedUnique] = useState(false)
 
   useEffect(() => {
     const getStartTime = async () => {
-      const startDate = await getFormationFormStart(user.id)
-      if (startDate) {
-        setCheckedUnique(true)
-        setFormStartTime(startDate.getTime())
-      }
+      await callServerFunction(() => getFormationFormStart(user.userId), {
+        onSuccess: (startDate) => {
+          if (startDate) {
+            setCheckedUnique(true)
+            setFormStartTime(startDate.getTime())
+          }
+        },
+      })
     }
     getStartTime()
-  }, [user])
+  }, [user, callServerFunction])
 
-  const openFormationForm = () => {
+  const openFormationForm = async () => {
     const now = new Date()
     if (!formStartTime) {
-      startFormationForm(user.id, now)
+      await callServerFunction(() => startFormationForm(user.userId, now))
       setFormStartTime(now.getTime())
     }
     setOpen(true)

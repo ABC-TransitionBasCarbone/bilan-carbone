@@ -2,10 +2,12 @@ import Button from '@/components/base/Button'
 import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import {
   simulateStudyEmissionFactorSourceUpgrade,
   upgradeStudyEmissionFactorSource,
 } from '@/services/serverFunctions/study'
+import { IsSuccess } from '@/utils/serverResponse'
 import { EmissionFactorImportVersion, Import, StudyResultUnit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -19,9 +21,13 @@ interface Props {
   canUpdate: boolean
 }
 
+type SimulateStudyEmissionFactorSourceUpgradeResponse = IsSuccess<
+  AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>
+>
+
 type SimulationResult = {
-  updated: Exclude<AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>['updated'], undefined> | []
-  deleted: Exclude<AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>['deleted'], undefined> | []
+  updated: Exclude<SimulateStudyEmissionFactorSourceUpgradeResponse['updated'], undefined> | []
+  deleted: Exclude<SimulateStudyEmissionFactorSourceUpgradeResponse['deleted'], undefined> | []
 }
 
 const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
@@ -29,11 +35,11 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
   const tSources = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const unit = useTranslations('study.results.units')(StudyResultUnit.K)
-  const [error, setError] = useState('')
   const [source, setSource] = useState<Import | null>(null)
   const [upgrading, setUpgrading] = useState(false)
   const [simulationResult, setSimulationResult] = useState<SimulationResult>({ updated: [], deleted: [] })
   const router = useRouter()
+  const { callServerFunction } = useServerFunction()
 
   const isUpgradable = (source: EmissionFactorImportVersion) =>
     emissionFactorSources.some(
@@ -54,33 +60,29 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
     }))
 
   const simulateSourceUpgrade = async (source: Import) => {
-    setError('')
     setSource(source)
-    const res = await simulateStudyEmissionFactorSourceUpgrade(study.id, source)
-    if (!res.success) {
-      setError(res.message || '')
-    } else {
-      setSimulationResult({ updated: res.updated || [], deleted: res.deleted || [] })
-    }
+    await callServerFunction(() => simulateStudyEmissionFactorSourceUpgrade(study.id, source), {
+      getErrorMessage: (error) => t(error, { name: tSources(source || '') }),
+      onSuccess: (data) => {
+        setSimulationResult({ updated: data.updated || [], deleted: data.deleted || [] })
+      },
+    })
   }
 
   const upgradeSource = async (source: Import) => {
     setUpgrading(true)
-    const res = await upgradeStudyEmissionFactorSource(study.id, source)
+    await callServerFunction(() => upgradeStudyEmissionFactorSource(study.id, source), {
+      getErrorMessage: (error) => t(error, { name: tSources(source || '') }),
+      onSuccess: () => {
+        setSource(null)
+        router.refresh()
+      },
+    })
     setUpgrading(false)
-    if (!res.success) {
-      setError(res.message || '')
-    } else {
-      setSource(null)
-      router.refresh()
-    }
   }
 
   const getEmissionFactorName = (
-    metaData: Exclude<
-      AsyncReturnType<typeof simulateStudyEmissionFactorSourceUpgrade>['updated'],
-      undefined
-    >[0]['metaData'],
+    metaData: Exclude<SimulateStudyEmissionFactorSourceUpgradeResponse['updated'], undefined>[0]['metaData'],
   ) =>
     `${metaData.title}${metaData.attribute ? ` - ${metaData.attribute}` : ''}${metaData.frontiere ? ` - ${metaData.frontiere}` : ''}${metaData.location ? ` - ${metaData.location}` : ''}`
 
@@ -170,8 +172,6 @@ const StudyVersions = ({ study, emissionFactorSources, canUpdate }: Props) => {
           )}
         </Modal>
       )}
-
-      {error && <p className="error">{t(error, { name: tSources(source || '') })}</p>}
     </div>
   )
 }

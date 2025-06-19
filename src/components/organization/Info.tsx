@@ -1,6 +1,7 @@
 'use client'
 
-import { OrganizationWithSites } from '@/db/user'
+import { OrganizationWithSites } from '@/db/account'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteOrganizationCommand } from '@/services/serverFunctions/organization'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -13,16 +14,16 @@ import DeletionModal from '../modals/DeletionModal'
 import styles from './Info.module.css'
 
 interface Props {
-  organization: OrganizationWithSites
+  organizationVersion: OrganizationWithSites
   canDelete: boolean
   canUpdate: boolean
 }
 
-const OrganizationInfo = ({ organization, canDelete, canUpdate }: Props) => {
+const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) => {
   const t = useTranslations('organization')
   const tDelete = useTranslations('organization.delete')
+  const { callServerFunction } = useServerFunction()
   const [deleting, setDeleting] = useState(false)
-  const [error, setError] = useState('')
 
   const router = useRouter()
 
@@ -31,20 +32,18 @@ const OrganizationInfo = ({ organization, canDelete, canUpdate }: Props) => {
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
-      id: organization.id,
+      id: organizationVersion.id,
       name: '',
     },
   })
 
   const onDelete = async () => {
-    setError('')
-    const result = await deleteOrganizationCommand(form.getValues())
-    if (result) {
-      setError(result)
-    } else {
-      router.push('/')
-      router.refresh()
-    }
+    await callServerFunction(() => deleteOrganizationCommand(form.getValues()), {
+      getErrorMessage: (error) => tDelete(error),
+      onSuccess: () => {
+        router.push('/')
+      },
+    })
   }
 
   const deleteAction: BlockProps['actions'] = canDelete
@@ -63,7 +62,7 @@ const OrganizationInfo = ({ organization, canDelete, canUpdate }: Props) => {
     ? [
         {
           actionType: 'link',
-          href: `/organisations/${organization.id}/modifier`,
+          href: `/organisations/${organizationVersion.id}/modifier`,
           'data-testid': 'edit-organization-button',
           children: t('modify'),
         },
@@ -74,7 +73,7 @@ const OrganizationInfo = ({ organization, canDelete, canUpdate }: Props) => {
     <>
       <Block as="h1" title={t('myOrganization')} actions={[...deleteAction, ...updateAction]}>
         <p data-testid="organization-name">
-          <span className={styles.info}>{t('name')}</span> {organization.name}
+          <span className={styles.info}>{t('name')}</span> {organizationVersion.organization.name}
         </p>
       </Block>
       {deleting && (
@@ -84,7 +83,6 @@ const OrganizationInfo = ({ organization, canDelete, canUpdate }: Props) => {
           onDelete={onDelete}
           onClose={() => setDeleting(false)}
           t={tDelete}
-          error={error}
         />
       )}
     </>

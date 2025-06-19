@@ -30,26 +30,24 @@ enum UserSource {
   TUNISIE
 }
 
-model User {
-  id               String    @id @default(uuid())
+model Account {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+
   importedFileDate DateTime? @map("imported_file_date")
 
-  organization           Organization?  @relation(fields: [organizationId], references: [id])
-  onboardedOrganizations Organization[] @relation("organizationOnboarder")
-  organizationId         String?        @map("organization_id")
+  organizationVersion           OrganizationVersion?  @relation(fields: [organizationVersionId], references: [id])
+  onboardedOrganizationVersions OrganizationVersion[] @relation("organizationVersionOnboarder")
+  organizationVersionId         String?               @map("organization_version_id")
 
   deactivatableFeatureStatus DeactivatableFeatureStatus[] @relation("deactivable_feature_updator")
 
-  role                   Role
-  level                  Level?
-  firstName              String     @map("first_name")
-  lastName               String     @map("last_name")
-  email                  String     @unique
-  password               String?
-  resetToken             String?    @map("reset_token")
-  status                 UserStatus
-  source                 UserSource @default(CRON)
-  formationFormStartTime DateTime?  @map("formation_form_start_time")
+  feedbackDate DateTime? @map("feedback_date")
+
+  role Role
 
   createdStudies             Study[]
   allowedStudies             UserOnStudy[]
@@ -57,6 +55,26 @@ model User {
   contributedEmissionSources StudyEmissionSource[]
   flows                      Document[]
   userApplicationSettings    UserApplicationSettings?
+
+  environment Environment
+  status      UserStatus
+
+  @@unique([userId, environment])
+  @@map("accounts")
+}
+
+model User {
+  id         String     @id @default(uuid())
+  level      Level?
+  firstName  String     @map("first_name")
+  lastName   String     @map("last_name")
+  email      String     @unique
+  password   String?
+  resetToken String?    @map("reset_token")
+  accounts   Account[]
+  source     UserSource @default(CRON)
+
+  formationFormStartTime DateTime? @map("formation_form_start_time")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -66,8 +84,8 @@ model User {
 
 model UserApplicationSettings {
   id                           String     @id @default(uuid())
-  userId                       String     @unique @map("user_id")
-  user                         User?      @relation(fields: [userId], references: [id])
+  accountId                    String?    @unique @map("account_id")
+  account                      Account?   @relation(fields: [accountId], references: [id])
   validatedEmissionSourcesOnly Boolean    @default(true) @map("validated_emission_sources_only")
   caUnit                       SiteCAUnit @default(K) @map("ca_unit")
 
@@ -78,13 +96,13 @@ model UserApplicationSettings {
 }
 
 model UserCheckedStep {
-  id     String        @id @default(uuid())
-  userId String        @map("user_id")
-  step   UserChecklist
+  id        String        @id @default(uuid())
+  accountId String        @map("account_id")
+  step      UserChecklist
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  @@unique([userId, step])
+  @@unique([accountId, step])
   @@map("user_checked_steps")
 }

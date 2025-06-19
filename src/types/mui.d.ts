@@ -1,24 +1,58 @@
 import '@mui/material/styles'
+import { CSSObject } from '@mui/material/styles'
+import { CSSProperties } from 'react'
 
 declare module '@mui/material/styles' {
   interface Theme {
     custom: {
+      box: CSSObject
       postColors: {
-        darkBlue: { dark: string; light: string }
-        green: { dark: string; light: string }
-        blue: { dark: string; light: string }
-        orange: { dark: string; light: string }
+        functioning: { light: string }
+        mobility: { light: string }
+        tour: { light: string }
+        candyStore: { light: string }
+        garbage: { light: string }
+        ticketOffice: { light: string }
+        movieTheater: { light: string }
+      }
+      roles: {
+        validator: string
+        editor: string
+        reader: string
+        contributor: string
+      }
+      navbar: {
+        organizationToolbar?: {
+          border?: string
+        }
+        text: CSSProperties
       }
     }
   }
 
   interface ThemeOptions {
     custom?: {
+      box: CSSObject
       postColors?: {
-        darkBlue?: { dark: string; light: string }
-        green?: { dark: string; light: string }
-        blue?: { dark: string; light: string }
-        orange?: { dark: string; light: string }
+        functioning: { light: string }
+        mobility: { light: string }
+        tour: { light: string }
+        candyStore: { light: string }
+        garbage: { light: string }
+        ticketOffice: { light: string }
+        movieTheater: { light: string }
+      }
+      roles: {
+        validator: string
+        editor: string
+        reader: string
+        contributor: string
+      }
+      navbar: {
+        organizationToolbar?: {
+          border?: string
+        }
+        text: CSSProperties
       }
     }
   }

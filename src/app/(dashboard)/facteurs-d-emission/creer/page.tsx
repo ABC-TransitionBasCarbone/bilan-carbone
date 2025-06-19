@@ -1,14 +1,15 @@
 import withAuth from '@/components/hoc/withAuth'
 import NewEmissionFactorPage from '@/components/pages/NewEmissionFactor'
 import NotFound from '@/components/pages/NotFound'
-import { User } from '@prisma/client'
+import { hasAccessToEmissionFactor } from '@/services/permissions/environment'
+import { UserSession } from 'next-auth'
 
 interface Props {
-  user: User
+  user: UserSession
 }
 
 const NewEmissionFactor = async ({ user }: Props) => {
-  if (!user.organizationId) {
+  if (!user.organizationVersionId || !hasAccessToEmissionFactor(user.environment)) {
     return <NotFound />
   }
   return <NewEmissionFactorPage />

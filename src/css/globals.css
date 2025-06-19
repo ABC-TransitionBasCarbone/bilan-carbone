@@ -1,12 +1,55 @@
+@font-face {
+  font-family: 'Gilroy-Bold';
+  font-style: normal;
+  font-weight: 800;
+  src:
+    local('Gilroy-Bold'),
+    url('https://fonts.cdnfonts.com/s/16219/Gilroy-Bold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gilroy-Heavy';
+  font-style: normal;
+  font-weight: 700;
+  src:
+    local('Gilroy-Heavy'),
+    url('https://fonts.cdnfonts.com/s/16219/Gilroy-Heavy.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gilroy-Light';
+  font-style: normal;
+  font-weight: 300;
+  src:
+    local('Gilroy-Light'),
+    url('https://fonts.cdnfonts.com/s/16219/Gilroy-Light.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gilroy-Medium';
+  font-style: normal;
+  font-weight: 500;
+  src:
+    local('Gilroy-Medium'),
+    url('https://fonts.cdnfonts.com/s/16219/Gilroy-Medium.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gilroy-Regular';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('Gilroy-Regular'),
+    url('https://fonts.cdnfonts.com/s/16219/Gilroy-Regular.woff') format('woff');
+}
+
 * {
-  font-family: 'gilroy-regular', sans-serif !important;
+  font-family: 'Gilroy-Regular', sans-serif;
 }
 
 body {
-  background: var(--background-50);
   height: 100vh;
   line-height: 1.25;
   overflow: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .title-h1,
@@ -84,6 +127,7 @@ table {
       &:nth-child(even) {
         background: white;
       }
+
       &:nth-child(odd) {
         background: var(--background-150);
       }
@@ -104,6 +148,7 @@ table {
   tr:first-child th:first-child {
     border-top-left-radius: 0.25rem;
   }
+
   tr:first-child th:last-child {
     border-top-right-radius: 0.25rem;
   }
@@ -111,6 +156,7 @@ table {
   tr:last-child td:first-child {
     border-bottom-left-radius: 0.25rem;
   }
+
   tr:last-child td:last-child {
     border-bottom-right-radius: 0.25rem;
   }
@@ -127,6 +173,10 @@ table {
 
 .error {
   color: var(--error-100);
+}
+
+.warning {
+  color: var(--warning);
 }
 
 .inputLabel {
@@ -156,4 +206,11 @@ table {
 
 .pointer {
   cursor: pointer;
+}
+
+.typeform {
+  height: 500px;
+  div {
+    height: 100%;
+  }
 }

@@ -4,13 +4,14 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { FormSelect } from '@/components/form/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyLevel } from '@/services/serverFunctions/study'
 import { ChangeStudyLevelCommand, ChangeStudyLevelCommandValidation } from '@/services/serverFunctions/study.command'
 import { getAllowedLevels } from '@/services/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { Level } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -19,7 +20,7 @@ import { useForm } from 'react-hook-form'
 import styles from './StudyParams.module.css'
 
 interface Props {
-  user: User
+  user: UserSession
   study: FullStudy
   disabled: boolean
 }
@@ -28,9 +29,9 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
   const t = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
   const tLevel = useTranslations('level')
-  const [error, setError] = useState('')
   const [glossary, setGlossary] = useState('')
   const router = useRouter()
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<ChangeStudyLevelCommand>({
     resolver: zodResolver(ChangeStudyLevelCommandValidation),
@@ -44,20 +45,19 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
 
   const level = form.watch('level')
 
-  const onSubmit = async (command: ChangeStudyLevelCommand) => {
-    const result = await changeStudyLevel(command)
-    if (result) {
-      setError(result)
-    } else {
-      router.refresh()
-    }
-  }
-
   useEffect(() => {
+    const onSubmit = async (command: ChangeStudyLevelCommand) => {
+      await callServerFunction(() => changeStudyLevel(command), {
+        onSuccess: () => {
+          router.refresh()
+        },
+      })
+    }
+
     if (level !== study.level) {
       onSubmit(form.getValues())
     }
-  }, [level, form, study])
+  }, [level, form, study, callServerFunction, router])
 
   const allowedLevels = useMemo(() => getAllowedLevels(user.level), [user])
   return (
@@ -94,7 +94,6 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
           })}
         </span>
       </GlossaryModal>
-      {error && <p>{error}</p>}
     </div>
   )
 }

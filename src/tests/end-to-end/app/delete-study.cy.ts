@@ -10,12 +10,25 @@ describe('Delete study', () => {
     cy.intercept('POST', '/etudes/*').as('delete')
   })
 
+  /**
+   * TODO
+   *
+   * Enlever la parti création d’une étude et la mocker
+   */
   it('should be able to delete a study', () => {
     cy.login()
 
-    cy.visit('/etudes/creer')
-    cy.getByTestId('organization-sites-checkbox').first().click()
-    cy.getByTestId('new-study-organization-button').click()
+    cy.getByTestId('new-study').click()
+
+    cy.getByTestId('organization-sites-checkbox').first().scrollIntoView()
+    cy.getByTestId('organization-sites-checkbox')
+      .first()
+      .within(() => {
+        cy.get('input').click({ force: true })
+      })
+
+    cy.getByTestId('new-study-organization-button').scrollIntoView()
+    cy.getByTestId('new-study-organization-button').click({ force: true })
 
     cy.getByTestId('new-study-name').type('My study to delete')
     cy.getByTestId('new-validator-name').type('bc-collaborator-0@yopmail.com')
@@ -35,16 +48,16 @@ describe('Delete study', () => {
     cy.get('#delete-study-modale-content').should('be.visible')
 
     cy.getByTestId('delete-study-name-field').type('my study to delet')
-    cy.getByTestId('study-deletion-error').should('not.exist')
+    cy.getByTestId('alert-toaster').should('not.exist')
     cy.getByTestId('confirm-study-deletion').click()
-    cy.getByTestId('study-deletion-error').should('be.visible')
-    cy.getByTestId('study-deletion-error').should('have.text', "Le nom de l'étude ne correspond pas")
+    cy.getByTestId('alert-toaster').should('be.visible')
+    cy.getByTestId('alert-toaster').should('contain.text', "Le nom de l'étude ne correspond pas")
 
     cy.getByTestId('delete-study-name-field').type('e')
 
     cy.url().then((savedUrl) => {
       cy.getByTestId('confirm-study-deletion').click()
-      cy.getByTestId('study-deletion-error').should('not.exist')
+      cy.getByTestId('alert-toaster').should('not.exist')
 
       cy.wait('@delete')
       cy.url().should('eq', `${Cypress.config().baseUrl}/`)

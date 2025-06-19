@@ -1,5 +1,5 @@
+import { fixUnits } from '@/services/serverFunctions/emissionFactor'
 import { Command } from 'commander'
-import { fixUnits } from '../../services/emissionFactors/emissionFactors'
 
 const program = new Command()
 

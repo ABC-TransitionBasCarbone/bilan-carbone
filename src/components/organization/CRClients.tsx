@@ -1,6 +1,6 @@
 'use client'
 
-import { Organization } from '@prisma/client'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
@@ -10,10 +10,10 @@ import ClientCard from './CRClient'
 import styles from './CRClients.module.css'
 
 interface Props {
-  organizations: Organization[]
+  organizationVersions: OrganizationVersionWithOrganization[]
 }
 
-const CRClients = ({ organizations }: Props) => {
+const CRClients = ({ organizationVersions }: Props) => {
   const t = useTranslations('organization')
   const [showAll, setShowAll] = useState(false)
   const [hiddenRows, setHiddenRows] = useState(false)
@@ -30,7 +30,7 @@ const CRClients = ({ organizations }: Props) => {
     checkHiddenRows()
     window.addEventListener('resize', checkHiddenRows)
     return () => window.removeEventListener('resize', checkHiddenRows)
-  }, [organizations])
+  }, [organizationVersions])
 
   return (
     <Block
@@ -50,15 +50,11 @@ const CRClients = ({ organizations }: Props) => {
         ref={gridRef}
         className={classNames(styles.grid, 'mb1', { [styles.hideSubRows]: !showAll })}
       >
-        {organizations.map((organization) => (
-          <ClientCard key={organization.id} organization={organization} />
+        {organizationVersions.map((organizationVersion) => (
+          <ClientCard key={organizationVersion.id} organizationVersion={organizationVersion} />
         ))}
       </ul>
-      {hiddenRows && (
-        <Button onClick={() => setShowAll(!showAll)} color="secondary">
-          {t(showAll ? 'seeLess' : 'seeMore')}
-        </Button>
-      )}
+      {hiddenRows && <Button onClick={() => setShowAll(!showAll)}>{t(showAll ? 'seeLess' : 'seeMore')}</Button>}
     </Block>
   )
 }

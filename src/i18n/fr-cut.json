@@ -1,4 +1,10 @@
 {
+  "navigation": {
+    "organization": "Mes cinémas",
+    "organizations": "Mes Bilans",
+    "information": "Données générales",
+    "team": "Mes collaborateurs"
+  },
   "home": {
     "message": {
       "core": "Bienvenue sur COUNT le premier calculateur d'impact écologique dédié aux salles de cinéma.\nCet outil a été développé par l'association CUT ! Cinéma Uni pour la transition, en coopération avec l'ABC, association pour la transition bas carbone\nOpération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)\nCUT bénéficie du soutien du CNC",
@@ -8,9 +14,57 @@
       "3": "Construire une trajectoire de réduction"
     }
   },
+  "study": {
+    "create": "Ajouter un Bilan",
+    "myCollaborations": "Mes collaborations",
+    "myStudies": "Mes Bilans",
+    "createFirstStudy": "Créer mon premier Bilan",
+    "see": "Voir mon Bilan",
+    "validatedOnlyDescription": "Pour chaque Bilan, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
+    "selectSite": "Avant de remplir les données, choisissez un cinéma",
+    "navigation": {
+      "framing": "Données générales",
+      "organizations": "Mes cinémas",
+      "team": "Mes collaborateurs",
+      "accounting": "Mes Bilans"
+    },
+    "new": {
+      "studyDates": "Année de référence du Bilan"
+    },
+    "perimeter": {
+      "editSites": "Modifier la liste de cinémas",
+      "deleteDialog": {
+        "title": "Êtes-vous sûr de vouloir supprimer {count, plural, =1 {ce cinéma} other {ces cinémas}} ?"
+      }
+    },
+    "export": {
+      "export": "Exporter mes cinémas"
+    },
+    "rights": {
+      "title": "Données générales de l'étude : {name}"
+    },
+    "organization": {
+      "site": "Cinéma",
+      "allSites": "Tous les cinémas",
+      "noSites": "Il n'y a pas de cinémas configurés sur l'organisation",
+      "addSite": "Créer un cinéma",
+      "sites": "Les cinémas de l'organisation",
+      "next": "Suivant",
+      "select": "Organisation",
+      "validation": {
+        "sites": "Veuillez selectionner au moins un cinéma concerné par l'étude"
+      }
+    }
+  },
   "organization": {
+    "card": {
+      "myOrganization": "Mes cinémas"
+    },
+    "form": {
+      "editTitle": "Modifier mes cinémas"
+    },
     "sites": {
-      "title": "Les cinemas de l'organisation concernés par l'étude",
+      "title": "Les établissements enregistrés",
       "noSites": "Il n'y a pas de cinemas configurés sur l'organisation",
       "name": "Nom",
       "namePlaceholder": "Nom du cinema",
@@ -21,6 +75,26 @@
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un cinema"
+    },
+    "team": {
+      "title": "Mes cinémas"
     }
+  },
+  "checklist": {
+    "title": "Bien démarrer sur COUNT",
+    "AddClientDetails": "Ajouter votre premier client afin de commencer vos Bilans",
+    "CreateFirstStudy": "Créer votre premier Bilan",
+    "CreateFirstStudyDetails": "C'est parti pour votre premier Bilan ! Remplissez les premières informations comme la date, le nom...",
+    "CreateFirstEmissionSource": "Répondez aux premières questions",
+    "CreateFirstEmissionSourceDetails": "Rendez-vous dans le premier poste/sous poste que vous souhaitez renseigner ! Répondez aux questions.",
+    "finished": "Vous êtes prêt à commencer votre utilisation du COUNT ! N'hésitez pas à consulter la <faq>FAQ</faq> ou à nous contacter en cas de besoin."
+  },
+  "actuality": {
+    "title": "Les actualités de COUNT"
+  },
+  "role": {
+    "DEFAULT": "Collaborateur",
+    "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées).",
+    "DEFAULT_description": "Un collaborateur peut modifier des études. Il n'a pas accès aux paramètres de l'organisation."
   }
 }

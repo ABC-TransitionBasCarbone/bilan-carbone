@@ -26,7 +26,7 @@
     "NotHeldSupported": "Non détenu, supporté",
     "NotHeldNotSupported": "Non détenue, non supporté",
     "UsedByIntermediary": "Utilisé par un intermédiaire",
-    "LandUse": "Utilisation des terres, changement d’affectation des terres et foresterie (UTCATF)"
+    "LandUse": "Utilisation des terres, changement d'affectation des terres et foresterie (UTCATF)"
   },
   "beges": {
     "rule": "Règle",
@@ -115,7 +115,7 @@
   },
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® +",
-    "explaination": "L'outil dédié à l’application de la méthode Bilan Carbone®, développé par l’Association pour la transition Bas Carbone (ABC), et accessible à l’ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
+    "explaination": "L'outil dédié à l'application de la méthode Bilan Carbone®, développé par l'Association pour la transition Bas Carbone (ABC), et accessible à l'ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
     "question": "Une question ? Lisez la <link>FAQ</link> ou <support>contactez-nous</support> !",
     "form": {
       "activate": "Activer mon compte",
@@ -140,11 +140,11 @@
       "error": "Veuillez verifier votre email et votre mot de passe",
       "expired": "Ce lien de réinitialisation de mot de passe a expiré",
       "backToHome": "Retour a l'accueil",
-      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous sur l'adresse email",
+      "resetError": "Certaines informations ne sont pas bonnes. Si vous pensez avoir tout rempli correctement, contactez nous.",
       "emailRequired": "Veuillez entrer un email",
       "emailAndPasswordRequired": "Veuillez entrer un email et un mot de passe",
       "emailSent": "Si votre email est correct, vous allez recevoir un mail pour réinitialiser votre mot de passe",
-      "validated": "Votre mot de passe a été réinitialisé, vous allez être redirigé vers la page de <link>connexion</link>.",
+      "validated": "Votre mot de passe a été réinitialisé",
       "validation": {
         "email": "Veuillez entrer un email",
         "password": "Veuillez entrer un mot de passe"
@@ -180,7 +180,8 @@
     "settings": "Paramètres",
     "team": "Mon équipe",
     "information": "Informations générales",
-    "formation": "Formation"
+    "formation": "Formation",
+    "selectAccount": "Sélection du compte"
   },
   "profile": {
     "title": "Mon profil",
@@ -234,7 +235,8 @@
     "information": "Informations",
     "validatedOnly": "Sources d'émission validées",
     "validatedOnlyDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
-    "withDependencies": "La nouvelle méthode Bilan Carbone® introduit le concept de responsabilité et de dépendance. Il est fortement recommandé de restituer les résultats du Bilan Carbone® avec et sans le sous-poste \"Utilisation en dépendance\", car l'organisation n'est généralement pas en mesure d'agir aisément sur ce sous-poste. En revanche, celui-ci reste capital pour comprendre les risques auxquels sont soumis l'organisation, notamment si elle est dépendante de secteurs ou d'activités très carbonés. Le résultat final à retenir doit inclure la dépendance. Pour plus d'information sur ces nouveaux concepts, nous vous invitons à consulter <link>cette page</link>.",
+    "withDependenciesDescription": "La nouvelle méthode Bilan Carbone® introduit le concept de responsabilité et de dépendance. Il est fortement recommandé de restituer les résultats du Bilan Carbone® avec et sans le sous-poste \"Utilisation en dépendance\", car l'organisation n'est généralement pas en mesure d'agir aisément sur ce sous-poste. En revanche, celui-ci reste capital pour comprendre les risques auxquels sont soumis l'organisation, notamment si elle est dépendante de secteurs ou d'activités très carbonés. Le résultat final à retenir doit inclure la dépendance. Pour plus d'information sur ces nouveaux concepts, nous vous invitons à consulter <link>cette page</link>.",
+    "monetaryRatioDescription": "Il est fortement déconseillé d'utiliser des facteurs d'émission en ratio monétaire lorsqu'une alternative est possible. Vous pouvez trouver plus d'information sur la <monetaryLink>méthodologie de l'ABC</monetaryLink>.",
     "close": "Fermer",
     "selectSite": "Avant de remplir les données, choisissez un site",
     "navigation": {
@@ -247,7 +249,9 @@
       "results": "Résultats",
       "transitionPlan": "Plan de transition",
       "menu": "Ouvrir le menu de navigation de l'étude",
-      "coming": "à venir"
+      "coming": "à venir",
+      "organizations": "Mon organisation",
+      "team": "Mon équipe"
     },
     "new": {
       "title": "Informations sur la nouvelle étude",
@@ -267,9 +271,9 @@
       "private": "Privée",
       "public": "Publique",
       "resultsUnit": "Unité des resultats de l'étude",
-      "numberOfSessions": "Nombre de séances",
-      "numberOfTickets": "Nombre d'entrées",
-      "numberOfOpenDays": "Nombre de jours d'ouverture",
+      "numberOfSessions": "Nombre de séances (par an)",
+      "numberOfTickets": "Nombre d'entrées (par an)",
+      "numberOfOpenDays": "Nombre de jours d'ouverture (par an)",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
       "clear": "Supprimer la valeur",
@@ -292,7 +296,7 @@
         "validatorEmailDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
         "studyDates": "Date de l'étude",
         "studyDatesDescription": "Il s'agit de la période sur laquelle l'étude s'étend. En général le début et la fin correspondent au 1er janvier et 31 décembre d'une même année.",
-        "realizationDates": "Date de réalisation l'étude",
+        "realizationDates": "Date de la réalisation de l'étude",
         "realizationDatesDescription": "Il s'agit de la période sur laquelle vous allez travailler sur la réalisation l'étude : Remplir ses sources d'émission, réaliser les exports, ... Ces dates ne sont pas obligatoires et vous pouvez toujours accéder à l'étude en dehors de la période renseignée.",
         "type": "Niveau de maturité du Bilan Carbone®",
         "typeDescription": "La nouvelle version de la méthode Bilan Carbone® introduit trois niveaux de maturité pour les Bilan Carbone® des organisations. Pour plus de détails, nous vous invitons à consulter <link>cette page</link>.",
@@ -353,7 +357,6 @@
       "Editor_description": "A tous les droits sur l'étude à l'exception de la validation des sources d'émission.",
       "Reader_description": "Peut uniquement accéder en lecture à l'étude et exporter les informations de celle-ci.",
       "close": "Fermer",
-      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "saved": "Nouveau rôle sauvegardé"
     },
     "title": "Étude",
@@ -365,8 +368,9 @@
         "email": "Email",
         "role": "Droit",
         "create": "Ajouter la personne",
+        "clear": "Supprimer la valeur",
         "Already in study": "Cette personne a déjà accès à l'étude.",
-        "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+        "Not authorized": "Action non autorisée. N'hésitez pas à consulter la FAQ ou à contacter le support si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
           "email": "Veuillez utiliser un email valide",
           "emailRequired": "Veuillez entrer un email",
@@ -388,7 +392,7 @@
         "subPost": "Sous poste",
         "create": "Ajouter la personne",
         "Already in study": "Cette personne a déjà accès à l'étude.",
-        "Not authorized": "Action non autorisée. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+        "Not authorized": "Action non autorisée. N'hésitez pas à consulter la FAQ ou à contacter le support si vous pensez qu'il s'agit d'une erreur.",
         "validation": {
           "email": "Veuillez renseigner un email valide",
           "post": "Veuillez selectionner un poste"
@@ -402,9 +406,11 @@
         "subPosts": "Sous postes",
         "title": "Contributeurs",
         "newContributorLink": "Ajouter un contributeur",
+        "andXOthers": "et {count, plural, =1 {1 autre} other {# autres}}",
         "deleting": {
           "title": "Confirmation",
           "confirmation": "Êtes vous sûr de vouloir supprimer {email} des contributeurs de cette étude ?",
+          "confirmationPost": "Êtes vous sûr de vouloir supprimer l'accès de {email} au poste {post} ?",
           "yes": "Oui",
           "no": "Non",
           "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
@@ -447,7 +453,7 @@
     },
     "perimeter": {
       "studyDates": "Date de l'étude",
-      "realizationDates": "Date de réalisation l'étude",
+      "realizationDates": "Date de la réalisation de l'étude",
       "dates": "Du {startDate} au {endDate}",
       "realizationFrom": "Étude réalisée à partir du {date}",
       "realizationUntil": "Étude réalisée jusqu'au {date}",
@@ -470,21 +476,35 @@
     "results": {
       "type": "Type",
       "post": "Poste",
+      "download": "Télécharger les résultats",
       "value": "Émissions ({unit})",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
+      "monetaryRatio": "Ratio monétaire",
       "coming": "à venir",
       "units": {
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
       "difference": {
-        "button": "Explication des différences entre le Bilan Carbone® et l’export Beges",
+        "button": "Explication des différences entre le Bilan Carbone® et l'export Beges",
         "modalTitle": "Explication de la différence entre les résultats",
+        "dependanceTitle": "Utilisation en dépendance",
+        "wasteTitle": "Traitement des déchets",
+        "missingCaractTitle": "Caractérisations manquantes",
+        "tableHeaders": {
+          "emissionSource": "Source d'émission",
+          "post": "Poste",
+          "bilanCarbone": "Bilan Carbone®",
+          "beges": "BEGES",
+          "difference": "Différence"
+        },
         "dependance": "Le Bilan GES règlementaire n'intègre pas le sous-poste \"Utilisation en dépendance\", car la notion de dépendance n'est pas existante dans la méthode BEGES-R",
+        "goToSubPost": "Aller au sous-poste",
         "waste": "Le Bilan GES règlementaire intègre l'ensemble des émissions dues au recyclage des déchets dans le bilan de l'émetteur des déchets, tandis que le Bilan Carbone® ne fait porter sur l'émetteur des déchets que le poids de la collecte et du transport des déchets. Ainsi, les facteurs d'émission ayant pour valeur 41 kgCO₂e/t au sein de l'outil sont ceux utilisés pour le Bilan Carbone®, tandis que les valeurs intégrant la régénération des matériaux (le processus de recyclage, pour les facteur d'émission \"Recyclage\" ou \"Fin de vie moyenne\") sont utilisés pour le BEGES-R. Le facteur d'émission affiché sur le BC+ est uniquement celui utilisé pour le Bilan Carbone®, mais les calculs de l'export BEGES-R se font bien avec les facteurs d'émission liés au recyclage ou à la fin de vie moyenne de l'ADEME. Voici les sources d'émissions liées à ce sujet : ",
-        "missingCaract": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
+        "missingCaract1": "Les sources d'émissions non caractérisées ne sont pas comptabilisées au sein du BEGES-R, ce qui entraine des différences indues avec le Bilan Carbone® dans le cas où vous auriez choisi de visualiser les sources d'émissions non validées.",
+        "missingCaract2": "Vous n'avez pas renseigné les caractérisations pour toutes les sources d'émission de votre étude. Merci d'éditer et ajouter la caractérisation pour les sources d'émission suivantes : ",
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
       },
@@ -508,9 +528,13 @@
       "noFactor": "Aucun facteur d'émission",
       "post": "Poste",
       "quality": "Qualité",
+      "site": "Site",
       "sourceCharacterization": "Caractérisation de la source d'émission",
+      "sourceDuration": "Durée (années)",
+      "sourceDeprecation": "Durée d'amortissement (années)",
       "sourceName": "Nom de la source d'émission",
       "sourceQuality": "Qualité de la source d'émission",
+      "sourceSurface": "Surface (ha)",
       "sourceUnit": "Unité de la source d'émission",
       "sourceValue": "Valeur de la source d'émission",
       "subPost": "Sous poste",
@@ -657,6 +681,22 @@
         "BiensEtMatieresEnApprocheMonetaire": "Un sous-poste est également dédié aux matières pour lesquelles des facteurs d'émission en ratios monétaires sont utilisés.",
         "UtilisationEnResponsabilite": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation est directement responsable ([en italisque] pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en responsabilité correspond à l'énergie utilisée pour refroidir et réchauffer le plateau-repas).",
         "UtilisationEnDependance": "Des produits vendus par l'organisation au sein du périmètre temporel considéré sur l'ensemble de leur durée de vie, dont l'organisation n'est pas directement reponsable mais que sont activité contribue à émettre ([en italique] Pour un fabriquant de plateau-repas servi dans un avion, l'utilisation en dépendance correspond aux émissions du vol complet)."
+      },
+      "cutQuestions": {
+        "error": "Erreur lors de la mise à jour du champs",
+        "next": "Suivant",
+        "previous": "Précédent",
+        "numberOfYears": "Nombre d'années",
+        "bonbons": "Bonbons - Nombre (sachets de {value}g)",
+        "chips": "Chips - Nombre (sachets de {value}g)",
+        "Electromenager": "Pour chacun de ces équipements électroménagers, veuillez renseigner :",
+        "FretCadence": "Fret - Cadence (fois/mois)",
+        "FretPoids moyen": "Fret - Poids moyen (kg)",
+        "FretProvenance": "Où est basé votre principal fournisseur ?",
+        "Refrigerateurs": "Réfrigérateurs",
+        "Congelateurs": "Congélateurs",
+        "Warmers": "Warmers",
+        "Distributeurs": "Distributeurs snacks / boisson"
       }
     },
     "create": {
@@ -670,6 +710,7 @@
       "unit": "Unité",
       "customUnit": "Unité personalisée",
       "customUnitPlaceholder": "Votre unité personalisée",
+      "monetaryUnit": "Unité monétaire",
       "source": "Source",
       "detailedGES": "Décomposition des GES",
       "multiple": "Facteur d'émission désagrégé",
@@ -733,7 +774,7 @@
     "title": "Facteurs d'émission",
     "loading": "Chargement des facteurs d'émission",
     "table": {
-      "subTitle": "Vous pouvez parcourir l’ensemble des facteurs d’émission disponibles, et en créer de nouveaux",
+      "subTitle": "Vous pouvez parcourir l'ensemble des facteurs d'émission disponibles, et en créer de nouveaux",
       "Valid": "Valide",
       "Archived": "Archivé",
       "selectLine": "Selectionner ce facteur d'émission",
@@ -797,7 +838,7 @@
       "modal": {
         "confirm-edition": "Êtes-vous sûrs de vouloir modifier ce facteur d'émissions",
         "confirm-deletion": "Êtes-vous sûrs de vouloir supprimer ce facteur d'émissions",
-        "title": "Modifier un facteur d’émission",
+        "title": "Modifier un facteur d'émission",
         "description": "<warning>Si vous avez utilisé ce facteur d'émissions dans des études, celles-ci seront donc modifiées.</warning> Si vous souhaitez faire une nouvelle version de ce facteur d'émissions, merci d'en créer un nouveau.",
         "confirm": "Confirmer",
         "close": "Annuler"
@@ -821,6 +862,12 @@
       "Transport": "Transport",
       "CombustionALaCentrale": "Combustion à la centrale",
       "Pertes": "Pertes"
+    },
+    "missingQualities": {
+      "title": "Ajout de la qualité pour les facteurs d'émission manuels",
+      "body": "Bonjour, d'après nos informations, vous aviez ajouté des facteurs d'émissions manuellement lorsqu'il était encore impossible de renseigner leur incertitude. Par défaut, pour ces facteurs d'émissions, les qualités sont considérées comme étant \"Très bonne\", ce qui correspond à une incertitude nulle sur le facteur d'émission. Ce bug étant dorénavant résolu, nous vous recommandons fortement de mettre à jour les facteurs d'émissions concernés qui sont les suivants :",
+      "close": "Fermer",
+      "correct": "Corriger"
     }
   },
   "level": {
@@ -848,6 +895,15 @@
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
     "More than one": "Il doit y avoir au moins un administrateur ou gestionnaire dans l'organisation"
   },
+  "environment": {
+    "BC": "BC+ 2.0",
+    "CUT": "Count",
+    "TILT": "Tilt"
+  },
+  "source": {
+    "CRON": "Cron",
+    "TUNISIE": "Tunisie"
+  },
   "team": {
     "title": "Mon organisation",
     "pending": "Invitations en attentes",
@@ -863,7 +919,14 @@
       "lastName": "Nom",
       "email": "Email",
       "level": "Formation",
-      "role": "Droits"
+      "role": "Droits",
+      "action": " ",
+      "deleteMember": "Supprimer le membre",
+      "userDeletion": "Suppression d'un utilisateur",
+      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet utilisateur ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
+      "close": "Annuler",
+      "confirm": "Confirmer",
+      "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur des études suivantes : "
     }
   },
   "newMember": {
@@ -881,7 +944,8 @@
       "lastName": "Veuillez renseigner un nom",
       "level": "Veuillez renseigner un niveau de formation",
       "role": "Veuillez renseigner un rôle"
-    }
+    },
+    "addedMember": "L'utilisateur a bien été ajouté à votre organisation"
   },
   "units": {
     "selectAll": "Tout sélectionner",
@@ -1059,7 +1123,8 @@
       "editTitle": "Modifier mon organisation",
       "edit": "Valider la modification",
       "name": "Nom de l'organisation",
-      "title": "Informations sur la nouvelle organisation"
+      "title": "Informations sur la nouvelle organisation",
+      "Unknown error": "Une erreur inconnue s'est produite. Veuillez contacter le support"
     },
     "sites": {
       "title": "Les sites de l'organisation concernés par l'étude",
@@ -1078,6 +1143,8 @@
       "delete": "Supprimer",
       "add": "Ajouter un site",
       "update": "Modifier la liste",
+      "cnc": "Code CNC",
+      "cncPlaceholder": "Code CNC",
       "glossary": {
         "title": "Glossaire",
         "etp": "Nombre d'Équivalent Temps Plein",
@@ -1115,10 +1182,11 @@
       "confirm": "Confirmer",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "wrongName": "Le nom du client ne correspond pas",
-      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le <support>support</support>."
+      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le support."
     }
   },
   "emissionSource": {
+    "in": "en",
     "emissionSource": "Donnée d'activité :",
     "emissionFactor": "Facteur d'émission :",
     "clear": "Supprimer la valeur",
@@ -1136,6 +1204,8 @@
     "optionalFields": "Informations optionnelles",
     "resetFESpecific": "Réinitialiser les valeurs par défaut",
     "duplicate": "Dupliquer la source d'émission",
+    "information": "Information",
+    "oldVersion": "Facteur d'émission issue d'une version dépréciée",
     "glossary": {
       "title": "Glossaire",
       "type": "Type",
@@ -1143,6 +1213,8 @@
       "quality": "Qualité",
       "qualityDescription": "Les incertitudes sont dorénavant calculées grâce à des notes qualitatives apportées sur la qualité du facteur d'émission et la qualité de la donnée d'activité. Les notes associées au facteur d'émission sont directement issues des bases de données, mais celles liées à la donnée d'activité doivent être saisies. Pour plus d'informations sur l'attribution des notes, nous vous invitons à consulter <link>cette page</link>.",
       "specificEmissionFactorQuality": "Vous pouvez spécifiquement ajuster la qualité du facteur d'émission dans votre source d'émission. La valeur générique du facteur d'émission est indiquée par le symbole {marker}.",
+      "version": "Facteur d'émission d'une ancienne version",
+      "versionDescription": "Vous modifiez une étude qui provient de l'ancien BC+. Ce facteur d'émission n'existant pas dans la version de la base empreinte liée à votre étude ({bcVersion}), si vous le modifiez, vous ne pourrez jamais le remettre.",
       "close": "Fermer"
     },
     "deleteDialog": {
@@ -1203,6 +1275,11 @@
       "expand": "Développer les qualités",
       "shrink": "Simplifier les qualités",
       "comment": "Commentaires"
+    },
+    "cut": {
+      "form": {
+        "value": "Nombre"
+      }
     },
     "emissionFactorDialog": {
       "title": "Choisir un facteur d'émission",
@@ -1300,7 +1377,7 @@
     "videos": "Vidéos",
     "videoExplanation": "Notez bien que l’évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d’obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
     "evaluation": "Evaluation des connaissances",
-    "evaluationEnded": "Vous avez déjà répondu au quesitonnaire",
+    "evaluationEnded": "Vous avez déjà répondu au questionnaire",
     "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><red> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l’outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</red>",
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre aux questions. Je suis dans les bonnes conditions pour commencer mon test.",
     "answer": "Répondre au questionnaire",
@@ -1311,8 +1388,19 @@
   "deactivableFeatures": {
     "title": "Fonctionnalités désactivables",
     "Formation": "Formation",
+    "Feedback": "Feedback",
+    "source": "Sources",
+    "environment": "Environnements",
     "true": "Active",
     "false": "Désactivée",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+  },
+  "feedback": {
+    "title": "Donnez votre avis sur le BC+ !",
+    "body": " Si vous avez 5 minutes, nous serions ravis d'avoir vos retours sur le BC+ ! Ceux-ci nous permettront de répondre aux mieux à vos besoins avec nos prochains développements. Si ce n'est pas le bon moment, vous pouvez reportez votre réponse.",
+    "reject": "Ne pas répondre",
+    "delay": "Plus tard ({time} jours)",
+    "answer": "Je donne mon avis",
+    "close": "Fermer"
   }
 }

@@ -7,13 +7,13 @@ import Button from '@/components/base/Button'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyName } from '@/services/serverFunctions/study'
 import { ChangeStudyNameCommand, ChangeStudyNameValidation } from '@/services/serverFunctions/study.command'
-import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { zodResolver } from '@hookform/resolvers/zod'
 import EditIcon from '@mui/icons-material/Edit'
-import { EmissionFactorImportVersion } from '@prisma/client'
-import { User } from 'next-auth'
+import { EmissionFactorImportVersion, Environment } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import StudyLevel from './StudyLevel'
@@ -23,7 +23,7 @@ import StudyResultsUnit from './StudyResultsUnit'
 import StudyVersions from './StudyVersions'
 
 interface Props {
-  user: User
+  user: UserSession
   study: FullStudy
   disabled: boolean
   emissionFactorSources: EmissionFactorImportVersion[]
@@ -34,7 +34,7 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
   const tValidation = useTranslations('study.rights.new')
 
   const [editTitle, setEditTitle] = useState(false)
-  const [error, setError] = useState('')
+  const { callServerFunction } = useServerFunction()
 
   const form = useForm<ChangeStudyNameCommand>({
     resolver: zodResolver(ChangeStudyNameValidation),
@@ -48,31 +48,29 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
 
   const name = form.watch('name')
 
-  const resetInput = () => {
+  const resetInput = useCallback(() => {
     form.setValue('name', study.name)
-    setError('')
     setEditTitle(false)
-  }
+  }, [form, study])
 
-  const onSubmit = useCallback(
-    form.handleSubmit(async (data) => {
+  const handleSubmit = useCallback(
+    async (data: ChangeStudyNameCommand) => {
       if (name === study.name) {
         resetInput()
         return
       }
-      const result = await changeStudyName(data)
-      if (result) {
-        setError(result)
-        return
-      }
-      setEditTitle(false)
-      study.name = name
-    }),
-    [name, study, form],
+
+      await callServerFunction(() => changeStudyName(data), {
+        onSuccess: () => {
+          setEditTitle(false)
+          study.name = name
+        },
+      })
+    },
+    [name, study, callServerFunction, resetInput],
   )
 
-  const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === CUT, [environment])
+  const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
 
   return (
     <>
@@ -111,9 +109,9 @@ const StudyParams = ({ user, study, disabled, emissionFactorSources }: Props) =>
         label={'edit-study-title'}
         title={t('edit')}
         onClose={resetInput}
-        actions={[{ actionType: 'button', onClick: onSubmit, children: t('edit') }]}
+        actions={[{ actionType: 'button', onClick: form.handleSubmit(handleSubmit), children: t('edit') }]}
       >
-        <FormTextField name="name" translation={tValidation} control={form.control} customError={error} required />
+        <FormTextField name="name" translation={tValidation} control={form.control} required />
       </Modal>
     </>
   )

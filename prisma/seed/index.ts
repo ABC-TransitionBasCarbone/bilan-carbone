@@ -1,9 +1,13 @@
+import { environmentsWithChecklist } from '@/constants/environments'
+import { reCreateBegesRules } from '@/db/beges'
 import { signPassword } from '@/services/auth'
-import { reCreateBegesRules } from '@/services/exportRules/beges'
 import { getEmissionFactorsFromAPI } from '@/services/importEmissionFactor/baseEmpreinte/getEmissionFactorsFromAPI'
+import { getAllowedLevels } from '@/services/study'
 import { faker } from '@faker-js/faker'
 import {
+  Account,
   EmissionFactorStatus,
+  Environment,
   Import,
   Level,
   PrismaClient,
@@ -18,10 +22,19 @@ import {
 import { Command } from 'commander'
 import { ACTUALITIES } from '../legacy_data/actualities'
 import { createRealStudy } from './study'
+import { getCutRoleFromBase } from './utils'
 
 const program = new Command()
 type Params = {
   importFactors: string | undefined
+}
+
+type userAndAccountsAndOrganizationVersion = {
+  user: User
+  accounts: {
+    account: Account
+    organizationVersion: { organizationId: string | null }
+  }[]
 }
 
 const prisma = new PrismaClient()
@@ -46,10 +59,24 @@ const users = async () => {
   await prisma.emissionFactorImportVersion.deleteMany()
 
   await prisma.site.deleteMany()
+  await prisma.userCheckedStep.deleteMany()
   await prisma.userApplicationSettings.deleteMany()
+  await prisma.account.deleteMany()
   await prisma.user.deleteMany()
 
+  await prisma.organizationVersion.deleteMany()
   await prisma.organization.deleteMany()
+
+  await prisma.cnc.deleteMany()
+
+  await prisma.cnc.create({
+    data: {
+      numeroAuto: '321',
+      nom: 'PATHE',
+      codeInsee: '75102',
+      commune: 'Paris 2e Arrondissement',
+    },
+  })
 
   await Promise.all([
     prisma.emissionFactor.create({
@@ -61,6 +88,7 @@ const users = async () => {
         reliability: 5,
         importedId: '1',
         unit: Unit.KG,
+        isMonetary: false,
         subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
@@ -80,6 +108,7 @@ const users = async () => {
         reliability: 5,
         importedId: '2',
         unit: Unit.KG_DRY_MATTER,
+        isMonetary: false,
         subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
@@ -99,6 +128,7 @@ const users = async () => {
         reliability: 3,
         importedId: '3',
         unit: Unit.CAR_KM,
+        isMonetary: false,
         subPosts: [SubPost.MetauxPlastiquesEtVerre],
         metaData: {
           create: {
@@ -113,34 +143,55 @@ const users = async () => {
   const unOnboardedOrganization = await prisma.organization.create({
     data: {
       name: faker.company.name(),
-      siret: faker.finance.accountNumber(14),
+      wordpressId: faker.finance.accountNumber(14),
+    },
+  })
+
+  const unOnboardedOrganizationVersion = await prisma.organizationVersion.create({
+    data: {
       isCR: false,
       onboarded: false,
       activatedLicence: true,
+      organizationId: unOnboardedOrganization.id,
+      environment: Environment.BC,
     },
   })
+
   const onboardingPassword = await signPassword('onboarding1234')
-  await prisma.user.create({
+  const onboarding = await prisma.user.create({
     data: {
       email: 'onboarding@yopmail.com',
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
-      organizationId: unOnboardedOrganization.id,
       password: onboardingPassword,
       level: Level.Initial,
-      role: Role.COLLABORATOR,
-      status: UserStatus.IMPORTED,
     },
   })
 
-  await prisma.user.create({
+  await prisma.account.create({
+    data: {
+      organizationVersionId: unOnboardedOrganizationVersion.id,
+      role: Role.COLLABORATOR,
+      userId: onboarding.id,
+      environment: Environment.BC,
+      status: UserStatus.IMPORTED,
+    },
+  })
+  const onboardingNotTrained = await prisma.user.create({
     data: {
       email: 'onboardingnottrained@yopmail.com',
       password: onboardingPassword,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
-      organizationId: unOnboardedOrganization.id,
+    },
+  })
+
+  await prisma.account.create({
+    data: {
+      organizationVersionId: unOnboardedOrganizationVersion.id,
       role: Role.COLLABORATOR,
+      userId: onboardingNotTrained.id,
+      environment: Environment.BC,
       status: UserStatus.IMPORTED,
     },
   })
@@ -148,44 +199,100 @@ const users = async () => {
   const clientLessOrganization = await prisma.organization.create({
     data: {
       name: faker.company.name(),
-      siret: faker.finance.accountNumber(14),
+      wordpressId: faker.finance.accountNumber(14),
+    },
+  })
+
+  const clientLessOrganizationVersion = await prisma.organizationVersion.create({
+    data: {
       isCR: true,
       onboarded: true,
       activatedLicence: true,
+      organizationId: clientLessOrganization.id,
+      environment: Environment.BC,
     },
   })
-  await prisma.user.create({
+
+  const clientLessUser = await prisma.user.create({
     data: {
       email: 'clientless@yopmail.com',
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
-      organizationId: clientLessOrganization.id,
       password: await signPassword(`client1234`),
+      level: Level.Initial,
+    },
+  })
+
+  await prisma.account.create({
+    data: {
+      organizationVersionId: clientLessOrganizationVersion.id,
       role: Role.COLLABORATOR,
+      userId: clientLessUser.id,
+      environment: Environment.BC,
       status: UserStatus.ACTIVE,
     },
   })
 
   const organizations = await prisma.organization.createManyAndReturn({
-    data: Array.from({ length: 10 }).map((_, index) => ({
+    data: Array.from({ length: 10 }).map(() => ({
       name: faker.company.name(),
-      siret: faker.finance.accountNumber(14),
-      isCR: index % 2 === 0,
-      onboarded: true,
-      activatedLicence: true,
+      wordpressId: faker.finance.accountNumber(14),
     })),
   })
 
-  const crOrganizations = organizations.filter((organization) => organization.isCR)
-  const regularOrganizations = organizations.filter((organization) => !organization.isCR)
+  const organizationVersions = await prisma.organizationVersion.createManyAndReturn({
+    data: organizations.map((organization, index) => ({
+      organizationId: organization.id,
+      isCR: index % 2 === 0,
+      onboarded: true,
+      activatedLicence: true,
+      environment: Environment.BC,
+    })),
+  })
+
+  const organizationVersionsCUT = await prisma.organizationVersion.createManyAndReturn({
+    data: organizations.map((organization) => ({
+      organizationId: organization.id,
+      isCR: false,
+      onboarded: false,
+      activatedLicence: true,
+      environment: Environment.CUT,
+    })),
+  })
+
+  const organizationVersionsTILT = await prisma.organizationVersion.createManyAndReturn({
+    data: organizations.map((organization, index) => ({
+      organizationId: organization.id,
+      isCR: index % 2 === 0,
+      onboarded: false,
+      activatedLicence: true,
+      environment: Environment.TILT,
+    })),
+  })
+
+  const crOrganizationVersions = organizationVersions.filter((organization) => organization.isCR)
+  const regularOrganizationVersions = organizationVersions.filter((organization) => !organization.isCR)
+
+  const environmentOrganizationVersions = {
+    [Environment.BC]: regularOrganizationVersions,
+    [Environment.CUT]: organizationVersionsCUT,
+    [Environment.TILT]: organizationVersionsTILT,
+  }
 
   const childOrganizations = await prisma.organization.createManyAndReturn({
     data: Array.from({ length: 50 }).map(() => ({
       name: faker.company.name(),
-      parentId: faker.helpers.arrayElement(crOrganizations).id,
+    })),
+  })
+
+  await prisma.organizationVersion.createManyAndReturn({
+    data: childOrganizations.map((childOrganization) => ({
+      parentId: faker.helpers.arrayElement(crOrganizationVersions).id,
+      organizationId: childOrganization.id,
       isCR: false,
       onboarded: true,
       activatedLicence: true,
+      environment: Environment.BC,
     })),
   })
 
@@ -202,103 +309,280 @@ const users = async () => {
   })
 
   const levels = Object.keys(Level)
-  const users = await prisma.user.createManyAndReturn({
-    data: await Promise.all([
-      ...Object.keys(Role).flatMap((role) => [
-        ...Array.from({ length: 3 }).map(async (_, index) => ({
-          email: `bc-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          organizationId: regularOrganizations[index % regularOrganizations.length].id,
-          password: await signPassword(`password-${index}`),
-          level: levels[index % levels.length] as Level,
-          role: role as Role,
-          status: UserStatus.ACTIVE,
-        })),
-        ...Array.from({ length: 3 }).map(async (_, index) => ({
-          email: `bc-cr-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          organizationId: crOrganizations[index % crOrganizations.length].id,
-          password: await signPassword(`password-${index}`),
-          level: levels[index % levels.length] as Level,
-          role: role as Role,
-          status: UserStatus.ACTIVE,
-        })),
-      ]),
-      ...Array.from({ length: 3 }).map(async (_, index) => ({
-        email: `bc-new-${index}@yopmail.com`,
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        organizationId: regularOrganizations[index % regularOrganizations.length].id,
-        password: await signPassword(`password-${index}`),
-        level: levels[index % levels.length] as Level,
-        role: Role.COLLABORATOR,
-        status: UserStatus.IMPORTED,
-      })),
+  const usersWithAccounts = await Promise.all([
+    ...Object.keys(Role).flatMap((role) => [
+      ...Array.from({ length: 3 }).map(async (_, index) => {
+        const user = await prisma.user.create({
+          data: {
+            email: `bc-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            password: await signPassword(`password-${index}`),
+            level: levels[index % levels.length] as Level,
+          },
+        })
+        const account = await prisma.account.create({
+          data: {
+            organizationVersionId: regularOrganizationVersions[index % regularOrganizationVersions.length].id,
+            role: role as Role,
+            userId: user.id,
+            environment: Environment.BC,
+            status: UserStatus.ACTIVE,
+          },
+        })
+
+        if (!account.organizationVersionId) {
+          return { user, accounts: [{ account, organizationVersion: { organizationId: null } }] }
+        }
+        const organizationVersion = await prisma.organizationVersion.findFirst({
+          where: { id: account.organizationVersionId },
+        })
+        if (!organizationVersion) {
+          return { user, accounts: [{ account, organizationVersion: { organizationId: null } }] }
+        }
+        return { user, accounts: [{ account, organizationVersion }] }
+      }),
+      ...Array.from({ length: 3 }).map(async (_, index) => {
+        const user = await prisma.user.create({
+          data: {
+            email: `bc-cr-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            password: await signPassword(`password-${index}`),
+            level: levels[index % levels.length] as Level,
+          },
+        })
+        const account = await prisma.account.create({
+          data: {
+            organizationVersionId: crOrganizationVersions[index % crOrganizationVersions.length].id,
+            role: role as Role,
+            userId: user.id,
+            environment: Environment.BC,
+            status: UserStatus.ACTIVE,
+          },
+        })
+        if (!account.organizationVersionId) {
+          return { user, accounts: [{ account, organizationVersion: { organizationId: null } }] }
+        }
+        const organizationVersion = await prisma.organizationVersion.findFirst({
+          where: { id: account.organizationVersionId },
+        })
+        if (!organizationVersion) {
+          return { user, accounts: [{ account, organizationVersion: { organizationId: null } }] }
+        }
+        return { user, accounts: [{ account, organizationVersion }] }
+      }),
     ]),
-  })
+    ...Array.from({ length: 3 }).map(async (_, index) => {
+      const user = await prisma.user.create({
+        data: {
+          email: `bc-new-${index}@yopmail.com`,
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
+          password: await signPassword(`password-${index}`),
+          level: levels[index % levels.length] as Level,
+        },
+      })
+      const account = await prisma.account.create({
+        data: {
+          organizationVersionId: regularOrganizationVersions[index % regularOrganizationVersions.length].id,
+          role: Role.COLLABORATOR,
+          userId: user.id,
+          environment: Environment.BC,
+          status: UserStatus.IMPORTED,
+        },
+      })
+      if (!account.organizationVersionId) {
+        return { user, accounts: [{ account, organizationVersion: { organizationId: null } }] }
+      }
+      const organizationVersion = await prisma.organizationVersion.findFirst({
+        where: { id: account.organizationVersionId },
+      })
+      if (!organizationVersion) {
+        return { user, accounts: [{ account, organizationVersion: { organizationId: null } }] }
+      }
+      return { user, accounts: [{ account, organizationVersion }] }
+    }),
+    ...Object.keys(Role).flatMap((role) => [
+      ...Object.keys(Environment).flatMap((environment) => [
+        ...Array.from({ length: 2 }).map(async (_, index) => {
+          const user = await prisma.user.create({
+            data: {
+              email: `${environment.toLocaleLowerCase()}-env-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
+              firstName: faker.person.firstName(),
+              lastName: faker.person.lastName(),
+              password: await signPassword(`password-${index}`),
+              level: levels[index % levels.length] as Level,
+            },
+          })
 
-  const [contributor] = await prisma.user.createManyAndReturn({
-    data: [
-      {
-        email: 'bc-contributor@yopmail.com',
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        password: await signPassword('password'),
-        level: Level.Initial,
-        organizationId: organizations[0].id,
+          const organizationVersionArray = environmentOrganizationVersions[environment as Environment]
+          const account = await prisma.account.create({
+            data: {
+              organizationVersionId: organizationVersionArray[index % organizationVersionArray.length].id,
+              role: getCutRoleFromBase(role as Role),
+              userId: user.id,
+              environment: environment as Environment,
+              status: UserStatus.ACTIVE,
+            },
+          })
+          if (!account.organizationVersionId) {
+            return { user, accounts: [{ account, organizationVersion: { organizationId: null } }] }
+          }
+          const organizationVersion = await prisma.organizationVersion.findFirst({
+            where: { id: account.organizationVersionId },
+          })
+          if (!organizationVersion) {
+            return { user, accounts: [{ account, organizationVersion: { organizationId: null } }] }
+          }
+          return { user, accounts: [{ account, organizationVersion }] }
+        }),
+      ]),
+      ...Array.from({ length: 2 }).map(async (_, index) => {
+        const user = await prisma.user.create({
+          data: {
+            email: `all-env-${role.toLocaleLowerCase()}-${index}@yopmail.com`,
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            password: await signPassword(`password-${index}`),
+            level: levels[index % levels.length] as Level,
+          },
+        })
+        const accountsData = [
+          {
+            organizationVersionId: regularOrganizationVersions[index % regularOrganizationVersions.length].id,
+            role: role as Role,
+            userId: user.id,
+            environment: Environment.BC,
+            status: UserStatus.ACTIVE,
+          },
+          {
+            organizationVersionId: organizationVersionsCUT[index % organizationVersionsCUT.length].id,
+            role: getCutRoleFromBase(role as Role),
+            userId: user.id,
+            environment: Environment.CUT,
+            status: UserStatus.ACTIVE,
+          },
+        ]
+        const accounts = await prisma.account.createManyAndReturn({
+          data: accountsData,
+        })
+
+        const organizationVersions = await prisma.organizationVersion.findMany({
+          where: {
+            id: {
+              in: accounts.map((account) => account.organizationVersionId).filter((id): id is string => id !== null),
+            },
+          },
+        })
+
+        const accountsAndOrganizationVersions = accounts.map((account) => {
+          const organizationVersion = organizationVersions.find((org) => org.id === account.organizationVersionId)
+          if (!organizationVersion) {
+            return { account, organizationVersion: { organizationId: null } }
+          }
+          return { account, organizationVersion }
+        })
+        return { user, accounts: accountsAndOrganizationVersions }
+      }),
+    ]),
+  ])
+
+  const [contributor] = await Promise.all([
+    prisma.account.create({
+      data: {
+        organizationVersionId: organizationVersions[0].id,
         role: Role.COLLABORATOR,
+        environment: Environment.BC,
         status: UserStatus.ACTIVE,
+        userId: (
+          await prisma.user.create({
+            data: {
+              email: 'bc-contributor@yopmail.com',
+              firstName: faker.person.firstName(),
+              lastName: faker.person.lastName(),
+              password: await signPassword('password'),
+              level: Level.Initial,
+            },
+          })
+        ).id,
       },
-      {
-        email: 'untrained@yopmail.com',
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        password: await signPassword('password'),
-        organizationId: regularOrganizations[1].id,
+    }),
+    prisma.account.create({
+      data: {
+        organizationVersionId: regularOrganizationVersions[1].id,
         role: Role.DEFAULT,
+        environment: Environment.BC,
         status: UserStatus.ACTIVE,
+        userId: (
+          await prisma.user.create({
+            data: {
+              email: 'untrained@yopmail.com',
+              firstName: faker.person.firstName(),
+              lastName: faker.person.lastName(),
+              password: await signPassword('password'),
+            },
+          })
+        ).id,
       },
-    ],
-  })
+    }),
+  ])
 
-  await prisma.user.create({
-    data: {
-      email: 'imported@yopmail.com',
-      firstName: 'User',
-      lastName: 'Imported',
-      role: Role.COLLABORATOR,
-      level: Level.Initial,
-      status: UserStatus.IMPORTED,
-      organizationId: regularOrganizations[0].id,
-    },
-  })
+  await prisma.user
+    .create({
+      data: {
+        email: 'imported@yopmail.com',
+        firstName: 'User',
+        lastName: 'Imported',
+        level: Level.Initial,
+      },
+    })
+    .then(async (user) => {
+      await prisma.account.create({
+        data: {
+          environment: Environment.BC,
+          organizationVersionId: regularOrganizationVersions[0].id,
+          role: Role.COLLABORATOR,
+          userId: user.id,
+          status: UserStatus.IMPORTED,
+        },
+      })
+    })
 
-  const activeUsers = await prisma.user.findMany({ where: { status: UserStatus.ACTIVE }, select: { id: true } })
+  const activeAccounts = await prisma.account.findMany({
+    where: { status: UserStatus.ACTIVE },
+    select: { id: true, environment: true },
+  })
   await prisma.userCheckedStep.createMany({
-    data: activeUsers.map((user) => ({ userId: user.id, step: UserChecklist.CreateAccount })),
+    data: activeAccounts
+      .filter((account) => environmentsWithChecklist.includes(account.environment))
+      .map((account) => ({ accountId: account.id, step: UserChecklist.CreateAccount })),
   })
 
   const subPosts = Object.keys(SubPost)
   const studies = await Promise.all(
     Array.from({ length: 20 }).map(() => {
-      const creator = faker.helpers.arrayElement(users.filter((user) => user.status === UserStatus.ACTIVE))
-      const organizationSites = sites.filter((site) => site.organizationId === creator.organizationId)
+      const creator = faker.helpers.arrayElement(
+        usersWithAccounts.filter((userWithAccount) => userWithAccount.accounts[0].account.status === UserStatus.ACTIVE),
+      )
+
+      const organizationVersionSites = sites.filter(
+        (site) => site.organizationId === creator.accounts[0].organizationVersion.organizationId,
+      )
       return prisma.study.create({
         include: { sites: true },
         data: {
-          createdById: creator.id,
+          createdById: creator.accounts[0].account.id,
           startDate: new Date(),
           endDate: faker.date.future(),
           isPublic: faker.datatype.boolean(),
-          level: faker.helpers.enumValue(Level),
+          level: faker.helpers.arrayElement(getAllowedLevels(creator.user.level)),
           name: faker.lorem.words({ min: 2, max: 5 }),
-          organizationId: creator.organizationId as string,
+          organizationVersionId: creator.accounts[0].account.organizationVersionId as string,
           sites: {
             createMany: {
               data: faker.helpers
-                .arrayElements(organizationSites, { min: 1, max: organizationSites.length })
+                .arrayElements(organizationVersionSites, { min: 1, max: organizationVersionSites.length })
                 .map((site) => ({
                   siteId: site.id,
                   etp: faker.helpers.maybe(() => faker.number.int({ min: 1, max: 100 })) || site.etp,
@@ -310,34 +594,52 @@ const users = async () => {
             },
           },
           allowedUsers: {
-            create: { role: StudyRole.Validator, userId: creator.id },
+            create: { role: StudyRole.Validator, accountId: creator.accounts[0].account.id },
           },
         },
       })
     }),
   )
 
-  const defaultUser = users.find((user) => user.email === 'bc-collaborator-0@yopmail.com') as User
-  const reader = users.find((user) => user.email === 'bc-collaborator-1@yopmail.com') as User
-  const editor = users.find((user) => user.email === 'bc-gestionnaire-0@yopmail.com') as User
-  const organizationSites = sites.filter((site) => site.organizationId === defaultUser.organizationId)
+  const defaultUserWithAccount = usersWithAccounts.find(
+    (userWithAccount) => userWithAccount.user.email === 'bc-collaborator-0@yopmail.com',
+  ) as userAndAccountsAndOrganizationVersion
+  const readerWithAccount = usersWithAccounts.find(
+    (userWithAccount) => userWithAccount.user.email === 'bc-collaborator-1@yopmail.com',
+  ) as userAndAccountsAndOrganizationVersion
+  const editorWithAccount = usersWithAccounts.find(
+    (userWithAccount) => userWithAccount.user.email === 'bc-gestionnaire-0@yopmail.com',
+  ) as userAndAccountsAndOrganizationVersion
+
+  if (!defaultUserWithAccount.accounts[0].account.organizationVersionId) {
+    return null
+  }
+  const defaultUserWithAccountOrganizationVersion = await prisma.organizationVersion.findFirst({
+    where: { id: defaultUserWithAccount.accounts[0].account.organizationVersionId },
+  })
+  if (!defaultUserWithAccountOrganizationVersion) {
+    return null
+  }
+  const organizationVersionSites = sites.filter(
+    (site) => site.organizationId === defaultUserWithAccountOrganizationVersion.organizationId,
+  )
 
   studies.push(
     await prisma.study.create({
       include: { sites: true },
       data: {
         id: '88c93e88-7c80-4be4-905b-f0bbd2ccc779',
-        createdById: defaultUser.id,
+        createdById: defaultUserWithAccount.accounts[0].account.id,
         startDate: new Date(),
         endDate: faker.date.future(),
         isPublic: false,
         level: faker.helpers.enumValue(Level),
         name: faker.lorem.words({ min: 2, max: 5 }),
-        organizationId: defaultUser.organizationId as string,
+        organizationVersionId: defaultUserWithAccount.accounts[0].account.organizationVersionId as string,
         sites: {
           createMany: {
             data: faker.helpers
-              .arrayElements(organizationSites, { min: 1, max: organizationSites.length })
+              .arrayElements(organizationVersionSites, { min: 1, max: organizationVersionSites.length })
               .map((site) => ({
                 siteId: site.id,
                 etp: faker.helpers.maybe(() => faker.number.int({ min: 1, max: 100 })) || site.etp,
@@ -351,14 +653,14 @@ const users = async () => {
         allowedUsers: {
           createMany: {
             data: [
-              { role: StudyRole.Validator, userId: defaultUser.id },
-              { role: StudyRole.Reader, userId: reader.id },
-              { role: StudyRole.Editor, userId: editor.id },
+              { role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id },
+              { role: StudyRole.Reader, accountId: readerWithAccount.accounts[0].account.id },
+              { role: StudyRole.Editor, accountId: editorWithAccount.accounts[0].account.id },
             ],
           },
         },
         contributors: {
-          create: { userId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
+          create: { accountId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
         },
       },
     }),
@@ -379,7 +681,7 @@ const users = async () => {
     }),
   )
 
-  await createRealStudy(prisma, defaultUser)
+  await createRealStudy(prisma, defaultUserWithAccount.accounts[0].account)
 }
 
 const actualities = async () => {
@@ -387,24 +689,8 @@ const actualities = async () => {
   await prisma.actuality.createMany({ data: ACTUALITIES })
 }
 
-const licenses = async () => {
-  await prisma.license.deleteMany()
-  await prisma.license.createMany({
-    data: [
-      {
-        name: 'Exploitation',
-        rights: [Role.ADMIN],
-      },
-      {
-        name: 'Utilisation',
-        rights: [Role.ADMIN],
-      },
-    ],
-  })
-}
-
 const main = async (params: Params) => {
-  await Promise.all([actualities(), licenses(), users(), reCreateBegesRules()])
+  await Promise.all([actualities(), users(), reCreateBegesRules()])
   if (params.importFactors) {
     await getEmissionFactorsFromAPI(params.importFactors)
   }

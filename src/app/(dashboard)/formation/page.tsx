@@ -3,7 +3,7 @@
 import FormationPage from '@/components/pages/Formation'
 import NotFound from '@/components/pages/NotFound'
 import { getFormationVideos } from '@/db/formation'
-import { getOrganizationById } from '@/db/organization'
+import { getOrganizationVersionById } from '@/db/organization'
 import { auth } from '@/services/auth'
 import { hasAccessToFormation } from '@/services/permissions/formations'
 
@@ -13,10 +13,16 @@ const Formation = async () => {
     return <NotFound />
   }
 
-  const organization = await getOrganizationById(session.user.organizationId)
+  const organizationVersion = await getOrganizationVersionById(session.user.organizationVersionId)
   const formations = await getFormationVideos()
 
-  return <FormationPage formations={formations} user={session.user} organizationName={organization?.name ?? ''} />
+  return (
+    <FormationPage
+      formations={formations}
+      user={session.user}
+      organizationName={organizationVersion?.organization?.name ?? ''}
+    />
+  )
 }
 
 export default Formation

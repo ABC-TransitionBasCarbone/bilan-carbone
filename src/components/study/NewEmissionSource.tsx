@@ -1,5 +1,6 @@
 'use client'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { createEmissionSource } from '@/services/serverFunctions/emissionSource'
 import AddIcon from '@mui/icons-material/Add'
 import { FormLabel, TextField } from '@mui/material'
@@ -21,6 +22,7 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySite }: Prop
   const [value, setValue] = useState('')
   const [saving, setSaving] = useState(false)
   const t = useTranslations('study.post')
+  const { callServerFunction } = useServerFunction()
   const router = useRouter()
 
   const onKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
@@ -34,21 +36,26 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySite }: Prop
     async (event: FocusEvent<HTMLInputElement>) => {
       if (event.target.value) {
         setSaving(true)
-        const result = await createEmissionSource({
-          name: event.target.value,
-          subPost,
-          studyId: study.id,
-          studySiteId: studySite,
-          caracterisation: caracterisations.length === 1 ? caracterisations[0] : undefined,
-        })
-        if (!result) {
-          setValue('')
-          router.refresh()
-        }
+        await callServerFunction(
+          () =>
+            createEmissionSource({
+              name: event.target.value,
+              subPost,
+              studyId: study.id,
+              studySiteId: studySite,
+              caracterisation: caracterisations.length === 1 ? caracterisations[0] : undefined,
+            }),
+          {
+            onSuccess: () => {
+              setValue('')
+              router.refresh()
+            },
+          },
+        )
         setSaving(false)
       }
     },
-    [study, subPost, router, studySite],
+    [study, subPost, router, studySite, callServerFunction, caracterisations],
   )
   return (
     <>

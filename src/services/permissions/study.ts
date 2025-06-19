@@ -1,32 +1,34 @@
+import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
+import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
-import { getUserByEmailWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { getUserByEmail } from '@/db/userImport'
+import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
-import { getUserRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { User as DbUser, Level, Organization, Prisma, Study, StudyRole } from '@prisma/client'
-import { User } from 'next-auth'
-import { auth } from '../auth'
+import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
+import { Level, Prisma, Study, StudyRole, User } from '@prisma/client'
+import { UserSession } from 'next-auth'
+import { dbActualizedAuth } from '../auth'
 import { checkLevel } from '../study'
 import { isInOrgaOrParentFromId } from './organization'
 
-export const isAdminOnStudyOrga = (user: User, studyOrganization: Pick<Organization, 'id' | 'parentId'>) =>
-  isAdminOnOrga(user, studyOrganization)
+export const isAdminOnStudyOrga = (user: UserSession, studyOrganizationVersion: OrganizationVersionWithOrganization) =>
+  isAdminOnOrga(user, studyOrganizationVersion)
 
-export const canReadStudy = async (user: User | UserWithAllowedStudies, studyId: string) => {
+export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, studyId: string) => {
   if (!user) {
     return false
   }
 
-  const study = await getStudyById(studyId, user.organizationId)
+  const study = await getStudyById(studyId, user.organizationVersionId)
 
   if (!study) {
     return false
   }
 
   if (
-    isAdminOnStudyOrga(user, study.organization) ||
-    (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization))
+    isAdminOnStudyOrga(user as UserSession, study.organizationVersion as OrganizationVersionWithOrganization) ||
+    (study.isPublic &&
+      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization))
   ) {
     return true
   }
@@ -38,13 +40,13 @@ export const canReadStudy = async (user: User | UserWithAllowedStudies, studyId:
       ...user.contributors.map((contributor) => contributor.studyId),
     ]
   } else {
-    const userWithAllowedStudies = await getUserByEmailWithAllowedStudies(user.email)
-    if (!userWithAllowedStudies) {
+    const accountWithAllowedStudies = await getAccountByIdWithAllowedStudies(user.accountId)
+    if (!accountWithAllowedStudies) {
       return false
     }
     allowedStudiesId = [
-      ...userWithAllowedStudies.allowedStudies.map((allowedStudy) => allowedStudy.studyId),
-      ...userWithAllowedStudies.contributors.map((contributor) => contributor.studyId),
+      ...accountWithAllowedStudies.allowedStudies.map((allowedStudy) => allowedStudy.studyId),
+      ...accountWithAllowedStudies.contributors.map((contributor) => contributor.studyId),
     ]
   }
 
@@ -55,8 +57,8 @@ export const canReadStudy = async (user: User | UserWithAllowedStudies, studyId:
   return false
 }
 
-export const filterAllowedStudies = async (user: User, studies: Study[]) => {
-  const userWithAllowedStudies = await getUserByEmailWithAllowedStudies(user.email)
+export const filterAllowedStudies = async (user: UserSession, studies: Study[]) => {
+  const userWithAllowedStudies = await getAccountByIdWithAllowedStudies(user.accountId)
 
   const allowedStudies = await Promise.all(
     studies.map(async (study) => ((await canReadStudy(userWithAllowedStudies, study.id)) ? study : null)),
@@ -64,30 +66,34 @@ export const filterAllowedStudies = async (user: User, studies: Study[]) => {
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateStudy = async (userEmail: string, study: Prisma.StudyCreateInput, organizationId: string) => {
-  const dbUser = await getUserByEmail(userEmail)
+export const canCreateStudy = async (
+  accountId: string,
+  study: Prisma.StudyCreateInput,
+  organizationVersionId: string,
+) => {
+  const dbAccount = await getAccountById(accountId)
 
-  if (!dbUser) {
+  if (!dbAccount) {
     return false
   }
 
-  if (!checkLevel(dbUser.level, study.level)) {
+  if (!checkLevel(dbAccount.user.level, study.level)) {
     return false
   }
 
-  if (!(await isInOrgaOrParentFromId(dbUser.organizationId, organizationId))) {
+  if (!(await isInOrgaOrParentFromId(dbAccount.organizationVersionId, organizationVersionId))) {
     return false
   }
 
   return true
 }
 
-const canChangeStudyValues = async (user: User, study: FullStudy) => {
-  if (isAdminOnStudyOrga(user, study.organization)) {
+const canChangeStudyValues = async (user: UserSession, study: FullStudy) => {
+  if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
     return true
   }
 
-  const userRightsOnStudy = await getUserRoleOnStudy(user, study)
+  const userRightsOnStudy = await getAccountRoleOnStudy(user, study)
   if (!userRightsOnStudy || !hasEditionRights(userRightsOnStudy)) {
     return false
   }
@@ -95,23 +101,23 @@ const canChangeStudyValues = async (user: User, study: FullStudy) => {
   return true
 }
 
-export const canChangePublicStatus = async (user: User, study: FullStudy) => {
+export const canChangePublicStatus = async (user: UserSession, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
-export const canUpgradeSourceVersion = async (user: User, study: FullStudy) => {
+export const canUpgradeSourceVersion = async (user: UserSession, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
-export const canChangeDates = async (user: User, study: FullStudy) => {
+export const canChangeDates = async (user: UserSession, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
-export const canChangeSites = async (user: User, study: FullStudy) => {
+export const canChangeSites = async (user: UserSession, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
-export const canChangeLevel = async (user: User, study: FullStudy, level: Level) => {
+export const canChangeLevel = async (user: UserSession, study: FullStudy, level: Level) => {
   if (!(await canChangeStudyValues(user, study))) {
     return false
   }
@@ -123,28 +129,33 @@ export const canChangeLevel = async (user: User, study: FullStudy, level: Level)
   return true
 }
 
-export const canChangeResultsUnit = async (user: User, study: FullStudy) => {
+export const canChangeResultsUnit = async (user: UserSession, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
-export const canChangeName = async (user: User, study: FullStudy) => {
+export const canChangeName = async (user: UserSession, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
-export const canChangeOpeningHours = async (user: User, study: FullStudy) => {
+export const canChangeOpeningHours = async (user: UserSession, study: FullStudy) => {
   return canChangeStudyValues(user, study)
 }
 
-export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStudy: DbUser | null, role: StudyRole) => {
-  if (userToAddOnStudy && user.id === userToAddOnStudy.id) {
+export const canAddRightOnStudy = (
+  user: UserSession,
+  study: FullStudy,
+  userToAddOnStudy: User | null,
+  role: StudyRole,
+) => {
+  if (userToAddOnStudy && user.accountId === userToAddOnStudy.id) {
     return false
   }
 
-  if ((!userToAddOnStudy || !userToAddOnStudy.organizationId) && role !== StudyRole.Reader) {
+  if (!userToAddOnStudy && role !== StudyRole.Reader) {
     return false
   }
 
-  const userRoleOnStudy = getUserRoleOnStudy(user, study)
+  const userRoleOnStudy = getAccountRoleOnStudy(user, study)
 
   if (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) {
     return false
@@ -157,12 +168,12 @@ export const canAddRightOnStudy = (user: User, study: FullStudy, userToAddOnStud
   return true
 }
 
-export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
-  if (isAdminOnStudyOrga(user, study.organization)) {
+export const canAddContributorOnStudy = (user: UserSession, study: FullStudy) => {
+  if (isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization)) {
     return true
   }
 
-  const userRightsOnStudy = getUserRoleOnStudy(user, study)
+  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
   if (!userRightsOnStudy || userRightsOnStudy === StudyRole.Reader) {
     return false
   }
@@ -171,32 +182,34 @@ export const canAddContributorOnStudy = (user: User, study: FullStudy) => {
 }
 
 export const canDeleteStudy = async (studyId: string) => {
-  const session = await auth()
+  const session = await dbActualizedAuth()
 
   if (!session) {
     return false
   }
 
-  const study = await getStudyById(studyId, session.user.organizationId)
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
+
   if (!study) {
     return false
   }
 
-  if (study.createdById === session.user.id) {
+  if (study.createdById === session.user.accountId) {
     return true
   }
 
-  const userRoleOnStudy = await getUserRoleOnStudy(session.user, study)
-  if (userRoleOnStudy === StudyRole.Validator) {
+  const accountRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
+
+  if (accountRoleOnStudy && accountRoleOnStudy === StudyRole.Validator) {
     return true
   }
 
   return false
 }
 
-export const filterStudyDetail = (user: User, study: FullStudy) => {
+export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
   const availableSubPosts = study.contributors
-    .filter((contributor) => contributor.user.email === user.email)
+    .filter((contributor) => contributor.account.user.email === user.email)
     .map((contributor) => contributor.subPost)
 
   return {
@@ -237,24 +250,26 @@ export const filterStudyDetail = (user: User, study: FullStudy) => {
     exports: study.exports,
     contributors: undefined,
     allowedUser: undefined,
+    emissionFactorVersions: study.emissionFactorVersions,
   }
 }
 export type StudyWithoutDetail = ReturnType<typeof filterStudyDetail>
 
-export const canReadStudyDetail = async (user: User, study: FullStudy) => {
+export const canReadStudyDetail = async (user: UserSession, study: FullStudy) => {
   const studyRight = await canReadStudy(user, study.id)
   if (!studyRight) {
     return false
   }
 
   if (
-    isAdminOnStudyOrga(user, study.organization) ||
-    (study.isPublic && isInOrgaOrParent(user.organizationId, study.organization))
+    isAdminOnStudyOrga(user, study.organizationVersion as OrganizationVersionWithOrganization) ||
+    (study.isPublic &&
+      isInOrgaOrParent(user.organizationVersionId, study.organizationVersion as OrganizationVersionWithOrganization))
   ) {
     return true
   }
 
-  const userRightsOnStudy = study.allowedUsers.find((right) => right.user.email === user.email)
+  const userRightsOnStudy = study.allowedUsers.find((right) => right.account.user.email === user.email)
   if (!userRightsOnStudy) {
     return false
   }
@@ -263,14 +278,14 @@ export const canReadStudyDetail = async (user: User, study: FullStudy) => {
 }
 
 const canAccessStudyFlows = async (studyId: string) => {
-  const session = await auth()
+  const session = await dbActualizedAuth()
 
   if (!session || !session.user) {
     return false
   }
 
-  const study = await getStudyById(studyId, session.user.organizationId)
-  if (!study || !getUserRoleOnStudy(session.user, study)) {
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
+  if (!study || !getAccountRoleOnStudy(session.user, study)) {
     return false
   }
 
@@ -278,17 +293,17 @@ const canAccessStudyFlows = async (studyId: string) => {
 }
 
 export const canEditStudyFlows = async (studyId: string) => {
-  const session = await auth()
+  const session = await dbActualizedAuth()
   if (!session) {
     return false
   }
-  const study = await getStudyById(studyId, session.user.organizationId)
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
 
   if (!study) {
     return false
   }
 
-  const userRoleOnStudy = getUserRoleOnStudy(session.user, study)
+  const userRoleOnStudy = getAccountRoleOnStudy(session.user, study)
   if (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) {
     return false
   }

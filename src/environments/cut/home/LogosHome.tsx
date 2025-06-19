@@ -1,7 +1,8 @@
 'use client'
-import { CUT, useAppEnvironmentStore } from '@/store/AppEnvironment'
+import Image from '@/components/document/Image'
+import { UserSessionProps } from '@/components/hoc/withAuth'
 import { Box } from '@mui/material'
-import Image from 'next/image'
+import { Environment } from '@prisma/client'
 import { useMemo } from 'react'
 import styles from './LogosHome.module.css'
 
@@ -11,9 +12,8 @@ const logos = [
   { src: '/logos/cut/Banques_des_territoires.svg', alt: 'Logo du groupe la caisse des dépots' },
 ]
 
-const LogosHome = () => {
-  const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === CUT, [environment])
+const LogosHome = ({ user }: UserSessionProps) => {
+  const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
   return (
     isCut && (
       <Box data-testid={'home-cut-logo'} className={styles.container}>

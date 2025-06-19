@@ -1,8 +1,8 @@
+import Image from '@/components/document/Image'
 import PdfViewer from '@/components/document/PDFViewer'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { Document } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import styles from './StudyFlow.module.css'
 
@@ -24,7 +24,9 @@ const StudyFlowViewer = ({ studyId, selectedFlow }: Props) => {
   const fetchAndSetFlowUrl = async (document: Document) => {
     setLoading(true)
     const url = await getDocumentUrl(document, studyId)
-    setDocumentUrl(url || '')
+    if (url.success) {
+      setDocumentUrl(url.data || '')
+    }
     setLoading(false)
   }
 

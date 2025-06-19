@@ -3,7 +3,7 @@
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { Study } from '@prisma/client'
-import { User } from 'next-auth'
+import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 import Block from '../base/Block'
@@ -14,7 +14,7 @@ interface Props {
   studies: Study[]
   canAddStudy: boolean
   creationUrl?: string
-  user: User
+  user: UserSession
   collaborations?: boolean
 }
 
@@ -32,6 +32,7 @@ const Studies = async ({ studies, canAddStudy, creationUrl, user, collaborations
                 actionType: 'link',
                 href: creationUrl,
                 color: 'secondary',
+                variant: 'outlined',
                 ['data-testid']: 'new-study',
                 children: (
                   <>

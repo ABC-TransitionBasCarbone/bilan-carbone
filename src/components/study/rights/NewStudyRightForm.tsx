@@ -2,19 +2,21 @@
 
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
+import { useToast } from '@/components/base/ToastProvider'
 import { FormAutocomplete } from '@/components/form/Autocomplete'
 import { FormSelect } from '@/components/form/Select'
-import { getOrganizationUsers } from '@/db/organization'
+import { getOrganizationVersionAccounts } from '@/db/organization'
 import { FullStudy } from '@/db/study'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { ALREADY_IN_STUDY } from '@/services/permissions/check'
 import { newStudyRight } from '@/services/serverFunctions/study'
 import { NewStudyRightCommand, NewStudyRightCommandValidation } from '@/services/serverFunctions/study.command'
 import { checkLevel } from '@/services/study'
+import { isAdmin } from '@/utils/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { SyntheticEvent, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -22,22 +24,28 @@ import NewStudyRightModal from './NewStudyRightModal'
 
 interface Props {
   study: FullStudy
-  users: Awaited<ReturnType<typeof getOrganizationUsers>>
-  existingUsers: string[]
-  userRole: StudyRole
+  accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
+  existingAccounts: string[]
+  accountRole: StudyRole
 }
 
-const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
-const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
-
-const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => {
+const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: Props) => {
   const router = useRouter()
   const t = useTranslations('study.rights.new')
   const tRole = useTranslations('study.role')
+  const { showErrorToast } = useToast()
 
-  const [error, setError] = useState('')
   const [readerOnly, setReaderOnly] = useState(false)
-  const [otherOrganization, setOtherOrganization] = useState(false)
+  const [otherOrganizationVersion, setOtherOrganizationVersion] = useState(false)
+  const { callServerFunction } = useServerFunction()
+
+  const filteredAccounts = useMemo(
+    () =>
+      accounts
+        .filter((account) => !existingAccounts.includes(account.user.email))
+        .filter((account) => !isAdmin(account.role)),
+    [accounts],
+  )
 
   const form = useForm<NewStudyRightCommand>({
     resolver: zodResolver(NewStudyRightCommandValidation),
@@ -50,10 +58,10 @@ const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => 
   })
 
   const onEmailChange = (_: SyntheticEvent, value: string | null) => {
-    form.setValue('email', value || '')
+    form.setValue('email', value?.trim() || '')
     if (value) {
-      const organizationUser = users.find((user) => user.email === value)
-      if (!organizationUser || checkLevel(organizationUser.level, study.level)) {
+      const organizationVersionAccount = accounts.find((account) => account.user.email === value)
+      if (!organizationVersionAccount || checkLevel(organizationVersionAccount.user.level, study.level)) {
         setReaderOnly(false)
       } else {
         setReaderOnly(true)
@@ -63,43 +71,42 @@ const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => 
   }
 
   const saveRight = async (command: NewStudyRightCommand) => {
-    const result = await newStudyRight(command)
-    setOtherOrganization(false)
-    if (result) {
-      setError(result)
-    } else {
-      router.push(`/etudes/${study.id}/cadrage`)
-      router.refresh()
-    }
+    await callServerFunction(() => newStudyRight(command), {
+      getErrorMessage: (error) => t(error),
+      onSuccess: () => {
+        setOtherOrganizationVersion(false)
+        router.push(`/etudes/${study.id}/cadrage`)
+      },
+    })
   }
 
   const onSubmit = async (command: NewStudyRightCommand) => {
-    if (users.some((user) => user.email === command.email)) {
+    if (accounts.some((account) => account.user.email === command.email)) {
       await saveRight(command)
-    } else if (existingUsers.includes(command.email)) {
-      setError(ALREADY_IN_STUDY)
+    } else if (existingAccounts.includes(command.email)) {
+      showErrorToast(t(ALREADY_IN_STUDY))
     } else {
-      setOtherOrganization(true)
+      setOtherOrganizationVersion(true)
     }
   }
 
   const usersOptions = useMemo(
     () =>
-      users.map((user) => ({
-        label: `${user.firstName} ${user.lastName.toUpperCase()} - ${user.email}`,
-        value: user.email,
+      filteredAccounts.map((account) => ({
+        label: `${account.user.firstName} ${account.user.lastName.toUpperCase()} - ${account.user.email}`,
+        value: account.user.email,
       })),
-    [users],
+    [filteredAccounts],
   )
 
   const allowedRoles = useMemo(
     () =>
       Object.keys(StudyRole).filter(
         (role) =>
-          (userRole === StudyRole.Validator || role !== StudyRole.Validator) &&
+          (accountRole === StudyRole.Validator || role !== StudyRole.Validator) &&
           (!readerOnly || role === StudyRole.Reader),
       ),
-    [readerOnly],
+    [accountRole, readerOnly],
   )
 
   return (
@@ -138,23 +145,11 @@ const NewStudyRightForm = ({ study, users, existingUsers, userRole }: Props) => 
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-rights-create-button">
           {t('create')}
         </LoadingButton>
-        {error && (
-          <p data-testid="study-rights-create-error">
-            {t.rich(error, {
-              support: (children) => <Link href={`mailto:${contactMail}`}>{children}</Link>,
-              link: (children) => (
-                <Link href={faq} target="_blank" rel="noreferrer noopener">
-                  {children}
-                </Link>
-              ),
-            })}
-          </p>
-        )}
       </Form>
       <NewStudyRightModal
-        otherOrganization={otherOrganization}
+        otherOrganizationVersion={otherOrganizationVersion}
         rightsWarning={form.getValues().role !== StudyRole.Reader}
-        decline={() => setOtherOrganization(false)}
+        decline={() => setOtherOrganizationVersion(false)}
         accept={() => saveRight(form.getValues())}
       />
     </>

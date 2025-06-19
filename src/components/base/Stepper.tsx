@@ -8,13 +8,14 @@ interface Props {
   fillValidatedSteps?: boolean
   className?: string
   small?: boolean
+  nextButton?: React.ReactNode
+  backButton?: React.ReactNode
 }
 
-const Stepper = ({ steps, activeStep, fillValidatedSteps, className, small }: Props) => (
+const Stepper = ({ steps, activeStep, fillValidatedSteps, className, small, nextButton, backButton }: Props) => (
   <MobileStepper
     className={classNames(className, 'mb2')}
     classes={{ dot: classNames(styles.stepperDots, { [styles.small]: small }), dotActive: styles.active }}
-    style={{ padding: 0 }}
     variant="dots"
     steps={steps}
     position="static"
@@ -27,8 +28,8 @@ const Stepper = ({ steps, activeStep, fillValidatedSteps, className, small }: Pr
         },
       }),
     }}
-    nextButton={null}
-    backButton={null}
+    nextButton={nextButton || null}
+    backButton={backButton || null}
   />
 )
 

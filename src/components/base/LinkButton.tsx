@@ -1,16 +1,12 @@
-import classNames from 'classnames'
-import Link, { LinkProps } from 'next/link'
-import { AnchorHTMLAttributes } from 'react'
-import buttonStyles from './Button.module.css'
-import styles from './LinkButton.module.css'
+import { Button, ButtonProps } from '@mui/material'
+import Link from 'next/link'
 
-const LinkButton = ({ className, ...rest }: LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>) => (
-  <Link
-    className={classNames(buttonStyles.button, styles.link, className, 'align-center p-2', {
-      [buttonStyles.secondary]: rest.color === 'secondary',
-    })}
-    {...rest}
-  />
+interface LinkButtonProps extends ButtonProps {
+  href?: string
+}
+
+const LinkButton = ({ href = '#', color = 'secondary', variant = 'outlined', ...props }: LinkButtonProps) => (
+  <Button component={Link} href={href} variant={variant} color={color} {...props} />
 )
 
 export default LinkButton

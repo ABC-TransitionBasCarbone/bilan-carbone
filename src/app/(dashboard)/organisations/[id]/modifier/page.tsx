@@ -1,28 +1,28 @@
-import withAuth, { UserProps } from '@/components/hoc/withAuth'
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import EditOrganizationPage from '@/components/pages/EditOrganization'
 import NotFound from '@/components/pages/NotFound'
-import { getOrganizationWithSitesById } from '@/db/organization'
-import { canEditOrganization } from '@/utils/organization'
+import { getOrganizationVersionWithSitesById, OrganizationVersionWithOrganization } from '@/db/organization'
+import { canEditOrganizationVersion } from '@/utils/organization'
 import { UUID } from 'crypto'
 
 interface Props {
   params: Promise<{ id: UUID }>
 }
 
-const OrganizationView = async (props: Props & UserProps) => {
+const OrganizationView = async (props: Props & UserSessionProps) => {
   const params = await props.params
 
   const id = params.id
-  if (!id || !props.user.organizationId) {
+  if (!id || !props.user.organizationVersionId) {
     return <NotFound />
   }
 
-  const organization = await getOrganizationWithSitesById(id)
-  if (!organization || !canEditOrganization(props.user, organization)) {
+  const organizationVersion = (await getOrganizationVersionWithSitesById(id)) as OrganizationVersionWithOrganization
+  if (!organizationVersion || !canEditOrganizationVersion(props.user, organizationVersion)) {
     return <NotFound />
   }
 
-  return <EditOrganizationPage organization={organization} user={props.user} />
+  return <EditOrganizationPage organizationVersion={organizationVersion} user={props.user} />
 }
 
 export default withAuth(OrganizationView)

@@ -1,3 +1,4 @@
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getLink } from '@/services/checklist'
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import ValidatedIcon from '@mui/icons-material/CheckCircle'
@@ -19,7 +20,7 @@ interface Props {
   validated: boolean
   disabled: boolean
   onClose: () => void
-  organizationId: string
+  organizationVersionId: string
   clientId?: string
   studyId?: string
 }
@@ -30,17 +31,21 @@ const ChecklistItem = ({
   validated,
   disabled,
   onClose,
-  organizationId,
+  organizationVersionId,
   clientId,
   studyId,
 }: Props) => {
   const t = useTranslations('checklist')
+  const { callServerFunction } = useServerFunction()
   const [expanded, setExpanded] = useState(false)
   const link = useMemo(() => getLink(step, studyId), [step, studyId])
 
   const markAsDone = async () => {
-    await addUserChecklistItem(step)
-    getCheckList()
+    await callServerFunction(() => addUserChecklistItem(step), {
+      onSuccess: () => {
+        getCheckList()
+      },
+    })
   }
 
   return (
@@ -80,12 +85,12 @@ const ChecklistItem = ({
           <p>
             {t.rich(`${step}Details`, {
               orga: (children) => (
-                <Link href={`/organisations/${organizationId}/modifier`} onClick={onClose}>
+                <Link href={`/organisations/${organizationVersionId}/modifier`} onClick={onClose}>
                   {children}
                 </Link>
               ),
               client: (children) => (
-                <Link href={`/organisations/${clientId ? clientId : organizationId}/modifier`} onClick={onClose}>
+                <Link href={`/organisations/${clientId ? clientId : organizationVersionId}/modifier`} onClick={onClose}>
                   {children}
                 </Link>
               ),
@@ -95,14 +100,14 @@ const ChecklistItem = ({
         <AccordionActions>
           {!validated && (
             <div className="justify-end">
-              <Button onClick={markAsDone} color="secondary">
+              <Button variant="outlined" onClick={markAsDone}>
                 {t('markAsDone')}
               </Button>
             </div>
           )}
           {link && (
             <div className="justify-end">
-              <LinkButton onClick={onClose} href={link}>
+              <LinkButton variant="contained" onClick={onClose} href={link}>
                 <span className="px-2">{t('go')}</span>
               </LinkButton>
             </div>

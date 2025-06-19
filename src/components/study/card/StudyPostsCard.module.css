@@ -8,6 +8,23 @@
   border-radius: 1rem;
   gap: 0.5rem;
   border: 2px solid;
+
+  &.post-darkBlue {
+    border-color: var(--post-darkBlue-dark);
+    color: var(--post-darkBlue-dark);
+  }
+  &.post-green {
+    border-color: var(--post-green-dark);
+    color: var(--post-green-dark);
+  }
+  &.post-blue {
+    border-color: var(--post-blue-dark);
+    color: var(--post-blue-dark);
+  }
+  &.post-orange {
+    border-color: var(--post-orange-dark);
+    color: var(--post-orange-dark);
+  }
 }
 
 .icon {
@@ -51,5 +68,13 @@
 
   &.success {
     color: var(--success-100);
+  }
+}
+
+.progressBar {
+  background: var(--warning);
+
+  &.success {
+    background: var(--success-100);
   }
 }

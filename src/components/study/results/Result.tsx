@@ -65,7 +65,7 @@ const Result = ({ computedResults, resultsUnit }: Props) => {
       grid={{ horizontal: true }}
       axisHighlight={{ x: 'none' }}
       yAxis={[{ label: tUnits(resultsUnit) }]}
-      series={[{ color: theme.palette.primary.main, data: values }]}
+      series={[{ color: theme.palette.secondary.main, data: values }]}
       {...chartSetting}
     />
   )

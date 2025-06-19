@@ -1,27 +1,35 @@
-import { getOrganizationById } from '@/db/organization'
-import { getUserByEmail } from '@/db/userImport'
-import { canEditOrganization, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
-import { User } from 'next-auth'
-import { auth } from '../auth'
+import { getAccountById } from '@/db/account'
+import { getOrganizationVersionById, OrganizationVersionWithOrganization } from '@/db/organization'
+import { getUserByEmail } from '@/db/user'
+import { canEditMemberRole, canEditOrganizationVersion, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
+import { UserSession } from 'next-auth'
+import { dbActualizedAuth } from '../auth'
 import { getOrganizationStudiesFromOtherUsers } from '../serverFunctions/study'
 
-export const isInOrgaOrParentFromId = async (userOrganizationId: string | null, organizationId: string) => {
-  if (userOrganizationId === organizationId) {
+export const isInOrgaOrParentFromId = async (
+  userOrganizationVersionId: string | null,
+  organizationVersionId: string,
+) => {
+  if (userOrganizationVersionId === organizationVersionId) {
     return true
   }
 
-  const organization = await getOrganizationById(organizationId)
-  return organization && isInOrgaOrParent(userOrganizationId, organization)
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId)
+  return (
+    organizationVersion &&
+    userOrganizationVersionId &&
+    isInOrgaOrParent(userOrganizationVersionId, organizationVersion as OrganizationVersionWithOrganization)
+  )
 }
 
-export const canCreateOrganization = async (user: User) => {
-  const dbUser = await getUserByEmail(user.email)
+export const canCreateOrganization = async (account: UserSession) => {
+  const dbAccount = await getAccountById(account.accountId)
 
-  if (!dbUser) {
+  if (!dbAccount) {
     return false
   }
 
-  const organization = await getOrganizationById(dbUser.organizationId)
+  const organization = await getOrganizationVersionById(dbAccount.organizationVersionId)
   if (!organization || !organization.isCR) {
     return false
   }
@@ -29,36 +37,76 @@ export const canCreateOrganization = async (user: User) => {
   return true
 }
 
-export const canUpdateOrganization = async (user: User, organizationId: string) => {
-  const dbUser = await getUserByEmail(user.email)
+export const canUpdateOrganizationVersion = async (account: UserSession, organizationVersionId: string) => {
+  const dbAccount = await getAccountById(account.accountId)
 
-  if (!dbUser) {
+  if (!dbAccount) {
     return false
   }
 
-  if (!isInOrgaOrParentFromId(user.organizationId, organizationId)) {
+  if (!(await isInOrgaOrParentFromId(account.organizationVersionId, organizationVersionId))) {
     return false
   }
 
-  const organization = await getOrganizationById(dbUser.organizationId)
-  if (!organization || !canEditOrganization(user, organization)) {
+  const organizationVersion = (await getOrganizationVersionById(
+    account.organizationVersionId,
+  )) as OrganizationVersionWithOrganization
+  if (!organizationVersion || !canEditOrganizationVersion(account, organizationVersion)) {
     return false
   }
 
   return true
 }
 
-export const canDeleteOrganization = async (organizationId: string) => {
-  const [session, targetOrganization] = await Promise.all([auth(), getOrganizationById(organizationId)])
-  if (!session || !session.user || !targetOrganization) {
+export const canDeleteOrganizationVersion = async (organizationVersionId: string) => {
+  const [session, targetOrganizationVersion] = await Promise.all([
+    dbActualizedAuth(),
+    getOrganizationVersionById(organizationVersionId),
+  ])
+  if (!session || !session.user || !targetOrganizationVersion) {
     return false
   }
 
+  const organizationStudiesFromOtherUsers = await getOrganizationStudiesFromOtherUsers(
+    organizationVersionId,
+    session.user.accountId,
+  )
+
   if (
-    !hasEditionRole(false, session.user.role) &&
-    (await getOrganizationStudiesFromOtherUsers(organizationId, session.user.id))
+    !hasEditionRole(true, session.user.role) ||
+    (organizationStudiesFromOtherUsers.success && !!organizationStudiesFromOtherUsers.data)
   ) {
     return false
   }
-  return targetOrganization.parentId === session.user.organizationId
+
+  return targetOrganizationVersion.parentId === session.user.organizationVersionId
+}
+
+/**
+ * This function does not take into account the fact that you cannot delete a member if it is the only validator on some studies
+ * If you want to add the check, you need to call the getStudiesWithOnlyValidator function (return the list of studies where the user is the only validator)
+ */
+export const canDeleteMember = async (email: string) => {
+  const session = await dbActualizedAuth()
+  if (!session || !session.user) {
+    return false
+  }
+
+  if (!canEditMemberRole(session.user)) {
+    return false
+  }
+
+  const targetMember = await getUserByEmail(email)
+  // Ici c'est normal de récupérer le premier account, on a juste besoin du userId
+  if (!targetMember || targetMember.accounts[0].userId === session.user.id) {
+    return false
+  }
+
+  const targetMemberAccount = targetMember.accounts.find(
+    (account) => account.organizationVersionId === session.user.organizationVersionId,
+  )
+  if (!targetMemberAccount) {
+    return false
+  }
+  return true
 }
