@@ -509,7 +509,8 @@
         "close": "Close"
       },
       "no-data": "No data to display",
-      "loading": "Loanding results"
+      "loading": "Loanding results",
+      "info": ""
     },
     "export": {
       "activityDataComment": "Activity data comment",

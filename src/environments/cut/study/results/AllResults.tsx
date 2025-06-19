@@ -5,7 +5,7 @@ import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import DownloadIcon from '@mui/icons-material/Download'
-import { Box, Button, CircularProgress, Tab, Tabs, Typography, useTheme } from '@mui/material'
+import { Box, Button, Tab, Tabs, Typography, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent, useMemo, useState } from 'react'
@@ -37,15 +37,6 @@ const a11yProps = (index: number) => {
     id: `full-width-tab-${index}`,
     'aria-controls': `full-width-tabpanel-${index}`,
   }
-}
-
-const CircularProgressCenter = ({ message }: { message: string }) => {
-  return (
-    <Box className={(styles.circularContainer, styles.gapped)}>
-      <CircularProgress variant="indeterminate" color="primary" />
-      <Typography>{message}</Typography>
-    </Box>
-  )
 }
 
 const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) => {
