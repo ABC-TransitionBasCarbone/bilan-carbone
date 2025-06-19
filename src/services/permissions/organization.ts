@@ -22,6 +22,18 @@ export const isInOrgaOrParentFromId = async (
   )
 }
 
+export const isVersionInOrgaOrParent = async (
+  organizationId: string,
+  organizationVersionId: { parentId: string | null; organization: { id: string } },
+) => {
+  if (organizationId === organizationVersionId.organization.id) {
+    return true
+  }
+
+  const organizationVersion = await getOrganizationVersionById(organizationVersionId.parentId)
+  return organizationId === organizationVersion?.organizationId
+}
+
 export const canCreateOrganization = async (account: UserSession) => {
   const dbAccount = await getAccountById(account.accountId)
 
