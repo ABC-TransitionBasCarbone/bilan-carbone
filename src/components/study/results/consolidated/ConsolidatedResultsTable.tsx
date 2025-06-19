@@ -42,7 +42,7 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies, hiddenUn
   }
 
   const columns = useMemo(() => {
-    const globalColumns = [
+    const tmpColumns = [
       {
         header: t('post'),
         accessorFn: ({ post }) => tPost(post),
@@ -63,25 +63,26 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies, hiddenUn
           )
         },
       },
-      {
-        header: t('value', { unit: tUnits(study.resultsUnit) }),
-        accessorKey: 'value',
-        cell: ({ getValue }) => (
-          <p className={styles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit])}</p>
-        ),
-      },
     ] as ColumnDef<ResultsByPost>[]
 
     if (!hiddenUncertainty) {
-      globalColumns.push({
+      tmpColumns.push({
         header: t('uncertainty'),
         accessorFn: ({ uncertainty }) =>
           uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
       })
     }
 
-    return globalColumns
-  }, [study.resultsUnit, t, tPost, tQuality, tUnits])
+    tmpColumns.push({
+      header: t('value', { unit: tUnits(study.resultsUnit) }),
+      accessorKey: 'value',
+      cell: ({ getValue }) => (
+        <p className={styles.number}>{formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit])}</p>
+      ),
+    })
+
+    return tmpColumns
+  }, [hiddenUncertainty, study.resultsUnit, t, tPost, tQuality, tUnits])
 
   const data = useMemo(
     () => computeResultsByPost(study, tPost, studySite, withDependencies, validatedOnly, BCPost),
@@ -103,7 +104,7 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies, hiddenUn
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
+                <th key={header.id} className={styles.header}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                 </th>
               ))}
