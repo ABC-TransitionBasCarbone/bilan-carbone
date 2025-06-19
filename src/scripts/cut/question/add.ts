@@ -6,20 +6,22 @@ import { parse } from 'csv-parse'
 import fs from 'fs'
 
 enum HEADERS {
-  POSTES = 'Postes',
-  SUBPOSTE = 'Sous-Postes',
-  QUESTION = 'Question',
   ID_EMISSION_FACTOR = 'ID FE',
-  TYPE = 'Type',
   ORDER = 'Ordre',
+  POSSIBLEANSWERS = 'PossibleAnswers',
+  POSTES = 'Postes',
+  QUESTION = 'Question',
+  SUBPOSTE = 'Sous-Postes',
+  TYPE = 'Type',
 }
 
 interface Header {
-  Order: number
-  Postes: string
-  SubPost: SubPost
-  Question: string
   IdEmmissionFactor: string
+  Order: number
+  PossibleAnswers: JSON
+  Postes: string
+  Question: string
+  SubPost: SubPost
   Type: Type
 }
 
@@ -53,9 +55,9 @@ const addQuestions = async (file: string) => {
         })
       })
       .on('end', async () => {
-        console.log()
+        console.log(`Ajout de ${questions.length} questions …`)
         await createQuestions(questions)
-        console.log()
+        console.log('Questions Créées')
         resolve()
       })
       .on('error', (error) => {
@@ -67,7 +69,7 @@ const addQuestions = async (file: string) => {
 const program = new Command()
 
 program
-  .name('questions')
+  .name('add-questions')
   .description('Script pour importer les questions pour CUT')
   .version('1.0.0')
   .requiredOption('-n, --name <value>', 'Nom de la version')
