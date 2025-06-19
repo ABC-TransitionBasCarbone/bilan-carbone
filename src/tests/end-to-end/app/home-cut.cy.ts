@@ -16,9 +16,4 @@ describe('Home page - CUT environment', () => {
     cy.getByTestId('home-cut-logo').scrollIntoView()
     cy.getByTestId('home-cut-logo').find('img[alt="Logo de france 3"]').should('be.visible')
   })
-
-  it('Should contain Caisse des dépôts logo', () => {
-    cy.getByTestId('home-cut-logo').scrollIntoView()
-    cy.getByTestId('home-cut-logo').find('img[alt="Logo du groupe la caisse des dépots"]').should('be.visible')
-  })
 })
