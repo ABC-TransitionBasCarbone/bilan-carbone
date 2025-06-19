@@ -8,7 +8,7 @@ import DownloadIcon from '@mui/icons-material/Download'
 import { Box, Button, CircularProgress, Tab, Tabs, Typography, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
-import { SyntheticEvent, useEffect, useMemo, useState } from 'react'
+import { SyntheticEvent, useMemo, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
@@ -50,7 +50,6 @@ const CircularProgressCenter = ({ message }: { message: string }) => {
 
 const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) => {
   const theme = useTheme()
-  const [loading, setLoading] = useState<boolean>(true)
   const [value, setValue] = useState(0)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -90,16 +89,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
     const precision = unit === 'K' ? 3 : 0
     return `${formatNumber(safeValue / STUDY_UNIT_VALUES[unit], precision)} ${tUnits(unit)}`
   }
-  console.log(barData.colors)
-  useEffect(() => {
-    setLoading(true)
 
-    const timeout = setTimeout(() => {
-      setLoading(false)
-    }, 2000)
-
-    return () => clearTimeout(timeout)
-  }, [resultsByPost])
   return (
     <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
       <Box component="section" className={classNames(styles.gapped, 'flex')}>
@@ -144,9 +134,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           {resultsByPost.length !== 0 && (
             <>
               <TabPanel value={value} index={1}>
-                {loading ? (
-                  <CircularProgressCenter message={t('loading')} />
-                ) : barData.values.length !== 0 ? (
+                {barData.values.length !== 0 && barData.values.some((v) => v !== 0) ? (
                   <BarChart
                     xAxis={[
                       {
@@ -176,9 +164,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                 )}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {loading ? (
-                  <CircularProgressCenter message={t('loading')} />
-                ) : pieData.length !== 0 ? (
+                {pieData.length !== 0 ? (
                   <PieChart
                     series={[{ data: pieData, valueFormatter: ({ value }) => chartFormatter(value) }]}
                     height={350}

@@ -28,8 +28,7 @@ export const useComputedResults = (resultsByPost: ResultsByPost[], tPost: TFunct
         const filteredSubPosts = post.subPosts.filter((subPost) =>
           filterWithDependencies(subPost.post as SubPost, false),
         )
-        // const value = filteredSubPosts.reduce((res, subPost) => res + subPost.value, 0)
-        const value = 23
+        const value = filteredSubPosts.reduce((res, subPost) => res + subPost.value, 0)
 
         return { ...post, subPosts: filteredSubPosts, value }
       })
