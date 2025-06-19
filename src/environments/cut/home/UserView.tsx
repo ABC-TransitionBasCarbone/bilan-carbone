@@ -20,10 +20,8 @@ const StyledLink = ({ ...props }: LinkProps) => {
     <MUILink
       component={Link}
       {...props}
-      sx={{
-        borderColor: theme.palette.primary.main,
-        backgroundColor: theme.palette.primary.light,
-      }}
+      borderColor={theme.palette.primary.main}
+      backgroundColor={theme.palette.primary.light}
     />
   )
 }
