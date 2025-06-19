@@ -69,16 +69,20 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   return (
     <>
       {withDependencies === undefined && showTitle && (
-        <div className={`${styles.header} justify-between mb1`}>
-          <StyledChip
-            icon={<SpaIcon />}
-            color="success"
-            label={study.name}
-            component="a"
-            href={`/etudes/${study.id}`}
-            clickable
-          />
-          <Button href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</Button>
+        <div className={`${styles.header} flex justify-between mb1`}>
+          <div className={styles.studyNameContainer}>
+            <StyledChip
+              icon={<SpaIcon />}
+              color="success"
+              label={study.name}
+              component="a"
+              href={`/etudes/${study.id}`}
+              clickable
+            />
+          </div>
+          <Button className={styles.seeResultsButton} href={`/etudes/${study.id}/comptabilisation/resultats`}>
+            {t('seeResults')}
+          </Button>
         </div>
       )}
 
