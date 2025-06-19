@@ -68,7 +68,14 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
     }
   }
   const resetLink = useMemo(() => getEnvRoute(`reset-password?email=${email}`, environment), [email])
-  const activationLink = useMemo(() => getEnvRoute(`activation?email=${email}`, environment), [email])
+  const activationLink = useMemo(
+    () =>
+      getEnvRoute(
+        environment === Environment.CUT ? `register?email=${email}` : `activation?email=${email}`,
+        environment,
+      ),
+    [email],
+  )
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
@@ -118,7 +125,7 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
             })}
           </p>
         )}
-        <div className={styles.activation}>
+        <div className={authStyles.bottomLink}>
           {t('firstConnection')}
           <Link data-testid="activation-button" className="ml-2" href={activationLink} prefetch={false}>
             {t('activate')}

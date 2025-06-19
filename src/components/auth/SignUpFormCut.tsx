@@ -1,9 +1,11 @@
 'use client'
 
+import { getEnvRoute } from '@/services/email/utils'
 import { signUpCutUser } from '@/services/serverFunctions/user'
 import { SignUpCutCommand, SignUpCutCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
+import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -20,6 +22,7 @@ const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
 const SignUpFormCut = () => {
   const t = useTranslations('signupCut')
+  const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
@@ -94,6 +97,12 @@ const SignUpFormCut = () => {
             })}
           </p>
         )}
+        <div className={authStyles.bottomLink}>
+          {tForm('alreadyRegistered')}
+          <Link className="ml-2" href={getEnvRoute('login', Environment.CUT)} prefetch={false}>
+            {tForm('login')}
+          </Link>
+        </div>
       </FormControl>
     </Form>
   )
