@@ -586,7 +586,10 @@ export const signUpCutUser = async (email: string, siretOrCNC: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateAccount(account.id, { organizationVersion: { connect: { id: organizationVersion.id } } })
+    await updateAccount(account.id, {
+      role: organization?.id ? Role.DEFAULT : Role.ADMIN,
+      organizationVersion: { connect: { id: organizationVersion.id } },
+    })
     if (organization?.id) {
       const createdAccount = (await getAccountById(account.id || '')) as AccountWithUser
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(createdAccount))
