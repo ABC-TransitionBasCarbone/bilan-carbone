@@ -696,7 +696,14 @@
         "Refrigerateurs": "Réfrigérateurs",
         "Congelateurs": "Congélateurs",
         "Warmers": "Warmers",
-        "Distributeurs": "Distributeurs snacks / boisson"
+        "Distributeurs": "Distributeurs snacks / boisson",
+        "format": {
+          "Text": "Texte",
+          "PostalCode": "Code postal",
+          "Year": "Année",
+          "Hour": "Heure",
+          "Number": "Number"
+        }
       }
     },
     "create": {
