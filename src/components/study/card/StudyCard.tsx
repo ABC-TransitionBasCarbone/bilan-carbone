@@ -37,7 +37,7 @@ const StudyCard = async ({ study, user }: Props) => {
 
   return (
     <li data-testid="study" className="flex">
-      <Box className={classNames(styles.card, 'flex-col grow')}>
+      <Box className={classNames(styles.card, 'flex-col grow w100')}>
         <div className="justify-center">
           <StudyName name={study.name} />
         </div>
