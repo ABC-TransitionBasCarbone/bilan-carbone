@@ -117,3 +117,7 @@
 .w100 {
   width: 100% !important;
 }
+
+.gapped1 {
+  gap: 1rem;
+}

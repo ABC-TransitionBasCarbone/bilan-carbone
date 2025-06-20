@@ -23,7 +23,7 @@ export const subPostQuestions: Partial<Record<SubPost, Question[]>> = {
       options: ['total', 'extension', 'otherBigRenovation'],
     },
     {
-      key: 'Renovation',
+      key: 'SharedBuilding',
       type: 'qcu',
     },
   ],

@@ -21,17 +21,19 @@ export const QCU = ({ question }: Props) => {
   return (
     <div className="flex flex-col m2">
       <Typography className="mb2">{tCutQuestions(question.key)}</Typography>
-      {[tCutQuestions('qcu.yes'), tCutQuestions('qcu.no')].map((option, index) => (
-        <StyledBox key={`box-${index}`} className="p-2 pr1 flex flex-row align-center mb1">
-          <Radio
-            key={index}
-            name={option}
-            checked={selectedOption === option}
-            onChange={(e) => setSelectedOption(e.target.checked ? option : null)}
-          />
-          <Typography>{tCutQuestions(`qcu.${option}`)}</Typography>
-        </StyledBox>
-      ))}
+      <div className="flex flex-row gapped1">
+        {[tCutQuestions('qcu.yes'), tCutQuestions('qcu.no')].map((option, index) => (
+          <StyledBox key={`box-${index}`} className="p-2 pr1 flex flex-row align-center mb1">
+            <Radio
+              key={index}
+              name={option}
+              checked={selectedOption === option}
+              onChange={(e) => setSelectedOption(e.target.checked ? option : null)}
+            />
+            <Typography>{option}</Typography>
+          </StyledBox>
+        ))}
+      </div>
     </div>
   )
 }
