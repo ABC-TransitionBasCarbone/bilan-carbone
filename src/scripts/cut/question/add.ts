@@ -4,70 +4,114 @@ import { Prisma, QuestionType, SubPost } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
+import path from 'path'
 
 enum HEADERS {
   ID_EMISSION_FACTOR = 'ID FE',
-  ORDER = 'Ordre',
-  POSSIBLEANSWERS = 'PossibleAnswers',
+  ORDER = 'Order',
+  POSSIBLE_ANSWERS = 'PossibleAnswers',
   POSTES = 'Postes',
   QUESTION = 'Question',
-  SUBPOSTE = 'Sous-Postes',
+  SUB_POSTE = 'Sous-postes',
   TYPE = 'Type',
   UNITE = 'Unité',
 }
 
 interface Header {
-  IdEmmissionFactor: string
-  Order: number
-  PossibleAnswers: string
-  Post: string
-  Question: string
-  SubPost: SubPost
-  Type: QuestionType
-  Unite: string
+  [HEADERS.ID_EMISSION_FACTOR]: string
+  [HEADERS.ORDER]: string
+  [HEADERS.POSSIBLE_ANSWERS]: string
+  [HEADERS.POSTES]: string
+  [HEADERS.QUESTION]: string
+  [HEADERS.SUB_POSTE]: string
+  [HEADERS.TYPE]: string
+  [HEADERS.UNITE]: string
 }
 
-const addQuestions = async (file: string) => {
-  const questions: Prisma.QuestionCreateManyInput[] = []
-  await new Promise<void>((resolve, reject) => {
-    fs.createReadStream(file)
+const isValidEnumValue = <T extends Record<string, string>>(enumObj: T, value: string): value is T[keyof T] => {
+  return Object.values(enumObj).includes(value)
+}
+
+const generateIdIntern = (label: string) =>
+  label
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+const fileExists = (filePath: string) => fs.existsSync(filePath) && fs.statSync(filePath).isFile()
+
+const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]> => {
+  return new Promise((resolve, reject) => {
+    const questions: Prisma.QuestionCreateManyInput[] = []
+    const errors: string[] = []
+    const encoding = getEncoding(file)
+
+    fs.createReadStream(file, { encoding })
       .pipe(
         parse({
-          columns: (headers: string[]) => {
-            const expectedHeaders = Object.values(HEADERS)
-            const missingHeaders = expectedHeaders.filter((h) => !headers.includes(h))
-
-            if (missingHeaders.length > 0) {
-              reject(new Error(`Headers manquants dans le fichier CSV : ${missingHeaders.join(', ')}`))
-            }
-
-            return headers
-          },
-          delimiter: ';',
-          encoding: getEncoding(file),
+          columns: true,
+          delimiter: ',',
+          trim: true,
         }),
       )
       .on('data', (row: Header) => {
+        const label = row[HEADERS.QUESTION]
+        const type = row[HEADERS.TYPE] === '' ? QuestionType.SELECT : row[HEADERS.TYPE].toUpperCase()
+        const subPost = row[HEADERS.SUB_POSTE]
+
+        if (label === '') {
+          errors.push(`Question manquante, Order "${row[HEADERS.ORDER]}", Sous postes "${row[HEADERS.SUB_POSTE]}"`)
+          return
+        }
+
+        if (!isValidEnumValue(QuestionType, type)) {
+          errors.push(`Type invalide: "${type}" pour la question "${label}"`)
+          return
+        }
+
+        if (!isValidEnumValue(SubPost, subPost)) {
+          errors.push(`Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POSTES]}"`)
+          return
+        }
+
         questions.push({
-          idIntern: row.Question.replace(' ', '-'),
-          label: row.Question,
-          subPost: row.SubPost,
-          order: row.Order,
-          type: row.Type,
-          possibleAnswers: row.PossibleAnswers.split('§'),
-          unite: row.Unite,
+          idIntern: generateIdIntern(label),
+          label,
+          subPost,
+          order: Number(row[HEADERS.ORDER]),
+          type,
+          possibleAnswers: row[HEADERS.POSSIBLE_ANSWERS].split('§').map((s) => s.trim()),
+          unite: row[HEADERS.UNITE] || '',
         })
       })
-      .on('end', async () => {
-        console.log(`Ajout de ${questions.length} questions …`)
-        await createQuestions(questions)
-        console.log('Questions Créées')
-        resolve()
+      .on('end', () => {
+        if (errors.length) {
+          return reject(new Error(errors.join('\n')))
+        }
+        resolve(questions)
       })
-      .on('error', (error) => {
-        reject(error)
-      })
+      .on('error', reject)
   })
+}
+
+const addQuestions = async (file: string) => {
+  if (!file || !fileExists(file)) {
+    throw new Error(`Le fichier "${file}" est introuvable.`)
+  }
+
+  console.log(`📥 Lecture du fichier : ${file}`)
+
+  const questions = await parseCsv(file)
+
+  console.log(`📊 ${questions.length} questions prêtes à être insérées.`)
+
+  await createQuestions(questions)
+
+  console.log('✅ Insertion terminée.')
 }
 
 const program = new Command()
@@ -76,10 +120,12 @@ program
   .name('add-questions')
   .description('Script pour importer les questions pour CUT')
   .version('1.0.0')
-  .requiredOption('-n, --name <value>', 'Nom de la version')
-  .option('-f, --file <value>', 'Import from CSV file')
+  .requiredOption('-f, --file <value>', 'Import depuis un fichier CSV')
   .parse(process.argv)
 
-const params = program.opts()
+const { file } = program.opts()
 
-addQuestions(params.file)
+addQuestions(path.resolve(file)).catch((err) => {
+  console.error('❌ Erreur :', err.message)
+  process.exit(1)
+})
