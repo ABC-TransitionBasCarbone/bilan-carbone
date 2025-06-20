@@ -703,6 +703,12 @@
           "Year": "Année",
           "Hour": "Heure",
           "Number": "Number"
+        },
+        "Renovation": "De quel type de rénovation s'est-il s'agit ? (Plusieurs réponses possibles)",
+        "qcm": {
+          "total": "Rénovation totale (hors agrandissement)",
+          "extension": "Agrandissement - extension",
+          "otherBigRenovation": "Autre travaux importants (par ex : changement moquette, ravalement, peinture...)"
         }
       }
     },

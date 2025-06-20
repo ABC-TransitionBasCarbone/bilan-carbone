@@ -14,7 +14,7 @@ interface Props {
 }
 
 const SubPostTabForm = ({ subPost, emissionSources, study }: Props) => {
-  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tCutQuestions = useTranslations('cutQuestions')
   const questions = subPostQuestions[subPost] || []
   const [newEmissionSources, setNewEmissionSources] = useState(emissionSources)
 

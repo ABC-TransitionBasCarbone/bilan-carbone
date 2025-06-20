@@ -697,12 +697,18 @@
         "Congelateurs": "Freezers",
         "Warmers": "Warmers",
         "Distributeurs": "Snack / drink vending machines",
+        "Renovation": "What type of renovation was it? (Multiple answers possible)",
         "format": {
           "Text": "Text",
           "PostalCode": "Postal code",
           "Year": "Year",
           "Hour": "hour",
           "Number": "Number"
+        },
+        "qcm": {
+          "total": "",
+          "extension": "",
+          "otherBigRenovation": ""
         }
       }
     },

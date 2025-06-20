@@ -17,7 +17,7 @@ interface Props {
 
 const StudyPostsPage = ({ post, study }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
-  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tCutQuestions = useTranslations('cutQuestions')
   const subPosts = useMemo(() => subPostsByPost[post], [post])
   const { studySite } = useStudySite(study)
   const [activeStep, setActiveStep] = useState(0)
