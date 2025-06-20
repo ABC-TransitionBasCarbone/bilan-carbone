@@ -508,8 +508,7 @@
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "close": "Close"
       },
-      "no-data": "No data to display",
-      "loading": "Loanding results",
+      "noData": "No data to display",
       "info": ""
     },
     "export": {

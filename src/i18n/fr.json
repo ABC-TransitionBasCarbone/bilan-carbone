@@ -509,8 +509,7 @@
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
       },
-      "no-data": "Aucune données à afficher",
-      "loading": "Chargement des résultats"
+      "noData": "Aucune données à afficher"
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",

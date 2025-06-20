@@ -150,7 +150,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                   />
                 ) : (
                   <Typography align="center" sx={{ mt: '0.25rem' }}>
-                    {t('no-data')}
+                    {t('noData')}
                   </Typography>
                 )}
               </TabPanel>
@@ -162,7 +162,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                   />
                 ) : (
                   <Typography align="center" sx={{ mt: '0.25rem' }}>
-                    {t('no-data')}
+                    {t('noData')}
                   </Typography>
                 )}
               </TabPanel>
