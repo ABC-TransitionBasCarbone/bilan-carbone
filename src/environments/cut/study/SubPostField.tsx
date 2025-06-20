@@ -1,4 +1,5 @@
 import Block from '@/components/base/Block'
+import { QCM } from '@/components/questions/QCM'
 import TextUnitInput from '@/components/questions/TextUnitInput'
 import TimePickerInput from '@/components/questions/TimePickerInput'
 import useStudySite from '@/components/study/site/useStudySite'
@@ -12,7 +13,7 @@ import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { InputCategories, InputCategory, InputFormat, Question } from '../services/post'
+import { InputCategories, InputCategory, InputFormat, Question, QuestionType } from '../services/post'
 
 interface Props {
   isLoading: boolean
@@ -142,10 +143,11 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
     ],
   )
 
-  const getInput = useCallback(() => {
+  const getTextInput = useCallback(() => {
     if (!question.format) {
       return
     }
+
     switch (InputCategories[question.format]) {
       case InputCategory.Text:
         return (
@@ -179,17 +181,28 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
         break
     }
   }, [
-    question.format,
-    question.type,
-    unit,
-    isLoading,
     currentValue,
-    emissionSource?.value,
     emissionSource?.id,
-    tCutQuestions,
+    emissionSource?.value,
     error,
     handleUpdate,
+    isLoading,
+    question.format,
+    question.type,
+    tCutQuestions,
+    unit,
   ])
+
+  const getInput = useCallback(() => {
+    switch (question.type) {
+      case QuestionType.Text:
+        return getTextInput()
+      case QuestionType.QCM:
+        return <QCM question={question} />
+      default:
+        return <></>
+    }
+  }, [getTextInput, question])
 
   return (
     <Block title={tCutQuestions(question.key, { value: question?.value || '' })}>

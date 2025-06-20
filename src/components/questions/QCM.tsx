@@ -1,5 +1,5 @@
 import { Question } from '@/environments/cut/services/post'
-import { Checkbox, FormControlLabel, styled, Typography } from '@mui/material'
+import { Checkbox, FormControlLabel, styled } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
@@ -15,12 +15,11 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
 }))
 
 export const QCM = ({ question }: Props) => {
-  const tCutQuestions = useTranslations('cutQuestions')
+  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
 
   return (
     <div className="flex flex-col m2">
-      <Typography className="mb2">{tCutQuestions(question.key)}</Typography>
       {question.options?.map((option, index) => (
         <StyledFormControlLabel
           key={`box-${index}`}

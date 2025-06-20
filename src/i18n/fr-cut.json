@@ -96,27 +96,5 @@
     "DEFAULT": "Collaborateur",
     "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées).",
     "DEFAULT_description": "Un collaborateur peut modifier des études. Il n'a pas accès aux paramètres de l'organisation."
-  },
-  "cutQuestions": {
-    "error": "Erreur lors de la mise à jour du champs",
-    "next": "Suivant",
-    "previous": "Précédent",
-    "numberOfYears": "Nombre d'années",
-    "bonbons": "Bonbons - Nombre (sachets de {value}g)",
-    "chips": "Chips - Nombre (sachets de {value}g)",
-    "Electromenager": "Pour chacun de ces équipements électroménagers, veuillez renseigner :",
-    "FretCadence": "Fret - Cadence (fois/mois)",
-    "FretPoids moyen": "Fret - Poids moyen (kg)",
-    "FretProvenance": "Où est basé votre principal fournisseur ?",
-    "Refrigerateurs": "Réfrigérateurs",
-    "Congelateurs": "Congélateurs",
-    "Warmers": "Warmers",
-    "Distributeurs": "Distributeurs snacks / boisson",
-    "Renovation": "De quel type de rénovation s'est-il s'agit ? (Plusieurs réponses possibles)", 
-    "qcm": {
-      "total": "Rénovation totale (hors agrandissement)",
-      "extension": "Agrandissement - extension",
-      "otherBigRenovation": "Autre travaux importants (par ex : changement moquette, ravalement, peinture...)"
-    }
   }
 }
