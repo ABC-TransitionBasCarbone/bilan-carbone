@@ -704,8 +704,8 @@
       },
       "cutQuestions": {
         "error": "Error while updating the field",
-        "next": "Next",
-        "previous": "Previous",
+        "next": "Next sub-post",
+        "previous": "Previous sub-post",
         "numberOfYears": "Number of years",
         "bonbons": "Candies - Quantity (packs of {value}g)",
         "chips": "Chips - Quantity (packs of {value}g)",
@@ -723,7 +723,14 @@
           "Year": "Year",
           "Hour": "hour",
           "Number": "Number"
-        }
+        },
+        "loading": "Loading questions...",
+        "errorLoadingQuestions": "Error loading questions",
+        "retry": "Retry",
+        "finish": "Finish",
+        "noQuestions": "No questions found for this sub-post",
+        "autoSaveError": "The answer could not be saved automatically",
+        "autoSaveInfo": "Your answers are automatically saved as you type."
       }
     },
     "create": {
@@ -1429,5 +1436,11 @@
     "delay": "Later ({time} days)",
     "answer": "Let's go",
     "close": "Close"
+  },
+  "common": {
+    "saving": "Saving...",
+    "saved": "Saved",
+    "savedAt": "Saved at {time}",
+    "saveError": "Error saving"
   }
 }

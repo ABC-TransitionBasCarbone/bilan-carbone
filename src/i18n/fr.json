@@ -704,8 +704,8 @@
       },
       "cutQuestions": {
         "error": "Erreur lors de la mise à jour du champs",
-        "next": "Suivant",
-        "previous": "Précédent",
+        "next": "Sous-poste suivant",
+        "previous": "Sous-poste précédent",
         "numberOfYears": "Nombre d'années",
         "bonbons": "Bonbons - Nombre (sachets de {value}g)",
         "chips": "Chips - Nombre (sachets de {value}g)",
@@ -722,8 +722,15 @@
           "PostalCode": "Code postal",
           "Year": "Année",
           "Hour": "Heure",
-          "Number": "Number"
-        }
+          "Number": "Nombre"
+        },
+        "loading": "Chargement des questions...",
+        "errorLoadingQuestions": "Erreur lors du chargement des questions",
+        "retry": "Réessayer",
+        "finish": "Terminer",
+        "noQuestions": "Aucune question trouvée pour ce sous-poste",
+        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer.",
+        "autoSaveInfo": "Vos réponses sont automatiquement sauvegardées pendant que vous tapez."
       }
     },
     "create": {
@@ -1429,5 +1436,11 @@
     "delay": "Plus tard ({time} jours)",
     "answer": "Je donne mon avis",
     "close": "Fermer"
+  },
+  "common": {
+    "saving": "Sauvegarde...",
+    "saved": "Enregistré",
+    "savedAt": "Enregistré à {time}",
+    "saveError": "Erreur de sauvegarde"
   }
 }
