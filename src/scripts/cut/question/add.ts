@@ -9,8 +9,8 @@ import path from 'path'
 enum HEADERS {
   ID_EMISSION_FACTOR = 'ID FE',
   ORDER = 'Order',
-  POSSIBLE_ANSWERS = 'PossibleAnswers',
-  POSTES = 'Postes',
+  POSSIBLE_ANSWER = 'PossibleAnswers',
+  POSTE = 'Postes',
   QUESTION = 'Question',
   REQUIRED = 'Required',
   SUB_POSTE = 'Sous-postes',
@@ -21,8 +21,8 @@ enum HEADERS {
 interface Header {
   [HEADERS.ID_EMISSION_FACTOR]: string
   [HEADERS.ORDER]: string
-  [HEADERS.POSSIBLE_ANSWERS]: string
-  [HEADERS.POSTES]: string
+  [HEADERS.POSSIBLE_ANSWER]: string
+  [HEADERS.POSTE]: string
   [HEADERS.QUESTION]: string
   [HEADERS.REQUIRED]: boolean
   [HEADERS.SUB_POSTE]: string
@@ -76,7 +76,7 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
         }
 
         if (!isValidEnumValue(SubPost, subPost)) {
-          errors.push(`Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POSTES]}"`)
+          errors.push(`Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POSTE]}"`)
           return
         }
 
@@ -86,7 +86,7 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
           subPost,
           order: Number(row[HEADERS.ORDER]),
           type,
-          possibleAnswers: row[HEADERS.POSSIBLE_ANSWERS].split('§').map((s) => s.trim()),
+          possibleAnswers: row[HEADERS.POSSIBLE_ANSWER].split('§').map((s) => s.trim()),
           unite: row[HEADERS.UNITE] || '',
           required: row[HEADERS.REQUIRED] || false,
         })
