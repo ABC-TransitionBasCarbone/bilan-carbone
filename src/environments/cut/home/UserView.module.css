@@ -17,7 +17,6 @@
 }
 
 .styledBoxInfo {
-  display: flex;
   align-items: center;
   padding-left: 2rem;
   height: 5rem;
@@ -32,13 +31,12 @@
 }
 
 .linkContainer {
-  display: flex;
-  justify-content: space-between;
   gap: 1rem;
   margin-top: 1rem;
 }
 
 .styledBoxLink {
+  align-items: center;
   width: 50%;
   height: 10rem;
   gap: 1rem;
