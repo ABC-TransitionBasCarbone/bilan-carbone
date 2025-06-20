@@ -1,10 +1,11 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { BCPost } from '@/services/posts'
+import { environmentPostMapping } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { getStandardDeviationRating } from '@/services/uncertainty'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -28,6 +29,7 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies, hiddenUn
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
   const [validatedOnly, setValidatedOnly] = useState(true)
+  const { environment } = useAppEnvironmentStore()
 
   useEffect(() => {
     applyUserSettings()
@@ -84,10 +86,19 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies, hiddenUn
     return tmpColumns
   }, [hiddenUncertainty, study.resultsUnit, t, tPost, tQuality, tUnits])
 
-  const data = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, withDependencies, validatedOnly, BCPost),
-    [study, tPost, studySite, withDependencies, validatedOnly],
-  )
+  const data = useMemo(() => {
+    if (!environment) {
+      return []
+    }
+    return computeResultsByPost(
+      study,
+      tPost,
+      studySite,
+      withDependencies,
+      validatedOnly,
+      environmentPostMapping[environment],
+    )
+  }, [environment, study, tPost, studySite, withDependencies, validatedOnly])
 
   const table = useReactTable({
     columns,
