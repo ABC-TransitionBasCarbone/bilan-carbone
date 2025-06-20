@@ -32,7 +32,7 @@ model Answer {
   study      Study    @relation(fields: [studyId], references: [id])
   studyId    String
   question   Question @relation(fields: [questionId], references: [id])
-  questionId String   @map("question_ref")
+  questionId String   @map("question_id")
 
   @@unique([questionId, studyId])
   @@map("answers")
