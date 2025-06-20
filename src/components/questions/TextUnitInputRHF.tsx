@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { InputHTMLAttributes, KeyboardEvent, useCallback, useMemo } from 'react'
 import DebouncedInput from '../base/DebouncedInput'
+import { getInputFormat } from '../dynamic-form/services/questionService'
 import { BaseInputProps } from '../dynamic-form/types/formTypes'
 import { InputFormat, QuestionType } from '../dynamic-form/types/questionTypes'
 import styles from './TextUnitInput.module.css'
@@ -29,7 +30,7 @@ const TextUnitInputRHF = ({
   const tUnits = useTranslations('units')
   const tQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
-  const questionFormat = format || question.format || InputFormat.Text
+  const questionFormat = format || getInputFormat(question.type)
   const questionUnit = unit || question.unite
   const inputLabel = label || tQuestions(`format.${questionFormat}`)
 

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { AutoSaveApiService, SaveAnswerRequest } from '../services/autoSaveApi'
 
 export interface FieldSaveStatus {
@@ -11,6 +11,7 @@ export interface UseAutoSaveReturn {
   saveField: (questionId: string, value: unknown) => void
   getFieldStatus: (questionId: string) => FieldSaveStatus
   clearField: (questionId: string) => void
+  initializeFieldStatus: (questionId: string, status: FieldSaveStatus['status']) => void
 }
 
 /**
@@ -120,11 +121,22 @@ export const useAutoSave = (studyId: string, debounceMs: number = 1000): UseAuto
     [fieldStatuses],
   )
 
-  return {
-    saveField,
-    getFieldStatus,
-    clearField,
-  }
+  const initializeFieldStatus = useCallback(
+    (questionId: string, status: FieldSaveStatus['status']) => {
+      updateFieldStatus(questionId, { status })
+    },
+    [updateFieldStatus],
+  )
+
+  return useMemo(
+    () => ({
+      saveField,
+      getFieldStatus,
+      clearField,
+      initializeFieldStatus,
+    }),
+    [saveField, getFieldStatus, clearField, initializeFieldStatus],
+  )
 }
 
 /**

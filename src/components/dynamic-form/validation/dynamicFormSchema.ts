@@ -1,6 +1,6 @@
+import { Question } from '@prisma/client'
 import { useMemo } from 'react'
 import { z } from 'zod'
-import { Question } from '../types/questionTypes'
 import { ValidationSchema } from '../types/validationTypes'
 import { createQuestionSchema } from './questionSchemas'
 

@@ -1,7 +1,7 @@
 import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { BaseInputProps } from '../dynamic-form/types/formTypes'
 
-interface SelectInputRHFProps extends BaseInputProps {
+interface SelectInputRHFProps extends Omit<BaseInputProps, 'value'> {
   value: string | string[]
   label?: string
   multiple?: boolean
@@ -24,7 +24,12 @@ const SelectInputRHF = ({
 
   return (
     <FormControl fullWidth error={!!error} disabled={disabled}>
-      <Select value={value || (multiple ? [] : '')} onChange={handleChange} onBlur={onBlur} multiple={multiple}>
+      <Select
+        value={(value as string | string[]) || (multiple ? [] : '')}
+        onChange={handleChange}
+        onBlur={onBlur}
+        multiple={multiple}
+      >
         {options.map((option) => (
           <MenuItem key={option} value={option}>
             {option}

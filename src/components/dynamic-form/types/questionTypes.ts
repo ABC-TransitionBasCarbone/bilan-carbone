@@ -1,12 +1,6 @@
-import { SubPost } from '@prisma/client'
+import { QuestionType } from '@prisma/client'
 
-export enum QuestionType {
-  TEXT = 'text',
-  NUMBER = 'number',
-  BOOLEAN = 'boolean',
-  SELECT = 'select',
-  TIME = 'time',
-}
+export { QuestionType, SubPost } from '@prisma/client'
 
 export enum InputFormat {
   Text = 'Text',
@@ -45,26 +39,24 @@ export interface ValidationRules {
   customValidation?: string
 }
 
-export interface Question {
-  id: string
-  idIntern: string
-  label: string
-  order: number
-  subPost: SubPost
-  type: QuestionType
-  unite: string
-  possibleAnswers: string[]
-  format?: InputFormat
-  required?: boolean
-  validation?: ValidationRules
-  importedEmissionFactorId?: string
+export enum FieldType {
+  TEXT = 'TEXT',
+  NUMBER = 'NUMBER',
+  BOOLEAN = 'BOOLEAN',
+  SELECT = 'SELECT',
+  TIME = 'TIME',
 }
 
-export interface Answer {
-  id: string
-  questionId: string
-  studyId: string
-  responses: string[]
-  createdAt: Date
-  updatedAt: Date
+// Type mapping from Prisma QuestionType to our internal types
+export const QUESTION_TYPE_FIELD_MAPPING: Record<QuestionType, FieldType> = {
+  [QuestionType.TEXT]: FieldType.TEXT,
+  [QuestionType.NUMBER]: FieldType.NUMBER,
+  [QuestionType.SELECT]: FieldType.SELECT,
+  [QuestionType.QCM]: FieldType.SELECT,
+  [QuestionType.QCU]: FieldType.SELECT,
+  [QuestionType.TABLE]: FieldType.TEXT,
+  [QuestionType.POSTAL_CODE]: FieldType.TEXT,
+  [QuestionType.DATE]: FieldType.TEXT,
+  [QuestionType.RANGE]: FieldType.NUMBER,
+  [QuestionType.PHONE]: FieldType.TEXT,
 }

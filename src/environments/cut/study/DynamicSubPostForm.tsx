@@ -1,8 +1,8 @@
 import DynamicForm from '@/components/dynamic-form/DynamicForm'
-import { QuestionService } from '@/components/dynamic-form/services/questionService'
-import { Answer, Question } from '@/components/dynamic-form/types/questionTypes'
 import { FullStudy } from '@/db/study'
-import { SubPost } from '@prisma/client'
+import { getQuestionsWithAnswers } from '@/services/serverFunctions/question'
+import { CircularProgress } from '@mui/material'
+import { Answer, Question, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -24,10 +24,13 @@ const DynamicSubPostForm = ({ subPost, study }: Props) => {
       setIsLoading(true)
       setError(null)
 
-      const { questions: loadedQuestions, answers: loadedAnswers } = await QuestionService.getQuestionsWithAnswers(
-        subPost,
-        study.id,
-      )
+      const result = await getQuestionsWithAnswers(subPost, study.id)
+
+      if (!result.success) {
+        throw new Error(result.errorMessage || 'Failed to load questions and answers')
+      }
+
+      const { questions: loadedQuestions, answers: loadedAnswers } = result.data
 
       setQuestions(loadedQuestions)
       setAnswers(loadedAnswers)
@@ -59,8 +62,8 @@ const DynamicSubPostForm = ({ subPost, study }: Props) => {
   // Loading state (initial load)
   if (isLoading && questions.length === 0) {
     return (
-      <div className="loading-container p-4">
-        <p>{tCutQuestions('loading')}</p>
+      <div className="loading-container p-4 text-center">
+        <CircularProgress />
       </div>
     )
   }
@@ -69,7 +72,7 @@ const DynamicSubPostForm = ({ subPost, study }: Props) => {
   if (questions.length === 0) {
     return (
       <div className="no-questions-container p-4 text-center">
-        <p className="text-gray-600">{tCutQuestions('noQuestions', { subPost: tCutQuestions(subPost) })}</p>
+        <p className="text-gray-600">{tCutQuestions('noQuestions')}</p>
       </div>
     )
   }
