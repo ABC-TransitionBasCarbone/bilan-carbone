@@ -730,7 +730,12 @@
         "retry": "Retry",
         "finish": "Finish",
         "noQuestions": "No questions found for this sub-post",
-        "autoSaveError": "The answer could not be saved automatically"
+        "autoSaveError": "The answer could not be saved automatically",
+        "qcm": {
+          "total": "",
+          "extension": "",
+          "otherBigRenovation": ""
+        }
       }
     },
     "create": {
