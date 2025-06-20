@@ -4,29 +4,29 @@ CREATE TYPE "QuestionType" AS ENUM ('QCM', 'QCU', 'SELECT', 'TABLE', 'POSTAL_COD
 -- CreateTable
 CREATE TABLE "questions" (
     "id" TEXT NOT NULL,
-    "idIntern" TEXT NOT NULL,
+    "id_intern" TEXT NOT NULL,
     "label" TEXT NOT NULL,
     "order" SERIAL NOT NULL,
-    "subPost" "SubPost" NOT NULL,
+    "sub_post" "SubPost" NOT NULL,
     "type" "QuestionType" NOT NULL,
     "unite" TEXT NOT NULL,
-    "possibleAnswers" TEXT[],
+    "possible_answers" TEXT[],
 
     CONSTRAINT "questions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "responses" (
+CREATE TABLE "answers" (
     "id" TEXT NOT NULL,
     "response" JSONB NOT NULL,
     "studyId" TEXT NOT NULL,
     "questionId" TEXT NOT NULL,
 
-    CONSTRAINT "responses_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "answers_pkey" PRIMARY KEY ("id")
 );
 
 -- AddForeignKey
-ALTER TABLE "responses" ADD CONSTRAINT "responses_studyId_fkey" FOREIGN KEY ("studyId") REFERENCES "studies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "answers" ADD CONSTRAINT "answers_studyId_fkey" FOREIGN KEY ("studyId") REFERENCES "studies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "responses" ADD CONSTRAINT "responses_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "answers" ADD CONSTRAINT "answers_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

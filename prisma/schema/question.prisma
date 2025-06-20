@@ -1,12 +1,12 @@
 model Question {
   id              String       @id @default(uuid())
-  idIntern        String
+  idIntern        String       @map("id_intern")
   label           String
   order           Int          @default(autoincrement())
-  subPost         SubPost
+  subPost         SubPost      @map("sub_post")
   type            QuestionType
   unite           String
-  possibleAnswers String[]
+  possibleAnswers String[]     @map("possible_answers")
   userAnswers     Answer[]
 
   @@map("questions")
@@ -33,5 +33,5 @@ model Answer {
   question   Question @relation(fields: [questionId], references: [id])
   questionId String
 
-  @@map("reponses")
+  @@map("answers")
 }

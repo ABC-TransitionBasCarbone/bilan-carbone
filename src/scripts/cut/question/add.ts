@@ -1,6 +1,6 @@
 import { createQuestions } from '@/db/question'
 import { getEncoding } from '@/utils/csv'
-import { Prisma, SubPost, Type } from '@prisma/client'
+import { Prisma, QuestionType, SubPost } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
@@ -23,7 +23,7 @@ interface Header {
   Post: string
   Question: string
   SubPost: SubPost
-  Type: Type
+  Type: QuestionType
   Unite: string
 }
 
@@ -54,7 +54,7 @@ const addQuestions = async (file: string) => {
           subPost: row.SubPost,
           order: row.Order,
           type: row.Type,
-          possibleAnswers: row.PossibleAnswers.split('?'),
+          possibleAnswers: row.PossibleAnswers.split('§'),
           unite: row.Unite,
         })
       })
