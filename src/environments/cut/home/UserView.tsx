@@ -36,29 +36,23 @@ const UserView = () => {
       <Typography data-testid="title" variant="h4">
         {title}
       </Typography>
-      <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
+      <StyledBox className={classNames('flex', styles.styledBoxContainer, styles.styledBoxInfo)}>
         <CheckCircleOutlineIcon color="disabled" fontSize="large" className={styles.checkIcon} />
         <Typography>{t('info.0')}</Typography>
       </StyledBox>
-      <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
+      <StyledBox className={classNames('flex', styles.styledBoxContainer, styles.styledBoxInfo)}>
         <CheckCircleOutlineIcon color="disabled" fontSize="large" className={styles.checkIcon} />
         <Typography>{t('info.1')}</Typography>
       </StyledBox>
-      <StyledBox className={classNames(styles.styledBoxContainer, styles.styledBoxInfo)}>
+      <StyledBox className={classNames('flex', styles.styledBoxContainer, styles.styledBoxInfo)}>
         <CheckCircleOutlineIcon color="disabled" fontSize="large" className={styles.checkIcon} />
         <Typography>{t('info.2')}</Typography>
       </StyledBox>
-      <Box className={styles.linkContainer}>
+      <Box className={classNames('flex', styles.linkContainer)}>
         <StyledLink
           color="info"
           href="/equipe"
-          className={classNames(
-            'flex-col',
-            'justify-center',
-            'align-center',
-            styles.styledBoxContainer,
-            styles.styledBoxLink,
-          )}
+          className={classNames('flex-col', 'justify-center', styles.styledBoxContainer, styles.styledBoxLink)}
         >
           <CinemaOutlinedIcon className={styles.icon} />
           <Typography>{navigation('organization')}</Typography>
@@ -66,13 +60,7 @@ const UserView = () => {
         <StyledLink
           color="info"
           href="/organisations"
-          className={classNames(
-            'flex-col',
-            'justify-center',
-            'align-center',
-            styles.styledBoxContainer,
-            styles.styledBoxLink,
-          )}
+          className={classNames('flex-col', 'justify-center', styles.styledBoxContainer, styles.styledBoxLink)}
         >
           <DiagramOutlinedIcon className={styles.icon} />
           <Typography>{navigation('organizations')}</Typography>
