@@ -13,16 +13,18 @@ enum HEADERS {
   QUESTION = 'Question',
   SUBPOSTE = 'Sous-Postes',
   TYPE = 'Type',
+  UNITE = 'Unité',
 }
 
 interface Header {
   IdEmmissionFactor: string
   Order: number
-  PossibleAnswers: JSON
-  Postes: string
+  PossibleAnswers: string
+  Post: string
   Question: string
   SubPost: SubPost
   Type: Type
+  Unite: string
 }
 
 const addQuestions = async (file: string) => {
@@ -47,11 +49,13 @@ const addQuestions = async (file: string) => {
       )
       .on('data', (row: Header) => {
         questions.push({
+          idIntern: row.Question.replace(' ', '-'),
           label: row.Question,
           subPost: row.SubPost,
           order: row.Order,
           type: row.Type,
-          PossibleAnswers: JSON.stringify({}),
+          possibleAnswers: row.PossibleAnswers.split('?'),
+          unite: row.Unite,
         })
       })
       .on('end', async () => {

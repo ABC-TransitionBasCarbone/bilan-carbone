@@ -1,10 +1,11 @@
 model Question {
   id              String       @id @default(uuid())
-  idIntern        String       @default(uuid())
+  idIntern        String
   label           String
   order           Int          @default(autoincrement())
   subPost         SubPost
   type            QuestionType
+  unite           String
   possibleAnswers String[]
   userAnswers     Answer[]
 
@@ -16,12 +17,12 @@ enum QuestionType {
   QCU
   SELECT
   TABLE
-  POSTALCODE
-  date
-  number
-  range
-  tel
-  text
+  POSTAL_CODE
+  DATE
+  NUMBER
+  RANGE
+  PHONE
+  TEXT
 }
 
 model Answer {
@@ -32,5 +33,5 @@ model Answer {
   question   Question @relation(fields: [questionId], references: [id])
   questionId String
 
-  @@map("answers")
+  @@map("reponses")
 }
