@@ -40,6 +40,9 @@
     "export": {
       "export": "Exporter mes cinémas"
     },
+    "results": {
+      "info": "Le Bilan Carbone® mesure les émissions de gaz à effet de serre d'une activité, et par conséquent sa contribution au dérèglement climatique ainsi que sa dépendance aux énergies fossiles et donc sa vulnérabilité. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire ce bilan l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !"
+    },
     "rights": {
       "title": "Données générales de l'étude : {name}"
     },

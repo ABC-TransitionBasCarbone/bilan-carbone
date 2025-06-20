@@ -487,6 +487,7 @@
         "K": "kgCO₂e",
         "T": "tCO₂e"
       },
+      "info": "Le Bilan Carbone® mesure les émissions de gaz à effet de serre d'une activité, et par conséquent sa contribution au dérèglement climatique ainsi que sa dépendance aux énergies fossiles et donc sa vulnérabilité. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire ce bilan l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !",
       "difference": {
         "button": "Explication des différences entre le Bilan Carbone® et l'export Beges",
         "modalTitle": "Explication de la différence entre les résultats",
@@ -508,8 +509,7 @@
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
       },
-      "no-data": "Aucune données à afficher",
-      "loading": "Chargement des résultats"
+      "noData": "Aucune données à afficher"
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",

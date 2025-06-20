@@ -1,3 +1,4 @@
+import { CutPost, Post } from '@/services/posts'
 import '@mui/material/styles'
 import { CSSObject } from '@mui/material/styles'
 import { CSSProperties } from 'react'
@@ -7,7 +8,7 @@ declare module '@mui/material/styles' {
     custom: {
       box: CSSObject
       postColors: {
-        [key: string]: { light: string; dark?: string }
+        [key in Post]: { light: string; dark?: string }
       }
       roles: {
         validator: string
@@ -28,7 +29,7 @@ declare module '@mui/material/styles' {
     custom?: {
       box: CSSObject
       postColors?: {
-        [key: string]: { light: string; dark?: string }
+        [key in CutPost]: { light: string; dark?: string }
       }
       roles: {
         validator: string
