@@ -10,10 +10,10 @@ enum HEADERS {
   ID_EMISSION_FACTOR = 'ID FE',
   ORDER = 'Order',
   POSSIBLE_ANSWER = 'PossibleAnswers',
-  POSTE = 'Postes',
+  POST = 'Postes',
   QUESTION = 'Question',
   REQUIRED = 'Required',
-  SUB_POSTE = 'Sous-postes',
+  SUB_POST = 'Sous-postes',
   TITRE = 'Titre',
   TYPE = 'Type',
   UNITE = 'Unité',
@@ -23,10 +23,10 @@ interface Header {
   [HEADERS.ID_EMISSION_FACTOR]: string
   [HEADERS.ORDER]: string
   [HEADERS.POSSIBLE_ANSWER]: string
-  [HEADERS.POSTE]: string
+  [HEADERS.POST]: string
   [HEADERS.QUESTION]: string
   [HEADERS.REQUIRED]: boolean
-  [HEADERS.SUB_POSTE]: string
+  [HEADERS.SUB_POST]: string
   [HEADERS.TITRE]: string
   [HEADERS.TYPE]: string
   [HEADERS.UNITE]: string
@@ -65,16 +65,16 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
       .on('data', (row: Header) => {
         const label = row[HEADERS.QUESTION]
         const type = row[HEADERS.TYPE] === '' ? QuestionType.TEXT : row[HEADERS.TYPE].toUpperCase()
-        const subPost = row[HEADERS.SUB_POSTE]
+        const subPost = row[HEADERS.SUB_POST]
         const titre = generateIdIntern(row[HEADERS.TITRE])
 
         if (titre === '') {
-          errors.push(`Titre manquant, Question : "${row[HEADERS.QUESTION]}, Sous postes "${row[HEADERS.SUB_POSTE]}"`)
+          errors.push(`Titre manquant, Question : "${row[HEADERS.QUESTION]}, Sous postes "${row[HEADERS.SUB_POST]}"`)
           return
         }
 
         if (label === '') {
-          errors.push(`Question manquante, Order "${row[HEADERS.ORDER]}", Sous postes "${row[HEADERS.SUB_POSTE]}"`)
+          errors.push(`Question manquante, Order "${row[HEADERS.ORDER]}", Sous postes "${row[HEADERS.SUB_POST]}"`)
           return
         }
 
@@ -84,7 +84,7 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
         }
 
         if (!isValidEnumValue(SubPost, subPost)) {
-          errors.push(`Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POSTE]}"`)
+          errors.push(`Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POST]}"`)
           return
         }
 
