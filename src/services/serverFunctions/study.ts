@@ -36,7 +36,7 @@ import {
   deleteStudyExport,
   downgradeStudyUserRoles,
   FullStudy,
-  getStudiesFromSites,
+  getStudiesSitesFromIds,
   getStudyById,
   getStudyNameById,
   getStudySites,
@@ -344,13 +344,15 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
 
 export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCinemaCommand) =>
   withServerResponse('changeStudyCinema', async () => {
-    const study = await getStudiesFromSites([studySiteId])
+    const studySites = await getStudiesSitesFromIds([studySiteId])
+    const study = studySites[0].study
 
-    if (!study || !study.length) {
+    if (!study) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const informations = await getStudyRightsInformations(study[0].id)
+    const informations = await getStudyRightsInformations(study.id)
+
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -360,8 +362,8 @@ export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCi
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateStudyOpeningHours(studyId, openingHours, openingHoursHoliday)
-    await updateStudySiteData(studyId, updateData)
+    await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
+    await updateStudySiteData(studySiteId, updateData)
   })
 
 export const hasActivityData = async (
@@ -764,7 +766,7 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
     }
   })
 
-const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) => {
+const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getStudiesSitesFromIds>[0]['study']) => {
   // The function does not return the user's role, which is sensitive information.
   // We don't need to know the role, only whether or not the user has one
   // We therefore arbitrarily use the "Reader" role
@@ -781,11 +783,11 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
 
 export const findStudiesWithSites = async (siteIds: string[]) =>
   withServerResponse('findStudiesWithSites', async () => {
-    const [session, studySites] = await Promise.all([dbActualizedAuth(), getStudiesFromSites(siteIds)])
+    const [session, studySites] = await Promise.all([dbActualizedAuth(), getStudiesSitesFromIds(siteIds)])
 
     const user = session?.user
-    const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
-    const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site' | 'study'> & {
+    const authorizedStudySites: AsyncReturnType<typeof getStudiesSitesFromIds> = []
+    const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesSitesFromIds>[0], 'site' | 'study'> & {
       count: number
     })[] = []
 

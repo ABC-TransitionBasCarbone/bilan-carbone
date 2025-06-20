@@ -498,16 +498,17 @@ export const createContributorOnStudy = (
     skipDuplicates: true,
   })
 
-export const getStudiesFromSites = async (siteIds: string[]) =>
+export const getStudiesSitesFromIds = async (siteIds: string[]) =>
   prismaClient.studySite.findMany({
     where: {
-      siteId: {
+      id: {
         in: siteIds,
       },
     },
     include: {
       study: {
         select: {
+          id: true,
           name: true,
           isPublic: true,
           level: true,

@@ -34,7 +34,15 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
 
   useEffect(() => {
     if (studySite) {
-      setSiteData(study.sites.find((site) => site.id === studySite))
+      const newSiteData = study.sites.find((site) => site.id === studySite)
+      setSiteData(newSiteData)
+      form.reset({
+        openingHours: openingHoursToObject(newSiteData?.openingHours ?? []),
+        openingHoursHoliday: openingHoursToObject(newSiteData?.openingHours ?? [], true),
+        numberOfOpenDays: newSiteData?.numberOfOpenDays ?? 0,
+        numberOfSessions: newSiteData?.numberOfSessions ?? 0,
+        numberOfTickets: newSiteData?.numberOfTickets ?? 0,
+      })
     }
   }, [studySite])
 
@@ -56,6 +64,8 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
 
   const form = useForm<ChangeStudyCinemaCommand>({
     resolver: zodResolver(ChangeStudyCinemaValidation),
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
     defaultValues: {
       openingHours: openingHoursToObject(siteData?.openingHours ?? []),
       openingHoursHoliday: openingHoursToObject(siteData?.openingHours ?? [], true),
@@ -67,9 +77,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
 
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
-  const numberOfOpenDays = form.watch('numberOfOpenDays')
-  const numberOfSessions = form.watch('numberOfSessions')
-  const numberOfTickets = form.watch('numberOfTickets')
 
   const days: DayOfWeek[] = useMemo(() => Object.keys(openingHours || {}) as DayOfWeek[], [openingHours])
   const daysHoliday: DayOfWeek[] = useMemo(
@@ -81,11 +88,11 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     async (data: ChangeStudyCinemaCommand) => {
       await callServerFunction(() => changeStudyCinema(studySite, data))
     },
-    [callServerFunction],
+    [callServerFunction, studySite],
   )
 
   const onStudyCinemaUpdate = useCallback(() => {
-    form.handleSubmit(handleStudyCinemaUpdate)()
+    form.handleSubmit(handleStudyCinemaUpdate, (e) => console.log('invalid', e))()
   }, [form, handleStudyCinemaUpdate])
 
   const handleCheckDay = useCallback(
@@ -112,20 +119,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     [openingHoursHoliday],
   )
 
-  useEffect(() => {
-    if (
-      siteData?.numberOfOpenDays !== numberOfOpenDays ||
-      siteData?.numberOfSessions !== numberOfSessions ||
-      siteData?.numberOfTickets !== numberOfTickets
-    ) {
-      onStudyCinemaUpdate()
-    }
-  }, [numberOfOpenDays, numberOfSessions, numberOfTickets, study])
-
-  useEffect(() => {
-    onStudyCinemaUpdate()
-  }, [JSON.stringify(openingHours), JSON.stringify(openingHoursHoliday)])
-
   return (
     <>
       <StudyParams user={user} study={study} disabled={editionDisabled} emissionFactorSources={emissionFactorSources} />
@@ -140,6 +133,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
             translation={t}
             type="number"
             className={styles.formTextField}
+            onBlur={onStudyCinemaUpdate}
           />
           <FormTextField
             control={form.control}
@@ -149,6 +143,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
             translation={t}
             type="number"
             className={styles.formTextField}
+            onBlur={onStudyCinemaUpdate}
           />
           <FormTextField
             control={form.control}
@@ -158,6 +153,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
             translation={t}
             type="number"
             className={styles.formTextField}
+            onBlur={onStudyCinemaUpdate}
           />
         </div>
       </Block>

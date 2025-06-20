@@ -203,7 +203,6 @@ export const ChangeStudyNameValidation = z.object({
 export type ChangeStudyNameCommand = z.infer<typeof ChangeStudyNameValidation>
 
 export const ChangeStudyCinemaValidation = z.object({
-  studyId: z.string(),
   openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
   openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
   numberOfSessions: z.number().optional().nullable(),
@@ -214,6 +213,7 @@ export const ChangeStudyCinemaValidation = z.object({
 export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>
 
 export const NewStudyRightCommandValidation = z.object({
+  studyId: z.string(),
   email: z
     .string({
       required_error: 'emailRequired',
