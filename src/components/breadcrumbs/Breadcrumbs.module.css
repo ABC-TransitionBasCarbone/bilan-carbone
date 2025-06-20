@@ -8,15 +8,6 @@
   list-style: none;
 }
 
-.navigation {
-  position: fixed;
-  top: 9.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 75vw;
-  z-index: 20;
-}
-
 .svg {
   color: var(--neutral-400);
 }
