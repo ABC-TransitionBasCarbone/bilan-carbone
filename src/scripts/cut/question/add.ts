@@ -14,6 +14,7 @@ enum HEADERS {
   QUESTION = 'Question',
   REQUIRED = 'Required',
   SUB_POSTE = 'Sous-postes',
+  TITRE = 'Titre',
   TYPE = 'Type',
   UNITE = 'Unité',
 }
@@ -26,6 +27,7 @@ interface Header {
   [HEADERS.QUESTION]: string
   [HEADERS.REQUIRED]: boolean
   [HEADERS.SUB_POSTE]: string
+  [HEADERS.TITRE]: string
   [HEADERS.TYPE]: string
   [HEADERS.UNITE]: string
 }
@@ -64,6 +66,12 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
         const label = row[HEADERS.QUESTION]
         const type = row[HEADERS.TYPE] === '' ? QuestionType.TEXT : row[HEADERS.TYPE].toUpperCase()
         const subPost = row[HEADERS.SUB_POSTE]
+        const titre = generateIdIntern(row[HEADERS.TITRE])
+
+        if (titre === '') {
+          errors.push(`Titre manquant, Question : "${row[HEADERS.QUESTION]}, Sous postes "${row[HEADERS.SUB_POSTE]}"`)
+          return
+        }
 
         if (label === '') {
           errors.push(`Question manquante, Order "${row[HEADERS.ORDER]}", Sous postes "${row[HEADERS.SUB_POSTE]}"`)
@@ -81,7 +89,7 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
         }
 
         questions.push({
-          idIntern: generateIdIntern(`${subPost}-${label}`),
+          idIntern: generateIdIntern(titre),
           label,
           subPost,
           order: Number(row[HEADERS.ORDER]),
