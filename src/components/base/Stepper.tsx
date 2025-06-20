@@ -1,6 +1,25 @@
-import { MobileStepper } from '@mui/material'
+import { MobileStepper, styled } from '@mui/material'
 import classNames from 'classnames'
 import styles from './Stepper.module.css'
+
+interface StyledStepperProps {
+  fillValidatedSteps?: boolean
+  currentActiveStep: number
+}
+
+const StyledMobileStepper = styled(MobileStepper, {
+  shouldForwardProp: (prop) => prop !== 'fillValidatedSteps' && prop !== 'currentActiveStep',
+})<StyledStepperProps>(({ theme, fillValidatedSteps, currentActiveStep }) => ({
+  flexGrow: 1,
+  '& .MuiMobileStepper-dotActive': {
+    backgroundColor: `${theme.palette.secondary.main} !important`,
+  },
+  ...(fillValidatedSteps && {
+    [`& .MuiMobileStepper-dot:nth-of-type(-n+${currentActiveStep})`]: {
+      backgroundColor: `${theme.palette.secondary.main} !important`,
+    },
+  }),
+}))
 
 interface Props {
   steps: number
@@ -13,21 +32,15 @@ interface Props {
 }
 
 const Stepper = ({ steps, activeStep, fillValidatedSteps, className, small, nextButton, backButton }: Props) => (
-  <MobileStepper
+  <StyledMobileStepper
     className={classNames(className, 'mb2')}
-    classes={{ dot: classNames(styles.stepperDots, { [styles.small]: small }), dotActive: styles.active }}
+    classes={{ dot: classNames(styles.stepperDots, { [styles.small]: small }) }}
     variant="dots"
     steps={steps}
     position="static"
     activeStep={activeStep - 1}
-    sx={{
-      flexGrow: 1,
-      ...(fillValidatedSteps && {
-        [`& .MuiMobileStepper-dot:nth-of-type(-n+${activeStep})`]: {
-          backgroundColor: 'var(--primary-500) !important',
-        },
-      }),
-    }}
+    fillValidatedSteps={fillValidatedSteps}
+    currentActiveStep={activeStep}
     nextButton={nextButton || null}
     backButton={backButton || null}
   />
