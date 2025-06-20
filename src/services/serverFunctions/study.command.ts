@@ -214,7 +214,6 @@ export const ChangeStudyCinemaValidation = z.object({
 export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>
 
 export const NewStudyRightCommandValidation = z.object({
-  studyId: z.string(),
   email: z
     .string({
       required_error: 'emailRequired',

@@ -21,9 +21,6 @@ export const mockedDdStudy = {
   oldBCId: null,
   realizationStartDate: null,
   realizationEndDate: null,
-  numberOfSessions: null,
-  numberOfTickets: null,
-  numberOfOpenDays: null,
   createdAt: new Date('2025-01-01T00:00:00.000Z'),
   updatedAt: new Date('2025-01-01T00:00:00.000Z'),
 }
@@ -37,13 +34,16 @@ export const mockedFullStudy = {
   emissionFactorVersions: [],
   exports: [],
   organizationVersion: mockedOrganizationVersion,
-  openingHours: [],
 }
 
 export const mockedStudySite = {
   id: 'mocked-study-site-id',
   etp: 1,
   ca: 1,
+  numberOfSessions: null,
+  numberOfTickets: null,
+  numberOfOpenDays: null,
+  openingHours: [],
 }
 
 export const mockedDbStudySite = {
@@ -75,16 +75,19 @@ export const getMockedStudy = (
     realizationEndDate?: Date
   },
 ): Study => ({ ...mockedDdStudy, ...props })
+
 export const getMockedFullStudy = (props?: Partial<FullStudy>): FullStudy => ({
   ...mockedFullStudy,
   ...props,
 })
+
 export const getMockedStudyCreateInput = (props: Partial<Prisma.StudyCreateInput>): Prisma.StudyCreateInput => ({
   ...mockedDdStudy,
   organizationVersion: { connect: { id: mockedOrganizationVersionId } },
   createdBy: { connect: { id: mockedUser.id } },
   ...props,
 })
+
 export const getMockedStudySite = (
   props?: Partial<Prisma.StudySiteCreateInput> & {
     createdAt?: Date
@@ -94,7 +97,9 @@ export const getMockedStudySite = (
 ): Prisma.StudySiteCreateInput & { id: string } => ({
   ...mockedDbStudySite,
   ...props,
+  openingHours: props?.openingHours ?? undefined,
 })
+
 export const getMockedFullStudySite = (
   props?: Partial<FullStudy['sites'][0]> & {
     createdAt?: Date
