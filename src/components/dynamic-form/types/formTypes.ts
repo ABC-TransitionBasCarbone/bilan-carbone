@@ -1,7 +1,6 @@
-import { SubPost } from '@prisma/client'
+import { Answer, Question, QuestionType, SubPost } from '@prisma/client'
 import { Control, FieldError } from 'react-hook-form'
 import { FieldSaveStatus } from '../hooks/useAutoSave'
-import { Answer, Question, QuestionType } from './questionTypes'
 
 // TODO: Specify the possible types of the form values
 export type FormValues = Record<string, unknown>
@@ -75,9 +74,9 @@ export interface TimeFieldConfig {
 export interface FormFieldMapping {
   [QuestionType.TEXT]: TextFieldConfig
   [QuestionType.NUMBER]: NumberFieldConfig
-  [QuestionType.BOOLEAN]: BooleanFieldConfig
   [QuestionType.SELECT]: SelectFieldConfig
-  [QuestionType.TIME]: TimeFieldConfig
+  [QuestionType.QCM]: SelectFieldConfig
+  [QuestionType.QCU]: SelectFieldConfig
 }
 
 export interface EmissionResults {

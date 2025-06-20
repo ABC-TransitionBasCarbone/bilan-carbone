@@ -1,3 +1,4 @@
+import { Question } from '@prisma/client'
 import { useEffect } from 'react'
 import { Controller, UseFormWatch } from 'react-hook-form'
 import BooleanInputRHF from '../questions/BooleanInputRHF'
@@ -6,10 +7,12 @@ import TextUnitInputRHF from '../questions/TextUnitInputRHF'
 import TimePickerInputRHF from '../questions/TimePickerInputRHF'
 import QuestionContainer from './QuestionContainer'
 import { UseAutoSaveReturn } from './hooks/useAutoSave'
+import { getQuestionFieldType } from './services/questionService'
 import { DynamicFormFieldProps, FormValues } from './types/formTypes'
-import { QuestionType } from './types/questionTypes'
+import { FieldType } from './types/questionTypes'
 
-interface DynamicFormFieldPropsWithAutoSave extends DynamicFormFieldProps {
+interface DynamicFormFieldPropsWithAutoSave extends Omit<DynamicFormFieldProps, 'question'> {
+  question: Question
   autoSave: UseAutoSaveReturn
   watch: UseFormWatch<FormValues>
 }
@@ -23,24 +26,26 @@ const DynamicFormField = ({
   watch,
 }: DynamicFormFieldPropsWithAutoSave) => {
   const fieldName = question.idIntern
-  const fieldStatus = autoSave.getFieldStatus(fieldName)
+  const fieldStatus = autoSave.getFieldStatus(question.id)
 
   // Watch for field changes and trigger auto-save
   useEffect(() => {
     const subscription = watch((formValues, { name }) => {
       if (name === fieldName) {
         const value = formValues[fieldName]
-        autoSave.saveField(fieldName, value)
+        autoSave.saveField(question.id, value)
       }
     })
 
     return () => subscription.unsubscribe()
-  }, [watch, fieldName, autoSave])
+  }, [watch, fieldName, autoSave, question.id])
 
   const renderField = () => {
-    switch (question.type) {
-      case QuestionType.TEXT:
-      case QuestionType.NUMBER:
+    const internalType = getQuestionFieldType(question.type)
+
+    switch (internalType) {
+      case FieldType.TEXT:
+      case FieldType.NUMBER:
         return (
           <Controller
             name={fieldName}
@@ -51,7 +56,7 @@ const DynamicFormField = ({
           />
         )
 
-      case QuestionType.TIME:
+      case FieldType.TIME:
         return (
           <Controller
             name={fieldName}
@@ -62,7 +67,7 @@ const DynamicFormField = ({
           />
         )
 
-      case QuestionType.SELECT:
+      case FieldType.SELECT:
         return (
           <Controller
             name={fieldName}
@@ -73,7 +78,7 @@ const DynamicFormField = ({
           />
         )
 
-      case QuestionType.BOOLEAN:
+      case FieldType.BOOLEAN:
         return (
           <Controller
             name={fieldName}
@@ -85,7 +90,7 @@ const DynamicFormField = ({
         )
 
       default:
-        console.warn(`Unsupported question type: ${question.type}`)
+        console.warn(`Unsupported question type: ${question.type} (mapped to: ${internalType})`)
         return (
           <Controller
             name={fieldName}

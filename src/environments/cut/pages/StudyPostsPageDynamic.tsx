@@ -35,6 +35,17 @@ const StudyPostsPageDynamic = ({ post, study }: Props) => {
     }
   }, [searchParams, subPosts])
 
+  // Update URL parameter when activeStep changes
+  useEffect(() => {
+    const currentSubPost = subPosts[activeStep]
+    if (currentSubPost) {
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+      newSearchParams.set('subPost', currentSubPost)
+      const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`
+      window.history.replaceState(null, '', newUrl)
+    }
+  }, [activeStep, subPosts, searchParams])
+
   const tabContent = useMemo(() => {
     return subPosts.map((subPost) => <DynamicSubPostForm key={subPost} subPost={subPost} study={study} />)
   }, [subPosts, study])

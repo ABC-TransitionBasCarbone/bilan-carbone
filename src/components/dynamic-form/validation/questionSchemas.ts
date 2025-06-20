@@ -1,5 +1,7 @@
+import { Question, QuestionType } from '@prisma/client'
 import { z } from 'zod'
-import { InputFormat, Question, QuestionType } from '../types/questionTypes'
+import { getInputFormat, getValidationRules } from '../services/questionService'
+import { InputFormat } from '../types/questionTypes'
 import { ValidationSchema } from '../types/validationTypes'
 import {
   commonValidationRules,
@@ -18,17 +20,22 @@ export const createQuestionSchema = (question: Question): ValidationSchema => {
     case QuestionType.NUMBER:
       schema = createNumberSchema(question)
       break
-    case QuestionType.BOOLEAN:
-      schema = z.boolean()
-      break
+    case QuestionType.QCM:
+    case QuestionType.QCU:
     case QuestionType.SELECT:
       schema = createSelectSchema(question)
       break
-    case QuestionType.FILE:
-      schema = createFileSchema()
+    case QuestionType.POSTAL_CODE:
+      schema = createPostalCodeSchema()
       break
-    case QuestionType.TIME:
-      schema = createTimeSchema(question)
+    case QuestionType.DATE:
+      schema = createDateSchema()
+      break
+    case QuestionType.RANGE:
+      schema = createNumberSchema(question)
+      break
+    case QuestionType.PHONE:
+      schema = createPhoneSchema()
       break
     default:
       schema = z.string()
@@ -39,39 +46,39 @@ export const createQuestionSchema = (question: Question): ValidationSchema => {
 
 const createTextSchema = (question: Question): z.ZodString => {
   let schema = z.string()
+  const format = getInputFormat(question.type)
+  const validation = getValidationRules(question.type)
 
-  if (question.format) {
-    switch (question.format) {
-      case InputFormat.PostalCode:
-        schema = commonValidationRules.postalCode
-        break
-      case InputFormat.Year:
-        schema = commonValidationRules.year
-        break
-      case InputFormat.Email:
-        schema = commonValidationRules.email
-        break
-      case InputFormat.Phone:
-        schema = commonValidationRules.phone
-        break
-      case InputFormat.Number:
-        schema = z.string().regex(/^\d+$/, 'validation.numberFormat')
-        break
-      case InputFormat.Text:
-      default:
-        schema = z.string()
-        break
-    }
+  switch (format) {
+    case InputFormat.PostalCode:
+      schema = commonValidationRules.postalCode
+      break
+    case InputFormat.Year:
+      schema = commonValidationRules.year
+      break
+    case InputFormat.Email:
+      schema = commonValidationRules.email
+      break
+    case InputFormat.Phone:
+      schema = commonValidationRules.phone
+      break
+    case InputFormat.Number:
+      schema = z.string().regex(/^\d+$/, 'validation.numberFormat')
+      break
+    case InputFormat.Text:
+    default:
+      schema = z.string()
+      break
   }
 
-  if (question.validation) {
-    if (question.validation.minLength || question.validation.maxLength) {
-      const lengthSchema = createLengthValidation(question.validation.minLength, question.validation.maxLength)
+  if (validation) {
+    if (validation.minLength || validation.maxLength) {
+      const lengthSchema = createLengthValidation(validation.minLength, validation.maxLength)
       schema = schema.pipe(lengthSchema)
     }
 
-    if (question.validation.pattern) {
-      const patternSchema = createPatternValidation(question.validation.pattern, 'validation.pattern')
+    if (validation.pattern) {
+      const patternSchema = createPatternValidation(validation.pattern, 'validation.pattern')
       schema = schema.pipe(patternSchema)
     }
   }
@@ -85,9 +92,10 @@ const createTextSchema = (question: Question): z.ZodString => {
 
 const createNumberSchema = (question: Question): z.ZodNumber => {
   let schema = z.number()
+  const validation = getValidationRules(question.type)
 
-  if (question.validation) {
-    schema = createNumberRangeValidation(question.validation.min, question.validation.max)
+  if (validation) {
+    schema = createNumberRangeValidation(validation.min, validation.max)
   }
 
   if (question.required) {
@@ -109,20 +117,14 @@ const createSelectSchema = (question: Question): z.ZodUnion<[z.ZodString, ...z.Z
   return optionSchema
 }
 
-const createFileSchema = (): z.ZodUnknown => {
-  return z.unknown()
+const createPostalCodeSchema = (): z.ZodString => {
+  return commonValidationRules.postalCode
 }
 
-const createTimeSchema = (question: Question): z.ZodString => {
-  let schema = z.string()
+const createDateSchema = (): z.ZodString => {
+  return commonValidationRules.year
+}
 
-  if (question.format === InputFormat.Hour) {
-    schema = z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'validation.timeFormat')
-  }
-
-  if (question.required) {
-    schema = schema.min(1, 'validation.required')
-  }
-
-  return schema
+const createPhoneSchema = (): z.ZodString => {
+  return commonValidationRules.phone
 }

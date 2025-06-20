@@ -1,9 +1,10 @@
-import { Answer } from '../types/questionTypes'
+import { deleteAnswerForQuestion, saveAnswerForQuestion } from '@/services/serverFunctions/question'
+import { Answer } from '@prisma/client'
 
 export interface SaveAnswerRequest {
   questionId: string
   studyId: string
-  response: string | string[]
+  response: unknown
 }
 
 export interface SaveAnswerResponse {
@@ -13,46 +14,40 @@ export interface SaveAnswerResponse {
 }
 
 /**
- * Mock API service for saving individual answers
- * In real implementation, this would make HTTP calls to your backend
+ * API service for saving individual answers to the database using server actions
  */
 export class AutoSaveApiService {
-  private static readonly MOCK_DELAY = 500 // Simulate network delay
-
   /**
    * Save a single answer for a question
    */
   static async saveAnswer(request: SaveAnswerRequest): Promise<SaveAnswerResponse> {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, this.MOCK_DELAY))
+    try {
+      const result = await saveAnswerForQuestion(request.questionId, request.studyId, request.response)
 
-    // Simulate random failures (5% chance)
-    if (Math.random() < 0.05) {
+      if (result.success) {
+        console.log('📝 Auto-saved answer:', {
+          questionId: request.questionId,
+          response: request.response,
+          timestamp: new Date().toISOString(),
+        })
+
+        return {
+          success: true,
+          answer: result.data,
+        }
+      } else {
+        return {
+          success: false,
+          error: result.errorMessage || 'Failed to save answer',
+        }
+      }
+    } catch (error) {
+      console.error('❌ Auto-save failed:', error)
+
       return {
         success: false,
-        error: 'Network error: Failed to save answer',
+        error: error instanceof Error ? error.message : 'Failed to save answer',
       }
-    }
-
-    // Mock successful save
-    const mockAnswer: Answer = {
-      id: `answer-${Date.now()}`,
-      questionId: request.questionId,
-      studyId: request.studyId,
-      responses: Array.isArray(request.response) ? request.response : [request.response],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }
-
-    console.log('📝 Auto-saved answer:', {
-      questionId: request.questionId,
-      response: request.response,
-      timestamp: new Date().toISOString(),
-    })
-
-    return {
-      success: true,
-      answer: mockAnswer,
     }
   }
 
@@ -60,16 +55,32 @@ export class AutoSaveApiService {
    * Delete an answer for a question (when field is cleared)
    */
   static async deleteAnswer(questionId: string, studyId: string): Promise<SaveAnswerResponse> {
-    await new Promise((resolve) => setTimeout(resolve, this.MOCK_DELAY))
+    try {
+      const result = await deleteAnswerForQuestion(questionId, studyId)
 
-    console.log('🗑️ Auto-deleted answer:', {
-      questionId,
-      studyId,
-      timestamp: new Date().toISOString(),
-    })
+      if (result.success) {
+        console.log('🗑️ Auto-deleted answer:', {
+          questionId,
+          studyId,
+          timestamp: new Date().toISOString(),
+        })
 
-    return {
-      success: true,
+        return {
+          success: true,
+        }
+      } else {
+        return {
+          success: false,
+          error: result.errorMessage || 'Failed to delete answer',
+        }
+      }
+    } catch (error) {
+      console.error('❌ Auto-delete failed:', error)
+
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to delete answer',
+      }
     }
   }
 }

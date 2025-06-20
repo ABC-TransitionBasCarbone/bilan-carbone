@@ -1,6 +1,6 @@
 import { Alert, Box, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FieldError } from 'react-hook-form'
 import DynamicFormField from './DynamicFormField'
 import { useAutoSave } from './hooks/useAutoSave'
@@ -17,6 +17,19 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false }: 
   } = useDynamicForm(questions, initialAnswers)
 
   const autoSave = useAutoSave(studyId)
+
+  // Initialize field statuses for existing answers
+  useEffect(() => {
+    if (initialAnswers && initialAnswers.length > 0) {
+      initialAnswers.forEach((answer) => {
+        if (answer.response) {
+          autoSave.initializeFieldStatus(answer.questionId, 'saved')
+        }
+      })
+    }
+    // Not adding autoSave to the dependency array prevents infinite re-renders
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialAnswers])
 
   const sortedQuestions = useMemo(() => [...questions].sort((a, b) => a.order - b.order), [questions])
 
