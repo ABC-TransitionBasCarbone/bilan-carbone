@@ -294,6 +294,7 @@ const EmissionSource = ({
                 update={update}
                 isFromOldImport={isFromOldImport}
                 currentBEVersion={currentBEVersion}
+                advanced={study.level === Level.Advanced}
               />
             ) : (
               <EmissionSourceForm
