@@ -1,9 +1,7 @@
 import { Question } from '@/environments/cut/services/post'
 import { Box, Checkbox, styled, Typography } from '@mui/material'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import styles from './QCM.module.css'
 
 interface Props {
   question: Question
@@ -24,10 +22,7 @@ export const QCM = ({ question }: Props) => {
     <div className="flex flex-col m2">
       <Typography className="mb2">{tCutQuestions(question.key)}</Typography>
       {question.options?.map((option, index) => (
-        <StyledBox
-          key={`box-${index}`}
-          className={classNames(styles.qcmContainer, 'p-2 pr1 flex flex-row align-center mb1')}
-        >
+        <StyledBox key={`box-${index}`} className="p-2 pr1 flex flex-row align-center mb1">
           <Checkbox
             key={index}
             name={option}
