@@ -1,0 +1,11 @@
+.inputWithUnit {
+  position: relative;
+  max-width: fit-content;
+}
+
+.unit {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+}
