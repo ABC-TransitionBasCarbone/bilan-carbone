@@ -132,6 +132,10 @@ const fullStudyInclude = {
       id: true,
       etp: true,
       ca: true,
+      openingHours: true,
+      numberOfOpenDays: true,
+      numberOfSessions: true,
+      numberOfTickets: true,
       site: {
         select: {
           id: true,
@@ -164,7 +168,6 @@ const fullStudyInclude = {
       },
     },
   },
-  openingHours: true,
 } satisfies Prisma.StudyInclude
 
 const normalizeAllowedUsers = (
@@ -412,6 +415,13 @@ export const downgradeStudyUserRoles = (studyId: string, accountIds: string[]) =
 
 export const getStudySites = (studyId: string) => prismaClient.studySite.findMany({ where: { studyId } })
 
+export const updateStudySiteData = async (studySiteId: string, data: Prisma.StudySiteUpdateInput) => {
+  return prismaClient.studySite.update({
+    where: { id: studySiteId },
+    data,
+  })
+}
+
 export const updateStudySites = async (
   studyId: string,
   newStudySites: Prisma.StudySiteCreateManyInput[],
@@ -462,6 +472,8 @@ export const updateStudyEmissionFactorVersion = async (studyId: string, source: 
 
 export const deleteStudy = async (id: string) => {
   return prismaClient.$transaction(async (transaction) => {
+    const studySites = await getStudySites(id)
+
     await Promise.all([
       transaction.userOnStudy.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionSource.deleteMany({ where: { studyId: id } }),
@@ -470,7 +482,7 @@ export const deleteStudy = async (id: string) => {
       transaction.document.deleteMany({ where: { studyId: id } }),
       transaction.studyEmissionFactorVersion.deleteMany({ where: { studyId: id } }),
       transaction.studyExport.deleteMany({ where: { studyId: id } }),
-      transaction.openingHours.deleteMany({ where: { studyId: id } }),
+      ...studySites.map((studySite) => transaction.openingHours.deleteMany({ where: { studySiteId: studySite.id } })),
     ])
     await transaction.study.delete({ where: { id } })
   })
@@ -565,13 +577,13 @@ export const countOrganizationStudiesFromOtherUsers = async (organizationVersion
   prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })
 
 export const updateStudyOpeningHours = async (
-  studyId: string,
+  studySiteId: string,
   openingHours: ChangeStudyCinemaCommand['openingHours'],
   openingHoursHoliday: ChangeStudyCinemaCommand['openingHoursHoliday'],
 ) => {
   await prismaClient.$transaction(async (prisma) => {
     const existingOpeningHours = await prisma.openingHours.findMany({
-      where: { studyId },
+      where: { studySiteId },
       select: { id: true },
     })
     const mergedOpeningHours = [...Object.values(openingHours || {}), ...Object.values(openingHoursHoliday || {})]
@@ -590,15 +602,11 @@ export const updateStudyOpeningHours = async (
     await prismaClient.$transaction(async (prisma) => {
       await Promise.all(
         mergedOpeningHours.map((openingHour) =>
-          openingHour.id
-            ? prisma.openingHours.upsert({
-                where: { id: openingHour.id },
-                update: openingHour,
-                create: { ...openingHour, Study: { connect: { id: studyId } } },
-              })
-            : prisma.openingHours.create({
-                data: { ...openingHour, Study: { connect: { id: studyId } } },
-              }),
+          prisma.openingHours.upsert({
+            where: { id: openingHour.id },
+            update: openingHour,
+            create: { ...openingHour, studySite: { connect: { id: studySiteId } } },
+          }),
         ),
       )
     })

@@ -4,16 +4,18 @@ import Block from '@/components/base/Block'
 import { FormTextField } from '@/components/form/TextField'
 import WeekScheduleForm from '@/components/form/WeekScheduleForm'
 import StudyParams from '@/components/study/rights/StudyParams'
+import SelectStudySite from '@/components/study/site/SelectStudySite'
+import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DayOfWeek, EmissionFactorImportVersion, OpeningHours, StudyRole } from '@prisma/client'
+import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
 
@@ -21,13 +23,20 @@ interface Props {
   user: UserSession
   study: FullStudy
   editionDisabled: boolean
-  userRoleOnStudy: StudyRole
   emissionFactorSources: EmissionFactorImportVersion[]
 }
 
-const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFactorSources }: Props) => {
+const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Props) => {
   const t = useTranslations('study.new')
   const { callServerFunction } = useServerFunction()
+  const { studySite, setSite } = useStudySite(study)
+  const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
+
+  useEffect(() => {
+    if (studySite) {
+      setSiteData(study.sites.find((site) => site.id === studySite))
+    }
+  }, [studySite])
 
   const openingHoursToObject = (openingHoursArr: OpeningHours[], isHoliday: boolean = false) => {
     return openingHoursArr.reduce(
@@ -48,12 +57,11 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
   const form = useForm<ChangeStudyCinemaCommand>({
     resolver: zodResolver(ChangeStudyCinemaValidation),
     defaultValues: {
-      studyId: study.id,
-      openingHours: openingHoursToObject(study.openingHours),
-      openingHoursHoliday: openingHoursToObject(study.openingHours, true),
-      numberOfOpenDays: study.numberOfOpenDays ?? 0,
-      numberOfSessions: study.numberOfSessions ?? 0,
-      numberOfTickets: study.numberOfTickets ?? 0,
+      openingHours: openingHoursToObject(siteData?.openingHours ?? []),
+      openingHoursHoliday: openingHoursToObject(siteData?.openingHours ?? [], true),
+      numberOfOpenDays: siteData?.numberOfOpenDays ?? 0,
+      numberOfSessions: siteData?.numberOfSessions ?? 0,
+      numberOfTickets: siteData?.numberOfTickets ?? 0,
     },
   })
 
@@ -71,7 +79,7 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
 
   const handleStudyCinemaUpdate = useCallback(
     async (data: ChangeStudyCinemaCommand) => {
-      await callServerFunction(() => changeStudyCinema(data))
+      await callServerFunction(() => changeStudyCinema(studySite, data))
     },
     [callServerFunction],
   )
@@ -106,9 +114,9 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
 
   useEffect(() => {
     if (
-      study.numberOfOpenDays !== numberOfOpenDays ||
-      study.numberOfSessions !== numberOfSessions ||
-      study.numberOfTickets !== numberOfTickets
+      siteData?.numberOfOpenDays !== numberOfOpenDays ||
+      siteData?.numberOfSessions !== numberOfSessions ||
+      siteData?.numberOfTickets !== numberOfTickets
     ) {
       onStudyCinemaUpdate()
     }
@@ -122,33 +130,36 @@ const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFa
     <>
       <StudyParams user={user} study={study} disabled={editionDisabled} emissionFactorSources={emissionFactorSources} />
       <Block>
-        <FormTextField
-          control={form.control}
-          name="numberOfSessions"
-          data-testid="new-study-number-of-sessions"
-          label={t('numberOfSessions')}
-          translation={t}
-          type="number"
-          className={styles.formTextField}
-        />
-        <FormTextField
-          control={form.control}
-          name="numberOfTickets"
-          data-testid="new-study-number-of-tickets"
-          label={t('numberOfTickets')}
-          translation={t}
-          type="number"
-          className={styles.formTextField}
-        />
-        <FormTextField
-          control={form.control}
-          name="numberOfOpenDays"
-          data-testid="new-study-number-of-open-days"
-          label={t('numberOfOpenDays')}
-          translation={t}
-          type="number"
-          className={styles.formTextField}
-        />
+        <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
+        <div className="mt2">
+          <FormTextField
+            control={form.control}
+            name="numberOfSessions"
+            data-testid="new-study-number-of-sessions"
+            label={t('numberOfSessions')}
+            translation={t}
+            type="number"
+            className={styles.formTextField}
+          />
+          <FormTextField
+            control={form.control}
+            name="numberOfTickets"
+            data-testid="new-study-number-of-tickets"
+            label={t('numberOfTickets')}
+            translation={t}
+            type="number"
+            className={styles.formTextField}
+          />
+          <FormTextField
+            control={form.control}
+            name="numberOfOpenDays"
+            data-testid="new-study-number-of-open-days"
+            label={t('numberOfOpenDays')}
+            translation={t}
+            type="number"
+            className={styles.formTextField}
+          />
+        </div>
       </Block>
       <Block title={t('openingHours')}>
         <div className={classNames(styles.openingHoursContainer, 'flex-col')}>

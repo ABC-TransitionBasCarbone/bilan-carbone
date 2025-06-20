@@ -45,6 +45,7 @@ import {
   updateStudy,
   updateStudyEmissionFactorVersion,
   updateStudyOpeningHours,
+  updateStudySiteData,
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
@@ -341,20 +342,26 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
     await updateStudy(studyId, { name: command.name })
   })
 
-export const changeStudyCinema = async ({ studyId, ...command }: ChangeStudyCinemaCommand) =>
+export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCinemaCommand) =>
   withServerResponse('changeStudyCinema', async () => {
-    const informations = await getStudyRightsInformations(studyId)
+    const study = await getStudiesFromSites([studySiteId])
+
+    if (!study || !study.length) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const informations = await getStudyRightsInformations(study[0].id)
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const { openingHours, openingHoursHoliday, ...updateData } = command
+    const { openingHours, openingHoursHoliday, ...updateData } = data
 
     if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
     await updateStudyOpeningHours(studyId, openingHours, openingHoursHoliday)
-    await updateStudy(studyId, updateData)
+    await updateStudySiteData(studyId, updateData)
   })
 
 export const hasActivityData = async (
