@@ -704,6 +704,11 @@
           "Year": "Year",
           "Hour": "hour",
           "Number": "Number"
+        },
+        "qcm": {
+          "total": "",
+          "extension": "",
+          "otherBigRenovation": ""
         }
       }
     },
