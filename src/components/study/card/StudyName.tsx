@@ -6,6 +6,8 @@ interface Props {
   name: string
 }
 
-const StudyName = ({ name }: Props) => <StyledChip color="success" label={name} icon={<SpaIcon />} />
+const StudyName = ({ name }: Props) => {
+  return <StyledChip color="success" label={name} icon={<SpaIcon />} />
+}
 
 export default StudyName

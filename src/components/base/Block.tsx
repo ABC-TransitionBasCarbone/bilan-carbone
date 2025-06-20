@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@mui/material'
+import { Button, ButtonProps, Typography } from '@mui/material'
 import classNames from 'classnames'
 
 import { ReactNode } from 'react'
@@ -24,6 +24,8 @@ export interface Props {
   description?: ReactNode
   actions?: Action[]
   className?: string
+  bold?: boolean
+  descriptionColor?: string
 }
 
 const Block = ({
@@ -38,6 +40,8 @@ const Block = ({
   actions,
   expIcon,
   className,
+  bold,
+  descriptionColor,
   ...rest
 }: Props) => {
   const Title = as === 'h1' ? 'h1' : 'h2'
@@ -56,7 +60,7 @@ const Block = ({
     <div className={classNames('main-container', styles.block)} {...rest}>
       <div className={classNames(styles.content, className)}>
         {actions ? (
-          <div className={classNames(styles.header, 'align-center justify-between')}>
+          <div className={classNames(styles.header, 'align-center justify-between', bold && 'bold')}>
             {titleDiv}
             <div className={classNames(styles.actions, 'flex')}>
               {actions.map(({ actionType, ...action }, index) =>
@@ -73,7 +77,11 @@ const Block = ({
         ) : (
           title && titleDiv
         )}
-        {description && <div className={styles.description}>{description}</div>}
+        {description && (
+          <Typography className={classNames(styles.description, bold && 'bold')} color={descriptionColor}>
+            {description}
+          </Typography>
+        )}
         {children && <div className={classNames(styles.children, { [styles.withMargin]: title })}>{children}</div>}
       </div>
     </div>

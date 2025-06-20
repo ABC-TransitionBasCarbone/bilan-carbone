@@ -4,7 +4,6 @@ import DynamicAllResults from '@/environments/core/study/results/DynamicAllResul
 import { addUserChecklistItem } from '@/services/serverFunctions/user'
 import { ExportRule, UserChecklist } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 interface Props {
   study: FullStudy
@@ -34,14 +33,12 @@ const ResultsPage = ({ study, rules, emissionFactorsWithParts, validatedOnly }: 
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
       />
-      <Block title={tStudyNav('results')} as="h1">
-        <DynamicAllResults
-          emissionFactorsWithParts={emissionFactorsWithParts}
-          rules={rules}
-          study={study}
-          validatedOnly={validatedOnly}
-        />
-      </Block>
+      <DynamicAllResults
+        emissionFactorsWithParts={emissionFactorsWithParts}
+        rules={rules}
+        study={study}
+        validatedOnly={validatedOnly}
+      />
     </>
   )
 }

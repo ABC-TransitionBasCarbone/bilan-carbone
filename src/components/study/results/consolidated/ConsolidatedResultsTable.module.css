@@ -26,3 +26,7 @@
 .number {
   text-align: right;
 }
+
+.header:last-child {
+  text-align: right;
+}

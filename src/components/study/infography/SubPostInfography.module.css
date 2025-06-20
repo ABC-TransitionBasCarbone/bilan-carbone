@@ -4,26 +4,6 @@
   transition: height 300ms ease-in-out;
 }
 
-.link {
-  border-radius: 1rem;
-  border: solid 4px;
-  text-decoration: none;
-  outline-offset: 6px;
-
-  &:hover {
-    .list {
-      color: var(--primary-800);
-    }
-  }
-}
-
-.displayChildren {
-  .subPostsContainer {
-    min-height: 0;
-    height: auto;
-  }
-}
-
 .subPosts {
   background-color: white;
   padding: 0.5rem;
@@ -60,24 +40,4 @@
       font-size: 0.625rem;
     }
   }
-}
-
-.green {
-  border-color: var(--post-green-dark);
-  background-color: var(--post-green-light);
-}
-
-.darkBlue {
-  border-color: var(--post-darkBlue-dark);
-  background-color: var(--post-darkBlue-light);
-}
-
-.blue {
-  border-color: var(--post-blue-dark);
-  background-color: var(--post-blue-light);
-}
-
-.orange {
-  border-color: var(--post-orange-dark);
-  background-color: var(--post-orange-light);
 }

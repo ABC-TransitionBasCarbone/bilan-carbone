@@ -5,10 +5,10 @@ import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import DownloadIcon from '@mui/icons-material/Download'
-import { Box, Button, CircularProgress, Container, Tab, Tabs, Typography, useTheme } from '@mui/material'
+import { Box, Button, Tab, Tabs, Typography, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
-import { SyntheticEvent, useEffect, useMemo, useState } from 'react'
+import { SyntheticEvent, useMemo, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
@@ -20,8 +20,10 @@ import { downloadStudyResults } from '@/services/study'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { axisClasses } from '@mui/x-charts/ChartsAxis'
 
+import Block from '@/components/base/Block'
 import { formatNumber } from '@/utils/number'
 import { Environment } from '@prisma/client'
+import classNames from 'classnames'
 import styles from './AllResults.module.css'
 
 interface Props {
@@ -37,18 +39,8 @@ const a11yProps = (index: number) => {
   }
 }
 
-const CircularProgressCenter = ({ message }: { message: string }) => {
-  return (
-    <Box className={styles.circularContainer}>
-      <CircularProgress variant="indeterminate" color="primary" />
-      <Typography>{message}</Typography>
-    </Box>
-  )
-}
-
 const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) => {
   const theme = useTheme()
-  const [loading, setLoading] = useState<boolean>(true)
   const [value, setValue] = useState(0)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -56,16 +48,18 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   const t = useTranslations('study.results')
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
+  const tResults = useTranslations('study.results')
   const tExport = useTranslations('exports')
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
+  const tStudyNav = useTranslations('study.navigation')
 
   const { studySite, setSite } = useStudySite(study, true)
 
   const resultsByPost = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
+    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, CutPost),
     [study, studySite, tPost, validatedOnly],
   )
 
@@ -74,6 +68,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
     sx: { [`.${axisClasses.left} .${axisClasses.label}`]: { transform: 'translate(-1rem, 0)' } },
     borderRadius: 10,
   }
+
   const listCutPosts = useListPosts() as CutPost[]
   const computeResults = useComputedResults(resultsByPost, tPost, listCutPosts)
 
@@ -86,43 +81,36 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
     return `${formatNumber(safeValue / STUDY_UNIT_VALUES[unit], precision)} ${tUnits(unit)}`
   }
 
-  useEffect(() => {
-    setLoading(true)
-
-    const timeout = setTimeout(() => {
-      setLoading(false)
-    }, 2000)
-
-    return () => clearTimeout(timeout)
-  }, [resultsByPost])
-
   return (
-    <Container>
-      <Box component="section" sx={{ display: 'flex', gap: '1rem' }}>
-        <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          endIcon={<DownloadIcon />}
-          onClick={() =>
-            downloadStudyResults(
-              study,
-              [],
-              emissionFactorsWithParts,
-              t,
-              tExport,
-              tPost,
-              tOrga,
-              tQuality,
-              tBeges,
-              tUnits,
-              Environment.CUT,
-            )
-          }
-        >
-          {tExportButton('export')}
-        </Button>
+    <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
+      <Box component="section" className={classNames(styles.gapped, 'flex')}>
+        <div className={classNames(styles.gapped, 'flex flex-col')}>
+          <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            endIcon={<DownloadIcon />}
+            onClick={() =>
+              downloadStudyResults(
+                study,
+                [],
+                emissionFactorsWithParts,
+                t,
+                tExport,
+                tPost,
+                tOrga,
+                tQuality,
+                tBeges,
+                tUnits,
+                Environment.CUT,
+              )
+            }
+          >
+            {tExportButton('export')}
+          </Button>
+        </div>
+        <Typography className={classNames(styles.infoContainer, 'ml2')}>{tResults('info')}</Typography>
       </Box>
       <Box component="section" sx={{ marginTop: '1rem' }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="secondary" textColor="inherit" variant="fullWidth">
@@ -132,14 +120,12 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
           <TabPanel value={value} index={0}>
-            <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} />
+            <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} hiddenUncertainty />
           </TabPanel>
           {resultsByPost.length !== 0 && (
             <>
               <TabPanel value={value} index={1}>
-                {loading ? (
-                  <CircularProgressCenter message={t('loading')} />
-                ) : barData.values.length !== 0 ? (
+                {barData.values.length !== 0 && barData.values.some((v) => v !== 0) ? (
                   <BarChart
                     xAxis={[
                       {
@@ -149,11 +135,14 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                         tickLabelStyle: { angle: -20, textAnchor: 'end' },
                         tickPlacement: 'extremities',
                         tickLabelPlacement: 'middle',
+                        colorMap: {
+                          type: 'ordinal',
+                          values: barData.labels,
+                          colors: barData.colors,
+                        },
                       },
                     ]}
-                    series={[
-                      { color: theme.palette.primary.main, data: barData.values, valueFormatter: chartFormatter },
-                    ]}
+                    series={[{ data: barData.values, valueFormatter: chartFormatter }]}
                     grid={{ horizontal: true }}
                     yAxis={[{ label: tUnits(study.resultsUnit) }]}
                     axisHighlight={{ x: 'none' }}
@@ -161,21 +150,19 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                   />
                 ) : (
                   <Typography align="center" sx={{ mt: '0.25rem' }}>
-                    {t('no-data')}
+                    {t('noData')}
                   </Typography>
                 )}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {loading ? (
-                  <CircularProgressCenter message={t('loading')} />
-                ) : pieData.length !== 0 ? (
+                {pieData.length !== 0 ? (
                   <PieChart
                     series={[{ data: pieData, valueFormatter: ({ value }) => chartFormatter(value) }]}
                     height={350}
                   />
                 ) : (
                   <Typography align="center" sx={{ mt: '0.25rem' }}>
-                    {t('no-data')}
+                    {t('noData')}
                   </Typography>
                 )}
               </TabPanel>
@@ -183,7 +170,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           )}
         </Box>
       </Box>
-    </Container>
+    </Block>
   )
 }
 

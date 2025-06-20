@@ -4,6 +4,17 @@
 
 .header {
   align-items: end;
+  gap: 1rem;
+}
+
+.studyNameContainer {
+  flex: 1;
+  min-width: 10rem;
+}
+
+.seeResultsButton {
+  flex-shrink: 0;
+  min-width: 10rem;
 }
 
 .container {

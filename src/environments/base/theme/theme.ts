@@ -1,3 +1,4 @@
+import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({
@@ -170,6 +171,18 @@ const theme = createTheme(base, {
           color: base.palette.secondary.main,
         },
       },
+    },
+    postColors: {
+      [Post.Energies]: { light: '#3F5488', dark: '#0C2155' },
+      [Post.AutresEmissionsNonEnergetiques]: { light: '#3F5488', dark: '#0C2155' },
+      [Post.DechetsDirects]: { light: '#3F5488', dark: '#0C2155' },
+      [Post.Immobilisations]: { light: '#3F5488', dark: '#0C2155' },
+      [Post.IntrantsBiensEtMatieres]: { light: '#5E97CB', dark: '#2C6498' },
+      [Post.IntrantsServices]: { light: '#5E97CB', dark: '#2C6498' },
+      [Post.Deplacements]: { light: '#79C7AB', dark: '#469478' },
+      [Post.Fret]: { light: '#79C7AB', dark: '#469478' },
+      [Post.FinDeVie]: { light: '#FBBC6B', dark: '#C88938' },
+      [Post.UtilisationEtDependance]: { light: '#FBBC6B', dark: '#C88938' },
     },
   },
 })
