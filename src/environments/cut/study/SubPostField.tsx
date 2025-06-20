@@ -7,14 +7,12 @@ import { getEmissionResultsCut } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData, getEmissionFactorByImportedId } from '@/services/serverFunctions/emissionFactor'
 import { createEmissionSource, updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommandValidation } from '@/services/serverFunctions/emissionSource.command'
-import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { InputCategories, InputCategory, InputFormat, Question } from '../services/post'
-import styles from './SubPostField.module.css'
 
 interface Props {
   isLoading: boolean
@@ -82,55 +80,68 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
     return emissionFactor.unit === Unit.CUSTOM ? emissionFactor.customUnit : emissionFactor.unit
   }, [emissionFactor])
 
-  const handleUpdate = async (emissionSourceId?: string | null) => {
-    const value = parseInt(currentValue || '') || undefined
+  const handleUpdate = useCallback(
+    async (emissionSourceId?: string | null) => {
+      const value = parseInt(currentValue || '') || undefined
 
-    if (!value) {
-      return
-    }
+      if (!value) {
+        return
+      }
 
-    const name = question.key
-    if (value && value < 0) {
-      setError(`${tEmissionSource('form.sign')}`)
-      setCurrentValue('0')
-      return
-    }
-    setError('')
+      const name = question.key
+      if (value && value < 0) {
+        setError(`${tEmissionSource('form.sign')}`)
+        setCurrentValue('0')
+        return
+      }
+      setError('')
 
-    try {
-      if (emissionSourceId) {
-        const command = {
-          emissionSourceId,
-          value,
+      try {
+        if (emissionSourceId) {
+          const command = {
+            emissionSourceId,
+            value,
+          }
+
+          const isValid = UpdateEmissionSourceCommandValidation.safeParse(command)
+          if (isValid.success) {
+            await updateEmissionSource(isValid.data)
+          }
+        } else {
+          const result = await createEmissionSource({
+            name,
+            subPost,
+            studyId: study.id,
+            studySiteId: studySite,
+            caracterisation: EmissionSourceCaracterisation.Operated,
+            type: EmissionSourceType.Physical,
+            value,
+            emissionFactorId: emissionFactor?.id,
+          })
+          if (!result.success) {
+            setError(tCutQuestions('error'))
+          }
         }
-
-        const isValid = UpdateEmissionSourceCommandValidation.safeParse(command)
-        if (isValid.success) {
-          await updateEmissionSource(isValid.data)
-        }
-      } else {
-        const result = await createEmissionSource({
-          name,
-          subPost,
-          studyId: study.id,
-          studySiteId: studySite,
-          caracterisation: EmissionSourceCaracterisation.Operated,
-          type: EmissionSourceType.Physical,
-          value,
-          emissionFactorId: emissionFactor?.id,
-        })
-        if (!result.success) {
-          setError(tCutQuestions('error'))
+      } catch {
+        setError(tCutQuestions('error'))
+      } finally {
+        if (callback) {
+          callback()
         }
       }
-    } catch {
-      setError(tCutQuestions('error'))
-    } finally {
-      if (callback) {
-        callback()
-      }
-    }
-  }
+    },
+    [
+      currentValue,
+      question.key,
+      tEmissionSource,
+      subPost,
+      study.id,
+      studySite,
+      emissionFactor?.id,
+      tCutQuestions,
+      callback,
+    ],
+  )
 
   const getInput = useCallback(() => {
     if (!question.format) {
@@ -160,7 +171,7 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
             value={currentValue ?? ''}
             onChange={setCurrentValue}
             onUpdate={() => {
-              console.log('update time')
+              handleUpdate(emissionSource?.id)
             }}
           />
         )
@@ -168,7 +179,18 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
       default:
         break
     }
-  }, [question, isLoading, currentValue, error, unit, emissionSource, setCurrentValue])
+  }, [
+    question.format,
+    question.type,
+    unit,
+    isLoading,
+    currentValue,
+    emissionSource?.value,
+    emissionSource?.id,
+    tCutQuestions,
+    error,
+    handleUpdate,
+  ])
 
   return (
     <Block title={tCutQuestions(question.key, { value: question?.value || '' })}>
@@ -176,11 +198,6 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
       {emissionResults && (
         <div className="mt1">
           <p>{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}</p>
-          {emissionResults.standardDeviation && (
-            <p className={styles.status}>
-              {tQuality('name')} {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
-            </p>
-          )}
         </div>
       )}
     </Block>
