@@ -12,6 +12,7 @@ enum HEADERS {
   POSSIBLE_ANSWERS = 'PossibleAnswers',
   POSTES = 'Postes',
   QUESTION = 'Question',
+  REQUIRED = 'Required',
   SUB_POSTE = 'Sous-postes',
   TYPE = 'Type',
   UNITE = 'Unité',
@@ -23,6 +24,7 @@ interface Header {
   [HEADERS.POSSIBLE_ANSWERS]: string
   [HEADERS.POSTES]: string
   [HEADERS.QUESTION]: string
+  [HEADERS.REQUIRED]: boolean
   [HEADERS.SUB_POSTE]: string
   [HEADERS.TYPE]: string
   [HEADERS.UNITE]: string
@@ -32,8 +34,8 @@ const isValidEnumValue = <T extends Record<string, string>>(enumObj: T, value: s
   return Object.values(enumObj).includes(value)
 }
 
-const generateIdIntern = (label: string) =>
-  label
+const generateIdIntern = (value: string) =>
+  value
     .toLowerCase()
     .trim()
     .normalize('NFD')
@@ -60,7 +62,7 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
       )
       .on('data', (row: Header) => {
         const label = row[HEADERS.QUESTION]
-        const type = row[HEADERS.TYPE] === '' ? QuestionType.SELECT : row[HEADERS.TYPE].toUpperCase()
+        const type = row[HEADERS.TYPE] === '' ? QuestionType.TEXT : row[HEADERS.TYPE].toUpperCase()
         const subPost = row[HEADERS.SUB_POSTE]
 
         if (label === '') {
@@ -79,13 +81,14 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
         }
 
         questions.push({
-          idIntern: generateIdIntern(label),
+          idIntern: generateIdIntern(`${subPost}-${label}`),
           label,
           subPost,
           order: Number(row[HEADERS.ORDER]),
           type,
           possibleAnswers: row[HEADERS.POSSIBLE_ANSWERS].split('§').map((s) => s.trim()),
           unite: row[HEADERS.UNITE] || '',
+          required: row[HEADERS.REQUIRED] || false,
         })
       })
       .on('end', () => {

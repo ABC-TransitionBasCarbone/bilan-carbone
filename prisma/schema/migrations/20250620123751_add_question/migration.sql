@@ -11,6 +11,7 @@ CREATE TABLE "questions" (
     "type" "QuestionType" NOT NULL,
     "unite" TEXT NOT NULL,
     "possible_answers" TEXT[],
+    "required" BOOLEAN NOT NULL,
 
     CONSTRAINT "questions_pkey" PRIMARY KEY ("id")
 );
@@ -20,13 +21,19 @@ CREATE TABLE "answers" (
     "id" TEXT NOT NULL,
     "response" JSONB NOT NULL,
     "studyId" TEXT NOT NULL,
-    "questionId" TEXT NOT NULL,
+    "question_ref" TEXT NOT NULL,
 
     CONSTRAINT "answers_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "questions_id_intern_key" ON "questions"("id_intern");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "answers_question_ref_studyId_key" ON "answers"("question_ref", "studyId");
 
 -- AddForeignKey
 ALTER TABLE "answers" ADD CONSTRAINT "answers_studyId_fkey" FOREIGN KEY ("studyId") REFERENCES "studies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "answers" ADD CONSTRAINT "answers_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "answers" ADD CONSTRAINT "answers_question_ref_fkey" FOREIGN KEY ("question_ref") REFERENCES "questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

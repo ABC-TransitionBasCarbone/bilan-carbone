@@ -1,6 +1,6 @@
 model Question {
   id              String       @id @default(uuid())
-  idIntern        String       @map("id_intern")
+  idIntern        String       @unique @map("id_intern")
   label           String
   order           Int          @default(autoincrement())
   subPost         SubPost      @map("sub_post")
@@ -8,6 +8,7 @@ model Question {
   unite           String
   possibleAnswers String[]     @map("possible_answers")
   userAnswers     Answer[]
+  required        Boolean
 
   @@map("questions")
 }
@@ -31,7 +32,8 @@ model Answer {
   study      Study    @relation(fields: [studyId], references: [id])
   studyId    String
   question   Question @relation(fields: [questionId], references: [id])
-  questionId String
+  questionId String   @map("question_ref")
 
+  @@unique([questionId, studyId])
   @@map("answers")
 }
