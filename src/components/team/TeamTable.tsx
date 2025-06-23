@@ -8,7 +8,7 @@ import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { canEditMemberRole } from '@/utils/organization'
 import { getEnvironmentRoles } from '@/utils/user'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Role } from '@prisma/client'
+import { Environment, Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -46,7 +46,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const router = useRouter()
 
   const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === 'CUT', [environment])
+  const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const columns = useMemo(() => {
     let col: ColumnDef<TeamMember>[] = [
