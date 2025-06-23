@@ -9,7 +9,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DayOfWeek, EmissionFactorImportVersion, OpeningHours, StudyRole } from '@prisma/client'
+import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -21,11 +21,10 @@ interface Props {
   user: UserSession
   study: FullStudy
   editionDisabled: boolean
-  userRoleOnStudy: StudyRole
   emissionFactorSources: EmissionFactorImportVersion[]
 }
 
-const StudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emissionFactorSources }: Props) => {
+const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Props) => {
   const t = useTranslations('study.new')
   const { callServerFunction } = useServerFunction()
 
