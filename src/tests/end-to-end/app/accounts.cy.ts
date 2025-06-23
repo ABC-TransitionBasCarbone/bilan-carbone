@@ -13,11 +13,11 @@ describe('Accounts - multiple environment with the same user', () => {
 
   it('Should be able to connect as CUT user', () => {
     cy.getByTestId('account-cut').click()
-    cy.getByTestId('home-cut-logo').should('exist')
+    cy.get('[alt="Logo de COUNT"]').should('exist')
   })
 
   it('Should be able to connect as BC user', () => {
     cy.getByTestId('account-bc').click()
-    cy.getByTestId('home-cut-logo').should('not.exist')
+    cy.get('[alt="Logo de bilan carbone 2025"]').should('exist')
   })
 })
