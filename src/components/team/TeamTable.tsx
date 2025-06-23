@@ -49,7 +49,7 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
   const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const columns = useMemo(() => {
-    let col: ColumnDef<TeamMember>[] = [
+    const col: ColumnDef<TeamMember>[] = [
       {
         header: t('firstName'),
         accessorKey: 'user.firstName',
@@ -146,13 +146,13 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         actions={
           canUpdateTeam
             ? [
-                {
-                  actionType: 'link',
-                  href: '/equipe/ajouter',
-                  'data-testid': 'add-member-link',
-                  children: t('newUser'),
-                },
-              ]
+              {
+                actionType: 'link',
+                href: '/equipe/ajouter',
+                'data-testid': 'add-member-link',
+                children: t('newUser'),
+              },
+            ]
             : undefined
         }
       >
