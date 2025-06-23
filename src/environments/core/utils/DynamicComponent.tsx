@@ -1,4 +1,3 @@
-'use client'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Environment } from '@prisma/client'
 import { ReactNode } from 'react'
