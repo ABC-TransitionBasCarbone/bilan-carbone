@@ -1,6 +1,6 @@
 import { Answer, Question, QuestionType, SubPost } from '@prisma/client'
 import { Control, FieldError } from 'react-hook-form'
-import { FieldSaveStatus } from '../hooks/useAutoSave'
+import { FieldSaveStatus } from '../../../hooks/useAutoSave'
 
 // TODO: Specify the possible types of the form values
 export type FormValues = Record<string, unknown>
@@ -31,10 +31,11 @@ export interface DynamicFormFieldProps {
 
 export interface BaseInputProps {
   question: Question
-  value: unknown
-  onChange: (value: unknown) => void
+  label: string
+  value: string | null
+  onChange: (value: string | null) => void
   onBlur: () => void
-  error?: string
+  errorMessage?: string
   disabled?: boolean
 }
 
@@ -64,11 +65,6 @@ export interface FileFieldConfig {
   accept?: string
   multiple?: boolean
   maxSize?: number
-}
-
-export interface TimeFieldConfig {
-  format?: '12h' | '24h'
-  precision?: 'minute' | 'second'
 }
 
 export interface FormFieldMapping {

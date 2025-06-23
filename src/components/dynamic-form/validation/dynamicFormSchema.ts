@@ -1,8 +1,8 @@
-import { Question } from '@prisma/client'
+import { Question, QuestionType } from '@prisma/client'
 import { useMemo } from 'react'
 import { z } from 'zod'
-import { ValidationSchema } from '../types/validationTypes'
-import { createQuestionSchema } from './questionSchemas'
+
+type ValidationSchema = z.ZodSchema<unknown>
 
 export const createDynamicFormSchema = (questions: Question[]): ValidationSchema => {
   const schemaObject: Record<string, ValidationSchema> = {}
@@ -20,38 +20,56 @@ export const useDynamicValidation = (questions: Question[]) => {
   }, [questions])
 }
 
-export const validateFormField = (value: unknown, question: Question): { isValid: boolean; error?: string } => {
-  try {
-    const schema = createQuestionSchema(question)
-    schema.parse(value)
-    return { isValid: true }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return {
-        isValid: false,
-        error: error.errors[0]?.message || 'validation.invalid',
-      }
+const createValidationRefine = (validationFn: (val: string) => boolean, message: string, required: boolean) => {
+  return (val: string | undefined) => {
+    if (!val || val.trim() === '') {
+      return !required
     }
-    return { isValid: false, error: 'validation.invalid' }
+    return validationFn(val)
   }
 }
 
-export const validateFormValues = (
-  formValues: Record<string, unknown>,
-  questions: Question[],
-): { isValid: boolean; errors: Record<string, string> } => {
-  const schema = createDynamicFormSchema(questions)
-  const result = schema.safeParse(formValues)
+const validationRules: Partial<Record<QuestionType, (val: string) => boolean>> = {
+  [QuestionType.NUMBER]: (val: string) => !isNaN(parseFloat(val)),
+  [QuestionType.POSTAL_CODE]: (val: string) => /^\d{5}$/.test(val),
+  [QuestionType.DATE]: (val: string) => /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/.test(val),
+  [QuestionType.PHONE]: (val: string) => /^[+]?[\d\s\-()]+$/.test(val),
+}
 
-  if (result.success) {
-    return { isValid: true, errors: {} }
+const validationMessages: Partial<Record<QuestionType, string>> = {
+  [QuestionType.NUMBER]: 'number',
+  [QuestionType.POSTAL_CODE]: 'postal_code',
+  [QuestionType.DATE]: 'date',
+  [QuestionType.PHONE]: 'phone',
+}
+
+export const createQuestionSchema = (question: Question): ValidationSchema => {
+  let schema: z.ZodSchema
+
+  if (question.required) {
+    schema = z
+      .string({
+        required_error: 'required',
+        invalid_type_error: 'required',
+      })
+      .min(1, { message: 'required' })
+  } else {
+    schema = z
+      .string({
+        invalid_type_error: 'invalid_type',
+      })
+      .optional()
+      .or(z.literal(''))
   }
 
-  const errors: Record<string, string> = {}
-  result.error.errors.forEach((error) => {
-    const fieldName = error.path[0] as string
-    errors[fieldName] = error.message
-  })
+  const validationRule = validationRules[question.type]
+  const validationMessage = validationMessages[question.type]
 
-  return { isValid: false, errors }
+  if (validationRule && validationMessage) {
+    schema = schema.refine(createValidationRefine(validationRule, validationMessage, question.required), {
+      message: validationMessage,
+    })
+  }
+
+  return schema
 }

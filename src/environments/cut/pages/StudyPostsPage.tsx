@@ -16,7 +16,7 @@ interface Props {
   study: FullStudy
 }
 
-const StudyPostsPageDynamic = ({ post, study }: Props) => {
+const StudyPostsPageCut = ({ post, study }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const router = useRouter()
@@ -103,4 +103,4 @@ const StudyPostsPageDynamic = ({ post, study }: Props) => {
   )
 }
 
-export default StudyPostsPageDynamic
+export default StudyPostsPageCut

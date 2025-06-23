@@ -2,9 +2,9 @@ import { Alert, Box, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
 import { FieldError } from 'react-hook-form'
+import { useAutoSave } from '../../hooks/useAutoSave'
+import { useDynamicForm } from '../../hooks/useDynamicForm'
 import DynamicFormField from './DynamicFormField'
-import { useAutoSave } from './hooks/useAutoSave'
-import { useDynamicForm } from './hooks/useDynamicForm'
 import { DynamicFormProps } from './types/formTypes'
 
 const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false }: DynamicFormProps) => {
@@ -12,7 +12,7 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false }: 
 
   const {
     control,
-    formState: { errors },
+    formState: { errors, touchedFields },
     watch,
   } = useDynamicForm(questions, initialAnswers)
 
@@ -54,10 +54,11 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false }: 
             key={question.id}
             question={question}
             control={control}
-            error={errors[question.idIntern] as FieldError | undefined}
+            error={touchedFields[question.idIntern] ? (errors[question.idIntern] as FieldError | undefined) : undefined}
             isLoading={isFormDisabled}
             autoSave={autoSave}
             watch={watch}
+            formErrors={errors}
           />
         ))}
       </Box>

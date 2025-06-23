@@ -1437,10 +1437,13 @@
     "answer": "Let's go",
     "close": "Close"
   },
-  "common": {
-    "saving": "Saving...",
-    "saved": "Saved",
-    "savedAt": "Saved at {time}",
-    "saveError": "Error saving"
+  "form": {
+    "validation": {
+      "number": "Please enter a valid number",
+      "postalCode": "Please enter a valid 5-digit postal code",
+      "date": "Please enter a valid date (DD/MM/YYYY)",
+      "phone": "Please enter a valid phone number",
+      "required": "This field is required"
+    }
   }
 }

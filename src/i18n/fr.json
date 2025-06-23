@@ -1437,10 +1437,13 @@
     "answer": "Je donne mon avis",
     "close": "Fermer"
   },
-  "common": {
-    "saving": "Sauvegarde...",
-    "saved": "Enregistré",
-    "savedAt": "Enregistré à {time}",
-    "saveError": "Erreur de sauvegarde"
+  "form": {
+    "validation": {
+      "number": "Veuillez saisir un nombre valide",
+      "postalCode": "Veuillez saisir un code postal valide de 5 chiffres",
+      "date": "Veuillez saisir une date valide (JJ/MM/AAAA)",
+      "phone": "Veuillez saisir un numéro de téléphone valide",
+      "required": "Ce champ est obligatoire"
+    }
   }
 }

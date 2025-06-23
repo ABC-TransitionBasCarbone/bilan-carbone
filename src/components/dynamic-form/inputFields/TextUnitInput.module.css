@@ -5,7 +5,9 @@
 
 .unit {
   position: absolute;
-  top: 50%;
+  top: 1.75rem; /* Align with MUI TextField input baseline */
   right: 2rem;
   transform: translateY(-50%);
+  pointer-events: none; /* Prevent interfering with input clicks */
+  z-index: 1;
 }

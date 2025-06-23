@@ -1,12 +1,13 @@
 import { Question } from '@prisma/client'
-import { useEffect } from 'react'
-import { Controller, UseFormWatch } from 'react-hook-form'
-import BooleanInputRHF from '../questions/BooleanInputRHF'
-import SelectInputRHF from '../questions/SelectInputRHF'
-import TextUnitInputRHF from '../questions/TextUnitInputRHF'
-import TimePickerInputRHF from '../questions/TimePickerInputRHF'
+import { useTranslations } from 'next-intl'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { Controller, FieldErrors, UseFormWatch } from 'react-hook-form'
+import { UseAutoSaveReturn } from '../../hooks/useAutoSave'
+import DatePickerInputRHF from './inputFields/DatePickerInputRHF'
+import SelectInputRHF from './inputFields/SelectInputRHF'
+import TextUnitInputRHF from './inputFields/TextUnitInputRHF'
+import YearPickerInputRHF from './inputFields/YearPickerInputRHF'
 import QuestionContainer from './QuestionContainer'
-import { UseAutoSaveReturn } from './hooks/useAutoSave'
 import { getQuestionFieldType } from './services/questionService'
 import { DynamicFormFieldProps, FormValues } from './types/formTypes'
 import { FieldType } from './types/questionTypes'
@@ -15,6 +16,7 @@ interface DynamicFormFieldPropsWithAutoSave extends Omit<DynamicFormFieldProps, 
   question: Question
   autoSave: UseAutoSaveReturn
   watch: UseFormWatch<FormValues>
+  formErrors: FieldErrors<FormValues>
 }
 
 const DynamicFormField = ({
@@ -24,88 +26,104 @@ const DynamicFormField = ({
   isLoading,
   autoSave,
   watch,
+  formErrors,
 }: DynamicFormFieldPropsWithAutoSave) => {
+  const tValidation = useTranslations('form.validation')
+
   const fieldName = question.idIntern
   const fieldStatus = autoSave.getFieldStatus(question.id)
+  const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Watch for field changes and trigger auto-save
+  const debouncedSave = useCallback(
+    (value: unknown) => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current)
+      }
+
+      debounceRef.current = setTimeout(() => {
+        // Only save if there are no validation errors for this field
+        if (!formErrors[fieldName]) {
+          autoSave.saveField(question.id, value)
+        }
+      }, 800)
+    },
+    [autoSave, question.id, formErrors, fieldName],
+  )
+
   useEffect(() => {
     const subscription = watch((formValues, { name }) => {
       if (name === fieldName) {
         const value = formValues[fieldName]
-        autoSave.saveField(question.id, value)
+        debouncedSave(value)
       }
     })
 
-    return () => subscription.unsubscribe()
-  }, [watch, fieldName, autoSave, question.id])
-
-  const renderField = () => {
-    const internalType = getQuestionFieldType(question.type)
-
-    switch (internalType) {
-      case FieldType.TEXT:
-      case FieldType.NUMBER:
-        return (
-          <Controller
-            name={fieldName}
-            control={control}
-            render={({ field }) => (
-              <TextUnitInputRHF {...field} question={question} error={error?.message} disabled={isLoading} />
-            )}
-          />
-        )
-
-      case FieldType.TIME:
-        return (
-          <Controller
-            name={fieldName}
-            control={control}
-            render={({ field }) => (
-              <TimePickerInputRHF {...field} question={question} error={error?.message} disabled={isLoading} />
-            )}
-          />
-        )
-
-      case FieldType.SELECT:
-        return (
-          <Controller
-            name={fieldName}
-            control={control}
-            render={({ field }) => (
-              <SelectInputRHF {...field} question={question} error={error?.message} disabled={isLoading} />
-            )}
-          />
-        )
-
-      case FieldType.BOOLEAN:
-        return (
-          <Controller
-            name={fieldName}
-            control={control}
-            render={({ field }) => (
-              <BooleanInputRHF {...field} question={question} error={error?.message} disabled={isLoading} />
-            )}
-          />
-        )
-
-      default:
-        console.warn(`Unsupported question type: ${question.type} (mapped to: ${internalType})`)
-        return (
-          <Controller
-            name={fieldName}
-            control={control}
-            render={({ field }) => (
-              <TextUnitInputRHF {...field} question={question} error={error?.message} disabled={isLoading} />
-            )}
-          />
-        )
+    return () => {
+      subscription.unsubscribe()
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current)
+      }
     }
-  }
+  }, [watch, fieldName, debouncedSave])
+
+  const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unite), [question.type, question.unite])
+
+  const baseInputProps = useMemo(
+    () => ({
+      question,
+      label: question.label,
+      errorMessage: error?.message ? tValidation(error.message) : undefined,
+      disabled: isLoading,
+    }),
+    [question, tValidation, error?.message, isLoading],
+  )
+
+  const renderField = useMemo(() => {
+    const getFieldComponent = () => {
+      switch (fieldType) {
+        case FieldType.TEXT:
+        case FieldType.NUMBER:
+          return TextUnitInputRHF
+        case FieldType.DATE:
+          return DatePickerInputRHF
+        case FieldType.YEAR:
+          return YearPickerInputRHF
+        case FieldType.SELECT:
+          return SelectInputRHF
+        default:
+          console.warn(`Unsupported question type: ${question.type} (mapped to: ${fieldType})`)
+          return TextUnitInputRHF
+      }
+    }
+
+    const FieldComponent = getFieldComponent()
+
+    return (
+      <Controller
+        name={fieldName}
+        control={control}
+        render={({ field }) => {
+          const { ref, ...fieldWithoutRef } = field
+
+          return (
+            <FieldComponent
+              {...fieldWithoutRef}
+              ref={ref}
+              value={field.value as string | null}
+              question={baseInputProps.question}
+              label={baseInputProps.label}
+              errorMessage={baseInputProps.errorMessage}
+              disabled={baseInputProps.disabled}
+            />
+          )
+        }}
+      />
+    )
+  }, [fieldType, fieldName, control, baseInputProps, question.type])
 
   return (
     <QuestionContainer question={question} isLoading={isLoading} saveStatus={fieldStatus}>
-      {renderField()}
+      {renderField}
     </QuestionContainer>
   )
 }
