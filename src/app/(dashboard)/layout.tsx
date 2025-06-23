@@ -61,6 +61,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
             clientId={clientId}
             studyId={studyId}
             userRole={account.role}
+            userLevel={account.level}
           />
         )}
         <EnvironmentInitializer user={account} />

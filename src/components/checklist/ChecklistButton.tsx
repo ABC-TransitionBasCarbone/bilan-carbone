@@ -4,7 +4,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Drawer, Fab } from '@mui/material'
-import { OrganizationVersion, Role, UserChecklist } from '@prisma/client'
+import { Level, OrganizationVersion, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { usePathname, useSearchParams } from 'next/navigation'
@@ -17,9 +17,10 @@ interface Props {
   clientId?: string
   studyId?: string
   userRole: Role
+  userLevel: Level | null
 }
 
-const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRole }: Props) => {
+const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRole, userLevel }: Props) => {
   const t = useTranslations('checklist')
   const { callServerFunction } = useServerFunction()
   const [open, setOpen] = useState(false)
@@ -87,6 +88,7 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
           getCheckList={getCheckList}
           userChecklist={checklist}
           userRole={userRole}
+          userLevel={userLevel}
           accountOrganizationVersion={accountOrganizationVersion}
           clientId={clientId}
           studyId={studyId}
