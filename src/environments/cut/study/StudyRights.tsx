@@ -8,7 +8,7 @@ import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { changeStudyCinema } from '@/services/serverFunctions/study'
+import { changeStudyCinema, getStudySite } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
@@ -19,6 +19,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './StudyRights.module.css'
 
+type PartialOpeningHours = Pick<OpeningHours, 'day' | 'openHour' | 'closeHour' | 'isHoliday'>
 interface Props {
   user: UserSession
   study: FullStudy
@@ -32,36 +33,33 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   const { studySite, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
 
-  const defaultOpeningHours = Object.values(DayOfWeek).reduce(
-    (acc, day) => {
-      acc[day] = { day, openHour: '', closeHour: '', isHoliday: false }
-      return acc
-    },
-    {} as Record<DayOfWeek, { day: DayOfWeek; openHour: string; closeHour: string; isHoliday: boolean }>,
-  )
-
   useEffect(() => {
-    if (studySite && studySite !== 'all') {
-      const newSiteData = study.sites.find((site) => site.id === studySite)
-      setSiteData(newSiteData)
+    async function setStudySiteData() {
+      if (studySite && studySite !== 'all') {
+        const studySiteRes = await getStudySite(studySite)
 
-      form.reset({
-        openingHours:
-          newSiteData?.openingHours && newSiteData.openingHours.length > 0
-            ? openingHoursToObject(newSiteData?.openingHours)
-            : defaultOpeningHours,
-        openingHoursHoliday: openingHoursToObject(newSiteData?.openingHours ?? [], true),
-        numberOfOpenDays: newSiteData?.numberOfOpenDays ?? 0,
-        numberOfSessions: newSiteData?.numberOfSessions ?? 0,
-        numberOfTickets: newSiteData?.numberOfTickets ?? 0,
-      })
+        if (studySiteRes.success && studySiteRes.data) {
+          const newSiteData = studySiteRes.data
+          setSiteData(newSiteData)
+
+          form.reset({
+            openingHours: openingHoursToObject(newSiteData.openingHours, true),
+            openingHoursHoliday: openingHoursToObject(newSiteData.openingHours, false),
+            numberOfOpenDays: newSiteData.numberOfOpenDays ?? 0,
+            numberOfSessions: newSiteData.numberOfSessions ?? 0,
+            numberOfTickets: newSiteData.numberOfTickets ?? 0,
+          })
+        }
+      }
     }
+
+    setStudySiteData()
   }, [studySite])
 
-  const openingHoursToObject = (openingHoursArr: OpeningHours[], isHoliday: boolean = false) => {
-    return openingHoursArr.reduce(
-      (acc: Record<DayOfWeek, OpeningHours>, openingHour) => {
-        if (openingHour.isHoliday === isHoliday) {
+  const openingHoursToObject = (openingHoursArr: PartialOpeningHours[], handleNormalDays: boolean) => {
+    const formattedOpeningHours = openingHoursArr.reduce(
+      (acc: Record<DayOfWeek, PartialOpeningHours>, openingHour) => {
+        if (openingHour.isHoliday !== handleNormalDays) {
           acc[openingHour.day] = {
             ...openingHour,
             openHour: openingHour.openHour ?? '',
@@ -70,8 +68,23 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
         }
         return acc
       },
-      {} as Record<DayOfWeek, OpeningHours>,
+      {} as Record<DayOfWeek, PartialOpeningHours>,
     )
+
+    if (handleNormalDays) {
+      for (const day of Object.values(DayOfWeek)) {
+        if (!(day in formattedOpeningHours)) {
+          formattedOpeningHours[day] = {
+            day,
+            openHour: '',
+            closeHour: '',
+            isHoliday: false,
+          }
+        }
+      }
+    }
+
+    return formattedOpeningHours
   }
 
   const form = useForm<ChangeStudyCinemaCommand>({
@@ -79,8 +92,8 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     defaultValues: {
-      openingHours: openingHoursToObject(siteData?.openingHours ?? []),
-      openingHoursHoliday: openingHoursToObject(siteData?.openingHours ?? [], true),
+      openingHours: openingHoursToObject(siteData?.openingHours ?? [], true),
+      openingHoursHoliday: openingHoursToObject(siteData?.openingHours ?? [], false),
       numberOfOpenDays: siteData?.numberOfOpenDays ?? 0,
       numberOfSessions: siteData?.numberOfSessions ?? 0,
       numberOfTickets: siteData?.numberOfTickets ?? 0,
@@ -103,8 +116,12 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   )
 
   const onStudyCinemaUpdate = useCallback(() => {
+    if (studySite === 'all') {
+      return
+    }
+
     form.handleSubmit(handleStudyCinemaUpdate, (e) => console.log('invalid', e))()
-  }, [form, handleStudyCinemaUpdate])
+  }, [form, handleStudyCinemaUpdate, studySite])
 
   const handleCheckDay = useCallback(
     (day: DayOfWeek) => {

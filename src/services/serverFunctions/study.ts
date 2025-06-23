@@ -131,6 +131,27 @@ export const getStudy = async (studyId: string) =>
     return study
   })
 
+export const getStudySite = async (studySiteId: string) =>
+  withServerResponse('getStudySite', async () => {
+    const session = await dbActualizedAuth()
+    if (!studySiteId || !session || !session.user) {
+      return null
+    }
+
+    const studySites = await getStudiesSitesFromIds([studySiteId])
+
+    if (!studySites || studySites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studySites[0].studyId, session.user.organizationVersionId)
+    if (!study || !hasAccessToStudy(session.user, study)) {
+      return null
+    }
+
+    return study.sites.find((site) => site.id === studySiteId)
+  })
+
 export const createStudyCommand = async ({ organizationVersionId, validator, sites, ...command }: CreateStudyCommand) =>
   withServerResponse('createStudyCommand', async () => {
     const session = await dbActualizedAuth()
@@ -331,6 +352,11 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
 export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCinemaCommand) =>
   withServerResponse('changeStudyCinema', async () => {
     const studySites = await getStudiesSitesFromIds([studySiteId])
+
+    if (!studySites || studySites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     const study = studySites[0].study
 
     if (!study) {
