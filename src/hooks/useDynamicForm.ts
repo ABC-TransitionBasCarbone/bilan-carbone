@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Answer, Question } from '@prisma/client'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { FormValues } from '../components/dynamic-form/types/formTypes'
 import { useDynamicValidation } from '../components/dynamic-form/validation/dynamicFormSchema'
 
@@ -15,7 +14,7 @@ export const useDynamicForm = (questions: Question[], initialAnswers?: Answer[])
   }, [questions, initialAnswers])
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema as z.ZodSchema<FormValues>),
+    resolver: zodResolver(schema),
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues,

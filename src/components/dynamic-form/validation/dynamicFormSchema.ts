@@ -2,10 +2,8 @@ import { Question, QuestionType } from '@prisma/client'
 import { useMemo } from 'react'
 import { z } from 'zod'
 
-type ValidationSchema = z.ZodSchema<unknown>
-
-export const createDynamicFormSchema = (questions: Question[]): ValidationSchema => {
-  const schemaObject: Record<string, ValidationSchema> = {}
+export const createDynamicFormSchema = (questions: Question[]) => {
+  const schemaObject: Record<string, z.ZodSchema> = {}
 
   questions.forEach((question) => {
     schemaObject[question.idIntern] = createQuestionSchema(question)
@@ -43,7 +41,7 @@ const validationMessages: Partial<Record<QuestionType, string>> = {
   [QuestionType.PHONE]: 'phone',
 }
 
-export const createQuestionSchema = (question: Question): ValidationSchema => {
+export const createQuestionSchema = (question: Question) => {
   let schema: z.ZodSchema
 
   if (question.required) {
