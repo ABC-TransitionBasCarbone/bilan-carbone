@@ -146,13 +146,13 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
         actions={
           canUpdateTeam
             ? [
-              {
-                actionType: 'link',
-                href: '/equipe/ajouter',
-                'data-testid': 'add-member-link',
-                children: t('newUser'),
-              },
-            ]
+                {
+                  actionType: 'link',
+                  href: '/equipe/ajouter',
+                  'data-testid': 'add-member-link',
+                  children: t('newUser'),
+                },
+              ]
             : undefined
         }
       >
