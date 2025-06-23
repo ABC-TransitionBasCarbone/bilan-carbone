@@ -1,8 +1,11 @@
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers'
 import { PickerValue } from '@mui/x-date-pickers/internals/models'
 import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { InputHTMLAttributes, useMemo } from 'react'
 import { BaseInputProps } from '../types/formTypes'
+
+dayjs.extend(customParseFormat)
 
 const DatePickerInputRHF = ({
   value,
@@ -13,7 +16,7 @@ const DatePickerInputRHF = ({
   ...props
 }: BaseInputProps & Omit<DatePickerProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
   const handleDateChange = (newValue: PickerValue) => {
-    onChange(newValue?.format('YYYY-MM-DD') || '')
+    onChange(newValue?.format('DD/MM/YYYY') || '')
   }
 
   const handleAccept = () => {
@@ -24,7 +27,11 @@ const DatePickerInputRHF = ({
 
   const convertedValue = useMemo(() => {
     if (value) {
-      return dayjs(value)
+      // Try to parse DD/MM/YYYY format first, then fallback to default parsing
+      const ddmmyyyy = dayjs(value, 'DD/MM/YYYY', true)
+      if (ddmmyyyy.isValid()) {
+        return ddmmyyyy
+      }
     }
     return null
   }, [value])
