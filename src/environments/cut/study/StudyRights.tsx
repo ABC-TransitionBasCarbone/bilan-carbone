@@ -32,12 +32,24 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   const { studySite, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
 
+  const defaultOpeningHours = Object.values(DayOfWeek).reduce(
+    (acc, day) => {
+      acc[day] = { day, openHour: '', closeHour: '', isHoliday: false }
+      return acc
+    },
+    {} as Record<DayOfWeek, { day: DayOfWeek; openHour: string; closeHour: string; isHoliday: boolean }>,
+  )
+
   useEffect(() => {
     if (studySite) {
       const newSiteData = study.sites.find((site) => site.id === studySite)
       setSiteData(newSiteData)
+
       form.reset({
-        openingHours: openingHoursToObject(newSiteData?.openingHours ?? []),
+        openingHours:
+          newSiteData?.openingHours && newSiteData.openingHours.length > 0
+            ? openingHoursToObject(newSiteData?.openingHours)
+            : defaultOpeningHours,
         openingHoursHoliday: openingHoursToObject(newSiteData?.openingHours ?? [], true),
         numberOfOpenDays: newSiteData?.numberOfOpenDays ?? 0,
         numberOfSessions: newSiteData?.numberOfSessions ?? 0,
