@@ -602,13 +602,27 @@ export const updateStudyOpeningHours = async (
 
     await prismaClient.$transaction(async (prisma) => {
       await Promise.all(
-        mergedOpeningHours.map((openingHour) =>
-          prisma.openingHours.upsert({
-            where: { id: openingHour.id },
-            update: openingHour,
-            create: { ...openingHour, studySite: { connect: { id: studySiteId } } },
-          }),
-        ),
+        mergedOpeningHours
+          .map((openingHour) => {
+            if (!openingHour.closeHour || !openingHour.openHour) {
+              return
+            }
+
+            if (!openingHour.id) {
+              return prisma.openingHours.create({
+                data: {
+                  ...openingHour,
+                  studySite: { connect: { id: studySiteId } },
+                },
+              })
+            }
+
+            return prisma.openingHours.update({
+              where: { id: openingHour.id },
+              data: openingHour,
+            })
+          })
+          .filter((promise) => promise !== undefined),
       )
     })
   })

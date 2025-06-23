@@ -41,7 +41,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   )
 
   useEffect(() => {
-    if (studySite) {
+    if (studySite && studySite !== 'all') {
       const newSiteData = study.sites.find((site) => site.id === studySite)
       setSiteData(newSiteData)
 
@@ -90,7 +90,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
 
-  const days: DayOfWeek[] = useMemo(() => Object.keys(openingHours || {}) as DayOfWeek[], [openingHours])
   const daysHoliday: DayOfWeek[] = useMemo(
     () => Object.keys(openingHoursHoliday || {}) as DayOfWeek[],
     [openingHoursHoliday],
@@ -130,6 +129,12 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     },
     [openingHoursHoliday],
   )
+
+  useEffect(() => {
+    onStudyCinemaUpdate()
+    // This effect is used to update the study cinema whenever the opening hours or holiday opening hours change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(openingHours), JSON.stringify(openingHoursHoliday)])
 
   return (
     <>
@@ -173,7 +178,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
         <div className={classNames(styles.openingHoursContainer, 'flex-col')}>
           <WeekScheduleForm
             label={t('openingHours')}
-            days={days}
+            days={Object.values(DayOfWeek)}
             name={'openingHours'}
             control={form.control}
             disabled={editionDisabled}

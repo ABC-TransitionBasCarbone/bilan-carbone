@@ -3,7 +3,7 @@
 import Block from '@/components/base/Block'
 import GlobalNewStudyForm from '@/components/study/new/Form'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { ControlMode, Export, Level } from '@prisma/client'
+import { Export, Level } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
@@ -18,7 +18,7 @@ const NewStudyForm = ({ form }: Props) => {
   useEffect(() => {
     form.setValue('level', Level.Initial)
     form.setValue('exports', {
-      [Export.Beges]: ControlMode.Operational,
+      [Export.Beges]: false,
       [Export.GHGP]: false,
       [Export.ISO14069]: false,
     })
