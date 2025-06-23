@@ -131,13 +131,7 @@ export const getStudy = async (studyId: string) =>
     return study
   })
 
-export const createStudyCommand = async ({
-  organizationVersionId,
-  validator,
-  sites,
-  openingHoursHoliday,
-  ...command
-}: CreateStudyCommand) =>
+export const createStudyCommand = async ({ organizationVersionId, validator, sites, ...command }: CreateStudyCommand) =>
   withServerResponse('createStudyCommand', async () => {
     const session = await dbActualizedAuth()
 
@@ -192,19 +186,11 @@ export const createStudyCommand = async ({
     const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
-    const mergedOpeningHours = [
-      ...Object.values(command.openingHours || {}),
-      ...Object.values(openingHoursHoliday || {}),
-    ]
-
     const study = {
       ...command,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
       isPublic: command.isPublic === 'true',
-      openingHours: {
-        create: mergedOpeningHours,
-      },
       allowedUsers: {
         createMany: { data: rights },
       },

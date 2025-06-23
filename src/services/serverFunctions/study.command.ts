@@ -83,12 +83,6 @@ export const CreateStudyCommandValidation = z
           }, 'endDate'),
         level: z.nativeEnum(Level, { required_error: 'level' }),
         isPublic: z.string(),
-
-        numberOfSessions: z.number().optional(),
-        numberOfTickets: z.number().optional(),
-        numberOfOpenDays: z.number().optional(),
-        openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
-        openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
       }),
       StudyExportsCommandValidation,
     ),
