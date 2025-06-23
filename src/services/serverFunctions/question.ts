@@ -1,6 +1,6 @@
 'use server'
 
-import { getAnswersByStudyAndSubPost, getQuestionsBySubPost, saveAnswer } from '@/db/question'
+import { getAnswersByStudyAndSubPost, getQuestionsByIdIntern, getQuestionsBySubPost, saveAnswer } from '@/db/question'
 import { withServerResponse } from '@/utils/serverResponse'
 import { Prisma, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
@@ -28,4 +28,14 @@ export const getQuestionsWithAnswers = async (subPost: SubPost, studyId: string)
     ])
 
     return { questions, answers }
+  })
+
+export const getQuestionsFromIdIntern = async (idIntern: string) =>
+  withServerResponse('getQuestionsByIdIntern', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error('Not authorized')
+    }
+
+    return getQuestionsByIdIntern(idIntern)
   })
