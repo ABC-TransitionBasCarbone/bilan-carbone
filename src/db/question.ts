@@ -80,3 +80,17 @@ export const getQuestionById = async (questionId: string): Promise<Question | nu
     },
   })
 }
+
+export const getQuestionsByIdIntern = async (idIntern: string): Promise<Question[]> => {
+  const parseIdItern = idIntern.replace(/^\d+/, '')
+  if (!parseIdItern) {
+    return []
+  }
+  return await prismaClient.question.findMany({
+    where: {
+      idIntern: {
+        contains: parseIdItern,
+      },
+    },
+  })
+}
