@@ -1,4 +1,4 @@
-import { Question } from '@prisma/client'
+import { Prisma, Question } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, FieldErrors, UseFormWatch } from 'react-hook-form'
@@ -43,7 +43,7 @@ const DynamicFormField = ({
       debounceRef.current = setTimeout(() => {
         // Only save if there are no validation errors for this field
         if (!formErrors[fieldName]) {
-          autoSave.saveField(question.id, value)
+          autoSave.saveField(question.id, value as Prisma.InputJsonValue)
         }
       }, 800)
     },

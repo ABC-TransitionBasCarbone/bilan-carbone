@@ -1,4 +1,5 @@
 import { saveAnswerForQuestion } from '@/services/serverFunctions/question'
+import { Prisma } from '@prisma/client'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 export interface FieldSaveStatus {
@@ -8,7 +9,7 @@ export interface FieldSaveStatus {
 }
 
 export interface UseAutoSaveReturn {
-  saveField: (questionId: string, value: unknown) => void
+  saveField: (questionId: string, value: Prisma.InputJsonValue) => void
   getFieldStatus: (questionId: string) => FieldSaveStatus
   initializeFieldStatus: (questionId: string, status: FieldSaveStatus['status']) => void
 }
@@ -16,7 +17,7 @@ export interface UseAutoSaveReturn {
 interface SaveAnswerRequest {
   questionId: string
   studyId: string
-  response: unknown
+  response: Prisma.InputJsonValue
 }
 
 /**
@@ -41,7 +42,7 @@ export const useAutoSave = (studyId: string): UseAutoSaveReturn => {
   }, [])
 
   const performSave = useCallback(
-    async (questionId: string, value: unknown) => {
+    async (questionId: string, value: Prisma.InputJsonValue) => {
       updateFieldStatus(questionId, { status: 'saving' })
 
       try {
@@ -81,7 +82,7 @@ export const useAutoSave = (studyId: string): UseAutoSaveReturn => {
   )
 
   const saveField = useCallback(
-    (questionId: string, value: unknown) => {
+    (questionId: string, value: Prisma.InputJsonValue) => {
       if (saveTimers.current[questionId]) {
         clearTimeout(saveTimers.current[questionId])
       }
@@ -128,7 +129,7 @@ export const useAutoSave = (studyId: string): UseAutoSaveReturn => {
   )
 }
 
-function formatValueForSave(value: unknown): string | string[] {
+function formatValueForSave(value: Prisma.InputJsonValue): Prisma.InputJsonValue {
   if (value === null || value === undefined) {
     return ''
   }
@@ -147,7 +148,7 @@ function formatValueForSave(value: unknown): string | string[] {
 /**
  * Check if value is considered empty
  */
-function isEmptyValue(value: unknown): boolean {
+function isEmptyValue(value: Prisma.InputJsonValue): boolean {
   if (value === null || value === undefined || value === '') {
     return true
   }

@@ -2,7 +2,7 @@
 
 import { deleteAnswer, getAnswersByStudyAndSubPost, getQuestionsBySubPost, saveAnswer } from '@/db/question'
 import { withServerResponse } from '@/utils/serverResponse'
-import { SubPost } from '@prisma/client'
+import { Prisma, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 
 export const getQuestionsForSubPost = async (subPost: SubPost) =>
@@ -25,7 +25,7 @@ export const getAnswersForStudyAndSubPost = async (studyId: string, subPost: Sub
     return getAnswersByStudyAndSubPost(studyId, subPost)
   })
 
-export const saveAnswerForQuestion = async (questionId: string, studyId: string, response: unknown) =>
+export const saveAnswerForQuestion = async (questionId: string, studyId: string, response: Prisma.InputJsonValue) =>
   withServerResponse('saveAnswerForQuestion', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
