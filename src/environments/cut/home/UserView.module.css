@@ -17,7 +17,6 @@
 }
 
 .styledBoxInfo {
-  align-items: center;
   padding-left: 2rem;
   height: 5rem;
   gap: 1rem;
@@ -36,7 +35,6 @@
 }
 
 .styledBoxLink {
-  align-items: center;
   width: 50%;
   height: 10rem;
   gap: 1rem;
