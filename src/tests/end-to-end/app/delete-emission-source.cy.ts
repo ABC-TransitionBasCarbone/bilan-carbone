@@ -1,5 +1,5 @@
 describe('Delete emission source', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
   })
 
