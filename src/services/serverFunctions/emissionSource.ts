@@ -18,7 +18,7 @@ import {
   canDeleteEmissionSource,
   canUpdateEmissionSource,
 } from '../permissions/emissionSource'
-import { isInOrgaOrParentFromId } from '../permissions/organization'
+import { isVersionInOrgaOrParent } from '../permissions/organization'
 import { CreateEmissionSourceCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
 import { addUserChecklistItem } from './user'
 
@@ -102,7 +102,7 @@ export const updateEmissionSource = async ({
     if (
       emissionFactor?.importedFrom === Import.Manual &&
       emissionFactor.organizationId &&
-      !(await isInOrgaOrParentFromId(emissionFactor.organizationId, study.organizationVersion.organization.id))
+      !(await isVersionInOrgaOrParent(emissionFactor.organizationId, study.organizationVersion))
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -116,7 +116,9 @@ export const updateEmissionSource = async ({
       ...command,
       ...(emissionFactorId !== undefined
         ? {
-            emissionFactorId,
+            ...(emissionFactorId
+              ? { emissionFactor: { connect: { id: emissionFactorId } } }
+              : { emissionFactor: { disconnect: true } }),
             feReliability: null,
             feTechnicalRepresentativeness: null,
             feGeographicRepresentativeness: null,

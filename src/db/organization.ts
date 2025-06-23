@@ -224,6 +224,9 @@ export const getRawOrganizationVersionById = (id: string | null) =>
 export const getRawOrganizationBySiret = (siret: string | null) =>
   siret ? prismaClient.organization.findFirst({ where: { wordpressId: { startsWith: siret } } }) : null
 
+export const getRawOrganizationBySiteCNC = (numeroAuto: string | null) =>
+  numeroAuto ? prismaClient.organization.findFirst({ where: { sites: { some: { cncId: numeroAuto } } } }) : null
+
 export const getRawOrganizationById = (id: string | null) =>
   id ? prismaClient.organization.findUnique({ where: { id } }) : null
 

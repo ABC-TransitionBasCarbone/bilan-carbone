@@ -115,11 +115,13 @@
   },
   "login": {
     "welcome": "Welcome",
+    "subtext": "",
     "explaination": "The tool dedicated to the application of the Bilan Carbone® method, developed by the Association for the Low Carbon Transition (ABC), and accessible to all of our members: Consulting and Research, Business, Association and Public Sector",
     "question": "A question? Read the <link>FAQ</link> or <support>contact us</support>!",
     "form": {
       "activate": "Activate my account",
       "firstConnection": "First connection ?",
+      "alreadyRegistered": "Already Registered?",
       "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
       "login": "Log in",
       "email": "Email",
@@ -162,6 +164,24 @@
     "Email sent": "You will receive an email to finish your account validation.",
     "validation": {
       "email": "Please enter an email"
+    }
+  },
+  "signupCut": {
+    "description": "Create a CUT account with your email and a Siret/CNC number",
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Please enter an email",
+    "siretOrCNC": "Siret or CNC",
+    "siretOrCNCPlaceholder": "Your Siret/CNC",
+    "siretOrCNCRequired": "Please enter a Siret/CNC number",
+    "validate": "Validate",
+    "Unknown CNC": "The CNC number you entered is not recognized. Please check it and try again.",
+    "Not authorized": "This email is already used for CUT or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation.",
+    "validation": {
+      "email": "Please enter an email",
+      "siretOrCNC": "Please enter a Siret/CNC number"
     }
   },
   "navigation": {
@@ -508,8 +528,8 @@
         "additionalMissing": "+ {count} other emission {count, plural,  =1 {source} other {sources}}",
         "close": "Close"
       },
-      "no-data": "No data to display",
-      "loading": "Loanding results"
+      "noData": "No data to display",
+      "info": ""
     },
     "export": {
       "activityDataComment": "Activity data comment",
@@ -696,7 +716,14 @@
         "Refrigerateurs": "Refrigerators",
         "Congelateurs": "Freezers",
         "Warmers": "Warmers",
-        "Distributeurs": "Snack / drink vending machines"
+        "Distributeurs": "Snack / drink vending machines",
+        "format": {
+          "Text": "Text",
+          "PostalCode": "Postal code",
+          "Year": "Year",
+          "Hour": "hour",
+          "Number": "Number"
+        }
       }
     },
     "create": {

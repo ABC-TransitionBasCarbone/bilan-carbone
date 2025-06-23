@@ -1,16 +1,14 @@
 'use client'
 
+import { BasePostInfography } from '@/environments/base/study/infography/BasePostInfography'
+import DynamicComponent from '@/environments/core/utils/DynamicComponent'
+import { CutPostInfography } from '@/environments/cut/study/infography/CutPostInfography'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { postColors } from '@/utils/study'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { StudyResultUnit, SubPost } from '@prisma/client'
-import classNames from 'classnames'
+import { getEmissionValueString, getValidationPercentage } from '@/utils/study'
+import { Environment, StudyResultUnit, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { PostHeader } from './PostHeader'
-import styles from './PostInfography.module.css'
+import { useMemo } from 'react'
 
 interface Props {
   post: Post | SubPost
@@ -20,10 +18,7 @@ interface Props {
 }
 
 const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
-  const t = useTranslations('emissionFactors.post')
-  const ref = useRef<HTMLDivElement>(null)
-  const [displayChildren, setDisplayChildren] = useState(false)
-  const displayTimeout = useRef<NodeJS.Timeout | null>(null)
+  const tUnits = useTranslations('study.results.units')
 
   const mainPost = useMemo(() => {
     if (Object.keys(Post).includes(post)) {
@@ -34,16 +29,6 @@ const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
     }
   }, [post])
 
-  const postColor = useMemo(() => (mainPost ? postColors[mainPost] : 'green'), [mainPost])
-
-  const percent = useMemo(() => {
-    const percent =
-      !data || data.numberOfEmissionSource === 0
-        ? 0
-        : (data.numberOfValidatedEmissionSource / data.numberOfEmissionSource) * 100
-    return percent
-  }, [data])
-
   const subPosts = useMemo(() => {
     if (Object.keys(Post).includes(post)) {
       return subPostsByPost[post as Post]
@@ -51,54 +36,40 @@ const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
     return null
   }, [post])
 
-  useEffect(() => {
-    if (ref.current) {
-      if (displayChildren) {
-        const height = ref.current.scrollHeight
-        ref.current.style.height = `${height}px`
-      } else {
-        ref.current.style.height = '0px'
-      }
-    }
-  }, [displayChildren, ref])
+  const emissionValue = useMemo(() => {
+    const unit = tUnits(resultsUnit)
+    return getEmissionValueString(data?.value, resultsUnit, unit)
+  }, [data, resultsUnit, tUnits])
+
+  const percent = useMemo(() => getValidationPercentage(data), [data])
 
   return (
     mainPost && (
-      <Link
-        data-testid="post-infography"
-        onMouseEnter={() => (displayTimeout.current = setTimeout(() => setDisplayChildren(true), 300))}
-        onMouseLeave={() => {
-          if (displayTimeout.current) {
-            clearTimeout(displayTimeout.current)
-          }
-          setDisplayChildren(false)
+      <DynamicComponent
+        environmentComponents={{
+          [Environment.CUT]: (
+            <CutPostInfography
+              post={post}
+              mainPost={mainPost}
+              subPosts={subPosts}
+              data={data}
+              studyId={studyId}
+              percent={percent}
+              emissionValue={emissionValue}
+            />
+          ),
         }}
-        href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
-        className={classNames(styles[postColor], styles.link, { [styles.displayChildren]: displayChildren })}
-      >
-        <PostHeader
-          post={post}
-          mainPost={mainPost}
-          emissionValue={data?.value}
-          percent={percent}
-          color={postColor}
-          resultsUnit={resultsUnit}
-        />
-        <div className={styles.subPostsContainer} ref={ref}>
-          {subPosts && (
-            <div className={classNames(styles.subPosts, 'flex')}>
-              <ul className={classNames(styles.list, 'flex-col')}>
-                {subPosts.map((subPost) => (
-                  <li className="align-center" key={subPost}>
-                    <KeyboardArrowRightIcon />
-                    {t(subPost)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      </Link>
+        defaultComponent={
+          <BasePostInfography
+            post={post}
+            mainPost={mainPost}
+            subPosts={subPosts}
+            studyId={studyId}
+            percent={percent}
+            emissionValue={emissionValue}
+          />
+        }
+      />
     )
   )
 }

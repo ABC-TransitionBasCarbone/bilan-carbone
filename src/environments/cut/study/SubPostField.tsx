@@ -1,34 +1,18 @@
 import Block from '@/components/base/Block'
-import Button from '@/components/base/Button'
-import DebouncedInput from '@/components/base/DebouncedInput'
+import TextUnitInput from '@/components/questions/TextUnitInput'
+import TimePickerInput from '@/components/questions/TimePickerInput'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import { getEmissionResultsCut } from '@/services/emissionSource'
 import { EmissionFactorWithMetaData, getEmissionFactorByImportedId } from '@/services/serverFunctions/emissionFactor'
-import {
-  createEmissionSource,
-  deleteEmissionSource,
-  updateEmissionSource,
-} from '@/services/serverFunctions/emissionSource'
+import { createEmissionSource, updateEmissionSource } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommandValidation } from '@/services/serverFunctions/emissionSource.command'
-import { getStandardDeviationRating } from '@/services/uncertainty'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@prisma/client'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
-import { Question } from '../services/post'
-import styles from './SubPostField.module.css'
-
-type EmissionSourceLight = {
-  id?: string | null
-  name?: string | null
-  value?: number | null
-  depreciationPeriod?: number | null
-  fakeId?: string | number | null
-}
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { InputCategories, InputCategory, InputFormat, Question } from '../services/post'
 
 interface Props {
   isLoading: boolean
@@ -41,7 +25,6 @@ interface Props {
 
 const SubPostField = ({ subPost, emissionSources, study, question, callback, isLoading = false }: Props) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
-  const tUnits = useTranslations('units')
   const tResultstUnits = useTranslations('study.results.units')
   const tQuality = useTranslations('quality')
   const tEmissionSource = useTranslations('emissionSource')
@@ -50,49 +33,14 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
 
   const [emissionFactor, setEmissionFactor] = useState<EmissionFactorWithMetaData | null>(null)
   const [error, setError] = useState('')
-  const [currentValues, setCurrentValues] = useState<Record<string, string>>({})
-  const [currentDepreciationPeriodValues, setCurrentDepreciationPeriodValues] = useState<Record<string, string>>({})
-  const [pendingEmissionSource, setPendingEmissionSource] = useState<EmissionSourceLight | null>({
-    fakeId: `new-${Date.now()}`,
-  })
-  const [newEmissionSources, setNewEmissionSources] = useState<EmissionSourceLight[]>([])
+  const [currentValue, setCurrentValue] = useState<string>()
 
   const emissionSourcesFiltered = useMemo(
     () => emissionSources?.filter((emissionSource) => emissionSource.name === question.key) || [],
     [emissionSources, question.key],
   )
 
-  const extendedEmissionSources = useMemo(() => {
-    const allEmissionSources = [
-      ...emissionSourcesFiltered,
-      ...newEmissionSources,
-      pendingEmissionSource,
-    ] as EmissionSourceLight[]
-
-    const map = new Map<string, EmissionSourceLight>()
-
-    for (const emissionSource of allEmissionSources) {
-      if (!emissionSource?.id) {
-        continue
-      }
-
-      const existingEmissionSource = map.get(emissionSource.id)
-      if (existingEmissionSource) {
-        const selectedEmissionSource = emissionSource.fakeId
-          ? emissionSource
-          : existingEmissionSource.fakeId
-            ? existingEmissionSource
-            : emissionSource
-        map.set(emissionSource.id, selectedEmissionSource)
-      } else {
-        map.set(emissionSource.id, emissionSource)
-      }
-    }
-
-    const processedEmissionSources = [...Array.from(map.values()), pendingEmissionSource]
-
-    return processedEmissionSources
-  }, [emissionSourcesFiltered, newEmissionSources, pendingEmissionSource])
+  const emissionSource = useMemo(() => emissionSourcesFiltered[0] || null, [emissionSourcesFiltered])
 
   const emissionResultsArray = useMemo(
     () => emissionSourcesFiltered?.map((emissionSource) => getEmissionResultsCut(emissionSource)),
@@ -125,154 +73,131 @@ const SubPostField = ({ subPost, emissionSources, study, question, callback, isL
     }
   }, [question])
 
-  const handleUpdate = async (id: string | number, emissionSourceId?: string | null) => {
-    const value = parseInt(currentValues[id] || '') || undefined
-    const depreciationPeriod = parseInt(currentDepreciationPeriodValues[id] || '') || undefined
-
-    if (!value && !depreciationPeriod) {
-      return
+  const unit = useMemo(() => {
+    if (!emissionFactor) {
+      return null
     }
+    return emissionFactor.unit === Unit.CUSTOM ? emissionFactor.customUnit : emissionFactor.unit
+  }, [emissionFactor])
 
-    const name = question.key
-    if (value && value < 0) {
-      setError(`${tEmissionSource('form.sign')}`)
-      setCurrentValues((prev) => ({ ...prev, [id]: '0' }))
-      return
-    }
-    setError('')
+  const handleUpdate = useCallback(
+    async (emissionSourceId?: string | null) => {
+      const value = parseInt(currentValue || '') || undefined
 
-    try {
-      if (emissionSourceId) {
-        const command = {
-          emissionSourceId,
-          value,
-          depreciationPeriod,
-        }
+      if (!value) {
+        return
+      }
 
-        const isValid = UpdateEmissionSourceCommandValidation.safeParse(command)
-        if (isValid.success) {
-          await updateEmissionSource(isValid.data)
-        }
-      } else {
-        const result = await createEmissionSource({
-          name,
-          subPost,
-          studyId: study.id,
-          studySiteId: studySite,
-          caracterisation: EmissionSourceCaracterisation.Operated,
-          type: EmissionSourceType.Physical,
-          value,
-          emissionFactorId: emissionFactor?.id,
-          depreciationPeriod,
-        })
-        if (result.success) {
-          setNewEmissionSources((prev) => [...prev, { ...result, fakeId: id }])
-          const fakeId = `new-${Date.now()}`
-          setPendingEmissionSource({ fakeId })
+      const name = question.key
+      if (value && value < 0) {
+        setError(`${tEmissionSource('form.sign')}`)
+        setCurrentValue('0')
+        return
+      }
+      setError('')
+
+      try {
+        if (emissionSourceId) {
+          const command = {
+            emissionSourceId,
+            value,
+          }
+
+          const isValid = UpdateEmissionSourceCommandValidation.safeParse(command)
+          if (isValid.success) {
+            await updateEmissionSource(isValid.data)
+          }
         } else {
-          setError(tCutQuestions('error'))
+          const result = await createEmissionSource({
+            name,
+            subPost,
+            studyId: study.id,
+            studySiteId: studySite,
+            caracterisation: EmissionSourceCaracterisation.Operated,
+            type: EmissionSourceType.Physical,
+            value,
+            emissionFactorId: emissionFactor?.id,
+          })
+          if (!result.success) {
+            setError(tCutQuestions('error'))
+          }
+        }
+      } catch {
+        setError(tCutQuestions('error'))
+      } finally {
+        if (callback) {
+          callback()
         }
       }
-    } catch {
-      setError(tCutQuestions('error'))
-    } finally {
-      if (callback) {
-        callback()
-      }
-    }
-  }
+    },
+    [
+      currentValue,
+      question.key,
+      tEmissionSource,
+      subPost,
+      study.id,
+      studySite,
+      emissionFactor?.id,
+      tCutQuestions,
+      callback,
+    ],
+  )
 
-  const handleDelete = async (emissionSourceId?: string | null) => {
-    if (!emissionSourceId) {
+  const getInput = useCallback(() => {
+    if (!question.format) {
       return
     }
-    await deleteEmissionSource(emissionSourceId)
-    setNewEmissionSources((prev) => prev.filter((emissionSource) => emissionSource.id !== emissionSourceId))
-    if (callback) {
-      callback()
+    switch (InputCategories[question.format]) {
+      case InputCategory.Text:
+        return (
+          <TextUnitInput
+            unit={unit}
+            format={question.format || InputFormat.Text}
+            type={question.type}
+            className="grow"
+            disabled={isLoading}
+            value={currentValue ?? emissionSource?.value?.toString() ?? ''}
+            onChange={(value) => !isLoading && setCurrentValue(value)}
+            onUpdate={() => handleUpdate(emissionSource?.id)}
+            label={tCutQuestions(`format.${question.format || InputFormat.Text}`)}
+            helperText={error}
+            error={!!error}
+          />
+        )
+      case InputCategory.Time:
+        return (
+          <TimePickerInput
+            label={tCutQuestions(`format.${question.format}`)}
+            value={currentValue ?? ''}
+            onChange={setCurrentValue}
+            onUpdate={() => {
+              handleUpdate(emissionSource?.id)
+            }}
+          />
+        )
+
+      default:
+        break
     }
-  }
+  }, [
+    question.format,
+    question.type,
+    unit,
+    isLoading,
+    currentValue,
+    emissionSource?.value,
+    emissionSource?.id,
+    tCutQuestions,
+    error,
+    handleUpdate,
+  ])
 
   return (
     <Block title={tCutQuestions(question.key, { value: question?.value || '' })}>
-      {extendedEmissionSources.map((emissionSource, index) => (
-        <div key={emissionSource?.fakeId || emissionSource?.id || index} className="flex mt1">
-          <div className={classNames(styles.inputWithUnit, 'flex grow mr1')}>
-            <DebouncedInput
-              debounce={50}
-              className="grow"
-              disabled={isLoading}
-              type={question.type}
-              value={
-                currentValues[emissionSource?.id || emissionSource?.fakeId || index] ??
-                emissionSource?.value?.toString() ??
-                ''
-              }
-              onChange={(value) =>
-                setCurrentValues((prev) => ({
-                  ...prev,
-                  [emissionSource?.id || emissionSource?.fakeId || index]: value,
-                }))
-              }
-              onBlur={() => handleUpdate(emissionSource?.id || emissionSource?.fakeId || index, emissionSource?.id)}
-              label={`${tEmissionSource('cut.form.value')} *`}
-              helperText={error}
-              error={!!error}
-              slotProps={{
-                htmlInput: { min: 0 },
-                input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                inputLabel: { shrink: true },
-              }}
-            />
-            {emissionFactor && (
-              <div className={styles.unit}>
-                {emissionFactor.unit === Unit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}
-              </div>
-            )}
-          </div>
-          <div className="mr1">
-            {question.depreciationPeriod && (
-              <DebouncedInput
-                debounce={50}
-                className="grow"
-                disabled={isLoading}
-                type={question.type}
-                value={
-                  currentDepreciationPeriodValues[emissionSource?.id || emissionSource?.fakeId || index] ??
-                  emissionSource?.depreciationPeriod?.toString() ??
-                  ''
-                }
-                onChange={(value) =>
-                  setCurrentDepreciationPeriodValues((prev) => ({
-                    ...prev,
-                    [emissionSource?.id || emissionSource?.fakeId || index]: value,
-                  }))
-                }
-                onBlur={() => handleUpdate(emissionSource?.id || emissionSource?.fakeId || index, emissionSource?.id)}
-                label={`${tCutQuestions('numberOfYears')}`}
-                slotProps={{
-                  htmlInput: { min: 0 },
-                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                  inputLabel: { shrink: true },
-                }}
-              />
-            )}
-          </div>
-          {emissionSource?.id && (
-            <Button className={styles.deleteButton} onClick={() => handleDelete(emissionSource.id)}>
-              <DeleteIcon />
-            </Button>
-          )}
-        </div>
-      ))}
+      <div className="flex mt1">{getInput()}</div>
       {emissionResults && (
         <div className="mt1">
           <p>{`${formatNumber(emissionResults.emission / STUDY_UNIT_VALUES[study.resultsUnit])} ${tResultstUnits(study.resultsUnit)}`}</p>
-          {emissionResults.standardDeviation && (
-            <p className={styles.status}>
-              {tQuality('name')} {tQuality(getStandardDeviationRating(emissionResults.standardDeviation).toString())}
-            </p>
-          )}
         </div>
       )}
     </Block>

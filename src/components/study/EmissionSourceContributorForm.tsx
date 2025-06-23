@@ -12,11 +12,14 @@ import { TextField } from '@mui/material'
 import { StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { useState } from 'react'
 import { Path } from 'react-hook-form'
 import LinkButton from '../base/LinkButton'
-import QualitySelect from '../form/QualitySelect'
+import GlossaryModal from '../modals/GlossaryModal'
 import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
+import QualitySelectGroup from './QualitySelectGroup'
 
 interface Props {
   emissionSource: StudyWithoutDetail['emissionSources'][0]
@@ -26,6 +29,7 @@ interface Props {
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
   isFromOldImport: boolean
   currentBEVersion: string
+  advanced: boolean
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -39,10 +43,18 @@ const EmissionSourceContributorForm = ({
   update,
   isFromOldImport,
   currentBEVersion,
+  advanced,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
   const tUnits = useTranslations('units')
+  const tGlossary = useTranslations('emissionSource.glossary')
+  const [expandedQuality, setExpandedQuality] = useState(!!advanced)
+  const [glossary, setGlossary] = useState('')
+
+  const qualities = qualityKeys.map((column) => emissionSource[column])
+  const defaultQuality = qualities.find((quality) => quality)
+  const canShrink = !defaultQuality || qualities.every((quality) => quality === defaultQuality)
 
   return (
     <>
@@ -115,28 +127,39 @@ const EmissionSourceContributorForm = ({
           {t('createEmissionFactor')}
         </LinkButton>
       )}
-
-      <div className={classNames(styles.row, 'flex')}>
-        {qualityKeys.map((quality) => (
-          <QualitySelect
-            key={quality}
-            data-testid={`emission-source-${quality}`}
-            id={quality}
-            value={emissionSource[quality] || ''}
-            onChange={(event) => update(quality, Number(event.target.value))}
-            label={t(`form.${quality}`)}
-            clearable
-          />
-        ))}
-        <QualitySelect
-          data-testid="emission-source-reliability"
-          id="reliability"
-          value={emissionSource.reliability || ''}
-          onChange={(event) => update('reliability', Number(event.target.value))}
-          label={t('form.reliability')}
+      <div className="mt1">
+        <QualitySelectGroup
+          canEdit={false}
+          emissionSource={emissionSource}
+          update={update}
+          advanced={advanced}
+          setGlossary={setGlossary}
+          expanded={expandedQuality || !canShrink}
+          setExpanded={setExpandedQuality}
+          canShrink={canShrink}
+          defaultQuality={defaultQuality}
           clearable
         />
       </div>
+
+      {glossary && (
+        <GlossaryModal glossary={glossary} onClose={() => setGlossary('')} label="emission-source" t={tGlossary}>
+          <p className="mb-2">
+            {tGlossary.rich(`${glossary}Description`, {
+              link: (children) => (
+                <Link
+                  href="https://www.bilancarbone-methode.com/4-comptabilisation/4.4-methode-destimation-des-incertitudes/4.4.2-comment-les-determiner#determination-qualitative"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {children}
+                </Link>
+              ),
+              bcVersion: currentBEVersion,
+            })}
+          </p>
+        </GlossaryModal>
+      )}
     </>
   )
 }

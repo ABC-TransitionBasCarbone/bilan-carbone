@@ -49,18 +49,16 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
       {actions && actions?.length > 0 && (
         <div className={classNames(styles.actions, 'justify-end')}>
           {actions.map((action, index) => {
-            if (action.actionType === 'loadingButton') {
-              const { ...loadingProps } = action
-              return <LoadingButton key={index} color="secondary" {...loadingProps} />
+            const { actionType, ...props } = action
+            if (actionType === 'loadingButton') {
+              return <LoadingButton key={index} color="secondary" {...(props as LoadingButtonProps)} />
             }
 
-            if (action.actionType === 'link') {
-              const { ...linkProps } = action
-              return <LinkButton key={index} color="secondary" {...linkProps} />
+            if (actionType === 'link') {
+              return <LinkButton key={index} color="secondary" {...props} />
             }
 
-            const { actionType, ...buttonProps } = action
-            return <Button key={index} type={actionType === 'submit' ? 'submit' : 'button'} {...buttonProps} />
+            return <Button key={index} type={actionType === 'submit' ? 'submit' : 'button'} {...props} />
           })}
         </div>
       )}

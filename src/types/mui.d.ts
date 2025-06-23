@@ -1,3 +1,4 @@
+import { CutPost, Post } from '@/services/posts'
 import '@mui/material/styles'
 import { CSSObject } from '@mui/material/styles'
 import { CSSProperties } from 'react'
@@ -7,13 +8,7 @@ declare module '@mui/material/styles' {
     custom: {
       box: CSSObject
       postColors: {
-        functioning: { light: string }
-        mobility: { light: string }
-        tour: { light: string }
-        candyStore: { light: string }
-        garbage: { light: string }
-        ticketOffice: { light: string }
-        movieTheater: { light: string }
+        [key in Post]: { light: string; dark?: string }
       }
       roles: {
         validator: string
@@ -27,6 +22,9 @@ declare module '@mui/material/styles' {
         }
         text: CSSProperties
       }
+      publicContainer: {
+        background?: string
+      }
     }
   }
 
@@ -34,13 +32,7 @@ declare module '@mui/material/styles' {
     custom?: {
       box: CSSObject
       postColors?: {
-        functioning: { light: string }
-        mobility: { light: string }
-        tour: { light: string }
-        candyStore: { light: string }
-        garbage: { light: string }
-        ticketOffice: { light: string }
-        movieTheater: { light: string }
+        [key in CutPost]: { light: string; dark?: string }
       }
       roles: {
         validator: string

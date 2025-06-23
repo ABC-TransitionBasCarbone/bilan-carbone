@@ -33,7 +33,6 @@ const DynamicStudyRights = ({ user, study, editionDisabled, userRoleOnStudy, emi
             user={user}
             study={study}
             editionDisabled={editionDisabled}
-            userRoleOnStudy={userRoleOnStudy}
             emissionFactorSources={emissionFactorSources}
           />
         ),
