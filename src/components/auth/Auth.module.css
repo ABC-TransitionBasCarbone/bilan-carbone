@@ -23,3 +23,7 @@
 .red {
   color: var(--error-100);
 }
+
+.bottomLink {
+  align-self: center;
+}

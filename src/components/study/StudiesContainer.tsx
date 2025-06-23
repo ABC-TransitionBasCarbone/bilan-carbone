@@ -4,6 +4,7 @@ import {
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
 import { default as CUTStudyHomeMessage } from '@/environments/cut/study/StudyHomeMessage'
+import { canCreateStudy } from '@/utils/user'
 import AddIcon from '@mui/icons-material/Add'
 import { Box as MUIBox } from '@mui/material'
 import { Study } from '@prisma/client'
@@ -47,7 +48,6 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
 
   const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
 
-  const canCreateStudy = !!user.level && !!user.organizationVersionId
   const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
   return studies.length ? (
@@ -60,7 +60,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
       {!!mainStudies.length && (
         <Studies
           studies={mainStudies}
-          canAddStudy={canCreateStudy && !isCR}
+          canAddStudy={canCreateStudy(user) && !isCR}
           creationUrl={creationUrl}
           user={user}
           collaborations={!organizationVersionId && isCR}
@@ -68,7 +68,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
       )}
       {!!collaborations.length && <Studies studies={collaborations} canAddStudy={false} user={user} collaborations />}
     </>
-  ) : canCreateStudy && !isCR ? (
+  ) : canCreateStudy(user) && !isCR ? (
     <MUIBox component="section">
       <CUTStudyHomeMessage user={user} />
       <div className="justify-center">

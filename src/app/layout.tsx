@@ -39,7 +39,7 @@ const RootLayout = async ({ children }: Readonly<Props>) => {
         <AppRouterCacheProvider options={providerOptions}>
           <NextIntlClientProvider messages={messages}>
             <RouteChangeListener />
-            <Providers environment={environment}>
+            <Providers>
               <CssBaseline />
               {children}
             </Providers>
