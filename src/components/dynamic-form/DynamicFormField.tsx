@@ -1,5 +1,5 @@
-import { Question } from '@prisma/client'
-import { useMemo } from 'react'
+import { Prisma, Question } from '@prisma/client'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { FieldErrors, UseFormWatch } from 'react-hook-form'
 import { UseAutoSaveReturn } from '../../hooks/useAutoSave'
 import FieldComponent from './FieldComponent'
@@ -36,9 +36,6 @@ const DynamicFormField = ({
         control={control}
         error={error}
         isLoading={isLoading}
-        watch={watch}
-        formErrors={formErrors}
-        autoSave={autoSave}
       />
     </QuestionContainer>
   )

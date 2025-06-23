@@ -1,12 +1,8 @@
-import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
-import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
-import { getAnswerByQuestionIdAndStudySiteId } from '@/services/serverFunctions/question'
 import { getQuestionLabel } from '@/utils/question'
-import { Prisma, Question } from '@prisma/client'
-import { JsonObject } from '@prisma/client/runtime/library'
+import { Question } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useCallback, useMemo } from 'react'
-import { Control, Controller, FieldError, FieldErrors, UseFormWatch } from 'react-hook-form'
+import { useMemo } from 'react'
+import { Control, Controller, FieldError } from 'react-hook-form'
 import DatePickerInput from './inputFields/DatePickerInput'
 import QCMInput from './inputFields/QCMInput'
 import QCUInput from './inputFields/QCUInput'
@@ -24,63 +20,10 @@ interface Props {
   error?: FieldError
   isLoading?: boolean
   control: Control<FormValues>
-  watch: UseFormWatch<FormValues>
-  formErrors: FieldErrors<FormValues>
-  autoSave: UseAutoSaveReturn
 }
-const FieldComponent = ({
-  fieldType,
-  fieldName,
-  question,
-  control,
-  error,
-  isLoading,
-  watch,
-  formErrors,
-  autoSave,
-}: Props) => {
+const FieldComponent = ({ fieldType, fieldName, question, control, error, isLoading }: Props) => {
   const tValidation = useTranslations('form.validation')
   const tFormat = useTranslations('emissionFactors.post.cutQuestions.format')
-
-  const isSavingOnBlur = useMemo(() => fieldType === FieldType.TEXT || fieldType === FieldType.NUMBER, [fieldType])
-
-  const saveField = useCallback(
-    async (value: unknown) => {
-      if (!formErrors[fieldName]) {
-        let finalValue = value
-        if (ID_INTERN_PREFIX_REGEX.test(fieldName)) {
-          const key = fieldName.split('-').pop()
-          if (key) {
-            const tableValue = { [key]: value }
-            const response = await getAnswerByQuestionIdAndStudySiteId(question.id, autoSave.studySiteId)
-            if (response.success) {
-              const { data } = response
-              if (data) {
-                const updatedValue = { ...(data.response as JsonObject), ...tableValue }
-                finalValue = updatedValue
-              } else {
-                finalValue = tableValue
-              }
-            }
-          }
-        }
-        autoSave.saveField(question, finalValue as Prisma.InputJsonValue)
-      }
-    },
-    [formErrors, fieldName, autoSave, question],
-  )
-
-  const handleBlur = useCallback(() => {
-    const currentValue = watch(fieldName)
-    saveField(currentValue)
-  }, [watch, fieldName, saveField])
-
-  const handleChange = useCallback(
-    (value: string | null) => {
-      saveField(value)
-    },
-    [saveField],
-  )
 
   const baseInputProps = useMemo(() => {
     const label = getQuestionLabel(question.type, tFormat)
@@ -122,9 +65,6 @@ const FieldComponent = ({
           errorMessage={baseInputProps.errorMessage}
           disabled={baseInputProps.disabled}
           control={control}
-          autoSave={autoSave}
-          watch={watch}
-          formErrors={formErrors}
         />
       )
     }
@@ -136,27 +76,12 @@ const FieldComponent = ({
         name={fieldName}
         control={control}
         render={({ field }) => {
-          const { ref, onBlur, onChange, ...fieldWithoutRef } = field
-          const handleFieldBlur = () => {
-            onBlur()
-            if (isSavingOnBlur) {
-              handleBlur()
-            }
-          }
-
-          const handleFieldChange = (value: string | null) => {
-            onChange(value)
-            if (!isSavingOnBlur) {
-              handleChange(value)
-            }
-          }
+          const { ref, ...fieldWithoutRef } = field
 
           return (
             <InputComponent
               {...fieldWithoutRef}
               ref={ref}
-              onBlur={handleFieldBlur}
-              onChange={handleFieldChange}
               value={field.value as string | null}
               question={baseInputProps.question}
               label={baseInputProps.label}
@@ -167,7 +92,6 @@ const FieldComponent = ({
         }}
       />
     )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldType, fieldName, control, baseInputProps, question.type])
 
   return renderField
