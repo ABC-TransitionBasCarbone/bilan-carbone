@@ -4,7 +4,11 @@ import { z } from 'zod'
 export const OpeningHoursValidation = z.object({
   id: z.string().optional(),
   day: z.nativeEnum(DayOfWeek),
-  isHoliday: z.boolean().default(false).optional(),
+  isHoliday: z.boolean().refine((val) => val === false),
   openHour: z.string().optional().nullable(),
   closeHour: z.string().optional().nullable(),
+})
+
+export const HolidayOpeningHoursValidation = OpeningHoursValidation.extend({
+  isHoliday: z.boolean().refine((val) => val === true),
 })
