@@ -4,10 +4,10 @@ import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import StudyResultsContainerSummaryCut from '@/environments/cut/study/results/StudyResultsContainerSummaryCut'
 import { Environment } from '@prisma/client'
-import StudyResultsContainerSummary from '../../environments/base/results/StudyResultsContainerSummary'
 import Block from '../base/Block'
 import useStudySite from './site/useStudySite'
 import StudyDetailsHeader from './StudyDetailsHeader'
+import StudyResultsContainerSummary from './results/StudyResultsContainerSummary'
 
 interface Props {
   canDeleteStudy?: boolean
