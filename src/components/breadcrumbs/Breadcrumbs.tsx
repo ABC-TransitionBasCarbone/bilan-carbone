@@ -10,7 +10,6 @@ interface Props {
 }
 
 const StyledContainer = styled(Box)<BoxProps>(({ theme }) => {
-  const { environment } = useAppEnvironmentStore()
   return {
     backgroundColor: theme.palette.primary.light,
     borderRadius: '0 0 1rem 1rem',

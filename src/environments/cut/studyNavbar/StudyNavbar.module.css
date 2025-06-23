@@ -1,0 +1,82 @@
+.toolbarContainer {
+  bottom: 1rem;
+  left: 1rem;
+  position: fixed;
+  justify-content: center;
+  display: flex;
+  z-index: 10;
+}
+
+.openDrawerButton {
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.studyNavbarContainer {
+  display: flex;
+  height: 100%;
+  background-color: var(--background-150) !important;
+  height: fit-content !important;
+  width: 14rem;
+  border-radius: 0px 1rem 1rem 0px;
+  top: calc(50vh - 10rem) !important;
+  overflow: hidden !important;
+  border: var(--border) !important;
+
+  hr {
+    color: var(--neutral-300) !important;
+  }
+}
+
+.opened {
+  @media screen and (max-width: 115rem) {
+    width: 14rem;
+  }
+}
+
+.button,
+.link {
+  cursor: pointer;
+}
+
+.button,
+.link,
+.section {
+  background-color: white;
+  width: 100%;
+  border: none;
+  color: var(--neutral-950);
+  padding: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: left;
+  font-size: 1rem;
+
+  &.active,
+  &:hover {
+    background-color: var(--primary-50);
+  }
+}
+
+.childrenLink {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
+}
+
+.icon {
+  font-size: 1rem !important;
+}
+
+.disabled {
+  color: var(--grayscale-800);
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: white;
+  }
+}
