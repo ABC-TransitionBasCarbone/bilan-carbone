@@ -1,7 +1,9 @@
 describe('Edit organization', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
+  })
 
+  beforeEach(() => {
     cy.intercept('POST', '/organisations/*/modifier').as('update')
   })
 

@@ -1,5 +1,5 @@
 describe('Real use case: BC V8_10', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
   })
 
