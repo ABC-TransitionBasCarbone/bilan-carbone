@@ -78,7 +78,11 @@ const Block = ({
           title && titleDiv
         )}
         {description && (
-          <Typography className={classNames(styles.description, bold && 'bold')} color={descriptionColor}>
+          <Typography
+            className={classNames(styles.description, bold && 'bold')}
+            color={descriptionColor}
+            component="div"
+          >
             {description}
           </Typography>
         )}
