@@ -116,7 +116,9 @@ export const updateEmissionSource = async ({
       ...command,
       ...(emissionFactorId !== undefined
         ? {
-            emissionFactorId,
+            ...(emissionFactorId
+              ? { emissionFactor: { connect: { id: emissionFactorId } } }
+              : { emissionFactor: { disconnect: true } }),
             feReliability: null,
             feTechnicalRepresentativeness: null,
             feGeographicRepresentativeness: null,

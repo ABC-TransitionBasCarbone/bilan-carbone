@@ -216,6 +216,7 @@ export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
     withoutDetail: true as const,
     id: study.id,
     name: study.name,
+    level: study.level,
     sites: study.sites,
     resultsUnit: study.resultsUnit,
     emissionSources: study.emissionSources
