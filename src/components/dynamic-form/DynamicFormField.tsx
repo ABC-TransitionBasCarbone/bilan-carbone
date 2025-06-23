@@ -3,10 +3,10 @@ import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, FieldErrors, UseFormWatch } from 'react-hook-form'
 import { UseAutoSaveReturn } from '../../hooks/useAutoSave'
-import DatePickerInputRHF from './inputFields/DatePickerInput'
-import SelectInputRHF from './inputFields/SelectInput'
-import TextUnitInputRHF from './inputFields/TextUnitInput'
-import YearPickerInputRHF from './inputFields/YearPickerInput'
+import DatePickerInput from './inputFields/DatePickerInput'
+import SelectInput from './inputFields/SelectInput'
+import TextUnitInput from './inputFields/TextUnitInput'
+import YearPickerInput from './inputFields/YearPickerInput'
 import QuestionContainer from './QuestionContainer'
 import { getQuestionFieldType } from './services/questionService'
 import { DynamicFormFieldProps, FormValues } from './types/formTypes'
@@ -83,16 +83,16 @@ const DynamicFormField = ({
       switch (fieldType) {
         case FieldType.TEXT:
         case FieldType.NUMBER:
-          return TextUnitInputRHF
+          return TextUnitInput
         case FieldType.DATE:
-          return DatePickerInputRHF
+          return DatePickerInput
         case FieldType.YEAR:
-          return YearPickerInputRHF
+          return YearPickerInput
         case FieldType.SELECT:
-          return SelectInputRHF
+          return SelectInput
         default:
           console.warn(`Unsupported question type: ${question.type} (mapped to: ${fieldType})`)
-          return TextUnitInputRHF
+          return TextUnitInput
       }
     }
 

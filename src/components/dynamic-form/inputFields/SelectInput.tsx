@@ -1,12 +1,12 @@
 import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { BaseInputProps } from '../types/formTypes'
 
-interface SelectInputRHFProps extends Omit<BaseInputProps, 'value' | 'onChange'> {
+interface SelectInputProps extends Omit<BaseInputProps, 'value' | 'onChange'> {
   value: string | null
   onChange: (value: string | null) => void
 }
 
-const SelectInputRHF = ({ question, value, onChange, onBlur, errorMessage, disabled }: SelectInputRHFProps) => {
+const SelectInput = ({ question, value, onChange, onBlur, errorMessage, disabled }: SelectInputProps) => {
   const options = question.possibleAnswers || []
 
   const handleChange = (event: SelectChangeEvent<string>) => {
@@ -27,4 +27,4 @@ const SelectInputRHF = ({ question, value, onChange, onBlur, errorMessage, disab
   )
 }
 
-export default SelectInputRHF
+export default SelectInput

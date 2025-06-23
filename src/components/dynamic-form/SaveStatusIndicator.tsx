@@ -8,7 +8,6 @@ interface SaveStatusIndicatorProps {
 
 const StyledIcon = styled(Box)(({ color }: { color: string }) => ({
   fontSize: '1.25rem',
-  cursor: 'help',
   color,
 }))
 

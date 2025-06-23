@@ -9,12 +9,12 @@ import { NumberInputFormat, QuestionType, TextInputFormat } from '../types/quest
 import { getInputFormatConfig } from './textInputFormatConfig'
 import styles from './TextUnitInput.module.css'
 
-interface TextUnitInputRHFProps extends BaseInputProps {
+interface TextUnitInputProps extends BaseInputProps {
   format?: TextInputFormat | NumberInputFormat
   unit?: string | null
 }
 
-const TextUnitInputRHF = ({
+const TextUnitInput = ({
   question,
   value,
   onChange,
@@ -24,7 +24,7 @@ const TextUnitInputRHF = ({
   unit,
   errorMessage,
   ...props
-}: TextUnitInputRHFProps &
+}: TextUnitInputProps &
   Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
   const tUnits = useTranslations('units')
   const questionFormat =
@@ -100,4 +100,4 @@ const TextUnitInputRHF = ({
   )
 }
 
-export default TextUnitInputRHF
+export default TextUnitInput

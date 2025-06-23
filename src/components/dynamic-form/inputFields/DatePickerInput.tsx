@@ -7,7 +7,7 @@ import { BaseInputProps } from '../types/formTypes'
 
 dayjs.extend(customParseFormat)
 
-const DatePickerInputRHF = ({
+const DatePickerInput = ({
   value,
   onChange,
   onBlur,
@@ -55,4 +55,4 @@ const DatePickerInputRHF = ({
   )
 }
 
-export default DatePickerInputRHF
+export default DatePickerInput

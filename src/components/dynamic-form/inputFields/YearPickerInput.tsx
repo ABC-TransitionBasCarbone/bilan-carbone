@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { InputHTMLAttributes, useMemo } from 'react'
 import { BaseInputProps } from '../types/formTypes'
 
-const YearPickerInputRHF = ({
+const YearPickerInput = ({
   value,
   onChange,
   onBlur,
@@ -54,4 +54,4 @@ const YearPickerInputRHF = ({
   )
 }
 
-export default YearPickerInputRHF
+export default YearPickerInput
