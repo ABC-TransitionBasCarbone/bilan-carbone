@@ -11,6 +11,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema, getStudySite } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { CircularProgress } from '@mui/material'
 import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
@@ -32,29 +33,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   const { callServerFunction } = useServerFunction()
   const { studySite, setSite } = useStudySite(study)
   const [siteData, setSiteData] = useState<FullStudy['sites'][0] | undefined>()
-
-  useEffect(() => {
-    async function setStudySiteData() {
-      if (studySite && studySite !== 'all') {
-        const studySiteRes = await getStudySite(studySite)
-
-        if (studySiteRes.success && studySiteRes.data) {
-          const newSiteData = studySiteRes.data
-          setSiteData(newSiteData)
-
-          form.reset({
-            openingHours: openingHoursToObject(newSiteData.openingHours, true),
-            openingHoursHoliday: openingHoursToObject(newSiteData.openingHours, false),
-            numberOfOpenDays: newSiteData.numberOfOpenDays ?? 0,
-            numberOfSessions: newSiteData.numberOfSessions ?? 0,
-            numberOfTickets: newSiteData.numberOfTickets ?? 0,
-          })
-        }
-      }
-    }
-
-    setStudySiteData()
-  }, [studySite])
+  const [loading, setLoading] = useState(true)
 
   const openingHoursToObject = (openingHoursArr: PartialOpeningHours[], handleNormalDays: boolean) => {
     const formattedOpeningHours = openingHoursArr.reduce(
@@ -99,6 +78,31 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
       numberOfTickets: siteData?.numberOfTickets ?? 0,
     },
   })
+
+  useEffect(() => {
+    async function setStudySiteData() {
+      setLoading(true)
+      if (studySite && studySite !== 'all') {
+        const studySiteRes = await getStudySite(studySite)
+
+        if (studySiteRes.success && studySiteRes.data) {
+          const newSiteData = studySiteRes.data
+          setSiteData(newSiteData)
+
+          form.reset({
+            openingHours: openingHoursToObject(newSiteData.openingHours, true),
+            openingHoursHoliday: openingHoursToObject(newSiteData.openingHours, false),
+            numberOfOpenDays: newSiteData.numberOfOpenDays ?? 0,
+            numberOfSessions: newSiteData.numberOfSessions ?? 0,
+            numberOfTickets: newSiteData.numberOfTickets ?? 0,
+          })
+        }
+      }
+      setLoading(false)
+    }
+
+    setStudySiteData()
+  }, [form, studySite])
 
   const openingHours = form.watch('openingHours')
   const openingHoursHoliday = form.watch('openingHoursHoliday')
@@ -158,61 +162,71 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
       <StudyParams user={user} study={study} disabled={editionDisabled} emissionFactorSources={emissionFactorSources} />
       <Block>
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
-        <div className="mt2">
-          <FormTextField
-            control={form.control}
-            name="numberOfSessions"
-            data-testid="new-study-number-of-sessions"
-            label={t('numberOfSessions')}
-            translation={t}
-            type="number"
-            className={styles.formTextField}
-            onBlur={onStudyCinemaUpdate}
-          />
-          <FormTextField
-            control={form.control}
-            name="numberOfTickets"
-            data-testid="new-study-number-of-tickets"
-            label={t('numberOfTickets')}
-            translation={t}
-            type="number"
-            className={styles.formTextField}
-            onBlur={onStudyCinemaUpdate}
-          />
-          <FormTextField
-            control={form.control}
-            name="numberOfOpenDays"
-            data-testid="new-study-number-of-open-days"
-            label={t('numberOfOpenDays')}
-            translation={t}
-            type="number"
-            className={styles.formTextField}
-            onBlur={onStudyCinemaUpdate}
-          />
-        </div>
       </Block>
-      <Block title={t('openingHours')}>
-        <div className={classNames(styles.openingHoursContainer, 'flex-col')}>
-          <WeekScheduleForm
-            label={t('openingHours')}
-            days={Object.values(DayOfWeek)}
-            name={'openingHours'}
-            control={form.control}
-            disabled={editionDisabled}
-            onCheckDay={handleCheckDay}
-            isChecked={isChecked}
-          />
-          {openingHoursHoliday && Object.keys(openingHoursHoliday).length !== 0 && (
-            <WeekScheduleForm
-              label={t('openingHoursHoliday')}
-              days={daysHoliday}
-              name={'openingHoursHoliday'}
-              control={form.control}
-              disabled={editionDisabled}
-            />
-          )}
-        </div>
-      </Block>
+      {loading ? (
+        <Block>
+          <CircularProgress variant="indeterminate" color="primary" size={100} />
+        </Block>
+      ) : (
+        <>
+          <Block>
+            <div>
+              <FormTextField
+                control={form.control}
+                name="numberOfSessions"
+                data-testid="new-study-number-of-sessions"
+                label={t('numberOfSessions')}
+                translation={t}
+                type="number"
+                className={styles.formTextField}
+                onBlur={onStudyCinemaUpdate}
+              />
+              <FormTextField
+                control={form.control}
+                name="numberOfTickets"
+                data-testid="new-study-number-of-tickets"
+                label={t('numberOfTickets')}
+                translation={t}
+                type="number"
+                className={styles.formTextField}
+                onBlur={onStudyCinemaUpdate}
+              />
+              <FormTextField
+                control={form.control}
+                name="numberOfOpenDays"
+                data-testid="new-study-number-of-open-days"
+                label={t('numberOfOpenDays')}
+                translation={t}
+                type="number"
+                className={styles.formTextField}
+                onBlur={onStudyCinemaUpdate}
+              />
+            </div>
+          </Block>
+          <Block title={t('openingHours')}>
+            <div className={classNames(styles.openingHoursContainer, 'flex-col')}>
+              <WeekScheduleForm
+                label={t('openingHours')}
+                days={Object.values(DayOfWeek)}
+                name={'openingHours'}
+                control={form.control}
+                disabled={editionDisabled}
+                onCheckDay={handleCheckDay}
+                isChecked={isChecked}
+              />
+              {openingHoursHoliday && Object.keys(openingHoursHoliday).length !== 0 && (
+                <WeekScheduleForm
+                  label={t('openingHoursHoliday')}
+                  days={daysHoliday}
+                  name={'openingHoursHoliday'}
+                  control={form.control}
+                  disabled={editionDisabled}
+                />
+              )}
+            </div>
+          </Block>
+        </>
+      )}
     </>
   )
 }

@@ -604,10 +604,6 @@ export const updateStudyOpeningHours = async (
       await Promise.all(
         mergedOpeningHours
           .map((openingHour) => {
-            if (!openingHour.closeHour || !openingHour.openHour) {
-              return
-            }
-
             if (!openingHour.id) {
               return prisma.openingHours.create({
                 data: {
