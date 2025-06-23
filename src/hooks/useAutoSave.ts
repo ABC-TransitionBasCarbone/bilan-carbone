@@ -1,6 +1,6 @@
 import { saveAnswerForQuestion } from '@/services/serverFunctions/question'
 import { Prisma } from '@prisma/client'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 export interface FieldSaveStatus {
   status: 'idle' | 'saving' | 'saved' | 'error'
@@ -25,7 +25,6 @@ interface SaveAnswerRequest {
  */
 export const useAutoSave = (studyId: string): UseAutoSaveReturn => {
   const [fieldStatuses, setFieldStatuses] = useState<Record<string, FieldSaveStatus>>({})
-  const saveTimers = useRef<Record<string, NodeJS.Timeout>>({})
 
   const saveAnswer = useCallback(async (request: SaveAnswerRequest) => {
     return saveAnswerForQuestion(request.questionId, request.studyId, request.response)
@@ -43,8 +42,6 @@ export const useAutoSave = (studyId: string): UseAutoSaveReturn => {
 
   const performSave = useCallback(
     async (questionId: string, value: Prisma.InputJsonValue) => {
-      updateFieldStatus(questionId, { status: 'saving' })
-
       try {
         const request: SaveAnswerRequest = {
           questionId,
@@ -83,11 +80,6 @@ export const useAutoSave = (studyId: string): UseAutoSaveReturn => {
 
   const saveField = useCallback(
     (questionId: string, value: Prisma.InputJsonValue) => {
-      if (saveTimers.current[questionId]) {
-        clearTimeout(saveTimers.current[questionId])
-      }
-
-      // Show saving state and perform save immediately (debounce handled at field level)
       updateFieldStatus(questionId, { status: 'saving' })
       performSave(questionId, value)
     },
@@ -107,17 +99,6 @@ export const useAutoSave = (studyId: string): UseAutoSaveReturn => {
     },
     [updateFieldStatus],
   )
-
-  useEffect(() => {
-    return () => {
-      Object.values(saveTimers.current).forEach((timer) => {
-        if (timer) {
-          clearTimeout(timer)
-        }
-      })
-      saveTimers.current = {}
-    }
-  }, [])
 
   return useMemo(
     () => ({

@@ -724,13 +724,11 @@
           "Hour": "hour",
           "Number": "Number"
         },
-        "loading": "Loading questions...",
         "errorLoadingQuestions": "Error loading questions",
         "retry": "Retry",
         "finish": "Finish",
         "noQuestions": "No questions found for this sub-post",
-        "autoSaveError": "The answer could not be saved automatically",
-        "autoSaveInfo": "Your answers are automatically saved as you type."
+        "autoSaveError": "The answer could not be saved automatically"
       }
     },
     "create": {

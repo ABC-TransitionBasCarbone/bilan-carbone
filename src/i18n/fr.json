@@ -724,13 +724,11 @@
           "Hour": "Heure",
           "Number": "Nombre"
         },
-        "loading": "Chargement des questions...",
         "errorLoadingQuestions": "Erreur lors du chargement des questions",
         "retry": "Réessayer",
         "finish": "Terminer",
         "noQuestions": "Aucune question trouvée pour ce sous-poste",
-        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer.",
-        "autoSaveInfo": "Vos réponses sont automatiquement sauvegardées pendant que vous tapez."
+        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
       }
     },
     "create": {
