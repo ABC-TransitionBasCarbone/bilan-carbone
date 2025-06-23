@@ -1,7 +1,7 @@
 import { TextFieldProps } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { InputHTMLAttributes, KeyboardEvent, useCallback, useMemo } from 'react'
+import { InputHTMLAttributes, useCallback, useMemo } from 'react'
 import DebouncedInput from '../../base/DebouncedInput'
 import { getNumberInputFormat, getTextInputFormat } from '../services/questionService'
 import { BaseInputProps } from '../types/formTypes'
@@ -41,40 +41,10 @@ const TextUnitInput = ({
     [onChange],
   )
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      const isControlKey = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', '.', ','].includes(e.key)
-      const isDigit = /^\d$/.test(e.key)
-
-      switch (questionFormat) {
-        case NumberInputFormat.PostalCode:
-          if (!isDigit && !isControlKey) {
-            e.preventDefault()
-          }
-          break
-        case NumberInputFormat.Number:
-          if (!isDigit && !isControlKey && e.key !== '-') {
-            e.preventDefault()
-          }
-          break
-        default:
-          break
-      }
-    },
-    [questionFormat],
-  )
-
   const inputProps: Record<string, unknown> = useMemo(() => {
     const config = getInputFormatConfig(questionFormat)
-    const props: Record<string, unknown> = { ...config.inputProps }
-
-    // Add keyboard restriction for numeric inputs
-    if (config.inputProps.inputMode === 'numeric') {
-      props.onKeyDown = handleKeyDown
-    }
-
-    return props
-  }, [questionFormat, handleKeyDown])
+    return { ...config.inputProps }
+  }, [questionFormat])
 
   return (
     <div className={classNames(styles.inputWithUnit, 'flex grow')}>

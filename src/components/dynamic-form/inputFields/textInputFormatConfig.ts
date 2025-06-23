@@ -28,6 +28,7 @@ export const INPUT_FORMAT_CONFIG: Record<TextInputFormat | NumberInputFormat, In
   },
   [NumberInputFormat.PostalCode]: {
     inputProps: {
+      type: 'text',
       inputMode: 'numeric',
       maxLength: 5,
       pattern: '[0-9]{5}',
