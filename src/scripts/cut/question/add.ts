@@ -32,6 +32,10 @@ interface Header {
   [HEADERS.UNIT]: string
 }
 
+type SourceType = 'google' | 'excel'
+
+type Delimiter = ',' | ';'
+
 const isValidEnumValue = <T extends Record<string, string>>(enumObj: T, value: string): value is T[keyof T] => {
   return Object.values(enumObj).includes(value)
 }
@@ -75,7 +79,7 @@ const generateIdIntern = (value: string) =>
 
 const fileExists = (filePath: string) => fs.existsSync(filePath) && fs.statSync(filePath).isFile()
 
-const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]> => {
+const parseCsv = async (file: string, delimiter: Delimiter): Promise<Prisma.QuestionCreateManyInput[]> => {
   return new Promise((resolve, reject) => {
     const questions: Prisma.QuestionCreateManyInput[] = []
     const errors: string[] = []
@@ -85,7 +89,7 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
       .pipe(
         parse({
           columns: true,
-          delimiter: ',',
+          delimiter,
           trim: true,
         }),
       )
@@ -152,14 +156,14 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
   })
 }
 
-const addQuestions = async (file: string) => {
+const addQuestions = async (file: string, source: SourceType) => {
   if (!file || !fileExists(file)) {
     throw new Error(`Le fichier "${file}" est introuvable.`)
   }
 
   console.log(`📥 Lecture du fichier : ${file}`)
 
-  const questions = await parseCsv(file)
+  const questions = await parseCsv(file, source === 'google' ? ',' : ';')
 
   console.log(`📊 ${questions.length} questions prêtes à être insérées.`)
 
@@ -174,12 +178,24 @@ program
   .name('add-questions')
   .description('Script pour importer les questions pour CUT')
   .version('1.0.0')
+  .option(
+    '-s, --source <type>',
+    'Source du fichier CSV (google | excel)',
+    (value) => {
+      const allowed = ['google', 'excel']
+      if (!allowed.includes(value)) {
+        throw new Error(`Source invalide : "${value}". Choix possibles : ${allowed.join(', ')}`)
+      }
+      return value
+    },
+    'google',
+  )
   .requiredOption('-f, --file <value>', 'Import depuis un fichier CSV')
   .parse(process.argv)
 
-const { file } = program.opts()
+const { file, source } = program.opts()
 
-addQuestions(path.resolve(file)).catch((err) => {
+addQuestions(path.resolve(file), source).catch((err) => {
   console.error('❌ Erreur :', err.message)
   process.exit(1)
 })
