@@ -39,7 +39,9 @@ describe('Create study emission source', () => {
       cy.getByTestId('emission-source-name').type('My emission source name')
     })
 
-    // TODO : Revoir ce test.
+    cy.getByTestId('emission-source-My new emission source').should('not.exist')
+    cy.getByTestId('emission-source-My emission source name').should('exist')
+
     cy.getByTestId('emission-source-factor').should('not.exist')
     cy.getByTestId('emission-source-factor-search').scrollIntoView().type('acier ou fer blanc')
     cy.getByTestId('emission-source-factor-suggestion').first().click()
@@ -56,12 +58,6 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-source').type('My source')
     cy.getByTestId('emission-source-type').click()
     cy.get('[data-value="Physical"]').click()
-
-    cy.getByTestId('emission-source-My new emission source').should('not.exist')
-
-    // cy.getByTestId('emission-source-status').should('contain', 'Enregistré')
-
-    cy.getByTestId('emission-source-My emission source name').should('exist')
 
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.get('[data-testid="emission-source-status"] > div').invoke('text').should('contain', 'À vérifier')

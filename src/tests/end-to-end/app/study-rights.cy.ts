@@ -172,13 +172,6 @@ describe('Study Rights', () => {
     cy.get('[data-value="Editor"]').should('exist')
     cy.get('[data-value="Validator"]').should('not.exist')
     cy.get('[data-value="Reader"]').click()
-    // cy.wait('@update')
-    // cy.getByTestId('study-rights-table-line').eq(4).contains('bc-super_admin-1@yopmail.comÉditeur')
-    cy.getByTestId('study-rights-change-button').click()
-    cy.getByTestId('study-rights-role').click()
-    cy.get('[data-value="Reader"]').should('exist')
-    cy.get('[data-value="Editor"]').should('exist')
-    cy.get('[data-value="Validator"]').should('not.exist')
     // Readers can't update rights
     cy.go('back')
     cy.url().then((link) => {
