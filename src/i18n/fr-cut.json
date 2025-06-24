@@ -1,8 +1,7 @@
 {
   "navigation": {
-    "organization": "Mes cinémas",
     "organizations": "Mes Bilans",
-    "information": "Données générales",
+    "information": "Mes cinémas",
     "team": "Mes collaborateurs"
   },
   "home": {
@@ -67,17 +66,17 @@
       "editTitle": "Modifier mes cinémas"
     },
     "sites": {
-      "title": "Les établissements enregistrés",
-      "noSites": "Il n'y a pas de cinemas configurés sur l'organisation",
+      "title": "Les cinémas enregistrés",
+      "noSites": "Il n'y a pas de cinémas configurés sur l'organisation",
       "name": "Nom",
-      "namePlaceholder": "Nom du cinema",
+      "namePlaceholder": "Nom du cinéma",
       "etp": "Nombre d'Équivalents Temps Plein",
-      "etpPlaceholder": "Entrez votre nombre d'ETP pour ce cinema ici",
+      "etpPlaceholder": "Entrez votre nombre d'ETP pour ce cinéma ici",
       "ca": "Chiffre d'affaire ({unit})",
-      "caPlaceholder": "Entrez votre CA pour ce cinema en {unit} ici",
+      "caPlaceholder": "Entrez votre CA pour ce cinéma en {unit} ici",
       "actions": "Actions",
       "delete": "Supprimer",
-      "add": "Ajouter un cinema"
+      "add": "Ajouter un cinéma"
     },
     "team": {
       "title": "Mes cinémas"

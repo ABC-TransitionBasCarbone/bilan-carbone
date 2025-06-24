@@ -9,11 +9,12 @@ import { FullStudy } from '@/db/study'
 import { Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { mapResultsByPost } from '@/services/results/utils'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import SpaIcon from '@mui/icons-material/Spa'
-import { SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -42,6 +43,9 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   )
 
   const computedResults = useMemo(() => mapResultsByPost(allComputedResults, withDep), [allComputedResults, withDep])
+
+  const { environment } = useAppEnvironmentStore()
+  const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
     const computedResults = computeResultsByPost(study, tPost, studySite, true, validatedOnly)
@@ -87,59 +91,65 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
       )}
 
       <div className={styles.container}>
-        <fieldset className={classNames(styles.selector, 'flex grow')} aria-label={t('results.withDependencies')}>
-          <label>
-            <input
-              type="radio"
-              name="dependencySelection"
-              value={t('results.withDependencies')}
-              checked={withDep}
-              onChange={() => setWithDependencies(true)}
-              className={styles.hidden}
-            />
-            <Box selected={withDep} color="secondary" className={classNames(styles.card, 'flex-col flex-cc pointer')}>
-              <h3 className="text-center">
-                {withDepValue} {tResultUnits(study.resultsUnit)}
-              </h3>
-              <span className="align-center text-center">
-                {t('results.withDependencies')}
-                <HelpOutlineOutlinedIcon
+        {!isCut && (
+          <fieldset className={classNames(styles.selector, 'flex grow')} aria-label={t('results.withDependencies')}>
+            <label>
+              <input
+                type="radio"
+                name="dependencySelection"
+                value={t('results.withDependencies')}
+                checked={withDep}
+                onChange={() => setWithDependencies(true)}
+                className={styles.hidden}
+              />
+              <Box selected={withDep} color="secondary" className={classNames(styles.card, 'flex-col flex-cc pointer')}>
+                <h3 className="text-center">
+                  {withDepValue} {tResultUnits(study.resultsUnit)}
+                </h3>
+                <span className="align-center text-center">
+                  {t('results.withDependencies')}
+                  <HelpOutlineOutlinedIcon
+                    color="secondary"
+                    className={`ml-4 ${styles.helpIcon}`}
+                    onClick={() => setGlossary('withDependencies')}
+                  />
+                </span>
+              </Box>
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="dependencySelection"
+                value={t('results.withoutDependencies')}
+                checked={!withDep}
+                onChange={() => setWithDependencies(false)}
+                className={styles.hidden}
+              />
+              <Box
+                selected={!withDep}
+                color="secondary"
+                className={classNames(styles.card, 'flex-col flex-cc pointer')}
+              >
+                <h3 className="text-center">
+                  {withoutDepValue} {tResultUnits(study.resultsUnit)}
+                </h3>
+                <span className="text-center">{t('results.withoutDependencies')}</span>
+              </Box>
+            </label>
+            <Box className={classNames(styles.card, styles.disabled, 'flex-col flex-cc')}>
+              <h3 className="text-center">{monetaryRatio} %</h3>
+              <span className="text-center align-center">
+                {t('results.monetaryRatio')}
+                <HelpIcon
                   color="secondary"
                   className={`ml-4 ${styles.helpIcon}`}
-                  onClick={() => setGlossary('withDependencies')}
+                  onClick={() => setGlossary('monetaryRatio')}
+                  label={t('information')}
                 />
               </span>
             </Box>
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="dependencySelection"
-              value={t('results.withoutDependencies')}
-              checked={!withDep}
-              onChange={() => setWithDependencies(false)}
-              className={styles.hidden}
-            />
-            <Box selected={!withDep} color="secondary" className={classNames(styles.card, 'flex-col flex-cc pointer')}>
-              <h3 className="text-center">
-                {withoutDepValue} {tResultUnits(study.resultsUnit)}
-              </h3>
-              <span className="text-center">{t('results.withoutDependencies')}</span>
-            </Box>
-          </label>
-          <Box className={classNames(styles.card, styles.disabled, 'flex-col flex-cc')}>
-            <h3 className="text-center">{monetaryRatio} %</h3>
-            <span className="text-center align-center">
-              {t('results.monetaryRatio')}
-              <HelpIcon
-                color="secondary"
-                className={`ml-4 ${styles.helpIcon}`}
-                onClick={() => setGlossary('monetaryRatio')}
-                label={t('information')}
-              />
-            </span>
-          </Box>
-        </fieldset>
+          </fieldset>
+        )}
         <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
       </div>
       <GlossaryModal

@@ -26,7 +26,6 @@ interface Props {
 const SubPostField = ({ subPost, emissionSources, study, question, callback, isLoading = false }: Props) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const tResultstUnits = useTranslations('study.results.units')
-  const tQuality = useTranslations('quality')
   const tEmissionSource = useTranslations('emissionSource')
 
   const { studySite } = useStudySite(study)

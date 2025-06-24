@@ -74,6 +74,11 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                         newValue && getCncData(newValue, row.index)
                       }}
                       placeholder={t('cncPlaceholder')}
+                      slotProps={{
+                        input: {
+                          sx: { borderRadius: '0.75rem', borderColor: 'var(--grayscale-300)', color: 'black' },
+                        },
+                      }}
                     />
                   )}
                 />
