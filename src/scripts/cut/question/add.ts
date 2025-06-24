@@ -1,6 +1,6 @@
 import { createQuestions } from '@/db/question'
 import { getEncoding } from '@/utils/csv'
-import { Prisma, QuestionType, SubPost } from '@prisma/client'
+import { Prisma, QuestionType, SubPost, Unit } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
@@ -16,7 +16,7 @@ enum HEADERS {
   SUB_POST = 'Sous-postes',
   TITRE = 'Titre',
   TYPE = 'Type',
-  UNITE = 'Unité',
+  UNIT = 'Unité',
 }
 
 interface Header {
@@ -29,11 +29,38 @@ interface Header {
   [HEADERS.SUB_POST]: string
   [HEADERS.TITRE]: string
   [HEADERS.TYPE]: string
-  [HEADERS.UNITE]: string
+  [HEADERS.UNIT]: string
 }
 
 const isValidEnumValue = <T extends Record<string, string>>(enumObj: T, value: string): value is T[keyof T] => {
   return Object.values(enumObj).includes(value)
+}
+
+function normalizeLabel(label: string): string {
+  return label
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '')
+    .trim()
+}
+
+const enumMap = Object.values(SubPost).reduce(
+  (map, value) => {
+    const normalized = normalizeLabel(value)
+    map[normalized] = value
+    return map
+  },
+  {} as Record<string, SubPost>,
+)
+
+function checkRequiredField(field: string, name: string, context: Record<string, string>, errors: string[]) {
+  if (field === '') {
+    const ctx = Object.entries(context)
+      .map(([k, v]) => `${k} "${v}"`)
+      .join(', ')
+    errors.push(`${name} manquant, ${ctx}`)
+  }
 }
 
 const generateIdIntern = (value: string) =>
@@ -65,21 +92,37 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
       .on('data', (row: Header) => {
         const label = row[HEADERS.QUESTION]
         const type = row[HEADERS.TYPE] === '' ? QuestionType.TEXT : row[HEADERS.TYPE].toUpperCase()
-        const subPost = row[HEADERS.SUB_POST]
+        const unit = row[HEADERS.UNIT] === '' ? Unit.ACTIVE : row[HEADERS.UNIT]
         const titre = generateIdIntern(row[HEADERS.TITRE])
+        const subPost = enumMap[normalizeLabel(row[HEADERS.SUB_POST])]
 
-        if (titre === '') {
-          errors.push(`Titre manquant, Question : "${row[HEADERS.QUESTION]}, Sous postes "${row[HEADERS.SUB_POST]}"`)
-          return
-        }
+        checkRequiredField(
+          titre,
+          'Titre',
+          {
+            Question: row[HEADERS.QUESTION],
+            'Sous postes': row[HEADERS.SUB_POST],
+          },
+          errors,
+        )
 
-        if (label === '') {
-          errors.push(`Question manquante, Order "${row[HEADERS.ORDER]}", Sous postes "${row[HEADERS.SUB_POST]}"`)
-          return
-        }
+        checkRequiredField(
+          label,
+          'Question',
+          {
+            Order: row[HEADERS.ORDER],
+            'Sous postes': row[HEADERS.SUB_POST],
+          },
+          errors,
+        )
 
         if (!isValidEnumValue(QuestionType, type)) {
           errors.push(`Type invalide: "${type}" pour la question "${label}"`)
+          return
+        }
+
+        if (!isValidEnumValue(Unit, unit) && unit !== '') {
+          errors.push(`Unit invalide: "${unit}" pour la question "${label}"`)
           return
         }
 
@@ -87,7 +130,7 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
           errors.push(`Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POST]}"`)
           return
         }
-
+        console.debug({ test: generateIdIntern(titre) })
         questions.push({
           idIntern: generateIdIntern(titre),
           label,
@@ -95,13 +138,13 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
           order: Number(row[HEADERS.ORDER]),
           type,
           possibleAnswers: row[HEADERS.POSSIBLE_ANSWER].split('§').map((s) => s.trim()),
-          unite: row[HEADERS.UNITE] || '',
+          unit: unit === '' ? null : unit,
           required: row[HEADERS.REQUIRED] || false,
         })
       })
       .on('end', () => {
         if (errors.length) {
-          return reject(new Error(errors.join('\n')))
+          return reject(new Error(errors.sort().join('\n')))
         }
         resolve(questions)
       })

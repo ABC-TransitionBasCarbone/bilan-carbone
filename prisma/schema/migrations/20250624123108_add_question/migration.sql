@@ -1,6 +1,17 @@
 -- CreateEnum
 CREATE TYPE "QuestionType" AS ENUM ('QCM', 'QCU', 'SELECT', 'TABLE', 'POSTAL_CODE', 'DATE', 'NUMBER', 'RANGE', 'PHONE', 'TEXT');
 
+-- AlterEnum
+-- This migration adds more than one value to an enum.
+-- With PostgreSQL versions 11 and earlier, this is not possible
+-- in a single migration. This can be worked around by creating
+-- multiple migrations, each migration adding only one value to
+-- the enum.
+
+
+ALTER TYPE "Unit" ADD VALUE 'MOVIES';
+ALTER TYPE "Unit" ADD VALUE 'TEAM';
+
 -- CreateTable
 CREATE TABLE "questions" (
     "id" TEXT NOT NULL,
@@ -9,7 +20,7 @@ CREATE TABLE "questions" (
     "order" SERIAL NOT NULL,
     "sub_post" "SubPost" NOT NULL,
     "type" "QuestionType" NOT NULL,
-    "unite" TEXT NOT NULL,
+    "unit" "Unit",
     "possible_answers" TEXT[],
     "required" BOOLEAN NOT NULL,
 
