@@ -249,7 +249,7 @@ export const canDeleteStudy = async (studyId: string) => {
   return false
 }
 
-export const canDuplicateStudy = async (studyId: string) => {
+export const canDuplicateStudy = async (studyId: string): Promise<boolean> => {
   const session = await dbActualizedAuth()
 
   if (!session) {
@@ -267,7 +267,7 @@ export const canDuplicateStudy = async (studyId: string) => {
   }
 
   const accountRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
-  return hasEditionRights(accountRoleOnStudy)
+  return hasEditionRights(accountRoleOnStudy) ?? false
 }
 
 export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
