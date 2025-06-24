@@ -9,6 +9,7 @@ import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { getEnvironment } from '@/i18n/environment'
+import { Box } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import styles from './layout.module.css'
@@ -44,7 +45,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
 
   return (
     <DynamicTheme environment={environment}>
-      <div className="flex-col h100">
+      <Box className="flex-col h100">
         <Navbar user={account} environment={environment} />
         {shouldDisplayOrgaCard && (
           <OrganizationCard
@@ -52,9 +53,12 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
             organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
           />
         )}
-        <main className={classNames(styles.content, { [styles.withOrganizationCard]: shouldDisplayOrgaCard })}>
+        <Box
+          component="main"
+          className={classNames(styles.content, { [styles.withOrganizationCard]: shouldDisplayOrgaCard })}
+        >
           {children}
-        </main>
+        </Box>
         {accountOrganizationVersion && environmentsWithChecklist.includes(accountOrganizationVersion.environment) && (
           <ChecklistButton
             accountOrganizationVersion={accountOrganizationVersion}
@@ -65,7 +69,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
           />
         )}
         <EnvironmentInitializer user={account} />
-      </div>
+      </Box>
     </DynamicTheme>
   )
 }
