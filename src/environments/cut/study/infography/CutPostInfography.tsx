@@ -57,7 +57,7 @@ export const CutPostInfography = ({ post, mainPost, subPosts, data, studyId, per
                 <StyledSubPostItem
                   key={subPost}
                   className="flex align-center"
-                  href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}`}
+                  href={`/etudes/${studyId}/comptabilisation/saisie-des-donnees/${mainPost}?subPost=${subPost}`}
                   validated={isValidated}
                 >
                   <StyledIconWrapper className="flex-cc">

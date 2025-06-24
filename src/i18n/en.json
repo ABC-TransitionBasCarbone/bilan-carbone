@@ -704,8 +704,8 @@
       },
       "cutQuestions": {
         "error": "Error while updating the field",
-        "next": "Next",
-        "previous": "Previous",
+        "next": "Next sub-post",
+        "previous": "Previous sub-post",
         "numberOfYears": "Number of years",
         "bonbons": "Candies - Quantity (packs of {value}g)",
         "chips": "Chips - Quantity (packs of {value}g)",
@@ -718,12 +718,18 @@
         "Warmers": "Warmers",
         "Distributeurs": "Snack / drink vending machines",
         "format": {
-          "Text": "Text",
-          "PostalCode": "Postal code",
-          "Year": "Year",
-          "Hour": "hour",
-          "Number": "Number"
-        }
+          "text": "Text",
+          "postalCode": "Postal code",
+          "phone": "Phone",
+          "year": "Year",
+          "hour": "Hour",
+          "number": "Number"
+        },
+        "errorLoadingQuestions": "Error loading questions",
+        "retry": "Retry",
+        "finish": "Finish",
+        "noQuestions": "No questions found for this sub-post",
+        "autoSaveError": "The answer could not be saved automatically"
       }
     },
     "create": {
@@ -1429,5 +1435,14 @@
     "delay": "Later ({time} days)",
     "answer": "Let's go",
     "close": "Close"
+  },
+  "form": {
+    "validation": {
+      "number": "Please enter a valid number",
+      "postalCode": "Please enter a valid 5-digit postal code",
+      "date": "Please enter a valid date (DD/MM/YYYY)",
+      "phone": "Please enter a valid phone number",
+      "required": "This field is required"
+    }
   }
 }

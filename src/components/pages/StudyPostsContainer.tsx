@@ -1,7 +1,7 @@
 'use client'
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import StudyPostsPageCut from '@/environments/cut/pages/StudyPosts'
+import StudyPostsPageCut from '@/environments/cut/pages/StudyPostsPage'
 import { Post } from '@/services/posts'
 import { Environment, StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
