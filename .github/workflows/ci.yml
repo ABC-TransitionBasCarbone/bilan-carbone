@@ -70,6 +70,16 @@ jobs:
         run: npx prisma generate
       - name: Build application
         run: yarn build
+      - name: Debug build output
+        run: |
+          echo "=== Current directory after build ==="
+          ls -la
+          echo "=== .next directory ==="
+          ls -la .next/ || echo "No .next directory created"
+          echo "=== .next size ==="
+          du -sh .next/ || echo "No .next to measure"
+          echo "=== node_modules/.prisma ==="
+          ls -la node_modules/.prisma/ || echo "No .prisma directory"
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
