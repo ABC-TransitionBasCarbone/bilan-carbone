@@ -2,9 +2,71 @@ name: CI
 on:
   push:
 jobs:
-  test:
-    timeout-minutes: 60
+  lint-and-typecheck:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+      - name: Generate prisma files
+        run: npx prisma generate
+      - name: Linter
+        run: yarn lint
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+  unit-tests:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+      - name: Copy .env
+        run: cp .env.dist .env
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+      - name: Generate prisma files
+        run: npx prisma generate
+      - name: Launch unit tests
+        run: yarn run test
+
+  build:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+      - name: Generate prisma files
+        run: npx prisma generate
+      - name: Build application
+        run: yarn build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            .next/
+            node_modules/.prisma/
+          retention-days: 1
+
+  database-setup:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, unit-tests]
     services:
       postgres:
         image: postgres:17
@@ -24,29 +86,56 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
-      - name: Run maildev
-        run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
         run: cp .env.dist .env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
-      - name: Linter
-        run: yarn lint
       - name: Generate prisma files
         run: npx prisma generate
       - name: Migrate DB
         run: npx prisma migrate deploy
       - name: Seed DB
         run: npx prisma db seed
-      - name: Run build
-        run: yarn build
-      - name: Run Typescript check
-        run: npx tsc --noEmit
+
+  e2e-tests:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    needs: [build, database-setup, unit-tests]
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: bilancarbone
+          POSTGRES_PASSWORD: bilancarbone
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+      - name: Run maildev
+        run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
+      - name: Copy .env
+        run: cp .env.dist .env
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+      - name: Migrate DB
+        run: npx prisma migrate deploy
+      - name: Seed DB
+        run: npx prisma db seed
       - name: Start server
         run: yarn start &
-      - name: Launch unit tests
-        run: yarn run test
-      - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
       - name: Launch e2e tests
         run: yarn run cypress
       - name: Upload screenshots
@@ -55,6 +144,47 @@ jobs:
         with:
           name: cypress-screenshots
           path: /home/runner/work/bilan-carbone/bilan-carbone/cypress/screenshots
+
+  lighthouse:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    needs: [build, database-setup]
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: bilancarbone
+          POSTGRES_PASSWORD: bilancarbone
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+      - name: Run maildev
+        run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
+      - name: Copy .env
+        run: cp .env.dist .env
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+      - name: Migrate DB
+        run: npx prisma migrate deploy
+      - name: Seed DB
+        run: npx prisma db seed
+      - name: Start server
+        run: yarn start &
+      - run: mkdir -p ${{ github.workspace }}/tmp/artifacts
       - name: Lighthouse Check
         uses: foo-software/lighthouse-check-action@master
         id: lighthouseCheck
