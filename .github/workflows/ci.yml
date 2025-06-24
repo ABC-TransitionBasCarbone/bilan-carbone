@@ -71,7 +71,7 @@ jobs:
       - name: Build application
         run: yarn build
       - name: Create compressed build archive
-        run: tar --preserve-timestamps -czf build-artifacts.tar.gz .next node_modules/.prisma node_modules/.cache package.json next.config.mjs
+        run: tar -czf build-artifacts.tar.gz .next node_modules/.prisma node_modules/.cache package.json next.config.mjs
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -140,7 +140,7 @@ jobs:
         with:
           name: build-artifacts
       - name: Extract build artifacts
-        run: tar --preserve-timestamps -xzf build-artifacts.tar.gz
+        run: tar -xzf build-artifacts.tar.gz
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
@@ -196,7 +196,7 @@ jobs:
         with:
           name: build-artifacts
       - name: Extract build artifacts
-        run: tar --preserve-timestamps -xzf build-artifacts.tar.gz
+        run: tar -xzf build-artifacts.tar.gz
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
