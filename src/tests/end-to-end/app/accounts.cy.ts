@@ -13,6 +13,9 @@ describe('Accounts - multiple environment with the same user', () => {
 
   it('Should be able to connect as CUT user', () => {
     cy.getByTestId('account-cut').click()
+    cy.get('img[alt]', { timeout: 4000 }).should(($img) => {
+      expect($img.attr('alt')).to.eq('Logo de COUNT')
+    })
     cy.get('[alt="Logo de COUNT"]').should('exist')
   })
 
