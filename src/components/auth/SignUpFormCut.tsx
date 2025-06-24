@@ -1,7 +1,8 @@
 'use client'
 
-import { activateEmail } from '@/services/serverFunctions/user'
-import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
+import { getEnvRoute } from '@/services/email/utils'
+import { signUpCutUser } from '@/services/serverFunctions/user'
+import { SignUpCutCommand, SignUpCutCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import { Environment } from '@prisma/client'
@@ -19,20 +20,24 @@ import authStyles from './Auth.module.css'
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
-interface Props {
-  environment?: Environment
-}
-
-const ActivationForm = ({ environment = Environment.BC }: Props) => {
-  const t = useTranslations('activation')
+const SignUpFormCut = () => {
+  const t = useTranslations('signupCut')
+  const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
 
   const searchParams = useSearchParams()
 
-  const { control, getValues, setValue, handleSubmit } = useForm<EmailCommand>({
-    resolver: zodResolver(EmailCommandValidation),
+  useEffect(() => {
+    const email = searchParams.get('email')
+    if (email) {
+      setValue('email', email)
+    }
+  }, [searchParams])
+
+  const { control, getValues, setValue, handleSubmit } = useForm<SignUpCutCommand>({
+    resolver: zodResolver(SignUpCutCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -40,19 +45,11 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
     },
   })
 
-  useEffect(() => {
-    const email = searchParams.get('email')
-    if (email) {
-      setValue('email', email)
-    }
-  }, [searchParams, setValue])
-
   const onSubmit = async () => {
     setMessage('')
     setSubmitting(true)
 
-    const activation = await activateEmail(getValues().email, environment)
-
+    const activation = await signUpCutUser(getValues().email, getValues().siretOrCNC)
     setSubmitting(false)
 
     if (activation.success) {
@@ -67,7 +64,6 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
       <FormControl className={authStyles.form}>
-        <p>{t('description')}</p>
         <FormTextField
           control={control}
           translation={t}
@@ -76,9 +72,17 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
           label={t('email')}
           placeholder={t('emailPlaceholder')}
           data-testid="activation-email"
-          trim
         />
-        <LoadingButton data-testid="activation-button" type="submit" loading={submitting} fullWidth>
+        <FormTextField
+          control={control}
+          translation={t}
+          name="siretOrCNC"
+          className={authStyles.input}
+          label={t('siretOrCNC')}
+          placeholder={t('siretOrCNCPlaceholder')}
+          data-testid="activation-siretOrCNC"
+        />
+        <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
           {t('validate')}
         </LoadingButton>
         {message && (
@@ -93,9 +97,15 @@ const ActivationForm = ({ environment = Environment.BC }: Props) => {
             })}
           </p>
         )}
+        <div className={authStyles.bottomLink}>
+          {tForm('alreadyRegistered')}
+          <Link className="ml-2" href={getEnvRoute('login', Environment.CUT)} prefetch={false}>
+            {tForm('login')}
+          </Link>
+        </div>
       </FormControl>
     </Form>
   )
 }
 
-export default ActivationForm
+export default SignUpFormCut

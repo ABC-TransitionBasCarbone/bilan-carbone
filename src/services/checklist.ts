@@ -1,8 +1,8 @@
 import { hasEditionRole } from '@/utils/organization'
 import { isAdmin } from '@/utils/user'
-import { Role, UserChecklist } from '@prisma/client'
+import { Level, Role, UserChecklist } from '@prisma/client'
 
-export const mandatoryParentSteps = (step: UserChecklist, userRole: Role, isCr: boolean) => {
+export const mandatoryParentSteps = (step: UserChecklist, userRole: Role, isCr: boolean, level: Level | null) => {
   let steps: UserChecklist[]
   switch (step) {
     case UserChecklist.AddSiteCR:
@@ -19,7 +19,7 @@ export const mandatoryParentSteps = (step: UserChecklist, userRole: Role, isCr: 
       steps = []
       break
   }
-  return getUserCheckList(userRole, isCr).filter((step) => steps.includes(step))
+  return getUserCheckList(userRole, isCr, level).filter((step) => steps.includes(step))
 }
 
 export const getLink = (step: UserChecklist, studyId?: string) => {
@@ -60,12 +60,13 @@ export const CRUserChecklist: UserChecklist[] = [
   UserChecklist.Completed,
 ]
 
-export const getUserCheckList = (userRole: Role, isCR: boolean) => {
+export const getUserCheckList = (userRole: Role, isCR: boolean, level: Level | null) => {
   const checklist = isCR ? CRUserChecklist : OrgaUserChecklist
   return checklist.filter(
     (step) =>
       (step !== UserChecklist.AddCollaborator || isAdmin(userRole) || userRole === Role.GESTIONNAIRE) &&
       (step !== UserChecklist.AddSiteOrga || hasEditionRole(isCR, userRole)) &&
-      (step !== UserChecklist.AddSiteCR || hasEditionRole(isCR, userRole)),
+      (step !== UserChecklist.AddSiteCR || hasEditionRole(isCR, userRole)) &&
+      (step !== UserChecklist.CreateFirstStudy || level),
   )
 }

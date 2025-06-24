@@ -1,5 +1,6 @@
 'use client'
 
+import { getEnvRoute } from '@/services/email/utils'
 import { LoginCommand, LoginCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Visibility from '@mui/icons-material/Visibility'
@@ -10,8 +11,8 @@ import classNames from 'classnames'
 import { signIn } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
@@ -21,16 +22,17 @@ import styles from './LoginForm.module.css'
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 
-const LoginForm = () => {
+interface Props {
+  environment?: Environment
+}
+
+const LoginForm = ({ environment = Environment.BC }: Props) => {
   const t = useTranslations('login.form')
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
-  const [env, setEnv] = useState<Environment | undefined>()
-
-  const searchParams = useSearchParams()
 
   const { getValues, control, watch, handleSubmit } = useForm<LoginCommand>({
     resolver: zodResolver(LoginCommandValidation),
@@ -51,13 +53,6 @@ const LoginForm = () => {
     return () => subscription.unsubscribe()
   }, [watch])
 
-  useEffect(() => {
-    const environment = searchParams.get('env')
-    if (environment && Object.keys(Environment).includes(environment)) {
-      setEnv(environment as Environment)
-    }
-  }, [searchParams])
-
   const onSubmit = async () => {
     setErrorMessage('')
     setSubmitting(true)
@@ -72,6 +67,15 @@ const LoginForm = () => {
       router.push('/?fromLogin')
     }
   }
+  const resetLink = useMemo(() => getEnvRoute(`reset-password?email=${email}`, environment), [email])
+  const activationLink = useMemo(
+    () =>
+      getEnvRoute(
+        environment === Environment.CUT ? `register?email=${email}` : `activation?email=${email}`,
+        environment,
+      ),
+    [email],
+  )
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="grow justify-center">
@@ -108,12 +112,7 @@ const LoginForm = () => {
           type={showPassword ? 'text' : 'password'}
           error={!!errorMessage}
         />
-        <Link
-          data-testid="reset-password-link"
-          className={styles.link}
-          href={env ? `/reset-password?email=${email}&env=${env}` : `/reset-password?email=${email}`}
-          prefetch={false}
-        >
+        <Link data-testid="reset-password-link" className={styles.link} href={resetLink} prefetch={false}>
           {t('forgotPassword')}
         </Link>
         <LoadingButton data-testid="login-button" type="submit" loading={submitting} fullWidth>
@@ -126,14 +125,9 @@ const LoginForm = () => {
             })}
           </p>
         )}
-        <div className={styles.activation}>
+        <div className={authStyles.bottomLink}>
           {t('firstConnection')}
-          <Link
-            data-testid="activation-button"
-            className="ml-2"
-            href={env ? `/activation?email=${email}&env=${env}` : `/activation?email=${email}`}
-            prefetch={false}
-          >
+          <Link data-testid="activation-button" className="ml-2" href={activationLink} prefetch={false}>
             {t('activate')}
           </Link>
         </div>

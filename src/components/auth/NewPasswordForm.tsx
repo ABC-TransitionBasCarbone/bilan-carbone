@@ -1,6 +1,7 @@
 'use client'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { getEnvRoute } from '@/services/email/utils'
 import { resetPassword } from '@/services/serverFunctions/user'
 import { EmailCommand, EmailCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,10 +16,13 @@ import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
-const NewPasswordForm = () => {
+interface Props {
+  environment?: Environment
+}
+
+const NewPasswordForm = ({ environment = Environment.BC }: Props) => {
   const t = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
-  const [env, setEnv] = useState<Environment | undefined>()
   const searchParams = useSearchParams()
   const { callServerFunction } = useServerFunction()
   const router = useRouter()
@@ -32,14 +36,16 @@ const NewPasswordForm = () => {
     },
   })
 
+  const loginLink = getEnvRoute('login', environment)
+
   const onSubmit = async () => {
     setSubmitting(true)
 
-    await callServerFunction(() => resetPassword(getValues().email.toLowerCase(), env), {
+    await callServerFunction(() => resetPassword(getValues().email.toLowerCase(), environment), {
       getSuccessMessage: () => t('emailSent'),
       getErrorMessage: (error) => t(error),
       onSuccess: () => {
-        router.push('/login')
+        router.push(loginLink)
       },
     })
     setSubmitting(false)
@@ -49,10 +55,6 @@ const NewPasswordForm = () => {
     const email = searchParams.get('email')
     if (email) {
       setValue('email', email)
-    }
-    const environment = searchParams.get('env')
-    if (environment && Object.keys(Environment).includes(environment)) {
-      setEnv(environment as Environment)
     }
   }, [searchParams, setValue])
 
