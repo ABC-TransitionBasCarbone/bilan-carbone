@@ -1,4 +1,8 @@
 describe('Accounts - multiple environment with the same user', () => {
+  before(() => {
+    cy.exec('npx prisma db seed')
+  })
+
   beforeEach(() => {
     cy.login('all-env-admin-0@yopmail.com', 'password-0')
   })

@@ -1,5 +1,5 @@
 describe('Emission factors table', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
   })
 

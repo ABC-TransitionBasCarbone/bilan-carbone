@@ -36,30 +36,28 @@ describe('Create study', () => {
     cy.wait('@create')
   })
 
-  // TODO: Revoir le comportement attendu.
-  // it('should create a study on an organization as a CR user', () => {
-  //   cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
+  it('should create a study on an organization as a CR user', () => {
+    cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
+    cy.visit('/etudes/creer')
 
-  //   cy.getByTestId('new-study').click()
+    cy.getByTestId('new-study-organization-title').should('be.visible')
+    cy.getByTestId('new-study-organization-select').click()
+    cy.get('[role="option"]').first().click()
+    cy.getByTestId('organization-sites-checkbox').first().click()
 
-  //   cy.getByTestId('new-study-organization-title').should('be.visible')
-  //   cy.getByTestId('new-study-organization-select').click()
-  //   cy.get('[role="option"]').first().click()
-  //   cy.getByTestId('organization-sites-checkbox').first().click()
+    cy.getByTestId('new-study-organization-button').click()
 
-  //   cy.getByTestId('new-study-organization-button').click()
+    cy.getByTestId('new-study-name').type('My new study')
+    cy.getByTestId('new-validator-name').click()
+    cy.get('[data-option-index="1"]').click()
 
-  //   cy.getByTestId('new-study-name').type('My new study')
-  //   cy.getByTestId('new-validator-name').click()
-  //   cy.get('[data-option-index="1"]').click()
+    cy.getByTestId('new-study-endDate').within(() => {
+      cy.get('span').first().type(dayjs().add(1, 'y').format('MM/DD/YYYY'))
+    })
+    cy.getByTestId('new-study-level').click()
+    cy.get('[data-value="Initial"]').click()
+    cy.getByTestId('new-study-create-button').click()
 
-  //   cy.getByTestId('new-study-endDate').within(() => {
-  //     cy.get('span').first().type(dayjs().add(1, 'y').format('MM/DD/YYYY'))
-  //   })
-  //   cy.getByTestId('new-study-level').click()
-  //   cy.get('[data-value="Initial"]').click()
-  //   cy.getByTestId('new-study-create-button').click()
-
-  //   cy.wait('@create')
-  // })
+    cy.wait('@create')
+  })
 })
