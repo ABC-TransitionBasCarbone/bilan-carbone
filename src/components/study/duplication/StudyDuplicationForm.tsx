@@ -31,7 +31,7 @@ const StudyDuplicationForm = ({ setGlossary, onDuplicationOptionsChange }: Props
 
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend" className={styles.duplicationLabel}>
+      <FormLabel component="legend" className="mb-2">
         <div className={classNames(formStyles.gapped, 'align-center')}>
           <span className="inputLabel bold">{tStudy('duplicationOptions')}</span>
           {setGlossary && (
