@@ -70,20 +70,8 @@ jobs:
         run: npx prisma generate
       - name: Build application
         run: yarn build
-      - name: Debug build output
-        run: |
-          echo "=== Current directory after build ==="
-          ls -la
-          echo "=== .next directory ==="
-          ls -la .next/ || echo "No .next directory created"
-          echo "=== .next size ==="
-          du -sh .next/ || echo "No .next to measure"
-          echo "=== node_modules/.prisma ==="
-          ls -la node_modules/.prisma/ || echo "No .prisma directory"
       - name: Create compressed build archive
-        run: |
-          tar -czf build-artifacts.tar.gz .next node_modules/.prisma package.json next.config.mjs
-          ls -lh build-artifacts.tar.gz
+        run: tar --preserve-timestamps -czf build-artifacts.tar.gz .next node_modules/.prisma node_modules/.cache package.json next.config.mjs
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -127,7 +115,7 @@ jobs:
   e2e-tests:
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    needs: [build, database-setup, unit-tests]
+    needs: [lint-and-typecheck, build, database-setup, unit-tests]
     services:
       postgres:
         image: postgres:17
@@ -152,12 +140,7 @@ jobs:
         with:
           name: build-artifacts
       - name: Extract build artifacts
-        run: |
-          ls -lh build-artifacts.tar.gz
-          tar -xzf build-artifacts.tar.gz
-          echo "=== Extracted files ==="
-          ls -la .next/ || echo "No .next directory"
-          cat .next/BUILD_ID || echo "No BUILD_ID file"
+        run: tar --preserve-timestamps -xzf build-artifacts.tar.gz
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
@@ -172,6 +155,10 @@ jobs:
         run: npx prisma db seed
       - name: Start server
         run: yarn start &
+      - name: Wait for hydration complete
+        run: |
+          npx wait-on http://localhost:3000 --timeout 30000
+          sleep 3
       - name: Launch e2e tests
         run: yarn run cypress
       - name: Upload screenshots
@@ -184,7 +171,7 @@ jobs:
   lighthouse:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    needs: [build, database-setup]
+    needs: [lint-and-typecheck, build, database-setup]
     services:
       postgres:
         image: postgres:17
@@ -209,11 +196,7 @@ jobs:
         with:
           name: build-artifacts
       - name: Extract build artifacts
-        run: |
-          ls -lh build-artifacts.tar.gz
-          tar -xzf build-artifacts.tar.gz
-          echo "=== Extracted files ==="
-          ls -la .next/ || echo "No .next directory"
+        run: tar --preserve-timestamps -xzf build-artifacts.tar.gz
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
