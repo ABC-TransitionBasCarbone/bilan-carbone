@@ -120,11 +120,6 @@ export const createDuplicateFormData = (
     level: sourceStudy.level,
     resultsUnit: sourceStudy.resultsUnit,
     organizationVersionId: sourceStudy.organizationVersionId,
-    numberOfSessions: sourceStudy.numberOfSessions || undefined,
-    numberOfTickets: sourceStudy.numberOfTickets || undefined,
-    numberOfOpenDays: sourceStudy.numberOfOpenDays || undefined,
-    openingHours: mapOpeningHours(sourceStudy.openingHours, false),
-    openingHoursHoliday: mapOpeningHours(sourceStudy.openingHours, true),
     sites: mergedSites,
     exports: createExportsRecord(sourceStudy.exports),
   }
