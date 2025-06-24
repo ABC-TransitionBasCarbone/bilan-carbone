@@ -80,15 +80,15 @@ jobs:
           du -sh .next/ || echo "No .next to measure"
           echo "=== node_modules/.prisma ==="
           ls -la node_modules/.prisma/ || echo "No .prisma directory"
+      - name: Create compressed build archive
+        run: |
+          tar -czf build-artifacts.tar.gz .next node_modules/.prisma package.json next.config.mjs
+          ls -lh build-artifacts.tar.gz
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: |
-            .next
-            node_modules/.prisma
-            package.json
-            next.config.mjs
+          path: build-artifacts.tar.gz
           retention-days: 1
 
   database-setup:
@@ -151,13 +151,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
-      - name: Debug artifacts
+      - name: Extract build artifacts
         run: |
-          echo "=== Current directory ==="
-          ls -la
-          echo "=== .next directory ==="
+          ls -lh build-artifacts.tar.gz
+          tar -xzf build-artifacts.tar.gz
+          echo "=== Extracted files ==="
           ls -la .next/ || echo "No .next directory"
-          echo "=== BUILD_ID ==="
           cat .next/BUILD_ID || echo "No BUILD_ID file"
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
@@ -209,6 +208,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
+      - name: Extract build artifacts
+        run: |
+          ls -lh build-artifacts.tar.gz
+          tar -xzf build-artifacts.tar.gz
+          echo "=== Extracted files ==="
+          ls -la .next/ || echo "No .next directory"
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
