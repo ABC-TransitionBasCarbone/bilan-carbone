@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import commonStyles from './../../../components/studyNavbar/StudyNavbar.module.css'
 import styles from './StudyNavbar.module.css'
 
 const StudyNavbarCut = ({ studyId }: { studyId: UUID }) => {
@@ -18,11 +19,11 @@ const StudyNavbarCut = ({ studyId }: { studyId: UUID }) => {
 
   return (
     <>
-      <div className={styles.toolbarContainer}>
+      <div className={commonStyles.toolbarContainer}>
         <Fab
           color="primary"
           data-testid="study-navbar-button"
-          className={styles.openDrawerButton}
+          className={commonStyles.openDrawerButton}
           aria-label={t('menu')}
           title={t('menu')}
           onClick={() => setOpen((prev) => !prev)}
@@ -31,9 +32,9 @@ const StudyNavbarCut = ({ studyId }: { studyId: UUID }) => {
         </Fab>
       </div>
       <Drawer
-        className={open ? styles.opened : ''}
+        className={open ? commonStyles.opened : ''}
         open={open}
-        PaperProps={{ className: styles.studyNavbarContainer }}
+        PaperProps={{ className: commonStyles.studyNavbarContainer }}
         variant="persistent"
       >
         <Link

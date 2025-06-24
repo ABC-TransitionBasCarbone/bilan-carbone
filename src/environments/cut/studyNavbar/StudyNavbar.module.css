@@ -1,19 +1,6 @@
-@import '../../../components/studyNavbar/StudyNavbar.module.css';
-
-.studyNavbarContainer {
-  display: flex;
-  height: 100%;
-  background-color: var(--background-150) !important;
-  height: fit-content !important;
-  width: 14rem;
-  border-radius: 0px 1rem 1rem 0px;
-  top: calc(50vh - 10rem) !important;
-  overflow: hidden !important;
-  border: var(--border) !important;
-
-  hr {
-    color: var(--neutral-300) !important;
-  }
+.button,
+.link {
+  cursor: pointer;
 }
 
 .button,
@@ -33,4 +20,10 @@
   &:hover {
     background-color: var(--primary-50);
   }
+}
+
+.childrenLink {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
 }
