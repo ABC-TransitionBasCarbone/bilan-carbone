@@ -24,7 +24,6 @@ const StudyPostsPageCut = ({ post, study }: Props) => {
   const subPosts = useMemo(() => subPostsByPost[post], [post])
   const [activeStep, setActiveStep] = useState(0)
 
-  // Handle URL parameter for direct navigation to specific subPost
   useEffect(() => {
     const subPostParam = searchParams.get('subPost')
     if (subPostParam) {
@@ -35,7 +34,6 @@ const StudyPostsPageCut = ({ post, study }: Props) => {
     }
   }, [searchParams, subPosts])
 
-  // Update URL parameter when activeStep changes
   useEffect(() => {
     const currentSubPost = subPosts[activeStep]
     if (currentSubPost) {

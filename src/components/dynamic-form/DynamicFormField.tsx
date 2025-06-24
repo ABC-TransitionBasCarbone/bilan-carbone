@@ -43,7 +43,6 @@ const DynamicFormField = ({
       }
 
       debounceRef.current = setTimeout(() => {
-        // Only save if there are no validation errors for this field
         if (!formErrors[fieldName]) {
           autoSave.saveField(question.id, value as Prisma.InputJsonValue)
         }

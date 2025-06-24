@@ -27,7 +27,6 @@ const DatePickerInput = ({
 
   const convertedValue = useMemo(() => {
     if (value) {
-      // Try to parse DD/MM/YYYY format first, then fallback to default parsing
       const ddmmyyyy = dayjs(value, 'DD/MM/YYYY', true)
       if (ddmmyyyy.isValid()) {
         return ddmmyyyy

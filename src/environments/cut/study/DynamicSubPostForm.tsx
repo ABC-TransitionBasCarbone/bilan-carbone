@@ -46,7 +46,6 @@ const DynamicSubPostForm = ({ subPost, study }: Props) => {
     loadQuestionsAndAnswers()
   }, [loadQuestionsAndAnswers])
 
-  // Error state
   if (error) {
     return (
       <div className="error-container p-4 border border-red-300 bg-red-50 rounded">
@@ -59,7 +58,6 @@ const DynamicSubPostForm = ({ subPost, study }: Props) => {
     )
   }
 
-  // Loading state (initial load)
   if (isLoading && questions.length === 0) {
     return (
       <div className="loading-container p-4 text-center">
@@ -68,7 +66,6 @@ const DynamicSubPostForm = ({ subPost, study }: Props) => {
     )
   }
 
-  // No questions state
   if (questions.length === 0) {
     return (
       <div className="no-questions-container p-4 text-center">

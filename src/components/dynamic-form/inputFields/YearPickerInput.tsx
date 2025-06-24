@@ -24,7 +24,6 @@ const YearPickerInput = ({
 
   const convertedValue = useMemo(() => {
     if (value && typeof value === 'string') {
-      // If it's just a year string, create a date from it
       const year = parseInt(value, 10)
       if (!isNaN(year) && year >= 1900 && year <= 2100) {
         return dayjs().year(year)

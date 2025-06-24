@@ -18,7 +18,6 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false }: 
 
   const autoSave = useAutoSave(studyId)
 
-  // Initialize field statuses for existing answers
   useEffect(() => {
     if (initialAnswers && initialAnswers.length > 0) {
       initialAnswers.forEach((answer) => {
@@ -35,7 +34,6 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false }: 
 
   const isFormDisabled = isLoading
 
-  // Check if any fields have save errors
   const hasAutoSaveErrors = useMemo(() => {
     return sortedQuestions.some((q) => autoSave.getFieldStatus(q.idIntern).status === 'error')
   }, [sortedQuestions, autoSave])
