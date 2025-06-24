@@ -17,5 +17,5 @@ export const Logo = ({ environment }: Props) => {
   }
   const { src, alt } = logos[typeof environment === 'string' && environment in logos ? environment : Environment.BC]
 
-  return <Image data-testid="logo" src={src} alt={alt} width={98} height={48} />
+  return <Image data-testid={`logo-${environment}`} src={src} alt={alt} width={98} height={48} />
 }

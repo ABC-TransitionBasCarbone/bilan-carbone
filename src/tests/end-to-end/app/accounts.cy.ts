@@ -13,14 +13,11 @@ describe('Accounts - multiple environment with the same user', () => {
 
   it('Should be able to connect as CUT user', () => {
     cy.getByTestId('account-cut').click()
-    cy.get('img[alt]', { timeout: 4000 }).should(($img) => {
-      expect($img.attr('alt')).to.eq('Logo de COUNT')
-    })
-    cy.get('[alt="Logo de COUNT"]').should('exist')
+    cy.getByTestId('logo-CUT').should('exist')
   })
 
   it('Should be able to connect as BC user', () => {
     cy.getByTestId('account-bc').click()
-    cy.get('[alt="Logo de bilan carbone 2025"]').should('exist')
+    cy.getByTestId('logo-BC').should('exist')
   })
 })
