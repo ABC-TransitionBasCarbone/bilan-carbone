@@ -157,19 +157,24 @@ const SelectOrganization = ({
             {organizationVersions[0].organization.name}
           </p>
         ) : (
-          <FormSelect
-            data-testid="new-study-organization-select"
-            name="organizationVersionId"
-            control={form.control}
-            translation={t}
-            label={t('select')}
-          >
-            {organizationVersions.map((organizationVersion) => (
-              <MenuItem key={organizationVersion.id} value={organizationVersion.id}>
-                {organizationVersion.organization.name}
-              </MenuItem>
-            ))}
-          </FormSelect>
+          <>
+            <p data-testid="new-study-organization-title" className="title-h1">
+              {t('title')}
+            </p>
+            <FormSelect
+              data-testid="new-study-organization-select"
+              name="organizationVersionId"
+              control={form.control}
+              translation={t}
+              label={t('select')}
+            >
+              {organizationVersions.map((organizationVersion) => (
+                <MenuItem key={organizationVersion.id} value={organizationVersion.id}>
+                  {organizationVersion.organization.name}
+                </MenuItem>
+              ))}
+            </FormSelect>
+          </>
         )}
         {organizationVersion &&
           (organizationVersion.organization.sites.length > 0 ? (
