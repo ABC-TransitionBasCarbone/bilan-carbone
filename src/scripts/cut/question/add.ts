@@ -163,7 +163,7 @@ const addQuestions = async (file: string, source: SourceType) => {
 
   console.log(`📥 Lecture du fichier : ${file}`)
 
-  const questions = await parseCsv(file, source === 'google' ? ',' : ';')
+  const questions = await parseCsv(file, source === 'excel' ? ';' : ',')
 
   console.log(`📊 ${questions.length} questions prêtes à être insérées.`)
 
@@ -180,7 +180,7 @@ program
   .version('1.0.0')
   .option(
     '-s, --source <type>',
-    'Source du fichier CSV (google | excel)',
+    'Source du fichier CSV (excel | google)',
     (value) => {
       const allowed = ['google', 'excel']
       if (!allowed.includes(value)) {
@@ -188,7 +188,7 @@ program
       }
       return value
     },
-    'google',
+    'excel',
   )
   .requiredOption('-f, --file <value>', 'Import depuis un fichier CSV')
   .parse(process.argv)
