@@ -130,7 +130,7 @@ const parseCsv = async (file: string): Promise<Prisma.QuestionCreateManyInput[]>
           errors.push(`Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POST]}"`)
           return
         }
-        console.debug({ test: generateIdIntern(titre) })
+
         questions.push({
           idIntern: generateIdIntern(titre),
           label,
