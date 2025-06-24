@@ -108,5 +108,8 @@
     "prisma": "^6.9.0",
     "ts-jest": "^29.3.4",
     "typescript": "^5.8.3"
+  },
+  "resolutions": {
+    "brace-expansion": "^2.0.2"
   }
 }
