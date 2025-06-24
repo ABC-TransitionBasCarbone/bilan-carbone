@@ -157,5 +157,4 @@ enum Unit {
 
   // CUT
   MOVIES
-  TEAM
 }

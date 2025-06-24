@@ -58,12 +58,20 @@ const enumMap = Object.values(SubPost).reduce(
   {} as Record<string, SubPost>,
 )
 
-function checkRequiredField(field: string, name: string, context: Record<string, string>, errors: string[]) {
+let line = 2
+
+function checkRequiredField(
+  field: string,
+  name: string,
+  context: Record<string, string>,
+  errors: string[],
+  line: number,
+) {
   if (field === '') {
     const ctx = Object.entries(context)
       .map(([k, v]) => `${k} "${v}"`)
       .join(', ')
-    errors.push(`${name} manquant, ${ctx}`)
+    errors.push(`(ligne ${line}) ${name} manquant, ${ctx}`)
   }
 }
 
@@ -108,7 +116,13 @@ const parseCsv = async (file: string, delimiter: Delimiter): Promise<Prisma.Ques
             'Sous postes': row[HEADERS.SUB_POST],
           },
           errors,
+          line,
         )
+
+        if (questions.find((question) => question.idIntern === titre)) {
+          errors.push(`(line ${line}): Titre déjà existant: "${row[HEADERS.TITRE]}"`)
+          return
+        }
 
         checkRequiredField(
           label,
@@ -118,25 +132,28 @@ const parseCsv = async (file: string, delimiter: Delimiter): Promise<Prisma.Ques
             'Sous postes': row[HEADERS.SUB_POST],
           },
           errors,
+          line,
         )
 
         if (!isValidEnumValue(QuestionType, type)) {
-          errors.push(`Type invalide: "${type}" pour la question "${label}"`)
+          errors.push(`(line ${line}): Type invalide: "${type}" pour la question "${label}"`)
           return
         }
 
         if (!isValidEnumValue(Unit, unit) && unit !== '') {
-          errors.push(`Unit invalide: "${unit}" pour la question "${label}"`)
+          errors.push(`(line ${line}): Unit invalide: "${unit}" pour la question "${label}"`)
           return
         }
 
         if (!isValidEnumValue(SubPost, subPost)) {
-          errors.push(`Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POST]}"`)
+          errors.push(
+            `(line ${line}): Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POST]}"`,
+          )
           return
         }
 
         questions.push({
-          idIntern: generateIdIntern(titre),
+          idIntern: titre,
           label,
           subPost,
           order: Number(row[HEADERS.ORDER]),
@@ -145,6 +162,7 @@ const parseCsv = async (file: string, delimiter: Delimiter): Promise<Prisma.Ques
           unit: unit === '' ? null : unit,
           required: row[HEADERS.REQUIRED] || false,
         })
+        line++
       })
       .on('end', () => {
         if (errors.length) {
