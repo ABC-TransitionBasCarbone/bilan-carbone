@@ -1,20 +1,4 @@
-.toolbarContainer {
-  bottom: 1rem;
-  left: 1rem;
-  position: fixed;
-  justify-content: center;
-  display: flex;
-  z-index: 10;
-}
-
-.openDrawerButton {
-  height: 4rem;
-  width: 4rem;
-  border-radius: 50% !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-}
+@import '../../../components/studyNavbar/StudyNavbar.module.css';
 
 .studyNavbarContainer {
   display: flex;
@@ -30,17 +14,6 @@
   hr {
     color: var(--neutral-300) !important;
   }
-}
-
-.opened {
-  @media screen and (max-width: 115rem) {
-    width: 14rem;
-  }
-}
-
-.button,
-.link {
-  cursor: pointer;
 }
 
 .button,
@@ -59,24 +32,5 @@
   &.active,
   &:hover {
     background-color: var(--primary-50);
-  }
-}
-
-.childrenLink {
-  display: flex;
-  flex-direction: column;
-  padding-left: 2rem;
-}
-
-.icon {
-  font-size: 1rem !important;
-}
-
-.disabled {
-  color: var(--grayscale-800);
-  cursor: not-allowed;
-
-  &:hover {
-    background-color: white;
   }
 }

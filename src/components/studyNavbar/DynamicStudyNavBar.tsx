@@ -6,7 +6,7 @@ import StudyNavbarCut from '@/environments/cut/studyNavbar/StudyNavbar'
 import { Environment } from '@prisma/client'
 import { UUID } from 'crypto'
 
-const StudyNavbarContainer = ({ studyId }: { studyId: UUID }) => {
+const DynamicStudyNavBar = ({ studyId }: { studyId: UUID }) => {
   return (
     <DynamicComponent
       environmentComponents={{ [Environment.CUT]: <StudyNavbarCut studyId={studyId} /> }}
@@ -15,4 +15,4 @@ const StudyNavbarContainer = ({ studyId }: { studyId: UUID }) => {
   )
 }
 
-export default StudyNavbarContainer
+export default DynamicStudyNavBar

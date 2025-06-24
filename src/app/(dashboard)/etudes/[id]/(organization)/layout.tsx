@@ -1,6 +1,6 @@
 import withAuth from '@/components/hoc/withAuth'
 import WithStudyDetails from '@/components/hoc/withStudyDetails'
-import StudyNavbarContainer from '@/components/studyNavbar/StudyNavbarContainer'
+import DynamicStudyNavBar from '@/components/studyNavbar/DynamicStudyNavBar'
 import { UUID } from 'crypto'
 import styles from './layout.module.css'
 
@@ -17,7 +17,7 @@ const NavLayout = async ({ children, params }: Props) => {
   return (
     <>
       <div className="flex">
-        <StudyNavbarContainer studyId={id} />
+        <DynamicStudyNavBar studyId={id} />
         <div className={styles.children}>{children}</div>
       </div>
     </>
