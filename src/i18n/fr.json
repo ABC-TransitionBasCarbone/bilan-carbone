@@ -718,11 +718,12 @@
         "Warmers": "Warmers",
         "Distributeurs": "Distributeurs snacks / boisson",
         "format": {
-          "Text": "Texte",
-          "PostalCode": "Code postal",
-          "Year": "Année",
-          "Hour": "Heure",
-          "Number": "Nombre"
+          "text": "Texte",
+          "postalCode": "Code postal",
+          "phone": "Téléphone",
+          "year": "Année",
+          "hour": "Heure",
+          "number": "Nombre"
         },
         "errorLoadingQuestions": "Erreur lors du chargement des questions",
         "retry": "Réessayer",

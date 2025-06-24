@@ -1,5 +1,5 @@
 import { FormValues } from '@/components/dynamic-form/types/formTypes'
-import { Answer, Question } from '@prisma/client'
+import { Answer, Question, QuestionType } from '@prisma/client'
 
 export const answersToFormValues = (questions: Question[], answers?: Answer[]): FormValues => {
   const formValues: FormValues = {}
@@ -15,4 +15,15 @@ export const answersToFormValues = (questions: Question[], answers?: Answer[]): 
   })
 
   return formValues
+}
+
+export const getQuestionLabel = (questionType: QuestionType, tFormat: (slug: string) => string) => {
+  switch (questionType) {
+    case QuestionType.POSTAL_CODE:
+      return tFormat('postalCode')
+    case QuestionType.PHONE:
+      return tFormat('phone')
+    default:
+      return ''
+  }
 }

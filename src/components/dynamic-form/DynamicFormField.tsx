@@ -1,3 +1,4 @@
+import { getQuestionLabel } from '@/utils/question'
 import { Prisma, Question } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -29,6 +30,7 @@ const DynamicFormField = ({
   formErrors,
 }: DynamicFormFieldPropsWithAutoSave) => {
   const tValidation = useTranslations('form.validation')
+  const tFormat = useTranslations('emissionFactors.post.cutQuestions.format')
 
   const fieldName = question.idIntern
   const fieldStatus = autoSave.getFieldStatus(question.id)
@@ -68,15 +70,15 @@ const DynamicFormField = ({
 
   const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unite), [question.type, question.unite])
 
-  const baseInputProps = useMemo(
-    () => ({
+  const baseInputProps = useMemo(() => {
+    const label = getQuestionLabel(question.type, tFormat)
+    return {
       question,
-      label: question.label,
+      label,
       errorMessage: error?.message ? tValidation(error.message) : undefined,
       disabled: isLoading,
-    }),
-    [question, tValidation, error?.message, isLoading],
-  )
+    }
+  }, [question, tValidation, error?.message, isLoading, tFormat])
 
   const renderField = useMemo(() => {
     const getFieldComponent = () => {

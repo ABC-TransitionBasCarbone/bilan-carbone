@@ -36,7 +36,7 @@ const validationRules: Partial<Record<QuestionType, (val: string) => boolean>> =
 
 const validationMessages: Partial<Record<QuestionType, string>> = {
   [QuestionType.NUMBER]: 'number',
-  [QuestionType.POSTAL_CODE]: 'postal_code',
+  [QuestionType.POSTAL_CODE]: 'postalCode',
   [QuestionType.DATE]: 'date',
   [QuestionType.PHONE]: 'phone',
 }

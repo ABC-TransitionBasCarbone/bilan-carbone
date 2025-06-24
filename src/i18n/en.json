@@ -718,11 +718,12 @@
         "Warmers": "Warmers",
         "Distributeurs": "Snack / drink vending machines",
         "format": {
-          "Text": "Text",
-          "PostalCode": "Postal code",
-          "Year": "Year",
-          "Hour": "hour",
-          "Number": "Number"
+          "text": "Text",
+          "postalCode": "Postal code",
+          "phone": "Phone",
+          "year": "Year",
+          "hour": "Hour",
+          "number": "Number"
         },
         "errorLoadingQuestions": "Error loading questions",
         "retry": "Retry",

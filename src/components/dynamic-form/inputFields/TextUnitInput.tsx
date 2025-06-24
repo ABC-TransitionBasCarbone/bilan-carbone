@@ -23,6 +23,7 @@ const TextUnitInput = ({
   format,
   unit,
   errorMessage,
+  label,
   ...props
 }: TextUnitInputProps &
   Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
@@ -50,7 +51,7 @@ const TextUnitInput = ({
     <div className={classNames(styles.inputWithUnit, 'flex grow')}>
       <DebouncedInput
         {...props}
-        label={''}
+        label={label}
         error={!!errorMessage}
         helperText={errorMessage}
         value={value || ''}
@@ -62,6 +63,9 @@ const TextUnitInput = ({
           htmlInput: inputProps,
           input: {
             onWheel: (event) => (event.target as HTMLInputElement).blur(),
+          },
+          inputLabel: {
+            shrink: true,
           },
         }}
       />
