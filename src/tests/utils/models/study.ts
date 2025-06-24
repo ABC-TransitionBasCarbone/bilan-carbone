@@ -109,3 +109,40 @@ export const getMockedFullStudySite = (
   ...mockedDbFullStudySite,
   ...props,
 })
+
+export const getMockedFormSite = (id: string, name: string, overrides = {}) => ({
+  id,
+  name,
+  selected: false,
+  ca: 0,
+  etp: 0,
+  emissionSourcesCount: 0,
+  ...overrides,
+})
+
+export const getMockedDetailedFullStudySite = (
+  siteId: string,
+  studySiteId: string,
+  name: string,
+  overrides = {},
+): FullStudy['sites'][0] => ({
+  ...getMockedFullStudySite({
+    id: studySiteId,
+    etp: 10,
+    ca: 50000,
+    site: {
+      id: siteId,
+      name,
+      postalCode: '12345',
+      city: 'Test City',
+    },
+    ...overrides,
+  }),
+})
+
+export const COMMON_DATES = {
+  startDate: new Date('2024-01-01'),
+  endDate: new Date('2024-12-31'),
+  realizationStartDate: new Date('2024-02-01'),
+  realizationEndDate: new Date('2024-11-30'),
+}

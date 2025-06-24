@@ -267,7 +267,7 @@ export const canDuplicateStudy = async (studyId: string) => {
   }
 
   const accountRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
-  return hasEditionRights(accountRoleOnStudy) ?? false
+  return hasEditionRights(accountRoleOnStudy)
 }
 
 export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
