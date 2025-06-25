@@ -154,9 +154,13 @@ const SelectOrganization = ({
   return (
     <>
       <Block>
-        {organizationVersions.length === 1 ? (
+        {organizationVersions.length === 1 || duplicateStudyId ? (
           <p data-testid="new-study-organization-title" className="title-h2">
-            {!isCut ? organizationVersions[0].organization.name : tOrganizationSites('title')}
+            {duplicateStudyId
+              ? organizationVersion?.organization.name
+              : !isCut
+                ? organizationVersions[0].organization.name
+                : tOrganizationSites('title')}
           </p>
         ) : (
           <>

@@ -24,13 +24,21 @@ import SelectStudySite from './site/SelectStudySite'
 
 interface Props {
   study: FullStudy
+  organizationVersionId: string | null
   canDeleteStudy?: boolean
   canDuplicateStudy?: boolean
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
 }
 
-const StudyDetailsHeader = ({ study, canDeleteStudy, canDuplicateStudy, studySite, setSite }: Props) => {
+const StudyDetailsHeader = ({
+  study,
+  organizationVersionId,
+  canDeleteStudy,
+  canDuplicateStudy,
+  studySite,
+  setSite,
+}: Props) => {
   const [deleting, setDeleting] = useState(false)
   const [duplicating, setDuplicating] = useState(false)
   const { callServerFunction } = useServerFunction()
@@ -43,7 +51,6 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, canDuplicateStudy, studySit
   const tQuality = useTranslations('quality')
   const tUnit = useTranslations('units')
   const tResultUnits = useTranslations('study.results.units')
-  const tStudy = useTranslations('study')
   const router = useRouter()
 
   const form = useForm<DeleteCommand>({
@@ -73,8 +80,7 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, canDuplicateStudy, studySit
           onClick: () => setDeleting(true),
           children: <DeleteIcon />,
           variant: 'contained',
-          color: 'secondary',
-          tooltip: tStudyDelete('delete'),
+          color: 'error',
         },
       ]
     : []
@@ -84,7 +90,6 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, canDuplicateStudy, studySit
         {
           actionType: 'button',
           onClick: () => setDuplicating(true),
-          tooltip: tStudy('duplicate'),
           children: <CopyIcon />,
         },
       ]
@@ -148,7 +153,14 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, canDuplicateStudy, studySit
           t={tStudyDelete}
         />
       )}
-      {duplicating && <DuplicateStudyModal study={study} open={duplicating} onClose={() => setDuplicating(false)} />}
+      {duplicating && (
+        <DuplicateStudyModal
+          studyId={study.id}
+          organizationVersionId={organizationVersionId}
+          open={duplicating}
+          onClose={() => setDuplicating(false)}
+        />
+      )}
     </Block>
   )
 }

@@ -14,15 +14,17 @@ interface Props {
   canDuplicateStudy?: boolean
   study: FullStudy
   validatedOnly: boolean
+  organizationVersionId: string | null
 }
 
-const StudyDetails = ({ canDeleteStudy, canDuplicateStudy, study, validatedOnly }: Props) => {
+const StudyDetails = ({ canDeleteStudy, canDuplicateStudy, study, validatedOnly, organizationVersionId }: Props) => {
   const { studySite, setSite } = useStudySite(study, true)
 
   return (
     <>
       <StudyDetailsHeader
         study={study}
+        organizationVersionId={organizationVersionId}
         canDeleteStudy={canDeleteStudy}
         canDuplicateStudy={canDuplicateStudy}
         studySite={studySite}
