@@ -87,7 +87,7 @@ const NewStudyPage = ({
         current={duplicateStudyId ? tStudy('duplicate') : tNav('newStudy')}
         links={[
           { label: tNav('home'), link: '/' },
-          defaultOrganizationVersion && defaultOrganizationVersion.isCR
+          defaultOrganizationVersion
             ? {
                 label: defaultOrganizationVersion.organization.name,
                 link: `/organisations/${defaultOrganizationVersion.id}`,

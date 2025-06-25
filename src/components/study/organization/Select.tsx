@@ -152,9 +152,9 @@ const SelectOrganization = ({
   return (
     <>
       <Block>
-        {organizationVersions.length === 1 ? (
+        {organizationVersions.length === 1 || duplicateStudyId ? (
           <p data-testid="new-study-organization-title" className="title-h2">
-            {organizationVersions[0].organization.name}
+            {duplicateStudyId ? organizationVersion?.organization.name : organizationVersions[0].organization.name}
           </p>
         ) : (
           <>
