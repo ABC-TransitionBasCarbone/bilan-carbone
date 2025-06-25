@@ -2,15 +2,18 @@
 
 import { getAnswersByStudyAndSubPost, getQuestionsBySubPost, saveAnswer } from '@/db/question'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Prisma, SubPost } from '@prisma/client'
+import { Prisma, Question, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
-import { createEmissionSource } from './emissionSource'
+import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
 export const saveAnswerForQuestion = async (
-  questionId: string,
+  question: Question,
   studyId: string,
   response: Prisma.InputJsonValue,
   studySiteId: string,
+  emissionFactorId?: string,
+  emissionSourceId?: string,
+  depreciationPeriod?: number,
 ) =>
   withServerResponse('saveAnswerForQuestion', async () => {
     const session = await dbActualizedAuth()
@@ -18,27 +21,28 @@ export const saveAnswerForQuestion = async (
       throw new Error('Not authorized')
     }
 
-    console.log('Saving answer for question:', questionId, 'in study:', studyId, 'with response:', response)
+    if (emissionSourceId) {
+      await updateEmissionSource({
+        value: Number(response),
+        emissionSourceId,
+        emissionFactorId,
+      })
+    } else {
+      await createEmissionSource({
+        name: String(response),
+        studyId,
+        studySiteId,
+        value: Number(response),
+        subPost: question.subPost,
+        depreciationPeriod,
+        emissionFactorId,
+      })
+    }
 
-    /*
-    TODO : calculate value to save in study_emission_sources (StudyEmissionSource)
-    if numeric response, it's ok
-    if text or boolean response, we need to calculate the value based on the response
-    */
-    createEmissionSource({
-      name: String(response),
-      studyId,
-      studySiteId, // This should be set based on your logic
-      value: Number(response),
-      depreciationPeriod: 0, // This should be set based on your logic
-      emissionFactorId: '', // This should be set based on your logic
-      subPost: SubPost.Batiments, // Assuming this is the correct subPost for questions
-    })
-
-    return saveAnswer(questionId, studyId, response)
+    return saveAnswer(question.id, studyId, response, emissionSourceId)
   })
 
-export const getQuestionsWithAnswers = async (subPost: SubPost, studyId: string) =>
+export const getQuestionsWithAnswers = async (subPost: SubPost, studySiteId: string) =>
   withServerResponse('getQuestionsWithAnswers', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
@@ -47,7 +51,7 @@ export const getQuestionsWithAnswers = async (subPost: SubPost, studyId: string)
 
     const [questions, answers] = await Promise.all([
       getQuestionsBySubPost(subPost),
-      getAnswersByStudyAndSubPost(studyId, subPost),
+      getAnswersByStudyAndSubPost(studySiteId, subPost),
     ])
 
     return { questions, answers }

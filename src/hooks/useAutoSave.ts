@@ -1,5 +1,5 @@
 import { saveAnswerForQuestion } from '@/services/serverFunctions/question'
-import { Prisma, SubPost } from '@prisma/client'
+import { Prisma, Question } from '@prisma/client'
 import { useCallback, useMemo, useState } from 'react'
 
 export interface FieldSaveStatus {
@@ -9,26 +9,33 @@ export interface FieldSaveStatus {
 }
 
 export interface UseAutoSaveReturn {
-  saveField: (questionId: string, value: Prisma.InputJsonValue) => void
+  saveField: (question: Question, value: Prisma.InputJsonValue) => void
   getFieldStatus: (questionId: string) => FieldSaveStatus
   initializeFieldStatus: (questionId: string, status: FieldSaveStatus['status']) => void
 }
 
 interface SaveAnswerRequest {
-  questionId: string
+  question: Question
   studyId: string
-  studySite: string
+  studySiteId: string
   response: Prisma.InputJsonValue
 }
 
 /**
  * Hook for auto-saving form fields with debouncing
  */
-export const useAutoSave = (studyId: string, studySite: string, subPost: SubPost): UseAutoSaveReturn => {
+export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveReturn => {
   const [fieldStatuses, setFieldStatuses] = useState<Record<string, FieldSaveStatus>>({})
+  const [emissionFactorId, setEmissionFactorId] = useState<string>()
 
   const saveAnswer = useCallback(async (request: SaveAnswerRequest) => {
-    return saveAnswerForQuestion(request.questionId, request.studyId, request.response, request.studySite)
+    return saveAnswerForQuestion(
+      request.question,
+      request.studyId,
+      request.response,
+      request.studySiteId,
+      emissionFactorId,
+    )
   }, [])
 
   const updateFieldStatus = useCallback((questionId: string, status: Partial<FieldSaveStatus>) => {
@@ -42,12 +49,16 @@ export const useAutoSave = (studyId: string, studySite: string, subPost: SubPost
   }, [])
 
   const performSave = useCallback(
-    async (questionId: string, value: Prisma.InputJsonValue) => {
+    async (question: Question, value: Prisma.InputJsonValue) => {
       try {
+        if (question.possibleAnswers.some((answer) => answer === value)) {
+          setEmissionFactorId(value as string)
+        }
+
         const request: SaveAnswerRequest = {
-          questionId,
+          question,
           studyId,
-          studySite,
+          studySiteId,
           response: formatValueForSave(value),
         }
 
@@ -55,23 +66,23 @@ export const useAutoSave = (studyId: string, studySite: string, subPost: SubPost
 
         if (result.success) {
           if (isEmptyValue(value)) {
-            updateFieldStatus(questionId, { status: 'idle' })
+            updateFieldStatus(question.id, { status: 'idle' })
             return
           }
 
-          updateFieldStatus(questionId, {
+          updateFieldStatus(question.id, {
             status: 'saved',
             error: undefined,
             lastSaved: new Date(),
           })
         } else {
-          updateFieldStatus(questionId, {
+          updateFieldStatus(question.id, {
             status: 'error',
             error: 'Failed to save',
           })
         }
       } catch (error) {
-        updateFieldStatus(questionId, {
+        updateFieldStatus(question.id, {
           status: 'error',
           error: error instanceof Error ? error.message : 'Unknown error',
         })
@@ -81,9 +92,9 @@ export const useAutoSave = (studyId: string, studySite: string, subPost: SubPost
   )
 
   const saveField = useCallback(
-    (questionId: string, value: Prisma.InputJsonValue) => {
-      updateFieldStatus(questionId, { status: 'saving' })
-      performSave(questionId, value)
+    (question: Question, value: Prisma.InputJsonValue) => {
+      updateFieldStatus(question.id, { status: 'saving' })
+      performSave(question, value)
     },
     [performSave, updateFieldStatus],
   )
