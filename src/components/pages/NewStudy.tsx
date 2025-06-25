@@ -15,7 +15,8 @@ import { Environment, Export, SiteCAUnit } from '@prisma/client'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import styles from './NewStudy.module.css'
@@ -38,9 +39,20 @@ const NewStudyPage = ({
   duplicateStudyId,
 }: Props) => {
   const [organizationVersion, setOrganizationVersion] = useState<OrganizationWithSites>()
+  const router = useRouter()
   const tNav = useTranslations('nav')
   const tStudy = useTranslations('study')
   const tSpinner = useTranslations('spinner')
+
+  useEffect(() => {
+    if (user.environment !== Environment.BC) {
+      const url = new URL(window.location.href)
+      if (url.searchParams.has('duplicate')) {
+        url.searchParams.delete('duplicate')
+        router.replace(url.pathname + (url.search ? `?${url.searchParams}` : ''))
+      }
+    }
+  }, [user.environment, router])
 
   const form = useForm<CreateStudyCommand>({
     resolver: zodResolver(CreateStudyCommandValidation),
@@ -75,7 +87,7 @@ const NewStudyPage = ({
   if (isLoading) {
     return (
       <div className={`${styles.loadingContainer} flex-cc flex-col p10`}>
-        <CircularProgress className={styles.spinner} />
+        <CircularProgress className={styles.spinner} color="primary" />
         <Typography>{tSpinner('loading')}</Typography>
       </div>
     )
@@ -98,7 +110,7 @@ const NewStudyPage = ({
       {organizationVersion ? (
         <DynamicComponent
           environmentComponents={{
-            [Environment.CUT]: <NewStudyFormCut form={form} duplicateStudyId={duplicateStudyId} />,
+            [Environment.CUT]: <NewStudyFormCut form={form} />,
           }}
           defaultComponent={
             <NewStudyForm user={user} accounts={accounts} form={form} duplicateStudyId={duplicateStudyId} />
