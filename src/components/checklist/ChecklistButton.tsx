@@ -1,6 +1,7 @@
 'use client'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { getUserCheckList } from '@/services/checklist'
 import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Drawer, Fab } from '@mui/material'
@@ -8,7 +9,7 @@ import { Level, OrganizationVersion, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './Checklist.module.css'
 import ChecklistDrawer from './ChecklistDrawer'
 
@@ -61,7 +62,20 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
     getCheckList()
   }, [open, getCheckList])
 
-  if ((checklist.length === 1 && checklist[0] === UserChecklist.CreateAccount) || completed || !fetchedCheckedSteps) {
+  const hideChecklist = useMemo(() => {
+    if (completed || !fetchedCheckedSteps) {
+      return true
+    }
+
+    const availableChecklist = getUserCheckList(userRole, accountOrganizationVersion.isCR, userLevel)
+    const remainingChecklist = availableChecklist.filter(
+      (step) => step !== UserChecklist.CreateAccount && step !== UserChecklist.Completed,
+    )
+
+    return remainingChecklist.length === 0
+  }, [completed, fetchedCheckedSteps, userRole, accountOrganizationVersion.isCR, userLevel])
+
+  if (hideChecklist) {
     return null
   }
 
