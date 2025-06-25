@@ -38,7 +38,7 @@ const SelectOrganization = ({
   const t = useTranslations('study.organization')
   const [error, setError] = useState('')
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const [originalSelectedSites, setOriginalSelectedSites] = useState<string[]>([])
+  const [originalSelectedSites, setOriginalSelectedSites] = useState<string[] | null>(null)
   const [pendingDeselectedSites, setPendingDeselectedSites] = useState<
     Array<{ name: string; emissionSourcesCount: number }>
   >([])
@@ -74,13 +74,13 @@ const SelectOrganization = ({
   }, [organizationVersion, caUnit, form])
 
   useEffect(() => {
-    if (duplicateStudyId && sites.length > 0) {
+    if (!originalSelectedSites && duplicateStudyId && sites.length > 0) {
       const selectedSiteIds = sites.filter((site) => site.selected).map((site) => site.id)
-      if (selectedSiteIds.length > 0 && originalSelectedSites.length === 0) {
+      if (selectedSiteIds.length > 0) {
         setOriginalSelectedSites(selectedSiteIds)
       }
     }
-  }, [duplicateStudyId, sites, originalSelectedSites.length])
+  }, [duplicateStudyId, originalSelectedSites, sites])
 
   const handleConfirmDeselection = () => {
     setShowWarningModal(false)
@@ -120,7 +120,7 @@ const SelectOrganization = ({
       const currentSelectedSiteIds = sites.filter((site) => site.selected).map((site) => site.id)
       const deselectedSitesWithSources = sites
         .filter((site) => {
-          const wasOriginallySelected = originalSelectedSites.includes(site.id)
+          const wasOriginallySelected = originalSelectedSites?.includes(site.id)
           const isCurrentlySelected = currentSelectedSiteIds.includes(site.id)
           const hasEmissionSources = site.emissionSourcesCount && site.emissionSourcesCount > 0
 
