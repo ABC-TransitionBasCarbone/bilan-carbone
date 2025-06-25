@@ -21,7 +21,7 @@ export const uploadEmissionFactors = async (
   console.log("Import des facteurs d'émissions...")
   const ids = emissionFactorsWorksheet.getRows().map((row) => row.EFV_GUID as string)
   const existingEmissionFactors = await transaction.emissionFactor.findMany({
-    where: { oldBCId: { in: ids } },
+    where: { oldBCId: { in: ids }, organizationId: organizationVersion.organizationId },
   })
 
   if (existingEmissionFactors.length > 0) {

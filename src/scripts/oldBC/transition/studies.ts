@@ -171,8 +171,9 @@ const mapToSubPost = (newSubPost: string) => {
   const normalizedSubPost = newSubPost
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\s,]/g, '')
+    .replace(/[\s,']/g, '')
     .toLowerCase()
+
   const foundSubPost = Object.values(SubPost).find((subPost) => subPost.toLowerCase() === normalizedSubPost)
   if (foundSubPost) {
     return foundSubPost
@@ -212,9 +213,13 @@ const parseEmissionSources = (
   studyEmissionSourcesWorkSheet: EmissionSourceRow[],
   emissionFactorsNames: Map<string, { name: string; id: string }>,
 ): [Map<string, EmissionSource[]>, boolean] => {
-  let error = false
+  const error = false
   const emissionsSources = studyEmissionSourcesWorkSheet
     .map<[string, EmissionSource] | null>((row) => {
+      if (row.siteOldBCId === '00000000-0000-0000-0000-000000000000') {
+        return null
+      }
+
       const newPostAndSubPost = postAndSubPostsOldNewMapping.getNewPostAndSubPost({
         domain: row.domain as string,
         category: row.category as string,
@@ -227,8 +232,7 @@ const parseEmissionSources = (
       try {
         subPost = mapToSubPost(newPostAndSubPost.newSubPost)
       } catch (e) {
-        console.warn("l'émission n'a pas été créée", e)
-        error = true
+        // console.warn("l'émission n'a pas été créée", e)
         return null
       }
       const incertitudeDA = getEmissionQuality((row.incertitudeDA as number) * 100)
@@ -300,6 +304,7 @@ const getExistingStudySites = async (transaction: Prisma.TransactionClient, stud
     },
     select: { id: true, studyId: true, siteId: true },
   })
+
   return existingStudySites.reduce((map, currentExistingStudySite) => {
     const studySite = {
       id: currentExistingStudySite.id,
@@ -401,6 +406,9 @@ export const uploadStudies = async (
 ) => {
   console.log('Import des études...')
 
+  const skippedInfos: { oldBcId: string; reason: string }[] = []
+  const emissionSourceWithtoutFe: { oldBcId: string; name: string; manual: boolean }[] = []
+
   const studies = parseStudies(oldBCWorksheetReader.studiesWorksheet)
   const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
   const studyExports = parseStudyExports(oldBCWorksheetReader.studyExportsWorksheet)
@@ -420,13 +428,14 @@ export const uploadStudies = async (
     existingEmissionFactorNames,
   )
 
-  if (error) {
-    throw new Error("Certaines sources d'émissions sont en erreurs, on arrête tout.")
-  }
+  // if (error) {
+  //   throw new Error("Certaines sources d'émissions sont en erreurs, on arrête tout.")
+  // }
 
   const alreadyImportedStudyIds = await transaction.study.findMany({
     where: {
       oldBCId: { in: studies.map((study) => study.oldBCId) },
+      organizationVersionId: organizationVersionId,
     },
     select: {
       id: true,
@@ -456,7 +465,8 @@ export const uploadStudies = async (
 
   const sitesETPsMapper = new SitesETPsMapper(oldBCWorksheetReader.sitesETPsWorksheet)
   const sitesCAsMapper = new SitesCAsMapper(oldBCWorksheetReader.sitesCAsWorksheet)
-  await transaction.studySite.createMany({
+
+  const createdStudySites = await transaction.studySite.createMany({
     data: Array.from(
       studySites.entries().flatMap(([studyOldBCId, studySites]) => {
         // N'importer que les studySites d'études nouvelles.
@@ -470,9 +480,20 @@ export const uploadStudies = async (
         }
         return studySites
           .map((studySite) => {
+            if (studySite.siteOldBCId === 'NULL') {
+              skippedInfos.push({
+                oldBcId: studyOldBCId,
+                reason: "Etude ignorée - Aucun site sélectionné, demander à l'utilisateur de le sélectionner",
+              })
+              return null
+            }
+
             const existingSiteId = existingSiteIds.get(studySite.siteOldBCId)
             if (!existingSiteId) {
-              console.warn(`Impossible de retrouver le site de oldBCId: ${studySite.siteOldBCId}`)
+              skippedInfos.push({
+                oldBcId: studySite.siteOldBCId,
+                reason: `Site d'étude ignoré - Le site n'existe plus ${studySite.siteOldBCId} ${studyOldBCId}`,
+              })
               return null
             }
             const siteETP = sitesETPsMapper.getMatchingSiteAdditionalData(
@@ -497,9 +518,11 @@ export const uploadStudies = async (
     ),
   })
 
-  await transaction.studyExport.createMany({
+  console.log(`Création de ${createdStudySites.count} studySites.`)
+
+  const createdStudyExport = await transaction.studyExport.createMany({
     data: Array.from(
-      studyExports.entries().flatMap(([studyOldBCId, studyExports]) => {
+      studyExports.entries().flatMap(([studyOldBCId, exportsForThisStudy]) => {
         // N'importer que les exports d'études nouvelles.
         if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
           return []
@@ -509,7 +532,11 @@ export const uploadStudies = async (
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
-        return studyExports
+        if (skippedInfos.some((s) => s.oldBcId === studyOldBCId)) {
+          return []
+        }
+
+        return exportsForThisStudy
           .map((studyExport) => ({
             ...studyExport,
             studyId: existingStudy.id,
@@ -518,6 +545,8 @@ export const uploadStudies = async (
       }),
     ),
   })
+
+  console.log(`Création de ${createdStudyExport.count} studyExports.`)
 
   const existingStudySites = await getExistingStudySites(
     transaction,
@@ -551,7 +580,7 @@ export const uploadStudies = async (
   )
   const emissionFactorsByImportedIdMap = new EmissionFactorsByImportedIdMap(emissionFactors)
   const studiesEmissionFactorVersionsMap = new StudiesEmissionFactorVersionsMap()
-  await transaction.studyEmissionSource.createMany({
+  const createdEmissionSource = await transaction.studyEmissionSource.createMany({
     data: Array.from(
       studyEmissionSources.entries().flatMap(([studyOldBCId, studyEmissionSources]) => {
         // N'importer que les sources d'émission d'études nouvelles.
@@ -563,21 +592,35 @@ export const uploadStudies = async (
           console.warn(`Impossible de retrouver l'étude de oldBCId: ${studyOldBCId}`)
           return []
         }
+        if (skippedInfos.some((s) => s.oldBcId === studyOldBCId)) {
+          return []
+        }
+
         return studyEmissionSources
           .map((studyEmissionSource) => {
+            if (
+              studyEmissionSource.siteOldBCId === 'NULL' ||
+              skippedInfos.some((s) => s.oldBcId === studyEmissionSource.siteOldBCId)
+            ) {
+              return null
+            }
+
             const existingSiteId = existingSiteIds.get(studyEmissionSource.siteOldBCId)
             if (!existingSiteId) {
-              console.warn(`Impossible de retrouver le site de oldBCId: ${studyEmissionSource.siteOldBCId}`)
+              console.warn(`2 - Impossible de retrouver le site de oldBCId: ${studyEmissionSource.siteOldBCId}`)
               return null
             }
             const studySites = existingStudySites.get(existingStudy.id)
             if (!studySites) {
-              console.warn(`Impossible de retrouver les studySites de studyId: ${existingStudy.id}`)
+              console.warn(`Impossible de retrouver les studySites de studyId: ${existingStudy.id} ${studyOldBCId}`)
               return null
             }
             const studySite = studySites.find((studySite) => studySite.siteId === existingSiteId)
             if (!studySite) {
-              console.warn(`Impossible de retrouver le studySite d'id: ${existingSiteId}`)
+              skippedInfos.push({
+                oldBcId: studyOldBCId,
+                reason: `Source d'émission ignorée - Le site associée n'est pas sélectionné pour l'étude ${studyOldBCId} ${studyEmissionSource.siteOldBCId}`,
+              })
               return null
             }
 
@@ -599,11 +642,15 @@ export const uploadStudies = async (
                 emissionFactorId = existingEmissionFactor.id
               }
             }
+
             if (!emissionFactorId) {
-              console.warn(
-                `Pas de facteur d'émission retrouvé pour l'étude de oldBCId ${studyOldBCId}, d'EFV_GUID ${studyEmissionSource.emissionFactorOldBCId} et d'ID_Source_Ref ${studyEmissionSource.emissionFactorImportedId}`,
-              )
+              emissionSourceWithtoutFe.push({
+                oldBcId: studyOldBCId,
+                name: studyEmissionSource.name,
+                manual: studyEmissionSource.emissionFactorImportedId === '0',
+              })
             }
+
             return {
               studyId: existingStudy.id,
               studySiteId: studySite.id,
@@ -628,7 +675,9 @@ export const uploadStudies = async (
     ),
   })
 
-  await transaction.studyEmissionFactorVersion.createMany({
+  console.log(`Création de ${createdEmissionSource.count} sources d'émissions.`)
+
+  const createdStudyFEVersion = await transaction.studyEmissionFactorVersion.createMany({
     data: Array.from(
       studiesEmissionFactorVersionsMap
         .getMap()
@@ -700,6 +749,11 @@ export const uploadStudies = async (
         }),
     ),
   })
+
+  console.log(`Création de ${createdStudyFEVersion.count} versions de facteurs d'émissions.`)
+
+  console.log('skippedInfos', JSON.stringify(skippedInfos))
+  console.log('emissionSourceWithtoutFe', JSON.stringify(emissionSourceWithtoutFe))
 
   return false
 }
