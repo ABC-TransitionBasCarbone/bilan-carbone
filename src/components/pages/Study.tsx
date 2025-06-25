@@ -5,6 +5,7 @@ import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import { canDeleteStudy } from '@/services/permissions/study'
 import { canEditOrganizationVersion } from '@/utils/organization'
+import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -41,7 +42,7 @@ const StudyPage = async ({ study, user }: Props) => {
       <StudyDetails
         study={study}
         canDeleteStudy={canDelete}
-        canDuplicateStudy={canEditOrga}
+        canDuplicateStudy={canEditOrga && user.environment === Environment.BC}
         validatedOnly={settings.validatedEmissionSourcesOnly}
         organizationVersionId={userOrgIsCR ? study.organizationVersionId : null}
       />
