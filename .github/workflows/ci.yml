@@ -116,16 +116,24 @@ jobs:
         run: yarn install --immutable --immutable-cache --check-cache
       - name: Generate prisma files
         run: npx prisma generate
+      - name: Migrate DB
+        run: npx prisma migrate deploy
+      - name: Seed DB
+        run: npx prisma db seed
+      - name: Build application
+        run: yarn build
       - name: Start server
         run: yarn start &
-      - name: Reset and seed database for tests
-        run: npx prisma migrate reset --force
       - name: Wait for hydration complete
         run: |
           npx wait-on http://localhost:3000 --timeout 30000
           sleep 3
       - name: Launch e2e tests
-        run: yarn run cypress
+        run: |
+          for spec in src/tests/end-to-end/app/*.cy.ts; do
+            echo "Running test: $spec"
+            yarn cypress run --spec "$spec" --headless || exit 1
+          done
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
         if: failure()
