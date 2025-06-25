@@ -4,7 +4,7 @@ import { BaseInputProps } from '../types/formTypes'
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   backgroundColor: 'white',
-  border: `solid 1px ${theme.palette.grey[500]}`,
+  border: `solid 1px ${theme.custom.box.borderColor}`,
   borderRadius: '1rem',
   width: 'fit-content',
 }))
