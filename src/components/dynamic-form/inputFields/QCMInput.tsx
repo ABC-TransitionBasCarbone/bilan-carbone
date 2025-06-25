@@ -9,7 +9,7 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   width: 'fit-content',
 }))
 
-export const QCM = ({ question, onBlur, errorMessage, disabled }: BaseInputProps) => {
+export const QCMInput = ({ question, onBlur, errorMessage, disabled }: BaseInputProps) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
 
   return (
@@ -40,4 +40,4 @@ export const QCM = ({ question, onBlur, errorMessage, disabled }: BaseInputProps
   )
 }
 
-export default QCM
+export default QCMInput
