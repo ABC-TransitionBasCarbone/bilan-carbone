@@ -3,7 +3,7 @@
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { BCPost, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
-import { UnitForBC, UNITS_BY_ENV } from '@/services/unit'
+import { UnitForBC } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
@@ -93,7 +93,7 @@ interface Props {
   userOrganizationId?: string | null
 }
 
-const initialSelectedUnits: (UnitForBC | string)[] = [...['all'], ...UNITS_BY_ENV.BC]
+const initialSelectedUnits: (UnitForBC | string)[] = [...['all'], ...Object.values(UnitForBC)]
 const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
 
 const EmissionFactorsTable = ({
