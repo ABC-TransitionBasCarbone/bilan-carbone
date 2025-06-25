@@ -4,30 +4,23 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
 import formStyles from '../../form/Form.module.css'
 import styles from './StudyDuplication.module.css'
 
-interface Props {
-  setGlossary?: (key: string) => void
-  onDuplicationOptionsChange?: (inviteTeam: boolean, inviteContributors: boolean) => void
+export interface InviteOptions {
+  team: boolean
+  contributors: boolean
 }
 
-const StudyDuplicationForm = ({ setGlossary, onDuplicationOptionsChange }: Props) => {
+interface Props {
+  setGlossary?: (key: string) => void
+  inviteOptions: InviteOptions
+  setInviteOptions: (options: InviteOptions) => void
+}
+
+const StudyDuplicationForm = ({ setGlossary, inviteOptions, setInviteOptions }: Props) => {
   const tGlossary = useTranslations('study.new.glossary')
   const tStudy = useTranslations('study.new')
-  const [inviteExistingTeam, setInviteExistingTeam] = useState(true)
-  const [inviteExistingContributors, setInviteExistingContributors] = useState(true)
-
-  const handleTeamChange = (checked: boolean) => {
-    setInviteExistingTeam(checked)
-    onDuplicationOptionsChange?.(checked, inviteExistingContributors)
-  }
-
-  const handleContributorsChange = (checked: boolean) => {
-    setInviteExistingContributors(checked)
-    onDuplicationOptionsChange?.(inviteExistingTeam, checked)
-  }
 
   return (
     <FormControl component="fieldset">
@@ -48,9 +41,9 @@ const StudyDuplicationForm = ({ setGlossary, onDuplicationOptionsChange }: Props
               className={styles.field}
               control={
                 <Checkbox
-                  checked={inviteExistingTeam}
+                  checked={inviteOptions?.team}
                   className={styles.checkbox}
-                  onChange={(_, checked) => handleTeamChange(checked)}
+                  onChange={(_, checked) => setInviteOptions({ ...inviteOptions, team: checked })}
                 />
               }
               label={tStudy('inviteTeam')}
@@ -61,9 +54,9 @@ const StudyDuplicationForm = ({ setGlossary, onDuplicationOptionsChange }: Props
               className={styles.field}
               control={
                 <Checkbox
-                  checked={inviteExistingContributors}
+                  checked={inviteOptions?.contributors}
                   className={styles.checkbox}
-                  onChange={(_, checked) => handleContributorsChange(checked)}
+                  onChange={(_, checked) => setInviteOptions({ ...inviteOptions, contributors: checked })}
                 />
               }
               label={tStudy('inviteContributors')}
