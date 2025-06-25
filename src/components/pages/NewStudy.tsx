@@ -82,7 +82,7 @@ const NewStudyPage = ({
     },
   })
 
-  const { targetOrganizationVersionId, isLoading } = useDuplicateStudy({ duplicateStudyId, form, user, caUnit })
+  const { isLoading } = useDuplicateStudy({ duplicateStudyId, form, user, caUnit })
 
   if (isLoading) {
     return (
@@ -124,7 +124,6 @@ const NewStudyPage = ({
           form={form}
           caUnit={caUnit}
           duplicateStudyId={duplicateStudyId}
-          targetOrganizationVersionId={targetOrganizationVersionId}
         />
       )}
     </>

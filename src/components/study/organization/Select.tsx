@@ -34,7 +34,6 @@ const SelectOrganization = ({
   form,
   caUnit,
   duplicateStudyId,
-  targetOrganizationVersionId,
 }: Props) => {
   const t = useTranslations('study.organization')
   const tOrganizationSites = useTranslations('organization.sites')
@@ -53,12 +52,6 @@ const SelectOrganization = ({
     () => organizationVersions.find((organizationVersion) => organizationVersion.id === organizationVersionId),
     [organizationVersionId, organizationVersions],
   )
-
-  useEffect(() => {
-    if (duplicateStudyId && targetOrganizationVersionId && !organizationVersionId) {
-      form.setValue('organizationVersionId', targetOrganizationVersionId)
-    }
-  }, [duplicateStudyId, targetOrganizationVersionId, organizationVersionId, form])
 
   useEffect(() => {
     if (!organizationVersion) {
@@ -82,7 +75,6 @@ const SelectOrganization = ({
     }
   }, [organizationVersion, caUnit, form])
 
-  // Track original selected sites when duplicating a study
   useEffect(() => {
     if (duplicateStudyId && sites.length > 0) {
       const selectedSiteIds = sites.filter((site) => site.selected).map((site) => site.id)
