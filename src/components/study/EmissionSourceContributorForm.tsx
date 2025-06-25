@@ -129,7 +129,7 @@ const EmissionSourceContributorForm = ({
       )}
       <div className="mt1">
         <QualitySelectGroup
-          canEdit={true}
+          canEdit={!emissionSource.validated}
           emissionSource={emissionSource}
           update={update}
           advanced={advanced}
