@@ -102,12 +102,6 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-      - name: Extract build artifacts
-        run: tar -xzf build-artifacts.tar.gz
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
@@ -120,8 +114,19 @@ jobs:
         run: npx prisma migrate deploy
       - name: Seed DB
         run: npx prisma db seed
-      - name: Build application
-        run: yarn build
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+      - name: Extract build artifacts
+        run: tar -xzf build-artifacts.tar.gz
+      - name: Verify build artifacts
+        run: |
+          echo "Checking if .next directory exists..."
+          ls -la .next/ || (echo "ERROR: .next directory not found" && exit 1)
+          echo "Checking if node_modules/.prisma exists..."
+          ls -la node_modules/.prisma/ || (echo "ERROR: node_modules/.prisma not found" && exit 1)
+          echo "Build artifacts verified successfully"
       - name: Start server
         run: yarn start &
       - name: Wait for hydration complete
