@@ -1,194 +1,10 @@
 import { createQuestions } from '@/db/question'
-import { getEncoding } from '@/utils/csv'
-import { Prisma, QuestionType, SubPost, Unit } from '@prisma/client'
 import { Command } from 'commander'
-import { parse } from 'csv-parse'
 import fs from 'fs'
 import path from 'path'
-
-enum HEADERS {
-  ID_EMISSION_FACTOR = 'ID FE',
-  ORDER = 'Order',
-  POSSIBLE_ANSWER = 'PossibleAnswers',
-  POST = 'Postes',
-  QUESTION = 'Question',
-  REQUIRED = 'Required',
-  SUB_POST = 'Sous-postes',
-  TITRE = 'Titre',
-  TYPE = 'Type',
-  UNIT = 'Unité',
-}
-
-interface Header {
-  [HEADERS.ID_EMISSION_FACTOR]: string
-  [HEADERS.ORDER]: string
-  [HEADERS.POSSIBLE_ANSWER]: string
-  [HEADERS.POST]: string
-  [HEADERS.QUESTION]: string
-  [HEADERS.REQUIRED]: boolean
-  [HEADERS.SUB_POST]: string
-  [HEADERS.TITRE]: string
-  [HEADERS.TYPE]: string
-  [HEADERS.UNIT]: string
-}
-
-type SourceType = 'google' | 'excel'
-
-type Delimiter = ',' | ';'
-
-const isValidEnumValue = <T extends Record<string, string>>(enumObj: T, value: string): value is T[keyof T] => {
-  return Object.values(enumObj).includes(value)
-}
-
-function normalizeLabel(label: string): string {
-  return label
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '')
-    .trim()
-}
-
-const enumMap = Object.values(SubPost).reduce(
-  (map, value) => {
-    const normalized = normalizeLabel(value)
-    map[normalized] = value
-    return map
-  },
-  {} as Record<string, SubPost>,
-)
-
-let line = 2
-
-function checkRequiredField(
-  field: string,
-  name: string,
-  context: Record<string, string>,
-  errors: string[],
-  line: number,
-) {
-  if (field === '') {
-    const ctx = Object.entries(context)
-      .map(([k, v]) => `${k} "${v}"`)
-      .join(', ')
-    errors.push(`(ligne ${line}) ${name} manquant, ${ctx}`)
-  }
-}
-
-const generateIdIntern = (value: string) =>
-  value
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+import { parseCsv } from './parser'
 
 const fileExists = (filePath: string) => fs.existsSync(filePath) && fs.statSync(filePath).isFile()
-
-const parseCsv = async (file: string, delimiter: Delimiter): Promise<Prisma.QuestionCreateManyInput[]> => {
-  return new Promise((resolve, reject) => {
-    const questions: Prisma.QuestionCreateManyInput[] = []
-    const errors: string[] = []
-    const encoding = getEncoding(file)
-
-    fs.createReadStream(file, { encoding })
-      .pipe(
-        parse({
-          columns: true,
-          delimiter,
-          trim: true,
-        }),
-      )
-      .on('data', (row: Header) => {
-        const label = row[HEADERS.QUESTION]
-        const type = row[HEADERS.TYPE] === '' ? QuestionType.TEXT : row[HEADERS.TYPE].toUpperCase()
-        const unit = row[HEADERS.UNIT] === '' ? Unit.ACTIVE : row[HEADERS.UNIT]
-        const titre = generateIdIntern(row[HEADERS.TITRE])
-        const subPost = enumMap[normalizeLabel(row[HEADERS.SUB_POST])]
-
-        checkRequiredField(
-          titre,
-          'Titre',
-          {
-            Question: row[HEADERS.QUESTION],
-            'Sous postes': row[HEADERS.SUB_POST],
-          },
-          errors,
-          line,
-        )
-
-        if (questions.find((question) => question.idIntern === titre)) {
-          errors.push(`(line ${line}): Titre déjà existant: "${row[HEADERS.TITRE]}"`)
-          return
-        }
-
-        checkRequiredField(
-          label,
-          'Question',
-          {
-            Order: row[HEADERS.ORDER],
-            'Sous postes': row[HEADERS.SUB_POST],
-          },
-          errors,
-          line,
-        )
-
-        if (!isValidEnumValue(QuestionType, type)) {
-          errors.push(`(line ${line}): Type invalide: "${type}" pour la question "${label}"`)
-          return
-        }
-
-        if (!isValidEnumValue(Unit, unit) && unit !== '') {
-          errors.push(`(line ${line}): Unit invalide: "${unit}" pour la question "${label}"`)
-          return
-        }
-
-        if (!isValidEnumValue(SubPost, subPost)) {
-          errors.push(
-            `(line ${line}): Sous-poste invalide: "${subPost}" pour la question "${label}" au poste "${row[HEADERS.POST]}"`,
-          )
-          return
-        }
-
-        questions.push({
-          idIntern: titre,
-          label,
-          subPost,
-          order: Number(row[HEADERS.ORDER]),
-          type,
-          possibleAnswers: row[HEADERS.POSSIBLE_ANSWER].split('§').map((s) => s.trim()),
-          unit: unit === '' ? null : unit,
-          required: row[HEADERS.REQUIRED] || false,
-        })
-        line++
-      })
-      .on('end', () => {
-        if (errors.length) {
-          return reject(new Error(errors.sort().join('\n')))
-        }
-        resolve(questions)
-      })
-      .on('error', reject)
-  })
-}
-
-const addQuestions = async (file: string, source: SourceType) => {
-  if (!file || !fileExists(file)) {
-    throw new Error(`Le fichier "${file}" est introuvable.`)
-  }
-
-  console.log(`📥 Lecture du fichier : ${file}`)
-
-  const questions = await parseCsv(file, source === 'excel' ? ';' : ',')
-
-  console.log(`📊 ${questions.length} questions prêtes à être insérées.`)
-
-  await createQuestions(questions)
-
-  console.log('✅ Insertion terminée.')
-}
 
 const program = new Command()
 
@@ -213,7 +29,23 @@ program
 
 const { file, source } = program.opts()
 
+async function addQuestions(file: string, source: string) {
+  if (!file || !fileExists(file)) {
+    throw new Error(`Le fichier "${file}" est introuvable.`)
+  }
+
+  console.log(`📥 Lecture du fichier : ${file}`)
+
+  const questions = await parseCsv(file, source === 'excel' ? ';' : ',')
+
+  console.log(`📊 ${questions.length} questions prêtes à être insérées.`)
+
+  await createQuestions(questions)
+
+  console.log('✅ Insertion terminée.')
+}
+
 addQuestions(path.resolve(file), source).catch((err) => {
-  console.error('❌ Erreur :', err.message)
+  console.error('❌ Erreur : \n', err.message)
   process.exit(1)
 })
