@@ -717,7 +717,6 @@
         "Congelateurs": "Freezers",
         "Warmers": "Warmers",
         "Distributeurs": "Snack / drink vending machines",
-        "Renovation": "What type of renovation was it? (Multiple answers possible)",
         "format": {
           "text": "Text",
           "postalCode": "Postal code",
@@ -730,12 +729,7 @@
         "retry": "Retry",
         "finish": "Finish",
         "noQuestions": "No questions found for this sub-post",
-        "autoSaveError": "The answer could not be saved automatically",
-        "qcm": {
-          "total": "",
-          "extension": "",
-          "otherBigRenovation": ""
-        }
+        "autoSaveError": "The answer could not be saved automatically"
       }
     },
     "create": {
