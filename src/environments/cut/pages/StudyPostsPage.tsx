@@ -14,9 +14,10 @@ import DynamicSubPostForm from '../study/DynamicSubPostForm'
 interface Props {
   post: Post
   study: FullStudy
+  studySite: string
 }
 
-const StudyPostsPageCut = ({ post, study }: Props) => {
+const StudyPostsPageCut = ({ post, study, studySite }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const router = useRouter()
@@ -45,7 +46,9 @@ const StudyPostsPageCut = ({ post, study }: Props) => {
   }, [activeStep, subPosts, searchParams])
 
   const tabContent = useMemo(() => {
-    return subPosts.map((subPost) => <DynamicSubPostForm key={subPost} subPost={subPost} study={study} />)
+    return subPosts.map((subPost) => (
+      <DynamicSubPostForm key={subPost} subPost={subPost} study={study} studySite={studySite} />
+    ))
   }, [subPosts, study])
 
   const handleNextStep = () => {
@@ -76,7 +79,6 @@ const StudyPostsPageCut = ({ post, study }: Props) => {
         activeTab={activeStep}
         setActiveTab={setActiveStep}
       />
-
       <Stepper
         steps={subPosts.length}
         activeStep={activeStep + 1}

@@ -1,5 +1,5 @@
 import { saveAnswerForQuestion } from '@/services/serverFunctions/question'
-import { Prisma } from '@prisma/client'
+import { Prisma, SubPost } from '@prisma/client'
 import { useCallback, useMemo, useState } from 'react'
 
 export interface FieldSaveStatus {
@@ -17,17 +17,18 @@ export interface UseAutoSaveReturn {
 interface SaveAnswerRequest {
   questionId: string
   studyId: string
+  studySite: string
   response: Prisma.InputJsonValue
 }
 
 /**
  * Hook for auto-saving form fields with debouncing
  */
-export const useAutoSave = (studyId: string): UseAutoSaveReturn => {
+export const useAutoSave = (studyId: string, studySite: string, subPost: SubPost): UseAutoSaveReturn => {
   const [fieldStatuses, setFieldStatuses] = useState<Record<string, FieldSaveStatus>>({})
 
   const saveAnswer = useCallback(async (request: SaveAnswerRequest) => {
-    return saveAnswerForQuestion(request.questionId, request.studyId, request.response)
+    return saveAnswerForQuestion(request.questionId, request.studyId, request.response, request.studySite)
   }, [])
 
   const updateFieldStatus = useCallback((questionId: string, status: Partial<FieldSaveStatus>) => {
@@ -46,6 +47,7 @@ export const useAutoSave = (studyId: string): UseAutoSaveReturn => {
         const request: SaveAnswerRequest = {
           questionId,
           studyId,
+          studySite,
           response: formatValueForSave(value),
         }
 

@@ -9,9 +9,10 @@ import { useCallback, useEffect, useState } from 'react'
 interface Props {
   subPost: SubPost
   study: FullStudy
+  studySite: string
 }
 
-const DynamicSubPostForm = ({ subPost, study }: Props) => {
+const DynamicSubPostForm = ({ subPost, study, studySite }: Props) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
   const [questions, setQuestions] = useState<Question[]>([])
@@ -80,6 +81,7 @@ const DynamicSubPostForm = ({ subPost, study }: Props) => {
         questions={questions}
         subPost={subPost}
         studyId={study.id}
+        studySite={studySite}
         initialAnswers={answers}
         isLoading={isLoading}
       />
