@@ -6,7 +6,7 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import StudyDuplicationForm from '@/components/study/duplication/StudyDuplicationForm'
+import StudyDuplicationForm, { InviteOptions } from '@/components/study/duplication/StudyDuplicationForm'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
@@ -32,12 +32,14 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
   const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
   const { callServerFunction } = useServerFunction()
-  const [inviteExistingTeam, setInviteExistingTeam] = useState(true)
-  const [inviteExistingContributors, setInviteExistingContributors] = useState(true)
+  const [inviteOptions, setInviteOptions] = useState<InviteOptions>({
+    team: true,
+    contributors: true,
+  })
 
   const onSubmit = async (command: CreateStudyCommand) => {
     const serverFunction = duplicateStudyId
-      ? () => duplicateStudyCommand(duplicateStudyId, command, inviteExistingTeam, inviteExistingContributors)
+      ? () => duplicateStudyCommand(duplicateStudyId, command, inviteOptions.team, inviteOptions.contributors)
       : () => createStudyCommand(command)
 
     await callServerFunction(() => serverFunction(), {
@@ -47,11 +49,6 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
       },
       getErrorMessage: (error) => tError(error),
     })
-  }
-
-  const handleDuplicationOptionsChange = (inviteTeam: boolean, inviteContributors: boolean) => {
-    setInviteExistingTeam(inviteTeam)
-    setInviteExistingContributors(inviteContributors)
   }
 
   const Help = (name: string) => (
@@ -85,7 +82,11 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
         </div>
         {children}
         {duplicateStudyId && (
-          <StudyDuplicationForm setGlossary={setGlossary} onDuplicationOptionsChange={handleDuplicationOptionsChange} />
+          <StudyDuplicationForm
+            setGlossary={setGlossary}
+            inviteOptions={inviteOptions}
+            setInviteOptions={setInviteOptions}
+          />
         )}
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
           {duplicateStudyId ? t('duplicate') : t('create')}
