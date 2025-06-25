@@ -729,13 +729,7 @@
         "retry": "Réessayer",
         "finish": "Terminer",
         "noQuestions": "Aucune question trouvée pour ce sous-poste",
-        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer.",
-        "Renovation": "De quel type de rénovation s'est-il s'agit ? (Plusieurs réponses possibles)",
-        "qcm": {
-          "total": "Rénovation totale (hors agrandissement)",
-          "extension": "Agrandissement - extension",
-          "otherBigRenovation": "Autre travaux importants (par ex : changement moquette, ravalement, peinture...)"
-        }
+        "autoSaveError": "Certaines réponses n'ont pas pu être sauvegardées automatiquement. Veuillez vérifier votre connexion et réessayer."
       }
     },
     "create": {

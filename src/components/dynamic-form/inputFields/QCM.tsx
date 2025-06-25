@@ -1,11 +1,6 @@
-import { Question } from '@/environments/cut/services/post'
-import { Checkbox, FormControlLabel, styled } from '@mui/material'
-import { useTranslations } from 'next-intl'
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, styled } from '@mui/material'
 import { useState } from 'react'
-
-interface Props {
-  question: Question
-}
+import { BaseInputProps } from '../types/formTypes'
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   backgroundColor: 'white',
@@ -14,18 +9,18 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   width: 'fit-content',
 }))
 
-export const QCM = ({ question }: Props) => {
-  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+export const QCM = ({ question, onBlur, errorMessage, disabled }: BaseInputProps) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
 
   return (
-    <div className="flex flex-col m2">
-      {question.options?.map((option, index) => (
+    <FormControl className="flex flex-col m2" error={!!errorMessage} disabled={disabled}>
+      {question.possibleAnswers?.map((option, index) => (
         <StyledFormControlLabel
           key={`box-${index}`}
           className="p-2 pr1 flex flex-row align-center mb1"
           control={
             <Checkbox
+              onBlur={onBlur}
               key={index}
               name={option}
               checked={selectedOptions.includes(option)}
@@ -37,9 +32,12 @@ export const QCM = ({ question }: Props) => {
               }}
             />
           }
-          label={tCutQuestions(`qcm.${option}`)}
+          label={option}
         />
       ))}
-    </div>
+      {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
+    </FormControl>
   )
 }
+
+export default QCM
