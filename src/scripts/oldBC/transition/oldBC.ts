@@ -14,7 +14,12 @@ import { OldBCWorkSheetsReader } from './oldBCWorkSheetsReader'
 import { uploadOrganizations } from './organizations'
 import { uploadStudies } from './studies'
 
-export const uploadOldBCInformations = async (file: string, email: string, organizationVersionId: string) => {
+export const uploadOldBCInformations = async (
+  file: string,
+  email: string,
+  organizationVersionId: string,
+  skip: boolean,
+) => {
   const postAndSubPostsOldNewMapping = new OldNewPostAndSubPostsMapping()
 
   const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
@@ -46,28 +51,26 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
   let hasEmissionFactorsWarning = false
   let hasStudiesWarning = false
 
-  await uploadOrganizations(
-    prismaClient,
-    oldBCWorksheetsReader.organizationsWorksheet,
-    accountOrganizationVersion,
-    true,
-  )
+  if (!skip) {
+    const rl = readline.createInterface({ input, output })
+    const doWeContinue = await rl.question(
+      "Tu n'as pas choisi de passer en mode vérification (pas de paramètre skip), es-tu sûr de vouloir continuer ? (oui/non) ",
+    )
 
-  const rl = readline.createInterface({ input, output })
-  const doWeContinue = await rl.question('Malgrès tous les avertissements, voulez-vous continuer ? (oui/non) ')
-
-  if (doWeContinue?.toLocaleLowerCase() !== 'oui') {
-    throw new Error('On arrête le programme')
-  } else {
-    console.log("C'est parti pour la migration !")
+    if (doWeContinue?.toLocaleLowerCase() !== 'oui') {
+      throw new Error('On arrête le programme')
+    } else {
+      console.log("C'est parti pour la migration !")
+    }
+    rl.close()
   }
-  rl.close()
 
   await prismaClient.$transaction(async (transaction) => {
     hasOrganizationsWarning = await uploadOrganizations(
       transaction,
       oldBCWorksheetsReader.organizationsWorksheet,
       accountOrganizationVersion,
+      false,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
@@ -81,6 +84,10 @@ export const uploadOldBCInformations = async (file: string, email: string, organ
       postAndSubPostsOldNewMapping,
       oldBCWorksheetsReader,
     )
+
+    if (skip) {
+      throw Error()
+    }
   })
 
   if (hasOrganizationsWarning) {

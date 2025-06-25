@@ -221,12 +221,16 @@ export const uploadOrganizations = async (
   // Je crée toutes les organisations sauf la mienne
   if (newOrganizations.length > 0 && !onlyChecking) {
     console.log(`Import de ${newOrganizations.length} organisations`)
+    const data = newOrganizations.map((organization) => ({
+      oldBCId: organization.oldBCId,
+      name: organization.name,
+    }))
+
     const createdOrganizations = await transaction.organization.createManyAndReturn({
-      data: newOrganizations.map((organization) => ({
-        oldBCId: organization.oldBCId,
-        name: organization.name,
-      })),
+      data,
     })
+
+    console.log(`Création de ${createdOrganizations.length} organisations dans la base de données.`)
     await transaction.organizationVersion.createMany({
       data: newOrganizations
         .map((organization) => {
@@ -273,7 +277,8 @@ export const uploadOrganizations = async (
       .filter((organization) => organization !== null)
 
     if (!onlyChecking) {
-      await transaction.site.createMany({ data })
+      const createdSites = await transaction.site.createMany({ data })
+      console.log(`Création de ${createdSites.count} sites par défaut pour les organisations dans la base de données.`)
     }
   }
 
@@ -299,7 +304,8 @@ export const uploadOrganizations = async (
     .filter((site) => site !== null)
   if (sitesToCreate.length > 0 && !onlyChecking) {
     console.log(`Import de ${sitesToCreate.length} sites`)
-    await transaction.site.createMany({ data: sitesToCreate })
+    const createdSites = await transaction.site.createMany({ data: sitesToCreate })
+    console.log(`Création de ${createdSites.count} sites dans la base de données.`)
   }
 
   if (existingOrganizationVersions.length > 0) {
