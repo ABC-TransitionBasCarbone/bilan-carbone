@@ -19,7 +19,7 @@ export const getNumberInputFormat = (type: QuestionType): NumberInputFormat => {
   }
 }
 
-export const getQuestionFieldType = (type: QuestionType, unit?: string): FieldType => {
+export const getQuestionFieldType = (type: QuestionType, unit: string | null): FieldType => {
   if (type === QuestionType.TEXT && unit === 'YEAR') {
     return FieldType.YEAR
   }

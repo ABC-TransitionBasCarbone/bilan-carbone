@@ -136,8 +136,8 @@ export function validateRow(
       order: Number(row[HEADERS.ORDER]),
       type,
       possibleAnswers: row[HEADERS.POSSIBLE_ANSWER].split('§').map((s) => s.trim()),
-      unit,
-      required: row[HEADERS.REQUIRED] || false,
+      unit: unit as Unit,
+      required: Boolean(row[HEADERS.REQUIRED]) || false,
     },
   }
 }
