@@ -67,6 +67,8 @@ export const getUserCheckList = (userRole: Role, isCR: boolean, level: Level | n
       (step !== UserChecklist.AddCollaborator || isAdmin(userRole) || userRole === Role.GESTIONNAIRE) &&
       (step !== UserChecklist.AddSiteOrga || hasEditionRole(isCR, userRole)) &&
       (step !== UserChecklist.AddSiteCR || hasEditionRole(isCR, userRole)) &&
-      (step !== UserChecklist.CreateFirstStudy || level),
+      (step !== UserChecklist.CreateFirstStudy || level) &&
+      (step !== UserChecklist.CreateFirstEmissionSource || level) &&
+      (step !== UserChecklist.ConsultResults || level),
   )
 }
