@@ -1,29 +1,25 @@
 'use client'
 
-import { FullStudy } from '@/db/study'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import Modal from './Modal'
 
 interface Props {
-  study: FullStudy
+  studyId: string
+  organizationVersionId: string | null
   open: boolean
   onClose: () => void
 }
 
-const DuplicateStudyModal = ({ study, open, onClose }: Props) => {
+const DuplicateStudyModal = ({ studyId, organizationVersionId, open, onClose }: Props) => {
   const t = useTranslations('study.duplicateDialog')
   const router = useRouter()
 
   const handleDuplicate = () => {
-    const searchParams = new URLSearchParams({
-      duplicate: study.id,
-    })
-
-    if (study.organizationVersion.isCR) {
-      router.push(`/organisations/${study.organizationVersionId}/etudes/creer?${searchParams.toString()}`)
+    if (organizationVersionId) {
+      router.push(`/organisations/${organizationVersionId}/etudes/creer?duplicate=${studyId}`)
     } else {
-      router.push(`/etudes/creer?${searchParams.toString()}`)
+      router.push(`/etudes/creer?duplicate=${studyId}`)
     }
   }
 
