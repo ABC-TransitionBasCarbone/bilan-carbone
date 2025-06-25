@@ -61,7 +61,7 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
     getCheckList()
   }, [open, getCheckList])
 
-  if (userLevel === null || completed || !fetchedCheckedSteps) {
+  if ((checklist.length === 1 && checklist[0] === UserChecklist.CreateAccount) || completed || !fetchedCheckedSteps) {
     return null
   }
 
