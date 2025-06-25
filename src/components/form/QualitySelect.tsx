@@ -21,7 +21,7 @@ const QualitySelect = ({
   return (
     <FormControl error={error} className={formControlClassName}>
       <InputLabel id={`${props.id}-label}`}>{props.label}</InputLabel>
-      <Select {...props} labelId={`${props.id}-label}`} withLabel={false} clearable={clearable}>
+      <Select {...props} labelId={`${props.id}-label}`} withLabel={false} clearable={!props.disabled && clearable}>
         {Array.from({ length: 5 }).map((_, index) => (
           <MenuItem key={index} value={index + 1}>
             {t((index + 1).toString())} {starredValue === index + 1 && <>{emissionFactorDefautQualityStar}</>}
