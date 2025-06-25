@@ -60,7 +60,7 @@ const EmissionSourceContributorForm = ({
     <>
       <div className={classNames(styles.row, 'flex')}>
         <EmissionSourceFactor
-          canEdit
+          canEdit={!emissionSource.validated}
           update={update}
           emissionFactors={emissionFactors}
           subPost={subPost}
@@ -72,6 +72,7 @@ const EmissionSourceContributorForm = ({
         <div className={classNames(styles.gapped, 'grow flex')}>
           <div className={classNames(styles.inputWithUnit, 'flex grow')}>
             <TextField
+              disabled={!!emissionSource.validated}
               className="grow"
               type="number"
               data-testid="emission-source-value-da"
@@ -89,6 +90,7 @@ const EmissionSourceContributorForm = ({
           {subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost) && (
             <div className={classNames(styles.inputWithUnit, 'flex grow')}>
               <TextField
+                disabled={!!emissionSource.validated}
                 className="grow"
                 type="number"
                 defaultValue={emissionSource.depreciationPeriod}
@@ -104,6 +106,7 @@ const EmissionSourceContributorForm = ({
           )}
         </div>
         <TextField
+          disabled={!!emissionSource.validated}
           data-testid="emission-source-source"
           defaultValue={emissionSource.source}
           onBlur={(event) => update('source', event.target.value)}
