@@ -129,7 +129,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                   <BarChart
                     xAxis={[
                       {
-                        data: barData.labels,
+                        data: barData.laUnitbels,
                         height: 80,
                         scaleType: 'band',
                         tickLabelStyle: { angle: -20, textAnchor: 'end' },
