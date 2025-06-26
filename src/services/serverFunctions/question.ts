@@ -28,11 +28,11 @@ export const saveAnswerForQuestion = async (
 
     const { emissionFactorImportedId, depreciationPeriod, previousQuestionInternId } = getEmissionFactorByIdIntern(
       question.idIntern,
-    )
+    ) || {}
     let emissionFactorId = undefined
 
     if (!emissionFactorImportedId && !depreciationPeriod) {
-      return saveAnswer(question.id, studySiteId, response, emissionSourceId)
+      return saveAnswer(question.id, studySiteId, response)
     }
 
     if (previousQuestionInternId) {
@@ -56,8 +56,6 @@ export const saveAnswerForQuestion = async (
     const value = depreciationPeriod ? undefined : Number(response)
 
     if (emissionSourceId) {
-      console.log('Updating existing emission source with id:', emissionSourceId)
-      console.log('Updating existing emission source with depreciationPeriod:', depreciationPeriod)
       await updateEmissionSource({
         value,
         emissionSourceId,
@@ -79,8 +77,6 @@ export const saveAnswerForQuestion = async (
         emissionSourceId = emissionSource.data.id
       }
     }
-
-    console.log('Saving answer for question:', question.id, 'with emissionSourceId:', emissionSourceId)
 
     return saveAnswer(question.id, studySiteId, response, emissionSourceId)
   })
@@ -121,7 +117,7 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     depreciationPeriod: 10,
     previousQuestionInternId: 'quelle-est-la-surface-plancher-du-cinema',
   },
-  'dans-le-cas-d-un-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': { emissionFactorImportedId: '20730' },
+  'quelle-est-la-surface-supplementaire': { emissionFactorImportedId: '20730' },
 
   // Fonctionnement	Energie
   'quelles-etaient-les-consommations-energetiques-du-cinema': { emissionFactorImportedId: '15591' },
