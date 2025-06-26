@@ -1,5 +1,6 @@
 'use client'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { signOutEnv } from '@/services/auth'
 import { getEnvRoute } from '@/services/email/utils'
 import { checkToken, reset } from '@/services/serverFunctions/auth'
 import { ResetPasswordCommand, ResetPasswordCommandValidation } from '@/services/serverFunctions/user.command'
@@ -10,7 +11,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { FormControl, IconButton, InputAdornment } from '@mui/material'
 import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
-import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -36,7 +36,7 @@ const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
 
   useEffect(() => {
     if (user) {
-      signOut({ redirect: false })
+      signOutEnv(environment, { redirect: false })
     }
   }, [user])
 

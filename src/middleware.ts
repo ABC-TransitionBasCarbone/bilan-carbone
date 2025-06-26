@@ -1,3 +1,4 @@
+import { Environment } from '@prisma/client'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -22,7 +23,18 @@ export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
 
     if (!token) {
-      const loginUrl = new URL('/login', req.url)
+      const env = req.nextUrl.searchParams.get('env')
+      let baseUrl = ''
+      switch (env) {
+        case Environment.CUT:
+          baseUrl = `${COUNT_ROUTE}`
+          break
+
+        default:
+          break
+      }
+
+      const loginUrl = new URL(`${baseUrl}/login`, req.url)
       return NextResponse.redirect(loginUrl)
     }
   }
