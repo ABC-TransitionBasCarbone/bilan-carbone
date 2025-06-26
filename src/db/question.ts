@@ -87,6 +87,14 @@ export const deleteAnswer = async (
   }
 }
 
+export const getQuestionByIdInterne = async (idIntern: string): Promise<Question | null> => {
+  return await prismaClient.question.findUnique({
+    where: {
+      idIntern,
+    },
+  })
+}
+
 export const getQuestionById = async (questionId: string): Promise<Question | null> => {
   return await prismaClient.question.findUnique({
     where: {
