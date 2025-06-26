@@ -1,5 +1,5 @@
 import { CUTUnit } from '@/services/unit'
-import { Prisma, QuestionType, SubPost, Unit } from '@prisma/client'
+import { Prisma, QuestionType, SubPost } from '@prisma/client'
 
 export enum HEADERS {
   ID_EMISSION_FACTOR = 'ID FE',
@@ -111,7 +111,7 @@ export function validateRow(
     return { error: `(ligne ${line}) Type invalide "${type}", pour question "${label}"` }
   }
 
-  if (unit && !isValidEnumValue(Unit, unit)) {
+  if (unit && !isValidEnumValue(CUTUnit, unit)) {
     return { error: `(ligne ${line}) Unité invalide "${unit}" pour question "${label}"` }
   }
 
@@ -138,7 +138,7 @@ export function validateRow(
       order: Number(row[HEADERS.ORDER]),
       type,
       possibleAnswers: row[HEADERS.POSSIBLE_ANSWER].split('§').map((s) => s.trim()),
-      unit: unit as Unit,
+      unit: unit as CUTUnit,
       required: Boolean(row[HEADERS.REQUIRED]) || false,
     },
   }
