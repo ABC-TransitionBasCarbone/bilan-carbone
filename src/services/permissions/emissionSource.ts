@@ -9,18 +9,8 @@ import { canBeValidated } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 import { canReadStudy, isAdminOnStudyOrga } from './study'
 
-export const hasStudyBasicRights = async (
-  account: AccountWithUser,
-  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
-    emissionFactorId?: string | null
-  },
-  study: FullStudy,
-) => {
+export const hasStudyBasicRights = async (account: AccountWithUser, study: FullStudy) => {
   if (!(await canReadStudy(accountWithUserToUserSession(account), study.id))) {
-    return false
-  }
-
-  if (!study.sites.find((studySite) => studySite.id === emissionSource.studySiteId)) {
     return false
   }
 
@@ -32,40 +22,68 @@ export const hasStudyBasicRights = async (
   return false
 }
 
+const canCreateEmissionSourceCommon = async (
+  account: AccountWithUser,
+  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
+    emissionFactorId?: string | null
+  },
+) => {
+  const study = await getStudyById(emissionSource.studyId, account.organizationVersionId)
+  if (!study) {
+    return { allowed: false }
+  }
+
+  const studySites = await getStudySites(emissionSource.studyId)
+  if (!studySites.some((studySite) => studySite.id === emissionSource.studySiteId)) {
+    return { allowed: false }
+  }
+
+  return { allowed: true, study }
+}
+
 const canCreateEmissionSourceBC = async (
   account: AccountWithUser,
   emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
     emissionFactorId?: string | null
   },
-  study?: FullStudy,
 ) => {
-  const dbStudy = study || (await getStudyById(emissionSource.studyId, account.organizationVersionId))
-  if (!dbStudy) {
+  const { allowed, study } = await canCreateEmissionSourceCommon(account, emissionSource)
+  if (!allowed || !study) {
     return false
   }
 
-  const studySites = await getStudySites(emissionSource.studyId)
-  if (!studySites.some((studySite) => studySite.id === emissionSource.studySiteId)) {
-    return false
-  }
-
-  return hasStudyBasicRights(account, emissionSource, dbStudy)
+  return hasStudyBasicRights(account, study)
 }
 
-const canCreateEmissionSourceCUT = () => true
+const canCreateEmissionSourceCUT = async (
+  account: AccountWithUser,
+  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
+    emissionFactorId?: string | null
+  },
+) => {
+  const { allowed, study } = await canCreateEmissionSourceCommon(account, emissionSource)
+  if (!allowed || !study) {
+    return false
+  }
+
+  if (study.organizationVersionId !== account.organizationVersionId) {
+    return false
+  }
+
+  return true
+}
 
 export const canCreateEmissionSource = async (
   account: AccountWithUser,
   emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
     emissionFactorId?: string | null
   },
-  study?: FullStudy,
 ) => {
   switch (account.environment) {
     case 'BC':
-      return canCreateEmissionSourceBC(account, emissionSource, study)
+      return canCreateEmissionSourceBC(account, emissionSource)
     case 'CUT':
-      return canCreateEmissionSourceCUT()
+      return canCreateEmissionSourceCUT(account, emissionSource)
     default:
       return false
   }
@@ -77,7 +95,7 @@ const canUpdateEmissionSourceBC = async (
   change: Partial<StudyEmissionSource>,
   study: FullStudy,
 ) => {
-  const hasBasicRights = await hasStudyBasicRights(account, emissionSource, study)
+  const hasBasicRights = await canCreateEmissionSourceBC(account, emissionSource)
   if (!hasBasicRights) {
     const contributor = study.contributors.find(
       (contributor) =>
@@ -120,7 +138,8 @@ const canUpdateEmissionSourceBC = async (
   return true
 }
 
-const canUpdateEmissionSourceCUT = () => true
+const canUpdateEmissionSourceCUT = (account: AccountWithUser, emissionSource: StudyEmissionSource) =>
+  canCreateEmissionSourceCUT(account, emissionSource)
 
 export const canUpdateEmissionSource = async (
   account: AccountWithUser,
@@ -132,7 +151,7 @@ export const canUpdateEmissionSource = async (
     case 'BC':
       return canUpdateEmissionSourceBC(account, emissionSource, change, study)
     case 'CUT':
-      return canUpdateEmissionSourceCUT()
+      return canUpdateEmissionSourceCUT(account, emissionSource)
     default:
       return false
   }
