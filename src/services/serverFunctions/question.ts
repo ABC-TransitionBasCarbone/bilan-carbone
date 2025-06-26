@@ -1,12 +1,17 @@
 'use server'
 
 import { findEmissionFactorByImportedId } from '@/db/emissionFactors'
-import { getAnswersByStudyAndSubPost, getQuestionsBySubPost, saveAnswer } from '@/db/question'
+import {
+  getAnswerByQuestionId,
+  getAnswersByStudyAndSubPost,
+  getQuestionById,
+  getQuestionsBySubPost,
+  saveAnswer,
+} from '@/db/question'
 import { withServerResponse } from '@/utils/serverResponse'
 import { Prisma, Question, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
-import { de } from '@faker-js/faker'
 
 export const saveAnswerForQuestion = async (
   question: Question,
@@ -21,13 +26,25 @@ export const saveAnswerForQuestion = async (
       throw new Error('Not authorized')
     }
 
-    const { emissionFactorImportedId, depreciationPeriod } = getEmissionFactorByIdIntern(question.idIntern)
+    const { emissionFactorImportedId, depreciationPeriod, previousQuestionInternId } = getEmissionFactorByIdIntern(
+      question.idIntern,
+    )
 
     if (!emissionFactorImportedId || !depreciationPeriod) {
       return saveAnswer(question.id, studySiteId, response, emissionSourceId)
     }
 
+    if (previousQuestionInternId) {
+      const previousQuestion = await getQuestionById(previousQuestionInternId)
+      if (!previousQuestion) {
+        throw new Error(`Previous question not found for idIntern: ${previousQuestionInternId}`)
+      }
+      const previousAnswer = await getAnswerByQuestionId(previousQuestion.id)
+      emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
+    }
+
     const emissionFactor = await findEmissionFactorByImportedId(emissionFactorImportedId)
+
     if (!emissionFactor) {
       throw new Error(`Emission factor not found for importedId: ${emissionFactorImportedId}`)
     }
@@ -78,11 +95,22 @@ export const getQuestionsWithAnswers = async (subPost: SubPost, studySiteId: str
 const getEmissionFactorByIdIntern = (idIntern: string) =>
   emissionFactorMap[idIntern] ?? { emissionFactorImportedId: undefined, depreciationPeriod: undefined }
 
-const emissionFactorMap: Record<string, { emissionFactorImportedId?: string; depreciationPeriod?: number }> = {
+const emissionFactorMap: Record<
+  string,
+  { emissionFactorImportedId?: string; depreciationPeriod?: number; previousQuestionInternId?: string }
+> = {
   // Fonctionnement	Bâtiment
   'quelle-est-la-surface-plancher-du-cinema': { emissionFactorImportedId: '15591' },
-  'quand-le-batiment-a-t-il-ete-construit': { emissionFactorImportedId: '15591', depreciationPeriod: 50 },
-  'a-quand-remonte-la-derniere-renovation-importante': { emissionFactorImportedId: '15591', depreciationPeriod: 10 },
+  'quand-le-batiment-a-t-il-ete-construit': {
+    emissionFactorImportedId: '15591',
+    depreciationPeriod: 50,
+    previousQuestionInternId: 'quelle-est-la-surface-plancher-du-cinema',
+  },
+  'a-quand-remonte-la-derniere-renovation-importante': {
+    emissionFactorImportedId: '15591',
+    depreciationPeriod: 10,
+    previousQuestionInternId: 'quelle-est-la-surface-plancher-du-cinema',
+  },
 
   // Fonctionnement	Energie
   'quelles-etaient-les-consommations-energetiques-du-cinema': { emissionFactorImportedId: '15591' },

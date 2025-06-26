@@ -16,6 +16,17 @@ export const getQuestionsBySubPost = async (subPost: SubPost): Promise<Question[
   })
 }
 
+export const getAnswerByQuestionId = async (questionId: string): Promise<Answer | null> => {
+  return await prismaClient.answer.findFirst({
+    where: {
+      questionId,
+    },
+    include: {
+      question: true,
+    },
+  })
+}
+
 export const getAnswersByStudyAndSubPost = async (studySiteId: string, subPost: SubPost): Promise<Answer[]> => {
   return await prismaClient.answer.findMany({
     where: {
