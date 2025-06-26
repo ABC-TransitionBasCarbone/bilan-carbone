@@ -223,6 +223,7 @@ export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracteris
   [SubPost.DechetsBatiments]: [EmissionSourceCaracterisation.Operated],
   [SubPost.DechetsFuitesOuEmissionsNonEnergetiques]: [EmissionSourceCaracterisation.Operated],
   [SubPost.EauxUsees]: [EmissionSourceCaracterisation.Operated],
+  [SubPost.AutresDechets]: [EmissionSourceCaracterisation.Operated],
   [SubPost.FretEntrant]: [
     EmissionSourceCaracterisation.Operated,
     EmissionSourceCaracterisation.NotOperatedSupported,

@@ -717,6 +717,7 @@
       "DechetsBatiments": "Materials waste",
       "DechetsFuitesOuEmissionsNonEnergetiques": "Leaks or non-energy emissions waste",
       "EauxUsees": "Wastewater",
+      "AutresDechets": "Other waste",
       "FretEntrant": "Incoming freight",
       "FretInterne": "Internal freight",
       "FretSortant": "Outgoing freight",

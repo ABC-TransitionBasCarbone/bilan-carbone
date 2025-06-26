@@ -60,6 +60,7 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
     SubPost.DechetsBatiments,
     SubPost.DechetsFuitesOuEmissionsNonEnergetiques,
     SubPost.EauxUsees,
+    SubPost.AutresDechets,
   ],
   [Post.Fret]: [SubPost.FretEntrant, SubPost.FretInterne, SubPost.FretSortant],
   [Post.Deplacements]: [

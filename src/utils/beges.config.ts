@@ -655,6 +655,7 @@ export const begesRules = [
   { subPost: SubPost.DechetsBatiments, operated: '4.3', held: '4.3' },
   { subPost: SubPost.DechetsFuitesOuEmissionsNonEnergetiques, operated: '4.3', held: '4.3' },
   { subPost: SubPost.EauxUsees, operated: '4.3', held: '4.3' },
+  { subPost: SubPost.AutresDechets, operated: '4.3', held: '4.3' },
   {
     subPost: SubPost.UtilisationEnResponsabilite,
     rented: '5.2',
