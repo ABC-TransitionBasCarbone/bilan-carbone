@@ -81,14 +81,6 @@ export const updateEmissionSource = async ({
       getEmissionSourceById(emissionSourceId),
       emissionFactorId ? getEmissionFactorById(emissionFactorId) : undefined,
     ])
-    console.log('updateEmissionSource', {
-      emissionSourceId,
-      emissionFactorId,
-      command,
-      account,
-      emissionSource,
-      emissionFactor,
-    })
     if (!account || !emissionSource) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -124,15 +116,15 @@ export const updateEmissionSource = async ({
       ...command,
       ...(emissionFactorId !== undefined
         ? {
-            ...(emissionFactorId
-              ? { emissionFactor: { connect: { id: emissionFactorId } } }
-              : { emissionFactor: { disconnect: true } }),
-            feReliability: null,
-            feTechnicalRepresentativeness: null,
-            feGeographicRepresentativeness: null,
-            feTemporalRepresentativeness: null,
-            feCompleteness: null,
-          }
+          ...(emissionFactorId
+            ? { emissionFactor: { connect: { id: emissionFactorId } } }
+            : { emissionFactor: { disconnect: true } }),
+          feReliability: null,
+          feTechnicalRepresentativeness: null,
+          feGeographicRepresentativeness: null,
+          feTemporalRepresentativeness: null,
+          feCompleteness: null,
+        }
         : {}),
     }
 
