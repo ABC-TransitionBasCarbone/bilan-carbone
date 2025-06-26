@@ -71,12 +71,6 @@ const BaseStudyValidation = z.object({
   realizationEndDate: optionalDateValidation('endDate'),
   level: z.nativeEnum(Level, { required_error: 'level' }),
   isPublic: z.string(),
-  resultsUnit: z.nativeEnum(StudyResultUnit).optional(),
-  numberOfSessions: z.number().optional(),
-  numberOfTickets: z.number().optional(),
-  numberOfOpenDays: z.number().optional(),
-  openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
-  openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
 })
 
 export const CreateStudyCommandValidation = z

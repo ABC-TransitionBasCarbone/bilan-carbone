@@ -72,6 +72,7 @@ import {
   Prisma,
   Role,
   StudyEmissionSource,
+  StudyResultUnit,
   StudyRole,
   SubPost,
   UserChecklist,
@@ -153,7 +154,10 @@ export const getStudySite = async (studySiteId: string) =>
     return study.sites.find((site) => site.id === studySiteId)
   })
 
-export const createStudyCommand = async ({ organizationVersionId, validator, sites, ...command }: CreateStudyCommand) =>
+export const createStudyCommand = async (
+  { organizationVersionId, validator, sites, ...command }: CreateStudyCommand,
+  resultsUnit?: StudyResultUnit,
+) =>
   withServerResponse('createStudyCommand', async () => {
     const session = await dbActualizedAuth()
 
@@ -213,6 +217,7 @@ export const createStudyCommand = async ({ organizationVersionId, validator, sit
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
       isPublic: command.isPublic === 'true',
+      resultsUnit: resultsUnit || StudyResultUnit.T,
       allowedUsers: {
         createMany: { data: rights },
       },
@@ -1009,7 +1014,7 @@ export const duplicateStudyCommand = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const createResult = await createStudyCommand(studyCommand)
+    const createResult = await createStudyCommand(studyCommand, sourceStudy.resultsUnit)
     if (!createResult.success) {
       throw new Error(createResult.errorMessage || 'Failed to create study')
     }
@@ -1029,8 +1034,8 @@ export const duplicateStudyCommand = async (
 
     const sourceEmissionSources = sourceStudy.emissionSources
     for (const sourceEmissionSource of sourceEmissionSources) {
-      const sourceSiteName = sourceEmissionSource.studySite.site.name
-      const targetStudySite = createdStudyWithSites.sites.find((studySite) => studySite.site.name === sourceSiteName)
+      const sourceSiteId = sourceEmissionSource.studySite.site.id
+      const targetStudySite = createdStudyWithSites.sites.find((studySite) => studySite.site.id === sourceSiteId)
       const targetStudySiteId = studySites.find((site) => targetStudySite && site.id === targetStudySite.id)?.id
 
       if (targetStudySiteId) {
