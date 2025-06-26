@@ -16,7 +16,7 @@ const UnitCommon = {
   KG: Unit.KG,
 }
 
-export const UnitForBC = {
+export const BCUnit = {
   A4_SHEET_100: Unit.A4_SHEET_100,
   KM_100: Unit.KM_100,
   ACTIVE: Unit.ACTIVE,
@@ -162,11 +162,11 @@ export const UnitForBC = {
   ...UnitCommon,
 }
 
-export const UnitForCut = {
+export const CUTUnit = {
   MOVIES: Unit.MOVIES,
   PERSON: Unit.PERSON,
   ...UnitCommon,
 }
 
-export type UnitForBC = (typeof UnitForBC)[keyof typeof UnitForBC]
-export type UnitForCut = (typeof UnitForCut)[keyof typeof UnitForCut]
+export type BCUnit = (typeof BCUnit)[keyof typeof BCUnit]
+export type CUTUnit = (typeof CUTUnit)[keyof typeof CUTUnit]

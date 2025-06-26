@@ -3,7 +3,7 @@
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { BCPost, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
-import { UnitForBC } from '@/services/unit'
+import { BCUnit } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
@@ -93,7 +93,7 @@ interface Props {
   userOrganizationId?: string | null
 }
 
-const initialSelectedUnits: (UnitForBC | string)[] = [...['all'], ...Object.values(UnitForBC)]
+const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
 const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
 
 const EmissionFactorsTable = ({
@@ -181,7 +181,7 @@ const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === UnitForBC.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}`,
+          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === BCUnit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),

@@ -8,9 +8,9 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import QualitySelectGroup from '@/components/study/QualitySelectGroup'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { qualityKeys, specificFEQualityKeys } from '@/services/uncertainty'
+import { BCUnit } from '@/services/unit'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
-import { Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -108,9 +108,9 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
             name="unit"
             fullWidth
           >
-            <MenuItem value={Unit.CUSTOM}>{tUnit(Unit.CUSTOM)}</MenuItem>
+            <MenuItem value={BCUnit.CUSTOM}>{tUnit(BCUnit.CUSTOM)}</MenuItem>
             {units
-              .filter((unit) => unit !== Unit.CUSTOM)
+              .filter((unit) => unit !== BCUnit.CUSTOM)
               .map((unit) => (
                 <MenuItem key={unit} value={unit}>
                   {tUnit(unit)}
@@ -118,7 +118,7 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
               ))}
           </FormSelect>
         </div>
-        {unit === Unit.CUSTOM && (
+        {unit === BCUnit.CUSTOM && (
           <>
             <div className="grow">
               <FormTextField

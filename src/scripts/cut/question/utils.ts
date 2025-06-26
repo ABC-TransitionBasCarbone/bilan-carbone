@@ -1,3 +1,4 @@
+import { CUTUnit } from '@/services/unit'
 import { Prisma, QuestionType, SubPost, Unit } from '@prisma/client'
 
 export enum HEADERS {
@@ -23,7 +24,7 @@ export interface Header {
   [HEADERS.SUB_POST]: string
   [HEADERS.TITRE]: string
   [HEADERS.TYPE]: string
-  [HEADERS.UNIT]: Unit
+  [HEADERS.UNIT]: CUTUnit
 }
 
 export const isValidEnumValue = <T extends Record<string, string>>(enumObj: T, value: string): value is T[keyof T] => {
@@ -106,6 +107,7 @@ export function validateRow(
   }
 
   if (!isValidEnumValue(QuestionType, type)) {
+    console.debug({ QuestionType, type })
     return { error: `(ligne ${line}) Type invalide "${type}", pour question "${label}"` }
   }
 
