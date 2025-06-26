@@ -26,9 +26,8 @@ export const saveAnswerForQuestion = async (
       throw new Error('Not authorized')
     }
 
-    const { emissionFactorImportedId, depreciationPeriod, previousQuestionInternId } = getEmissionFactorByIdIntern(
-      question.idIntern,
-    ) || {}
+    const { emissionFactorImportedId, depreciationPeriod, previousQuestionInternId } =
+      getEmissionFactorByIdIntern(question.idIntern) || {}
     let emissionFactorId = undefined
 
     if (!emissionFactorImportedId && !depreciationPeriod) {
