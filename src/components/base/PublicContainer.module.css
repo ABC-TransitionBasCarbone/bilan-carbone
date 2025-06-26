@@ -8,4 +8,5 @@
   max-width: 62rem;
   max-height: calc(100% - 2rem);
   overflow-y: auto;
+  border-radius: 1rem;
 }

@@ -184,6 +184,14 @@
       "siretOrCNC": "Veuillez entrer un Siret/CNC"
     }
   },
+  "footer": {
+    "message": {
+      "0": "",
+      "1": "",
+      "2": "",
+      "3": ""
+    }
+  },
   "navigation": {
     "factors": "Facteurs d'émission",
     "fe": "FE",

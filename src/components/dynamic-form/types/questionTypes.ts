@@ -20,14 +20,16 @@ export enum FieldType {
   DATE = 'DATE',
   YEAR = 'YEAR',
   TITLE = 'TITLE',
+  QCM = 'QCM',
+  QCU = 'QCU',
 }
 
 export const QUESTION_TYPE_FIELD_MAPPING: Record<QuestionType, FieldType> = {
   [QuestionType.TEXT]: FieldType.TEXT,
   [QuestionType.NUMBER]: FieldType.NUMBER,
   [QuestionType.SELECT]: FieldType.SELECT,
-  [QuestionType.QCM]: FieldType.SELECT, // TODO: change when QCM is implemented
-  [QuestionType.QCU]: FieldType.SELECT, // TODO: change when QCU is implemented
+  [QuestionType.QCM]: FieldType.QCM,
+  [QuestionType.QCU]: FieldType.QCU,
   [QuestionType.TABLE]: FieldType.TEXT, // TODO: change when table selector is implemented
   [QuestionType.POSTAL_CODE]: FieldType.NUMBER,
   [QuestionType.DATE]: FieldType.DATE,
