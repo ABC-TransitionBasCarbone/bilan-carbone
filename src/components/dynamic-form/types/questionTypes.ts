@@ -19,6 +19,7 @@ export enum FieldType {
   SELECT_FE = 'SELECT_FE',
   DATE = 'DATE',
   YEAR = 'YEAR',
+  TITLE = 'TITLE',
 }
 
 export const QUESTION_TYPE_FIELD_MAPPING: Record<QuestionType, FieldType> = {
@@ -33,4 +34,5 @@ export const QUESTION_TYPE_FIELD_MAPPING: Record<QuestionType, FieldType> = {
   [QuestionType.RANGE]: FieldType.TEXT, // TODO: change when range selector is implemented
   [QuestionType.PHONE]: FieldType.TEXT,
   [QuestionType.SELECT_FE]: FieldType.SELECT_FE,
+  [QuestionType.TITLE]: FieldType.TITLE,
 }
