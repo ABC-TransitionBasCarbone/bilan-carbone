@@ -22,12 +22,10 @@ export const hasStudyBasicRights = async (account: AccountWithUser, study: FullS
   return false
 }
 
-const canCreateEmissionSourceCommon = async (
-  account: AccountWithUser,
-  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
-    emissionFactorId?: string | null
-  },
-) => {
+type PartialStudyEmissionSource = Pick<StudyEmissionSource, 'studyId' | 'studySiteId'> & {
+  emissionFactorId?: string | null
+}
+const canCreateEmissionSourceCommon = async (account: AccountWithUser, emissionSource: PartialStudyEmissionSource) => {
   const study = await getStudyById(emissionSource.studyId, account.organizationVersionId)
   if (!study) {
     return { allowed: false }
@@ -41,12 +39,7 @@ const canCreateEmissionSourceCommon = async (
   return { allowed: true, study }
 }
 
-const canCreateEmissionSourceBC = async (
-  account: AccountWithUser,
-  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
-    emissionFactorId?: string | null
-  },
-) => {
+const canCreateEmissionSourceBC = async (account: AccountWithUser, emissionSource: PartialStudyEmissionSource) => {
   const { allowed, study } = await canCreateEmissionSourceCommon(account, emissionSource)
   if (!allowed || !study) {
     return false
@@ -55,12 +48,7 @@ const canCreateEmissionSourceBC = async (
   return hasStudyBasicRights(account, study)
 }
 
-const canCreateEmissionSourceCUT = async (
-  account: AccountWithUser,
-  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
-    emissionFactorId?: string | null
-  },
-) => {
+const canCreateEmissionSourceCUT = async (account: AccountWithUser, emissionSource: PartialStudyEmissionSource) => {
   const { allowed, study } = await canCreateEmissionSourceCommon(account, emissionSource)
   if (!allowed || !study) {
     return false
@@ -73,12 +61,7 @@ const canCreateEmissionSourceCUT = async (
   return true
 }
 
-export const canCreateEmissionSource = async (
-  account: AccountWithUser,
-  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
-    emissionFactorId?: string | null
-  },
-) => {
+export const canCreateEmissionSource = async (account: AccountWithUser, emissionSource: PartialStudyEmissionSource) => {
   switch (account.environment) {
     case 'BC':
       return canCreateEmissionSourceBC(account, emissionSource)
