@@ -33,6 +33,7 @@ interface Study {
   name: string
   startDate: Date | string
   endDate: Date | string
+  organizationVersionId?: string | null
 }
 
 interface StudySite {
@@ -76,20 +77,29 @@ const parseStudies = async (
 ): Promise<Study[]> => {
   const relevantStudies = studiesWorksheet.getRows().filter((row) => row.name)
 
-  const organizationStudies = await transaction.organization.findMany({
-    where: { oldBCId: { in: relevantStudies.map((row) => row.oldBCId as string) } },
-    select: { oldBCId: true, organizationVersions: true },
+  const studiesSites = await transaction.site.findMany({
+    where: { oldBCId: { in: relevantStudies.map((row) => row.siteId as string) } },
+    select: { organizationId: true },
+  })
+
+  const studiesOrganizations = await transaction.organization.findMany({
+    where: { id: { in: studiesSites.map((site) => site.organizationId) } },
+    select: {
+      oldBCId: true,
+      organizationVersions: true,
+      sites: true,
+    },
   })
 
   return relevantStudies.map((row) => {
-    const studyOrga = organizationStudies.find((org) => org.oldBCId === row.oldBCId)
+    const studyOrga = studiesOrganizations.find((org) => org.sites.some((site) => site.oldBCId === row.siteId))
 
     return {
       oldBCId: row.oldBCId as string,
       name: row.name as string,
       startDate: row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : '',
       endDate: row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : '',
-      organizationVersionid: studyOrga?.organizationVersions.find((orgVer) => orgVer.environment === Environment.BC)
+      organizationVersionId: studyOrga?.organizationVersions.find((orgVer) => orgVer.environment === Environment.BC)
         ?.id,
     }
   })
@@ -480,7 +490,7 @@ export const uploadStudies = async (
       createdById: accountId,
       isPublic: false,
       level: Level.Initial,
-      organizationVersionId: organizationVersionId,
+      organizationVersionId: study.organizationVersionId ?? organizationVersionId,
     })),
   })
 
