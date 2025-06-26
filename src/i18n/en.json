@@ -184,6 +184,14 @@
       "siretOrCNC": "Please enter a Siret/CNC number"
     }
   },
+  "footer": {
+    "message": {
+      "0": "",
+      "1": "",
+      "2": "",
+      "3": ""
+    }
+  },
   "navigation": {
     "factors": "Emission factors",
     "fe": "EF",

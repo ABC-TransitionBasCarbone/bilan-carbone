@@ -13,6 +13,14 @@
       "3": "Construire une trajectoire de réduction"
     }
   },
+  "footer": {
+    "message": {
+      "0": "Cet outil a été développé par l'Association",
+      "1": "En coopération avec l'ABC, <br></br> Association pour la transition Bas Carbone",
+      "2": "Opération soutenue par l'État dans le cadre du <br></br> dispositif « Soutenir les alternatives vertes 2 » <br></br> de France 2030, opéré par la Banque des <br></br> territoires (Caisse des Dépôts)",
+      "3": "CUT! bénéficie du soutien du CNC"
+    }
+  },
   "study": {
     "create": "Ajouter un Bilan",
     "myCollaborations": "Mes collaborations",
