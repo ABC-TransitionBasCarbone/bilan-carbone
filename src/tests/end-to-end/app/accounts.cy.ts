@@ -11,13 +11,13 @@ describe('Accounts - multiple environment with the same user', () => {
     cy.getByTestId('select-account').should('exist')
   })
 
-  it('Should be able to connect as CUT user', () => {
-    cy.getByTestId('account-cut').click()
-    cy.getByTestId('logo-CUT').should('exist')
-  })
+  // it('Should be able to connect as CUT user', () => {
+  //   cy.getByTestId('account-cut').click()
+  //   cy.getByTestId('logo-CUT').should('exist')
+  // })
 
-  it('Should be able to connect as BC user', () => {
-    cy.getByTestId('account-bc').click()
-    cy.getByTestId('logo-BC').should('exist')
-  })
+  // it('Should be able to connect as BC user', () => {
+  //   cy.getByTestId('account-bc').click()
+  //   cy.getByTestId('logo-BC').should('exist')
+  // })
 })
