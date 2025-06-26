@@ -70,7 +70,6 @@ export const uploadOldBCInformations = async (
       transaction,
       oldBCWorksheetsReader.organizationsWorksheet,
       accountOrganizationVersion,
-      false,
     )
     hasEmissionFactorsWarning = await uploadEmissionFactors(
       transaction,
