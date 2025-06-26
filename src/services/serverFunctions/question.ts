@@ -29,8 +29,9 @@ export const saveAnswerForQuestion = async (
     const { emissionFactorImportedId, depreciationPeriod, previousQuestionInternId } = getEmissionFactorByIdIntern(
       question.idIntern,
     )
+    let emissionFactorId = undefined
 
-    if (!emissionFactorImportedId || !depreciationPeriod) {
+    if (!emissionFactorImportedId && !depreciationPeriod) {
       return saveAnswer(question.id, studySiteId, response, emissionSourceId)
     }
 
@@ -43,12 +44,14 @@ export const saveAnswerForQuestion = async (
       emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
     }
 
-    const emissionFactor = await findEmissionFactorByImportedId(emissionFactorImportedId)
-
-    if (!emissionFactor) {
-      throw new Error(`Emission factor not found for importedId: ${emissionFactorImportedId}`)
+    if (emissionFactorImportedId) {
+      const emissionFactor = await findEmissionFactorByImportedId(emissionFactorImportedId)
+      if (!emissionFactor) {
+        throw new Error(`Emission factor not found for importedId: ${emissionFactorImportedId}`)
+      }
+      emissionFactorId = emissionFactor.id
     }
-    const emissionFactorId = emissionFactor.id
+
     const value = depreciationPeriod ? undefined : Number(response)
 
     if (emissionSourceId) {
@@ -74,6 +77,8 @@ export const saveAnswerForQuestion = async (
       }
     }
 
+    console.log('Saving answer for question:', question.id, 'with emissionSourceId:', emissionSourceId)
+
     return saveAnswer(question.id, studySiteId, response, emissionSourceId)
   })
 
@@ -92,22 +97,20 @@ export const getQuestionsWithAnswers = async (subPost: SubPost, studySiteId: str
     return { questions, answers }
   })
 
-const getEmissionFactorByIdIntern = (idIntern: string) =>
-  emissionFactorMap[idIntern] ?? { emissionFactorImportedId: undefined, depreciationPeriod: undefined }
+type EmissionFactorInfo = {
+  emissionFactorImportedId?: string | undefined
+  depreciationPeriod?: number
+  previousQuestionInternId?: string
+}
 
-const emissionFactorMap: Record<
-  string,
-  { emissionFactorImportedId?: string; depreciationPeriod?: number; previousQuestionInternId?: string }
-> = {
+const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // Fonctionnement	Bâtiment
   'quelle-est-la-surface-plancher-du-cinema': { emissionFactorImportedId: '15591' },
   'quand-le-batiment-a-t-il-ete-construit': {
-    emissionFactorImportedId: '15591',
     depreciationPeriod: 50,
     previousQuestionInternId: 'quelle-est-la-surface-plancher-du-cinema',
   },
   'a-quand-remonte-la-derniere-renovation-importante': {
-    emissionFactorImportedId: '15591',
     depreciationPeriod: 10,
     previousQuestionInternId: 'quelle-est-la-surface-plancher-du-cinema',
   },
@@ -116,3 +119,5 @@ const emissionFactorMap: Record<
   'quelles-etaient-les-consommations-energetiques-du-cinema': { emissionFactorImportedId: '15591' },
   'quelle-est-votre-consommation-annuelle-de-diesel': { emissionFactorImportedId: '14015' },
 }
+
+const getEmissionFactorByIdIntern = (idIntern: string): EmissionFactorInfo => emissionFactorMap[idIntern]
