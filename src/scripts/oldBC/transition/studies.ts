@@ -236,8 +236,8 @@ const parseEmissionSources = (
   postAndSubPostsOldNewMapping: OldNewPostAndSubPostsMapping,
   studyEmissionSourcesWorkSheet: EmissionSourceRow[],
   emissionFactorsNames: Map<string, { name: string; id: string }>,
-): [Map<string, EmissionSource[]>, boolean] => {
-  const error = false
+): [Map<string, EmissionSource[]>, { oldPost: string; reason: string }[]] => {
+  const skippedEmissionSource: { oldPost: string; reason: string }[] = []
   const emissionsSources = studyEmissionSourcesWorkSheet
     .map<[string, EmissionSource] | null>((row) => {
       if (row.siteOldBCId === '00000000-0000-0000-0000-000000000000') {
@@ -253,12 +253,17 @@ const parseEmissionSources = (
       })
       const name = buildEmissionSourceName(row, emissionFactorsNames, newPostAndSubPost)
       let subPost
+
       try {
         subPost = mapToSubPost(newPostAndSubPost.newSubPost)
       } catch (e) {
-        // console.warn("l'émission n'a pas été créée", e)
+        skippedEmissionSource.push({
+          oldPost: `${row.domain} ${row.category} ${row.subCategory} ${row.post} ${row.subPost}`,
+          reason: `Sous poste invalide ${subPost}`,
+        })
         return null
       }
+
       const incertitudeDA = getEmissionQuality((row.incertitudeDA as number) * 100)
       return [
         row.studyOldBCId as string,
@@ -294,7 +299,7 @@ const parseEmissionSources = (
       return accumulator
     }, new Map<string, EmissionSource[]>())
 
-  return [emissionsSources, error]
+  return [emissionsSources, skippedEmissionSource]
 }
 
 const getExistingStudies = async (
@@ -444,7 +449,7 @@ export const uploadStudies = async (
   console.log('Import des études...')
 
   const skippedInfos: { oldBcId: string; reason: string }[] = []
-  const emissionSourceWithtoutFe: { oldBcId: string; name: string; manual: boolean }[] = []
+  const emissionSourceWithoutFe: { oldBcId: string; name: string; manual: boolean }[] = []
 
   const studies = await parseStudies(transaction, oldBCWorksheetReader.studiesWorksheet)
   const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
@@ -459,15 +464,11 @@ export const uploadStudies = async (
     .slice(1)
     .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
 
-  const [studyEmissionSources, error] = parseEmissionSources(
+  const [studyEmissionSources, skippedEmissionSource] = parseEmissionSources(
     postAndSubPostsOldNewMapping,
     studyEmissionSourcesWorksheet,
     existingEmissionFactorNames,
   )
-
-  // if (error) {
-  //   throw new Error("Certaines sources d'émissions sont en erreurs, on arrête tout.")
-  // }
 
   const alreadyImportedStudyIds = await transaction.study.findMany({
     where: {
@@ -685,7 +686,7 @@ export const uploadStudies = async (
             }
 
             if (!emissionFactorId) {
-              emissionSourceWithtoutFe.push({
+              emissionSourceWithoutFe.push({
                 oldBcId: studyOldBCId,
                 name: studyEmissionSource.name,
                 manual: studyEmissionSource.emissionFactorImportedId === '0',
@@ -794,7 +795,12 @@ export const uploadStudies = async (
   console.log(`Création de ${createdStudyFEVersion.count} versions de facteurs d'émissions.`)
 
   console.log('skippedInfos', JSON.stringify(skippedInfos))
-  console.log('emissionSourceWithtoutFe', JSON.stringify(emissionSourceWithtoutFe))
+  console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
+  console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
+  console.log(
+    'emissionSourceWithoutFe',
+    JSON.stringify(emissionSourceWithoutFe.map((e) => ({ studyOld: e.oldBcId, name: e.name }))),
+  )
 
   return false
 }
