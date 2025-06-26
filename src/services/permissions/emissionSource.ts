@@ -96,7 +96,7 @@ export const canUpdateEmissionSource = async (
 
   if (
     change.depreciationPeriod &&
-    ![...subPostsByPost[Post.Immobilisations], SubPost.Electromenager, SubPost.Batiment].includes(
+    ![...subPostsByPost[Post.Immobilisations]].includes(
       emissionSource.subPost,
     )
   ) {
