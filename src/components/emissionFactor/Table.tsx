@@ -3,6 +3,7 @@
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { BCPost, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { BCUnit } from '@/services/unit'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
@@ -29,14 +30,7 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import {
-  EmissionFactorImportVersion,
-  EmissionFactorStatus,
-  Import,
-  StudyResultUnit,
-  SubPost,
-  Unit,
-} from '@prisma/client'
+import { EmissionFactorImportVersion, EmissionFactorStatus, Import, StudyResultUnit, SubPost } from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -99,7 +93,7 @@ interface Props {
   userOrganizationId?: string | null
 }
 
-const initialSelectedUnits: (Unit | string)[] = [...['all'], ...Object.values(Unit)]
+const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
 const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
 
 const EmissionFactorsTable = ({
@@ -187,7 +181,7 @@ const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === Unit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}`,
+          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === BCUnit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),

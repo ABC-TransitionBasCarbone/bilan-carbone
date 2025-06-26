@@ -2,9 +2,10 @@ import { gazKeys } from '@/constants/emissions'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getQualityRating, qualityKeys } from '@/services/uncertainty'
+import { BCUnit } from '@/services/unit'
 import ShrinkIcon from '@mui/icons-material/ZoomInMap'
 import ExpandIcon from '@mui/icons-material/ZoomOutMap'
-import { Import, StudyResultUnit, SubPost, Unit } from '@prisma/client'
+import { Import, StudyResultUnit, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Fragment, useMemo, useState } from 'react'
@@ -91,7 +92,8 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
         <div className={classNames(styles.info, styles.list, 'flex')}>
           {gases.map((gaz) => (
             <div key={gaz}>
-              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}/{tUnits(emissionFactor.unit || Unit.KG)}
+              {t(gaz)} {emissionFactor[gaz]} {tResultUnits(StudyResultUnit.K)}/
+              {tUnits(emissionFactor.unit || BCUnit.KG)}
             </div>
           ))}
         </div>

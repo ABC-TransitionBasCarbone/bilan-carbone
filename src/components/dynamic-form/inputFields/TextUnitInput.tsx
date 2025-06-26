@@ -33,7 +33,7 @@ const TextUnitInput = ({
     (question.type === QuestionType.NUMBER || question.type === QuestionType.POSTAL_CODE
       ? getNumberInputFormat(question.type)
       : getTextInputFormat(question.type))
-  const questionUnit = unit || question.unite
+  const questionUnit = unit || question.unit
 
   const handleChange = useCallback(
     (newValue: string) => {

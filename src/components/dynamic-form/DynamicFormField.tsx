@@ -69,7 +69,7 @@ const DynamicFormField = ({
     }
   }, [watch, fieldName, debouncedSave])
 
-  const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unite), [question.type, question.unite])
+  const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unit), [question.type, question.unit])
 
   const baseInputProps = useMemo(() => {
     const label = getQuestionLabel(question.type, tFormat)

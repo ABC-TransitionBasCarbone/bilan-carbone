@@ -5,7 +5,7 @@ model Question {
   order           Int          @default(autoincrement())
   subPost         SubPost      @map("sub_post")
   type            QuestionType
-  unite           String
+  unit            Unit?
   possibleAnswers String[]     @map("possible_answers")
   userAnswers     Answer[]
   required        Boolean
@@ -17,6 +17,7 @@ enum QuestionType {
   QCM
   QCU
   SELECT
+  SELECT_FE
   TABLE
   POSTAL_CODE
   DATE
@@ -24,6 +25,7 @@ enum QuestionType {
   RANGE
   PHONE
   TEXT
+  TITLE
 }
 
 model Answer {
