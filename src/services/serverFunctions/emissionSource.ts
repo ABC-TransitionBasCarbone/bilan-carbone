@@ -81,6 +81,14 @@ export const updateEmissionSource = async ({
       getEmissionSourceById(emissionSourceId),
       emissionFactorId ? getEmissionFactorById(emissionFactorId) : undefined,
     ])
+    console.log('updateEmissionSource', {
+      emissionSourceId,
+      emissionFactorId,
+      command,
+      account,
+      emissionSource,
+      emissionFactor,
+    })
     if (!account || !emissionSource) {
       throw new Error(NOT_AUTHORIZED)
     }
