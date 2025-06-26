@@ -6,6 +6,7 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { Prisma, Question, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
+import { de } from '@faker-js/faker'
 
 export const saveAnswerForQuestion = async (
   question: Question,
@@ -22,7 +23,7 @@ export const saveAnswerForQuestion = async (
 
     const { emissionFactorImportedId, depreciationPeriod } = getEmissionFactorByIdIntern(question.idIntern)
 
-    if (!emissionFactorImportedId) {
+    if (!emissionFactorImportedId || !depreciationPeriod) {
       return saveAnswer(question.id, studySiteId, response, emissionSourceId)
     }
 
@@ -31,10 +32,11 @@ export const saveAnswerForQuestion = async (
       throw new Error(`Emission factor not found for importedId: ${emissionFactorImportedId}`)
     }
     const emissionFactorId = emissionFactor.id
+    const value = depreciationPeriod ? undefined : Number(response)
 
     if (emissionSourceId) {
       await updateEmissionSource({
-        value: Number(response),
+        value,
         emissionSourceId,
         emissionFactorId,
         depreciationPeriod,
@@ -43,7 +45,7 @@ export const saveAnswerForQuestion = async (
       const emissionSource = await createEmissionSource({
         studyId,
         studySiteId,
-        value: Number(response),
+        value,
         name: question.idIntern,
         subPost: question.subPost,
         depreciationPeriod,
@@ -77,11 +79,12 @@ const getEmissionFactorByIdIntern = (idIntern: string) =>
   emissionFactorMap[idIntern] ?? { emissionFactorImportedId: undefined, depreciationPeriod: undefined }
 
 const emissionFactorMap: Record<string, { emissionFactorImportedId?: string; depreciationPeriod?: number }> = {
-  // Bâtiment
+  // Fonctionnement	Bâtiment
   'quelle-est-la-surface-plancher-du-cinema': { emissionFactorImportedId: '15591' },
-  'quand-le-batiment-a-t-il-ete-construit': { depreciationPeriod: 50 },
+  'quand-le-batiment-a-t-il-ete-construit': { emissionFactorImportedId: '15591', depreciationPeriod: 50 },
+  'a-quand-remonte-la-derniere-renovation-importante': { emissionFactorImportedId: '15591', depreciationPeriod: 10 },
 
-  // Energie
+  // Fonctionnement	Energie
   'quelles-etaient-les-consommations-energetiques-du-cinema': { emissionFactorImportedId: '15591' },
   'quelle-est-votre-consommation-annuelle-de-diesel': { emissionFactorImportedId: '14015' },
 }
