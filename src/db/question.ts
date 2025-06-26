@@ -45,7 +45,7 @@ export const saveAnswer = async (
     },
     update: {
       response,
-      emissionSourceId
+      emissionSourceId,
     },
     create: {
       questionId,

@@ -28,12 +28,7 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
   const [fieldStatuses, setFieldStatuses] = useState<Record<string, FieldSaveStatus>>({})
 
   const saveAnswer = useCallback(async (request: SaveAnswerRequest) => {
-    return saveAnswerForQuestion(
-      request.question,
-      request.response,
-      studyId,
-      studySiteId
-    )
+    return saveAnswerForQuestion(request.question, request.response, studyId, studySiteId)
   }, [])
 
   const updateFieldStatus = useCallback((questionId: string, status: Partial<FieldSaveStatus>) => {
