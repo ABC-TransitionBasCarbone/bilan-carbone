@@ -4,7 +4,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById, getStudySites } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import { StudyEmissionSource, StudyRole, SubPost } from '@prisma/client'
+import { StudyEmissionSource, StudyRole } from '@prisma/client'
 import { canBeValidated } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 import { canReadStudy, isAdminOnStudyOrga } from './study'
@@ -94,12 +94,7 @@ export const canUpdateEmissionSource = async (
     }
   }
 
-  if (
-    change.depreciationPeriod &&
-    ![...subPostsByPost[Post.Immobilisations]].includes(
-      emissionSource.subPost,
-    )
-  ) {
+  if (change.depreciationPeriod && ![...subPostsByPost[Post.Immobilisations]].includes(emissionSource.subPost)) {
     return false
   }
 
