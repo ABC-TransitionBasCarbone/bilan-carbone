@@ -6,6 +6,7 @@ import { Controller, FieldErrors, UseFormWatch } from 'react-hook-form'
 import { UseAutoSaveReturn } from '../../hooks/useAutoSave'
 import DatePickerInput from './inputFields/DatePickerInput'
 import QCMInput from './inputFields/QCMInput'
+import QCUInput from './inputFields/QCUInput'
 import SelectInput from './inputFields/SelectInput'
 import TextUnitInput from './inputFields/TextUnitInput'
 import YearPickerInput from './inputFields/YearPickerInput'
@@ -94,6 +95,8 @@ const DynamicFormField = ({
           return SelectInput
         case FieldType.QCM:
           return QCMInput
+        case FieldType.QCU:
+          return QCUInput
         default:
           console.warn(`Unsupported question type: ${question.type} (mapped to: ${fieldType})`)
           return TextUnitInput
