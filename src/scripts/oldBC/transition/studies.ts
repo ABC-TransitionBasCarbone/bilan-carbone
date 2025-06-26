@@ -3,6 +3,7 @@ import {
   ControlMode,
   EmissionFactorImportVersion,
   EmissionFactor as EmissionFactorPrismaModel,
+  Environment,
   Import,
   Level,
   Prisma,
@@ -69,16 +70,29 @@ interface EmissionFactor {
   emissionFactorConsoValue: number | null
 }
 
-const parseStudies = (studiesWorksheet: StudiesWorkSheet): Study[] => {
-  return studiesWorksheet
-    .getRows()
-    .filter((row) => row.name)
-    .map((row) => ({
+const parseStudies = async (
+  transaction: Prisma.TransactionClient,
+  studiesWorksheet: StudiesWorkSheet,
+): Promise<Study[]> => {
+  const relevantStudies = studiesWorksheet.getRows().filter((row) => row.name)
+
+  const organizationStudies = await transaction.organization.findMany({
+    where: { oldBCId: { in: relevantStudies.map((row) => row.oldBCId as string) } },
+    select: { oldBCId: true, organizationVersions: true },
+  })
+
+  return relevantStudies.map((row) => {
+    const studyOrga = organizationStudies.find((org) => org.oldBCId === row.oldBCId)
+
+    return {
       oldBCId: row.oldBCId as string,
       name: row.name as string,
       startDate: row.startDate ? new Date(getJsDateFromExcel(row.startDate as number)) : '',
       endDate: row.endDate ? new Date(getJsDateFromExcel(row.endDate as number)) : '',
-    }))
+      organizationVersionid: studyOrga?.organizationVersions.find((orgVer) => orgVer.environment === Environment.BC)
+        ?.id,
+    }
+  })
 }
 
 const parseStudySites = (studySitesWorksheet: StudySitesWorkSheet): Map<string, StudySite[]> => {
@@ -409,7 +423,7 @@ export const uploadStudies = async (
   const skippedInfos: { oldBcId: string; reason: string }[] = []
   const emissionSourceWithtoutFe: { oldBcId: string; name: string; manual: boolean }[] = []
 
-  const studies = parseStudies(oldBCWorksheetReader.studiesWorksheet)
+  const studies = await parseStudies(transaction, oldBCWorksheetReader.studiesWorksheet)
   const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
   const studyExports = parseStudyExports(oldBCWorksheetReader.studyExportsWorksheet)
   const existingEmissionFactorNames = await getExistingEmissionFactorsNames(
