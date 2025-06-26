@@ -1,5 +1,5 @@
 import { FullStudy } from '@/db/study'
-import { Level, Prisma, Study, StudyResultUnit } from '@prisma/client'
+import { Import, Level, Prisma, Study, StudyResultUnit, StudyRole } from '@prisma/client'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
 import { mockedAccountId, mockedUser } from './user'
 
@@ -146,3 +146,88 @@ export const COMMON_DATES = {
   realizationStartDate: new Date('2024-02-01'),
   realizationEndDate: new Date('2024-11-30'),
 }
+
+export const COMMON_DATES_STR = {
+  startDate: '2024-01-01',
+  endDate: '2024-12-31',
+  realizationStartDate: '2024-02-01',
+  realizationEndDate: '2024-11-30',
+}
+
+export const TEST_IDS = {
+  sourceStudy: 'source-study-id',
+  newStudy: 'new-study-id',
+  orgVersion: 'org-version-id',
+  studySite: 'study-site-id',
+  newStudySite: 'new-study-site-id',
+  site: 'site-id',
+  emissionSource: 'emission-source-id',
+  emissionFactor: 'emission-factor-id',
+  importVersion: 'import-version-id',
+  userStudy: 'user-study-id',
+  contributorStudy: 'contributor-study-id',
+  account: 'account-id',
+}
+
+export const TEST_EMAILS = {
+  currentUser: 'current@example.com',
+  validator: 'validator@example.com',
+  teamMember: 'team@example.com',
+  contributor: 'contributor@example.com',
+}
+
+export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
+  name: 'Duplicated Study',
+  organizationVersionId: TEST_IDS.orgVersion,
+  validator: TEST_EMAILS.validator,
+  isPublic: 'false',
+  level: 'Initial' as const,
+  sites: [],
+  exports: {
+    Beges: false,
+    GHGP: false,
+    ISO14069: false,
+  },
+  ...COMMON_DATES_STR,
+  ...overrides,
+})
+
+export const getMockeFullStudy = (overrides = {}) => ({
+  id: TEST_IDS.sourceStudy,
+  name: 'Source Study',
+  resultsUnit: StudyResultUnit.K,
+  organizationVersionId: TEST_IDS.orgVersion,
+  emissionFactorVersions: [
+    {
+      source: Import.BaseEmpreinte,
+      importVersionId: TEST_IDS.importVersion,
+    },
+  ],
+  emissionSources: [
+    {
+      id: TEST_IDS.emissionSource,
+      name: 'Test Emission Source',
+      value: 100,
+      studySite: {
+        id: TEST_IDS.studySite,
+        site: { id: TEST_IDS.site, name: 'Test Site' },
+      },
+      emissionFactor: { id: TEST_IDS.emissionFactor },
+    },
+  ],
+  allowedUsers: [
+    {
+      id: TEST_IDS.userStudy,
+      account: { user: { email: TEST_EMAILS.teamMember } },
+      role: StudyRole.Editor,
+    },
+  ],
+  contributors: [
+    {
+      id: TEST_IDS.contributorStudy,
+      account: { user: { email: TEST_EMAILS.contributor } },
+      subPost: 'test-subpost',
+    },
+  ],
+  ...overrides,
+})
