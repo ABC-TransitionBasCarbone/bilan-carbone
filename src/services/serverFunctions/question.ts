@@ -18,7 +18,6 @@ export const saveAnswerForQuestion = async (
   response: Prisma.InputJsonValue,
   studyId: string,
   studySiteId: string,
-  emissionSourceId?: string,
 ) =>
   withServerResponse('saveAnswerForQuestion', async () => {
     const session = await dbActualizedAuth()
@@ -29,6 +28,7 @@ export const saveAnswerForQuestion = async (
     const { emissionFactorImportedId, depreciationPeriod, previousQuestionInternId } =
       getEmissionFactorByIdIntern(question.idIntern) || {}
     let emissionFactorId = undefined
+    let emissionSourceId = undefined
 
     if (!emissionFactorImportedId && !depreciationPeriod) {
       return saveAnswer(question.id, studySiteId, response)
@@ -54,6 +54,11 @@ export const saveAnswerForQuestion = async (
 
     const value = depreciationPeriod ? undefined : Number(response)
 
+    const previousAnswer = await getAnswerByQuestionId(question.id)
+    if (previousAnswer && previousAnswer.emissionSourceId) {
+      emissionSourceId = previousAnswer.emissionSourceId
+    }
+
     if (emissionSourceId) {
       await updateEmissionSource({
         value,
@@ -74,6 +79,7 @@ export const saveAnswerForQuestion = async (
 
       if (emissionSource.success && emissionSource.data) {
         emissionSourceId = emissionSource.data.id
+        await updateEmissionSource({ validated: true, emissionSourceId })
       }
     }
 

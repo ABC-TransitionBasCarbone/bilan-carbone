@@ -32,7 +32,7 @@ export const hasStudyBasicRights = async (
   return false
 }
 
-export const canCreateEmissionSource = async (
+const canCreateEmissionSourceBC = async (
   account: AccountWithUser,
   emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
     emissionFactorId?: string | null
@@ -52,7 +52,26 @@ export const canCreateEmissionSource = async (
   return hasStudyBasicRights(account, emissionSource, dbStudy)
 }
 
-export const canUpdateEmissionSource = async (
+const canCreateEmissionSourceCUT = () => true
+
+export const canCreateEmissionSource = async (
+  account: AccountWithUser,
+  emissionSource: Pick<StudyEmissionSource, 'studyId' | 'subPost' | 'studySiteId'> & {
+    emissionFactorId?: string | null
+  },
+  study?: FullStudy,
+) => {
+  switch (account.environment) {
+    case 'BC':
+      return canCreateEmissionSourceBC(account, emissionSource, study)
+    case 'CUT':
+      return canCreateEmissionSourceCUT()
+    default:
+      return false
+  }
+}
+
+const canUpdateEmissionSourceBC = async (
   account: AccountWithUser,
   emissionSource: StudyEmissionSource,
   change: Partial<StudyEmissionSource>,
@@ -99,6 +118,24 @@ export const canUpdateEmissionSource = async (
   }
 
   return true
+}
+
+const canUpdateEmissionSourceCUT = () => true
+
+export const canUpdateEmissionSource = async (
+  account: AccountWithUser,
+  emissionSource: StudyEmissionSource,
+  change: Partial<StudyEmissionSource>,
+  study: FullStudy,
+) => {
+  switch (account.environment) {
+    case 'BC':
+      return canUpdateEmissionSourceBC(account, emissionSource, change, study)
+    case 'CUT':
+      return canUpdateEmissionSourceCUT()
+    default:
+      return false
+  }
 }
 
 export const canDeleteEmissionSource = async (account: AccountWithUser, study: FullStudy) => {
