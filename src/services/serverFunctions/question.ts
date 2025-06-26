@@ -25,8 +25,11 @@ export const saveAnswerForQuestion = async (
     switch (question.idIntern) {
       case 'quelles-etaient-les-consommations-energetiques-du-cinema':
         emissionFactorImportedId = '15591'
+        break
       case 'quelle-est-votre-consommation-annuelle-de-diesel':
         emissionFactorImportedId = '14015'
+        break
+
     }
 
     if (!emissionFactorImportedId) {
