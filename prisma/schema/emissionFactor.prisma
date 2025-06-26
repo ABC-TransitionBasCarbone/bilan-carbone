@@ -69,6 +69,7 @@ enum SubPost {
   DechetsBatiments
   DechetsFuitesOuEmissionsNonEnergetiques
   EauxUsees
+  AutresDechets
 
   //Fret
   FretEntrant
