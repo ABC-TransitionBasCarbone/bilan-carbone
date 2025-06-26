@@ -42,23 +42,11 @@ describe('Home page - ', () => {
       cy.login('cut-env-admin-0@yopmail.com')
     })
 
-    it('Should display the CUT logos block', () => {
-      cy.getByTestId('home-cut-logo').should('exist')
-    })
-
-    it('Should contain République Française logo', () => {
-      cy.getByTestId('home-cut-logo').scrollIntoView()
-      cy.getByTestId('home-cut-logo').find('img[alt="Logo de la république française"]').should('be.visible')
-    })
-
-    it('Should contain France 3 logo', () => {
-      cy.getByTestId('home-cut-logo').scrollIntoView()
-      cy.getByTestId('home-cut-logo').find('img[alt="Logo de france 3"]').should('be.visible')
-    })
-
-    it('Should contain Caisse des dépôts logo', () => {
-      cy.getByTestId('home-cut-logo').scrollIntoView()
-      cy.getByTestId('home-cut-logo').find('img[alt="Logo du groupe la caisse des dépots"]').should('be.visible')
+    it('should display the main title on the home page', () => {
+      cy.getByTestId('title')
+        .should('have.length', 1)
+        .first()
+        .should('contain.text', 'Faire votre bilan d’impact vous permettra de :')
     })
   })
 })
