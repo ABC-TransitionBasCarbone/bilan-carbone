@@ -797,10 +797,7 @@ export const uploadStudies = async (
   console.log('skippedInfos', JSON.stringify(skippedInfos))
   console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
   console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
-  console.log(
-    'emissionSourceWithoutFe',
-    JSON.stringify(emissionSourceWithoutFe.map((e) => ({ studyOld: e.oldBcId, name: e.name }))),
-  )
+  console.log('emissionSourceWithoutFe', JSON.stringify(emissionSourceWithoutFe))
 
   return false
 }
