@@ -287,12 +287,25 @@ const parseEmissionSources = (
   return [emissionsSources, error]
 }
 
-const getExistingStudies = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
+const getExistingStudies = async (
+  transaction: Prisma.TransactionClient,
+  studiesIds: string[],
+  organizationVersionId: string,
+) => {
+  const orgaVersionIds = await transaction.organizationVersion.findMany({
+    where: {
+      OR: [{ id: organizationVersionId }, { parentId: organizationVersionId }],
+      environment: Environment.BC,
+    },
+    select: { id: true },
+  })
+
   const existingObjects = await transaction.study.findMany({
     where: {
       oldBCId: {
         in: studiesIds,
       },
+      organizationVersionId: { in: orgaVersionIds.map((v) => v.id) },
     },
     select: { id: true, oldBCId: true, startDate: true, endDate: true },
   })
@@ -461,7 +474,7 @@ export const uploadStudies = async (
     alreadyImportedStudyIds.every((alreadyImportedStudy) => alreadyImportedStudy.oldBCId !== study.oldBCId),
   )
 
-  await transaction.study.createMany({
+  const createdStudies = await transaction.study.createMany({
     data: newStudies.map((study) => ({
       ...study,
       createdById: accountId,
@@ -471,7 +484,9 @@ export const uploadStudies = async (
     })),
   })
 
-  const existingStudies = await getExistingStudies(transaction, Array.from(studySites.keys()))
+  console.log(createdStudies.count, 'études créées.')
+
+  const existingStudies = await getExistingStudies(transaction, Array.from(studySites.keys()), organizationVersionId)
   const sitesOldBCIds = Array.from(
     studySites.values().flatMap((studySites) => studySites.map((studySite) => studySite.siteOldBCId)),
   )
@@ -510,6 +525,7 @@ export const uploadStudies = async (
               })
               return null
             }
+
             const siteETP = sitesETPsMapper.getMatchingSiteAdditionalData(
               studySite.siteOldBCId,
               existingStudy.startDate,
@@ -520,6 +536,7 @@ export const uploadStudies = async (
               existingStudy.startDate,
               existingStudy.endDate,
             )
+
             return {
               studyId: existingStudy.id,
               siteId: existingSiteId,
