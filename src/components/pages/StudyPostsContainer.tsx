@@ -40,9 +40,9 @@ const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-                label: study.organizationVersion.organization.name,
-                link: `/organisations/${study.organizationVersion.id}`,
-              }
+              label: study.organizationVersion.organization.name,
+              link: `/organisations/${study.organizationVersion.id}`,
+            }
             : undefined,
 
           { label: study.name, link: `/etudes/${study.id}` },
@@ -68,7 +68,7 @@ const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
           />
         }
         environmentComponents={{
-          [Environment.CUT]: <StudyPostsPageCut post={post} study={study} studySite={studySite} />,
+          [Environment.CUT]: <StudyPostsPageCut post={post} study={study} studySiteId={studySite} />,
         }}
       />
     </>

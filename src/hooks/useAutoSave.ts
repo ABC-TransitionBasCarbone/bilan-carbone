@@ -26,15 +26,13 @@ interface SaveAnswerRequest {
  */
 export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveReturn => {
   const [fieldStatuses, setFieldStatuses] = useState<Record<string, FieldSaveStatus>>({})
-  const [emissionFactorId, setEmissionFactorId] = useState<string>()
 
   const saveAnswer = useCallback(async (request: SaveAnswerRequest) => {
     return saveAnswerForQuestion(
       request.question,
-      request.studyId,
       request.response,
-      request.studySiteId,
-      emissionFactorId,
+      studyId,
+      studySiteId
     )
   }, [])
 
@@ -51,10 +49,6 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
   const performSave = useCallback(
     async (question: Question, value: Prisma.InputJsonValue) => {
       try {
-        if (question.possibleAnswers.some((answer) => answer === value)) {
-          setEmissionFactorId(value as string)
-        }
-
         const request: SaveAnswerRequest = {
           question,
           studyId,
@@ -88,7 +82,7 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
         })
       }
     },
-    [studyId, updateFieldStatus, saveAnswer],
+    [studySiteId, updateFieldStatus, saveAnswer],
   )
 
   const saveField = useCallback(

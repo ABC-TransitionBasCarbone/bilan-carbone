@@ -14,10 +14,10 @@ import DynamicSubPostForm from '../study/DynamicSubPostForm'
 interface Props {
   post: Post
   study: FullStudy
-  studySite: string
+  studySiteId: string
 }
 
-const StudyPostsPageCut = ({ post, study, studySite }: Props) => {
+const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const router = useRouter()
@@ -47,7 +47,7 @@ const StudyPostsPageCut = ({ post, study, studySite }: Props) => {
 
   const tabContent = useMemo(() => {
     return subPosts.map((subPost) => (
-      <DynamicSubPostForm key={subPost} subPost={subPost} study={study} studySite={studySite} />
+      <DynamicSubPostForm key={subPost} subPost={subPost} study={study} studySiteId={studySiteId} />
     ))
   }, [subPosts, study])
 
