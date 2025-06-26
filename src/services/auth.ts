@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions, Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { signIn } from 'next-auth/react'
+import { signIn, signOut, SignOutParams } from 'next-auth/react'
 import { DAY } from '../utils/time'
 
 export const signPassword = async (password: string) => {
@@ -207,4 +207,16 @@ export async function accountHandler(accountId: string) {
     redirect: false,
     accountId,
   })
+}
+
+export const signOutEnv = async <P extends boolean = true>(
+  env: Environment = Environment.BC,
+  options?: SignOutParams<P>,
+): Promise<P extends true ? void : { url: string }> => {
+  const result = (await signOut({
+    callbackUrl: `/signed-out?env=${env}`,
+    ...options,
+  })) as P extends true ? void : { url: string }
+
+  return result
 }

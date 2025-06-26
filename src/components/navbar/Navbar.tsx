@@ -8,7 +8,6 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 import { AppBar, Box, Container, MenuItem, Toolbar } from '@mui/material'
 import { Environment, Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
-import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { MouseEvent, ReactNode, useEffect, useMemo, useState } from 'react'
 import { Logo } from '../base/Logo'
@@ -17,6 +16,7 @@ import NavbarButton from './NavbarButton'
 import NavbarLink from './NavbarLink'
 import NavbarOrganizationMenu from './NavbarOrganizationMenu'
 
+import { signOutEnv } from '@/services/auth'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -164,7 +164,7 @@ const Navbar = ({ children, user, environment }: Props) => {
                 <MenuBookIcon />
               </NavbarButton>
             )}
-            <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOut()}>
+            <NavbarButton title={t('logout')} aria-label={t('logout')} onClick={() => signOutEnv(user.environment)}>
               <PowerSettingsNewIcon />
             </NavbarButton>
           </Box>
