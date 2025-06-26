@@ -270,7 +270,7 @@
     "duplicateCopy": " - Copie",
     "duplicateDialog": {
       "title": "Duplication de l'étude",
-      "description": "Souhaitez vous dupliquer cette étude ? Vous serez redirigé vers la page de création d'une étude, tous les champs seront pré-remplis avec les informations de cette étude, et une fois validé, toute l'étude et ses sources d'émissions seront dupliquées.",
+      "description": "Souhaitez-vous dupliquer cette étude ? Vous serez redirigé vers la page de création d'une étude, tous les champs seront pré-remplis avec les informations de cette étude, et une fois validée, toute l'étude et ses sources d'émissions seront dupliquées. Les études seront alors indépendantes, toute modification faite dans l'une ne se reflètera pas dans l'autre une fois la duplication faite.",
       "cancel": "Annuler",
       "confirm": "Dupliquer"
     },

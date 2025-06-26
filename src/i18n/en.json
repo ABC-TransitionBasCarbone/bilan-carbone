@@ -270,7 +270,7 @@
     "duplicateCopy": " - Copy",
     "duplicateDialog": {
       "title": "Study duplication",
-      "description": "Do you want to duplicate this study? You will be redirected to the study creation page, all fields will be pre-filled with the information from this study, and once validated, the entire study and its emission sources will be duplicated.",
+      "description": "Would you like to duplicate this study? You will be redirected to the study creation page, all fields will be pre-filled with the information from this study, and once validated, the entire study and its emission sources will be duplicated. The studies will then be independent, any modification made to one will not be reflected in the other once the duplication is complete.",
       "cancel": "Cancel",
       "confirm": "Duplicate"
     },
