@@ -5,7 +5,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { getStudy } from '@/services/serverFunctions/study'
 import { CreateStudyCommand, SitesCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import { ControlMode, Export, OpeningHours, SiteCAUnit } from '@prisma/client'
+import { ControlMode, Export, SiteCAUnit } from '@prisma/client'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -120,21 +120,4 @@ export const createDuplicateFormData = (
     sites: mergedSites,
     exports: createExportsRecord(sourceStudy.exports),
   }
-}
-
-export const mapOpeningHours = (openingHours: OpeningHours[], isHoliday: boolean) => {
-  return (
-    openingHours?.reduce(
-      (acc, oh) => {
-        if (oh.isHoliday === isHoliday) {
-          acc[oh.day] = {
-            openHour: oh.openHour || '',
-            closeHour: oh.closeHour || '',
-          }
-        }
-        return acc
-      },
-      {} as Record<string, { openHour: string; closeHour: string }>,
-    ) || {}
-  )
 }
