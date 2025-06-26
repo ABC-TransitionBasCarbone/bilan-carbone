@@ -54,7 +54,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           site: {
-            select: { name: true },
+            select: { id: true, name: true },
           },
         },
       },
