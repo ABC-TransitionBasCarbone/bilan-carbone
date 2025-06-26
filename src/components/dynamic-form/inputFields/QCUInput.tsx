@@ -20,15 +20,13 @@ const QCUInput = ({ question, errorMessage, disabled, onBlur }: BaseInputProps) 
           className="p-2 pr1 flex flex-row align-center mb1"
           label={option}
           control={
-            <>
-              <Radio
-                onBlur={onBlur}
-                key={index}
-                name={option}
-                checked={selectedOption === option}
-                onChange={(e) => setSelectedOption(e.target.checked ? option : null)}
-              />
-            </>
+            <Radio
+              onBlur={onBlur}
+              key={index}
+              name={option}
+              checked={selectedOption === option}
+              onChange={(e) => setSelectedOption(e.target.checked ? option : null)}
+            />
           }
         />
       ))}
