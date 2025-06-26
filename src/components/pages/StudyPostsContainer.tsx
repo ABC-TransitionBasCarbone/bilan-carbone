@@ -16,9 +16,10 @@ interface Props {
   post: Post
   study: FullStudy
   userRole: StudyRole
+  isCut: boolean
 }
 
-const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
+const StudyPostsPageContainer = ({ post, study, userRole, isCut }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
@@ -55,6 +56,7 @@ const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
           userRole={userRole as StudyRole}
           studySite={studySite}
           setSite={setSite}
+          isCut={isCut}
         />
       </Block>
       <DynamicComponent

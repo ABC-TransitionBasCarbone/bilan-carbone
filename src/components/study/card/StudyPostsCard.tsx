@@ -18,8 +18,9 @@ interface Props {
   userRole: StudyRole
   studySite: string
   setSite: Dispatch<SetStateAction<string>>
+  isCut: boolean
 }
-const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) => {
+const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut }: Props) => {
   const t = useTranslations('study')
   const tRole = useTranslations('study.role')
   const tPost = useTranslations('emissionFactors.post')
@@ -48,23 +49,25 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite }: Props) =>
         </div>
         <p className="text-center">{t('selectSite')}</p>
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} withLabel={false} />
-        <Box className={classNames(styles.emissionSources, 'p1', { [styles.allValidated]: percent === 100 })}>
-          <p className="mb1 align-center">
-            {t.rich('validatedSources', {
-              validated: validated,
-              total: emissionSources.length,
-              data: (children) => (
-                <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
-                  {children}
-                </span>
-              ),
-            })}
-          </p>
-          <ProgressBar
-            value={percent}
-            barClass={classNames(styles.progressBar, { [styles.success]: percent === 100 })}
-          />
-        </Box>
+        {!isCut && (
+          <Box className={classNames(styles.emissionSources, 'p1', { [styles.allValidated]: percent === 100 })}>
+            <p className="mb1 align-center">
+              {t.rich('validatedSources', {
+                validated: validated,
+                total: emissionSources.length,
+                data: (children) => (
+                  <span className={classNames(styles.validated, 'mr-4', { [styles.success]: percent === 100 })}>
+                    {children}
+                  </span>
+                ),
+              })}
+            </p>
+            <ProgressBar
+              value={percent}
+              barClass={classNames(styles.progressBar, { [styles.success]: percent === 100 })}
+            />
+          </Box>
+        )}
       </Box>
     </div>
   )
