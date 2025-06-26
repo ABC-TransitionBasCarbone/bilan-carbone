@@ -87,7 +87,7 @@ export const deleteAnswer = async (
   }
 }
 
-export const getQuestionByIdInterne = async (idIntern: string): Promise<Question | null> => {
+export const getQuestionByIdIntern = async (idIntern: string): Promise<Question | null> => {
   return await prismaClient.question.findUnique({
     where: {
       idIntern,

@@ -4,7 +4,7 @@ import { findEmissionFactorByImportedId } from '@/db/emissionFactors'
 import {
   getAnswerByQuestionId,
   getAnswersByStudyAndSubPost,
-  getQuestionByIdInterne,
+  getQuestionByIdIntern,
   getQuestionsBySubPost,
   saveAnswer,
 } from '@/db/question'
@@ -36,7 +36,7 @@ export const saveAnswerForQuestion = async (
     }
 
     if (previousQuestionInternId) {
-      const previousQuestion = await getQuestionByIdInterne(previousQuestionInternId)
+      const previousQuestion = await getQuestionByIdIntern(previousQuestionInternId)
       if (!previousQuestion) {
         throw new Error(`Previous question not found for idIntern: ${previousQuestionInternId}`)
       }
@@ -60,6 +60,7 @@ export const saveAnswerForQuestion = async (
         emissionSourceId,
         emissionFactorId,
         depreciationPeriod,
+        validated: true,
       })
     } else {
       const emissionSource = await createEmissionSource({
