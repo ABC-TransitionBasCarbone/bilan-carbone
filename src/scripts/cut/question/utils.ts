@@ -138,7 +138,7 @@ export function validateRow(
       order: Number(row[HEADERS.ORDER]),
       type,
       possibleAnswers: row[HEADERS.POSSIBLE_ANSWER].split('§').map((s) => s.trim()),
-      unit: unit as CUTUnit,
+      unit: unit === '' ? null : (unit as CUTUnit),
       required: Boolean(row[HEADERS.REQUIRED]) || false,
     },
   }
