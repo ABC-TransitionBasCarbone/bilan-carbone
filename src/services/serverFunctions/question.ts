@@ -1,13 +1,7 @@
 'use server'
 
 import { findEmissionFactorByImportedId } from '@/db/emissionFactors'
-import {
-  getAnswerByQuestionId,
-  getAnswersByStudyAndSubPost,
-  getQuestionByIdIntern,
-  getQuestionsBySubPost,
-  saveAnswer,
-} from '@/db/question'
+import { getAnswerByQuestionId, getAnswersByStudyAndSubPost, getQuestionsBySubPost, saveAnswer } from '@/db/question'
 import { withServerResponse } from '@/utils/serverResponse'
 import { Prisma, Question, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
@@ -25,8 +19,7 @@ export const saveAnswerForQuestion = async (
       throw new Error('Not authorized')
     }
 
-    const { emissionFactorImportedId, depreciationPeriod, previousQuestionInternId } =
-      getEmissionFactorByIdIntern(question.idIntern) || {}
+    const { emissionFactorImportedId, depreciationPeriod } = getEmissionFactorByIdIntern(question.idIntern) || {}
     let emissionFactorId = undefined
     let emissionSourceId = undefined
 
@@ -34,15 +27,16 @@ export const saveAnswerForQuestion = async (
       return saveAnswer(question.id, studySiteId, response)
     }
 
-    if (previousQuestionInternId) {
-      const previousQuestion = await getQuestionByIdIntern(previousQuestionInternId)
-      if (!previousQuestion) {
-        throw new Error(`Previous question not found for idIntern: ${previousQuestionInternId}`)
-      }
+    // A remettre quand on gèrera les sous question, pour le moment il n'y en a pas à priori.
+    // if (previousQuestionInternId) {
+    //   const previousQuestion = await getQuestionByIdIntern(previousQuestionInternId)
+    //   if (!previousQuestion) {
+    //     throw new Error(`Previous question not found for idIntern: ${previousQuestionInternId}`)
+    //   }
 
-      const previousAnswer = await getAnswerByQuestionId(previousQuestion.id)
-      emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
-    }
+    //   const previousAnswer = await getAnswerByQuestionId(previousQuestion.id)
+    //   emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
+    // }
 
     if (emissionFactorImportedId) {
       const emissionFactor = await findEmissionFactorByImportedId(emissionFactorImportedId)
