@@ -1,6 +1,7 @@
 import { FormControl, FormControlLabel, Radio, styled } from '@mui/material'
 import { useState } from 'react'
 import { BaseInputProps } from '../types/formTypes'
+import { formatOption } from './utils'
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   backgroundColor: 'white',
@@ -18,7 +19,7 @@ const QCUInput = ({ question, errorMessage, disabled, onBlur }: BaseInputProps) 
         <StyledFormControlLabel
           key={`box-${index}`}
           className="p-2 pr1 flex flex-row align-center mb1"
-          label={option}
+          label={formatOption(option)}
           control={
             <Radio
               onBlur={onBlur}
