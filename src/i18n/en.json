@@ -1,6 +1,19 @@
 {
   "home": {
-    "userToValidate": "A user has been added to your organization because they have just been trained in the carbon assessment method. Go to <link>your team page</link> to validate their account"
+    "userToValidate": "A user has been added to your organization because they have just been trained in the carbon assessment method. Go to <link>your team page</link> to validate their account",
+    "title": "Completing your impact assessment will allow you to:",
+    "info": {
+      "0": "Understand the impact assessment of your establishment",
+      "1": "Identify priority actions",
+      "2": "Build a reduction trajectory"
+    },
+    "message": {
+      "core": "Welcome to COUNT, the first ecological impact calculator dedicated to movie theaters.\nThis tool was developed by the association CUT! Cinema United for Transition, in cooperation with the ABC, the association for low-carbon transition.\nThis initiative is supported by the French State as part of the 'Support Green Alternatives 2' program under France 2030, operated by the Banque des Territoires (Caisse des Dépôts).\nCUT is supported by the CNC.",
+      "0": "Completing your impact assessment will allow you to:",
+      "1": "Understand the impact assessment of your establishment",
+      "2": "Identify priority actions",
+      "3": "Build a reduction trajectory"
+    }
   },
   "exports": {
     "title": "Exports:",
