@@ -5,6 +5,8 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, FieldErrors, UseFormWatch } from 'react-hook-form'
 import { UseAutoSaveReturn } from '../../hooks/useAutoSave'
 import DatePickerInput from './inputFields/DatePickerInput'
+import QCMInput from './inputFields/QCMInput'
+import QCUInput from './inputFields/QCUInput'
 import SelectInput from './inputFields/SelectInput'
 import TextUnitInput from './inputFields/TextUnitInput'
 import YearPickerInput from './inputFields/YearPickerInput'
@@ -67,7 +69,7 @@ const DynamicFormField = ({
     }
   }, [watch, fieldName, debouncedSave])
 
-  const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unite), [question.type, question.unite])
+  const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unit), [question.type, question.unit])
 
   const baseInputProps = useMemo(() => {
     const label = getQuestionLabel(question.type, tFormat)
@@ -91,6 +93,10 @@ const DynamicFormField = ({
           return YearPickerInput
         case FieldType.SELECT:
           return SelectInput
+        case FieldType.QCM:
+          return QCMInput
+        case FieldType.QCU:
+          return QCUInput
         default:
           console.warn(`Unsupported question type: ${question.type} (mapped to: ${fieldType})`)
           return TextUnitInput

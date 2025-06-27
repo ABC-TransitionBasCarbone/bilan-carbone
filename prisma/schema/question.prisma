@@ -2,6 +2,7 @@ enum QuestionType {
   QCM
   QCU
   SELECT
+  SELECT_FE
   TABLE
   POSTAL_CODE
   DATE
@@ -9,6 +10,7 @@ enum QuestionType {
   RANGE
   PHONE
   TEXT
+  TITLE
 }
 
 model Question {

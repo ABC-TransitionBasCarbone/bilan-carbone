@@ -13,6 +13,14 @@
       "3": "Construire une trajectoire de réduction"
     }
   },
+  "footer": {
+    "message": {
+      "0": "Cet outil a été développé par l'Association",
+      "1": "En coopération avec l'ABC, <br></br> Association pour la transition Bas Carbone",
+      "2": "Opération soutenue par l'État dans le cadre du <br></br> dispositif « Soutenir les alternatives vertes 2 » <br></br> de France 2030, opéré par la Banque des <br></br> territoires (Caisse des Dépôts)",
+      "3": "CUT! bénéficie du soutien du CNC"
+    }
+  },
   "study": {
     "create": "Ajouter un Bilan",
     "myCollaborations": "Mes collaborations",
@@ -41,7 +49,7 @@
       "export": "Exporter mes cinémas"
     },
     "results": {
-      "info": "Le Bilan Carbone® mesure les émissions de gaz à effet de serre d'une activité, et par conséquent sa contribution au dérèglement climatique ainsi que sa dépendance aux énergies fossiles et donc sa vulnérabilité. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire ce bilan l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !"
+      "info": "Cette empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !"
     },
     "rights": {
       "title": "Données générales de l'étude : {name}"

@@ -154,4 +154,8 @@ enum Unit {
   CNY
   YEAR
   CUSTOM
+
+  // CUT
+  MOVIES
+  PERSON
 }
