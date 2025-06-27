@@ -7,7 +7,7 @@ import { useDynamicForm } from '../../hooks/useDynamicForm'
 import DynamicFormField from './DynamicFormField'
 import { DynamicFormProps } from './types/formTypes'
 
-const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false }: DynamicFormProps) => {
+const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, studySiteId }: DynamicFormProps) => {
   const tQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
   const {
@@ -16,7 +16,7 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false }: 
     watch,
   } = useDynamicForm(questions, initialAnswers)
 
-  const autoSave = useAutoSave(studyId)
+  const autoSave = useAutoSave(studyId, studySiteId)
 
   useEffect(() => {
     if (initialAnswers && initialAnswers.length > 0) {
