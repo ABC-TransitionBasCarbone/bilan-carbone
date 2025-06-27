@@ -1,7 +1,5 @@
 import { QuestionType } from '@prisma/client'
 
-export { QuestionType, SubPost } from '@prisma/client'
-
 export enum TextInputFormat {
   Text = 'Text',
   Phone = 'Phone',
