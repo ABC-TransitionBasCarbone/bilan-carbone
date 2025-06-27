@@ -1,0 +1,8 @@
+.sitesSection {
+  background-color: var(--background-200);
+  border-radius: 0.5rem;
+}
+
+.sitesTitle {
+  font-weight: 600;
+}
