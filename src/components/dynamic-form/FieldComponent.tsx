@@ -10,6 +10,7 @@ import SelectInput from './inputFields/SelectInput'
 import TableInput from './inputFields/TableInput'
 import TextUnitInput from './inputFields/TextUnitInput'
 import YearPickerInput from './inputFields/YearPickerInput'
+import QuestionAccordion from './QuestionAccordion/QuestionAccordion'
 import { FormValues } from './types/formTypes'
 import { FieldType } from './types/questionTypes'
 
@@ -67,6 +68,10 @@ const FieldComponent = ({ fieldType, fieldName, question, control, error, isLoad
           control={control}
         />
       )
+    }
+
+    if (fieldType === FieldType.TITLE) {
+      return <QuestionAccordion control={control} question={question} label={label} />
     }
 
     const InputComponent = getInputComponent()
