@@ -78,8 +78,8 @@ const canUpdateEmissionSourceBC = async (
   change: Partial<StudyEmissionSource>,
   study: FullStudy,
 ) => {
-  const hasBasicRights = await canCreateEmissionSourceBC(account, emissionSource)
-  if (!hasBasicRights) {
+  const canCreateEmissionSource = await canCreateEmissionSourceBC(account, emissionSource)
+  if (!canCreateEmissionSource) {
     const contributor = study.contributors.find(
       (contributor) =>
         contributor.account.user.email === account.user.email && contributor.subPost === emissionSource.subPost,
