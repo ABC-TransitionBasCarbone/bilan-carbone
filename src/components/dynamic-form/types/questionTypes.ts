@@ -22,6 +22,7 @@ export enum FieldType {
   TITLE = 'TITLE',
   QCM = 'QCM',
   QCU = 'QCU',
+  TABLE = 'TABLE',
 }
 
 export const QUESTION_TYPE_FIELD_MAPPING: Record<QuestionType, FieldType> = {
@@ -30,7 +31,7 @@ export const QUESTION_TYPE_FIELD_MAPPING: Record<QuestionType, FieldType> = {
   [QuestionType.SELECT]: FieldType.SELECT,
   [QuestionType.QCM]: FieldType.QCM,
   [QuestionType.QCU]: FieldType.QCU,
-  [QuestionType.TABLE]: FieldType.TEXT, // TODO: change when table selector is implemented
+  [QuestionType.TABLE]: FieldType.TABLE,
   [QuestionType.POSTAL_CODE]: FieldType.NUMBER,
   [QuestionType.DATE]: FieldType.DATE,
   [QuestionType.RANGE]: FieldType.TEXT, // TODO: change when range selector is implemented
