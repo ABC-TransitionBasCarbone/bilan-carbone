@@ -12,7 +12,7 @@ import styles from './StudyExports.module.css'
 
 interface Props<T extends StudyExportsCommand> {
   form: UseFormReturn<T>
-  study: FullStudy
+  study: FullStudy | null
   showControl: boolean
   setGlossary: (key: string) => void
   t: ReturnType<typeof useTranslations>
@@ -61,7 +61,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
                 <ExportCheckbox
                   key={key}
                   id={key as Export}
-                  study={study}
+                  study={study || null}
                   values={value}
                   setValues={onChange}
                   disabled={disabled}
