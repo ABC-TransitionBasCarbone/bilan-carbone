@@ -50,6 +50,7 @@ export const computeResultsByPost = (
         .map((subPost) => {
           const emissionSources = siteEmissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
           const validatedEmissionSources = emissionSources.filter((emissionSource) => emissionSource.validated)
+
           return {
             post: subPost,
             value: getEmissionSourcesTotalCo2(validatedOnly ? validatedEmissionSources : emissionSources),
