@@ -147,3 +147,7 @@
   font-weight: 600;
   border: 1px solid var(--primary-200);
 }
+
+.additionalMissingSources {
+  font-size: 0.875rem;
+}

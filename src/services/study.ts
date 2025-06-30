@@ -58,12 +58,13 @@ export enum EmissionSourcesStatus {
 export const getEmissionSourceStatus = (
   study: FullStudy | StudyWithoutDetail,
   emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  environment: Environment | undefined,
 ) => {
   if (emissionSource.validated) {
     return EmissionSourcesStatus.Valid
   }
 
-  if (canBeValidated(emissionSource, study, emissionSource.emissionFactor)) {
+  if (canBeValidated(emissionSource, study, emissionSource.emissionFactor, environment)) {
     return EmissionSourcesStatus.ToVerify
   }
 

@@ -1,5 +1,6 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { getCaracterisationsBySubPost } from '@/utils/study'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
 import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
 import { convertTiltSubPostToBCSubPost, Post, subPostsByPost } from '../posts'
@@ -199,7 +200,13 @@ export const computeBegesResult = (
       }
 
       const id = emissionSource.emissionFactor.id
-      const caracterisation = emissionSource.caracterisation
+
+      const availableCaracterisations = getCaracterisationsBySubPost(study.exports, emissionSource.subPost)
+      const caracterisation =
+        emissionSource.caracterisation && availableCaracterisations.includes(emissionSource.caracterisation)
+          ? emissionSource.caracterisation
+          : null
+
       const value = getBegesEmissionValue(emissionSource)
 
       const emissionFactor = emissionFactorsWithParts.find(

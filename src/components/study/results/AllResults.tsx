@@ -82,10 +82,10 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
               <MenuItem
                 key={exportItem.type}
                 value={exportItem.type}
-                disabled={exportItem.type !== Export.Beges || exportItem.control !== ControlMode.Operational}
+                disabled={exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare}
               >
                 {tExport(exportItem.type)}
-                {(exportItem.type !== Export.Beges || exportItem.control !== ControlMode.Operational) && (
+                {(exportItem.type !== Export.Beges || exportItem.control === ControlMode.CapitalShare) && (
                   <em> ({t('coming')})</em>
                 )}
               </MenuItem>

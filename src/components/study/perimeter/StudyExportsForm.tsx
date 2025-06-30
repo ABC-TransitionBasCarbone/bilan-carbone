@@ -1,4 +1,5 @@
 import HelpIcon from '@/components/base/HelpIcon'
+import { FullStudy } from '@/db/study'
 import { StudyExportsCommand } from '@/services/serverFunctions/study.command'
 import { FormControl, FormGroup, FormLabel } from '@mui/material'
 import { Export } from '@prisma/client'
@@ -11,13 +12,21 @@ import styles from './StudyExports.module.css'
 
 interface Props<T extends StudyExportsCommand> {
   form: UseFormReturn<T>
+  study: FullStudy
   showControl: boolean
   setGlossary: (key: string) => void
   t: ReturnType<typeof useTranslations>
   disabled?: boolean
 }
 
-const StudyExportsForm = <T extends StudyExportsCommand>({ form, showControl, setGlossary, t, disabled }: Props<T>) => {
+const StudyExportsForm = <T extends StudyExportsCommand>({
+  form,
+  study,
+  showControl,
+  setGlossary,
+  t,
+  disabled,
+}: Props<T>) => {
   const tGlossary = useTranslations('study.new.glossary')
   const control = form?.control as Control<StudyExportsCommand>
   return (
@@ -49,7 +58,14 @@ const StudyExportsForm = <T extends StudyExportsCommand>({ form, showControl, se
           <FormGroup>
             <div className={styles.exports}>
               {Object.keys(Export).map((key) => (
-                <ExportCheckbox key={key} id={key as Export} values={value} setValues={onChange} disabled={disabled} />
+                <ExportCheckbox
+                  key={key}
+                  id={key as Export}
+                  study={study}
+                  values={value}
+                  setValues={onChange}
+                  disabled={disabled}
+                />
               ))}
             </div>
           </FormGroup>
