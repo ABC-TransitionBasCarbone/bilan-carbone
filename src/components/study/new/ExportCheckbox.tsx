@@ -11,7 +11,7 @@ import styles from './ExportCheckbox.module.css'
 
 interface Props {
   id: Export
-  study: FullStudy | null
+  study?: FullStudy
   values: Record<Export, ControlMode | false>
   setValues: Dispatch<SetStateAction<Record<Export, ControlMode | false>>>
   disabled?: boolean

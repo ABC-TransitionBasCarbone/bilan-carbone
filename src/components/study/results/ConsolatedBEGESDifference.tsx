@@ -3,7 +3,7 @@ import Modal from '@/components/modals/Modal'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { getCaracterisationsBySubPost, getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
+import { getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
 import { Post, subPostsByPost } from '@/services/posts'
 import { computeBegesResult, getBegesEmissionTotal } from '@/services/results/beges'
 import { computeResultsByPost } from '@/services/results/consolidated'
@@ -13,7 +13,7 @@ import { STUDY_UNIT_VALUES } from '@/utils/study'
 import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
-import { EmissionSourceCaracterisation, Export, ExportRule, SubPost } from '@prisma/client'
+import { Export, ExportRule, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -119,7 +119,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
     () =>
       study.emissionSources.filter((emissionSource) => {
         if (
-          !(emissionSource.validated || !validatedOnly) ||
+          (!emissionSource.validated && validatedOnly) ||
           emissionSource.subPost === SubPost.UtilisationEnDependance
         ) {
           return false
@@ -129,14 +129,9 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
           return true
         }
 
-        const availableCaracterisations = getCaracterisationsBySubPost(study.exports, emissionSource.subPost)
-        if (availableCaracterisations.length === 0) {
-          return false
-        }
-
-        return !availableCaracterisations.includes(emissionSource.caracterisation as EmissionSourceCaracterisation)
+        return false
       }),
-    [study.emissionSources, study.exports, validatedOnly],
+    [study.emissionSources, validatedOnly],
   )
 
   const missingCaractDifference = useMemo(() => {
@@ -155,7 +150,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
     }, 0)
   }, [missingCaract, emissionFactorsWithParts, unitValue, environment])
 
-  const maxButtonEmissionSources = 5
+  const maxButtonEmissionSources = 10
 
   return begesTotal !== computedTotal ? (
     <>
