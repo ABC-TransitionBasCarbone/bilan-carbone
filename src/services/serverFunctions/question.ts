@@ -1,7 +1,13 @@
 'use server'
 
 import { findEmissionFactorByImportedId } from '@/db/emissionFactors'
-import { getAnswerByQuestionId, getAnswersByStudyAndSubPost, getQuestionByIdIntern, getQuestionsBySubPost, saveAnswer } from '@/db/question'
+import {
+  getAnswerByQuestionId,
+  getAnswersByStudyAndSubPost,
+  getQuestionByIdIntern,
+  getQuestionsBySubPost,
+  saveAnswer,
+} from '@/db/question'
 import { withServerResponse } from '@/utils/serverResponse'
 import { Prisma, Question, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
@@ -19,36 +25,29 @@ export const saveAnswerForQuestion = async (
       throw new Error('Not authorized')
     }
 
-    const { emissionFactorImportedId, depreciationPeriod, previousQuestionInternId } = getEmissionFactorByIdIntern(question.idIntern) || {}
+    const { emissionFactorImportedId, depreciationPeriod, linkQuestion } =
+      getEmissionFactorByIdIntern(question.idIntern) || {}
 
-    console.log(`Saving answer for question: ${question.idIntern}, response: ${response}, studySiteId: ${studySiteId}`)
     let emissionFactorId = undefined
     let emissionSourceId = undefined
-
-    if (!response) {
-      console.warn(`No response provided for question: ${question.idIntern}. Skipping save.`)
-      return
-    }
 
     if (!emissionFactorImportedId && !depreciationPeriod) {
       return saveAnswer(question.id, studySiteId, response)
     }
 
-    // TODO: gérer d'un autre manière le cas où on a une question précédente
-    if (previousQuestionInternId) {
-      const previousQuestion = await getQuestionByIdIntern(previousQuestionInternId)
+    /**
+     * TODO: gérer d'un autre manière le cas où on a une question précédente
+     * Pour l'instant on fait un findFirst
+     */
+    if (linkQuestion) {
+      const previousQuestion = await getQuestionByIdIntern(linkQuestion)
       if (!previousQuestion) {
-        throw new Error(`Previous question not found for idIntern: ${previousQuestionInternId}`)
+        throw new Error(`Previous question not found for idIntern: ${linkQuestion}`)
       }
 
       const previousAnswer = await getAnswerByQuestionId(previousQuestion.id)
       emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
-      /**
-       * TODO: fix pour arriver sur le bon id d'émission source
-       */
     }
-
-    console.log(`Emission factor imported ID: ${emissionFactorImportedId}, Depreciation period: ${depreciationPeriod}`)
 
     /**
      * TODO handle depreciation period calculation based on date
@@ -115,7 +114,7 @@ export const getQuestionsWithAnswers = async (subPost: SubPost, studySiteId: str
 type EmissionFactorInfo = {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
-  previousQuestionInternId?: string
+  linkQuestion?: string
 }
 
 const getEmissionFactorByIdIntern = (idIntern: string): EmissionFactorInfo => emissionFactorMap[idIntern]
@@ -126,22 +125,28 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
    * TODO match emissionFactorImportedId with idIntern
    */
   // Batiment
-  '10-quelle-est-la-surface-plancher-du-cinema': { emissionFactorImportedId: '20730' },
-  '11-quand-le-batiment-a-t-il-ete-construit': { depreciationPeriod: 50, previousQuestionInternId: '10-quelle-est-la-surface-plancher-du-cinema' },
-  '12-a-quand-remonte-la-derniere-renovation-importante': { depreciationPeriod: 10, previousQuestionInternId: '10-quelle-est-la-surface-plancher-du-cinema' },
+  '10-quelle-est-la-surface-plancher-du-cinema': { emissionFactorImportedId: '20730', linkQuestion: '11-quand-le-batiment-a-t-il-ete-construit' },
+  '11-quand-le-batiment-a-t-il-ete-construit': {
+    depreciationPeriod: 50,
+    linkQuestion: '10-quelle-est-la-surface-plancher-du-cinema',
+  },
+  '12-a-quand-remonte-la-derniere-renovation-importante': {
+    depreciationPeriod: 10,
+    linkQuestion: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee'
+  },
   'de-quel-type-de-renovation-sagi-t-il': {},
-  'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': { emissionFactorImportedId: '20730' },
+  'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': {
+    emissionFactorImportedId: '20730', linkQuestion: '12-a-quand-remonte-la-derniere-renovation-importante',
+  },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},
   'le-cinema-dispose-t-il-dun-parking': {},
-  'si-oui-de-combien-de-places': { emissionFactorImportedId: '26008' },
-  // Equipe
-  '10-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
+  'si-oui-de-combien-de-places': { emissionFactorImportedId: '26008', depreciationPeriod: 50 },
+  // Equipe - attente de la fonctionnalité table
   '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
   '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
   '13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
-  // DeplacementsProfessionnels
-  '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
+  // DeplacementsProfessionnels - attente de la fonctionnalité table
   '11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '12-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
@@ -153,7 +158,7 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quelles-etaient-les-consommations-energetiques-du-cinema': { emissionFactorImportedId: '15591' },
   gaz: { emissionFactorImportedId: '37138' },
   fuel: { emissionFactorImportedId: '14086' },
-  'reseaux-urbains-chaleurfroid': { emissionFactorImportedId: '' },
+  'reseaux-urbains-chaleurfroid': { emissionFactorImportedId: '' }, // Attente d'une fonctionnalité pour gérer les départements
   'bois-granules': { emissionFactorImportedId: '34942' },
   'votre-cinema-est-il-equipe-de-la-climatisation': { emissionFactorImportedId: '' },
   'le-cinema-dispose-t-il-d-un-ou-plusieurs-groupes-electrogenes': { emissionFactorImportedId: '20911' },
@@ -161,24 +166,23 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // ActivitesDeBureau
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
   'quel-montant-avez-vous-depense-en-services': { emissionFactorImportedId: '43545' },
-  'pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {},
-  'ordinateurs-fixes-nombre-unite': { emissionFactorImportedId: '27003' },
-  'ordinateurs-fixes-annee-ou-nombre-jours': {},
-  'ordinateurs-portables-nombre-unite': { emissionFactorImportedId: '27002' },
-  'ordinateurs-portables-annee-ou-nombre-jours': {},
-  'photocopieurs-nombre-unite': { emissionFactorImportedId: '20591' },
-  'photocopieurs-annee-ou-nombre-jours': {},
-  'imprimantes-nombre-unite': { emissionFactorImportedId: '27027' },
-  'imprimantes-annee-ou-nombre-jours': {},
-  'telephones-fixes-nombre-unite': { emissionFactorImportedId: '20614' },
-  'telephones-fixes-annee-ou-nombre-jours': {},
-  'telephones-portables-nombre-unite': { emissionFactorImportedId: '27010' },
-  'telephones-portables-annee-ou-nombre-jours': {},
-  'tablettes-nombre-unite': { emissionFactorImportedId: '27007' },
-  'tablettes-annee-ou-nombre-jours': {},
+  'ordinateurs-fixes-nombre-unite': { emissionFactorImportedId: '27003', linkQuestion: 'ordinateurs-fixes-annee-ou-nombre-jours' },
+  'ordinateurs-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'ordinateurs-fixes-nombre-unite' },
+  'ordinateurs-portables-nombre-unite': { emissionFactorImportedId: '27002', linkQuestion: 'ordinateurs-portables-annee-ou-nombre-jours' },
+  'ordinateurs-portables-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'ordinateurs-portables-nombre-unite' },
+  'photocopieurs-nombre-unite': { emissionFactorImportedId: '20591', linkQuestion: 'photocopieurs-annee-ou-nombre-jours' },
+  'photocopieurs-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'photocopieurs-nombre-unite' },
+  'imprimantes-nombre-unite': { emissionFactorImportedId: '27027', linkQuestion: 'imprimantes-annee-ou-nombre-jours' },
+  'imprimantes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'imprimantes-nombre-unite' },
+  'telephones-fixes-nombre-unite': { emissionFactorImportedId: '20614', linkQuestion: 'telephones-fixes-annee-ou-nombre-jours' },
+  'telephones-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'telephones-fixes-nombre-unite' },
+  'telephones-portables-nombre-unite': { emissionFactorImportedId: '27010', linkQuestion: 'telephones-portables-annee-ou-nombre-jours' },
+  'telephones-portables-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'telephones-portables-nombre-unite' },
+  'tablettes-nombre-unite': { emissionFactorImportedId: '27007', linkQuestion: 'tablettes-annee-ou-nombre-jours' },
+  'tablettes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'tablettes-nombre-unite' },
   // Mobilité spectateurs
   'avez-vous-deja-realise-une-enquete-mobilite-specteurs': {},
-  /** TODO: Liste 1 */
+  /** TODO: Liste 1  - attente de la fonctionnalité liste */
   'si-a-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': {},
   /***** */
   'si-b-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
@@ -192,50 +196,43 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'combien-d-equipes-de-film-avez-vous-recu-en-*': {},
   'combien-de-nuits': { emissionFactorImportedId: '106' },
   'combien-d-equipes-de-repas': { emissionFactorImportedId: '20682' },
-  // Autres matériel et matériel technique
-  '10-decrivez-les-differentes-salles-du-cinema': {},
+  // Autres matériel et matériel technique - Attente de la fonctionnalité table
   '11-decrivez-les-differentes-salles-du-cinema': {},
   '12-decrivez-les-differentes-salles-du-cinema': {},
   '13-decrivez-les-differentes-salles-du-cinema': {},
   '14-decrivez-les-differentes-salles-du-cinema': {},
   '15-decrivez-les-differentes-salles-du-cinema': {},
   '16-decrivez-les-differentes-salles-du-cinema': {},
-  '10-comment-stockez-vous-les-films': {},
   '11-comment-stockez-vous-les-films': { emissionFactorImportedId: '20894' },
   '12-comment-stockez-vous-les-films': { emissionFactorImportedId: '20893' },
-  // TODO: Calcul ?
-  'combien-de-films-recevez-vous-en-dématérialise-par-an': {},
-  'combiende-films-recevez-vous-sur-dcp-physique-par-an': {},
-  'combien-de-donnees-stockez-vous-dans-un-cloud': {},
-  '10-de-combien-disposez-vous-de': {},
+  'combien-de-films-recevez-vous-en-dématérialise-par-an': { emissionFactorImportedId: '141' },
+  'combiende-films-recevez-vous-sur-dcp-physique-par-an': {}, // TODO: Calcul ?
+  'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '142' },
   '11-de-combien-disposez-vous-de': { emissionFactorImportedId: '139' },
   '12-de-combien-disposez-vous-de': { emissionFactorImportedId: '140' },
   // Achats
-  '10-vendez-vous-des-boissons-et-des-confiseries': {},
   '11-vendez-vous-des-boissons-et-des-confiseries': {},
   // Fret
   'quelle-est-la-distance-entre-votre-cinema-et-votre-principal-fournisseur': { emissionFactorImportedId: '28026' },
   // Electromenager
-  '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26976' },
-  '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {},
-  '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26978' },
-  '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {},
-  '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26986' },
-  '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26976' },
-  '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {},
+  '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26976', linkQuestion: '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
+  '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { depreciationPeriod: 5, linkQuestion: '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
+  '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26978', linkQuestion: '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
+  '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { depreciationPeriod: 5, linkQuestion: '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
+  '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26986', linkQuestion: '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
+  '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { depreciationPeriod: 5, linkQuestion: '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
+  '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26976', linkQuestion: '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
+  '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { depreciationPeriod: 5, linkQuestion: '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
   // DechetsOrdinaires
-  '110-veuillez-renseigner-les-dechets-generes-par-semaine': {},
-  '111-veuillez-renseigner-les-dechets-generes-par-semaine': {},
-  '112-veuillez-renseigner-les-dechets-generes-par-semaine': {},
-  '113-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34654' },
-  '120-veuillez-renseigner-les-dechets-generes-par-semaine': {},
-  '121-veuillez-renseigner-les-dechets-generes-par-semaine': {},
-  '122-veuillez-renseigner-les-dechets-generes-par-semaine': {},
-  '123-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34486' },
-  '130-veuillez-renseigner-les-dechets-generes-par-semaine': {},
-  '131-veuillez-renseigner-les-dechets-generes-par-semaine': {},
-  '132-veuillez-renseigner-les-dechets-generes-par-semaine': {},
-  '133-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '22040' },
+  '112-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
+  '113-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34654' }, // Taille des bennes
+  '114-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Fréquence de ramassage (par semaine)
+  '121-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
+  '122-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34486' }, // Taille des bennes
+  '123-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Fréquence de ramassage (par semaine)
+  '131-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes 
+  '132-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '22040' }, // Taille des bennes
+  '133-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Fréquence de ramassage (par semaine)
   // DechetsExceptionnels
   'quelle-quantite-de-materiel-technique-jetez-vous-par-an': { emissionFactorImportedId: '34620' },
   'quelle-quantite-de-lampes-xenon-jetez-vous-par-an': { emissionFactorImportedId: '107' },
