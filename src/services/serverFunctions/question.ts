@@ -46,12 +46,9 @@ export const saveAnswerForQuestion = async (
     let value = depreciationPeriod ? undefined : Number(response)
 
     if (!emissionFactorImportedId && !depreciationPeriod) {
-      ({ emissionFactorId, value } = determineFactorAndValue(
-        response,
-        emissionFactorId,
-        value,
-        studySite.numberOfSessions ?? 1,
-      ))
+      const result = determineFactorAndValue(response, emissionFactorId, value, studySite.numberOfSessions ?? 1)
+      emissionFactorId = result.emissionFactorId
+      value = result.value
 
       return saveAnswer(question.id, studySiteId, response)
     }
