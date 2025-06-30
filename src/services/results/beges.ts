@@ -1,8 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { getCaracterisationsBySubPost } from '@/utils/study'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
-import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
+import { getCaracterisationsBySubPost, getStandardDeviation, sumStandardDeviations } from '../emissionSource'
 import { convertTiltSubPostToBCSubPost, Post, subPostsByPost } from '../posts'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
@@ -200,8 +199,9 @@ export const computeBegesResult = (
       }
 
       const id = emissionSource.emissionFactor.id
+      const environment = study.organizationVersion?.environment
 
-      const availableCaracterisations = getCaracterisationsBySubPost(study.exports, emissionSource.subPost)
+      const availableCaracterisations = getCaracterisationsBySubPost(emissionSource.subPost, study.exports, environment)
       const caracterisation =
         emissionSource.caracterisation && availableCaracterisations.includes(emissionSource.caracterisation)
           ? emissionSource.caracterisation
