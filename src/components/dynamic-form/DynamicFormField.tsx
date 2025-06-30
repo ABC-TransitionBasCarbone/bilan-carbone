@@ -1,7 +1,7 @@
 import { getQuestionLabel } from '@/utils/question'
 import { Prisma, Question } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { Controller, FieldErrors, UseFormWatch } from 'react-hook-form'
 import { UseAutoSaveReturn } from '../../hooks/useAutoSave'
 import DatePickerInput from './inputFields/DatePickerInput'
@@ -36,40 +36,38 @@ const DynamicFormField = ({
 
   const fieldName = question.idIntern
   const fieldStatus = autoSave.getFieldStatus(question.id)
-  const debounceRef = useRef<NodeJS.Timeout | null>(null)
+  const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unit), [question.type, question.unit])
+  const isSavingOnBlur = useMemo(() => fieldType === FieldType.TEXT || fieldType === FieldType.NUMBER, [fieldType])
 
-  const debouncedSave = useCallback(
+  const saveField = useCallback(
     (value: unknown) => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current)
+      if (!formErrors[fieldName]) {
+        autoSave.saveField(question, value as Prisma.InputJsonValue)
       }
-
-      debounceRef.current = setTimeout(() => {
-        if (!formErrors[fieldName]) {
-          autoSave.saveField(question, value as Prisma.InputJsonValue)
-        }
-      }, 800)
     },
     [autoSave, question, formErrors, fieldName],
   )
+
+  const handleBlur = useCallback(() => {
+    const currentValue = watch(fieldName)
+    saveField(currentValue)
+  }, [watch, fieldName, saveField])
 
   useEffect(() => {
     const subscription = watch((formValues, { name }) => {
       if (name === fieldName) {
         const value = formValues[fieldName]
-        debouncedSave(value)
+
+        if (!isSavingOnBlur) {
+          saveField(value)
+        }
       }
     })
 
     return () => {
       subscription.unsubscribe()
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current)
-      }
     }
-  }, [watch, fieldName, debouncedSave])
-
-  const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unit), [question.type, question.unit])
+  }, [watch, fieldName, saveField, isSavingOnBlur])
 
   const baseInputProps = useMemo(() => {
     const label = getQuestionLabel(question.type, tFormat)
@@ -110,12 +108,20 @@ const DynamicFormField = ({
         name={fieldName}
         control={control}
         render={({ field }) => {
-          const { ref, ...fieldWithoutRef } = field
+          const { ref, onBlur, ...fieldWithoutRef } = field
+
+          const handleFieldBlur = () => {
+            onBlur()
+            if (isSavingOnBlur) {
+              handleBlur()
+            }
+          }
 
           return (
             <FieldComponent
               {...fieldWithoutRef}
               ref={ref}
+              onBlur={handleFieldBlur}
               value={field.value as string | null}
               question={baseInputProps.question}
               label={baseInputProps.label}
@@ -126,7 +132,7 @@ const DynamicFormField = ({
         }}
       />
     )
-  }, [fieldType, fieldName, control, baseInputProps, question.type])
+  }, [fieldType, fieldName, control, baseInputProps, question.type, handleBlur, isSavingOnBlur])
 
   return (
     <QuestionContainer question={question} isLoading={isLoading} saveStatus={fieldStatus}>
