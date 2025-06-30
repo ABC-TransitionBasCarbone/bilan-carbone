@@ -28,42 +28,43 @@ export const saveAnswerForQuestion = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const { emissionFactorImportedId, depreciationPeriod, linkQuestion } =
+    const { emissionFactorImportedId, depreciationPeriod, linkQuestionId } =
       getEmissionFactorByIdIntern(question.idIntern) || {}
 
     let emissionFactorId = undefined
     let emissionSourceId = undefined
 
+    if (!canReadStudy(session.user, studyId)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, session.user.organizationVersionId)
+    const studySite = study?.sites.find((site) => site.id === studySiteId)
+    if (!study || !studySite) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    let value = depreciationPeriod ? undefined : Number(response)
+
     if (!emissionFactorImportedId && !depreciationPeriod) {
+      ({ emissionFactorId, value } = determineFactorAndValue(
+        response,
+        emissionFactorId,
+        value,
+        studySite.numberOfSessions ?? 1,
+      ))
+
       return saveAnswer(question.id, studySiteId, response)
     }
 
-    /**
-     * TODO: gérer d'un autre manière le cas où on a une question précédente
-     * Pour l'instant on fait un findFirst
-     */
-    if (linkQuestion) {
-      const previousQuestion = await getQuestionByIdIntern(linkQuestion)
-      if (!previousQuestion) {
-        throw new Error(`Previous question not found for idIntern: ${linkQuestion}`)
-      }
-      if (!canReadStudy(session.user, studyId)) {
-        throw new Error(NOT_AUTHORIZED)
+    if (linkQuestionId) {
+      const linkQuestion = await getQuestionByIdIntern(linkQuestionId)
+      if (!linkQuestion) {
+        throw new Error(`Previous question not found for idIntern: ${linkQuestionId}`)
       }
 
-      const study = await getStudyById(studyId, session.user.organizationVersionId)
-      if (!study || !study.sites.find((site) => site.id === studySiteId)) {
-        throw new Error(NOT_AUTHORIZED)
-      }
-
-      const previousAnswer = await getAnswerByQuestionId(previousQuestion.id, studySiteId)
-      emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
+      const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
+      emissionSourceId = linkAnswer?.emissionSourceId ?? undefined
     }
-
-    /**
-     * TODO handle depreciation period calculation based on date
-     * value = value / emissionSource.depreciationPeriod
-     */
 
     if (emissionFactorImportedId) {
       const emissionFactor = await findEmissionFactorByImportedId(emissionFactorImportedId)
@@ -71,13 +72,6 @@ export const saveAnswerForQuestion = async (
         throw new Error(`Emission factor not found for importedId: ${emissionFactorImportedId}`)
       }
       emissionFactorId = emissionFactor.id
-    }
-
-    const value = depreciationPeriod ? undefined : Number(response)
-
-    const previousAnswer = await getAnswerByQuestionId(question.id, studySiteId)
-    if (previousAnswer && previousAnswer.emissionSourceId) {
-      emissionSourceId = previousAnswer.emissionSourceId
     }
 
     if (emissionSourceId) {
@@ -125,7 +119,7 @@ export const getQuestionsWithAnswers = async (subPost: SubPost, studySiteId: str
 type EmissionFactorInfo = {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
-  linkQuestion?: string
+  linkQuestionId?: string
 }
 
 const getEmissionFactorByIdIntern = (idIntern: string): EmissionFactorInfo => emissionFactorMap[idIntern]
@@ -138,20 +132,20 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // Batiment
   '10-quelle-est-la-surface-plancher-du-cinema': {
     emissionFactorImportedId: '20730',
-    linkQuestion: '11-quand-le-batiment-a-t-il-ete-construit',
+    linkQuestionId: '11-quand-le-batiment-a-t-il-ete-construit',
   },
   '11-quand-le-batiment-a-t-il-ete-construit': {
     depreciationPeriod: 50,
-    linkQuestion: '10-quelle-est-la-surface-plancher-du-cinema',
+    linkQuestionId: '10-quelle-est-la-surface-plancher-du-cinema',
   },
   '12-a-quand-remonte-la-derniere-renovation-importante': {
     depreciationPeriod: 10,
-    linkQuestion: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee',
+    linkQuestionId: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee',
   },
   'de-quel-type-de-renovation-sagi-t-il': {},
   'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': {
     emissionFactorImportedId: '20730',
-    linkQuestion: '12-a-quand-remonte-la-derniere-renovation-importante',
+    linkQuestionId: '12-a-quand-remonte-la-derniere-renovation-importante',
   },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},
@@ -183,39 +177,39 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quel-montant-avez-vous-depense-en-services': { emissionFactorImportedId: '43545' },
   'ordinateurs-fixes-nombre-unite': {
     emissionFactorImportedId: '27003',
-    linkQuestion: 'ordinateurs-fixes-annee-ou-nombre-jours',
+    linkQuestionId: 'ordinateurs-fixes-annee-ou-nombre-jours',
   },
-  'ordinateurs-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'ordinateurs-fixes-nombre-unite' },
+  'ordinateurs-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'ordinateurs-fixes-nombre-unite' },
   'ordinateurs-portables-nombre-unite': {
     emissionFactorImportedId: '27002',
-    linkQuestion: 'ordinateurs-portables-annee-ou-nombre-jours',
+    linkQuestionId: 'ordinateurs-portables-annee-ou-nombre-jours',
   },
   'ordinateurs-portables-annee-ou-nombre-jours': {
     depreciationPeriod: 4,
-    linkQuestion: 'ordinateurs-portables-nombre-unite',
+    linkQuestionId: 'ordinateurs-portables-nombre-unite',
   },
   'photocopieurs-nombre-unite': {
     emissionFactorImportedId: '20591',
-    linkQuestion: 'photocopieurs-annee-ou-nombre-jours',
+    linkQuestionId: 'photocopieurs-annee-ou-nombre-jours',
   },
-  'photocopieurs-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'photocopieurs-nombre-unite' },
-  'imprimantes-nombre-unite': { emissionFactorImportedId: '27027', linkQuestion: 'imprimantes-annee-ou-nombre-jours' },
-  'imprimantes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'imprimantes-nombre-unite' },
+  'photocopieurs-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'photocopieurs-nombre-unite' },
+  'imprimantes-nombre-unite': { emissionFactorImportedId: '27027', linkQuestionId: 'imprimantes-annee-ou-nombre-jours' },
+  'imprimantes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'imprimantes-nombre-unite' },
   'telephones-fixes-nombre-unite': {
     emissionFactorImportedId: '20614',
-    linkQuestion: 'telephones-fixes-annee-ou-nombre-jours',
+    linkQuestionId: 'telephones-fixes-annee-ou-nombre-jours',
   },
-  'telephones-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'telephones-fixes-nombre-unite' },
+  'telephones-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'telephones-fixes-nombre-unite' },
   'telephones-portables-nombre-unite': {
     emissionFactorImportedId: '27010',
-    linkQuestion: 'telephones-portables-annee-ou-nombre-jours',
+    linkQuestionId: 'telephones-portables-annee-ou-nombre-jours',
   },
   'telephones-portables-annee-ou-nombre-jours': {
     depreciationPeriod: 4,
-    linkQuestion: 'telephones-portables-nombre-unite',
+    linkQuestionId: 'telephones-portables-nombre-unite',
   },
-  'tablettes-nombre-unite': { emissionFactorImportedId: '27007', linkQuestion: 'tablettes-annee-ou-nombre-jours' },
-  'tablettes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'tablettes-nombre-unite' },
+  'tablettes-nombre-unite': { emissionFactorImportedId: '27007', linkQuestionId: 'tablettes-annee-ou-nombre-jours' },
+  'tablettes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'tablettes-nombre-unite' },
   // Mobilité spectateurs
   'avez-vous-deja-realise-une-enquete-mobilite-specteurs': {},
   /** TODO: Liste 1  - attente de la fonctionnalité liste */
@@ -253,35 +247,35 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // Electromenager
   '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
     emissionFactorImportedId: '26976',
-    linkQuestion: '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+    linkQuestionId: '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
     depreciationPeriod: 5,
-    linkQuestion: '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+    linkQuestionId: '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
     emissionFactorImportedId: '26978',
-    linkQuestion: '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+    linkQuestionId: '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
     depreciationPeriod: 5,
-    linkQuestion: '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+    linkQuestionId: '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
     emissionFactorImportedId: '26986',
-    linkQuestion: '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+    linkQuestionId: '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
     depreciationPeriod: 5,
-    linkQuestion: '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+    linkQuestionId: '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
     emissionFactorImportedId: '26976',
-    linkQuestion: '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+    linkQuestionId: '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
     depreciationPeriod: 5,
-    linkQuestion: '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+    linkQuestionId: '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   // DechetsOrdinaires
   '112-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
@@ -332,4 +326,25 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'baies-de-disques': { emissionFactorImportedId: '20893' },
   // CommunicationDigitale (again)
   'ecrans-tv': { emissionFactorImportedId: '27006' },
+}
+
+const determineFactorAndValue = (
+  response: Prisma.InputJsonValue,
+  emissionFactorId: string | undefined,
+  value: number | undefined,
+  numberOfSessions: number,
+) => {
+  const mapping: Record<string, string> = {
+    'Un peu de confiseries et de boissons (~30g)': '136',
+    'Une part standard de confiseries et de boissons (~120g)': '137',
+    'Une part significative de confiseries et de boissons (~200g)': '138',
+  }
+
+  if (typeof response === 'string' && mapping[response]) {
+    emissionFactorId = mapping[response]
+  } else {
+    value = Number(response) * numberOfSessions
+  }
+
+  return { emissionFactorId, value }
 }
