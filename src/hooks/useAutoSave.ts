@@ -27,9 +27,12 @@ interface SaveAnswerRequest {
 export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveReturn => {
   const [fieldStatuses, setFieldStatuses] = useState<Record<string, FieldSaveStatus>>({})
 
-  const saveAnswer = useCallback(async (request: SaveAnswerRequest) => {
-    return saveAnswerForQuestion(request.question, request.response, studyId, studySiteId)
-  }, [])
+  const saveAnswer = useCallback(
+    async (request: SaveAnswerRequest) => {
+      return saveAnswerForQuestion(request.question, request.response, studyId, studySiteId)
+    },
+    [studyId, studySiteId],
+  )
 
   const updateFieldStatus = useCallback((questionId: string, status: Partial<FieldSaveStatus>) => {
     setFieldStatuses((prev) => ({
@@ -77,7 +80,7 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
         })
       }
     },
-    [studySiteId, updateFieldStatus, saveAnswer],
+    [studyId, studySiteId, saveAnswer, updateFieldStatus],
   )
 
   const saveField = useCallback(
