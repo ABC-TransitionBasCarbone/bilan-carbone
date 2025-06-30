@@ -34,17 +34,17 @@ const UserView = () => {
   return (
     <Box component="section" className={classNames(styles.container, 'flex-col')}>
       <Alert severity="info" className="mb-2">
-        Le calculateur proposé vous permet d’estimer l’impact sur le climat de votre activité. Il s’agit avant tout d’un
-        outil de sensibilisation. Il ne s'agit pas de réaliser une démarche de transition bas carbone mais d'une
-        empreinte carbone simplifiée — au sens du{' '}
-        <Link
-          href="https://www.guide-communication-climat.fr/definitions/approches-de-comptabilite-carbone"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Guide de communication autour de la comptabilité carbone
-        </Link>{' '}
-        — centré sur les principaux postes d’émissions liés à l’activité des salles de cinéma.
+        {t.rich('alert.info', {
+          link: (chunks) => (
+            <Link
+              href="https://www.guide-communication-climat.fr/definitions/approches-de-comptabilite-carbone"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {chunks}
+            </Link>
+          ),
+        })}
       </Alert>
       <Typography data-testid="title" variant="h4">
         {title}
