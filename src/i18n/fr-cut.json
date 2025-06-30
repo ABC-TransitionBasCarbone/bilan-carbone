@@ -1,11 +1,17 @@
 {
   "navigation": {
-    "organization": "Mes cinémas",
+    "organization": "Mes collaborateurs",
     "organizations": "Mes Bilans",
-    "information": "Données générales",
+    "information": "Mes cinémas",
     "team": "Mes collaborateurs"
   },
   "home": {
+    "title": "Faire votre bilan d’impact vous permettra de :",
+    "info": {
+      "0": "Comprendre la mesure d’impact de votre établissement",
+      "1": "Indentifier les priorités d’action",
+      "2": "Construire une trajectoire de réduction"
+    },
     "message": {
       "core": "Bienvenue sur COUNT le premier calculateur d'impact écologique dédié aux salles de cinéma.\nCet outil a été développé par l'association CUT ! Cinéma Uni pour la transition, en coopération avec l'ABC, association pour la transition bas carbone\nOpération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)\nCUT bénéficie du soutien du CNC",
       "0": "Faire votre bilan d'impact vous permettra de :",
@@ -14,12 +20,21 @@
       "3": "Construire une trajectoire de réduction"
     }
   },
+  "footer": {
+    "message": {
+      "0": "Cet outil a été développé par l'Association",
+      "1": "En coopération avec l'ABC, <br></br> Association pour la transition Bas Carbone",
+      "2": "Opération soutenue par l'État dans le cadre du <br></br> dispositif « Soutenir les alternatives vertes 2 » <br></br> de France 2030, opéré par la Banque des <br></br> territoires (Caisse des Dépôts)",
+      "3": "CUT! bénéficie du soutien du CNC"
+    }
+  },
   "study": {
     "create": "Ajouter un Bilan",
     "myCollaborations": "Mes collaborations",
     "myStudies": "Mes Bilans",
     "createFirstStudy": "Créer mon premier Bilan",
     "see": "Voir mon Bilan",
+    "validatedSources": "<data>{validated} / {total}</data> Questions répondues",
     "validatedOnlyDescription": "Pour chaque Bilan, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
     "selectSite": "Avant de remplir les données, choisissez un cinéma",
     "navigation": {
@@ -39,6 +54,9 @@
     },
     "export": {
       "export": "Exporter mes cinémas"
+    },
+    "results": {
+      "info": "Cette empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !"
     },
     "rights": {
       "title": "Données générales de l'étude : {name}"
@@ -64,17 +82,17 @@
       "editTitle": "Modifier mes cinémas"
     },
     "sites": {
-      "title": "Les établissements enregistrés",
-      "noSites": "Il n'y a pas de cinemas configurés sur l'organisation",
+      "title": "Les cinémas enregistrés",
+      "noSites": "Il n'y a pas de cinémas configurés sur l'organisation",
       "name": "Nom",
-      "namePlaceholder": "Nom du cinema",
+      "namePlaceholder": "Nom du cinéma",
       "etp": "Nombre d'Équivalents Temps Plein",
-      "etpPlaceholder": "Entrez votre nombre d'ETP pour ce cinema ici",
+      "etpPlaceholder": "Entrez votre nombre d'ETP pour ce cinéma ici",
       "ca": "Chiffre d'affaire ({unit})",
-      "caPlaceholder": "Entrez votre CA pour ce cinema en {unit} ici",
+      "caPlaceholder": "Entrez votre CA pour ce cinéma en {unit} ici",
       "actions": "Actions",
       "delete": "Supprimer",
-      "add": "Ajouter un cinema"
+      "add": "Ajouter un cinéma"
     },
     "team": {
       "title": "Mes cinémas"
@@ -96,5 +114,14 @@
     "DEFAULT": "Collaborateur",
     "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées).",
     "DEFAULT_description": "Un collaborateur peut modifier des études. Il n'a pas accès aux paramètres de l'organisation."
+  },
+  "login": {
+    "welcome": "Bienvenue sur",
+    "subtext": "Le premier calculateur d'impact écologique dédié aux salles de cinéma.",
+    "explaination": "Cet outil a été développé par l'association <b>CUT ! Cinéma Uni pour la transition,</b> en coopération avec <b>l'ABC, association pour la transition bas carbone.</b>",
+    "question": "Opération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)",
+    "form": {
+      "activate": "Créer mon compte"
+    }
   }
 }

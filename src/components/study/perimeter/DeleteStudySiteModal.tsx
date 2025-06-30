@@ -25,7 +25,7 @@ const DeleteStudySiteModal = ({ open, confirmDeletion, cancelDeletion, deleting 
           actionType: 'button',
           onClick: confirmDeletion,
           children: t('accept'),
-          ['data-testid']: 'delete-study-site-modale-accept',
+          ['data-testid']: 'delete-study-site-modal-accept',
         },
       ]}
     >

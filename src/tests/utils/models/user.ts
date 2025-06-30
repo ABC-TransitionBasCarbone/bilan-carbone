@@ -52,6 +52,20 @@ const mockedDbAccount = {
   },
 }
 
+export const mockedSession = {
+  email: mockedUser.email,
+  accountId: mockedAccountId,
+  organizationId: mockedOrganizationId,
+  environment: Environment.BC,
+  role: mockedAccount.role,
+  userId: mockedUserId,
+  organizationVersionId: mockedOrganizationVersionId,
+  id: mockedAccountId,
+  level: mockedUser.level,
+  firstName: mockedUser.firstName,
+  lastName: mockedUser.lastName,
+}
+
 export const getMockedDbAccount = (
   props?: Partial<Account>,
   userProps?: Partial<Prisma.UserCreateInput>,

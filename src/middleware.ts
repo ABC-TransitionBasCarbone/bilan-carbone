@@ -1,8 +1,9 @@
+import { Environment } from '@prisma/client'
 import { getToken } from 'next-auth/jwt'
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-const publicRoutes = ['/login', '/reset-password', '/activation']
+const COUNT_ROUTE = '/count'
+const publicRoutes = ['/login', '/reset-password', '/activation', COUNT_ROUTE]
 
 const bucketName = process.env.SCW_BUCKET_NAME as string
 const region = process.env.SCW_REGION
@@ -13,11 +14,27 @@ const logos = ['https://base-empreinte.ademe.fr', 'https://www.legifrance.gouv.f
 const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
 export async function middleware(req: NextRequest) {
+  if (req.nextUrl.pathname === COUNT_ROUTE) {
+    const countLoginUrl = new URL(`${COUNT_ROUTE}/login`, req.url)
+    return NextResponse.redirect(countLoginUrl)
+  }
+
   if (!publicRoutes.find((route) => req.nextUrl.pathname.startsWith(route))) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
 
     if (!token) {
-      const loginUrl = new URL('/login', req.url)
+      const env = req.nextUrl.searchParams.get('env')
+      let baseUrl = ''
+      switch (env) {
+        case Environment.CUT:
+          baseUrl = `${COUNT_ROUTE}`
+          break
+
+        default:
+          break
+      }
+
+      const loginUrl = new URL(`${baseUrl}/login`, req.url)
       return NextResponse.redirect(loginUrl)
     }
   }

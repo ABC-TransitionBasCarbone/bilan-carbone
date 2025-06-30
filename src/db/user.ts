@@ -83,23 +83,36 @@ export const updateUserPasswordForEmail = async (email: string, password: string
     throw new Error(`User with email ${email} not found`)
   }
 
+  const account = await prismaClient.account.findFirst({
+    where: {
+      userId: user.id,
+      environment: env,
+      status: { in: AuthorizedInOrgaUserStatus },
+    },
+  })
+
+  if (!account) {
+    throw new Error(`Account with email ${email} for environment ${env} not found or has a wrong status`)
+  }
+
   const accounts = await prismaClient.account.findMany({
     where: {
       userId: user.id,
-      environment: { in: environmentsWithChecklist },
       status: { in: AuthorizedInOrgaUserStatus },
     },
   })
 
   if (accounts.length > 0) {
     await Promise.all([
-      ...accounts.map((account) =>
-        prismaClient.userCheckedStep.upsert({
-          where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
-          update: {},
-          create: { accountId: account.id, step: UserChecklist.CreateAccount },
-        }),
-      ),
+      ...accounts
+        .filter((account) => environmentsWithChecklist.includes(account.environment))
+        .map((account) =>
+          prismaClient.userCheckedStep.upsert({
+            where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
+            update: {},
+            create: { accountId: account.id, step: UserChecklist.CreateAccount },
+          }),
+        ),
       prismaClient.account.update({
         where: { userId_environment: { userId: user.id, environment: env } },
         data: { status: UserStatus.ACTIVE },
@@ -244,7 +257,7 @@ export const createUsersWithAccount = async (
 export const updateAccount = (
   accountId: string,
   data: Partial<Prisma.AccountUpdateInput & { role: Exclude<Role, 'SUPER_ADMIN'> | undefined }>,
-  userData: Partial<Prisma.UserUpdateInput>,
+  userData?: Partial<Prisma.UserUpdateInput>,
 ) =>
   prismaClient.account.update({
     where: { id: accountId },
@@ -266,6 +279,7 @@ export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclu
   prismaClient.user.create({
     data: newMember,
     select: {
+      id: true,
       accounts: {
         select: {
           id: true,

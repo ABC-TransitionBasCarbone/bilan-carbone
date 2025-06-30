@@ -1,13 +1,14 @@
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Environment } from '@prisma/client'
 import { ReactNode } from 'react'
+import EnvironmentLoader from './EnvironmentLoader'
 
 type EnvironmentMap = {
   [key in Environment]?: ReactNode
 }
 
 interface Props {
-  defaultComponent: ReactNode
+  defaultComponent?: ReactNode
   environmentComponents?: EnvironmentMap
   forceEnvironment?: Environment
 }
@@ -17,7 +18,7 @@ const DynamicComponent = ({ defaultComponent, environmentComponents = {}, forceE
 
   const environmentToUse = forceEnvironment || environment
 
-  return environmentComponents[environmentToUse || Environment.BC] || defaultComponent
+  return environmentToUse ? environmentComponents[environmentToUse] || defaultComponent : <EnvironmentLoader />
 }
 
 export default DynamicComponent

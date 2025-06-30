@@ -1,14 +1,15 @@
 'use client'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { getUserCheckList } from '@/services/checklist'
 import { getUserCheckedItems } from '@/services/serverFunctions/user'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Drawer, Fab } from '@mui/material'
-import { OrganizationVersion, Role, UserChecklist } from '@prisma/client'
+import { Level, OrganizationVersion, Role, UserChecklist } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './Checklist.module.css'
 import ChecklistDrawer from './ChecklistDrawer'
 
@@ -17,9 +18,10 @@ interface Props {
   clientId?: string
   studyId?: string
   userRole: Role
+  userLevel: Level | null
 }
 
-const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRole }: Props) => {
+const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRole, userLevel }: Props) => {
   const t = useTranslations('checklist')
   const { callServerFunction } = useServerFunction()
   const [open, setOpen] = useState(false)
@@ -60,7 +62,20 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
     getCheckList()
   }, [open, getCheckList])
 
-  if (completed || !fetchedCheckedSteps) {
+  const hideChecklist = useMemo(() => {
+    if (completed || !fetchedCheckedSteps) {
+      return true
+    }
+
+    const availableChecklist = getUserCheckList(userRole, accountOrganizationVersion.isCR, userLevel)
+    const remainingChecklist = availableChecklist.filter(
+      (step) => step !== UserChecklist.CreateAccount && step !== UserChecklist.Completed,
+    )
+
+    return remainingChecklist.length === 0
+  }, [completed, fetchedCheckedSteps, userRole, accountOrganizationVersion.isCR, userLevel])
+
+  if (hideChecklist) {
     return null
   }
 
@@ -87,6 +102,7 @@ const ChecklistButton = ({ accountOrganizationVersion, clientId, studyId, userRo
           getCheckList={getCheckList}
           userChecklist={checklist}
           userRole={userRole}
+          userLevel={userLevel}
           accountOrganizationVersion={accountOrganizationVersion}
           clientId={clientId}
           studyId={studyId}

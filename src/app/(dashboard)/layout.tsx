@@ -7,7 +7,9 @@ import { getAccountOrganizationVersions } from '@/db/account'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
+import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { getEnvironment } from '@/i18n/environment'
+import { Box } from '@mui/material'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
 import styles from './layout.module.css'
@@ -42,27 +44,33 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
   )?.id
 
   return (
-    <div className="flex-col h100">
-      <Navbar user={account} environment={environment} />
-      {shouldDisplayOrgaCard && (
-        <OrganizationCard
-          account={account}
-          organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
-        />
-      )}
-      <main className={classNames(styles.content, { [styles.withOrganizationCard]: shouldDisplayOrgaCard })}>
-        {children}
-      </main>
-      {accountOrganizationVersion && environmentsWithChecklist.includes(accountOrganizationVersion.environment) && (
-        <ChecklistButton
-          accountOrganizationVersion={accountOrganizationVersion}
-          clientId={clientId}
-          studyId={studyId}
-          userRole={account.role}
-        />
-      )}
-      <EnvironmentInitializer user={account} />
-    </div>
+    <DynamicTheme environment={environment}>
+      <Box className="flex-col h100">
+        <Navbar user={account} environment={environment} />
+        {shouldDisplayOrgaCard && (
+          <OrganizationCard
+            account={account}
+            organizationVersions={organizationVersions as OrganizationVersionWithOrganization[]}
+          />
+        )}
+        <Box
+          component="main"
+          className={classNames(styles.content, { [styles.withOrganizationCard]: shouldDisplayOrgaCard })}
+        >
+          {children}
+        </Box>
+        {accountOrganizationVersion && environmentsWithChecklist.includes(accountOrganizationVersion.environment) && (
+          <ChecklistButton
+            accountOrganizationVersion={accountOrganizationVersion}
+            clientId={clientId}
+            studyId={studyId}
+            userRole={account.role}
+            userLevel={account.level}
+          />
+        )}
+        <EnvironmentInitializer user={account} />
+      </Box>
+    </DynamicTheme>
   )
 }
 

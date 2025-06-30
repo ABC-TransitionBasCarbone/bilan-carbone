@@ -1,0 +1,17 @@
+.loading {
+  top: 0;
+  left: 0;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: white;
+  z-index: 10000;
+}
+
+.circular {
+  width: 8rem;
+  height: 8rem;
+}

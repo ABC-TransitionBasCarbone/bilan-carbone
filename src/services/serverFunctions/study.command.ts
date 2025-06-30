@@ -1,7 +1,7 @@
 import { ControlMode, DayOfWeek, Export, Level, StudyResultUnit, StudyRole } from '@prisma/client'
 import dayjs from 'dayjs'
 import z from 'zod'
-import { OpeningHoursValidation } from '../hours'
+import { HolidayOpeningHoursValidation, OpeningHoursValidation } from '../hours'
 import { SubPostsCommandValidation } from './emissionFactor.command'
 
 export const SitesCommandValidation = z.object({
@@ -83,12 +83,6 @@ export const CreateStudyCommandValidation = z
           }, 'endDate'),
         level: z.nativeEnum(Level, { required_error: 'level' }),
         isPublic: z.string(),
-
-        numberOfSessions: z.number().optional(),
-        numberOfTickets: z.number().optional(),
-        numberOfOpenDays: z.number().optional(),
-        openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
-        openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
       }),
       StudyExportsCommandValidation,
     ),
@@ -203,9 +197,8 @@ export const ChangeStudyNameValidation = z.object({
 export type ChangeStudyNameCommand = z.infer<typeof ChangeStudyNameValidation>
 
 export const ChangeStudyCinemaValidation = z.object({
-  studyId: z.string(),
   openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
-  openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
+  openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), HolidayOpeningHoursValidation).optional(),
   numberOfSessions: z.number().optional().nullable(),
   numberOfTickets: z.number().optional().nullable(),
   numberOfOpenDays: z.number().optional().nullable(),

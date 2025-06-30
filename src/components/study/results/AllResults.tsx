@@ -1,4 +1,5 @@
 'use client'
+import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
@@ -32,6 +33,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
   const tQuality = useTranslations('quality')
   const tBeges = useTranslations('beges')
   const tUnits = useTranslations('study.results.units')
+  const tStudyNav = useTranslations('study.navigation')
 
   const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
@@ -42,7 +44,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
 
   return (
-    <>
+    <Block title={tStudyNav('results')} as="h1">
       <div className={classNames(styles.select, 'flex')}>
         <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
         <FormControl>
@@ -124,7 +126,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
           />
         )}
       </div>
-    </>
+    </Block>
   )
 }
 

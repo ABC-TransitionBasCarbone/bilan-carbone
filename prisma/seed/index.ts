@@ -40,6 +40,9 @@ type userAndAccountsAndOrganizationVersion = {
 const prisma = new PrismaClient()
 
 const users = async () => {
+  await prisma.answer.deleteMany()
+  await prisma.question.deleteMany()
+
   await prisma.emissionFactorPartMetaData.deleteMany()
   await prisma.emissionFactorPart.deleteMany()
   await prisma.emissionFactorMetaData.deleteMany()
@@ -68,6 +71,8 @@ const users = async () => {
   await prisma.organization.deleteMany()
 
   await prisma.cnc.deleteMany()
+
+  await prisma.deactivatableFeatureStatus.deleteMany()
 
   await prisma.cnc.create({
     data: {
@@ -230,6 +235,39 @@ const users = async () => {
       userId: clientLessUser.id,
       environment: Environment.BC,
       status: UserStatus.ACTIVE,
+    },
+  })
+
+  const organizationVersionCutSignup = await prisma.organizationVersion.create({
+    data: {
+      environment: Environment.CUT,
+      organizationId: (
+        await prisma.organization.create({
+          data: {
+            name: faker.company.name(),
+            wordpressId: '1234567891234',
+          },
+        })
+      ).id,
+    },
+  })
+
+  await prisma.account.create({
+    data: {
+      organizationVersionId: organizationVersionCutSignup.id,
+      role: Role.ADMIN,
+      environment: Environment.CUT,
+      status: UserStatus.ACTIVE,
+      userId: (
+        await prisma.user.create({
+          data: {
+            email: 'cut-admin-test@yopmail.com',
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            password: await signPassword('password'),
+          },
+        })
+      ).id,
     },
   })
 
@@ -624,6 +662,76 @@ const users = async () => {
     (site) => site.organizationId === defaultUserWithAccountOrganizationVersion.organizationId,
   )
 
+  // e2e emission factor
+  await prisma.emissionFactor.create({
+    data: {
+      importedFrom: Import.Manual,
+      status: EmissionFactorStatus.Valid,
+      totalCo2: 81,
+      geographicRepresentativeness: 5,
+      completeness: 5,
+      reliability: 5,
+      technicalRepresentativeness: 5,
+      temporalRepresentativeness: 5,
+      importedId: '4',
+      unit: Unit.GWH,
+      isMonetary: false,
+      source: 'Magic',
+      subPosts: [SubPost.Electricite],
+      organizationId: defaultUserWithAccount.accounts[0].organizationVersion.organizationId,
+      emissionFactorParts: {
+        create: [
+          {
+            co2f: 1,
+            ch4f: 2,
+            ch4b: 3,
+            n2o: 4,
+            co2b: 5,
+            sf6: 6,
+            hfc: 7,
+            pfc: 8,
+            otherGES: 9,
+            type: 'Amont',
+            totalCo2: 45,
+            createdAt: new Date('2025-01-01 07:00:00.00'),
+            metaData: {
+              create: {
+                language: 'fr',
+                title: 'My first part',
+              },
+            },
+          },
+          {
+            co2f: 2,
+            ch4f: 3,
+            ch4b: 4,
+            n2o: 5,
+            co2b: 6,
+            sf6: 7,
+            hfc: 8,
+            pfc: 9,
+            otherGES: 10,
+            type: 'Combustion',
+            totalCo2: 54,
+            createdAt: new Date('2025-01-01 08:00:00.00'),
+            metaData: {
+              create: {
+                language: 'fr',
+                title: 'My second part',
+              },
+            },
+          },
+        ],
+      },
+      metaData: {
+        create: {
+          language: 'fr',
+          title: 'My FE to edit',
+        },
+      },
+    },
+  })
+
   studies.push(
     await prisma.study.create({
       include: { sites: true },
@@ -661,6 +769,41 @@ const users = async () => {
         },
         contributors: {
           create: { accountId: contributor.id, subPost: SubPost.MetauxPlastiquesEtVerre },
+        },
+      },
+    }),
+  )
+
+  studies.push(
+    await prisma.study.create({
+      include: { sites: true },
+      data: {
+        id: '88c93e88-7c80-4be4-905b-f0bbd2ccc840',
+        createdById: defaultUserWithAccount.accounts[0].account.id,
+        startDate: new Date(),
+        endDate: faker.date.future(),
+        isPublic: false,
+        level: Level.Initial,
+        name: 'Study to delete',
+        organizationVersionId: defaultUserWithAccount.accounts[0].account.organizationVersionId as string,
+        sites: {
+          createMany: {
+            data: faker.helpers
+              .arrayElements(organizationVersionSites, { min: 1, max: organizationVersionSites.length })
+              .map((site) => ({
+                siteId: site.id,
+                etp: faker.helpers.maybe(() => faker.number.int({ min: 1, max: 100 })) || site.etp,
+                ca:
+                  faker.helpers.maybe(
+                    () => Math.round(faker.number.float({ min: 100_000, max: 1_000_000_000 })) / 100,
+                  ) || site.ca,
+              })),
+          },
+        },
+        allowedUsers: {
+          createMany: {
+            data: [{ role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id }],
+          },
         },
       },
     }),

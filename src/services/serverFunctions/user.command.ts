@@ -118,3 +118,14 @@ export const ResetPasswordCommandValidation = z.object({
 })
 
 export type ResetPasswordCommand = z.infer<typeof ResetPasswordCommandValidation>
+
+export const SignUpCutCommandValidation = z.object({
+  email: z
+    .string({ required_error: 'email' })
+    .email('email')
+    .trim()
+    .transform((email) => email.toLowerCase()),
+  siretOrCNC: z.string({ required_error: 'siretOrCNC' }).trim().min(1, 'siretOrCNC'),
+})
+
+export type SignUpCutCommand = z.infer<typeof SignUpCutCommandValidation>

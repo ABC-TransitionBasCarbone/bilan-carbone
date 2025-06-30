@@ -1,13 +1,15 @@
+import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({
   palette: {
     primary: {
       main: '#63EA90',
-      light: '#D0F8DE',
+      light: '#E0FBE8',
       contrastText: '#2C303A',
     },
     secondary: {
+      light: '#F3FBF7',
       main: '#63EA90',
     },
     grey: {
@@ -15,9 +17,13 @@ const base = createTheme({
     },
     success: {
       main: '#94EBBF',
+      light: '#63EA9080',
+      dark: '#5EDC7A',
     },
     error: {
       main: '#FF4052',
+      light: '#FFCCCC',
+      dark: '#F99',
     },
     warning: {
       main: '#fc8514',
@@ -64,6 +70,13 @@ const base = createTheme({
       fontWeight: 600,
       fontFamily: 'Gilroy, sans-serif',
     },
+    h4: {
+      fontFamily: 'Gilroy, sans-serif',
+      fontWeight: 700,
+      fontSize: '1.5rem',
+      lineHeight: '1.2rem',
+      letterSpacing: '0%',
+    },
   },
 })
 
@@ -91,6 +104,9 @@ const cutTheme = createTheme(base, {
             backgroundColor: base.palette.grey['50'],
           },
         },
+        contained: {
+          color: '#F4F7F9',
+        },
       },
     },
     MuiLinearProgress: {
@@ -117,13 +133,13 @@ const cutTheme = createTheme(base, {
       padding: '1rem',
     },
     postColors: {
-      functioning: { light: '#FF8145' },
-      mobility: { light: '#FEBC0C' },
-      tour: { light: '#3CCDB4' },
-      candyStore: { light: '#FF49A2' },
-      garbage: { light: '#9A61FA' },
-      ticketOffice: { light: '#FF4052' },
-      movieTheater: { light: '#6AA8FF' },
+      [Post.Fonctionnement]: { light: '#FF8145' },
+      [Post.MobiliteSpectateurs]: { light: '#FEBC0C' },
+      [Post.TourneesAvantPremiere]: { light: '#3CCDB4' },
+      [Post.Dechets]: { light: '#9A61FA' },
+      [Post.ConfiseriesEtBoissons]: { light: '#FF49A2' },
+      [Post.BilletterieEtCommunication]: { light: '#FF4052' },
+      [Post.SallesEtCabines]: { light: '#6AA8FF' },
     },
     roles: {
       validator: '#ffc966',
@@ -138,6 +154,9 @@ const cutTheme = createTheme(base, {
         textTransform: 'uppercase',
         fontSize: '1rem',
       },
+    },
+    publicContainer: {
+      background: '#E0FBE8',
     },
   },
 })

@@ -1,5 +1,7 @@
 'use client'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { signOutEnv } from '@/services/auth'
+import { getEnvRoute } from '@/services/email/utils'
 import { checkToken, reset } from '@/services/serverFunctions/auth'
 import { ResetPasswordCommand, ResetPasswordCommandValidation } from '@/services/serverFunctions/user.command'
 import { computePasswordValidation } from '@/services/utils'
@@ -9,9 +11,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { FormControl, IconButton, InputAdornment } from '@mui/material'
 import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
-import { signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
@@ -23,9 +24,10 @@ import authStyles from './Auth.module.css'
 interface Props {
   user?: UserSession
   token: string
+  environment?: Environment
 }
 
-const ResetForm = ({ user, token }: Props) => {
+const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
   useEffect(() => {
     checkToken(token).then((invalidtoken) => {
       setInvalidResetLink(invalidtoken)
@@ -34,7 +36,7 @@ const ResetForm = ({ user, token }: Props) => {
 
   useEffect(() => {
     if (user) {
-      signOut({ redirect: false })
+      signOutEnv(environment, { redirect: false })
     }
   }, [user])
 
@@ -51,10 +53,7 @@ const ResetForm = ({ user, token }: Props) => {
     digit: false,
   })
   const [submitting, setSubmitting] = useState(false)
-  const [env, setEnv] = useState<Environment | undefined>()
   const { callServerFunction } = useServerFunction()
-
-  const searchParams = useSearchParams()
 
   const { getValues, control, watch, handleSubmit } = useForm<ResetPasswordCommand>({
     resolver: zodResolver(ResetPasswordCommandValidation),
@@ -66,13 +65,6 @@ const ResetForm = ({ user, token }: Props) => {
   })
 
   useEffect(() => {
-    const environment = searchParams.get('env')
-    if (environment && Object.keys(Environment).includes(environment)) {
-      setEnv(environment as Environment)
-    }
-  }, [searchParams])
-
-  useEffect(() => {
     const { unsubscribe } = watch((values) => setPasswordValidation(computePasswordValidation(values.password ?? '')))
 
     return () => unsubscribe()
@@ -82,21 +74,18 @@ const ResetForm = ({ user, token }: Props) => {
     return <ResetLinkAlreadyUsed />
   }
 
+  const loginLink = getEnvRoute('login', environment)
+
   const onSubmit = async () => {
     setSubmitting(true)
 
     const { email, password } = getValues()
-    await callServerFunction(() => reset(email.toLowerCase(), password, token, env), {
+    await callServerFunction(() => reset(email.toLowerCase(), password, token, environment), {
       getSuccessMessage: () => t('validated'),
       getErrorMessage: () => t('resetError'),
       onSuccess: () => {
         setSubmitting(false)
-
-        if (env) {
-          router.push(`/login?env=${env}`)
-        } else {
-          router.push(`/login`)
-        }
+        router.push(loginLink)
       },
       onError: () => {
         setSubmitting(false)

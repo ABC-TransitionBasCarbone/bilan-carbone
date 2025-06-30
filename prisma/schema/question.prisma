@@ -1,0 +1,51 @@
+enum QuestionType {
+  QCM
+  QCU
+  SELECT
+  SELECT_FE
+  TABLE
+  POSTAL_CODE
+  DATE
+  NUMBER
+  RANGE
+  PHONE
+  TEXT
+  TITLE
+}
+
+model Question {
+  id              String       @id @default(uuid())
+  idIntern        String       @unique @map("id_intern")
+  label           String
+  order           Int          @default(autoincrement())
+  subPost         SubPost      @map("sub_post")
+  type            QuestionType
+  unit            Unit?
+  possibleAnswers String[]     @map("possible_answers")
+  userAnswers     Answer[]
+  required        Boolean
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @default(now()) @updatedAt @map("updated_at")
+
+  @@map("questions")
+}
+
+model Answer {
+  id       String @id @default(uuid())
+  response Json
+
+  studySite   StudySite @relation(fields: [studySiteId], references: [id])
+  studySiteId String
+
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String   @map("question_id")
+
+  emissionSourceId String?              @map("emission_source_id")
+  emissionSource   StudyEmissionSource? @relation(fields: [emissionSourceId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([questionId, studySiteId])
+  @@map("answers")
+}

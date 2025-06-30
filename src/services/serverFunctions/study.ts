@@ -36,7 +36,7 @@ import {
   deleteStudyExport,
   downgradeStudyUserRoles,
   FullStudy,
-  getStudiesFromSites,
+  getStudiesSitesFromIds,
   getStudyById,
   getStudyNameById,
   getStudySites,
@@ -45,6 +45,7 @@ import {
   updateStudy,
   updateStudyEmissionFactorVersion,
   updateStudyOpeningHours,
+  updateStudySiteData,
   updateStudySites,
   updateUserOnStudy,
 } from '@/db/study'
@@ -93,7 +94,7 @@ import {
   canChangePublicStatus,
   canChangeResultsUnit,
   canChangeSites,
-  canCreateStudy,
+  canCreateSpecificStudy,
   canDeleteStudy,
   canEditStudyFlows,
   canUpgradeSourceVersion,
@@ -130,13 +131,28 @@ export const getStudy = async (studyId: string) =>
     return study
   })
 
-export const createStudyCommand = async ({
-  organizationVersionId,
-  validator,
-  sites,
-  openingHoursHoliday,
-  ...command
-}: CreateStudyCommand) =>
+export const getStudySite = async (studySiteId: string) =>
+  withServerResponse('getStudySite', async () => {
+    const session = await dbActualizedAuth()
+    if (!studySiteId || !session || !session.user) {
+      return null
+    }
+
+    const studySites = await getStudiesSitesFromIds([studySiteId])
+
+    if (!studySites || studySites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studySites[0].studyId, session.user.organizationVersionId)
+    if (!study || !hasAccessToStudy(session.user, study)) {
+      return null
+    }
+
+    return study.sites.find((site) => site.id === studySiteId)
+  })
+
+export const createStudyCommand = async ({ organizationVersionId, validator, sites, ...command }: CreateStudyCommand) =>
   withServerResponse('createStudyCommand', async () => {
     const session = await dbActualizedAuth()
 
@@ -191,19 +207,11 @@ export const createStudyCommand = async ({
     const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
-    const mergedOpeningHours = [
-      ...Object.values(command.openingHours || {}),
-      ...Object.values(openingHoursHoliday || {}),
-    ]
-
     const study = {
       ...command,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
       isPublic: command.isPublic === 'true',
-      openingHours: {
-        create: mergedOpeningHours,
-      },
       allowedUsers: {
         createMany: { data: rights },
       },
@@ -238,7 +246,7 @@ export const createStudyCommand = async ({
       },
     } satisfies Prisma.StudyCreateInput
 
-    if (!(await canCreateStudy(session.user.accountId, study, organizationVersionId))) {
+    if (!(await canCreateSpecificStudy(session.user, study, organizationVersionId))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -341,20 +349,33 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
     await updateStudy(studyId, { name: command.name })
   })
 
-export const changeStudyCinema = async ({ studyId, ...command }: ChangeStudyCinemaCommand) =>
+export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCinemaCommand) =>
   withServerResponse('changeStudyCinema', async () => {
-    const informations = await getStudyRightsInformations(studyId)
+    const studySites = await getStudiesSitesFromIds([studySiteId])
+
+    if (!studySites || studySites.length === 0) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = studySites[0].study
+
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const informations = await getStudyRightsInformations(study.id)
+
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const { openingHours, openingHoursHoliday, ...updateData } = command
+    const { openingHours, openingHoursHoliday, ...updateData } = data
 
     if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateStudyOpeningHours(studyId, openingHours, openingHoursHoliday)
-    await updateStudy(studyId, updateData)
+    await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
+    await updateStudySiteData(studySiteId, updateData)
   })
 
 export const hasActivityData = async (
@@ -757,7 +778,7 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
     }
   })
 
-const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getStudiesFromSites>[0]['study']) => {
+const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getStudiesSitesFromIds>[0]['study']) => {
   // The function does not return the user's role, which is sensitive information.
   // We don't need to know the role, only whether or not the user has one
   // We therefore arbitrarily use the "Reader" role
@@ -774,11 +795,11 @@ const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getSt
 
 export const findStudiesWithSites = async (siteIds: string[]) =>
   withServerResponse('findStudiesWithSites', async () => {
-    const [session, studySites] = await Promise.all([dbActualizedAuth(), getStudiesFromSites(siteIds)])
+    const [session, studySites] = await Promise.all([dbActualizedAuth(), getStudiesSitesFromIds(siteIds)])
 
     const user = session?.user
-    const authorizedStudySites: AsyncReturnType<typeof getStudiesFromSites> = []
-    const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesFromSites>[0], 'site' | 'study'> & {
+    const authorizedStudySites: AsyncReturnType<typeof getStudiesSitesFromIds> = []
+    const unauthorizedStudySites: (Pick<AsyncReturnType<typeof getStudiesSitesFromIds>[0], 'site' | 'study'> & {
       count: number
     })[] = []
 

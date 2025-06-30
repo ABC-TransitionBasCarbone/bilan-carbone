@@ -4,10 +4,11 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { TeamMember } from '@/db/account'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteOrganizationMember } from '@/services/serverFunctions/organization'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { canEditMemberRole } from '@/utils/organization'
 import { getEnvironmentRoles } from '@/utils/user'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Role } from '@prisma/client'
+import { Environment, Role } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -44,6 +45,9 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
 
   const router = useRouter()
 
+  const { environment } = useAppEnvironmentStore()
+  const isCut = useMemo(() => environment === Environment.CUT, [environment])
+
   const columns = useMemo(() => {
     const col: ColumnDef<TeamMember>[] = [
       {
@@ -52,26 +56,34 @@ const TeamTable = ({ user, team, crOrga }: Props) => {
       },
       { header: t('lastName'), accessorKey: 'user.lastName' },
       { header: t('email'), accessorKey: 'user.email' },
-      { header: t('level'), accessorFn: (member: TeamMember) => (member.user.level ? tLevel(member.user.level) : '') },
-      {
-        header: t('role'),
-        accessorKey: 'role',
-        cell: (context) => {
-          const role = context.getValue() as Role
-          return canUpdateTeam ? (
-            <SelectRole
-              currentUserEmail={user.email}
-              currentRole={role}
-              email={context.row.original.user.email}
-              level={context.row.original.user.level}
-              environment={user.environment}
-            />
-          ) : (
-            <>{tRole(role)}</>
-          )
-        },
-      },
     ]
+
+    if (!isCut) {
+      col.push({
+        header: t('level'),
+        accessorFn: (member: TeamMember) => (member.user.level ? tLevel(member.user.level) : ''),
+      })
+    }
+
+    col.push({
+      header: t('role'),
+      accessorKey: 'role',
+      cell: ({ getValue, row }) => {
+        const role = getValue() as Role
+        return canUpdateTeam ? (
+          <SelectRole
+            currentUserEmail={user.email}
+            currentRole={role}
+            email={row.original.user.email}
+            level={row.original.user.level}
+            environment={user.environment}
+          />
+        ) : (
+          <>{tRole(role)}</>
+        )
+      },
+    })
+
     if (canUpdateTeam) {
       col.push({
         header: t('action'),

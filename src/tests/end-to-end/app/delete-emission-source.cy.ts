@@ -1,5 +1,5 @@
 describe('Delete emission source', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
   })
 
@@ -15,7 +15,7 @@ describe('Delete emission source', () => {
 
     cy.getByTestId('emission-source-My temp emission source').click()
     cy.getByTestId('emission-source-delete').click()
-    cy.getByTestId('delete-emission-source-modale-accept').click()
+    cy.getByTestId('delete-emission-source-modal-accept').click()
 
     cy.getByTestId('emission-source-My temp emission source').should('not.exist')
   })

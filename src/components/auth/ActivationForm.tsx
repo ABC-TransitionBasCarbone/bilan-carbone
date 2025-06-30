@@ -19,12 +19,15 @@ import authStyles from './Auth.module.css'
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
-const ActivationForm = () => {
+interface Props {
+  environment?: Environment
+}
+
+const ActivationForm = ({ environment = Environment.BC }: Props) => {
   const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
-  const [env, setEnv] = useState<Environment | undefined>()
 
   const searchParams = useSearchParams()
 
@@ -42,18 +45,13 @@ const ActivationForm = () => {
     if (email) {
       setValue('email', email)
     }
-
-    const environment = searchParams.get('env')
-    if (environment && Object.keys(Environment).includes(environment)) {
-      setEnv(environment as Environment)
-    }
   }, [searchParams, setValue])
 
   const onSubmit = async () => {
     setMessage('')
     setSubmitting(true)
 
-    const activation = await activateEmail(getValues().email, env)
+    const activation = await activateEmail(getValues().email, environment)
 
     setSubmitting(false)
 

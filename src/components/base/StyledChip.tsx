@@ -28,7 +28,7 @@ const BaseStyledChip = styled(Chip)(({ theme, color = 'default' }) => {
 
   return {
     ...baseStyles,
-    color: palette.dark,
+    color: palette.contrastText,
     '& .MuiChip-icon, & .MuiChip-deleteIcon': {
       color: palette.dark,
     },

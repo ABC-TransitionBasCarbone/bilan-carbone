@@ -7,14 +7,6 @@
   height: auto;
 }
 
-.container {
-  position: absolute;
-  width: 75%;
-  max-width: 62rem;
-  max-height: calc(100% - 2rem);
-  overflow-y: auto;
-}
-
 .loginForm {
   padding: 2rem;
   border: var(--border-dark);
@@ -72,4 +64,21 @@
 
 .title {
   margin-bottom: 1rem !important;
+}
+
+.divider {
+  width: 30%;
+}
+
+.explaination {
+  font-size: 1.2rem;
+}
+
+.explaination b {
+  font-size: 1.2rem;
+}
+
+.france2030Logo {
+  height: fit-content;
+  width: 20%;
 }

@@ -1,0 +1,16 @@
+.container {
+  bottom: 0;
+  width: 100%;
+  min-height: 236px;
+  padding: 2rem 0;
+  @media screen and (max-width: 75rem) {
+    flex-wrap: wrap;
+  }
+}
+
+.font {
+  font-weight: 400;
+  font-size: 13;
+  line-height: '100%';
+  letter-spacing: 0;
+}

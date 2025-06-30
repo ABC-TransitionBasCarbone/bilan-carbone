@@ -1,0 +1,43 @@
+.subPostsContainer {
+  height: 0;
+  overflow: hidden;
+  transition: height 300ms ease-in-out;
+}
+
+.subPosts {
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 0 0 calc(1rem - 2px) calc(1rem - 2px);
+
+  @media screen and (max-width: 64rem) {
+    padding: 0.25rem;
+  }
+
+  @media screen and (max-width: 55rem) {
+    display: none;
+  }
+}
+
+.list {
+  gap: 0.25rem;
+  color: var(--primary-800);
+
+  @media screen and (max-width: 90rem) {
+    gap: 0.125rem;
+  }
+
+  li,
+  svg {
+    @media screen and (max-width: 90rem) {
+      font-size: 0.875rem;
+    }
+
+    @media screen and (max-width: 64rem) {
+      font-size: 0.75rem;
+    }
+
+    @media screen and (max-width: 55rem) {
+      font-size: 0.625rem;
+    }
+  }
+}

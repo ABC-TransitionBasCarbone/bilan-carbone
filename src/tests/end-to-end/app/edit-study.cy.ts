@@ -1,8 +1,11 @@
 import dayjs from 'dayjs'
 
 describe('Edit study', () => {
-  beforeEach(() => {
+  before(() => {
     cy.exec('npx prisma db seed')
+  })
+
+  beforeEach(() => {
     cy.intercept('POST', '/etudes/creer').as('create')
   })
 

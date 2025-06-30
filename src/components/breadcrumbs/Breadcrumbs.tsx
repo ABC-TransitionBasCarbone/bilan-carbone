@@ -2,6 +2,7 @@
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Box, BoxProps, Link, Breadcrumbs as MUIBreadcrumbs, styled, Typography } from '@mui/material'
+import { Environment } from '@prisma/client'
 import { useMemo } from 'react'
 
 interface Props {
@@ -10,7 +11,6 @@ interface Props {
 }
 
 const StyledContainer = styled(Box)<BoxProps>(({ theme }) => {
-  const { environment } = useAppEnvironmentStore()
   return {
     backgroundColor: theme.palette.primary.light,
     borderRadius: '0 0 1rem 1rem',
@@ -24,7 +24,7 @@ const StyledContainer = styled(Box)<BoxProps>(({ theme }) => {
 
 const Breadcrumbs = ({ links, current }: Props) => {
   const { environment } = useAppEnvironmentStore()
-  const isCut = useMemo(() => environment === 'CUT', [environment])
+  const isCut = useMemo(() => environment === Environment.CUT, [environment])
   return (
     <nav role="navigation" aria-label="Breadcrumb" className="main-container">
       <StyledContainer className="flex-cc">
