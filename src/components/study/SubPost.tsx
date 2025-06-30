@@ -1,12 +1,12 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { caracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
+import { getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { getCaracterisationsBySubPost, STUDY_UNIT_VALUES } from '@/utils/study'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material'
 import { StudyRole, SubPost as SubPostEnum } from '@prisma/client'
@@ -66,7 +66,7 @@ const SubPost = ({
     [study, subPost, withoutDetail],
   )
 
-  const caracterisations = useMemo(() => caracterisationsBySubPost[subPost], [subPost])
+  const caracterisations = useMemo(() => getCaracterisationsBySubPost(study.exports, subPost), [subPost, study.exports])
 
   const [expanded, setExpanded] = useState(false)
 
