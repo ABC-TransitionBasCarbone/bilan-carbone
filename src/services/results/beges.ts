@@ -1,8 +1,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { getCaracterisationsBySubPost } from '@/utils/study'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
-import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
+import { getCaracterisationsBySubPost, getStandardDeviation, sumStandardDeviations } from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
