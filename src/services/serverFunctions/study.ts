@@ -58,7 +58,6 @@ import { withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
   getAllowedRolesFromDefaultRole,
-  getCaracterisationsBySubPost,
   getUserRoleOnPublicStudy,
   hasEditionRights,
 } from '@/utils/study'
@@ -85,6 +84,7 @@ import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
+import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
 import { isInOrgaOrParentFromId } from '../permissions/organization'

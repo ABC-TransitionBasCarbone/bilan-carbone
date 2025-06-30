@@ -1,12 +1,11 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy } from '@/db/study'
-import { getAllCaracterisationsBySubPost } from '@/services/emissionSource'
 import { isAdminOnStudyOrga } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { checkLevel } from '@/services/study'
 import { isAdmin } from '@/utils/user'
-import { Environment, Export, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
+import { Environment, Level, Role, StudyResultUnit, StudyRole, SubPost, Unit } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { formatNumber } from './number'
 import { isInOrgaOrParent } from './organization'
@@ -121,13 +120,4 @@ export const getEmissionValueString = (
 ): string => {
   const safeValue = value ?? 0
   return `${formatNumber(safeValue / STUDY_UNIT_VALUES[resultsUnit], decimals)} ${unitLabel}`
-}
-
-export const getCaracterisationsBySubPost = (exports: FullStudy['exports'], subPost: SubPost) => {
-  const begesExport = exports.find((exp) => exp.type === Export.Beges)
-  const controlMode = begesExport?.control || 'Operational'
-  const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
-  const caracterisations = caracterisationMap[subPost]
-
-  return caracterisations
 }
