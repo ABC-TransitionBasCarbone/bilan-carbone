@@ -8,7 +8,7 @@ import { expect } from '@jest/globals'
 import { Level, Role, StudyRole } from '@prisma/client'
 import * as authModule from '../auth'
 import * as organizationModule from './organization'
-import { canCreateStudy, canDeleteStudy } from './study'
+import { canCreateSpecificStudy, canDeleteStudy } from './study'
 
 // mocked called function
 jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
@@ -50,7 +50,7 @@ const mockedStudyToDelete = {
 const getStudyWithPublicStatus = (isPublic: boolean) => ({ ...mockedStudyToDelete, isPublic })
 
 describe('Study permissions service', () => {
-  describe('canCreateStudy', () => {
+  describe('canCreateSpecificStudy', () => {
     beforeEach(() => {
       jest.clearAllMocks()
       mockIsInOrgaOrParentFromId.mockResolvedValue(true)
@@ -62,17 +62,17 @@ describe('Study permissions service', () => {
       })
 
       it('User should be able to create an "Advanced" study', async () => {
-        const result = await canCreateStudy(mockedAccountId, advancedStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedAccountId, advancedStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create a "Standard" study', async () => {
-        const result = await canCreateStudy(mockedAccountId, standardStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedAccountId, standardStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create an "Initial" study', async () => {
-        const result = await canCreateStudy(mockedAccountId, initialStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedAccountId, initialStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
     })
@@ -83,17 +83,17 @@ describe('Study permissions service', () => {
       })
 
       it('User should not be able to create an "Advanced" study', async () => {
-        const result = await canCreateStudy(mockedAccountId, advancedStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedAccountId, advancedStudy, mockedOrganizationVersionId)
         expect(result).toBe(false)
       })
 
       it('User should be able to create a "Standard" study', async () => {
-        const result = await canCreateStudy(mockedAccountId, standardStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedAccountId, standardStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create an "Initial" study', async () => {
-        const result = await canCreateStudy(mockedAccountId, initialStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedAccountId, initialStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
     })
@@ -104,17 +104,17 @@ describe('Study permissions service', () => {
       })
 
       it('User should not be able to create an "Advanced" study', async () => {
-        const result = await canCreateStudy(mockedAccountId, advancedStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedAccountId, advancedStudy, mockedOrganizationVersionId)
         expect(result).toBe(false)
       })
 
       it('User should not be able to create a "Standard" study', async () => {
-        const result = await canCreateStudy(mockedAccountId, standardStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedAccountId, standardStudy, mockedOrganizationVersionId)
         expect(result).toBe(false)
       })
 
       it('User should be able to create an "Initial" study', async () => {
-        const result = await canCreateStudy(mockedAccountId, initialStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedAccountId, initialStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
     })

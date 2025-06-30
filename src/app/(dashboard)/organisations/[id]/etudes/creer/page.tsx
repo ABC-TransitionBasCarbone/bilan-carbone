@@ -3,10 +3,9 @@ import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { getOrganizationVersionAccounts } from '@/db/organization'
+import { canCreateAStudy } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
-import { canCreateStudy } from '@/utils/user'
-import { Environment } from '@prisma/client'
 interface Props {
   params: Promise<{ id: string }>
 }
@@ -15,8 +14,8 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps) => {
   const params = await props.params
 
   const id = params.id
-  const user = props.user
-  if (!id || !canCreateStudy(user)) {
+  const { user } = props
+  if (!id || !canCreateAStudy(user)) {
     return <NotFound />
   }
 
