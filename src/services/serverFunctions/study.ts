@@ -8,6 +8,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountsUserLevel,
 } from '@/db/account'
+import { prismaClient } from '@/db/client'
 import { getCNCById } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -28,7 +29,6 @@ import {
   createContributorOnStudy,
   createStudy,
   createStudyEmissionSource,
-  createStudyExport,
   createUserOnStudy,
   deleteAccountOnStudy,
   deleteContributor,
@@ -48,6 +48,7 @@ import {
   updateStudySiteData,
   updateStudySites,
   updateUserOnStudy,
+  upsertStudyExport,
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
@@ -57,6 +58,7 @@ import { withServerResponse } from '@/utils/serverResponse'
 import {
   getAccountRoleOnStudy,
   getAllowedRolesFromDefaultRole,
+  getCaracterisationsBySubPost,
   getUserRoleOnPublicStudy,
   hasEditionRights,
 } from '@/utils/study'
@@ -67,6 +69,7 @@ import {
   Document,
   EmissionFactor,
   EmissionFactorImportVersion,
+  EmissionSourceCaracterisation,
   Export,
   Import,
   Prisma,
@@ -480,7 +483,54 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
     if (control === false) {
       return deleteStudyExport(studyId, type)
     }
-    return createStudyExport(studyId, type, control)
+    return upsertStudyExport(studyId, type, control)
+  })
+
+export const clearInvalidCharacterizations = async (studyId: string, newControlMode: ControlMode) =>
+  withServerResponse('clearInvalidCharacterizations', async () => {
+    const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
+    if (!session || !session.user || !study.success || !study.data) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const emissionSources = study.data.emissionSources
+
+    const updatePromises = emissionSources
+      .map((emissionSource) => {
+        if (!emissionSource.caracterisation) {
+          return null
+        }
+
+        const exportsWithNewControlMode = study.data?.exports.map((exp) => ({
+          ...exp,
+          control: newControlMode,
+        }))
+        const validCaracterisations = getCaracterisationsBySubPost(
+          exportsWithNewControlMode || [],
+          emissionSource.subPost,
+        )
+        const isValidForNewControlMode = validCaracterisations.includes(
+          emissionSource.caracterisation as EmissionSourceCaracterisation,
+        )
+
+        if (!isValidForNewControlMode) {
+          return prismaClient.studyEmissionSource.update({
+            where: { id: emissionSource.id },
+            data: { caracterisation: null },
+          })
+        }
+        return null
+      })
+      .filter(Boolean)
+
+    if (updatePromises.length > 0) {
+      await Promise.all(updatePromises)
+    }
+
+    return
   })
 
 const getOrCreateUserAndSendStudyInvite = async (
