@@ -8,11 +8,11 @@ import { Post, subPostsByPost } from '@/services/posts'
 import { computeBegesResult, getBegesEmissionTotal } from '@/services/results/beges'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { formatNumber } from '@/utils/number'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { getCaracterisationsBySubPost, STUDY_UNIT_VALUES } from '@/utils/study'
 import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
 import TrendingUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
-import { Export, ExportRule, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, Export, ExportRule, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -115,13 +115,26 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
 
   const missingCaract = useMemo(
     () =>
-      study.emissionSources.filter(
-        (emissionSource) =>
-          (emissionSource.validated || !validatedOnly) &&
-          !emissionSource.caracterisation &&
-          emissionSource.subPost !== SubPost.UtilisationEnDependance,
-      ),
-    [study.emissionSources, validatedOnly],
+      study.emissionSources.filter((emissionSource) => {
+        if (
+          !(emissionSource.validated || !validatedOnly) ||
+          emissionSource.subPost === SubPost.UtilisationEnDependance
+        ) {
+          return false
+        }
+
+        if (!emissionSource.caracterisation) {
+          return true
+        }
+
+        const availableCaracterisations = getCaracterisationsBySubPost(study.exports, emissionSource.subPost)
+        if (availableCaracterisations.length === 0) {
+          return false
+        }
+
+        return !availableCaracterisations.includes(emissionSource.caracterisation as EmissionSourceCaracterisation)
+      }),
+    [study.emissionSources, study.exports, validatedOnly],
   )
 
   const missingCaractDifference = useMemo(() => {
@@ -140,7 +153,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
     }, 0)
   }, [missingCaract, emissionFactorsWithParts, unitValue])
 
-  const maxListedEmissionSources = 10
+  const maxButtonEmissionSources = 5
 
   return begesTotal !== computedTotal ? (
     <>
@@ -259,22 +272,23 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
                 </p>
                 <div className={classNames(styles.missingSourcesList, 'wrap')}>
                   {missingCaract
-                    .filter((_, i) => i < maxListedEmissionSources)
+                    .filter((_, i) => i < maxButtonEmissionSources)
                     .map((emissionSource) => (
                       <Button
                         key={`caract-emission-source-${emissionSource.id}`}
                         onClick={() => navigateToEmissionSource(emissionSource.id, emissionSource.subPost)}
                         color="secondary"
+                        variant="outlined"
                         size="small"
                         className={styles.missingSourceButton}
                       >
                         {emissionSource.name}
                       </Button>
                     ))}
-                  {missingCaract.length > maxListedEmissionSources && (
-                    <span className={styles.additionalCount}>
-                      +{missingCaract.length - maxListedEmissionSources} {t('additionalMissing')}
-                    </span>
+                  {missingCaract.length > maxButtonEmissionSources && (
+                    <div className={classNames(styles.additionalMissingSources, 'mt-2')}>
+                      {t('additionalMissing', { count: missingCaract.length - maxButtonEmissionSources })}
+                    </div>
                   )}
                 </div>
               </div>
