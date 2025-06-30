@@ -11,7 +11,7 @@ import styles from './ExportCheckbox.module.css'
 
 interface Props {
   id: Export
-  study: FullStudy
+  study: FullStudy | null
   values: Record<Export, ControlMode | false>
   setValues: Dispatch<SetStateAction<Record<Export, ControlMode | false>>>
   disabled?: boolean
@@ -25,8 +25,8 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled }: Props) => {
   const [pendingControlMode, setPendingControlMode] = useState<ControlMode | null>(null)
 
   const hasCharacterizations = useMemo(
-    () => study.emissionSources.some((source) => source.caracterisation !== null),
-    [study.emissionSources],
+    () => study && study.emissionSources.some((source) => source.caracterisation !== null),
+    [study],
   )
 
   const handleControlModeChange = (newControlMode: ControlMode) => {
@@ -42,11 +42,15 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled }: Props) => {
 
   const confirmControlModeChange = async () => {
     if (pendingControlMode) {
-      await callServerFunction(() => clearInvalidCharacterizations(study.id, pendingControlMode), {
-        onSuccess: () => {
-          setValues({ ...values, [id]: pendingControlMode })
-        },
-      })
+      if (!study) {
+        setValues({ ...values, [id]: pendingControlMode })
+      } else {
+        await callServerFunction(() => clearInvalidCharacterizations(study.id, pendingControlMode), {
+          onSuccess: () => {
+            setValues({ ...values, [id]: pendingControlMode })
+          },
+        })
+      }
     }
     setShowWarning(false)
     setPendingControlMode(null)
