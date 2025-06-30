@@ -25,6 +25,11 @@ export const saveAnswerForQuestion = async (
     let emissionFactorId = undefined
     let emissionSourceId = undefined
 
+    if (!response) {
+      console.warn(`No response provided for question: ${question.idIntern}. Skipping save.`)
+      return
+    }
+
     if (!emissionFactorImportedId && !depreciationPeriod) {
       return saveAnswer(question.id, studySiteId, response)
     }
@@ -38,6 +43,9 @@ export const saveAnswerForQuestion = async (
 
       const previousAnswer = await getAnswerByQuestionId(previousQuestion.id)
       emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
+      /**
+       * TODO: fix pour arriver sur le bon id d'émission source
+       */
     }
 
     console.log(`Emission factor imported ID: ${emissionFactorImportedId}, Depreciation period: ${depreciationPeriod}`)
