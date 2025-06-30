@@ -51,6 +51,3 @@ const getUntrainedRoles = (environment: Environment) => {
 
 export const canBeUntrainedRole = (role: Role, environment: Environment) =>
   getUntrainedRoles(environment).includes(role)
-
-export const canCreateStudy = (user: UserSession) =>
-  user.environment === Environment.CUT || (!!user.level && !!user.organizationVersionId)

@@ -5,7 +5,7 @@ import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { Level, Prisma, Study, StudyRole, User } from '@prisma/client'
+import { Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { checkLevel } from '../study'
@@ -66,7 +66,11 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
   return allowedStudies.filter((study) => study !== null)
 }
 
-export const canCreateStudy = async (
+export const canCreateAStudy = (user: UserSession) => {
+  return user.environment === Environment.CUT || (!!user.level && !!user.organizationVersionId)
+}
+
+const canCreateSpecificStudyCommon = async (
   accountId: string,
   study: Prisma.StudyCreateInput,
   organizationVersionId: string,
@@ -74,18 +78,56 @@ export const canCreateStudy = async (
   const dbAccount = await getAccountById(accountId)
 
   if (!dbAccount) {
-    return false
-  }
-
-  if (!checkLevel(dbAccount.user.level, study.level)) {
-    return false
+    return { allowed: false }
   }
 
   if (!(await isInOrgaOrParentFromId(dbAccount.organizationVersionId, organizationVersionId))) {
+    return { allowed: false }
+  }
+
+  return { allowed: true, account: dbAccount }
+}
+
+const canCreateSpecificStudyCUT = async (
+  accountId: string,
+  study: Prisma.StudyCreateInput,
+  organizationVersionId: string,
+) => {
+  const { allowed } = await canCreateSpecificStudyCommon(accountId, study, organizationVersionId)
+  return allowed
+}
+
+const canCreateSpecificStudyBC = async (
+  accountId: string,
+  study: Prisma.StudyCreateInput,
+  organizationVersionId: string,
+) => {
+  const { allowed: commonRights, account: dbAccount } = await canCreateSpecificStudyCommon(
+    accountId,
+    study,
+    organizationVersionId,
+  )
+
+  if (!commonRights || !dbAccount || !checkLevel(dbAccount.user.level, study.level)) {
     return false
   }
 
   return true
+}
+
+export const canCreateSpecificStudy = async (
+  user: UserSession,
+  study: Prisma.StudyCreateInput,
+  organizationVersionId: string,
+) => {
+  switch (user.environment) {
+    case Environment.CUT:
+      return canCreateSpecificStudyCUT(user.accountId, study, organizationVersionId)
+    case Environment.BC:
+      return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
+    default:
+      return false
+  }
 }
 
 const canChangeStudyValues = async (user: UserSession, study: FullStudy) => {

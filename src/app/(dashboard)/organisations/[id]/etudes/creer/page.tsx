@@ -3,6 +3,7 @@ import NewStudyPage from '@/components/pages/NewStudy'
 import NotFound from '@/components/pages/NotFound'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { getOrganizationVersionAccounts } from '@/db/organization'
+import { canCreateAStudy } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 interface Props {
@@ -13,13 +14,14 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps) => {
   const params = await props.params
 
   const id = params.id
-  if (!id || !props.user.organizationVersionId || !props.user.level) {
+  const { user } = props
+  if (!id || !canCreateAStudy(user)) {
     return <NotFound />
   }
 
   const [organizationVersions, accounts] = await Promise.all([
-    getAccountOrganizationVersions(props.user.accountId),
-    getOrganizationVersionAccounts(props.user.organizationVersionId),
+    getAccountOrganizationVersions(user.accountId),
+    getOrganizationVersionAccounts(user.organizationVersionId),
   ])
 
   const userSettings = await getUserSettings()
@@ -28,7 +30,7 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps) => {
   return (
     <NewStudyPage
       organizationVersions={organizationVersions}
-      user={props.user}
+      user={user}
       accounts={accounts}
       defaultOrganizationVersion={organizationVersions.find((organizationVersion) => organizationVersion.id === id)}
       caUnit={caUnit}
