@@ -179,7 +179,10 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '27003',
     linkQuestionId: 'ordinateurs-fixes-annee-ou-nombre-jours',
   },
-  'ordinateurs-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'ordinateurs-fixes-nombre-unite' },
+  'ordinateurs-fixes-annee-ou-nombre-jours': {
+    depreciationPeriod: 4,
+    linkQuestionId: 'ordinateurs-fixes-nombre-unite',
+  },
   'ordinateurs-portables-nombre-unite': {
     emissionFactorImportedId: '27002',
     linkQuestionId: 'ordinateurs-portables-annee-ou-nombre-jours',
@@ -193,7 +196,10 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     linkQuestionId: 'photocopieurs-annee-ou-nombre-jours',
   },
   'photocopieurs-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'photocopieurs-nombre-unite' },
-  'imprimantes-nombre-unite': { emissionFactorImportedId: '27027', linkQuestionId: 'imprimantes-annee-ou-nombre-jours' },
+  'imprimantes-nombre-unite': {
+    emissionFactorImportedId: '27027',
+    linkQuestionId: 'imprimantes-annee-ou-nombre-jours',
+  },
   'imprimantes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'imprimantes-nombre-unite' },
   'telephones-fixes-nombre-unite': {
     emissionFactorImportedId: '20614',
@@ -338,12 +344,55 @@ const determineFactorAndValue = (
     'Un peu de confiseries et de boissons (~30g)': '136',
     'Une part standard de confiseries et de boissons (~120g)': '137',
     'Une part significative de confiseries et de boissons (~200g)': '138',
+    'tous types d’hôtel': '100',
+    'hôtel 1*': '101',
+    'hôtel 2*': '102',
+    'hôtel 3*': '103',
+    'hôtel 4*': '104',
+    'hôtel 5*': '105',
+    nuitée: '106',
+    'Projecteur Xénon': '107',
+    'Projecteur Laser': '108',
+    'Projecteur 35 mm': '109',
+    'Ecran 2D': '110',
+    'Ecran 3D': '111',
+    'Fauteuils classiques': '112',
+    'Fauteuils 4DX': '113',
+    'Son Stéréo': '114',
+    'Dolby 5.1': '115',
+    'Dolby 7.1': '116',
+    'Dolby Atmos': '117',
+    IMAX: '118',
+    'Auro 3D / Ice': '119',
+    'DTS : X': '120',
+    THX: '121',
+    'Métro (Ile de France)': '43253',
+    'RER et Transilien (Ile-de-France)': '43254',
+    'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
+    'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
+    'Bus (agglomérations de - de 100 000 habitants)': '27998',
+    'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
+    'Bus (agglomérations de + de 250 000 habitants)': '28000',
+    'Vélo à assistance éléctrique': '28331',
+    'Vélo classique': '134',
+    Marche: '135',
+    'Voiture gazole courte distance': '27984',
+    'Voiture essence courte distance': '27983',
+    'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
+      '28015',
+    'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
+    'Moto >250cm3 /Mixte': '27995',
+    'Moto<250cm3/Mixte': '27992',
+    'Trottinette électrique': '28329',
   }
 
   if (typeof response === 'string' && mapping[response]) {
     emissionFactorId = mapping[response]
   } else {
-    value = Number(response) * numberOfSessions
+    value =
+      emissionFactorId && ['136', '137', '138'].includes(emissionFactorId)
+        ? Number(response) * numberOfSessions
+        : Number(response)
   }
 
   return { emissionFactorId, value }
