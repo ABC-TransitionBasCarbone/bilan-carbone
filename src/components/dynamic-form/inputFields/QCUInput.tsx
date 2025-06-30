@@ -1,5 +1,4 @@
 import { FormControl, FormControlLabel, Radio, styled } from '@mui/material'
-import { useState } from 'react'
 import { BaseInputProps } from '../types/formTypes'
 import { formatOption } from './utils'
 
@@ -10,9 +9,7 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   width: 'fit-content',
 }))
 
-const QCUInput = ({ question, errorMessage, disabled, onBlur }: BaseInputProps) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>()
-
+const QCUInput = ({ question, value, onChange, onBlur, errorMessage, disabled }: BaseInputProps) => {
   return (
     <FormControl className="flex flex-row m2 gapped1" error={!!errorMessage} disabled={disabled}>
       {question.possibleAnswers.map((option, index) => (
@@ -25,8 +22,8 @@ const QCUInput = ({ question, errorMessage, disabled, onBlur }: BaseInputProps) 
               onBlur={onBlur}
               key={index}
               name={option}
-              checked={selectedOption === option}
-              onChange={(e) => setSelectedOption(e.target.checked ? option : null)}
+              checked={value === option}
+              onChange={(e) => onChange(e.target.checked ? option : null)}
             />
           }
         />
