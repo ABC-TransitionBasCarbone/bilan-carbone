@@ -173,9 +173,9 @@ export const getEmissionResultsCut = (emissionSource: (FullStudy | StudyWithoutD
   return result
 }
 
-export const getAllCaracterisationsBySubPost = (
+const getAllCaracterisationsBySubPost = (
   controlMode: ControlMode,
-): Record<SubPost, EmissionSourceCaracterisation[]> => {
+): Partial<Record<SubPost, EmissionSourceCaracterisation[]>> => {
   switch (controlMode) {
     case ControlMode.Financial:
       return financialCaracterisationsBySubPost
@@ -192,30 +192,10 @@ export const getCaracterisationsBySubPost = (exports: FullStudy['exports'], subP
   const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
   const caracterisations = caracterisationMap[subPost]
 
-  return caracterisations
+  return caracterisations ?? []
 }
 
-const cutSubPostsWithoutCaracterisations = {
-  [SubPost.ActivitesDeBureau]: [],
-  [SubPost.Equipe]: [],
-  [SubPost.Batiment]: [],
-  [SubPost.Fret]: [],
-  [SubPost.MobiliteSpectateurs]: [],
-  [SubPost.Energie]: [],
-  [SubPost.EquipesRecues]: [],
-  [SubPost.MaterielTechnique]: [],
-  [SubPost.AutreMateriel]: [],
-  [SubPost.Achats]: [],
-  [SubPost.Electromenager]: [],
-  [SubPost.DechetsOrdinaires]: [],
-  [SubPost.DechetsExceptionnels]: [],
-  [SubPost.MaterielDistributeurs]: [],
-  [SubPost.MaterielCinema]: [],
-  [SubPost.CommunicationDigitale]: [],
-  [SubPost.CaissesEtBornes]: [],
-}
-
-export const operationalCaracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
+export const operationalCaracterisationsBySubPost: Partial<Record<SubPost, EmissionSourceCaracterisation[]>> = {
   [SubPost.CombustiblesFossiles]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
   [SubPost.CombustiblesOrganiques]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
   [SubPost.ReseauxDeChaleurEtDeVapeur]: [
@@ -317,10 +297,9 @@ export const operationalCaracterisationsBySubPost: Record<SubPost, EmissionSourc
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
   ],
-  ...cutSubPostsWithoutCaracterisations,
 }
 
-export const financialCaracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
+export const financialCaracterisationsBySubPost: Partial<Record<SubPost, EmissionSourceCaracterisation[]>> = {
   [SubPost.CombustiblesFossiles]: [
     EmissionSourceCaracterisation.Held,
     EmissionSourceCaracterisation.NotHeldSimpleRent,
@@ -452,5 +431,4 @@ export const financialCaracterisationsBySubPost: Record<SubPost, EmissionSourceC
     EmissionSourceCaracterisation.FinalClient,
     EmissionSourceCaracterisation.UsedByIntermediary,
   ],
-  ...cutSubPostsWithoutCaracterisations,
 }
