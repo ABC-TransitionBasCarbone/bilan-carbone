@@ -125,18 +125,22 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
    * TODO match emissionFactorImportedId with idIntern
    */
   // Batiment
-  '10-quelle-est-la-surface-plancher-du-cinema': { emissionFactorImportedId: '20730', linkQuestion: '11-quand-le-batiment-a-t-il-ete-construit' },
+  '10-quelle-est-la-surface-plancher-du-cinema': {
+    emissionFactorImportedId: '20730',
+    linkQuestion: '11-quand-le-batiment-a-t-il-ete-construit',
+  },
   '11-quand-le-batiment-a-t-il-ete-construit': {
     depreciationPeriod: 50,
     linkQuestion: '10-quelle-est-la-surface-plancher-du-cinema',
   },
   '12-a-quand-remonte-la-derniere-renovation-importante': {
     depreciationPeriod: 10,
-    linkQuestion: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee'
+    linkQuestion: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee',
   },
   'de-quel-type-de-renovation-sagi-t-il': {},
   'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': {
-    emissionFactorImportedId: '20730', linkQuestion: '12-a-quand-remonte-la-derniere-renovation-importante',
+    emissionFactorImportedId: '20730',
+    linkQuestion: '12-a-quand-remonte-la-derniere-renovation-importante',
   },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},
@@ -166,18 +170,39 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // ActivitesDeBureau
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
   'quel-montant-avez-vous-depense-en-services': { emissionFactorImportedId: '43545' },
-  'ordinateurs-fixes-nombre-unite': { emissionFactorImportedId: '27003', linkQuestion: 'ordinateurs-fixes-annee-ou-nombre-jours' },
+  'ordinateurs-fixes-nombre-unite': {
+    emissionFactorImportedId: '27003',
+    linkQuestion: 'ordinateurs-fixes-annee-ou-nombre-jours',
+  },
   'ordinateurs-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'ordinateurs-fixes-nombre-unite' },
-  'ordinateurs-portables-nombre-unite': { emissionFactorImportedId: '27002', linkQuestion: 'ordinateurs-portables-annee-ou-nombre-jours' },
-  'ordinateurs-portables-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'ordinateurs-portables-nombre-unite' },
-  'photocopieurs-nombre-unite': { emissionFactorImportedId: '20591', linkQuestion: 'photocopieurs-annee-ou-nombre-jours' },
+  'ordinateurs-portables-nombre-unite': {
+    emissionFactorImportedId: '27002',
+    linkQuestion: 'ordinateurs-portables-annee-ou-nombre-jours',
+  },
+  'ordinateurs-portables-annee-ou-nombre-jours': {
+    depreciationPeriod: 4,
+    linkQuestion: 'ordinateurs-portables-nombre-unite',
+  },
+  'photocopieurs-nombre-unite': {
+    emissionFactorImportedId: '20591',
+    linkQuestion: 'photocopieurs-annee-ou-nombre-jours',
+  },
   'photocopieurs-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'photocopieurs-nombre-unite' },
   'imprimantes-nombre-unite': { emissionFactorImportedId: '27027', linkQuestion: 'imprimantes-annee-ou-nombre-jours' },
   'imprimantes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'imprimantes-nombre-unite' },
-  'telephones-fixes-nombre-unite': { emissionFactorImportedId: '20614', linkQuestion: 'telephones-fixes-annee-ou-nombre-jours' },
+  'telephones-fixes-nombre-unite': {
+    emissionFactorImportedId: '20614',
+    linkQuestion: 'telephones-fixes-annee-ou-nombre-jours',
+  },
   'telephones-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'telephones-fixes-nombre-unite' },
-  'telephones-portables-nombre-unite': { emissionFactorImportedId: '27010', linkQuestion: 'telephones-portables-annee-ou-nombre-jours' },
-  'telephones-portables-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'telephones-portables-nombre-unite' },
+  'telephones-portables-nombre-unite': {
+    emissionFactorImportedId: '27010',
+    linkQuestion: 'telephones-portables-annee-ou-nombre-jours',
+  },
+  'telephones-portables-annee-ou-nombre-jours': {
+    depreciationPeriod: 4,
+    linkQuestion: 'telephones-portables-nombre-unite',
+  },
   'tablettes-nombre-unite': { emissionFactorImportedId: '27007', linkQuestion: 'tablettes-annee-ou-nombre-jours' },
   'tablettes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestion: 'tablettes-nombre-unite' },
   // Mobilité spectateurs
@@ -215,14 +240,38 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // Fret
   'quelle-est-la-distance-entre-votre-cinema-et-votre-principal-fournisseur': { emissionFactorImportedId: '28026' },
   // Electromenager
-  '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26976', linkQuestion: '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
-  '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { depreciationPeriod: 5, linkQuestion: '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
-  '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26978', linkQuestion: '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
-  '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { depreciationPeriod: 5, linkQuestion: '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
-  '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26986', linkQuestion: '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
-  '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { depreciationPeriod: 5, linkQuestion: '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
-  '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { emissionFactorImportedId: '26976', linkQuestion: '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
-  '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': { depreciationPeriod: 5, linkQuestion: '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner' },
+  '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    emissionFactorImportedId: '26976',
+    linkQuestion: '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+  },
+  '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    depreciationPeriod: 5,
+    linkQuestion: '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+  },
+  '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    emissionFactorImportedId: '26978',
+    linkQuestion: '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+  },
+  '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    depreciationPeriod: 5,
+    linkQuestion: '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+  },
+  '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    emissionFactorImportedId: '26986',
+    linkQuestion: '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+  },
+  '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    depreciationPeriod: 5,
+    linkQuestion: '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+  },
+  '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    emissionFactorImportedId: '26976',
+    linkQuestion: '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+  },
+  '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    depreciationPeriod: 5,
+    linkQuestion: '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+  },
   // DechetsOrdinaires
   '112-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
   '113-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34654' }, // Taille des bennes
@@ -230,7 +279,7 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   '121-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
   '122-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34486' }, // Taille des bennes
   '123-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Fréquence de ramassage (par semaine)
-  '131-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes 
+  '131-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
   '132-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '22040' }, // Taille des bennes
   '133-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Fréquence de ramassage (par semaine)
   // DechetsExceptionnels
