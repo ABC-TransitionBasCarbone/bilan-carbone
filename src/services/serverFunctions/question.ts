@@ -1,7 +1,7 @@
 'use server'
 
 import { findEmissionFactorByImportedId } from '@/db/emissionFactors'
-import { getAnswerByQuestionId, getAnswersByStudyAndSubPost, getQuestionsBySubPost, saveAnswer } from '@/db/question'
+import { getAnswerByQuestionId, getAnswersByStudyAndSubPost, getQuestionByIdIntern, getQuestionsBySubPost, saveAnswer } from '@/db/question'
 import { withServerResponse } from '@/utils/serverResponse'
 import { Prisma, Question, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
@@ -19,7 +19,9 @@ export const saveAnswerForQuestion = async (
       throw new Error('Not authorized')
     }
 
-    const { emissionFactorImportedId, depreciationPeriod } = getEmissionFactorByIdIntern(question.idIntern) || {}
+    const { emissionFactorImportedId, depreciationPeriod, previousQuestionInternId } = getEmissionFactorByIdIntern(question.idIntern) || {}
+
+    console.log(`Saving answer for question: ${question.idIntern}, response: ${response}, studySiteId: ${studySiteId}`)
     let emissionFactorId = undefined
     let emissionSourceId = undefined
 
@@ -27,16 +29,23 @@ export const saveAnswerForQuestion = async (
       return saveAnswer(question.id, studySiteId, response)
     }
 
-    // TODO: A remettre quand on gèrera les sous question, pour le moment il n'y en a pas à priori.
-    // if (previousQuestionInternId) {
-    //   const previousQuestion = await getQuestionByIdIntern(previousQuestionInternId)
-    //   if (!previousQuestion) {
-    //     throw new Error(`Previous question not found for idIntern: ${previousQuestionInternId}`)
-    //   }
+    // TODO: gérer d'un autre manière le cas où on a une question précédente
+    if (previousQuestionInternId) {
+      const previousQuestion = await getQuestionByIdIntern(previousQuestionInternId)
+      if (!previousQuestion) {
+        throw new Error(`Previous question not found for idIntern: ${previousQuestionInternId}`)
+      }
 
-    //   const previousAnswer = await getAnswerByQuestionId(previousQuestion.id)
-    //   emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
-    // }
+      const previousAnswer = await getAnswerByQuestionId(previousQuestion.id)
+      emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
+    }
+
+    console.log(`Emission factor imported ID: ${emissionFactorImportedId}, Depreciation period: ${depreciationPeriod}`)
+
+    /**
+     * TODO handle depreciation period calculation based on date
+     * value = value / emissionSource.depreciationPeriod
+     */
 
     if (emissionFactorImportedId) {
       const emissionFactor = await findEmissionFactorByImportedId(emissionFactorImportedId)
@@ -104,10 +113,14 @@ type EmissionFactorInfo = {
 const getEmissionFactorByIdIntern = (idIntern: string): EmissionFactorInfo => emissionFactorMap[idIntern]
 
 const emissionFactorMap: Record<string, EmissionFactorInfo> = {
+  /**
+   * TODO use date to calculate depreciation period
+   * TODO match emissionFactorImportedId with idIntern
+   */
   // Batiment
   '10-quelle-est-la-surface-plancher-du-cinema': { emissionFactorImportedId: '20730' },
-  '11-quand-le-batiment-a-t-il-ete-construit': {},
-  '12-a-quand-remonte-la-derniere-renovation-importante': {},
+  '11-quand-le-batiment-a-t-il-ete-construit': { depreciationPeriod: 50, previousQuestionInternId: '10-quelle-est-la-surface-plancher-du-cinema' },
+  '12-a-quand-remonte-la-derniere-renovation-importante': { depreciationPeriod: 10, previousQuestionInternId: '10-quelle-est-la-surface-plancher-du-cinema' },
   'de-quel-type-de-renovation-sagi-t-il': {},
   'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': { emissionFactorImportedId: '20730' },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
@@ -169,7 +182,7 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quel-est-le-profil-auquel-vous-pouvez-identifier-le-plus-votre-cinema': {},
   // Equipes recus
   'combien-d-equipes-de-film-avez-vous-recu-en-*': {},
-  'combien-de-nuits': { emissionFactorImportedId: '17,11' },
+  'combien-de-nuits': { emissionFactorImportedId: '106' },
   'combien-d-equipes-de-repas': { emissionFactorImportedId: '20682' },
   // Autres matériel et matériel technique
   '10-decrivez-les-differentes-salles-du-cinema': {},
@@ -187,8 +200,8 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'combiende-films-recevez-vous-sur-dcp-physique-par-an': {},
   'combien-de-donnees-stockez-vous-dans-un-cloud': {},
   '10-de-combien-disposez-vous-de': {},
-  '11-de-combien-disposez-vous-de': { emissionFactorImportedId: '1,31' },
-  '12-de-combien-disposez-vous-de': { emissionFactorImportedId: '200' },
+  '11-de-combien-disposez-vous-de': { emissionFactorImportedId: '139' },
+  '12-de-combien-disposez-vous-de': { emissionFactorImportedId: '140' },
   // Achats
   '10-vendez-vous-des-boissons-et-des-confiseries': {},
   '11-vendez-vous-des-boissons-et-des-confiseries': {},
@@ -217,38 +230,38 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   '133-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '22040' },
   // DechetsExceptionnels
   'quelle-quantite-de-materiel-technique-jetez-vous-par-an': { emissionFactorImportedId: '34620' },
-  'quelle-quantite-de-lampes-xenon-jetez-vous-par-an': { emissionFactorImportedId: '50' },
+  'quelle-quantite-de-lampes-xenon-jetez-vous-par-an': { emissionFactorImportedId: '107' },
   // MaterielDistributeurs
   '11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '0,31218',
+    emissionFactorImportedId: '125',
   },
   '12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '0,038313',
+    emissionFactorImportedId: '126',
   },
   '13-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '0,195',
+    emissionFactorImportedId: '127',
   },
   '14-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '1,365',
+    emissionFactorImportedId: '128',
   },
   '15-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '0,231',
+    emissionFactorImportedId: '129',
   },
   '16-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '0,007095',
+    emissionFactorImportedId: '130',
   },
   // MaterielCinema
-  '11-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '0,007095' },
-  '12-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '0,038313' },
-  '13-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '0,0059598' },
+  '11-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '130' },
+  '12-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '126' },
+  '13-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '133' },
   // CommunicationDigitale
-  'combien-de-newsletters-ont-ete-envoyees': { emissionFactorImportedId: '0,00471' },
-  'combien-de-caissons-d-affichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '892,25' },
+  'combien-de-newsletters-ont-ete-envoyees': { emissionFactorImportedId: '120' },
+  'combien-de-caissons-d-affichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '121' },
   'combien-d-ecrans-se-trouvent-dans-les-espaces-de-circulation': { emissionFactorImportedId: '27006' },
-  'le-cinema-dispose-t-il-d-un-affichage-exterieur-si-oui-quelle-surface': { emissionFactorImportedId: '379' },
+  'le-cinema-dispose-t-il-d-un-affichage-exterieur-si-oui-quelle-surface': { emissionFactorImportedId: '122' },
   // CaissesEtBornes
-  'de-combien-de-bornes-de-caisse-libre-service-dispose-le-cinema': { emissionFactorImportedId: '495,41' },
-  'de-combien-de-systemes-de-caisse-classique-dispose-le-cinema': { emissionFactorImportedId: '69,07' },
+  'de-combien-de-bornes-de-caisse-libre-service-dispose-le-cinema': { emissionFactorImportedId: '123' },
+  'de-combien-de-systemes-de-caisse-classique-dispose-le-cinema': { emissionFactorImportedId: '124' },
   // MaterielTechnique
   serveur: { emissionFactorImportedId: '20894' },
   'baies-de-disques': { emissionFactorImportedId: '20893' },
