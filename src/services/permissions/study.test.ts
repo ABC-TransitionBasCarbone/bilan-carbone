@@ -2,7 +2,7 @@ import * as dbAccountModule from '@/db/account'
 import * as dbStudyModule from '@/db/study'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedStudyCreateInput } from '@/tests/utils/models/study'
-import { getMockedDbAccount, mockedAccountId, mockedUserId } from '@/tests/utils/models/user'
+import { getMockedDbAccount, mockedAccountId, mockedSession, mockedUserId } from '@/tests/utils/models/user'
 import * as studyUtils from '@/utils/study'
 import { expect } from '@jest/globals'
 import { Level, Role, StudyRole } from '@prisma/client'
@@ -62,17 +62,17 @@ describe('Study permissions service', () => {
       })
 
       it('User should be able to create an "Advanced" study', async () => {
-        const result = await canCreateSpecificStudy(mockedAccountId, advancedStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedSession, advancedStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create a "Standard" study', async () => {
-        const result = await canCreateSpecificStudy(mockedAccountId, standardStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedSession, standardStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create an "Initial" study', async () => {
-        const result = await canCreateSpecificStudy(mockedAccountId, initialStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedSession, initialStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
     })
@@ -83,17 +83,17 @@ describe('Study permissions service', () => {
       })
 
       it('User should not be able to create an "Advanced" study', async () => {
-        const result = await canCreateSpecificStudy(mockedAccountId, advancedStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedSession, advancedStudy, mockedOrganizationVersionId)
         expect(result).toBe(false)
       })
 
       it('User should be able to create a "Standard" study', async () => {
-        const result = await canCreateSpecificStudy(mockedAccountId, standardStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedSession, standardStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
 
       it('User should be able to create an "Initial" study', async () => {
-        const result = await canCreateSpecificStudy(mockedAccountId, initialStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedSession, initialStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
     })
@@ -104,17 +104,17 @@ describe('Study permissions service', () => {
       })
 
       it('User should not be able to create an "Advanced" study', async () => {
-        const result = await canCreateSpecificStudy(mockedAccountId, advancedStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedSession, advancedStudy, mockedOrganizationVersionId)
         expect(result).toBe(false)
       })
 
       it('User should not be able to create a "Standard" study', async () => {
-        const result = await canCreateSpecificStudy(mockedAccountId, standardStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedSession, standardStudy, mockedOrganizationVersionId)
         expect(result).toBe(false)
       })
 
       it('User should be able to create an "Initial" study', async () => {
-        const result = await canCreateSpecificStudy(mockedAccountId, initialStudy, mockedOrganizationVersionId)
+        const result = await canCreateSpecificStudy(mockedSession, initialStudy, mockedOrganizationVersionId)
         expect(result).toBe(true)
       })
     })
