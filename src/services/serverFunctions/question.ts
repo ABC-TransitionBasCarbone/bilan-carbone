@@ -8,9 +8,12 @@ import {
   getQuestionsBySubPost,
   saveAnswer,
 } from '@/db/question'
+import { getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
 import { Prisma, Question, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
+import { NOT_AUTHORIZED } from '../permissions/check'
+import { canReadStudy } from '../permissions/study'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
 export const saveAnswerForQuestion = async (
@@ -22,7 +25,7 @@ export const saveAnswerForQuestion = async (
   withServerResponse('saveAnswerForQuestion', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
-      throw new Error('Not authorized')
+      throw new Error(NOT_AUTHORIZED)
     }
 
     const { emissionFactorImportedId, depreciationPeriod, linkQuestion } =
@@ -44,8 +47,16 @@ export const saveAnswerForQuestion = async (
       if (!previousQuestion) {
         throw new Error(`Previous question not found for idIntern: ${linkQuestion}`)
       }
+      if (!canReadStudy(session.user, studyId)) {
+        throw new Error(NOT_AUTHORIZED)
+      }
 
-      const previousAnswer = await getAnswerByQuestionId(previousQuestion.id)
+      const study = await getStudyById(studyId, session.user.organizationVersionId)
+      if (!study || !study.sites.find((site) => site.id === studySiteId)) {
+        throw new Error(NOT_AUTHORIZED)
+      }
+
+      const previousAnswer = await getAnswerByQuestionId(previousQuestion.id, studySiteId)
       emissionSourceId = previousAnswer?.emissionSourceId ?? undefined
     }
 
@@ -64,7 +75,7 @@ export const saveAnswerForQuestion = async (
 
     const value = depreciationPeriod ? undefined : Number(response)
 
-    const previousAnswer = await getAnswerByQuestionId(question.id)
+    const previousAnswer = await getAnswerByQuestionId(question.id, studySiteId)
     if (previousAnswer && previousAnswer.emissionSourceId) {
       emissionSourceId = previousAnswer.emissionSourceId
     }
@@ -100,7 +111,7 @@ export const getQuestionsWithAnswers = async (subPost: SubPost, studySiteId: str
   withServerResponse('getQuestionsWithAnswers', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
-      throw new Error('Not authorized')
+      throw new Error(NOT_AUTHORIZED)
     }
 
     const [questions, answers] = await Promise.all([

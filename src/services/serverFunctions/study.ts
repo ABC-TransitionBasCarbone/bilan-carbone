@@ -94,7 +94,7 @@ import {
   canChangePublicStatus,
   canChangeResultsUnit,
   canChangeSites,
-  canCreateStudy,
+  canCreateSpecificStudy,
   canDeleteStudy,
   canEditStudyFlows,
   canUpgradeSourceVersion,
@@ -246,7 +246,7 @@ export const createStudyCommand = async ({ organizationVersionId, validator, sit
       },
     } satisfies Prisma.StudyCreateInput
 
-    if (!(await canCreateStudy(session.user.accountId, study, organizationVersionId))) {
+    if (!(await canCreateSpecificStudy(session.user, study, organizationVersionId))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
