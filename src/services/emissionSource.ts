@@ -1,7 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { getCaracterisationsBySubPost } from '@/utils/study'
-import { ControlMode, EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
+import { ControlMode, EmissionSourceCaracterisation, Export, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
 import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
@@ -170,6 +169,28 @@ export const getEmissionResultsCut = (emissionSource: (FullStudy | StudyWithoutD
     result.emission = result.emission / 5
   }
   return result
+}
+
+export const getAllCaracterisationsBySubPost = (
+  controlMode: ControlMode,
+): Record<SubPost, EmissionSourceCaracterisation[]> => {
+  switch (controlMode) {
+    case ControlMode.Financial:
+      return financialCaracterisationsBySubPost
+    case ControlMode.Operational:
+      return operationalCaracterisationsBySubPost
+    default:
+      return operationalCaracterisationsBySubPost
+  }
+}
+
+export const getCaracterisationsBySubPost = (exports: FullStudy['exports'], subPost: SubPost) => {
+  const begesExport = exports.find((exp) => exp.type === Export.Beges)
+  const controlMode = begesExport?.control || ControlMode.Operational
+  const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
+  const caracterisations = caracterisationMap[subPost]
+
+  return caracterisations
 }
 
 const cutSubPostsWithoutCaracterisations = {
@@ -430,17 +451,4 @@ export const financialCaracterisationsBySubPost: Record<SubPost, EmissionSourceC
     EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   ...cutSubPostsWithoutCaracterisations,
-}
-
-export const getAllCaracterisationsBySubPost = (
-  controlMode: ControlMode,
-): Record<SubPost, EmissionSourceCaracterisation[]> => {
-  switch (controlMode) {
-    case ControlMode.Financial:
-      return financialCaracterisationsBySubPost
-    case ControlMode.Operational:
-      return operationalCaracterisationsBySubPost
-    default:
-      return operationalCaracterisationsBySubPost
-  }
 }
