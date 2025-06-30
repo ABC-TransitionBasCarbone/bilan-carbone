@@ -5,6 +5,8 @@ import { getAccountOrganizationVersions } from '@/db/account'
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
+import { canCreateStudy } from '@/utils/user'
+import { Environment } from '@prisma/client'
 interface Props {
   params: Promise<{ id: string }>
 }
@@ -13,13 +15,14 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps) => {
   const params = await props.params
 
   const id = params.id
-  if (!id || !props.user.organizationVersionId || !props.user.level) {
+  const user = props.user
+  if (!id || !canCreateStudy(user)) {
     return <NotFound />
   }
 
   const [organizationVersions, accounts] = await Promise.all([
-    getAccountOrganizationVersions(props.user.accountId),
-    getOrganizationVersionAccounts(props.user.organizationVersionId),
+    getAccountOrganizationVersions(user.accountId),
+    getOrganizationVersionAccounts(user.organizationVersionId),
   ])
 
   const userSettings = await getUserSettings()
@@ -28,7 +31,7 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps) => {
   return (
     <NewStudyPage
       organizationVersions={organizationVersions}
-      user={props.user}
+      user={user}
       accounts={accounts}
       defaultOrganizationVersion={organizationVersions.find((organizationVersion) => organizationVersion.id === id)}
       caUnit={caUnit}
