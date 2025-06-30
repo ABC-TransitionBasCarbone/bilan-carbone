@@ -9,9 +9,10 @@ import { useCallback, useEffect, useState } from 'react'
 interface Props {
   subPost: SubPost
   study: FullStudy
+  studySiteId: string
 }
 
-const DynamicSubPostForm = ({ subPost, study }: Props) => {
+const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
   const [questions, setQuestions] = useState<Question[]>([])
@@ -24,7 +25,7 @@ const DynamicSubPostForm = ({ subPost, study }: Props) => {
       setIsLoading(true)
       setError(null)
 
-      const result = await getQuestionsWithAnswers(subPost, study.id)
+      const result = await getQuestionsWithAnswers(subPost, studySiteId)
 
       if (!result.success) {
         throw new Error(result.errorMessage || 'Failed to load questions and answers')
@@ -80,6 +81,7 @@ const DynamicSubPostForm = ({ subPost, study }: Props) => {
         questions={questions}
         subPost={subPost}
         studyId={study.id}
+        studySiteId={studySiteId}
         initialAnswers={answers}
         isLoading={isLoading}
       />

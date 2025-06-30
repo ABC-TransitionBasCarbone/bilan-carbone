@@ -1,5 +1,6 @@
 import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { BaseInputProps } from '../types/formTypes'
+import { formatOption } from './utils'
 
 interface SelectInputProps extends Omit<BaseInputProps, 'value' | 'onChange'> {
   value: string | null
@@ -18,7 +19,7 @@ const SelectInput = ({ question, value, onChange, onBlur, errorMessage, disabled
       <Select value={value || ''} onChange={handleChange} onBlur={onBlur}>
         {options.map((option) => (
           <MenuItem key={option} value={option}>
-            {option}
+            {formatOption(option)}
           </MenuItem>
         ))}
       </Select>

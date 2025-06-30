@@ -16,10 +16,22 @@ export const getQuestionsBySubPost = async (subPost: SubPost): Promise<Question[
   })
 }
 
-export const getAnswersByStudyAndSubPost = async (studyId: string, subPost: SubPost): Promise<Answer[]> => {
+export const getAnswerByQuestionId = async (questionId: string, studySiteId: string): Promise<Answer | null> => {
+  return await prismaClient.answer.findFirst({
+    where: {
+      questionId,
+      studySiteId,
+    },
+    include: {
+      question: true,
+    },
+  })
+}
+
+export const getAnswersByStudyAndSubPost = async (studySiteId: string, subPost: SubPost): Promise<Answer[]> => {
   return await prismaClient.answer.findMany({
     where: {
-      studyId: studyId,
+      studySiteId,
       question: {
         subPost: subPost,
       },
@@ -32,36 +44,39 @@ export const getAnswersByStudyAndSubPost = async (studyId: string, subPost: SubP
 
 export const saveAnswer = async (
   questionId: string,
-  studyId: string,
+  studySiteId: string,
   response: Prisma.InputJsonValue,
+  emissionSourceId?: string,
 ): Promise<Answer> => {
   return await prismaClient.answer.upsert({
     where: {
-      questionId_studyId: {
+      questionId_studySiteId: {
         questionId,
-        studyId,
+        studySiteId,
       },
     },
     update: {
       response,
+      emissionSourceId,
     },
     create: {
       questionId,
-      studyId,
+      studySiteId,
       response,
+      emissionSourceId,
     },
   })
 }
 
 export const deleteAnswer = async (
   questionId: string,
-  studyId: string,
+  studySiteId: string,
 ): Promise<{ success: boolean; error?: string }> => {
   try {
     await prismaClient.answer.deleteMany({
       where: {
         questionId,
-        studyId,
+        studySiteId,
       },
     })
     return { success: true }
@@ -71,6 +86,14 @@ export const deleteAnswer = async (
       error: error instanceof Error ? error.message : 'Unknown error occurred',
     }
   }
+}
+
+export const getQuestionByIdIntern = async (idIntern: string): Promise<Question | null> => {
+  return await prismaClient.question.findUnique({
+    where: {
+      idIntern,
+    },
+  })
 }
 
 export const getQuestionById = async (questionId: string): Promise<Question | null> => {

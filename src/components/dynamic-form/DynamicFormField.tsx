@@ -35,11 +35,11 @@ const DynamicFormField = ({
 
       debounceRef.current = setTimeout(() => {
         if (!formErrors[fieldName]) {
-          autoSave.saveField(question.id, value as Prisma.InputJsonValue)
+          autoSave.saveField(question, value as Prisma.InputJsonValue)
         }
       }, 800)
     },
-    [autoSave, question.id, formErrors, fieldName],
+    [autoSave, question, formErrors, fieldName],
   )
 
   useEffect(() => {

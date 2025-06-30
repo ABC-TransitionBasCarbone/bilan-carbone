@@ -9,6 +9,7 @@ export interface DynamicFormProps {
   questions: Question[]
   subPost: SubPost
   studyId: string
+  studySiteId: string
   initialAnswers?: Answer[]
   isLoading?: boolean
 }

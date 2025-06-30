@@ -1,6 +1,19 @@
 {
   "home": {
-    "userToValidate": "Un utilisateur a été ajouté à votre organisation car il vient d'être formé à la méthode bilan carbone. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte"
+    "userToValidate": "Un utilisateur a été ajouté à votre organisation car il vient d'être formé à la méthode bilan carbone. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte",
+    "title": "Faire votre bilan d’impact vous permettra de :",
+    "info": {
+      "0": "Comprendre la mesure d’impact de votre établissement",
+      "1": "Identifier les priorités d’action",
+      "2": "Construire une trajectoire de réduction"
+    },
+    "message": {
+      "core": "Bienvenue sur COUNT le premier calculateur d'impact écologique dédié aux salles de cinéma.\nCet outil a été développé par l'association CUT ! Cinéma Uni pour la transition, en coopération avec l'ABC, association pour la transition bas carbone\nOpération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)\nCUT bénéficie du soutien du CNC",
+      "0": "Faire votre bilan d'impact vous permettra de :",
+      "1": "Comprendre la mesure d'impact de votre établissement",
+      "2": "Identifier les priorités d'action",
+      "3": "Construire une trajectoire de réduction"
+    }
   },
   "exports": {
     "title": "Exports :",

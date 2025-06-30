@@ -1,6 +1,7 @@
 import { Checkbox, FormControl, FormControlLabel, FormHelperText, styled } from '@mui/material'
 import { useState } from 'react'
 import { BaseInputProps } from '../types/formTypes'
+import { formatOption } from './utils'
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   backgroundColor: 'white',
@@ -32,7 +33,7 @@ export const QCMInput = ({ question, onBlur, errorMessage, disabled }: BaseInput
               }}
             />
           }
-          label={option}
+          label={formatOption(option)}
         />
       ))}
       {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
