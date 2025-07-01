@@ -1,11 +1,13 @@
 // WIP DO NOT USE YET
+import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { getQuestionsFromIdIntern } from '@/services/serverFunctions/question'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Question, QuestionType } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
-import { Control } from 'react-hook-form'
+import { Control, FieldErrors, UseFormWatch } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../../base/Button'
 import FieldComponent from '../FieldComponent'
@@ -14,9 +16,12 @@ import { BaseInputProps, FormValues } from '../types/formTypes'
 
 interface Props extends Omit<BaseInputProps, 'value' | 'onChange' | 'onBlur'> {
   control: Control<FormValues>
+  autoSave: UseAutoSaveReturn
+  watch: UseFormWatch<FormValues>
+  formErrors: FieldErrors<FormValues>
 }
 
-const TableInput = ({ question, control }: Props) => {
+const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) => {
   const [questions, setQuestions] = useState<Question[]>([])
 
   const getQuestions = async () => {
@@ -28,6 +33,7 @@ const TableInput = ({ question, control }: Props) => {
 
   useEffect(() => {
     getQuestions()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question.idIntern])
 
   const newRow = () =>
@@ -66,7 +72,7 @@ const TableInput = ({ question, control }: Props) => {
   }
 
   const columns = useMemo<ColumnDef<Record<string, string>>[]>(() => {
-    const columns = questions.map((question) => ({
+    const col = questions.map((question) => ({
       id: question.idIntern,
       header: question.label,
       accessorKey: question.idIntern,
@@ -76,10 +82,13 @@ const TableInput = ({ question, control }: Props) => {
 
         return (
           <FieldComponent
+            autoSave={autoSave}
             fieldName={question.idIntern}
             fieldType={fieldType}
             question={question}
             key={`${question.idIntern}-${row.original.id}`}
+            watch={watch}
+            formErrors={formErrors}
             // TO DO faire marcher le onChange quand la bdd sera adaptée aux tableaux
             // value={getValue() as string}
             // onChange={(value) => handleChange(value || "", row.original.id, question.idIntern)}
@@ -90,20 +99,20 @@ const TableInput = ({ question, control }: Props) => {
       },
     })) as ColumnDef<Record<string, string>>[]
 
-    columns.push({
+    col.push({
       id: 'delete',
       header: tCutQuestions('actions'),
       accessorKey: 'id',
       cell: ({ row }) => (
-        <div className="w100 flex-cc">
+        <Box>
           <Button title={tCutQuestions('delete')} aria-label="delete" onClick={() => handleDelete(row.original.id)}>
             <DeleteIcon />
           </Button>
-        </div>
+        </Box>
       ),
     })
 
-    return columns
+    return col
   }, [tCutQuestions, questions])
 
   const table = useReactTable<Record<string, string>>({
@@ -112,34 +121,37 @@ const TableInput = ({ question, control }: Props) => {
     getCoreRowModel: getCoreRowModel(),
     getRowId: (row) => row.id,
   })
+
   return (
-    <div>
+    <Box>
       <Button className="align" onClick={() => setCurrentAnswers((prev) => [...prev, newRow()])}>
         {tCutQuestions('add')}
       </Button>
-      <table className="mt1">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <TableContainer component={Paper} className="mt1">
+        <Table>
+          <TableHead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableCell key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableHead>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   )
 }
 

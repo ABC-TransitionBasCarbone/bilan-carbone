@@ -1,3 +1,4 @@
+import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { getQuestionLabel } from '@/utils/question'
 import { Prisma, Question } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -129,6 +130,7 @@ const FieldComponent = ({
         }}
       />
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldType, fieldName, control, baseInputProps, question.type])
 
   return renderField
