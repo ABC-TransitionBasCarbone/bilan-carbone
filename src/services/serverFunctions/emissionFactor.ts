@@ -9,6 +9,8 @@ import {
   getAllEmissionFactorsByIds,
   getEmissionFactorById,
   getEmissionFactorDetailsById,
+  getEmissionFactorImportVersionsBC,
+  getEmissionFactorImportVersionsCUT,
   getManualEmissionFactors,
   setEmissionFactorUnitAsCustom,
   updateEmissionFactor,
@@ -21,6 +23,7 @@ import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
 import { IsSuccess, withServerResponse } from '@/utils/serverResponse'
 import { EmissionFactorStatus, Import, Unit } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor'
@@ -217,3 +220,18 @@ export const fixUnits = async () => {
   )
   console.log(`Fait : ${emissionFactors.length} facteurs mis à jour`)
 }
+
+export const getEmissionFactorImportVersions = async (user: UserSession) =>
+  withServerResponse('getEmissionFactorImportVersions', async () => {
+    if (!user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    switch (user.environment) {
+      case 'cut':
+        return getEmissionFactorImportVersionsCUT()
+      case 'bc':
+      default:
+        return getEmissionFactorImportVersionsBC()
+    }
+  })

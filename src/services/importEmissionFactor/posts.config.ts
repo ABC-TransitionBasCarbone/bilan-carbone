@@ -10209,6 +10209,7 @@ export const elementsBySubPost: Record<SubPost, string[]> = {
     '34628',
     '34632',
     '34630',
+    '34634',
   ],
   [SubPost.EauxUsees]: ['24284'],
   [SubPost.FretEntrant]: [

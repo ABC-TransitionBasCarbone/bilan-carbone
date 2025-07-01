@@ -186,6 +186,8 @@ model EmissionFactorImportVersion {
   emissionFactors             EmissionFactor[]
   studyEmissionFactorVersions StudyEmissionFactorVersion[]
 
+  archived Boolean @default(false)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 

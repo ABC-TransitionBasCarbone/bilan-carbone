@@ -1,17 +1,20 @@
 import { Environment } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { Suspense } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
+import withAuth from '../hoc/withAuth'
 
 interface Props {
   userOrganizationId?: string
   manualOnly: boolean
   environment: Environment
+  user: UserSession
 }
 
-const EmissionFactorsPage = ({ userOrganizationId, manualOnly, environment }: Props) => {
+const EmissionFactorsPage = ({ userOrganizationId, manualOnly, user, environment }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors')
 
@@ -35,11 +38,16 @@ const EmissionFactorsPage = ({ userOrganizationId, manualOnly, environment }: Pr
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors userOrganizationId={userOrganizationId} manualOnly={manualOnly} environment={environment} />
+          <EmissionFactors
+            userOrganizationId={userOrganizationId}
+            manualOnly={manualOnly}
+            user={user}
+            environment={environment}
+          />
         </Suspense>
       </Block>
     </>
   )
 }
 
-export default EmissionFactorsPage
+export default withAuth(EmissionFactorsPage)
