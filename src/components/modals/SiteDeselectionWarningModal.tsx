@@ -1,5 +1,6 @@
 'use client'
 
+import { styled } from '@mui/material/styles'
 import { useTranslations } from 'next-intl'
 import Modal from './Modal'
 import styles from './SiteDeselectionWarningModal.module.css'
@@ -10,6 +11,10 @@ interface Props {
   onConfirm: () => void
   sitesWithSources: Array<{ name: string; emissionSourcesCount: number }>
 }
+const StyledWarningSection = styled('div')(({ theme }) => ({
+  backgroundColor: theme.custom.palette.error.background,
+  borderRadius: '0.5rem',
+}))
 
 const SiteDeselectionWarningModal = ({ isOpen, onClose, onConfirm, sitesWithSources }: Props) => {
   const t = useTranslations('study.new.siteDeselectionModal')
@@ -37,7 +42,7 @@ const SiteDeselectionWarningModal = ({ isOpen, onClose, onConfirm, sitesWithSour
       <div>
         <p>{t('description')}</p>
 
-        <div className={`${styles.sitesSection} my1 p1`}>
+        <StyledWarningSection className="my1 p1">
           <p className={`${styles.sitesTitle} mb-2`}>{t('affectedSites')}:</p>
           <ul className="m0 px-2">
             {sitesWithSources.map((site, index) => (
@@ -46,7 +51,7 @@ const SiteDeselectionWarningModal = ({ isOpen, onClose, onConfirm, sitesWithSour
               </li>
             ))}
           </ul>
-        </div>
+        </StyledWarningSection>
 
         <p>{t('confirmation')}</p>
       </div>

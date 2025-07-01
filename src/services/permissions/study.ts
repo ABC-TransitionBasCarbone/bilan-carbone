@@ -3,7 +3,7 @@ import { getDocumentById } from '@/db/document'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
+import { canEditOrganizationVersion, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -247,6 +247,31 @@ export const canDeleteStudy = async (studyId: string) => {
   }
 
   return false
+}
+
+export const canDuplicateStudy = async (studyId: string) => {
+  const session = await dbActualizedAuth()
+
+  if (!session) {
+    return false
+  }
+
+  if (session.user.environment !== Environment.BC) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
+
+  if (!study) {
+    return false
+  }
+
+  const canEditOrga = canEditOrganizationVersion(
+    session.user,
+    study.organizationVersion as OrganizationVersionWithOrganization,
+  )
+
+  return canEditOrga
 }
 
 export const filterStudyDetail = (user: UserSession, study: FullStudy) => {

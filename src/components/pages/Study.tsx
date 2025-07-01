@@ -1,11 +1,9 @@
 'use server'
 
-import { isOrganizationVersionCR, OrganizationVersionWithOrganization } from '@/db/organization'
+import { isOrganizationVersionCR } from '@/db/organization'
 import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
-import { canDeleteStudy } from '@/services/permissions/study'
-import { canEditOrganizationVersion } from '@/utils/organization'
-import { Environment } from '@prisma/client'
+import { canDeleteStudy, canDuplicateStudy } from '@/services/permissions/study'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -18,9 +16,9 @@ interface Props {
 
 const StudyPage = async ({ study, user }: Props) => {
   const tNav = await getTranslations('nav')
-  const [canDelete, canEditOrga, settings, userOrgIsCR] = await Promise.all([
+  const [canDelete, canDuplicate, settings, userOrgIsCR] = await Promise.all([
     canDeleteStudy(study.id),
-    canEditOrganizationVersion(user, study.organizationVersion as OrganizationVersionWithOrganization),
+    canDuplicateStudy(study.id),
     getUserApplicationSettings(user.accountId),
     isOrganizationVersionCR(user.organizationVersionId),
   ])
@@ -42,7 +40,7 @@ const StudyPage = async ({ study, user }: Props) => {
       <StudyDetails
         study={study}
         canDeleteStudy={canDelete}
-        canDuplicateStudy={canEditOrga && user.environment === Environment.BC}
+        canDuplicateStudy={canDuplicate}
         validatedOnly={settings.validatedEmissionSourcesOnly}
         organizationVersionId={userOrgIsCR ? study.organizationVersionId : null}
       />

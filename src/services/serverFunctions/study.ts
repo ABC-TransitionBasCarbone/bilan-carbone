@@ -98,6 +98,7 @@ import {
   canChangeSites,
   canCreateSpecificStudy,
   canDeleteStudy,
+  canDuplicateStudy,
   canEditStudyFlows,
   canUpgradeSourceVersion,
   isAdminOnStudyOrga,
@@ -1009,8 +1010,12 @@ export const duplicateStudyCommand = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
+    if (!(await canDuplicateStudy(sourceStudyId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     const sourceStudy = await getStudyById(sourceStudyId, session.user.organizationVersionId)
-    if (!sourceStudy || !hasEditionRights(getAccountRoleOnStudy(session.user, sourceStudy))) {
+    if (!sourceStudy) {
       throw new Error(NOT_AUTHORIZED)
     }
 

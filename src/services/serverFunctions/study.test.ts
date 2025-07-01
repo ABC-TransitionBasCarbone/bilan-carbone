@@ -43,6 +43,7 @@ jest.mock('../../services/permissions/study', () => ({
   getAccountRoleOnStudy: jest.fn(),
   isAdminOnStudyOrga: jest.fn(),
   canCreateSpecificStudy: jest.fn(),
+  canDuplicateStudy: jest.fn(),
 }))
 jest.mock('../../utils/study', () => ({
   getAccountRoleOnStudy: jest.fn(),
@@ -110,9 +111,9 @@ const mockGetUserSourceById = userDbModule.getUserSourceById as jest.Mock
 const mockGetAccountByEmailAndOrganizationVersionId =
   accountModule.getAccountByEmailAndOrganizationVersionId as jest.Mock
 const mockGetAccountByEmailAndEnvironment = accountModule.getAccountByEmailAndEnvironment as jest.Mock
-const mockHasEditionRights = studyUtilsModule.hasEditionRights as jest.Mock
 const mockGetAccountRoleOnStudy = studyUtilsModule.getAccountRoleOnStudy as jest.Mock
 const mockCanCreateSpecificStudy = studyPermissionsModule.canCreateSpecificStudy as jest.Mock
+const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
@@ -120,7 +121,7 @@ const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
 describe('duplicateStudyCommand', () => {
   const setupSuccessfulDuplication = () => {
     mockDbActualizedAuth.mockResolvedValue({ user: mockedAuthUser })
-    mockHasEditionRights.mockReturnValue(true)
+    mockCanDuplicateStudy.mockResolvedValue(true)
     mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Editor)
     mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue({ id: 'validator-account-id' })
     mockGetOrganizationVersionById.mockImplementation(() =>
@@ -191,8 +192,8 @@ describe('duplicateStudyCommand', () => {
       expect(result).toEqual({ success: false, errorMessage: 'Not authorized' })
     })
 
-    it('should return error when user has no edition rights on source study', async () => {
-      mockHasEditionRights.mockReturnValue(false)
+    it('should return error when user cannot duplicate source study', async () => {
+      mockCanDuplicateStudy.mockResolvedValue(false)
 
       const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
       expect(result).toEqual({ success: false, errorMessage: 'Not authorized' })

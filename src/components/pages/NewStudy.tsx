@@ -86,7 +86,7 @@ const NewStudyPage = ({
 
   if (isLoading) {
     return (
-      <div className={`${styles.loadingContainer} flex-cc flex-col p10`}>
+      <div className="flex-cc flex-col p10 gapped1">
         <CircularProgress className={styles.spinner} color="primary" />
         <Typography>{tSpinner('loading')}</Typography>
       </div>
