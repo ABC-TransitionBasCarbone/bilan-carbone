@@ -403,6 +403,7 @@ class EmissionFactorsByImportedIdMap {
   ) {
     const emissionFactorList = this.emissionFactorsMap.get(emissionFactorImportedId)
     if (!emissionFactorList) {
+      console.log(emissionFactorImportedId)
       return null
     }
 
@@ -809,7 +810,9 @@ export const uploadStudies = async (
 
   for (const study of studyWithoutFEImportVersions) {
     const studyEmissionFactorVersions = []
-    for (const source of Object.values(Import).filter((source) => source !== Import.Manual)) {
+    for (const source of Object.values(Import).filter(
+      (source) => source === Import.BaseEmpreinte || source === Import.Legifrance || source === Import.NegaOctet,
+    )) {
       const latestImportVersion = await getSourceLatestImportVersionId(source)
       if (latestImportVersion) {
         studyEmissionFactorVersions.push({ studyId: study.id, source, importVersionId: latestImportVersion.id })
