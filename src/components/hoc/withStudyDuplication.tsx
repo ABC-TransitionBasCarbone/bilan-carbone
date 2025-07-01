@@ -1,7 +1,5 @@
 import NotFound from '@/components/pages/NotFound'
-import { getStudyById } from '@/db/study'
-import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
-import { Environment } from '@prisma/client'
+import { canDuplicateStudy } from '@/services/permissions/study'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
 
@@ -22,19 +20,14 @@ const withStudyDuplication = (
     const searchParams = await props.searchParams
     const duplicateStudyId = searchParams.duplicate
 
-    // Only allow duplication in base environment
-    const finalDuplicateStudyId = props.user.environment === Environment.BC ? duplicateStudyId : undefined
+    let finalDuplicateStudyId: string | undefined = undefined
 
-    if (finalDuplicateStudyId) {
-      const sourceStudy = await getStudyById(finalDuplicateStudyId, props.user.organizationVersionId)
-      if (!sourceStudy) {
+    if (duplicateStudyId) {
+      const canDuplicate = await canDuplicateStudy(duplicateStudyId)
+      if (!canDuplicate) {
         return <NotFound />
       }
-
-      const userRole = getAccountRoleOnStudy(props.user, sourceStudy)
-      if (!hasEditionRights(userRole)) {
-        return <NotFound />
-      }
+      finalDuplicateStudyId = duplicateStudyId
     }
 
     return <WrappedComponent {...props} duplicateStudyId={finalDuplicateStudyId ?? null} />
