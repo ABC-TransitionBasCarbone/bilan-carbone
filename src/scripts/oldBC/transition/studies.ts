@@ -1,3 +1,4 @@
+import { getSourceLatestImportVersionId } from '@/db/study'
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
 import {
   ControlMode,
@@ -404,6 +405,7 @@ class EmissionFactorsByImportedIdMap {
     if (!emissionFactorList) {
       return null
     }
+
     const sortedByCreatedAtEmissionFactors = emissionFactorList.sort((a, b) =>
       a.version && b.version ? b.version.createdAt.getTime() - a.version.createdAt.getTime() : 1,
     )
@@ -435,6 +437,7 @@ class StudiesEmissionFactorVersionsMap {
       }
       const emissionFactorVersions = emissionFactorVersionsMap.get(emissionFactor.version.source) ?? []
       emissionFactorVersionsMap.set(emissionFactor.version.source, emissionFactorVersions.concat(emissionFactorItem))
+      this.studiesEmissionFactorVersionsMap.set(studyId, emissionFactorVersionsMap)
     }
   }
 }
@@ -794,6 +797,32 @@ export const uploadStudies = async (
 
   console.log(`Création de ${createdStudyFEVersion.count} versions de facteurs d'émissions.`)
 
+  const studyWithoutFEImportVersions = await transaction.study.findMany({
+    where: {
+      oldBCId: { in: studies.map((study) => study.oldBCId) },
+      emissionFactorVersions: {
+        none: {},
+      },
+    },
+    select: { id: true },
+  })
+
+  for (const study of studyWithoutFEImportVersions) {
+    const studyEmissionFactorVersions = []
+    for (const source of Object.values(Import).filter((source) => source !== Import.Manual)) {
+      const latestImportVersion = await getSourceLatestImportVersionId(source)
+      if (latestImportVersion) {
+        studyEmissionFactorVersions.push({ studyId: study.id, source, importVersionId: latestImportVersion.id })
+      }
+    }
+    await transaction.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
+  }
+
+  console.log(
+    studyWithoutFEImportVersions.length,
+    "études sans version de facteur d'émission, ajout des versions par défaut.",
+    studyWithoutFEImportVersions,
+  )
   console.log('skippedInfos', JSON.stringify(skippedInfos))
   console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
   console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
