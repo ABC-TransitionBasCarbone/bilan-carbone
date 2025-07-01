@@ -1,6 +1,9 @@
 import { Prisma, Question } from '@prisma/client'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { FieldErrors, UseFormWatch } from 'react-hook-form'
+import { useTranslations } from 'next-intl'
+import { useCallback, useEffect, useMemo } from 'react'
+import { Controller, FieldErrors, UseFormWatch } from 'react-hook-form'
 import { UseAutoSaveReturn } from '../../hooks/useAutoSave'
 import FieldComponent from './FieldComponent'
 import QuestionContainer from './QuestionContainer'
@@ -25,40 +28,103 @@ const DynamicFormField = ({
 }: DynamicFormFieldPropsWithAutoSave) => {
   const fieldName = question.idIntern
   const fieldStatus = autoSave.getFieldStatus(question.id)
-  const debounceRef = useRef<NodeJS.Timeout | null>(null)
+  const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unit), [question.type, question.unit])
+  const isSavingOnBlur = useMemo(() => fieldType === FieldType.TEXT || fieldType === FieldType.NUMBER, [fieldType])
 
-  const debouncedSave = useCallback(
+  const saveField = useCallback(
     (value: unknown) => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current)
+      if (!formErrors[fieldName]) {
+        autoSave.saveField(question, value as Prisma.InputJsonValue)
       }
-
-      debounceRef.current = setTimeout(() => {
-        if (!formErrors[fieldName]) {
-          autoSave.saveField(question, value as Prisma.InputJsonValue)
-        }
-      }, 800)
     },
     [autoSave, question, formErrors, fieldName],
   )
+
+  const handleBlur = useCallback(() => {
+    const currentValue = watch(fieldName)
+    saveField(currentValue)
+  }, [watch, fieldName, saveField])
 
   useEffect(() => {
     const subscription = watch((formValues, { name }) => {
       if (name === fieldName) {
         const value = formValues[fieldName]
-        debouncedSave(value)
+
+        if (!isSavingOnBlur) {
+          saveField(value)
+        }
       }
     })
 
     return () => {
       subscription.unsubscribe()
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current)
+    }
+  }, [watch, fieldName, saveField, isSavingOnBlur])
+
+  const baseInputProps = useMemo(() => {
+    const label = getQuestionLabel(question.type, tFormat)
+    return {
+      question,
+      label,
+      errorMessage: error?.message ? tValidation(error.message) : undefined,
+      disabled: isLoading,
+    }
+  }, [question, tValidation, error?.message, isLoading, tFormat])
+
+  const renderField = useMemo(() => {
+    const getFieldComponent = () => {
+      switch (fieldType) {
+        case FieldType.TEXT:
+        case FieldType.NUMBER:
+          return TextUnitInput
+        case FieldType.DATE:
+          return DatePickerInput
+        case FieldType.YEAR:
+          return YearPickerInput
+        case FieldType.SELECT:
+          return SelectInput
+        case FieldType.QCM:
+          return QCMInput
+        case FieldType.QCU:
+          return QCUInput
+        default:
+          console.warn(`Unsupported question type: ${question.type} (mapped to: ${fieldType})`)
+          return TextUnitInput
       }
     }
-  }, [watch, fieldName, debouncedSave])
 
-  const fieldType = useMemo(() => getQuestionFieldType(question.type, question.unit), [question.type, question.unit])
+    const FieldComponent = getFieldComponent()
+
+    return (
+      <Controller
+        name={fieldName}
+        control={control}
+        render={({ field }) => {
+          const { ref, onBlur, ...fieldWithoutRef } = field
+
+          const handleFieldBlur = () => {
+            onBlur()
+            if (isSavingOnBlur) {
+              handleBlur()
+            }
+          }
+
+          return (
+            <FieldComponent
+              {...fieldWithoutRef}
+              ref={ref}
+              onBlur={handleFieldBlur}
+              value={field.value as string | null}
+              question={baseInputProps.question}
+              label={baseInputProps.label}
+              errorMessage={baseInputProps.errorMessage}
+              disabled={baseInputProps.disabled}
+            />
+          )
+        }}
+      />
+    )
+  }, [fieldType, fieldName, control, baseInputProps, question.type, handleBlur, isSavingOnBlur])
 
   return (
     <QuestionContainer question={question} isLoading={isLoading} saveStatus={fieldStatus}>
