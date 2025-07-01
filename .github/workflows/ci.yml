@@ -64,7 +64,7 @@ jobs:
       - name: Run maildev
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
-        run: cp .env.dist .env
+        run: cp .env.dist .env.test
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
       - name: Generate prisma files
