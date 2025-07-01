@@ -1,8 +1,8 @@
 import { getQuestionLabel } from '@/utils/question'
-import { Question } from '@prisma/client'
+import { Prisma, Question } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
-import { Control, Controller, FieldError } from 'react-hook-form'
+import { useCallback, useMemo } from 'react'
+import { Control, Controller, FieldError, FieldErrors, UseFormWatch } from 'react-hook-form'
 import DatePickerInput from './inputFields/DatePickerInput'
 import QCMInput from './inputFields/QCMInput'
 import QCUInput from './inputFields/QCUInput'
@@ -20,10 +20,39 @@ interface Props {
   error?: FieldError
   isLoading?: boolean
   control: Control<FormValues>
+  watch: UseFormWatch<FormValues>
+  formErrors: FieldErrors<FormValues>
+  autoSave: UseAutoSaveReturn
 }
-const FieldComponent = ({ fieldType, fieldName, question, control, error, isLoading }: Props) => {
+const FieldComponent = ({
+  fieldType,
+  fieldName,
+  question,
+  control,
+  error,
+  isLoading,
+  watch,
+  formErrors,
+  autoSave,
+}: Props) => {
   const tValidation = useTranslations('form.validation')
   const tFormat = useTranslations('emissionFactors.post.cutQuestions.format')
+
+  const isSavingOnBlur = useMemo(() => fieldType === FieldType.TEXT || fieldType === FieldType.NUMBER, [fieldType])
+
+  const saveField = useCallback(
+    (value: unknown) => {
+      if (!formErrors[fieldName]) {
+        autoSave.saveField(question, value as Prisma.InputJsonValue)
+      }
+    },
+    [autoSave, question, formErrors, fieldName],
+  )
+
+  const handleBlur = useCallback(() => {
+    const currentValue = watch(fieldName)
+    saveField(currentValue)
+  }, [watch, fieldName, saveField])
 
   const baseInputProps = useMemo(() => {
     const label = getQuestionLabel(question.type, tFormat)
@@ -76,12 +105,20 @@ const FieldComponent = ({ fieldType, fieldName, question, control, error, isLoad
         name={fieldName}
         control={control}
         render={({ field }) => {
-          const { ref, ...fieldWithoutRef } = field
+          const { ref, onBlur, ...fieldWithoutRef } = field
+
+          const handleFieldBlur = () => {
+            onBlur()
+            if (isSavingOnBlur) {
+              handleBlur()
+            }
+          }
 
           return (
             <InputComponent
               {...fieldWithoutRef}
               ref={ref}
+              onBlur={handleFieldBlur}
               value={field.value as string | null}
               question={baseInputProps.question}
               label={baseInputProps.label}
