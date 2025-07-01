@@ -18,7 +18,7 @@
     "test:watch": "jest --watch",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
-    "db:test:reset": "NODE_ENV=test dotenv -e .env.test -- prisma migrate reset --force",
+    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force",
     "seed:import": "prisma db seed -- -i",
     "user:import": "tsx src/scripts/ftp/importUsers.ts"
   },
