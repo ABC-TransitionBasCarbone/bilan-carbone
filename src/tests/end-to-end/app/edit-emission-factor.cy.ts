@@ -1,6 +1,6 @@
 describe('Edit emission factor', () => {
   before(() => {
-    cy.exec('npx prisma db seed')
+    cy.exec('yarn db:test:reset')
   })
 
   beforeEach(() => {

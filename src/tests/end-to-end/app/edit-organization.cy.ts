@@ -1,6 +1,6 @@
 describe('Edit organization', () => {
   before(() => {
-    cy.exec('npx prisma db seed')
+    cy.exec('yarn db:test:reset')
   })
 
   beforeEach(() => {

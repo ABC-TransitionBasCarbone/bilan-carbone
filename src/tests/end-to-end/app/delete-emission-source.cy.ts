@@ -1,6 +1,6 @@
 describe('Delete emission source', () => {
   before(() => {
-    cy.exec('npx prisma db seed')
+    cy.exec('yarn db:test:reset')
   })
 
   it('should be able to delete an emission source on a study', () => {

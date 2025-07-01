@@ -1,6 +1,6 @@
 describe('Register cut', () => {
   before(() => {
-    cy.exec('npx prisma db seed')
+    cy.exec('yarn db:test:reset')
   })
 
   it('does create new cut user and organization with CNC', () => {

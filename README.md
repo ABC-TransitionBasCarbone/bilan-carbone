@@ -20,7 +20,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 2. **Environment setup**
 
-   Create a `.env` file copied from `.env.dist` in the root directory.
+   Create a `.env.local` copied from `.env.dist` in the root directory and a `.env.test` copied from `.env.test.dist` in the root directory.
 
 3. **Start the database**
 

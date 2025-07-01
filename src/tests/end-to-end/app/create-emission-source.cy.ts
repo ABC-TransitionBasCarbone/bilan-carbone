@@ -2,7 +2,7 @@ const studyId = '88c93e88-7c80-4be4-905b-f0bbd2ccc779'
 
 describe('Create study emission source', () => {
   before(() => {
-    cy.exec('npx prisma db seed')
+    cy.exec('yarn db:test:reset')
   })
 
   it('should create an emission source on a study', () => {
