@@ -42,7 +42,7 @@ jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
   getAccountRoleOnStudy: jest.fn(),
   isAdminOnStudyOrga: jest.fn(),
-  canCreateStudy: jest.fn(),
+  canCreateSpecificStudy: jest.fn(),
 }))
 jest.mock('../../utils/study', () => ({
   getAccountRoleOnStudy: jest.fn(),
@@ -112,7 +112,7 @@ const mockGetAccountByEmailAndOrganizationVersionId =
 const mockGetAccountByEmailAndEnvironment = accountModule.getAccountByEmailAndEnvironment as jest.Mock
 const mockHasEditionRights = studyUtilsModule.hasEditionRights as jest.Mock
 const mockGetAccountRoleOnStudy = studyUtilsModule.getAccountRoleOnStudy as jest.Mock
-const mockCanCreateStudy = studyPermissionsModule.canCreateStudy as jest.Mock
+const mockCanCreateSpecificStudy = studyPermissionsModule.canCreateSpecificStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
@@ -134,7 +134,7 @@ describe('duplicateStudyCommand', () => {
       }),
     )
     mockGetUserApplicationSettings.mockResolvedValue({ caUnit: 'K' })
-    mockCanCreateStudy.mockResolvedValue(true)
+    mockCanCreateSpecificStudy.mockResolvedValue(true)
     mockGetEmissionFactorsImportActiveVersion.mockResolvedValue({ id: 'active-version-id' })
     mockIsAdmin.mockReturnValue(false)
     mockGetStudyById.mockImplementation((id: string) => {
