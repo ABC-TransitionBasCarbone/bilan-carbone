@@ -3,10 +3,10 @@ import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { getQuestionsFromIdIntern } from '@/services/serverFunctions/question'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import { Question, QuestionType } from '@prisma/client'
+import { Prisma, QuestionType } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Control, FieldErrors, UseFormWatch } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import Button from '../../base/Button'
@@ -22,26 +22,16 @@ interface Props extends Omit<BaseInputProps, 'value' | 'onChange' | 'onBlur'> {
 }
 
 const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) => {
-  const [questions, setQuestions] = useState<Question[]>([])
+  const [questions, setQuestions] = useState<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]>([])
+  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const [currentAnswers, setCurrentAnswers] = useState<Record<string, string>[]>([])
+
   const getQuestions = async () => {
     const res = await getQuestionsFromIdIntern(question.idIntern)
     if (res.success) {
       setQuestions(res.data.filter((question) => question.type !== QuestionType.TABLE))
     }
   }
-
-  useEffect(() => {
-    getQuestions()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [question.idIntern])
-
-  const newRow = () =>
-    ({ id: uuidv4(), ...Object.fromEntries(questions.map((question) => [question.idIntern, ''])) }) as Record<
-      string,
-      string
-    >
-  const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
-  const [currentAnswers, setCurrentAnswers] = useState<Record<string, string>[]>([newRow()])
 
   // TO DO faire marcher le onChange quand la bdd sera adaptée aux tableaux
   // const handleChange = (value: string, id: string, key: string) => {
@@ -113,11 +103,52 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
     return col
   }, [questions, tCutQuestions, autoSave, watch, formErrors, control])
 
+  const newRow = useCallback(() => {
+    const row = { id: uuidv4(), ...Object.fromEntries(questions.map((question) => [question.idIntern, ''])) } as Record<
+      string,
+      string
+    >
+    return row
+  }, [questions])
+
+  useEffect(() => {
+    getQuestions()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question.idIntern])
+
+  useEffect(() => {
+    if (questions.length !== 0) {
+      const lengths = questions.flatMap(({ userAnswers }) => {
+        return userAnswers.map(({ response }) => {
+          if (typeof response === 'object' && response !== null && !Array.isArray(response)) {
+            return Object.keys(response).length
+          }
+          return 0
+        })
+      })
+
+      const maxLength = Math.max(0, ...lengths)
+
+      const current = []
+      if (maxLength !== 0) {
+        for (let i = 0; i <= maxLength; i++) {
+          current.push(newRow())
+        }
+      } else {
+        current.push(newRow())
+      }
+
+      setCurrentAnswers(current)
+    }
+  }, [newRow, questions])
+
   const table = useReactTable<Record<string, string>>({
     columns,
     data: currentAnswers,
     getCoreRowModel: getCoreRowModel(),
-    getRowId: (row) => row.id,
+    getRowId: (row) => {
+      return row.id
+    },
   })
 
   return (

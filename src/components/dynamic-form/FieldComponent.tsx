@@ -45,7 +45,6 @@ const FieldComponent = ({
 
   const saveField = useCallback(
     async (value: unknown) => {
-      console.log('In SaveField', { fieldName })
       if (!formErrors[fieldName]) {
         let finalValue = value
         if (/^\d+/.test(fieldName)) {

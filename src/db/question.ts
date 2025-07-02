@@ -104,7 +104,9 @@ export const getQuestionById = async (questionId: string): Promise<Question | nu
   })
 }
 
-export const getQuestionsByIdIntern = async (idIntern: string): Promise<Question[]> => {
+export const getQuestionsByIdIntern = async (
+  idIntern: string,
+): Promise<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]> => {
   const parseIdItern = idIntern.replace(/^\d+/, '')
   if (!parseIdItern) {
     return []
@@ -114,6 +116,9 @@ export const getQuestionsByIdIntern = async (idIntern: string): Promise<Question
       idIntern: {
         contains: parseIdItern,
       },
+    },
+    include: {
+      userAnswers: true,
     },
   })
 }
