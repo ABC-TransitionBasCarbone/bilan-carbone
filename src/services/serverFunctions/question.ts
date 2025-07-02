@@ -45,7 +45,7 @@ export const saveAnswerForQuestion = async (
     }
     const value = depreciationPeriod ? undefined : Number(response)
 
-    if (!emissionFactorImportedId && !depreciationPeriod) {
+    if (!emissionFactorImportedId && !depreciationPeriod && !linkQuestionId) {
       return saveAnswer(question.id, studySiteId, response)
     }
 
@@ -56,6 +56,11 @@ export const saveAnswerForQuestion = async (
       }
 
       const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
+      /**
+       * TODO :
+       * Sauvegarder dans une seule réponse json les différentes valeurs à multiplier
+       * Créer une émissionSource uniquement quand les différentes valeurs sont connues
+       */
       emissionSourceId = linkAnswer?.emissionSourceId ?? undefined
     }
 
@@ -364,15 +369,22 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     linkQuestionId: '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   // DechetsOrdinaires
-  '112-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
-  '113-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34654' }, // Taille des bennes
-  '114-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Fréquence de ramassage (par semaine)
+  '111-veuillez-renseigner-les-dechets-generes-par-semaine': {
+    linkQuestionId: '112-veuillez-renseigner-les-dechets-generes-par-semaine',
+  }, // Nombre des bennes
+  '112-veuillez-renseigner-les-dechets-generes-par-semaine': {
+    linkQuestionId: '113-veuillez-renseigner-les-dechets-generes-par-semaine',
+  }, // Taille des bennes
+  '113-veuillez-renseigner-les-dechets-generes-par-semaine': {
+    emissionFactorImportedId: '34654',
+    linkQuestionId: '111-veuillez-renseigner-les-dechets-generes-par-semaine',
+  }, // Fréquence de ramassage (par semaine) Ordures ménagères
   '121-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
-  '122-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34486' }, // Taille des bennes
-  '123-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Fréquence de ramassage (par semaine)
+  '122-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Taille des bennes
+  '123-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34486' }, // Fréquence de ramassage (par semaine) Emballages et papier
   '131-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
-  '132-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '22040' }, // Taille des bennes
-  '133-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Fréquence de ramassage (par semaine)
+  '132-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Taille des bennes
+  '133-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '22040' }, // Fréquence de ramassage (par semaine) Biodéchets
   // DechetsExceptionnels
   'quelle-quantite-de-materiel-technique-jetez-vous-par-an': { emissionFactorImportedId: '34620' },
   'quelle-quantite-de-lampes-xenon-jetez-vous-par-an': { emissionFactorImportedId: '107' },
