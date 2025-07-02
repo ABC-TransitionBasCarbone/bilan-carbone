@@ -1,6 +1,6 @@
 describe('Register cut', () => {
   before(() => {
-    cy.exec('yarn db:test:reset')
+    cy.resetTestDatabase()
   })
 
   it('does create new cut user and organization with CNC', () => {

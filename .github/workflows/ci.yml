@@ -78,7 +78,7 @@ jobs:
       - name: Build application
         run: yarn build
       - name: Start server
-        run: yarn start &
+        run: yarn start --port 3001 &
       - name: Launch e2e tests
         run: |
           for spec in src/tests/end-to-end/app/*.cy.ts; do

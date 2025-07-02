@@ -1,6 +1,6 @@
 describe('Authentication', () => {
   before(() => {
-    cy.exec('yarn db:test:reset')
+    cy.resetTestDatabase()
   })
 
   beforeEach(() => {

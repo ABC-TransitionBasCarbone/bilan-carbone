@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 describe('Study collaborators', () => {
   before(() => {
-    cy.exec('yarn db:test:reset')
+    cy.resetTestDatabase()
   })
 
   beforeEach(() => {

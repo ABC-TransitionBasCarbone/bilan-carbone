@@ -1,6 +1,6 @@
 describe('Real use case: BC V8_10', () => {
   before(() => {
-    cy.exec('yarn db:test:reset')
+    cy.resetTestDatabase()
   })
 
   it('should correctly compute results', () => {

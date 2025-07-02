@@ -1,6 +1,6 @@
 describe('Onboarding', () => {
   beforeEach(() => {
-    cy.exec('yarn db:test:reset')
+    cy.resetTestDatabase()
     cy.intercept('POST', '/api/auth/callback/credentials').as('login')
   })
 

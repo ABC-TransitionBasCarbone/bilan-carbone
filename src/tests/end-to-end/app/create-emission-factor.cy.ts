@@ -1,6 +1,6 @@
 describe('Create emission factor', () => {
   before(() => {
-    cy.exec('yarn db:test:reset')
+    cy.resetTestDatabase()
   })
 
   beforeEach(() => {

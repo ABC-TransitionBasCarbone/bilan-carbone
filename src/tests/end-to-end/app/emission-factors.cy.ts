@@ -1,6 +1,6 @@
 describe('Emission factors table', () => {
   before(() => {
-    cy.exec('yarn db:test:reset')
+    cy.resetTestDatabase()
   })
 
   it('Should be able to display archived emission factors', () => {

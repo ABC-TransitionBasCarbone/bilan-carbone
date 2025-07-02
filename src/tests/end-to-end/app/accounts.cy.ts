@@ -1,6 +1,6 @@
 describe('Accounts - multiple environment with the same user', () => {
   before(() => {
-    cy.exec('yarn db:test:reset')
+    cy.resetTestDatabase()
   })
 
   beforeEach(() => {

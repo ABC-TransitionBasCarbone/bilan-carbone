@@ -2,7 +2,7 @@ import { Role } from '@prisma/client'
 
 describe('Team', () => {
   before(() => {
-    cy.exec('yarn db:test:reset')
+    cy.resetTestDatabase()
   })
 
   beforeEach(() => {
