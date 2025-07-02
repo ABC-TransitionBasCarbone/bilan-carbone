@@ -75,16 +75,30 @@ interface EmissionFactor {
 const parseStudies = async (
   transaction: Prisma.TransactionClient,
   studiesWorksheet: StudiesWorkSheet,
+  organizationVersionId: string,
 ): Promise<Study[]> => {
   const relevantStudies = studiesWorksheet.getRows().filter((row) => row.name)
 
+  const orgaVersionIds = await transaction.organizationVersion.findMany({
+    where: {
+      OR: [{ id: organizationVersionId }, { parentId: organizationVersionId }],
+      environment: Environment.BC,
+    },
+    select: { id: true, organizationId: true },
+  })
+
   const studiesSites = await transaction.site.findMany({
-    where: { oldBCId: { in: relevantStudies.map((row) => row.siteId as string) } },
+    where: {
+      oldBCId: { in: relevantStudies.map((row) => row.siteId as string) },
+      organization: { id: { in: orgaVersionIds.map((org) => org.organizationId) } },
+    },
     select: { organizationId: true },
   })
 
   const studiesOrganizations = await transaction.organization.findMany({
-    where: { id: { in: studiesSites.map((site) => site.organizationId) } },
+    where: {
+      id: { in: studiesSites.map((site) => site.organizationId) },
+    },
     select: {
       oldBCId: true,
       organizationVersions: true,
@@ -272,7 +286,7 @@ const parseEmissionSources = (
           siteOldBCId: row.siteOldBCId as string,
           name: name,
           recycledPart: row.recycledPart as number,
-          comment: `${row.commentaires as string} ${row.commentairesCollecte as string}`,
+          comment: `${row.commentaires ? row.commentaires : ''} ${row.commentairesCollecte ? row.commentairesCollecte : ''}`,
           validated: (row.validationDASaisie as number) === 1,
           emissionFactorOldBCId: row.emissionFactorOldBCId as string,
           value: row.daTotalValue as number,
@@ -323,7 +337,13 @@ const getExistingStudies = async (
       },
       organizationVersionId: { in: orgaVersionIds.map((v) => v.id) },
     },
-    select: { id: true, oldBCId: true, startDate: true, endDate: true },
+    select: {
+      id: true,
+      oldBCId: true,
+      startDate: true,
+      endDate: true,
+      organizationVersion: { select: { id: true, organization: { select: { name: true } } } },
+    },
   })
 
   return existingObjects.reduce((map, currentExistingObject) => {
@@ -332,10 +352,11 @@ const getExistingStudies = async (
         id: currentExistingObject.id,
         startDate: currentExistingObject.startDate,
         endDate: currentExistingObject.endDate,
+        orgaVersion: currentExistingObject.organizationVersion.organization,
       })
     }
     return map
-  }, new Map<string, { id: string; startDate: Date; endDate: Date }>())
+  }, new Map<string, { id: string; startDate: Date; endDate: Date; orgaVersion: { name: string } }>())
 }
 
 const getExistingStudySites = async (transaction: Prisma.TransactionClient, studiesIds: string[]) => {
@@ -369,6 +390,7 @@ interface EmissionFactorWithVersion extends EmissionFactorPrismaModel {
 
 class EmissionFactorsByImportedIdMap {
   emissionFactorsMap: Map<string, EmissionFactor[]>
+  static skippedEmissionFactors: Set<string> = new Set()
 
   constructor(emissionFactors: EmissionFactorWithVersion[]) {
     this.emissionFactorsMap = emissionFactors.reduce((emissionFactorsMap, emissionFactor) => {
@@ -403,7 +425,7 @@ class EmissionFactorsByImportedIdMap {
   ) {
     const emissionFactorList = this.emissionFactorsMap.get(emissionFactorImportedId)
     if (!emissionFactorList) {
-      console.log(emissionFactorImportedId)
+      EmissionFactorsByImportedIdMap.skippedEmissionFactors.add(emissionFactorImportedId)
       return null
     }
 
@@ -455,7 +477,7 @@ export const uploadStudies = async (
   const skippedInfos: { oldBcId: string; reason: string }[] = []
   const emissionSourceWithoutFe: { oldBcId: string; name: string; manual: boolean }[] = []
 
-  const studies = await parseStudies(transaction, oldBCWorksheetReader.studiesWorksheet)
+  const studies = await parseStudies(transaction, oldBCWorksheetReader.studiesWorksheet, organizationVersionId)
   const studySites = parseStudySites(oldBCWorksheetReader.studySitesWorksheet)
   const studyExports = parseStudyExports(oldBCWorksheetReader.studyExportsWorksheet)
   const existingEmissionFactorNames = await getExistingEmissionFactorsNames(
@@ -605,13 +627,16 @@ export const uploadStudies = async (
     ),
   )
 
-  const emissionFactorImportedIds = Array.from(
-    studyEmissionSources
-      .values()
-      .flatMap((studyEmissionSources) =>
-        studyEmissionSources.map((studyEmissionSource) => studyEmissionSource.emissionFactorImportedId),
-      ),
+  const emissionFactorImportedIds = new Set(
+    Array.from(
+      studyEmissionSources
+        .values()
+        .flatMap((studyEmissionSources) =>
+          studyEmissionSources.map((studyEmissionSource) => studyEmissionSource.emissionFactorImportedId),
+        ),
+    ),
   )
+
   const emissionFactorOldBCIds = Array.from(
     studyEmissionSources
       .values()
@@ -621,14 +646,15 @@ export const uploadStudies = async (
   )
   const emissionFactors = await getExistingEmissionFactors(
     transaction,
-    emissionFactorImportedIds,
+    Array.from(emissionFactorImportedIds),
     emissionFactorOldBCIds,
   )
+
   const emissionFactorsByImportedIdMap = new EmissionFactorsByImportedIdMap(emissionFactors)
   const studiesEmissionFactorVersionsMap = new StudiesEmissionFactorVersionsMap()
   const createdEmissionSource = await transaction.studyEmissionSource.createMany({
     data: Array.from(
-      studyEmissionSources.entries().flatMap(([studyOldBCId, studyEmissionSources]) => {
+      studyEmissionSources.entries().flatMap(([studyOldBCId, studyEmissionSourcesNew]) => {
         // N'importer que les sources d'émission d'études nouvelles.
         if (!newStudies.some((newStudy) => newStudy.oldBCId === studyOldBCId)) {
           return []
@@ -642,7 +668,7 @@ export const uploadStudies = async (
           return []
         }
 
-        return studyEmissionSources
+        return studyEmissionSourcesNew
           .map((studyEmissionSource) => {
             if (
               studyEmissionSource.siteOldBCId === 'NULL' ||
@@ -821,15 +847,16 @@ export const uploadStudies = async (
     await transaction.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
   }
 
-  console.log(
-    studyWithoutFEImportVersions.length,
-    "études sans version de facteur d'émission, ajout des versions par défaut.",
-    studyWithoutFEImportVersions,
-  )
-  console.log('skippedInfos', JSON.stringify(skippedInfos))
-  console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
-  console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
-  console.log('emissionSourceWithoutFe', JSON.stringify(emissionSourceWithoutFe))
+  console.log(EmissionFactorsByImportedIdMap.skippedEmissionFactors)
+  // console.log(
+  //   studyWithoutFEImportVersions.length,
+  //   "études sans version de facteur d'émission, ajout des versions par défaut.",
+  //   studyWithoutFEImportVersions,
+  // )
+  // console.log('skippedInfos', JSON.stringify(skippedInfos))
+  // console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
+  // console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
+  // console.log('emissionSourceWithoutFe', JSON.stringify(emissionSourceWithoutFe))
 
   return false
 }

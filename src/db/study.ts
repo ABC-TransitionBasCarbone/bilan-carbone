@@ -69,6 +69,7 @@ const fullStudyInclude = {
   emissionSources: {
     select: {
       id: true,
+      createdAt: true,
       subPost: true,
       name: true,
       caracterisation: true,

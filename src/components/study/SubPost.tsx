@@ -64,6 +64,11 @@ const SubPost = ({
     )
   }, [emissionSources, environment])
 
+  const sortedEmissionSources = useMemo(
+    () => emissionSources.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)),
+    [emissionSources],
+  )
+
   const contributors = useMemo(
     () =>
       withoutDetail
@@ -92,13 +97,13 @@ const SubPost = ({
       }, 300)
     } else if (hash.startsWith('#emission-source-')) {
       const emissionSourceId = hash.replace('#emission-source-', '')
-      const hasTargetEmissionSource = emissionSources.some((source) => source.id === emissionSourceId)
+      const hasTargetEmissionSource = sortedEmissionSources.some((source) => source.id === emissionSourceId)
 
       if (hasTargetEmissionSource) {
         setExpanded(true)
       }
     }
-  }, [emissionSources, subPost])
+  }, [sortedEmissionSources, subPost])
 
   return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
     <div ref={accordionRef} id={`subpost-${subPost}`} className={styles.subPostScrollContainer}>
@@ -131,7 +136,7 @@ const SubPost = ({
           </p>
         </AccordionSummary>
         <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
-          {emissionSources.map((emissionSource) =>
+          {sortedEmissionSources.map((emissionSource) =>
             // Dirty hack to force type on EmissionSource
             withoutDetail ? (
               <EmissionSource
