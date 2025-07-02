@@ -227,7 +227,9 @@ const getExistingEmissionFactorsNames = async (
   const emissionFactorsOldBCIds = studyEmissionSourcesWorksheet
     .getRows()
     .filter((row) => row.studyOldBCId !== '00000000-0000-0000-0000-000000000000')
-    .map((row) => row.emissionFactorOldBCId as string)
+    .map((row) =>
+      row.emissionFactorImportedId === '0' ? `${row.emissionFactorOldBCId}` : `${row.emissionFactorImportedId}`,
+    )
 
   return await getExistingEmissionFactorsNamesFromRepository(transaction, emissionFactorsOldBCIds)
 }
@@ -239,7 +241,7 @@ const buildEmissionSourceName = (
 ) => {
   let name = row.descriptifData as string
   if (!name) {
-    const emissionFactorName = emissionFactorsNames.get(row.emissionFactorOldBCId as string)
+    const emissionFactorName = emissionFactorsNames.get(`${row.emissionFactorImportedId || row.emissionFactorOldBCId}`)
     if (emissionFactorName) {
       name = emissionFactorName.name
     }
@@ -848,15 +850,15 @@ export const uploadStudies = async (
   }
 
   console.log(EmissionFactorsByImportedIdMap.skippedEmissionFactors)
-  // console.log(
-  //   studyWithoutFEImportVersions.length,
-  //   "études sans version de facteur d'émission, ajout des versions par défaut.",
-  //   studyWithoutFEImportVersions,
-  // )
-  // console.log('skippedInfos', JSON.stringify(skippedInfos))
-  // console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
-  // console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
-  // console.log('emissionSourceWithoutFe', JSON.stringify(emissionSourceWithoutFe))
+  console.log(
+    studyWithoutFEImportVersions.length,
+    "études sans version de facteur d'émission, ajout des versions par défaut.",
+    studyWithoutFEImportVersions,
+  )
+  console.log('skippedInfos', JSON.stringify(skippedInfos))
+  console.log('sous poste en erreur', new Set(skippedEmissionSource.map((e) => e.oldPost)))
+  console.log('raisons des sous postes en erreur', new Set(skippedEmissionSource.map((e) => e.reason)))
+  console.log('emissionSourceWithoutFe', JSON.stringify(emissionSourceWithoutFe))
 
   return false
 }
