@@ -1,5 +1,7 @@
 // WIP DO NOT USE YET
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
+import { useServerFunction } from '@/hooks/useServerFunction'
+import { deleteAnswerKeysFromRow } from '@/services/serverFunctions/answer'
 import { getQuestionsFromIdIntern } from '@/services/serverFunctions/question'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
@@ -8,7 +10,6 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Control, FieldErrors, UseFormWatch } from 'react-hook-form'
-import { v4 as uuidv4 } from 'uuid'
 import Button from '../../base/Button'
 import FieldComponent from '../FieldComponent'
 import { getQuestionFieldType } from '../services/questionService'
@@ -25,6 +26,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
   const [questions, setQuestions] = useState<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]>([])
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const [currentAnswers, setCurrentAnswers] = useState<Record<string, string>[]>([])
+  const { callServerFunction } = useServerFunction()
 
   const getQuestions = async () => {
     const res = await getQuestionsFromIdIntern(question.idIntern)
@@ -33,31 +35,10 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
     }
   }
 
-  // TO DO faire marcher le onChange quand la bdd sera adaptée aux tableaux
-  // const handleChange = (value: string, id: string, key: string) => {
-  //   setCurrentAnswers((prevAnswers) => {
-  //     let hasChanged = false
-
-  //     const newAnswers = prevAnswers.map((row) => {
-  //       if (row.id !== id) return row
-
-  //       if (row[key] === value) return row
-
-  //       hasChanged = true
-  //       return { ...row, [key]: value }
-  //     })
-
-  //     // onChange(newValues.map(row => row[key] || '').join(', '));
-  //     return hasChanged ? newAnswers : prevAnswers
-  //   })
-  // }
-
-  const handleDelete = (id: string) => {
-    setCurrentAnswers((prevAnswers) => prevAnswers.filter((answerRow) => answerRow.id !== id))
-    // TO DO faire marcher le onChange quand la bdd sera adaptée aux tableaux
-    // onChange(currentAnswers.filter(answerRow => answerRow.id !== id).map(row =>
-    //   row[questions[0].key] || ''
-    // ).join(', '));
+  const handleDelete = async (row: Record<string, string>) => {
+    const indexToDelete = row.id
+    setCurrentAnswers((prevAnswers) => prevAnswers.filter((answerRow) => answerRow.id !== indexToDelete))
+    callServerFunction(() => deleteAnswerKeysFromRow(question.idIntern, indexToDelete))
   }
 
   const columns = useMemo<ColumnDef<Record<string, string>>[]>(() => {
@@ -66,7 +47,6 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
       header: question.label,
       accessorKey: question.idIntern,
       cell: ({ row }) => {
-        // TODO utiliser question.unit dans les params de getQuestionFieldType ?
         const fieldType = getQuestionFieldType(question.type, question.unit)
         return (
           <FieldComponent
@@ -77,10 +57,6 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
             key={`${question.idIntern}-${row.index}`}
             watch={watch}
             formErrors={formErrors}
-            // TO DO faire marcher le onChange quand la bdd sera adaptée aux tableaux
-            // value={getValue() as string}
-            // onChange={(value) => handleChange(value || "", row.original.id, question.idIntern)}
-            // onUpdate={handleUpdate}
             control={control}
           />
         )
@@ -93,7 +69,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
       accessorKey: 'id',
       cell: ({ row }) => (
         <Box>
-          <Button title={tCutQuestions('delete')} aria-label="delete" onClick={() => handleDelete(row.original.id)}>
+          <Button title={tCutQuestions('delete')} aria-label="delete" onClick={() => handleDelete(row.original)}>
             <DeleteIcon />
           </Button>
         </Box>
@@ -101,15 +77,15 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
     })
 
     return col
-  }, [questions, tCutQuestions, autoSave, watch, formErrors, control])
+  }, [questions, tCutQuestions, autoSave, formErrors, control])
 
-  const newRow = useCallback(() => {
-    const row = { id: uuidv4(), ...Object.fromEntries(questions.map((question) => [question.idIntern, ''])) } as Record<
-      string,
-      string
-    >
+  const newRow = useCallback((index: number) => {
+    const row = {
+      id: index.toString(),
+      ...Object.fromEntries(questions.map((question) => [question.idIntern, index])),
+    } as Record<string, string>
     return row
-  }, [questions])
+  }, [])
 
   useEffect(() => {
     getQuestions()
@@ -132,15 +108,15 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
       const current = []
       if (maxLength !== 0) {
         for (let i = 0; i <= maxLength; i++) {
-          current.push(newRow())
+          current.push(newRow(i))
         }
       } else {
-        current.push(newRow())
+        current.push(newRow(0))
       }
 
       setCurrentAnswers(current)
     }
-  }, [newRow, questions])
+  }, [questions])
 
   const table = useReactTable<Record<string, string>>({
     columns,
@@ -153,7 +129,10 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
 
   return (
     <Box>
-      <Button className="align" onClick={() => setCurrentAnswers((prev) => [...prev, newRow()])}>
+      <Button
+        className="align"
+        onClick={() => setCurrentAnswers((prev) => [...prev, newRow(currentAnswers.length + 1)])}
+      >
         {tCutQuestions('add')}
       </Button>
       <TableContainer component={Paper} className="mt1">
