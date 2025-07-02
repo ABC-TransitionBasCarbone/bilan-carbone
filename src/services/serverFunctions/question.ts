@@ -29,7 +29,7 @@ export const saveAnswerForQuestion = async (
     }
 
     const { emissionFactorImportedId, depreciationPeriod, linkQuestionId } =
-      getEmissionFactorByIdIntern(question.idIntern) || {}
+      getEmissionFactorByIdIntern(question.idIntern, response) || {}
 
     let emissionFactorId = undefined
     let emissionSourceId = undefined
@@ -46,10 +46,6 @@ export const saveAnswerForQuestion = async (
     let value = depreciationPeriod ? undefined : Number(response)
 
     if (!emissionFactorImportedId && !depreciationPeriod) {
-      const result = determineFactorAndValue(response, emissionFactorId, value, studySite.numberOfSessions ?? 1)
-      emissionFactorId = result.emissionFactorId
-      value = result.value
-
       return saveAnswer(question.id, studySiteId, response)
     }
 
@@ -117,9 +113,18 @@ type EmissionFactorInfo = {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
   linkQuestionId?: string
+  emissionFactors?: Record<string, string>
 }
 
-const getEmissionFactorByIdIntern = (idIntern: string): EmissionFactorInfo => emissionFactorMap[idIntern]
+const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJsonValue): EmissionFactorInfo => {
+  const emissionFactorInfo = emissionFactorMap[idIntern]
+
+  if (emissionFactorInfo.emissionFactors) {
+    emissionFactorInfo.emissionFactorImportedId = emissionFactorInfo.emissionFactors[response.toString()]
+  }
+
+  return emissionFactorInfo
+}
 
 const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   /**
@@ -151,14 +156,45 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // Equipe - attente de la fonctionnalité table
   '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
   '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
-  '13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
+  '13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {
+    emissionFactors: {
+      'Métro (Ile de France)': '43253',
+      'RER et Transilien (Ile-de-France)': '43254',
+      'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
+      'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
+      'Bus (agglomérations de - de 100 000 habitants)': '27998',
+      'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
+      'Bus (agglomérations de + de 250 000 habitants)': '28000',
+      'Vélo à assistance éléctrique': '28331',
+      'Vélo classique': '134',
+      Marche: '135',
+      'Voiture gazole courte distance': '27984',
+      'Voiture essence courte distance': '27983',
+      'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
+        '28015',
+      'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
+      'Moto >250cm3 /Mixte': '27995',
+      'Moto<250cm3/Mixte': '27992',
+      'Trottinette électrique': '28329',
+    },
+  },
   // DeplacementsProfessionnels - attente de la fonctionnalité table
   '11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '12-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '14-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '15-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
-  '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
+  '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
+    emissionFactors: {
+      'tous types d’hôtel': '100',
+      'hôtel 1*': '101',
+      'hôtel 2*': '102',
+      'hôtel 3*': '103',
+      'hôtel 4*': '104',
+      'hôtel 5*': '105',
+      nuitée: '106',
+    },
+  },
   '17-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   // Energie
   'quelles-etaient-les-consommations-energetiques-du-cinema': { emissionFactorImportedId: '15591' },
@@ -230,12 +266,48 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'combien-de-nuits': { emissionFactorImportedId: '106' },
   'combien-d-equipes-de-repas': { emissionFactorImportedId: '20682' },
   // Autres matériel et matériel technique - Attente de la fonctionnalité table
-  '11-decrivez-les-differentes-salles-du-cinema': {},
-  '12-decrivez-les-differentes-salles-du-cinema': {},
-  '13-decrivez-les-differentes-salles-du-cinema': {},
-  '14-decrivez-les-differentes-salles-du-cinema': {},
-  '15-decrivez-les-differentes-salles-du-cinema': {},
-  '16-decrivez-les-differentes-salles-du-cinema': {},
+  '11-decrivez-les-differentes-salles-du-cinema': {
+    // TODO multiplier par le nombre de salles ou faire un tableau
+    emissionFactors: {
+      'Projecteur Xénon': '107',
+      'Projecteur Laser': '108',
+      'Projecteur 35 mm': '109',
+    },
+  },
+  '12-decrivez-les-differentes-salles-du-cinema': {
+    // TODO multiplier par le nombre d'écrans
+    emissionFactors: {
+      'Ecran 2D': '110',
+      'Ecran 3D': '111',
+    },
+    linkQuestionId: '13-Décrivez les différentes salles du cinéma',
+  },
+  '13-decrivez-les-differentes-salles-du-cinema': {
+    linkQuestionId: '12-Décrivez les différentes salles du cinéma',
+  },
+  '14-decrivez-les-differentes-salles-du-cinema': {
+    emissionFactors: {
+      'Fauteuils classiques': '112',
+      'Fauteuils 4DX': '113',
+    },
+    linkQuestionId: '15-Décrivez les différentes salles du cinéma',
+  },
+  '15-decrivez-les-differentes-salles-du-cinema': {
+    linkQuestionId: '14-Décrivez les différentes salles du cinéma',
+  },
+  '16-decrivez-les-differentes-salles-du-cinema': {
+    // TODO multiplier par le nombre de salles
+    emissionFactors: {
+      'Son Stéréo': '114',
+      'Dolby 5.1': '115',
+      'Dolby 7.1': '116',
+      'Dolby Atmos': '117',
+      IMAX: '118',
+      'Auro 3D / Ice': '119',
+      'DTS : X': '120',
+      THX: '121',
+    },
+  },
   '11-comment-stockez-vous-les-films': { emissionFactorImportedId: '20894' },
   '12-comment-stockez-vous-les-films': { emissionFactorImportedId: '20893' },
   'combien-de-films-recevez-vous-en-dématérialise-par-an': { emissionFactorImportedId: '141' },
@@ -244,7 +316,14 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   '11-de-combien-disposez-vous-de': { emissionFactorImportedId: '139' },
   '12-de-combien-disposez-vous-de': { emissionFactorImportedId: '140' },
   // Achats
-  '11-vendez-vous-des-boissons-et-des-confiseries': {},
+  '11-vendez-vous-des-boissons-et-des-confiseries': {
+    emissionFactors: {
+      // TODO trouver une manière de mulitplier par le nombre de séances
+      'Un peu de confiseries et de boissons (~30g)': '136',
+      'Une part standard de confiseries et de boissons (~120g)': '137',
+      'Une part significative de confiseries et de boissons (~200g)': '138',
+    },
+  },
   // Fret
   'quelle-est-la-distance-entre-votre-cinema-et-votre-principal-fournisseur': { emissionFactorImportedId: '28026' },
   // Electromenager
@@ -329,68 +408,4 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'baies-de-disques': { emissionFactorImportedId: '20893' },
   // CommunicationDigitale (again)
   'ecrans-tv': { emissionFactorImportedId: '27006' },
-}
-
-const determineFactorAndValue = (
-  response: Prisma.InputJsonValue,
-  emissionFactorId: string | undefined,
-  value: number | undefined,
-  numberOfSessions: number,
-) => {
-  const mapping: Record<string, string> = {
-    'Un peu de confiseries et de boissons (~30g)': '136',
-    'Une part standard de confiseries et de boissons (~120g)': '137',
-    'Une part significative de confiseries et de boissons (~200g)': '138',
-    'tous types d’hôtel': '100',
-    'hôtel 1*': '101',
-    'hôtel 2*': '102',
-    'hôtel 3*': '103',
-    'hôtel 4*': '104',
-    'hôtel 5*': '105',
-    nuitée: '106',
-    'Projecteur Xénon': '107',
-    'Projecteur Laser': '108',
-    'Projecteur 35 mm': '109',
-    'Ecran 2D': '110',
-    'Ecran 3D': '111',
-    'Fauteuils classiques': '112',
-    'Fauteuils 4DX': '113',
-    'Son Stéréo': '114',
-    'Dolby 5.1': '115',
-    'Dolby 7.1': '116',
-    'Dolby Atmos': '117',
-    IMAX: '118',
-    'Auro 3D / Ice': '119',
-    'DTS : X': '120',
-    THX: '121',
-    'Métro (Ile de France)': '43253',
-    'RER et Transilien (Ile-de-France)': '43254',
-    'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
-    'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
-    'Bus (agglomérations de - de 100 000 habitants)': '27998',
-    'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
-    'Bus (agglomérations de + de 250 000 habitants)': '28000',
-    'Vélo à assistance éléctrique': '28331',
-    'Vélo classique': '134',
-    Marche: '135',
-    'Voiture gazole courte distance': '27984',
-    'Voiture essence courte distance': '27983',
-    'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
-      '28015',
-    'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
-    'Moto >250cm3 /Mixte': '27995',
-    'Moto<250cm3/Mixte': '27992',
-    'Trottinette électrique': '28329',
-  }
-
-  if (typeof response === 'string' && mapping[response]) {
-    emissionFactorId = mapping[response]
-  } else {
-    value =
-      emissionFactorId && ['136', '137', '138'].includes(emissionFactorId)
-        ? Number(response) * numberOfSessions
-        : Number(response)
-  }
-
-  return { emissionFactorId, value }
 }
