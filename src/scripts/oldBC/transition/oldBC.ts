@@ -65,29 +65,32 @@ export const uploadOldBCInformations = async (
     rl.close()
   }
 
-  await prismaClient.$transaction(async (transaction) => {
-    hasOrganizationsWarning = await uploadOrganizations(
-      transaction,
-      oldBCWorksheetsReader.organizationsWorksheet,
-      accountOrganizationVersion,
-    )
-    hasEmissionFactorsWarning = await uploadEmissionFactors(
-      transaction,
-      oldBCWorksheetsReader.emissionFactorsWorksheet,
-      accountOrganizationVersion,
-    )
-    hasStudiesWarning = await uploadStudies(
-      transaction,
-      account.id,
-      organizationVersionId,
-      postAndSubPostsOldNewMapping,
-      oldBCWorksheetsReader,
-    )
+  await prismaClient.$transaction(
+    async (transaction) => {
+      hasOrganizationsWarning = await uploadOrganizations(
+        transaction,
+        oldBCWorksheetsReader.organizationsWorksheet,
+        accountOrganizationVersion,
+      )
+      hasEmissionFactorsWarning = await uploadEmissionFactors(
+        transaction,
+        oldBCWorksheetsReader.emissionFactorsWorksheet,
+        accountOrganizationVersion,
+      )
+      hasStudiesWarning = await uploadStudies(
+        transaction,
+        account.id,
+        organizationVersionId,
+        postAndSubPostsOldNewMapping,
+        oldBCWorksheetsReader,
+      )
 
-    if (skip) {
-      throw Error()
-    }
-  })
+      if (skip) {
+        throw Error()
+      }
+    },
+    { timeout: 10000 },
+  ) // 10 seconds timeout for the transaction
 
   if (hasOrganizationsWarning) {
     console.log(

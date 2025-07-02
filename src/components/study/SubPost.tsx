@@ -51,9 +51,18 @@ const SubPost = ({
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
 
-  const total = useMemo(
-    () => emissionSources.reduce((sum, emissionSource) => sum + (getEmissionResults(emissionSource)?.emission || 0), 0),
+  const sortedEmissionSources = useMemo(
+    () => emissionSources.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)),
     [emissionSources],
+  )
+
+  const total = useMemo(
+    () =>
+      sortedEmissionSources.reduce(
+        (sum, emissionSource) => sum + (getEmissionResults(emissionSource)?.emission || 0),
+        0,
+      ),
+    [sortedEmissionSources],
   )
 
   const contributors = useMemo(
@@ -75,15 +84,15 @@ const SubPost = ({
     const hash = window.location.hash
     if (hash.startsWith('#emission-source-')) {
       const emissionSourceId = hash.replace('#emission-source-', '')
-      const hasTargetEmissionSource = emissionSources.some((source) => source.id === emissionSourceId)
+      const hasTargetEmissionSource = sortedEmissionSources.some((source) => source.id === emissionSourceId)
 
       if (hasTargetEmissionSource) {
         setExpanded(true)
       }
     }
-  }, [emissionSources])
+  }, [sortedEmissionSources])
 
-  return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && emissionSources.length === 0 ? null : (
+  return (!userRoleOnStudy || userRoleOnStudy === StudyRole.Reader) && sortedEmissionSources.length === 0 ? null : (
     <div>
       <Accordion expanded={expanded} onChange={(_, isExpanded) => setExpanded(isExpanded)}>
         <AccordionSummary
@@ -114,7 +123,7 @@ const SubPost = ({
           </p>
         </AccordionSummary>
         <AccordionDetails id={`panel-${subPost}-content`} className={styles.subPostDetailsContainer}>
-          {emissionSources.map((emissionSource) =>
+          {sortedEmissionSources.map((emissionSource) =>
             // Dirty hack to force type on EmissionSource
             withoutDetail ? (
               <EmissionSource
