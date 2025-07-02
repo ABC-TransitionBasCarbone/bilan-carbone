@@ -119,7 +119,11 @@ type EmissionFactorInfo = {
 const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJsonValue): EmissionFactorInfo => {
   const emissionFactorInfo = emissionFactorMap[idIntern]
 
-  if (emissionFactorInfo.emissionFactors) {
+  console.log(
+    `getEmissionFactorByIdIntern: idIntern=${idIntern}, response=${response}, emissionFactorInfo=`,
+    emissionFactorInfo,
+  )
+  if (emissionFactorInfo && emissionFactorInfo.emissionFactors) {
     emissionFactorInfo.emissionFactorImportedId = emissionFactorInfo.emissionFactors[response.toString()]
   }
 
