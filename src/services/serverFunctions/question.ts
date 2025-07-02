@@ -43,7 +43,7 @@ export const saveAnswerForQuestion = async (
     if (!study || !studySite) {
       throw new Error(NOT_AUTHORIZED)
     }
-    let value = depreciationPeriod ? undefined : Number(response)
+    const value = depreciationPeriod ? undefined : Number(response)
 
     if (!emissionFactorImportedId && !depreciationPeriod) {
       return saveAnswer(question.id, studySiteId, response)
