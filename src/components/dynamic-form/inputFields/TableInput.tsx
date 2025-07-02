@@ -23,7 +23,6 @@ interface Props extends Omit<BaseInputProps, 'value' | 'onChange' | 'onBlur'> {
 
 const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) => {
   const [questions, setQuestions] = useState<Question[]>([])
-
   const getQuestions = async () => {
     const res = await getQuestionsFromIdIntern(question.idIntern)
     if (res.success) {
@@ -76,17 +75,16 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
       id: question.idIntern,
       header: question.label,
       accessorKey: question.idIntern,
-      cell: ({ row, getValue }) => {
+      cell: ({ row }) => {
         // TODO utiliser question.unit dans les params de getQuestionFieldType ?
         const fieldType = getQuestionFieldType(question.type, question.unit)
-
         return (
           <FieldComponent
             autoSave={autoSave}
-            fieldName={question.idIntern}
+            fieldName={`${question.idIntern}-${row.index}`}
             fieldType={fieldType}
             question={question}
-            key={`${question.idIntern}-${row.original.id}`}
+            key={`${question.idIntern}-${row.index}`}
             watch={watch}
             formErrors={formErrors}
             // TO DO faire marcher le onChange quand la bdd sera adaptée aux tableaux
@@ -113,7 +111,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
     })
 
     return col
-  }, [tCutQuestions, questions])
+  }, [questions, tCutQuestions, autoSave, watch, formErrors, control])
 
   const table = useReactTable<Record<string, string>>({
     columns,

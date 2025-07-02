@@ -1,6 +1,8 @@
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
+import { getAnswerByQuestionIdAndStudySiteId } from '@/services/serverFunctions/question'
 import { getQuestionLabel } from '@/utils/question'
 import { Prisma, Question } from '@prisma/client'
+import { JsonObject } from '@prisma/client/runtime/library'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import { Control, Controller, FieldError, FieldErrors, UseFormWatch } from 'react-hook-form'
@@ -42,18 +44,43 @@ const FieldComponent = ({
   const isSavingOnBlur = useMemo(() => fieldType === FieldType.TEXT || fieldType === FieldType.NUMBER, [fieldType])
 
   const saveField = useCallback(
-    (value: unknown) => {
+    async (value: unknown) => {
+      console.log('In SaveField', { fieldName })
       if (!formErrors[fieldName]) {
-        autoSave.saveField(question, value as Prisma.InputJsonValue)
+        let finalValue = value
+        if (/^\d+/.test(fieldName)) {
+          const key = fieldName.split('-').pop()
+          if (key) {
+            const tableValue = { [key]: value }
+            const response = await getAnswerByQuestionIdAndStudySiteId(question.id, autoSave.studySiteId)
+            if (response.success) {
+              const { data } = response
+              if (data) {
+                const updatedValue = { ...(data.response as JsonObject), ...tableValue }
+                finalValue = updatedValue
+              } else {
+                finalValue = tableValue
+              }
+            }
+          }
+        }
+        autoSave.saveField(question, finalValue as Prisma.InputJsonValue)
       }
     },
-    [autoSave, question, formErrors, fieldName],
+    [formErrors, fieldName, autoSave, question],
   )
 
   const handleBlur = useCallback(() => {
     const currentValue = watch(fieldName)
     saveField(currentValue)
   }, [watch, fieldName, saveField])
+
+  const handleChange = useCallback(
+    (value: string | null) => {
+      saveField(value)
+    },
+    [saveField],
+  )
 
   const baseInputProps = useMemo(() => {
     const label = getQuestionLabel(question.type, tFormat)
@@ -95,6 +122,9 @@ const FieldComponent = ({
           errorMessage={baseInputProps.errorMessage}
           disabled={baseInputProps.disabled}
           control={control}
+          autoSave={autoSave}
+          watch={watch}
+          formErrors={formErrors}
         />
       )
     }
@@ -106,12 +136,18 @@ const FieldComponent = ({
         name={fieldName}
         control={control}
         render={({ field }) => {
-          const { ref, onBlur, ...fieldWithoutRef } = field
-
+          const { ref, onBlur, onChange, ...fieldWithoutRef } = field
           const handleFieldBlur = () => {
             onBlur()
             if (isSavingOnBlur) {
               handleBlur()
+            }
+          }
+
+          const handleFieldChange = (value: string | null) => {
+            onChange(value)
+            if (!isSavingOnBlur) {
+              handleChange(value)
             }
           }
 
@@ -120,6 +156,7 @@ const FieldComponent = ({
               {...fieldWithoutRef}
               ref={ref}
               onBlur={handleFieldBlur}
+              onChange={handleFieldChange}
               value={field.value as string | null}
               question={baseInputProps.question}
               label={baseInputProps.label}
