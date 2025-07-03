@@ -1,18 +1,29 @@
 'use server'
 
-import { getEmissionFactorSources } from '@/db/emissionFactors'
-import { getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
+import { getEmissionFactorImportVersions, getEmissionFactors } from '@/services/serverFunctions/emissionFactor'
 import { EmissionFactorImportVersion, Import } from '@prisma/client'
+import { UserSession } from 'next-auth'
+import NotFound from '../pages/NotFound'
 import EmissionFactorsTable from './Table'
 
 interface Props {
   userOrganizationId?: string
   manualOnly: boolean
+  user: UserSession
 }
 
-const EmissionFactors = async ({ userOrganizationId, manualOnly }: Props) => {
-  const [emissionFactors, importVersions] = await Promise.all([getEmissionFactors(), getEmissionFactorSources()])
+const EmissionFactors = async ({ userOrganizationId, manualOnly, user }: Props) => {
+  const [emissionFactors, importVersionsRes] = await Promise.all([
+    getEmissionFactors(),
+    getEmissionFactorImportVersions(user),
+  ])
   const manualImport = { id: Import.Manual, source: Import.Manual, name: '' } as EmissionFactorImportVersion
+
+  if (!importVersionsRes.success) {
+    return <NotFound />
+  }
+
+  const importVersions = importVersionsRes.data
 
   const initialSelectedSources = importVersions
     .filter((importVersion) =>

@@ -60,6 +60,7 @@ const getDefaultEmissionFactors = (versionIds?: string[]) =>
       organizationId: null,
       subPosts: { isEmpty: false },
       ...(versionIds && { versionId: { in: versionIds } }),
+      version: { archived: false },
     },
     select: selectEmissionFactor,
     orderBy: { createdAt: 'desc' },
@@ -315,11 +316,14 @@ export const getEmissionFactorDetailsById = async (id: string) =>
   })
 export type DetailedEmissionFactor = AsyncReturnType<typeof getEmissionFactorDetailsById>
 
-export const getEmissionFactorSources = async (withCut: boolean = false) => {
-  if (withCut) {
-    return prismaClient.emissionFactorImportVersion.findMany()
-  }
-  return prismaClient.emissionFactorImportVersion.findMany({ where: { source: { not: Import.CUT } } })
+export const getEmissionFactorImportVersionsBC = async (withArchived?: boolean) => {
+  return prismaClient.emissionFactorImportVersion.findMany({
+    where: { source: { not: Import.CUT }, ...(!withArchived && { archived: false }) },
+  })
+}
+
+export const getEmissionFactorImportVersionsCUT = async () => {
+  return prismaClient.emissionFactorImportVersion.findMany()
 }
 
 export const getStudyEmissionFactorSources = async (studyId: string, withCut: boolean = false) => {
