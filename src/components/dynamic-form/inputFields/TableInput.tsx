@@ -1,7 +1,6 @@
 // WIP DO NOT USE YET
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { deleteAnswerKeysFromRow } from '@/services/serverFunctions/answer'
 import { getQuestionsFromIdIntern } from '@/services/serverFunctions/question'
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Prisma, QuestionType } from '@prisma/client'
@@ -37,12 +36,16 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
     }
   }
 
-  const handleDelete = async (row: TableRow) => {
-    const result = await callServerFunction(() => deleteAnswerKeysFromRow(question.idIntern, row.index))
-    if (result.success) {
-      setCurrentAnswers((prevAnswers) => prevAnswers.filter((answerRow) => answerRow.id !== row.id))
-    }
-  }
+  /**
+   * TODO : La suppression en base fonctionne mais la suppression de ligne à un bug. Peux importe quel ligne on supprime
+   * visuellement c’est la dernière ligne qui sera supprimé même si en base, ce sont bien les bonnes données qui sont supprimer
+   */
+  // const handleDelete = async (row: TableRow) => {
+  //   const result = await callServerFunction(() => deleteAnswerKeysFromRow(question.idIntern, row.index))
+  //   if (result.success) {
+  //     setCurrentAnswers((prevAnswers) => prevAnswers.filter((answerRow) => answerRow.id !== row.id))
+  //   }
+  // }
 
   const columns = useMemo<ColumnDef<Record<string, string>>[]>(() => {
     const col = questions.map((question) => ({
@@ -66,6 +69,9 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
       },
     })) as ColumnDef<Record<string, string>>[]
 
+    /**
+     * TODO : À remettre pour faire apparaitre le button de suppression
+     */
     // col.push({
     //   id: 'delete',
     //   header: tCutQuestions('actions'),
