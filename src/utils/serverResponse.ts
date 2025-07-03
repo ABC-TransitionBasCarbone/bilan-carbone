@@ -15,7 +15,6 @@ export type ApiResponse<T = unknown> =
     }
 
 export const withServerResponse = async <T>(functionName: string, fn: () => Promise<T>): Promise<ApiResponse<T>> => {
-  console.debug('in withServerResponse')
   const session = await auth()
   const userId = session?.user.id ?? 'anonymous'
   const start = new Date()

@@ -10,6 +10,7 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Control, FieldErrors, UseFormWatch } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
 import Button from '../../base/Button'
 import FieldComponent from '../FieldComponent'
 import { getQuestionFieldType } from '../services/questionService'
@@ -21,6 +22,8 @@ interface Props extends Omit<BaseInputProps, 'value' | 'onChange' | 'onBlur'> {
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
 }
+
+type TableRow = Record<string, string> & { id: string; index: string }
 
 const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) => {
   const [questions, setQuestions] = useState<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]>([])
@@ -35,10 +38,11 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
     }
   }
 
-  const handleDelete = async (row: Record<string, string>) => {
-    const indexToDelete = row.id
-    setCurrentAnswers((prevAnswers) => prevAnswers.filter((answerRow) => answerRow.id !== indexToDelete))
-    callServerFunction(() => deleteAnswerKeysFromRow(question.idIntern, indexToDelete))
+  const handleDelete = async (row: TableRow) => {
+    const result = await callServerFunction(() => deleteAnswerKeysFromRow(question.idIntern, row.index))
+    if (result.success) {
+      setCurrentAnswers((prevAnswers) => prevAnswers.filter((answerRow) => answerRow.id !== row.id))
+    }
   }
 
   const columns = useMemo<ColumnDef<Record<string, string>>[]>(() => {
@@ -67,13 +71,21 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
       id: 'delete',
       header: tCutQuestions('actions'),
       accessorKey: 'id',
-      cell: ({ row }) => (
-        <Box>
-          <Button title={tCutQuestions('delete')} aria-label="delete" onClick={() => handleDelete(row.original)}>
-            <DeleteIcon />
-          </Button>
-        </Box>
-      ),
+      cell: ({ row }) => {
+        const tableRow = row.original as TableRow
+        return (
+          <Box>
+            <Button
+              title={tCutQuestions('delete')}
+              aria-label="delete"
+              color="error"
+              onClick={() => handleDelete(tableRow)}
+            >
+              <DeleteIcon />
+            </Button>
+          </Box>
+        )
+      },
     })
 
     return col
@@ -81,9 +93,10 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
 
   const newRow = useCallback((index: number) => {
     const row = {
-      id: index.toString(),
+      id: uuidv4(),
+      index: index.toString(),
       ...Object.fromEntries(questions.map((question) => [question.idIntern, index])),
-    } as Record<string, string>
+    } as TableRow
     return row
   }, [])
 
@@ -111,7 +124,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
           current.push(newRow(i))
         }
       } else {
-        current.push(newRow(0))
+        current.push(newRow(currentAnswers.length + 1))
       }
 
       setCurrentAnswers(current)
