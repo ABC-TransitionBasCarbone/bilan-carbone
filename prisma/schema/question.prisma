@@ -34,7 +34,7 @@ model Answer {
   id       String @id @default(uuid())
   response Json
 
-  studySite   StudySite @relation(fields: [studySiteId], references: [id])
+  studySite   StudySite @relation(fields: [studySiteId], references: [id], onDelete: Cascade)
   studySiteId String
 
   question   Question @relation(fields: [questionId], references: [id])
