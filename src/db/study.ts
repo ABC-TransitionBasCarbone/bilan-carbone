@@ -6,16 +6,18 @@ import { checkLevel, getAllowedLevels } from '@/services/study'
 import { isAdminOnOrga } from '@/utils/organization'
 import { getUserRoleOnPublicStudy } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
-import { ControlMode, Export, Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
+import { ControlMode, Environment, Export, Import, Level, StudyRole, SubPost, type Prisma } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getAccountOrganizationVersions } from './account'
 import { prismaClient } from './client'
 import { getOrganizationVersionById, OrganizationVersionWithOrganization } from './organization'
 
-export const createStudy = async (data: Prisma.StudyCreateInput) => {
+export const createStudy = async (data: Prisma.StudyCreateInput, environment: Environment) => {
   const dbStudy = await prismaClient.study.create({ data })
   const studyEmissionFactorVersions = []
-  for (const source of Object.values(Import).filter((source) => source !== Import.Manual)) {
+  for (const source of Object.values(Import).filter(
+    (source) => source !== Import.Manual && (environment === Environment.CUT || source !== Import.CUT),
+  )) {
     const latestImportVersion = await getSourceLatestImportVersionId(source)
     if (latestImportVersion) {
       studyEmissionFactorVersions.push({ studyId: dbStudy.id, source, importVersionId: latestImportVersion.id })
