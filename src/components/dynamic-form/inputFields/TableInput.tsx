@@ -3,7 +3,6 @@ import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { deleteAnswerKeysFromRow } from '@/services/serverFunctions/answer'
 import { getQuestionsFromIdIntern } from '@/services/serverFunctions/question'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Prisma, QuestionType } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -67,26 +66,26 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
       },
     })) as ColumnDef<Record<string, string>>[]
 
-    col.push({
-      id: 'delete',
-      header: tCutQuestions('actions'),
-      accessorKey: 'id',
-      cell: ({ row }) => {
-        const tableRow = row.original as TableRow
-        return (
-          <Box>
-            <Button
-              title={tCutQuestions('delete')}
-              aria-label="delete"
-              color="error"
-              onClick={() => handleDelete(tableRow)}
-            >
-              <DeleteIcon />
-            </Button>
-          </Box>
-        )
-      },
-    })
+    // col.push({
+    //   id: 'delete',
+    //   header: tCutQuestions('actions'),
+    //   accessorKey: 'id',
+    //   cell: ({ row }) => {
+    //     const tableRow = row.original as TableRow
+    //     return (
+    //       <Box>
+    //         <Button
+    //           title={tCutQuestions('delete')}
+    //           aria-label="delete"
+    //           color="error"
+    //           onClick={() => handleDelete(tableRow)}
+    //         >
+    //           <DeleteIcon />
+    //         </Button>
+    //       </Box>
+    //     )
+    //   },
+    // })
 
     return col
   }, [questions, tCutQuestions, autoSave, formErrors, control])
