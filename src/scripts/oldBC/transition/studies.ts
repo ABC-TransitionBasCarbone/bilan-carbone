@@ -50,6 +50,9 @@ interface EmissionSource {
   siteOldBCId: string
   name: string
   recycledPart: number
+  deprecation?: number
+  duration?: number
+  hectare?: number
   comment: string
   validated: boolean
   emissionFactorOldBCId: string
@@ -282,6 +285,7 @@ const parseEmissionSources = (
       }
 
       const incertitudeDA = getEmissionQuality((row.incertitudeDA as number) * 100)
+
       return [
         row.studyOldBCId as string,
         {
@@ -300,6 +304,11 @@ const parseEmissionSources = (
           completeness: incertitudeDA,
           emissionFactorImportedId: String(row.emissionFactorImportedId),
           emissionFactorConsoValue: row.emissionFactorConsoValue as number,
+          deprecation: row.amortissement as number,
+          ...(subPost === SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas && {
+            duration: 20,
+            hectare: typeof row.daTotalValue === 'number' ? row.daTotalValue / 20 : parseFloat(row.daTotalValue) / 20,
+          }),
         },
       ]
     })
