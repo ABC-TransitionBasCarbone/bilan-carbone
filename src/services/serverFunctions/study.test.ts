@@ -175,6 +175,8 @@ describe('duplicateStudyCommand', () => {
 
     expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
     expect(mockAddUserChecklistItem).toHaveBeenCalled()
+    expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
+    expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
   })
 
   describe('Authentication and Authorization', () => {
@@ -237,6 +239,7 @@ describe('duplicateStudyCommand', () => {
 
       expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
       expect(mockCreateUserOnStudy).toHaveBeenCalled()
+      expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
     })
 
     it('should invite existing contributors when flag is true', async () => {
@@ -244,6 +247,7 @@ describe('duplicateStudyCommand', () => {
 
       expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
       expect(mockCreateContributorOnStudy).toHaveBeenCalled()
+      expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
     })
 
     it('should skip current user when inviting team members', async () => {
