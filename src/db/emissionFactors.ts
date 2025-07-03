@@ -60,6 +60,7 @@ const getDefaultEmissionFactors = (versionIds?: string[]) =>
       organizationId: null,
       subPosts: { isEmpty: false },
       ...(versionIds && { versionId: { in: versionIds } }),
+      version: { archived: false },
     },
     select: selectEmissionFactor,
     orderBy: { createdAt: 'desc' },
