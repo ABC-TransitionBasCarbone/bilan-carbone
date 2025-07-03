@@ -18,19 +18,16 @@ const withStudyDuplication = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & Props & UserSessionProps) => {
     const searchParams = await props.searchParams
-    const duplicateStudyId = searchParams.duplicate
-
-    let finalDuplicateStudyId: string | undefined = undefined
+    const duplicateStudyId = searchParams.duplicate ?? null
 
     if (duplicateStudyId) {
       const canDuplicate = await canDuplicateStudy(duplicateStudyId)
       if (!canDuplicate) {
         return <NotFound />
       }
-      finalDuplicateStudyId = duplicateStudyId
     }
 
-    return <WrappedComponent {...props} duplicateStudyId={finalDuplicateStudyId ?? null} />
+    return <WrappedComponent {...props} duplicateStudyId={duplicateStudyId} />
   }
 
   Component.displayName = 'WithStudyDuplication'
