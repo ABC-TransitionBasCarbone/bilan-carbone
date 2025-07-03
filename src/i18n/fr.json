@@ -1,6 +1,6 @@
 {
   "home": {
-    "userToValidate": "Un utilisateur a été ajouté à votre organisation car il vient d'être formé à la méthode bilan carbone. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte",
+    "userToValidate": "Un·e utilisateur·ice a été ajouté à votre organisation car il vient d'être formé à la méthode bilan carbone. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte",
     "title": "Faire votre bilan d’impact vous permettra de :",
     "info": {
       "0": "Comprendre la mesure d’impact de votre établissement",
@@ -964,11 +964,11 @@
     "invitationDate": "Invitation envoyé le",
     "toValidate": "Invitations à valider",
     "addedDate": "Ajouté le",
-    "delete": "Supprimer l'utilisateur",
+    "delete": "Supprimer l'utilisateur·ice",
     "resend": "Renvoyer l'invitation",
     "table": {
       "title": "Mes collaborateur·ice·s",
-      "newUser": "Inviter un utilisateur",
+      "newUser": "Inviter un·e utilisatr·ice",
       "firstName": "Prénom",
       "lastName": "Nom",
       "email": "Email",
@@ -976,22 +976,22 @@
       "role": "Droits",
       "action": " ",
       "deleteMember": "Supprimer le·a membre",
-      "userDeletion": "Suppression d'un utilisateur",
-      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet utilisateur ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
+      "userDeletion": "Suppression d'un·e utilisatr·ice",
+      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet·te utilisateur·ice ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
       "close": "Annuler",
       "confirm": "Confirmer",
       "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur des études suivantes : "
     }
   },
   "newMember": {
-    "title": "Inviter un utilisateur",
+    "title": "Inviter un·e utilisatr·ice",
     "email": "Email",
     "firstName": "Prénom",
     "lastName": "Nom",
     "role": "Droits",
     "level": "Formation",
-    "create": "Inviter l'utilisateur",
-    "Not authorized": "Impossible d'inviter cette utilisateur. Veuillez contacter le <link>support</link> pour plus d'informations.",
+    "create": "Inviter l'utilisateur·ice",
+    "Not authorized": "Impossible d'inviter cette utilisatr·ice. Veuillez contacter le <link>support</link> pour plus d'informations.",
     "validation": {
       "email": "Veuillez renseigner un email valide",
       "firstName": "Veuillez renseigner un prénom",
@@ -999,7 +999,7 @@
       "level": "Veuillez renseigner un niveau de formation",
       "role": "Veuillez renseigner un rôle"
     },
-    "addedMember": "L'utilisateur a bien été ajouté à votre organisation"
+    "addedMember": "L'utilisateur·ice a bien été ajouté à votre organisation"
   },
   "units": {
     "selectAll": "Tout sélectionner",
