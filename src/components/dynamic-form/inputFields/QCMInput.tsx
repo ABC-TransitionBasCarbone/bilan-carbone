@@ -1,5 +1,4 @@
 import { Checkbox, FormControl, FormControlLabel, FormHelperText, styled } from '@mui/material'
-import { useState } from 'react'
 import { BaseInputProps } from '../types/formTypes'
 import { formatOption } from './utils'
 
@@ -10,8 +9,14 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   width: 'fit-content',
 }))
 
-export const QCMInput = ({ question, onBlur, errorMessage, disabled }: BaseInputProps) => {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+export const QCMInput = ({ question, value, onChange, onBlur, errorMessage, disabled }: BaseInputProps) => {
+  const selectedOptions: string[] = JSON.parse(value || '[]')
+
+  const handleOptionChange = (option: string, checked: boolean) => {
+    const newSelectedOptions = checked ? [...selectedOptions, option] : selectedOptions.filter((c) => c !== option)
+    const newValue = newSelectedOptions.length > 0 ? JSON.stringify(newSelectedOptions) : JSON.stringify([])
+    onChange(newValue)
+  }
 
   return (
     <FormControl className="flex flex-col m2" error={!!errorMessage} disabled={disabled}>
@@ -25,12 +30,7 @@ export const QCMInput = ({ question, onBlur, errorMessage, disabled }: BaseInput
               key={index}
               name={option}
               checked={selectedOptions.includes(option)}
-              onChange={(e) => {
-                setSelectedOptions((oldValues) => {
-                  const newValues = e.target.checked ? [...oldValues, option] : oldValues.filter((c) => c !== option)
-                  return newValues
-                })
-              }}
+              onChange={(e) => handleOptionChange(option, e.target.checked)}
             />
           }
           label={formatOption(option)}

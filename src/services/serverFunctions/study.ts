@@ -251,7 +251,7 @@ export const createStudyCommand = async ({ organizationVersionId, validator, sit
     }
 
     try {
-      const createdStudy = await createStudy(study)
+      const createdStudy = await createStudy(study, session.user.environment)
       addUserChecklistItem(UserChecklist.CreateFirstStudy)
       return { id: createdStudy.id }
     } catch (e) {
