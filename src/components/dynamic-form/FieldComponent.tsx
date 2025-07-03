@@ -1,3 +1,4 @@
+import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import { getAnswerByQuestionIdAndStudySiteId } from '@/services/serverFunctions/question'
 import { getQuestionLabel } from '@/utils/question'
@@ -47,7 +48,7 @@ const FieldComponent = ({
     async (value: unknown) => {
       if (!formErrors[fieldName]) {
         let finalValue = value
-        if (/^\d+/.test(fieldName)) {
+        if (ID_INTERN_PREFIX_REGEX.test(fieldName)) {
           const key = fieldName.split('-').pop()
           if (key) {
             const tableValue = { [key]: value }

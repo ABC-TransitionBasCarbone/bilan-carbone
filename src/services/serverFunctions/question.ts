@@ -4,6 +4,7 @@ import { findEmissionFactorByImportedId } from '@/db/emissionFactors'
 import {
   getAnswerByQuestionId,
   getAnswersByStudyAndSubPost,
+  getQuestionByIdIntern,
   getQuestionsByIdIntern,
   getQuestionsBySubPost,
   saveAnswer,
