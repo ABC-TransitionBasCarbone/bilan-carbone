@@ -202,6 +202,24 @@ const theme = createTheme(base, {
       [Post.FinDeVie]: { light: '#FBBC6B', dark: '#C88938' },
       [Post.UtilisationEtDependance]: { light: '#FBBC6B', dark: '#C88938' },
     },
+    beges: {
+      category: {
+        1: '#f15f57',
+        2: '#29ba91',
+        3: '#c89181',
+        4: '#4a79bd',
+        5: '#2dabcd',
+        6: '#57585a',
+      },
+      categoryLight: {
+        1: '#FEF6F3',
+        2: '#F4FAF8',
+        3: '#FBF8F6',
+        4: '#F3F5FA',
+        5: '#F1F9FB',
+        6: '#F2F3F4',
+      },
+    },
   },
 })
 
