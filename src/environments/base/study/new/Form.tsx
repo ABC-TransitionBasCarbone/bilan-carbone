@@ -23,9 +23,10 @@ interface Props {
   user: UserSession
   accounts: Awaited<ReturnType<typeof getOrganizationVersionAccounts>>
   form: UseFormReturn<CreateStudyCommand>
+  duplicateStudyId?: string | null
 }
 
-const NewStudyForm = ({ user, accounts, form }: Props) => {
+const NewStudyForm = ({ user, accounts, form, duplicateStudyId }: Props) => {
   const t = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
   const [glossary, setGlossary] = useState('')
@@ -42,7 +43,13 @@ const NewStudyForm = ({ user, accounts, form }: Props) => {
 
   return (
     <Block title={t('title')} as="h1">
-      <GlobalNewStudyForm form={form} glossary={glossary} setGlossary={setGlossary} t={t}>
+      <GlobalNewStudyForm
+        form={form}
+        glossary={glossary}
+        setGlossary={setGlossary}
+        t={t}
+        duplicateStudyId={duplicateStudyId}
+      >
         <div>
           <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">
             <span className="inputLabel bold">{t('realizationDates')}</span>

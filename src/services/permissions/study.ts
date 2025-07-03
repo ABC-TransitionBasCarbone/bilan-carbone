@@ -3,7 +3,7 @@ import { getDocumentById } from '@/db/document'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
-import { isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
+import { canEditOrganizationVersion, isAdminOnOrga, isInOrgaOrParent } from '@/utils/organization'
 import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -135,7 +135,7 @@ const canChangeStudyValues = async (user: UserSession, study: FullStudy) => {
     return true
   }
 
-  const userRightsOnStudy = await getAccountRoleOnStudy(user, study)
+  const userRightsOnStudy = getAccountRoleOnStudy(user, study)
   if (!userRightsOnStudy || !hasEditionRights(userRightsOnStudy)) {
     return false
   }
@@ -240,13 +240,46 @@ export const canDeleteStudy = async (studyId: string) => {
     return true
   }
 
-  const accountRoleOnStudy = await getAccountRoleOnStudy(session.user, study)
+  const accountRoleOnStudy = getAccountRoleOnStudy(session.user, study)
 
   if (accountRoleOnStudy && accountRoleOnStudy === StudyRole.Validator) {
     return true
   }
 
   return false
+}
+
+export const canDuplicateStudy = async (studyId: string) => {
+  const session = await dbActualizedAuth()
+
+  if (!session) {
+    return false
+  }
+
+  if (session.user.environment !== Environment.BC) {
+    return false
+  }
+
+  const study = await getStudyById(studyId, session.user.organizationVersionId)
+
+  if (!study) {
+    return false
+  }
+
+  const canEditOrga = canEditOrganizationVersion(
+    session.user,
+    study.organizationVersion as OrganizationVersionWithOrganization,
+  )
+  if (!canEditOrga) {
+    return false
+  }
+
+  const accountRoleOnStudy = getAccountRoleOnStudy(session.user, study)
+  if (!accountRoleOnStudy || accountRoleOnStudy !== StudyRole.Validator) {
+    return false
+  }
+
+  return true
 }
 
 export const filterStudyDetail = (user: UserSession, study: FullStudy) => {
