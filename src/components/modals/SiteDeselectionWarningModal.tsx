@@ -3,7 +3,6 @@
 import { styled } from '@mui/material/styles'
 import { useTranslations } from 'next-intl'
 import Modal from './Modal'
-import styles from './SiteDeselectionWarningModal.module.css'
 
 interface Props {
   isOpen: boolean
@@ -14,6 +13,10 @@ interface Props {
 const StyledWarningSection = styled('div')(({ theme }) => ({
   backgroundColor: theme.custom.palette.error.background,
   borderRadius: '0.5rem',
+
+  '& p': {
+    fontWeight: 'bold',
+  },
 }))
 
 const SiteDeselectionWarningModal = ({ isOpen, onClose, onConfirm, sitesWithSources }: Props) => {
@@ -42,8 +45,8 @@ const SiteDeselectionWarningModal = ({ isOpen, onClose, onConfirm, sitesWithSour
       <div>
         <p>{t('description')}</p>
 
-        <StyledWarningSection className="my1 p1">
-          <p className={`${styles.sitesTitle} mb-2`}>{t('affectedSites')}:</p>
+        <StyledWarningSection className="my2 p1">
+          <p className="mb-2">{t('affectedSites')}:</p>
           <ul className="m0 px-2">
             {sitesWithSources.map((site, index) => (
               <li key={index} className="mb-2">
