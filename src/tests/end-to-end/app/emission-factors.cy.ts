@@ -1,6 +1,6 @@
 describe('Emission factors table', () => {
   before(() => {
-    cy.exec('npx prisma db seed')
+    cy.resetTestDatabase()
   })
 
   it('Should be able to display archived emission factors', () => {
