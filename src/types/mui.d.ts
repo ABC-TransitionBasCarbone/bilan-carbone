@@ -25,6 +25,24 @@ declare module '@mui/material/styles' {
       publicContainer: {
         background?: string
       }
+      beges: {
+        category: {
+          1: string
+          2: string
+          3: string
+          4: string
+          5: string
+          6: string
+        }
+        categoryLight: {
+          1: string
+          2: string
+          3: string
+          4: string
+          5: string
+          6: string
+        }
+      }
     }
   }
 
@@ -45,6 +63,24 @@ declare module '@mui/material/styles' {
           border?: string
         }
         text: CSSProperties
+      }
+      beges?: {
+        category?: {
+          1?: string
+          2?: string
+          3?: string
+          4?: string
+          5?: string
+          6?: string
+        }
+        categoryLight?: {
+          1?: string
+          2?: string
+          3?: string
+          4?: string
+          5?: string
+          6?: string
+        }
       }
     }
   }
