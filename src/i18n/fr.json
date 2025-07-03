@@ -1436,6 +1436,8 @@
     "AddClientDetails": "Ajouter votre premier client afin de commencer vos Bilans Carbone®",
     "AddSiteCR": "Ajouter les sites",
     "AddSiteCRDetails": "Ajouter des sites à votre <orga>organisation</orga> ou à <client>un de vos clients</client> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation ou client n'a qu'un site, créer un site 'Tous sites'",
+    "AddSiteCRCollaborator": "Ajouter les sites",
+    "AddSiteCRCollaboratorDetails": "Ajouter des sites à <client>un de vos clients</client> pour que vous puissiez établir les émissions de chacun des sites. Si votre client n'a qu'un site, créer un site 'Tous sites'",
     "AddSiteOrga": "Ajouter les sites",
     "AddSiteOrgaDetails": "Ajouter des sites à votre <orga>organisation</orga> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation n'a qu'un site, créer un site 'Tous sites'",
     "CreateFirstStudy": "Créer votre premier Bilan Carbone®",
