@@ -1,6 +1,6 @@
 'use server'
 
-import { findEmissionFactorByImportedId } from '@/db/emissionFactors'
+import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   getAnswerByQuestionId,
   getAnswersByStudyAndSubPost,
@@ -66,7 +66,10 @@ export const saveAnswerForQuestion = async (
     }
 
     if (emissionFactorImportedId) {
-      const emissionFactor = await findEmissionFactorByImportedId(emissionFactorImportedId)
+      const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+        emissionFactorImportedId,
+        study.emissionFactorVersions.map((v) => v.importVersionId),
+      )
       if (!emissionFactor) {
         throw new Error(`Emission factor not found for importedId: ${emissionFactorImportedId}`)
       }
