@@ -5,6 +5,7 @@ import {
   getAnswerByQuestionId,
   getAnswersByStudyAndSubPost,
   getQuestionByIdIntern,
+  getQuestionsByIdIntern,
   getQuestionsBySubPost,
   saveAnswer,
 } from '@/db/question'
@@ -112,6 +113,26 @@ export const getQuestionsWithAnswers = async (subPost: SubPost, studySiteId: str
     ])
 
     return { questions, answers }
+  })
+
+export const getAnswerByQuestionIdAndStudySiteId = async (questionId: string, studySiteId: string) =>
+  withServerResponse('getAnswerByQuestionId', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return getAnswerByQuestionId(questionId, studySiteId)
+  })
+
+export const getQuestionsFromIdIntern = async (idIntern: string) =>
+  withServerResponse('getQuestionsByIdIntern', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error('Not authorized')
+    }
+
+    return getQuestionsByIdIntern(idIntern)
   })
 
 type EmissionFactorInfo = {

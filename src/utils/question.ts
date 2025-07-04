@@ -1,5 +1,8 @@
 import { FormValues } from '@/components/dynamic-form/types/formTypes'
+import { FieldType } from '@/components/dynamic-form/types/questionTypes'
+import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { Answer, Question, QuestionType } from '@prisma/client'
+import { JsonObject } from '@prisma/client/runtime/library'
 
 export const answersToFormValues = (questions: Question[], answers?: Answer[]): FormValues => {
   const formValues: FormValues = {}
@@ -8,7 +11,14 @@ export const answersToFormValues = (questions: Question[], answers?: Answer[]): 
     const answer = answers?.find((a) => a.questionId === question.id)
 
     if (answer && answer.response) {
-      formValues[question.idIntern] = answer.response
+      if (ID_INTERN_PREFIX_REGEX.test(question.idIntern) && question.type !== FieldType.TABLE) {
+        const keys = Object.keys(answer.response as JsonObject)
+        keys.forEach((key) => {
+          formValues[`${question.idIntern}-${key}`] = (answer.response as JsonObject)[key]
+        })
+      } else {
+        formValues[question.idIntern] = answer.response
+      }
     } else {
       formValues[question.idIntern] = null
     }

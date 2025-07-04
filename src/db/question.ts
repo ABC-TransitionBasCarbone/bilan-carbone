@@ -1,3 +1,4 @@
+import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { Answer, Prisma, Question, SubPost } from '@prisma/client'
 import { prismaClient } from './client'
 
@@ -100,6 +101,25 @@ export const getQuestionById = async (questionId: string): Promise<Question | nu
   return await prismaClient.question.findUnique({
     where: {
       id: questionId,
+    },
+  })
+}
+
+export const getQuestionsByIdIntern = async (
+  idIntern: string,
+): Promise<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]> => {
+  const parseIdItern = idIntern.replace(ID_INTERN_PREFIX_REGEX, '')
+  if (!parseIdItern) {
+    return []
+  }
+  return await prismaClient.question.findMany({
+    where: {
+      idIntern: {
+        contains: parseIdItern,
+      },
+    },
+    include: {
+      userAnswers: true,
     },
   })
 }

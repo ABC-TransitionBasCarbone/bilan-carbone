@@ -11,9 +11,14 @@ import {
 } from './QuestionContainer.styles'
 import SaveStatusIndicator from './SaveStatusIndicator'
 import { EmissionResults, QuestionContainerProps } from './types/formTypes'
+import { FieldType } from './types/questionTypes'
 
 const QuestionContainer = ({ question, children, showResults, results, saveStatus }: QuestionContainerProps) => {
+  const inTable = /^\D*\d.*?-/.test(question.idIntern) && question.type !== FieldType.TABLE
   const tResultsUnits = useTranslations('study.results.units')
+  if (inTable) {
+    return
+  }
 
   const formatEmissionResults = (results: EmissionResults) => {
     if (!results || !results.emission) {
