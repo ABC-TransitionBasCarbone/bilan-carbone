@@ -72,6 +72,7 @@ const FieldComponent = ({
 
   const handleBlur = useCallback(() => {
     const currentValue = watch(fieldName)
+    console.debug({ currentValue })
     saveField(currentValue)
   }, [watch, fieldName, saveField])
 
