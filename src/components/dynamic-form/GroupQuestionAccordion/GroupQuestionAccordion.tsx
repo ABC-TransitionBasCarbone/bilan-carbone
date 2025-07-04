@@ -5,7 +5,7 @@ import { Question, QuestionType } from '@prisma/client'
 import { useEffect, useState } from 'react'
 import { Control, FieldError, FieldErrors, UseFormWatch } from 'react-hook-form'
 import { FormValues, QuestionContainerProps } from '../types/formTypes'
-import { FieldType, QUESTION_TYPE_FIELD_MAPPING } from '../types/questionTypes'
+import { FieldType } from '../types/questionTypes'
 import {
   StyledQuestionAccordion,
   StyledQuestionAccordionDetails,
@@ -15,6 +15,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { Card } from '@mui/material'
 import FieldComponent from '../FieldComponent'
+import { getQuestionFieldType } from '../services/questionService'
 import { StyledCardContent, StyledCardHeader } from './Card/Card.style'
 
 interface Props extends Omit<QuestionContainerProps, 'children'> {
@@ -29,16 +30,7 @@ interface Props extends Omit<QuestionContainerProps, 'children'> {
   autoSave: UseAutoSaveReturn
 }
 
-const GroupQuestionAccordion = ({
-  question,
-  error,
-  control,
-  watch,
-  formErrors,
-  autoSave,
-  isLoading,
-  saveStatus,
-}: Props) => {
+const GroupQuestionAccordion = ({ question, error, control, watch, formErrors, autoSave, saveStatus }: Props) => {
   const [questions, setQuestions] = useState<Question[]>([])
   const getQuestions = async () => {
     const result = await getQuestionsFromIdIntern(question.idIntern)
@@ -68,12 +60,11 @@ const GroupQuestionAccordion = ({
                 autoSave={autoSave}
                 control={control}
                 fieldName={question.idIntern}
-                fieldType={QUESTION_TYPE_FIELD_MAPPING[question.type]}
+                fieldType={getQuestionFieldType(question.type, question.unit)}
                 formErrors={formErrors}
                 question={question}
                 watch={watch}
                 error={error}
-                isLoading={isLoading}
               />
             </StyledCardContent>
           </Card>

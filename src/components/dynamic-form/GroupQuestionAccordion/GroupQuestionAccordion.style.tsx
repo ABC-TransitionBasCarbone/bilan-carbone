@@ -1,7 +1,7 @@
 'use client'
 import { FieldSaveStatus } from '@/hooks/useAutoSave'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { Accordion, AccordionDetails, AccordionSummary, AccordionSummaryProps, Box, styled } from '@mui/material'
+import SaveStatusIndicator from '../SaveStatusIndicator'
 
 export const StyledQuestionAccordion = styled(Accordion)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -14,11 +14,9 @@ export const StyledQuestionAccordionSummary = styled(
   ({ saveStatus, ...props }: AccordionSummaryProps & { saveStatus: FieldSaveStatus | undefined }) => (
     <AccordionSummary {...props}>
       {props.title}
-      {saveStatus && (
-        <Box ml="auto" mr={1}>
-          <CheckCircleIcon color="primary" />
-        </Box>
-      )}
+      <Box ml="auto" mr={1}>
+        {saveStatus && <SaveStatusIndicator status={saveStatus} />}
+      </Box>
     </AccordionSummary>
   ),
 )(({ theme }) => ({

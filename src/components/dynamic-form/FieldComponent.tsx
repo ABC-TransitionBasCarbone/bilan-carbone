@@ -27,6 +27,7 @@ interface Props {
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
   autoSave: UseAutoSaveReturn
+  isInTable?: boolean
 }
 const FieldComponent = ({
   fieldType,
@@ -38,6 +39,7 @@ const FieldComponent = ({
   watch,
   formErrors,
   autoSave,
+  isInTable = false,
 }: Props) => {
   const tValidation = useTranslations('form.validation')
   const tFormat = useTranslations('emissionFactors.post.cutQuestions.format')
@@ -45,10 +47,10 @@ const FieldComponent = ({
   const isSavingOnBlur = useMemo(() => fieldType === FieldType.TEXT || fieldType === FieldType.NUMBER, [fieldType])
 
   const saveField = useCallback(
-    async (value: unknown) => {
+    async (value: unknown, isInTable: boolean) => {
       if (!formErrors[fieldName]) {
         let finalValue = value
-        if (ID_INTERN_PREFIX_REGEX.test(fieldName)) {
+        if (ID_INTERN_PREFIX_REGEX.test(fieldName) && isInTable) {
           const key = fieldName.split('-').pop()
           if (key) {
             const tableValue = { [key]: value }
@@ -72,13 +74,12 @@ const FieldComponent = ({
 
   const handleBlur = useCallback(() => {
     const currentValue = watch(fieldName)
-    console.debug({ currentValue })
-    saveField(currentValue)
+    saveField(currentValue, isInTable)
   }, [watch, fieldName, saveField])
 
   const handleChange = useCallback(
     (value: string | null) => {
-      saveField(value)
+      saveField(value, isInTable)
     },
     [saveField],
   )
