@@ -1200,8 +1200,8 @@
       "delete": "Delete",
       "add": "Add a site",
       "update": "Update list",
-      "cnc": "Code CNC",
-      "cncPlaceholder": "Code CNC",
+      "cnc": "Numéro CNC",
+      "cncPlaceholder": "Numéro CNC",
       "glossary": {
         "title": "Glossary",
         "etp": "Number of Full Time Equivalents",

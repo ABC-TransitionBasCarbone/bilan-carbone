@@ -2,7 +2,6 @@
 
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
-import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import Sites from '@/environments/base/organization/Sites'
@@ -84,13 +83,6 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
   const sites = form.watch('sites')
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
-      <FormTextField
-        data-testid="edit-organization-name"
-        control={form.control}
-        translation={t}
-        name="name"
-        label={t('name')}
-      />
       <DynamicComponent
         environmentComponents={{ [Environment.CUT]: <SitesCut sites={sites} form={form} /> }}
         defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} />}
