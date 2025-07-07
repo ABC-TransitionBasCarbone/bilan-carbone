@@ -109,10 +109,8 @@ const FieldComponent = ({
                 const columnQuestions =
                   relatedQuestions.data?.filter((q: Question) => q.type !== QuestionType.TABLE) || []
 
-                const newRowIndex = updatedRows.length > 0 ? Math.max(...updatedRows.map((row) => row.index)) + 1 : 0
                 const newRow = {
                   id: rowId,
-                  index: newRowIndex,
                   data: {} as Record<string, string>,
                 }
 

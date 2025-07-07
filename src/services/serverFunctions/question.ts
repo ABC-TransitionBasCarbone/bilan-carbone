@@ -4,6 +4,7 @@ import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
+  deleteAnswerEmissionSourcesForRow,
   findAnswerEmissionSourceByAnswer,
   findAnswerEmissionSourceByAnswerAndRow,
   getAnswerByQuestionId,
@@ -32,6 +33,23 @@ type EmissionFactorInfo = {
   emissionFactors?: Record<string, string>
 }
 
+const cleanupDeletedTableRows = async (question: Question, tableAnswer: TableAnswer, studySiteId: string) => {
+  const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
+
+  if (existingAnswer && existingAnswer.response && isTableAnswer(existingAnswer.response)) {
+    const existingTableAnswer = existingAnswer.response as TableAnswer
+    const existingRowIds = existingTableAnswer.rows.map((row) => row.id)
+    const currentRowIds = tableAnswer.rows.map((row) => row.id)
+    const deletedRowIds = existingRowIds.filter((rowId) => !currentRowIds.includes(rowId))
+
+    for (const deletedRowId of deletedRowIds) {
+      await deleteAnswerEmissionSourcesForRow(existingAnswer.id, deletedRowId)
+    }
+  }
+
+  return existingAnswer
+}
+
 const handleTableEmissionSources = async (
   question: Question,
   tableAnswer: TableAnswer,
@@ -41,14 +59,14 @@ const handleTableEmissionSources = async (
 ) => {
   const emissionSourceIds: string[] = []
 
+  const existingAnswer = await cleanupDeletedTableRows(question, tableAnswer, studySiteId)
+
   if (hasTableEmissionCalculator(question.idIntern)) {
     const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
 
-    const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
-
-    for (let rowIndex = 0; rowIndex < tableAnswer.rows.length; rowIndex++) {
-      const row = tableAnswer.rows[rowIndex]
-      const result = calculationResults[rowIndex]
+    for (let arrayIndex = 0; arrayIndex < tableAnswer.rows.length; arrayIndex++) {
+      const row = tableAnswer.rows[arrayIndex]
+      const result = calculationResults[arrayIndex]
 
       if (!result || result.emissionSources.length === 0) {
         continue
@@ -79,7 +97,7 @@ const handleTableEmissionSources = async (
             studyId,
             studySiteId,
             value: emissionSource.value,
-            name: `${question.idIntern}-${emissionSource.name}-row-${rowIndex}`,
+            name: `${question.idIntern}-${emissionSource.name}-${row.id}`,
             subPost: question.subPost,
             emissionFactorId: emissionSource.emissionFactorId,
           })
@@ -156,7 +174,7 @@ const handleTableEmissionSources = async (
         studyId,
         studySiteId,
         value: isNaN(value as number) ? undefined : value,
-        name: `${relatedQuestion.idIntern}-row-${row.index}`,
+        name: `${relatedQuestion.idIntern}-row-${row.id}`,
         subPost: question.subPost,
         depreciationPeriod,
         emissionFactorId,
@@ -217,9 +235,9 @@ export const saveAnswerForQuestion = async (
       if (hasTableEmissionCalculator(question.idIntern) && savedAnswer) {
         const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
 
-        for (let rowIndex = 0; rowIndex < tableAnswer.rows.length; rowIndex++) {
-          const row = tableAnswer.rows[rowIndex]
-          const result = calculationResults[rowIndex]
+        for (let arrayIndex = 0; arrayIndex < tableAnswer.rows.length; arrayIndex++) {
+          const row = tableAnswer.rows[arrayIndex]
+          const result = calculationResults[arrayIndex]
 
           if (!result || result.emissionSources.length === 0) {
             continue
@@ -227,10 +245,10 @@ export const saveAnswerForQuestion = async (
 
           for (let emissionIndex = 0; emissionIndex < result.emissionSources.length; emissionIndex++) {
             const emissionSource = result.emissionSources[emissionIndex]
-            const emissionSourceId = emissionSourceIds[rowIndex * result.emissionSources.length + emissionIndex]
+            const emissionSourceId = emissionSourceIds[arrayIndex * result.emissionSources.length + emissionIndex]
 
             if (emissionSourceId) {
-              await upsertAnswerEmissionSource(savedAnswer.id, row.id, emissionSource.name, emissionSourceId, rowIndex)
+              await upsertAnswerEmissionSource(savedAnswer.id, row.id, emissionSource.name, emissionSourceId)
             }
           }
         }
@@ -309,7 +327,7 @@ export const saveAnswerForQuestion = async (
     if (emissionSourceId && savedAnswer) {
       const existingEntry = await findAnswerEmissionSourceByAnswer(savedAnswer.id)
       if (!existingEntry) {
-        await createAnswerEmissionSource(savedAnswer.id, emissionSourceId, null, null, null)
+        await createAnswerEmissionSource(savedAnswer.id, emissionSourceId, null, null)
       }
 
       // If this question has a linkQuestionId, also ensure the linked answers are connected to the same emission source
@@ -320,7 +338,7 @@ export const saveAnswerForQuestion = async (
           if (linkAnswer) {
             const linkExistingEntry = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
             if (!linkExistingEntry) {
-              await createAnswerEmissionSource(linkAnswer.id, emissionSourceId, null, null, null)
+              await createAnswerEmissionSource(linkAnswer.id, emissionSourceId, null, null)
             }
           }
         }

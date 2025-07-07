@@ -23,10 +23,7 @@ const generateUniqueRowId = (): string => {
 /**
  * Create a new empty table row
  */
-export const createNewTableRow = (
-  index: number,
-  questionColumns: Array<{ id: string; idIntern: string }>,
-): TableRow => {
+export const createNewTableRow = (questionColumns: Array<{ id: string; idIntern: string }>): TableRow => {
   const data: Record<string, string> = {}
 
   // Initialize empty values for each column
@@ -36,7 +33,6 @@ export const createNewTableRow = (
 
   return {
     id: generateUniqueRowId(),
-    index,
     data,
   }
 }
@@ -88,13 +84,7 @@ export const addTableRow = (
   tableAnswer: TableAnswer,
   questionColumns: Array<{ id: string; idIntern: string }>,
 ): TableAnswer => {
-  let newIndex = 0
-  if (tableAnswer.rows.length > 0) {
-    newIndex = Math.max(...tableAnswer.rows.map((row) => row.index)) + 1
-  }
-  const newRow = createNewTableRow(newIndex, questionColumns)
-  console.log({ newIndex })
-  console.log({ newRow })
+  const newRow = createNewTableRow(questionColumns)
 
   return {
     ...tableAnswer,

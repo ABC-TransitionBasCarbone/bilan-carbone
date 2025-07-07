@@ -144,7 +144,6 @@ export const upsertAnswerEmissionSource = async (
   rowId: string,
   emissionType: string,
   emissionSourceId: string,
-  rowIndex: number,
 ) => {
   return await prismaClient.answerEmissionSource.upsert({
     where: {
@@ -156,13 +155,11 @@ export const upsertAnswerEmissionSource = async (
     },
     update: {
       emissionSourceId,
-      rowIndex,
     },
     create: {
       answerId,
       emissionSourceId,
       rowId,
-      rowIndex,
       emissionType,
     },
   })
@@ -179,7 +176,6 @@ export const updateAnswerEmissionSourceComplete = async (
   id: string,
   emissionSourceId: string,
   rowId: string | null = null,
-  rowIndex: number | null = null,
   emissionType: string | null = null,
 ) => {
   return await prismaClient.answerEmissionSource.update({
@@ -187,7 +183,6 @@ export const updateAnswerEmissionSourceComplete = async (
     data: {
       emissionSourceId,
       rowId,
-      rowIndex,
       emissionType,
     },
   })
@@ -197,7 +192,6 @@ export const createAnswerEmissionSource = async (
   answerId: string,
   emissionSourceId: string,
   rowId: string | null = null,
-  rowIndex: number | null = null,
   emissionType: string | null = null,
 ) => {
   return await prismaClient.answerEmissionSource.create({
@@ -205,8 +199,38 @@ export const createAnswerEmissionSource = async (
       answerId,
       emissionSourceId,
       rowId,
-      rowIndex,
       emissionType,
     },
   })
+}
+
+export const findAnswerEmissionSourcesByAnswerAndRow = async (answerId: string, rowId: string) => {
+  return await prismaClient.answerEmissionSource.findMany({
+    where: {
+      answerId,
+      rowId,
+    },
+  })
+}
+
+export const deleteAnswerEmissionSourcesForRow = async (answerId: string, rowId: string) => {
+  const entriesToDelete = await findAnswerEmissionSourcesByAnswerAndRow(answerId, rowId)
+
+  await prismaClient.answerEmissionSource.deleteMany({
+    where: {
+      answerId,
+      rowId,
+    },
+  })
+
+  if (entriesToDelete.length > 0) {
+    const emissionSourceIds = entriesToDelete.map((entry) => entry.emissionSourceId)
+    await prismaClient.studyEmissionSource.deleteMany({
+      where: {
+        id: { in: emissionSourceIds },
+      },
+    })
+  }
+
+  return entriesToDelete
 }

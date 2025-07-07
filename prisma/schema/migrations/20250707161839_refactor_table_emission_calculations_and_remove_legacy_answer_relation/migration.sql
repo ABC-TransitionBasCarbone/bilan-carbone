@@ -16,7 +16,6 @@ CREATE TABLE "answer_emission_sources" (
     "answer_id" TEXT NOT NULL,
     "emission_source_id" TEXT NOT NULL,
     "row_id" TEXT,
-    "row_index" INTEGER,
     "emission_type" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

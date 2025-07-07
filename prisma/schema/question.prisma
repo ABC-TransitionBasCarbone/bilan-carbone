@@ -57,7 +57,6 @@ model AnswerEmissionSource {
   emissionSourceId String              @map("emission_source_id")
 
   rowId        String? @map("row_id")        // "row-1751892643065-t7uker0u0" - unique row identifier
-  rowIndex     Int?    @map("row_index")     // 0, 1, 2, etc. - row position in table
   emissionType String? @map("emission_type") // "meal", "transport", etc. - emission source type within row
 
   createdAt DateTime @default(now()) @map("created_at")

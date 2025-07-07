@@ -40,7 +40,6 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     async (rowId: string) => {
       const newTableAnswer = deleteTableRow(tableAnswer, rowId)
       setTableAnswer(newTableAnswer)
-
       autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
     },
     [tableAnswer, autoSave, question],

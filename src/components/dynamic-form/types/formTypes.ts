@@ -84,7 +84,6 @@ export interface EmissionResults {
 
 export interface TableRow {
   id: string
-  index: number
   data: Record<string, string>
 }
 
