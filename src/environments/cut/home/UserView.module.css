@@ -3,7 +3,7 @@
 }
 
 .title {
-  font-family: 'Gilroy', sans-serif;
+  font-family: 'Gilroy-Regular', sans-serif;
   font-weight: 400;
   font-size: 1.5rem;
   line-height: 1.2rem;
@@ -21,7 +21,7 @@
   height: 5rem;
   gap: 1rem;
   > p {
-    font-family: 'Gilroy', sans-serif;
+    font-family: 'Gilroy-Regular', sans-serif;
     font-weight: 400;
     font-size: 1.125rem;
     line-height: 1.2rem;
@@ -39,6 +39,7 @@
   height: 12rem;
   gap: 1rem;
   text-decoration: none;
+  font-family: 'Gilroy-Regular', sans-serif;
   > div {
     > p {
       font-weight: 700;

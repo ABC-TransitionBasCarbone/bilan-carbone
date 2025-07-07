@@ -21,6 +21,7 @@ const infoLength = 3
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   borderColor: theme.palette.primary.main,
   backgroundColor: theme.palette.secondary.light,
+  color: theme.palette.text.primary,
 }))
 
 const StyledLink = ({ ...props }: LinkProps) => {
@@ -31,6 +32,7 @@ const StyledLink = ({ ...props }: LinkProps) => {
       {...props}
       borderColor={theme.palette.primary.main}
       backgroundColor={theme.palette.primary.light}
+      color={theme.palette.text.primary}
       padding="1rem"
     />
   )
