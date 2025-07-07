@@ -26,9 +26,11 @@ interface Props {
 
 const SelectOrganization = ({ user, organizationVersions, selectOrganizationVersion, form, caUnit }: Props) => {
   const t = useTranslations('study.organization')
+  const tOrganizationSites = useTranslations('organization.sites')
   const [error, setError] = useState('')
   const sites = form.watch('sites')
   const organizationVersionId = form.watch('organizationVersionId')
+  const isCut = useMemo(() => user.environment === Environment.CUT, [user.environment])
 
   const organizationVersion = useMemo(
     () => organizationVersions.find((organizationVersion) => organizationVersion.id === organizationVersionId),
@@ -83,7 +85,7 @@ const SelectOrganization = ({ user, organizationVersions, selectOrganizationVers
     <Block>
       {organizationVersions.length === 1 ? (
         <p data-testid="new-study-organization-title" className="title-h2">
-          {organizationVersions[0].organization.name}
+          {!isCut ? organizationVersions[0].organization.name : tOrganizationSites('title')}
         </p>
       ) : (
         <>

@@ -47,7 +47,13 @@
       "accounting": "Mes Empreintes"
     },
     "new": {
-      "studyDates": "Année de référence de l’Empreinte"
+      "studyDates": "Année de référence de l’Empreinte",
+      "suggestion": {
+        "name": "Empreinte - \"Nom du cinéma\", \"Date de début de la référence du bilan\""
+      },
+      "info": {
+        "date": "Les estimations sont généralement faites sur une période de 12 mois"
+      }
     },
     "perimeter": {
       "editSites": "Modifier la liste de cinémas",
@@ -85,7 +91,7 @@
       "editTitle": "Modifier mes cinémas"
     },
     "sites": {
-      "title": "Les cinémas enregistrés",
+      "title": "Sur quels cinémas doit porter l'empreinte ?",
       "noSites": "Il n'y a pas de cinémas configurés sur l'organisation",
       "name": "Nom",
       "namePlaceholder": "Nom du cinéma",
