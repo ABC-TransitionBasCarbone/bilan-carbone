@@ -1,5 +1,7 @@
 'use server'
 
+import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
+import { prismaClient } from '@/db/client'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   getAnswerByQuestionId,
@@ -9,13 +11,96 @@ import {
   getQuestionsBySubPost,
   saveAnswer,
 } from '@/db/question'
-import { getStudyById } from '@/db/study'
+import { FullStudy, getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Prisma, Question, SubPost } from '@prisma/client'
+import { isTableAnswer } from '@/utils/tableInput'
+import { Prisma, Question, QuestionType, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadStudy } from '../permissions/study'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
+
+const handleTableEmissionSources = async (
+  question: Question,
+  tableAnswer: TableAnswer,
+  studyId: string,
+  studySiteId: string,
+  study: FullStudy,
+) => {
+  const emissionSourceIds: string[] = []
+
+  // Get related questions for this table
+  const relatedQuestions = await getQuestionsByIdIntern(question.idIntern)
+
+  for (const row of tableAnswer.rows) {
+    // For each column in the table, check if it has emission factor mapping
+    for (const relatedQuestion of relatedQuestions) {
+      const columnValue = row.data[relatedQuestion.idIntern]
+      if (!columnValue) {
+        continue
+      }
+
+      const { emissionFactorImportedId, depreciationPeriod, linkQuestionId } =
+        getEmissionFactorByIdIntern(relatedQuestion.idIntern, columnValue) || {}
+
+      if (!emissionFactorImportedId && !depreciationPeriod && !linkQuestionId) {
+        continue // Skip columns without emission factor mapping
+      }
+
+      let emissionFactorId = undefined
+
+      // Handle linked questions for table rows
+      if (linkQuestionId) {
+        const linkQuestion = await getQuestionByIdIntern(linkQuestionId)
+        if (linkQuestion) {
+          // Look for linked question value in the same row
+          const linkValue = row.data[linkQuestion.idIntern]
+          if (linkValue) {
+            const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkValue)
+            if (linkEmissionInfo?.emissionFactorImportedId) {
+              const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+                linkEmissionInfo.emissionFactorImportedId,
+                study.emissionFactorVersions.map((v) => v.importVersionId),
+              )
+              if (emissionFactor) {
+                emissionFactorId = emissionFactor.id
+              }
+            }
+          }
+        }
+      } else if (emissionFactorImportedId) {
+        const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+          emissionFactorImportedId,
+          study.emissionFactorVersions.map((v) => v.importVersionId),
+        )
+        if (emissionFactor) {
+          emissionFactorId = emissionFactor.id
+        }
+      }
+
+      // Calculate value from column data
+      const value = depreciationPeriod ? undefined : Number(columnValue)
+
+      // Create emission source for this table cell/row combination
+      const emissionSource = await createEmissionSource({
+        studyId,
+        studySiteId,
+        value: isNaN(value as number) ? undefined : value,
+        name: `${relatedQuestion.idIntern}-row-${row.index}`,
+        subPost: question.subPost,
+        depreciationPeriod,
+        emissionFactorId,
+      })
+
+      if (emissionSource.success && emissionSource.data) {
+        emissionSourceIds.push(emissionSource.data.id)
+        await updateEmissionSource({ validated: true, emissionSourceId: emissionSource.data.id })
+      }
+    }
+  }
+
+  return emissionSourceIds
+}
 
 export const saveAnswerForQuestion = async (
   question: Question,
@@ -29,12 +114,6 @@ export const saveAnswerForQuestion = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const { emissionFactorImportedId, depreciationPeriod, linkQuestionId } =
-      getEmissionFactorByIdIntern(question.idIntern, response) || {}
-
-    let emissionFactorId = undefined
-    let emissionSourceId = undefined
-
     if (!canReadStudy(session.user, studyId)) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -44,6 +123,34 @@ export const saveAnswerForQuestion = async (
     if (!study || !studySite) {
       throw new Error(NOT_AUTHORIZED)
     }
+
+    // Prevent saving to table column questions - data should be saved to the parent TABLE question
+    if (await isTableColumnQuestion(question)) {
+      throw new Error(
+        `Cannot save directly to table column question ${question.idIntern}. Data should be saved to the parent TABLE question.`,
+      )
+    }
+
+    if (question.type === QuestionType.TABLE) {
+      let tableAnswer: TableAnswer
+
+      if (isTableAnswer(response)) {
+        tableAnswer = response
+      } else {
+        tableAnswer = { rows: [] }
+      }
+
+      const emissionSourceIds = await handleTableEmissionSources(question, tableAnswer, studyId, studySiteId, study)
+
+      return saveAnswer(question.id, studySiteId, tableAnswer as unknown as Prisma.InputJsonValue, emissionSourceIds[0])
+    }
+
+    const { emissionFactorImportedId, depreciationPeriod, linkQuestionId } =
+      getEmissionFactorByIdIntern(question.idIntern, response) || {}
+
+    let emissionFactorId = undefined
+    let emissionSourceId = undefined
+
     const value = depreciationPeriod ? undefined : Number(response)
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkQuestionId) {
@@ -138,6 +245,48 @@ export const getQuestionsFromIdIntern = async (idIntern: string) =>
     return getQuestionsByIdIntern(idIntern)
   })
 
+export const getParentTableQuestion = async (columnQuestionId: string) =>
+  withServerResponse('getParentTableQuestion', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error('Not authorized')
+    }
+
+    const columnQuestion = await prismaClient.question.findUnique({
+      where: { id: columnQuestionId },
+    })
+
+    if (!columnQuestion) {
+      throw new Error('Column question not found')
+    }
+
+    const relatedQuestions = await getQuestionsByIdIntern(columnQuestion.idIntern)
+
+    const tableQuestion = relatedQuestions.find((q) => q.type === QuestionType.TABLE)
+
+    if (!tableQuestion) {
+      throw new Error('Parent TABLE question not found')
+    }
+
+    return tableQuestion
+  })
+
+const isTableColumnQuestion = async (question: Question): Promise<boolean> => {
+  if (question.type === QuestionType.TABLE) {
+    return false
+  }
+
+  try {
+    const relatedQuestions = await getQuestionsByIdIntern(question.idIntern)
+
+    const hasTableQuestion = relatedQuestions.some((q) => q.type === QuestionType.TABLE)
+
+    return hasTableQuestion
+  } catch {
+    return false
+  }
+}
+
 type EmissionFactorInfo = {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
@@ -152,8 +301,18 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
     `getEmissionFactorByIdIntern: idIntern=${idIntern}, response=${response}, emissionFactorInfo=`,
     emissionFactorInfo,
   )
+
   if (emissionFactorInfo && emissionFactorInfo.emissionFactors) {
-    emissionFactorInfo.emissionFactorImportedId = emissionFactorInfo.emissionFactors[response.toString()]
+    if (typeof response === 'object' && response !== null && !Array.isArray(response)) {
+      for (const [, value] of Object.entries(response)) {
+        if (typeof value === 'string' && emissionFactorInfo.emissionFactors[value]) {
+          emissionFactorInfo.emissionFactorImportedId = emissionFactorInfo.emissionFactors[value]
+          break
+        }
+      }
+    } else {
+      emissionFactorInfo.emissionFactorImportedId = emissionFactorInfo.emissionFactors[response.toString()]
+    }
   }
 
   return emissionFactorInfo

@@ -1,6 +1,6 @@
 import { Question } from '@prisma/client'
 import { useMemo } from 'react'
-import { FieldErrors, UseFormWatch } from 'react-hook-form'
+import { FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import { UseAutoSaveReturn } from '../../hooks/useAutoSave'
 import FieldComponent from './FieldComponent'
 import QuestionContainer from './QuestionContainer'
@@ -12,6 +12,7 @@ interface DynamicFormFieldPropsWithAutoSave extends Omit<DynamicFormFieldProps, 
   autoSave: UseAutoSaveReturn
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
+  setValue: UseFormSetValue<FormValues>
 }
 
 const DynamicFormField = ({
@@ -22,6 +23,7 @@ const DynamicFormField = ({
   autoSave,
   watch,
   formErrors,
+  setValue,
 }: DynamicFormFieldPropsWithAutoSave) => {
   const fieldName = question.idIntern
   const fieldStatus = autoSave.getFieldStatus(question.id)
@@ -39,6 +41,7 @@ const DynamicFormField = ({
         watch={watch}
         formErrors={formErrors}
         autoSave={autoSave}
+        setValue={setValue}
       />
     </QuestionContainer>
   )
