@@ -68,23 +68,6 @@ const UserView = ({ account }: Props) => {
       <Box className={classNames('flex', styles.linkContainer)}>
         <StyledLink
           color="info"
-          href="/equipe"
-          className={classNames(
-            'flex-col justify-center align-center',
-            styles.styledBoxContainer,
-            styles.styledBoxLink,
-          )}
-        >
-          <Groups2OutlinedIcon className={styles.icon} />
-          <Box>
-            <Typography>{navigation('collaborators.title')}</Typography>
-            <Typography variant="subtitle2" className={styles.linkMessage}>
-              {navigation('collaborators.message')}
-            </Typography>
-          </Box>
-        </StyledLink>
-        <StyledLink
-          color="info"
           href={`/organisations/${account.organizationVersionId}/modifier`}
           className={classNames(
             'flex-col justify-center align-center',
@@ -97,6 +80,23 @@ const UserView = ({ account }: Props) => {
             <Typography>{navigation('movietheater.title')}</Typography>
             <Typography variant="subtitle2" className={styles.linkMessage}>
               {navigation('movietheater.message')}
+            </Typography>
+          </Box>
+        </StyledLink>
+        <StyledLink
+          color="info"
+          href="/equipe"
+          className={classNames(
+            'flex-col justify-center align-center',
+            styles.styledBoxContainer,
+            styles.styledBoxLink,
+          )}
+        >
+          <Groups2OutlinedIcon className={styles.icon} />
+          <Box>
+            <Typography>{navigation('collaborators.title')}</Typography>
+            <Typography variant="subtitle2" className={styles.linkMessage}>
+              {navigation('collaborators.message')}
             </Typography>
           </Box>
         </StyledLink>
