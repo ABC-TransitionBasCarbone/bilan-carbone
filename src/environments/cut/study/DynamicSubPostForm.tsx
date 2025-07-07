@@ -33,7 +33,12 @@ const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
 
       const { questions: loadedQuestions, answers: loadedAnswers } = result.data
 
-      setQuestions(loadedQuestions)
+      setQuestions(
+        loadedQuestions.map((q) => ({
+          ...q,
+          label: q.label.replace('en * ?', `en  ${study.startDate.getFullYear()} ?`),
+        })),
+      )
       setAnswers(loadedAnswers)
     } catch (err) {
       console.error('Failed to load questions and answers:', err)
