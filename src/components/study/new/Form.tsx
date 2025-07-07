@@ -9,6 +9,7 @@ import GlossaryModal from '@/components/modals/GlossaryModal'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { createStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
+import { Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -22,12 +23,15 @@ interface Props {
   glossary?: string
   setGlossary?: (glossary: string) => void
   t: (key: string) => string
+  isCut?: boolean
 }
 
-const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
+const NewStudyForm = ({ form, children, glossary, setGlossary, t, isCut = false }: Props) => {
   const router = useRouter()
   const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
+  const tStudyNewSuggestion = useTranslations('study.new.suggestion')
+  const tStudyNewInfo = useTranslations('study.new.info')
   const { callServerFunction } = useServerFunction()
 
   const onSubmit = async (command: CreateStudyCommand) => {
@@ -41,7 +45,9 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
   }
 
   const Help = (name: string) => (
-    <HelpIcon className="ml-4" onClick={() => setGlossary && setGlossary(name)} label={tGlossary('title')} />
+    <Tooltip placement="right" title={tStudyNewInfo('date')}>
+      <HelpIcon className="ml-4" onClick={() => setGlossary && setGlossary(name)} label={tGlossary('title')} />
+    </Tooltip>
   )
 
   return (
@@ -53,6 +59,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t }: Props) => {
           translation={t}
           name="name"
           label={t('name')}
+          placeholder={isCut ? tStudyNewSuggestion('name') : ''}
         />
         <div>
           <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
