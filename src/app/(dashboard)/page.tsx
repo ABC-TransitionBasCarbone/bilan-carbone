@@ -10,7 +10,9 @@ export const revalidate = 0
 const Home = async ({ user: account }: UserSessionProps) => {
   return (
     <>
-      <Block>{account.environment === Environment.CUT ? <CUTUserView /> : <UserView account={account} />}</Block>
+      <Block>
+        {account.environment === Environment.CUT ? <CUTUserView account={account} /> : <UserView account={account} />}
+      </Block>
       {account.environment === Environment.CUT && <Footer />}
     </>
   )

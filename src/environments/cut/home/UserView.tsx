@@ -1,13 +1,22 @@
 'use client'
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Alert, Box, BoxProps, LinkProps, Link as MUILink, styled, Typography, useTheme } from '@mui/material'
 
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import CinemaOutlinedIcon from '../icons/CinemaOutlinedIcon'
+
+import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined'
 import DiagramOutlinedIcon from '../icons/DiagramOutlinedIcon'
+
+import { UserSession } from 'next-auth'
+import CinemaOutlinedIcon from '../icons/CinemaOutlinedIcon'
 import styles from './UserView.module.css'
+
+interface Props {
+  account: UserSession
+}
+
+const infoLength = 3
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   borderColor: theme.palette.primary.main,
@@ -22,14 +31,15 @@ const StyledLink = ({ ...props }: LinkProps) => {
       {...props}
       borderColor={theme.palette.primary.main}
       backgroundColor={theme.palette.primary.light}
+      padding="1rem"
     />
   )
 }
 
-const UserView = () => {
+const UserView = ({ account }: Props) => {
   const t = useTranslations('home')
   const title = t('title')
-  const navigation = useTranslations('navigation')
+  const navigation = useTranslations('home.navigation')
 
   return (
     <Box component="section" className={classNames(styles.container, 'flex-col')}>
@@ -49,18 +59,12 @@ const UserView = () => {
       <Typography data-testid="title" variant="h4">
         {title}
       </Typography>
-      <StyledBox className={classNames('flex align-center', styles.styledBoxContainer, styles.styledBoxInfo)}>
-        <CheckCircleOutlineIcon color="disabled" fontSize="large" className={styles.checkIcon} />
-        <Typography>{t('info.0')}</Typography>
-      </StyledBox>
-      <StyledBox className={classNames('flex align-center', styles.styledBoxContainer, styles.styledBoxInfo)}>
-        <CheckCircleOutlineIcon color="disabled" fontSize="large" className={styles.checkIcon} />
-        <Typography>{t('info.1')}</Typography>
-      </StyledBox>
-      <StyledBox className={classNames('flex align-center', styles.styledBoxContainer, styles.styledBoxInfo)}>
-        <CheckCircleOutlineIcon color="disabled" fontSize="large" className={styles.checkIcon} />
-        <Typography>{t('info.2')}</Typography>
-      </StyledBox>
+      {Array.from({ length: infoLength }, (_, i) => (
+        <StyledBox key={i} className={classNames('flex align-center', styles.styledBoxContainer, styles.styledBoxInfo)}>
+          <Typography>{i + 1}.</Typography>
+          <Typography>{t(`info.${i}`)}</Typography>
+        </StyledBox>
+      ))}
       <Box className={classNames('flex', styles.linkContainer)}>
         <StyledLink
           color="info"
@@ -71,8 +75,30 @@ const UserView = () => {
             styles.styledBoxLink,
           )}
         >
+          <Groups2OutlinedIcon className={styles.icon} />
+          <Box>
+            <Typography>{navigation('collaborators.title')}</Typography>
+            <Typography variant="subtitle2" className={styles.linkMessage}>
+              {navigation('collaborators.message')}
+            </Typography>
+          </Box>
+        </StyledLink>
+        <StyledLink
+          color="info"
+          href={`/organisations/${account.organizationVersionId}/modifier`}
+          className={classNames(
+            'flex-col justify-center align-center',
+            styles.styledBoxContainer,
+            styles.styledBoxLink,
+          )}
+        >
           <CinemaOutlinedIcon className={styles.icon} />
-          <Typography>{navigation('organization')}</Typography>
+          <Box>
+            <Typography>{navigation('movietheater.title')}</Typography>
+            <Typography variant="subtitle2" className={styles.linkMessage}>
+              {navigation('movietheater.message')}
+            </Typography>
+          </Box>
         </StyledLink>
         <StyledLink
           color="info"
@@ -84,7 +110,12 @@ const UserView = () => {
           )}
         >
           <DiagramOutlinedIcon className={styles.icon} />
-          <Typography>{navigation('organizations')}</Typography>
+          <Box>
+            <Typography>{navigation('footprints.title')}</Typography>
+            <Typography variant="subtitle2" className={styles.linkMessage}>
+              {navigation('footprints.message')}
+            </Typography>
+          </Box>
         </StyledLink>
       </Box>
     </Box>

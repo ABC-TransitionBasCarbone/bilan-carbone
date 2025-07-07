@@ -36,15 +36,21 @@
 
 .styledBoxLink {
   width: 50%;
-  height: 10rem;
+  height: 12rem;
   gap: 1rem;
   text-decoration: none;
-  > p {
-    font-weight: 700;
-    font-size: 1.5rem;
-    line-height: 100%;
-    letter-spacing: 0%;
-    text-align: center;
+  > div {
+    > p {
+      font-weight: 700;
+      font-size: 1.5rem;
+      line-height: 100%;
+      letter-spacing: 0%;
+      text-align: center;
+    }
+    > .linkMessage {
+      margin-top: 0.5rem;
+      text-align: center;
+    }
   }
 }
 
