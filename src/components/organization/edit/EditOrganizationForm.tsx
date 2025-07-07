@@ -2,6 +2,7 @@
 
 import Form from '@/components/base/Form'
 import LoadingButton from '@/components/base/LoadingButton'
+import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import Sites from '@/environments/base/organization/Sites'
@@ -28,13 +29,14 @@ import { useForm } from 'react-hook-form'
 interface Props {
   organizationVersion: OrganizationVersionWithOrganization
   caUnit: SiteCAUnit
+  isCut?: boolean
 }
 
 type StudiesWithSites = IsSuccess<AsyncReturnType<typeof findStudiesWithSites>>
 
 const emptySitesOnError = { authorizedStudySites: [], unauthorizedStudySites: [] }
 
-const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
+const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
   const tStudySites = useTranslations('organization.studySites')
@@ -83,6 +85,15 @@ const EditOrganizationForm = ({ organizationVersion, caUnit }: Props) => {
   const sites = form.watch('sites')
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
+      {!isCut && (
+        <FormTextField
+          data-testid="edit-organization-name"
+          control={form.control}
+          translation={t}
+          name="name"
+          label={t('name')}
+        />
+      )}
       <DynamicComponent
         environmentComponents={{ [Environment.CUT]: <SitesCut sites={sites} form={form} /> }}
         defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} />}
