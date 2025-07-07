@@ -1,5 +1,6 @@
 // WIP DO NOT USE YET
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getQuestionsFromIdIntern } from '@/services/serverFunctions/question'
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Prisma, QuestionType } from '@prisma/client'
@@ -26,7 +27,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
   const [questions, setQuestions] = useState<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]>([])
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const [currentAnswers, setCurrentAnswers] = useState<Record<string, string>[]>([])
-  // const { callServerFunction } = useServerFunction()
+  const { callServerFunction } = useServerFunction()
 
   const getQuestions = async () => {
     const res = await getQuestionsFromIdIntern(question.idIntern)
@@ -130,9 +131,6 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
       } else {
         current.push(newRow(currentAnswers.length + 1))
       }
-
-      console.log('current', current)
-      console.log('currentAnswers', currentAnswers)
 
       setCurrentAnswers(current)
     }
