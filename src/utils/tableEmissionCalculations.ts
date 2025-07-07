@@ -1,4 +1,5 @@
 import { TableAnswer, TableRow } from '@/components/dynamic-form/types/formTypes'
+import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { Question } from '@prisma/client'
@@ -40,10 +41,12 @@ const calculateWorkRhythm: TableEmissionCalculator = {
   calculate: async (row, study) => {
     const daysPerWeek = parseFloat(row.data['11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || '0')
     const distanceKm = parseFloat(row.data['12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || '0')
-    const transportMode = row.data['13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || ''
+    const transportModeFEList =
+      emissionFactorMap['13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'].emissionFactors
+    const transportModeFEName = row.data['13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || ''
 
     // Validate that all required values are present and valid
-    if (!daysPerWeek || daysPerWeek <= 0 || !distanceKm || distanceKm <= 0 || !transportMode) {
+    if (!daysPerWeek || daysPerWeek <= 0 || !distanceKm || distanceKm <= 0 || !transportModeFEName) {
       return {
         emissionSources: [],
         breakdown: {
@@ -75,7 +78,7 @@ const calculateWorkRhythm: TableEmissionCalculator = {
     }
 
     // The transportMode value is always the emission factor ID directly
-    const transportEmissionFactorId = transportMode
+    const transportEmissionFactorId = transportModeFEList?.[transportModeFEName]
 
     // Calculate transport emissions
     if (daysPerWeek > 0 && distanceKm > 0 && transportEmissionFactorId) {
@@ -114,12 +117,25 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
     const participants = parseFloat(
       row.data['13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || '0',
     )
-    const transportModeFE = row.data['14-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || ''
+    const transportModeFEList =
+      emissionFactorMap['14-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'].emissionFactors
+    const transportModeFEName = row.data['14-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || ''
     const occurrences = parseFloat(row.data['15-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || '0')
-    const accommodationTypeFE = row.data['16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || ''
+    const accommodationTypeFEList =
+      emissionFactorMap['16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'].emissionFactors
+    const accommodationTypeFEName = row.data['16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || ''
     const duration = parseFloat(row.data['17-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || '0')
 
-    if (!distance || distance <= 0 || !participants || participants <= 0 || !occurrences || occurrences <= 0) {
+    if (
+      !distance ||
+      distance <= 0 ||
+      !participants ||
+      participants <= 0 ||
+      !occurrences ||
+      occurrences <= 0 ||
+      !transportModeFEName ||
+      !accommodationTypeFEName
+    ) {
       return {
         emissionSources: [],
       }
@@ -127,35 +143,43 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
 
     const emissionSources: EmissionSourceCalculation[] = []
 
-    if (transportModeFE) {
-      const transportEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-        transportModeFE,
-        study.emissionFactorVersions.map((v) => v.importVersionId),
-      )
+    if (transportModeFEName && transportModeFEList) {
+      const transportModeFE = transportModeFEList[transportModeFEName]
 
-      if (transportEmissionFactor) {
-        const transportValue = distance * participants * occurrences
-        emissionSources.push({
-          name: 'transport',
-          value: transportValue,
-          emissionFactorId: transportEmissionFactor.id,
-        })
+      if (transportModeFE) {
+        const transportEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+          transportModeFE,
+          study.emissionFactorVersions.map((v) => v.importVersionId),
+        )
+
+        if (transportEmissionFactor) {
+          const transportValue = distance * participants * occurrences
+          emissionSources.push({
+            name: 'transport',
+            value: transportValue,
+            emissionFactorId: transportEmissionFactor.id,
+          })
+        }
       }
     }
 
-    if (accommodationTypeFE && duration > 0) {
-      const accommodationEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-        accommodationTypeFE,
-        study.emissionFactorVersions.map((v) => v.importVersionId),
-      )
+    if (accommodationTypeFEName && accommodationTypeFEList && duration > 0) {
+      const accommodationTypeFE = accommodationTypeFEList[accommodationTypeFEName]
 
-      if (accommodationEmissionFactor) {
-        const accommodationValue = duration * participants * occurrences
-        emissionSources.push({
-          name: 'accommodation',
-          value: accommodationValue,
-          emissionFactorId: accommodationEmissionFactor.id,
-        })
+      if (accommodationTypeFE) {
+        const accommodationEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+          accommodationTypeFE,
+          study.emissionFactorVersions.map((v) => v.importVersionId),
+        )
+
+        if (accommodationEmissionFactor) {
+          const accommodationValue = duration * participants * occurrences
+          emissionSources.push({
+            name: 'accommodation',
+            value: accommodationValue,
+            emissionFactorId: accommodationEmissionFactor.id,
+          })
+        }
       }
     }
 

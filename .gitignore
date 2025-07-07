@@ -144,3 +144,4 @@ dist
 .DS_Store
 
 cypress/screenshots
+/notes
