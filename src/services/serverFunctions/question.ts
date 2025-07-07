@@ -114,7 +114,6 @@ const handleTableEmissionSources = async (
   const relatedQuestions = await getQuestionsByIdIntern(question.idIntern)
 
   for (const row of tableAnswer.rows) {
-    // For each column in the table, check if it has emission factor mapping
     for (const relatedQuestion of relatedQuestions) {
       const columnValue = row.data[relatedQuestion.idIntern]
       if (!columnValue) {
@@ -125,17 +124,15 @@ const handleTableEmissionSources = async (
         getEmissionFactorByIdIntern(relatedQuestion.idIntern, columnValue) || {}
 
       if (!emissionFactorImportedId && !depreciationPeriod && !linkQuestionId) {
-        continue // Skip columns without emission factor mapping
+        continue
       }
 
       let emissionFactorId = undefined
 
-      // Handle linked questions for table rows
       if (linkQuestionId) {
         const linkQuestion = await getQuestionByIdIntern(linkQuestionId)
 
         if (linkQuestion) {
-          // Look for linked question value in the same row
           const linkValue = row.data[linkQuestion.idIntern]
           if (linkValue) {
             const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkValue)
@@ -160,10 +157,8 @@ const handleTableEmissionSources = async (
         }
       }
 
-      // Calculate value from column data
       const value = depreciationPeriod ? undefined : Number(columnValue)
 
-      // Create emission source for this table cell/row combination
       const emissionSource = await createEmissionSource({
         studyId,
         studySiteId,

@@ -65,8 +65,6 @@ const FieldComponent = ({
             ? fieldName.substring(question.idIntern.length + 1)
             : null
 
-          console.log({ fieldName, rowId, questionIdIntern: question.idIntern })
-
           if (rowId) {
             const parentTableResponse = await getParentTableQuestion(question.id)
             if (parentTableResponse.success) {
