@@ -47,7 +47,6 @@ export const saveAnswer = async (
   questionId: string,
   studySiteId: string,
   response: Prisma.InputJsonValue,
-  emissionSourceId?: string,
 ): Promise<Answer> => {
   return await prismaClient.answer.upsert({
     where: {
@@ -58,13 +57,11 @@ export const saveAnswer = async (
     },
     update: {
       response,
-      emissionSourceId,
     },
     create: {
       questionId,
       studySiteId,
       response,
-      emissionSourceId,
     },
   })
 }
@@ -120,6 +117,96 @@ export const getQuestionsByIdIntern = async (
     },
     include: {
       userAnswers: true,
+    },
+  })
+}
+
+export const findAnswerEmissionSourceByAnswerAndRow = async (answerId: string, rowId: string, emissionType: string) => {
+  return await prismaClient.answerEmissionSource.findFirst({
+    where: {
+      answerId,
+      rowId,
+      emissionType,
+    },
+  })
+}
+
+export const findAnswerEmissionSourceByAnswer = async (answerId: string) => {
+  return await prismaClient.answerEmissionSource.findFirst({
+    where: {
+      answerId,
+    },
+  })
+}
+
+export const upsertAnswerEmissionSource = async (
+  answerId: string,
+  rowId: string,
+  emissionType: string,
+  emissionSourceId: string,
+  rowIndex: number,
+) => {
+  return await prismaClient.answerEmissionSource.upsert({
+    where: {
+      answerId_rowId_emissionType: {
+        answerId,
+        rowId,
+        emissionType,
+      },
+    },
+    update: {
+      emissionSourceId,
+      rowIndex,
+    },
+    create: {
+      answerId,
+      emissionSourceId,
+      rowId,
+      rowIndex,
+      emissionType,
+    },
+  })
+}
+
+export const updateAnswerEmissionSource = async (id: string, emissionSourceId: string) => {
+  return await prismaClient.answerEmissionSource.update({
+    where: { id },
+    data: { emissionSourceId },
+  })
+}
+
+export const updateAnswerEmissionSourceComplete = async (
+  id: string,
+  emissionSourceId: string,
+  rowId: string | null = null,
+  rowIndex: number | null = null,
+  emissionType: string | null = null,
+) => {
+  return await prismaClient.answerEmissionSource.update({
+    where: { id },
+    data: {
+      emissionSourceId,
+      rowId,
+      rowIndex,
+      emissionType,
+    },
+  })
+}
+
+export const createAnswerEmissionSource = async (
+  answerId: string,
+  emissionSourceId: string,
+  rowId: string | null = null,
+  rowIndex: number | null = null,
+  emissionType: string | null = null,
+) => {
+  return await prismaClient.answerEmissionSource.create({
+    data: {
+      answerId,
+      emissionSourceId,
+      rowId,
+      rowIndex,
+      emissionType,
     },
   })
 }

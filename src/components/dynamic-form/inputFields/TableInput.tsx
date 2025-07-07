@@ -143,14 +143,31 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
   }, [questions, question.id, question.type, autoSave.studySiteId, populateFormFields])
 
   const handleAddRow = useCallback(() => {
-    console.log('handleAddRow', tableAnswer)
-    const newTableAnswer = addTableRow(tableAnswer, questions)
+    const updatedTableAnswer = {
+      ...tableAnswer,
+      rows: tableAnswer.rows.map((row) => {
+        const updatedData = { ...row.data }
+        questions.forEach((question) => {
+          const fieldName = `${question.idIntern}-${row.id}`
+          const currentValue = watch(fieldName)
+          if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
+            updatedData[question.idIntern] = String(currentValue)
+          }
+        })
+        return {
+          ...row,
+          data: updatedData,
+        }
+      }),
+    }
+
+    const newTableAnswer = addTableRow(updatedTableAnswer, questions)
     setTableAnswer(newTableAnswer)
 
     populateFormFields(newTableAnswer)
 
     autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
-  }, [tableAnswer, questions, autoSave, question, populateFormFields])
+  }, [tableAnswer, questions, autoSave, question, populateFormFields, watch])
 
   useEffect(() => {
     getQuestions()

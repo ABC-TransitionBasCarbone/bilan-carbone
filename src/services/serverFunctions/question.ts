@@ -1,24 +1,36 @@
 'use server'
 
 import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
-import { prismaClient } from '@/db/client'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
+  createAnswerEmissionSource,
+  findAnswerEmissionSourceByAnswer,
+  findAnswerEmissionSourceByAnswerAndRow,
   getAnswerByQuestionId,
   getAnswersByStudyAndSubPost,
+  getQuestionById,
   getQuestionByIdIntern,
   getQuestionsByIdIntern,
   getQuestionsBySubPost,
   saveAnswer,
+  upsertAnswerEmissionSource,
 } from '@/db/question'
 import { FullStudy, getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
+import { calculateTableEmissions, hasTableEmissionCalculator } from '@/utils/tableEmissionCalculations'
 import { isTableAnswer } from '@/utils/tableInput'
 import { Prisma, Question, QuestionType, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadStudy } from '../permissions/study'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
+
+type EmissionFactorInfo = {
+  emissionFactorImportedId?: string | undefined
+  depreciationPeriod?: number
+  linkQuestionId?: string
+  emissionFactors?: Record<string, string>
+}
 
 const handleTableEmissionSources = async (
   question: Question,
@@ -29,7 +41,64 @@ const handleTableEmissionSources = async (
 ) => {
   const emissionSourceIds: string[] = []
 
-  // Get related questions for this table
+  if (hasTableEmissionCalculator(question.idIntern)) {
+    const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
+
+    const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
+
+    for (let rowIndex = 0; rowIndex < tableAnswer.rows.length; rowIndex++) {
+      const row = tableAnswer.rows[rowIndex]
+      const result = calculationResults[rowIndex]
+
+      if (!result || result.emissionSources.length === 0) {
+        continue
+      }
+
+      for (const emissionSource of result.emissionSources) {
+        let emissionSourceId: string
+
+        let existingEmissionSource = null
+        if (existingAnswer) {
+          existingEmissionSource = await findAnswerEmissionSourceByAnswerAndRow(
+            existingAnswer.id,
+            row.id,
+            emissionSource.name,
+          )
+        }
+
+        if (existingEmissionSource) {
+          await updateEmissionSource({
+            emissionSourceId: existingEmissionSource.emissionSourceId,
+            value: emissionSource.value,
+            emissionFactorId: emissionSource.emissionFactorId,
+            validated: true,
+          })
+          emissionSourceId = existingEmissionSource.emissionSourceId
+        } else {
+          const newEmissionSource = await createEmissionSource({
+            studyId,
+            studySiteId,
+            value: emissionSource.value,
+            name: `${question.idIntern}-${emissionSource.name}-row-${rowIndex}`,
+            subPost: question.subPost,
+            emissionFactorId: emissionSource.emissionFactorId,
+          })
+
+          if (newEmissionSource.success && newEmissionSource.data) {
+            emissionSourceId = newEmissionSource.data.id
+            await updateEmissionSource({ validated: true, emissionSourceId })
+          } else {
+            continue
+          }
+        }
+
+        emissionSourceIds.push(emissionSourceId)
+      }
+    }
+
+    return emissionSourceIds
+  }
+
   const relatedQuestions = await getQuestionsByIdIntern(question.idIntern)
 
   for (const row of tableAnswer.rows) {
@@ -52,6 +121,7 @@ const handleTableEmissionSources = async (
       // Handle linked questions for table rows
       if (linkQuestionId) {
         const linkQuestion = await getQuestionByIdIntern(linkQuestionId)
+
         if (linkQuestion) {
           // Look for linked question value in the same row
           const linkValue = row.data[linkQuestion.idIntern]
@@ -142,7 +212,31 @@ export const saveAnswerForQuestion = async (
 
       const emissionSourceIds = await handleTableEmissionSources(question, tableAnswer, studyId, studySiteId, study)
 
-      return saveAnswer(question.id, studySiteId, tableAnswer as unknown as Prisma.InputJsonValue, emissionSourceIds[0])
+      const savedAnswer = await saveAnswer(question.id, studySiteId, tableAnswer as unknown as Prisma.InputJsonValue)
+
+      if (hasTableEmissionCalculator(question.idIntern) && savedAnswer) {
+        const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
+
+        for (let rowIndex = 0; rowIndex < tableAnswer.rows.length; rowIndex++) {
+          const row = tableAnswer.rows[rowIndex]
+          const result = calculationResults[rowIndex]
+
+          if (!result || result.emissionSources.length === 0) {
+            continue
+          }
+
+          for (let emissionIndex = 0; emissionIndex < result.emissionSources.length; emissionIndex++) {
+            const emissionSource = result.emissionSources[emissionIndex]
+            const emissionSourceId = emissionSourceIds[rowIndex * result.emissionSources.length + emissionIndex]
+
+            if (emissionSourceId) {
+              await upsertAnswerEmissionSource(savedAnswer.id, row.id, emissionSource.name, emissionSourceId, rowIndex)
+            }
+          }
+        }
+      }
+
+      return savedAnswer
     }
 
     const { emissionFactorImportedId, depreciationPeriod, linkQuestionId } =
@@ -169,7 +263,10 @@ export const saveAnswerForQuestion = async (
        * Sauvegarder dans une seule réponse json les différentes valeurs à multiplier
        * Créer une émissionSource uniquement quand les différentes valeurs sont connues
        */
-      emissionSourceId = linkAnswer?.emissionSourceId ?? undefined
+      if (linkAnswer) {
+        const linkEmissionSource = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
+        emissionSourceId = linkEmissionSource?.emissionSourceId ?? undefined
+      }
     }
 
     if (emissionFactorImportedId) {
@@ -207,7 +304,30 @@ export const saveAnswerForQuestion = async (
       }
     }
 
-    return saveAnswer(question.id, studySiteId, response, emissionSourceId)
+    const savedAnswer = await saveAnswer(question.id, studySiteId, response)
+
+    if (emissionSourceId && savedAnswer) {
+      const existingEntry = await findAnswerEmissionSourceByAnswer(savedAnswer.id)
+      if (!existingEntry) {
+        await createAnswerEmissionSource(savedAnswer.id, emissionSourceId, null, null, null)
+      }
+
+      // If this question has a linkQuestionId, also ensure the linked answers are connected to the same emission source
+      if (linkQuestionId) {
+        const linkQuestion = await getQuestionByIdIntern(linkQuestionId)
+        if (linkQuestion) {
+          const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
+          if (linkAnswer) {
+            const linkExistingEntry = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
+            if (!linkExistingEntry) {
+              await createAnswerEmissionSource(linkAnswer.id, emissionSourceId, null, null, null)
+            }
+          }
+        }
+      }
+    }
+
+    return savedAnswer
   })
 
 export const getQuestionsWithAnswers = async (subPost: SubPost, studySiteId: string) =>
@@ -252,9 +372,7 @@ export const getParentTableQuestion = async (columnQuestionId: string) =>
       throw new Error('Not authorized')
     }
 
-    const columnQuestion = await prismaClient.question.findUnique({
-      where: { id: columnQuestionId },
-    })
+    const columnQuestion = await getQuestionById(columnQuestionId)
 
     if (!columnQuestion) {
       throw new Error('Column question not found')
@@ -285,13 +403,6 @@ const isTableColumnQuestion = async (question: Question): Promise<boolean> => {
   } catch {
     return false
   }
-}
-
-type EmissionFactorInfo = {
-  emissionFactorImportedId?: string | undefined
-  depreciationPeriod?: number
-  linkQuestionId?: string
-  emissionFactors?: Record<string, string>
 }
 
 const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJsonValue): EmissionFactorInfo => {
@@ -378,7 +489,7 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   '15-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
     emissionFactors: {
-      'tous types d’hôtel': '100',
+      "tous types d'hôtel": '100',
       'hôtel 1*': '101',
       'hôtel 2*': '102',
       'hôtel 3*': '103',
@@ -443,7 +554,7 @@ const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'tablettes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'tablettes-nombre-unite' },
   // Mobilité spectateurs
   'avez-vous-deja-realise-une-enquete-mobilite-specteurs': {},
-  /** TODO: Liste 1  - attente de la fonctionnalité liste */
+  /** TODO: Liste 1  - attente de la fonctionnalité liste */
   'si-a-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': {},
   /***** */
   'si-b-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
