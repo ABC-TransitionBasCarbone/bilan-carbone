@@ -209,7 +209,7 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
  * Calculator for question: 10-Pour chacun de ces équipements électroménagers, veuillez renseigner
  * Formula:
  * - Fixed table with emission factor per appliance type
- * - Depreciation logic: if purchase year < 5 years ago: divide by 5, if rented: multiply by (rental days/365) / 5
+ * - Depreciation logic: if purchase year < 5 years ago: return 1, else return 0
  */
 const calculateElectromenager: TableEmissionCalculator = {
   calculate: async (row, study) => {
