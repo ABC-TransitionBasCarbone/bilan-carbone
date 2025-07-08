@@ -31,7 +31,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
   const [tableAnswer, setTableAnswer] = useState<TableAnswer>({ rows: [] })
 
   const emissionFactorInfo = emissionFactorMap[question.idIntern]
-  const isFixedTable = emissionFactorInfo?.isFixed && emissionFactorInfo?.emissionFactors
+  const isFixedTable = !!(emissionFactorInfo?.isFixed && emissionFactorInfo?.emissionFactors)
 
   const getQuestions = async () => {
     const res = await getQuestionsFromIdIntern(question.idIntern)
@@ -59,12 +59,11 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
           const fieldName = `${question.idIntern}-${row.id}`
           const currentValue = watch(fieldName)
 
-          // For fixed tables, preserve the pre-filled select value if it's empty in form
+          // For fixed tables, preserve the pre-filled select value which won't be updated manually
           if (isFixedTable && questionIndex === 0 && (!currentValue || currentValue === '')) {
-            // Keep the original pre-filled value
-            const emissionFactorLabels = Object.keys(emissionFactorInfo?.emissionFactors || {})
-            if (emissionFactorLabels[rowIndex]) {
-              updatedData[question.idIntern] = emissionFactorLabels[rowIndex]
+            const selectQuestion = questions.find((q) => q.type === QuestionType.SELECT)
+            if (selectQuestion && selectQuestion.possibleAnswers && selectQuestion.possibleAnswers[rowIndex]) {
+              updatedData[question.idIntern] = selectQuestion.possibleAnswers[rowIndex]
             }
           } else if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
             updatedData[question.idIntern] = String(currentValue)
@@ -77,7 +76,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
       }),
     }
     return updatedTableAnswer
-  }, [tableAnswer, questions, watch, isFixedTable, emissionFactorInfo?.emissionFactors])
+  }, [tableAnswer, questions, watch, isFixedTable])
 
   // Handle field changes for fixed tables to ensure pre-filled values are saved
   const handleTableFieldBlur = useCallback(() => {
@@ -194,12 +193,15 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     }
 
     if (existingTableAnswer.rows.length === 0) {
-      if (isFixedTable && emissionFactorInfo?.emissionFactors) {
-        // Create fixed rows based on emission factors
-        const fixedRows = Object.keys(emissionFactorInfo.emissionFactors).map((emissionFactorLabel) =>
-          createFixedTableRow(questions, emissionFactorLabel),
-        )
-        existingTableAnswer = { rows: fixedRows }
+      if (isFixedTable) {
+        // Create fixed rows based on first select question's possible answers
+        const firstSelectQuestion = questions.find((q) => q.type === QuestionType.SELECT)
+        if (firstSelectQuestion && firstSelectQuestion.possibleAnswers) {
+          const fixedRows = firstSelectQuestion.possibleAnswers.map((possibleAnswer) =>
+            createFixedTableRow(questions, possibleAnswer),
+          )
+          existingTableAnswer = { rows: fixedRows }
+        }
       } else {
         existingTableAnswer = addTableRow(existingTableAnswer, questions)
       }
@@ -208,15 +210,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     setTableAnswer(existingTableAnswer)
 
     populateFormFields(existingTableAnswer)
-  }, [
-    questions,
-    question.id,
-    question.type,
-    autoSave.studySiteId,
-    populateFormFields,
-    isFixedTable,
-    emissionFactorInfo?.emissionFactors,
-  ])
+  }, [questions, question.id, question.type, autoSave.studySiteId, populateFormFields, isFixedTable])
 
   const handleAddRow = useCallback(() => {
     const updatedTableAnswer = syncAllValuesToTableData()
