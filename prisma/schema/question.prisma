@@ -40,12 +40,27 @@ model Answer {
   question   Question @relation(fields: [questionId], references: [id])
   questionId String   @map("question_id")
 
-  emissionSourceId String?              @map("emission_source_id")
-  emissionSource   StudyEmissionSource? @relation(fields: [emissionSourceId], references: [id])
+  emissionSources AnswerEmissionSource[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@unique([questionId, studySiteId])
   @@map("answers")
+}
+
+model AnswerEmissionSource {
+  id               String              @id @default(uuid())
+  answer           Answer              @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  answerId         String              @map("answer_id")
+  emissionSource   StudyEmissionSource @relation(fields: [emissionSourceId], references: [id], onDelete: Cascade)
+  emissionSourceId String              @map("emission_source_id")
+
+  rowId        String? @map("row_id")        // "row-1751892643065-t7uker0u0" - unique row identifier
+  emissionType String? @map("emission_type") // "meal", "transport", etc. - emission source type within row
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([answerId, rowId, emissionType]) // One emission source per row per type
+  @@map("answer_emission_sources")
 }

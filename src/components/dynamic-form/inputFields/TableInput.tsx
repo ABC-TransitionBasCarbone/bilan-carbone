@@ -1,33 +1,33 @@
-// WIP DO NOT USE YET
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { getQuestionsFromIdIntern } from '@/services/serverFunctions/question'
+import {
+  getAnswerByQuestionIdAndStudySiteId,
+  getParentTableQuestion,
+  getQuestionsFromIdIntern,
+} from '@/services/serverFunctions/question'
+import { addTableRow, deleteTableRow, isTableAnswer } from '@/utils/tableInput'
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Prisma, QuestionType } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Control, FieldErrors, UseFormWatch } from 'react-hook-form'
-import { v4 as uuidv4 } from 'uuid'
+import { Control, FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import Button from '../../base/Button'
 import FieldComponent from '../FieldComponent'
 import { getQuestionFieldType } from '../services/questionService'
-import { BaseInputProps, FormValues } from '../types/formTypes'
+import { BaseInputProps, FormValues, TableAnswer, TableRow as TableRowData } from '../types/formTypes'
 
 interface Props extends Omit<BaseInputProps, 'value' | 'onChange' | 'onBlur'> {
   control: Control<FormValues>
   autoSave: UseAutoSaveReturn
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
+  setValue: UseFormSetValue<FormValues>
 }
 
-type TableRow = Record<string, string> & { id: string; index: string }
-
-const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) => {
+const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }: Props) => {
   const [questions, setQuestions] = useState<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]>([])
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
-  const [currentAnswers, setCurrentAnswers] = useState<Record<string, string>[]>([])
-  const { callServerFunction } = useServerFunction()
+  const [tableAnswer, setTableAnswer] = useState<TableAnswer>({ rows: [] })
 
   const getQuestions = async () => {
     const res = await getQuestionsFromIdIntern(question.idIntern)
@@ -36,74 +36,137 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
     }
   }
 
-  /**
-   * TODO : La suppression en base fonctionne mais la suppression de ligne à un bug. Peux importe quel ligne on supprime
-   * visuellement c’est la dernière ligne qui sera supprimé même si en base, ce sont bien les bonnes données qui sont supprimer
-   */
-  // const handleDelete = async (row: TableRow) => {
-  //   const result = await callServerFunction(() => deleteAnswerKeysFromRow(question.idIntern, row.index))
-  //   if (result.success) {
-  //     setCurrentAnswers((prevAnswers) => prevAnswers.filter((answerRow) => answerRow.id !== row.id))
-  //   }
-  // }
+  const handleDeleteRow = useCallback(
+    async (rowId: string) => {
+      const newTableAnswer = deleteTableRow(tableAnswer, rowId)
+      setTableAnswer(newTableAnswer)
+      autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
+    },
+    [tableAnswer, autoSave, question],
+  )
 
-  const columns = useMemo<ColumnDef<Record<string, string>>[]>(() => {
+  const columns = useMemo<ColumnDef<TableRowData>[]>(() => {
     const col = questions.map((question) => ({
       id: question.idIntern,
       header: question.label,
       accessorKey: question.idIntern,
       cell: ({ row }) => {
         const fieldType = getQuestionFieldType(question.type, question.unit)
+        const tableRow = row.original as TableRowData
         return (
           <FieldComponent
             autoSave={autoSave}
-            fieldName={`${question.idIntern}-${row.index}`}
+            fieldName={`${question.idIntern}-${tableRow.id}`}
             fieldType={fieldType}
             question={question}
-            key={`${question.idIntern}-${row.index}`}
+            key={`${question.idIntern}-${tableRow.id}`}
             watch={watch}
             formErrors={formErrors}
             control={control}
+            setValue={setValue}
           />
         )
       },
-    })) as ColumnDef<Record<string, string>>[]
+    })) as ColumnDef<TableRowData>[]
 
-    /**
-     * TODO : À remettre pour faire apparaitre le button de suppression
-     */
-    // col.push({
-    //   id: 'delete',
-    //   header: tCutQuestions('actions'),
-    //   accessorKey: 'id',
-    //   cell: ({ row }) => {
-    //     const tableRow = row.original as TableRow
-    //     return (
-    //       <Box>
-    //         <Button
-    //           title={tCutQuestions('delete')}
-    //           aria-label="delete"
-    //           color="error"
-    //           onClick={() => handleDelete(tableRow)}
-    //         >
-    //           <DeleteIcon />
-    //         </Button>
-    //       </Box>
-    //     )
-    //   },
-    // })
+    col.push({
+      id: 'delete',
+      header: tCutQuestions('actions'),
+      accessorKey: 'id',
+      cell: ({ row }) => {
+        const tableRow = row.original as TableRowData
+        return (
+          <Box>
+            <Button
+              title={tCutQuestions('delete')}
+              aria-label="delete"
+              color="error"
+              onClick={() => handleDeleteRow(tableRow.id)}
+            >
+              Delete
+            </Button>
+          </Box>
+        )
+      },
+    })
 
     return col
-  }, [questions, tCutQuestions, autoSave, formErrors, control])
+  }, [questions, tCutQuestions, autoSave, watch, formErrors, control, handleDeleteRow, setValue])
 
-  const newRow = useCallback((index: number) => {
-    const row = {
-      id: uuidv4(),
-      index: index.toString(),
-      ...Object.fromEntries(questions.map((question) => [question.idIntern, index])),
-    } as TableRow
-    return row
-  }, [])
+  const populateFormFields = useCallback(
+    (tableAnswer: TableAnswer) => {
+      tableAnswer.rows.forEach((row) => {
+        questions.forEach((question) => {
+          const fieldName = `${question.idIntern}-${row.id}`
+          const value = row.data[question.idIntern] || ''
+          setValue(fieldName, value)
+        })
+      })
+    },
+    [questions, setValue],
+  )
+
+  const loadTableData = useCallback(async () => {
+    if (questions.length === 0) {
+      return
+    }
+
+    let existingTableAnswer: TableAnswer = { rows: [] }
+
+    try {
+      let tableQuestionId = question.id
+
+      if (question.type !== QuestionType.TABLE) {
+        const parentTableResponse = await getParentTableQuestion(question.id)
+        if (parentTableResponse.success) {
+          tableQuestionId = parentTableResponse.data.id
+        }
+      }
+
+      const response = await getAnswerByQuestionIdAndStudySiteId(tableQuestionId, autoSave.studySiteId)
+
+      if (response.success && response.data && response.data.response && isTableAnswer(response.data.response)) {
+        existingTableAnswer = response.data.response
+      }
+    } catch (error) {
+      console.error('Failed to load table data:', error)
+    }
+
+    if (existingTableAnswer.rows.length === 0) {
+      existingTableAnswer = addTableRow(existingTableAnswer, questions)
+    }
+
+    setTableAnswer(existingTableAnswer)
+
+    populateFormFields(existingTableAnswer)
+  }, [questions, question.id, question.type, autoSave.studySiteId, populateFormFields])
+
+  const handleAddRow = useCallback(() => {
+    const updatedTableAnswer = {
+      ...tableAnswer,
+      rows: tableAnswer.rows.map((row) => {
+        const updatedData = { ...row.data }
+        questions.forEach((question) => {
+          const fieldName = `${question.idIntern}-${row.id}`
+          const currentValue = watch(fieldName)
+          if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
+            updatedData[question.idIntern] = String(currentValue)
+          }
+        })
+        return {
+          ...row,
+          data: updatedData,
+        }
+      }),
+    }
+
+    const newTableAnswer = addTableRow(updatedTableAnswer, questions)
+    setTableAnswer(newTableAnswer)
+
+    populateFormFields(newTableAnswer)
+
+    autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
+  }, [tableAnswer, questions, autoSave, question, populateFormFields, watch])
 
   useEffect(() => {
     getQuestions()
@@ -111,34 +174,14 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
   }, [question.idIntern])
 
   useEffect(() => {
-    if (questions.length !== 0) {
-      const lengths = questions.flatMap(({ userAnswers }) => {
-        return userAnswers.map(({ response }) => {
-          if (typeof response === 'object' && response !== null && !Array.isArray(response)) {
-            return Object.keys(response).length
-          }
-          return 0
-        })
-      })
-
-      const maxLength = Math.max(0, ...lengths)
-
-      const current = []
-      if (maxLength !== 0) {
-        for (let i = 0; i <= maxLength; i++) {
-          current.push(newRow(i))
-        }
-      } else {
-        current.push(newRow(currentAnswers.length + 1))
-      }
-
-      setCurrentAnswers(current)
+    if (questions.length > 0) {
+      loadTableData()
     }
-  }, [questions])
+  }, [questions.length, loadTableData])
 
-  const table = useReactTable<Record<string, string>>({
+  const table = useReactTable<TableRowData>({
     columns,
-    data: currentAnswers,
+    data: tableAnswer.rows,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (row) => {
       return row.id
@@ -147,10 +190,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors }: Props) =
 
   return (
     <Box>
-      <Button
-        className="align"
-        onClick={() => setCurrentAnswers((prev) => [...prev, newRow(currentAnswers.length + 1)])}
-      >
+      <Button className="align" onClick={handleAddRow}>
         {tCutQuestions('add')}
       </Button>
       <TableContainer component={Paper} className="mt1">

@@ -14,6 +14,7 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
     control,
     formState: { errors, touchedFields },
     watch,
+    setValue,
   } = useDynamicForm(questions, initialAnswers)
 
   const autoSave = useAutoSave(studyId, studySiteId)
@@ -57,6 +58,7 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
             autoSave={autoSave}
             watch={watch}
             formErrors={errors}
+            setValue={setValue}
           />
         ))}
       </Box>
