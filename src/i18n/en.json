@@ -559,7 +559,6 @@
       "activityDataValue": "Activity data value",
       "date": "Deadline",
       "download": "Download emission sources",
-      "downloadSubPost": "Download {name} emission sources",
       "emissionName": "Emission factor (EF) name",
       "emissionQuality": "EF quality",
       "emissionSource": "EF source",
