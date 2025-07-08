@@ -7,7 +7,6 @@ import { downloadStudyResults } from '@/services/study'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { ControlMode, Environment, Export, ExportRule } from '@prisma/client'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
@@ -16,7 +15,6 @@ import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
 import DependenciesSwitch from './DependenciesSwitch'
-import styles from './ResultsTables.module.css'
 
 interface Props {
   study: FullStudy
@@ -45,7 +43,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
 
   return (
     <Block title={tStudyNav('results')} as="h1">
-      <div className={classNames(styles.select, 'flex')}>
+      <div className="flex gapped1 mb2">
         <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
         <FormControl>
           <InputLabel id="result-type-selector-label">{t('type')}</InputLabel>
