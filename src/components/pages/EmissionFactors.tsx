@@ -1,17 +1,21 @@
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { Suspense } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
+import withAuth from '../hoc/withAuth'
 
 interface Props {
   userOrganizationId?: string
   manualOnly: boolean
+  user: UserSession
 }
 
-const EmissionFactorsPage = ({ userOrganizationId, manualOnly }: Props) => {
+const EmissionFactorsPage = ({ userOrganizationId, manualOnly, user }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors')
+
   return (
     <>
       <Breadcrumbs current={tNav('emissionFactors')} links={[{ label: tNav('home'), link: '/' }]} />
@@ -32,11 +36,11 @@ const EmissionFactorsPage = ({ userOrganizationId, manualOnly }: Props) => {
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors userOrganizationId={userOrganizationId} manualOnly={manualOnly} />
+          <EmissionFactors userOrganizationId={userOrganizationId} manualOnly={manualOnly} user={user} />
         </Suspense>
       </Block>
     </>
   )
 }
 
-export default EmissionFactorsPage
+export default withAuth(EmissionFactorsPage)

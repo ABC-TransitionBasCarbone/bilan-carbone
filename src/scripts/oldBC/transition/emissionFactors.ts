@@ -21,7 +21,7 @@ export const uploadEmissionFactors = async (
   console.log("Import des facteurs d'émissions...")
   const ids = emissionFactorsWorksheet.getRows().map((row) => row.EFV_GUID as string)
   const existingEmissionFactors = await transaction.emissionFactor.findMany({
-    where: { oldBCId: { in: ids } },
+    where: { oldBCId: { in: ids }, organizationId: organizationVersion.organizationId },
   })
 
   if (existingEmissionFactors.length > 0) {
@@ -154,7 +154,7 @@ export const uploadEmissionFactors = async (
   })
 
   if (inconsistentGuids.length > 0) {
-    console.log(`${inconsistentGuids.length} facteurs d'émissions avec des parties incohérentes, donc ignorées`)
+    throw new Error(`${inconsistentGuids.length} facteurs d'émissions avec des parties incohérentes, donc ignorées`)
   }
 
   const filteredEmissionFactorPartsToCreate = emissionFactorPartsToCreate

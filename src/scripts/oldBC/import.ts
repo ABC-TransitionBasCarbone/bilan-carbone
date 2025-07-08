@@ -10,8 +10,9 @@ program
   .requiredOption('-f, --file <value>', 'Import from XLSX file')
   .requiredOption('-e, --email <value>', 'User email')
   .requiredOption('-o, --organization-version <value>', 'User organization version ID')
+  .option('-s, --skip', 'do not import, only validate the file')
   .parse(process.argv)
 
 const params = program.opts()
 
-uploadOldBCInformations(params.file, params.email.toLowerCase(), params.organizationVersion)
+uploadOldBCInformations(params.file, params.email.toLowerCase(), params.organizationVersion, params.skip)
