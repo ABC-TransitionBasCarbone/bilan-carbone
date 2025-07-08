@@ -63,7 +63,7 @@
     "new": {
       "studyDates": "Année de référence de l’Empreinte",
       "suggestion": {
-        "name": "Empreinte - \"Nom du cinéma\", \"Date de début de la référence du bilan\""
+        "name": "Empreinte - \"UGC Odéon\", \"{studyStartDate}\""
       },
       "info": {
         "date": "Les estimations sont généralement faites sur une période de 12 mois"

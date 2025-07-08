@@ -1,7 +1,7 @@
 'use client'
 
 import { TeamMember } from '@/db/account'
-import { UserStatus } from '@prisma/client'
+import { Environment, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
@@ -24,7 +24,7 @@ const TeamPage = ({ user, team, crOrga = false }: Props) => {
   return (
     <SessionProvider>
       <Breadcrumbs current={tNav('team')} links={[{ label: tNav('home'), link: '/' }]} />
-      <Block title={t('title')} as="h1" />
+      {user.environment !== Environment.CUT && <Block title={t('title')} as="h1" />}
       <InvitationsToValidate
         usersToValidate={team.filter((member) => member.status === UserStatus.PENDING_REQUEST)}
         user={user}

@@ -70,7 +70,16 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, isCut = false,
           translation={t}
           name="name"
           label={t('name')}
-          placeholder={isCut ? tStudyNewSuggestion('name') : ''}
+          placeholder={
+            isCut
+              ? tStudyNewSuggestion
+                  .rich('name', {
+                    studyStartDate: new Date().getFullYear(),
+                    data: (children) => children,
+                  })
+                  ?.toLocaleString()
+              : ''
+          }
         />
         <div>
           <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
