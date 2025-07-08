@@ -3,6 +3,7 @@ export type EmissionFactorInfo = {
   depreciationPeriod?: number
   linkQuestionId?: string
   emissionFactors?: Record<string, string>
+  isFixed?: boolean
 }
 
 export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
@@ -108,47 +109,19 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // ActivitesDeBureau
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
   'quel-montant-avez-vous-depense-en-services': { emissionFactorImportedId: '43545' },
-  'ordinateurs-fixes-nombre-unite': {
-    emissionFactorImportedId: '27003',
-    linkQuestionId: 'ordinateurs-fixes-annee-ou-nombre-jours',
-  },
-  'ordinateurs-fixes-annee-ou-nombre-jours': {
+  '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
+    isFixed: true,
     depreciationPeriod: 4,
-    linkQuestionId: 'ordinateurs-fixes-nombre-unite',
+    emissionFactors: {
+      'Ordinateurs fixes': '27003',
+      'Ordinateurs portables': '27002',
+      Photocopieurs: '20591',
+      Imprimantes: '27027',
+      'Téléphones fixes': '20614',
+      'Téléphones portables': '27010',
+      Tablettes: '27007',
+    },
   },
-  'ordinateurs-portables-nombre-unite': {
-    emissionFactorImportedId: '27002',
-    linkQuestionId: 'ordinateurs-portables-annee-ou-nombre-jours',
-  },
-  'ordinateurs-portables-annee-ou-nombre-jours': {
-    depreciationPeriod: 4,
-    linkQuestionId: 'ordinateurs-portables-nombre-unite',
-  },
-  'photocopieurs-nombre-unite': {
-    emissionFactorImportedId: '20591',
-    linkQuestionId: 'photocopieurs-annee-ou-nombre-jours',
-  },
-  'photocopieurs-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'photocopieurs-nombre-unite' },
-  'imprimantes-nombre-unite': {
-    emissionFactorImportedId: '27027',
-    linkQuestionId: 'imprimantes-annee-ou-nombre-jours',
-  },
-  'imprimantes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'imprimantes-nombre-unite' },
-  'telephones-fixes-nombre-unite': {
-    emissionFactorImportedId: '20614',
-    linkQuestionId: 'telephones-fixes-annee-ou-nombre-jours',
-  },
-  'telephones-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'telephones-fixes-nombre-unite' },
-  'telephones-portables-nombre-unite': {
-    emissionFactorImportedId: '27010',
-    linkQuestionId: 'telephones-portables-annee-ou-nombre-jours',
-  },
-  'telephones-portables-annee-ou-nombre-jours': {
-    depreciationPeriod: 4,
-    linkQuestionId: 'telephones-portables-nombre-unite',
-  },
-  'tablettes-nombre-unite': { emissionFactorImportedId: '27007', linkQuestionId: 'tablettes-annee-ou-nombre-jours' },
-  'tablettes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'tablettes-nombre-unite' },
   // Mobilité spectateurs
   'avez-vous-deja-realise-une-enquete-mobilite-specteurs': {},
   /** TODO: Liste 1  - attente de la fonctionnalité liste */
@@ -227,81 +200,48 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // Fret
   'quelle-est-la-distance-entre-votre-cinema-et-votre-principal-fournisseur': { emissionFactorImportedId: '28026' },
   // Electromenager
-  '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26976',
-    linkQuestionId: '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+  '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    isFixed: true,
+    emissionFactors: {
+      Réfrigérateurs: '26976',
+      Congélateurs: '26978',
+      Warmers: '26986',
+      'Distributeurs snacks / boisson': '26976',
+    },
     depreciationPeriod: 5,
-    linkQuestionId: '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26978',
-    linkQuestionId: '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26986',
-    linkQuestionId: '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26976',
-    linkQuestionId: '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   // DechetsOrdinaires
-  '111-veuillez-renseigner-les-dechets-generes-par-semaine': {
-    linkQuestionId: '112-veuillez-renseigner-les-dechets-generes-par-semaine',
-  }, // Nombre des bennes
-  '112-veuillez-renseigner-les-dechets-generes-par-semaine': {
-    linkQuestionId: '113-veuillez-renseigner-les-dechets-generes-par-semaine',
-  }, // Taille des bennes
-  '113-veuillez-renseigner-les-dechets-generes-par-semaine': {
-    emissionFactorImportedId: '34654',
-    linkQuestionId: '111-veuillez-renseigner-les-dechets-generes-par-semaine',
-  }, // Fréquence de ramassage (par semaine) Ordures ménagères
-  '121-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
-  '122-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Taille des bennes
-  '123-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34486' }, // Fréquence de ramassage (par semaine) Emballages et papier
-  '131-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
-  '132-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Taille des bennes
-  '133-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '22040' }, // Fréquence de ramassage (par semaine) Biodéchets
+  '10-veuillez-renseigner-les-dechets-generes-par-semaine': {
+    isFixed: true,
+    emissionFactors: {
+      'Ordures ménagères (déchets non triés / sans filière)': '34654',
+      'Emballages et papier (plastique, métal, papier et carton)': '34486',
+      'Biodéchets (restes alimentaires)': '22040',
+    },
+  },
   // DechetsExceptionnels
   'quelle-quantite-de-materiel-technique-jetez-vous-par-an': { emissionFactorImportedId: '34620' },
   'quelle-quantite-de-lampes-xenon-jetez-vous-par-an': { emissionFactorImportedId: '107' },
   // MaterielDistributeurs
-  '11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '125',
-  },
-  '12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '126',
-  },
-  '13-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '127',
-  },
-  '14-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '128',
-  },
-  '15-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '129',
-  },
-  '16-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '130',
+  '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
+    isFixed: true,
+    emissionFactors: {
+      'Affiches 120x160': '125',
+      'Affiches 40x60': '126',
+      'PLV comptoir': '127',
+      'PLV grand format': '128',
+      Goodies: '129',
+    },
   },
   // MaterielCinema
-  '11-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '130' },
-  '12-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '126' },
-  '13-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '133' },
+  '10-quelle-quantite-de-materiel-produisez-vous-chaque-mois': {
+    isFixed: true,
+    emissionFactors: {
+      Programme: '130',
+      Affiches: '126',
+      Flyers: '133',
+    },
+  },
   // CommunicationDigitale
   'combien-de-newsletters-ont-ete-envoyees': { emissionFactorImportedId: '120' },
   'combien-de-caissons-d-affichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '121' },

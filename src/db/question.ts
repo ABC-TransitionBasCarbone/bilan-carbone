@@ -118,6 +118,9 @@ export const getQuestionsByIdIntern = async (
     include: {
       userAnswers: true,
     },
+    orderBy: {
+      order: 'asc',
+    },
   })
 }
 

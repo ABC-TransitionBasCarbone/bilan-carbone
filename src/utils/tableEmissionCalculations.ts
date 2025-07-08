@@ -205,21 +205,109 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
   },
 }
 
+const calculateEmissionSourcesDepreciation = async (
+  study: FullStudy,
+  questionIdIntern: string,
+  equipmentType: string,
+  quantity: number,
+  purchaseYear: number,
+): Promise<TableEmissionCalculationResult> => {
+  if (!equipmentType || !purchaseYear) {
+    return {
+      emissionSources: [],
+    }
+  }
+
+  const emissionSources: EmissionSourceCalculation[] = []
+  const emissionFactorInfo = emissionFactorMap[questionIdIntern]
+  const emissionFactorId = emissionFactorInfo?.emissionFactors?.[equipmentType]
+  const depreciationPeriod = emissionFactorInfo?.depreciationPeriod
+
+  if (!emissionFactorId || !depreciationPeriod) {
+    return {
+      emissionSources: [],
+    }
+  }
+
+  if (emissionFactorId) {
+    const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+      emissionFactorId,
+      study.emissionFactorVersions.map((v) => v.importVersionId),
+    )
+
+    if (emissionFactor) {
+      const currentYear = new Date().getFullYear()
+      const yearCount = currentYear - purchaseYear
+
+      // Calculate cumulative depreciation factor: each year adds 1/depreciationPeriod more
+      // Year 1: 1/5, Year 2: 2/5, Year 3: 3/5, Year 4: 4/5, Year 5: 5/5, Year 6+: 5/5
+      let depreciationFactor = 0
+      if (yearCount < depreciationPeriod) {
+        depreciationFactor = (yearCount + 1) / depreciationPeriod
+      } else {
+        depreciationFactor = 1
+      }
+
+      const finalValue = quantity * depreciationFactor
+
+      emissionSources.push({
+        name: equipmentType.toLowerCase().replace(/[\s/]+/g, '_'),
+        value: finalValue,
+        emissionFactorId: emissionFactor.id,
+      })
+    }
+  }
+
+  return {
+    emissionSources,
+  }
+}
+
+const calculateElectromenager: TableEmissionCalculator = {
+  calculate: async (row, study) => {
+    const equipmentType = row.data['11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || ''
+    const quantity = parseInt(row.data['12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || '0')
+    const purchaseYear = parseInt(
+      row.data['13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || '0',
+    )
+
+    return calculateEmissionSourcesDepreciation(
+      study,
+      '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
+      equipmentType,
+      quantity,
+      purchaseYear,
+    )
+  },
+}
+
+const calculateInformatique: TableEmissionCalculator = {
+  calculate: async (row, study) => {
+    const equipmentType = row.data['11-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || ''
+    const quantity = parseInt(row.data['12-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || '0')
+    const purchaseYear = parseInt(row.data['13-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer'] || '0')
+
+    return calculateEmissionSourcesDepreciation(
+      study,
+      '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer',
+      equipmentType,
+      quantity,
+      purchaseYear,
+    )
+  },
+}
+
 const tableEmissionCalculators: Record<string, TableEmissionCalculator> = {
   '10-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': calculateWorkRhythm,
   '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': calculateProfessionalTravel,
+  '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': calculateElectromenager,
+  '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': calculateInformatique,
 }
 
-/**
- * Check if a table question has a specific emission calculator
- */
 export const hasTableEmissionCalculator = (questionIdIntern: string): boolean => {
   return questionIdIntern in tableEmissionCalculators
 }
 
-/**
- * Calculate emissions for a table question
- */
 export const calculateTableEmissions = async (
   question: Question,
   tableAnswer: TableAnswer,
@@ -228,7 +316,6 @@ export const calculateTableEmissions = async (
   const calculator = tableEmissionCalculators[question.idIntern]
 
   if (!calculator) {
-    // No specific calculator found, return empty results
     return []
   }
 

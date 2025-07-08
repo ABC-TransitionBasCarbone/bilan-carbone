@@ -1,8 +1,5 @@
 import { TableAnswer, TableRow } from '@/components/dynamic-form/types/formTypes'
 
-/**
- * Check if an answer response is in table format
- */
 export const isTableAnswer = (response: unknown): response is TableAnswer => {
   return (
     typeof response === 'object' &&
@@ -13,22 +10,41 @@ export const isTableAnswer = (response: unknown): response is TableAnswer => {
   )
 }
 
-/**
- * Generate a unique row ID that doesn't conflict with existing ones
- */
 const generateUniqueRowId = (): string => {
   return `row-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
 }
 
-/**
- * Create a new empty table row
- */
 export const createNewTableRow = (questionColumns: Array<{ id: string; idIntern: string }>): TableRow => {
   const data: Record<string, string> = {}
 
   // Initialize empty values for each column
   for (const question of questionColumns) {
     data[question.idIntern] = ''
+  }
+
+  return {
+    id: generateUniqueRowId(),
+    data,
+  }
+}
+
+/**
+ * Create a fixed table row with pre-filled emission factor
+ */
+export const createFixedTableRow = (
+  questionColumns: Array<{ id: string; idIntern: string }>,
+  emissionFactorLabel: string,
+): TableRow => {
+  const data: Record<string, string> = {}
+
+  for (const question of questionColumns) {
+    data[question.idIntern] = ''
+  }
+
+  // Pre-fill the first select field with the emission factor label
+  // This assumes the first column is the select field for the emission factor type
+  if (questionColumns.length > 0) {
+    data[questionColumns[0].idIntern] = emissionFactorLabel
   }
 
   return {

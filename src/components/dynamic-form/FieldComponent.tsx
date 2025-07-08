@@ -29,6 +29,8 @@ interface Props {
   question: Question
   error?: FieldError
   isLoading?: boolean
+  disabled?: boolean
+  onCustomBlur?: () => void
   control: Control<FormValues>
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
@@ -42,6 +44,8 @@ const FieldComponent = ({
   control,
   error,
   isLoading,
+  disabled,
+  onCustomBlur,
   watch,
   formErrors,
   autoSave,
@@ -152,9 +156,9 @@ const FieldComponent = ({
       question,
       label,
       errorMessage: error?.message ? tValidation(error.message) : undefined,
-      disabled: isLoading,
+      disabled: isLoading || disabled,
     }
-  }, [question, tValidation, error?.message, isLoading, tFormat])
+  }, [question, tValidation, error?.message, isLoading, disabled, tFormat])
 
   const renderField = useMemo(() => {
     const getInputComponent = () => {
@@ -206,6 +210,9 @@ const FieldComponent = ({
             onBlur()
             if (isSavingOnBlur) {
               handleBlur()
+            }
+            if (onCustomBlur) {
+              onCustomBlur()
             }
           }
 

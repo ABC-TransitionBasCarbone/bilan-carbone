@@ -63,6 +63,10 @@ const handleTableEmissionSources = async (
       const result = calculationResults[arrayIndex]
 
       if (!result || result.emissionSources.length === 0) {
+        // Clean up any existing emission sources for this row when data becomes invalid
+        if (existingAnswer) {
+          await deleteAnswerEmissionSourcesForRow(existingAnswer.id, row.id)
+        }
         continue
       }
 
@@ -224,6 +228,8 @@ export const saveAnswerForQuestion = async (
       if (hasTableEmissionCalculator(question.idIntern) && savedAnswer) {
         const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
 
+        let emissionSourceIdIndex = 0
+
         for (let arrayIndex = 0; arrayIndex < tableAnswer.rows.length; arrayIndex++) {
           const row = tableAnswer.rows[arrayIndex]
           const result = calculationResults[arrayIndex]
@@ -234,7 +240,9 @@ export const saveAnswerForQuestion = async (
 
           for (let emissionIndex = 0; emissionIndex < result.emissionSources.length; emissionIndex++) {
             const emissionSource = result.emissionSources[emissionIndex]
-            const emissionSourceId = emissionSourceIds[arrayIndex * result.emissionSources.length + emissionIndex]
+            const emissionSourceId = emissionSourceIds[emissionSourceIdIndex]
+
+            emissionSourceIdIndex++
 
             if (emissionSourceId) {
               await upsertAnswerEmissionSource(savedAnswer.id, row.id, emissionSource.name, emissionSourceId)
