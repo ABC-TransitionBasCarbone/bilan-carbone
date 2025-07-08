@@ -3,6 +3,7 @@ export type EmissionFactorInfo = {
   depreciationPeriod?: number
   linkQuestionId?: string
   emissionFactors?: Record<string, string>
+  isFixed?: boolean
 }
 
 export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
@@ -227,37 +228,15 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // Fret
   'quelle-est-la-distance-entre-votre-cinema-et-votre-principal-fournisseur': { emissionFactorImportedId: '28026' },
   // Electromenager
-  '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26976',
-    linkQuestionId: '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+  '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
+    isFixed: true,
+    emissionFactors: {
+      Réfrigérateurs: '26976',
+      Congélateurs: '26978',
+      Warmers: '26986',
+      'Distributeurs snacks / boisson': '26976',
+    },
     depreciationPeriod: 5,
-    linkQuestionId: '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26978',
-    linkQuestionId: '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26986',
-    linkQuestionId: '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26976',
-    linkQuestionId: '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
   },
   // DechetsOrdinaires
   '111-veuillez-renseigner-les-dechets-generes-par-semaine': {

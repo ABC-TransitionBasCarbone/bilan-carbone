@@ -205,9 +205,69 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
   },
 }
 
+/**
+ * Calculator for question: 10-Pour chacun de ces équipements électroménagers, veuillez renseigner
+ * Formula:
+ * - Fixed table with emission factor per appliance type
+ * - Depreciation logic: if purchase year < 5 years ago: divide by 5, if rented: multiply by (rental days/365) / 5
+ */
+const calculateElectromenager: TableEmissionCalculator = {
+  calculate: async (row, study) => {
+    const applianceType = row.data['11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || ''
+    const quantity = parseInt(row.data['12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || '0')
+    const purchaseYear = parseInt(
+      row.data['13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner'] || '0',
+    )
+
+    if (!applianceType || !quantity || quantity <= 0 || !purchaseYear) {
+      return {
+        emissionSources: [],
+      }
+    }
+
+    const emissionSources: EmissionSourceCalculation[] = []
+
+    const emissionFactorInfo =
+      emissionFactorMap['10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner']
+    const emissionFactorId = emissionFactorInfo?.emissionFactors?.[applianceType]
+
+    if (emissionFactorId) {
+      const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+        emissionFactorId,
+        study.emissionFactorVersions.map((v) => v.importVersionId),
+      )
+
+      if (emissionFactor) {
+        const currentYear = new Date().getFullYear()
+        const yearCount = currentYear - purchaseYear
+        const depreciationPeriod = emissionFactorInfo?.depreciationPeriod || 5
+
+        // TODO: Confirm that this is the expected behavior
+        let depreciationFactor = 0
+        if (yearCount < depreciationPeriod) {
+          depreciationFactor = 1
+        }
+
+        const finalValue = quantity * depreciationFactor
+
+        emissionSources.push({
+          name: applianceType.toLowerCase().replace(/\s+/g, '_'),
+          value: finalValue,
+          emissionFactorId: emissionFactor.id,
+        })
+      }
+    }
+
+    return {
+      emissionSources,
+    }
+  },
+}
+
 const tableEmissionCalculators: Record<string, TableEmissionCalculator> = {
   '10-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': calculateWorkRhythm,
   '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': calculateProfessionalTravel,
+  '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': calculateElectromenager,
 }
 
 /**

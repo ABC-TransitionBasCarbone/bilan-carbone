@@ -1,10 +1,11 @@
+import { emissionFactorMap } from '@/constants/emissionFactorMap'
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
 import {
   getAnswerByQuestionIdAndStudySiteId,
   getParentTableQuestion,
   getQuestionsFromIdIntern,
 } from '@/services/serverFunctions/question'
-import { addTableRow, deleteTableRow, isTableAnswer } from '@/utils/tableInput'
+import { addTableRow, createFixedTableRow, deleteTableRow, isTableAnswer } from '@/utils/tableInput'
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Prisma, QuestionType } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
@@ -29,6 +30,9 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
   const [tableAnswer, setTableAnswer] = useState<TableAnswer>({ rows: [] })
 
+  const emissionFactorInfo = emissionFactorMap[question.idIntern]
+  const isFixedTable = emissionFactorInfo?.isFixed && emissionFactorInfo?.emissionFactors
+
   const getQuestions = async () => {
     const res = await getQuestionsFromIdIntern(question.idIntern)
     if (res.success) {
@@ -45,14 +49,55 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     [tableAnswer, autoSave, question],
   )
 
+  // Helper function to sync all form values back to table data while preserving pre-filled values
+  const syncAllValuesToTableData = useCallback(() => {
+    const updatedTableAnswer = {
+      ...tableAnswer,
+      rows: tableAnswer.rows.map((row, rowIndex) => {
+        const updatedData = { ...row.data }
+        questions.forEach((question, questionIndex) => {
+          const fieldName = `${question.idIntern}-${row.id}`
+          const currentValue = watch(fieldName)
+
+          // For fixed tables, preserve the pre-filled select value if it's empty in form
+          if (isFixedTable && questionIndex === 0 && (!currentValue || currentValue === '')) {
+            // Keep the original pre-filled value
+            const emissionFactorLabels = Object.keys(emissionFactorInfo?.emissionFactors || {})
+            if (emissionFactorLabels[rowIndex]) {
+              updatedData[question.idIntern] = emissionFactorLabels[rowIndex]
+            }
+          } else if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
+            updatedData[question.idIntern] = String(currentValue)
+          }
+        })
+        return {
+          ...row,
+          data: updatedData,
+        }
+      }),
+    }
+    return updatedTableAnswer
+  }, [tableAnswer, questions, watch, isFixedTable, emissionFactorInfo?.emissionFactors])
+
+  // Handle field changes for fixed tables to ensure pre-filled values are saved
+  const handleTableFieldBlur = useCallback(() => {
+    if (isFixedTable) {
+      const updatedTableAnswer = syncAllValuesToTableData()
+      setTableAnswer(updatedTableAnswer)
+      autoSave.saveField(question, updatedTableAnswer as unknown as Prisma.InputJsonValue)
+    }
+  }, [isFixedTable, syncAllValuesToTableData, autoSave, question])
+
   const columns = useMemo<ColumnDef<TableRowData>[]>(() => {
-    const col = questions.map((question) => ({
+    const col = questions.map((question, questionIndex) => ({
       id: question.idIntern,
       header: question.label,
       accessorKey: question.idIntern,
       cell: ({ row }) => {
         const fieldType = getQuestionFieldType(question.type, question.unit)
         const tableRow = row.original as TableRowData
+        // For fixed tables, disable the first column (select field)
+        const isFirstColumnInFixedTable = isFixedTable && questionIndex === 0
         return (
           <FieldComponent
             autoSave={autoSave}
@@ -64,34 +109,50 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
             formErrors={formErrors}
             control={control}
             setValue={setValue}
+            disabled={isFirstColumnInFixedTable}
+            onCustomBlur={isFixedTable ? handleTableFieldBlur : undefined}
           />
         )
       },
     })) as ColumnDef<TableRowData>[]
 
-    col.push({
-      id: 'delete',
-      header: tCutQuestions('actions'),
-      accessorKey: 'id',
-      cell: ({ row }) => {
-        const tableRow = row.original as TableRowData
-        return (
-          <Box>
-            <Button
-              title={tCutQuestions('delete')}
-              aria-label="delete"
-              color="error"
-              onClick={() => handleDeleteRow(tableRow.id)}
-            >
-              Delete
-            </Button>
-          </Box>
-        )
-      },
-    })
+    // Only add delete column for non-fixed tables
+    if (!isFixedTable) {
+      col.push({
+        id: 'delete',
+        header: tCutQuestions('actions'),
+        accessorKey: 'id',
+        cell: ({ row }) => {
+          const tableRow = row.original as TableRowData
+          return (
+            <Box>
+              <Button
+                title={tCutQuestions('delete')}
+                aria-label="delete"
+                color="error"
+                onClick={() => handleDeleteRow(tableRow.id)}
+              >
+                Delete
+              </Button>
+            </Box>
+          )
+        },
+      })
+    }
 
     return col
-  }, [questions, tCutQuestions, autoSave, watch, formErrors, control, handleDeleteRow, setValue])
+  }, [
+    questions,
+    tCutQuestions,
+    autoSave,
+    watch,
+    formErrors,
+    control,
+    handleDeleteRow,
+    setValue,
+    isFixedTable,
+    handleTableFieldBlur,
+  ])
 
   const populateFormFields = useCallback(
     (tableAnswer: TableAnswer) => {
@@ -133,40 +194,39 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
     }
 
     if (existingTableAnswer.rows.length === 0) {
-      existingTableAnswer = addTableRow(existingTableAnswer, questions)
+      if (isFixedTable && emissionFactorInfo?.emissionFactors) {
+        // Create fixed rows based on emission factors
+        const fixedRows = Object.keys(emissionFactorInfo.emissionFactors).map((emissionFactorLabel) =>
+          createFixedTableRow(questions, emissionFactorLabel),
+        )
+        existingTableAnswer = { rows: fixedRows }
+      } else {
+        existingTableAnswer = addTableRow(existingTableAnswer, questions)
+      }
     }
 
     setTableAnswer(existingTableAnswer)
 
     populateFormFields(existingTableAnswer)
-  }, [questions, question.id, question.type, autoSave.studySiteId, populateFormFields])
+  }, [
+    questions,
+    question.id,
+    question.type,
+    autoSave.studySiteId,
+    populateFormFields,
+    isFixedTable,
+    emissionFactorInfo?.emissionFactors,
+  ])
 
   const handleAddRow = useCallback(() => {
-    const updatedTableAnswer = {
-      ...tableAnswer,
-      rows: tableAnswer.rows.map((row) => {
-        const updatedData = { ...row.data }
-        questions.forEach((question) => {
-          const fieldName = `${question.idIntern}-${row.id}`
-          const currentValue = watch(fieldName)
-          if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
-            updatedData[question.idIntern] = String(currentValue)
-          }
-        })
-        return {
-          ...row,
-          data: updatedData,
-        }
-      }),
-    }
-
+    const updatedTableAnswer = syncAllValuesToTableData()
     const newTableAnswer = addTableRow(updatedTableAnswer, questions)
     setTableAnswer(newTableAnswer)
 
     populateFormFields(newTableAnswer)
 
     autoSave.saveField(question, newTableAnswer as unknown as Prisma.InputJsonValue)
-  }, [tableAnswer, questions, autoSave, question, populateFormFields, watch])
+  }, [syncAllValuesToTableData, questions, autoSave, question, populateFormFields])
 
   useEffect(() => {
     getQuestions()
@@ -190,9 +250,11 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
 
   return (
     <Box>
-      <Button className="align" onClick={handleAddRow}>
-        {tCutQuestions('add')}
-      </Button>
+      {!isFixedTable && (
+        <Button className="align" onClick={handleAddRow}>
+          {tCutQuestions('add')}
+        </Button>
+      )}
       <TableContainer component={Paper} className="mt1">
         <Table>
           <TableHead>
