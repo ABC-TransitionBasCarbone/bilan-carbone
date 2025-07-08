@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import DownloadIcon from '@mui/icons-material/Download'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
+import { Environment } from '@prisma/client'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -71,28 +72,40 @@ const StudyDetailsHeader = ({ study, canDeleteStudy, studySite, setSite }: Props
       ]
     : []
 
+  const exportAction: BlockProps['actions'] =
+    study.organizationVersion.environment === Environment.BC
+      ? [
+          {
+            actionType: 'button',
+            onClick: () =>
+              downloadStudyEmissionSources(
+                study,
+                tStudyExport,
+                tCaracterisations,
+                tPost,
+                tQuality,
+                tUnit,
+                tResultUnits,
+              ),
+            disabled: study.emissionSources.length === 0,
+            variant: 'contained',
+            color: 'secondary',
+            children: (
+              <>
+                {tStudyExport('download')}
+                <DownloadIcon />
+              </>
+            ),
+          },
+        ]
+      : []
+
   return (
     <Block
       title={study.name}
       as="h1"
       icon={study.isPublic ? <LockOpenIcon /> : <LockIcon />}
-      actions={[
-        {
-          actionType: 'button',
-          onClick: () =>
-            downloadStudyEmissionSources(study, tStudyExport, tCaracterisations, tPost, tQuality, tUnit, tResultUnits),
-          disabled: study.emissionSources.length === 0,
-          variant: 'contained',
-          color: 'secondary',
-          children: (
-            <>
-              {tStudyExport('download')}
-              <DownloadIcon />
-            </>
-          ),
-        },
-        ...deleteAction,
-      ]}
+      actions={[...exportAction, ...deleteAction]}
       description={
         <div className={styles.studyInfo}>
           <p>

@@ -559,7 +559,6 @@
       "activityDataValue": "Valeur de la donnée d'activité",
       "date": "Date butoire",
       "download": "Télécharger les sources d'émission",
-      "downloadSubPost": "Télécharger les sources d'émission de {name}",
       "emissionName": "Nom du FE (facteur d'émission)",
       "emissionQuality": "Qualité du FE",
       "emissionSource": "Source du FE",
