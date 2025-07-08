@@ -16,25 +16,43 @@ import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
+import { getAllCNCs } from '@/services/serverFunctions/cnc'
+import { FormAutocomplete } from '../form/Autocomplete'
+import { useServerFunction } from '@/hooks/useServerFunction'
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
-const SignUpFormCut = () => {
+const SignUpFormCut = async () => {
   const t = useTranslations('signupCut')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
+  const [cncs, setCNCS] = useState<CNC[]>([])
+  const { callServerFunction } = useServerFunction()
 
   const searchParams = useSearchParams()
 
   useEffect(() => {
+    const fetchCNCs = async () => {
+      const response = await callServerFunction(async () => {
+        const data = await getAllCNCs()
+        return { success: true, data } // wrap in ApiResponse
+      })
+
+      if (response.success) {
+        setCNCS(response.data)
+      }
+    }
+    fetchCNCs()
+
     const email = searchParams.get('email')
     if (email) {
       setValue('email', email)
     }
-  }, [searchParams])
+  }, [searchParams, callServerFunction])
+
 
   const { control, getValues, setValue, handleSubmit } = useForm<SignUpCutCommand>({
     resolver: zodResolver(SignUpCutCommandValidation),
@@ -73,13 +91,20 @@ const SignUpFormCut = () => {
           placeholder={t('emailPlaceholder')}
           data-testid="activation-email"
         />
-        <FormTextField
+        <FormAutocomplete
           control={control}
           translation={t}
+          options={cncs}
           name="siretOrCNC"
-          className={authStyles.input}
           label={t('siretOrCNC')}
-          placeholder={t('siretOrCNCPlaceholder')}
+          className={authStyles.input}
+          getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
+          filterOptions={(options, { inputValue }) =>
+            options.filter((option) =>
+              typeof option === 'string' ? option : option.label.toLowerCase().includes(inputValue.toLowerCase()),
+            )
+          }
+          freeSolo
           data-testid="activation-siretOrCNC"
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
