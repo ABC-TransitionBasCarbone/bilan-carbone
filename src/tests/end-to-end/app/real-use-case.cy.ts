@@ -1,6 +1,6 @@
 describe('Real use case: BC V8_10', () => {
   before(() => {
-    cy.exec('npx prisma db seed')
+    cy.resetTestDatabase()
   })
 
   it('should correctly compute results', () => {

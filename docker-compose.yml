@@ -6,6 +6,14 @@ services:
       POSTGRES_PASSWORD: bilancarbone
     ports:
       - '5432:5432'
+  db_test:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: bilancarbone
+      POSTGRES_PASSWORD: bilancarbone
+      POSTGRES_DB: bilancarbone_test
+    ports:
+      - '5433:5432'
   maildev:
     image: maildev/maildev
     ports:

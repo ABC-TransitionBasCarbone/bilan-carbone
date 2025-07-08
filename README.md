@@ -20,7 +20,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 2. **Environment setup**
 
-   Create a `.env` file copied from `.env.dist` in the root directory.
+   Create a `.env` copied from `.env.dist` in the root directory and a `.env.test` copied from `.env.test.dist` in the root directory.
 
 3. **Start the database**
 
@@ -83,15 +83,27 @@ npx prisma studio
 
 ## Testing
 
+### Run unit tests
+
 ```bash
 # Run tests
 yarn test
 
 # Run tests in watch mode
 yarn test:watch
+```
+
+### Run Cypress tests
+
+```bash
+# Start the app in test environment connected to the test database
+yarn dev:test
 
 # Run Cypress tests
 yarn cypress
+
+# Run a specific test file
+yarn cypress --spec "src/tests/end-to-end/app/auth.cy.ts"
 
 # Open Cypress GUI
 yarn cypress:gui

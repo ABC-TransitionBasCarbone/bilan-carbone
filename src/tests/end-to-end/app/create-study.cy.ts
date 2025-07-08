@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 
 describe('Create study', () => {
   before(() => {
-    cy.exec('npx prisma db seed')
+    cy.resetTestDatabase()
   })
 
   beforeEach(() => {
