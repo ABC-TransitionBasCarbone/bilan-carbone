@@ -7,7 +7,9 @@ import {
   createAnswerEmissionSource,
   deleteAnswerEmissionSourceById,
   deleteAnswerEmissionSourcesForRow,
+  findAllAnswerEmissionSourcesByAnswer,
   findAnswerEmissionSourceByAnswer,
+  findAnswerEmissionSourceByAnswerAndEmissionSource,
   findAnswerEmissionSourceByAnswerAndRow,
   findAnswerEmissionSourcesByAnswerAndRow,
   getAnswerByQuestionId,
@@ -63,6 +65,36 @@ const cleanupRowEmissionSources = async (
       }
     }
   }
+}
+
+const createOrUpdateAnswerEmissionSources = async (answerId: string, emissionSourceIds: string[]) => {
+  for (const emissionSourceId of emissionSourceIds) {
+    // Check if this specific emission source is already linked to this answer
+    const existingEntry = await findAnswerEmissionSourceByAnswerAndEmissionSource(answerId, emissionSourceId)
+
+    if (!existingEntry) {
+      await createAnswerEmissionSource(answerId, emissionSourceId, null, null)
+    }
+  }
+}
+
+const cleanupPreviousEmissionSources = async (question: Question, studySiteId: string) => {
+  const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
+
+  if (existingAnswer) {
+    // Get all emission sources linked to this answer
+    const existingAnswerEmissionSources = await findAllAnswerEmissionSourcesByAnswer(existingAnswer.id)
+
+    // Delete all existing emission sources for this special question
+    for (const existingAnswerEmissionSource of existingAnswerEmissionSources) {
+      await deleteAnswerEmissionSourceById(
+        existingAnswerEmissionSource.id,
+        existingAnswerEmissionSource.emissionSourceId,
+      )
+    }
+  }
+
+  return existingAnswer
 }
 
 const handleTableEmissionSources = async (
@@ -216,7 +248,7 @@ export const saveAnswerForQuestion = async (
     const depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
-      return handleSpecialQuestions(question)
+      return handleSpecialQuestions(question, response, studyId, studySiteId, study)
     }
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
@@ -305,10 +337,7 @@ export const saveAnswerForQuestion = async (
     const savedAnswer = await saveAnswer(question.id, studySiteId, response)
 
     if (emissionSourceId && savedAnswer) {
-      const existingEntry = await findAnswerEmissionSourceByAnswer(savedAnswer.id)
-      if (!existingEntry) {
-        await createAnswerEmissionSource(savedAnswer.id, emissionSourceId, null, null)
-      }
+      await createOrUpdateAnswerEmissionSources(savedAnswer.id, [emissionSourceId])
 
       // If this question has a linkDepreciationQuestionId, also ensure the linked answers are connected to the same emission source
       if (linkDepreciationQuestionId) {
@@ -316,10 +345,7 @@ export const saveAnswerForQuestion = async (
         if (linkQuestion) {
           const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
           if (linkAnswer) {
-            const linkExistingEntry = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
-            if (!linkExistingEntry) {
-              await createAnswerEmissionSource(linkAnswer.id, emissionSourceId, null, null)
-            }
+            await createOrUpdateAnswerEmissionSources(linkAnswer.id, [emissionSourceId])
           }
         }
       }
@@ -422,15 +448,81 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
   return emissionFactorInfo
 }
 
-const applyCinemaProfileForTransport = (question: Question) => {}
+const applyCinemaProfileForTransport = async (
+  question: Question,
+  selectedProfile: string,
+  studyId: string,
+  studySiteId: string,
+  study: FullStudy,
+) => {
+  const emissionFactorInfo = emissionFactorMap[question.idIntern]
+  const cinemaProfile = emissionFactorInfo.cinemaProfiles?.[selectedProfile]
 
-const handleSpecialQuestions = (question: Question) => {
-  switch (question.idIntern) {
-    case 'si-vous-souhaitez-vous-identifier-a-des-profils-de-cinema-comparable-de-quel-type-de-cinema-votre-etablissement-se-rapproche-le-plus': {
-      return applyCinemaProfileForTransport(question)
-    }
-    default: {
-      return
+  await cleanupPreviousEmissionSources(question, studySiteId)
+
+  if (!cinemaProfile || !selectedProfile) {
+    return []
+  }
+
+  const emissionSourceIds: string[] = []
+
+  if (cinemaProfile.shortDistance) {
+    for (const [transportMode, config] of Object.entries(cinemaProfile.shortDistance)) {
+      if (config.percentage > 0 && config.averageDistance > 0) {
+        const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+          config.emissionFactorId,
+          study.emissionFactorVersions.map((v) => v.importVersionId),
+        )
+
+        if (emissionFactor) {
+          const value = (config.percentage / 100) * config.averageDistance
+
+          const newEmissionSource = await createEmissionSource({
+            studyId,
+            studySiteId,
+            value,
+            name: `cinema-profile-${transportMode}`,
+            subPost: question.subPost,
+            emissionFactorId: emissionFactor.id,
+          })
+
+          if (newEmissionSource.success && newEmissionSource.data) {
+            await updateEmissionSource({ validated: true, emissionSourceId: newEmissionSource.data.id })
+            emissionSourceIds.push(newEmissionSource.data.id)
+          }
+        }
+      }
     }
   }
+
+  return emissionSourceIds
+}
+
+const handleSpecialQuestions = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  studyId: string,
+  studySiteId: string,
+  study: FullStudy,
+) => {
+  let emissionSourceIds: string[] = []
+
+  switch (question.idIntern) {
+    case 'si-vous-souhaitez-vous-identifier-a-des-profils-de-cinema-comparable-de-quel-type-de-cinema-votre-etablissement-se-rapproche-le-plus': {
+      const selectedProfile = response as string
+      emissionSourceIds = await applyCinemaProfileForTransport(question, selectedProfile, studyId, studySiteId, study)
+      break
+    }
+    default: {
+      break
+    }
+  }
+
+  const savedAnswer = await saveAnswer(question.id, studySiteId, response)
+
+  if (savedAnswer && emissionSourceIds.length > 0) {
+    await createOrUpdateAnswerEmissionSources(savedAnswer.id, emissionSourceIds)
+  }
+
+  return savedAnswer
 }

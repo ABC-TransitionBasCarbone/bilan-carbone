@@ -247,3 +247,20 @@ export const deleteAnswerEmissionSourceById = async (answerEmissionSourceId: str
     where: { id: emissionSourceId },
   })
 }
+
+export const findAnswerEmissionSourceByAnswerAndEmissionSource = async (answerId: string, emissionSourceId: string) => {
+  return await prismaClient.answerEmissionSource.findFirst({
+    where: {
+      answerId,
+      emissionSourceId,
+    },
+  })
+}
+
+export const findAllAnswerEmissionSourcesByAnswer = async (answerId: string) => {
+  return await prismaClient.answerEmissionSource.findMany({
+    where: {
+      answerId,
+    },
+  })
+}
