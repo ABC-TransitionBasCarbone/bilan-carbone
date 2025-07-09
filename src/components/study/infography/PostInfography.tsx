@@ -1,12 +1,10 @@
 'use client'
 
 import { BasePostInfography } from '@/environments/base/study/infography/BasePostInfography'
-import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { CutPostInfography } from '@/environments/cut/study/infography/CutPostInfography'
 import { Post, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getEmissionValueString, getValidationPercentage } from '@/utils/study'
-import { Environment, StudyResultUnit, SubPost } from '@prisma/client'
+import { StudyResultUnit, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 
@@ -45,30 +43,13 @@ const PostInfography = ({ post, data, studyId, resultsUnit }: Props) => {
 
   return (
     mainPost && (
-      <DynamicComponent
-        environmentComponents={{
-          [Environment.CUT]: (
-            <CutPostInfography
-              post={post}
-              mainPost={mainPost}
-              subPosts={subPosts}
-              data={data}
-              studyId={studyId}
-              percent={percent}
-              emissionValue={emissionValue}
-            />
-          ),
-        }}
-        defaultComponent={
-          <BasePostInfography
-            post={post}
-            mainPost={mainPost}
-            subPosts={subPosts}
-            studyId={studyId}
-            percent={percent}
-            emissionValue={emissionValue}
-          />
-        }
+      <BasePostInfography
+        post={post}
+        mainPost={mainPost}
+        subPosts={subPosts}
+        studyId={studyId}
+        percent={percent}
+        emissionValue={emissionValue}
       />
     )
   )

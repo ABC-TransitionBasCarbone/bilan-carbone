@@ -2,6 +2,7 @@
 
 import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
 import { EmissionFactorInfo, emissionFactorMap } from '@/constants/emissionFactorMap'
+import { prismaClient } from '@/db/client'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
@@ -25,6 +26,7 @@ import { Prisma, Question, QuestionType, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadStudy } from '../permissions/study'
+import { CutPost, subPostsByPost } from '../posts'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
 const cleanupDeletedTableRows = async (question: Question, tableAnswer: TableAnswer, studySiteId: string) => {
@@ -443,3 +445,82 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
 
   return emissionFactorInfo
 }
+
+export type QuestionStats = { answered: number; total: number }
+export type StatsResult = Record<CutPost, Partial<Record<SubPost, QuestionStats>>>
+
+export const getQuestionProgressBySubPostPerPost = async () =>
+  withServerResponse('getQuestionProgressBySubPostPerPost', async () => {
+    const cutSubPosts = Object.values(CutPost).flatMap((cutPost) => subPostsByPost[cutPost])
+    const questionStats = await prismaClient.question.groupBy({
+      by: ['subPost'],
+      where: {
+        subPost: {
+          in: cutSubPosts,
+        },
+      },
+      _count: {
+        _all: true,
+      },
+    })
+
+    const answers = await prismaClient.answer.findMany({
+      where: {
+        response: {
+          not: '',
+        },
+        question: {
+          subPost: { in: cutSubPosts },
+        },
+      },
+      select: {
+        response: true,
+        question: {
+          select: {
+            subPost: true,
+            type: true,
+          },
+        },
+      },
+    })
+
+    const answeredCountBySubPost = answers.reduce<Partial<Record<SubPost, number>>>((acc, answer) => {
+      const { response, question } = answer
+      const subPost = question.subPost
+      const type = question.type
+
+      let isValid = false
+
+      if (type === 'TABLE') {
+        const rows = response?.rows
+        isValid =
+          Array.isArray(rows) &&
+          rows.length > 0 &&
+          rows.some((row: any) => row?.data && Object.keys(row.data).length > 0)
+      } else {
+        isValid = typeof response === 'string' && response.trim() !== ''
+      }
+
+      if (isValid) {
+        acc[subPost] = (acc[subPost] || 0) + 1
+      }
+
+      return acc
+    }, {})
+
+    const result: StatsResult = {} as StatsResult
+
+    for (const cutPost of Object.values(CutPost)) {
+      result[cutPost] = {} as Partial<Record<SubPost, QuestionStats>>
+
+      for (const subPost of subPostsByPost[cutPost]) {
+        const stat = questionStats.find((question) => question.subPost === subPost)
+        result[cutPost][subPost] = {
+          total: stat?._count._all ?? 0,
+          answered: answeredCountBySubPost[subPost] ?? 0,
+        }
+      }
+    }
+
+    return result
+  })

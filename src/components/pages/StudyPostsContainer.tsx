@@ -17,9 +17,10 @@ interface Props {
   study: FullStudy
   userRole: StudyRole
   isCut: boolean
+  environment: Environment
 }
 
-const StudyPostsPageContainer = ({ post, study, userRole, isCut }: Props) => {
+const StudyPostsPageContainer = ({ post, study, userRole, isCut, environment }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
@@ -67,6 +68,7 @@ const StudyPostsPageContainer = ({ post, study, userRole, isCut }: Props) => {
             userRole={userRole}
             emissionSources={emissionSources}
             studySite={studySite}
+            environment={environment}
           />
         }
         environmentComponents={{

@@ -1,6 +1,7 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import AllPostsInfographyCut from '@/environments/cut/study/infography/AllPostsInfography'
+import { default as AllPostsInfographyCut } from '@/environments/cut/study/infography/AllPostsInfography'
+import { BCPost, CutPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
@@ -11,9 +12,10 @@ import AllPostsInfography from './AllPostsInfography'
 interface Props {
   study: FullStudy
   studySite: string
+  environment: Environment
 }
 
-const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
+const AllPostsInfographyContainer = ({ study, studySite, environment }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const [validatedOnly, setValidatedOnly] = useState(true)
 
@@ -29,10 +31,21 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
     }
   }
 
+  const post = useMemo(() => {
+    switch (environment) {
+      case Environment.CUT:
+        return CutPost
+      default:
+        return BCPost
+    }
+  }, [environment])
+
   const data = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
-    [study, tPost, studySite, validatedOnly],
+    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, post),
+    [study, tPost, studySite, validatedOnly, post],
   )
+
+  console.log({ data })
 
   return (
     <DynamicComponent
