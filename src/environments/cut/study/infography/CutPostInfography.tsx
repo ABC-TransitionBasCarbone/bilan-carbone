@@ -2,7 +2,7 @@
 
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
-import { isPostValidated } from '@/utils/study'
+import { QuestionStats } from '@/services/serverFunctions/question'
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined'
 import CheckCircleOutlineSharp from '@mui/icons-material/CheckCircleOutlineSharp'
 import { SubPost } from '@prisma/client'
@@ -25,9 +25,19 @@ interface Props {
   studyId: string
   percent: number
   emissionValue: string
+  questionStats: Partial<Record<SubPost, QuestionStats>>
 }
 
-export const CutPostInfography = ({ post, mainPost, subPosts, data, studyId, percent, emissionValue }: Props) => {
+export const CutPostInfography = ({
+  post,
+  mainPost,
+  subPosts,
+  studyId,
+  percent,
+  emissionValue,
+  questionStats,
+}: Props) => {
+  console.log({ questionStats })
   const t = useTranslations('emissionFactors.post')
   const [displayChildren, setDisplayChildren] = useState(false)
 
@@ -51,8 +61,8 @@ export const CutPostInfography = ({ post, mainPost, subPosts, data, studyId, per
         <StyledSubPostContainer isVisible={displayChildren}>
           <div className="flex-col gap-1">
             {subPosts.map((subPost) => {
-              const subPostData = data?.subPosts.find((sp) => sp.post === subPost)
-              const isValidated = isPostValidated(subPostData)
+              const subPostData = questionStats[subPost]
+              const isValidated = subPostData?.total === subPostData?.answered
               return (
                 <StyledSubPostItem
                   key={subPost}

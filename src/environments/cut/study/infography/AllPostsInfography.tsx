@@ -60,11 +60,8 @@ const AllPostsInfography = ({ study, data }: Props) => {
         const completionRate = allTotal > 0 ? (allAnswered / allTotal) * 100 : 0
 
         const unit = tUnits(study.resultsUnit)
-        const emissionValue = getEmissionValueString(
-          data.find((d) => d.post === cutPost)?.value,
-          study.resultsUnit,
-          unit,
-        )
+        const dataByPost = data.find((d) => d.post === cutPost)
+        const emissionValue = getEmissionValueString(dataByPost?.value, study.resultsUnit, unit)
 
         return (
           <CutPostInfography
@@ -75,6 +72,7 @@ const AllPostsInfography = ({ study, data }: Props) => {
             post={cutPost}
             studyId={study.id}
             subPosts={subPostsByPost[cutPost]}
+            questionStats={questionProgress[cutPost]}
           />
         )
       })}
