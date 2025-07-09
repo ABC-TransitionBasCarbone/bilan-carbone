@@ -5,9 +5,12 @@ import { EmissionFactorInfo, emissionFactorMap } from '@/constants/emissionFacto
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
+  deleteAnswerEmissionSourceById,
   deleteAnswerEmissionSourcesForRow,
+  deleteStudyEmissionSourceById,
   findAnswerEmissionSourceByAnswer,
   findAnswerEmissionSourceByAnswerAndRow,
+  findAnswerEmissionSourcesByAnswerAndRow,
   getAnswerByQuestionId,
   getAnswersByStudyAndSubPost,
   getQuestionById,
@@ -27,7 +30,7 @@ import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadStudy } from '../permissions/study'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
-const cleanupDeletedTableRows = async (question: Question, tableAnswer: TableAnswer, studySiteId: string) => {
+const cleanupTableEmissionSources = async (question: Question, tableAnswer: TableAnswer, studySiteId: string) => {
   const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
 
   if (existingAnswer && existingAnswer.response && isTableAnswer(existingAnswer.response)) {
@@ -44,6 +47,17 @@ const cleanupDeletedTableRows = async (question: Question, tableAnswer: TableAns
   return existingAnswer
 }
 
+const cleanupOrphanedEmissionSources = async (answerId: string, rowId: string, validEmissionNames: Set<string>) => {
+  const existingEmissionSources = await findAnswerEmissionSourcesByAnswerAndRow(answerId, rowId)
+
+  for (const existingEmissionSource of existingEmissionSources) {
+    if (existingEmissionSource.emissionType && !validEmissionNames.has(existingEmissionSource.emissionType)) {
+      await deleteAnswerEmissionSourceById(existingEmissionSource.id)
+      await deleteStudyEmissionSourceById(existingEmissionSource.emissionSourceId)
+    }
+  }
+}
+
 const handleTableEmissionSources = async (
   question: Question,
   tableAnswer: TableAnswer,
@@ -53,7 +67,7 @@ const handleTableEmissionSources = async (
 ) => {
   const emissionSourceIds: string[] = []
 
-  const existingAnswer = await cleanupDeletedTableRows(question, tableAnswer, studySiteId)
+  const existingAnswer = await cleanupTableEmissionSources(question, tableAnswer, studySiteId)
 
   if (hasTableEmissionCalculator(question.idIntern)) {
     const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
@@ -69,6 +83,8 @@ const handleTableEmissionSources = async (
         }
         continue
       }
+
+      const processedEmissionNames = new Set<string>()
 
       for (const emissionSource of result.emissionSources) {
         let emissionSourceId: string
@@ -109,6 +125,11 @@ const handleTableEmissionSources = async (
         }
 
         emissionSourceIds.push(emissionSourceId)
+        processedEmissionNames.add(emissionSource.name)
+      }
+
+      if (existingAnswer) {
+        await cleanupOrphanedEmissionSources(existingAnswer.id, row.id, processedEmissionNames)
       }
     }
   }

@@ -237,3 +237,15 @@ export const deleteAnswerEmissionSourcesForRow = async (answerId: string, rowId:
 
   return entriesToDelete
 }
+
+export const deleteAnswerEmissionSourceById = async (id: string) => {
+  return await prismaClient.answerEmissionSource.delete({
+    where: { id },
+  })
+}
+
+export const deleteStudyEmissionSourceById = async (id: string) => {
+  return await prismaClient.studyEmissionSource.delete({
+    where: { id },
+  })
+}
