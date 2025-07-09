@@ -329,8 +329,6 @@ const calculateSpectatorMobility: TableEmissionCalculator = {
         '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants'
       ].emissionFactors
 
-    console.log({ transportModeFEName, distanceKm })
-
     if (!transportModeFEName || !distanceKm || distanceKm <= 0) {
       return {
         emissionSources: [],
@@ -471,10 +469,6 @@ const calculateRooms: TableEmissionCalculator = {
     const soundYear = parseInt(row.data['111-decrivez-les-differentes-salles-du-cinema'] || '0')
 
     if (!projectorYear || !screenYear || !seatYear || !soundYear) {
-      console.log('projectorYear', projectorYear)
-      console.log('screenYear', screenYear)
-      console.log('seatYear', seatYear)
-      console.log('soundYear', soundYear)
       return {
         emissionSources: [],
       }
@@ -483,7 +477,6 @@ const calculateRooms: TableEmissionCalculator = {
     let allEmissionSources: EmissionSourceCalculation[] = []
 
     if (projectorType && projectorYear) {
-      console.log({ projectorType, projectorYear })
       const projectorResult = await calculateEmissionSourcesDepreciation(
         study,
         '102-decrivez-les-differentes-salles-du-cinema',
@@ -496,7 +489,6 @@ const calculateRooms: TableEmissionCalculator = {
     }
 
     if (screenType && screenSize > 0 && screenYear) {
-      console.log({ screenType, screenSize, screenYear })
       const screenResult = await calculateEmissionSourcesDepreciation(
         study,
         '104-decrivez-les-differentes-salles-du-cinema',
@@ -509,7 +501,6 @@ const calculateRooms: TableEmissionCalculator = {
     }
 
     if (seatType && seatCount > 0 && seatYear) {
-      console.log({ seatType, seatCount, seatYear })
       const seatResult = await calculateEmissionSourcesDepreciation(
         study,
         '107-decrivez-les-differentes-salles-du-cinema',
@@ -523,7 +514,6 @@ const calculateRooms: TableEmissionCalculator = {
 
     // Système de son
     if (soundType && soundYear) {
-      console.log({ soundType, soundYear })
       const soundResult = await calculateEmissionSourcesDepreciation(
         study,
         '110-decrivez-les-differentes-salles-du-cinema',
@@ -534,8 +524,6 @@ const calculateRooms: TableEmissionCalculator = {
       )
       allEmissionSources = allEmissionSources.concat(soundResult.emissionSources)
     }
-
-    console.log({ allEmissionSources })
 
     return {
       emissionSources: allEmissionSources,
