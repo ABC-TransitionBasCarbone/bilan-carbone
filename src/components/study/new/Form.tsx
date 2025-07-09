@@ -14,7 +14,7 @@ import { Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import HelpIcon from '../../base/HelpIcon'
 import styles from './Form.module.css'
@@ -60,6 +60,17 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
     </Tooltip>
   )
 
+  const studyNamePlaceHolder = useMemo(
+    () =>
+      `${
+        tStudyNewSuggestion.rich('name', {
+          studyStartDate: new Date().getFullYear(),
+          orga: form.getValues('sites')[0]?.name || tStudyNewSuggestion('yourOrga'),
+        }) || ''
+      }`,
+    [form, tStudyNewSuggestion],
+  )
+
   return (
     <>
       <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -69,12 +80,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
           translation={t}
           name="name"
           label={t('name')}
-          placeholder={`${
-            tStudyNewSuggestion.rich('name', {
-              studyStartDate: new Date().getFullYear(),
-              orga: form.getValues('sites')[0]?.name || tStudyNewSuggestion('yourOrga'),
-            }) || ''
-          }`}
+          placeholder={studyNamePlaceHolder}
         />
         <div>
           <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">
