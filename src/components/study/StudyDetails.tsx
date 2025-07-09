@@ -11,16 +11,25 @@ import StudyDetailsHeader from './StudyDetailsHeader'
 
 interface Props {
   canDeleteStudy?: boolean
+  canDuplicateStudy?: boolean
   study: FullStudy
   validatedOnly: boolean
+  organizationVersionId: string | null
 }
 
-const StudyDetails = ({ canDeleteStudy, study, validatedOnly }: Props) => {
+const StudyDetails = ({ canDeleteStudy, canDuplicateStudy, study, validatedOnly, organizationVersionId }: Props) => {
   const { studySite, setSite } = useStudySite(study, true)
 
   return (
     <>
-      <StudyDetailsHeader study={study} canDeleteStudy={canDeleteStudy} studySite={studySite} setSite={setSite} />
+      <StudyDetailsHeader
+        study={study}
+        organizationVersionId={organizationVersionId}
+        canDeleteStudy={canDeleteStudy}
+        canDuplicateStudy={canDuplicateStudy}
+        studySite={studySite}
+        setSite={setSite}
+      />
       <Block>
         <DynamicComponent
           environmentComponents={{

@@ -144,7 +144,7 @@ describe('Study permissions service', () => {
           email: 'mocked-validator-email',
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(StudyRole.Validator)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -159,7 +159,7 @@ describe('Study permissions service', () => {
           email: 'mocked-editor-email',
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(StudyRole.Editor)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Editor)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -174,7 +174,7 @@ describe('Study permissions service', () => {
           email: 'mocked-editor-reader',
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(StudyRole.Reader)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Reader)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -189,7 +189,7 @@ describe('Study permissions service', () => {
           role: Role.ADMIN,
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(StudyRole.Validator)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -204,7 +204,7 @@ describe('Study permissions service', () => {
           role: Role.SUPER_ADMIN,
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(StudyRole.Validator)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -219,7 +219,7 @@ describe('Study permissions service', () => {
           role: 'GESTIONNAIRE',
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(StudyRole.Reader)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Reader)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -234,7 +234,7 @@ describe('Study permissions service', () => {
           role: 'COLLABORATOR',
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(StudyRole.Reader)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Reader)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -249,7 +249,7 @@ describe('Study permissions service', () => {
           role: Role.ADMIN,
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(StudyRole.Validator)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -264,7 +264,7 @@ describe('Study permissions service', () => {
           role: Role.SUPER_ADMIN,
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(StudyRole.Validator)
+      mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Validator)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(true)
     })
@@ -279,7 +279,7 @@ describe('Study permissions service', () => {
           role: Role.SUPER_ADMIN,
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(null)
+      mockGetAccountRoleOnStudy.mockReturnValue(null)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })
@@ -294,7 +294,7 @@ describe('Study permissions service', () => {
           role: Role.SUPER_ADMIN,
         },
       })
-      mockGetAccountRoleOnStudy.mockResolvedValue(null)
+      mockGetAccountRoleOnStudy.mockReturnValue(null)
       const result = await canDeleteStudy(mockedStudyId)
       expect(result).toBe(false)
     })

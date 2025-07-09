@@ -266,6 +266,14 @@
   },
   "study": {
     "create": "Add a Bilan Carbone®",
+    "duplicate": "Duplicate study",
+    "duplicateCopy": " - Copy",
+    "duplicateDialog": {
+      "title": "Study duplication",
+      "description": "Would you like to duplicate this study? You will be redirected to the study creation page, all fields will be pre-filled with the information from this study, and once validated, the entire study and its emission sources will be duplicated. The studies will then be independent, any modification made to one will not be reflected in the other once the duplication is complete.",
+      "cancel": "Cancel",
+      "confirm": "Duplicate"
+    },
     "myCollaborations": "My collaborations",
     "myStudies": "My Bilan Carbone®",
     "createFirstStudy": "Create my first Bilan Carbone®",
@@ -331,6 +339,20 @@
       "public": "Public",
       "resultsUnit": "Study result's unit",
       "create": "Create study",
+      "duplicate": "Duplicate",
+      "duplicationOptions": "Duplication options",
+      "inviteTeam": "Invite the same team",
+      "inviteContributors": "Invite the same contributors",
+      "siteDeselectionModal": {
+        "title": "Warning: Sites with emission sources",
+        "description": "You are trying to deselect sites that contain emission sources in the original study.",
+        "affectedSites": "Affected sites",
+        "sourcesCount": "{count, plural, =1 {1 emission source} other {# emission sources}}",
+        "totalSources": "{count, plural, =1 {In total, 1 emission source will not be duplicated.} other {In total, # emission sources will not be duplicated.}}",
+        "confirmation": "Are you sure you want to continue?",
+        "cancel": "Cancel",
+        "proceed": "Continue without these sources"
+      },
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Validator email",
@@ -347,6 +369,8 @@
         "exportsDescription": "By default, the results are returned in Bilan Carbone® format, but it is possible to obtain the results in the formats required by several other carbon accounting methods, such as the Bilan GES règlementaire, which is the French regulatory method.",
         "control": "Control mode",
         "controlDescription": "The control mode is a data item required by certain carbon accounting methods, such as the regulatory GHG Balance or the GHG Protocol. In order to obtain the results in the formats requested by these methods, you will need to characterise the different sources of emissions when you enter them, which will determine into which of the existing categories within these methods (the equivalent of the posts and sub-posts within the Bilan Carbone® method) the emissions will be broken down. Depending on the control mode selected, the characterizations available for the different sources of emissions vary. For more details on the control modes, please consult the methodological guides for the methods in question. We strongly recommend that you use the \"Operational Control\" control mode, which is by far the most common.",
+        "duplicationOptions": "Duplication options",
+        "duplicationOptionsDescription": "When duplicating a study, you can choose to invite the same team members and contributors from the original study to the new one. This helps maintain collaboration continuity.",
         "close": "Close"
       },
       "validation": {
@@ -1412,6 +1436,8 @@
     "AddClientDetails": "Add your first client to start your Bilans Carbone®.",
     "AddSiteCR": "Add sites",
     "AddSiteCRDetails": "Add sites to your <orga>organization</orga> or to <client>one of your clients</client> so that you can set up emissions for each site. If your organization or customer has only one site, create an 'All sites' site.",
+    "AddSiteCRCollaborator": "Add sites",
+    "AddSiteCRCollaboratorDetails": "Add sites to <client>one of your clients</client> so that you can set up emissions for each site. If your customer has only one site, create an 'All sites' site.",
     "AddSiteOrga": "Add sites",
     "AddSiteOrgaDetails": "Add sites to your <orga>organization</orga> so that you can set up emissions for each site. If your organization has only one site, create an 'All sites' site.",
     "CreateFirstStudy": "Create your first Bilan Carbone®",

@@ -6,13 +6,15 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FormDatePicker } from '@/components/form/DatePicker'
 import { FormTextField } from '@/components/form/TextField'
 import GlossaryModal from '@/components/modals/GlossaryModal'
+import StudyDuplicationForm, { InviteOptions } from '@/components/study/duplication/StudyDuplicationForm'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { createStudyCommand } from '@/services/serverFunctions/study'
+import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import HelpIcon from '../../base/HelpIcon'
 import styles from './Form.module.css'
@@ -23,19 +25,28 @@ interface Props {
   glossary?: string
   setGlossary?: (glossary: string) => void
   t: (key: string) => string
+  duplicateStudyId?: string | null
   isCut?: boolean
 }
 
-const NewStudyForm = ({ form, children, glossary, setGlossary, t, isCut = false }: Props) => {
+const NewStudyForm = ({ form, children, glossary, setGlossary, t, isCut = false, duplicateStudyId }: Props) => {
   const router = useRouter()
   const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
   const tStudyNewSuggestion = useTranslations('study.new.suggestion')
   const tStudyNewInfo = useTranslations('study.new.info')
   const { callServerFunction } = useServerFunction()
+  const [inviteOptions, setInviteOptions] = useState<InviteOptions>({
+    team: true,
+    contributors: true,
+  })
 
   const onSubmit = async (command: CreateStudyCommand) => {
-    await callServerFunction(() => createStudyCommand(command), {
+    const serverFunction = duplicateStudyId
+      ? () => duplicateStudyCommand(duplicateStudyId, command, inviteOptions.team, inviteOptions.contributors)
+      : () => createStudyCommand(command)
+
+    await callServerFunction(() => serverFunction(), {
       onSuccess: (data) => {
         router.push(`/etudes/${data.id}`)
         router.refresh()
@@ -77,8 +88,15 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, isCut = false 
           </div>
         </div>
         {children}
+        {duplicateStudyId && (
+          <StudyDuplicationForm
+            setGlossary={setGlossary}
+            inviteOptions={inviteOptions}
+            setInviteOptions={setInviteOptions}
+          />
+        )}
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="new-study-create-button">
-          {t('create')}
+          {duplicateStudyId ? t('duplicate') : t('create')}
         </LoadingButton>
       </Form>
       {glossary && (
