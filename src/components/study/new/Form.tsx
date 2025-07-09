@@ -26,10 +26,9 @@ interface Props {
   setGlossary?: (glossary: string) => void
   t: (key: string) => string
   duplicateStudyId?: string | null
-  isCut?: boolean
 }
 
-const NewStudyForm = ({ form, children, glossary, setGlossary, t, isCut = false, duplicateStudyId }: Props) => {
+const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudyId }: Props) => {
   const router = useRouter()
   const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
@@ -70,16 +69,12 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, isCut = false,
           translation={t}
           name="name"
           label={t('name')}
-          placeholder={
-            isCut
-              ? tStudyNewSuggestion
-                  .rich('name', {
-                    studyStartDate: new Date().getFullYear(),
-                    data: (children) => children,
-                  })
-                  ?.toLocaleString()
-              : ''
-          }
+          placeholder={`${
+            tStudyNewSuggestion.rich('name', {
+              studyStartDate: new Date().getFullYear(),
+              orga: form.getValues('sites')[0]?.name || tStudyNewSuggestion('yourOrga'),
+            }) || ''
+          }`}
         />
         <div>
           <IconLabel icon={Help('studyDates')} iconPosition="after" className="mb-2">

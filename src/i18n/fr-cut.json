@@ -63,7 +63,8 @@
     "new": {
       "studyDates": "Année de référence de l’Empreinte",
       "suggestion": {
-        "name": "Empreinte - \"UGC Odéon\", \"{studyStartDate}\""
+        "name": "Empreinte - {orga} {studyStartDate}",
+        "yourOrga": "Votre cinéma"
       },
       "info": {
         "date": "Les estimations sont généralement faites sur une période de 12 mois"
@@ -116,9 +117,6 @@
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un cinéma"
-    },
-    "team": {
-      "title": "Mes cinémas"
     }
   },
   "checklist": {

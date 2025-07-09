@@ -335,6 +335,10 @@
         "to": "to",
         "DifferentHoursHoliday": "Different hours during holidays"
       },
+      "suggestion": {
+        "name": "Bilan Carbone® - {orga} {studyStartDate}",
+        "yourOrga": "Your organization"
+      },
       "private": "Private",
       "public": "Public",
       "resultsUnit": "Study result's unit",
@@ -985,7 +989,6 @@
     "TUNISIE": "Tunisia"
   },
   "team": {
-    "title": "My Organization",
     "pending": "Pending invitations",
     "invitationDate": "Invitation sent on",
     "toValidate": "Invitations to validate",
@@ -993,7 +996,7 @@
     "delete": "Delete user",
     "resend": "Resend invitation",
     "table": {
-      "title": "My Collaborators",
+      "title": "My team",
       "newUser": "Invite a user",
       "firstName": "First Name",
       "lastName": "Last Name",
