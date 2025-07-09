@@ -4,6 +4,29 @@ export type EmissionFactorInfo = {
   linkDepreciationQuestionId?: string
   emissionFactors?: Record<string, string>
   isFixed?: boolean
+  isSpecial?: boolean
+  weights?: Record<string, number>
+}
+
+const TRANSPORT_EMISSION_FACTORS = {
+  'Métro (Ile de France)': '43253',
+  'RER et Transilien (Ile-de-France)': '43254',
+  'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
+  'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
+  'Bus (agglomérations de - de 100 000 habitants)': '27998',
+  'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
+  'Bus (agglomérations de + de 250 000 habitants)': '28000',
+  'Vélo à assistance éléctrique': '28331',
+  'Vélo classique': '134',
+  Marche: '135',
+  'Voiture gazole courte distance': '27984',
+  'Voiture essence courte distance': '27983',
+  'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
+    '28015',
+  'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
+  'Moto >250cm3 /Mixte': '27995',
+  'Moto<250cm3/Mixte': '27992',
+  'Trottinette électrique': '28329',
 }
 
 export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
@@ -37,52 +60,14 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
   '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
   '13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {
-    emissionFactors: {
-      'Métro (Ile de France)': '43253',
-      'RER et Transilien (Ile-de-France)': '43254',
-      'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
-      'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
-      'Bus (agglomérations de - de 100 000 habitants)': '27998',
-      'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
-      'Bus (agglomérations de + de 250 000 habitants)': '28000',
-      'Vélo à assistance éléctrique': '28331',
-      'Vélo classique': '134',
-      Marche: '135',
-      'Voiture gazole courte distance': '27984',
-      'Voiture essence courte distance': '27983',
-      'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
-        '28015',
-      'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
-      'Moto >250cm3 /Mixte': '27995',
-      'Moto<250cm3/Mixte': '27992',
-      'Trottinette électrique': '28329',
-    },
+    emissionFactors: TRANSPORT_EMISSION_FACTORS,
   },
-  // DeplacementsProfessionnels - attente de la fonctionnalité table
+  // DeplacementsProfessionnels
   '11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '12-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '14-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
-    emissionFactors: {
-      'Métro (Ile de France)': '43253',
-      'RER et Transilien (Ile-de-France)': '43254',
-      'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
-      'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
-      'Bus (agglomérations de - de 100 000 habitants)': '27998',
-      'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
-      'Bus (agglomérations de + de 250 000 habitants)': '28000',
-      'Vélo à assistance éléctrique': '28331',
-      'Vélo classique': '134',
-      Marche: '135',
-      'Voiture gazole courte distance': '27984',
-      'Voiture essence courte distance': '27983',
-      'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
-        '28015',
-      'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
-      'Moto >250cm3 /Mixte': '27995',
-      'Moto<250cm3/Mixte': '27992',
-      'Trottinette électrique': '28329',
-    },
+    emissionFactors: TRANSPORT_EMISSION_FACTORS,
   },
   '15-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
@@ -122,14 +107,17 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       Tablettes: '27007',
     },
   },
-  // Mobilité spectateurs
-  'avez-vous-deja-realise-une-enquete-mobilite-specteurs': {},
-  /** TODO: Liste 1  - attente de la fonctionnalité liste */
-  'si-a-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': {},
-  /***** */
-  'si-b-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
+  'avez-vous-deja-realise-une-enquete-mobilite-spectateur': {},
+  '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': {
+    isFixed: true,
+    emissionFactors: TRANSPORT_EMISSION_FACTORS,
+  },
+  'si-vous-souhaitez-realiser-une-enquete-mobilite-spectateur-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
     {},
-  'si-c-de-quel-type-de-cinema-votre-etablissement-se-rapproche-le-plus': {},
+  'si-vous-souhaitez-vous-identifier-a-des-profils-de-cinema-comparable-de-quel-type-de-cinema-votre-etablissement-se-rapproche-le-plus':
+    {
+      isSpecial: true,
+    },
   'vos-spectateurs-sont-ils-majoritairement-des-habitants-locaux-cest-a-dire-residant-a-lannee-dans-les-environs-ou-attirez-vous-aussi-une-part-non-negligeable-de-spectateurs-de-passage-dans-la-region-touristes-notamment':
     {},
   next: {},
@@ -139,31 +127,31 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'combien-de-nuits': { emissionFactorImportedId: '106' },
   'combien-d-equipes-de-repas': { emissionFactorImportedId: '20682' },
   // Autres matériel et matériel technique - Attente de la fonctionnalité table
-  '11-decrivez-les-differentes-salles-du-cinema': {
-    // TODO multiplier par le nombre de salles ou faire un tableau
+  '10-decrivez-les-differentes-salles-du-cinema': {},
+  '102-decrivez-les-differentes-salles-du-cinema': {
+    depreciationPeriod: 10,
     emissionFactors: {
       'Projecteur Xénon': '107',
       'Projecteur Laser': '108',
       'Projecteur 35 mm': '109',
     },
   },
-  '12-decrivez-les-differentes-salles-du-cinema': {
-    // TODO multiplier par le nombre d'écrans
+  '104-decrivez-les-differentes-salles-du-cinema': {
+    depreciationPeriod: 10,
     emissionFactors: {
       'Ecran 2D': '110',
       'Ecran 3D': '111',
     },
   },
-  '13-decrivez-les-differentes-salles-du-cinema': {},
-  '14-decrivez-les-differentes-salles-du-cinema': {
+  '107-decrivez-les-differentes-salles-du-cinema': {
+    depreciationPeriod: 10,
     emissionFactors: {
       'Fauteuils classiques': '112',
       'Fauteuils 4DX': '113',
     },
   },
-  '15-decrivez-les-differentes-salles-du-cinema': {},
-  '16-decrivez-les-differentes-salles-du-cinema': {
-    // TODO multiplier par le nombre de salles
+  '110-decrivez-les-differentes-salles-du-cinema': {
+    depreciationPeriod: 10,
     emissionFactors: {
       'Son Stéréo': '114',
       'Dolby 5.1': '115',
@@ -226,6 +214,12 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'PLV grand format': '128',
       Goodies: '129',
     },
+    weights: {
+      'Affiches 120x160': 0.22,
+      'Affiches 40x60': 0.027,
+      'PLV comptoir': 0.5,
+      'PLV grand format': 3.5,
+    },
   },
   // MaterielCinema
   '10-quelle-quantite-de-materiel-produisez-vous-chaque-mois': {
@@ -234,6 +228,11 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       Programme: '130',
       Affiches: '126',
       Flyers: '133',
+    },
+    weights: {
+      Programme: 0.005,
+      Affiches: 0.027,
+      Flyers: 0.0042,
     },
   },
   // CommunicationDigitale

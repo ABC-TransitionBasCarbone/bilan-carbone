@@ -59,6 +59,9 @@ const TextUnitInput = ({
         onBlur={onBlur}
         disabled={disabled}
         debounce={50}
+        sx={{
+          minWidth: '6rem',
+        }}
         slotProps={{
           htmlInput: inputProps,
           input: {
