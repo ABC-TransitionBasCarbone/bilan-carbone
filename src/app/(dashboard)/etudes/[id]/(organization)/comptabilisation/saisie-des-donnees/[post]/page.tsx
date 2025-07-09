@@ -36,6 +36,7 @@ const StudyPost = async (props: Props & StudyProps & UserSessionProps) => {
       study={props.study}
       userRole={userRole}
       isCut={props.user.environment === Environment.CUT}
+      environment={props.user.environment}
     />
   )
 }

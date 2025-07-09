@@ -181,6 +181,9 @@ export const getQuestionProgressBySubPostPerPost = async () =>
 
     const answers = await prismaClient.answer.findMany({
       where: {
+        response: {
+          not: '',
+        },
         question: {
           subPost: { in: cutSubPosts },
         },
