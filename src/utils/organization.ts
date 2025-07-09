@@ -27,5 +27,3 @@ export const canEditOrganizationVersion = (
   const isCR = !!organizationVersion?.parentId && organizationVersion.parentId === account.organizationVersionId
   return hasEditionRole(isCR, account.role)
 }
-
-export const canEditMemberRole = (account: UserSession) => isAdmin(account.role) || account.role === Role.GESTIONNAIRE
