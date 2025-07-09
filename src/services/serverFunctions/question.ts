@@ -474,17 +474,37 @@ export const getQuestionProgressBySubPostPerPost = async () =>
         },
       },
       select: {
+        response: true,
         question: {
           select: {
             subPost: true,
+            type: true,
           },
         },
       },
     })
 
     const answeredCountBySubPost = answers.reduce<Partial<Record<SubPost, number>>>((acc, answer) => {
-      const subPost = answer.question.subPost
-      acc[subPost] = (acc[subPost] || 0) + 1
+      const { response, question } = answer
+      const subPost = question.subPost
+      const type = question.type
+
+      let isValid = false
+
+      if (type === 'TABLE') {
+        const rows = response?.rows
+        isValid =
+          Array.isArray(rows) &&
+          rows.length > 0 &&
+          rows.some((row: any) => row?.data && Object.keys(row.data).length > 0)
+      } else {
+        isValid = typeof response === 'string' && response.trim() !== ''
+      }
+
+      if (isValid) {
+        acc[subPost] = (acc[subPost] || 0) + 1
+      }
+
       return acc
     }, {})
 

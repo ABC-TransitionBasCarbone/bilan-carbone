@@ -37,7 +37,6 @@ export const CutPostInfography = ({
   emissionValue,
   questionStats,
 }: Props) => {
-  console.log({ questionStats })
   const t = useTranslations('emissionFactors.post')
   const [displayChildren, setDisplayChildren] = useState(false)
 
