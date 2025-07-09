@@ -1,5 +1,5 @@
 import { AccountWithUser } from '@/db/account'
-import { canEditMemberRole } from '@/utils/organization'
+import { canEditMemberRole } from '@/utils/user'
 import { canBeUntrainedRole } from '@/utils/user'
 import { Prisma, Role, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
