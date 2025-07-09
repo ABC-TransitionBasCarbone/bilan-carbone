@@ -47,7 +47,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
 
     await callServerFunction(() => serverFunction(), {
       onSuccess: (data) => {
-        router.push(`/etudes/${data.id}` + (isCut ? '/cadrage' : ''))
+        router.push(`/etudes/${data.id}`)
         router.refresh()
       },
       getErrorMessage: (error) => tError(error),
