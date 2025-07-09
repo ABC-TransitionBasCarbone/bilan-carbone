@@ -43,26 +43,22 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
     () =>
       [
         {
-          header: t('rule'),
-          columns: [
-            {
-              id: 'category',
-              header: t('category.title'),
-              accessorFn: ({ rule }) => {
-                const category = rule.split('.')[0]
-                return category === 'total' ? '' : `${category}. ${t(`category.${category}`)}`
-              },
-            },
-            {
-              header: t('post.title'),
-              accessorFn: ({ rule }) => {
-                if (rule === 'total') {
-                  return t('total')
-                }
-                return rule.includes('.total') ? t('subTotal') : `${rule}. ${t(`post.${rule}`)}`
-              },
-            },
-          ],
+          id: 'category',
+          header: t('category.title'),
+          accessorFn: ({ rule }) => {
+            const category = rule.split('.')[0]
+            return category === 'total' ? '' : `${category}. ${t(`category.${category}`)}`
+          },
+        },
+        {
+          id: 'post',
+          header: t('post.title'),
+          accessorFn: ({ rule }) => {
+            if (rule === 'total') {
+              return t('total')
+            }
+            return rule.includes('.total') ? t('subTotal') : `${rule}. ${t(`post.${rule}`)}`
+          },
         },
         {
           header: t('ges', { unit: tUnits(study.resultsUnit) }),
@@ -97,15 +93,16 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
               accessorKey: 'co2b',
               cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
             },
-            {
-              header: t('uncertainty'),
-              accessorFn: ({ uncertainty }) =>
-                uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
-            },
           ],
         },
+        {
+          id: 'uncertainty',
+          header: t('uncertainty'),
+          accessorFn: ({ uncertainty }) =>
+            uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
+        },
       ] as ColumnDef<BegesLine>[],
-    [t, tQuality],
+    [t, tQuality, tUnits, study.resultsUnit],
   )
 
   const data = useMemo(
@@ -155,12 +152,21 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
                   }
 
                   let cellClass = ''
+                  const isSubtotal = row.original.rule.includes('.total')
+                  const isTotalColumn = cell.column.id === 'total'
+
                   if (cell.column.id === 'category') {
-                    cellClass = 'category-cell'
+                    cellClass = 'category-cell category-bold'
                   } else if (isTotal) {
                     cellClass = 'total-row'
+                  } else if (isSubtotal) {
+                    cellClass = 'post-cell subtotal-row'
                   } else {
                     cellClass = 'post-cell'
+                  }
+
+                  if (isTotalColumn) {
+                    cellClass += ' total-column'
                   }
 
                   return (
