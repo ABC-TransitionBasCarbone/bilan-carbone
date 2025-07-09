@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { caracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
+import { getCaracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { formatNumber } from '@/utils/number'
@@ -66,7 +66,7 @@ const SubPost = ({
     [study, subPost, withoutDetail],
   )
 
-  const caracterisations = useMemo(() => caracterisationsBySubPost[subPost], [subPost])
+  const caracterisations = useMemo(() => getCaracterisationsBySubPost(study.exports, subPost), [subPost, study.exports])
 
   const [expanded, setExpanded] = useState(false)
 
