@@ -1,3 +1,4 @@
+import { resultsExportHeadersBase, resultsExportHeadersCut } from '@/constants/exports'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy, getStudyById } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
@@ -302,6 +303,28 @@ export const downloadStudyEmissionSources = async (
   downloadCSV(csvContent, fileName)
 }
 
+const getHeadersForEnv = (environment: Environment) => {
+  switch (environment) {
+    case Environment.CUT:
+      return resultsExportHeadersCut
+    case Environment.BC:
+    default:
+      return resultsExportHeadersBase
+  }
+}
+const getFormattedHeadersForEnv = (
+  environment: Environment,
+  traduction: ReturnType<typeof useTranslations>,
+  traductionUnit: ReturnType<typeof useTranslations>,
+  unit: StudyResultUnit,
+) => {
+  const headers = getHeadersForEnv(environment)
+
+  return headers.map((header) =>
+    header !== 'value' ? traduction(header) : traduction(header, { unit: traductionUnit(unit) }),
+  )
+}
+
 export const formatConsolidatedStudyResultsForExport = (
   study: FullStudy,
   siteList: { name: string; id: string }[],
@@ -314,6 +337,7 @@ export const formatConsolidatedStudyResultsForExport = (
   environment: Environment = Environment.BC,
 ) => {
   const dataForExport = []
+  const headersForEnv = getHeadersForEnv(environment)
 
   for (const site of siteList) {
     const resultList = computeResultsByPost(
@@ -324,16 +348,16 @@ export const formatConsolidatedStudyResultsForExport = (
       validatedEmissionSourcesOnly,
       environmentPostMapping[environment],
     )
-
     dataForExport.push([site.name])
-    dataForExport.push([tStudy('post'), tStudy('uncertainty'), tStudy('value', { unit: tUnits(study.resultsUnit) })])
+    dataForExport.push(getFormattedHeadersForEnv(environment, tStudy, tUnits, study.resultsUnit))
 
     for (const result of resultList) {
-      dataForExport.push([
-        tPost(result.post) ?? '',
-        result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '',
-        (result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit],
-      ])
+      const resultLine = [tPost(result.post) ?? '']
+
+      if (headersForEnv.includes('uncertainty')) {
+        resultLine.push(result.uncertainty ? tQuality(getStandardDeviationRating(result.uncertainty).toString()) : '')
+      }
+      dataForExport.push([...resultLine, (result.value ?? 0) / STUDY_UNIT_VALUES[study.resultsUnit]])
     }
 
     dataForExport.push([])

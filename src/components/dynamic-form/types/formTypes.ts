@@ -81,3 +81,12 @@ export interface EmissionResults {
   qualityRating: string
   unit: string
 }
+
+export interface TableRow {
+  id: string
+  data: Record<string, string>
+}
+
+export interface TableAnswer {
+  rows: TableRow[]
+}
