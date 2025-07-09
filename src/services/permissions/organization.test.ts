@@ -4,6 +4,7 @@ import * as dbUser from '@/db/user'
 import { mockedOrganizationId, mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
+import * as userUtils from '@/utils/user'
 import { expect } from '@jest/globals'
 import { Role } from '@prisma/client'
 import { UserSession } from 'next-auth'
@@ -21,10 +22,12 @@ jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
 jest.mock('@/db/organization', () => ({ getOrganizationVersionById: jest.fn() }))
 jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
 jest.mock('@/utils/organization', () => ({
-  canEditMemberRole: jest.fn(),
   canEditOrganizationVersion: jest.fn(),
   hasEditionRole: jest.fn(),
   isInOrgaOrParent: jest.fn(),
+}))
+jest.mock('@/utils/user', () => ({
+  canEditMemberRole: jest.fn(),
 }))
 jest.mock('../serverFunctions/study', () => ({ getOrganizationStudiesFromOtherUsers: jest.fn() }))
 jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
@@ -32,7 +35,7 @@ jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
 const mockGetAccountById = dbAccount.getAccountById as jest.Mock
 const mockGetOrganizationVersionById = dbOrganization.getOrganizationVersionById as jest.Mock
 const mockGetUserByEmail = dbUser.getUserByEmail as jest.Mock
-const mockCanEditMemberRole = organizationUtils.canEditMemberRole as jest.Mock
+const mockCanEditMemberRole = userUtils.canEditMemberRole as jest.Mock
 const mockCanEditOrganizationVersion = organizationUtils.canEditOrganizationVersion as jest.Mock
 const mockHasEditionRole = organizationUtils.hasEditionRole as jest.Mock
 const mockIsInOrgaOrParent = organizationUtils.isInOrgaOrParent as jest.Mock

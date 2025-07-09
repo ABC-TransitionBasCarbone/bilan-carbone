@@ -2,12 +2,22 @@ import { CutRoles } from '@/services/roles'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
 import { Environment, Role, UserStatus } from '@prisma/client'
-import * as organizationModule from './organization'
-import { canBeUntrainedRole, findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
+import {
+  canBeUntrainedRole,
+  canEditMemberRole,
+  findUserInfo,
+  getEnvironmentRoles,
+  getRoleToSetForUntrained,
+  isAdmin,
+} from './user'
 
-jest.mock('./organization', () => ({ canEditMemberRole: jest.fn() }))
+jest.mock('./user', () => ({
+  canEditMemberRole: jest.fn(),
+  canBeUntrainedRole: jest.fn(),
+}))
 
-const mockCanEditMemberRole = organizationModule.canEditMemberRole as jest.Mock
+const mockCanEditMemberRole = canEditMemberRole as jest.Mock
+const mockCanBeUntrainedRole = canBeUntrainedRole as jest.Mock
 
 describe('userUtils functions', () => {
   describe('isAdmin', () => {
@@ -105,19 +115,19 @@ describe('userUtils functions', () => {
 
   describe('canBeUntrainedRole', () => {
     test('should return true for all roles in CUT environment', () => {
-      expect(canBeUntrainedRole(Role.ADMIN, Environment.CUT)).toBe(true)
-      expect(canBeUntrainedRole(Role.DEFAULT, Environment.CUT)).toBe(true)
+      expect(mockCanBeUntrainedRole(Role.ADMIN, Environment.CUT)).toBe(true)
+      expect(mockCanBeUntrainedRole(Role.DEFAULT, Environment.CUT)).toBe(true)
     })
 
     test('should return true for GESTIONNAIRE and DEFAULT roles in BASE environment', () => {
-      expect(canBeUntrainedRole(Role.GESTIONNAIRE, Environment.BC)).toBe(true)
-      expect(canBeUntrainedRole(Role.DEFAULT, Environment.BC)).toBe(true)
+      expect(mockCanBeUntrainedRole(Role.GESTIONNAIRE, Environment.BC)).toBe(true)
+      expect(mockCanBeUntrainedRole(Role.DEFAULT, Environment.BC)).toBe(true)
     })
 
     test('should return false for other roles in BASE environment', () => {
-      expect(canBeUntrainedRole(Role.ADMIN, Environment.BC)).toBe(false)
-      expect(canBeUntrainedRole(Role.COLLABORATOR, Environment.BC)).toBe(false)
-      expect(canBeUntrainedRole(Role.SUPER_ADMIN, Environment.BC)).toBe(false)
+      expect(mockCanBeUntrainedRole(Role.ADMIN, Environment.BC)).toBe(false)
+      expect(mockCanBeUntrainedRole(Role.COLLABORATOR, Environment.BC)).toBe(false)
+      expect(mockCanBeUntrainedRole(Role.SUPER_ADMIN, Environment.BC)).toBe(false)
     })
   })
 })
