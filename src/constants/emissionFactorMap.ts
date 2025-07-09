@@ -1,7 +1,7 @@
 export type EmissionFactorInfo = {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
-  linkQuestionId?: string
+  linkDepreciationQuestionId?: string
   emissionFactors?: Record<string, string>
   isFixed?: boolean
 }
@@ -12,22 +12,22 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
    * TODO match emissionFactorImportedId with idIntern
    */
   // Batiment
-  '10-quelle-est-la-surface-plancher-du-cinema': {
+  'quelle-est-la-surface-plancher-du-cinema': {
     emissionFactorImportedId: '20730',
-    linkQuestionId: '11-quand-le-batiment-a-t-il-ete-construit',
+    linkDepreciationQuestionId: 'quand-le-batiment-a-t-il-ete-construit',
   },
-  '11-quand-le-batiment-a-t-il-ete-construit': {
+  'quand-le-batiment-a-t-il-ete-construit': {
     depreciationPeriod: 50,
-    linkQuestionId: '10-quelle-est-la-surface-plancher-du-cinema',
+    linkDepreciationQuestionId: 'quelle-est-la-surface-plancher-du-cinema',
   },
-  '12-a-quand-remonte-la-derniere-renovation-importante': {
+  'a-quand-remonte-la-derniere-renovation-importante': {
     depreciationPeriod: 10,
-    linkQuestionId: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee',
+    linkDepreciationQuestionId: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee',
   },
   'de-quel-type-de-renovation-sagi-t-il': {},
   'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': {
     emissionFactorImportedId: '20730',
-    linkQuestionId: '12-a-quand-remonte-la-derniere-renovation-importante',
+    linkDepreciationQuestionId: 'a-quand-remonte-la-derniere-renovation-importante',
   },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},
@@ -153,21 +153,15 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Ecran 2D': '110',
       'Ecran 3D': '111',
     },
-    linkQuestionId: '13-Décrivez les différentes salles du cinéma',
   },
-  '13-decrivez-les-differentes-salles-du-cinema': {
-    linkQuestionId: '12-Décrivez les différentes salles du cinéma',
-  },
+  '13-decrivez-les-differentes-salles-du-cinema': {},
   '14-decrivez-les-differentes-salles-du-cinema': {
     emissionFactors: {
       'Fauteuils classiques': '112',
       'Fauteuils 4DX': '113',
     },
-    linkQuestionId: '15-Décrivez les différentes salles du cinéma',
   },
-  '15-decrivez-les-differentes-salles-du-cinema': {
-    linkQuestionId: '14-Décrivez les différentes salles du cinéma',
-  },
+  '15-decrivez-les-differentes-salles-du-cinema': {},
   '16-decrivez-les-differentes-salles-du-cinema': {
     // TODO multiplier par le nombre de salles
     emissionFactors: {

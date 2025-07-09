@@ -124,17 +124,18 @@ const handleTableEmissionSources = async (
         continue
       }
 
-      const { emissionFactorImportedId, depreciationPeriod, linkQuestionId } =
+      const { emissionFactorImportedId, depreciationPeriod, linkDepreciationQuestionId } =
         getEmissionFactorByIdIntern(relatedQuestion.idIntern, columnValue) || {}
 
-      if (!emissionFactorImportedId && !depreciationPeriod && !linkQuestionId) {
+      console.log(emissionFactorImportedId, depreciationPeriod, linkDepreciationQuestionId)
+      if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
         continue
       }
 
       let emissionFactorId = undefined
 
-      if (linkQuestionId) {
-        const linkQuestion = await getQuestionByIdIntern(linkQuestionId)
+      if (linkDepreciationQuestionId) {
+        const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
 
         if (linkQuestion) {
           const linkValue = row.data[linkQuestion.idIntern]
@@ -254,33 +255,47 @@ export const saveAnswerForQuestion = async (
       return savedAnswer
     }
 
-    const { emissionFactorImportedId, depreciationPeriod, linkQuestionId } =
+    const { emissionFactorImportedId, depreciationPeriod, linkDepreciationQuestionId } =
       getEmissionFactorByIdIntern(question.idIntern, response) || {}
 
     let emissionFactorId = undefined
     let emissionSourceId = undefined
 
-    const value = depreciationPeriod ? undefined : Number(response)
+    const value = Number(response)
+    let valueToStore = value
+    const depreciationPeriodToStore = depreciationPeriod
 
-    if (!emissionFactorImportedId && !depreciationPeriod && !linkQuestionId) {
+    if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
       return saveAnswer(question.id, studySiteId, response)
     }
 
-    if (linkQuestionId) {
-      const linkQuestion = await getQuestionByIdIntern(linkQuestionId)
+    if (depreciationPeriod && !linkDepreciationQuestionId) {
+      throw new Error(`question avec une période d'amortissement mais sans question liée ${question.idIntern}`)
+    }
+
+    if (linkDepreciationQuestionId) {
+      const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
       if (!linkQuestion) {
-        throw new Error(`Previous question not found for idIntern: ${linkQuestionId}`)
+        throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
       }
 
       const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
-      /**
-       * TODO :
-       * Sauvegarder dans une seule réponse json les différentes valeurs à multiplier
-       * Créer une émissionSource uniquement quand les différentes valeurs sont connues
-       */
       if (linkAnswer) {
         const linkEmissionSource = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
         emissionSourceId = linkEmissionSource?.emissionSourceId ?? undefined
+      }
+
+      const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
+
+      const depreciationPeriodToStore =
+        (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
+      const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : value
+      const dateValue = depreciationPeriod ? value : parseFloat(linkAnswer?.response?.toString() || '0')
+
+      if (depreciationPeriodToStore < new Date(study.startDate).getFullYear() - dateValue) {
+        valueToStore = 0
+      } else {
+        valueToStore = valueToDepreciate
       }
     }
 
@@ -297,19 +312,19 @@ export const saveAnswerForQuestion = async (
 
     if (emissionSourceId) {
       await updateEmissionSource({
-        value,
+        value: valueToStore,
         emissionSourceId,
         emissionFactorId,
-        depreciationPeriod,
+        depreciationPeriod: depreciationPeriodToStore,
       })
     } else {
       const emissionSource = await createEmissionSource({
         studyId,
         studySiteId,
-        value,
+        value: valueToStore,
         name: question.idIntern,
         subPost: question.subPost,
-        depreciationPeriod,
+        depreciationPeriod: depreciationPeriodToStore,
         emissionFactorId,
       })
 
@@ -327,9 +342,9 @@ export const saveAnswerForQuestion = async (
         await createAnswerEmissionSource(savedAnswer.id, emissionSourceId, null, null)
       }
 
-      // If this question has a linkQuestionId, also ensure the linked answers are connected to the same emission source
-      if (linkQuestionId) {
-        const linkQuestion = await getQuestionByIdIntern(linkQuestionId)
+      // If this question has a linkDepreciationQuestionId, also ensure the linked answers are connected to the same emission source
+      if (linkDepreciationQuestionId) {
+        const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
         if (linkQuestion) {
           const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
           if (linkAnswer) {
@@ -422,11 +437,6 @@ const isTableColumnQuestion = async (question: Question): Promise<boolean> => {
 
 const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJsonValue): EmissionFactorInfo => {
   const emissionFactorInfo = emissionFactorMap[idIntern]
-
-  console.log(
-    `getEmissionFactorByIdIntern: idIntern=${idIntern}, response=${response}, emissionFactorInfo=`,
-    emissionFactorInfo,
-  )
 
   if (emissionFactorInfo && emissionFactorInfo.emissionFactors) {
     if (typeof response === 'object' && response !== null && !Array.isArray(response)) {
