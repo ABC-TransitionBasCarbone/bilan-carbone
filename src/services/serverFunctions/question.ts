@@ -792,9 +792,17 @@ const handleSpecialQuestions = async (
 ) => {
   let emissionSourceIds: string[] = []
 
+  if (question.idIntern !== SHORT_DISTANCE_QUESTION_ID && question.idIntern !== LONG_DISTANCE_QUESTION_ID) {
+    await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [question.idIntern])
+  }
+
   switch (question.idIntern) {
     case SHORT_DISTANCE_QUESTION_ID:
     case LONG_DISTANCE_QUESTION_ID: {
+      await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [
+        SHORT_DISTANCE_QUESTION_ID,
+        LONG_DISTANCE_QUESTION_ID,
+      ])
       emissionSourceIds = await applyCinemaProfileForTransport(question, response, study, studySiteId)
       break
     }
