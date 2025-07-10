@@ -247,9 +247,3 @@ export const deleteAnswerEmissionSourceById = async (answerEmissionSourceId: str
     where: { id: emissionSourceId },
   })
 }
-
-export const deleteStudyEmissionSourceById = async (id: string) => {
-  return await prismaClient.studyEmissionSource.delete({
-    where: { id },
-  })
-}
