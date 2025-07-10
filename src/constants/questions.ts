@@ -8,6 +8,7 @@ export const LONG_DISTANCE_APPLIED_PERCENTAGE = 0.03
 export const LONG_DISTANCE_CAR_PERCENTAGE = 0.7
 export const LONG_DISTANCE_TGV_PERCENTAGE = 0.3
 
-export const MOVIE_TEAM_QUESTION_ID = 'combien-d-equipes-de-film-avez-vous-recu-en-*'
+export const MOVIE_TEAM_QUESTION_ID = 'combien-dequipes-de-films-avez-vous-recu-en'
+export const MOVIE_TEAM_MEAL_QUESTION_ID = 'combien-dequipes-de-repas'
 export const MOVIE_DEMAT_QUESTION_ID = 'combien-de-films-recevez-vous-en-dematerialise-par-an'
 export const MOVIE_DCP_QUESTION_ID = 'combien-de-films-recevez-vous-sur-dcp-physique-par-an'
