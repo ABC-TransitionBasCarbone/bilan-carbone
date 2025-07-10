@@ -14,6 +14,7 @@ import {
   updateEmissionFactor,
 } from '@/db/emissionFactors'
 import { getOrganizationVersionById } from '@/db/organization'
+import { getStudyById } from '@/db/study'
 import { getLocale } from '@/i18n/locale'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { ManualEmissionFactorUnitList } from '@/utils/emissionFactors'
@@ -65,6 +66,22 @@ export const getEmissionFactors = async (studyId?: string, withCut: boolean = fa
   })
 export type EmissionFactorWithMetaData = IsSuccess<AsyncReturnType<typeof getEmissionFactors>>[number]
 
+const getStudyOrganization = async (studyId: string, organizationVersionId: string) => {
+  const study = await getStudyById(studyId, organizationVersionId)
+  if (!study) {
+    throw Error("Study doesn't exist")
+  }
+
+  const orgaVersion = study.organizationVersion.parentId || study.organizationVersion.id
+
+  const organization = await getOrganizationVersionById(orgaVersion)
+  if (!organization) {
+    throw Error("Organization doesn't exist")
+  }
+
+  return organization.organizationId
+}
+
 export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
   withServerResponse('getEmissionFactorsByIds', async () => {
     try {
@@ -76,7 +93,7 @@ export const getEmissionFactorsByIds = async (ids: string[], studyId: string) =>
         return []
       }
 
-      const emissionFactorOrganization = (await getStudyParentOrganizationVersionId(
+      const emissionFactorOrganization = (await getStudyOrganization(
         studyId,
         session.user.organizationVersionId,
       )) as string
