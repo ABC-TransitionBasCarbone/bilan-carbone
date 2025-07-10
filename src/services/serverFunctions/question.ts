@@ -223,10 +223,6 @@ export const saveAnswerForQuestion = async (
       return saveAnswer(question.id, studySiteId, response)
     }
 
-    if (depreciationPeriod && !linkDepreciationQuestionId) {
-      throw new Error(`question avec une période d'amortissement mais sans question liée ${question.idIntern}`)
-    }
-
     const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
     if (existingAnswer) {
       const existingEmissionSource = await findAnswerEmissionSourceByAnswer(existingAnswer.id)
