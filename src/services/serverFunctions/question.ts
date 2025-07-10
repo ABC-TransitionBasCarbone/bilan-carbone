@@ -3,8 +3,12 @@
 import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
 import { EmissionFactorInfo, emissionFactorMap } from '@/constants/emissionFactorMap'
 import {
+  CONFECTIONERY_QUESTION_ID,
   LONG_DISTANCE_APPLIED_PERCENTAGE,
   LONG_DISTANCE_QUESTION_ID,
+  MOVIE_DCP_QUESTION_ID,
+  MOVIE_DEMAT_QUESTION_ID,
+  MOVIE_TEAM_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
 } from '@/constants/questions'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
@@ -302,7 +306,7 @@ export const saveAnswerForQuestion = async (
         })
       }
     } else if (!isEmptyValue) {
-      await createEmissionSource({
+      const newEmissionSource = await createEmissionSource({
         studyId,
         studySiteId,
         value: valueToStore,
@@ -312,6 +316,10 @@ export const saveAnswerForQuestion = async (
         emissionFactorId,
         validated: true,
       })
+
+      if (newEmissionSource.success && newEmissionSource.data) {
+        emissionSourceId = newEmissionSource.data.id
+      }
     }
 
     const savedAnswer = await saveAnswer(question.id, studySiteId, response)
@@ -595,6 +603,187 @@ const applyCinemaProfileForTransport = async (
   return emissionSourceIds
 }
 
+const applyConfectioneryCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  console.log('inside')
+  const studyId = study.id
+  const studySite = study.sites.find((site) => site.id === studySiteId)
+  const numberOfTickets = studySite?.numberOfTickets || 0
+
+  if (numberOfTickets === 0) {
+    return []
+  }
+
+  const emissionInfo = emissionFactorMap[CONFECTIONERY_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactors) {
+    return []
+  }
+
+  const selectedOption = response as string
+  const emissionFactorImportedId = emissionInfo.emissionFactors[selectedOption]
+
+  if (!emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const value = numberOfTickets
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
+const applyMovieTeamCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const emissionInfo = emissionFactorMap[MOVIE_TEAM_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const studySite = study.sites.find((site) => site.id === studySiteId)
+  const distanceToParis = studySite?.distanceToParis || 0
+  const value = Number(response) * 3 * distanceToParis
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
+const applyDematMovieCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const emissionSourceIds: string[] = []
+  const emissionInfo = emissionFactorMap[MOVIE_DCP_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return emissionSourceIds
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return emissionSourceIds
+  }
+
+  const numberReponse = Number(response)
+  const infosToCreate = [180, 3, 4]
+
+  for (const info of infosToCreate) {
+    const newEmissionSource = await createEmissionSource({
+      studyId,
+      studySiteId,
+      value: info * numberReponse,
+      name: question.idIntern,
+      subPost: question.subPost,
+      emissionFactorId: emissionFactor.id,
+      validated: true,
+    })
+
+    if (newEmissionSource.success && newEmissionSource.data) {
+      emissionSourceIds.push(newEmissionSource.data.id)
+    }
+  }
+
+  return emissionSourceIds
+}
+
+const applyDCPMovieCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const emissionSourceIds: string[] = []
+  const emissionInfo = emissionFactorMap[MOVIE_DCP_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return emissionSourceIds
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return emissionSourceIds
+  }
+
+  const studySite = study.sites.find((site) => site.id === studySiteId)
+  const distanceToParis = studySite?.distanceToParis || 0
+  const numberReponse = Number(response)
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: (0.1 * numberReponse * distanceToParis) / 1000,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return emissionSourceIds
+}
+
 const handleSpecialQuestions = async (
   question: Question,
   response: Prisma.InputJsonValue,
@@ -607,6 +796,22 @@ const handleSpecialQuestions = async (
     case SHORT_DISTANCE_QUESTION_ID:
     case LONG_DISTANCE_QUESTION_ID: {
       emissionSourceIds = await applyCinemaProfileForTransport(question, response, study, studySiteId)
+      break
+    }
+    case CONFECTIONERY_QUESTION_ID: {
+      emissionSourceIds = await applyConfectioneryCalculation(question, response, study, studySiteId)
+      break
+    }
+    case MOVIE_TEAM_QUESTION_ID: {
+      emissionSourceIds = await applyMovieTeamCalculation(question, response, study, studySiteId)
+      break
+    }
+    case MOVIE_DEMAT_QUESTION_ID: {
+      emissionSourceIds = await applyDematMovieCalculation(question, response, study, studySiteId)
+      break
+    }
+    case MOVIE_DCP_QUESTION_ID: {
+      emissionSourceIds = await applyDCPMovieCalculation(question, response, study, studySiteId)
       break
     }
     default: {

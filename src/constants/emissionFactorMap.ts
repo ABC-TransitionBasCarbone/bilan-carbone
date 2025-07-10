@@ -217,10 +217,10 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   next: {},
   'quel-est-le-profil-auquel-vous-pouvez-identifier-le-plus-votre-cinema': {},
   // Equipes recus
-  'combien-d-equipes-de-film-avez-vous-recu-en-*': {},
+  'combien-d-equipes-de-film-avez-vous-recu-en-*': { emissionFactorImportedId: '28130', isSpecial: true },
   'combien-de-nuits': { emissionFactorImportedId: '106' },
   'combien-d-equipes-de-repas': { emissionFactorImportedId: '20682' },
-  // Autres matériel et matériel technique - Attente de la fonctionnalité table
+  // Matériel technique
   '10-decrivez-les-differentes-salles-du-cinema': {},
   '102-decrivez-les-differentes-salles-du-cinema': {
     depreciationPeriod: 10,
@@ -259,15 +259,16 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   '11-comment-stockez-vous-les-films': { emissionFactorImportedId: '20894' },
   '12-comment-stockez-vous-les-films': { emissionFactorImportedId: '20893' },
-  'combien-de-films-recevez-vous-en-dématérialise-par-an': { emissionFactorImportedId: '141' },
-  'combiende-films-recevez-vous-sur-dcp-physique-par-an': {}, // TODO: Calcul ?
-  'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '142' },
-  '11-de-combien-disposez-vous-de': { emissionFactorImportedId: '139' },
-  '12-de-combien-disposez-vous-de': { emissionFactorImportedId: '140' },
+  'combien-de-films-recevez-vous-en-dematerialise-par-an': { isSpecial: true, emissionFactorImportedId: '142' },
+  'combien-de-films-recevez-vous-sur-dcp-physique-par-an': { isSpecial: true, emissionFactorImportedId: '143' },
+  'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
+  '12-de-combien-disposez-vous-de-disques-durs-disposez-vous': { emissionFactorImportedId: '140' },
+  // Autre matériel
+  'de-combien-de-lunettes-3d-disposez-vous': { emissionFactorImportedId: '139' },
   // Achats
-  '11-vendez-vous-des-boissons-et-des-confiseries': {
+  'selon-vous-en-moyenne-un-spectateur-achete': {
+    isSpecial: true,
     emissionFactors: {
-      // TODO trouver une manière de mulitplier par le nombre de séances
       'Un peu de confiseries et de boissons (~30g)': '136',
       'Une part standard de confiseries et de boissons (~120g)': '137',
       'Une part significative de confiseries et de boissons (~200g)': '138',
