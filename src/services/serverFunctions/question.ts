@@ -127,7 +127,6 @@ const handleTableEmissionSources = async (
       const { emissionFactorImportedId, depreciationPeriod, linkDepreciationQuestionId } =
         getEmissionFactorByIdIntern(relatedQuestion.idIntern, columnValue) || {}
 
-      console.log(emissionFactorImportedId, depreciationPeriod, linkDepreciationQuestionId)
       if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
         continue
       }
@@ -261,8 +260,7 @@ export const saveAnswerForQuestion = async (
     let emissionFactorId = undefined
     let emissionSourceId = undefined
 
-    const value = Number(response)
-    let valueToStore = value
+    let valueToStore = Number(response)
     const depreciationPeriodToStore = depreciationPeriod
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
@@ -289,8 +287,8 @@ export const saveAnswerForQuestion = async (
 
       const depreciationPeriodToStore =
         (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
-      const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : value
-      const dateValue = depreciationPeriod ? value : parseFloat(linkAnswer?.response?.toString() || '0')
+      const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
+      const dateValue = depreciationPeriod ? valueToStore : parseFloat(linkAnswer?.response?.toString() || '0')
 
       if (depreciationPeriodToStore < new Date(study.startDate).getFullYear() - dateValue) {
         valueToStore = 0
