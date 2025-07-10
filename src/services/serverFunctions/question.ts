@@ -51,20 +51,11 @@ const cleanupRowEmissionSources = async (
   rowId: string,
   calculatedEmissionSources?: EmissionSourceCalculation[],
 ) => {
-  console.log({
-    calculatedEmissionSources,
-  })
-
   if (!calculatedEmissionSources || calculatedEmissionSources.length === 0) {
     await deleteAnswerEmissionSourcesForRow(answerId, rowId)
   } else {
     const existingAnswerEmissionSources = await findAnswerEmissionSourcesByAnswerAndRow(answerId, rowId)
     const existingTypes = new Set(calculatedEmissionSources.map((e) => e.name))
-
-    console.log({
-      existingTypes,
-      existingAnswerEmissionSources,
-    })
 
     for (const existingEmissionSource of existingAnswerEmissionSources) {
       if (existingEmissionSource.emissionType && !existingTypes.has(existingEmissionSource.emissionType)) {
