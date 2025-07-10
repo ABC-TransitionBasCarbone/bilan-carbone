@@ -33,11 +33,11 @@ export interface TableEmissionCalculator {
  */
 const calculateWorkRhythm: TableEmissionCalculator = {
   calculate: async (row, study) => {
-    const daysPerWeek = parseFloat(row.data['11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || '0')
-    const distanceKm = parseFloat(row.data['12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || '0')
+    const daysPerWeek = parseFloat(row.data['12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || '0')
+    const distanceKm = parseFloat(row.data['13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || '0')
     const transportModeFEList =
-      emissionFactorMap['13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'].emissionFactors
-    const transportModeFEName = row.data['13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || ''
+      emissionFactorMap['14-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'].emissionFactors
+    const transportModeFEName = row.data['15-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || ''
 
     const emissionSources: EmissionSourceCalculation[] = []
 
@@ -90,7 +90,7 @@ const calculateWorkRhythm: TableEmissionCalculator = {
  */
 const calculateProfessionalTravel: TableEmissionCalculator = {
   calculate: async (row, study) => {
-    const distance = parseFloat(row.data['11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || '0')
+    const distance = parseFloat(row.data['12-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || '0')
     const participants = parseFloat(
       row.data['13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || '0',
     )
