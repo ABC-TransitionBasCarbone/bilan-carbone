@@ -319,6 +319,7 @@
       "isPublicTitle": "Study visibility",
       "numberOfSessions": "Number of sessions",
       "numberOfTickets": "Number of tickets",
+      "distanceToParis": "Distance to Paris (km)",
       "numberOfOpenDays": "Number of open days",
       "openingHours": "Opening hours",
       "openingHoursHoliday": "Opening hours during school holidays",

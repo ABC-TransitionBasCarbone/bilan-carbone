@@ -167,6 +167,7 @@ export const ChangeStudyCinemaValidation = z.object({
   numberOfSessions: z.number().optional().nullable(),
   numberOfTickets: z.number().optional().nullable(),
   numberOfOpenDays: z.number().optional().nullable(),
+  distanceToParis: z.number().optional().nullable(),
 })
 
 export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>
