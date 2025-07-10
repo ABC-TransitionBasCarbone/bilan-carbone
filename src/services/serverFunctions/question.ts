@@ -233,7 +233,7 @@ export const saveAnswerForQuestion = async (
     let emissionSourceId = undefined
 
     let valueToStore = Number(response)
-    const depreciationPeriodToStore = depreciationPeriod
+    let depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
       return handleSpecialQuestions(question, response, study, studySiteId)
@@ -249,6 +249,7 @@ export const saveAnswerForQuestion = async (
       emissionSourceId = existingEmissionSource?.emissionSourceId ?? undefined
     }
 
+    let emissionFactorToFindId = emissionFactorImportedId
     if (linkDepreciationQuestionId) {
       const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
       if (!linkQuestion) {
@@ -263,8 +264,7 @@ export const saveAnswerForQuestion = async (
 
       const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
 
-      const depreciationPeriodToStore =
-        (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
+      depreciationPeriodToStore = (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
       const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
       const dateValue = depreciationPeriod ? valueToStore : parseFloat(linkAnswer?.response?.toString() || '0')
 
@@ -273,15 +273,19 @@ export const saveAnswerForQuestion = async (
       } else {
         valueToStore = valueToDepreciate
       }
+
+      if (!emissionFactorImportedId && linkEmissionInfo?.emissionFactorImportedId) {
+        emissionFactorToFindId = linkEmissionInfo.emissionFactorImportedId
+      }
     }
 
-    if (emissionFactorImportedId) {
+    if (emissionFactorToFindId) {
       const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-        emissionFactorImportedId,
+        emissionFactorToFindId,
         study.emissionFactorVersions.map((v) => v.importVersionId),
       )
       if (!emissionFactor) {
-        throw new Error(`Emission factor not found for importedId: ${emissionFactorImportedId}`)
+        throw new Error(`Emission factor not found for importedId: ${emissionFactorToFindId}`)
       }
       emissionFactorId = emissionFactor.id
     }
