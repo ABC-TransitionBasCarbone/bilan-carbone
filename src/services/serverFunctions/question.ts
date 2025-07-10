@@ -227,6 +227,12 @@ export const saveAnswerForQuestion = async (
       throw new Error(`question avec une période d'amortissement mais sans question liée ${question.idIntern}`)
     }
 
+    const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
+    if (existingAnswer) {
+      const existingEmissionSource = await findAnswerEmissionSourceByAnswer(existingAnswer.id)
+      emissionSourceId = existingEmissionSource?.emissionSourceId ?? undefined
+    }
+
     if (linkDepreciationQuestionId) {
       const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
       if (!linkQuestion) {
@@ -264,14 +270,26 @@ export const saveAnswerForQuestion = async (
       emissionFactorId = emissionFactor.id
     }
 
+    const isEmptyValue = isNaN(valueToStore) || valueToStore <= 0
+
     if (emissionSourceId) {
-      await updateEmissionSource({
-        value: valueToStore,
-        emissionSourceId,
-        emissionFactorId,
-        depreciationPeriod: depreciationPeriodToStore,
-      })
-    } else {
+      if (isEmptyValue) {
+        if (existingAnswer) {
+          const existingEntry = await findAnswerEmissionSourceByAnswer(existingAnswer.id)
+          if (existingEntry) {
+            await deleteAnswerEmissionSourceById(existingEntry.id, emissionSourceId)
+          }
+        }
+        emissionSourceId = undefined
+      } else {
+        await updateEmissionSource({
+          value: valueToStore,
+          emissionSourceId,
+          emissionFactorId,
+          depreciationPeriod: depreciationPeriodToStore,
+        })
+      }
+    } else if (!isEmptyValue) {
       const emissionSource = await createEmissionSource({
         studyId,
         studySiteId,
