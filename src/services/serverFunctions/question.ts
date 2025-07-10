@@ -610,7 +610,6 @@ const applyConfectioneryCalculation = async (
   study: FullStudy,
   studySiteId: string,
 ) => {
-  console.log('inside')
   const studyId = study.id
   const studySite = study.sites.find((site) => site.id === studySiteId)
   const numberOfTickets = studySite?.numberOfTickets || 0
