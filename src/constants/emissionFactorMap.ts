@@ -67,14 +67,16 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '20730',
     linkDepreciationQuestionId: 'a-quand-remonte-la-derniere-renovation-importante',
   },
+  'quel-est-le-montant-des-depenses-liees-a-ces-travaux-de-renovation': { emissionFactorImportedId: '43340' },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},
   'le-cinema-dispose-t-il-dun-parking': {},
   'si-oui-de-combien-de-places': { emissionFactorImportedId: '26008', depreciationPeriod: 50 },
   // Equipe - attente de la fonctionnalité table
-  '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
-  '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
-  '13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {
+  '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
+  '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
+  '13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
+  '14-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {
     emissionFactors: TRANSPORT_EMISSION_FACTORS,
   },
   // DeplacementsProfessionnels
