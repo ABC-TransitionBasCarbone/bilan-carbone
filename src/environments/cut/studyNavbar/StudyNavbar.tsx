@@ -37,14 +37,6 @@ const StudyNavbarCut = ({ studyId }: { studyId: UUID }) => {
         PaperProps={{ className: commonStyles.studyNavbarContainer }}
         variant="persistent"
       >
-        <Link
-          className={classNames(styles.link, { [styles.active]: pathName === `/etudes/${studyId}` })}
-          href={`/etudes/${studyId}`}
-        >
-          {t('homepage')}
-        </Link>
-        <Divider />
-
         <div>
           <div
             className={classNames(
