@@ -5,9 +5,11 @@ import { EmissionFactorInfo, emissionFactorMap } from '@/constants/emissionFacto
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
+  deleteAnswerEmissionSourceById,
   deleteAnswerEmissionSourcesForRow,
   findAnswerEmissionSourceByAnswer,
   findAnswerEmissionSourceByAnswerAndRow,
+  findAnswerEmissionSourcesByAnswerAndRow,
   getAnswerByQuestionId,
   getAnswersByStudyAndSubPost,
   getQuestionById,
@@ -19,18 +21,20 @@ import {
 } from '@/db/question'
 import { FullStudy, getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
-import { calculateTableEmissions, hasTableEmissionCalculator } from '@/utils/tableEmissionCalculations'
+import {
+  calculateTableEmissions,
+  EmissionSourceCalculation,
+  hasTableEmissionCalculator,
+} from '@/utils/tableEmissionCalculations'
 import { isTableAnswer } from '@/utils/tableInput'
-import { Prisma, Question, QuestionType, SubPost } from '@prisma/client'
+import { Answer, Prisma, Question, QuestionType, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadStudy } from '../permissions/study'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
-const cleanupDeletedTableRows = async (question: Question, tableAnswer: TableAnswer, studySiteId: string) => {
-  const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
-
-  if (existingAnswer && existingAnswer.response && isTableAnswer(existingAnswer.response)) {
+const cleanupTableEmissionSources = async (tableAnswer: TableAnswer, existingAnswer: Answer) => {
+  if (existingAnswer.response && isTableAnswer(existingAnswer.response)) {
     const existingTableAnswer = existingAnswer.response as TableAnswer
     const existingRowIds = existingTableAnswer.rows.map((row) => row.id)
     const currentRowIds = tableAnswer.rows.map((row) => row.id)
@@ -40,8 +44,25 @@ const cleanupDeletedTableRows = async (question: Question, tableAnswer: TableAns
       await deleteAnswerEmissionSourcesForRow(existingAnswer.id, deletedRowId)
     }
   }
+}
 
-  return existingAnswer
+const cleanupRowEmissionSources = async (
+  answerId: string,
+  rowId: string,
+  calculatedEmissionSources?: EmissionSourceCalculation[],
+) => {
+  if (!calculatedEmissionSources || calculatedEmissionSources.length === 0) {
+    await deleteAnswerEmissionSourcesForRow(answerId, rowId)
+  } else {
+    const existingAnswerEmissionSources = await findAnswerEmissionSourcesByAnswerAndRow(answerId, rowId)
+    const existingTypes = new Set(calculatedEmissionSources.map((e) => e.name))
+
+    for (const existingEmissionSource of existingAnswerEmissionSources) {
+      if (existingEmissionSource.emissionType && !existingTypes.has(existingEmissionSource.emissionType)) {
+        await deleteAnswerEmissionSourceById(existingEmissionSource.id, existingEmissionSource.emissionSourceId)
+      }
+    }
+  }
 }
 
 const handleTableEmissionSources = async (
@@ -52,8 +73,11 @@ const handleTableEmissionSources = async (
   study: FullStudy,
 ) => {
   const emissionSourceIds: string[] = []
+  const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
 
-  const existingAnswer = await cleanupDeletedTableRows(question, tableAnswer, studySiteId)
+  if (existingAnswer) {
+    await cleanupTableEmissionSources(tableAnswer, existingAnswer)
+  }
 
   if (hasTableEmissionCalculator(question.idIntern)) {
     const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
@@ -62,12 +86,8 @@ const handleTableEmissionSources = async (
       const row = tableAnswer.rows[arrayIndex]
       const result = calculationResults[arrayIndex]
 
-      if (!result || result.emissionSources.length === 0) {
-        // Clean up any existing emission sources for this row when data becomes invalid
-        if (existingAnswer) {
-          await deleteAnswerEmissionSourcesForRow(existingAnswer.id, row.id)
-        }
-        continue
+      if (existingAnswer) {
+        await cleanupRowEmissionSources(existingAnswer.id, row.id, result?.emissionSources)
       }
 
       for (const emissionSource of result.emissionSources) {
@@ -111,75 +131,7 @@ const handleTableEmissionSources = async (
         emissionSourceIds.push(emissionSourceId)
       }
     }
-
-    return emissionSourceIds
   }
-
-  const relatedQuestions = await getQuestionsByIdIntern(question.idIntern)
-
-  for (const row of tableAnswer.rows) {
-    for (const relatedQuestion of relatedQuestions) {
-      const columnValue = row.data[relatedQuestion.idIntern]
-      if (!columnValue) {
-        continue
-      }
-
-      const { emissionFactorImportedId, depreciationPeriod, linkDepreciationQuestionId } =
-        getEmissionFactorByIdIntern(relatedQuestion.idIntern, columnValue) || {}
-
-      if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
-        continue
-      }
-
-      let emissionFactorId = undefined
-
-      if (linkDepreciationQuestionId) {
-        const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
-
-        if (linkQuestion) {
-          const linkValue = row.data[linkQuestion.idIntern]
-          if (linkValue) {
-            const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkValue)
-            if (linkEmissionInfo?.emissionFactorImportedId) {
-              const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-                linkEmissionInfo.emissionFactorImportedId,
-                study.emissionFactorVersions.map((v) => v.importVersionId),
-              )
-              if (emissionFactor) {
-                emissionFactorId = emissionFactor.id
-              }
-            }
-          }
-        }
-      } else if (emissionFactorImportedId) {
-        const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-          emissionFactorImportedId,
-          study.emissionFactorVersions.map((v) => v.importVersionId),
-        )
-        if (emissionFactor) {
-          emissionFactorId = emissionFactor.id
-        }
-      }
-
-      const value = depreciationPeriod ? undefined : Number(columnValue)
-
-      const emissionSource = await createEmissionSource({
-        studyId,
-        studySiteId,
-        value: isNaN(value as number) ? undefined : value,
-        name: `${relatedQuestion.idIntern}-row-${row.id}`,
-        subPost: question.subPost,
-        depreciationPeriod,
-        emissionFactorId,
-      })
-
-      if (emissionSource.success && emissionSource.data) {
-        emissionSourceIds.push(emissionSource.data.id)
-        await updateEmissionSource({ validated: true, emissionSourceId: emissionSource.data.id })
-      }
-    }
-  }
-
   return emissionSourceIds
 }
 
@@ -254,7 +206,7 @@ export const saveAnswerForQuestion = async (
       return savedAnswer
     }
 
-    const { emissionFactorImportedId, depreciationPeriod, linkDepreciationQuestionId } =
+    const { emissionFactorImportedId, depreciationPeriod, linkDepreciationQuestionId, isSpecial } =
       getEmissionFactorByIdIntern(question.idIntern, response) || {}
 
     let emissionFactorId = undefined
@@ -262,6 +214,10 @@ export const saveAnswerForQuestion = async (
 
     let valueToStore = Number(response)
     const depreciationPeriodToStore = depreciationPeriod
+
+    if (isSpecial) {
+      return handleSpecialQuestions(question)
+    }
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
       return saveAnswer(question.id, studySiteId, response)
@@ -450,4 +406,17 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
   }
 
   return emissionFactorInfo
+}
+
+const applyCinemaProfileForTransport = (question: Question) => {}
+
+const handleSpecialQuestions = (question: Question) => {
+  switch (question.idIntern) {
+    case 'si-vous-souhaitez-vous-identifier-a-des-profils-de-cinema-comparable-de-quel-type-de-cinema-votre-etablissement-se-rapproche-le-plus': {
+      return applyCinemaProfileForTransport(question)
+    }
+    default: {
+      return
+    }
+  }
 }

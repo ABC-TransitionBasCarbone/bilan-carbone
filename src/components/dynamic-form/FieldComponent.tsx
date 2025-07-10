@@ -36,7 +36,9 @@ interface Props {
   formErrors: FieldErrors<FormValues>
   autoSave: UseAutoSaveReturn
   setValue: UseFormSetValue<FormValues>
+  table?: boolean
 }
+
 const FieldComponent = ({
   fieldType,
   fieldName,
@@ -50,6 +52,7 @@ const FieldComponent = ({
   formErrors,
   autoSave,
   setValue,
+  table,
 }: Props) => {
   const { callServerFunction } = useServerFunction()
 
@@ -234,6 +237,7 @@ const FieldComponent = ({
               label={baseInputProps.label}
               errorMessage={baseInputProps.errorMessage}
               disabled={baseInputProps.disabled}
+              table={table}
             />
           )
         }}

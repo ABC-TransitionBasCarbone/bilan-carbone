@@ -110,6 +110,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
             setValue={setValue}
             disabled={isFirstColumnInFixedTable}
             onCustomBlur={isFixedTable ? handleTableFieldBlur : undefined}
+            table={true}
           />
         )
       },
