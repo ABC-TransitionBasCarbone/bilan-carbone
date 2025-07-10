@@ -1186,19 +1186,3 @@ export const duplicateStudyEmissionSource = async (
   })
 
 export const getCNCCodeById = async (id: string) => getCNCById(id)
-
-export const getStudyOrganization = async (studyId: string, organizationVersionId: string) => {
-  const study = await getStudyById(studyId, organizationVersionId)
-  if (!study) {
-    throw Error("Study doesn't exist")
-  }
-
-  const orgaVersion = study.organizationVersion.parentId || study.organizationVersion.id
-
-  const organization = await getOrganizationVersionById(orgaVersion)
-  if (!organization) {
-    throw Error("Organization doesn't exist")
-  }
-
-  return organization.organizationId
-}
