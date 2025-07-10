@@ -7,7 +7,6 @@ import {
   createAnswerEmissionSource,
   deleteAnswerEmissionSourceById,
   deleteAnswerEmissionSourcesForRow,
-  deleteStudyEmissionSourceById,
   findAnswerEmissionSourceByAnswer,
   findAnswerEmissionSourceByAnswerAndRow,
   findAnswerEmissionSourcesByAnswerAndRow,
@@ -22,18 +21,20 @@ import {
 } from '@/db/question'
 import { FullStudy, getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
-import { calculateTableEmissions, hasTableEmissionCalculator } from '@/utils/tableEmissionCalculations'
+import {
+  calculateTableEmissions,
+  EmissionSourceCalculation,
+  hasTableEmissionCalculator,
+} from '@/utils/tableEmissionCalculations'
 import { isTableAnswer } from '@/utils/tableInput'
-import { Prisma, Question, QuestionType, SubPost } from '@prisma/client'
+import { Answer, Prisma, Question, QuestionType, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadStudy } from '../permissions/study'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
-const cleanupTableEmissionSources = async (question: Question, tableAnswer: TableAnswer, studySiteId: string) => {
-  const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
-
-  if (existingAnswer && existingAnswer.response && isTableAnswer(existingAnswer.response)) {
+const cleanupTableEmissionSources = async (tableAnswer: TableAnswer, existingAnswer: Answer) => {
+  if (existingAnswer.response && isTableAnswer(existingAnswer.response)) {
     const existingTableAnswer = existingAnswer.response as TableAnswer
     const existingRowIds = existingTableAnswer.rows.map((row) => row.id)
     const currentRowIds = tableAnswer.rows.map((row) => row.id)
@@ -43,17 +44,32 @@ const cleanupTableEmissionSources = async (question: Question, tableAnswer: Tabl
       await deleteAnswerEmissionSourcesForRow(existingAnswer.id, deletedRowId)
     }
   }
-
-  return existingAnswer
 }
 
-const cleanupOrphanedEmissionSources = async (answerId: string, rowId: string, validEmissionNames: Set<string>) => {
-  const existingEmissionSources = await findAnswerEmissionSourcesByAnswerAndRow(answerId, rowId)
+const cleanupRowEmissionSources = async (
+  answerId: string,
+  rowId: string,
+  calculatedEmissionSources?: EmissionSourceCalculation[],
+) => {
+  console.log({
+    calculatedEmissionSources,
+  })
 
-  for (const existingEmissionSource of existingEmissionSources) {
-    if (existingEmissionSource.emissionType && !validEmissionNames.has(existingEmissionSource.emissionType)) {
-      await deleteAnswerEmissionSourceById(existingEmissionSource.id)
-      await deleteStudyEmissionSourceById(existingEmissionSource.emissionSourceId)
+  if (!calculatedEmissionSources || calculatedEmissionSources.length === 0) {
+    await deleteAnswerEmissionSourcesForRow(answerId, rowId)
+  } else {
+    const existingAnswerEmissionSources = await findAnswerEmissionSourcesByAnswerAndRow(answerId, rowId)
+    const existingTypes = new Set(calculatedEmissionSources.map((e) => e.name))
+
+    console.log({
+      existingTypes,
+      existingAnswerEmissionSources,
+    })
+
+    for (const existingEmissionSource of existingAnswerEmissionSources) {
+      if (existingEmissionSource.emissionType && !existingTypes.has(existingEmissionSource.emissionType)) {
+        await deleteAnswerEmissionSourceById(existingEmissionSource.id, existingEmissionSource.emissionSourceId)
+      }
     }
   }
 }
@@ -66,8 +82,11 @@ const handleTableEmissionSources = async (
   study: FullStudy,
 ) => {
   const emissionSourceIds: string[] = []
+  const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
 
-  const existingAnswer = await cleanupTableEmissionSources(question, tableAnswer, studySiteId)
+  if (existingAnswer) {
+    await cleanupTableEmissionSources(tableAnswer, existingAnswer)
+  }
 
   if (hasTableEmissionCalculator(question.idIntern)) {
     const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
@@ -76,15 +95,9 @@ const handleTableEmissionSources = async (
       const row = tableAnswer.rows[arrayIndex]
       const result = calculationResults[arrayIndex]
 
-      if (!result || result.emissionSources.length === 0) {
-        // Clean up any existing emission sources for this row when data becomes invalid
-        if (existingAnswer) {
-          await deleteAnswerEmissionSourcesForRow(existingAnswer.id, row.id)
-        }
-        continue
+      if (existingAnswer) {
+        await cleanupRowEmissionSources(existingAnswer.id, row.id, result?.emissionSources)
       }
-
-      const processedEmissionNames = new Set<string>()
 
       for (const emissionSource of result.emissionSources) {
         let emissionSourceId: string
@@ -125,11 +138,6 @@ const handleTableEmissionSources = async (
         }
 
         emissionSourceIds.push(emissionSourceId)
-        processedEmissionNames.add(emissionSource.name)
-      }
-
-      if (existingAnswer) {
-        await cleanupOrphanedEmissionSources(existingAnswer.id, row.id, processedEmissionNames)
       }
     }
   }

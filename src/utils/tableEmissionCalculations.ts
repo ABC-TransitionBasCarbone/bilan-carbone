@@ -39,18 +39,6 @@ const calculateWorkRhythm: TableEmissionCalculator = {
       emissionFactorMap['13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'].emissionFactors
     const transportModeFEName = row.data['13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema'] || ''
 
-    // Validate that all required values are present and valid
-    if (!daysPerWeek || daysPerWeek <= 0 || !distanceKm || distanceKm <= 0 || !transportModeFEName) {
-      return {
-        emissionSources: [],
-        breakdown: {
-          mealEmissions: 0,
-          transportEmissions: 0,
-        },
-        totalEmissions: 0,
-      }
-    }
-
     const emissionSources: EmissionSourceCalculation[] = []
 
     if (daysPerWeek > 0 && MEAL_EMISSION_FACTOR_ID) {
@@ -467,12 +455,6 @@ const calculateRooms: TableEmissionCalculator = {
     const seatYear = parseInt(row.data['109-decrivez-les-differentes-salles-du-cinema'] || '0')
     const soundType = row.data['110-decrivez-les-differentes-salles-du-cinema'] || ''
     const soundYear = parseInt(row.data['111-decrivez-les-differentes-salles-du-cinema'] || '0')
-
-    if (!projectorYear || !screenYear || !seatYear || !soundYear) {
-      return {
-        emissionSources: [],
-      }
-    }
 
     let allEmissionSources: EmissionSourceCalculation[] = []
 

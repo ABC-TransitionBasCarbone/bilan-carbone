@@ -8,12 +8,17 @@ const DisabledText = styled(Typography)({
   minHeight: '1.25rem',
 })
 
+const StyledFormControl = styled(FormControl)<{ table?: string }>(({ table }) => ({
+  ...(table && { maxWidth: '200px' }),
+}))
+
 interface SelectInputProps extends Omit<BaseInputProps, 'value' | 'onChange'> {
   value: string | null
   onChange: (value: string | null) => void
+  table?: string
 }
 
-const SelectInput = ({ question, value, onChange, onBlur, errorMessage, disabled }: SelectInputProps) => {
+const SelectInput = ({ question, value, onChange, onBlur, errorMessage, disabled, table }: SelectInputProps) => {
   const options = question.possibleAnswers || []
 
   const handleChange = (event: SelectChangeEvent<string>) => {
@@ -22,15 +27,15 @@ const SelectInput = ({ question, value, onChange, onBlur, errorMessage, disabled
 
   if (disabled && value) {
     return (
-      <FormControl fullWidth error={!!errorMessage}>
+      <StyledFormControl fullWidth error={!!errorMessage} table={table}>
         <DisabledText variant="body1">{formatOption(value)}</DisabledText>
         {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
-      </FormControl>
+      </StyledFormControl>
     )
   }
 
   return (
-    <FormControl fullWidth error={!!errorMessage} disabled={disabled}>
+    <StyledFormControl fullWidth error={!!errorMessage} disabled={disabled} table={table}>
       <Select value={value || ''} onChange={handleChange} onBlur={onBlur}>
         {options.map((option) => (
           <MenuItem key={option} value={option}>
@@ -39,7 +44,7 @@ const SelectInput = ({ question, value, onChange, onBlur, errorMessage, disabled
         ))}
       </Select>
       {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
-    </FormControl>
+    </StyledFormControl>
   )
 }
 

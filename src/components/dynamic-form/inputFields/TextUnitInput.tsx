@@ -60,7 +60,7 @@ const TextUnitInput = ({
         disabled={disabled}
         debounce={50}
         sx={{
-          minWidth: '6rem',
+          minWidth: '6.5rem',
         }}
         slotProps={{
           htmlInput: inputProps,
