@@ -67,11 +67,9 @@ const cleanupRowEmissionSources = async (
   }
 }
 
-const createOrUpdateAnswerEmissionSources = async (answerId: string, emissionSourceIds: string[]) => {
+const createAnswerEmissionSources = async (answerId: string, emissionSourceIds: string[]) => {
   for (const emissionSourceId of emissionSourceIds) {
-    // Check if this specific emission source is already linked to this answer
     const existingEntry = await findAnswerEmissionSourceByAnswerAndEmissionSource(answerId, emissionSourceId)
-
     if (!existingEntry) {
       await createAnswerEmissionSource(answerId, emissionSourceId, null, null)
     }
@@ -150,11 +148,11 @@ const handleTableEmissionSources = async (
             name: `${question.idIntern}-${emissionSource.name}-${row.id}`,
             subPost: question.subPost,
             emissionFactorId: emissionSource.emissionFactorId,
+            validated: true,
           })
 
           if (newEmissionSource.success && newEmissionSource.data) {
             emissionSourceId = newEmissionSource.data.id
-            await updateEmissionSource({ validated: true, emissionSourceId })
           } else {
             continue
           }
@@ -318,7 +316,7 @@ export const saveAnswerForQuestion = async (
         })
       }
     } else if (!isEmptyValue) {
-      const emissionSource = await createEmissionSource({
+      await createEmissionSource({
         studyId,
         studySiteId,
         value: valueToStore,
@@ -326,18 +324,14 @@ export const saveAnswerForQuestion = async (
         subPost: question.subPost,
         depreciationPeriod: depreciationPeriodToStore,
         emissionFactorId,
+        validated: true,
       })
-
-      if (emissionSource.success && emissionSource.data) {
-        emissionSourceId = emissionSource.data.id
-        await updateEmissionSource({ validated: true, emissionSourceId })
-      }
     }
 
     const savedAnswer = await saveAnswer(question.id, studySiteId, response)
 
     if (emissionSourceId && savedAnswer) {
-      await createOrUpdateAnswerEmissionSources(savedAnswer.id, [emissionSourceId])
+      await createAnswerEmissionSources(savedAnswer.id, [emissionSourceId])
 
       // If this question has a linkDepreciationQuestionId, also ensure the linked answers are connected to the same emission source
       if (linkDepreciationQuestionId) {
@@ -345,7 +339,7 @@ export const saveAnswerForQuestion = async (
         if (linkQuestion) {
           const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
           if (linkAnswer) {
-            await createOrUpdateAnswerEmissionSources(linkAnswer.id, [emissionSourceId])
+            await createAnswerEmissionSources(linkAnswer.id, [emissionSourceId])
           }
         }
       }
@@ -464,6 +458,9 @@ const applyCinemaProfileForTransport = async (
     return []
   }
 
+  const studySite = study.sites.find((site) => site.id === studySiteId)
+  const numberOfTickets = studySite?.numberOfTickets || 0
+
   const emissionSourceIds: string[] = []
 
   if (cinemaProfile.shortDistance) {
@@ -475,21 +472,17 @@ const applyCinemaProfileForTransport = async (
         )
 
         if (emissionFactor) {
-          const value = (config.percentage / 100) * config.averageDistance
+          const value = (config.percentage / 100) * config.averageDistance * numberOfTickets
 
-          const newEmissionSource = await createEmissionSource({
+          await createEmissionSource({
             studyId,
             studySiteId,
             value,
             name: `cinema-profile-${transportMode}`,
             subPost: question.subPost,
             emissionFactorId: emissionFactor.id,
+            validated: true,
           })
-
-          if (newEmissionSource.success && newEmissionSource.data) {
-            await updateEmissionSource({ validated: true, emissionSourceId: newEmissionSource.data.id })
-            emissionSourceIds.push(newEmissionSource.data.id)
-          }
         }
       }
     }
@@ -521,7 +514,7 @@ const handleSpecialQuestions = async (
   const savedAnswer = await saveAnswer(question.id, studySiteId, response)
 
   if (savedAnswer && emissionSourceIds.length > 0) {
-    await createOrUpdateAnswerEmissionSources(savedAnswer.id, emissionSourceIds)
+    await createAnswerEmissionSources(savedAnswer.id, emissionSourceIds)
   }
 
   return savedAnswer
