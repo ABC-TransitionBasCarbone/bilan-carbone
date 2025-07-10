@@ -2,12 +2,19 @@
 
 import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
 import { EmissionFactorInfo, emissionFactorMap } from '@/constants/emissionFactorMap'
+import {
+  LONG_DISTANCE_APPLIED_PERCENTAGE,
+  LONG_DISTANCE_QUESTION_ID,
+  SHORT_DISTANCE_QUESTION_ID,
+} from '@/constants/questions'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
   deleteAnswerEmissionSourceById,
   deleteAnswerEmissionSourcesForRow,
+  findAllAnswerEmissionSourcesByAnswer,
   findAnswerEmissionSourceByAnswer,
+  findAnswerEmissionSourceByAnswerAndEmissionSource,
   findAnswerEmissionSourceByAnswerAndRow,
   findAnswerEmissionSourcesByAnswerAndRow,
   getAnswerByQuestionId,
@@ -65,6 +72,15 @@ const cleanupRowEmissionSources = async (
   }
 }
 
+const createAnswerEmissionSources = async (answerId: string, emissionSourceIds: string[]) => {
+  for (const emissionSourceId of emissionSourceIds) {
+    const existingEntry = await findAnswerEmissionSourceByAnswerAndEmissionSource(answerId, emissionSourceId)
+    if (!existingEntry) {
+      await createAnswerEmissionSource(answerId, emissionSourceId, null, null)
+    }
+  }
+}
+
 const handleTableEmissionSources = async (
   question: Question,
   tableAnswer: TableAnswer,
@@ -118,11 +134,11 @@ const handleTableEmissionSources = async (
             name: `${question.idIntern}-${emissionSource.name}-${row.id}`,
             subPost: question.subPost,
             emissionFactorId: emissionSource.emissionFactorId,
+            validated: true,
           })
 
           if (newEmissionSource.success && newEmissionSource.data) {
             emissionSourceId = newEmissionSource.data.id
-            await updateEmissionSource({ validated: true, emissionSourceId })
           } else {
             continue
           }
@@ -216,7 +232,7 @@ export const saveAnswerForQuestion = async (
     const depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
-      return handleSpecialQuestions(question)
+      return handleSpecialQuestions(question, response, study, studySiteId)
     }
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
@@ -286,7 +302,7 @@ export const saveAnswerForQuestion = async (
         })
       }
     } else if (!isEmptyValue) {
-      const emissionSource = await createEmissionSource({
+      await createEmissionSource({
         studyId,
         studySiteId,
         value: valueToStore,
@@ -294,21 +310,14 @@ export const saveAnswerForQuestion = async (
         subPost: question.subPost,
         depreciationPeriod: depreciationPeriodToStore,
         emissionFactorId,
+        validated: true,
       })
-
-      if (emissionSource.success && emissionSource.data) {
-        emissionSourceId = emissionSource.data.id
-        await updateEmissionSource({ validated: true, emissionSourceId })
-      }
     }
 
     const savedAnswer = await saveAnswer(question.id, studySiteId, response)
 
     if (emissionSourceId && savedAnswer) {
-      const existingEntry = await findAnswerEmissionSourceByAnswer(savedAnswer.id)
-      if (!existingEntry) {
-        await createAnswerEmissionSource(savedAnswer.id, emissionSourceId, null, null)
-      }
+      await createAnswerEmissionSources(savedAnswer.id, [emissionSourceId])
 
       // If this question has a linkDepreciationQuestionId, also ensure the linked answers are connected to the same emission source
       if (linkDepreciationQuestionId) {
@@ -316,10 +325,7 @@ export const saveAnswerForQuestion = async (
         if (linkQuestion) {
           const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
           if (linkAnswer) {
-            const linkExistingEntry = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
-            if (!linkExistingEntry) {
-              await createAnswerEmissionSource(linkAnswer.id, emissionSourceId, null, null)
-            }
+            await createAnswerEmissionSources(linkAnswer.id, [emissionSourceId])
           }
         }
       }
@@ -422,15 +428,197 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
   return emissionFactorInfo
 }
 
-const applyCinemaProfileForTransport = (question: Question) => {}
+const cleanupEmissionSourcesByQuestionIdInterns = async (studySiteId: string, questionIdInterns: string[]) => {
+  const answers = await Promise.all(
+    questionIdInterns.map(async (idIntern) => {
+      const question = await getQuestionByIdIntern(idIntern)
+      if (!question) {
+        return null
+      }
+      return getAnswerByQuestionId(question.id, studySiteId)
+    }),
+  )
 
-const handleSpecialQuestions = (question: Question) => {
-  switch (question.idIntern) {
-    case 'si-vous-souhaitez-vous-identifier-a-des-profils-de-cinema-comparable-de-quel-type-de-cinema-votre-etablissement-se-rapproche-le-plus': {
-      return applyCinemaProfileForTransport(question)
+  for (const answer of answers) {
+    if (!answer) {
+      continue
     }
-    default: {
-      return
+
+    const existingAnswerEmissionSources = await findAllAnswerEmissionSourcesByAnswer(answer.id)
+
+    for (const existingAnswerEmissionSource of existingAnswerEmissionSources) {
+      await deleteAnswerEmissionSourceById(
+        existingAnswerEmissionSource.id,
+        existingAnswerEmissionSource.emissionSourceId,
+      )
     }
   }
+}
+
+const applyCinemaProfileForTransport = async (
+  question: Question,
+  currentResponse: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+
+  await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [SHORT_DISTANCE_QUESTION_ID, LONG_DISTANCE_QUESTION_ID])
+
+  let selectedShortDistanceProfile: string
+  let selectedLongDistanceProfile: string
+
+  if (question.idIntern === SHORT_DISTANCE_QUESTION_ID) {
+    selectedShortDistanceProfile = currentResponse as string
+
+    const longDistanceAnswer = await getAnswerByQuestionId(
+      await getQuestionByIdIntern(LONG_DISTANCE_QUESTION_ID).then((q) => q?.id || ''),
+      studySiteId,
+    )
+    selectedLongDistanceProfile = longDistanceAnswer?.response as string
+  } else {
+    selectedLongDistanceProfile = currentResponse as string
+
+    const shortDistanceAnswer = await getAnswerByQuestionId(
+      await getQuestionByIdIntern(SHORT_DISTANCE_QUESTION_ID).then((q) => q?.id || ''),
+      studySiteId,
+    )
+    selectedShortDistanceProfile = shortDistanceAnswer?.response as string
+  }
+
+  const shortDistanceEmissionInfo = emissionFactorMap[SHORT_DISTANCE_QUESTION_ID]
+  const longDistanceEmissionInfo = emissionFactorMap[LONG_DISTANCE_QUESTION_ID]
+
+  const shortDistanceProfile = shortDistanceEmissionInfo?.shortDistanceProfiles?.[selectedShortDistanceProfile]
+  const longDistanceProfile = longDistanceEmissionInfo?.longDistanceProfiles?.[selectedLongDistanceProfile]
+
+  if (!shortDistanceProfile || !longDistanceProfile) {
+    return []
+  }
+
+  const studySite = study.sites.find((site) => site.id === studySiteId)
+  const numberOfTickets = studySite?.numberOfTickets || 0
+  const distanceToParis = studySite?.distanceToParis || 0
+
+  if (numberOfTickets === 0) {
+    return []
+  }
+
+  const emissionSourceIds: string[] = []
+
+  const shortDistancePercentageToUse = longDistanceProfile.shortDistancePercentage / 100
+
+  for (const [transportMode, config] of Object.entries(shortDistanceProfile)) {
+    if (config.percentage > 0 && config.averageDistance > 0) {
+      const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+        config.emissionFactorId,
+        study.emissionFactorVersions.map((v) => v.importVersionId),
+      )
+
+      if (emissionFactor) {
+        const value =
+          (config.percentage / 100) * shortDistancePercentageToUse * config.averageDistance * numberOfTickets
+
+        const newEmissionSource = await createEmissionSource({
+          studyId,
+          studySiteId,
+          value,
+          name: `cinema-profile-${transportMode}`,
+          subPost: question.subPost,
+          emissionFactorId: emissionFactor.id,
+          validated: true,
+        })
+
+        if (newEmissionSource.success && newEmissionSource.data) {
+          emissionSourceIds.push(newEmissionSource.data.id)
+        }
+      }
+    }
+  }
+
+  if (longDistanceProfile.longDistancePercentage > 0 && distanceToParis > 0) {
+    const longDistancePercentageToUse = longDistanceProfile.longDistancePercentage / 100
+
+    const carEmissionFactorId = longDistanceEmissionInfo?.emissionFactors?.['Voiture longue distance']
+
+    const carEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+      carEmissionFactorId!,
+      study.emissionFactorVersions.map((v) => v.importVersionId),
+    )
+
+    if (carEmissionFactor) {
+      const carValue =
+        numberOfTickets * longDistancePercentageToUse * 0.7 * LONG_DISTANCE_APPLIED_PERCENTAGE * distanceToParis
+
+      const newEmissionSource = await createEmissionSource({
+        studyId,
+        studySiteId,
+        value: carValue,
+        name: 'cinema-profile-long-voiture',
+        subPost: question.subPost,
+        emissionFactorId: carEmissionFactor.id,
+        validated: true,
+      })
+
+      if (newEmissionSource.success && newEmissionSource.data) {
+        emissionSourceIds.push(newEmissionSource.data.id)
+      }
+    }
+
+    const tgvEmissionFactorId = longDistanceEmissionInfo?.emissionFactors?.['TGV']
+
+    const tgvEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+      tgvEmissionFactorId!,
+      study.emissionFactorVersions.map((v) => v.importVersionId),
+    )
+
+    if (tgvEmissionFactor) {
+      const tgvValue =
+        numberOfTickets * longDistancePercentageToUse * 0.3 * LONG_DISTANCE_APPLIED_PERCENTAGE * distanceToParis
+
+      const newEmissionSource = await createEmissionSource({
+        studyId,
+        studySiteId,
+        value: tgvValue,
+        name: 'cinema-profile-long-tgv',
+        subPost: question.subPost,
+        emissionFactorId: tgvEmissionFactor.id,
+        validated: true,
+      })
+
+      if (newEmissionSource.success && newEmissionSource.data) {
+        emissionSourceIds.push(newEmissionSource.data.id)
+      }
+    }
+  }
+
+  return emissionSourceIds
+}
+
+const handleSpecialQuestions = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  let emissionSourceIds: string[] = []
+
+  switch (question.idIntern) {
+    case SHORT_DISTANCE_QUESTION_ID:
+    case LONG_DISTANCE_QUESTION_ID: {
+      emissionSourceIds = await applyCinemaProfileForTransport(question, response, study, studySiteId)
+      break
+    }
+    default: {
+      break
+    }
+  }
+
+  const savedAnswer = await saveAnswer(question.id, studySiteId, response)
+
+  if (savedAnswer && emissionSourceIds.length > 0) {
+    await createAnswerEmissionSources(savedAnswer.id, emissionSourceIds)
+  }
+
+  return savedAnswer
 }

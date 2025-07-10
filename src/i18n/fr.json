@@ -322,6 +322,7 @@
       "resultsUnit": "Unité des resultats de l'étude",
       "numberOfSessions": "Nombre de séances (par an)",
       "numberOfTickets": "Nombre d'entrées (par an)",
+      "distanceToParis": "Distance à Paris (km)",
       "numberOfOpenDays": "Nombre de jours d'ouverture (par an)",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",

@@ -27,7 +27,7 @@ export const createEmissionSource = async ({
   studySiteId,
   emissionFactorId,
   ...command
-}: CreateEmissionSourceCommand) =>
+}: CreateEmissionSourceCommand & { validated?: boolean }) =>
   withServerResponse('createEmissionSource', async () => {
     const session = await auth()
     if (!session || !session.user) {
