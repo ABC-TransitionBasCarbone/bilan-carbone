@@ -20,21 +20,21 @@
         "message": "Retrouvez ici la liste des établissements rattachés à votre compte"
       }
     },
-    "title": "Faire votre Empreinte d’impact vous permettra de :",
+    "title": "Calculer votre empreinte carbone simplifiée vous permettra de :",
     "alert": {
       "info": "Le calculateur Count vous permet d’estimer l’impact sur le climat de votre activité. Il s’agit avant tout d’un outil de sensibilisation. Il ne s'agit pas d'une démarche de transition bas carbone mais d'une empreinte carbone simplifiée — au sens du <link>Guide de communication autour de la comptabilité carbone</link> — centrée sur les principaux postes d’émissions liés à l’activité des salles de cinéma."
     },
     "info": {
       "0": "Comprendre la mesure d’impact de votre établissement",
       "1": "Identifier les priorités d’action",
-      "2": "Construire une trajectoire de réduction"
+      "2": "À long terme, et via un travail plus approfondi, construire une trajectoire de réduction"
     },
     "message": {
       "core": "Bienvenue sur COUNT le premier calculateur d'impact écologique dédié aux salles de cinéma.\nCet outil a été développé par l'association CUT ! Cinéma Uni pour la transition, en coopération avec l'ABC, association pour la transition bas carbone\nOpération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)\nCUT bénéficie du soutien du CNC",
-      "0": "Faire votre Empreinte d'impact vous permettra de :",
+      "0": "Calculer votre empreinte carbone simplifiée vous permettra de :",
       "1": "Comprendre la mesure d'impact de votre établissement",
       "2": "Identifier les priorités d'action",
-      "3": "Construire une trajectoire de réduction"
+      "3": "À long terme, et via un travail plus approfondi, construire une trajectoire de réduction"
     }
   },
   "footer": {
