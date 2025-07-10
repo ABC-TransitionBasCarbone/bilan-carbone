@@ -232,7 +232,7 @@ export const saveAnswerForQuestion = async (
     const depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
-      return handleSpecialQuestions(question, response, studyId, studySiteId, study)
+      return handleSpecialQuestions(question, response, study, studySiteId)
     }
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
@@ -458,10 +458,11 @@ const cleanupEmissionSourcesByQuestionIdInterns = async (studySiteId: string, qu
 const applyCinemaProfileForTransport = async (
   question: Question,
   currentResponse: Prisma.InputJsonValue,
-  studyId: string,
-  studySiteId: string,
   study: FullStudy,
+  studySiteId: string,
 ) => {
+  const studyId = study.id
+
   await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [SHORT_DISTANCE_QUESTION_ID, LONG_DISTANCE_QUESTION_ID])
 
   let selectedShortDistanceProfile: string
@@ -597,16 +598,15 @@ const applyCinemaProfileForTransport = async (
 const handleSpecialQuestions = async (
   question: Question,
   response: Prisma.InputJsonValue,
-  studyId: string,
-  studySiteId: string,
   study: FullStudy,
+  studySiteId: string,
 ) => {
   let emissionSourceIds: string[] = []
 
   switch (question.idIntern) {
     case SHORT_DISTANCE_QUESTION_ID:
     case LONG_DISTANCE_QUESTION_ID: {
-      emissionSourceIds = await applyCinemaProfileForTransport(question, response, studyId, studySiteId, study)
+      emissionSourceIds = await applyCinemaProfileForTransport(question, response, study, studySiteId)
       break
     }
     default: {

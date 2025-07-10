@@ -42,8 +42,6 @@ const TRANSPORT_EMISSION_FACTORS = {
   'Moto >250cm3 /Mixte': '27995',
   'Moto<250cm3/Mixte': '27992',
   'Trottinette électrique': '28329',
-  'Voiture longue distance': '27984', // Using gazole for long distance
-  TGV: '43255',
 }
 
 export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
