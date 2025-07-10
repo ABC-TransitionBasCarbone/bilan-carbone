@@ -262,7 +262,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'combien-de-films-recevez-vous-en-dematerialise-par-an': { isSpecial: true, emissionFactorImportedId: '142' },
   'combien-de-films-recevez-vous-sur-dcp-physique-par-an': { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
-  '12-de-combien-disposez-vous-de-disques-durs-disposez-vous': { emissionFactorImportedId: '140' },
+  'de-combien-de-disques-durs-disposez-vous': { emissionFactorImportedId: '140' },
   // Autre matériel
   'de-combien-de-lunettes-3d-disposez-vous': { emissionFactorImportedId: '139' },
   // Achats
