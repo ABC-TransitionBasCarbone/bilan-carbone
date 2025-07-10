@@ -219,9 +219,10 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   next: {},
   'quel-est-le-profil-auquel-vous-pouvez-identifier-le-plus-votre-cinema': {},
   // Equipes recus
-  'combien-dequipes-de-films-avez-vous-recu-en': { emissionFactorImportedId: '28130', isSpecial: true },
-  'combien-de-nuits': { emissionFactorImportedId: '106' },
-  'combien-dequipes-de-repas': { emissionFactorImportedId: '20682', isSpecial: true },
+  'combien-dequipes-de-films-avez-vous-recu-en': {
+    emissionFactors: { transport: '28130', meal: '20682' },
+    isSpecial: true,
+  },
   // Matériel technique
   '10-decrivez-les-differentes-salles-du-cinema': {},
   '102-decrivez-les-differentes-salles-du-cinema': {

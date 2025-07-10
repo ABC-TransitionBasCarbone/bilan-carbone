@@ -8,7 +8,6 @@ import {
   LONG_DISTANCE_QUESTION_ID,
   MOVIE_DCP_QUESTION_ID,
   MOVIE_DEMAT_QUESTION_ID,
-  MOVIE_TEAM_MEAL_QUESTION_ID,
   MOVIE_TEAM_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
 } from '@/constants/questions'
@@ -665,19 +664,20 @@ const applyMovieTeamCalculation = async (
   studySiteId: string,
 ) => {
   const studyId = study.id
+  const emissionSourceIds: string[] = []
 
   const emissionInfo = emissionFactorMap[MOVIE_TEAM_QUESTION_ID]
-  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
-    return []
+  if (!emissionInfo || !emissionInfo.emissionFactors) {
+    return emissionSourceIds
   }
 
   const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-    emissionInfo.emissionFactorImportedId,
+    emissionInfo.emissionFactors.transport,
     study.emissionFactorVersions.map((v) => v.importVersionId),
   )
 
   if (!emissionFactor) {
-    return []
+    return emissionSourceIds
   }
 
   const studySite = study.sites.find((site) => site.id === studySiteId)
@@ -695,50 +695,35 @@ const applyMovieTeamCalculation = async (
   })
 
   if (newEmissionSource.success && newEmissionSource.data) {
-    return [newEmissionSource.data.id]
+    emissionSourceIds.push(newEmissionSource.data.id)
   }
 
-  return []
-}
-
-const applyMovieTeamMealCalculation = async (
-  question: Question,
-  response: Prisma.InputJsonValue,
-  study: FullStudy,
-  studySiteId: string,
-) => {
-  const studyId = study.id
-  const emissionInfo = emissionFactorMap[MOVIE_TEAM_MEAL_QUESTION_ID]
-  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
-    return []
-  }
-
-  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-    emissionInfo.emissionFactorImportedId,
+  const mealEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactors.meal,
     study.emissionFactorVersions.map((v) => v.importVersionId),
   )
 
-  if (!emissionFactor) {
-    return []
+  if (!mealEmissionFactor) {
+    return emissionSourceIds
   }
 
-  const value = Number(response) * 5
+  const mealValue = Number(response) * 15
 
-  const newEmissionSource = await createEmissionSource({
+  const newMealEmissionSource = await createEmissionSource({
     studyId,
     studySiteId,
-    value,
-    name: question.idIntern,
+    value: mealValue,
+    name: `${question.idIntern}-meal`,
     subPost: question.subPost,
-    emissionFactorId: emissionFactor.id,
+    emissionFactorId: mealEmissionFactor.id,
     validated: true,
   })
 
-  if (newEmissionSource.success && newEmissionSource.data) {
-    return [newEmissionSource.data.id]
+  if (newMealEmissionSource.success && newMealEmissionSource.data) {
+    emissionSourceIds.push(newMealEmissionSource.data.id)
   }
 
-  return []
+  return emissionSourceIds
 }
 
 const applyDematMovieCalculation = async (
@@ -857,10 +842,6 @@ const handleSpecialQuestions = async (
     }
     case MOVIE_TEAM_QUESTION_ID: {
       emissionSourceIds = await applyMovieTeamCalculation(question, response, study, studySiteId)
-      break
-    }
-    case MOVIE_TEAM_MEAL_QUESTION_ID: {
-      emissionSourceIds = await applyMovieTeamMealCalculation(question, response, study, studySiteId)
       break
     }
     case MOVIE_DEMAT_QUESTION_ID: {
