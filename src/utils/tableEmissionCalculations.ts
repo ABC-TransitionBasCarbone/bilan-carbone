@@ -236,7 +236,7 @@ const calculateEmissionSourcesDepreciation = async (
     )
 
     if (emissionFactor) {
-      const currentYear = new Date().getFullYear()
+      const currentYear = new Date(study.startDate).getFullYear()
       const yearCount = currentYear - purchaseYear
 
       // Calculate cumulative depreciation factor: each year adds 1/depreciationPeriod more
