@@ -54,6 +54,7 @@ export const CRUserChecklist: UserChecklist[] = [
   UserChecklist.AddCollaborator,
   UserChecklist.AddClient,
   UserChecklist.AddSiteCR,
+  UserChecklist.AddSiteCRCollaborator,
   UserChecklist.CreateFirstStudy,
   UserChecklist.CreateFirstEmissionSource,
   UserChecklist.ConsultResults,
@@ -66,7 +67,9 @@ export const getUserCheckList = (userRole: Role, isCR: boolean, level: Level | n
     (step) =>
       (step !== UserChecklist.AddCollaborator || isAdmin(userRole) || userRole === Role.GESTIONNAIRE) &&
       (step !== UserChecklist.AddSiteOrga || hasEditionRole(isCR, userRole)) &&
-      (step !== UserChecklist.AddSiteCR || hasEditionRole(isCR, userRole)) &&
+      (step !== UserChecklist.AddSiteCR || (hasEditionRole(isCR, userRole) && userRole !== Role.COLLABORATOR)) &&
+      (step !== UserChecklist.AddSiteCRCollaborator ||
+        (hasEditionRole(isCR, userRole) && userRole === Role.COLLABORATOR)) &&
       (step !== UserChecklist.CreateFirstStudy || level) &&
       (step !== UserChecklist.CreateFirstEmissionSource || level) &&
       (step !== UserChecklist.ConsultResults || level),

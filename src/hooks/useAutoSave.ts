@@ -9,9 +9,10 @@ export interface FieldSaveStatus {
 }
 
 export interface UseAutoSaveReturn {
-  saveField: (question: Question, value: Prisma.InputJsonValue) => void
+  saveField: (question: Question, value: Prisma.InputJsonValue) => Promise<void>
   getFieldStatus: (questionId: string) => FieldSaveStatus
   initializeFieldStatus: (questionId: string, status: FieldSaveStatus['status']) => void
+  studySiteId: string
 }
 
 interface SaveAnswerRequest {
@@ -84,9 +85,9 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
   )
 
   const saveField = useCallback(
-    (question: Question, value: Prisma.InputJsonValue) => {
+    async (question: Question, value: Prisma.InputJsonValue) => {
       updateFieldStatus(question.id, { status: 'saving' })
-      performSave(question, value)
+      await performSave(question, value)
     },
     [performSave, updateFieldStatus],
   )
@@ -110,8 +111,9 @@ export const useAutoSave = (studyId: string, studySiteId: string): UseAutoSaveRe
       saveField,
       getFieldStatus,
       initializeFieldStatus,
+      studySiteId,
     }),
-    [saveField, getFieldStatus, initializeFieldStatus],
+    [saveField, getFieldStatus, initializeFieldStatus, studySiteId],
   )
 }
 
@@ -128,7 +130,7 @@ function formatValueForSave(value: Prisma.InputJsonValue): Prisma.InputJsonValue
     return value.toString()
   }
 
-  return String(value)
+  return value
 }
 
 /**

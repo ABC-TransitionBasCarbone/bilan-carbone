@@ -1,3 +1,4 @@
+import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography } from '@mui/material'
@@ -11,9 +12,14 @@ import {
 } from './QuestionContainer.styles'
 import SaveStatusIndicator from './SaveStatusIndicator'
 import { EmissionResults, QuestionContainerProps } from './types/formTypes'
+import { FieldType } from './types/questionTypes'
 
 const QuestionContainer = ({ question, children, showResults, results, saveStatus }: QuestionContainerProps) => {
+  const inTable = ID_INTERN_PREFIX_REGEX.test(question.idIntern) && question.type !== FieldType.TABLE
   const tResultsUnits = useTranslations('study.results.units')
+  if (inTable) {
+    return
+  }
 
   const formatEmissionResults = (results: EmissionResults) => {
     if (!results || !results.emission) {

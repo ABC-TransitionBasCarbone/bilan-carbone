@@ -1,5 +1,5 @@
 import { TeamMember } from '@/db/account'
-import { canEditMemberRole } from '@/utils/organization'
+import { canEditMemberRole } from '@/utils/user'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useFormatter, useTranslations } from 'next-intl'

@@ -1,6 +1,6 @@
 describe('Accounts - multiple environment with the same user', () => {
   before(() => {
-    cy.exec('npx prisma db seed')
+    cy.resetTestDatabase()
   })
 
   beforeEach(() => {

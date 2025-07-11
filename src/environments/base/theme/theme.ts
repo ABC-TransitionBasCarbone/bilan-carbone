@@ -148,6 +148,11 @@ const theme = createTheme(base, {
     },
   },
   custom: {
+    palette: {
+      error: {
+        background: '#f6b8b8',
+      },
+    },
     box: {
       backgroundColor: base.palette.background.paper,
       color: base.palette.text.primary,

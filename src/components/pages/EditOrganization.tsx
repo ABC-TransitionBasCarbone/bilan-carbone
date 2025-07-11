@@ -1,6 +1,7 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { getUserApplicationSettings } from '@/db/user'
 import { defaultCAUnit } from '@/utils/number'
+import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
@@ -28,7 +29,11 @@ const EditOrganizationPage = async ({ organizationVersion, user }: Props) => {
         ]}
       />
       <Block as="h1" title={t('editTitle')}>
-        <EditOrganizationForm organizationVersion={organizationVersion} caUnit={caUnit} />
+        <EditOrganizationForm
+          organizationVersion={organizationVersion}
+          caUnit={caUnit}
+          isCut={user.environment === Environment.CUT}
+        />
       </Block>
     </>
   )

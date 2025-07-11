@@ -46,7 +46,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, columns, ca
       <div>
         <div className="justify-between align-center">
           <p className="title-h3">
-            {t('title')}
+            {!isCut && t('title')}
             {isCut || (
               <Help className="ml-4" onClick={() => setShowGlossary(!showGlossary)} label={tGlossary('title')} />
             )}

@@ -79,8 +79,6 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
       environment,
     )
 
-    console.log(`Organization ${organization.name} (${organization.id}) created or updated`)
-
     const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
       organization?.id,
       environment,
@@ -103,7 +101,6 @@ const processUser = async (value: Record<string, string>, importedFileDate: Date
         level: user.level,
       },
     )
-    console.log(`Updating ${email} because already exists`)
     return null
   }
 

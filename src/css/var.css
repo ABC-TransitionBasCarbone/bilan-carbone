@@ -7,6 +7,11 @@
   margin: 2rem;
 }
 
+.my1 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .m-2 {
   margin: 0.5rem;
 }
@@ -73,6 +78,10 @@
 
 .p2 {
   padding: 2rem;
+}
+
+.p10 {
+  padding: 10rem;
 }
 
 .p-2 {

@@ -1,3 +1,4 @@
+import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { Answer, Prisma, Question, SubPost } from '@prisma/client'
 import { prismaClient } from './client'
 
@@ -46,7 +47,6 @@ export const saveAnswer = async (
   questionId: string,
   studySiteId: string,
   response: Prisma.InputJsonValue,
-  emissionSourceId?: string,
 ): Promise<Answer> => {
   return await prismaClient.answer.upsert({
     where: {
@@ -57,13 +57,11 @@ export const saveAnswer = async (
     },
     update: {
       response,
-      emissionSourceId,
     },
     create: {
       questionId,
       studySiteId,
       response,
-      emissionSourceId,
     },
   })
 }
@@ -100,6 +98,169 @@ export const getQuestionById = async (questionId: string): Promise<Question | nu
   return await prismaClient.question.findUnique({
     where: {
       id: questionId,
+    },
+  })
+}
+
+export const getQuestionsByIdIntern = async (
+  idIntern: string,
+): Promise<Prisma.QuestionGetPayload<{ include: { userAnswers: true } }>[]> => {
+  const parseIdItern = idIntern.replace(ID_INTERN_PREFIX_REGEX, '')
+  if (!parseIdItern) {
+    return []
+  }
+  return await prismaClient.question.findMany({
+    where: {
+      idIntern: {
+        contains: parseIdItern,
+      },
+    },
+    include: {
+      userAnswers: true,
+    },
+    orderBy: {
+      order: 'asc',
+    },
+  })
+}
+
+export const findAnswerEmissionSourceByAnswerAndRow = async (answerId: string, rowId: string, emissionType: string) => {
+  return await prismaClient.answerEmissionSource.findFirst({
+    where: {
+      answerId,
+      rowId,
+      emissionType,
+    },
+  })
+}
+
+export const findAnswerEmissionSourceByAnswer = async (answerId: string) => {
+  return await prismaClient.answerEmissionSource.findFirst({
+    where: {
+      answerId,
+    },
+  })
+}
+
+export const upsertAnswerEmissionSource = async (
+  answerId: string,
+  rowId: string,
+  emissionType: string,
+  emissionSourceId: string,
+) => {
+  return await prismaClient.answerEmissionSource.upsert({
+    where: {
+      answerId_rowId_emissionType: {
+        answerId,
+        rowId,
+        emissionType,
+      },
+    },
+    update: {
+      emissionSourceId,
+    },
+    create: {
+      answerId,
+      emissionSourceId,
+      rowId,
+      emissionType,
+    },
+  })
+}
+
+export const updateAnswerEmissionSource = async (id: string, emissionSourceId: string) => {
+  return await prismaClient.answerEmissionSource.update({
+    where: { id },
+    data: { emissionSourceId },
+  })
+}
+
+export const updateAnswerEmissionSourceComplete = async (
+  id: string,
+  emissionSourceId: string,
+  rowId: string | null = null,
+  emissionType: string | null = null,
+) => {
+  return await prismaClient.answerEmissionSource.update({
+    where: { id },
+    data: {
+      emissionSourceId,
+      rowId,
+      emissionType,
+    },
+  })
+}
+
+export const createAnswerEmissionSource = async (
+  answerId: string,
+  emissionSourceId: string,
+  rowId: string | null = null,
+  emissionType: string | null = null,
+) => {
+  return await prismaClient.answerEmissionSource.create({
+    data: {
+      answerId,
+      emissionSourceId,
+      rowId,
+      emissionType,
+    },
+  })
+}
+
+export const findAnswerEmissionSourcesByAnswerAndRow = async (answerId: string, rowId: string) => {
+  return await prismaClient.answerEmissionSource.findMany({
+    where: {
+      answerId,
+      rowId,
+    },
+  })
+}
+
+export const deleteAnswerEmissionSourcesForRow = async (answerId: string, rowId: string) => {
+  const entriesToDelete = await findAnswerEmissionSourcesByAnswerAndRow(answerId, rowId)
+
+  await prismaClient.answerEmissionSource.deleteMany({
+    where: {
+      answerId,
+      rowId,
+    },
+  })
+
+  if (entriesToDelete.length > 0) {
+    const emissionSourceIds = entriesToDelete.map((entry) => entry.emissionSourceId)
+    await prismaClient.studyEmissionSource.deleteMany({
+      where: {
+        id: { in: emissionSourceIds },
+      },
+    })
+  }
+
+  return entriesToDelete
+}
+
+export const deleteAnswerEmissionSourceById = async (answerEmissionSourceId: string, emissionSourceId: string) => {
+  await prismaClient.answerEmissionSource.delete({
+    where: { id: answerEmissionSourceId },
+  })
+
+  await prismaClient.studyEmissionSource.delete({
+    where: { id: emissionSourceId },
+  })
+}
+
+export const findAnswerEmissionSourceByAnswerAndEmissionSource = async (answerId: string, emissionSourceId: string) => {
+  return await prismaClient.answerEmissionSource.findFirst({
+    where: {
+      answerId,
+      emissionSourceId,
+    },
+  })
+}
+
+export const findAllAnswerEmissionSourcesByAnswer = async (answerId: string) => {
+  return await prismaClient.answerEmissionSource.findMany({
+    where: {
+      answerId,
     },
   })
 }

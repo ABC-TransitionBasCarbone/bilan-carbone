@@ -35,6 +35,9 @@ const base = createTheme({
       default: '#FBFCFC',
       paper: '#FBFCFC',
     },
+    text: {
+      primary: '#2C303A',
+    },
   },
   shadows: [
     'none',
@@ -64,14 +67,14 @@ const base = createTheme({
     'none',
   ],
   typography: {
-    fontFamily: '"Gilroy", sans-serif',
+    fontFamily: 'Gilroy-Regular, sans-serif',
     button: {
       textTransform: 'none',
       fontWeight: 600,
-      fontFamily: 'Gilroy, sans-serif',
+      fontFamily: 'Gilroy-Regular, sans-serif',
     },
     h4: {
-      fontFamily: 'Gilroy, sans-serif',
+      fontFamily: 'Gilroy-Regular, sans-serif',
       fontWeight: 700,
       fontSize: '1.5rem',
       lineHeight: '1.2rem',
@@ -118,6 +121,14 @@ const cutTheme = createTheme(base, {
         bar: {
           borderRadius: 4,
           backgroundColor: base.palette.primary.main,
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          color: base.palette.text.primary,
+          fontFamily: 'Gilroy-Regular, sans-serif',
         },
       },
     },

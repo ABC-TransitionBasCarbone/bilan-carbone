@@ -47,6 +47,10 @@ const YearPickerInput = ({
           error: !!errorMessage,
           helperText: errorMessage,
           onBlur: onBlur,
+          sx: {
+            backgroundColor: 'white',
+            width: '6.5rem',
+          },
         },
       }}
     />

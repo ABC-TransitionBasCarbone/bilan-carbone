@@ -33,7 +33,16 @@ const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
 
       const { questions: loadedQuestions, answers: loadedAnswers } = result.data
 
-      setQuestions(loadedQuestions)
+      // Update the label of each question by replacing the placeholder 'en * ?'
+      // with the actual study start year, e.g., 'en 2024 ?'
+      const updatedQuestions = loadedQuestions.map((question) => {
+        const year = study.startDate.getFullYear()
+        return {
+          ...question,
+          label: question.label.replace('en * ?', `en  ${year} ?`),
+        }
+      })
+      setQuestions(updatedQuestions)
       setAnswers(loadedAnswers)
     } catch (err) {
       console.error('Failed to load questions and answers:', err)
@@ -41,7 +50,7 @@ const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
     } finally {
       setIsLoading(false)
     }
-  }, [subPost, study.id])
+  }, [subPost, studySiteId, study.startDate])
 
   useEffect(() => {
     loadQuestionsAndAnswers()

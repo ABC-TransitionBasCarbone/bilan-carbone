@@ -56,7 +56,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           site: {
-            select: { name: true },
+            select: { id: true, name: true },
           },
         },
       },
@@ -138,6 +138,7 @@ const fullStudyInclude = {
       numberOfOpenDays: true,
       numberOfSessions: true,
       numberOfTickets: true,
+      distanceToParis: true,
       site: {
         select: {
           id: true,
