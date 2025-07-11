@@ -54,7 +54,8 @@ const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
 
   useEffect(() => {
     loadQuestionsAndAnswers()
-  }, [loadQuestionsAndAnswers])
+    // Do not add loadQuestionsAndAnswers otherWise tables are broken
+  }, [studySiteId])
 
   if (error) {
     return (
