@@ -11,21 +11,25 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
   const tQuestions = useTranslations('emissionFactors.post.cutQuestions')
 
   const {
-    control,
-    formState: { errors, touchedFields },
-    watch,
-    setValue,
+    form: {
+      control,
+      formState: { errors, touchedFields },
+      watch,
+      setValue,
+    },
+    updateDefaultValues,
   } = useDynamicForm(questions, initialAnswers)
 
   const autoSave = useAutoSave(studyId, studySiteId)
 
   useEffect(() => {
-    if (initialAnswers && initialAnswers.length > 0) {
+    if (initialAnswers) {
       initialAnswers.forEach((answer) => {
         if (answer.response) {
           autoSave.initializeFieldStatus(answer.questionId, 'saved')
         }
       })
+      updateDefaultValues(initialAnswers)
     }
     // Not adding autoSave to the dependency array prevents infinite re-renders
     // eslint-disable-next-line react-hooks/exhaustive-deps

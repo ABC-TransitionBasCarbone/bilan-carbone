@@ -49,7 +49,7 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
     return subPosts.map((subPost) => (
       <DynamicSubPostForm key={subPost} subPost={subPost} study={study} studySiteId={studySiteId} />
     ))
-  }, [subPosts, study])
+  }, [subPosts, study, studySiteId])
 
   const handleNextStep = () => {
     if (activeStep < subPosts.length - 1) {

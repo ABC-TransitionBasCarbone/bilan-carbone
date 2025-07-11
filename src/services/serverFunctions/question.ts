@@ -8,7 +8,6 @@ import {
   LONG_DISTANCE_QUESTION_ID,
   MOVIE_DCP_QUESTION_ID,
   MOVIE_DEMAT_QUESTION_ID,
-  MOVIE_TEAM_MEAL_QUESTION_ID,
   MOVIE_TEAM_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
 } from '@/constants/questions'
@@ -234,7 +233,7 @@ export const saveAnswerForQuestion = async (
     let emissionSourceId = undefined
 
     let valueToStore = Number(response)
-    const depreciationPeriodToStore = depreciationPeriod
+    let depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
       return handleSpecialQuestions(question, response, study, studySiteId)
@@ -250,6 +249,7 @@ export const saveAnswerForQuestion = async (
       emissionSourceId = existingEmissionSource?.emissionSourceId ?? undefined
     }
 
+    let emissionFactorToFindId = emissionFactorImportedId
     if (linkDepreciationQuestionId) {
       const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
       if (!linkQuestion) {
@@ -264,8 +264,7 @@ export const saveAnswerForQuestion = async (
 
       const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
 
-      const depreciationPeriodToStore =
-        (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
+      depreciationPeriodToStore = (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
       const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
       const dateValue = depreciationPeriod ? valueToStore : parseFloat(linkAnswer?.response?.toString() || '0')
 
@@ -274,15 +273,19 @@ export const saveAnswerForQuestion = async (
       } else {
         valueToStore = valueToDepreciate
       }
+
+      if (!emissionFactorImportedId && linkEmissionInfo?.emissionFactorImportedId) {
+        emissionFactorToFindId = linkEmissionInfo.emissionFactorImportedId
+      }
     }
 
-    if (emissionFactorImportedId) {
+    if (emissionFactorToFindId) {
       const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-        emissionFactorImportedId,
+        emissionFactorToFindId,
         study.emissionFactorVersions.map((v) => v.importVersionId),
       )
       if (!emissionFactor) {
-        throw new Error(`Emission factor not found for importedId: ${emissionFactorImportedId}`)
+        throw new Error(`Emission factor not found for importedId: ${emissionFactorToFindId}`)
       }
       emissionFactorId = emissionFactor.id
     }
@@ -665,19 +668,20 @@ const applyMovieTeamCalculation = async (
   studySiteId: string,
 ) => {
   const studyId = study.id
+  const emissionSourceIds: string[] = []
 
   const emissionInfo = emissionFactorMap[MOVIE_TEAM_QUESTION_ID]
-  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
-    return []
+  if (!emissionInfo || !emissionInfo.emissionFactors) {
+    return emissionSourceIds
   }
 
   const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-    emissionInfo.emissionFactorImportedId,
+    emissionInfo.emissionFactors.transport,
     study.emissionFactorVersions.map((v) => v.importVersionId),
   )
 
   if (!emissionFactor) {
-    return []
+    return emissionSourceIds
   }
 
   const studySite = study.sites.find((site) => site.id === studySiteId)
@@ -695,50 +699,35 @@ const applyMovieTeamCalculation = async (
   })
 
   if (newEmissionSource.success && newEmissionSource.data) {
-    return [newEmissionSource.data.id]
+    emissionSourceIds.push(newEmissionSource.data.id)
   }
 
-  return []
-}
-
-const applyMovieTeamMealCalculation = async (
-  question: Question,
-  response: Prisma.InputJsonValue,
-  study: FullStudy,
-  studySiteId: string,
-) => {
-  const studyId = study.id
-  const emissionInfo = emissionFactorMap[MOVIE_TEAM_MEAL_QUESTION_ID]
-  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
-    return []
-  }
-
-  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-    emissionInfo.emissionFactorImportedId,
+  const mealEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactors.meal,
     study.emissionFactorVersions.map((v) => v.importVersionId),
   )
 
-  if (!emissionFactor) {
-    return []
+  if (!mealEmissionFactor) {
+    return emissionSourceIds
   }
 
-  const value = Number(response) * 5
+  const mealValue = Number(response) * 15
 
-  const newEmissionSource = await createEmissionSource({
+  const newMealEmissionSource = await createEmissionSource({
     studyId,
     studySiteId,
-    value,
-    name: question.idIntern,
+    value: mealValue,
+    name: `${question.idIntern}-meal`,
     subPost: question.subPost,
-    emissionFactorId: emissionFactor.id,
+    emissionFactorId: mealEmissionFactor.id,
     validated: true,
   })
 
-  if (newEmissionSource.success && newEmissionSource.data) {
-    return [newEmissionSource.data.id]
+  if (newMealEmissionSource.success && newMealEmissionSource.data) {
+    emissionSourceIds.push(newMealEmissionSource.data.id)
   }
 
-  return []
+  return emissionSourceIds
 }
 
 const applyDematMovieCalculation = async (
@@ -857,10 +846,6 @@ const handleSpecialQuestions = async (
     }
     case MOVIE_TEAM_QUESTION_ID: {
       emissionSourceIds = await applyMovieTeamCalculation(question, response, study, studySiteId)
-      break
-    }
-    case MOVIE_TEAM_MEAL_QUESTION_ID: {
-      emissionSourceIds = await applyMovieTeamMealCalculation(question, response, study, studySiteId)
       break
     }
     case MOVIE_DEMAT_QUESTION_ID: {
