@@ -12,6 +12,7 @@ import styles from './TextUnitInput.module.css'
 interface TextUnitInputProps extends BaseInputProps {
   format?: TextInputFormat | NumberInputFormat
   unit?: string | null
+  table?: boolean
 }
 
 const TextUnitInput = ({
@@ -24,6 +25,8 @@ const TextUnitInput = ({
   unit,
   errorMessage,
   label,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  table,
   ...props
 }: TextUnitInputProps &
   Omit<TextFieldProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
@@ -59,6 +62,9 @@ const TextUnitInput = ({
         onBlur={onBlur}
         disabled={disabled}
         debounce={50}
+        sx={{
+          minWidth: '6.5rem',
+        }}
         slotProps={{
           htmlInput: inputProps,
           input: {

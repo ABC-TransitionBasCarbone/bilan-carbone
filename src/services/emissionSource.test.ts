@@ -20,7 +20,7 @@ const defaultEmissionSource = {
     importedId: '123',
     isMonetary: false,
   },
-  studySite: { id: 'siteId', site: { name: 'mocked-site' } },
+  studySite: { id: 'siteId', site: { id: 'siteId', name: 'mocked-site' } },
   emissionFactorId: 'emissionFactor',
   name: 'name',
   source: null,

@@ -266,6 +266,14 @@
   },
   "study": {
     "create": "Ajouter un Bilan Carbone®",
+    "duplicate": "Dupliquer l'étude",
+    "duplicateCopy": " - Copie",
+    "duplicateDialog": {
+      "title": "Duplication de l'étude",
+      "description": "Souhaitez-vous dupliquer cette étude ? Vous serez redirigé vers la page de création d'une étude, tous les champs seront pré-remplis avec les informations de cette étude, et une fois validée, toute l'étude et ses sources d'émissions seront dupliquées. Les études seront alors indépendantes, toute modification faite dans l'une ne se reflètera pas dans l'autre une fois la duplication faite.",
+      "cancel": "Annuler",
+      "confirm": "Dupliquer"
+    },
     "myCollaborations": "Mes collaborations",
     "myStudies": "Mes Bilans Carbone®",
     "createFirstStudy": "Créer mon premier Bilan Carbone®",
@@ -314,6 +322,7 @@
       "resultsUnit": "Unité des resultats de l'étude",
       "numberOfSessions": "Nombre de séances (par an)",
       "numberOfTickets": "Nombre d'entrées (par an)",
+      "distanceToParis": "Distance à Paris (km)",
       "numberOfOpenDays": "Nombre de jours d'ouverture (par an)",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
@@ -330,7 +339,25 @@
         "to": "à",
         "DifferentHoursHoliday": "Horaires différents pendant les vacances scolaires"
       },
+      "suggestion": {
+        "name": "Bilan Carbone® - {orga} {studyStartDate}",
+        "yourOrga": "Votre organisation"
+      },
       "create": "Créer l'étude",
+      "duplicate": "Dupliquer l'étude",
+      "duplicationOptions": "Options de duplication",
+      "inviteTeam": "Inviter la même équipe",
+      "inviteContributors": "Inviter les mêmes contributeurs",
+      "siteDeselectionModal": {
+        "title": "Attention : Sites avec sources d'émission",
+        "description": "Vous tentez de désélectionner des sites qui contiennent des sources d'émission dans l'étude originale.",
+        "affectedSites": "Sites affectés",
+        "sourcesCount": "{count, plural, =1 {1 source d'émission} other {# sources d'émission}}",
+        "totalSources": "{count, plural, =1 {Au total, 1 source d'émission ne sera pas dupliquée.} other {Au total, # sources d'émission ne seront pas dupliquées.}}",
+        "confirmation": "Êtes-vous sûr de vouloir continuer ?",
+        "cancel": "Annuler",
+        "proceed": "Continuer sans ces sources"
+      },
       "glossary": {
         "title": "Glossaire",
         "validatorEmail": "Email du validateur",
@@ -347,6 +374,8 @@
         "exportsDescription": "Les résultats sont par défaut restitués au format Bilan Carbone®, mais il est possible d'obtenir les résultats sous les formats demandés par plusieurs autres méthodes de comptabilité carbone, comme le Bilan GES règlementaire, qui est la méthode règlementaire française.",
         "control": "Mode de contrôle",
         "controlDescription": "Le mode de contrôle est une donnée demandée par certaines méthodes de comptabilité carbone, comme le Bilan GES règlementaire ou le GHG Protocol. Pour obtenir les résultats sous les formats demandés par ces méthodes, vous devrez caractériser les différentes sources d'émission lors de votre saisie, ce qui déterminera dans quelle catégories existantes au sein de ces méthodes (l'équivalent des postes et sous-postes au sein de la méthode Bilan Carbone®) les émissions vont se ventiler. En fonction du mode de contrôle sélectionné, les caractérisations disponibles pour les différentes sources d'émission varient. Pour plus de détail sur les modes de contrôle, nous vous invitons à consulter les guides méthodologiques des méthodes en question. Nous vous recommandons vivement d'utiliser le mode de contrôle \"Contrôle Opérationnel\", qui est de loin le plus courant.",
+        "duplicationOptions": "Options de duplication",
+        "duplicationOptionsDescription": "Lors de la duplication d'une étude, vous pouvez choisir d'inviter les mêmes membres d'équipe et contributeurs de l'étude originale dans la nouvelle. Cela permet de maintenir la continuité de la collaboration.",
         "close": "Fermer"
       },
       "validation": {
@@ -559,7 +588,6 @@
       "activityDataValue": "Valeur de la donnée d'activité",
       "date": "Date butoire",
       "download": "Télécharger les sources d'émission",
-      "downloadSubPost": "Télécharger les sources d'émission de {name}",
       "emissionName": "Nom du FE (facteur d'émission)",
       "emissionQuality": "Qualité du FE",
       "emissionSource": "Source du FE",
@@ -962,7 +990,6 @@
     "TUNISIE": "Tunisie"
   },
   "team": {
-    "title": "Mon organisation",
     "pending": "Invitations en attentes",
     "invitationDate": "Invitation envoyé le",
     "toValidate": "Invitations à valider",
@@ -970,7 +997,7 @@
     "delete": "Supprimer l'utilisateur",
     "resend": "Renvoyer l'invitation",
     "table": {
-      "title": "Mes collaborateurs",
+      "title": "Mon équipe",
       "newUser": "Inviter un utilisateur",
       "firstName": "Prénom",
       "lastName": "Nom",
@@ -1200,8 +1227,8 @@
       "delete": "Supprimer",
       "add": "Ajouter un site",
       "update": "Modifier la liste",
-      "cnc": "Code CNC",
-      "cncPlaceholder": "Code CNC",
+      "cnc": "Numéro CNC",
+      "cncPlaceholder": "Numéro CNC",
       "glossary": {
         "title": "Glossaire",
         "etp": "Nombre d'Équivalent Temps Plein",
@@ -1413,6 +1440,8 @@
     "AddClientDetails": "Ajouter votre premier client afin de commencer vos Bilans Carbone®",
     "AddSiteCR": "Ajouter les sites",
     "AddSiteCRDetails": "Ajouter des sites à votre <orga>organisation</orga> ou à <client>un de vos clients</client> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation ou client n'a qu'un site, créer un site 'Tous sites'",
+    "AddSiteCRCollaborator": "Ajouter les sites",
+    "AddSiteCRCollaboratorDetails": "Ajouter des sites à <client>un de vos clients</client> pour que vous puissiez établir les émissions de chacun des sites. Si votre client n'a qu'un site, créer un site 'Tous sites'",
     "AddSiteOrga": "Ajouter les sites",
     "AddSiteOrgaDetails": "Ajouter des sites à votre <orga>organisation</orga> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation n'a qu'un site, créer un site 'Tous sites'",
     "CreateFirstStudy": "Créer votre premier Bilan Carbone®",

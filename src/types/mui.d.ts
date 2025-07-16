@@ -6,6 +6,11 @@ import { CSSProperties } from 'react'
 declare module '@mui/material/styles' {
   interface Theme {
     custom: {
+      palette: {
+        error: {
+          background: string
+        }
+      }
       box: CSSObject
       postColors: {
         [key in Post]: { light: string; dark?: string }
@@ -30,6 +35,11 @@ declare module '@mui/material/styles' {
 
   interface ThemeOptions {
     custom?: {
+      palette?: {
+        error?: {
+          background?: string
+        }
+      }
       box: CSSObject
       postColors?: {
         [key in CutPost]: { light: string; dark?: string }

@@ -3,7 +3,7 @@
 }
 
 .title {
-  font-family: 'Gilroy', sans-serif;
+  font-family: 'Gilroy-Regular', sans-serif;
   font-weight: 400;
   font-size: 1.5rem;
   line-height: 1.2rem;
@@ -21,7 +21,7 @@
   height: 5rem;
   gap: 1rem;
   > p {
-    font-family: 'Gilroy', sans-serif;
+    font-family: 'Gilroy-Regular', sans-serif;
     font-weight: 400;
     font-size: 1.125rem;
     line-height: 1.2rem;
@@ -36,15 +36,22 @@
 
 .styledBoxLink {
   width: 50%;
-  height: 10rem;
+  height: 12rem;
   gap: 1rem;
   text-decoration: none;
-  > p {
-    font-weight: 700;
-    font-size: 1.5rem;
-    line-height: 100%;
-    letter-spacing: 0%;
-    text-align: center;
+  font-family: 'Gilroy-Regular', sans-serif;
+  > div {
+    > p {
+      font-weight: 700;
+      font-size: 1.5rem;
+      line-height: 100%;
+      letter-spacing: 0%;
+      text-align: center;
+    }
+    > .linkMessage {
+      margin-top: 0.5rem;
+      text-align: center;
+    }
   }
 }
 

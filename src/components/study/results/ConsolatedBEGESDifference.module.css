@@ -1,5 +1,5 @@
 .button {
-  max-width: 20rem;
+  width: 21rem;
   background-color: var(--background-200);
   color: var(--primary-800);
   border-radius: 0.5rem;

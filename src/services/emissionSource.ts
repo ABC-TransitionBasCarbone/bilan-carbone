@@ -95,7 +95,9 @@ const getEmissionSourceEmission = (emissionSource: (FullStudy | StudyWithoutDeta
 
   let emission = getEmissionFactorValue(emissionSource.emissionFactor) * emissionSource.value
   if (
-    [...subPostsByPost[Post.Immobilisations], SubPost.Electromenager].includes(emissionSource.subPost) &&
+    [...subPostsByPost[Post.Immobilisations], SubPost.Electromenager, SubPost.Batiment].includes(
+      emissionSource.subPost,
+    ) &&
     emissionSource.depreciationPeriod
   ) {
     emission = emission / emissionSource.depreciationPeriod

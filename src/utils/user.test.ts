@@ -2,12 +2,7 @@ import { CutRoles } from '@/services/roles'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { expect } from '@jest/globals'
 import { Environment, Role, UserStatus } from '@prisma/client'
-import * as organizationModule from './organization'
 import { canBeUntrainedRole, findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
-
-jest.mock('./organization', () => ({ canEditMemberRole: jest.fn() }))
-
-const mockCanEditMemberRole = organizationModule.canEditMemberRole as jest.Mock
 
 describe('userUtils functions', () => {
   describe('isAdmin', () => {
@@ -16,7 +11,7 @@ describe('userUtils functions', () => {
       expect(isAdmin(Role.SUPER_ADMIN)).toBe(true)
     })
 
-    test('should return false for non-ADMIN role', () => {
+    test('should return false for non-ADMIN roles', () => {
       expect(isAdmin(Role.GESTIONNAIRE)).toBe(false)
       expect(isAdmin(Role.COLLABORATOR)).toBe(false)
       expect(isAdmin(Role.DEFAULT)).toBe(false)
@@ -27,7 +22,6 @@ describe('userUtils functions', () => {
   describe('findUserInfo', () => {
     test('should return correct arguments for user find info when user can edit member role', () => {
       const user = getMockedAuthUser({ role: Role.ADMIN })
-      mockCanEditMemberRole.mockReturnValue(true)
 
       const result = findUserInfo(user)
       expect(result).toEqual({
@@ -47,12 +41,10 @@ describe('userUtils functions', () => {
         },
         where: { organizationVersionId: user.organizationVersionId },
       })
-      expect(mockCanEditMemberRole).toHaveBeenCalledWith(user)
     })
 
     test('should return correct arguments for user find info when user cannot edit member role', () => {
       const user = getMockedAuthUser({ role: Role.DEFAULT })
-      mockCanEditMemberRole.mockReturnValue(false)
 
       const result = findUserInfo(user)
       expect(result).toEqual({
@@ -72,7 +64,6 @@ describe('userUtils functions', () => {
         },
         where: { status: UserStatus.ACTIVE, organizationVersionId: user.organizationVersionId },
       })
-      expect(mockCanEditMemberRole).toHaveBeenCalledWith(user)
     })
   })
 

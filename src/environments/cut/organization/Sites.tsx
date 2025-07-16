@@ -90,7 +90,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
       },
       {
         id: 'name',
-        header: t('name'),
+        header: t('namePlaceholder'),
         accessorKey: 'name',
         cell: ({ row, getValue }) =>
           row.original.cncId && form ? (

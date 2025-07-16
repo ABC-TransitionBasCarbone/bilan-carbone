@@ -1,21 +1,159 @@
 'use server'
 
-import { findEmissionFactorByImportedId } from '@/db/emissionFactors'
+import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
+import { EmissionFactorInfo, emissionFactorMap } from '@/constants/emissionFactorMap'
 import {
+  CONFECTIONERY_QUESTION_ID,
+  LONG_DISTANCE_APPLIED_PERCENTAGE,
+  LONG_DISTANCE_QUESTION_ID,
+  MOVIE_DCP_QUESTION_ID,
+  MOVIE_DEMAT_QUESTION_ID,
+  MOVIE_TEAM_QUESTION_ID,
+  SHORT_DISTANCE_QUESTION_ID,
+} from '@/constants/questions'
+import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
+import {
+  createAnswerEmissionSource,
+  deleteAnswerEmissionSourceById,
+  deleteAnswerEmissionSourcesForRow,
+  findAllAnswerEmissionSourcesByAnswer,
+  findAnswerEmissionSourceByAnswer,
+  findAnswerEmissionSourceByAnswerAndEmissionSource,
+  findAnswerEmissionSourceByAnswerAndRow,
+  findAnswerEmissionSourcesByAnswerAndRow,
   getAnswerByQuestionId,
   getAnswersByStudyAndSubPost,
+  getQuestionById,
   getQuestionByIdIntern,
   getQuestionsByIdIntern,
   getQuestionsBySubPost,
   saveAnswer,
+  upsertAnswerEmissionSource,
 } from '@/db/question'
-import { getStudyById } from '@/db/study'
+import { FullStudy, getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Prisma, Question, SubPost } from '@prisma/client'
+import {
+  calculateTableEmissions,
+  EmissionSourceCalculation,
+  hasTableEmissionCalculator,
+} from '@/utils/tableEmissionCalculations'
+import { isTableAnswer } from '@/utils/tableInput'
+import { Answer, Prisma, Question, QuestionType, SubPost } from '@prisma/client'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import { canReadStudy } from '../permissions/study'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
+
+const cleanupTableEmissionSources = async (tableAnswer: TableAnswer, existingAnswer: Answer) => {
+  if (existingAnswer.response && isTableAnswer(existingAnswer.response)) {
+    const existingTableAnswer = existingAnswer.response as TableAnswer
+    const existingRowIds = existingTableAnswer.rows.map((row) => row.id)
+    const currentRowIds = tableAnswer.rows.map((row) => row.id)
+    const deletedRowIds = existingRowIds.filter((rowId) => !currentRowIds.includes(rowId))
+
+    for (const deletedRowId of deletedRowIds) {
+      await deleteAnswerEmissionSourcesForRow(existingAnswer.id, deletedRowId)
+    }
+  }
+}
+
+const cleanupRowEmissionSources = async (
+  answerId: string,
+  rowId: string,
+  calculatedEmissionSources?: EmissionSourceCalculation[],
+) => {
+  if (!calculatedEmissionSources || calculatedEmissionSources.length === 0) {
+    await deleteAnswerEmissionSourcesForRow(answerId, rowId)
+  } else {
+    const existingAnswerEmissionSources = await findAnswerEmissionSourcesByAnswerAndRow(answerId, rowId)
+    const existingTypes = new Set(calculatedEmissionSources.map((e) => e.name))
+
+    for (const existingEmissionSource of existingAnswerEmissionSources) {
+      if (existingEmissionSource.emissionType && !existingTypes.has(existingEmissionSource.emissionType)) {
+        await deleteAnswerEmissionSourceById(existingEmissionSource.id, existingEmissionSource.emissionSourceId)
+      }
+    }
+  }
+}
+
+const createAnswerEmissionSources = async (answerId: string, emissionSourceIds: string[]) => {
+  for (const emissionSourceId of emissionSourceIds) {
+    const existingEntry = await findAnswerEmissionSourceByAnswerAndEmissionSource(answerId, emissionSourceId)
+    if (!existingEntry) {
+      await createAnswerEmissionSource(answerId, emissionSourceId, null, null)
+    }
+  }
+}
+
+const handleTableEmissionSources = async (
+  question: Question,
+  tableAnswer: TableAnswer,
+  studyId: string,
+  studySiteId: string,
+  study: FullStudy,
+) => {
+  const emissionSourceIds: string[] = []
+  const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
+
+  if (existingAnswer) {
+    await cleanupTableEmissionSources(tableAnswer, existingAnswer)
+  }
+
+  if (hasTableEmissionCalculator(question.idIntern)) {
+    const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
+
+    for (let arrayIndex = 0; arrayIndex < tableAnswer.rows.length; arrayIndex++) {
+      const row = tableAnswer.rows[arrayIndex]
+      const result = calculationResults[arrayIndex]
+
+      if (existingAnswer) {
+        await cleanupRowEmissionSources(existingAnswer.id, row.id, result?.emissionSources)
+      }
+
+      for (const emissionSource of result.emissionSources) {
+        let emissionSourceId: string
+
+        let existingEmissionSource = null
+        if (existingAnswer) {
+          existingEmissionSource = await findAnswerEmissionSourceByAnswerAndRow(
+            existingAnswer.id,
+            row.id,
+            emissionSource.name,
+          )
+        }
+
+        if (existingEmissionSource) {
+          await updateEmissionSource({
+            emissionSourceId: existingEmissionSource.emissionSourceId,
+            value: emissionSource.value,
+            emissionFactorId: emissionSource.emissionFactorId,
+            validated: true,
+          })
+          emissionSourceId = existingEmissionSource.emissionSourceId
+        } else {
+          const newEmissionSource = await createEmissionSource({
+            studyId,
+            studySiteId,
+            value: emissionSource.value,
+            name: `${question.idIntern}-${emissionSource.name}-${row.id}`,
+            subPost: question.subPost,
+            emissionFactorId: emissionSource.emissionFactorId,
+            validated: true,
+          })
+
+          if (newEmissionSource.success && newEmissionSource.data) {
+            emissionSourceId = newEmissionSource.data.id
+          } else {
+            continue
+          }
+        }
+
+        emissionSourceIds.push(emissionSourceId)
+      }
+    }
+  }
+  return emissionSourceIds
+}
 
 export const saveAnswerForQuestion = async (
   question: Question,
@@ -29,12 +167,6 @@ export const saveAnswerForQuestion = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const { emissionFactorImportedId, depreciationPeriod, linkQuestionId } =
-      getEmissionFactorByIdIntern(question.idIntern, response) || {}
-
-    let emissionFactorId = undefined
-    let emissionSourceId = undefined
-
     if (!canReadStudy(session.user, studyId)) {
       throw new Error(NOT_AUTHORIZED)
     }
@@ -44,60 +176,174 @@ export const saveAnswerForQuestion = async (
     if (!study || !studySite) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const value = depreciationPeriod ? undefined : Number(response)
 
-    if (!emissionFactorImportedId && !depreciationPeriod && !linkQuestionId) {
+    // Prevent saving to table column questions - data should be saved to the parent TABLE question
+    if (await isTableColumnQuestion(question)) {
+      throw new Error(
+        `Cannot save directly to table column question ${question.idIntern}. Data should be saved to the parent TABLE question.`,
+      )
+    }
+
+    if (question.type === QuestionType.TABLE) {
+      let tableAnswer: TableAnswer
+
+      if (isTableAnswer(response)) {
+        tableAnswer = response
+      } else {
+        tableAnswer = { rows: [] }
+      }
+
+      const emissionSourceIds = await handleTableEmissionSources(question, tableAnswer, studyId, studySiteId, study)
+
+      const savedAnswer = await saveAnswer(question.id, studySiteId, tableAnswer as unknown as Prisma.InputJsonValue)
+
+      if (hasTableEmissionCalculator(question.idIntern) && savedAnswer) {
+        const calculationResults = await calculateTableEmissions(question, tableAnswer, study)
+
+        let emissionSourceIdIndex = 0
+
+        for (let arrayIndex = 0; arrayIndex < tableAnswer.rows.length; arrayIndex++) {
+          const row = tableAnswer.rows[arrayIndex]
+          const result = calculationResults[arrayIndex]
+
+          if (!result || result.emissionSources.length === 0) {
+            continue
+          }
+
+          for (let emissionIndex = 0; emissionIndex < result.emissionSources.length; emissionIndex++) {
+            const emissionSource = result.emissionSources[emissionIndex]
+            const emissionSourceId = emissionSourceIds[emissionSourceIdIndex]
+
+            emissionSourceIdIndex++
+
+            if (emissionSourceId) {
+              await upsertAnswerEmissionSource(savedAnswer.id, row.id, emissionSource.name, emissionSourceId)
+            }
+          }
+        }
+      }
+
+      return savedAnswer
+    }
+
+    const { emissionFactorImportedId, depreciationPeriod, linkDepreciationQuestionId, isSpecial } =
+      getEmissionFactorByIdIntern(question.idIntern, response) || {}
+
+    let emissionFactorId = undefined
+    let emissionSourceId = undefined
+
+    let valueToStore = Number(response)
+    let depreciationPeriodToStore = depreciationPeriod
+
+    if (isSpecial) {
+      return handleSpecialQuestions(question, response, study, studySiteId)
+    }
+
+    if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
       return saveAnswer(question.id, studySiteId, response)
     }
 
-    if (linkQuestionId) {
-      const linkQuestion = await getQuestionByIdIntern(linkQuestionId)
+    const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
+    if (existingAnswer) {
+      const existingEmissionSource = await findAnswerEmissionSourceByAnswer(existingAnswer.id)
+      emissionSourceId = existingEmissionSource?.emissionSourceId ?? undefined
+    }
+
+    let emissionFactorToFindId = emissionFactorImportedId
+    if (linkDepreciationQuestionId) {
+      const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
       if (!linkQuestion) {
-        throw new Error(`Previous question not found for idIntern: ${linkQuestionId}`)
+        throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
       }
 
       const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
-      /**
-       * TODO :
-       * Sauvegarder dans une seule réponse json les différentes valeurs à multiplier
-       * Créer une émissionSource uniquement quand les différentes valeurs sont connues
-       */
-      emissionSourceId = linkAnswer?.emissionSourceId ?? undefined
+      if (linkAnswer) {
+        const linkEmissionSource = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
+        emissionSourceId = linkEmissionSource?.emissionSourceId ?? undefined
+      }
+
+      const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
+
+      depreciationPeriodToStore = (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
+      const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
+      const dateValue = depreciationPeriod ? valueToStore : parseFloat(linkAnswer?.response?.toString() || '0')
+
+      if (depreciationPeriodToStore < new Date(study.startDate).getFullYear() - dateValue) {
+        valueToStore = 0
+      } else {
+        valueToStore = valueToDepreciate
+      }
+
+      if (!emissionFactorImportedId && linkEmissionInfo?.emissionFactorImportedId) {
+        emissionFactorToFindId = linkEmissionInfo.emissionFactorImportedId
+      }
     }
 
-    if (emissionFactorImportedId) {
-      const emissionFactor = await findEmissionFactorByImportedId(emissionFactorImportedId)
+    if (emissionFactorToFindId) {
+      const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+        emissionFactorToFindId,
+        study.emissionFactorVersions.map((v) => v.importVersionId),
+      )
       if (!emissionFactor) {
-        throw new Error(`Emission factor not found for importedId: ${emissionFactorImportedId}`)
+        throw new Error(`Emission factor not found for importedId: ${emissionFactorToFindId}`)
       }
       emissionFactorId = emissionFactor.id
     }
 
+    const isEmptyValue = isNaN(valueToStore) || valueToStore <= 0
+
     if (emissionSourceId) {
-      await updateEmissionSource({
-        value,
-        emissionSourceId,
-        emissionFactorId,
-        depreciationPeriod,
-      })
-    } else {
-      const emissionSource = await createEmissionSource({
+      if (isEmptyValue) {
+        if (existingAnswer) {
+          const existingEntry = await findAnswerEmissionSourceByAnswer(existingAnswer.id)
+          if (existingEntry) {
+            await deleteAnswerEmissionSourceById(existingEntry.id, emissionSourceId)
+          }
+        }
+        emissionSourceId = undefined
+      } else {
+        await updateEmissionSource({
+          value: valueToStore,
+          emissionSourceId,
+          emissionFactorId,
+          depreciationPeriod: depreciationPeriodToStore,
+        })
+      }
+    } else if (!isEmptyValue) {
+      const newEmissionSource = await createEmissionSource({
         studyId,
         studySiteId,
-        value,
+        value: valueToStore,
         name: question.idIntern,
         subPost: question.subPost,
-        depreciationPeriod,
+        depreciationPeriod: depreciationPeriodToStore,
         emissionFactorId,
+        validated: true,
       })
 
-      if (emissionSource.success && emissionSource.data) {
-        emissionSourceId = emissionSource.data.id
-        await updateEmissionSource({ validated: true, emissionSourceId })
+      if (newEmissionSource.success && newEmissionSource.data) {
+        emissionSourceId = newEmissionSource.data.id
       }
     }
 
-    return saveAnswer(question.id, studySiteId, response, emissionSourceId)
+    const savedAnswer = await saveAnswer(question.id, studySiteId, response)
+
+    if (emissionSourceId && savedAnswer) {
+      await createAnswerEmissionSources(savedAnswer.id, [emissionSourceId])
+
+      // If this question has a linkDepreciationQuestionId, also ensure the linked answers are connected to the same emission source
+      if (linkDepreciationQuestionId) {
+        const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
+        if (linkQuestion) {
+          const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
+          if (linkAnswer) {
+            await createAnswerEmissionSources(linkAnswer.id, [emissionSourceId])
+          }
+        }
+      }
+    }
+
+    return savedAnswer
   })
 
 export const getQuestionsWithAnswers = async (subPost: SubPost, studySiteId: string) =>
@@ -135,314 +381,491 @@ export const getQuestionsFromIdIntern = async (idIntern: string) =>
     return getQuestionsByIdIntern(idIntern)
   })
 
-type EmissionFactorInfo = {
-  emissionFactorImportedId?: string | undefined
-  depreciationPeriod?: number
-  linkQuestionId?: string
-  emissionFactors?: Record<string, string>
+export const getParentTableQuestion = async (columnQuestionId: string) =>
+  withServerResponse('getParentTableQuestion', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error('Not authorized')
+    }
+
+    const columnQuestion = await getQuestionById(columnQuestionId)
+
+    if (!columnQuestion) {
+      throw new Error('Column question not found')
+    }
+
+    const relatedQuestions = await getQuestionsByIdIntern(columnQuestion.idIntern)
+
+    const tableQuestion = relatedQuestions.find((q) => q.type === QuestionType.TABLE)
+
+    if (!tableQuestion) {
+      throw new Error('Parent TABLE question not found')
+    }
+
+    return tableQuestion
+  })
+
+const isTableColumnQuestion = async (question: Question): Promise<boolean> => {
+  if (question.type === QuestionType.TABLE) {
+    return false
+  }
+
+  try {
+    const relatedQuestions = await getQuestionsByIdIntern(question.idIntern)
+
+    const hasTableQuestion = relatedQuestions.some((q) => q.type === QuestionType.TABLE)
+
+    return hasTableQuestion
+  } catch {
+    return false
+  }
 }
 
 const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJsonValue): EmissionFactorInfo => {
   const emissionFactorInfo = emissionFactorMap[idIntern]
 
-  console.log(
-    `getEmissionFactorByIdIntern: idIntern=${idIntern}, response=${response}, emissionFactorInfo=`,
-    emissionFactorInfo,
-  )
   if (emissionFactorInfo && emissionFactorInfo.emissionFactors) {
-    emissionFactorInfo.emissionFactorImportedId = emissionFactorInfo.emissionFactors[response.toString()]
+    if (typeof response === 'object' && response !== null && !Array.isArray(response)) {
+      for (const [, value] of Object.entries(response)) {
+        if (typeof value === 'string' && emissionFactorInfo.emissionFactors[value]) {
+          emissionFactorInfo.emissionFactorImportedId = emissionFactorInfo.emissionFactors[value]
+          break
+        }
+      }
+    } else {
+      emissionFactorInfo.emissionFactorImportedId = emissionFactorInfo.emissionFactors[response.toString()]
+    }
   }
 
   return emissionFactorInfo
 }
 
-const emissionFactorMap: Record<string, EmissionFactorInfo> = {
-  /**
-   * TODO use date to calculate depreciation period
-   * TODO match emissionFactorImportedId with idIntern
-   */
-  // Batiment
-  '10-quelle-est-la-surface-plancher-du-cinema': {
-    emissionFactorImportedId: '20730',
-    linkQuestionId: '11-quand-le-batiment-a-t-il-ete-construit',
-  },
-  '11-quand-le-batiment-a-t-il-ete-construit': {
-    depreciationPeriod: 50,
-    linkQuestionId: '10-quelle-est-la-surface-plancher-du-cinema',
-  },
-  '12-a-quand-remonte-la-derniere-renovation-importante': {
-    depreciationPeriod: 10,
-    linkQuestionId: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee',
-  },
-  'de-quel-type-de-renovation-sagi-t-il': {},
-  'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': {
-    emissionFactorImportedId: '20730',
-    linkQuestionId: '12-a-quand-remonte-la-derniere-renovation-importante',
-  },
-  'le-batiment-est-il-partage-avec-une-autre-activite': {},
-  'quelle-est-la-surface-totale-du-batiment': {},
-  'le-cinema-dispose-t-il-dun-parking': {},
-  'si-oui-de-combien-de-places': { emissionFactorImportedId: '26008', depreciationPeriod: 50 },
-  // Equipe - attente de la fonctionnalité table
-  '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
-  '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
-  '13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {
-    emissionFactors: {
-      'Métro (Ile de France)': '43253',
-      'RER et Transilien (Ile-de-France)': '43254',
-      'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
-      'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
-      'Bus (agglomérations de - de 100 000 habitants)': '27998',
-      'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
-      'Bus (agglomérations de + de 250 000 habitants)': '28000',
-      'Vélo à assistance éléctrique': '28331',
-      'Vélo classique': '134',
-      Marche: '135',
-      'Voiture gazole courte distance': '27984',
-      'Voiture essence courte distance': '27983',
-      'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
-        '28015',
-      'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
-      'Moto >250cm3 /Mixte': '27995',
-      'Moto<250cm3/Mixte': '27992',
-      'Trottinette électrique': '28329',
-    },
-  },
-  // DeplacementsProfessionnels - attente de la fonctionnalité table
-  '11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
-  '12-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
-  '13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
-  '14-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
-  '15-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
-  '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
-    emissionFactors: {
-      'tous types d’hôtel': '100',
-      'hôtel 1*': '101',
-      'hôtel 2*': '102',
-      'hôtel 3*': '103',
-      'hôtel 4*': '104',
-      'hôtel 5*': '105',
-      nuitée: '106',
-    },
-  },
-  '17-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
-  // Energie
-  'quelles-etaient-les-consommations-energetiques-du-cinema': { emissionFactorImportedId: '15591' },
-  gaz: { emissionFactorImportedId: '37138' },
-  fuel: { emissionFactorImportedId: '14086' },
-  'reseaux-urbains-chaleurfroid': { emissionFactorImportedId: '' }, // Attente d'une fonctionnalité pour gérer les départements
-  'bois-granules': { emissionFactorImportedId: '34942' },
-  'votre-cinema-est-il-equipe-de-la-climatisation': { emissionFactorImportedId: '' },
-  'le-cinema-dispose-t-il-d-un-ou-plusieurs-groupes-electrogenes': { emissionFactorImportedId: '20911' },
-  'quelle-est-votre-consommation-annuelle-de-diesel': { emissionFactorImportedId: '14015' },
-  // ActivitesDeBureau
-  'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
-  'quel-montant-avez-vous-depense-en-services': { emissionFactorImportedId: '43545' },
-  'ordinateurs-fixes-nombre-unite': {
-    emissionFactorImportedId: '27003',
-    linkQuestionId: 'ordinateurs-fixes-annee-ou-nombre-jours',
-  },
-  'ordinateurs-fixes-annee-ou-nombre-jours': {
-    depreciationPeriod: 4,
-    linkQuestionId: 'ordinateurs-fixes-nombre-unite',
-  },
-  'ordinateurs-portables-nombre-unite': {
-    emissionFactorImportedId: '27002',
-    linkQuestionId: 'ordinateurs-portables-annee-ou-nombre-jours',
-  },
-  'ordinateurs-portables-annee-ou-nombre-jours': {
-    depreciationPeriod: 4,
-    linkQuestionId: 'ordinateurs-portables-nombre-unite',
-  },
-  'photocopieurs-nombre-unite': {
-    emissionFactorImportedId: '20591',
-    linkQuestionId: 'photocopieurs-annee-ou-nombre-jours',
-  },
-  'photocopieurs-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'photocopieurs-nombre-unite' },
-  'imprimantes-nombre-unite': {
-    emissionFactorImportedId: '27027',
-    linkQuestionId: 'imprimantes-annee-ou-nombre-jours',
-  },
-  'imprimantes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'imprimantes-nombre-unite' },
-  'telephones-fixes-nombre-unite': {
-    emissionFactorImportedId: '20614',
-    linkQuestionId: 'telephones-fixes-annee-ou-nombre-jours',
-  },
-  'telephones-fixes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'telephones-fixes-nombre-unite' },
-  'telephones-portables-nombre-unite': {
-    emissionFactorImportedId: '27010',
-    linkQuestionId: 'telephones-portables-annee-ou-nombre-jours',
-  },
-  'telephones-portables-annee-ou-nombre-jours': {
-    depreciationPeriod: 4,
-    linkQuestionId: 'telephones-portables-nombre-unite',
-  },
-  'tablettes-nombre-unite': { emissionFactorImportedId: '27007', linkQuestionId: 'tablettes-annee-ou-nombre-jours' },
-  'tablettes-annee-ou-nombre-jours': { depreciationPeriod: 4, linkQuestionId: 'tablettes-nombre-unite' },
-  // Mobilité spectateurs
-  'avez-vous-deja-realise-une-enquete-mobilite-specteurs': {},
-  /** TODO: Liste 1  - attente de la fonctionnalité liste */
-  'si-a-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': {},
-  /***** */
-  'si-b-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
-    {},
-  'si-c-de-quel-type-de-cinema-votre-etablissement-se-rapproche-le-plus': {},
-  'vos-spectateurs-sont-ils-majoritairement-des-habitants-locaux-cest-a-dire-residant-a-lannee-dans-les-environs-ou-attirez-vous-aussi-une-part-non-negligeable-de-spectateurs-de-passage-dans-la-region-touristes-notamment':
-    {},
-  next: {},
-  'quel-est-le-profil-auquel-vous-pouvez-identifier-le-plus-votre-cinema': {},
-  // Equipes recus
-  'combien-d-equipes-de-film-avez-vous-recu-en-*': {},
-  'combien-de-nuits': { emissionFactorImportedId: '106' },
-  'combien-d-equipes-de-repas': { emissionFactorImportedId: '20682' },
-  // Autres matériel et matériel technique - Attente de la fonctionnalité table
-  '11-decrivez-les-differentes-salles-du-cinema': {
-    // TODO multiplier par le nombre de salles ou faire un tableau
-    emissionFactors: {
-      'Projecteur Xénon': '107',
-      'Projecteur Laser': '108',
-      'Projecteur 35 mm': '109',
-    },
-  },
-  '12-decrivez-les-differentes-salles-du-cinema': {
-    // TODO multiplier par le nombre d'écrans
-    emissionFactors: {
-      'Ecran 2D': '110',
-      'Ecran 3D': '111',
-    },
-    linkQuestionId: '13-Décrivez les différentes salles du cinéma',
-  },
-  '13-decrivez-les-differentes-salles-du-cinema': {
-    linkQuestionId: '12-Décrivez les différentes salles du cinéma',
-  },
-  '14-decrivez-les-differentes-salles-du-cinema': {
-    emissionFactors: {
-      'Fauteuils classiques': '112',
-      'Fauteuils 4DX': '113',
-    },
-    linkQuestionId: '15-Décrivez les différentes salles du cinéma',
-  },
-  '15-decrivez-les-differentes-salles-du-cinema': {
-    linkQuestionId: '14-Décrivez les différentes salles du cinéma',
-  },
-  '16-decrivez-les-differentes-salles-du-cinema': {
-    // TODO multiplier par le nombre de salles
-    emissionFactors: {
-      'Son Stéréo': '114',
-      'Dolby 5.1': '115',
-      'Dolby 7.1': '116',
-      'Dolby Atmos': '117',
-      IMAX: '118',
-      'Auro 3D / Ice': '119',
-      'DTS : X': '120',
-      THX: '121',
-    },
-  },
-  '11-comment-stockez-vous-les-films': { emissionFactorImportedId: '20894' },
-  '12-comment-stockez-vous-les-films': { emissionFactorImportedId: '20893' },
-  'combien-de-films-recevez-vous-en-dématérialise-par-an': { emissionFactorImportedId: '141' },
-  'combiende-films-recevez-vous-sur-dcp-physique-par-an': {}, // TODO: Calcul ?
-  'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '142' },
-  '11-de-combien-disposez-vous-de': { emissionFactorImportedId: '139' },
-  '12-de-combien-disposez-vous-de': { emissionFactorImportedId: '140' },
-  // Achats
-  '11-vendez-vous-des-boissons-et-des-confiseries': {
-    emissionFactors: {
-      // TODO trouver une manière de mulitplier par le nombre de séances
-      'Un peu de confiseries et de boissons (~30g)': '136',
-      'Une part standard de confiseries et de boissons (~120g)': '137',
-      'Une part significative de confiseries et de boissons (~200g)': '138',
-    },
-  },
-  // Fret
-  'quelle-est-la-distance-entre-votre-cinema-et-votre-principal-fournisseur': { emissionFactorImportedId: '28026' },
-  // Electromenager
-  '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26976',
-    linkQuestionId: '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '12-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '11-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26978',
-    linkQuestionId: '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '14-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '13-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26986',
-    linkQuestionId: '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '16-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '15-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    emissionFactorImportedId: '26976',
-    linkQuestionId: '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  '18-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': {
-    depreciationPeriod: 5,
-    linkQuestionId: '17-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner',
-  },
-  // DechetsOrdinaires
-  '111-veuillez-renseigner-les-dechets-generes-par-semaine': {
-    linkQuestionId: '112-veuillez-renseigner-les-dechets-generes-par-semaine',
-  }, // Nombre des bennes
-  '112-veuillez-renseigner-les-dechets-generes-par-semaine': {
-    linkQuestionId: '113-veuillez-renseigner-les-dechets-generes-par-semaine',
-  }, // Taille des bennes
-  '113-veuillez-renseigner-les-dechets-generes-par-semaine': {
-    emissionFactorImportedId: '34654',
-    linkQuestionId: '111-veuillez-renseigner-les-dechets-generes-par-semaine',
-  }, // Fréquence de ramassage (par semaine) Ordures ménagères
-  '121-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
-  '122-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Taille des bennes
-  '123-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '34486' }, // Fréquence de ramassage (par semaine) Emballages et papier
-  '131-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Nombre des bennes
-  '132-veuillez-renseigner-les-dechets-generes-par-semaine': {}, // Taille des bennes
-  '133-veuillez-renseigner-les-dechets-generes-par-semaine': { emissionFactorImportedId: '22040' }, // Fréquence de ramassage (par semaine) Biodéchets
-  // DechetsExceptionnels
-  'quelle-quantite-de-materiel-technique-jetez-vous-par-an': { emissionFactorImportedId: '34620' },
-  'quelle-quantite-de-lampes-xenon-jetez-vous-par-an': { emissionFactorImportedId: '107' },
-  // MaterielDistributeurs
-  '11-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '125',
-  },
-  '12-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '126',
-  },
-  '13-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '127',
-  },
-  '14-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '128',
-  },
-  '15-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '129',
-  },
-  '16-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
-    emissionFactorImportedId: '130',
-  },
-  // MaterielCinema
-  '11-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '130' },
-  '12-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '126' },
-  '13-quelle-quantite-de-materiel-produisez-vous-chaque-mois': { emissionFactorImportedId: '133' },
-  // CommunicationDigitale
-  'combien-de-newsletters-ont-ete-envoyees': { emissionFactorImportedId: '120' },
-  'combien-de-caissons-d-affichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '121' },
-  'combien-d-ecrans-se-trouvent-dans-les-espaces-de-circulation': { emissionFactorImportedId: '27006' },
-  'le-cinema-dispose-t-il-d-un-affichage-exterieur-si-oui-quelle-surface': { emissionFactorImportedId: '122' },
-  // CaissesEtBornes
-  'de-combien-de-bornes-de-caisse-libre-service-dispose-le-cinema': { emissionFactorImportedId: '123' },
-  'de-combien-de-systemes-de-caisse-classique-dispose-le-cinema': { emissionFactorImportedId: '124' },
-  // MaterielTechnique
-  serveur: { emissionFactorImportedId: '20894' },
-  'baies-de-disques': { emissionFactorImportedId: '20893' },
-  // CommunicationDigitale (again)
-  'ecrans-tv': { emissionFactorImportedId: '27006' },
+const cleanupEmissionSourcesByQuestionIdInterns = async (studySiteId: string, questionIdInterns: string[]) => {
+  const answers = await Promise.all(
+    questionIdInterns.map(async (idIntern) => {
+      const question = await getQuestionByIdIntern(idIntern)
+      if (!question) {
+        return null
+      }
+      return getAnswerByQuestionId(question.id, studySiteId)
+    }),
+  )
+
+  for (const answer of answers) {
+    if (!answer) {
+      continue
+    }
+
+    const existingAnswerEmissionSources = await findAllAnswerEmissionSourcesByAnswer(answer.id)
+
+    for (const existingAnswerEmissionSource of existingAnswerEmissionSources) {
+      await deleteAnswerEmissionSourceById(
+        existingAnswerEmissionSource.id,
+        existingAnswerEmissionSource.emissionSourceId,
+      )
+    }
+  }
+}
+
+const applyCinemaProfileForTransport = async (
+  question: Question,
+  currentResponse: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+
+  await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [SHORT_DISTANCE_QUESTION_ID, LONG_DISTANCE_QUESTION_ID])
+
+  let selectedShortDistanceProfile: string
+  let selectedLongDistanceProfile: string
+
+  if (question.idIntern === SHORT_DISTANCE_QUESTION_ID) {
+    selectedShortDistanceProfile = currentResponse as string
+
+    const longDistanceAnswer = await getAnswerByQuestionId(
+      await getQuestionByIdIntern(LONG_DISTANCE_QUESTION_ID).then((q) => q?.id || ''),
+      studySiteId,
+    )
+    selectedLongDistanceProfile = longDistanceAnswer?.response as string
+  } else {
+    selectedLongDistanceProfile = currentResponse as string
+
+    const shortDistanceAnswer = await getAnswerByQuestionId(
+      await getQuestionByIdIntern(SHORT_DISTANCE_QUESTION_ID).then((q) => q?.id || ''),
+      studySiteId,
+    )
+    selectedShortDistanceProfile = shortDistanceAnswer?.response as string
+  }
+
+  const shortDistanceEmissionInfo = emissionFactorMap[SHORT_DISTANCE_QUESTION_ID]
+  const longDistanceEmissionInfo = emissionFactorMap[LONG_DISTANCE_QUESTION_ID]
+
+  const shortDistanceProfile = shortDistanceEmissionInfo?.shortDistanceProfiles?.[selectedShortDistanceProfile]
+  const longDistanceProfile = longDistanceEmissionInfo?.longDistanceProfiles?.[selectedLongDistanceProfile]
+
+  if (!shortDistanceProfile || !longDistanceProfile) {
+    return []
+  }
+
+  const studySite = study.sites.find((site) => site.id === studySiteId)
+  const numberOfTickets = studySite?.numberOfTickets || 0
+  const distanceToParis = studySite?.distanceToParis || 0
+
+  if (numberOfTickets === 0) {
+    return []
+  }
+
+  const emissionSourceIds: string[] = []
+
+  const shortDistancePercentageToUse = longDistanceProfile.shortDistancePercentage / 100
+
+  for (const [transportMode, config] of Object.entries(shortDistanceProfile)) {
+    if (config.percentage > 0 && config.averageDistance > 0) {
+      const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+        config.emissionFactorId,
+        study.emissionFactorVersions.map((v) => v.importVersionId),
+      )
+
+      if (emissionFactor) {
+        const value =
+          (config.percentage / 100) * shortDistancePercentageToUse * config.averageDistance * numberOfTickets
+
+        const newEmissionSource = await createEmissionSource({
+          studyId,
+          studySiteId,
+          value,
+          name: `cinema-profile-${transportMode}`,
+          subPost: question.subPost,
+          emissionFactorId: emissionFactor.id,
+          validated: true,
+        })
+
+        if (newEmissionSource.success && newEmissionSource.data) {
+          emissionSourceIds.push(newEmissionSource.data.id)
+        }
+      }
+    }
+  }
+
+  if (longDistanceProfile.longDistancePercentage > 0 && distanceToParis > 0) {
+    const longDistancePercentageToUse = longDistanceProfile.longDistancePercentage / 100
+
+    const carEmissionFactorId = longDistanceEmissionInfo?.emissionFactors?.['Voiture longue distance']
+
+    const carEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+      carEmissionFactorId!,
+      study.emissionFactorVersions.map((v) => v.importVersionId),
+    )
+
+    if (carEmissionFactor) {
+      const carValue =
+        numberOfTickets * longDistancePercentageToUse * 0.7 * LONG_DISTANCE_APPLIED_PERCENTAGE * distanceToParis
+
+      const newEmissionSource = await createEmissionSource({
+        studyId,
+        studySiteId,
+        value: carValue,
+        name: 'cinema-profile-long-voiture',
+        subPost: question.subPost,
+        emissionFactorId: carEmissionFactor.id,
+        validated: true,
+      })
+
+      if (newEmissionSource.success && newEmissionSource.data) {
+        emissionSourceIds.push(newEmissionSource.data.id)
+      }
+    }
+
+    const tgvEmissionFactorId = longDistanceEmissionInfo?.emissionFactors?.['TGV']
+
+    const tgvEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+      tgvEmissionFactorId!,
+      study.emissionFactorVersions.map((v) => v.importVersionId),
+    )
+
+    if (tgvEmissionFactor) {
+      const tgvValue =
+        numberOfTickets * longDistancePercentageToUse * 0.3 * LONG_DISTANCE_APPLIED_PERCENTAGE * distanceToParis
+
+      const newEmissionSource = await createEmissionSource({
+        studyId,
+        studySiteId,
+        value: tgvValue,
+        name: 'cinema-profile-long-tgv',
+        subPost: question.subPost,
+        emissionFactorId: tgvEmissionFactor.id,
+        validated: true,
+      })
+
+      if (newEmissionSource.success && newEmissionSource.data) {
+        emissionSourceIds.push(newEmissionSource.data.id)
+      }
+    }
+  }
+
+  return emissionSourceIds
+}
+
+const applyConfectioneryCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+  const studySite = study.sites.find((site) => site.id === studySiteId)
+  const numberOfTickets = studySite?.numberOfTickets || 0
+
+  if (numberOfTickets === 0) {
+    return []
+  }
+
+  const emissionInfo = emissionFactorMap[CONFECTIONERY_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactors) {
+    return []
+  }
+
+  const selectedOption = response as string
+  const emissionFactorImportedId = emissionInfo.emissionFactors[selectedOption]
+
+  if (!emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const value = numberOfTickets
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
+const applyMovieTeamCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+  const emissionSourceIds: string[] = []
+
+  const emissionInfo = emissionFactorMap[MOVIE_TEAM_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactors) {
+    return emissionSourceIds
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactors.transport,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return emissionSourceIds
+  }
+
+  const studySite = study.sites.find((site) => site.id === studySiteId)
+  const distanceToParis = studySite?.distanceToParis || 0
+  const value = Number(response) * 3 * distanceToParis
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    emissionSourceIds.push(newEmissionSource.data.id)
+  }
+
+  const mealEmissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactors.meal,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!mealEmissionFactor) {
+    return emissionSourceIds
+  }
+
+  const mealValue = Number(response) * 15
+
+  const newMealEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: mealValue,
+    name: `${question.idIntern}-meal`,
+    subPost: question.subPost,
+    emissionFactorId: mealEmissionFactor.id,
+    validated: true,
+  })
+
+  if (newMealEmissionSource.success && newMealEmissionSource.data) {
+    emissionSourceIds.push(newMealEmissionSource.data.id)
+  }
+
+  return emissionSourceIds
+}
+
+const applyDematMovieCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+  const emissionSourceIds: string[] = []
+  const emissionInfo = emissionFactorMap[MOVIE_DCP_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return emissionSourceIds
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return emissionSourceIds
+  }
+
+  const numberReponse = Number(response)
+  const infosToCreate = [180, 3, 4]
+
+  for (const info of infosToCreate) {
+    const newEmissionSource = await createEmissionSource({
+      studyId,
+      studySiteId,
+      value: info * numberReponse,
+      name: question.idIntern,
+      subPost: question.subPost,
+      emissionFactorId: emissionFactor.id,
+      validated: true,
+    })
+
+    if (newEmissionSource.success && newEmissionSource.data) {
+      emissionSourceIds.push(newEmissionSource.data.id)
+    }
+  }
+
+  return emissionSourceIds
+}
+
+const applyDCPMovieCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+
+  const emissionSourceIds: string[] = []
+  const emissionInfo = emissionFactorMap[MOVIE_DCP_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return emissionSourceIds
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return emissionSourceIds
+  }
+
+  const studySite = study.sites.find((site) => site.id === studySiteId)
+  const distanceToParis = studySite?.distanceToParis || 0
+  const numberReponse = Number(response)
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: (0.1 * numberReponse * distanceToParis) / 1000,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return emissionSourceIds
+}
+
+const handleSpecialQuestions = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  let emissionSourceIds: string[] = []
+
+  if (question.idIntern !== SHORT_DISTANCE_QUESTION_ID && question.idIntern !== LONG_DISTANCE_QUESTION_ID) {
+    await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [question.idIntern])
+  }
+
+  switch (question.idIntern) {
+    case SHORT_DISTANCE_QUESTION_ID:
+    case LONG_DISTANCE_QUESTION_ID: {
+      await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [
+        SHORT_DISTANCE_QUESTION_ID,
+        LONG_DISTANCE_QUESTION_ID,
+      ])
+      emissionSourceIds = await applyCinemaProfileForTransport(question, response, study, studySiteId)
+      break
+    }
+    case CONFECTIONERY_QUESTION_ID: {
+      emissionSourceIds = await applyConfectioneryCalculation(question, response, study, studySiteId)
+      break
+    }
+    case MOVIE_TEAM_QUESTION_ID: {
+      emissionSourceIds = await applyMovieTeamCalculation(question, response, study, studySiteId)
+      break
+    }
+    case MOVIE_DEMAT_QUESTION_ID: {
+      emissionSourceIds = await applyDematMovieCalculation(question, response, study, studySiteId)
+      break
+    }
+    case MOVIE_DCP_QUESTION_ID: {
+      emissionSourceIds = await applyDCPMovieCalculation(question, response, study, studySiteId)
+      break
+    }
+    default: {
+      break
+    }
+  }
+
+  const savedAnswer = await saveAnswer(question.id, studySiteId, response)
+
+  if (savedAnswer && emissionSourceIds.length > 0) {
+    await createAnswerEmissionSources(savedAnswer.id, emissionSourceIds)
+  }
+
+  return savedAnswer
 }

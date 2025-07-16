@@ -18,7 +18,6 @@ const QuestionContainer = ({ question, children, showResults, results, saveStatu
   const hasPrefixIdIntern = ID_INTERN_PREFIX_REGEX.test(question.idIntern)
   const inTable = hasPrefixIdIntern && question.type !== FieldType.TABLE
   const inTitle = hasPrefixIdIntern && question.type !== FieldType.TITLE
-
   const tResultsUnits = useTranslations('study.results.units')
   if (inTable && inTitle) {
     return

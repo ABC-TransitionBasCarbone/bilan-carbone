@@ -10,9 +10,10 @@ import { UseFormReturn } from 'react-hook-form'
 
 interface Props {
   form: UseFormReturn<CreateStudyCommand>
+  duplicateStudyId?: string | null
 }
 
-const NewStudyForm = ({ form }: Props) => {
+const NewStudyForm = ({ form, duplicateStudyId }: Props) => {
   const t = useTranslations('study.new')
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const NewStudyForm = ({ form }: Props) => {
 
   return (
     <Block title={t('title')} as="h1">
-      <GlobalNewStudyForm form={form} t={t} />
+      <GlobalNewStudyForm form={form} t={t} duplicateStudyId={duplicateStudyId} />
     </Block>
   )
 }

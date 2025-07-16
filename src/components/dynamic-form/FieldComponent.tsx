@@ -1,12 +1,18 @@
+import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { UseAutoSaveReturn } from '@/hooks/useAutoSave'
-import { getAnswerByQuestionIdAndStudySiteId } from '@/services/serverFunctions/question'
+import { useServerFunction } from '@/hooks/useServerFunction'
+import {
+  getAnswerByQuestionIdAndStudySiteId,
+  getParentTableQuestion,
+  getQuestionsFromIdIntern,
+} from '@/services/serverFunctions/question'
 import { getQuestionLabel } from '@/utils/question'
-import { Prisma, Question } from '@prisma/client'
-import { JsonObject } from '@prisma/client/runtime/library'
+import { isTableAnswer } from '@/utils/tableInput'
+import { Prisma, Question, QuestionType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
-import { Control, Controller, FieldError, FieldErrors, UseFormWatch } from 'react-hook-form'
+import { Control, Controller, FieldError, FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import DatePickerInput from './inputFields/DatePickerInput'
 import QCMInput from './inputFields/QCMInput'
 import QCUInput from './inputFields/QCUInput'
@@ -23,12 +29,17 @@ interface Props {
   question: Question
   error?: FieldError
   isLoading?: boolean
+  disabled?: boolean
+  onCustomBlur?: () => void
   control: Control<FormValues>
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
   autoSave: UseAutoSaveReturn
   isInTable?: boolean
+  setValue: UseFormSetValue<FormValues>
+  table?: boolean
 }
+
 const FieldComponent = ({
   fieldType,
   fieldName,
@@ -36,11 +47,17 @@ const FieldComponent = ({
   control,
   error,
   isLoading,
+  disabled,
+  onCustomBlur,
   watch,
   formErrors,
   autoSave,
   isInTable = false,
+  setValue,
+  table,
 }: Props) => {
+  const { callServerFunction } = useServerFunction()
+
   const tValidation = useTranslations('form.validation')
   const tFormat = useTranslations('emissionFactors.post.cutQuestions.format')
 
@@ -50,26 +67,80 @@ const FieldComponent = ({
     async (value: unknown, isInTable: boolean) => {
       if (!formErrors[fieldName]) {
         let finalValue = value
-        if (ID_INTERN_PREFIX_REGEX.test(fieldName) && isInTable) {
-          const key = fieldName.split('-').pop()
-          if (key) {
-            const tableValue = { [key]: value }
-            const response = await getAnswerByQuestionIdAndStudySiteId(question.id, autoSave.studySiteId)
-            if (response.success) {
-              const { data } = response
-              if (data) {
-                const updatedValue = { ...(data.response as JsonObject), ...tableValue }
-                finalValue = updatedValue
-              } else {
-                finalValue = tableValue
+        let targetQuestion = question
+
+        if (ID_INTERN_PREFIX_REGEX.test(fieldName)) {
+          const rowId = fieldName.startsWith(question.idIntern + '-')
+            ? fieldName.substring(question.idIntern.length + 1)
+            : null
+
+          if (rowId) {
+            const parentTableResponse = await getParentTableQuestion(question.id)
+            if (parentTableResponse.success) {
+              targetQuestion = parentTableResponse.data
+
+              const response = await getAnswerByQuestionIdAndStudySiteId(targetQuestion.id, autoSave.studySiteId)
+              let tableAnswer: TableAnswer = { rows: [] }
+
+              if (
+                response.success &&
+                response.data &&
+                response.data.response &&
+                isTableAnswer(response.data.response)
+              ) {
+                tableAnswer = response.data.response
+              }
+
+              const updatedRows = tableAnswer.rows.map((row) => {
+                if (row.id === rowId) {
+                  return {
+                    ...row,
+                    data: {
+                      ...row.data,
+                      [question.idIntern]: value,
+                    },
+                  }
+                }
+                return row
+              })
+
+              if (!updatedRows.find((row) => row.id === rowId)) {
+                const relatedQuestions = await callServerFunction(() =>
+                  getQuestionsFromIdIntern(targetQuestion.idIntern),
+                )
+
+                if (!relatedQuestions.success) {
+                  throw new Error(relatedQuestions.errorMessage)
+                }
+
+                const columnQuestions =
+                  relatedQuestions.data?.filter((q: Question) => q.type !== QuestionType.TABLE) || []
+
+                const newRow = {
+                  id: rowId,
+                  data: {} as Record<string, string>,
+                }
+
+                for (const columnQuestion of columnQuestions) {
+                  newRow.data[columnQuestion.idIntern] = ''
+                }
+
+                newRow.data[question.idIntern] = value as string
+                updatedRows.push(newRow)
+              }
+
+              finalValue = {
+                ...tableAnswer,
+                rows: updatedRows,
               }
             }
           }
         }
-        autoSave.saveField(question, finalValue as Prisma.InputJsonValue)
+
+        autoSave.saveField(targetQuestion, finalValue as Prisma.InputJsonValue)
       }
     },
-    [formErrors, fieldName, autoSave, question],
+    [formErrors, fieldName, question, autoSave, callServerFunction],
   )
 
   const handleBlur = useCallback(() => {
@@ -90,9 +161,9 @@ const FieldComponent = ({
       question,
       label,
       errorMessage: error?.message ? tValidation(error.message) : undefined,
-      disabled: isLoading,
+      disabled: isLoading || disabled,
     }
-  }, [question, tValidation, error?.message, isLoading, tFormat])
+  }, [question, tValidation, error?.message, isLoading, disabled, tFormat])
 
   const renderField = useMemo(() => {
     const getInputComponent = () => {
@@ -127,6 +198,7 @@ const FieldComponent = ({
           autoSave={autoSave}
           watch={watch}
           formErrors={formErrors}
+          setValue={setValue}
         />
       )
     }
@@ -143,6 +215,9 @@ const FieldComponent = ({
             onBlur()
             if (isSavingOnBlur) {
               handleBlur()
+            }
+            if (onCustomBlur) {
+              onCustomBlur()
             }
           }
 
@@ -164,6 +239,7 @@ const FieldComponent = ({
               label={baseInputProps.label}
               errorMessage={baseInputProps.errorMessage}
               disabled={baseInputProps.disabled}
+              table={table}
             />
           )
         }}
