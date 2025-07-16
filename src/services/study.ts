@@ -504,7 +504,7 @@ export const downloadStudyResults = async (
 
   if (environment === Environment.CUT) {
     consolidatedResults.data.unshift([])
-    consolidatedResults.data.unshift(['Fichier en cours de développement'])
+    consolidatedResults.data.unshift([tExport('developmentFile')])
   }
 
   data.push(consolidatedResults)
