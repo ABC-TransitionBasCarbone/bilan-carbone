@@ -7,6 +7,7 @@ import {
   NEWSLETTER_QUESTION_ID,
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
+  XENON_LAMPS_QUESTION_ID,
 } from './questions'
 
 type CinemaTransportProfile = {
@@ -326,7 +327,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   // DechetsExceptionnels
   'quelle-quantite-de-materiel-technique-jetez-vous-par-an': { emissionFactorImportedId: '34620' },
-  'quelle-quantite-de-lampes-xenon-jetez-vous-par-an': { emissionFactorImportedId: '107' },
+  [XENON_LAMPS_QUESTION_ID]: { emissionFactorImportedId: '107', isSpecial: true, weights: { default: 0.86 } },
   // MaterielDistributeurs
   '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
     isFixed: true,

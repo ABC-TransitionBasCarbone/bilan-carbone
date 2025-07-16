@@ -541,7 +541,7 @@ const calculateWaste: TableEmissionCalculator = {
       )
 
       if (wasteEmissionFactor) {
-        const wasteValue = binCount * binSize * WASTE_DENSITY * frequency * 52
+        const wasteValue = binCount * binSize * WASTE_DENSITY * frequency * 52 * 0.001
 
         emissionSources.push({
           name: 'waste',

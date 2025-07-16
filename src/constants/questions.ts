@@ -13,6 +13,8 @@ export const MOVIE_DCP_QUESTION_ID = 'combien-de-films-recevez-vous-sur-dcp-phys
 export const NEWSLETTER_QUESTION_ID = 'combien-de-newsletters-ont-ete-envoyees'
 export const NEWSLETTER_RECEIVER_COUNT_QUESTION_ID = 'en-moyenne-a-combien-de-personnes-sont-adressees-ces-newsletters'
 
+export const XENON_LAMPS_QUESTION_ID = 'quelle-quantite-de-lampes-xenon-jetez-vous-par-an'
+
 // Value constants
 export const LONG_DISTANCE_APPLIED_PERCENTAGE = 0.03
 export const LONG_DISTANCE_CAR_PERCENTAGE = 0.7
