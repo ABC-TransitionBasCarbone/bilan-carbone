@@ -35,6 +35,7 @@ interface Props {
   watch: UseFormWatch<FormValues>
   formErrors: FieldErrors<FormValues>
   autoSave: UseAutoSaveReturn
+  isInTable?: boolean
   setValue: UseFormSetValue<FormValues>
   table?: boolean
 }
@@ -51,6 +52,7 @@ const FieldComponent = ({
   watch,
   formErrors,
   autoSave,
+  isInTable = false,
   setValue,
   table,
 }: Props) => {
@@ -62,7 +64,7 @@ const FieldComponent = ({
   const isSavingOnBlur = useMemo(() => fieldType === FieldType.TEXT || fieldType === FieldType.NUMBER, [fieldType])
 
   const saveField = useCallback(
-    async (value: unknown) => {
+    async (value: unknown, isInTable: boolean) => {
       if (!formErrors[fieldName]) {
         let finalValue = value
         let targetQuestion = question
@@ -143,12 +145,12 @@ const FieldComponent = ({
 
   const handleBlur = useCallback(() => {
     const currentValue = watch(fieldName)
-    saveField(currentValue)
+    saveField(currentValue, isInTable)
   }, [watch, fieldName, saveField])
 
   const handleChange = useCallback(
     (value: string | null) => {
-      saveField(value)
+      saveField(value, isInTable)
     },
     [saveField],
   )
