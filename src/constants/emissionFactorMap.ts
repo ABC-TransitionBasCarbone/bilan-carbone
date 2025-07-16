@@ -65,7 +65,6 @@ const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
   'Moto >250cm3 /Mixte': '27995',
   'Moto<250cm3/Mixte': '27992',
-  'Trottinette électrique': '28329',
   'TGV 2021': '43256',
   'Avion Moyen courrier AVEC trainées': '28132',
 }
