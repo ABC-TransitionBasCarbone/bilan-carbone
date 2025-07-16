@@ -9,6 +9,8 @@ import {
   MOVIE_DCP_QUESTION_ID,
   MOVIE_DEMAT_QUESTION_ID,
   MOVIE_TEAM_QUESTION_ID,
+  NEWSLETTER_QUESTION_ID,
+  NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
 } from '@/constants/questions'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
@@ -818,6 +820,72 @@ const applyDCPMovieCalculation = async (
   return emissionSourceIds
 }
 
+const applyNewsletterCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+
+  let newsletterCount: number
+  let receiverCount: number
+
+  if (question.idIntern === NEWSLETTER_QUESTION_ID) {
+    newsletterCount = Number(response)
+
+    const receiverCountAnswer = await getAnswerByQuestionId(
+      await getQuestionByIdIntern(NEWSLETTER_RECEIVER_COUNT_QUESTION_ID).then((q) => q?.id || ''),
+      studySiteId,
+    )
+    receiverCount = Number(receiverCountAnswer?.response) || 0
+  } else {
+    receiverCount = Number(response)
+
+    const newsletterCountAnswer = await getAnswerByQuestionId(
+      await getQuestionByIdIntern(NEWSLETTER_QUESTION_ID).then((q) => q?.id || ''),
+      studySiteId,
+    )
+    newsletterCount = Number(newsletterCountAnswer?.response) || 0
+  }
+
+  if (newsletterCount === 0 || receiverCount === 0) {
+    return []
+  }
+
+  const totalEmails = newsletterCount * receiverCount
+
+  const emissionFactorInfo = emissionFactorMap[NEWSLETTER_QUESTION_ID]
+  if (!emissionFactorInfo || !emissionFactorInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionFactorInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: totalEmails,
+    name: NEWSLETTER_QUESTION_ID,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
 const handleSpecialQuestions = async (
   question: Question,
   response: Prisma.InputJsonValue,
@@ -826,7 +894,12 @@ const handleSpecialQuestions = async (
 ) => {
   let emissionSourceIds: string[] = []
 
-  if (question.idIntern !== SHORT_DISTANCE_QUESTION_ID && question.idIntern !== LONG_DISTANCE_QUESTION_ID) {
+  if (
+    question.idIntern !== SHORT_DISTANCE_QUESTION_ID &&
+    question.idIntern !== LONG_DISTANCE_QUESTION_ID &&
+    question.idIntern !== NEWSLETTER_QUESTION_ID &&
+    question.idIntern !== NEWSLETTER_RECEIVER_COUNT_QUESTION_ID
+  ) {
     await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [question.idIntern])
   }
 
@@ -854,6 +927,15 @@ const handleSpecialQuestions = async (
     }
     case MOVIE_DCP_QUESTION_ID: {
       emissionSourceIds = await applyDCPMovieCalculation(question, response, study, studySiteId)
+      break
+    }
+    case NEWSLETTER_QUESTION_ID:
+    case NEWSLETTER_RECEIVER_COUNT_QUESTION_ID: {
+      await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [
+        NEWSLETTER_QUESTION_ID,
+        NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
+      ])
+      emissionSourceIds = await applyNewsletterCalculation(question, response, study, studySiteId)
       break
     }
     default: {
