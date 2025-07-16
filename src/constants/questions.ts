@@ -11,7 +11,7 @@ export const MOVIE_DEMAT_QUESTION_ID = 'combien-de-films-recevez-vous-en-demater
 export const MOVIE_DCP_QUESTION_ID = 'combien-de-films-recevez-vous-sur-dcp-physique-par-an'
 
 export const NEWSLETTER_QUESTION_ID = 'combien-de-newsletters-ont-ete-envoyees'
-export const NEWSLETTER_RECEIVER_COUNT_QUESTION_ID = 'en-moyenne-a-combien-de-personnes-sont-adresses-ces-newsletters'
+export const NEWSLETTER_RECEIVER_COUNT_QUESTION_ID = 'en-moyenne-a-combien-de-personnes-sont-adressees-ces-newsletters'
 
 // Value constants
 export const LONG_DISTANCE_APPLIED_PERCENTAGE = 0.03
