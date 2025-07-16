@@ -2,6 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { hasAccessToDownloadStudyEmissionSourcesButton } from '@/services/permissions/environment'
 import { deleteStudyCommand } from '@/services/serverFunctions/study'
 import { DeleteCommand, DeleteCommandValidation } from '@/services/serverFunctions/study.command'
 import { downloadStudyEmissionSources } from '@/services/study'
@@ -11,7 +12,6 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
-import { Environment } from '@prisma/client'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -95,33 +95,26 @@ const StudyDetailsHeader = ({
       ]
     : []
 
-  const exportAction: BlockProps['actions'] =
-    study.organizationVersion.environment === Environment.BC
-      ? [
-          {
-            actionType: 'button',
-            onClick: () =>
-              downloadStudyEmissionSources(
-                study,
-                tStudyExport,
-                tCaracterisations,
-                tPost,
-                tQuality,
-                tUnit,
-                tResultUnits,
-              ),
-            disabled: study.emissionSources.length === 0,
-            variant: 'contained',
-            color: 'secondary',
-            children: (
-              <>
-                {tStudyExport('download')}
-                <DownloadIcon />
-              </>
-            ),
-          },
-        ]
-      : []
+  const exportAction: BlockProps['actions'] = hasAccessToDownloadStudyEmissionSourcesButton(
+    study.organizationVersion.environment,
+  )
+    ? [
+        {
+          actionType: 'button',
+          onClick: () =>
+            downloadStudyEmissionSources(study, tStudyExport, tCaracterisations, tPost, tQuality, tUnit, tResultUnits),
+          disabled: study.emissionSources.length === 0,
+          variant: 'contained',
+          color: 'secondary',
+          children: (
+            <>
+              {tStudyExport('download')}
+              <DownloadIcon />
+            </>
+          ),
+        },
+      ]
+    : []
 
   return (
     <Block
