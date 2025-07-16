@@ -73,7 +73,7 @@ export function validateRow(
   const titre = generateIdIntern(row[HEADERS.TITRE])
   const label = row[HEADERS.QUESTION]
   const type = row[HEADERS.TYPE] === '' ? QuestionType.TEXT : row[HEADERS.TYPE].toUpperCase()
-  const unit = row[HEADERS.UNIT]
+  const unit = row[HEADERS.UNIT].toUpperCase()
   const subPost = enumMap[normalizeLabel(row[HEADERS.SUB_POST])]
 
   const titreError = checkRequiredField(
