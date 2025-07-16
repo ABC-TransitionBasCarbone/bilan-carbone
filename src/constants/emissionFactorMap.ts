@@ -1,3 +1,14 @@
+import {
+  CONFECTIONERY_QUESTION_ID,
+  LONG_DISTANCE_QUESTION_ID,
+  MOVIE_DCP_QUESTION_ID,
+  MOVIE_DEMAT_QUESTION_ID,
+  MOVIE_TEAM_QUESTION_ID,
+  NEWSLETTER_QUESTION_ID,
+  NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
+  SHORT_DISTANCE_QUESTION_ID,
+} from './questions'
+
 type CinemaTransportProfile = {
   percentage: number
   averageDistance: number
@@ -21,6 +32,7 @@ export type EmissionFactorInfo = {
   weights?: Record<string, number>
   shortDistanceProfiles?: Record<string, CinemaProfileConfig>
   longDistanceProfiles?: Record<string, LongDistanceConfig>
+  relatedQuestions?: string[]
 }
 
 const TRANSPORT_EMISSION_FACTORS = {
@@ -131,95 +143,95 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   'si-vous-souhaitez-realiser-une-enquete-mobilite-spectateur-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
     {},
-  'si-vous-souhaitez-vous-identifier-a-des-profils-de-cinema-comparable-de-quel-type-de-cinema-votre-etablissement-se-rapproche-le-plus':
-    {
-      isSpecial: true,
-      shortDistanceProfiles: {
-        'Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun':
-          {
-            Voiture: { percentage: 13, averageDistance: 5.98, emissionFactorId: '27983' },
-            'Transports en commun (bus, métro, tram)': {
-              percentage: 28,
-              averageDistance: 7.41,
-              emissionFactorId: '28150',
-            },
-            'Moto / scooter': { percentage: 0, averageDistance: 2.31, emissionFactorId: '27995' },
-            'Train / RER': { percentage: 2, averageDistance: 9.59, emissionFactorId: '43254' },
-            'Trottinette électrique': { percentage: 0, averageDistance: 3.33, emissionFactorId: '28329' },
+  [SHORT_DISTANCE_QUESTION_ID]: {
+    isSpecial: true,
+    relatedQuestions: [LONG_DISTANCE_QUESTION_ID],
+    shortDistanceProfiles: {
+      'Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun':
+        {
+          Voiture: { percentage: 13, averageDistance: 5.98, emissionFactorId: '27983' },
+          'Transports en commun (bus, métro, tram)': {
+            percentage: 28,
+            averageDistance: 7.41,
+            emissionFactorId: '28150',
           },
-        "Les spectateurs parcourent autour de 10 km aller-retour pour se rendre au cinéma. Il s'agit essentiellement d'un public de proximité venant en grande partie en voiture. Autour de 25% d'entre eux viennent à pied.":
-          {
-            Voiture: { percentage: 69, averageDistance: 10.77, emissionFactorId: '27983' },
-            'Transports en commun (bus, métro, tram)': {
-              percentage: 2,
-              averageDistance: 7.41,
-              emissionFactorId: '28150',
-            },
-            'Moto / scooter': { percentage: 2, averageDistance: 6.42, emissionFactorId: '27995' },
-            'Train / RER': { percentage: 0, averageDistance: 5.36, emissionFactorId: '43254' },
-            'Trottinette électrique': { percentage: 0, averageDistance: 0, emissionFactorId: '28329' },
+          'Moto / scooter': { percentage: 0, averageDistance: 2.31, emissionFactorId: '27995' },
+          'Train / RER': { percentage: 2, averageDistance: 9.59, emissionFactorId: '43254' },
+          'Trottinette électrique': { percentage: 0, averageDistance: 3.33, emissionFactorId: '28329' },
+        },
+      "Les spectateurs parcourent autour de 10 km aller-retour pour se rendre au cinéma. Il s'agit essentiellement d'un public de proximité venant en grande partie en voiture. Autour de 25% d'entre eux viennent à pied.":
+        {
+          Voiture: { percentage: 69, averageDistance: 10.77, emissionFactorId: '27983' },
+          'Transports en commun (bus, métro, tram)': {
+            percentage: 2,
+            averageDistance: 7.41,
+            emissionFactorId: '28150',
           },
-        "Les spectateurs parcourent autour de 20-25 km aller-retour pour se rendre au cinéma. Il s'agit essentiellement d'un public de proximité venant en grande partie en voiture. Autour de 25% d'entre eux viennent à pied.":
-          {
-            Voiture: { percentage: 63, averageDistance: 24.36, emissionFactorId: '27983' },
-            'Transports en commun (bus, métro, tram)': {
-              percentage: 5,
-              averageDistance: 25.84,
-              emissionFactorId: '28150',
-            },
-            'Moto / scooter': { percentage: 1, averageDistance: 9.91, emissionFactorId: '27995' },
-            'Train / RER': { percentage: 0, averageDistance: 3.69, emissionFactorId: '43254' },
-            'Trottinette électrique': { percentage: 0, averageDistance: 3.76, emissionFactorId: '28329' },
-          },
-        'Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en transports en commun, peu viennent à pied. La distance moyenne parcourue est autour de 15 km aller-retour':
-          {
-            Voiture: { percentage: 89, averageDistance: 15.84, emissionFactorId: '27983' },
-            'Transports en commun (bus, métro, tram)': {
-              percentage: 2,
-              averageDistance: 10.27,
-              emissionFactorId: '28150',
-            },
-            'Moto / scooter': { percentage: 0, averageDistance: 4.6, emissionFactorId: '27995' },
-            'Train / RER': { percentage: 0, averageDistance: 24.58, emissionFactorId: '43254' },
-            'Trottinette électrique': { percentage: 0, averageDistance: 1.97, emissionFactorId: '28329' },
-          },
-        "Le cinéma n'est accessible qu'en voiture": {
-          Voiture: { percentage: 100, averageDistance: 18.73, emissionFactorId: '27983' },
-          'Transports en commun (bus, métro, tram)': { percentage: 0, averageDistance: 0, emissionFactorId: '28150' },
-          'Moto / scooter': { percentage: 0, averageDistance: 0, emissionFactorId: '27995' },
-          'Train / RER': { percentage: 0, averageDistance: 0, emissionFactorId: '43254' },
+          'Moto / scooter': { percentage: 2, averageDistance: 6.42, emissionFactorId: '27995' },
+          'Train / RER': { percentage: 0, averageDistance: 5.36, emissionFactorId: '43254' },
           'Trottinette électrique': { percentage: 0, averageDistance: 0, emissionFactorId: '28329' },
         },
-      },
-    },
-  'vos-spectateurs-sont-ils-majoritairement-des-habitants-locaux-cest-a-dire-residant-a-lannee-dans-les-environs-ou-attirez-vous-aussi-une-part-non-negligeable-de-spectateurs-de-passage-dans-la-region-touristes-notamment':
-    {
-      isSpecial: true,
-      emissionFactors: {
-        TGV: '43256',
-        'Voiture longue distance': '27983',
-      },
-      longDistanceProfiles: {
-        "Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année":
-          {
-            longDistancePercentage: 80,
-            shortDistancePercentage: 20,
+      "Les spectateurs parcourent autour de 20-25 km aller-retour pour se rendre au cinéma. Il s'agit essentiellement d'un public de proximité venant en grande partie en voiture. Autour de 25% d'entre eux viennent à pied.":
+        {
+          Voiture: { percentage: 63, averageDistance: 24.36, emissionFactorId: '27983' },
+          'Transports en commun (bus, métro, tram)': {
+            percentage: 5,
+            averageDistance: 25.84,
+            emissionFactorId: '28150',
           },
-        'Le cinéma est situé dans une ville de destination de week-end et / ou station balnéaire attirant environ 25% de spectateurs "non-locaux"':
-          {
-            longDistancePercentage: 25,
-            shortDistancePercentage: 75,
-          },
-        'Le cinéma accueille majoritairement des spectateurs locaux': {
-          longDistancePercentage: 0,
-          shortDistancePercentage: 100,
+          'Moto / scooter': { percentage: 1, averageDistance: 9.91, emissionFactorId: '27995' },
+          'Train / RER': { percentage: 0, averageDistance: 3.69, emissionFactorId: '43254' },
+          'Trottinette électrique': { percentage: 0, averageDistance: 3.76, emissionFactorId: '28329' },
         },
+      'Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en transports en commun, peu viennent à pied. La distance moyenne parcourue est autour de 15 km aller-retour':
+        {
+          Voiture: { percentage: 89, averageDistance: 15.84, emissionFactorId: '27983' },
+          'Transports en commun (bus, métro, tram)': {
+            percentage: 2,
+            averageDistance: 10.27,
+            emissionFactorId: '28150',
+          },
+          'Moto / scooter': { percentage: 0, averageDistance: 4.6, emissionFactorId: '27995' },
+          'Train / RER': { percentage: 0, averageDistance: 24.58, emissionFactorId: '43254' },
+          'Trottinette électrique': { percentage: 0, averageDistance: 1.97, emissionFactorId: '28329' },
+        },
+      "Le cinéma n'est accessible qu'en voiture": {
+        Voiture: { percentage: 100, averageDistance: 18.73, emissionFactorId: '27983' },
+        'Transports en commun (bus, métro, tram)': { percentage: 0, averageDistance: 0, emissionFactorId: '28150' },
+        'Moto / scooter': { percentage: 0, averageDistance: 0, emissionFactorId: '27995' },
+        'Train / RER': { percentage: 0, averageDistance: 0, emissionFactorId: '43254' },
+        'Trottinette électrique': { percentage: 0, averageDistance: 0, emissionFactorId: '28329' },
       },
     },
+  },
+  [LONG_DISTANCE_QUESTION_ID]: {
+    isSpecial: true,
+    relatedQuestions: [SHORT_DISTANCE_QUESTION_ID],
+    emissionFactors: {
+      TGV: '43256',
+      'Voiture longue distance': '27983',
+    },
+    longDistanceProfiles: {
+      "Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année":
+        {
+          longDistancePercentage: 80,
+          shortDistancePercentage: 20,
+        },
+      'Le cinéma est situé dans une ville de destination de week-end et / ou station balnéaire attirant environ 25% de spectateurs "non-locaux"':
+        {
+          longDistancePercentage: 25,
+          shortDistancePercentage: 75,
+        },
+      'Le cinéma accueille majoritairement des spectateurs locaux': {
+        longDistancePercentage: 0,
+        shortDistancePercentage: 100,
+      },
+    },
+  },
   next: {},
   'quel-est-le-profil-auquel-vous-pouvez-identifier-le-plus-votre-cinema': {},
   // Equipes recus
-  'combien-dequipes-de-films-avez-vous-recu-en': {
+  [MOVIE_TEAM_QUESTION_ID]: {
     emissionFactors: { transport: '28130', meal: '20682' },
     isSpecial: true,
   },
@@ -262,14 +274,14 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   '11-comment-stockez-vous-les-films': { emissionFactorImportedId: '20894' },
   '12-comment-stockez-vous-les-films': { emissionFactorImportedId: '20893' },
-  'combien-de-films-recevez-vous-en-dematerialise-par-an': { isSpecial: true, emissionFactorImportedId: '142' },
-  'combien-de-films-recevez-vous-sur-dcp-physique-par-an': { isSpecial: true, emissionFactorImportedId: '143' },
+  [MOVIE_DEMAT_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '142' },
+  [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
   'de-combien-de-disques-durs-disposez-vous': { emissionFactorImportedId: '140' },
   // Autre matériel
   'de-combien-de-lunettes-3d-disposez-vous': { emissionFactorImportedId: '139' },
   // Achats
-  'selon-vous-en-moyenne-un-spectateur-achete': {
+  [CONFECTIONERY_QUESTION_ID]: {
     isSpecial: true,
     emissionFactors: {
       'Un peu de confiseries et de boissons (~30g)': '136',
@@ -338,6 +350,16 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'combien-de-caissons-daffichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '121' },
   'combien-decrans-se-trouvent-dans-les-espaces-de-circulation': { emissionFactorImportedId: '27006' },
   'le-cinema-dispose-t-il-dun-affichage-exterieur-si-oui-quelle-surface': { emissionFactorImportedId: '122' },
+  [NEWSLETTER_QUESTION_ID]: {
+    emissionFactorImportedId: '120',
+    isSpecial: true,
+    relatedQuestions: [NEWSLETTER_RECEIVER_COUNT_QUESTION_ID],
+  },
+  [NEWSLETTER_RECEIVER_COUNT_QUESTION_ID]: {
+    emissionFactorImportedId: '120',
+    isSpecial: true,
+    relatedQuestions: [NEWSLETTER_QUESTION_ID],
+  },
   // CaissesEtBornes
   'de-combien-de-bornes-de-caisse-libre-service-dispose-le-cinema': { emissionFactorImportedId: '123' },
   'de-combien-de-systemes-de-caisse-classique-dispose-le-cinema': { emissionFactorImportedId: '124' },
