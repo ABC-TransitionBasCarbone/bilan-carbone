@@ -1,3 +1,14 @@
+import {
+  CONFECTIONERY_QUESTION_ID,
+  LONG_DISTANCE_QUESTION_ID,
+  MOVIE_DCP_QUESTION_ID,
+  MOVIE_DEMAT_QUESTION_ID,
+  MOVIE_TEAM_QUESTION_ID,
+  NEWSLETTER_QUESTION_ID,
+  NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
+  SHORT_DISTANCE_QUESTION_ID,
+} from './questions'
+
 type CinemaTransportProfile = {
   percentage: number
   averageDistance: number
@@ -131,7 +142,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   'si-vous-souhaitez-realiser-une-enquete-mobilite-spectateur-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
     {},
-  SHORT_DISTANCE_QUESTION_ID: {
+  [SHORT_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     shortDistanceProfiles: {
       'Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun':
@@ -191,7 +202,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       },
     },
   },
-  LONG_DISTANCE_QUESTION_ID: {
+  [LONG_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     emissionFactors: {
       TGV: '43256',
@@ -217,7 +228,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   next: {},
   'quel-est-le-profil-auquel-vous-pouvez-identifier-le-plus-votre-cinema': {},
   // Equipes recus
-  MOVIE_TEAM_QUESTION_ID: {
+  [MOVIE_TEAM_QUESTION_ID]: {
     emissionFactors: { transport: '28130', meal: '20682' },
     isSpecial: true,
   },
@@ -260,14 +271,14 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   '11-comment-stockez-vous-les-films': { emissionFactorImportedId: '20894' },
   '12-comment-stockez-vous-les-films': { emissionFactorImportedId: '20893' },
-  MOVIE_DEMAT_QUESTION_ID: { isSpecial: true, emissionFactorImportedId: '142' },
-  MOVIE_DCP_QUESTION_ID: { isSpecial: true, emissionFactorImportedId: '143' },
+  [MOVIE_DEMAT_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '142' },
+  [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
   'de-combien-de-disques-durs-disposez-vous': { emissionFactorImportedId: '140' },
   // Autre matériel
   'de-combien-de-lunettes-3d-disposez-vous': { emissionFactorImportedId: '139' },
   // Achats
-  CONFECTIONERY_QUESTION_ID: {
+  [CONFECTIONERY_QUESTION_ID]: {
     isSpecial: true,
     emissionFactors: {
       'Un peu de confiseries et de boissons (~30g)': '136',
@@ -332,8 +343,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     },
   },
   // CommunicationDigitale
-  NEWSLETTER_QUESTION_ID: { emissionFactorImportedId: '120', isSpecial: true },
-  NEWSLETTER_RECEIVER_COUNT_QUESTION_ID: {
+  [NEWSLETTER_QUESTION_ID]: { emissionFactorImportedId: '120', isSpecial: true },
+  [NEWSLETTER_RECEIVER_COUNT_QUESTION_ID]: {
     emissionFactorImportedId: '120',
     isSpecial: true,
   },
