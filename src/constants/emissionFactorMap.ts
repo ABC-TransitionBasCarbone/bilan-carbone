@@ -346,10 +346,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     },
   },
   // CommunicationDigitale
-  'combien-de-newsletters-ont-ete-envoyees': { emissionFactorImportedId: '120' },
-  'combien-de-caissons-daffichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '121' },
-  'combien-decrans-se-trouvent-dans-les-espaces-de-circulation': { emissionFactorImportedId: '27006' },
-  'le-cinema-dispose-t-il-dun-affichage-exterieur-si-oui-quelle-surface': { emissionFactorImportedId: '122' },
   [NEWSLETTER_QUESTION_ID]: {
     emissionFactorImportedId: '120',
     isSpecial: true,
@@ -360,6 +356,9 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     isSpecial: true,
     relatedQuestions: [NEWSLETTER_QUESTION_ID],
   },
+  'combien-de-caissons-daffichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '121' },
+  'combien-decrans-se-trouvent-dans-les-espaces-de-circulation': { emissionFactorImportedId: '27006' },
+  'le-cinema-dispose-t-il-dun-affichage-exterieur-si-oui-quelle-surface': { emissionFactorImportedId: '122' },
   // CaissesEtBornes
   'de-combien-de-bornes-de-caisse-libre-service-dispose-le-cinema': { emissionFactorImportedId: '123' },
   'de-combien-de-systemes-de-caisse-classique-dispose-le-cinema': { emissionFactorImportedId: '124' },
