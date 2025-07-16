@@ -370,9 +370,9 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     isSpecial: true,
     relatedQuestions: [NEWSLETTER_QUESTION_ID],
   },
-  'combien-de-caissons-d-affichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '121' },
-  'combien-d-ecrans-se-trouvent-dans-les-espaces-de-circulation': { emissionFactorImportedId: '27006' },
-  'le-cinema-dispose-t-il-d-un-affichage-exterieur-si-oui-quelle-surface': { emissionFactorImportedId: '122' },
+  'combien-de-caissons-daffichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '121' },
+  'combien-decrans-se-trouvent-dans-les-espaces-de-circulation': { emissionFactorImportedId: '27006' },
+  'le-cinema-dispose-t-il-dun-affichage-exterieur-si-oui-quelle-surface': { emissionFactorImportedId: '122' },
   // CaissesEtBornes
   'de-combien-de-bornes-de-caisse-libre-service-dispose-le-cinema': { emissionFactorImportedId: '123' },
   'de-combien-de-systemes-de-caisse-classique-dispose-le-cinema': { emissionFactorImportedId: '124' },
