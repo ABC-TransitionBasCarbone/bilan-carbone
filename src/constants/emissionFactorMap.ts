@@ -23,7 +23,7 @@ export type EmissionFactorInfo = {
   longDistanceProfiles?: Record<string, LongDistanceConfig>
 }
 
-const TRANSPORT_EMISSION_FACTORS = {
+const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'Métro (Ile de France)': '43253',
   'RER et Transilien (Ile-de-France)': '43254',
   'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
@@ -42,6 +42,19 @@ const TRANSPORT_EMISSION_FACTORS = {
   'Moto >250cm3 /Mixte': '27995',
   'Moto<250cm3/Mixte': '27992',
   'Trottinette électrique': '28329',
+}
+
+const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
+  'Voiture gazole courte distance': '27984',
+  'Voiture essence courte distance': '27983',
+  'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
+    '28015',
+  'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
+  'Moto >250cm3 /Mixte': '27995',
+  'Moto<250cm3/Mixte': '27992',
+  'Trottinette électrique': '28329',
+  'TGV 2021': '43256',
+  'Avion Moyen courrier AVEC trainées': '28132',
 }
 
 export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
@@ -77,14 +90,14 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
   '13-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
   '14-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {
-    emissionFactors: TRANSPORT_EMISSION_FACTORS,
+    emissionFactors: SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS,
   },
   // DeplacementsProfessionnels
   '11-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '12-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '13-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '14-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
-    emissionFactors: TRANSPORT_EMISSION_FACTORS,
+    emissionFactors: LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS,
   },
   '15-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
@@ -127,7 +140,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'avez-vous-deja-realise-une-enquete-mobilite-spectateur': {},
   '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': {
     isFixed: true,
-    emissionFactors: TRANSPORT_EMISSION_FACTORS,
+    emissionFactors: SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS,
   },
   'si-vous-souhaitez-realiser-une-enquete-mobilite-spectateur-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
     {},
