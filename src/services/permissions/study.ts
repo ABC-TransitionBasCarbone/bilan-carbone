@@ -9,6 +9,7 @@ import { Environment, Level, Prisma, Study, StudyRole, User } from '@prisma/clie
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { checkLevel } from '../study'
+import { hasAccessToDuplicateStudy } from './environment'
 import { isInOrgaOrParentFromId } from './organization'
 
 export const isAdminOnStudyOrga = (user: UserSession, studyOrganizationVersion: OrganizationVersionWithOrganization) =>
@@ -256,7 +257,7 @@ export const canDuplicateStudy = async (studyId: string) => {
     return false
   }
 
-  if (session.user.environment !== Environment.BC) {
+  if (!hasAccessToDuplicateStudy(session.user.environment)) {
     return false
   }
 
