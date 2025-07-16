@@ -12,6 +12,7 @@ import {
   NEWSLETTER_QUESTION_ID,
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
+  XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
@@ -886,6 +887,57 @@ const applyNewsletterCalculation = async (
   return []
 }
 
+const applyXenonLampsCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+  const numberOfLamps = Number(response) || 0
+
+  if (numberOfLamps === 0) {
+    return []
+  }
+
+  const emissionFactorInfo = emissionFactorMap[XENON_LAMPS_QUESTION_ID]
+  if (!emissionFactorInfo || !emissionFactorInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionFactorInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const weight = emissionFactorInfo.weights?.default
+  if (!weight) {
+    return []
+  }
+
+  const value = numberOfLamps * weight
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
 const handleSpecialQuestions = async (
   question: Question,
   response: Prisma.InputJsonValue,
@@ -928,6 +980,10 @@ const handleSpecialQuestions = async (
     case NEWSLETTER_QUESTION_ID:
     case NEWSLETTER_RECEIVER_COUNT_QUESTION_ID: {
       emissionSourceIds = await applyNewsletterCalculation(question, response, study, studySiteId)
+      break
+    }
+    case XENON_LAMPS_QUESTION_ID: {
+      emissionSourceIds = await applyXenonLampsCalculation(question, response, study, studySiteId)
       break
     }
     default: {
