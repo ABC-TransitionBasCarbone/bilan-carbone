@@ -490,19 +490,24 @@ export const downloadStudyResults = async (
     ? userSettings.data?.validatedEmissionSourcesOnly
     : undefined
 
-  data.push(
-    formatConsolidatedStudyResultsForExport(
-      study,
-      siteList,
-      tStudy,
-      tExport,
-      tPost,
-      tQuality,
-      tUnits,
-      validatedEmissionSourcesOnly,
-      environment,
-    ),
+  const consolidatedResults = formatConsolidatedStudyResultsForExport(
+    study,
+    siteList,
+    tStudy,
+    tExport,
+    tPost,
+    tQuality,
+    tUnits,
+    validatedEmissionSourcesOnly,
+    environment,
   )
+
+  if (environment === Environment.CUT) {
+    consolidatedResults.data.unshift([])
+    consolidatedResults.data.unshift(['Fichier en cours de développement'])
+  }
+
+  data.push(consolidatedResults)
 
   if (study.exports.some((exp) => exp.type === Export.Beges)) {
     data.push(
