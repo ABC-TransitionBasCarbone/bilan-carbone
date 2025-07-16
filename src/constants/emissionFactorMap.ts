@@ -232,7 +232,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quel-est-le-profil-auquel-vous-pouvez-identifier-le-plus-votre-cinema': {},
   // Equipes recus
   [MOVIE_TEAM_QUESTION_ID]: {
-    emissionFactors: { transport: '28130', meal: '20682' },
+    emissionFactors: { transport: '43256', meal: '20682' },
     isSpecial: true,
   },
   // Matériel technique
