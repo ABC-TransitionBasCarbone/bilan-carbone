@@ -32,6 +32,7 @@ export type EmissionFactorInfo = {
   weights?: Record<string, number>
   shortDistanceProfiles?: Record<string, CinemaProfileConfig>
   longDistanceProfiles?: Record<string, LongDistanceConfig>
+  relatedQuestions?: string[]
 }
 
 const TRANSPORT_EMISSION_FACTORS = {
@@ -144,6 +145,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     {},
   [SHORT_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
+    relatedQuestions: [LONG_DISTANCE_QUESTION_ID],
     shortDistanceProfiles: {
       'Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun':
         {
@@ -204,6 +206,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   [LONG_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
+    relatedQuestions: [SHORT_DISTANCE_QUESTION_ID],
     emissionFactors: {
       TGV: '43256',
       'Voiture longue distance': '27983',
@@ -343,10 +346,15 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     },
   },
   // CommunicationDigitale
-  [NEWSLETTER_QUESTION_ID]: { emissionFactorImportedId: '120', isSpecial: true },
+  [NEWSLETTER_QUESTION_ID]: {
+    emissionFactorImportedId: '120',
+    isSpecial: true,
+    relatedQuestions: [NEWSLETTER_RECEIVER_COUNT_QUESTION_ID],
+  },
   [NEWSLETTER_RECEIVER_COUNT_QUESTION_ID]: {
     emissionFactorImportedId: '120',
     isSpecial: true,
+    relatedQuestions: [NEWSLETTER_QUESTION_ID],
   },
   'combien-de-caissons-d-affichage-dynamique-sont-presents-dans-le-cinema': { emissionFactorImportedId: '121' },
   'combien-d-ecrans-se-trouvent-dans-les-espaces-de-circulation': { emissionFactorImportedId: '27006' },

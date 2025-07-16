@@ -894,22 +894,18 @@ const handleSpecialQuestions = async (
 ) => {
   let emissionSourceIds: string[] = []
 
-  if (
-    question.idIntern !== SHORT_DISTANCE_QUESTION_ID &&
-    question.idIntern !== LONG_DISTANCE_QUESTION_ID &&
-    question.idIntern !== NEWSLETTER_QUESTION_ID &&
-    question.idIntern !== NEWSLETTER_RECEIVER_COUNT_QUESTION_ID
-  ) {
-    await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [question.idIntern])
+  const emissionFactorInfo = emissionFactorMap[question.idIntern]
+
+  const questionsToCleanup = [question.idIntern]
+  if (emissionFactorInfo?.relatedQuestions) {
+    questionsToCleanup.push(...emissionFactorInfo.relatedQuestions)
   }
+
+  await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, questionsToCleanup)
 
   switch (question.idIntern) {
     case SHORT_DISTANCE_QUESTION_ID:
     case LONG_DISTANCE_QUESTION_ID: {
-      await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [
-        SHORT_DISTANCE_QUESTION_ID,
-        LONG_DISTANCE_QUESTION_ID,
-      ])
       emissionSourceIds = await applyCinemaProfileForTransport(question, response, study, studySiteId)
       break
     }
@@ -931,10 +927,6 @@ const handleSpecialQuestions = async (
     }
     case NEWSLETTER_QUESTION_ID:
     case NEWSLETTER_RECEIVER_COUNT_QUESTION_ID: {
-      await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [
-        NEWSLETTER_QUESTION_ID,
-        NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
-      ])
       emissionSourceIds = await applyNewsletterCalculation(question, response, study, studySiteId)
       break
     }
