@@ -82,7 +82,6 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
   const handleTableFieldBlur = useCallback(() => {
     if (isFixedTable) {
       const updatedTableAnswer = syncAllValuesToTableData()
-      setTableAnswer(updatedTableAnswer)
       autoSave.saveField(question, updatedTableAnswer as unknown as Prisma.InputJsonValue)
     }
   }, [isFixedTable, syncAllValuesToTableData, autoSave, question])
