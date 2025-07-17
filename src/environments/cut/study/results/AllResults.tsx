@@ -88,7 +88,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           {tResults.rich('cutFeedback', {
             lien: (children) => (
               <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
-                {children}
+                <strong>{children}</strong>
               </Link>
             ),
           })}
