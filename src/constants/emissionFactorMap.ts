@@ -58,6 +58,14 @@ const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
 }
 
 const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
+  'Métro (Ile de France)': '43253',
+  'RER et Transilien (Ile-de-France)': '43254',
+  'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
+  'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
+  'Bus (agglomérations de - de 100 000 habitants)': '27998',
+  'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
+  'Bus (agglomérations de + de 250 000 habitants)': '28000',
+  'Vélo à assistance éléctrique': '28331',
   'Voiture gazole longue distance': '43799',
   'Voiture essence longue distance': '43796',
   'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
