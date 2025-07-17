@@ -1,4 +1,4 @@
-import { createQuestions } from '@/db/question'
+import { upsertQuestions } from '@/db/question'
 import { Command } from 'commander'
 import fs from 'fs'
 import path from 'path'
@@ -40,7 +40,7 @@ async function addQuestions(file: string, source: string) {
 
   console.log(`📊 ${questions.length} questions prêtes à être insérées.`)
 
-  await createQuestions(questions)
+  await upsertQuestions(questions)
 
   console.log('✅ Insertion terminée.')
 }
