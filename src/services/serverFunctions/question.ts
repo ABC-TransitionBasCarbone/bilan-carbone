@@ -14,6 +14,7 @@ import {
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
+import { getNumberOfProgrammedFilms } from '@/db/cnc'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
@@ -180,6 +181,8 @@ export const saveAnswerForQuestion = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
+    const numberOfProgrammedFilms = await getNumberOfProgrammedFilms(study.sites[0].site.cncId)
+
     // Prevent saving to table column questions - data should be saved to the parent TABLE question
     if (await isTableColumnQuestion(question)) {
       throw new Error(
@@ -239,7 +242,7 @@ export const saveAnswerForQuestion = async (
     let depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
-      return handleSpecialQuestions(question, response, study, studySiteId)
+      return handleSpecialQuestions(question, response, study, studySiteId, numberOfProgrammedFilms)
     }
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
@@ -738,6 +741,7 @@ const applyDematMovieCalculation = async (
   response: Prisma.InputJsonValue,
   study: FullStudy,
   studySiteId: string,
+  numberOfProgrammedFilms: number,
 ) => {
   const studyId = study.id
   const emissionSourceIds: string[] = []
@@ -758,8 +762,9 @@ const applyDematMovieCalculation = async (
   const numberReponse = Number(response)
   const infosToCreate = [180, 3, 4]
 
+  // TODO: Tenter de factoriser en O(1)
   for (const info of infosToCreate) {
-    const newEmissionSource = await createEmissionSource({
+    const newEmissionSourceDemat = await createEmissionSource({
       studyId,
       studySiteId,
       value: info * numberReponse,
@@ -768,9 +773,21 @@ const applyDematMovieCalculation = async (
       emissionFactorId: emissionFactor.id,
       validated: true,
     })
+    const newEmissionSourceDCP = await createEmissionSource({
+      studyId,
+      studySiteId,
+      value: info * (numberOfProgrammedFilms - numberReponse),
+      name: `DCP - ${question.idIntern}`,
+      subPost: question.subPost,
+      emissionFactorId: emissionFactor.id,
+      validated: true,
+    })
 
-    if (newEmissionSource.success && newEmissionSource.data) {
-      emissionSourceIds.push(newEmissionSource.data.id)
+    if (newEmissionSourceDemat.success && newEmissionSourceDemat.data) {
+      emissionSourceIds.push(newEmissionSourceDemat.data.id)
+    }
+    if (newEmissionSourceDCP.success && newEmissionSourceDCP.data) {
+      emissionSourceIds.push(newEmissionSourceDCP.data.id)
     }
   }
 
@@ -943,6 +960,7 @@ const handleSpecialQuestions = async (
   response: Prisma.InputJsonValue,
   study: FullStudy,
   studySiteId: string,
+  numberOfProgrammedFilms: number,
 ) => {
   let emissionSourceIds: string[] = []
 
@@ -970,7 +988,13 @@ const handleSpecialQuestions = async (
       break
     }
     case MOVIE_DEMAT_QUESTION_ID: {
-      emissionSourceIds = await applyDematMovieCalculation(question, response, study, studySiteId)
+      emissionSourceIds = await applyDematMovieCalculation(
+        question,
+        response,
+        study,
+        studySiteId,
+        numberOfProgrammedFilms,
+      )
       break
     }
     case MOVIE_DCP_QUESTION_ID: {

@@ -145,6 +145,7 @@ const fullStudyInclude = {
           name: true,
           postalCode: true,
           city: true,
+          cncId: true,
         },
       },
     },
