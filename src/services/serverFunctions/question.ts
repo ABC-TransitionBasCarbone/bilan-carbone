@@ -940,13 +940,12 @@ const handleSpecialQuestions = async (
   question: Question,
   response: Prisma.InputJsonValue,
   study: FullStudy,
-  studySite: Prisma.SiteGetPayload<{
-    include: {
-      cnc: true
-    }
-  }>,
+  studySite: FullStudy['sites'][0],
 ) => {
-  const { id: studySiteId, cnc } = studySite
+  const {
+    id: studySiteId,
+    site: { cnc },
+  } = studySite
 
   let emissionSourceIds: string[] = []
 
