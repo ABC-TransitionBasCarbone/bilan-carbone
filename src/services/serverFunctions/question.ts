@@ -239,13 +239,7 @@ export const saveAnswerForQuestion = async (
     let depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
-      return handleSpecialQuestions(
-        question,
-        response,
-        study,
-        studySiteId,
-        studySite.site.cnc?.numberOfProgrammedFilms || 0,
-      )
+      return handleSpecialQuestions(question, response, study, studySite)
     }
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
@@ -946,9 +940,14 @@ const handleSpecialQuestions = async (
   question: Question,
   response: Prisma.InputJsonValue,
   study: FullStudy,
-  studySiteId: string,
-  numberOfProgrammedFilms: number,
+  studySite: Prisma.SiteGetPayload<{
+    include: {
+      cnc: true
+    }
+  }>,
 ) => {
+  const { id: studySiteId, cnc } = studySite
+
   let emissionSourceIds: string[] = []
 
   const emissionFactorInfo = emissionFactorMap[question.idIntern]
@@ -981,7 +980,7 @@ const handleSpecialQuestions = async (
         response,
         study,
         studySiteId,
-        numberOfProgrammedFilms,
+        cnc?.numberOfProgrammedFilms || 0,
       )
       emissionSourceIds = [...emissionSourceDCPIds, ...emissionSourceDematIds]
       break
