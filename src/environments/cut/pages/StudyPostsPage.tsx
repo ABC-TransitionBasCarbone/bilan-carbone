@@ -24,18 +24,26 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
   const searchParams = useSearchParams()
   const subPosts = useMemo(() => subPostsByPost[post], [post])
   const [activeStep, setActiveStep] = useState(0)
+  const [pageLoading, setPageLoading] = useState(true)
 
   useEffect(() => {
-    const subPostParam = searchParams.get('subPost')
-    if (subPostParam) {
-      const subPostIndex = subPosts.findIndex((subPost) => subPost === subPostParam)
-      if (subPostIndex !== -1) {
-        setActiveStep(subPostIndex)
+    if (pageLoading) {
+      setPageLoading(false)
+      const subPostParam = searchParams.get('subPost')
+      if (subPostParam) {
+        const subPostIndex = subPosts.findIndex((subPost) => subPost === subPostParam)
+        if (subPostIndex !== -1) {
+          setActiveStep(subPostIndex)
+        }
       }
     }
   }, [searchParams, subPosts])
 
   useEffect(() => {
+    if (pageLoading) {
+      return
+    }
+
     const currentSubPost = subPosts[activeStep]
     if (currentSubPost) {
       const newSearchParams = new URLSearchParams(searchParams.toString())
