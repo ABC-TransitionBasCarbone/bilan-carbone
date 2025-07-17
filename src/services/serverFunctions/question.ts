@@ -239,7 +239,7 @@ export const saveAnswerForQuestion = async (
     let depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
-      return handleSpecialQuestions(question, response, study, studySiteId)
+      return handleSpecialQuestions(question, response, study, studySite)
     }
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
@@ -741,7 +741,7 @@ const applyDematMovieCalculation = async (
 ) => {
   const studyId = study.id
   const emissionSourceIds: string[] = []
-  const emissionInfo = emissionFactorMap[MOVIE_DCP_QUESTION_ID]
+  const emissionInfo = emissionFactorMap[MOVIE_DEMAT_QUESTION_ID]
   if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
     return emissionSourceIds
   }
@@ -755,23 +755,20 @@ const applyDematMovieCalculation = async (
     return emissionSourceIds
   }
 
-  const numberReponse = Number(response)
-  const infosToCreate = [180, 3, 4]
+  const numberDematFilms = Number(response)
 
-  for (const info of infosToCreate) {
-    const newEmissionSource = await createEmissionSource({
-      studyId,
-      studySiteId,
-      value: info * numberReponse,
-      name: question.idIntern,
-      subPost: question.subPost,
-      emissionFactorId: emissionFactor.id,
-      validated: true,
-    })
+  const newEmissionSourceDemat = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: 2 * numberDematFilms + 3 * numberDematFilms + 4 * numberDematFilms,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
 
-    if (newEmissionSource.success && newEmissionSource.data) {
-      emissionSourceIds.push(newEmissionSource.data.id)
-    }
+  if (newEmissionSourceDemat.success && newEmissionSourceDemat.data) {
+    emissionSourceIds.push(newEmissionSourceDemat.data.id)
   }
 
   return emissionSourceIds
@@ -782,6 +779,7 @@ const applyDCPMovieCalculation = async (
   response: Prisma.InputJsonValue,
   study: FullStudy,
   studySiteId: string,
+  numberOfProgrammedFilms: number,
 ) => {
   const studyId = study.id
 
@@ -802,12 +800,12 @@ const applyDCPMovieCalculation = async (
 
   const studySite = study.sites.find((site) => site.id === studySiteId)
   const distanceToParis = studySite?.distanceToParis || 0
-  const numberReponse = Number(response)
+  const numberDematFilms = Number(response)
 
   const newEmissionSource = await createEmissionSource({
     studyId,
     studySiteId,
-    value: (0.1 * numberReponse * distanceToParis) / 1000,
+    value: ((numberOfProgrammedFilms - numberDematFilms) * distanceToParis) / 1000,
     name: question.idIntern,
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
@@ -942,8 +940,13 @@ const handleSpecialQuestions = async (
   question: Question,
   response: Prisma.InputJsonValue,
   study: FullStudy,
-  studySiteId: string,
+  studySite: FullStudy['sites'][0],
 ) => {
+  const {
+    id: studySiteId,
+    site: { cnc },
+  } = studySite
+
   let emissionSourceIds: string[] = []
 
   const emissionFactorInfo = emissionFactorMap[question.idIntern]
@@ -970,11 +973,15 @@ const handleSpecialQuestions = async (
       break
     }
     case MOVIE_DEMAT_QUESTION_ID: {
-      emissionSourceIds = await applyDematMovieCalculation(question, response, study, studySiteId)
-      break
-    }
-    case MOVIE_DCP_QUESTION_ID: {
-      emissionSourceIds = await applyDCPMovieCalculation(question, response, study, studySiteId)
+      const emissionSourceDematIds = await applyDematMovieCalculation(question, response, study, studySiteId)
+      const emissionSourceDCPIds = await applyDCPMovieCalculation(
+        question,
+        response,
+        study,
+        studySiteId,
+        cnc?.numberOfProgrammedFilms || 0,
+      )
+      emissionSourceIds = [...emissionSourceDCPIds, ...emissionSourceDematIds]
       break
     }
     case NEWSLETTER_QUESTION_ID:
