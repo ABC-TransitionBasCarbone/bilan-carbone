@@ -5,14 +5,15 @@ import { prismaClient } from './client'
 export const getAllQuestions = () => prismaClient.question.findMany({})
 
 export const upsertQuestions = async (data: Prisma.QuestionCreateInput[]) => {
-  for (const question of data) {
-    const test = await prismaClient.question.upsert({
-      where: { idIntern: question.idIntern },
-      update: question,
-      create: question,
-    })
-    console.log(test)
-  }
+  await Promise.all(
+    data.map((question) =>
+      prismaClient.question.upsert({
+        where: { idIntern: question.idIntern },
+        update: question,
+        create: question,
+      }),
+    ),
+  )
 }
 
 export const getQuestionsBySubPost = async (subPost: SubPost): Promise<Question[]> => {
