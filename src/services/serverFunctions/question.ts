@@ -955,7 +955,7 @@ const handleClimatisationCalculation = async (
     return []
   }
 
-  const emissionInfo = emissionFactorMap[CONFECTIONERY_QUESTION_ID]
+  const emissionInfo = emissionFactorMap[CLIMATISATION_QUESTION_ID]
   if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
     return []
   }
