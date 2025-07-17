@@ -3,6 +3,7 @@
 import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
 import { EmissionFactorInfo, emissionFactorMap } from '@/constants/emissionFactorMap'
 import {
+  CLIMATISATION_QUESTION_ID,
   CONFECTIONERY_QUESTION_ID,
   LONG_DISTANCE_APPLIED_PERCENTAGE,
   LONG_DISTANCE_QUESTION_ID,
@@ -936,6 +937,55 @@ const applyXenonLampsCalculation = async (
   return []
 }
 
+const handleClimatisationCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySite: FullStudy['sites'][number],
+) => {
+  const studyId = study.id
+  const {
+    id: studySiteId,
+    site: { cnc },
+  } = studySite
+
+  const value = Boolean(response)
+
+  if (!value || !cnc?.ecrans) {
+    return []
+  }
+
+  const emissionInfo = emissionFactorMap[CONFECTIONERY_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: cnc.ecrans,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
 const handleSpecialQuestions = async (
   question: Question,
   response: Prisma.InputJsonValue,
@@ -991,6 +1041,10 @@ const handleSpecialQuestions = async (
     }
     case XENON_LAMPS_QUESTION_ID: {
       emissionSourceIds = await applyXenonLampsCalculation(question, response, study, studySiteId)
+      break
+    }
+    case CLIMATISATION_QUESTION_ID: {
+      emissionSourceIds = await handleClimatisationCalculation(question, response, study, studySite)
       break
     }
     default: {
