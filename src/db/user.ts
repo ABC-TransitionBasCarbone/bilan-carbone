@@ -210,9 +210,6 @@ export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>
     data,
   })
 
-export const createUsers = (users: Prisma.UserCreateManyInput[]) =>
-  prismaClient.user.createMany({ data: users, skipDuplicates: true })
-
 export const createUsersWithAccount = async (
   users: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[],
 ) => {
@@ -294,8 +291,19 @@ export const getUserFeedbackDate = async (accountId: string) =>
 export const updateUserFeedbackDate = async (accountId: string, feedbackDate: Date) =>
   prismaClient.account.update({ where: { id: accountId }, data: { feedbackDate } })
 
-export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
-  prismaClient.user.create({
+export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) => {
+  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+  if (deactivatedFeaturesRestrictions?.active) {
+    const notAllowedEnvironments =
+      !Array.isArray(newMember?.accounts?.create) &&
+      newMember?.accounts?.create?.environment !== undefined &&
+      deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(newMember.accounts.create.environment)
+
+    if (notAllowedEnvironments) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+  }
+  return prismaClient.user.create({
     data: newMember,
     select: {
       id: true,
@@ -307,6 +315,7 @@ export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclu
       },
     },
   })
+}
 
 export const handleAddingUser = async (creator: UserSession, newUser: AddMemberCommand) => {
   const environment = creator.environment
