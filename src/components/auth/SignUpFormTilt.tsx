@@ -2,7 +2,7 @@
 
 import { getEnvRoute } from '@/services/email/utils'
 import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
-import { SignUpCutCommand, SignUpCutCommandValidation } from '@/services/serverFunctions/user.command'
+import { SignUpTiltCommand, SignUpTiltCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import { Environment } from '@prisma/client'
@@ -20,8 +20,8 @@ import authStyles from './Auth.module.css'
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
 
-const SignUpFormCut = () => {
-  const t = useTranslations('signupCut')
+const SignUpFormTilt = () => {
+  const t = useTranslations('signupTilt')
   const tForm = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
@@ -36,8 +36,8 @@ const SignUpFormCut = () => {
     }
   }, [searchParams])
 
-  const { control, getValues, setValue, handleSubmit } = useForm<SignUpCutCommand>({
-    resolver: zodResolver(SignUpCutCommandValidation),
+  const { control, getValues, setValue, handleSubmit } = useForm<SignUpTiltCommand>({
+    resolver: zodResolver(SignUpTiltCommandValidation),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -49,7 +49,7 @@ const SignUpFormCut = () => {
     setMessage('')
     setSubmitting(true)
 
-    const activation = await signUpWithSiretOrCNC(getValues().email, getValues().siretOrCNC, Environment.CUT)
+    const activation = await signUpWithSiretOrCNC(getValues().email, getValues().siret, Environment.TILT)
     setSubmitting(false)
 
     if (activation.success) {
@@ -76,11 +76,11 @@ const SignUpFormCut = () => {
         <FormTextField
           control={control}
           translation={t}
-          name="siretOrCNC"
+          name="siret"
           className={authStyles.input}
-          label={t('siretOrCNC')}
-          placeholder={t('siretOrCNCPlaceholder')}
-          data-testid="activation-siretOrCNC"
+          label={t('siret')}
+          placeholder={t('siretPlaceholder')}
+          data-testid="activation-siret"
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
           {t('validate')}
@@ -99,7 +99,7 @@ const SignUpFormCut = () => {
         )}
         <div className={authStyles.bottomLink}>
           {tForm('alreadyRegistered')}
-          <Link className="ml-2" href={getEnvRoute('login', Environment.CUT)} prefetch={false}>
+          <Link className="ml-2" href={getEnvRoute('login', Environment.TILT)} prefetch={false}>
             {tForm('login')}
           </Link>
         </div>
@@ -108,4 +108,4 @@ const SignUpFormCut = () => {
   )
 }
 
-export default SignUpFormCut
+export default SignUpFormTilt

@@ -71,7 +71,7 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
   const activationLink = useMemo(
     () =>
       getEnvRoute(
-        environment === Environment.CUT ? `register?email=${email}` : `activation?email=${email}`,
+        environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`,
         environment,
       ),
     [email],

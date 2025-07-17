@@ -198,6 +198,23 @@
       "siretOrCNC": "Please enter a Siret/CNC number"
     }
   },
+  "signupTilt": {
+    "description": "Create a Tilt account with your email and a Siret",
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Please enter an email",
+    "siret": "Siret",
+    "siretPlaceholder": "Your Siret",
+    "siretRequired": "Please enter a Siret",
+    "validate": "Validate",
+    "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation.",
+    "validation": {
+      "email": "Please enter an email",
+      "siret": "Please enter a Siret"
+    }
+  },
   "footer": {
     "message": {
       "0": "",

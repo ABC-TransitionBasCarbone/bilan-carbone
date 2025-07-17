@@ -3,7 +3,9 @@ import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 
 const COUNT_ROUTE = '/count'
-const publicRoutes = ['/login', '/reset-password', '/activation', COUNT_ROUTE]
+const TILT_ROUTE = '/tilt'
+const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE]
+const publicRoutes = ['/login', '/reset-password', '/activation', ...ENV_ROUTES]
 
 const bucketName = process.env.SCW_BUCKET_NAME as string
 const region = process.env.SCW_REGION
@@ -14,8 +16,8 @@ const logos = ['https://base-empreinte.ademe.fr', 'https://www.legifrance.gouv.f
 const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
 export async function middleware(req: NextRequest) {
-  if (req.nextUrl.pathname === COUNT_ROUTE) {
-    const countLoginUrl = new URL(`${COUNT_ROUTE}/login`, req.url)
+  if (ENV_ROUTES.includes(req.nextUrl.pathname)) {
+    const countLoginUrl = new URL(`${req.nextUrl}/login`, req.url)
     return NextResponse.redirect(countLoginUrl)
   }
 
@@ -29,7 +31,9 @@ export async function middleware(req: NextRequest) {
         case Environment.CUT:
           baseUrl = `${COUNT_ROUTE}`
           break
-
+        case Environment.TILT:
+          baseUrl = `${TILT_ROUTE}`
+          break
         default:
           break
       }
