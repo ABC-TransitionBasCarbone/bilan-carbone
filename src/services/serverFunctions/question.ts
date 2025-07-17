@@ -180,8 +180,6 @@ export const saveAnswerForQuestion = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const numberOfProgrammedFilms = studySite.site.cnc?.numberOfProgrammedFilms || 0
-
     // Prevent saving to table column questions - data should be saved to the parent TABLE question
     if (await isTableColumnQuestion(question)) {
       throw new Error(
@@ -241,7 +239,13 @@ export const saveAnswerForQuestion = async (
     let depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
-      return handleSpecialQuestions(question, response, study, studySiteId, numberOfProgrammedFilms)
+      return handleSpecialQuestions(
+        question,
+        response,
+        study,
+        studySiteId,
+        studySite.site.cnc?.numberOfProgrammedFilms || 0,
+      )
     }
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
@@ -762,10 +766,7 @@ const applyDematMovieCalculation = async (
   const newEmissionSourceDemat = await createEmissionSource({
     studyId,
     studySiteId,
-    value:
-      0.00921 * 90 * 2 * numberDematFilms * 0.9 +
-      1.5 * numberDematFilms * 2 * 0.00921 +
-      2 * numberDematFilms * 2 * 0.00921,
+    value: 2 * numberDematFilms + 3 * numberDematFilms + 4 * numberDematFilms,
     name: question.idIntern,
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
@@ -781,9 +782,10 @@ const applyDematMovieCalculation = async (
 
 const applyDCPMovieCalculation = async (
   question: Question,
-  numberOfProgrammedFilms: number,
+  response: Prisma.InputJsonValue,
   study: FullStudy,
   studySiteId: string,
+  numberOfProgrammedFilms: number,
 ) => {
   const studyId = study.id
 
@@ -804,11 +806,12 @@ const applyDCPMovieCalculation = async (
 
   const studySite = study.sites.find((site) => site.id === studySiteId)
   const distanceToParis = studySite?.distanceToParis || 0
+  const numberDematFilms = Number(response)
 
   const newEmissionSource = await createEmissionSource({
     studyId,
     studySiteId,
-    value: (numberOfProgrammedFilms * distanceToParis) / 1000,
+    value: ((numberOfProgrammedFilms - numberDematFilms) * distanceToParis) / 1000,
     name: question.idIntern,
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
@@ -973,7 +976,13 @@ const handleSpecialQuestions = async (
     }
     case MOVIE_DEMAT_QUESTION_ID: {
       const emissionSourceDematIds = await applyDematMovieCalculation(question, response, study, studySiteId)
-      const emissionSourceDCPIds = await applyDCPMovieCalculation(question, numberOfProgrammedFilms, study, studySiteId)
+      const emissionSourceDCPIds = await applyDCPMovieCalculation(
+        question,
+        response,
+        study,
+        studySiteId,
+        numberOfProgrammedFilms,
+      )
       emissionSourceIds = [...emissionSourceDCPIds, ...emissionSourceDematIds]
       break
     }
