@@ -47,8 +47,8 @@ const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'Vélo à assistance éléctrique': '28331',
   'Vélo classique': '134',
   Marche: '135',
-  'Voiture gazole courte distance': '27984',
-  'Voiture essence courte distance': '27983',
+  'Voiture gazole courte distance': '43798',
+  'Voiture essence courte distance': '43795',
   'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
     '28015',
   'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
@@ -58,8 +58,16 @@ const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
 }
 
 const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
-  'Voiture gazole courte distance': '27984',
-  'Voiture essence courte distance': '27983',
+  'Métro (Ile de France)': '43253',
+  'RER et Transilien (Ile-de-France)': '43254',
+  'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
+  'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
+  'Bus (agglomérations de - de 100 000 habitants)': '27998',
+  'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
+  'Bus (agglomérations de + de 250 000 habitants)': '28000',
+  'Vélo à assistance éléctrique': '28331',
+  'Voiture gazole longue distance': '43799',
+  'Voiture essence longue distance': '43796',
   'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
     '28015',
   'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
@@ -162,7 +170,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     shortDistanceProfiles: {
       'Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun':
         {
-          Voiture: { percentage: 13, averageDistance: 5.98, emissionFactorId: '27983' },
+          Voiture: { percentage: 13, averageDistance: 5.98, emissionFactorId: '43795' },
           'Transports en commun (bus, métro, tram)': {
             percentage: 28,
             averageDistance: 7.41,
@@ -174,7 +182,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
         },
       "Les spectateurs parcourent autour de 10 km aller-retour pour se rendre au cinéma. Il s'agit essentiellement d'un public de proximité venant en grande partie en voiture. Autour de 25% d'entre eux viennent à pied.":
         {
-          Voiture: { percentage: 69, averageDistance: 10.77, emissionFactorId: '27983' },
+          Voiture: { percentage: 69, averageDistance: 10.77, emissionFactorId: '43795' },
           'Transports en commun (bus, métro, tram)': {
             percentage: 2,
             averageDistance: 7.41,
@@ -186,7 +194,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
         },
       "Les spectateurs parcourent autour de 20-25 km aller-retour pour se rendre au cinéma. Il s'agit essentiellement d'un public de proximité venant en grande partie en voiture. Autour de 25% d'entre eux viennent à pied.":
         {
-          Voiture: { percentage: 63, averageDistance: 24.36, emissionFactorId: '27983' },
+          Voiture: { percentage: 63, averageDistance: 24.36, emissionFactorId: '43795' },
           'Transports en commun (bus, métro, tram)': {
             percentage: 5,
             averageDistance: 25.84,
@@ -198,7 +206,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
         },
       'Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en transports en commun, peu viennent à pied. La distance moyenne parcourue est autour de 15 km aller-retour':
         {
-          Voiture: { percentage: 89, averageDistance: 15.84, emissionFactorId: '27983' },
+          Voiture: { percentage: 89, averageDistance: 15.84, emissionFactorId: '43795' },
           'Transports en commun (bus, métro, tram)': {
             percentage: 2,
             averageDistance: 10.27,
@@ -209,7 +217,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
           'Trottinette électrique': { percentage: 0, averageDistance: 1.97, emissionFactorId: '28329' },
         },
       "Le cinéma n'est accessible qu'en voiture": {
-        Voiture: { percentage: 100, averageDistance: 18.73, emissionFactorId: '27983' },
+        Voiture: { percentage: 100, averageDistance: 18.73, emissionFactorId: '43795' },
         'Transports en commun (bus, métro, tram)': { percentage: 0, averageDistance: 0, emissionFactorId: '28150' },
         'Moto / scooter': { percentage: 0, averageDistance: 0, emissionFactorId: '27995' },
         'Train / RER': { percentage: 0, averageDistance: 0, emissionFactorId: '43254' },
@@ -222,7 +230,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     relatedQuestions: [SHORT_DISTANCE_QUESTION_ID],
     emissionFactors: {
       TGV: '43256',
-      'Voiture longue distance': '27983',
+      'Voiture longue distance': '43796',
     },
     longDistanceProfiles: {
       "Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année":
