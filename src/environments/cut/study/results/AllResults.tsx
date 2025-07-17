@@ -24,6 +24,7 @@ import Block from '@/components/base/Block'
 import { formatNumber } from '@/utils/number'
 import { Environment } from '@prisma/client'
 import classNames from 'classnames'
+import Link from 'next/link'
 import styles from './AllResults.module.css'
 
 interface Props {
@@ -45,7 +46,6 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
-  const t = useTranslations('study.results')
   const tOrga = useTranslations('study.organization')
   const tPost = useTranslations('emissionFactors.post')
   const tResults = useTranslations('study.results')
@@ -83,6 +83,17 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
 
   return (
     <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
+      <Box component="section" className="mb2">
+        <Typography>
+          {tResults.rich('cutFeedback', {
+            lien: (children) => (
+              <Link href={process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_LINK ?? ''} target="_blank">
+                {children}
+              </Link>
+            ),
+          })}
+        </Typography>
+      </Box>
       <Box component="section" className={classNames(styles.gapped, 'flex')}>
         <div className={classNames(styles.gapped, 'flex flex-col')}>
           <SelectStudySite study={study} allowAll studySite={studySite} setSite={setSite} />
@@ -96,7 +107,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                 study,
                 [],
                 emissionFactorsWithParts,
-                t,
+                tResults,
                 tExport,
                 tPost,
                 tOrga,
@@ -150,7 +161,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                   />
                 ) : (
                   <Typography align="center" sx={{ mt: '0.25rem' }}>
-                    {t('noData')}
+                    {tResults('noData')}
                   </Typography>
                 )}
               </TabPanel>
@@ -162,7 +173,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
                   />
                 ) : (
                   <Typography align="center" sx={{ mt: '0.25rem' }}>
-                    {t('noData')}
+                    {tResults('noData')}
                   </Typography>
                 )}
               </TabPanel>
