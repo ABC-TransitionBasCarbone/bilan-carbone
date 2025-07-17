@@ -1,4 +1,4 @@
-import PublicCutPage from '@/components/pages/PublicCut'
+import PublicTiltPage from '@/components/pages/PublicTilt'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { Environment } from '@prisma/client'
 import { Metadata } from 'next'
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 
 const PublicLayout = ({ children }: Props) => {
   return (
-    <DynamicTheme environment={Environment.CUT}>
+    <DynamicTheme environment={Environment.TILT}>
       <main className="h100">
-        <PublicCutPage>{children}</PublicCutPage>
+        <PublicTiltPage>{children}</PublicTiltPage>
       </main>
     </DynamicTheme>
   )

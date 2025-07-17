@@ -13,7 +13,7 @@ const ResetPasswordPage = async (props: Props) => {
 
   const session = await auth()
 
-  return <ResetForm user={session?.user} token={token} environment={Environment.CUT} />
+  return <ResetForm user={session?.user} token={token} environment={Environment.TILT} />
 }
 
 export default ResetPasswordPage

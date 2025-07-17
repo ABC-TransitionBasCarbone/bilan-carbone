@@ -1,14 +1,14 @@
-import SignUpFormCut from '@/components/auth/SignUpFormCut'
+import SignUpFormTilt from '@/components/auth/SignUpFormTilt'
 import { auth } from '@/services/auth'
 import { redirect } from 'next/navigation'
 
-const CountSignUpPage = async () => {
+const TiltSignUpPage = async () => {
   const session = await auth()
   if (session) {
     redirect('/')
   }
 
-  return <SignUpFormCut />
+  return <SignUpFormTilt />
 }
 
-export default CountSignUpPage
+export default TiltSignUpPage

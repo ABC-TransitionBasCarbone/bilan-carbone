@@ -9,7 +9,7 @@ const NewPasswordPage = async () => {
     redirect('/')
   }
 
-  return <NewPasswordForm environment={Environment.CUT} />
+  return <NewPasswordForm environment={Environment.TILT} />
 }
 
 export default NewPasswordPage

@@ -129,3 +129,14 @@ export const SignUpCutCommandValidation = z.object({
 })
 
 export type SignUpCutCommand = z.infer<typeof SignUpCutCommandValidation>
+
+export const SignUpTiltCommandValidation = z.object({
+  email: z
+    .string({ required_error: 'email' })
+    .email('email')
+    .trim()
+    .transform((email) => email.toLowerCase()),
+  siret: z.string({ required_error: 'siret' }).trim().min(14, 'siret').max(14, 'siret'),
+})
+
+export type SignUpTiltCommand = z.infer<typeof SignUpTiltCommandValidation>
