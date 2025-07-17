@@ -576,7 +576,11 @@ export const signUpCutUser = async (email: string, siretOrCNC: string) =>
         )
         await addSite({
           name: CNC.nom || '',
-          cncId: siretOrCNC,
+          cnc: {
+            connect: {
+              id: siretOrCNC,
+            },
+          },
           organization: { connect: { id: organizationVersion.organizationId } },
         })
       }
