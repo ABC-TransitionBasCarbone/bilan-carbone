@@ -72,6 +72,7 @@ import {
 } from '../email/email'
 import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED, REQUEST_SENT, UNKNOWN_CNC } from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
+import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
 const updateUserResetToken = async (email: string, duration: number) => {
@@ -523,7 +524,14 @@ export const answerFeeback = async () =>
 
 export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, environment: Environment) =>
   withServerResponse('signUpWithSiretOrCNC', async () => {
-    // TODO BLOCK WITH DEACTIVABLE FEATURES
+    const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+    if (
+      deactivatedFeaturesRestrictions?.active &&
+      deactivatedFeaturesRestrictions.deactivatedEnvironments?.includes(environment)
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, environment)
     if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
