@@ -14,7 +14,6 @@ import {
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
-import { getNumberOfProgrammedFilms } from '@/db/cnc'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
@@ -181,7 +180,7 @@ export const saveAnswerForQuestion = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const numberOfProgrammedFilms = await getNumberOfProgrammedFilms(study.sites[0].site.cncId)
+    const numberOfProgrammedFilms = studySite.site.cnc?.numberOfProgrammedFilms || 0
 
     // Prevent saving to table column questions - data should be saved to the parent TABLE question
     if (await isTableColumnQuestion(question)) {
