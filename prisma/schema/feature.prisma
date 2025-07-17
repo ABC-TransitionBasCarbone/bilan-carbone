@@ -1,6 +1,7 @@
 enum DeactivatableFeature {
   Formation
   Feedback
+  Creation
 }
 
 model DeactivatableFeatureStatus {
