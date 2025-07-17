@@ -198,6 +198,23 @@
       "siretOrCNC": "Veuillez entrer un Siret/CNC"
     }
   },
+  "signupTilt": {
+    "description": "Créez un compte sur Tilt en entrant votre email ainsi qu'un Siret",
+    "email": "Email",
+    "emailPlaceholder": "Votre adresse email",
+    "emailRequired": "Veuillez entrer un email",
+    "siret": "Siret",
+    "siretPlaceholder": "Votre Siret",
+    "siretRequired": "Veuillez entrer un Siret",
+    "validate": "Valider",
+    "Not authorized": "Cet email est déjà inscrit avec un compte Tilt ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "validation": {
+      "email": "Veuillez entrer un email",
+      "siret": "Veuillez entrer un Siret"
+    }
+  },
   "footer": {
     "message": {
       "0": "",
