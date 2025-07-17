@@ -28,7 +28,6 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
 
   useEffect(() => {
     if (pageLoading) {
-      setPageLoading(false)
       const subPostParam = searchParams.get('subPost')
       if (subPostParam) {
         const subPostIndex = subPosts.findIndex((subPost) => subPost === subPostParam)
@@ -36,6 +35,7 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
           setActiveStep(subPostIndex)
         }
       }
+      setPageLoading(false)
     }
   }, [searchParams, subPosts])
 
