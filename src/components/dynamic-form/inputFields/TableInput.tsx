@@ -65,7 +65,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
             if (selectQuestion && selectQuestion.possibleAnswers && selectQuestion.possibleAnswers[rowIndex]) {
               updatedData[question.idIntern] = selectQuestion.possibleAnswers[rowIndex]
             }
-          } else if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
+          } else if (currentValue !== undefined && currentValue !== null) {
             updatedData[question.idIntern] = String(currentValue)
           }
         })
