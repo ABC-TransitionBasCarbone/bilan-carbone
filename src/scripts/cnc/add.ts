@@ -1,4 +1,4 @@
-import { createCNC } from '@/db/cnc'
+import { upsertCNC } from '@/db/cnc'
 import { Prisma } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
@@ -103,7 +103,7 @@ const addCNC = async (file: string) => {
       )
       .on('end', async () => {
         console.log(`Ajout de ${cncs.length} cnc...`)
-        await createCNC(cncs)
+        await upsertCNC(cncs)
         console.log('CNC créées')
         resolve()
       })
