@@ -72,6 +72,7 @@ model Site {
   studies        StudySite[]
 
   cncId String?
+  cnc   Cnc?    @relation(fields: [cncId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -101,10 +102,11 @@ model Cnc {
   multiplexe              Boolean? @map("multiplexe")
   latitude                Float?   @map("latitude")
   longitude               Float?   @map("longitude")
-  numberOfProgrammedFilms Int?     @map("number_of_programmed_films")
+  numberOfProgrammedFilms Int      @default(0) @map("number_of_programmed_films")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  Site      Site[]
 
   @@map("cncs")
 }
