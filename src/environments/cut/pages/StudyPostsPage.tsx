@@ -37,7 +37,7 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
       }
       setPageLoading(false)
     }
-  }, [searchParams, subPosts])
+  }, [pageLoading, searchParams, subPosts])
 
   useEffect(() => {
     if (pageLoading) {
@@ -51,7 +51,7 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
       const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`
       window.history.replaceState(null, '', newUrl)
     }
-  }, [activeStep, subPosts, searchParams])
+  }, [activeStep, subPosts, searchParams, pageLoading])
 
   const tabContent = useMemo(() => {
     return subPosts.map((subPost) => (
