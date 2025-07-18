@@ -80,7 +80,7 @@ const users = async () => {
       nom: 'PATHE',
       codeInsee: '75102',
       commune: 'Paris 2e Arrondissement',
-      ecrans: 21, // Add écrans data for climatisation calculation
+      ecrans: 21,
     },
   })
 
