@@ -80,6 +80,7 @@ const users = async () => {
       nom: 'PATHE',
       codeInsee: '75102',
       commune: 'Paris 2e Arrondissement',
+      ecrans: 21,
     },
   })
 
@@ -334,6 +335,8 @@ const users = async () => {
     })),
   })
 
+  const cncRecord = await prisma.cnc.findUnique({ where: { numeroAuto: '321' } })
+
   const sites = await prisma.site.createManyAndReturn({
     data: [...organizations, ...childOrganizations].flatMap((organization) => {
       const sitesNumber = faker.number.int({ min: 1, max: 5 })
@@ -345,6 +348,20 @@ const users = async () => {
       }))
     }),
   })
+
+  if (cncRecord) {
+    const cutOrganizationIds = organizationVersionsCUT.map((orgVersion) => orgVersion.organizationId)
+    const cutSites = sites.filter((site) => cutOrganizationIds.includes(site.organizationId))
+
+    await Promise.all(
+      cutSites.map((site) =>
+        prisma.site.update({
+          where: { id: site.id },
+          data: { cncId: cncRecord.id },
+        }),
+      ),
+    )
+  }
 
   const levels = Object.keys(Level)
   const usersWithAccounts = await Promise.all([

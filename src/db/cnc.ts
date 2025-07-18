@@ -21,3 +21,6 @@ export const upsertCNC = async (data: Prisma.CncCreateInput[]) => {
 }
 
 export const getCNCById = async (numeroAuto: string) => await prismaClient.cnc.findUnique({ where: { numeroAuto } })
+
+export const getCNCByNumeroAuto = async (numeroAuto: string) =>
+  await prismaClient.cnc.findUnique({ where: { numeroAuto } })
