@@ -8,7 +8,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountsUserLevel,
 } from '@/db/account'
-import { getCNCById } from '@/db/cnc'
+import { getCNCById, getCNCByNumeroAuto } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
@@ -1186,3 +1186,13 @@ export const duplicateStudyEmissionSource = async (
   })
 
 export const getCNCCodeById = async (id: string) => getCNCById(id)
+
+export const getCNCByNumeroAutoCode = async (numeroAuto: string) =>
+  withServerResponse('getCNCByNumeroAutoCode', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await getCNCByNumeroAuto(numeroAuto)
+  })

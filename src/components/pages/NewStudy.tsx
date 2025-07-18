@@ -74,6 +74,7 @@ const NewStudyPage = ({
           postalCode: site.postalCode ?? '',
           city: site.city ?? '',
           cncId: site.cncId ?? '',
+          cncNumeroAuto: site.cnc?.numeroAuto || '',
         })) || [],
       exports: {
         [Export.Beges]: false,
