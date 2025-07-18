@@ -335,7 +335,6 @@ const users = async () => {
     })),
   })
 
-  // Get the CNC record to link to cinema sites
   const cncRecord = await prisma.cnc.findUnique({ where: { numeroAuto: '321' } })
 
   const sites = await prisma.site.createManyAndReturn({
@@ -350,12 +349,10 @@ const users = async () => {
     }),
   })
 
-  // Link CNC to sites belonging to CUT environment organization versions
   if (cncRecord) {
     const cutOrganizationIds = organizationVersionsCUT.map((orgVersion) => orgVersion.organizationId)
     const cutSites = sites.filter((site) => cutOrganizationIds.includes(site.organizationId))
 
-    // Update CUT environment sites to link to CNC
     await Promise.all(
       cutSites.map((site) =>
         prisma.site.update({
