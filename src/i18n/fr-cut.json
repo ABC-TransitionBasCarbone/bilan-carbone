@@ -80,7 +80,8 @@
       "export": "Exporter mes cinémas"
     },
     "results": {
-      "info": "Cette Empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette Empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !"
+      "info": "Cette Empreinte carbone simplifiée vise à estimer les émissions de gaz à effet de serre de votre activité, et par conséquent votre contribution au dérèglement climatique ainsi que vos potentielles dépendance aux énergies fossiles qui sont des vulnérabilités. \n\nL'Union Européenne s'est engagée, en ratifiant l'Accord de Paris, à la neutralité carbone d'ici 2050. Pour contribuer à cet objectif, votre cinéma devrait réduire son impact de 5% par an. \n\nNous vous invitons donc à refaire cette Empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire !",
+      "cutFeedback": "Vous venez d'utiliser la version test du calculateur Count. Nous sommes actuellement en train d'apporter des modifications pour gagner en clarté et en précision, ainsi que pour corriger d'éventuels bugs avant la sortie. Nous vous remercions de bien vouloir remplir <lien>ce questionnaire</lien>, afin de nous aider à améliorer l'outil pour sa sortie officielle (septembre 2025) !"
     },
     "rights": {
       "title": "Données générales de l'étude : {name}"

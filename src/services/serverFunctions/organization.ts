@@ -24,6 +24,7 @@ import { isAdmin } from '@/utils/user'
 import { Account, Environment, Prisma, StudyRole, User, UserChecklist } from '@prisma/client'
 import { auth, dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED, UNKNOWN_ERROR } from '../permissions/check'
+import { hasAccessToCreateOrganization } from '../permissions/environment'
 import {
   canCreateOrganization,
   canDeleteMember,
@@ -55,7 +56,7 @@ export const getStudyOrganizationVersion = async (studyId: string) =>
 export const createOrganizationCommand = async (command: CreateOrganizationCommand) =>
   withServerResponse('createOrganizationCommand', async () => {
     const session = await dbActualizedAuth()
-    if (!session || !session.user.organizationVersionId || session.user.environment !== Environment.BC) {
+    if (!session || !session.user.organizationVersionId || !hasAccessToCreateOrganization(session.user.environment)) {
       throw new Error(NOT_AUTHORIZED)
     }
 

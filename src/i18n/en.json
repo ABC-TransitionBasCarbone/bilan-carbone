@@ -20,7 +20,8 @@
     "consolidated": "Carbon Assessment®",
     "Beges": "Regulatory GHG Assesment",
     "GHGP": "GHG Protocol",
-    "ISO14069": "ISO 14069"
+    "ISO14069": "ISO 14069",
+    "developmentFile": "File under development"
   },
   "categorisations": {
     "Operated": "Operated",

@@ -6,6 +6,7 @@ import NewStudyForm from '@/environments/base/study/new/Form'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import NewStudyFormCut from '@/environments/cut/study/new/Form'
 import { useDuplicateStudy } from '@/hooks/useDuplicateStudy'
+import { hasAccessToDuplicateStudy } from '@/services/permissions/environment'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -45,7 +46,7 @@ const NewStudyPage = ({
   const tSpinner = useTranslations('spinner')
 
   useEffect(() => {
-    if (user.environment !== Environment.BC) {
+    if (!hasAccessToDuplicateStudy(user.environment)) {
       const url = new URL(window.location.href)
       if (url.searchParams.has('duplicate')) {
         url.searchParams.delete('duplicate')
@@ -73,6 +74,7 @@ const NewStudyPage = ({
           postalCode: site.postalCode ?? '',
           city: site.city ?? '',
           cncId: site.cncId ?? '',
+          cncNumeroAuto: site.cnc?.numeroAuto || '',
         })) || [],
       exports: {
         [Export.Beges]: false,

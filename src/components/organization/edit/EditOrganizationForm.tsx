@@ -57,6 +57,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
         postalCode: site.postalCode ?? '',
         city: site.city ?? '',
         cncId: site.cncId ?? '',
+        cncNumeroAuto: site.cnc?.numeroAuto || '',
       })),
     },
   })

@@ -80,6 +80,7 @@ const users = async () => {
       nom: 'PATHE',
       codeInsee: '75102',
       commune: 'Paris 2e Arrondissement',
+      ecrans: 21,
     },
   })
 
@@ -299,9 +300,9 @@ const users = async () => {
   })
 
   const organizationVersionsTILT = await prisma.organizationVersion.createManyAndReturn({
-    data: organizations.map((organization, index) => ({
+    data: organizations.map((organization) => ({
       organizationId: organization.id,
-      isCR: index % 2 === 0,
+      isCR: false,
       onboarded: false,
       activatedLicence: true,
       environment: Environment.TILT,
@@ -334,6 +335,8 @@ const users = async () => {
     })),
   })
 
+  const cncRecord = await prisma.cnc.findUnique({ where: { numeroAuto: '321' } })
+
   const sites = await prisma.site.createManyAndReturn({
     data: [...organizations, ...childOrganizations].flatMap((organization) => {
       const sitesNumber = faker.number.int({ min: 1, max: 5 })
@@ -345,6 +348,20 @@ const users = async () => {
       }))
     }),
   })
+
+  if (cncRecord) {
+    const cutOrganizationIds = organizationVersionsCUT.map((orgVersion) => orgVersion.organizationId)
+    const cutSites = sites.filter((site) => cutOrganizationIds.includes(site.organizationId))
+
+    await Promise.all(
+      cutSites.map((site) =>
+        prisma.site.update({
+          where: { id: site.id },
+          data: { cncId: cncRecord.id },
+        }),
+      ),
+    )
+  }
 
   const levels = Object.keys(Level)
   const usersWithAccounts = await Promise.all([
@@ -458,7 +475,7 @@ const users = async () => {
           const account = await prisma.account.create({
             data: {
               organizationVersionId: organizationVersionArray[index % organizationVersionArray.length].id,
-              role: getCutRoleFromBase(role as Role),
+              role: environment === Environment.CUT ? getCutRoleFromBase(role as Role) : (role as Role),
               userId: user.id,
               environment: environment as Environment,
               status: UserStatus.ACTIVE,
@@ -499,6 +516,13 @@ const users = async () => {
             role: getCutRoleFromBase(role as Role),
             userId: user.id,
             environment: Environment.CUT,
+            status: UserStatus.ACTIVE,
+          },
+          {
+            organizationVersionId: organizationVersionsTILT[index % organizationVersionsTILT.length].id,
+            role: role as Role,
+            userId: user.id,
+            environment: Environment.TILT,
             status: UserStatus.ACTIVE,
           },
         ]

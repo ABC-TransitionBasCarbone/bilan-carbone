@@ -5,7 +5,13 @@ import { prismaClient } from './client'
 import { deleteStudy } from './study'
 
 export type OrganizationVersionWithOrganization = OrganizationVersion & {
-  organization: Organization & { sites: Site[] }
+  organization: Organization & {
+    sites: (Site & {
+      cnc: {
+        numeroAuto: string | null
+      } | null
+    })[]
+  }
 }
 export type OrganizationVersionWithOrganizationWithoutSites = OrganizationVersion & { organization: Organization }
 
@@ -17,6 +23,7 @@ export const OrganizationVersionWithOrganizationSelect = {
   isCR: true,
   activatedLicence: true,
   onboarded: true,
+  onboarderId: true,
   environment: true,
   parentId: true,
   organization: {
@@ -24,8 +31,29 @@ export const OrganizationVersionWithOrganizationSelect = {
       oldBCId: true,
       id: true,
       name: true,
+      createdAt: true,
+      updatedAt: true,
+      importedFileDate: true,
+      wordpressId: true,
       sites: {
-        select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true, cncId: true },
+        select: {
+          name: true,
+          etp: true,
+          ca: true,
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+          organizationId: true,
+          oldBCId: true,
+          postalCode: true,
+          city: true,
+          cncId: true,
+          cnc: {
+            select: {
+              numeroAuto: true,
+            },
+          },
+        },
         orderBy: { createdAt: Prisma.SortOrder.asc },
       },
     },
