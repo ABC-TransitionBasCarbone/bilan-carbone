@@ -138,6 +138,7 @@ export const getMockedDetailedFullStudySite = (
       city: 'Test City',
       cnc: {
         numberOfProgrammedFilms: 10,
+        ecrans: 13,
       },
     },
     ...overrides,

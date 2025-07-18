@@ -15,6 +15,8 @@ export const NEWSLETTER_RECEIVER_COUNT_QUESTION_ID = 'en-moyenne-a-combien-de-pe
 
 export const XENON_LAMPS_QUESTION_ID = 'quelle-quantite-de-lampes-xenon-jetez-vous-par-an'
 
+export const CLIMATISATION_QUESTION_ID = 'votre-cinema-est-il-equipe-de-la-climatisation'
+
 // Value constants
 export const LONG_DISTANCE_APPLIED_PERCENTAGE = 0.03
 export const LONG_DISTANCE_CAR_PERCENTAGE = 0.7

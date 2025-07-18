@@ -148,6 +148,7 @@ const fullStudyInclude = {
           cnc: {
             select: {
               numberOfProgrammedFilms: true,
+              ecrans: true,
             },
           },
         },
