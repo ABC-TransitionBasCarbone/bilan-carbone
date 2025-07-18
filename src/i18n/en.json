@@ -571,6 +571,7 @@
       "type": "Type",
       "post": "Post",
       "download": "Download results",
+      "downloadPDF": "Download PDF",
       "value": "Emissions ({unit})",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",

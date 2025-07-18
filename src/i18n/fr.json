@@ -571,6 +571,7 @@
       "type": "Type",
       "post": "Poste",
       "download": "Télécharger les résultats",
+      "downloadPDF": "Télécharger PDF",
       "value": "Émissions ({unit})",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
