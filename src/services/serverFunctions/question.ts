@@ -696,7 +696,7 @@ const applyMovieTeamCalculation = async (
     studyId,
     studySiteId,
     value,
-    name: question.idIntern,
+    name: `${question.idIntern}-transport`,
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
     validated: true,
