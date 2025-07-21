@@ -1291,8 +1291,8 @@
     "seeMore": "Voir plus",
     "name": "Nom : ",
     "title": "Organisation",
-    "createFirstClient": "Créer mon premier client",
-    "firstClientMessage": "Nous vous invitons à créer votre premier client puis à créer votre premier Bilan Carbone®",
+    "createFirstClient": "Créer mon premier·ère client·e",
+    "firstClientMessage": "Nous vous invitons à créer votre premier·ère client·e puis à créer votre premier Bilan Carbone®",
     "form": {
       "create": "Créer l'organisation",
       "editTitle": "Modifier mon organisation",
@@ -1354,14 +1354,14 @@
     },
     "delete": {
       "button": "Supprimer l'organisation",
-      "title": "Êtes-vous sûr de vouloir supprimer ce client ?",
-      "content": "Êtes vous sur de vouloir supprimer ce client ? <warning>Toutes ses données et études seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'organisation dans le champs ci-dessous:",
-      "name": "Nom du client",
+      "title": "Êtes-vous sûr de vouloir supprimer ce·tte client·e ?",
+      "content": "Êtes vous sur de vouloir supprimer ce·tte client·e ? <warning>Toutes ses données et études seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'organisation dans le champs ci-dessous:",
+      "name": "Nom du ou de la client·e",
       "cancel": "Annuler",
       "confirm": "Confirmer",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
-      "wrongName": "Le nom du client ne correspond pas",
-      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le support."
+      "wrongName": "Le nom du ou de la client·e ne correspond pas",
+      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce·tte client·e. Veuillez contacter le support."
     }
   },
   "emissionSource": {
@@ -1533,8 +1533,8 @@
     "CreateAccountDetails": "",
     "AddCollaborator": "Ajouter des collaborateur·ices",
     "AddCollaboratorDetails": "Ajouter vos collègues pour qu'ils puissent vous aider à établir le Bilan Carbone® de votre entreprise.",
-    "AddClient": "Créer votre premier client",
-    "AddClientDetails": "Ajouter votre premier client afin de commencer vos Bilans Carbone®",
+    "AddClient": "Créer votre premier·ère client·e",
+    "AddClientDetails": "Ajouter votre premier·ère client·e afin de commencer vos Bilans Carbone®",
     "AddSiteCR": "Ajouter les sites",
     "AddSiteCRDetails": "Ajouter des sites à votre <orga>organisation</orga> ou à <client>un de vos clients</client> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation ou client n'a qu'un site, créer un site 'Tous sites'",
     "AddSiteCRCollaborator": "Ajouter les sites",
