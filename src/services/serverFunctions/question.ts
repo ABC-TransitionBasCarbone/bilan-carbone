@@ -496,16 +496,18 @@ export const getQuestionProgressBySubPostPerPost = async () =>
       const subPost = question.subPost
       const type = question.type
 
-      if (type === QuestionType.TABLE) {
+      if (type === QuestionType.TABLE && typeof response === 'object' && response !== null && 'rows' in response) {
         const rows = response?.rows
         if (Array.isArray(rows)) {
           for (const row of rows) {
-            const data = row?.data
-            if (data && typeof data === 'object') {
-              const nonEmptyFields = Object.values(data).filter(
-                (value) => value !== null && value !== undefined && value !== '',
-              )
-              acc[subPost] = (acc[subPost] || 0) + nonEmptyFields.length
+            if (typeof row === 'object' && row !== null && 'data' in row) {
+              const data = row?.data
+              if (data && typeof data === 'object') {
+                const nonEmptyFields = Object.values(data).filter(
+                  (value) => value !== null && value !== undefined && value !== '',
+                )
+                acc[subPost] = (acc[subPost] || 0) + nonEmptyFields.length
+              }
             }
           }
         }
