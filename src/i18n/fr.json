@@ -745,7 +745,7 @@
         "EmissionsLieesAuChangementDAffectationDesSolsCas": "Imperméabilisation des sols, ...",
         "EmissionsLieesALaProductionDeFroid": "Fuites de fluides réfrigérants.",
         "EmissionsLieesAuxProcedesIndustriels": "Production de ciment, émissions de process dans l'industrie des semiconducteurs, ...",
-        "FretInterne": "Dans le cas où les points de départ et d'arrivée deraient partie du périmètre organisationnel.",
+        "FretInterne": "Dans le cas où les points de départ et d'arrivée feraient partie du périmètre organisationnel.",
         "ServicesEnApprocheMonetaire": "Différents services reçus, comptabilisés via des facteurs d'émission en ratios monétaires.",
         "MatiereDestineeAuxEmballages": "Afin de pouvoir faire porter des actions du plan de transition sur les emballages, un sous-poste est dédié à la matière destinée à ces emballages est disponible.",
         "BiensEtMatieresEnApprocheMonetaire": "Un sous-poste est également dédié aux matières pour lesquelles des facteurs d'émission en ratios monétaires sont utilisés.",
