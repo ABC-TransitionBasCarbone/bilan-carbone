@@ -7,6 +7,8 @@ import {
   MOVIE_TEAM_QUESTION_ID,
   NEWSLETTER_QUESTION_ID,
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
+  RENOVATION_QUESTION_ID,
+  SERVICES_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from './questions'
@@ -38,44 +40,34 @@ export type EmissionFactorInfo = {
 }
 
 const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
-  'Métro (Ile de France)': '43253',
-  'RER et Transilien (Ile-de-France)': '43254',
-  'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
-  'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
-  'Bus (agglomérations de - de 100 000 habitants)': '27998',
-  'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
-  'Bus (agglomérations de + de 250 000 habitants)': '28000',
-  'Vélo à assistance éléctrique': '28331',
+  'RER et Transilien': '43254',
+  'Métro, tramway (FE agglo 100-250k habitants)': '28150',
+  'Bus (FE agglo 100-250k habitants)': '27999',
+  'Vélo électrique': '28331',
   'Vélo classique': '134',
   Marche: '135',
-  'Voiture gazole courte distance': '27984',
-  'Voiture essence courte distance': '27983',
-  'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
-    '28015',
-  'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
-  'Moto >250cm3 /Mixte': '27995',
-  'Moto<250cm3/Mixte': '27992',
+  'Voiture diesel': '27984',
+  'Voiture essence': '27983',
+  'Voiture hybride': '28015',
+  'Voiture électrique': '28013',
+  Moto: '27995',
+  Scooter: '27992',
   'Trottinette électrique': '28329',
 }
 
 const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
-  'Métro (Ile de France)': '43253',
-  'RER et Transilien (Ile-de-France)': '43254',
-  'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
-  'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
-  'Bus (agglomérations de - de 100 000 habitants)': '27998',
-  'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
-  'Bus (agglomérations de + de 250 000 habitants)': '28000',
-  'Vélo à assistance éléctrique': '28331',
-  'Voiture gazole longue distance': '27978',
-  'Voiture essence longue distance': '27977',
-  'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
-    '28015',
-  'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
-  'Moto >250cm3 /Mixte': '27995',
-  'Moto<250cm3/Mixte': '27992',
-  'TGV 2021': '43256',
-  'Avion Moyen courrier AVEC trainées': '28132',
+  'RER et Transilien': '43254',
+  'Métro, tramway (FE agglo 100-250k habitants)': '28150',
+  'Bus (FE agglo 100-250k habitants)': '27999',
+  'Vélo électrique': '28331',
+  'Voiture diesel': '27978',
+  'Voiture essence': '27977',
+  'Voiture hybride': '28015',
+  'Voiture électrique': '28013',
+  Moto: '27995',
+  Scooter: '27992',
+  TGV: '43256',
+  'Avion moyen courrier': '28132',
 }
 
 export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
@@ -101,7 +93,10 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '20730',
     linkDepreciationQuestionId: 'a-quand-remonte-la-derniere-renovation-importante',
   },
-  'quel-est-le-montant-des-depenses-liees-a-ces-travaux-de-renovation': { emissionFactorImportedId: '43340' },
+  [RENOVATION_QUESTION_ID]: {
+    emissionFactorImportedId: '43340',
+    isSpecial: true,
+  },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},
   'le-cinema-dispose-t-il-dun-parking': {},
@@ -144,7 +139,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quelle-est-votre-consommation-annuelle-de-diesel': { emissionFactorImportedId: '14015' },
   // ActivitesDeBureau
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
-  'quel-montant-avez-vous-depense-en-services': { emissionFactorImportedId: '43545' },
+  [SERVICES_QUESTION_ID]: { emissionFactorImportedId: '43545', isSpecial: true },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
     isFixed: true,
     depreciationPeriod: 4,
