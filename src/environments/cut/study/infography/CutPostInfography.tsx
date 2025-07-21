@@ -3,8 +3,8 @@
 import { Post } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { QuestionStats } from '@/services/serverFunctions/question'
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined'
 import CheckCircleOutlineSharp from '@mui/icons-material/CheckCircleOutlineSharp'
+import EditIcon from '@mui/icons-material/Edit'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
@@ -70,7 +70,7 @@ export const CutPostInfography = ({
                   validated={isValidated}
                 >
                   <StyledIconWrapper className="flex-cc">
-                    {isValidated ? <CheckCircleOutlineSharp /> : <CancelOutlinedIcon />}
+                    {isValidated ? <CheckCircleOutlineSharp /> : <EditIcon />}
                   </StyledIconWrapper>
                   {t(subPost)}
                 </StyledSubPostItem>
