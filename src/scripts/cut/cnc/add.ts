@@ -1,9 +1,9 @@
 import { upsertCNC } from '@/db/cnc'
-import { getEncoding } from '../../../utils/csv'
 import { Prisma } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
+import { getEncoding } from '../../../utils/csv'
 
 const addCNC = async (file: string) => {
   const cncs: Prisma.CncCreateInput[] = []
