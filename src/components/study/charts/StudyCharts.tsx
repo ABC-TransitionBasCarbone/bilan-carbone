@@ -49,15 +49,21 @@ const StudyCharts = ({
     [study, studySite, tPost, validatedOnly],
   )
 
+  const chartFormatter = (value: number | null, showUnit = true) => {
+    const safeValue = value ?? 0
+    const unit = showUnit ? tUnits(study.resultsUnit) : ''
+    return `${formatNumber(safeValue / STUDY_UNIT_VALUES[study.resultsUnit], 2)} ${unit}`
+  }
+
   const listCutPosts = useListPosts() as CutPost[]
   const computeResults = useComputedResults(resultsByPost, tPost, listCutPosts)
   const { pieData, barData } = useChartData(computeResults, theme)
 
-  const chartFormatter = (value: number | null) => {
-    const safeValue = value ?? 0
-    const unit = study.resultsUnit
-    return `${formatNumber(safeValue / STUDY_UNIT_VALUES[unit], 2)} ${tUnits(unit)}`
-  }
+  // Enhance pie data with formatted values in labels
+  const enhancedPieData = pieData.map((item) => ({
+    ...item,
+    label: `${item.label} - ${chartFormatter(item.value)}`,
+  }))
 
   const barChartSettings = {
     height,
@@ -122,7 +128,7 @@ const StudyCharts = ({
             series={[
               {
                 data: barData.values,
-                valueFormatter: chartFormatter,
+                valueFormatter: (value) => chartFormatter(value, false),
                 label: showLegend ? 'Émissions' : undefined,
               },
             ]}
@@ -150,14 +156,14 @@ const StudyCharts = ({
   if (type === 'pie') {
     return (
       <div>
-        {pieData.length !== 0 ? (
+        {enhancedPieData.length !== 0 ? (
           <PieChart
             series={[
               {
-                data: pieData,
-                valueFormatter: ({ value }) => chartFormatter(value),
-                arcLabel: showLabelsOnPie ? (item) => chartFormatter(item.value) : undefined,
-                arcLabelMinAngle: 35,
+                data: enhancedPieData,
+                arcLabel: showLabelsOnPie ? (item) => chartFormatter(item.value, false) : undefined,
+                arcLabelMinAngle: 10,
+                arcLabelRadius: '80%',
                 innerRadius: 0,
                 outerRadius: 200,
               },
