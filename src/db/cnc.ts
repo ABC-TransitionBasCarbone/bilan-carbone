@@ -41,3 +41,15 @@ export const updateNumberOfProgrammedFilms = async ({
     },
   })
 }
+export const getCNCs = async () => await prismaClient.cnc.findMany(
+  {
+    where: {
+      numeroAuto: {
+        not: null,
+      },
+    },
+    orderBy: {
+      codeInsee: 'asc',
+    },
+  },
+)
