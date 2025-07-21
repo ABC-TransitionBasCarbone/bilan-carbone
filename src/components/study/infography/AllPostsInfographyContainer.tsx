@@ -45,8 +45,6 @@ const AllPostsInfographyContainer = ({ study, studySite, environment }: Props) =
     [study, tPost, studySite, validatedOnly, post],
   )
 
-  console.log({ data })
-
   return (
     <DynamicComponent
       defaultComponent={<AllPostsInfography study={study} data={data} />}

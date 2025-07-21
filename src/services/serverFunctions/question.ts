@@ -2,7 +2,6 @@
 
 import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
 import { EmissionFactorInfo, emissionFactorMap } from '@/constants/emissionFactorMap'
-import { prismaClient } from '@/db/client'
 import {
   CLIMATISATION_QUESTION_ID,
   CONFECTIONERY_QUESTION_ID,
@@ -16,6 +15,7 @@ import {
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
+import { prismaClient } from '@/db/client'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
@@ -452,17 +452,24 @@ export type StatsResult = Record<CutPost, Partial<Record<SubPost, QuestionStats>
 export const getQuestionProgressBySubPostPerPost = async () =>
   withServerResponse('getQuestionProgressBySubPostPerPost', async () => {
     const cutSubPosts = Object.values(CutPost).flatMap((cutPost) => subPostsByPost[cutPost])
-    const questionStats = await prismaClient.question.groupBy({
-      by: ['subPost'],
+
+    const questions = await prismaClient.question.findMany({
       where: {
-        subPost: {
-          in: cutSubPosts,
-        },
+        subPost: { in: cutSubPosts },
       },
-      _count: {
-        _all: true,
+      select: {
+        subPost: true,
+        type: true,
       },
     })
+
+    const totalCountBySubPost = questions.reduce<Partial<Record<SubPost, number>>>((acc, question) => {
+      const { subPost, type } = question
+      if (type !== QuestionType.TABLE) {
+        acc[subPost] = (acc[subPost] || 0) + 1
+      }
+      return acc
+    }, {})
 
     const answers = await prismaClient.answer.findMany({
       where: {
@@ -489,22 +496,24 @@ export const getQuestionProgressBySubPostPerPost = async () =>
       const subPost = question.subPost
       const type = question.type
 
-      let isValid = false
-
-      if (type === 'TABLE') {
+      if (type === QuestionType.TABLE) {
         const rows = response?.rows
-        isValid =
-          Array.isArray(rows) &&
-          rows.length > 0 &&
-          rows.some((row: any) => row?.data && Object.keys(row.data).length > 0)
+        if (Array.isArray(rows)) {
+          for (const row of rows) {
+            const data = row?.data
+            if (data && typeof data === 'object') {
+              const nonEmptyFields = Object.values(data).filter(
+                (value) => value !== null && value !== undefined && value !== '',
+              )
+              acc[subPost] = (acc[subPost] || 0) + nonEmptyFields.length
+            }
+          }
+        }
       } else {
-        isValid = typeof response === 'string' && response.trim() !== ''
+        if (typeof response === 'string' && response.trim() !== '') {
+          acc[subPost] = (acc[subPost] || 0) + 1
+        }
       }
-
-      if (isValid) {
-        acc[subPost] = (acc[subPost] || 0) + 1
-      }
-
       return acc
     }, {})
 
@@ -514,9 +523,8 @@ export const getQuestionProgressBySubPostPerPost = async () =>
       result[cutPost] = {} as Partial<Record<SubPost, QuestionStats>>
 
       for (const subPost of subPostsByPost[cutPost]) {
-        const stat = questionStats.find((question) => question.subPost === subPost)
         result[cutPost][subPost] = {
-          total: stat?._count._all ?? 0,
+          total: totalCountBySubPost[subPost] ?? 0,
           answered: answeredCountBySubPost[subPost] ?? 0,
         }
       }

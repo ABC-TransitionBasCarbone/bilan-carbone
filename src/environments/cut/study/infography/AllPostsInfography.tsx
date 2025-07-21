@@ -48,8 +48,6 @@ const AllPostsInfography = ({ study, data }: Props) => {
     <StyledGrid>
       {Object.values(CutPost).map((cutPost) => {
         const subPostStats = questionProgress[cutPost] ?? {}
-
-        // Une seule itération pour answered et total
         let allAnswered = 0
         let allTotal = 0
         for (const stats of Object.values(subPostStats)) {
