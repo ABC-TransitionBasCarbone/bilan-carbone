@@ -11,6 +11,7 @@ import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import EmissionSourceTags from '../study/perimeter/EmissionSourceTags'
 import StudyFlow from '../study/perimeter/flow/StudyFlow'
 import StudyPerimeter from '../study/perimeter/StudyPerimeter'
 
@@ -57,6 +58,7 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
           caUnit={caUnit}
         />
       </Block>
+      <EmissionSourceTags studyId={study.id} />
       <StudyFlow
         canAddFlow={canAddFlow}
         documents={documents}

@@ -4,7 +4,9 @@ import { AccountWithUser, getAccountById } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import {
   createEmissionSourceOnStudy,
+  createEmissionSourceTagOnStudy,
   deleteEmissionSourceOnStudy,
+  deleteEmissionSourceTagOnStudy,
   getEmissionSourceById,
   updateEmissionSourceOnStudy,
 } from '@/db/emissionSource'
@@ -18,8 +20,13 @@ import {
   canDeleteEmissionSource,
   canUpdateEmissionSource,
 } from '../permissions/emissionSource'
+import { hasAccessToCreateEmissionSourceTag } from '../permissions/environment'
 import { isVersionInOrgaOrParent } from '../permissions/organization'
-import { CreateEmissionSourceCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
+import {
+  CreateEmissionSourceCommand,
+  NewEmissionSourceTagCommand,
+  UpdateEmissionSourceCommand,
+} from './emissionSource.command'
 import { addUserChecklistItem } from './user'
 
 export const createEmissionSource = async ({
@@ -176,4 +183,71 @@ export const getEmissionSourcesByStudyId = async (studyId: string) =>
     }
 
     return study.emissionSources
+  })
+
+export const createEmissionSourceTag = async ({ studyId, name }: NewEmissionSourceTagCommand) =>
+  withServerResponse('createEmissionSourceTag', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const account = await getAccountById(session.user.accountId)
+    if (!account) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasAccessToCreateEmissionSourceTag(account.environment))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, account.organizationVersionId)
+
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await createEmissionSourceTagOnStudy({
+      study: { connect: { id: studyId } },
+      name,
+    })
+  })
+
+export const deleteEmissionSourceTag = async (tagId: string) =>
+  withServerResponse('deleteEmissionSourceTag', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const account = await getAccountById(session.user.accountId)
+    if (!account) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasAccessToCreateEmissionSourceTag(account.environment))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await deleteEmissionSourceTagOnStudy(tagId)
+  })
+
+export const getEmissionSourceTagsByStudyId = async (studyId: string) =>
+  withServerResponse('getEmissionSourceTagsByStudyId', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      return []
+    }
+
+    const account = await getAccountById(session.user.accountId)
+    if (!account) {
+      return []
+    }
+
+    const study = await getStudyById(studyId, account.organizationVersionId)
+    if (!study) {
+      return []
+    }
+
+    return study.emissionSourceTags
   })

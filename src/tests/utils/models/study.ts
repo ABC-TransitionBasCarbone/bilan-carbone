@@ -34,6 +34,7 @@ export const mockedFullStudy = {
   emissionFactorVersions: [],
   exports: [],
   organizationVersion: mockedOrganizationVersion,
+  emissionSourceTags: [],
 }
 
 export const mockedStudySite = {

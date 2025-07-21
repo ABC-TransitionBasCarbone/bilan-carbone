@@ -177,6 +177,13 @@ const fullStudyInclude = {
       },
     },
   },
+  emissionSourceTags: {
+    select: {
+      id: true,
+      name: true,
+      studyId: true,
+    },
+  },
 } satisfies Prisma.StudyInclude
 
 const normalizeAllowedUsers = (

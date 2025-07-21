@@ -40,3 +40,10 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   feCompleteness: z.number().nullable().optional(),
 })
 export type UpdateEmissionSourceCommand = z.infer<typeof UpdateEmissionSourceCommandValidation>
+
+export const NewEmissionSourceTagCommandValidation = z.object({
+  studyId: z.string(),
+  name: z.string(),
+})
+
+export type NewEmissionSourceTagCommand = z.infer<typeof NewEmissionSourceTagCommandValidation>
