@@ -76,6 +76,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
       numberOfOpenDays: siteData?.numberOfOpenDays ?? 0,
       numberOfSessions: siteData?.numberOfSessions ?? 0,
       numberOfTickets: siteData?.numberOfTickets ?? 0,
+      distanceToParis: siteData?.distanceToParis ?? 0,
     },
   })
 
@@ -95,6 +96,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
             numberOfOpenDays: newSiteData.numberOfOpenDays ?? 0,
             numberOfSessions: newSiteData.numberOfSessions ?? 0,
             numberOfTickets: newSiteData.numberOfTickets ?? 0,
+            distanceToParis: newSiteData.distanceToParis ?? 0,
           })
         }
       }
@@ -196,6 +198,16 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 name="numberOfOpenDays"
                 data-testid="new-study-number-of-open-days"
                 label={t('numberOfOpenDays')}
+                translation={t}
+                type="number"
+                className={styles.formTextField}
+                onBlur={onStudyCinemaUpdate}
+              />
+              <FormTextField
+                control={form.control}
+                name="distanceToParis"
+                data-testid="new-study-distance-to-paris"
+                label={t('distanceToParis')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}

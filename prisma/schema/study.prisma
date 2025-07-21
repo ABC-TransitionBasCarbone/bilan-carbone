@@ -274,6 +274,7 @@ model StudySite {
   numberOfSessions Int?
   numberOfTickets  Int?
   numberOfOpenDays Int?
+  distanceToParis  Int?
   openingHours     OpeningHours[]
 
   createdAt DateTime @default(now()) @map("created_at")

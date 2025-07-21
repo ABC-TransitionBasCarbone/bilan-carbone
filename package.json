@@ -3,7 +3,7 @@
   "version": "2.7.0",
   "private": true,
   "engines": {
-    "node": "22",
+    "node": "22.16.0",
     "yarn": "1.22"
   },
   "scripts": {
@@ -19,6 +19,8 @@
     "cypress:gui": "cypress open",
     "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force",
     "seed:import": "prisma db seed -- -i",
+    "question:import:google": "npx tsx src/scripts/cut/question/add.ts -s google -f",
+    "question:import:excel": "npx tsx src/scripts/cut/question/add.ts -f",
     "user:import": "tsx src/scripts/ftp/importUsers.ts"
   },
   "prisma": {

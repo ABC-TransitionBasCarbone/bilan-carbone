@@ -1,7 +1,6 @@
 import { CutRoles } from '@/services/roles'
 import { Environment, Prisma, Role, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
-import { canEditMemberRole } from './organization'
 
 export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
 
@@ -51,3 +50,5 @@ const getUntrainedRoles = (environment: Environment) => {
 
 export const canBeUntrainedRole = (role: Role, environment: Environment) =>
   getUntrainedRoles(environment).includes(role)
+
+export const canEditMemberRole = (account: UserSession) => isAdmin(account.role) || account.role === Role.GESTIONNAIRE

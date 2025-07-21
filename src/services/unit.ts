@@ -14,6 +14,7 @@ const UnitCommon = {
   METER: Unit.METER,
   GO: Unit.GO,
   KG: Unit.KG,
+  KEURO: Unit.KEURO,
 }
 
 export const BCUnit = {
@@ -30,7 +31,6 @@ export const BCUnit = {
   HA_YEAR: Unit.HA_YEAR,
   HA_CLEMENTINE: Unit.HA_CLEMENTINE,
   HOUR: Unit.HOUR,
-  KEURO: Unit.KEURO,
   KEURO_2019_HT: Unit.KEURO_2019_HT,
   KEURO_2020_HT: Unit.KEURO_2020_HT,
   KEURO_2021_HT: Unit.KEURO_2021_HT,

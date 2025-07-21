@@ -20,7 +20,8 @@
     "consolidated": "Carbon Assessment®",
     "Beges": "Regulatory GHG Assesment",
     "GHGP": "GHG Protocol",
-    "ISO14069": "ISO 14069"
+    "ISO14069": "ISO 14069",
+    "developmentFile": "File under development"
   },
   "categorisations": {
     "Operated": "Operated",
@@ -319,6 +320,7 @@
       "isPublicTitle": "Study visibility",
       "numberOfSessions": "Number of sessions",
       "numberOfTickets": "Number of tickets",
+      "distanceToParis": "Distance to Paris (km)",
       "numberOfOpenDays": "Number of open days",
       "openingHours": "Opening hours",
       "openingHoursHoliday": "Opening hours during school holidays",
@@ -334,6 +336,10 @@
         "from": "from",
         "to": "to",
         "DifferentHoursHoliday": "Different hours during holidays"
+      },
+      "suggestion": {
+        "name": "Bilan Carbone® - {orga} {studyStartDate}",
+        "yourOrga": "Your organization"
       },
       "private": "Private",
       "public": "Public",
@@ -985,7 +991,6 @@
     "TUNISIE": "Tunisia"
   },
   "team": {
-    "title": "My Organization",
     "pending": "Pending invitations",
     "invitationDate": "Invitation sent on",
     "toValidate": "Invitations to validate",
@@ -993,7 +998,7 @@
     "delete": "Delete user",
     "resend": "Resend invitation",
     "table": {
-      "title": "My Collaborators",
+      "title": "My team",
       "newUser": "Invite a user",
       "firstName": "First Name",
       "lastName": "Last Name",

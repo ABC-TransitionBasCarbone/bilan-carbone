@@ -27,7 +27,7 @@ const NewStudyForm = ({ form, duplicateStudyId }: Props) => {
 
   return (
     <Block title={t('title')} as="h1">
-      <GlobalNewStudyForm form={form} t={t} isCut={true} duplicateStudyId={duplicateStudyId} />
+      <GlobalNewStudyForm form={form} t={t} duplicateStudyId={duplicateStudyId} />
     </Block>
   )
 }

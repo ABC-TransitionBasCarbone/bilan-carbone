@@ -20,7 +20,8 @@
     "consolidated": "Bilan Carbone®",
     "Beges": "Bilan GES Reglementaire",
     "GHGP": "GHG Protocol",
-    "ISO14069": "ISO 14069"
+    "ISO14069": "ISO 14069",
+    "developmentFile": "Fichier en cours de développement"
   },
   "categorisations": {
     "Operated": "Opéré",
@@ -322,6 +323,7 @@
       "resultsUnit": "Unité des resultats de l'étude",
       "numberOfSessions": "Nombre de séances (par an)",
       "numberOfTickets": "Nombre d'entrées (par an)",
+      "distanceToParis": "Distance à Paris (km)",
       "numberOfOpenDays": "Nombre de jours d'ouverture (par an)",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
@@ -337,6 +339,10 @@
         "from": "de",
         "to": "à",
         "DifferentHoursHoliday": "Horaires différents pendant les vacances scolaires"
+      },
+      "suggestion": {
+        "name": "Bilan Carbone® - {orga} {studyStartDate}",
+        "yourOrga": "Votre organisation"
       },
       "create": "Créer l'étude",
       "duplicate": "Dupliquer l'étude",
@@ -985,7 +991,6 @@
     "TUNISIE": "Tunisie"
   },
   "team": {
-    "title": "Mon organisation",
     "pending": "Invitations en attentes",
     "invitationDate": "Invitation envoyé le",
     "toValidate": "Invitations à valider",
@@ -993,7 +998,7 @@
     "delete": "Supprimer l'utilisateur",
     "resend": "Renvoyer l'invitation",
     "table": {
-      "title": "Mes collaborateurs",
+      "title": "Mon équipe",
       "newUser": "Inviter un utilisateur",
       "firstName": "Prénom",
       "lastName": "Nom",

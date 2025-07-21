@@ -9,6 +9,7 @@ export const SitesCommandValidation = z.object({
     z.object({
       id: z.string(),
       cncId: z.string().optional(),
+      cncNumeroAuto: z.string().optional(),
       name: z
         .string({
           required_error: 'name',
@@ -167,6 +168,7 @@ export const ChangeStudyCinemaValidation = z.object({
   numberOfSessions: z.number().optional().nullable(),
   numberOfTickets: z.number().optional().nullable(),
   numberOfOpenDays: z.number().optional().nullable(),
+  distanceToParis: z.number().optional().nullable(),
 })
 
 export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>

@@ -138,12 +138,19 @@ const fullStudyInclude = {
       numberOfOpenDays: true,
       numberOfSessions: true,
       numberOfTickets: true,
+      distanceToParis: true,
       site: {
         select: {
           id: true,
           name: true,
           postalCode: true,
           city: true,
+          cnc: {
+            select: {
+              numberOfProgrammedFilms: true,
+              ecrans: true,
+            },
+          },
         },
       },
     },

@@ -24,18 +24,26 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
   const searchParams = useSearchParams()
   const subPosts = useMemo(() => subPostsByPost[post], [post])
   const [activeStep, setActiveStep] = useState(0)
+  const [pageLoading, setPageLoading] = useState(true)
 
   useEffect(() => {
-    const subPostParam = searchParams.get('subPost')
-    if (subPostParam) {
-      const subPostIndex = subPosts.findIndex((subPost) => subPost === subPostParam)
-      if (subPostIndex !== -1) {
-        setActiveStep(subPostIndex)
+    if (pageLoading) {
+      const subPostParam = searchParams.get('subPost')
+      if (subPostParam) {
+        const subPostIndex = subPosts.findIndex((subPost) => subPost === subPostParam)
+        if (subPostIndex !== -1) {
+          setActiveStep(subPostIndex)
+        }
       }
+      setPageLoading(false)
     }
-  }, [searchParams, subPosts])
+  }, [pageLoading, searchParams, subPosts])
 
   useEffect(() => {
+    if (pageLoading) {
+      return
+    }
+
     const currentSubPost = subPosts[activeStep]
     if (currentSubPost) {
       const newSearchParams = new URLSearchParams(searchParams.toString())
@@ -43,13 +51,13 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
       const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`
       window.history.replaceState(null, '', newUrl)
     }
-  }, [activeStep, subPosts, searchParams])
+  }, [activeStep, subPosts, searchParams, pageLoading])
 
   const tabContent = useMemo(() => {
     return subPosts.map((subPost) => (
       <DynamicSubPostForm key={subPost} subPost={subPost} study={study} studySiteId={studySiteId} />
     ))
-  }, [subPosts, study])
+  }, [subPosts, study, studySiteId])
 
   const handleNextStep = () => {
     if (activeStep < subPosts.length - 1) {
