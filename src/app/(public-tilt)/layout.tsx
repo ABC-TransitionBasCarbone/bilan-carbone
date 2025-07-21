@@ -9,8 +9,8 @@ interface Props {
 }
 
 export const metadata: Metadata = {
-  title: "Count le premier calculateur d'impact écologique dédié aux salles de cinéma",
-  description: "Count le premier calculateur d'impact écologique dédié aux salles de cinéma",
+  title: 'Bilan Carbone + pour les associations',
+  description: 'Découvrez le logiciel Bilan Carbone + pour les associations',
 }
 
 const PublicLayout = ({ children }: Props) => {
