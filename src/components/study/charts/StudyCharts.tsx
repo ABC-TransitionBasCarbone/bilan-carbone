@@ -56,8 +56,7 @@ const StudyCharts = ({
   const chartFormatter = (value: number | null) => {
     const safeValue = value ?? 0
     const unit = study.resultsUnit
-    const precision = unit === 'K' ? 3 : 0
-    return `${formatNumber(safeValue / STUDY_UNIT_VALUES[unit], precision)} ${tUnits(unit)}`
+    return `${formatNumber(safeValue / STUDY_UNIT_VALUES[unit], 2)} ${tUnits(unit)}`
   }
 
   const barChartSettings = {
@@ -103,11 +102,6 @@ const StudyCharts = ({
   if (type === 'bar') {
     return (
       <div>
-        {showTitle && title && (
-          <Typography variant="h6" align="center" sx={{ mb: 2 }}>
-            {title}
-          </Typography>
-        )}
         {barData.values.length !== 0 && barData.values.some((v) => v !== 0) ? (
           <BarChart
             xAxis={[
@@ -135,17 +129,18 @@ const StudyCharts = ({
             grid={{ horizontal: true }}
             yAxis={[{ label: tUnits(study.resultsUnit) }]}
             axisHighlight={{ x: 'none' }}
-            // Afficher les valeurs au-dessus des barres si demandé
             barLabel={
               showLabelsOnBars ? (item) => (item.value && item.value > 0 ? chartFormatter(item.value) : '') : undefined
             }
-            // Masquer la légende si demandé
             slots={showLegend ? undefined : { legend: () => null }}
             {...barChartSettings}
           />
         ) : (
-          <Typography align="center" sx={{ mt: 2 }}>
-            {tResults('noData')}
+          <Typography align="center">{tResults('noData')}</Typography>
+        )}
+        {showTitle && (
+          <Typography variant="h6" align="center" sx={{ fontSize: '1rem', mt: -4, mb: 4 }}>
+            {title}
           </Typography>
         )}
       </div>
@@ -155,11 +150,6 @@ const StudyCharts = ({
   if (type === 'pie') {
     return (
       <div>
-        {showTitle && title && (
-          <Typography variant="h6" align="center" sx={{ mb: 2 }}>
-            {title}
-          </Typography>
-        )}
         {pieData.length !== 0 ? (
           <PieChart
             series={[
@@ -175,8 +165,11 @@ const StudyCharts = ({
             {...pieChartSettings}
           />
         ) : (
-          <Typography align="center" sx={{ mt: 2 }}>
-            {tResults('noData')}
+          <Typography align="center">{tResults('noData')}</Typography>
+        )}
+        {showTitle && (
+          <Typography variant="h6" align="center" sx={{ fontSize: '1rem', mt: -4, mb: 4 }}>
+            {title}
           </Typography>
         )}
       </div>

@@ -148,7 +148,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               study={study}
               studySite={studySite}
               type="bar"
-              height={450}
+              height={400}
               showTitle={false}
               showLegend={true}
               showLabelsOnBars={true}
@@ -160,7 +160,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               study={study}
               studySite={studySite}
               type="pie"
-              height={350}
+              height={400}
               showTitle={false}
               showLegend={true}
               showLabelsOnPie={true}
