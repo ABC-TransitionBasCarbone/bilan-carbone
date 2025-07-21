@@ -48,8 +48,8 @@ const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'Vélo à assistance éléctrique': '28331',
   'Vélo classique': '134',
   Marche: '135',
-  'Voiture gazole courte distance': '43798',
-  'Voiture essence courte distance': '43795',
+  'Voiture gazole courte distance': '27984',
+  'Voiture essence courte distance': '27983',
   'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
     '28015',
   'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
@@ -67,8 +67,8 @@ const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
   'Bus (agglomérations de + de 250 000 habitants)': '28000',
   'Vélo à assistance éléctrique': '28331',
-  'Voiture gazole longue distance': '43799',
-  'Voiture essence longue distance': '43796',
+  'Voiture gazole longue distance': '27978',
+  'Voiture essence longue distance': '27977',
   'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
     '28015',
   'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
