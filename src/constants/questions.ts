@@ -17,6 +17,10 @@ export const XENON_LAMPS_QUESTION_ID = 'quelle-quantite-de-lampes-xenon-jetez-vo
 
 export const CLIMATISATION_QUESTION_ID = 'votre-cinema-est-il-equipe-de-la-climatisation'
 
+export const RENOVATION_QUESTION_ID = 'quel-est-le-montant-des-depenses-liees-a-ces-travaux-de-renovation'
+
+export const SERVICES_QUESTION_ID = 'quel-montant-avez-vous-depense-en-services'
+
 // Value constants
 export const LONG_DISTANCE_APPLIED_PERCENTAGE = 0.03
 export const LONG_DISTANCE_CAR_PERCENTAGE = 0.7

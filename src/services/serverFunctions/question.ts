@@ -12,6 +12,8 @@ import {
   MOVIE_TEAM_QUESTION_ID,
   NEWSLETTER_QUESTION_ID,
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
+  RENOVATION_QUESTION_ID,
+  SERVICES_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
@@ -986,6 +988,51 @@ const handleClimatisationCalculation = async (
   return []
 }
 
+const handleKEuroQuestions = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+
+  const value = Number(response) || 0
+
+  if (!value) {
+    return []
+  }
+
+  const emissionInfo = emissionFactorMap[question.idIntern]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: value / 1000,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
 const handleSpecialQuestions = async (
   question: Question,
   response: Prisma.InputJsonValue,
@@ -1045,6 +1092,11 @@ const handleSpecialQuestions = async (
     }
     case CLIMATISATION_QUESTION_ID: {
       emissionSourceIds = await handleClimatisationCalculation(question, response, study, studySite)
+      break
+    }
+    case RENOVATION_QUESTION_ID:
+    case SERVICES_QUESTION_ID: {
+      emissionSourceIds = await handleKEuroQuestions(question, response, study, studySiteId)
       break
     }
     default: {

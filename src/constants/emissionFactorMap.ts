@@ -7,6 +7,8 @@ import {
   MOVIE_TEAM_QUESTION_ID,
   NEWSLETTER_QUESTION_ID,
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
+  RENOVATION_QUESTION_ID,
+  SERVICES_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from './questions'
@@ -101,7 +103,10 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '20730',
     linkDepreciationQuestionId: 'a-quand-remonte-la-derniere-renovation-importante',
   },
-  'quel-est-le-montant-des-depenses-liees-a-ces-travaux-de-renovation': { emissionFactorImportedId: '43340' },
+  [RENOVATION_QUESTION_ID]: {
+    emissionFactorImportedId: '43340',
+    isSpecial: true,
+  },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},
   'le-cinema-dispose-t-il-dun-parking': {},
@@ -144,7 +149,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quelle-est-votre-consommation-annuelle-de-diesel': { emissionFactorImportedId: '14015' },
   // ActivitesDeBureau
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
-  'quel-montant-avez-vous-depense-en-services': { emissionFactorImportedId: '43545' },
+  [SERVICES_QUESTION_ID]: { emissionFactorImportedId: '43545', isSpecial: true },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
     isFixed: true,
     depreciationPeriod: 4,
