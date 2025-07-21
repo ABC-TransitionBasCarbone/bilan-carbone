@@ -103,16 +103,7 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
     const accommodationTypeFEName = row.data['16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || ''
     const duration = parseFloat(row.data['17-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || '0')
 
-    if (
-      !distance ||
-      distance <= 0 ||
-      !participants ||
-      participants <= 0 ||
-      !occurrences ||
-      occurrences <= 0 ||
-      !transportModeFEName ||
-      !accommodationTypeFEName
-    ) {
+    if (!distance || distance <= 0 || !participants || participants <= 0 || !occurrences || occurrences <= 0) {
       return {
         emissionSources: [],
       }
