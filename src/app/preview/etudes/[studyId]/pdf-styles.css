@@ -557,6 +557,7 @@
 /* Classes pour les styles de texte */
 .pdf-text-bold {
   font-weight: bold;
+  font-size: 1em;
 }
 
 .pdf-text-center {
