@@ -998,7 +998,11 @@
     "delete": "Supprimer l'utilisateur·ice",
     "resend": "Renvoyer l'invitation",
     "table": {
+<<<<<<< HEAD
       "title": "Mon équipe",
+=======
+      "title": "Mes collaborateur·ice·s",
+>>>>>>> fe0f9afdbc62a4a4e1ab3a109983dbc0d83a9ead
       "newUser": "Inviter un·e utilisatr·ice",
       "firstName": "Prénom",
       "lastName": "Nom",
