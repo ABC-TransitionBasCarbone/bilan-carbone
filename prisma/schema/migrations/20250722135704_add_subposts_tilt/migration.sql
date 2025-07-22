@@ -6,6 +6,7 @@
 -- the enum.
 
 
+ALTER TYPE "SubPost" ADD VALUE 'AutresDechets';
 ALTER TYPE "SubPost" ADD VALUE 'FroidEtClim';
 ALTER TYPE "SubPost" ADD VALUE 'ActivitesAgricoles';
 ALTER TYPE "SubPost" ADD VALUE 'ActivitesIndustrielles';
@@ -31,4 +32,3 @@ ALTER TYPE "SubPost" ADD VALUE 'UtilisationEnDependanceConsommationDEnergie';
 ALTER TYPE "SubPost" ADD VALUE 'UtilisationEnDependanceFuitesEtAutresConsommations';
 ALTER TYPE "SubPost" ADD VALUE 'TeletravailSalaries';
 ALTER TYPE "SubPost" ADD VALUE 'TeletravailBenevoles';
-ALTER TYPE "SubPost" ADD VALUE 'Numerique';
