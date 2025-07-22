@@ -1,7 +1,9 @@
 'use client'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvRoute } from '@/services/email/utils'
 import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
+import { getAllCNCs } from '@/services/serverFunctions/cnc'
 import { SignUpCutCommand, SignUpCutCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
@@ -14,11 +16,9 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
+import { FormAutocomplete } from '../form/Autocomplete'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
-import { FormAutocomplete } from '../form/Autocomplete'
-import { useServerFunction } from '@/hooks/useServerFunction'
-import { getAllCNCs } from '@/services/serverFunctions/cnc'
 
 const contactMail = process.env.NEXT_PUBLIC_ABC_SUPPORT_MAIL
 const faq = process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''
@@ -95,9 +95,9 @@ const SignUpFormCut = () => {
           data-testid="activation-siretOrCNC"
           control={control}
           translation={t}
-          options={cncs.map(cnc => ({
+          options={cncs.map((cnc) => ({
             label: `${cnc.nom} (Dep : ${cnc.dep} | Numéro CNC : ${cnc.numeroAuto})`,
-            value: cnc.numeroAuto ?? ''
+            value: cnc.numeroAuto ?? '',
           }))}
           name="siretOrCNC"
           label={t('siretOrCNC')}

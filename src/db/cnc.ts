@@ -51,5 +51,4 @@ export const getCNCs = async () => await prismaClient.cnc.findMany(
     orderBy: {
       codeInsee: 'asc',
     },
-  },
-)
+  })
