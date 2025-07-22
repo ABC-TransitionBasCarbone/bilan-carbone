@@ -9,10 +9,9 @@ import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useTheme } from '@mui/material'
 import { BarChart, PieChart } from '@mui/x-charts'
-import { axisClasses } from '@mui/x-charts/ChartsAxis'
-import { pieArcLabelClasses } from '@mui/x-charts/PieChart'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
+import styles from './StudyCharts.module.css'
 
 interface Props {
   study: FullStudy
@@ -32,7 +31,7 @@ const StudyCharts = ({
   studySite = 'all',
   type,
   title,
-  height = 450,
+  height = 400,
   showTitle = true,
   showLegend = true,
   showLabelsOnBars = true,
@@ -59,55 +58,14 @@ const StudyCharts = ({
   const computeResults = useComputedResults(resultsByPost, tPost, listCutPosts)
   const { pieData, barData } = useChartData(computeResults, theme)
 
-  // Enhance pie data with formatted values in labels
   const enhancedPieData = pieData.map((item) => ({
     ...item,
     label: `${item.label} - ${chartFormatter(item.value)}`,
   }))
 
-  const barChartSettings = {
-    height,
-    sx: {
-      [`.${axisClasses.left} .${axisClasses.label}`]: { transform: 'translate(-1rem, 0)' },
-      backgroundColor: '#fff',
-      '& .MuiChartsAxis-tick': {
-        stroke: '#333',
-      },
-      '& .MuiChartsAxis-line': {
-        stroke: '#333',
-      },
-      '& text': {
-        fill: '#333 !important',
-        fontSize: '16px !important',
-      },
-      // Styles pour les labels des barres
-      '& .MuiBarLabel-root': {
-        fontSize: '16px !important',
-        fontWeight: 'bold !important',
-      },
-    },
-    borderRadius: 10,
-  }
-
-  const pieChartSettings = {
-    height,
-    sx: {
-      backgroundColor: '#fff',
-      '& text': {
-        fill: '#333 !important',
-        fontSize: '16px !important',
-      },
-      // Styles pour les labels des arcs
-      [`& .${pieArcLabelClasses.root}`]: {
-        fontSize: '16px !important',
-        fontWeight: 'bold !important',
-      },
-    },
-  }
-
   if (type === 'bar') {
     return (
-      <div>
+      <div className={styles.barChart}>
         {barData.values.length !== 0 && barData.values.some((v) => v !== 0) ? (
           <BarChart
             xAxis={[
@@ -139,7 +97,7 @@ const StudyCharts = ({
               showLabelsOnBars ? (item) => (item.value && item.value > 0 ? chartFormatter(item.value) : '') : undefined
             }
             slots={showLegend ? undefined : { legend: () => null }}
-            {...barChartSettings}
+            height={height}
           />
         ) : (
           <Typography align="center">{tResults('noData')}</Typography>
@@ -155,7 +113,7 @@ const StudyCharts = ({
 
   if (type === 'pie') {
     return (
-      <div>
+      <div className={styles.pieChart}>
         {enhancedPieData.length !== 0 ? (
           <PieChart
             series={[
@@ -168,13 +126,42 @@ const StudyCharts = ({
                 outerRadius: 200,
               },
             ]}
-            {...pieChartSettings}
+            height={height}
           />
         ) : (
           <Typography align="center">{tResults('noData')}</Typography>
         )}
         {showTitle && (
-          <Typography variant="h6" align="center" sx={{ fontSize: '1rem', mt: -4, mb: 4 }}>
+          <Typography variant="h6" align="center" className={styles.chartTitle}>
+            {title}
+          </Typography>
+        )}
+      </div>
+    )
+  }
+
+  if (type === 'pie') {
+    return (
+      <div className={styles.pieChart}>
+        {enhancedPieData.length !== 0 ? (
+          <PieChart
+            series={[
+              {
+                data: enhancedPieData,
+                arcLabel: showLabelsOnPie ? (item) => chartFormatter(item.value, false) : undefined,
+                arcLabelMinAngle: 10,
+                arcLabelRadius: '80%',
+                innerRadius: 0,
+                outerRadius: 200,
+              },
+            ]}
+            height={height}
+          />
+        ) : (
+          <Typography align="center">{tResults('noData')}</Typography>
+        )}
+        {showTitle && (
+          <Typography variant="h6" align="center" className={styles.chartTitle}>
             {title}
           </Typography>
         )}
