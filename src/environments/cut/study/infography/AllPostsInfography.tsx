@@ -7,7 +7,7 @@ import { getQuestionProgressBySubPostPerPost, StatsResult } from '@/services/ser
 import { getEmissionValueString } from '@/utils/study'
 import { styled } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CutPostInfography } from './CutPostInfography'
 
 interface Props {
@@ -26,7 +26,7 @@ const StyledGrid = styled('div')({
 })
 
 const AllPostsInfography = ({ studySiteId, study, data }: Props) => {
-  const [questionProgress, setQuestionProgress] = useState<StatsResult | null>(null)
+  const [questionProgress, setQuestionProgress] = useState<StatsResult>({} as StatsResult)
   const { callServerFunction } = useServerFunction()
 
   const tUnits = useTranslations('study.results.units')
@@ -45,42 +45,41 @@ const AllPostsInfography = ({ studySiteId, study, data }: Props) => {
     getQuestionProgress()
   }, [studySiteId, getQuestionProgress])
 
+  const renderedInfographies = useMemo(() => {
+    return Object.values(CutPost).map((cutPost) => {
+      const subPostStats = questionProgress[cutPost] ?? {}
+      let allAnswered = 0
+      let allTotal = 0
+      for (const stats of Object.values(subPostStats)) {
+        allAnswered += stats?.answered ?? 0
+        allTotal += stats?.total ?? 0
+      }
+
+      const completionRate = allTotal > 0 ? (allAnswered / allTotal) * 100 : 0
+
+      const unit = tUnits(study.resultsUnit)
+      const dataByPost = data.find((d) => d.post === cutPost)
+      const emissionValue = getEmissionValueString(dataByPost?.value, study.resultsUnit, unit)
+
+      return (
+        <CutPostInfography
+          key={cutPost}
+          mainPost={cutPost}
+          emissionValue={emissionValue}
+          percent={completionRate}
+          post={cutPost}
+          studyId={study.id}
+          subPosts={subPostsByPost[cutPost]}
+          questionStats={questionProgress[cutPost]}
+        />
+      )
+    })
+  }, [questionProgress, tUnits, study.resultsUnit, study.id, data])
+
   if (isLoading || !questionProgress) {
     return <EnvironmentLoader />
   }
-
-  return (
-    <StyledGrid>
-      {Object.values(CutPost).map((cutPost) => {
-        const subPostStats = questionProgress[cutPost] ?? {}
-        let allAnswered = 0
-        let allTotal = 0
-        for (const stats of Object.values(subPostStats)) {
-          allAnswered += stats?.answered ?? 0
-          allTotal += stats?.total ?? 0
-        }
-
-        const completionRate = allTotal > 0 ? (allAnswered / allTotal) * 100 : 0
-
-        const unit = tUnits(study.resultsUnit)
-        const dataByPost = data.find((d) => d.post === cutPost)
-        const emissionValue = getEmissionValueString(dataByPost?.value, study.resultsUnit, unit)
-
-        return (
-          <CutPostInfography
-            key={cutPost}
-            mainPost={cutPost}
-            emissionValue={emissionValue}
-            percent={completionRate}
-            post={cutPost}
-            studyId={study.id}
-            subPosts={subPostsByPost[cutPost]}
-            questionStats={questionProgress[cutPost]}
-          />
-        )
-      })}
-    </StyledGrid>
-  )
+  return <StyledGrid>{renderedInfographies}</StyledGrid>
 }
 
 export default AllPostsInfography
