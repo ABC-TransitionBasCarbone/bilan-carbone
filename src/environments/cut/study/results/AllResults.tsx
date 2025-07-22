@@ -17,8 +17,10 @@ import { Environment } from '@prisma/client'
 
 import Block from '@/components/base/Block'
 import LoadingButton from '@/components/base/LoadingButton'
-import StudyCharts from '@/components/study/charts/StudyCharts'
+import BarChart from '@/components/study/charts/BarChart'
+import PieChart from '@/components/study/charts/PieChart'
 import { useServerFunction } from '@/hooks/useServerFunction'
+import { CutPost } from '@/services/posts'
 import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
 import classNames from 'classnames'
 import Link from 'next/link'
@@ -139,27 +141,26 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
             <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} hiddenUncertainty />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <StudyCharts
+            <BarChart
               study={study}
               studySite={studySite}
-              type="bar"
               height={400}
               showTitle={false}
               showLegend={true}
               showLabelsOnBars={true}
               validatedOnly={validatedOnly}
+              postValues={CutPost}
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <StudyCharts
+            <PieChart
               study={study}
               studySite={studySite}
-              type="pie"
               height={400}
               showTitle={false}
-              showLegend={true}
               showLabelsOnPie={true}
               validatedOnly={validatedOnly}
+              postValues={CutPost}
             />
           </TabPanel>
         </Box>

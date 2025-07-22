@@ -1,0 +1,27 @@
+.barChart :global(.MuiChartsAxis-left .MuiChartsAxis-label) {
+  transform: translate(-1rem, 0);
+}
+
+.barChart :global(.MuiChartsAxis-tick) {
+  stroke: var(--mui-palette-grey-500);
+}
+
+.barChart :global(.MuiChartsAxis-line) {
+  stroke: var(--mui-palette-grey-500);
+}
+
+.barChart :global(text) {
+  fill: var(--mui-palette-text-primary) !important;
+  font-size: 0.75rem !important;
+}
+
+.barChart :global(.MuiBarLabel-root) {
+  font-size: 1rem !important;
+  font-weight: bold !important;
+}
+
+.chartTitle {
+  font-size: 1rem !important;
+  margin-top: -2rem !important;
+  margin-bottom: 2rem !important;
+}
