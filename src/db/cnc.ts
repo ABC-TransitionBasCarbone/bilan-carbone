@@ -25,8 +25,8 @@ export const findCncByNumeroAuto = async (numeroAuto: string) =>
 
 export const findCncById = async (id: string) => await prismaClient.cnc.findUnique({ where: { id } })
 
-export const getCNCs = async () => await prismaClient.cnc.findMany(
-  {
+export const getCNCs = async () =>
+  await prismaClient.cnc.findMany({
     where: {
       numeroAuto: {
         not: null,
@@ -35,5 +35,4 @@ export const getCNCs = async () => await prismaClient.cnc.findMany(
     orderBy: {
       codeInsee: 'asc',
     },
-  },
-)
+  })
