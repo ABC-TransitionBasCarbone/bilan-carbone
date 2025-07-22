@@ -465,6 +465,11 @@ export const getQuestionProgressBySubPostPerPost = async ({ studySiteId }: { stu
 
     const totalCountBySubPost = questions.reduce<Partial<Record<SubPost, number>>>((acc, question) => {
       const { subPost, type } = question
+      /**
+       * Comme les questions type TABLE, contiennent les réponses de ses sous questions
+       * On ne les comptes pas dans nombres de questions total,
+       * sinon il y aurait toujours une question de plus que le nombres de réponses
+       */
       if (type !== QuestionType.TABLE) {
         acc[subPost] = (acc[subPost] || 0) + 1
       }
@@ -492,25 +497,50 @@ export const getQuestionProgressBySubPostPerPost = async ({ studySiteId }: { stu
       },
     })
 
+    type TableResponseRow = {
+      id: string
+      data: Record<string, unknown>
+    }
+
+    type TableResponse = {
+      rows: TableResponseRow[]
+    }
+
+    function isTableResponse(response: unknown): response is TableResponse {
+      if (typeof response !== 'object' || response === null) {
+        return false
+      }
+
+      const r = response as { rows?: unknown }
+
+      if (!Array.isArray(r.rows)) {
+        return false
+      }
+
+      return r.rows.every((row): row is TableResponseRow => {
+        if (typeof row !== 'object' || row === null) {
+          return false
+        }
+
+        const id = (row as { id?: unknown }).id
+        const data = (row as { data?: unknown }).data
+
+        return typeof id === 'string' && typeof data === 'object' && data !== null && !Array.isArray(data)
+      })
+    }
+
     const answeredCountBySubPost = answers.reduce<Partial<Record<SubPost, number>>>((acc, answer) => {
       const { response, question } = answer
       const subPost = question.subPost
       const type = question.type
 
-      if (type === QuestionType.TABLE && typeof response === 'object' && response !== null && 'rows' in response) {
-        const rows = response?.rows
-        if (Array.isArray(rows)) {
-          for (const row of rows) {
-            if (typeof row === 'object' && row !== null && 'data' in row) {
-              const data = row?.data
-              if (data && typeof data === 'object') {
-                const nonEmptyFields = Object.values(data).filter(
-                  (value) => value !== null && value !== undefined && value !== '',
-                )
-                acc[subPost] = (acc[subPost] || 0) + nonEmptyFields.length
-              }
-            }
-          }
+      if (type === QuestionType.TABLE && isTableResponse(response)) {
+        for (const row of response.rows) {
+          const data = row.data
+          const nonEmptyFields = Object.values(data).filter(
+            (value) => value !== null && value !== undefined && value !== '',
+          )
+          acc[subPost] = (acc[subPost] || 0) + nonEmptyFields.length
         }
       } else {
         if (typeof response === 'string' && response.trim() !== '') {
