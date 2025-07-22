@@ -96,6 +96,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [RENOVATION_QUESTION_ID]: {
     emissionFactorImportedId: '43340',
     isSpecial: true,
+    depreciationPeriod: 10,
+    linkDepreciationQuestionId: 'a-quand-remonte-la-derniere-renovation-importante',
   },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},

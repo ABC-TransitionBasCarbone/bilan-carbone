@@ -161,6 +161,48 @@ const handleTableEmissionSources = async (
   return emissionSourceIds
 }
 
+const handleDepreciation = async (
+  linkDepreciationQuestionId: string,
+  depreciationPeriod: number | undefined,
+  currentValue: number,
+  emissionFactorImportedId: string | undefined,
+  studyStartDate: Date,
+  studySiteId: string,
+) => {
+  const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
+  let emissionSourceId: string | undefined
+  let valueToStore = currentValue
+  let emissionFactorToFindId: string | undefined
+  if (!linkQuestion) {
+    throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
+  }
+
+  const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
+  if (linkAnswer) {
+    const linkEmissionSource = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
+    emissionSourceId = linkEmissionSource?.emissionSourceId ?? undefined
+  }
+
+  const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
+
+  const depreciationPeriodToStore =
+    (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
+  const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
+  const dateValue = depreciationPeriod ? currentValue : parseFloat(linkAnswer?.response?.toString() || '0')
+
+  if (depreciationPeriodToStore < studyStartDate.getFullYear() - dateValue) {
+    valueToStore = 0
+  } else {
+    valueToStore = valueToDepreciate
+  }
+
+  if (!emissionFactorImportedId && linkEmissionInfo?.emissionFactorImportedId) {
+    emissionFactorToFindId = linkEmissionInfo.emissionFactorImportedId
+  }
+
+  return { emissionSourceId, valueToStore, emissionFactorToFindId, depreciationPeriodToStore }
+}
+
 export const saveAnswerForQuestion = async (
   question: Question,
   response: Prisma.InputJsonValue,
@@ -257,32 +299,18 @@ export const saveAnswerForQuestion = async (
 
     let emissionFactorToFindId = emissionFactorImportedId
     if (linkDepreciationQuestionId) {
-      const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
-      if (!linkQuestion) {
-        throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
-      }
-
-      const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
-      if (linkAnswer) {
-        const linkEmissionSource = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
-        emissionSourceId = linkEmissionSource?.emissionSourceId ?? undefined
-      }
-
-      const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
-
-      depreciationPeriodToStore = (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
-      const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
-      const dateValue = depreciationPeriod ? valueToStore : parseFloat(linkAnswer?.response?.toString() || '0')
-
-      if (depreciationPeriodToStore < new Date(study.startDate).getFullYear() - dateValue) {
-        valueToStore = 0
-      } else {
-        valueToStore = valueToDepreciate
-      }
-
-      if (!emissionFactorImportedId && linkEmissionInfo?.emissionFactorImportedId) {
-        emissionFactorToFindId = linkEmissionInfo.emissionFactorImportedId
-      }
+      const depreciationInfo = await handleDepreciation(
+        linkDepreciationQuestionId,
+        depreciationPeriodToStore,
+        valueToStore,
+        emissionFactorImportedId,
+        study.startDate,
+        studySiteId,
+      )
+      emissionSourceId = depreciationInfo.emissionSourceId
+      valueToStore = depreciationInfo.valueToStore
+      emissionFactorToFindId = depreciationInfo.emissionFactorToFindId
+      depreciationPeriodToStore = depreciationInfo.depreciationPeriodToStore
     }
 
     if (emissionFactorToFindId) {
@@ -1007,8 +1035,27 @@ const handleKEuroQuestions = async (
     return []
   }
 
+  let valueToStore = value
+  let emissionFactorToFindId = emissionInfo.emissionFactorImportedId
+  let depreciationPeriodToStore = emissionInfo.depreciationPeriod
+  if (emissionInfo.linkDepreciationQuestionId) {
+    const depreciationInfo = await handleDepreciation(
+      emissionInfo.linkDepreciationQuestionId,
+      depreciationPeriodToStore,
+      valueToStore,
+      emissionInfo.emissionFactorImportedId,
+      study.startDate,
+      studySiteId,
+    )
+    if (depreciationInfo.emissionFactorToFindId) {
+      emissionFactorToFindId = depreciationInfo.emissionFactorToFindId
+    }
+    valueToStore = depreciationInfo.valueToStore
+    depreciationPeriodToStore = depreciationInfo.depreciationPeriodToStore
+  }
+
   const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-    emissionInfo.emissionFactorImportedId,
+    emissionFactorToFindId,
     study.emissionFactorVersions.map((v) => v.importVersionId),
   )
 
@@ -1019,7 +1066,7 @@ const handleKEuroQuestions = async (
   const newEmissionSource = await createEmissionSource({
     studyId,
     studySiteId,
-    value: value / 1000,
+    value: valueToStore / 1000,
     name: question.idIntern,
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
