@@ -87,6 +87,13 @@ const fullStudyInclude = {
           },
         },
       },
+      emissionSourceTag: {
+        select: {
+          id: true,
+          name: true,
+          studyId: true,
+        },
+      },
     },
     orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
   },

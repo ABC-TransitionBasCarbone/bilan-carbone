@@ -207,7 +207,7 @@ export const createEmissionSourceTag = async ({ studyId, name }: NewEmissionSour
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await createEmissionSourceTagOnStudy({
+    return await createEmissionSourceTagOnStudy({
       study: { connect: { id: studyId } },
       name,
     })
