@@ -2,6 +2,7 @@ import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({
+  cssVariables: true,
   palette: {
     background: {
       default: '#3880ff0d',

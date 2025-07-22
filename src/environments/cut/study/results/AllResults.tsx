@@ -19,7 +19,7 @@ import Block from '@/components/base/Block'
 import LoadingButton from '@/components/base/LoadingButton'
 import StudyCharts from '@/components/study/charts/StudyCharts'
 import { useServerFunction } from '@/hooks/useServerFunction'
-import { generateStudyResultsPDFPlaywright } from '@/services/serverFunctions/pdfPlaywright'
+import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
 import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
@@ -58,13 +58,11 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
 
   const handlePDFDownload = async () => {
     setPdfLoading(true)
-    await callServerFunction(() => generateStudyResultsPDFPlaywright(study.id), {
+    await callServerFunction(() => generateStudySummaryPDF(study.id, study.name, study.startDate.getFullYear()), {
       onSuccess: (data) => {
-        // Créer un blob à partir du buffer
         const pdfBuffer = new Uint8Array(data.pdfBuffer)
         const pdfBlob = new Blob([pdfBuffer], { type: data.contentType })
 
-        // Télécharger le PDF
         const url = URL.createObjectURL(pdfBlob)
         const link = document.createElement('a')
         link.href = url
@@ -73,9 +71,6 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
         link.click()
         document.body.removeChild(link)
         URL.revokeObjectURL(url)
-      },
-      onError: () => {
-        // L'erreur est déjà gérée par callServerFunction avec un toast
       },
     })
     setPdfLoading(false)

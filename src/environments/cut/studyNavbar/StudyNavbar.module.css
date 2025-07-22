@@ -6,10 +6,10 @@
 .button,
 .link,
 .section {
-  background-color: white;
+  background-color: var(--mui-palette-background-paper);
   width: 100%;
   border: none;
-  color: var(--neutral-950);
+  color: var(--mui-palette-text-primary);
   padding: 1rem;
   text-decoration: none;
   font-weight: 600;
@@ -18,7 +18,7 @@
 
   &.active,
   &:hover {
-    background-color: var(--primary-50);
+    background-color: var(--mui-palette-primary-light);
   }
 }
 
