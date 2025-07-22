@@ -573,7 +573,7 @@
       "download": "Download results",
       "downloadPDF": "Download the summary",
       "value": "Emissions ({unit})",
-      "emissions": "Emissions", 
+      "emissions": "Emissions",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
