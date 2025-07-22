@@ -48,7 +48,9 @@ const AllPostsInfographyContainer = ({ study, studySite, environment }: Props) =
   return (
     <DynamicComponent
       defaultComponent={<AllPostsInfography study={study} data={data} />}
-      environmentComponents={{ [Environment.CUT]: <AllPostsInfographyCut study={study} data={data} /> }}
+      environmentComponents={{
+        [Environment.CUT]: <AllPostsInfographyCut studySiteId={studySite} study={study} data={data} />,
+      }}
     />
   )
 }

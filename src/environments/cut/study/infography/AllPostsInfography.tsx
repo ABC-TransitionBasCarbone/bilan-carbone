@@ -1,15 +1,17 @@
 import { FullStudy } from '@/db/study'
 import EnvironmentLoader from '@/environments/core/utils/EnvironmentLoader'
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { CutPost, subPostsByPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
 import { getQuestionProgressBySubPostPerPost, StatsResult } from '@/services/serverFunctions/question'
 import { getEmissionValueString } from '@/utils/study'
 import { styled } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { CutPostInfography } from './CutPostInfography'
 
 interface Props {
+  studySiteId: string
   study: FullStudy
   data: ResultsByPost[]
 }
@@ -23,22 +25,25 @@ const StyledGrid = styled('div')({
   paddingBottom: '12rem',
 })
 
-const AllPostsInfography = ({ study, data }: Props) => {
+const AllPostsInfography = ({ studySiteId, study, data }: Props) => {
   const [questionProgress, setQuestionProgress] = useState<StatsResult | null>(null)
+  const { callServerFunction } = useServerFunction()
 
   const tUnits = useTranslations('study.results.units')
   const [isLoading, setIsLoading] = useState(true)
 
+  const getQuestionProgress = useCallback(async () => {
+    await callServerFunction(() => getQuestionProgressBySubPostPerPost({ studySiteId }), {
+      onSuccess: (value) => {
+        setQuestionProgress(value)
+        setIsLoading(false)
+      },
+    })
+  }, [callServerFunction, studySiteId])
+
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await getQuestionProgressBySubPostPerPost()
-      if (response.success) {
-        setQuestionProgress(response.data)
-      }
-      setIsLoading(false)
-    }
-    fetchData()
-  }, [])
+    getQuestionProgress()
+  }, [studySiteId, getQuestionProgress])
 
   if (isLoading || !questionProgress) {
     return <EnvironmentLoader />

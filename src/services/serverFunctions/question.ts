@@ -449,7 +449,7 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
 export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Record<CutPost, Partial<Record<SubPost, QuestionStats>>>
 
-export const getQuestionProgressBySubPostPerPost = async () =>
+export const getQuestionProgressBySubPostPerPost = async ({ studySiteId }: { studySiteId: string }) =>
   withServerResponse('getQuestionProgressBySubPostPerPost', async () => {
     const cutSubPosts = Object.values(CutPost).flatMap((cutPost) => subPostsByPost[cutPost])
 
@@ -473,6 +473,7 @@ export const getQuestionProgressBySubPostPerPost = async () =>
 
     const answers = await prismaClient.answer.findMany({
       where: {
+        studySiteId,
         response: {
           not: '',
         },
