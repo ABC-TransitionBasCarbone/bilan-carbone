@@ -1,21 +1,15 @@
+import withAuth from '@/components/hoc/withAuth'
 import { getStudyById } from '@/db/study'
 import { dbActualizedAuth } from '@/services/auth'
 import { notFound, redirect } from 'next/navigation'
-import PDFPreviewContent from './PDFPreviewContent'
+import PDFSummary from './PDFSummary'
 
 interface Props {
   params: Promise<{ studyId: string }>
-  searchParams: Promise<{ print?: string }>
 }
 
-export default async function PDFPreviewPage({ params, searchParams }: Props) {
+const PDFPreviewPage = async ({ params }: Props) => {
   const { studyId } = await params
-  const { print } = await searchParams
-
-  // Vérifier que c'est bien pour l'impression (sécurité)
-  if (!print) {
-    redirect('/dashboard')
-  }
 
   const session = await dbActualizedAuth()
   if (!session?.user) {
@@ -27,5 +21,7 @@ export default async function PDFPreviewPage({ params, searchParams }: Props) {
     notFound()
   }
 
-  return <PDFPreviewContent study={study} />
+  return <PDFSummary study={study} />
 }
+
+export default withAuth(PDFPreviewPage)

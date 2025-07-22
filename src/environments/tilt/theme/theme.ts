@@ -3,6 +3,7 @@ import { TiltPost } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
 
 const tiltTheme = createTheme(theme, {
+  cssVariables: true,
   custom: {
     postColors: {
       [TiltPost.IntrantsBiensEtMatieresTilt]: { light: '#5E97CB', dark: '#2C6498' },

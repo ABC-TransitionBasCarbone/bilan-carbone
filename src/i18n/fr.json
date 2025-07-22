@@ -571,7 +571,7 @@
       "type": "Type",
       "post": "Poste",
       "download": "Télécharger les résultats",
-      "downloadPDF": "Télécharger PDF",
+      "downloadPDF": "Télécharger la fiche récapitulative",
       "value": "Émissions ({unit})",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
@@ -605,6 +605,30 @@
         "close": "Fermer"
       },
       "noData": "Aucune données à afficher"
+    },
+    "pdf": {
+      "loading": "Chargement des données...",
+      "title": "Empreinte carbone simplifiée {year}",
+      "cinemas": {
+        "list": "Portant sur les cinémas suivants"
+      },
+      "results": {
+        "all": "Résultats - Tous cinémas",
+        "site": "Résultats - {site}"
+      },
+      "charts": {
+        "all": "Graphiques - Tous cinémas",
+        "site": "Graphiques - {site}",
+        "allEmissions": "Émissions dues aux activités de l'ensemble des cinémas, en tCO2e",
+        "siteEmissions": "Émissions dues aux activités du cinéma {site}, en tCO2e"
+      },
+      "labels": {
+        "cinemas": "Cinémas",
+        "screens": "Écrans",
+        "entries": "Entrées",
+        "sessions": "Séances"
+      },
+      "additionalInfo": "Informations complémentaires"
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",

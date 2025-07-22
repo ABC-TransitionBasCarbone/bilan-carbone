@@ -571,7 +571,7 @@
       "type": "Type",
       "post": "Post",
       "download": "Download results",
-      "downloadPDF": "Download PDF",
+      "downloadPDF": "Download the summary",
       "value": "Emissions ({unit})",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
@@ -605,6 +605,30 @@
       },
       "noData": "No data to display",
       "info": ""
+    },
+    "pdf": {
+      "loading": "Loading data...",
+      "title": "Simplified carbon footprint {year}",
+      "cinemas": {
+        "list": "Covering the following cinemas"
+      },
+      "results": {
+        "all": "Results - All cinemas",
+        "site": "Results - {site}"
+      },
+      "charts": {
+        "all": "Charts - All cinemas",
+        "site": "Charts - {site}",
+        "allEmissions": "Emissions from all cinema activities, in tCO2e",
+        "siteEmissions": "Emissions from cinema {site} activities, in tCO2e"
+      },
+      "labels": {
+        "cinemas": "Cinemas",
+        "screens": "Screens",
+        "entries": "Entries",
+        "sessions": "Sessions"
+      },
+      "additionalInfo": "Additional information"
     },
     "export": {
       "activityDataComment": "Activity data comment",

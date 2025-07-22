@@ -11,7 +11,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import './pdf-styles.css'
+import './pdf-summary.css'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { ResultsByPost } from '@/services/results/consolidated'
@@ -31,14 +31,13 @@ interface Props {
   study: FullStudy
 }
 
-const PDFPreviewContent = ({ study }: Props) => {
+const PDFSummary = ({ study }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tStudy = useTranslations('study.results')
+  const tPdf = useTranslations('study.pdf')
 
   const [sites, setSites] = useState<SiteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [totalPages, setTotalPages] = useState(0)
-
   const referenceYear = study.startDate.getFullYear() || new Date().getFullYear()
 
   useEffect(() => {
@@ -46,7 +45,6 @@ const PDFPreviewContent = ({ study }: Props) => {
       try {
         setIsLoading(true)
 
-        // Traitement de chaque site
         const sitesData: SiteData[] = []
 
         for (const studySite of study.sites) {
@@ -77,11 +75,6 @@ const PDFPreviewContent = ({ study }: Props) => {
         }
 
         setSites(sitesData)
-
-        // Calculer le nombre total de pages
-        // 3 pages consolidées + 3 pages par site
-        const calculatedTotalPages = 3 + sitesData.length * 3
-        setTotalPages(calculatedTotalPages)
       } catch (error) {
         console.error('Error loading PDF data:', error)
       } finally {
@@ -98,7 +91,7 @@ const PDFPreviewContent = ({ study }: Props) => {
         <div className="pdf-container">
           <div className="pdf-content">
             <div className="pdf-header-section">
-              <p>Chargement des données...</p>
+              <p>{tPdf('loading')}</p>
             </div>
           </div>
         </div>
@@ -109,34 +102,27 @@ const PDFPreviewContent = ({ study }: Props) => {
   return (
     <ThemeProvider theme={cutTheme}>
       <div className="pdf-container">
-        {/* Header intégré dans le contenu */}
-        <div className="pdf-page-header">
-          <Image src="/logos/cut/COUNT.png" alt="COUNT Logo" width={100} height={40} />
+        <div className="pdf-page-header flex align-center justify-center">
+          <Image src="/logos/cut/logo-filled.svg" alt="COUNT Logo" width={100} height={40} />
         </div>
 
-        {/* Footer intégré dans le contenu */}
-        <div className="pdf-page-footer">
-          <div className="pdf-page-footer-logos pdf-flex pdf-gap-20">
-            <Image src="/logos/cut/CUT.png" alt="CUT Logo" width={80} height={30} />
-            <Image src="/logos/cut/CNC.png" alt="CNC Logo" width={80} height={30} />
-            <Image src="/logos/cut/France3_2025.png" alt="France 2030 Logo" width={80} height={30} />
-          </div>
-          <div className="pdf-page-number">
-            Page <span className="pageNumber" /> sur <span className="totalPages">{totalPages}</span>
+        <div className="pdf-page-footer flex align-center justify-between">
+          <div className="pdf-page-footer-logos flex align-center">
+            <Image src="/logos/cut/CUT.svg" alt="CUT Logo" width={80} height={30} />
+            <Image src="/logos/cut/ABC.svg" alt="ABC Logo" width={80} height={30} />
+            <Image src="/logos/cut/CNC.svg" alt="CNC Logo" width={80} height={30} />
+            <Image src="/logos/cut/France3_2025_blanc.png" alt="France 2030 Logo" width={80} height={30} />
           </div>
         </div>
 
-        {/* PAGE 1: TOTAUX CONSOLIDÉS */}
         <div className="pdf-content pdf-page-content">
-          {/* En-tête du document */}
           <div className="pdf-header-section page-break-avoid">
-            <h1 className="pdf-title">Empreinte carbone simplifiée {referenceYear}</h1>
+            <h1 className="pdf-title">{tPdf('title', { year: referenceYear })}</h1>
           </div>
 
-          {/* Liste des cinémas */}
           <div className="pdf-cinemas-list page-break-avoid">
             <span>
-              <h2 className="pdf-cinemas-title">Portant sur les cinémas suivants :</h2>
+              <h2 className="pdf-cinemas-title">{tPdf('cinemas.list')}:</h2>
               <ul>
                 {sites.map((site) => (
                   <li key={site.id}>{site.fullName}</li>
@@ -145,28 +131,26 @@ const PDFPreviewContent = ({ study }: Props) => {
             </span>
           </div>
 
-          {/* Totaux consolidés - Page 1 */}
           <div className="pdf-section page-break-avoid">
-            <h2 className="pdf-totals-header">Résultats - Tous cinémas</h2>
+            <h2 className="pdf-totals-header pdf-header-with-border">{tPdf('results.all')}</h2>
 
-            {/* Résumé consolidé */}
-            <div className="pdf-general-data pdf-summary-stats pdf-margin-top-30">
+            <div className="pdf-general-data pdf-summary-stats flex justify-between mt2">
               <div className="pdf-data-item">
-                <div className="pdf-data-label">Cinémas</div>
+                <div className="pdf-data-label">{tPdf('labels.cinemas')}</div>
                 <div className="pdf-data-value">{sites.length}</div>
               </div>
               <div className="pdf-data-item">
-                <div className="pdf-data-label">Écrans</div>
+                <div className="pdf-data-label">{tPdf('labels.screens')}</div>
                 <div className="pdf-data-value">{sites.reduce((sum, site) => sum + site.generalData.screens, 0)}</div>
               </div>
               <div className="pdf-data-item">
-                <div className="pdf-data-label">Entrées</div>
+                <div className="pdf-data-label">{tPdf('labels.entries')}</div>
                 <div className="pdf-data-value">
                   {formatNumber(sites.reduce((sum, site) => sum + site.generalData.entries, 0))}
                 </div>
               </div>
               <div className="pdf-data-item">
-                <div className="pdf-data-label">Séances</div>
+                <div className="pdf-data-label">{tPdf('labels.sessions')}</div>
                 <div className="pdf-data-value">
                   {formatNumber(sites.reduce((sum, site) => sum + site.generalData.sessions, 0))}
                 </div>
@@ -183,32 +167,29 @@ const PDFPreviewContent = ({ study }: Props) => {
           </div>
         </div>
 
-        {/* PAGE 2: GRAPHIQUES CONSOLIDÉS */}
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
-            <h2 className="pdf-totals-header">Graphiques - Tous cinémas</h2>
+            <h2 className="pdf-totals-header pdf-header-with-border">{tPdf('charts.all')}</h2>
 
-            {/* Graphique en barres */}
             <StudyCharts
               study={study}
               studySite="all"
               type="bar"
               height={350}
               showTitle={true}
-              title="Émissions dues aux activités de l'ensemble des cinémas, en tCO2e"
+              title={tPdf('charts.allEmissions')}
               showLegend={false}
               showLabelsOnBars={true}
               validatedOnly={false}
             />
 
-            {/* Graphique circulaire */}
             <StudyCharts
               study={study}
               studySite="all"
               type="pie"
               height={400}
               showTitle={true}
-              title="Émissions dues aux activités de l'ensemble des cinémas, en tCO2e"
+              title={tPdf('charts.allEmissions')}
               showLegend={true}
               showLabelsOnPie={true}
               validatedOnly={false}
@@ -216,12 +197,10 @@ const PDFPreviewContent = ({ study }: Props) => {
           </div>
         </div>
 
-        {/* PAGE 3: DÉTAIL DES ÉMISSIONS PAR POSTE */}
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
-            <h2 className="pdf-totals-header">Informations complémentaires</h2>
-            {/* Section d'information */}
-            <div className="pdf-info-section pdf-margin-top-30">
+            <h2 className="pdf-totals-header pdf-header-with-border">{tPdf('additionalInfo')}</h2>
+            <div className="pdf-info-section mt2">
               <div className="pdf-info-text">
                 <p>{tStudy('info')}</p>
               </div>
@@ -229,31 +208,29 @@ const PDFPreviewContent = ({ study }: Props) => {
           </div>
         </div>
 
-        {/* PAGES PAR CINÉMA - Répéter la structure pour chaque cinéma */}
         {sites.map((site) => (
           <React.Fragment key={site.id}>
-            {/* PAGE X: TOTAUX PAR CINÉMA */}
             <div className="pdf-content page-break-before pdf-page-content">
               <div className="pdf-section">
-                <h2 className="pdf-cinema-header">Résultats - {site.fullName}</h2>
+                <h2 className="pdf-cinema-header pdf-header-with-border">
+                  {tPdf('results.site', { site: site.fullName })}
+                </h2>
 
-                {/* Données générales du cinéma */}
-                <div className="pdf-general-data">
+                <div className="pdf-general-data flex justify-between">
                   <div className="pdf-data-item">
-                    <div className="pdf-data-label">Écrans</div>
+                    <div className="pdf-data-label">{tPdf('labels.screens')}</div>
                     <div className="pdf-data-value">{site.generalData.screens}</div>
                   </div>
                   <div className="pdf-data-item">
-                    <div className="pdf-data-label">Entrées</div>
+                    <div className="pdf-data-label">{tPdf('labels.entries')}</div>
                     <div className="pdf-data-value">{formatNumber(site.generalData.entries)}</div>
                   </div>
                   <div className="pdf-data-item">
-                    <div className="pdf-data-label">Séances</div>
+                    <div className="pdf-data-label">{tPdf('labels.sessions')}</div>
                     <div className="pdf-data-value">{formatNumber(site.generalData.sessions)}</div>
                   </div>
                 </div>
 
-                {/* Résultats du cinéma */}
                 <ConsolidatedResultsTable
                   study={study}
                   studySite={site.id}
@@ -265,32 +242,31 @@ const PDFPreviewContent = ({ study }: Props) => {
               </div>
             </div>
 
-            {/* PAGE X+1: GRAPHIQUES PAR CINÉMA */}
             <div className="pdf-content page-break-before pdf-page-content">
               <div className="pdf-section">
-                <h2 className="pdf-cinema-header">Graphiques - {site.fullName}</h2>
+                <h2 className="pdf-cinema-header pdf-header-with-border">
+                  {tPdf('charts.site', { site: site.fullName })}
+                </h2>
 
-                {/* Graphique en barres du cinéma */}
                 <StudyCharts
                   study={study}
                   studySite={site.id}
                   type="bar"
                   height={350}
                   showTitle={true}
-                  title={`Émissions dues aux activités du cinéma ${site.fullName}, en tCO2e`}
+                  title={tPdf('charts.siteEmissions', { site: site.fullName })}
                   showLegend={false}
                   showLabelsOnBars={true}
                   validatedOnly={false}
                 />
 
-                {/* Graphique circulaire du cinéma */}
                 <StudyCharts
                   study={study}
                   studySite={site.id}
                   type="pie"
                   height={400}
                   showTitle={true}
-                  title={`Émissions dues aux activités du cinéma ${site.fullName}, en tCO2e`}
+                  title={tPdf('charts.siteEmissions', { site: site.fullName })}
                   showLegend={true}
                   showLabelsOnPie={true}
                   validatedOnly={false}
@@ -304,4 +280,4 @@ const PDFPreviewContent = ({ study }: Props) => {
   )
 }
 
-export default PDFPreviewContent
+export default PDFSummary
