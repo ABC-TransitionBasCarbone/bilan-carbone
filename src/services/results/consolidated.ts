@@ -44,7 +44,7 @@ export const computeResultsByPost = (
 
   const postInfos = Object.values(postValues)
     .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-    .map((post) => {
+    .map((post: Post) => {
       const subPosts = subPostsByPost[post]
         .filter((subPost) => filterWithDependencies(subPost, withDependencies))
         .map((subPost) => {
