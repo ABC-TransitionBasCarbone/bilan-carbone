@@ -649,7 +649,9 @@
       "noFlows": "Aucune cartographie des flux à afficher",
       "notAuthorized": "Action non authorisée",
       "removeFlow": "Supprimer la cartographie",
-      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+      "info": "Vous pouvez télécharger un exemple de cartographie des flux pour vous aider à construire la votre. Par la suite, si vous souhaitez soumettre votre cartographie des flux pour que d'autres utilisateurs puissent l'utiliser en exemple et aider d'autres association, merci de la soumettre à methodologie@abc-transitionbascarbone.fr",
+      "downloadSample": "Télécharger un exemple"
     },
     "delete": {
       "cancel": "Annuler",
