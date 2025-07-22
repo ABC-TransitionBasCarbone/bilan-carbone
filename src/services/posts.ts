@@ -38,7 +38,6 @@ export enum TiltPost {
   Utilisation = 'Utilisation',
   FinDeVie = BCPost.FinDeVie,
   Teletravail = 'Teletravail',
-  Numerique = 'Numerique',
 }
 
 export const Post = { ...BCPost, ...CutPost, ...TiltPost }
@@ -168,7 +167,6 @@ export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
   ],
   [TiltPost.FinDeVie]: subPostsByPostBC[BCPost.FinDeVie],
   [TiltPost.Teletravail]: [SubPost.TeletravailSalaries, SubPost.TeletravailBenevoles],
-  [TiltPost.Numerique]: [SubPost.Numerique],
 }
 
 export const environmentPostMapping = {

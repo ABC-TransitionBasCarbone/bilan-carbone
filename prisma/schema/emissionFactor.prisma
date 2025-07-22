@@ -169,9 +169,6 @@ enum SubPost {
   // Télétravail 
   TeletravailSalaries
   TeletravailBenevoles
-
-  // Numerique 
-  Numerique
 }
 
 model EmissionFactorImportVersion {

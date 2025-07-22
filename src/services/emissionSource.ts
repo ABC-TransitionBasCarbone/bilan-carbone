@@ -317,5 +317,4 @@ export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracteris
   [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: [],
   [SubPost.TeletravailSalaries]: [],
   [SubPost.TeletravailBenevoles]: [],
-  [SubPost.Numerique]: [],
 }
