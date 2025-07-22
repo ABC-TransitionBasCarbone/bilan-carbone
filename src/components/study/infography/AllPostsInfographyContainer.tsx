@@ -12,10 +12,9 @@ import AllPostsInfography from './AllPostsInfography'
 interface Props {
   study: FullStudy
   studySite: string
-  environment: Environment
 }
 
-const AllPostsInfographyContainer = ({ study, studySite, environment }: Props) => {
+const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const [validatedOnly, setValidatedOnly] = useState(true)
 
@@ -32,13 +31,13 @@ const AllPostsInfographyContainer = ({ study, studySite, environment }: Props) =
   }
 
   const post = useMemo(() => {
-    switch (environment) {
+    switch (study.organizationVersion.environment) {
       case Environment.CUT:
         return CutPost
       default:
         return BCPost
     }
-  }, [environment])
+  }, [study.organizationVersion.environment])
 
   const data = useMemo(
     () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, post),

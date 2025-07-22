@@ -16,11 +16,9 @@ interface Props {
   post: Post
   study: FullStudy
   userRole: StudyRole
-  isCut: boolean
-  environment: Environment
 }
 
-const StudyPostsPageContainer = ({ post, study, userRole, isCut, environment }: Props) => {
+const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
@@ -32,6 +30,11 @@ const StudyPostsPageContainer = ({ post, study, userRole, isCut, environment }: 
           subPostsByPost[post].includes(emissionSource.subPost) && emissionSource.studySite.id === studySite,
       ) as FullStudy['emissionSources'],
     [study, post, studySite],
+  )
+
+  const isCut = useMemo(
+    () => study.organizationVersion.environment === Environment.CUT,
+    [study.organizationVersion.environment],
   )
 
   return (
@@ -68,7 +71,6 @@ const StudyPostsPageContainer = ({ post, study, userRole, isCut, environment }: 
             userRole={userRole}
             emissionSources={emissionSources}
             studySite={studySite}
-            environment={environment}
           />
         }
         environmentComponents={{
