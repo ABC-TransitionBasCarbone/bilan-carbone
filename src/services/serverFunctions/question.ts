@@ -920,7 +920,7 @@ const applyXenonLampsCalculation = async (
     return []
   }
 
-  const value = (numberOfLamps * weight) / 1000
+  const value = numberOfLamps * weight // weight in kg
 
   const newEmissionSource = await createEmissionSource({
     studyId,
