@@ -15,9 +15,11 @@ import { EmissionResults, QuestionContainerProps } from './types/formTypes'
 import { FieldType } from './types/questionTypes'
 
 const QuestionContainer = ({ question, children, showResults, results, saveStatus }: QuestionContainerProps) => {
-  const inTable = ID_INTERN_PREFIX_REGEX.test(question.idIntern) && question.type !== FieldType.TABLE
+  const hasPrefixIdIntern = ID_INTERN_PREFIX_REGEX.test(question.idIntern)
+  const inTable = hasPrefixIdIntern && question.type !== FieldType.TABLE
+  const inTitle = hasPrefixIdIntern && question.type !== FieldType.TITLE
   const tResultsUnits = useTranslations('study.results.units')
-  if (inTable) {
+  if (inTable && inTitle) {
     return
   }
 
