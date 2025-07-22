@@ -1,15 +1,19 @@
 'use client'
 
+import Button from '@/components/base/Button'
 import LoadingButton from '@/components/base/LoadingButton'
 import { useToast } from '@/components/base/ToastProvider'
 import { FullStudy } from '@/db/study'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
+import { hasAccessToStudyFlowExample } from '@/services/permissions/environment'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
 import { addFlowToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
+import { getStudyFlowSampleDocumentUrl } from '@/services/serverFunctions/studyFlow'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
-import { InputLabel } from '@mui/material'
+import { Alert, InputLabel } from '@mui/material'
 import { Document } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -32,6 +36,7 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
   const tUpload = useTranslations('upload')
   const { callServerFunction } = useServerFunction()
   const { showErrorToast } = useToast()
+  const { environment } = useAppEnvironmentStore()
 
   const router = useRouter()
   const [uploading, setUploading] = useState(false)
@@ -92,6 +97,17 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     setDeleting(false)
   }
 
+  const downloadSample = async () => {
+    setDownloading(true)
+    await callServerFunction(() => getStudyFlowSampleDocumentUrl(study.id), {
+      getErrorMessage: (error) => t(error),
+      onSuccess: (url) => {
+        downloadFromUrl(url, 'example_study_flow.jpg')
+      },
+    })
+    setDownloading(false)
+  }
+
   return (
     <Block
       title={t('flows', { name: study.name })}
@@ -124,6 +140,17 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
           : undefined
       }
     >
+      {environment && hasAccessToStudyFlowExample(environment) && (
+        <div className="mb-2">
+          <Alert severity="info" className="mb-2">
+            {t('info')}
+          </Alert>
+          <Button loading={downloading} onClick={downloadSample}>
+            {t('downloadSample')}
+          </Button>
+        </div>
+      )}
+
       {selectedFlow ? (
         <div className="flex-col">
           <div className="flex-col mb1">
