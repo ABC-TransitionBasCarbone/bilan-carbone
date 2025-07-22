@@ -1,7 +1,7 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { Environment, StudyRole } from '@prisma/client'
+import { StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -12,10 +12,9 @@ import useStudySite from '../study/site/useStudySite'
 interface Props {
   study: FullStudy
   userRole: StudyRole
-  environment: Environment
 }
 
-const StudyContributionPage = ({ study, environment }: Props) => {
+const StudyContributionPage = ({ study }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
   const { studySite, setSite } = useStudySite(study)
@@ -39,7 +38,7 @@ const StudyContributionPage = ({ study, environment }: Props) => {
         <div className="mb1">
           <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
         </div>
-        <AllPostsInfographyContainer study={study} studySite={studySite} environment={environment} />
+        <AllPostsInfographyContainer study={study} studySite={studySite} />
       </Block>
     </>
   )

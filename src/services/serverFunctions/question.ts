@@ -36,6 +36,7 @@ import {
   upsertAnswerEmissionSource,
 } from '@/db/question'
 import { FullStudy, getStudyById } from '@/db/study'
+import { isTableResponse } from '@/typeguards/question'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   calculateTableEmissions,
@@ -44,9 +45,10 @@ import {
 } from '@/utils/tableEmissionCalculations'
 import { isTableAnswer } from '@/utils/tableInput'
 import { Answer, Prisma, Question, QuestionType, SubPost } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canReadStudy } from '../permissions/study'
+import { canReadStudy, canReadStudyDetail } from '../permissions/study'
 import { CutPost, subPostsByPost } from '../posts'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
@@ -449,8 +451,20 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
 export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Record<CutPost, Partial<Record<SubPost, QuestionStats>>>
 
-export const getQuestionProgressBySubPostPerPost = async ({ studySiteId }: { studySiteId: string }) =>
+export const getQuestionProgressBySubPostPerPost = async ({
+  study,
+  studySiteId,
+  user,
+}: {
+  study: FullStudy
+  studySiteId: string
+  user: UserSession
+}) =>
   withServerResponse('getQuestionProgressBySubPostPerPost', async () => {
+    if (!canReadStudyDetail(user, study)) {
+      return
+    }
+
     const cutSubPosts = Object.values(CutPost).flatMap((cutPost) => subPostsByPost[cutPost])
 
     const questions = await prismaClient.question.findMany({
@@ -496,38 +510,6 @@ export const getQuestionProgressBySubPostPerPost = async ({ studySiteId }: { stu
         },
       },
     })
-
-    type TableResponseRow = {
-      id: string
-      data: Record<string, unknown>
-    }
-
-    type TableResponse = {
-      rows: TableResponseRow[]
-    }
-
-    function isTableResponse(response: unknown): response is TableResponse {
-      if (typeof response !== 'object' || response === null) {
-        return false
-      }
-
-      const r = response as { rows?: unknown }
-
-      if (!Array.isArray(r.rows)) {
-        return false
-      }
-
-      return r.rows.every((row): row is TableResponseRow => {
-        if (typeof row !== 'object' || row === null) {
-          return false
-        }
-
-        const id = (row as { id?: unknown }).id
-        const data = (row as { data?: unknown }).data
-
-        return typeof id === 'string' && typeof data === 'object' && data !== null && !Array.isArray(data)
-      })
-    }
 
     const answeredCountBySubPost = answers.reduce<Partial<Record<SubPost, number>>>((acc, answer) => {
       const { response, question } = answer
