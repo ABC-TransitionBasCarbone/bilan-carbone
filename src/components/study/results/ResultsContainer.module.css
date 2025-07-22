@@ -71,14 +71,6 @@
   pointer-events: none;
 }
 
-.graph {
-  width: calc(50% - 1rem);
-
-  @media screen and (max-width: 60rem) {
-    width: 100%;
-  }
-}
-
 .helpIcon {
   cursor: pointer;
 

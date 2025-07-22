@@ -573,6 +573,7 @@
       "download": "Télécharger les résultats",
       "downloadPDF": "Télécharger la fiche récapitulative",
       "value": "Émissions ({unit})",
+      "emissions": "Émissions",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",

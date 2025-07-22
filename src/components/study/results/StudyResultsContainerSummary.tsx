@@ -6,9 +6,8 @@ import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
+import { BCPost, CutPost, environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
-import { mapResultsByPost } from '@/services/results/utils'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
@@ -19,7 +18,7 @@ import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import Result from './Result'
+import BarChart from '../charts/BarChart'
 import styles from './ResultsContainer.module.css'
 
 interface Props {
@@ -37,21 +36,6 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
   const { environment } = useAppEnvironmentStore()
-
-  const allComputedResults = useMemo(
-    () =>
-      computeResultsByPost(
-        study,
-        tPost,
-        studySite,
-        true,
-        validatedOnly,
-        environmentPostMapping[environment || Environment.BC],
-      ),
-    [studySite, validatedOnly, environment],
-  )
-
-  const computedResults = useMemo(() => mapResultsByPost(allComputedResults, withDep), [allComputedResults, withDep])
 
   const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
@@ -83,7 +67,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
 
     return [formatedTotal, formatedDiff, formatedMonetaryRatio]
-  }, [study, studySite, validatedOnly, environment])
+  }, [environment, study, studySite, tPost, validatedOnly])
 
   return (
     <>
@@ -165,7 +149,19 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             </Box>
           </fieldset>
         )}
-        <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
+        <div className="grow">
+          <BarChart
+            study={study}
+            studySite={studySite}
+            height={450}
+            showTitle={false}
+            showLegend={false}
+            showLabelsOnBars={false}
+            validatedOnly={false}
+            postValues={isCut ? CutPost : BCPost}
+            fixedColor={isCut ? false : true}
+          />
+        </div>
       </div>
       <GlossaryModal
         glossary={glossary ? `results.${glossary}` : ''}

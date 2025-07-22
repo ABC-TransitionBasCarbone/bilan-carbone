@@ -1,6 +1,5 @@
 'use client'
 
-import StudyCharts from '@/components/study/charts/StudyCharts'
 import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
 import { CutPost } from '@/services/posts'
@@ -15,6 +14,7 @@ import './pdf-summary.css'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { ResultsByPost } from '@/services/results/consolidated'
+import { ChartsPage } from './ChartsPage'
 
 interface SiteData {
   id: string
@@ -167,35 +167,7 @@ const PDFSummary = ({ study }: Props) => {
           </div>
         </div>
 
-        <div className="pdf-content page-break-before pdf-page-content">
-          <div className="pdf-section">
-            <h2 className="pdf-totals-header pdf-header-with-border">{tPdf('charts.all')}</h2>
-
-            <StudyCharts
-              study={study}
-              studySite="all"
-              type="bar"
-              height={350}
-              showTitle={true}
-              title={tPdf('charts.allEmissions')}
-              showLegend={false}
-              showLabelsOnBars={true}
-              validatedOnly={false}
-            />
-
-            <StudyCharts
-              study={study}
-              studySite="all"
-              type="pie"
-              height={400}
-              showTitle={true}
-              title={tPdf('charts.allEmissions')}
-              showLegend={true}
-              showLabelsOnPie={true}
-              validatedOnly={false}
-            />
-          </div>
-        </div>
+        <ChartsPage study={study} studySite="all" siteName="" tPdf={tPdf} isAll={true} postValues={CutPost} />
 
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
@@ -242,37 +214,14 @@ const PDFSummary = ({ study }: Props) => {
               </div>
             </div>
 
-            <div className="pdf-content page-break-before pdf-page-content">
-              <div className="pdf-section">
-                <h2 className="pdf-cinema-header pdf-header-with-border">
-                  {tPdf('charts.site', { site: site.fullName })}
-                </h2>
-
-                <StudyCharts
-                  study={study}
-                  studySite={site.id}
-                  type="bar"
-                  height={350}
-                  showTitle={true}
-                  title={tPdf('charts.siteEmissions', { site: site.fullName })}
-                  showLegend={false}
-                  showLabelsOnBars={true}
-                  validatedOnly={false}
-                />
-
-                <StudyCharts
-                  study={study}
-                  studySite={site.id}
-                  type="pie"
-                  height={400}
-                  showTitle={true}
-                  title={tPdf('charts.siteEmissions', { site: site.fullName })}
-                  showLegend={true}
-                  showLabelsOnPie={true}
-                  validatedOnly={false}
-                />
-              </div>
-            </div>
+            <ChartsPage
+              study={study}
+              studySite={site.id}
+              siteName={site.fullName}
+              tPdf={tPdf}
+              isAll={false}
+              postValues={CutPost}
+            />
           </React.Fragment>
         ))}
       </div>
