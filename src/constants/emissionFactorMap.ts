@@ -330,7 +330,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   // DechetsExceptionnels
   'quelle-quantite-de-materiel-technique-jetez-vous-par-an': { emissionFactorImportedId: '34620' },
-  [XENON_LAMPS_QUESTION_ID]: { emissionFactorImportedId: '107', isSpecial: true, weights: { default: 0.86 } },
+  [XENON_LAMPS_QUESTION_ID]: { emissionFactorImportedId: '144', isSpecial: true, weights: { default: 0.86 } },
   // MaterielDistributeurs
   '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
     isFixed: true,
