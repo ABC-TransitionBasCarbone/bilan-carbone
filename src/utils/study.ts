@@ -75,6 +75,18 @@ export const postColors: Record<Post, string> = {
   [Post.ConfiseriesEtBoissons]: 'orange',
   [Post.Dechets]: 'darkBlue',
   [Post.BilletterieEtCommunication]: 'darkBlue',
+
+  [Post.ConstructionDesLocaux]: 'darkBlue',
+  [Post.FroidEtClim]: 'darkBlue',
+  [Post.AutresEmissions]: 'darkBlue',
+  [Post.DeplacementsDePersonne]: 'darkBlue',
+  [Post.TransportDeMarchandises]: 'darkBlue',
+  [Post.IntrantsBiensEtMatieresTilt]: 'darkBlue',
+  [Post.Alimentation]: 'darkBlue',
+  [Post.EquipementsEtImmobilisations]: 'darkBlue',
+  [Post.Utilisation]: 'darkBlue',
+  [Post.Teletravail]: 'darkBlue',
+  [Post.Numerique]: 'darkBlue',
 }
 
 export const hasEditionRights = (userRoleOnStudy: StudyRole | null) => {
