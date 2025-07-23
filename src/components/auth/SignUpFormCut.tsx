@@ -29,30 +29,10 @@ const SignUpFormCut = () => {
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
-  const [cncs, setCNCS] = useState<Cnc[]>([])
+  const [cncs, setCNCs] = useState<Cnc[]>([])
   const { callServerFunction } = useServerFunction()
 
   const searchParams = useSearchParams()
-
-  useEffect(() => {
-    fetchCNCs()
-
-    const email = searchParams.get('email')
-    if (email) {
-      setValue('email', email)
-    }
-  }, [searchParams])
-
-  const fetchCNCs = async () => {
-    const response = await callServerFunction(async () => {
-      const data = await getAllCNCs()
-      return { success: true, data } // wrap in ApiResponse
-    })
-
-    if (response.success) {
-      setCNCS(response.data)
-    }
-  }
 
   const { control, getValues, setValue, handleSubmit } = useForm<SignUpCutCommand>({
     resolver: zodResolver(SignUpCutCommandValidation),
@@ -62,6 +42,28 @@ const SignUpFormCut = () => {
       email: searchParams.get('email') ?? '',
     },
   })
+
+  useEffect(() => {
+    const fetchCNCs = async () => {
+      const response = await callServerFunction(async () => {
+        const data = await getAllCNCs()
+        return { success: true, data }
+      })
+
+      if (response.success) {
+        setCNCs(response.data)
+      }
+    }
+
+    fetchCNCs()
+  }, [setCNCs])
+
+  useEffect(() => {
+    const email = searchParams.get('email')
+    if (email) {
+      setValue('email', email)
+    }
+  }, [searchParams, setValue])
 
   const onSubmit = async () => {
     setMessage('')
