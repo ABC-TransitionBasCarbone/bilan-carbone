@@ -1201,8 +1201,28 @@ export const duplicateStudyCommand = async (
     const studySites = await getStudySites(createdStudyId)
 
     for (const sourceVersion of sourceStudy.emissionFactorVersions) {
-      await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId)
+      // TODO: Clean check when we fix: https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/1377
+      if (sourceVersion.source !== Import.CUT) {
+        await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId)
+      }
     }
+
+    // Check if control modes have changed to determine if we should clear characterizations
+    const sourceExportsByType = sourceStudy.exports.reduce(
+      (acc, exp) => {
+        acc[exp.type] = exp.control
+        return acc
+      },
+      {} as Record<Export, ControlMode>,
+    )
+
+    const hasControlModeChanged = (exportType: Export) => {
+      const sourceControl = sourceExportsByType[exportType]
+      const newControl = studyCommand.exports[exportType]
+      return sourceControl && newControl && sourceControl !== newControl
+    }
+
+    const shouldClearCharacterizations = Object.values(Export).some(hasControlModeChanged)
 
     const sourceEmissionSources = sourceStudy.emissionSources
     for (const sourceEmissionSource of sourceEmissionSources) {
@@ -1231,7 +1251,8 @@ export const duplicateStudyCommand = async (
           feGeographicRepresentativeness: sourceEmissionSource.feGeographicRepresentativeness,
           feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
           feCompleteness: sourceEmissionSource.feCompleteness,
-          caracterisation: sourceEmissionSource.caracterisation,
+          // Clear characterization if control mode changed, otherwise keep it
+          caracterisation: shouldClearCharacterizations ? null : sourceEmissionSource.caracterisation,
           study: { connect: { id: createdStudyId } },
           emissionFactor: sourceEmissionSource.emissionFactor
             ? { connect: { id: sourceEmissionSource.emissionFactor.id } }
