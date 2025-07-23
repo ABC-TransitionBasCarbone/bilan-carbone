@@ -11,6 +11,7 @@ import { ExportRule } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
+import { StyledBegesTable } from './StyledBegesTable'
 
 interface Props {
   study: FullStudy
@@ -42,26 +43,22 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
     () =>
       [
         {
-          header: t('rule'),
-          columns: [
-            {
-              id: 'category',
-              header: t('category.title'),
-              accessorFn: ({ rule }) => {
-                const category = rule.split('.')[0]
-                return category === 'total' ? '' : `${category}. ${t(`category.${category}`)}`
-              },
-            },
-            {
-              header: t('post.title'),
-              accessorFn: ({ rule }) => {
-                if (rule === 'total') {
-                  return t('total')
-                }
-                return rule.includes('.total') ? t('subTotal') : `${rule}. ${t(`post.${rule}`)}`
-              },
-            },
-          ],
+          id: 'category',
+          header: t('category.title'),
+          accessorFn: ({ rule }) => {
+            const category = rule.split('.')[0]
+            return category === 'total' ? '' : `${category}. ${t(`category.${category}`)}`
+          },
+        },
+        {
+          id: 'post',
+          header: t('post.title'),
+          accessorFn: ({ rule }) => {
+            if (rule === 'total') {
+              return t('total')
+            }
+            return rule.includes('.total') ? t('subTotal') : `${rule}. ${t(`post.${rule}`)}`
+          },
         },
         {
           header: t('ges', { unit: tUnits(study.resultsUnit) }),
@@ -96,15 +93,16 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
               accessorKey: 'co2b',
               cell: ({ getValue }) => formatNumber(getValue<number>() / STUDY_UNIT_VALUES[study.resultsUnit]),
             },
-            {
-              header: t('uncertainty'),
-              accessorFn: ({ uncertainty }) =>
-                uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
-            },
           ],
         },
+        {
+          id: 'uncertainty',
+          header: t('uncertainty'),
+          accessorFn: ({ uncertainty }) =>
+            uncertainty ? tQuality(getStandardDeviationRating(uncertainty).toString()) : '',
+        },
       ] as ColumnDef<BegesLine>[],
-    [t, tQuality],
+    [t, tQuality, tUnits, study.resultsUnit],
   )
 
   const data = useMemo(
@@ -120,7 +118,7 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
 
   return (
     <>
-      <table aria-labelledby="study-rights-table-title">
+      <StyledBegesTable aria-labelledby="study-rights-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -133,20 +131,60 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} data-testid="beges-results-table-row">
-              {row.getVisibleCells().map((cell) => {
-                const rule = row.original.rule.split('.')
-                return cell.column.id !== 'category' || rule[1] === '1' || rule[0] === 'total' ? (
-                  <td key={cell.id} rowSpan={cell.column.id === 'category' ? rulesSpans[rule[0]] : undefined}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ) : null
-              })}
-            </tr>
-          ))}
+          {table.getRowModel().rows.map((row) => {
+            const rule = row.original.rule.split('.')
+            const category = rule[0]
+            const isTotal = category === 'total'
+            const isCategoryHeader = rule[1] === '1' || isTotal
+
+            return (
+              <tr
+                key={row.id}
+                data-testid="beges-results-table-row"
+                data-category={category}
+                className={isCategoryHeader ? 'category-first-row' : ''}
+              >
+                {row.getVisibleCells().map((cell) => {
+                  const shouldRenderCell = cell.column.id !== 'category' || isCategoryHeader
+
+                  if (!shouldRenderCell) {
+                    return null
+                  }
+
+                  let cellClass = ''
+                  const isSubtotal = row.original.rule.includes('.total')
+                  const isTotalColumn = cell.column.id === 'total'
+
+                  if (cell.column.id === 'category') {
+                    cellClass = 'category-cell category-bold'
+                  } else if (isTotal) {
+                    cellClass = 'total-row'
+                  } else if (isSubtotal) {
+                    cellClass = 'post-cell subtotal-row'
+                  } else {
+                    cellClass = 'post-cell'
+                  }
+
+                  if (isTotalColumn) {
+                    cellClass += ' total-column'
+                  }
+
+                  return (
+                    <td
+                      key={cell.id}
+                      rowSpan={cell.column.id === 'category' ? rulesSpans[category] : undefined}
+                      className={cellClass}
+                      data-category={category}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
         </tbody>
-      </table>
+      </StyledBegesTable>
     </>
   )
 }

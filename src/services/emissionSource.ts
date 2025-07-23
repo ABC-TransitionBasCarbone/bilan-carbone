@@ -1,6 +1,6 @@
 import { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
+import { ControlMode, EmissionSourceCaracterisation, Export, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
 import { Post, subPostsByPost } from './posts'
 import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
@@ -22,7 +22,9 @@ export const getEmissionSourceCompletion = (
   emissionFactor: (FullStudy | StudyWithoutDetail)['emissionSources'][0]['emissionFactor'],
 ) => {
   const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
-  const caracterisations = caracterisationsBySubPost[emissionSource.subPost]
+
+  const caracterisations = getCaracterisationsBySubPost(study.exports, emissionSource.subPost)
+
   if (study.exports.length > 0 && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
@@ -171,7 +173,29 @@ export const getEmissionResultsCut = (emissionSource: (FullStudy | StudyWithoutD
   return result
 }
 
-export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
+const getAllCaracterisationsBySubPost = (
+  controlMode: ControlMode,
+): Partial<Record<SubPost, EmissionSourceCaracterisation[]>> => {
+  switch (controlMode) {
+    case ControlMode.Financial:
+      return financialCaracterisationsBySubPost
+    case ControlMode.Operational:
+      return operationalCaracterisationsBySubPost
+    default:
+      return operationalCaracterisationsBySubPost
+  }
+}
+
+export const getCaracterisationsBySubPost = (exports: FullStudy['exports'], subPost: SubPost) => {
+  const begesExport = exports.find((exp) => exp.type === Export.Beges)
+  const controlMode = begesExport?.control || ControlMode.Operational
+  const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
+  const caracterisations = caracterisationMap[subPost]
+
+  return caracterisations ?? []
+}
+
+export const operationalCaracterisationsBySubPost: Partial<Record<SubPost, EmissionSourceCaracterisation[]>> = {
   [SubPost.CombustiblesFossiles]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
   [SubPost.CombustiblesOrganiques]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
   [SubPost.ReseauxDeChaleurEtDeVapeur]: [
@@ -273,22 +297,138 @@ export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracteris
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
   ],
+}
 
-  [SubPost.ActivitesDeBureau]: [],
-  [SubPost.Equipe]: [],
-  [SubPost.Batiment]: [],
-  [SubPost.Fret]: [],
-  [SubPost.MobiliteSpectateurs]: [],
-  [SubPost.Energie]: [],
-  [SubPost.EquipesRecues]: [],
-  [SubPost.MaterielTechnique]: [],
-  [SubPost.AutreMateriel]: [],
-  [SubPost.Achats]: [],
-  [SubPost.Electromenager]: [],
-  [SubPost.DechetsOrdinaires]: [],
-  [SubPost.DechetsExceptionnels]: [],
-  [SubPost.MaterielDistributeurs]: [],
-  [SubPost.MaterielCinema]: [],
-  [SubPost.CommunicationDigitale]: [],
-  [SubPost.CaissesEtBornes]: [],
+export const financialCaracterisationsBySubPost: Partial<Record<SubPost, EmissionSourceCaracterisation[]>> = {
+  [SubPost.CombustiblesFossiles]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.CombustiblesOrganiques]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.ReseauxDeChaleurEtDeVapeur]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.ReseauxDeFroid]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.Electricite]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.Agriculture]: [
+    EmissionSourceCaracterisation.HeldProcedeed,
+    EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.EmissionsLieesALaProductionDeFroid]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.EmissionsLieesAuxProcedesIndustriels]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.AutresEmissionsNonEnergetiques]: [
+    EmissionSourceCaracterisation.HeldProcedeed,
+    EmissionSourceCaracterisation.HeldFugitive,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
+    EmissionSourceCaracterisation.NotHeldOther,
+  ],
+  [SubPost.MetauxPlastiquesEtVerre]: [EmissionSourceCaracterisation.Held],
+  [SubPost.PapiersCartons]: [EmissionSourceCaracterisation.Held],
+  [SubPost.MateriauxDeConstruction]: [EmissionSourceCaracterisation.Held],
+  [SubPost.ProduitsChimiquesEtHydrogene]: [EmissionSourceCaracterisation.Held],
+  [SubPost.NourritureRepasBoissons]: [EmissionSourceCaracterisation.Held],
+  [SubPost.MatiereDestineeAuxEmballages]: [EmissionSourceCaracterisation.Held],
+  [SubPost.AutresIntrants]: [EmissionSourceCaracterisation.Held],
+  [SubPost.BiensEtMatieresEnApprocheMonetaire]: [EmissionSourceCaracterisation.Held],
+  [SubPost.AchatsDeServices]: [EmissionSourceCaracterisation.Held],
+  [SubPost.UsagesNumeriques]: [EmissionSourceCaracterisation.Held],
+  [SubPost.ServicesEnApprocheMonetaire]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsDEmballagesEtPlastiques]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsOrganiques]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsOrduresMenageres]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsDangereux]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsBatiments]: [EmissionSourceCaracterisation.Held],
+  [SubPost.DechetsFuitesOuEmissionsNonEnergetiques]: [EmissionSourceCaracterisation.Held],
+  [SubPost.EauxUsees]: [EmissionSourceCaracterisation.Held],
+  [SubPost.FretEntrant]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSupported,
+    EmissionSourceCaracterisation.NotHeldNotSupported,
+  ],
+  [SubPost.FretInterne]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSupported,
+    EmissionSourceCaracterisation.NotHeldNotSupported,
+  ],
+  [SubPost.FretSortant]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSupported,
+    EmissionSourceCaracterisation.NotHeldNotSupported,
+  ],
+  [SubPost.DeplacementsDomicileTravail]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSupported,
+    EmissionSourceCaracterisation.NotHeldNotSupported,
+  ],
+  [SubPost.DeplacementsProfessionnels]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSupported,
+    EmissionSourceCaracterisation.NotHeldNotSupported,
+  ],
+  [SubPost.DeplacementsVisiteurs]: [
+    EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSupported,
+    EmissionSourceCaracterisation.NotHeldNotSupported,
+  ],
+  [SubPost.Batiments]: [EmissionSourceCaracterisation.Held],
+  [SubPost.AutresInfrastructures]: [EmissionSourceCaracterisation.Held],
+  [SubPost.Equipements]: [EmissionSourceCaracterisation.Held],
+  [SubPost.Informatique]: [EmissionSourceCaracterisation.Held],
+  [SubPost.UtilisationEnResponsabilite]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
+  ],
+  [SubPost.UtilisationEnDependance]: [],
+  [SubPost.InvestissementsFinanciersRealises]: [EmissionSourceCaracterisation.Held],
+  [SubPost.ConsommationDEnergieEnFinDeVie]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
+  ],
+  [SubPost.TraitementDesDechetsEnFinDeVie]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
+  ],
+  [SubPost.FuitesOuEmissionsNonEnergetiques]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
+  ],
+  [SubPost.TraitementDesEmballagesEnFinDeVie]: [
+    EmissionSourceCaracterisation.Rented,
+    EmissionSourceCaracterisation.FinalClient,
+    EmissionSourceCaracterisation.UsedByIntermediary,
+  ],
 }

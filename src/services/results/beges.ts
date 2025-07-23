@@ -197,6 +197,7 @@ export const computeBegesResult = (
 
       const id = emissionSource.emissionFactor.id
       const caracterisation = emissionSource.caracterisation
+
       const value = getBegesEmissionValue(emissionSource)
 
       const emissionFactor = emissionFactorsWithParts.find(
