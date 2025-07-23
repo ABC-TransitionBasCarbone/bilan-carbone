@@ -1,5 +1,5 @@
 import { FullStudy } from '@/db/study'
-import { Import, Level, Prisma, Study, StudyResultUnit, StudyRole } from '@prisma/client'
+import { ControlMode, Export, Import, Level, Prisma, Study, StudyResultUnit, StudyRole } from '@prisma/client'
 import { mockedOrganizationVersion, mockedOrganizationVersionId } from './organization'
 import { mockedAccountId, mockedUser } from './user'
 
@@ -206,6 +206,7 @@ export const getMockeFullStudy = (overrides = {}) => ({
   name: 'Source Study',
   resultsUnit: StudyResultUnit.K,
   organizationVersionId: TEST_IDS.orgVersion,
+  exports: [{ type: Export.Beges, control: ControlMode.Operational }],
   emissionFactorVersions: [
     {
       source: Import.BaseEmpreinte,
