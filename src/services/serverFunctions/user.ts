@@ -11,7 +11,7 @@ import {
   getAccountFromUserOrganization,
   getAccountsFromUser,
 } from '@/db/account'
-import { getCNCById } from '@/db/cnc'
+import { findCncByNumeroAuto } from '@/db/cnc'
 import { isFeatureActive } from '@/db/deactivableFeatures'
 import {
   createOrganizationWithVersion,
@@ -566,7 +566,7 @@ export const signUpCutUser = async (email: string, siretOrCNC: string) =>
         ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, Environment.CUT)
         : null
       if (!organizationVersion) {
-        const CNC = await getCNCById(siretOrCNC)
+        const CNC = await findCncByNumeroAuto(siretOrCNC)
         if (!CNC) {
           throw new Error(UNKNOWN_CNC)
         }
@@ -576,7 +576,16 @@ export const signUpCutUser = async (email: string, siretOrCNC: string) =>
         )
         await addSite({
           name: CNC.nom || '',
-          cncId: siretOrCNC,
+          postalCode: CNC.codeInsee || '',
+          city: CNC.commune || '',
+          cnc: {
+            connectOrCreate: {
+              create: {},
+              where: {
+                id: CNC.id,
+              },
+            },
+          },
           organization: { connect: { id: organizationVersion.organizationId } },
         })
       }

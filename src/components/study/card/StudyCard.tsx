@@ -2,8 +2,9 @@ import Button from '@/components/base/Button'
 import Label from '@/components/base/Label'
 import ProgressBar from '@/components/base/ProgressBar'
 import { getStudyById, getStudyValidatedEmissionsSources } from '@/db/study'
+import { hasAccessToStudyCardDetails } from '@/services/permissions/environment'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import { Environment, Study } from '@prisma/client'
+import { Study } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -41,7 +42,7 @@ const StudyCard = async ({ study, user }: Props) => {
         <div className="justify-center">
           <StudyName name={study.name} />
         </div>
-        {user.environment === Environment.BC && (
+        {hasAccessToStudyCardDetails(user.environment) && (
           <>
             <div className="justify-center">
               <Label className={styles[accountRoleOnStudy.toLowerCase()]}>{t(`role.${accountRoleOnStudy}`)}</Label>

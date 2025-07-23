@@ -1,4 +1,6 @@
-import { createQuestions } from '@/db/question'
+import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
+import { upsertQuestions } from '@/db/question'
+import { QuestionType } from '@prisma/client'
 import { Command } from 'commander'
 import fs from 'fs'
 import path from 'path'
@@ -40,7 +42,15 @@ async function addQuestions(file: string, source: string) {
 
   console.log(`📊 ${questions.length} questions prêtes à être insérées.`)
 
-  await createQuestions(questions)
+  for (const question of questions) {
+    if (question.type === QuestionType.TABLE && !question.idIntern.match(ID_INTERN_PREFIX_REGEX)) {
+      throw new Error(
+        `L'idIntern "${question.idIntern}" de la question "${question.label}" doit commencer par un nombre. car c'est une quesiton table`,
+      )
+    }
+  }
+
+  await upsertQuestions(questions)
 
   console.log('✅ Insertion terminée.')
 }

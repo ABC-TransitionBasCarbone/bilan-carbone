@@ -62,7 +62,7 @@ export const mockedDbFullStudySite = {
     name: 'Mocked Site',
     postalCode: null,
     city: null,
-    cncId: null,
+    cnc: null,
   },
 }
 
@@ -136,6 +136,10 @@ export const getMockedDetailedFullStudySite = (
       name,
       postalCode: '12345',
       city: 'Test City',
+      cnc: {
+        numberOfProgrammedFilms: 10,
+        ecrans: 13,
+      },
     },
     ...overrides,
   }),

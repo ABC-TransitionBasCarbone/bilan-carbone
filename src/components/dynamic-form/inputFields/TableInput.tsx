@@ -65,7 +65,7 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
             if (selectQuestion && selectQuestion.possibleAnswers && selectQuestion.possibleAnswers[rowIndex]) {
               updatedData[question.idIntern] = selectQuestion.possibleAnswers[rowIndex]
             }
-          } else if (currentValue !== undefined && currentValue !== null && currentValue !== '') {
+          } else if (currentValue !== undefined && currentValue !== null) {
             updatedData[question.idIntern] = String(currentValue)
           }
         })
@@ -82,7 +82,6 @@ const TableInput = ({ question, control, autoSave, watch, formErrors, setValue }
   const handleTableFieldBlur = useCallback(() => {
     if (isFixedTable) {
       const updatedTableAnswer = syncAllValuesToTableData()
-      setTableAnswer(updatedTableAnswer)
       autoSave.saveField(question, updatedTableAnswer as unknown as Prisma.InputJsonValue)
     }
   }, [isFixedTable, syncAllValuesToTableData, autoSave, question])

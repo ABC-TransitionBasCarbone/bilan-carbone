@@ -5,12 +5,12 @@ import DebouncedInput from '@/components/base/DebouncedInput'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
-import { getCNCCodeById } from '@/services/serverFunctions/study'
+import { getCncByNumeroAuto } from '@/services/serverFunctions/study'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { Control, Controller, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from '../../base/organization/Sites.module.css'
 
@@ -27,18 +27,76 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
   const getValues = form?.getValues as UseFormGetValues<SitesCommand>
 
-  const getCncData = async (cncId: string, index: number) => {
-    if (!cncId || cncId.length < 2) {
-      return
-    }
-    const cnc = await getCNCCodeById(cncId)
-    if (!cnc) {
-      return
-    }
-    cnc.nom && setValue(`sites.${index}.name`, cnc.nom)
-    cnc.codeInsee && setValue(`sites.${index}.postalCode`, cnc.codeInsee)
-    cnc.commune && setValue(`sites.${index}.city`, cnc.commune)
-  }
+  // Track original site data to detect manual changes
+  const originalSiteDataRef = useRef<
+    Record<number, { numeroAuto: string; name: string; postalCode: string; city: string; cncId: string }>
+  >({})
+
+  const setCncData = useCallback(
+    async (numeroAuto: string, index: number) => {
+      // Initialize original values if not set
+      if (!(index in originalSiteDataRef.current)) {
+        const currentSite = sites[index]
+        originalSiteDataRef.current[index] = {
+          numeroAuto: currentSite?.cncNumeroAuto || '',
+          name: currentSite?.name || '',
+          postalCode: currentSite?.postalCode || '',
+          city: currentSite?.city || '',
+          cncId: currentSite?.cncId || '',
+        }
+      }
+
+      const originalData = originalSiteDataRef.current[index]
+
+      // If going back to original value, restore original site data
+      if (numeroAuto === originalData.numeroAuto) {
+        setValue(`sites.${index}.cncId`, originalData.cncId)
+        setValue(`sites.${index}.name`, originalData.name)
+        setValue(`sites.${index}.postalCode`, originalData.postalCode)
+        setValue(`sites.${index}.city`, originalData.city)
+        setValue(`sites.${index}.cncNumeroAuto`, originalData.numeroAuto)
+        return
+      }
+
+      if (!numeroAuto || numeroAuto.length < 2) {
+        // Clear all fields if input is too short
+        setValue(`sites.${index}.cncId`, '')
+        setValue(`sites.${index}.name`, '')
+        setValue(`sites.${index}.postalCode`, '')
+        setValue(`sites.${index}.city`, '')
+        return
+      }
+      // Look up CNC by numeroAuto (what the user enters)
+      const response = await getCncByNumeroAuto(numeroAuto)
+      if (!response.success || !response.data) {
+        // Clear all fields if CNC lookup fails
+        setValue(`sites.${index}.cncId`, '')
+        setValue(`sites.${index}.name`, '')
+        setValue(`sites.${index}.postalCode`, '')
+        setValue(`sites.${index}.city`, '')
+        return
+      }
+      const cnc = response.data
+      // Store the CNC's id (UUID) in the cncId field, not the numeroAuto
+      if (cnc.id) {
+        setValue(`sites.${index}.cncId`, cnc.id)
+      }
+      // Store the cnc numeroAuto for display purposes only
+      if (cnc.numeroAuto) {
+        setValue(`sites.${index}.cncNumeroAuto`, cnc.numeroAuto)
+      }
+      if (cnc.nom) {
+        setValue(`sites.${index}.name`, cnc.nom)
+      }
+      if (cnc.codeInsee) {
+        setValue(`sites.${index}.postalCode`, cnc.codeInsee)
+      }
+      if (cnc.commune) {
+        setValue(`sites.${index}.city`, cnc.commune)
+      }
+    },
+    [setValue, sites],
+  )
 
   const columns = useMemo(() => {
     const columns = [
@@ -57,30 +115,33 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                     name={`sites.${row.index}.selected`}
                     data-testid="organization-sites-checkbox"
                   />
-                  {getValue<string>()}
+                  {row.original.cncNumeroAuto || getValue<string>() || ''}
                 </div>
               ) : (
                 <Controller
                   name={`sites.${row.index}.cncId`}
                   control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <DebouncedInput
-                      data-testid="edit-site-cnc"
-                      className={styles.cnc}
-                      debounce={200}
-                      value={value ?? ''}
-                      onChange={(newValue: string) => {
-                        onChange(newValue)
-                        newValue && getCncData(newValue, row.index)
-                      }}
-                      placeholder={t('cncPlaceholder')}
-                      slotProps={{
-                        input: {
-                          sx: { borderRadius: '0.75rem', borderColor: 'var(--grayscale-300)', color: 'black' },
-                        },
-                      }}
-                    />
-                  )}
+                  render={() => {
+                    const displayValue = row.original.cncNumeroAuto || ''
+
+                    return (
+                      <DebouncedInput
+                        data-testid="edit-site-cnc"
+                        className={styles.cnc}
+                        debounce={200}
+                        value={displayValue}
+                        onChange={(newValue: string) => {
+                          setCncData(newValue, row.index)
+                        }}
+                        placeholder={t('cncPlaceholder')}
+                        slotProps={{
+                          input: {
+                            sx: { borderRadius: '0.75rem', borderColor: 'var(--grayscale-300)', color: 'black' },
+                          },
+                        }}
+                      />
+                    )
+                  }}
                 />
               )}
             </>
@@ -187,7 +248,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
       })
     }
     return columns
-  }, [t, form])
+  }, [t, form, withSelection, control, setCncData, setValue, getValues])
 
   return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} isCut={true} />
 }

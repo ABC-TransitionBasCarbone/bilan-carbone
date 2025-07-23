@@ -3,13 +3,19 @@
 import { TableAnswer } from '@/components/dynamic-form/types/formTypes'
 import { EmissionFactorInfo, emissionFactorMap } from '@/constants/emissionFactorMap'
 import {
+  CLIMATISATION_QUESTION_ID,
   CONFECTIONERY_QUESTION_ID,
   LONG_DISTANCE_APPLIED_PERCENTAGE,
   LONG_DISTANCE_QUESTION_ID,
   MOVIE_DCP_QUESTION_ID,
   MOVIE_DEMAT_QUESTION_ID,
   MOVIE_TEAM_QUESTION_ID,
+  NEWSLETTER_QUESTION_ID,
+  NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
+  RENOVATION_QUESTION_ID,
+  SERVICES_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
+  XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
@@ -155,6 +161,48 @@ const handleTableEmissionSources = async (
   return emissionSourceIds
 }
 
+const handleDepreciation = async (
+  linkDepreciationQuestionId: string,
+  depreciationPeriod: number | undefined,
+  currentValue: number,
+  emissionFactorImportedId: string | undefined,
+  studyStartDate: Date,
+  studySiteId: string,
+) => {
+  const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
+  let emissionSourceId: string | undefined
+  let valueToStore = currentValue
+  let emissionFactorToFindId: string | undefined
+  if (!linkQuestion) {
+    throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
+  }
+
+  const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
+  if (linkAnswer) {
+    const linkEmissionSource = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
+    emissionSourceId = linkEmissionSource?.emissionSourceId ?? undefined
+  }
+
+  const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
+
+  const depreciationPeriodToStore =
+    (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
+  const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
+  const dateValue = depreciationPeriod ? currentValue : parseFloat(linkAnswer?.response?.toString() || '0')
+
+  if (depreciationPeriodToStore < studyStartDate.getFullYear() - dateValue) {
+    valueToStore = 0
+  } else {
+    valueToStore = valueToDepreciate
+  }
+
+  if (!emissionFactorImportedId && linkEmissionInfo?.emissionFactorImportedId) {
+    emissionFactorToFindId = linkEmissionInfo.emissionFactorImportedId
+  }
+
+  return { emissionSourceId, valueToStore, emissionFactorToFindId, depreciationPeriodToStore }
+}
+
 export const saveAnswerForQuestion = async (
   question: Question,
   response: Prisma.InputJsonValue,
@@ -236,7 +284,7 @@ export const saveAnswerForQuestion = async (
     let depreciationPeriodToStore = depreciationPeriod
 
     if (isSpecial) {
-      return handleSpecialQuestions(question, response, study, studySiteId)
+      return handleSpecialQuestions(question, response, study, studySite)
     }
 
     if (!emissionFactorImportedId && !depreciationPeriod && !linkDepreciationQuestionId) {
@@ -251,32 +299,18 @@ export const saveAnswerForQuestion = async (
 
     let emissionFactorToFindId = emissionFactorImportedId
     if (linkDepreciationQuestionId) {
-      const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
-      if (!linkQuestion) {
-        throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
-      }
-
-      const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
-      if (linkAnswer) {
-        const linkEmissionSource = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
-        emissionSourceId = linkEmissionSource?.emissionSourceId ?? undefined
-      }
-
-      const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
-
-      depreciationPeriodToStore = (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
-      const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
-      const dateValue = depreciationPeriod ? valueToStore : parseFloat(linkAnswer?.response?.toString() || '0')
-
-      if (depreciationPeriodToStore < new Date(study.startDate).getFullYear() - dateValue) {
-        valueToStore = 0
-      } else {
-        valueToStore = valueToDepreciate
-      }
-
-      if (!emissionFactorImportedId && linkEmissionInfo?.emissionFactorImportedId) {
-        emissionFactorToFindId = linkEmissionInfo.emissionFactorImportedId
-      }
+      const depreciationInfo = await handleDepreciation(
+        linkDepreciationQuestionId,
+        depreciationPeriodToStore,
+        valueToStore,
+        emissionFactorImportedId,
+        study.startDate,
+        studySiteId,
+      )
+      emissionSourceId = depreciationInfo.emissionSourceId
+      valueToStore = depreciationInfo.valueToStore
+      emissionFactorToFindId = depreciationInfo.emissionFactorToFindId
+      depreciationPeriodToStore = depreciationInfo.depreciationPeriodToStore
     }
 
     if (emissionFactorToFindId) {
@@ -738,7 +772,7 @@ const applyDematMovieCalculation = async (
 ) => {
   const studyId = study.id
   const emissionSourceIds: string[] = []
-  const emissionInfo = emissionFactorMap[MOVIE_DCP_QUESTION_ID]
+  const emissionInfo = emissionFactorMap[MOVIE_DEMAT_QUESTION_ID]
   if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
     return emissionSourceIds
   }
@@ -752,23 +786,20 @@ const applyDematMovieCalculation = async (
     return emissionSourceIds
   }
 
-  const numberReponse = Number(response)
-  const infosToCreate = [180, 3, 4]
+  const numberDematFilms = Number(response)
 
-  for (const info of infosToCreate) {
-    const newEmissionSource = await createEmissionSource({
-      studyId,
-      studySiteId,
-      value: info * numberReponse,
-      name: question.idIntern,
-      subPost: question.subPost,
-      emissionFactorId: emissionFactor.id,
-      validated: true,
-    })
+  const newEmissionSourceDemat = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: 180 * numberDematFilms + 3 * numberDematFilms + 4 * numberDematFilms,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
 
-    if (newEmissionSource.success && newEmissionSource.data) {
-      emissionSourceIds.push(newEmissionSource.data.id)
-    }
+  if (newEmissionSourceDemat.success && newEmissionSourceDemat.data) {
+    emissionSourceIds.push(newEmissionSourceDemat.data.id)
   }
 
   return emissionSourceIds
@@ -779,6 +810,7 @@ const applyDCPMovieCalculation = async (
   response: Prisma.InputJsonValue,
   study: FullStudy,
   studySiteId: string,
+  numberOfProgrammedFilms: number,
 ) => {
   const studyId = study.id
 
@@ -799,12 +831,12 @@ const applyDCPMovieCalculation = async (
 
   const studySite = study.sites.find((site) => site.id === studySiteId)
   const distanceToParis = studySite?.distanceToParis || 0
-  const numberReponse = Number(response)
+  const numberDematFilms = Number(response)
 
   const newEmissionSource = await createEmissionSource({
     studyId,
     studySiteId,
-    value: (0.1 * numberReponse * distanceToParis) / 1000,
+    value: ((numberOfProgrammedFilms - numberDematFilms) * distanceToParis) / 1000,
     name: question.idIntern,
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
@@ -818,25 +850,245 @@ const applyDCPMovieCalculation = async (
   return emissionSourceIds
 }
 
-const handleSpecialQuestions = async (
+const applyNewsletterCalculation = async (
   question: Question,
   response: Prisma.InputJsonValue,
   study: FullStudy,
   studySiteId: string,
 ) => {
+  const studyId = study.id
+
+  let newsletterCount: number
+  let receiverCount: number
+
+  if (question.idIntern === NEWSLETTER_QUESTION_ID) {
+    newsletterCount = Number(response)
+
+    const receiverCountAnswer = await getAnswerByQuestionId(
+      await getQuestionByIdIntern(NEWSLETTER_RECEIVER_COUNT_QUESTION_ID).then((q) => q?.id || ''),
+      studySiteId,
+    )
+    receiverCount = Number(receiverCountAnswer?.response) || 0
+  } else {
+    receiverCount = Number(response)
+
+    const newsletterCountAnswer = await getAnswerByQuestionId(
+      await getQuestionByIdIntern(NEWSLETTER_QUESTION_ID).then((q) => q?.id || ''),
+      studySiteId,
+    )
+    newsletterCount = Number(newsletterCountAnswer?.response) || 0
+  }
+
+  if (newsletterCount === 0 || receiverCount === 0) {
+    return []
+  }
+
+  const totalEmails = newsletterCount * receiverCount
+
+  const emissionFactorInfo = emissionFactorMap[NEWSLETTER_QUESTION_ID]
+  if (!emissionFactorInfo || !emissionFactorInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionFactorInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: totalEmails,
+    name: NEWSLETTER_QUESTION_ID,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
+const applyXenonLampsCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+  const numberOfLamps = Number(response) || 0
+
+  if (numberOfLamps === 0) {
+    return []
+  }
+
+  const emissionFactorInfo = emissionFactorMap[XENON_LAMPS_QUESTION_ID]
+  if (!emissionFactorInfo || !emissionFactorInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionFactorInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const weight = emissionFactorInfo.weights?.default
+  if (!weight) {
+    return []
+  }
+
+  const value = numberOfLamps * weight // weight in kg
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
+const handleClimatisationCalculation = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySite: FullStudy['sites'][number],
+) => {
+  const studyId = study.id
+  const {
+    id: studySiteId,
+    site: { cnc },
+  } = studySite
+
+  const value = Boolean(response)
+
+  if (!value || !cnc?.ecrans) {
+    return []
+  }
+
+  const emissionInfo = emissionFactorMap[CLIMATISATION_QUESTION_ID]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: cnc.ecrans,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
+const handleKEuroQuestions = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+
+  const value = Number(response) || 0
+
+  if (!value) {
+    return []
+  }
+
+  const emissionInfo = emissionFactorMap[question.idIntern]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const depreciationPeriodToStore = emissionInfo.depreciationPeriod ?? 0
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: value / 1000,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+    ...(depreciationPeriodToStore > 0 && { depreciationPeriod: depreciationPeriodToStore }),
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
+const handleSpecialQuestions = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySite: FullStudy['sites'][0],
+) => {
+  const {
+    id: studySiteId,
+    site: { cnc },
+  } = studySite
+
   let emissionSourceIds: string[] = []
 
-  if (question.idIntern !== SHORT_DISTANCE_QUESTION_ID && question.idIntern !== LONG_DISTANCE_QUESTION_ID) {
-    await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [question.idIntern])
+  const emissionFactorInfo = emissionFactorMap[question.idIntern]
+
+  const questionsToCleanup = [question.idIntern]
+  if (emissionFactorInfo?.relatedQuestions) {
+    questionsToCleanup.push(...emissionFactorInfo.relatedQuestions)
   }
+
+  await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, questionsToCleanup)
 
   switch (question.idIntern) {
     case SHORT_DISTANCE_QUESTION_ID:
     case LONG_DISTANCE_QUESTION_ID: {
-      await cleanupEmissionSourcesByQuestionIdInterns(studySiteId, [
-        SHORT_DISTANCE_QUESTION_ID,
-        LONG_DISTANCE_QUESTION_ID,
-      ])
       emissionSourceIds = await applyCinemaProfileForTransport(question, response, study, studySiteId)
       break
     }
@@ -849,11 +1101,33 @@ const handleSpecialQuestions = async (
       break
     }
     case MOVIE_DEMAT_QUESTION_ID: {
-      emissionSourceIds = await applyDematMovieCalculation(question, response, study, studySiteId)
+      const emissionSourceDematIds = await applyDematMovieCalculation(question, response, study, studySiteId)
+      const emissionSourceDCPIds = await applyDCPMovieCalculation(
+        question,
+        response,
+        study,
+        studySiteId,
+        cnc?.numberOfProgrammedFilms || 0,
+      )
+      emissionSourceIds = [...emissionSourceDCPIds, ...emissionSourceDematIds]
       break
     }
-    case MOVIE_DCP_QUESTION_ID: {
-      emissionSourceIds = await applyDCPMovieCalculation(question, response, study, studySiteId)
+    case NEWSLETTER_QUESTION_ID:
+    case NEWSLETTER_RECEIVER_COUNT_QUESTION_ID: {
+      emissionSourceIds = await applyNewsletterCalculation(question, response, study, studySiteId)
+      break
+    }
+    case XENON_LAMPS_QUESTION_ID: {
+      emissionSourceIds = await applyXenonLampsCalculation(question, response, study, studySiteId)
+      break
+    }
+    case CLIMATISATION_QUESTION_ID: {
+      emissionSourceIds = await handleClimatisationCalculation(question, response, study, studySite)
+      break
+    }
+    case RENOVATION_QUESTION_ID:
+    case SERVICES_QUESTION_ID: {
+      emissionSourceIds = await handleKEuroQuestions(question, response, study, studySiteId)
       break
     }
     default: {

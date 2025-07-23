@@ -1,9 +1,9 @@
-import { createCNC } from '@/db/cnc'
+import { upsertCNC } from '@/db/cnc'
 import { Prisma } from '@prisma/client'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
-import { getEncoding } from '../../utils/csv'
+import { getEncoding } from '../../../utils/csv'
 
 const addCNC = async (file: string) => {
   const cncs: Prisma.CncCreateInput[] = []
@@ -40,6 +40,7 @@ const addCNC = async (file: string) => {
               'genre',
               'multiplexe',
               'latitude',
+              'nombredefilmsprogrammes',
               'longitude',
             ]
             const missing = requiredHeaders.filter((h) => !headers.includes(h))
@@ -74,6 +75,7 @@ const addCNC = async (file: string) => {
           multiplexe?: string
           latitude?: number
           longitude?: number
+          nombredefilmsprogrammes?: number
         }) => {
           cncs.push({
             regionCNC: row.regioncnc,
@@ -95,12 +97,13 @@ const addCNC = async (file: string) => {
             multiplexe: row.multiplexe === 'OUI',
             latitude: row.latitude ? parseFloat(row.latitude.toString()) : undefined,
             longitude: row.longitude ? parseFloat(row.longitude.toString()) : undefined,
+            numberOfProgrammedFilms: row.nombredefilmsprogrammes ? Number(row.nombredefilmsprogrammes.toString()) : 0,
           })
         },
       )
       .on('end', async () => {
         console.log(`Ajout de ${cncs.length} cnc...`)
-        await createCNC(cncs)
+        await upsertCNC(cncs)
         console.log('CNC créées')
         resolve()
       })

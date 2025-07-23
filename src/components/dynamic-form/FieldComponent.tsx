@@ -211,11 +211,10 @@ const FieldComponent = ({
           const { ref, onBlur, onChange, ...fieldWithoutRef } = field
           const handleFieldBlur = () => {
             onBlur()
-            if (isSavingOnBlur) {
-              handleBlur()
-            }
             if (onCustomBlur) {
               onCustomBlur()
+            } else if (isSavingOnBlur) {
+              handleBlur()
             }
           }
 

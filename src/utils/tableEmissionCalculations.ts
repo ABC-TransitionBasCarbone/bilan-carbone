@@ -103,16 +103,7 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
     const accommodationTypeFEName = row.data['16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || ''
     const duration = parseFloat(row.data['17-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || '0')
 
-    if (
-      !distance ||
-      distance <= 0 ||
-      !participants ||
-      participants <= 0 ||
-      !occurrences ||
-      occurrences <= 0 ||
-      !transportModeFEName ||
-      !accommodationTypeFEName
-    ) {
+    if (!participants || participants <= 0 || !occurrences || occurrences <= 0) {
       return {
         emissionSources: [],
       }
@@ -120,7 +111,7 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
 
     const emissionSources: EmissionSourceCalculation[] = []
 
-    if (transportModeFEName && transportModeFEList) {
+    if (transportModeFEName && transportModeFEList && distance && distance > 0) {
       const transportModeFE = transportModeFEList[transportModeFEName]
 
       if (transportModeFE) {
@@ -541,7 +532,7 @@ const calculateWaste: TableEmissionCalculator = {
       )
 
       if (wasteEmissionFactor) {
-        const wasteValue = binCount * binSize * WASTE_DENSITY * frequency * 52
+        const wasteValue = binCount * binSize * WASTE_DENSITY * frequency * 52 * 0.001
 
         emissionSources.push({
           name: 'waste',

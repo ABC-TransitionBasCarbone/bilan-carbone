@@ -145,6 +145,12 @@ const fullStudyInclude = {
           name: true,
           postalCode: true,
           city: true,
+          cnc: {
+            select: {
+              numberOfProgrammedFilms: true,
+              ecrans: true,
+            },
+          },
         },
       },
     },
