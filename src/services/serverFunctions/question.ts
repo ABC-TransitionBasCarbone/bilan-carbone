@@ -791,7 +791,7 @@ const applyDematMovieCalculation = async (
   const newEmissionSourceDemat = await createEmissionSource({
     studyId,
     studySiteId,
-    value: 2 * numberDematFilms + 3 * numberDematFilms + 4 * numberDematFilms,
+    value: 180 * numberDematFilms + 3 * numberDematFilms + 4 * numberDematFilms,
     name: question.idIntern,
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
@@ -1035,27 +1035,10 @@ const handleKEuroQuestions = async (
     return []
   }
 
-  let valueToStore = value
-  let emissionFactorToFindId = emissionInfo.emissionFactorImportedId
-  let depreciationPeriodToStore = emissionInfo.depreciationPeriod
-  if (emissionInfo.linkDepreciationQuestionId) {
-    const depreciationInfo = await handleDepreciation(
-      emissionInfo.linkDepreciationQuestionId,
-      depreciationPeriodToStore,
-      valueToStore,
-      emissionInfo.emissionFactorImportedId,
-      study.startDate,
-      studySiteId,
-    )
-    if (depreciationInfo.emissionFactorToFindId) {
-      emissionFactorToFindId = depreciationInfo.emissionFactorToFindId
-    }
-    valueToStore = depreciationInfo.valueToStore
-    depreciationPeriodToStore = depreciationInfo.depreciationPeriodToStore
-  }
+  const depreciationPeriodToStore = emissionInfo.depreciationPeriod ?? 0
 
   const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
-    emissionFactorToFindId,
+    emissionInfo.emissionFactorImportedId,
     study.emissionFactorVersions.map((v) => v.importVersionId),
   )
 
@@ -1066,11 +1049,12 @@ const handleKEuroQuestions = async (
   const newEmissionSource = await createEmissionSource({
     studyId,
     studySiteId,
-    value: valueToStore / 1000,
+    value: value / 1000,
     name: question.idIntern,
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
     validated: true,
+    ...(depreciationPeriodToStore > 0 && { depreciationPeriod: depreciationPeriodToStore }),
   })
 
   if (newEmissionSource.success && newEmissionSource.data) {

@@ -84,10 +84,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     depreciationPeriod: 50,
     linkDepreciationQuestionId: 'quelle-est-la-surface-plancher-du-cinema',
   },
-  'a-quand-remonte-la-derniere-renovation-importante': {
-    depreciationPeriod: 10,
-    linkDepreciationQuestionId: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee',
-  },
   'de-quel-type-de-renovation-sagi-t-il': {},
   'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': {
     emissionFactorImportedId: '20730',
@@ -97,7 +93,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     emissionFactorImportedId: '43340',
     isSpecial: true,
     depreciationPeriod: 10,
-    linkDepreciationQuestionId: 'a-quand-remonte-la-derniere-renovation-importante',
   },
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},
