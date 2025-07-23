@@ -416,7 +416,7 @@
       "displayInfography": "Voir les différents postes",
       "hideInfography": "Cacher les différents postes",
       "emissionSource": "{count, plural, =0 {Pas de source d'emission} =1 {1 source d'émission} other {# sources d'émission}}",
-      "contributors": "{count, plural, =1 {1 contributeur} other {# contibuteurs}}",
+      "contributors": "{count, plural, =1 {1 contributeur·ice} other {# contibuteur·ices}}",
       "contributorsList": "{count, plural, =1 {Contributeur·rice :} other {Contributeur·ices :}}",
       "label": "Libellé de la source d'émission",
       "new": "Donnez un titre à votre nouvelle source d'émission",
@@ -490,7 +490,7 @@
       },
       "contributorsTable": {
         "actions": " ",
-        "delete": "Supprimer le contributeur",
+        "delete": "Supprimer le contributeur·ice",
         "email": "Email",
         "post": "Poste",
         "subPosts": "Sous postes",
@@ -926,7 +926,7 @@
         },
         "post": "Poste",
         "post_studyContributorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel votre facteur d'émission sera sélectionnable.",
-        "post_emissionFactorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel le contributeur pourra intervenir.",
+        "post_emissionFactorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel le contributeur·ice pourra intervenir.",
         "close": "Fermer"
       },
       "validation": {
@@ -1052,10 +1052,10 @@
     "Advanced": "Avancé"
   },
   "role": {
-    "SUPER_ADMIN": "Administrateur Global",
-    "ADMIN": "Administrateur",
+    "SUPER_ADMIN": "Administrateur·ice Global",
+    "ADMIN": "Administrateur·ice",
     "GESTIONNAIRE": "Gestionnaire",
-    "COLLABORATOR": "Collaborateur",
+    "COLLABORATOR": "Collaborateur·ice",
     "DEFAULT": "Membre",
     "ADMIN_description": "Un·e administrateur·ice possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées). Il est impossible de changer le rôle d'un·e administrateur·ice sur une étude de son organisation.",
     "ADMIN_description_CR": "Un·e administrateur·ice possède tous les droits sur le compte et les études (qu'elles soient publiques ou privées) de l'organisation ou de ses clients. Il est impossible de changer le rôle d'un·e administrateur·ice sur une étude de son organisation ou d'un de ses clients.",
@@ -1354,14 +1354,14 @@
     },
     "delete": {
       "button": "Supprimer l'organisation",
-      "title": "Êtes-vous sûr de vouloir supprimer ce·tte client·e ?",
+      "title": "Êtes-vous sûr de vouloir supprimer ce client ?",
       "content": "Êtes vous sur de vouloir supprimer ce·tte client·e ? <warning>Toutes ses données et études seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'organisation dans le champs ci-dessous:",
-      "name": "Nom du ou de la client·e",
+      "name": "Nom du client",
       "cancel": "Annuler",
       "confirm": "Confirmer",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
-      "wrongName": "Le nom du ou de la client·e ne correspond pas",
-      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce·tte client·e. Veuillez contacter le support."
+      "wrongName": "Le nom du client ne correspond pas",
+      "unexpectedAssociations": "Un évènement inattendu est survenu lors de la suppression de ce client. Veuillez contacter le support."
     }
   },
   "emissionSource": {

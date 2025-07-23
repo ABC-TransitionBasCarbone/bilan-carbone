@@ -52,7 +52,7 @@
     "createFirstStudy": "Créer ma première empreinte",
     "see": "Voir mon empreinte",
     "validatedSources": "<data>{validated} / {total}</data> Questions répondues",
-    "validatedOnlyDescription": "Pour chaque empreinte, un ou plusieurs validateur·ices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
+    "validatedOnlyDescription": "Pour chaque empreinte, un ou plusieurs validateur·ices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeur·ices et éditeur·ices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
     "selectSite": "Avant de remplir les données, choisissez un cinéma",
     "navigation": {
       "framing": "Données générales",
