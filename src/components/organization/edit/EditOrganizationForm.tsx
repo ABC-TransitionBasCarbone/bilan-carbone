@@ -8,6 +8,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
+import SitesTilt from '@/environments/tilt/organization/Sites'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
@@ -58,6 +59,8 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
         city: site.city ?? '',
         cncId: site.cncId ?? '',
         cncNumeroAuto: site.cnc?.numeroAuto || '',
+        volunteerNumber: site.volunteerNumber || 0,
+        beneficiaryNumber: site.beneficiaryNumber || 0,
       })),
     },
   })
@@ -96,7 +99,10 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
         />
       )}
       <DynamicComponent
-        environmentComponents={{ [Environment.CUT]: <SitesCut sites={sites} form={form} /> }}
+        environmentComponents={{
+          [Environment.CUT]: <SitesCut sites={sites} form={form} />,
+          [Environment.TILT]: <SitesTilt sites={sites} form={form} caUnit={caUnit} />,
+        }}
         defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} />}
       />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">

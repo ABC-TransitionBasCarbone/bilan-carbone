@@ -47,6 +47,8 @@ export const OrganizationVersionWithOrganizationSelect = {
           oldBCId: true,
           postalCode: true,
           city: true,
+          volunteerNumber: true,
+          beneficiaryNumber: true,
           cncId: true,
           cnc: {
             select: {
@@ -156,6 +158,8 @@ export const updateOrganization = async (
           postalCode: site.postalCode,
           city: site.city,
           cncId: site.cncId || undefined,
+          volunteerNumber: site.volunteerNumber || undefined,
+          beneficiaryNumber: site.beneficiaryNumber || undefined,
         },
         update: {
           name: site.name,
@@ -164,6 +168,8 @@ export const updateOrganization = async (
           postalCode: site.postalCode,
           city: site.city,
           cncId: site.cncId || undefined,
+          volunteerNumber: site.volunteerNumber || undefined,
+          beneficiaryNumber: site.beneficiaryNumber || undefined,
         },
       }),
     ),
