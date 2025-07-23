@@ -1,20 +1,18 @@
 'use client'
 
+import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
 import { CutPost } from '@/services/posts'
-import { computeResultsByPost } from '@/services/results/consolidated'
+import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ThemeProvider } from '@mui/material/styles'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import './pdf-summary.css'
-
-import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
-import { ResultsByPost } from '@/services/results/consolidated'
 import { ChartsPage } from './ChartsPage'
+import './pdf-summary.css'
 
 interface SiteData {
   id: string
