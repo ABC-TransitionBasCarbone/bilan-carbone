@@ -5,10 +5,7 @@ import LoadingButton from '@/components/base/LoadingButton'
 import { FormTextField } from '@/components/form/TextField'
 import Modal from '@/components/modals/Modal'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
-import Sites from '@/environments/base/organization/Sites'
-import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import SitesCut from '@/environments/cut/organization/Sites'
-import SitesTilt from '@/environments/tilt/organization/Sites'
+import DynamicSites from '@/environments/core/organization/DynamicSites'
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
@@ -20,7 +17,7 @@ import { handleWarningText } from '@/utils/components'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { IsSuccess } from '@/utils/serverResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Environment, SiteCAUnit } from '@prisma/client'
+import { SiteCAUnit } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -98,13 +95,7 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false }: Pr
           label={t('name')}
         />
       )}
-      <DynamicComponent
-        environmentComponents={{
-          [Environment.CUT]: <SitesCut sites={sites} form={form} />,
-          [Environment.TILT]: <SitesTilt sites={sites} form={form} caUnit={caUnit} />,
-        }}
-        defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} />}
-      />
+      <DynamicSites sites={sites} form={form} caUnit={caUnit} />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
         {t('edit')}
       </LoadingButton>

@@ -5,10 +5,7 @@ import LinkButton from '@/components/base/LinkButton'
 import { FormSelect } from '@/components/form/Select'
 import SiteDeselectionWarningModal from '@/components/modals/SiteDeselectionWarningModal'
 import { OrganizationWithSites } from '@/db/account'
-import Sites from '@/environments/base/organization/Sites'
-import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import SitesCut from '@/environments/cut/organization/Sites'
-import SitesTilt from '@/environments/tilt/organization/Sites'
+import DynamicSites from '@/environments/core/organization/DynamicSites'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
@@ -179,13 +176,7 @@ const SelectOrganization = ({
         {organizationVersion &&
           (organizationVersion.organization.sites.length > 0 ? (
             <>
-              <DynamicComponent
-                environmentComponents={{
-                  [Environment.CUT]: <SitesCut sites={sites} form={form} withSelection />,
-                  [Environment.TILT]: <SitesTilt sites={sites} form={form} caUnit={caUnit} withSelection />,
-                }}
-                defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} withSelection />}
-              />
+              <DynamicSites sites={sites} form={form} caUnit={caUnit} withSelection />
               <div className="mt2">
                 <Button
                   disabled={!sites.some((site) => site.selected)}
