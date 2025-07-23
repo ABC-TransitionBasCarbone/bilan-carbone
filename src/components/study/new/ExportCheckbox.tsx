@@ -15,9 +15,10 @@ interface Props {
   values: Record<Export, ControlMode | false>
   setValues: Dispatch<SetStateAction<Record<Export, ControlMode | false>>>
   disabled?: boolean
+  duplicateStudyId?: string | null
 }
 
-const ExportCheckbox = ({ id, study, values, setValues, disabled }: Props) => {
+const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudyId }: Props) => {
   const t = useTranslations('study.new')
   const tExport = useTranslations('exports')
   const { callServerFunction } = useServerFunction()
@@ -32,7 +33,12 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled }: Props) => {
   const handleControlModeChange = (newControlMode: ControlMode) => {
     const currentControlMode = values[id] as ControlMode
 
-    if (hasCharacterizations && currentControlMode && currentControlMode !== newControlMode) {
+    const shouldShowWarning =
+      currentControlMode &&
+      currentControlMode !== newControlMode &&
+      ((hasCharacterizations && study) || duplicateStudyId)
+
+    if (shouldShowWarning) {
       setPendingControlMode(newControlMode)
       setShowWarning(true)
     } else {
@@ -42,9 +48,11 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled }: Props) => {
 
   const confirmControlModeChange = async () => {
     if (pendingControlMode) {
-      if (!study) {
+      if (!study || duplicateStudyId) {
+        // For new studies or duplicate studies, don't clear characterizations immediately
         setValues({ ...values, [id]: pendingControlMode })
       } else {
+        // For existing studies, clear characterizations immediately
         await callServerFunction(() => clearInvalidCharacterizations(study.id, pendingControlMode), {
           onSuccess: () => {
             setValues({ ...values, [id]: pendingControlMode })

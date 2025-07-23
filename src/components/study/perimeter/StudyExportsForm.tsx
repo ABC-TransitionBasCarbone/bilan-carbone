@@ -17,6 +17,7 @@ interface Props<T extends StudyExportsCommand> {
   setGlossary: (key: string) => void
   t: ReturnType<typeof useTranslations>
   disabled?: boolean
+  duplicateStudyId?: string | null
 }
 
 const StudyExportsForm = <T extends StudyExportsCommand>({
@@ -26,6 +27,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
   setGlossary,
   t,
   disabled,
+  duplicateStudyId,
 }: Props<T>) => {
   const tGlossary = useTranslations('study.new.glossary')
   const control = form?.control as Control<StudyExportsCommand>
@@ -65,6 +67,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
                   values={value}
                   setValues={onChange}
                   disabled={disabled}
+                  duplicateStudyId={duplicateStudyId}
                 />
               ))}
             </div>
