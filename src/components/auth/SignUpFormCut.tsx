@@ -104,6 +104,7 @@ const SignUpFormCut = () => {
           name="siretOrCNC"
           label={t('siretOrCNC')}
           helperText={t('siretOrCNCPlaceholder')}
+          freeSolo
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
           {t('validate')}
