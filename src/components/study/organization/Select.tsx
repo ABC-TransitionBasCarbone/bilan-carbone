@@ -8,6 +8,7 @@ import { OrganizationWithSites } from '@/db/account'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
+import SitesTilt from '@/environments/tilt/organization/Sites'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
 import { FormHelperText, MenuItem } from '@mui/material'
@@ -181,6 +182,7 @@ const SelectOrganization = ({
               <DynamicComponent
                 environmentComponents={{
                   [Environment.CUT]: <SitesCut sites={sites} form={form} withSelection />,
+                  [Environment.TILT]: <SitesTilt sites={sites} form={form} caUnit={caUnit} withSelection />,
                 }}
                 defaultComponent={<Sites sites={sites} form={form} caUnit={caUnit} withSelection />}
               />

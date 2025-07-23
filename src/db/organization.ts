@@ -112,7 +112,16 @@ export const getOrganizationWithSitesById = (id: string) =>
     where: { id },
     include: {
       sites: {
-        select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
+        select: {
+          name: true,
+          etp: true,
+          ca: true,
+          id: true,
+          postalCode: true,
+          city: true,
+          volunteerNumber: true,
+          beneficiaryNumber: true,
+        },
         orderBy: { createdAt: 'asc' },
       },
       organizationVersions: true,

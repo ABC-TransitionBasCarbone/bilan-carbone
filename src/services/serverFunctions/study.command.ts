@@ -26,8 +26,8 @@ export const SitesCommandValidation = z.object({
       postalCode: z.string().optional(),
       city: z.string().optional(),
       emissionSourcesCount: z.number().optional(),
-      volunteerNumber: z.number().optional(),
-      beneficiaryNumber: z.number().optional(),
+      volunteerNumber: z.number().optional().nullable(),
+      beneficiaryNumber: z.number().optional().nullable(),
     }),
   ),
 })

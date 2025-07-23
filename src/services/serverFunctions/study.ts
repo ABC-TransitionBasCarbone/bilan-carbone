@@ -256,6 +256,8 @@ export const createStudyCommand = async (
                 siteId: site.id,
                 etp: site.etp || organizationSite.etp,
                 ca: site.ca ? site.ca * caUnit : organizationSite.ca,
+                volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
+                beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
               }
             })
             .filter((site) => site !== undefined),
@@ -454,6 +456,8 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
           siteId: site.id,
           etp: site.etp || organizationSite.etp,
           ca: (site?.ca || 0) * caUnit || organizationSite.ca,
+          volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
+          beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
         }
       })
       .filter((site) => site !== undefined)
