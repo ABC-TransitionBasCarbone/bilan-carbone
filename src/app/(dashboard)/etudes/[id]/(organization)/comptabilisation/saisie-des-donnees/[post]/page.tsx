@@ -29,7 +29,7 @@ const StudyPost = async (props: Props & StudyProps & UserSessionProps) => {
     return <NotFound />
   }
 
-  return <StudyPostsPageContainer post={post as Post} study={props.study} userRole={userRole} />
+  return <StudyPostsPageContainer post={post as Post} study={props.study} userRole={userRole} user={props.user} />
 }
 
 export default withAuth(withStudy(StudyPost))

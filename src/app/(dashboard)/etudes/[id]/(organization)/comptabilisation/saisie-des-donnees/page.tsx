@@ -10,7 +10,7 @@ const DataEntry = async ({ study, user }: StudyProps & UserSessionProps) => {
   if (!userRole) {
     return <NotFound />
   }
-  return <StudyContributionPage study={study} userRole={userRole} environment={user.environment} />
+  return <StudyContributionPage study={study} userRole={userRole} user={user} />
 }
 
 export default withAuth(withStudyDetails(DataEntry))

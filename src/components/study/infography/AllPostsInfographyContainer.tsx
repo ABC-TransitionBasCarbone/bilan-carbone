@@ -5,6 +5,7 @@ import { BCPost, CutPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import AllPostsInfography from './AllPostsInfography'
@@ -12,9 +13,10 @@ import AllPostsInfography from './AllPostsInfography'
 interface Props {
   study: FullStudy
   studySite: string
+  user: UserSession
 }
 
-const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
+const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const [validatedOnly, setValidatedOnly] = useState(true)
 
@@ -48,7 +50,7 @@ const AllPostsInfographyContainer = ({ study, studySite }: Props) => {
     <DynamicComponent
       defaultComponent={<AllPostsInfography study={study} data={data} />}
       environmentComponents={{
-        [Environment.CUT]: <AllPostsInfographyCut studySiteId={studySite} study={study} data={data} />,
+        [Environment.CUT]: <AllPostsInfographyCut studySiteId={studySite} study={study} data={data} user={user} />,
       }}
     />
   )

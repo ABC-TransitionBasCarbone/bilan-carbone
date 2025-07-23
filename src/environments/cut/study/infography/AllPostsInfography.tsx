@@ -6,6 +6,7 @@ import { ResultsByPost } from '@/services/results/consolidated'
 import { getQuestionProgressBySubPostPerPost, StatsResult } from '@/services/serverFunctions/question'
 import { getEmissionValueString } from '@/utils/study'
 import { styled } from '@mui/material'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CutPostInfography } from './CutPostInfography'
@@ -14,6 +15,7 @@ interface Props {
   studySiteId: string
   study: FullStudy
   data: ResultsByPost[]
+  user: UserSession
 }
 
 const StyledGrid = styled('div')({
@@ -25,7 +27,7 @@ const StyledGrid = styled('div')({
   paddingBottom: '12rem',
 })
 
-const AllPostsInfography = ({ studySiteId, study, data }: Props) => {
+const AllPostsInfography = ({ studySiteId, study, data, user }: Props) => {
   const [questionProgress, setQuestionProgress] = useState<StatsResult>({} as StatsResult)
   const { callServerFunction } = useServerFunction()
 
@@ -33,12 +35,15 @@ const AllPostsInfography = ({ studySiteId, study, data }: Props) => {
   const [isLoading, setIsLoading] = useState(true)
 
   const getQuestionProgress = useCallback(async () => {
-    await callServerFunction(() => getQuestionProgressBySubPostPerPost({ studySiteId }), {
+    await callServerFunction(() => getQuestionProgressBySubPostPerPost({ studySiteId, user, study }), {
       onSuccess: (value) => {
-        setQuestionProgress(value)
-        setIsLoading(false)
+        if (value) {
+          setQuestionProgress(value)
+          setIsLoading(false)
+        }
       },
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callServerFunction, studySiteId])
 
   useEffect(() => {

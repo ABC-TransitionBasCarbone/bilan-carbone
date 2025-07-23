@@ -4,6 +4,7 @@ import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import StudyPostsPageCut from '@/environments/cut/pages/StudyPostsPage'
 import { Post, subPostsByPost } from '@/services/posts'
 import { Environment, StudyRole } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import Block from '../base/Block'
@@ -16,9 +17,10 @@ interface Props {
   post: Post
   study: FullStudy
   userRole: StudyRole
+  user: UserSession
 }
 
-const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
+const StudyPostsPageContainer = ({ post, study, userRole, user }: Props) => {
   const tNav = useTranslations('nav')
   const tPost = useTranslations('emissionFactors.post')
   const { studySite, setSite } = useStudySite(study)
@@ -71,6 +73,7 @@ const StudyPostsPageContainer = ({ post, study, userRole }: Props) => {
             userRole={userRole}
             emissionSources={emissionSources}
             studySite={studySite}
+            user={user}
           />
         }
         environmentComponents={{

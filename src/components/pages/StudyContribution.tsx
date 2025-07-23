@@ -2,6 +2,7 @@
 
 import { FullStudy } from '@/db/study'
 import { StudyRole } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -12,9 +13,10 @@ import useStudySite from '../study/site/useStudySite'
 interface Props {
   study: FullStudy
   userRole: StudyRole
+  user: UserSession
 }
 
-const StudyContributionPage = ({ study }: Props) => {
+const StudyContributionPage = ({ study, user }: Props) => {
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
   const { studySite, setSite } = useStudySite(study)
@@ -38,7 +40,7 @@ const StudyContributionPage = ({ study }: Props) => {
         <div className="mb1">
           <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
         </div>
-        <AllPostsInfographyContainer study={study} studySite={studySite} />
+        <AllPostsInfographyContainer study={study} studySite={studySite} user={user} />
       </Block>
     </>
   )
