@@ -26,6 +26,11 @@ type LongDistanceConfig = {
   shortDistancePercentage: number
 }
 
+export type ConditionalRule = {
+  idIntern: string
+  expectedAnswers: string[]
+}
+
 export type EmissionFactorInfo = {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
@@ -37,6 +42,7 @@ export type EmissionFactorInfo = {
   shortDistanceProfiles?: Record<string, CinemaProfileConfig>
   longDistanceProfiles?: Record<string, LongDistanceConfig>
   relatedQuestions?: string[]
+  conditionalRules?: ConditionalRule[]
 }
 
 const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
@@ -97,7 +103,16 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'le-batiment-est-il-partage-avec-une-autre-activite': {},
   'quelle-est-la-surface-totale-du-batiment': {},
   'le-cinema-dispose-t-il-dun-parking': {},
-  'si-oui-de-combien-de-places': { emissionFactorImportedId: '26008', depreciationPeriod: 50 },
+  'si-oui-de-combien-de-places': {
+    emissionFactorImportedId: '26008',
+    depreciationPeriod: 50,
+    conditionalRules: [
+      {
+        idIntern: 'le-cinema-dispose-t-il-dun-parking',
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
+  },
   // Equipe - attente de la fonctionnalité table
   '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
   '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },

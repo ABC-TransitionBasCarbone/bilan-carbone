@@ -1,5 +1,6 @@
 import { FormValues } from '@/components/dynamic-form/types/formTypes'
 import { FieldType } from '@/components/dynamic-form/types/questionTypes'
+import { EmissionFactorInfo } from '@/constants/emissionFactorMap'
 import { ID_INTERN_PREFIX_REGEX } from '@/constants/utils'
 import { Answer, Question, QuestionType } from '@prisma/client'
 import { JsonObject } from '@prisma/client/runtime/library'
@@ -36,4 +37,12 @@ export const getQuestionLabel = (questionType: QuestionType, tFormat: (slug: str
     default:
       return ''
   }
+}
+
+export const isQuestionRelatedToPrevious = (currentQuestionInfo: EmissionFactorInfo, previousQuestion: Question) => {
+  if (!currentQuestionInfo?.conditionalRules || currentQuestionInfo.conditionalRules.length === 0) {
+    return false
+  }
+
+  return currentQuestionInfo.conditionalRules.some((rule) => rule.idIntern === previousQuestion.idIntern)
 }
