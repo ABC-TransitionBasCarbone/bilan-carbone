@@ -97,6 +97,11 @@
       "validation": {
         "sites": "Veuillez selectionner au moins un cinéma concerné par l'étude"
       }
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Afficher les postes"
+      }
     }
   },
   "organization": {
