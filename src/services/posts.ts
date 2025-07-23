@@ -16,7 +16,7 @@ export enum BCPost {
 export enum CutPost {
   Fonctionnement = 'Fonctionnement',
   MobiliteSpectateurs = 'MobiliteSpectateurs',
-  TourneesAvantPremiere = 'TourneesAvantPremiere',
+  TourneesAvantPremieres = 'TourneesAvantPremieres',
   SallesEtCabines = 'SallesEtCabines',
   ConfiseriesEtBoissons = 'ConfiseriesEtBoissons',
   Dechets = 'Dechets',
@@ -111,12 +111,12 @@ export const subPostsByPostCUT: Record<CutPost, SubPost[]> = {
     SubPost.Energie,
     SubPost.ActivitesDeBureau,
   ],
-  [CutPost.MobiliteSpectateurs]: [SubPost.MobiliteSpectateurs],
-  [CutPost.TourneesAvantPremiere]: [SubPost.EquipesRecues],
-  [CutPost.SallesEtCabines]: [SubPost.MaterielTechnique, SubPost.AutreMateriel],
-  [CutPost.ConfiseriesEtBoissons]: [SubPost.Achats, SubPost.Fret, SubPost.Electromenager],
-  [CutPost.Dechets]: [SubPost.DechetsOrdinaires, SubPost.DechetsExceptionnels],
-  [CutPost.BilletterieEtCommunication]: [
+  [Post.MobiliteSpectateurs]: [SubPost.MobiliteSpectateurs],
+  [Post.TourneesAvantPremieres]: [SubPost.EquipesRecues],
+  [Post.SallesEtCabines]: [SubPost.MaterielTechnique, SubPost.AutreMateriel],
+  [Post.ConfiseriesEtBoissons]: [SubPost.Achats, SubPost.Fret, SubPost.Electromenager],
+  [Post.Dechets]: [SubPost.DechetsOrdinaires, SubPost.DechetsExceptionnels],
+  [Post.BilletterieEtCommunication]: [
     SubPost.MaterielDistributeurs,
     SubPost.MaterielCinema,
     SubPost.CommunicationDigitale,
