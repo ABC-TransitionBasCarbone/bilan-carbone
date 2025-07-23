@@ -405,7 +405,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Affiches 40x60': '126',
       'PLV comptoir': '127',
       'PLV grand format': '128',
-      Goodies: '129',
     },
     weights: {
       'Affiches 120x160': 0.22,
