@@ -17,7 +17,7 @@ export const getFeaturesRestictions = async () =>
 export const getFeatureRestictions = async (feature: DeactivatableFeature) =>
   prismaClient.deactivatableFeatureStatus.findUnique({
     where: { feature },
-    select: { deactivatedSources: true, deactivatedEnvironments: true },
+    select: { active: true, deactivatedSources: true, deactivatedEnvironments: true },
   })
 
 export const updateFeatureRestictions = async (

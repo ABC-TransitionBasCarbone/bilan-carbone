@@ -1,12 +1,13 @@
 import { environmentsWithChecklist } from '@/constants/environments'
 import { signPassword } from '@/services/auth'
 import { NOT_AUTHORIZED } from '@/services/permissions/check'
+import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { addUserChecklistItem, sendEmailToAddedUser } from '@/services/serverFunctions/user'
 import { AddMemberCommand } from '@/services/serverFunctions/user.command'
 import { AuthorizedInOrgaUserStatus } from '@/services/users'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
-import { Environment, Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
+import { DeactivatableFeature, Environment, Prisma, Role, UserChecklist, UserStatus } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client'
@@ -209,19 +210,34 @@ export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>
     data,
   })
 
-export const createUsers = (users: Prisma.UserCreateManyInput[]) =>
-  prismaClient.user.createMany({ data: users, skipDuplicates: true })
-
 export const createUsersWithAccount = async (
   users: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[],
 ) => {
+  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+  let filteredUsers = users
+
+  if (deactivatedFeaturesRestrictions?.active) {
+    const notAllowedEnvironments = users.some(({ account }) =>
+      deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(account.environment),
+    )
+    filteredUsers = users.filter(
+      ({ account }) => !deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(account.environment),
+    )
+    if (notAllowedEnvironments) {
+      console.log(
+        'Creation of users from these environments is not allowed: ',
+        deactivatedFeaturesRestrictions.deactivatedEnvironments,
+      )
+    }
+  }
+
   const newUsers = await prismaClient.user.createMany({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    data: users.map(({ account, ...user }) => user),
+    data: filteredUsers.map(({ account, ...user }) => user),
     skipDuplicates: true,
   })
 
-  const emails = users.map(({ email }) => email)
+  const emails = filteredUsers.map(({ email }) => email)
 
   const createdUsers = await prismaClient.user.findMany({
     where: { email: { in: emails } },
@@ -229,7 +245,7 @@ export const createUsersWithAccount = async (
 
   let newAccountCount = 0
   for (const user of createdUsers) {
-    const originalUsers = users.filter((u) => u.email === user.email)
+    const originalUsers = filteredUsers.filter((u) => u.email === user.email)
     if (!originalUsers.length) {
       throw new Error(`No account info for user ${user.email}`)
     }
@@ -275,8 +291,20 @@ export const getUserFeedbackDate = async (accountId: string) =>
 export const updateUserFeedbackDate = async (accountId: string, feedbackDate: Date) =>
   prismaClient.account.update({ where: { id: accountId }, data: { feedbackDate } })
 
-export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) =>
-  prismaClient.user.create({
+export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) => {
+  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+  if (deactivatedFeaturesRestrictions?.active) {
+    const createAccount = Array.isArray(newMember?.accounts?.create) ? undefined : newMember?.accounts?.create
+
+    const notAllowedEnvironments =
+      createAccount?.environment === undefined ||
+      deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(createAccount.environment)
+
+    if (notAllowedEnvironments) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+  }
+  return prismaClient.user.create({
     data: newMember,
     select: {
       id: true,
@@ -288,6 +316,7 @@ export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclu
       },
     },
   })
+}
 
 export const handleAddingUser = async (creator: UserSession, newUser: AddMemberCommand) => {
   const environment = creator.environment
