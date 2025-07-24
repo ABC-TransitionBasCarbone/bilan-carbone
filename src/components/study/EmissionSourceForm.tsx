@@ -4,6 +4,7 @@ import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { createEmissionSourceTag, getEmissionSourceTagsByStudyId } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
@@ -20,9 +21,10 @@ import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
-import { FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
+import { Autocomplete, createFilterOptions, FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
+  EmissionSourceTag,
   EmissionSourceType,
   StudyResultUnit,
   StudyRole,
@@ -46,6 +48,9 @@ import styles from './EmissionSource.module.css'
 import EmissionSourceFactor from './EmissionSourceFactor'
 import emissionFactorStyles from './EmissionSourceFactor.module.css'
 import QualitySelectGroup from './QualitySelectGroup'
+
+type Option = { label: string; value: string; inputValue?: string }
+const filter = createFilterOptions<Option>()
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
@@ -102,6 +107,8 @@ const EmissionSourceForm = ({
   const [duplicationSite, setDuplicationSite] = useState(emissionSource.studySite.id)
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
   const [expandedFEQuality, setExpandedFEQuality] = useState(true)
+  const [tags, setTags] = useState<EmissionSourceTag[]>([])
+  const [tagInputValue, setTagInputValue] = useState('')
   const router = useRouter()
 
   const qualities = qualityKeys.map((column) => emissionSource[column])
@@ -138,6 +145,26 @@ const EmissionSourceForm = ({
       update('value', (emissionSource.hectare || 0) * (emissionSource.duration || 0))
     }
   }, [emissionSource.hectare, emissionSource.duration])
+
+  useEffect(() => {
+    getEmissionSourceTags()
+  }, [studyId])
+
+  const getEmissionSourceTags = async () => {
+    const response = await getEmissionSourceTagsByStudyId(studyId)
+    if (response.success && response.data) {
+      setTags(response.data)
+    }
+  }
+
+  const createAndUpdateTag = async (name: string) => {
+    const createTag = await createEmissionSourceTag({ name, studyId })
+    if (createTag.success) {
+      update('emissionSourceTagId', createTag.data.id)
+      setTags((prevTags) => [...prevTags, createTag.data])
+      setTagInputValue(name)
+    }
+  }
 
   const glossaryLink = useMemo(() => {
     switch (glossary) {
@@ -369,6 +396,41 @@ const EmissionSourceForm = ({
 
       <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('optionalFields')}</p>
       <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
+        <Autocomplete
+          disabled={!canEdit}
+          data-testid="emission-source-tag"
+          options={tags.map((tag) => ({ label: tag.name, value: tag.id }))}
+          inputValue={tagInputValue}
+          onInputChange={(_, newInputValue) => setTagInputValue(newInputValue)}
+          onChange={(_, option: Option | string | null) => {
+            if (option && typeof option === 'object' && 'inputValue' in option && option.inputValue) {
+              createAndUpdateTag(option.inputValue)
+            } else {
+              update('emissionSourceTagId', typeof option === 'string' ? option : option?.value || null)
+            }
+          }}
+          defaultValue={
+            emissionSource.emissionSourceTag && {
+              label: emissionSource.emissionSourceTag?.name,
+              value: emissionSource.emissionSourceTag?.id,
+            }
+          }
+          renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
+          freeSolo
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params)
+            const { inputValue } = params
+            const isExisting = options.some((option) => inputValue === option.label)
+            if (inputValue !== '' && !isExisting) {
+              filtered.push({
+                value: inputValue,
+                label: t('form.create', { tag: inputValue }),
+                inputValue,
+              })
+            }
+            return filtered
+          }}
+        />
         <div className={classNames(styles.gapped, styles.optionnalFields, 'grow flex')}>
           <TextField
             className="grow"

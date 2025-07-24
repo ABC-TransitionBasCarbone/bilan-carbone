@@ -87,6 +87,13 @@ const fullStudyInclude = {
           },
         },
       },
+      emissionSourceTag: {
+        select: {
+          id: true,
+          name: true,
+          studyId: true,
+        },
+      },
     },
     orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
   },
@@ -175,6 +182,13 @@ const fullStudyInclude = {
           name: true,
         },
       },
+    },
+  },
+  emissionSourceTags: {
+    select: {
+      id: true,
+      name: true,
+      studyId: true,
     },
   },
 } satisfies Prisma.StudyInclude

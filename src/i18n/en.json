@@ -553,6 +553,10 @@
       "validSites": "Validate changes",
       "exports": "Exports",
       "control": "Control mode",
+      "emissionSourceTags": "Tags",
+      "emissionSourceTag": "Create a tag",
+      "emissionSourceTagsPlaceholder": "Your tag",
+      "validate": "Validate",
       "deleteDialog": {
         "accept": "Yes",
         "decline": "No",
@@ -624,6 +628,7 @@
       "sourceSurface": "Surface (ha)",
       "sourceUnit": "Emission source unit",
       "sourceValue": "Emission source value",
+      "sourceTag": "Emission source tag",
       "subPost": "Sub post",
       "total": "Total",
       "uncertainty": "Uncertainty",
@@ -1376,7 +1381,9 @@
       "quality": "Quality",
       "expand": "Expand qualities",
       "shrink": "Shrink qualities",
-      "comment": "Comments"
+      "comment": "Comments",
+      "tag": "Tag",
+      "create": "Create {tag}"
     },
     "cut": {
       "form": {
