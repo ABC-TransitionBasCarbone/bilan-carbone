@@ -46,6 +46,8 @@ export const mockedStudySite = {
   numberOfOpenDays: null,
   distanceToParis: null,
   openingHours: [],
+  volunteerNumber: 0,
+  beneficiaryNumber: 0,
 }
 
 export const mockedDbStudySite = {

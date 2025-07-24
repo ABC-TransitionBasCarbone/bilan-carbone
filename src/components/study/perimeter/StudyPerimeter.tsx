@@ -9,6 +9,7 @@ import { FullStudy } from '@/db/study'
 import Sites from '@/environments/base/organization/Sites'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import SitesCut from '@/environments/cut/organization/Sites'
+import SitesTilt from '@/environments/tilt/organization/Sites'
 
 import { useServerFunction } from '@/hooks/useServerFunction'
 import {
@@ -279,6 +280,16 @@ const StudyPerimeter = ({ study, organizationVersion, userRoleOnStudy, caUnit }:
                     }))
               }
               form={isEditing ? siteForm : undefined}
+              withSelection
+            />
+          ),
+          [Environment.TILT]: (
+            <SitesTilt
+              sites={
+                isEditing ? sites : study.sites.map((site) => ({ ...site, name: site.site.name, selected: false }))
+              }
+              form={isEditing ? (siteForm as unknown as UseFormReturn<SitesCommand>) : undefined}
+              caUnit={caUnit}
               withSelection
             />
           ),

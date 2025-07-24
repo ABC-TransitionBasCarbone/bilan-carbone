@@ -67,6 +67,9 @@ model Site {
   postalCode String?
   city       String?
 
+  volunteerNumber   Int @default(0) @map("volunteer_number")
+  beneficiaryNumber Int @default(0) @map("beneficiary_number")
+
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
   studies        StudySite[]

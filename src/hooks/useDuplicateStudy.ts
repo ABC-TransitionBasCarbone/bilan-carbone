@@ -76,6 +76,8 @@ export const updateSitesFromSourceStudy = (
         selected: true,
         etp: sourceStudySite.etp,
         ca: sourceStudySite.ca ? displayCA(sourceStudySite.ca, CA_UNIT_VALUES[caUnit]) : 0,
+        volunteerNumber: sourceStudySite.volunteerNumber ?? 0,
+        beneficiaryNumber: sourceStudySite.beneficiaryNumber ?? 0,
         emissionSourcesCount,
       }
     }

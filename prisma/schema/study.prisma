@@ -289,11 +289,13 @@ model StudySite {
   ca                  Float
   StudyEmissionSource StudyEmissionSource[]
 
-  numberOfSessions Int?
-  numberOfTickets  Int?
-  numberOfOpenDays Int?
-  distanceToParis  Int?
-  openingHours     OpeningHours[]
+  volunteerNumber   Int?           @map("volunteer_number")
+  beneficiaryNumber Int?           @map("beneficiary_number")
+  numberOfSessions  Int?
+  numberOfTickets   Int?
+  numberOfOpenDays  Int?
+  distanceToParis   Int?
+  openingHours      OpeningHours[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
