@@ -19,7 +19,6 @@ export function formatDynamicLabel(label: string, context: FormatContext, custom
   const replacers = { ...defaultReplacers, ...customReplacers }
 
   return label.replace(REGEX_INTERPOLATION, (_, key) => {
-    console.debug({ key })
     const replacer = replacers[key]
     return replacer ? replacer(context) : `{{${key}}}`
   })
