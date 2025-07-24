@@ -34,10 +34,11 @@ export const FormTextField = <T extends FieldValues>({
   const handleChange = useCallback(
     (
       event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-      onChange: (...event: (string | number)[]) => void,
+      onChange: (...event: (string | number | null)[]) => void,
     ) => {
       if (textFieldProps.type === 'number') {
-        return onChange(parseFloat(event.target.value))
+        const value = event.target.value.trim()
+        return onChange(value === '' ? null : parseFloat(value))
       }
       if (trim) {
         return onChange(event.target.value.trim())
@@ -62,7 +63,11 @@ export const FormTextField = <T extends FieldValues>({
             {...textFieldProps}
             error={!!error || !!customError}
             onChange={(event) => handleChange(event, onChange)}
-            value={(textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined ? '' : value}
+            value={
+              (textFieldProps.type === 'number' && Number.isNaN(value)) || value === undefined || value === null
+                ? ''
+                : value
+            }
             slotProps={{
               input: {
                 onWheel: (event) => (event.target as HTMLInputElement).blur(),
