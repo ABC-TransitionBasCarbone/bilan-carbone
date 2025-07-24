@@ -158,7 +158,19 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     [openingHoursHoliday],
   )
 
-  const labelWithYear = (label: string) => t(label, { year: study.startDate.getFullYear() })
+=======
+  const labelWithYear = (label: string) =>
+    t(
+      label,
+      { year: study.startDate },
+      {
+        dateTime: {
+          short: {
+            year: 'numeric',
+          },
+        },
+      },
+    )
 
   useEffect(() => {
     onStudyCinemaUpdate()
@@ -184,7 +196,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfSessions"
                 data-testid="new-study-number-of-sessions"
-                label={t('numberOfSessions')}
+                label={labelWithYear('numberOfSessions')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -194,7 +206,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfTickets"
                 data-testid="new-study-number-of-tickets"
-                label={t('numberOfTickets')}
+                label={labelWithYear('numberOfTickets')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -204,7 +216,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfOpenDays"
                 data-testid="new-study-number-of-open-days"
-                label={t('numberOfOpenDays')}
+                label={labelWithYear('numberOfOpenDays')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
