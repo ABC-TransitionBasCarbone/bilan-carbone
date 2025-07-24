@@ -65,7 +65,6 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
 
     return formattedOpeningHours
   }
-
   const form = useForm<ChangeStudyCinemaCommand>({
     resolver: zodResolver(ChangeStudyCinemaValidation),
     mode: 'onBlur',
@@ -97,6 +96,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
             numberOfSessions: newSiteData.numberOfSessions ?? 0,
             numberOfTickets: newSiteData.numberOfTickets ?? 0,
             distanceToParis: newSiteData.distanceToParis ?? 0,
+            numberOfProgrammedFilms: newSiteData.site.cnc?.numberOfProgrammedFilms ?? 0,
           })
         }
       }
@@ -116,8 +116,12 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
 
   const handleStudyCinemaUpdate = useCallback(
     async (data: ChangeStudyCinemaCommand) => {
-      await callServerFunction(() => changeStudyCinema(studySite, data))
+      const cncId = siteData?.site.cnc?.id
+      if (cncId) {
+        await callServerFunction(() => changeStudyCinema(studySite, cncId, data))
+      }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [callServerFunction, studySite],
   )
 
@@ -152,6 +156,8 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     },
     [openingHoursHoliday],
   )
+
+  const labelWithYear = (label: string) => t(label, { year: study.startDate.getFullYear() })
 
   useEffect(() => {
     onStudyCinemaUpdate()
@@ -208,6 +214,16 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 name="distanceToParis"
                 data-testid="new-study-distance-to-paris"
                 label={t('distanceToParis')}
+                translation={t}
+                type="number"
+                className={styles.formTextField}
+                onBlur={onStudyCinemaUpdate}
+              />
+              <FormTextField
+                control={form.control}
+                name="numberOfProgrammedFilms"
+                data-testid="new-study-number-of-programmed-films"
+                label={labelWithYear('numberOfProgrammedFilms')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}

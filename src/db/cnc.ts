@@ -24,3 +24,20 @@ export const findCncByNumeroAuto = async (numeroAuto: string) =>
   await prismaClient.cnc.findUnique({ where: { numeroAuto } })
 
 export const findCncById = async (id: string) => await prismaClient.cnc.findUnique({ where: { id } })
+
+export const updateNumberOfProgrammedFilms = async ({
+  cncId,
+  numberOfProgrammedFilms,
+}: {
+  cncId: string
+  numberOfProgrammedFilms: number | null | undefined
+}) => {
+  await prismaClient.cnc.update({
+    data: {
+      numberOfProgrammedFilms: numberOfProgrammedFilms ?? 0,
+    },
+    where: {
+      id: cncId,
+    },
+  })
+}
