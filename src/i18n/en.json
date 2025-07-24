@@ -402,7 +402,8 @@
         "startDate": "Please select a study start date",
         "endDate": "Please select a study end date",
         "endDateBeforStartDate": "The end date must be after the start date",
-        "level": "Please select the type of Carbon Assessment"
+        "level": "Please select the type of Carbon Assessment",
+        "invalidNumber": "Please enter a valid value"
       },
       "error": {
         "default": "Something went wrong ...",
