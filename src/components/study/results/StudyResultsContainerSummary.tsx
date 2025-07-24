@@ -6,7 +6,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { mapResultsByPost } from '@/services/results/utils'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -36,19 +36,34 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
   const tResultUnits = useTranslations('study.results.units')
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
+  const { environment } = useAppEnvironmentStore()
 
   const allComputedResults = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
-    [studySite, validatedOnly],
+    () =>
+      computeResultsByPost(
+        study,
+        tPost,
+        studySite,
+        true,
+        validatedOnly,
+        environmentPostMapping[environment || Environment.BC],
+      ),
+    [studySite, validatedOnly, environment],
   )
 
   const computedResults = useMemo(() => mapResultsByPost(allComputedResults, withDep), [allComputedResults, withDep])
 
-  const { environment } = useAppEnvironmentStore()
   const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
-    const computedResults = computeResultsByPost(study, tPost, studySite, true, validatedOnly)
+    const computedResults = computeResultsByPost(
+      study,
+      tPost,
+      studySite,
+      true,
+      validatedOnly,
+      environmentPostMapping[environment || Environment.BC],
+    )
     const total = computedResults.find((result) => result.post === 'total')?.value || 0
     const monetaryTotal = computedResults.find((result) => result.post === 'total')?.monetaryValue || 0
 
@@ -68,7 +83,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
 
     return [formatedTotal, formatedDiff, formatedMonetaryRatio]
-  }, [study, studySite, validatedOnly])
+  }, [study, studySite, validatedOnly, environment])
 
   return (
     <>

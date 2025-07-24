@@ -69,6 +69,7 @@ enum SubPost {
   DechetsBatiments
   DechetsFuitesOuEmissionsNonEnergetiques
   EauxUsees
+  AutresDechets
 
   //Fret
   FretEntrant
@@ -128,6 +129,46 @@ enum SubPost {
   MaterielCinema
   CommunicationDigitale
   CaissesEtBornes
+
+  // TILT
+  // Dechets
+  FroidEtClim
+
+  // Autres émissions 
+  ActivitesAgricoles
+  ActivitesIndustrielles
+  
+  // Deplacements de personnes
+  DeplacementsDomicileTravailSalaries
+  DeplacementsDomicileTravailBenevoles
+  DeplacementsDansLeCadreDUneMissionAssociativeSalaries
+  DeplacementsDansLeCadreDUneMissionAssociativeBenevoles
+  DeplacementsDesBeneficiaires
+  DeplacementsFabricationDesVehicules
+
+  // Transport de marchandises
+  Entrant
+  Interne
+  Sortant
+  TransportFabricationDesVehicules
+
+  // Alimentation 
+  RepasPrisParLesSalaries
+  RepasPrisParLesBenevoles
+
+  // Utilisation
+  UtilisationEnResponsabiliteConsommationDeBiens
+  UtilisationEnResponsabiliteConsommationNumerique
+  UtilisationEnResponsabiliteConsommationDEnergie
+  UtilisationEnResponsabiliteFuitesEtAutresConsommations
+  UtilisationEnDependanceConsommationDeBiens
+  UtilisationEnDependanceConsommationNumerique
+  UtilisationEnDependanceConsommationDEnergie
+  UtilisationEnDependanceFuitesEtAutresConsommations
+
+  // Télétravail 
+  TeletravailSalaries
+  TeletravailBenevoles
 }
 
 model EmissionFactorImportVersion {
