@@ -4,12 +4,12 @@ type Replacers = Record<string, ReplacerFn>
 const REGEX_INTERPOLATION = /{{\s*(\w+)\s*}}/g
 
 /**
- * Remplace des variables dynamique, par exemple : "{{startYear}}" -> "2025"
- * Basé sur des syntax courrante type Angular, Mustach, Vue.js, React, etc.
- * @param label - La string contenant des variables entre {{ }}.
- * @param context - Objet contenant les valeurs de remplacement (ex: { startYear: 2025 }).
- * @param customReplacers - Méthode(s) custom(s) pour transformer des valeurs avant insertion (optionnel).
- * @returns le label avec toutes ces valeurs "interpolées" (modifiés).
+ * Replaces dynamic variables, for example: "{{startYear}}" -> "2025"
+ * Based on common syntaxes like Angular, Mustache, Vue.js, React, etc.
+ * @param label - The string containing variables inside {{ }}.
+ * @param context - Object containing replacement values (e.g., { startYear: 2025 }).
+ * @param customReplacers - Custom method(s) to transform values before insertion (optional).
+ * @returns The label with all its values "interpolated" (replaced).
  */
 export function formatDynamicLabel(label: string, context: FormatContext, customReplacers: Replacers = {}): string {
   const defaultReplacers: Replacers = {
