@@ -147,6 +147,7 @@ const fullStudyInclude = {
           city: true,
           cnc: {
             select: {
+              id: true,
               numberOfProgrammedFilms: true,
               ecrans: true,
             },
@@ -548,6 +549,12 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
                   isCR: true,
                 },
               },
+            },
+          },
+          cnc: {
+            select: {
+              id: true,
+              numberOfProgrammedFilms: true,
             },
           },
         },
