@@ -5,7 +5,6 @@ import StudyPostsPageContainer from '@/components/pages/StudyPostsContainer'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { Post } from '@/services/posts'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import { Environment } from '@prisma/client'
 
 interface Props {
   params: Promise<{
@@ -30,14 +29,7 @@ const StudyPost = async (props: Props & StudyProps & UserSessionProps) => {
     return <NotFound />
   }
 
-  return (
-    <StudyPostsPageContainer
-      post={post as Post}
-      study={props.study}
-      userRole={userRole}
-      isCut={props.user.environment === Environment.CUT}
-    />
-  )
+  return <StudyPostsPageContainer post={post as Post} study={props.study} userRole={userRole} user={props.user} />
 }
 
 export default withAuth(withStudy(StudyPost))

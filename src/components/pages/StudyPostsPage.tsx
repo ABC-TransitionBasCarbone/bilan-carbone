@@ -3,6 +3,7 @@
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { StudyRole } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import GlossaryModal from '../modals/GlossaryModal'
@@ -16,9 +17,10 @@ interface Props {
   userRole: StudyRole
   emissionSources: FullStudy['emissionSources']
   studySite: string
+  user: UserSession
 }
 
-const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite }: Props) => {
+const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite, user }: Props) => {
   const [showInfography, setShowInfography] = useState(false)
   const tPost = useTranslations('emissionFactors.post')
   const [glossary, setGlossary] = useState('')
@@ -33,7 +35,7 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, studySite }: P
         emissionSources={emissionSources}
         setGlossary={setGlossary}
       >
-        {showInfography && <StudyPostInfography study={study} studySite={studySite} />}
+        {showInfography && <StudyPostInfography study={study} studySite={studySite} user={user} />}
         <SubPosts
           post={post}
           study={study}
