@@ -40,7 +40,6 @@ const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
         ...question,
         label: formatDynamicLabel(question.label, { study }),
       }))
-      console.debug({ updatedQuestions })
       setQuestions(updatedQuestions)
       setAnswers(loadedAnswers)
     } catch (err) {
