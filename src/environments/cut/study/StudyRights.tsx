@@ -158,19 +158,8 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     [openingHoursHoliday],
   )
 
-=======
-  const labelWithYear = (label: string) =>
-    t(
-      label,
-      { year: study.startDate },
-      {
-        dateTime: {
-          short: {
-            year: 'numeric',
-          },
-        },
-      },
-    )
+
+  const labelWithYear = (label: string) => t(label, { year: study.startDate.getFullYear() })
 
   useEffect(() => {
     onStudyCinemaUpdate()

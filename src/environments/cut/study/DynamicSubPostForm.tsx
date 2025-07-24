@@ -1,5 +1,6 @@
 import DynamicForm from '@/components/dynamic-form/DynamicForm'
 import { FullStudy } from '@/db/study'
+import { formatDynamicLabel } from '@/services/interpolation'
 import { getQuestionsWithAnswers } from '@/services/serverFunctions/question'
 import { CircularProgress } from '@mui/material'
 import { Answer, Question, SubPost } from '@prisma/client'
@@ -35,13 +36,11 @@ const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
 
       // Update the label of each question by replacing the placeholder 'en * ?'
       // with the actual study start year, e.g., 'en 2024 ?'
-      const updatedQuestions = loadedQuestions.map((question) => {
-        const year = study.startDate.getFullYear()
-        return {
-          ...question,
-          label: question.label.replace('en * ?', `en  ${year} ?`),
-        }
-      })
+      const updatedQuestions = loadedQuestions.map((question) => ({
+        ...question,
+        label: formatDynamicLabel(question.label, { study }),
+      }))
+      console.debug({ updatedQuestions })
       setQuestions(updatedQuestions)
       setAnswers(loadedAnswers)
     } catch (err) {
@@ -50,11 +49,13 @@ const DynamicSubPostForm = ({ subPost, study, studySiteId }: Props) => {
     } finally {
       setIsLoading(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subPost, studySiteId, study.startDate])
 
   useEffect(() => {
     loadQuestionsAndAnswers()
     // Do not add loadQuestionsAndAnswers otherWise tables are broken
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [studySiteId])
 
   if (error) {
