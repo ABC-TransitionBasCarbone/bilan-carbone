@@ -1,6 +1,7 @@
 'use client'
 
 import Block from '@/components/base/Block'
+import LinkButton from '@/components/base/LinkButton'
 import { FormTextField } from '@/components/form/TextField'
 import WeekScheduleForm from '@/components/form/WeekScheduleForm'
 import StudyParams from '@/components/study/rights/StudyParams'
@@ -11,7 +12,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { changeStudyCinema, getStudySite } from '@/services/serverFunctions/study'
 import { ChangeStudyCinemaCommand, ChangeStudyCinemaValidation } from '@/services/serverFunctions/study.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CircularProgress } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { DayOfWeek, EmissionFactorImportVersion, OpeningHours } from '@prisma/client'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
@@ -153,6 +154,8 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
     [openingHoursHoliday],
   )
 
+  const labelWithYear = (label: string) => t(label, { year: study.startDate.getFullYear() })
+
   useEffect(() => {
     onStudyCinemaUpdate()
     // This effect is used to update the study cinema whenever the opening hours or holiday opening hours change.
@@ -177,7 +180,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfSessions"
                 data-testid="new-study-number-of-sessions"
-                label={t('numberOfSessions')}
+                label={labelWithYear('numberOfSessions')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -187,7 +190,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfTickets"
                 data-testid="new-study-number-of-tickets"
-                label={t('numberOfTickets')}
+                label={labelWithYear('numberOfTickets')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -197,7 +200,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 control={form.control}
                 name="numberOfOpenDays"
                 data-testid="new-study-number-of-open-days"
-                label={t('numberOfOpenDays')}
+                label={labelWithYear('numberOfOpenDays')}
                 translation={t}
                 type="number"
                 className={styles.formTextField}
@@ -236,6 +239,15 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
                 />
               )}
             </div>
+            <Box className={classNames('flex', 'justify-end')}>
+              <LinkButton
+                color="primary"
+                variant="contained"
+                href={`/etudes/${study.id}/comptabilisation/saisie-des-donnees`}
+              >
+                Suivant
+              </LinkButton>
+            </Box>
           </Block>
         </>
       )}

@@ -97,6 +97,11 @@
       "validation": {
         "sites": "Veuillez selectionner au moins un cinéma concerné par l'étude"
       }
+    },
+    "infography": {
+      "form": {
+        "backToInfography": "Afficher les postes"
+      }
     }
   },
   "organization": {
@@ -140,7 +145,7 @@
   "login": {
     "welcome": "Bienvenue sur",
     "subtext": "Le premier calculateur d'impact écologique dédié aux salles de cinéma.",
-    "explaination": "Cet outil a été développé par l'association <b>CUT ! Cinéma Uni pour la transition,</b> en coopération avec <b>l'ABC, association pour la transition bas carbone.</b>",
+    "explaination": "Cet outil a été développé par l'association <b>CUT ! Cinéma Uni pour la Transition,</b> en coopération avec <b>l'ABC, association pour la Transition bas carbone.</b>",
     "question": "Opération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)",
     "form": {
       "activate": "Créer mon compte"

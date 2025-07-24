@@ -165,6 +165,7 @@ export const BCUnit = {
 export const CUTUnit = {
   MOVIES: Unit.MOVIES,
   PERSON: Unit.PERSON,
+  TEAM: Unit.TEAM,
   ...UnitCommon,
 }
 

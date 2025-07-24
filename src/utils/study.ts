@@ -70,7 +70,7 @@ export const postColors: Record<Post, string> = {
 
   [Post.Fonctionnement]: 'darkBlue',
   [Post.MobiliteSpectateurs]: 'darkBlue',
-  [Post.TourneesAvantPremiere]: 'darkBlue',
+  [Post.TourneesAvantPremieres]: 'darkBlue',
   [Post.SallesEtCabines]: 'darkBlue',
   [Post.ConfiseriesEtBoissons]: 'orange',
   [Post.Dechets]: 'darkBlue',
