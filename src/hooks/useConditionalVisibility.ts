@@ -14,7 +14,7 @@ export const useConditionalVisibility = (
   const previousVisibleQuestionsRef = useRef<Set<string>>(new Set())
 
   const visibleQuestions = useMemo(() => {
-    return questions.filter((question) => {
+    const conditionallyVisibleQuestions = questions.filter((question) => {
       const emissionInfo = emissionFactorMap[question.idIntern]
 
       if (!emissionInfo?.conditionalRules || emissionInfo.conditionalRules.length === 0) {
@@ -28,8 +28,30 @@ export const useConditionalVisibility = (
           return false
         }
 
+        if (typeof parentValue === 'string' && parentValue.startsWith('[')) {
+          const parsedValue = JSON.parse(parentValue)
+          if (Array.isArray(parsedValue)) {
+            return rule.expectedAnswers.some((expectedAnswer) => parsedValue.includes(expectedAnswer))
+          }
+        }
+
         return rule.expectedAnswers.includes(String(parentValue))
       })
+    })
+
+    // Hide children when parent table questions are hidden (10-)
+    const hiddenParentTables = questions
+      .filter((q) => !conditionallyVisibleQuestions.some((visible) => visible.idIntern === q.idIntern))
+      .filter((q) => q.idIntern.startsWith('10-'))
+
+    return conditionallyVisibleQuestions.filter((question) => {
+      const isChildOfHiddenParent = hiddenParentTables.some((hiddenParent) => {
+        const parentBase = hiddenParent.idIntern.replace(/^10-/, '')
+        const questionBase = question.idIntern.replace(/^\d+-/, '')
+        return questionBase === parentBase && question.idIntern.match(/^\d+-/) && !question.idIntern.startsWith('10-')
+      })
+
+      return !isChildOfHiddenParent
     })
   }, [questions, watchedValues])
 

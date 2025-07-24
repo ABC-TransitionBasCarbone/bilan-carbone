@@ -1,5 +1,5 @@
 import { emissionFactorMap } from '@/constants/emissionFactorMap'
-import { isQuestionRelatedToPrevious } from '@/utils/question'
+import { areQuestionsLinked } from '@/utils/question'
 import { Alert, Box, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
@@ -61,8 +61,9 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
         {visibleQuestions.map((question, index) => {
           const previousQuestion = index > 0 ? visibleQuestions[index - 1] : null
           const currentQuestionInfo = emissionFactorMap[question.idIntern]
+          const previousQuestionInfo = previousQuestion ? emissionFactorMap[previousQuestion.idIntern] : null
           const showRelationLine =
-            previousQuestion && isQuestionRelatedToPrevious(currentQuestionInfo, previousQuestion)
+            previousQuestion && areQuestionsLinked(currentQuestionInfo, previousQuestion, previousQuestionInfo)
 
           return (
             <Box key={question.id}>
