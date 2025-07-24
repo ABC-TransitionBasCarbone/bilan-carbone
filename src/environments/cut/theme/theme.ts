@@ -2,6 +2,7 @@ import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({
+  cssVariables: true,
   palette: {
     primary: {
       main: '#63EA90',
@@ -13,7 +14,15 @@ const base = createTheme({
       main: '#63EA90',
     },
     grey: {
-      '500': '#2C303A',
+      50: '#e9eff9',
+      100: '#dbe5f6',
+      200: '#eae5e8',
+      300: '#c6d8f5',
+      400: '#9fbff3',
+      500: '#2C303A',
+      600: '#080212',
+      800: '#040109',
+      900: '#020105',
     },
     success: {
       main: '#94EBBF',

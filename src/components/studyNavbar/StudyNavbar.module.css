@@ -19,16 +19,16 @@
 .studyNavbarContainer {
   display: flex;
   height: 100%;
-  background-color: var(--background-150) !important;
+  background-color: var(--mui-palette-primary-light) !important;
   height: fit-content !important;
   width: 14rem;
   border-radius: 0px 1rem 1rem 0px;
   top: calc(50vh - 10rem) !important;
   overflow: hidden !important;
-  border: var(--border) !important;
+  border: 2px solid var(--mui-palette-divider) !important;
 
   hr {
-    color: var(--neutral-300) !important;
+    color: var(--mui-palette-grey-300) !important;
   }
 }
 
@@ -46,10 +46,10 @@
 .button,
 .link,
 .section {
-  background-color: white;
+  background-color: var(--mui-palette-background-paper);
   width: 100%;
   border: none;
-  color: var(--info);
+  color: var(--mui-palette-info-main);
   padding: 1rem;
   text-decoration: none;
   font-weight: 600;
@@ -58,7 +58,7 @@
 
   &.active,
   &:hover {
-    background-color: var(--primary-50);
+    background-color: var(--mui-palette-primary-light);
   }
 }
 
@@ -73,10 +73,10 @@
 }
 
 .disabled {
-  color: var(--grayscale-800);
+  color: var(--mui-palette-grey-800);
   cursor: not-allowed;
 
   &:hover {
-    background-color: white;
+    background-color: var(--mui-palette-background-paper);
   }
 }

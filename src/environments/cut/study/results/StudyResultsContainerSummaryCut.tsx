@@ -2,13 +2,11 @@
 
 import LinkButton from '@/components/base/LinkButton'
 import StudyName from '@/components/study/card/StudyName'
-import Result from '@/components/study/results/Result'
+import BarChart from '@/components/study/charts/BarChart'
 import { FullStudy } from '@/db/study'
-import { computeResultsByPost } from '@/services/results/consolidated'
-import { mapResultsByPost } from '@/services/results/utils'
+import { CutPost } from '@/services/posts'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useMemo } from 'react'
 import styles from './ResultsContainer.module.css'
 
 interface Props {
@@ -16,14 +14,8 @@ interface Props {
 }
 
 const StudyResultsContainerSummaryCut = ({ study }: Props) => {
-  const tPost = useTranslations('emissionFactors.post')
   const t = useTranslations('study')
-
   const studySite = 'all'
-
-  const allComputedResults = useMemo(() => computeResultsByPost(study, tPost, studySite, true, false), [study, tPost])
-
-  const computedResults = useMemo(() => mapResultsByPost(allComputedResults, true), [allComputedResults])
 
   return (
     <>
@@ -33,7 +25,18 @@ const StudyResultsContainerSummaryCut = ({ study }: Props) => {
         </Link>
         <LinkButton href={`/etudes/${study.id}/comptabilisation/resultats`}>{t('seeResults')}</LinkButton>
       </div>
-      <Result studySite={studySite} computedResults={computedResults} resultsUnit={study.resultsUnit} />
+      <div className="grow">
+        <BarChart
+          study={study}
+          studySite={studySite}
+          height={450}
+          showTitle={false}
+          showLegend={false}
+          showLabelsOnBars={false}
+          validatedOnly={false}
+          postValues={CutPost}
+        />
+      </div>
     </>
   )
 }
