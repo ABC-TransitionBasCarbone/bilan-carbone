@@ -20,6 +20,7 @@ import {
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
+  deleteAnswer,
   deleteAnswerEmissionSourceById,
   deleteAnswerEmissionSourcesForRow,
   findAllAnswerEmissionSourcesByAnswer,
@@ -413,6 +414,33 @@ export const getQuestionsFromIdIntern = async (idIntern: string) =>
     }
 
     return getQuestionsByIdIntern(idIntern)
+  })
+
+export const cleanupHiddenQuestion = async (questionIdIntern: string, studySiteId: string) =>
+  withServerResponse('cleanupHiddenQuestion', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const question = await getQuestionByIdIntern(questionIdIntern)
+    if (!question) {
+      throw new Error(`Question not found for idIntern: ${questionIdIntern}`)
+    }
+
+    const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
+    if (existingAnswer) {
+      const existingAnswerEmissionSources = await findAllAnswerEmissionSourcesByAnswer(existingAnswer.id)
+
+      for (const existingAnswerEmissionSource of existingAnswerEmissionSources) {
+        await deleteAnswerEmissionSourceById(
+          existingAnswerEmissionSource.id,
+          existingAnswerEmissionSource.emissionSourceId,
+        )
+      }
+    }
+
+    await deleteAnswer(question.id, studySiteId)
   })
 
 export const getParentTableQuestion = async (columnQuestionId: string) =>

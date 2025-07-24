@@ -1,9 +1,13 @@
+import { emissionFactorMap } from '@/constants/emissionFactorMap'
+import { areQuestionsLinked } from '@/utils/question'
 import { Alert, Box, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
 import { FieldError } from 'react-hook-form'
 import { useAutoSave } from '../../hooks/useAutoSave'
+import { useConditionalVisibility } from '../../hooks/useConditionalVisibility'
 import { useDynamicForm } from '../../hooks/useDynamicForm'
+import styles from './DynamicForm.module.css'
 import DynamicFormField from './DynamicFormField'
 import { DynamicFormProps } from './types/formTypes'
 
@@ -37,11 +41,13 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
 
   const sortedQuestions = useMemo(() => [...questions].sort((a, b) => a.order - b.order), [questions])
 
+  const visibleQuestions = useConditionalVisibility(sortedQuestions, watch, studySiteId, setValue)
+
   const isFormDisabled = isLoading
 
   const hasAutoSaveErrors = useMemo(() => {
-    return sortedQuestions.some((q) => autoSave.getFieldStatus(q.idIntern).status === 'error')
-  }, [sortedQuestions, autoSave])
+    return visibleQuestions.some((q) => autoSave.getFieldStatus(q.idIntern).status === 'error')
+  }, [visibleQuestions, autoSave])
 
   return (
     <Box className="dynamic-form">
@@ -52,19 +58,31 @@ const DynamicForm = ({ questions, studyId, initialAnswers, isLoading = false, st
       )}
 
       <Box>
-        {sortedQuestions.map((question) => (
-          <DynamicFormField
-            key={question.id}
-            question={question}
-            control={control}
-            error={touchedFields[question.idIntern] ? (errors[question.idIntern] as FieldError | undefined) : undefined}
-            isLoading={isFormDisabled}
-            autoSave={autoSave}
-            watch={watch}
-            formErrors={errors}
-            setValue={setValue}
-          />
-        ))}
+        {visibleQuestions.map((question, index) => {
+          const previousQuestion = index > 0 ? visibleQuestions[index - 1] : null
+          const currentQuestionInfo = emissionFactorMap[question.idIntern]
+          const previousQuestionInfo = previousQuestion ? emissionFactorMap[previousQuestion.idIntern] : null
+          const showRelationLine =
+            previousQuestion && areQuestionsLinked(currentQuestionInfo, previousQuestion, previousQuestionInfo)
+
+          return (
+            <Box key={question.id}>
+              {showRelationLine && <Box className={styles.relationLine} />}
+              <DynamicFormField
+                question={question}
+                control={control}
+                error={
+                  touchedFields[question.idIntern] ? (errors[question.idIntern] as FieldError | undefined) : undefined
+                }
+                isLoading={isFormDisabled}
+                autoSave={autoSave}
+                watch={watch}
+                formErrors={errors}
+                setValue={setValue}
+              />
+            </Box>
+          )
+        })}
       </Box>
     </Box>
   )

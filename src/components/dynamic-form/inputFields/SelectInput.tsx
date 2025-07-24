@@ -1,5 +1,6 @@
 import { FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import styles from '../DynamicForm.module.css'
 import { BaseInputProps } from '../types/formTypes'
 import { formatOption } from './utils'
 
@@ -11,7 +12,9 @@ const DisabledText = styled(Typography)({
 const StyledFormControl = styled(FormControl, {
   shouldForwardProp: (prop) => prop !== 'table',
 })<{ table?: boolean }>(({ table }) => ({
-  ...(table && { maxWidth: '12.5rem' }),
+  maxWidth: table ? '12.5rem' : '100%',
+  width: '100%',
+  boxSizing: 'border-box',
 }))
 
 interface SelectInputProps extends Omit<BaseInputProps, 'value' | 'onChange'> {
@@ -38,9 +41,18 @@ const SelectInput = ({ question, value, onChange, onBlur, errorMessage, disabled
 
   return (
     <StyledFormControl fullWidth error={!!errorMessage} disabled={disabled} table={table}>
-      <Select value={value || ''} onChange={handleChange} onBlur={onBlur}>
+      <Select
+        value={value || ''}
+        onChange={handleChange}
+        onBlur={onBlur}
+        MenuProps={{
+          PaperProps: {
+            className: `${styles.selectMenuPaper} ${table ? styles.table : styles.normal}`,
+          },
+        }}
+      >
         {options.map((option) => (
-          <MenuItem key={option} value={option}>
+          <MenuItem key={option} value={option} className={styles.selectMenuItem}>
             {formatOption(option)}
           </MenuItem>
         ))}
