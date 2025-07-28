@@ -1,10 +1,11 @@
 import HelpIcon from '@/components/base/HelpIcon'
 import { Select } from '@/components/base/Select'
 import GlossaryModal from '@/components/modals/GlossaryModal'
-import { BCPost, Post } from '@/services/posts'
+import { environmentPostMapping, Post } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
-import { SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, UseFormReturn, UseFormSetValue } from 'react-hook-form'
@@ -27,6 +28,7 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
 
   const control = form.control as Control<SubPostsCommand>
   const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
+  const { environment } = useAppEnvironmentStore()
 
   const [glossary, setGlossary] = useState('')
 
@@ -43,11 +45,11 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
     form.trigger('subPosts' as FieldPath<T>)
   }, [selectedPosts, form])
 
-  const availablePosts: BCPost[] = useMemo(
+  const availablePosts: Post[] = useMemo(
     () =>
-      Object.keys(BCPost)
+      Object.keys(environmentPostMapping[environment || Environment.BC])
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
-        .filter((postKey) => !Object.keys(selectedPosts).includes(postKey)) as BCPost[],
+        .filter((postKey) => !Object.keys(selectedPosts).includes(postKey)) as Post[],
     [selectedPosts, tPost],
   )
 
@@ -70,7 +72,11 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context }: Props<T>) =
       {Object.keys(selectedPosts).map((postKey) => (
         <Box key={postKey} className={styles.postContainer}>
           <Posts
-            postOptions={postKey === ALL_POSTS_VALUE ? Object.values(BCPost) : availablePosts}
+            postOptions={
+              postKey === ALL_POSTS_VALUE
+                ? Object.values(environmentPostMapping[environment || Environment.BC])
+                : availablePosts
+            }
             form={form}
             post={postKey === ALL_POSTS_VALUE ? undefined : (postKey as Post)}
             subPosts={selectedPosts[postKey as Post]}
