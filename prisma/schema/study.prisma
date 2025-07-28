@@ -76,7 +76,8 @@ model OpeningHours {
 model EmissionSourceTag {
   id String @id @default(uuid())
 
-  name String
+  name  String
+  color String?
 
   studyId             String                @map("study_id")
   study               Study                 @relation(fields: [studyId], references: [id])
