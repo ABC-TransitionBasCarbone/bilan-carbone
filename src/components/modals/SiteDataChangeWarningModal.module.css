@@ -1,0 +1,17 @@
+.modalBody {
+  overflow-y: auto;
+}
+
+.warningSection {
+  background-color: var(--mui-palette-error-light);
+  border-radius: 0.5rem;
+}
+
+.warningSection p {
+  font-weight: bold;
+}
+
+.warningSection ul ul {
+  list-style-type: disc;
+  padding-left: 1rem;
+}

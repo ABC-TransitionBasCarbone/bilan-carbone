@@ -40,7 +40,7 @@ export type ConditionalRule = {
   expectedAnswers: string[]
 }
 
-export type EmissionFactorInfo = {
+export interface EmissionFactorInfo {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
   linkDepreciationQuestionId?: string
@@ -52,7 +52,20 @@ export type EmissionFactorInfo = {
   longDistanceProfiles?: Record<string, LongDistanceConfig>
   relatedQuestions?: string[]
   conditionalRules?: ConditionalRule[]
+  dependentFields?: SiteDependentField[]
 }
+
+export const SITE_DEPENDENT_FIELDS = [
+  'numberOfSessions',
+  'numberOfTickets',
+  'numberOfOpenDays',
+  'distanceToParis',
+  'numberOfProgrammedFilms',
+] as const
+
+export type SiteDependentField = (typeof SITE_DEPENDENT_FIELDS)[number]
+
+export type SiteDependentFields = Record<SiteDependentField, boolean>
 
 const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'RER et Transilien': '43254',
@@ -83,6 +96,21 @@ const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   Scooter: '27992',
   TGV: '43256',
   'Avion moyen courrier': '28132',
+}
+
+export const getQuestionsAffectedBySiteDataChange = (changedFields: SiteDependentField[]): string[] => {
+  const affectedQuestions: string[] = []
+
+  for (const [questionId, info] of Object.entries(emissionFactorMap)) {
+    if (info.dependentFields) {
+      const hasAffectedField = info.dependentFields.some((field) => changedFields.includes(field))
+      if (hasAffectedField) {
+        affectedQuestions.push(questionId)
+      }
+    }
+  }
+
+  return affectedQuestions
 }
 
 export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
@@ -214,6 +242,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [SHORT_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [LONG_DISTANCE_QUESTION_ID],
+    dependentFields: ['numberOfTickets', 'distanceToParis'],
     conditionalRules: [
       {
         idIntern: MOBILIY_SURVEY_QUESTION_ID,
@@ -281,6 +310,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [LONG_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [SHORT_DISTANCE_QUESTION_ID],
+    dependentFields: ['numberOfTickets', 'distanceToParis'],
     conditionalRules: [
       {
         idIntern: MOBILIY_SURVEY_QUESTION_ID,
@@ -314,6 +344,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [MOVIE_TEAM_QUESTION_ID]: {
     emissionFactors: { transport: '43256', meal: '20682' },
     isSpecial: true,
+    dependentFields: ['distanceToParis'],
   },
   // Matériel technique
   '10-decrivez-les-differentes-salles-du-cinema': {},
@@ -354,7 +385,11 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   '11-comment-stockez-vous-les-films': { emissionFactorImportedId: '20894' },
   '12-comment-stockez-vous-les-films': { emissionFactorImportedId: '20893' },
-  [MOVIE_DEMAT_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '142' },
+  [MOVIE_DEMAT_QUESTION_ID]: {
+    isSpecial: true,
+    emissionFactorImportedId: '142',
+    dependentFields: ['distanceToParis', 'numberOfProgrammedFilms'],
+  },
   [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
   'de-combien-de-disques-durs-disposez-vous': { emissionFactorImportedId: '140' },
@@ -374,6 +409,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Une part standard de confiseries et de boissons (~120g)': '137',
       'Une part significative de confiseries et de boissons (~200g)': '138',
     },
+    dependentFields: ['numberOfTickets'],
   },
   // Fret
   'quelle-est-la-distance-entre-votre-cinema-et-votre-principal-fournisseur': { emissionFactorImportedId: '28026' },

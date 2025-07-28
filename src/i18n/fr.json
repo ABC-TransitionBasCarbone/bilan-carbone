@@ -3,8 +3,8 @@
     "userToValidate": "Un·e utilisateur·ice a été ajouté à votre organisation car il vient d'être formé à la méthode Bilan Carbone®. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte",
     "title": "Faire votre bilan d’impact vous permettra de :",
     "info": {
-      "0": "Comprendre la mesure d’impact de votre établissement",
-      "1": "Identifier les priorités d’action",
+      "0": "Comprendre la mesure d'impact de votre établissement",
+      "1": "Identifier les priorités d'action",
       "2": "Construire une trajectoire de réduction"
     },
     "message": {
@@ -554,6 +554,16 @@
       "editSites": "Modifier la liste de sites",
       "cancelEditSites": "Annuler la modification",
       "validSites": "Valider les changements",
+      "validSitesToRecalculate": "Valider les changements (recalcul des émissions)",
+      "siteDataChangeModal": {
+        "title": "Changement impactant les résultats existants",
+        "description": "La modification que vous venez d'apporter va affecter les calculs d'émissions existantes.",
+        "affectedCalculations": "Cela va recalculer les émissions pour {count, plural, one {# sous-poste} other {# sous-postes}}.",
+        "affectedSubPosts": "Sous-postes affectés",
+        "confirmation": "Êtes-vous sûr de vouloir continuer ?",
+        "cancel": "Annuler",
+        "proceed": "Confirmer les changements"
+      },
       "exports": "Exports",
       "control": "Mode de contrôle",
       "emissionSourceTags": "Tags",
@@ -1400,7 +1410,7 @@
     "deleteDialog": {
       "button": "Supprimer la source",
       "delete": "Supprimer cette source d'émission",
-      "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
+      "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
       "description": "<warning>Toutes les données renseignées seront définitivement perdues</warning>, et les éventuels contributeur·ices n'auront plus accès à cette source d'émission.",
       "accept": "Oui",
       "decline": "Non"
@@ -1426,12 +1436,12 @@
       "Statistical": "Statistique",
       "Approched": "Approchée"
     },
-    "informations": "Informations :",
+    "informations": "Informations :",
     "results": {
-      "title": "Résultats :",
-      "emission": "Émission :",
-      "confiance": "Intervalle de confiance à 95% :",
-      "alpha": "Alpha :"
+      "title": "Résultats :",
+      "emission": "Émission :",
+      "confiance": "Intervalle de confiance à 95% :",
+      "alpha": "Alpha :"
     },
     "form": {
       "validate": "Validée",
@@ -1472,7 +1482,7 @@
     }
   },
   "quality": {
-    "name": "Qualité :",
+    "name": "Qualité :",
     "1": "Très mauvaise",
     "2": "Mauvaise",
     "3": "Moyenne",
@@ -1559,14 +1569,14 @@
     "warning": "Avertissement",
     "warningMessage": "<error>Veuillez vérifier sur votre compte BC+ le nom de votre organisation dans la page <i>Mon organisation > Informations générales</i>, ainsi que vos nom et prénom dans votre profil (en haut à droite). Ces informations seront utilisées pour générer votre attestation personnalisée.</error><br></br>Vous êtes actuellement connecté en tant que {name}, de l'organisation {organization} et êtes formé au niveau {level}. Si cette dernière information n'est pas correcte, merci d'envoyer votre attestation de formation à l'adresse <support>support</support>.<br></br><b>Rappel :</b> la formation doit être suivie avec <b>votre compte personnel</b> et <b>votre adresse e-mail nominative</b>, et non avec un compte générique de l'entreprise. Vous pouvez ajouter d'autres membres de votre organisation depuis le BC+ : page <i>Mon organisation > Mon équipe</i>.",
     "videos": "Vidéos",
-    "videoExplanation": "Notez bien que l’évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d’obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
+    "videoExplanation": "Notez bien que l'évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d'obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au questionnaire",
-    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><red> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l’outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</red>",
+    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><red> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l'outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</red>",
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre aux questions. Je suis dans les bonnes conditions pour commencer mon test.",
     "answer": "Répondre au questionnaire",
     "timer": "Temps restant : ",
-    "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite de {time} minutes avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d’attestation de réussite.",
+    "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite de {time} minutes avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d'attestation de réussite.",
     "form": "Questionnaire Typeform"
   },
   "deactivableFeatures": {
