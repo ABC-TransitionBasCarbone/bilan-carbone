@@ -1,7 +1,7 @@
 'use client'
 
 import { getEnvRoute } from '@/services/email/utils'
-import { signUpCutUser } from '@/services/serverFunctions/user'
+import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
 import { SignUpCutCommand, SignUpCutCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
@@ -49,7 +49,7 @@ const SignUpFormCut = () => {
     setMessage('')
     setSubmitting(true)
 
-    const activation = await signUpCutUser(getValues().email, getValues().siretOrCNC)
+    const activation = await signUpWithSiretOrCNC(getValues().email, getValues().siretOrCNC, Environment.CUT)
     setSubmitting(false)
 
     if (activation.success) {

@@ -26,6 +26,8 @@ export const SitesCommandValidation = z.object({
       postalCode: z.string().optional(),
       city: z.string().optional(),
       emissionSourcesCount: z.number().optional(),
+      volunteerNumber: z.number().optional().nullable(),
+      beneficiaryNumber: z.number().optional().nullable(),
     }),
   ),
 })
@@ -166,11 +168,11 @@ export type ChangeStudyNameCommand = z.infer<typeof ChangeStudyNameValidation>
 export const ChangeStudyCinemaValidation = z.object({
   openingHours: z.record(z.nativeEnum(DayOfWeek), OpeningHoursValidation).optional(),
   openingHoursHoliday: z.record(z.nativeEnum(DayOfWeek), HolidayOpeningHoursValidation).optional(),
-  numberOfSessions: z.number().optional().nullable(),
-  numberOfTickets: z.number().optional().nullable(),
-  numberOfOpenDays: z.number().optional().nullable(),
-  distanceToParis: z.number().optional().nullable(),
-  numberOfProgrammedFilms: z.number().optional().nullable(),
+  numberOfSessions: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
+  numberOfTickets: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
+  numberOfOpenDays: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
+  distanceToParis: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
+  numberOfProgrammedFilms: z.number({ invalid_type_error: 'invalidNumber' }).optional().nullable(),
 })
 
 export type ChangeStudyCinemaCommand = z.infer<typeof ChangeStudyCinemaValidation>

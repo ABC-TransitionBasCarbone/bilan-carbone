@@ -1,0 +1,10 @@
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: scroll;
+  margin-bottom: 0.5rem;
+}
+
+.form {
+  max-width: 400px;
+}

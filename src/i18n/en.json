@@ -198,6 +198,23 @@
       "siretOrCNC": "Please enter a Siret/CNC number"
     }
   },
+  "signupTilt": {
+    "description": "Create a Tilt account with your email and a Siret",
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Please enter an email",
+    "siret": "Siret",
+    "siretPlaceholder": "Your Siret",
+    "siretRequired": "Please enter a Siret",
+    "validate": "Validate",
+    "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation.",
+    "validation": {
+      "email": "Please enter an email",
+      "siret": "Please enter a Siret"
+    }
+  },
   "footer": {
     "message": {
       "0": "",
@@ -386,7 +403,8 @@
         "startDate": "Please select a study start date",
         "endDate": "Please select a study end date",
         "endDateBeforStartDate": "The end date must be after the start date",
-        "level": "Please select the type of Carbon Assessment"
+        "level": "Please select the type of Carbon Assessment",
+        "invalidNumber": "Please enter a valid value"
       },
       "error": {
         "default": "Something went wrong ...",
@@ -537,6 +555,10 @@
       "validSites": "Validate changes",
       "exports": "Exports",
       "control": "Control mode",
+      "emissionSourceTags": "Tags",
+      "emissionSourceTag": "Create a tag",
+      "emissionSourceTagsPlaceholder": "Your tag",
+      "validate": "Validate",
       "deleteDialog": {
         "accept": "Yes",
         "decline": "No",
@@ -608,6 +630,7 @@
       "sourceSurface": "Surface (ha)",
       "sourceUnit": "Emission source unit",
       "sourceValue": "Emission source value",
+      "sourceTag": "Emission source tag",
       "subPost": "Sub post",
       "total": "Total",
       "uncertainty": "Uncertainty",
@@ -1225,6 +1248,10 @@
       "postalCodePlaceholder": "Postal code",
       "city": "City",
       "cityPlaceholder": "City",
+      "volunteerNumber": "Number of volunteers",
+      "volunteerNumberPlaceholder": "Enter the number of volunteers for this site here",
+      "beneficiaryNumber": "Number of beneficiaries",
+      "beneficiaryNumberPlaceholder": "Enter the number of beneficiaries for this site here",
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",
@@ -1360,7 +1387,9 @@
       "quality": "Quality",
       "expand": "Expand qualities",
       "shrink": "Shrink qualities",
-      "comment": "Comments"
+      "comment": "Comments",
+      "tag": "Tag",
+      "create": "Create {tag}"
     },
     "cut": {
       "form": {
@@ -1477,6 +1506,7 @@
     "title": "Deactivable functionnalities",
     "Formation": "Formation",
     "Feedback": "Feedback",
+    "Creation": "Creation",
     "source": "Sources",
     "environment": "Environments",
     "true": "Activated",

@@ -19,9 +19,10 @@ interface Props<T extends SitesCommand> {
   sites: SitesCommand['sites']
   withSelection?: boolean
   caUnit: SiteCAUnit
+  additionalColumns?: ColumnDef<SitesCommand['sites'][0]>[]
 }
 
-const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: Props<T>) => {
+const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit, additionalColumns = [] }: Props<T>) => {
   const t = useTranslations('organization.sites')
   const tUnit = useTranslations('settings.caUnit')
 
@@ -114,6 +115,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
             `${formatNumber(displayCA(getValue<number>(), CA_UNIT_VALUES[caUnit]))}`
           ),
       },
+      ...additionalColumns,
     ] as ColumnDef<SitesCommand['sites'][0]>[]
     if (form && !withSelection) {
       columns.push({
@@ -140,6 +142,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection, caUnit }: P
         ),
       })
     }
+
     return columns
   }, [t, form, headerCAUnit])
 

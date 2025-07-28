@@ -1,15 +1,22 @@
 import {
   CLIMATISATION_QUESTION_ID,
   CONFECTIONERY_QUESTION_ID,
+  CONFECTIONERY_SELECT_QUESTION_ID,
+  INCREASE_SURFACE_QUESTION_ID,
   LONG_DISTANCE_QUESTION_ID,
+  MOBILITY_DOWNLOAD_MODEL_QUESTION_ID,
+  MOBILIY_SURVEY_QUESTION_ID,
   MOVIE_DCP_QUESTION_ID,
   MOVIE_DEMAT_QUESTION_ID,
   MOVIE_TEAM_QUESTION_ID,
   NEWSLETTER_QUESTION_ID,
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
   RENOVATION_QUESTION_ID,
+  RENOVATION_SELECTION_QUESTION_ID,
   SERVICES_QUESTION_ID,
+  SHARED_ACTIVITY_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
+  SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from './questions'
 
@@ -26,6 +33,11 @@ type LongDistanceConfig = {
   shortDistancePercentage: number
 }
 
+export type ConditionalRule = {
+  idIntern: string
+  expectedAnswers: string[]
+}
+
 export type EmissionFactorInfo = {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
@@ -37,6 +49,7 @@ export type EmissionFactorInfo = {
   shortDistanceProfiles?: Record<string, CinemaProfileConfig>
   longDistanceProfiles?: Record<string, LongDistanceConfig>
   relatedQuestions?: string[]
+  conditionalRules?: ConditionalRule[]
 }
 
 const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
@@ -85,19 +98,48 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     linkDepreciationQuestionId: 'quelle-est-la-surface-plancher-du-cinema',
   },
   'de-quel-type-de-renovation-sagi-t-il': {},
-  'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': {
+  [INCREASE_SURFACE_QUESTION_ID]: {
     emissionFactorImportedId: '20730',
-    linkDepreciationQuestionId: 'a-quand-remonte-la-derniere-renovation-importante',
+    conditionalRules: [
+      {
+        idIntern: RENOVATION_SELECTION_QUESTION_ID,
+        expectedAnswers: ['Agrandissement - extension'],
+      },
+    ],
   },
   [RENOVATION_QUESTION_ID]: {
     emissionFactorImportedId: '43340',
     isSpecial: true,
     depreciationPeriod: 10,
+    conditionalRules: [
+      {
+        idIntern: RENOVATION_SELECTION_QUESTION_ID,
+        expectedAnswers: [
+          'Rénovation totale (hors agrandissement)',
+          'Autres travaux importants (par ex : changement moquette, ravalement, peinture etc)',
+        ],
+      },
+    ],
   },
-  'le-batiment-est-il-partage-avec-une-autre-activite': {},
-  'quelle-est-la-surface-totale-du-batiment': {},
+  'quelle-est-la-surface-totale-du-batiment': {
+    conditionalRules: [
+      {
+        idIntern: SHARED_ACTIVITY_QUESTION_ID,
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
+  },
   'le-cinema-dispose-t-il-dun-parking': {},
-  'si-oui-de-combien-de-places': { emissionFactorImportedId: '26008', depreciationPeriod: 50 },
+  'si-oui-de-combien-de-places': {
+    emissionFactorImportedId: '26008',
+    depreciationPeriod: 50,
+    conditionalRules: [
+      {
+        idIntern: 'le-cinema-dispose-t-il-dun-parking',
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
+  },
   // Equipe - attente de la fonctionnalité table
   '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
   '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
@@ -150,16 +192,33 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       Tablettes: '27007',
     },
   },
-  'avez-vous-deja-realise-une-enquete-mobilite-spectateur': {},
-  '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': {
+  [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: {
     isFixed: true,
     emissionFactors: SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS,
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ['11-Oui et je peux rentrer les résultats'],
+      },
+    ],
   },
-  'si-vous-souhaitez-realiser-une-enquete-mobilite-spectateur-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
-    {},
+  [MOBILITY_DOWNLOAD_MODEL_QUESTION_ID]: {
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ["12-Non mais je voudrais le faire pour estimer l'impact du cinéma"],
+      },
+    ],
+  },
   [SHORT_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [LONG_DISTANCE_QUESTION_ID],
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ["13-Non mais je préfère m'identifier dans des profils de cinéma comparables"],
+      },
+    ],
     shortDistanceProfiles: {
       'Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun':
         {
@@ -221,6 +280,12 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [LONG_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [SHORT_DISTANCE_QUESTION_ID],
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ["13-Non mais je préfère m'identifier dans des profils de cinéma comparables"],
+      },
+    ],
     emissionFactors: {
       TGV: '43256',
       'Voiture longue distance': '27977',
@@ -297,6 +362,12 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // Achats
   [CONFECTIONERY_QUESTION_ID]: {
     isSpecial: true,
+    conditionalRules: [
+      {
+        idIntern: CONFECTIONERY_SELECT_QUESTION_ID,
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
     emissionFactors: {
       'Un peu de confiseries et de boissons (~30g)': '136',
       'Une part standard de confiseries et de boissons (~120g)': '137',

@@ -1,6 +1,7 @@
 'use server'
 
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
+import { defaultEmissionSourceTags } from '@/constants/emissionSourceTags'
 import {
   AccountWithUser,
   addAccount,
@@ -213,6 +214,15 @@ export const createStudyCommand = async (
     const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
+    const emissionSourceTags = {
+      createMany: {
+        data:
+          session.user.environment in defaultEmissionSourceTags
+            ? defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags]
+            : [],
+      },
+    }
+
     const study = {
       ...command,
       createdBy: { connect: { id: session.user.accountId } },
@@ -246,11 +256,14 @@ export const createStudyCommand = async (
                 siteId: site.id,
                 etp: site.etp || organizationSite.etp,
                 ca: site.ca ? site.ca * caUnit : organizationSite.ca,
+                volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
+                beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
               }
             })
             .filter((site) => site !== undefined),
         },
       },
+      emissionSourceTags,
     } satisfies Prisma.StudyCreateInput
 
     if (!(await canCreateSpecificStudy(session.user, study, organizationVersionId))) {
@@ -444,6 +457,8 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
           siteId: site.id,
           etp: site.etp || organizationSite.etp,
           ca: (site?.ca || 0) * caUnit || organizationSite.ca,
+          volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
+          beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
         }
       })
       .filter((site) => site !== undefined)

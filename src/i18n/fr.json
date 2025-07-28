@@ -198,6 +198,23 @@
       "siretOrCNC": "Veuillez entrer un Siret/CNC"
     }
   },
+  "signupTilt": {
+    "description": "Créez un compte sur Tilt en entrant votre email ainsi qu'un Siret",
+    "email": "Email",
+    "emailPlaceholder": "Votre adresse email",
+    "emailRequired": "Veuillez entrer un email",
+    "siret": "Siret",
+    "siretPlaceholder": "Votre Siret",
+    "siretRequired": "Veuillez entrer un Siret",
+    "validate": "Valider",
+    "Not authorized": "Cet email est déjà inscrit avec un compte Tilt ou ce SIRET n'est pas valide. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "validation": {
+      "email": "Veuillez entrer un email",
+      "siret": "Veuillez entrer un Siret"
+    }
+  },
   "footer": {
     "message": {
       "0": "",
@@ -386,7 +403,8 @@
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
-        "level": "Veuillez selectionner le type de Bilan Carbone®"
+        "level": "Veuillez selectionner le type de Bilan Carbone®",
+        "invalidNumber": "Veuillez saisir une valeur valide"
       },
       "error": {
         "default": "Une erreur s'est produite ...",
@@ -537,6 +555,10 @@
       "validSites": "Valider les changements",
       "exports": "Exports",
       "control": "Mode de contrôle",
+      "emissionSourceTags": "Tags",
+      "emissionSourceTag": "Créer un tag",
+      "emissionSourceTagsPlaceholder": "Votre tag",
+      "validate": "Valider",
       "deleteDialog": {
         "accept": "Oui",
         "decline": "Non",
@@ -608,6 +630,7 @@
       "sourceSurface": "Surface (ha)",
       "sourceUnit": "Unité de la source d'émission",
       "sourceValue": "Valeur de la source d'émission",
+      "sourceTag": "Tag de la source d'émission",
       "subPost": "Sous poste",
       "total": "Total",
       "uncertainty": "Incertitude",
@@ -1225,6 +1248,10 @@
       "postalCodePlaceholder": "Code postal",
       "city": "Ville",
       "cityPlaceholder": "Ville",
+      "volunteerNumber": "Nombre de volontaires",
+      "volunteerNumberPlaceholder": "Entrez le nombre de volontaires pour ce site ici",
+      "beneficiaryNumber": "Nombre de bénéficiaires",
+      "beneficiaryNumberPlaceholder": "Entrez le nombre de bénéficiaires pour ce site ici",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",
@@ -1360,7 +1387,9 @@
       "quality": "Qualité",
       "expand": "Développer les qualités",
       "shrink": "Simplifier les qualités",
-      "comment": "Commentaires"
+      "comment": "Commentaires",
+      "tag": "Tag",
+      "create": "Créer {tag}"
     },
     "cut": {
       "form": {
@@ -1477,6 +1506,7 @@
     "title": "Fonctionnalités désactivables",
     "Formation": "Formation",
     "Feedback": "Feedback",
+    "Creation": "Création",
     "source": "Sources",
     "environment": "Environnements",
     "true": "Active",
