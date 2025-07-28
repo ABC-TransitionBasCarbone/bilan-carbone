@@ -30,6 +30,7 @@ const SignUpFormCut = () => {
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
   const [cncs, setCNCs] = useState<Cnc[]>([])
+  const [siretOrCNC, setSiretOrCNC] = useState('')
   const { callServerFunction } = useServerFunction()
 
   const searchParams = useSearchParams()
@@ -69,7 +70,7 @@ const SignUpFormCut = () => {
     setMessage('')
     setSubmitting(true)
 
-    const activation = await signUpWithSiretOrCNC(getValues().email, getValues().siretOrCNC, Environment.CUT)
+    const activation = await signUpWithSiretOrCNC(getValues().email, siretOrCNC, Environment.CUT)
     setSubmitting(false)
 
     if (activation.success) {
@@ -102,9 +103,13 @@ const SignUpFormCut = () => {
             value: cnc.numeroAuto ?? '',
           }))}
           name="siretOrCNC"
+          inputValue={siretOrCNC}
           label={t('siretOrCNC')}
           helperText={t('siretOrCNCPlaceholder')}
           freeSolo
+          onInputChange={(_, siretOrCNC) => {
+            setSiretOrCNC(siretOrCNC)
+          }}
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
           {t('validate')}
