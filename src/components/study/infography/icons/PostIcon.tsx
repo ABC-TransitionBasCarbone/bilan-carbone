@@ -17,6 +17,16 @@ import { SallesEtCabinesIcon } from './sallesetcabines'
 import { TourneesAvantPremiereIcon } from './tourneesavantpremiere'
 import { UtilisationEtDependanceIcon } from './utilisationetdependance'
 
+import AcUnitOutlinedIcon from '@mui/icons-material/AcUnitOutlined'
+import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined'
+import ChairAltOutlinedIcon from '@mui/icons-material/ChairAltOutlined'
+import DinnerDiningOutlinedIcon from '@mui/icons-material/DinnerDiningOutlined'
+import FilterDramaOutlinedIcon from '@mui/icons-material/FilterDramaOutlined'
+import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
+import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined'
+import MapsHomeWorkOutlinedIcon from '@mui/icons-material/MapsHomeWorkOutlined'
+import TrainOutlinedIcon from '@mui/icons-material/TrainOutlined'
+
 interface Props {
   post: Post
   className?: string
@@ -58,6 +68,26 @@ const PostIcon = ({ post, className }: Props) => {
       return <DechetsIcon className={className} />
     case Post.BilletterieEtCommunication:
       return <BilletterieEtCommunicationIcon className={className} />
+    case Post.IntrantsBiensEtMatieresTilt:
+      return <IntrantsBiensEtMatieresIcon className={className} />
+    case Post.Alimentation:
+      return <DinnerDiningOutlinedIcon className={className} />
+    case Post.EquipementsEtImmobilisations:
+      return <ChairAltOutlinedIcon className={className} />
+    case Post.DeplacementsDePersonne:
+      return <TrainOutlinedIcon className={className} />
+    case Post.TransportDeMarchandises:
+      return <LocalShippingOutlinedIcon className={className} />
+    case Post.ConstructionDesLocaux:
+      return <MapsHomeWorkOutlinedIcon className={className} />
+    case Post.FroidEtClim:
+      return <AcUnitOutlinedIcon className={className} />
+    case Post.AutresEmissions:
+      return <FilterDramaOutlinedIcon className={className} />
+    case Post.Utilisation:
+      return <LightbulbOutlinedIcon className={className} />
+    case Post.Teletravail:
+      return <BoltOutlinedIcon className={className} />
   }
 }
 
