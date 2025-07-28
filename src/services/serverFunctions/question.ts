@@ -480,9 +480,9 @@ export const getQuestionProgressBySubPostPerPost = async ({
     const totalCountBySubPost = questions.reduce<Partial<Record<SubPost, number>>>((acc, question) => {
       const { subPost, type } = question
       /**
-       * Comme les questions type TABLE, contiennent les réponses de ses sous questions
-       * On ne les comptes pas dans nombres de questions total,
-       * sinon il y aurait toujours une question de plus que le nombres de réponses
+       * Since TABLE-type questions contain the answers of their sub-questions,
+       * We do not count them in the total number of questions,
+       * Otherwise, there would always be one more question than the number of answers.
        */
       if (type !== QuestionType.TABLE) {
         acc[subPost] = (acc[subPost] || 0) + 1
