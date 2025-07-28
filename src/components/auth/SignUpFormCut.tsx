@@ -2,8 +2,8 @@
 
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvRoute } from '@/services/email/utils'
-import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
 import { getAllCNCs } from '@/services/serverFunctions/cnc'
+import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
 import { SignUpCutCommand, SignUpCutCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
