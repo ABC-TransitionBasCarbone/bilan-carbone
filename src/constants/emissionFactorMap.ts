@@ -180,7 +180,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
   [SERVICES_QUESTION_ID]: { emissionFactorImportedId: '43545', isSpecial: true },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
-    isFixed: true,
     depreciationPeriod: 4,
     emissionFactors: {
       'Ordinateurs fixes': '27003',
