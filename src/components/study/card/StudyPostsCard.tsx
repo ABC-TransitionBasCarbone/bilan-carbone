@@ -41,11 +41,13 @@ const StudyPostsCard = ({ study, post, userRole, studySite, setSite, isCut }: Pr
           <PostIcon className={styles.icon} post={post} />
           {tPost(post)}
         </div>
-        <div className="justify-between align-center">
+        <div className={`justify-${isCut ? 'center' : 'between'} align-center`}>
           <StudyName name={study.name} />
-          <div className={classNames(styles.role, styles[userRole.toLowerCase()], 'ml-2 text-center')}>
-            {tRole(userRole)}
-          </div>
+          {!isCut && (
+            <div className={classNames(styles.role, styles[userRole.toLowerCase()], 'ml-2 text-center')}>
+              {tRole(userRole)}
+            </div>
+          )}
         </div>
         <p className="text-center">{t('selectSite')}</p>
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} withLabel={false} />
