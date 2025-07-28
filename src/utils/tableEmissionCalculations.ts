@@ -518,7 +518,6 @@ const calculateWaste: TableEmissionCalculator = {
         emissionSources: [],
       }
     }
-
     const emissionSources: EmissionSourceCalculation[] = []
     const wasteFEList = emissionFactorMap['10-veuillez-renseigner-les-dechets-generes-par-semaine'].emissionFactors
     const wasteEmissionFactorId = wasteFEList?.[wasteType]
@@ -530,8 +529,8 @@ const calculateWaste: TableEmissionCalculator = {
       )
 
       if (wasteEmissionFactor) {
-        const wasteValue = binCount * binSize * WASTE_DENSITY * frequency * 52 * 0.001
-
+        const wasteValue =
+          binCount * binSize * (wasteEmissionFactorId === '34478' ? 0.04 : WASTE_DENSITY) * frequency * 52 * 0.001
         emissionSources.push({
           name: 'waste',
           value: wasteValue,

@@ -394,6 +394,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Ordures ménagères (déchets non triés / sans filière)': '34654',
       'Emballages et papier (plastique, métal, papier et carton)': '34486',
       'Biodéchets (restes alimentaires)': '22040',
+      'Déchets verre': '34478',
     },
   },
   // DechetsExceptionnels
