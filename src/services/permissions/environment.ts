@@ -21,3 +21,6 @@ export const hasAccessToDuplicateStudy = (environment: Environment) =>
 
 export const hasAccessToCreateEmissionSourceTag = async (environment: Environment) =>
   ([Environment.BC, Environment.TILT] as Environment[]).includes(environment)
+
+export const hasAccessToStudyFlowExample = (environment: Environment) =>
+  ([Environment.TILT] as Environment[]).includes(environment)

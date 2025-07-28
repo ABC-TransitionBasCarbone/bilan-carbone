@@ -356,7 +356,7 @@ export const canReadStudyDetail = async (user: UserSession, study: FullStudy) =>
   return true
 }
 
-const canAccessStudyFlows = async (studyId: string) => {
+export const canAccessStudyFlows = async (studyId: string) => {
   const session = await dbActualizedAuth()
 
   if (!session || !session.user) {
