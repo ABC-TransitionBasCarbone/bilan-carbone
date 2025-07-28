@@ -140,6 +140,7 @@ export const getMockedDetailedFullStudySite = (
       postalCode: '12345',
       city: 'Test City',
       cnc: {
+        id: '1',
         numberOfProgrammedFilms: 10,
         ecrans: 13,
       },

@@ -9,7 +9,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountsUserLevel,
 } from '@/db/account'
-import { findCncByNumeroAuto } from '@/db/cnc'
+import { findCncByNumeroAuto, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
@@ -369,7 +369,7 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
     await updateStudy(studyId, { name: command.name })
   })
 
-export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCinemaCommand) =>
+export const changeStudyCinema = async (studySiteId: string, cncId: string, data: ChangeStudyCinemaCommand) =>
   withServerResponse('changeStudyCinema', async () => {
     const studySites = await getStudiesSitesFromIds([studySiteId])
 
@@ -388,12 +388,13 @@ export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCi
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const { openingHours, openingHoursHoliday, ...updateData } = data
+    const { openingHours, openingHoursHoliday, numberOfProgrammedFilms, ...updateData } = data
 
     if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
+    await updateNumberOfProgrammedFilms({ cncId, numberOfProgrammedFilms })
     await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
     await updateStudySiteData(studySiteId, updateData)
   })

@@ -341,6 +341,7 @@
       "numberOfSessions": "Nombre de séances (par an)",
       "numberOfTickets": "Nombre d'entrées (par an)",
       "distanceToParis": "Distance à Paris (km)",
+      "numberOfProgrammedFilms": "Nombre de films programmés (en {year})",
       "numberOfOpenDays": "Nombre de jours d'ouverture (par an)",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",

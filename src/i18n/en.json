@@ -338,6 +338,7 @@
       "numberOfSessions": "Number of sessions",
       "numberOfTickets": "Number of tickets",
       "distanceToParis": "Distance to Paris (km)",
+      "numberOfProgrammedFilms": "Number of scheduled films (in {year})",
       "numberOfOpenDays": "Number of open days",
       "openingHours": "Opening hours",
       "openingHoursHoliday": "Opening hours during school holidays",
