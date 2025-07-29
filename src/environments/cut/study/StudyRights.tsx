@@ -48,7 +48,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   const [showSiteDataWarning, setShowSiteDataWarning] = useState(false)
   const [pendingSiteChanges, setPendingSiteChanges] = useState<{
     changedFields: SiteDependentField[]
-    questionsBySubPost: Record<string, Array<{ id: string; label: string; idIntern: string }>>
+    questionsBySubPost: Record<string, Array<{ id: string; label: string; idIntern: string; answer?: string }>>
     pendingData: ChangeStudyCinemaCommand
   } | null>(null)
   const [originalValues, setOriginalValues] = useState<{
@@ -161,7 +161,7 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
           if (changedFields.length > 0) {
             const affectedQuestionIds = getQuestionsAffectedBySiteDataChange(changedFields)
             if (affectedQuestionIds.length > 0) {
-              const questionsBySubPostResponse = await getQuestionsGroupedBySubPost(affectedQuestionIds)
+              const questionsBySubPostResponse = await getQuestionsGroupedBySubPost(affectedQuestionIds, studySite)
               const questionsBySubPost = questionsBySubPostResponse.success ? questionsBySubPostResponse.data : {}
 
               setPendingSiteChanges({

@@ -558,8 +558,7 @@
       "siteDataChangeModal": {
         "title": "Changement impactant les résultats existants",
         "description": "La modification que vous venez d'apporter va affecter les calculs d'émissions existantes.",
-        "affectedCalculations": "Cela va recalculer les émissions pour {count, plural, one {# sous-poste} other {# sous-postes}}.",
-        "affectedSubPosts": "Sous-postes affectés",
+        "affectedCalculations": "Cela va recalculer les émissions pour les questions suivantes :",
         "confirmation": "Êtes-vous sûr de vouloir continuer ?",
         "cancel": "Annuler",
         "proceed": "Confirmer les changements"

@@ -869,9 +869,12 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
     }
   })
 
-export const getQuestionsGroupedBySubPost = async (questionIds: string[]) =>
+export const getQuestionsGroupedBySubPost = async (questionIds: string[], studySiteId?: string) =>
   withServerResponse('getQuestionsGroupedBySubPost', async () => {
-    const questionsBySubPost: Record<string, Array<{ id: string; label: string; idIntern: string }>> = {}
+    const questionsBySubPost: Record<
+      string,
+      Array<{ id: string; label: string; idIntern: string; answer?: string }>
+    > = {}
 
     for (const questionId of questionIds) {
       const questions = await getQuestionsByIdIntern(questionId)
@@ -880,10 +883,20 @@ export const getQuestionsGroupedBySubPost = async (questionIds: string[]) =>
           if (!questionsBySubPost[question.subPost]) {
             questionsBySubPost[question.subPost] = []
           }
+
+          let answerText: string | undefined
+          if (studySiteId) {
+            const answer = await getAnswerByQuestionId(question.id, studySiteId)
+            if (answer && answer.response) {
+              answerText = typeof answer.response === 'string' ? answer.response : JSON.stringify(answer.response)
+            }
+          }
+
           questionsBySubPost[question.subPost].push({
             id: question.id,
             label: question.label,
             idIntern: question.idIntern,
+            answer: answerText,
           })
         }
       }

@@ -558,8 +558,7 @@
       "siteDataChangeModal": {
         "title": "Data Changes Impacting Existing Results",
         "description": "The changes you just made will affect existing emission calculations.",
-        "affectedCalculations": "This will recalculate emissions for {count, plural, one {# sub-post} other {# sub-posts}}.",
-        "affectedSubPosts": "Affected sub-posts",
+        "affectedCalculations": "This will recalculate emissions for the following questions:",
         "confirmation": "Are you sure you want to continue?",
         "cancel": "Cancel",
         "proceed": "Confirm changes"
