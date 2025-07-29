@@ -1,10 +1,19 @@
 .tags {
   display: flex;
   gap: 0.5rem;
-  overflow-x: scroll;
   margin-bottom: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .form {
-  max-width: 400px;
+  max-width: 300px;
+}
+
+.colorInput {
+  max-height: fit-content;
+}
+
+.preview {
+  align-self: center;
+  margin-bottom: 1rem;
 }

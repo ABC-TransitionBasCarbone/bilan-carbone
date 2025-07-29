@@ -14,12 +14,20 @@ type DefaultEmissionSourceTags = {
   }[]
 }
 
+export enum emissionSourceTagColors {
+  GREY = '#9fbff3',
+  GREEN = '#94EBBF',
+  RED = '#e04949',
+  ORANGE = '#fc8514',
+  BLUE = '#606af5',
+}
+
 export const defaultEmissionSourceTags: DefaultEmissionSourceTags = {
   [Environment.TILT]: [
-    { name: DefaultEmissionSourceTag.PERIMETRE_INTERNE, color: 'success' },
-    { name: DefaultEmissionSourceTag.PERIMETRE_BENEVOLES, color: 'error' },
-    { name: DefaultEmissionSourceTag.PERIMETRE_BENEFICIAIRES, color: 'warning' },
-    { name: DefaultEmissionSourceTag.NUMERIQUE, color: 'info' },
+    { name: DefaultEmissionSourceTag.PERIMETRE_INTERNE, color: emissionSourceTagColors.GREEN },
+    { name: DefaultEmissionSourceTag.PERIMETRE_BENEVOLES, color: emissionSourceTagColors.RED },
+    { name: DefaultEmissionSourceTag.PERIMETRE_BENEFICIAIRES, color: emissionSourceTagColors.ORANGE },
+    { name: DefaultEmissionSourceTag.NUMERIQUE, color: emissionSourceTagColors.BLUE },
   ],
 }
 type EmissionSourceTagMap = {

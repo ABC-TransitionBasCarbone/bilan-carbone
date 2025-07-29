@@ -4,6 +4,7 @@ import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import Form from '@/components/base/Form'
 import { FormTextField } from '@/components/form/TextField'
+import { emissionSourceTagColors } from '@/constants/emissionSourceTags'
 import {
   createEmissionSourceTag,
   deleteEmissionSourceTag,
@@ -14,11 +15,11 @@ import {
   NewEmissionSourceTagCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Chip, FormControl } from '@mui/material'
+import { Box, Chip, FormControl, MenuItem, Select } from '@mui/material'
 import { EmissionSourceTag } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import styles from './EmissionSourceTag.module.css'
 
 interface Props {
@@ -47,8 +48,12 @@ const EmissionSourceTags = ({ studyId }: Props) => {
     reValidateMode: 'onChange',
     defaultValues: {
       studyId,
+      color: emissionSourceTagColors.GREY,
     },
   })
+
+  const name = useWatch({ control, name: 'name', defaultValue: 'preview' })
+  const color = useWatch({ control, name: 'color', defaultValue: emissionSourceTagColors.GREY })
 
   const onSubmit = async () => {
     const createTag = await createEmissionSourceTag(getValues())
@@ -65,26 +70,63 @@ const EmissionSourceTags = ({ studyId }: Props) => {
     }
   }
 
+  console.log('EmissionSourceTags', tags)
+
   return (
     <Block title={t('emissionSourceTags')}>
       {tags.length > 0 && (
         <div className={styles.tags}>
           {tags.map((tag) => (
-            <Chip onDelete={() => onDelete(tag.id)} color="primary" key={tag.id} label={tag.name} />
+            <Chip onDelete={() => onDelete(tag.id)} sx={{ bgcolor: tag.color }} key={tag.id} label={tag.name} />
           ))}
         </div>
       )}
 
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <FormControl>
-          <FormTextField
-            control={control}
-            translation={t}
-            name="name"
-            label={t('emissionSourceTag')}
-            placeholder={t('emissionSourceTagsPlaceholder')}
-            data-testid="create-emission-source-tags"
-          />
+          <div className="flex justify-between mb-2">
+            <Controller
+              control={control}
+              name="color"
+              defaultValue={emissionSourceTagColors.GREY}
+              render={({ field }) => (
+                <FormControl className="inputContainer">
+                  <div className="mb-2">
+                    <span className="inputLabel bold">{t('color')}</span>
+                  </div>
+                  <Select
+                    className={styles.colorInput}
+                    {...field}
+                    displayEmpty
+                    data-testid="create-emission-source-tag-color"
+                  >
+                    {Object.values(emissionSourceTagColors).map((color) => (
+                      <MenuItem key={color} value={color}>
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            borderRadius: '50%',
+                            backgroundColor: color,
+                            border: '1px solid #ccc',
+                          }}
+                        />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+            />
+            <FormTextField
+              control={control}
+              translation={t}
+              name="name"
+              label={t('emissionSourceTag')}
+              placeholder={t('emissionSourceTagsPlaceholder')}
+              data-testid="create-emission-source-tags"
+            />
+          </div>
+          <Chip className={styles.preview} sx={{ bgcolor: color }} label={name || 'preview'} />
           <Button data-testid="submit-button" type="submit" fullWidth>
             {t('validate')}
           </Button>

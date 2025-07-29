@@ -199,7 +199,7 @@ export const getEmissionSourcesByStudyId = async (studyId: string) =>
     return study.emissionSources
   })
 
-export const createEmissionSourceTag = async ({ studyId, name }: NewEmissionSourceTagCommand) =>
+export const createEmissionSourceTag = async ({ studyId, name, color }: NewEmissionSourceTagCommand) =>
   withServerResponse('createEmissionSourceTag', async () => {
     const session = await auth()
     if (!session || !session.user) {
@@ -224,6 +224,7 @@ export const createEmissionSourceTag = async ({ studyId, name }: NewEmissionSour
     return await createEmissionSourceTagOnStudy({
       study: { connect: { id: studyId } },
       name,
+      color,
     })
   })
 

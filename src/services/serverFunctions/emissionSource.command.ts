@@ -45,6 +45,7 @@ export type UpdateEmissionSourceCommand = z.infer<typeof UpdateEmissionSourceCom
 export const NewEmissionSourceTagCommandValidation = z.object({
   studyId: z.string(),
   name: z.string(),
+  color: z.string().optional(),
 })
 
 export type NewEmissionSourceTagCommand = z.infer<typeof NewEmissionSourceTagCommandValidation>

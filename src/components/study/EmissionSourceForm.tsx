@@ -21,7 +21,7 @@ import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
-import { Autocomplete, FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
+import { Autocomplete, Chip, FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
   EmissionSourceTag,
@@ -49,7 +49,7 @@ import EmissionSourceFactor from './EmissionSourceFactor'
 import emissionFactorStyles from './EmissionSourceFactor.module.css'
 import QualitySelectGroup from './QualitySelectGroup'
 
-type Option = { label: string; value: string }
+type Option = { label: string; value: string; color?: string | null }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
@@ -389,15 +389,32 @@ const EmissionSourceForm = ({
           multiple
           disabled={!canEdit}
           data-testid="emission-source-tag"
-          options={tags.map((tag) => ({ label: tag.name, value: tag.id }))}
-          value={emissionSource.emissionSourceTags.map((tag) => ({ label: tag.name, value: tag.id }))}
+          options={tags.map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
+          value={emissionSource.emissionSourceTags.map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
           onChange={(_, options: Option[]) => {
             update(
               'emissionSourceTags',
               options.map((tag) => tag.value),
             )
           }}
+          renderOption={(props, option) => {
+            const { key, ...optionProps } = props
+
+            return (
+              <li key={key} {...optionProps}>
+                <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} />
+              </li>
+            )
+          }}
           renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
+          renderValue={(value: Option[], getItemProps) =>
+            value.map((option: Option, index: number) => {
+              const { key, ...itemProps } = getItemProps({ index })
+              return (
+                <Chip variant="outlined" label={option.label} key={key} sx={{ bgcolor: option.color }} {...itemProps} />
+              )
+            })
+          }
         />
         <div className={classNames(styles.gapped, styles.optionnalFields, 'grow flex')}>
           <TextField

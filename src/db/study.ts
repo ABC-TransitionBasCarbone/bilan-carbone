@@ -91,6 +91,7 @@ const fullStudyInclude = {
         select: {
           id: true,
           name: true,
+          color: true,
           studyId: true,
         },
       },
