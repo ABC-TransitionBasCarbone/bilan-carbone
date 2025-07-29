@@ -21,9 +21,18 @@ interface Props {
   studySite: string
   withDependencies: boolean
   hiddenUncertainty?: boolean
+  expandAll?: boolean
+  hideExpandIcons?: boolean
 }
 
-const ConsolidatedResultsTable = ({ study, studySite, withDependencies, hiddenUncertainty }: Props) => {
+const ConsolidatedResultsTable = ({
+  study,
+  studySite,
+  withDependencies,
+  hiddenUncertainty,
+  expandAll,
+  hideExpandIcons,
+}: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
@@ -49,6 +58,19 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies, hiddenUn
         header: t('post'),
         accessorFn: ({ post }) => tPost(post),
         cell: ({ row, getValue }) => {
+          if (hideExpandIcons) {
+            const isSubpost = row.depth > 0
+            return (
+              <p
+                className={classNames('align-center', isSubpost ? styles.notExpandable : styles.expandable, {
+                  [styles.subPost]: isSubpost,
+                })}
+              >
+                {getValue<string>()}
+              </p>
+            )
+          }
+
           return row.getCanExpand() ? (
             <button onClick={row.getToggleExpandedHandler()} className={classNames('align-center', styles.expandable)}>
               {row.getIsExpanded() ? (
@@ -84,7 +106,7 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies, hiddenUn
     })
 
     return tmpColumns
-  }, [hiddenUncertainty, study.resultsUnit, t, tPost, tQuality, tUnits])
+  }, [hiddenUncertainty, hideExpandIcons, study.resultsUnit, t, tPost, tQuality, tUnits])
 
   const data = useMemo(() => {
     if (!environment) {
@@ -106,6 +128,7 @@ const ConsolidatedResultsTable = ({ study, studySite, withDependencies, hiddenUn
     getSubRows: (row) => row.subPosts,
     getExpandedRowModel: getExpandedRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    initialState: expandAll ? { expanded: true } : undefined,
   })
 
   return (

@@ -1,0 +1,208 @@
+@media print {
+  @page {
+    margin: 0;
+    size: A4;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.page-break-before {
+  page-break-before: always !important;
+}
+
+.page-break-after {
+  page-break-after: always !important;
+}
+
+.page-break-avoid {
+  page-break-inside: avoid !important;
+}
+
+.section-break {
+  page-break-before: auto;
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+
+.pdf-content.page-break-before {
+  page-break-before: always !important;
+}
+
+.pdf-page-header,
+.pdf-page-footer {
+  position: fixed;
+  z-index: 1000;
+  height: 3.75rem;
+  padding: 0 2.5rem;
+}
+
+.pdf-page-header {
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--mui-palette-primary-main);
+}
+
+.pdf-page-header img {
+  height: 2.5rem;
+  width: auto;
+}
+
+.pdf-page-footer {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--mui-palette-grey-500);
+  font-size: 0.75rem;
+  color: var(--mui-palette-grey-500);
+}
+
+.pdf-page-footer-logos {
+  gap: 1.25rem;
+}
+
+.pdf-page-footer-logos img {
+  height: 1.875rem;
+  width: auto;
+}
+
+.pdf-container {
+  line-height: 1.4;
+  color: var(--mui-palette-text-primary);
+  background-color: var(--mui-palette-background-default);
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+}
+
+.pdf-content {
+  padding: 1.25rem 2.5rem;
+}
+
+.pdf-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--mui-palette-primary-main);
+  margin: 0 0 0.625rem 0;
+  text-align: center;
+}
+
+.pdf-header-section {
+  text-align: center;
+  margin-bottom: 1.875rem;
+}
+
+.pdf-cinemas-list {
+  text-align: left;
+  margin-bottom: 1.875rem;
+}
+
+.pdf-cinemas-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.625rem;
+  color: var(--mui-palette-primary-main);
+}
+
+.pdf-section {
+  margin-bottom: 2.5rem;
+}
+
+.pdf-header-with-border {
+  border-bottom: 2px solid var(--mui-palette-success-main);
+  padding-bottom: 0.625rem;
+}
+
+.pdf-cinema-header {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--mui-palette-primary-main);
+  margin-bottom: 1.25rem;
+  page-break-after: avoid;
+}
+
+.pdf-general-data {
+  background-color: var(--mui-palette-primary-light);
+  padding: 0.9375rem;
+  border-radius: 0.3125rem;
+  margin-bottom: 1.25rem;
+}
+
+.pdf-data-item {
+  text-align: center;
+  flex: 1;
+}
+
+.pdf-data-label {
+  font-size: 0.75rem;
+  color: var(--mui-palette-grey-500);
+  margin-bottom: 0.3125rem;
+}
+
+.pdf-data-value {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: var(--mui-palette-text-primary);
+}
+
+.pdf-totals-header {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--mui-palette-primary-main);
+  margin-bottom: 1.25rem;
+}
+
+.pdf-info-section {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  background-color: #fff;
+  border-radius: 0.3125rem;
+  border: 1px solid var(--mui-palette-success-main);
+}
+
+.pdf-info-text {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.pdf-summary-stats {
+  margin-top: 1.875rem;
+  background-color: var(--mui-palette-primary-light);
+  border-radius: 0.5rem;
+  border: 1px solid var(--mui-palette-success-main);
+}
+
+.pdf-page-content {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  min-height: calc(100vh - 5rem);
+}
+
+@media print {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-after: avoid;
+  }
+
+  table {
+    page-break-inside: avoid;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  .pdf-general-data {
+    page-break-inside: avoid;
+  }
+}
