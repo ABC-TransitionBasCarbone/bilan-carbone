@@ -16,7 +16,7 @@ export enum BCPost {
 export enum CutPost {
   Fonctionnement = 'Fonctionnement',
   MobiliteSpectateurs = 'MobiliteSpectateurs',
-  TourneesAvantPremieres = 'TourneesAvantPremiere',
+  TourneesAvantPremieres = 'TourneesAvantPremieres',
   SallesEtCabines = 'SallesEtCabines',
   ConfiseriesEtBoissons = 'ConfiseriesEtBoissons',
   Dechets = 'Dechets',
