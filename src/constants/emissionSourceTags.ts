@@ -4,6 +4,7 @@ export enum DefaultEmissionSourceTag {
   PERIMETRE_INTERNE = 'Périmètre Interne',
   PERIMETRE_BENEVOLES = 'Périmètre Bénévoles',
   PERIMETRE_BENEFICIAIRES = 'Périmètre Bénéficiaires',
+  NUMERIQUE = 'Numérique',
 }
 
 type DefaultEmissionSourceTags = {
@@ -18,6 +19,7 @@ export const defaultEmissionSourceTags: DefaultEmissionSourceTags = {
     { name: DefaultEmissionSourceTag.PERIMETRE_INTERNE, color: 'success' },
     { name: DefaultEmissionSourceTag.PERIMETRE_BENEVOLES, color: 'error' },
     { name: DefaultEmissionSourceTag.PERIMETRE_BENEFICIAIRES, color: 'warning' },
+    { name: DefaultEmissionSourceTag.NUMERIQUE, color: 'info' },
   ],
 }
 type EmissionSourceTagMap = {
@@ -101,6 +103,10 @@ export const emissionSourceTagMap: EmissionSourceTagMap = {
       SubPost.TraitementDesDechetsEnFinDeVie,
       SubPost.FuitesOuEmissionsNonEnergetiques,
       SubPost.TraitementDesEmballagesEnFinDeVie,
+    ],
+    [DefaultEmissionSourceTag.NUMERIQUE]: [
+      SubPost.UtilisationEnResponsabiliteConsommationNumerique,
+      SubPost.UtilisationEnDependanceConsommationNumerique,
     ],
   },
 }
