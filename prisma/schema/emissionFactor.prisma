@@ -137,7 +137,7 @@ enum SubPost {
   // Autres émissions 
   ActivitesAgricoles
   ActivitesIndustrielles
-  
+
   // Deplacements de personnes
   DeplacementsDomicileTravailSalaries
   DeplacementsDomicileTravailBenevoles

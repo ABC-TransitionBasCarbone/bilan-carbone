@@ -1,8 +1,8 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { BCPost, CutPost, TiltPost } from '@/services/posts'
 import AllPostsInfographyCut from '@/environments/cut/study/infography/AllPostsInfography'
 import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
+import { BCPost, CutPost, TiltPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
@@ -61,7 +61,7 @@ const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
     <DynamicComponent
       defaultComponent={<AllPostsInfography study={study} data={data} />}
       environmentComponents={{
-        [Environment.CUT]: <AllPostsInfographyCut study={study} data={data} />,
+        [Environment.CUT]: <AllPostsInfographyCut study={study} data={data} studySiteId={studySite} user={user} />,
         [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
       }}
     />

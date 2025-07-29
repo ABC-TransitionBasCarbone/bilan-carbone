@@ -562,6 +562,7 @@ export const getQuestionProgressBySubPostPerPost = async ({
         response: true,
         question: {
           select: {
+            idIntern: true,
             subPost: true,
             type: true,
           },
@@ -571,8 +572,34 @@ export const getQuestionProgressBySubPostPerPost = async ({
 
     const answeredCountBySubPost = answers.reduce<Partial<Record<SubPost, number>>>((acc, answer) => {
       const { response, question } = answer
-      const subPost = question.subPost
-      const type = question.type
+      const { type, subPost, idIntern } = question
+
+      const isConditional = Object.keys(emissionFactorMap).find((key) => {
+        const listQuestionWithConditionalResponse = emissionFactorMap[key].conditionalRules?.map(
+          ({ idIntern: idInternRule, expectedAnswers }) => {
+            /**
+             * Response in DB is '"[X,…]"'
+             */
+            if (typeof response === 'string' && response.startsWith('[')) {
+              /**
+               * Test if response is in conditional rules
+               */
+              const parsedValue = JSON.parse(response) as string[]
+              const result = parsedValue.every((res) => !expectedAnswers.includes(res))
+              return idInternRule === idIntern && result
+            }
+            return idInternRule === idIntern && !expectedAnswers.includes(response as string)
+          },
+        )
+        /**
+         * If question with conditional response not display subquestion
+         */
+        return listQuestionWithConditionalResponse?.filter((t) => t).length ?? 0 > 0
+      })
+
+      if (isConditional && totalCountBySubPost[subPost]) {
+        totalCountBySubPost[subPost] -= 1
+      }
 
       if (type === QuestionType.TABLE && isTableResponse(response)) {
         for (const row of response.rows) {
