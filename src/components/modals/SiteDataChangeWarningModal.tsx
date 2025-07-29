@@ -27,12 +27,12 @@ const SiteDataChangeWarningModal = ({ isOpen, onClose, onConfirm, questionsBySub
       actions={[
         {
           actionType: 'button',
+          color: 'error',
           children: t('cancel'),
           onClick: onClose,
         },
         {
           actionType: 'button',
-          color: 'error',
           children: t('proceed'),
           onClick: onConfirm,
         },
