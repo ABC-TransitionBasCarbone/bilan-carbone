@@ -21,7 +21,8 @@
     "seed:import": "prisma db seed -- -i",
     "question:import:google": "npx tsx src/scripts/cut/question/add.ts -s google -f",
     "question:import:excel": "npx tsx src/scripts/cut/question/add.ts -f",
-    "user:import": "tsx src/scripts/ftp/importUsers.ts"
+    "user:import": "tsx src/scripts/ftp/importUsers.ts",
+    "postinstall": "npx playwright install"
   },
   "prisma": {
     "schema": "prisma/schema",
