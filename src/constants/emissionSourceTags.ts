@@ -1,9 +1,106 @@
-import { Environment } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 
-export const defaultEmissionSourceTags = {
+export enum DefaultEmissionSourceTag {
+  PERIMETRE_INTERNE = 'Périmètre Interne',
+  PERIMETRE_BENEVOLES = 'Périmètre Bénévoles',
+  PERIMETRE_BENEFICIAIRES = 'Périmètre Bénéficiaires',
+}
+
+type DefaultEmissionSourceTags = {
+  [key in Environment]?: {
+    name: string
+    color: string
+  }[]
+}
+
+export const defaultEmissionSourceTags: DefaultEmissionSourceTags = {
   [Environment.TILT]: [
-    { name: 'Périmètre Interne' },
-    { name: 'Périmètre Bénévoles' },
-    { name: 'Périmètre Bénéficiaires' },
+    { name: DefaultEmissionSourceTag.PERIMETRE_INTERNE, color: 'success' },
+    { name: DefaultEmissionSourceTag.PERIMETRE_BENEVOLES, color: 'error' },
+    { name: DefaultEmissionSourceTag.PERIMETRE_BENEFICIAIRES, color: 'warning' },
   ],
+}
+type EmissionSourceTagMap = {
+  [key in Environment]?: {
+    [key in DefaultEmissionSourceTag]?: SubPost[]
+  }
+}
+
+export const emissionSourceTagMap: EmissionSourceTagMap = {
+  [Environment.TILT]: {
+    [DefaultEmissionSourceTag.PERIMETRE_INTERNE]: [
+      SubPost.Batiment,
+      SubPost.AutresInfrastructures,
+      SubPost.CombustiblesFossiles,
+      SubPost.CombustiblesOrganiques,
+      SubPost.ReseauxDeChaleurEtDeVapeur,
+      SubPost.ReseauxDeFroid,
+      SubPost.Electricite,
+
+      SubPost.DechetsDEmballagesEtPlastiques,
+      SubPost.DechetsOrganiques,
+      SubPost.DechetsOrduresMenageres,
+      SubPost.DechetsDangereux,
+      SubPost.DechetsBatiments,
+      SubPost.FuitesOuEmissionsNonEnergetiques,
+      SubPost.EauxUsees,
+      SubPost.AutresDechets,
+
+      SubPost.ActivitesAgricoles,
+      SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
+      SubPost.ActivitesIndustrielles,
+
+      SubPost.DeplacementsDomicileTravailSalaries,
+      SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries,
+      SubPost.DeplacementsFabricationDesVehicules,
+
+      SubPost.Entrant,
+      SubPost.Interne,
+      SubPost.Sortant,
+      SubPost.TransportFabricationDesVehicules,
+
+      SubPost.MetauxPlastiquesEtVerre,
+      SubPost.PapiersCartons,
+      SubPost.MateriauxDeConstruction,
+      SubPost.ProduitsChimiquesEtHydrogene,
+      SubPost.MatiereDestineeAuxEmballages,
+      SubPost.AutresIntrants,
+      SubPost.BiensEtMatieresEnApprocheMonetaire,
+
+      SubPost.RepasPrisParLesSalaries,
+
+      SubPost.AchatsDeServices,
+      SubPost.UsagesNumeriques,
+      SubPost.ServicesEnApprocheMonetaire,
+
+      SubPost.Equipements,
+      SubPost.Informatique,
+
+      SubPost.InvestissementsFinanciersRealises,
+
+      SubPost.TeletravailSalaries,
+    ],
+    [DefaultEmissionSourceTag.PERIMETRE_BENEVOLES]: [
+      SubPost.DeplacementsDomicileTravailBenevoles,
+      SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles,
+      SubPost.RepasPrisParLesBenevoles,
+      SubPost.TeletravailBenevoles,
+    ],
+    [DefaultEmissionSourceTag.PERIMETRE_BENEFICIAIRES]: [
+      SubPost.DeplacementsDesBeneficiaires,
+      SubPost.UtilisationEnResponsabiliteConsommationDeBiens,
+      SubPost.UtilisationEnResponsabiliteConsommationNumerique,
+      SubPost.UtilisationEnResponsabiliteConsommationDEnergie,
+      SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations,
+      SubPost.UtilisationEnDependanceConsommationDeBiens,
+      SubPost.UtilisationEnDependanceConsommationNumerique,
+      SubPost.UtilisationEnDependanceConsommationDEnergie,
+      SubPost.UtilisationEnDependanceFuitesEtAutresConsommations,
+
+      SubPost.ConsommationDEnergieEnFinDeVie,
+      SubPost.TraitementDesDechetsEnFinDeVie,
+      SubPost.FuitesOuEmissionsNonEnergetiques,
+      SubPost.TraitementDesEmballagesEnFinDeVie,
+    ],
+  },
 }
