@@ -26,6 +26,7 @@ import {
   EmissionSourceCaracterisation,
   EmissionSourceTag,
   EmissionSourceType,
+  Environment,
   StudyResultUnit,
   StudyRole,
   SubPost,
@@ -65,6 +66,7 @@ interface Props {
   subPost: SubPost
   selectedFactor?: EmissionFactorWithMetaData
   update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
+  environment: Environment | undefined
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
@@ -92,6 +94,7 @@ const EmissionSourceForm = ({
   isFromOldImport,
   currentBEVersion,
   studyUnit,
+  environment,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -329,7 +332,8 @@ const EmissionSourceForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))} {tResultUnits(StudyResultUnit.K)}/
+            {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}{' '}
+            {tResultUnits(StudyResultUnit.K)}/
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}{' '}
             {qualityRating && (
               <>

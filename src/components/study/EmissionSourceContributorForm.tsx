@@ -9,7 +9,7 @@ import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import AddIcon from '@mui/icons-material/Add'
 import { TextField } from '@mui/material'
-import { StudyResultUnit, SubPost, Unit } from '@prisma/client'
+import { Environment, StudyResultUnit, SubPost, Unit } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -30,6 +30,7 @@ interface Props {
   isFromOldImport: boolean
   currentBEVersion: string
   advanced: boolean
+  environment: Environment | undefined
 }
 
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
@@ -44,6 +45,7 @@ const EmissionSourceContributorForm = ({
   isFromOldImport,
   currentBEVersion,
   advanced,
+  environment,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tResultUnits = useTranslations('study.results.units')
@@ -119,7 +121,8 @@ const EmissionSourceContributorForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))} {tResultUnits(StudyResultUnit.K)}/
+            {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}{' '}
+            {tResultUnits(StudyResultUnit.K)}/
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
           </p>
           {selectedFactor.metaData && <p className={styles.detail}>{getDetail(selectedFactor.metaData)}</p>}

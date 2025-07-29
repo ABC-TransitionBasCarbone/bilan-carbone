@@ -47,6 +47,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
       true,
       validatedOnly,
       environmentPostMapping[environment || Environment.BC],
+      environment,
     )
     const total = computedResults.find((result) => result.post === 'total')?.value || 0
     const monetaryTotal = computedResults.find((result) => result.post === 'total')?.monetaryValue || 0

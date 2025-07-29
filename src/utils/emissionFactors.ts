@@ -6,8 +6,10 @@ import { EmissionFactor, Environment, Import, Prisma, SubPost, Unit } from '@pri
 
 export const getEmissionFactorValue = (
   emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2'>,
+  environment?: Environment,
 ) => {
   if (
+    environment !== Environment.CUT &&
     emissionFactor.importedFrom === Import.BaseEmpreinte &&
     emissionFactor.importedId &&
     wasteEmissionFactors[emissionFactor.importedId]

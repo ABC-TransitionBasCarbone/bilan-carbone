@@ -7,6 +7,7 @@ import { getEmissionSourcesTotalCo2 } from '@/services/emissionSource'
 import { Post, subPostsByPost } from '@/services/posts'
 import { computeBegesResult, getBegesEmissionTotal } from '@/services/results/beges'
 import { computeResultsByPost } from '@/services/results/consolidated'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import LightbulbIcon from '@mui/icons-material/LightbulbOutlined'
@@ -28,6 +29,7 @@ interface Props {
 }
 
 const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validatedOnly }: Props) => {
+  const { environment } = useAppEnvironmentStore()
   const t = useTranslations('study.results.difference')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
@@ -51,8 +53,8 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
   )
   const begesTotal = formatNumber((beges.find((result) => result.rule === 'total')?.total || 0) / unitValue, 0)
   const computedResults = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly),
-    [study, studySite, tPost, validatedOnly],
+    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, undefined, environment),
+    [study, studySite, tPost, validatedOnly, environment],
   )
   const computedTotal = formatNumber(
     (computedResults.find((result) => result.post === 'total')?.value || 0) / unitValue,
@@ -94,7 +96,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
           return null
         }
 
-        const bcValue = Math.round(getEmissionSourcesTotalCo2([emissionSource]) / unitValue)
+        const bcValue = Math.round(getEmissionSourcesTotalCo2([emissionSource], environment) / unitValue)
         const begesValue = Math.round(getBegesEmissionTotal(emissionSource, emissionFactor) / unitValue)
         const difference = begesValue - bcValue
 
@@ -107,7 +109,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
         }
       })
       .filter((item): item is NonNullable<typeof item> => item !== null && Math.abs(item.difference) >= 1)
-  }, [wasteEmissionSourcesOnStudy, emissionFactorsWithParts, validatedOnly, tPost, unitValue])
+  }, [wasteEmissionSourcesOnStudy, emissionFactorsWithParts, validatedOnly, tPost, unitValue, environment])
 
   const wasteTotalDifference = useMemo(() => {
     return wasteSourcesWithDifferences.reduce((total, item) => total + item.difference, 0)
@@ -135,10 +137,10 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
         return total
       }
 
-      const bcEmissionTotal = Math.round(getEmissionSourcesTotalCo2([emissionSource]) / unitValue)
+      const bcEmissionTotal = Math.round(getEmissionSourcesTotalCo2([emissionSource], environment) / unitValue)
       return total - bcEmissionTotal
     }, 0)
-  }, [missingCaract, emissionFactorsWithParts, unitValue])
+  }, [missingCaract, emissionFactorsWithParts, unitValue, environment])
 
   const maxListedEmissionSources = 10
 

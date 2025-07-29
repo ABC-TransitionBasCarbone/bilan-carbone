@@ -1,5 +1,5 @@
 import { FullStudy } from '@/db/study'
-import { SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 import {
   getEmissionSourcesTotalCo2,
   getEmissionSourcesTotalMonetaryCo2,
@@ -39,6 +39,7 @@ export const computeResultsByPost = (
   withDependencies: boolean,
   validatedOnly: boolean = true,
   postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost = BCPost,
+  environment: Environment | undefined,
 ) => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 
@@ -53,7 +54,7 @@ export const computeResultsByPost = (
 
           return {
             post: subPost,
-            value: getEmissionSourcesTotalCo2(validatedOnly ? validatedEmissionSources : emissionSources),
+            value: getEmissionSourcesTotalCo2(validatedOnly ? validatedEmissionSources : emissionSources, environment),
             monetaryValue: getEmissionSourcesTotalMonetaryCo2(
               validatedOnly ? validatedEmissionSources : emissionSources,
             ),
