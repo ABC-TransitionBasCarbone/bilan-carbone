@@ -556,8 +556,10 @@
       "exports": "Exports",
       "control": "Mode de contrôle",
       "emissionSourceTags": "Tags",
-      "emissionSourceTag": "Créer un tag",
+      "emissionSourceTagLabel": "Libellé",
+      "color": "Couleur",
       "emissionSourceTagsPlaceholder": "Votre tag",
+      "createEmissionSourceTag": "Créer mon tag",
       "validate": "Valider",
       "deleteDialog": {
         "accept": "Oui",
