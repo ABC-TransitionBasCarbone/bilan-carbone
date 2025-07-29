@@ -5,6 +5,8 @@ export const INCREASE_SURFACE_QUESTION_ID =
 export const RENOVATION_QUESTION_ID = 'quel-est-le-montant-des-depenses-liees-a-ces-travaux-de-renovation'
 export const SERVICES_QUESTION_ID = 'quel-montant-avez-vous-depense-en-services'
 export const SHARED_ACTIVITY_QUESTION_ID = 'le-batiment-est-il-partage-avec-une-autre-activite'
+export const RESEAU_CHALLEUR_QUESTION_ID = 'reseaux-urbains-chaleur'
+export const RESEAU_FROID_QUESTION_ID = 'reseaux-urbains-froid'
 
 // Mobilité spectateurs
 export const MOBILIY_SURVEY_QUESTION_ID = 'avez-vous-deja-realise-une-enquete-mobilite-spectateurs'
