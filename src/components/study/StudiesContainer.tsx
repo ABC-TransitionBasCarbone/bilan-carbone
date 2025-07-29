@@ -3,7 +3,6 @@ import {
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
 } from '@/db/study'
-import { default as CUTStudyHomeMessage } from '@/environments/cut/study/StudyHomeMessage'
 import { canCreateAStudy } from '@/services/permissions/study'
 import AddIcon from '@mui/icons-material/Add'
 import { Box as MUIBox } from '@mui/material'
@@ -70,7 +69,6 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR }: Props) =>
     </>
   ) : canCreateAStudy(user) && !isCR ? (
     <MUIBox component="section">
-      <CUTStudyHomeMessage user={user} />
       <div className="justify-center">
         <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
           <Image src="/img/orga.png" alt="cr.png" width={177} height={119} />

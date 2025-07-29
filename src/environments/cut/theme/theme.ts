@@ -155,7 +155,7 @@ const cutTheme = createTheme(base, {
     postColors: {
       [Post.Fonctionnement]: { light: '#FF8145' },
       [Post.MobiliteSpectateurs]: { light: '#FEBC0C' },
-      [Post.TourneesAvantPremiere]: { light: '#3CCDB4' },
+      [Post.TourneesAvantPremieres]: { light: '#3CCDB4' },
       [Post.Dechets]: { light: '#9A61FA' },
       [Post.ConfiseriesEtBoissons]: { light: '#FF49A2' },
       [Post.BilletterieEtCommunication]: { light: '#FF4052' },

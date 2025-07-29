@@ -20,6 +20,7 @@ interface Props {
 const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tCutQuestions = useTranslations('emissionFactors.post.cutQuestions')
+  const tInfography = useTranslations('study.infography')
   const router = useRouter()
   const searchParams = useSearchParams()
   const subPosts = useMemo(() => subPostsByPost[post], [post])
@@ -79,7 +80,17 @@ const StudyPostsPageCut = ({ post, study, studySiteId }: Props) => {
   const isLastStep = activeStep >= subPosts.length - 1
 
   return (
-    <Block title={tPost(post)} as="h1">
+    <Block
+      title={tPost(post)}
+      as="h1"
+      actions={[
+        {
+          actionType: 'link',
+          href: `/etudes/${study.id}/comptabilisation/saisie-des-donnees`,
+          children: tInfography('form.backToInfography'),
+        },
+      ]}
+    >
       <TabsWithGreenStyling
         tabs={subPosts}
         t={tPost}

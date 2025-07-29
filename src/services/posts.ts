@@ -16,7 +16,7 @@ export enum BCPost {
 export enum CutPost {
   Fonctionnement = 'Fonctionnement',
   MobiliteSpectateurs = 'MobiliteSpectateurs',
-  TourneesAvantPremiere = 'TourneesAvantPremiere',
+  TourneesAvantPremieres = 'TourneesAvantPremiere',
   SallesEtCabines = 'SallesEtCabines',
   ConfiseriesEtBoissons = 'ConfiseriesEtBoissons',
   Dechets = 'Dechets',
@@ -112,7 +112,7 @@ export const subPostsByPostCUT: Record<CutPost, SubPost[]> = {
     SubPost.ActivitesDeBureau,
   ],
   [CutPost.MobiliteSpectateurs]: [SubPost.MobiliteSpectateurs],
-  [CutPost.TourneesAvantPremiere]: [SubPost.EquipesRecues],
+  [CutPost.TourneesAvantPremieres]: [SubPost.EquipesRecues],
   [CutPost.SallesEtCabines]: [SubPost.MaterielTechnique, SubPost.AutreMateriel],
   [CutPost.ConfiseriesEtBoissons]: [SubPost.Achats, SubPost.Fret, SubPost.Electromenager],
   [CutPost.Dechets]: [SubPost.DechetsOrdinaires, SubPost.DechetsExceptionnels],

@@ -157,10 +157,9 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   '15-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
     emissionFactors: {
-      "tous types d'hôtel": '100',
+      appartement: '100',
       'hôtel 1*': '101',
       'hôtel 2*': '102',
-      'hôtel 3*': '103',
       'hôtel 4*': '104',
       'hôtel 5*': '105',
       nuitée: '106',
@@ -407,7 +406,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Affiches 40x60': '126',
       'PLV comptoir': '127',
       'PLV grand format': '128',
-      Goodies: '129',
     },
     weights: {
       'Affiches 120x160': 0.22,

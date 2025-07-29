@@ -58,7 +58,7 @@ const PostIcon = ({ post, className }: Props) => {
       return <FonctionnementIcon className={className} />
     case Post.MobiliteSpectateurs:
       return <MobiliteSpectateursIcon className={className} />
-    case Post.TourneesAvantPremiere:
+    case Post.TourneesAvantPremieres:
       return <TourneesAvantPremiereIcon className={className} />
     case Post.SallesEtCabines:
       return <SallesEtCabinesIcon className={className} />
