@@ -4,6 +4,7 @@ import { FullStudy } from '@/db/study'
 import { useChartComputations } from '@/hooks/useChartComputations'
 import { BCPost, CutPost, Post } from '@/services/posts'
 import { isPost } from '@/utils/post'
+import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart } from '@mui/x-charts'
 import { useTranslations } from 'next-intl'
@@ -51,13 +52,16 @@ const PieChart = ({
   const pieData = useMemo(
     () =>
       computeResults
-        .map(({ label, value, post }) => ({
-          label: `${label} - ${chartFormatter(value)}`,
-          value,
-          color: isPost(post) ? theme.custom.postColors[post].light : theme.palette.primary.light,
-        }))
+        .map(({ label, value, post }) => {
+          const convertedValue = value / STUDY_UNIT_VALUES[study.resultsUnit]
+          return {
+            label: `${label} - ${chartFormatter(convertedValue)}`,
+            value: convertedValue,
+            color: isPost(post) ? theme.custom.postColors[post].light : theme.palette.primary.light,
+          }
+        })
         .filter((computeResult) => computeResult.value > 0),
-    [computeResults, theme, chartFormatter],
+    [computeResults, theme, chartFormatter, study.resultsUnit],
   )
 
   return (
