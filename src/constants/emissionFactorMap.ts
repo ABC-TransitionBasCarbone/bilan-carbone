@@ -54,8 +54,8 @@ export type EmissionFactorInfo = {
 
 const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'RER et Transilien': '43254',
-  'Métro, tramway (FE agglo 100-250k habitants)': '28150',
-  'Bus (FE agglo 100-250k habitants)': '27999',
+  'Métro, tramway': '28150',
+  Bus: '27999',
   'Vélo électrique': '28331',
   'Vélo classique': '134',
   Marche: '135',
@@ -70,8 +70,8 @@ const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
 
 const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'RER et Transilien': '43254',
-  'Métro, tramway (FE agglo 100-250k habitants)': '28150',
-  'Bus (FE agglo 100-250k habitants)': '27999',
+  'Métro, tramway': '28150',
+  Bus: '27999',
   'Vélo électrique': '28331',
   'Voiture diesel': '27978',
   'Voiture essence': '27977',
