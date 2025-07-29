@@ -13,6 +13,8 @@ import {
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
   RENOVATION_QUESTION_ID,
   RENOVATION_SELECTION_QUESTION_ID,
+  RESEAU_CHALLEUR_QUESTION_ID,
+  RESEAU_FROID_QUESTION_ID,
   SERVICES_QUESTION_ID,
   SHARED_ACTIVITY_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
@@ -170,7 +172,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quelles-etaient-les-consommations-energetiques-du-cinema': { emissionFactorImportedId: '15591' },
   gaz: { emissionFactorImportedId: '37138' },
   fuel: { emissionFactorImportedId: '14086' },
-  'reseaux-urbains-chaleurfroid': { emissionFactorImportedId: '' }, // Attente d'une fonctionnalité pour gérer les départements
+  [RESEAU_CHALLEUR_QUESTION_ID]: { emissionFactorImportedId: '37089' },
+  [RESEAU_FROID_QUESTION_ID]: { emissionFactorImportedId: '37090' },
   'bois-granules': { emissionFactorImportedId: '34942' },
   [CLIMATISATION_QUESTION_ID]: { emissionFactorImportedId: '145', isSpecial: true },
   'le-cinema-dispose-t-il-d-un-ou-plusieurs-groupes-electrogenes': { emissionFactorImportedId: '20911' },
