@@ -20,7 +20,35 @@ export const upsertCNC = async (data: Prisma.CncCreateInput[]) => {
   )
 }
 
-export const getCNCById = async (numeroAuto: string) => await prismaClient.cnc.findUnique({ where: { numeroAuto } })
-
-export const getCNCByNumeroAuto = async (numeroAuto: string) =>
+export const findCncByNumeroAuto = async (numeroAuto: string) =>
   await prismaClient.cnc.findUnique({ where: { numeroAuto } })
+
+export const findCncById = async (id: string) => await prismaClient.cnc.findUnique({ where: { id } })
+
+export const updateNumberOfProgrammedFilms = async ({
+  cncId,
+  numberOfProgrammedFilms,
+}: {
+  cncId: string
+  numberOfProgrammedFilms: number | null | undefined
+}) => {
+  await prismaClient.cnc.update({
+    data: {
+      numberOfProgrammedFilms: numberOfProgrammedFilms ?? 0,
+    },
+    where: {
+      id: cncId,
+    },
+  })
+}
+export const getCNCs = async () =>
+  await prismaClient.cnc.findMany({
+    where: {
+      numeroAuto: {
+        not: null,
+      },
+    },
+    orderBy: {
+      codeInsee: 'asc',
+    },
+  })

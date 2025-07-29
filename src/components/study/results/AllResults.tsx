@@ -4,9 +4,10 @@ import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { downloadStudyResults } from '@/services/study'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { ControlMode, Environment, Export, ExportRule } from '@prisma/client'
+import { ControlMode, Export, ExportRule } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
@@ -33,6 +34,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
   const tUnits = useTranslations('study.results.units')
   const tStudyNav = useTranslations('study.navigation')
 
+  const { environment } = useAppEnvironmentStore()
   const [withDependencies, setWithDependencies] = useState(true)
   const [type, setType] = useState<Export | 'consolidated'>('consolidated')
   const exports = useMemo(() => study.exports, [study.exports])
@@ -85,7 +87,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
               tQuality,
               tBeges,
               tUnits,
-              Environment.BC,
+              environment,
             )
           }
           title={t('download')}

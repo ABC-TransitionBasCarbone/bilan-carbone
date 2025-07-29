@@ -21,7 +21,7 @@
     "Beges": "Bilan GES Reglementaire",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
-    "developmentFile": "Fichier en cours de développement"
+    "developmentFile": "⚠️ Fichier en cours de développement ⚠️"
   },
   "categorisations": {
     "Operated": "Opéré",
@@ -198,6 +198,23 @@
       "siretOrCNC": "Veuillez entrer un Siret/CNC"
     }
   },
+  "signupTilt": {
+    "description": "Créez un compte sur Tilt en entrant votre email ainsi qu'un Siret",
+    "email": "Email",
+    "emailPlaceholder": "Votre adresse email",
+    "emailRequired": "Veuillez entrer un email",
+    "siret": "Siret",
+    "siretPlaceholder": "Votre Siret",
+    "siretRequired": "Veuillez entrer un Siret",
+    "validate": "Valider",
+    "Not authorized": "Cet email est déjà inscrit avec un compte Tilt ou ce SIRET n'est pas valide. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "validation": {
+      "email": "Veuillez entrer un email",
+      "siret": "Veuillez entrer un Siret"
+    }
+  },
   "footer": {
     "message": {
       "0": "",
@@ -324,6 +341,7 @@
       "numberOfSessions": "Nombre de séances (par an)",
       "numberOfTickets": "Nombre d'entrées (par an)",
       "distanceToParis": "Distance à Paris (km)",
+      "numberOfProgrammedFilms": "Nombre de films programmés (en {year})",
       "numberOfOpenDays": "Nombre de jours d'ouverture (par an)",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
@@ -385,7 +403,8 @@
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
-        "level": "Veuillez selectionner le type de Bilan Carbone®"
+        "level": "Veuillez selectionner le type de Bilan Carbone®",
+        "invalidNumber": "Veuillez saisir une valeur valide"
       },
       "error": {
         "default": "Une erreur s'est produite ...",
@@ -536,6 +555,10 @@
       "validSites": "Valider les changements",
       "exports": "Exports",
       "control": "Mode de contrôle",
+      "emissionSourceTags": "Tags",
+      "emissionSourceTag": "Créer un tag",
+      "emissionSourceTagsPlaceholder": "Votre tag",
+      "validate": "Valider",
       "deleteDialog": {
         "accept": "Oui",
         "decline": "Non",
@@ -607,6 +630,7 @@
       "sourceSurface": "Surface (ha)",
       "sourceUnit": "Unité de la source d'émission",
       "sourceValue": "Valeur de la source d'émission",
+      "sourceTag": "Tag de la source d'émission",
       "subPost": "Sous poste",
       "total": "Total",
       "uncertainty": "Incertitude",
@@ -626,7 +650,9 @@
       "noFlows": "Aucune cartographie des flux à afficher",
       "notAuthorized": "Action non authorisée",
       "removeFlow": "Supprimer la cartographie",
-      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+      "info": "Vous pouvez télécharger un exemple de cartographie des flux pour vous aider à construire la votre. Par la suite, si vous souhaitez soumettre votre cartographie des flux pour que d'autres utilisateurs puissent l'utiliser en exemple et aider d'autres association, merci de la soumettre à methodologie@abc-transitionbascarbone.fr",
+      "downloadSample": "Télécharger un exemple"
     },
     "delete": {
       "cancel": "Annuler",
@@ -694,6 +720,7 @@
       "DechetsBatiments": "Déchets matériaux",
       "DechetsFuitesOuEmissionsNonEnergetiques": "Fuites ou émissions non énergétiques",
       "EauxUsees": "Eaux usées",
+      "AutresDechets": "Autres déchets",
       "FretEntrant": "Fret entrant",
       "FretInterne": "Fret interne",
       "FretSortant": "Fret sortant",
@@ -726,6 +753,43 @@
       "MaterielCinema": "Matériel cinéma",
       "CommunicationDigitale": "Communication digitale",
       "CaissesEtBornes": "Caisses et bornes",
+      "IntrantsBiensEtServices": "Intrants biens et services",
+      "IntrantsBiensEtMatieresTilt": "Intrants biens et matières",
+      "Alimentation": "Alimentation",
+      "RepasPrisParLesSalaries": "Repas pris par les salariés",
+      "RepasPrisParLesBenevoles": "Repas pris par les bénévoles",
+      "EquipementsEtImmobilisations": "Équipements et immobilisations",
+      "DeplacementsDePersonne": "Déplacement de personne",
+      "DeplacementsDomicileTravailSalaries": "Déplacements domicile travail des salariés",
+      "DeplacementsDomicileTravailBenevoles": "Déplacements domicile travail des bénévoles",
+      "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Déplacements dans le cadre d'une mission associative des salariés",
+      "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Déplacements dans le cadre d'une mission associative des bénévoles",
+      "DeplacementsDesBeneficiaires": "Déplacements des bénéficiaires",
+      "DeplacementsFabricationDesVehicules": "Déplacements Fabrication des véhicules",
+      "TransportDeMarchandises": "Transport de marchandises",
+      "Entrant": "Entrant",
+      "Sortant": "Sortant",
+      "Interne": "Interne",
+      "TransportFabricationDesVehicules": "Transport fabrication de véhicules",
+      "LocauxEtInfrastructures": "Locaux et infrastructures",
+      "ConstructionDesLocaux": "Construction des locaux",
+      "FroidEtClim": "Froid et climatisation",
+      "AutresEmissions": "Autres émissions",
+      "ActivitesAgricoles": "Activités agricoles",
+      "ActivitesIndustrielles": "Activités industrielles",
+      "UtilisationEtFinDeVie": "Utilisation et fin de vie",
+      "Utilisation": "Utilisation",
+      "UtilisationEnResponsabiliteConsommationDeBiens": "Utilisation en responsabilité - Consommation de biens",
+      "UtilisationEnResponsabiliteConsommationNumerique": "Utilisation en responsabilité - Consommation numérique",
+      "UtilisationEnResponsabiliteConsommationDEnergie": "Utilisation en responsabilité - Consommation d'énergie",
+      "UtilisationEnResponsabiliteFuitesEtAutresConsommations": "Utilisation en responsabilité - Fuites et autres consommations",
+      "UtilisationEnDependanceConsommationDeBiens": "Utilisation en dépendance - Consommation de biens",
+      "UtilisationEnDependanceConsommationNumerique": "Utilisation en dépendance - Consommation numérique",
+      "UtilisationEnDependanceConsommationDEnergie": "Utilisation en dépendance - Consommation d'énergie",
+      "UtilisationEnDependanceFuitesEtAutresConsommations": "Utilisation en dépendance - Fuites et autres consommations",
+      "Teletravail": "Télétravail",
+      "TeletravailSalaries": "Télétravail des salariés",
+      "TeletravailBenevoles": "Télétravail des bénévoles",
       "glossary": "Glossaire",
       "close": "Fermer",
       "glossaryDescription": {
@@ -1224,6 +1288,10 @@
       "postalCodePlaceholder": "Code postal",
       "city": "Ville",
       "cityPlaceholder": "Ville",
+      "volunteerNumber": "Nombre de volontaires",
+      "volunteerNumberPlaceholder": "Entrez le nombre de volontaires pour ce site ici",
+      "beneficiaryNumber": "Nombre de bénéficiaires",
+      "beneficiaryNumberPlaceholder": "Entrez le nombre de bénéficiaires pour ce site ici",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",
@@ -1359,7 +1427,9 @@
       "quality": "Qualité",
       "expand": "Développer les qualités",
       "shrink": "Simplifier les qualités",
-      "comment": "Commentaires"
+      "comment": "Commentaires",
+      "tag": "Tag",
+      "create": "Créer {tag}"
     },
     "cut": {
       "form": {
@@ -1476,6 +1546,7 @@
     "title": "Fonctionnalités désactivables",
     "Formation": "Formation",
     "Feedback": "Feedback",
+    "Creation": "Création",
     "source": "Sources",
     "environment": "Environnements",
     "true": "Active",

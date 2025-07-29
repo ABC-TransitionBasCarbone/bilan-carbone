@@ -65,6 +65,8 @@ export const canCreateEmissionSource = async (account: AccountWithUser, emission
   switch (account.environment) {
     case 'BC':
       return canCreateEmissionSourceBC(account, emissionSource)
+    case 'TILT':
+      return canCreateEmissionSourceBC(account, emissionSource)
     case 'CUT':
       return canCreateEmissionSourceCUT(account, emissionSource)
     default:
@@ -132,6 +134,8 @@ export const canUpdateEmissionSource = async (
 ) => {
   switch (account.environment) {
     case 'BC':
+      return canUpdateEmissionSourceBC(account, emissionSource, change, study)
+    case 'TILT':
       return canUpdateEmissionSourceBC(account, emissionSource, change, study)
     case 'CUT':
       return canUpdateEmissionSourceCUT(account, emissionSource)

@@ -73,6 +73,19 @@ model OpeningHours {
   @@map("opening_hours")
 }
 
+model EmissionSourceTag {
+  id String @id @default(uuid())
+
+  name String
+
+  studyId             String                @map("study_id")
+  study               Study                 @relation(fields: [studyId], references: [id])
+  StudyEmissionSource StudyEmissionSource[]
+
+  @@unique([name, studyId])
+  @@map("emission_source_tag")
+}
+
 model Study {
   id      String  @id @default(uuid())
   oldBCId String? @map("old_bc_id")
@@ -100,6 +113,8 @@ model Study {
   flows           Document[]
 
   emissionFactorVersions StudyEmissionFactorVersion[]
+
+  emissionSourceTags EmissionSourceTag[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -204,6 +219,9 @@ model StudyEmissionSource {
 
   answerEmissionSources AnswerEmissionSource[]
 
+  emissionSourceTagId String?            @map("emission_source_tag_id")
+  emissionSourceTag   EmissionSourceTag? @relation(fields: [emissionSourceTagId], references: [id])
+
   @@map("study_emission_sources")
 }
 
@@ -271,11 +289,13 @@ model StudySite {
   ca                  Float
   StudyEmissionSource StudyEmissionSource[]
 
-  numberOfSessions Int?
-  numberOfTickets  Int?
-  numberOfOpenDays Int?
-  distanceToParis  Int?
-  openingHours     OpeningHours[]
+  volunteerNumber   Int?           @map("volunteer_number")
+  beneficiaryNumber Int?           @map("beneficiary_number")
+  numberOfSessions  Int?
+  numberOfTickets   Int?
+  numberOfOpenDays  Int?
+  distanceToParis   Int?
+  openingHours      OpeningHours[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

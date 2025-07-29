@@ -109,6 +109,7 @@ const getEmissionSourcesRows = (
       'sourceDuration',
       'sourceUnit',
       'sourceQuality',
+      'sourceTag',
       'activityDataValue',
       'activityDataUnit',
       'activityDataQuality',
@@ -137,6 +138,7 @@ const getEmissionSourcesRows = (
         initCols.push(tPost(emissionSource.subPost))
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
+      console.log('CONSOLE', emissionSourceSD)
 
       const withDeprecation = subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)
 
@@ -153,6 +155,7 @@ const getEmissionSourcesRows = (
           isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
+          emissionSource.emissionSourceTag?.name || '',
           emissionSource.value || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
           getQuality(getQualityRating(emissionSource), tQuality),

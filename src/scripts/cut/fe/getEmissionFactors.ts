@@ -1,5 +1,5 @@
 import { Command } from 'commander'
-import { getEmissionFactorsFromCSV } from '../../services/importEmissionFactor/cut/getEmissionFactors'
+import { getEmissionFactorsFromCSV } from '../../../services/importEmissionFactor/cut/getEmissionFactors'
 
 const program = new Command()
 

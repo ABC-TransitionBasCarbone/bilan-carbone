@@ -47,6 +47,8 @@ export const OrganizationVersionWithOrganizationSelect = {
           oldBCId: true,
           postalCode: true,
           city: true,
+          volunteerNumber: true,
+          beneficiaryNumber: true,
           cncId: true,
           cnc: {
             select: {
@@ -110,7 +112,16 @@ export const getOrganizationWithSitesById = (id: string) =>
     where: { id },
     include: {
       sites: {
-        select: { name: true, etp: true, ca: true, id: true, postalCode: true, city: true },
+        select: {
+          name: true,
+          etp: true,
+          ca: true,
+          id: true,
+          postalCode: true,
+          city: true,
+          volunteerNumber: true,
+          beneficiaryNumber: true,
+        },
         orderBy: { createdAt: 'asc' },
       },
       organizationVersions: true,
@@ -156,6 +167,8 @@ export const updateOrganization = async (
           postalCode: site.postalCode,
           city: site.city,
           cncId: site.cncId || undefined,
+          volunteerNumber: site.volunteerNumber || undefined,
+          beneficiaryNumber: site.beneficiaryNumber || undefined,
         },
         update: {
           name: site.name,
@@ -164,6 +177,8 @@ export const updateOrganization = async (
           postalCode: site.postalCode,
           city: site.city,
           cncId: site.cncId || undefined,
+          volunteerNumber: site.volunteerNumber || undefined,
+          beneficiaryNumber: site.beneficiaryNumber || undefined,
         },
       }),
     ),

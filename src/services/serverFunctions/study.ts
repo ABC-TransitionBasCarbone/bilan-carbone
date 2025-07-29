@@ -1,6 +1,7 @@
 'use server'
 
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
+import { defaultEmissionSourceTags } from '@/constants/emissionSourceTags'
 import {
   AccountWithUser,
   addAccount,
@@ -8,7 +9,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountsUserLevel,
 } from '@/db/account'
-import { getCNCById, getCNCByNumeroAuto } from '@/db/cnc'
+import { findCncByNumeroAuto, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
@@ -213,6 +214,15 @@ export const createStudyCommand = async (
     const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
+    const emissionSourceTags = {
+      createMany: {
+        data:
+          session.user.environment in defaultEmissionSourceTags
+            ? defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags]
+            : [],
+      },
+    }
+
     const study = {
       ...command,
       createdBy: { connect: { id: session.user.accountId } },
@@ -246,11 +256,14 @@ export const createStudyCommand = async (
                 siteId: site.id,
                 etp: site.etp || organizationSite.etp,
                 ca: site.ca ? site.ca * caUnit : organizationSite.ca,
+                volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
+                beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
               }
             })
             .filter((site) => site !== undefined),
         },
       },
+      emissionSourceTags,
     } satisfies Prisma.StudyCreateInput
 
     if (!(await canCreateSpecificStudy(session.user, study, organizationVersionId))) {
@@ -356,7 +369,7 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
     await updateStudy(studyId, { name: command.name })
   })
 
-export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCinemaCommand) =>
+export const changeStudyCinema = async (studySiteId: string, cncId: string, data: ChangeStudyCinemaCommand) =>
   withServerResponse('changeStudyCinema', async () => {
     const studySites = await getStudiesSitesFromIds([studySiteId])
 
@@ -375,12 +388,13 @@ export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCi
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const { openingHours, openingHoursHoliday, ...updateData } = data
+    const { openingHours, openingHoursHoliday, numberOfProgrammedFilms, ...updateData } = data
 
     if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
+    await updateNumberOfProgrammedFilms({ cncId, numberOfProgrammedFilms })
     await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
     await updateStudySiteData(studySiteId, updateData)
   })
@@ -443,6 +457,8 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
           siteId: site.id,
           etp: site.etp || organizationSite.etp,
           ca: (site?.ca || 0) * caUnit || organizationSite.ca,
+          volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
+          beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
         }
       })
       .filter((site) => site !== undefined)
@@ -1185,14 +1201,12 @@ export const duplicateStudyEmissionSource = async (
     await createStudyEmissionSource(data)
   })
 
-export const getCNCCodeById = async (id: string) => getCNCById(id)
-
-export const getCNCByNumeroAutoCode = async (numeroAuto: string) =>
-  withServerResponse('getCNCByNumeroAutoCode', async () => {
+export const getCncByNumeroAuto = async (numeroAuto: string) =>
+  withServerResponse('getCncByNumeroAuto', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return await getCNCByNumeroAuto(numeroAuto)
+    return await findCncByNumeroAuto(numeroAuto)
   })

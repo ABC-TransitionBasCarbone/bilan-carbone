@@ -1,13 +1,22 @@
 import {
   CLIMATISATION_QUESTION_ID,
   CONFECTIONERY_QUESTION_ID,
+  CONFECTIONERY_SELECT_QUESTION_ID,
+  INCREASE_SURFACE_QUESTION_ID,
   LONG_DISTANCE_QUESTION_ID,
+  MOBILITY_DOWNLOAD_MODEL_QUESTION_ID,
+  MOBILIY_SURVEY_QUESTION_ID,
   MOVIE_DCP_QUESTION_ID,
   MOVIE_DEMAT_QUESTION_ID,
   MOVIE_TEAM_QUESTION_ID,
   NEWSLETTER_QUESTION_ID,
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
+  RENOVATION_QUESTION_ID,
+  RENOVATION_SELECTION_QUESTION_ID,
+  SERVICES_QUESTION_ID,
+  SHARED_ACTIVITY_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
+  SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from './questions'
 
@@ -24,6 +33,11 @@ type LongDistanceConfig = {
   shortDistancePercentage: number
 }
 
+export type ConditionalRule = {
+  idIntern: string
+  expectedAnswers: string[]
+}
+
 export type EmissionFactorInfo = {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
@@ -35,47 +49,38 @@ export type EmissionFactorInfo = {
   shortDistanceProfiles?: Record<string, CinemaProfileConfig>
   longDistanceProfiles?: Record<string, LongDistanceConfig>
   relatedQuestions?: string[]
+  conditionalRules?: ConditionalRule[]
 }
 
 const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
-  'Métro (Ile de France)': '43253',
-  'RER et Transilien (Ile-de-France)': '43254',
-  'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
-  'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
-  'Bus (agglomérations de - de 100 000 habitants)': '27998',
-  'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
-  'Bus (agglomérations de + de 250 000 habitants)': '28000',
-  'Vélo à assistance éléctrique': '28331',
+  'RER et Transilien': '43254',
+  'Métro, tramway (FE agglo 100-250k habitants)': '28150',
+  'Bus (FE agglo 100-250k habitants)': '27999',
+  'Vélo électrique': '28331',
   'Vélo classique': '134',
   Marche: '135',
-  'Voiture gazole courte distance': '43798',
-  'Voiture essence courte distance': '43795',
-  'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
-    '28015',
-  'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
-  'Moto >250cm3 /Mixte': '27995',
-  'Moto<250cm3/Mixte': '27992',
+  'Voiture diesel': '27984',
+  'Voiture essence': '27983',
+  'Voiture hybride': '28015',
+  'Voiture électrique': '28013',
+  Moto: '27995',
+  Scooter: '27992',
   'Trottinette électrique': '28329',
 }
 
 const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
-  'Métro (Ile de France)': '43253',
-  'RER et Transilien (Ile-de-France)': '43254',
-  'Métro, tramway (agglomérations de 100 000 à 250 000 habitants)': '28150',
-  'Métro, tramway (agglomérations de + de 250 000 habitants)': '28151',
-  'Bus (agglomérations de - de 100 000 habitants)': '27998',
-  'Bus (agglomérations de 100 000 à 250 000 habitants)': '27999',
-  'Bus (agglomérations de + de 250 000 habitants)': '28000',
-  'Vélo à assistance éléctrique': '28331',
-  'Voiture gazole longue distance': '43799',
-  'Voiture essence longue distance': '43796',
-  'Voiture particulière/Entrée de gamme - Véhicule léger/Hybride rechargeable avec alimentation auxiliaire de puissance':
-    '28015',
-  'Voiture particulière/Entrée de gamme - Véhicule léger/Electrique': '28013',
-  'Moto >250cm3 /Mixte': '27995',
-  'Moto<250cm3/Mixte': '27992',
-  'TGV 2021': '43256',
-  'Avion Moyen courrier AVEC trainées': '28132',
+  'RER et Transilien': '43254',
+  'Métro, tramway (FE agglo 100-250k habitants)': '28150',
+  'Bus (FE agglo 100-250k habitants)': '27999',
+  'Vélo électrique': '28331',
+  'Voiture diesel': '27978',
+  'Voiture essence': '27977',
+  'Voiture hybride': '28015',
+  'Voiture électrique': '28013',
+  Moto: '27995',
+  Scooter: '27992',
+  TGV: '43256',
+  'Avion moyen courrier': '28132',
 }
 
 export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
@@ -92,20 +97,49 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     depreciationPeriod: 50,
     linkDepreciationQuestionId: 'quelle-est-la-surface-plancher-du-cinema',
   },
-  'a-quand-remonte-la-derniere-renovation-importante': {
-    depreciationPeriod: 10,
-    linkDepreciationQuestionId: 'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee',
-  },
   'de-quel-type-de-renovation-sagi-t-il': {},
-  'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': {
+  [INCREASE_SURFACE_QUESTION_ID]: {
     emissionFactorImportedId: '20730',
-    linkDepreciationQuestionId: 'a-quand-remonte-la-derniere-renovation-importante',
+    conditionalRules: [
+      {
+        idIntern: RENOVATION_SELECTION_QUESTION_ID,
+        expectedAnswers: ['Agrandissement - extension'],
+      },
+    ],
   },
-  'quel-est-le-montant-des-depenses-liees-a-ces-travaux-de-renovation': { emissionFactorImportedId: '43340' },
-  'le-batiment-est-il-partage-avec-une-autre-activite': {},
-  'quelle-est-la-surface-totale-du-batiment': {},
+  [RENOVATION_QUESTION_ID]: {
+    emissionFactorImportedId: '43340',
+    isSpecial: true,
+    depreciationPeriod: 10,
+    conditionalRules: [
+      {
+        idIntern: RENOVATION_SELECTION_QUESTION_ID,
+        expectedAnswers: [
+          'Rénovation totale (hors agrandissement)',
+          'Autres travaux importants (par ex : changement moquette, ravalement, peinture etc)',
+        ],
+      },
+    ],
+  },
+  'quelle-est-la-surface-totale-du-batiment': {
+    conditionalRules: [
+      {
+        idIntern: SHARED_ACTIVITY_QUESTION_ID,
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
+  },
   'le-cinema-dispose-t-il-dun-parking': {},
-  'si-oui-de-combien-de-places': { emissionFactorImportedId: '26008', depreciationPeriod: 50 },
+  'si-oui-de-combien-de-places': {
+    emissionFactorImportedId: '26008',
+    depreciationPeriod: 50,
+    conditionalRules: [
+      {
+        idIntern: 'le-cinema-dispose-t-il-dun-parking',
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
+  },
   // Equipe - attente de la fonctionnalité table
   '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
   '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
@@ -144,9 +178,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quelle-est-votre-consommation-annuelle-de-diesel': { emissionFactorImportedId: '14015' },
   // ActivitesDeBureau
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
-  'quel-montant-avez-vous-depense-en-services': { emissionFactorImportedId: '43545' },
+  [SERVICES_QUESTION_ID]: { emissionFactorImportedId: '43545', isSpecial: true },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
-    isFixed: true,
     depreciationPeriod: 4,
     emissionFactors: {
       'Ordinateurs fixes': '27003',
@@ -158,20 +191,37 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       Tablettes: '27007',
     },
   },
-  'avez-vous-deja-realise-une-enquete-mobilite-spectateur': {},
-  '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': {
+  [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: {
     isFixed: true,
     emissionFactors: SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS,
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ['11-Oui et je peux rentrer les résultats'],
+      },
+    ],
   },
-  'si-vous-souhaitez-realiser-une-enquete-mobilite-spectateur-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
-    {},
+  [MOBILITY_DOWNLOAD_MODEL_QUESTION_ID]: {
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ["12-Non mais je voudrais le faire pour estimer l'impact du cinéma"],
+      },
+    ],
+  },
   [SHORT_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [LONG_DISTANCE_QUESTION_ID],
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ["13-Non mais je préfère m'identifier dans des profils de cinéma comparables"],
+      },
+    ],
     shortDistanceProfiles: {
       'Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun':
         {
-          Voiture: { percentage: 13, averageDistance: 5.98, emissionFactorId: '43795' },
+          Voiture: { percentage: 13, averageDistance: 5.98, emissionFactorId: '27983' },
           'Transports en commun (bus, métro, tram)': {
             percentage: 28,
             averageDistance: 7.41,
@@ -183,7 +233,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
         },
       "Les spectateurs parcourent autour de 10 km aller-retour pour se rendre au cinéma. Il s'agit essentiellement d'un public de proximité venant en grande partie en voiture. Autour de 25% d'entre eux viennent à pied.":
         {
-          Voiture: { percentage: 69, averageDistance: 10.77, emissionFactorId: '43795' },
+          Voiture: { percentage: 69, averageDistance: 10.77, emissionFactorId: '27983' },
           'Transports en commun (bus, métro, tram)': {
             percentage: 2,
             averageDistance: 7.41,
@@ -195,7 +245,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
         },
       "Les spectateurs parcourent autour de 20-25 km aller-retour pour se rendre au cinéma. Il s'agit essentiellement d'un public de proximité venant en grande partie en voiture. Autour de 25% d'entre eux viennent à pied.":
         {
-          Voiture: { percentage: 63, averageDistance: 24.36, emissionFactorId: '43795' },
+          Voiture: { percentage: 63, averageDistance: 24.36, emissionFactorId: '27983' },
           'Transports en commun (bus, métro, tram)': {
             percentage: 5,
             averageDistance: 25.84,
@@ -207,7 +257,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
         },
       'Plus de 80% des spectateurs viennent en voiture. Pas ou peu viennent en transports en commun, peu viennent à pied. La distance moyenne parcourue est autour de 15 km aller-retour':
         {
-          Voiture: { percentage: 89, averageDistance: 15.84, emissionFactorId: '43795' },
+          Voiture: { percentage: 89, averageDistance: 15.84, emissionFactorId: '27983' },
           'Transports en commun (bus, métro, tram)': {
             percentage: 2,
             averageDistance: 10.27,
@@ -218,7 +268,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
           'Trottinette électrique': { percentage: 0, averageDistance: 1.97, emissionFactorId: '28329' },
         },
       "Le cinéma n'est accessible qu'en voiture": {
-        Voiture: { percentage: 100, averageDistance: 18.73, emissionFactorId: '43795' },
+        Voiture: { percentage: 100, averageDistance: 18.73, emissionFactorId: '27983' },
         'Transports en commun (bus, métro, tram)': { percentage: 0, averageDistance: 0, emissionFactorId: '28150' },
         'Moto / scooter': { percentage: 0, averageDistance: 0, emissionFactorId: '27995' },
         'Train / RER': { percentage: 0, averageDistance: 0, emissionFactorId: '43254' },
@@ -229,9 +279,15 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [LONG_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [SHORT_DISTANCE_QUESTION_ID],
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ["13-Non mais je préfère m'identifier dans des profils de cinéma comparables"],
+      },
+    ],
     emissionFactors: {
       TGV: '43256',
-      'Voiture longue distance': '43796',
+      'Voiture longue distance': '27977',
     },
     longDistanceProfiles: {
       "Le cinéma est situé dans une zone touristique et 80% ou + des spectateurs ne résident pas à proximité du cinéma à l'année":
@@ -305,6 +361,12 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   // Achats
   [CONFECTIONERY_QUESTION_ID]: {
     isSpecial: true,
+    conditionalRules: [
+      {
+        idIntern: CONFECTIONERY_SELECT_QUESTION_ID,
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
     emissionFactors: {
       'Un peu de confiseries et de boissons (~30g)': '136',
       'Une part standard de confiseries et de boissons (~120g)': '137',
@@ -331,11 +393,12 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Ordures ménagères (déchets non triés / sans filière)': '34654',
       'Emballages et papier (plastique, métal, papier et carton)': '34486',
       'Biodéchets (restes alimentaires)': '22040',
+      'Déchets verre': '34478',
     },
   },
   // DechetsExceptionnels
   'quelle-quantite-de-materiel-technique-jetez-vous-par-an': { emissionFactorImportedId: '34620' },
-  [XENON_LAMPS_QUESTION_ID]: { emissionFactorImportedId: '107', isSpecial: true, weights: { default: 0.86 } },
+  [XENON_LAMPS_QUESTION_ID]: { emissionFactorImportedId: '144', isSpecial: true, weights: { default: 0.86 } },
   // MaterielDistributeurs
   '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': {
     isFixed: true,

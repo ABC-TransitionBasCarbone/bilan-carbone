@@ -1,5 +1,6 @@
 import { TableAnswer, TableRow } from '@/components/dynamic-form/types/formTypes'
 import { emissionFactorMap } from '@/constants/emissionFactorMap'
+import { SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID } from '@/constants/questions'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { Question } from '@prisma/client'
@@ -103,16 +104,7 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
     const accommodationTypeFEName = row.data['16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || ''
     const duration = parseFloat(row.data['17-decrivez-les-deplacements-professionnels-de-vos-collaborateurs'] || '0')
 
-    if (
-      !distance ||
-      distance <= 0 ||
-      !participants ||
-      participants <= 0 ||
-      !occurrences ||
-      occurrences <= 0 ||
-      !transportModeFEName ||
-      !accommodationTypeFEName
-    ) {
+    if (!participants || participants <= 0 || !occurrences || occurrences <= 0) {
       return {
         emissionSources: [],
       }
@@ -120,7 +112,7 @@ const calculateProfessionalTravel: TableEmissionCalculator = {
 
     const emissionSources: EmissionSourceCalculation[] = []
 
-    if (transportModeFEName && transportModeFEList) {
+    if (transportModeFEName && transportModeFEList && distance && distance > 0) {
       const transportModeFE = transportModeFEList[transportModeFEName]
 
       if (transportModeFE) {
@@ -310,10 +302,7 @@ const calculateSpectatorMobility: TableEmissionCalculator = {
         '12-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants'
       ] || '0',
     )
-    const transportModeFEList =
-      emissionFactorMap[
-        '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants'
-      ].emissionFactors
+    const transportModeFEList = emissionFactorMap[SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID].emissionFactors
 
     if (!transportModeFEName || !distanceKm || distanceKm <= 0) {
       return {
@@ -529,7 +518,6 @@ const calculateWaste: TableEmissionCalculator = {
         emissionSources: [],
       }
     }
-
     const emissionSources: EmissionSourceCalculation[] = []
     const wasteFEList = emissionFactorMap['10-veuillez-renseigner-les-dechets-generes-par-semaine'].emissionFactors
     const wasteEmissionFactorId = wasteFEList?.[wasteType]
@@ -541,8 +529,8 @@ const calculateWaste: TableEmissionCalculator = {
       )
 
       if (wasteEmissionFactor) {
-        const wasteValue = binCount * binSize * WASTE_DENSITY * frequency * 52 * 0.001
-
+        const wasteValue =
+          binCount * binSize * (wasteEmissionFactorId === '34478' ? 0.04 : WASTE_DENSITY) * frequency * 52 * 0.001
         emissionSources.push({
           name: 'waste',
           value: wasteValue,
@@ -562,8 +550,7 @@ const tableEmissionCalculators: Record<string, TableEmissionCalculator> = {
   '10-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': calculateProfessionalTravel,
   '10-pour-chacun-de-ces-equipements-electromenagers-veuillez-renseigner': calculateElectromenager,
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': calculateInformatique,
-  '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants':
-    calculateSpectatorMobility,
+  [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: calculateSpectatorMobility,
   '10-quelle-quantite-de-materiel-produisez-vous-chaque-mois': calculateMaterials,
   '10-quelle-quantite-de-materiel-distributeurs-recevez-vous-en-moyenne-par-semaine': calculateDistributorMaterials,
   '10-decrivez-les-differentes-salles-du-cinema': calculateRooms,

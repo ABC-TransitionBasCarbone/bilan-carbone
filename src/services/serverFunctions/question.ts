@@ -12,6 +12,8 @@ import {
   MOVIE_TEAM_QUESTION_ID,
   NEWSLETTER_QUESTION_ID,
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
+  RENOVATION_QUESTION_ID,
+  SERVICES_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
@@ -19,6 +21,7 @@ import { prismaClient } from '@/db/client'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
+  deleteAnswer,
   deleteAnswerEmissionSourceById,
   deleteAnswerEmissionSourcesForRow,
   findAllAnswerEmissionSourcesByAnswer,
@@ -163,6 +166,48 @@ const handleTableEmissionSources = async (
   return emissionSourceIds
 }
 
+const handleDepreciation = async (
+  linkDepreciationQuestionId: string,
+  depreciationPeriod: number | undefined,
+  currentValue: number,
+  emissionFactorImportedId: string | undefined,
+  studyStartDate: Date,
+  studySiteId: string,
+) => {
+  const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
+  let emissionSourceId: string | undefined
+  let valueToStore = currentValue
+  let emissionFactorToFindId: string | undefined
+  if (!linkQuestion) {
+    throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
+  }
+
+  const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
+  if (linkAnswer) {
+    const linkEmissionSource = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
+    emissionSourceId = linkEmissionSource?.emissionSourceId ?? undefined
+  }
+
+  const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
+
+  const depreciationPeriodToStore =
+    (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
+  const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
+  const dateValue = depreciationPeriod ? currentValue : parseFloat(linkAnswer?.response?.toString() || '0')
+
+  if (depreciationPeriodToStore < studyStartDate.getFullYear() - dateValue) {
+    valueToStore = 0
+  } else {
+    valueToStore = valueToDepreciate
+  }
+
+  if (!emissionFactorImportedId && linkEmissionInfo?.emissionFactorImportedId) {
+    emissionFactorToFindId = linkEmissionInfo.emissionFactorImportedId
+  }
+
+  return { emissionSourceId, valueToStore, emissionFactorToFindId, depreciationPeriodToStore }
+}
+
 export const saveAnswerForQuestion = async (
   question: Question,
   response: Prisma.InputJsonValue,
@@ -259,32 +304,18 @@ export const saveAnswerForQuestion = async (
 
     let emissionFactorToFindId = emissionFactorImportedId
     if (linkDepreciationQuestionId) {
-      const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
-      if (!linkQuestion) {
-        throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
-      }
-
-      const linkAnswer = await getAnswerByQuestionId(linkQuestion.id, studySiteId)
-      if (linkAnswer) {
-        const linkEmissionSource = await findAnswerEmissionSourceByAnswer(linkAnswer.id)
-        emissionSourceId = linkEmissionSource?.emissionSourceId ?? undefined
-      }
-
-      const linkEmissionInfo = getEmissionFactorByIdIntern(linkQuestion.idIntern, linkAnswer?.response || {})
-
-      depreciationPeriodToStore = (depreciationPeriod ? depreciationPeriod : linkEmissionInfo?.depreciationPeriod) || 1
-      const valueToDepreciate = depreciationPeriod ? parseFloat(linkAnswer?.response?.toString() || '0') : valueToStore
-      const dateValue = depreciationPeriod ? valueToStore : parseFloat(linkAnswer?.response?.toString() || '0')
-
-      if (depreciationPeriodToStore < new Date(study.startDate).getFullYear() - dateValue) {
-        valueToStore = 0
-      } else {
-        valueToStore = valueToDepreciate
-      }
-
-      if (!emissionFactorImportedId && linkEmissionInfo?.emissionFactorImportedId) {
-        emissionFactorToFindId = linkEmissionInfo.emissionFactorImportedId
-      }
+      const depreciationInfo = await handleDepreciation(
+        linkDepreciationQuestionId,
+        depreciationPeriodToStore,
+        valueToStore,
+        emissionFactorImportedId,
+        study.startDate,
+        studySiteId,
+      )
+      emissionSourceId = depreciationInfo.emissionSourceId
+      valueToStore = depreciationInfo.valueToStore
+      emissionFactorToFindId = depreciationInfo.emissionFactorToFindId
+      depreciationPeriodToStore = depreciationInfo.depreciationPeriodToStore
     }
 
     if (emissionFactorToFindId) {
@@ -387,6 +418,33 @@ export const getQuestionsFromIdIntern = async (idIntern: string) =>
     }
 
     return getQuestionsByIdIntern(idIntern)
+  })
+
+export const cleanupHiddenQuestion = async (questionIdIntern: string, studySiteId: string) =>
+  withServerResponse('cleanupHiddenQuestion', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const question = await getQuestionByIdIntern(questionIdIntern)
+    if (!question) {
+      throw new Error(`Question not found for idIntern: ${questionIdIntern}`)
+    }
+
+    const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
+    if (existingAnswer) {
+      const existingAnswerEmissionSources = await findAllAnswerEmissionSourcesByAnswer(existingAnswer.id)
+
+      for (const existingAnswerEmissionSource of existingAnswerEmissionSources) {
+        await deleteAnswerEmissionSourceById(
+          existingAnswerEmissionSource.id,
+          existingAnswerEmissionSource.emissionSourceId,
+        )
+      }
+    }
+
+    await deleteAnswer(question.id, studySiteId)
   })
 
 export const getParentTableQuestion = async (columnQuestionId: string) =>
@@ -865,7 +923,7 @@ const applyDematMovieCalculation = async (
   const newEmissionSourceDemat = await createEmissionSource({
     studyId,
     studySiteId,
-    value: 2 * numberDematFilms + 3 * numberDematFilms + 4 * numberDematFilms,
+    value: 180 * numberDematFilms + 3 * numberDematFilms + 4 * numberDematFilms,
     name: question.idIntern,
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
@@ -1022,7 +1080,7 @@ const applyXenonLampsCalculation = async (
     return []
   }
 
-  const value = (numberOfLamps * weight) / 1000
+  const value = numberOfLamps * weight // weight in kg
 
   const newEmissionSource = await createEmissionSource({
     studyId,
@@ -1081,6 +1139,54 @@ const handleClimatisationCalculation = async (
     subPost: question.subPost,
     emissionFactorId: emissionFactor.id,
     validated: true,
+  })
+
+  if (newEmissionSource.success && newEmissionSource.data) {
+    return [newEmissionSource.data.id]
+  }
+
+  return []
+}
+
+const handleKEuroQuestions = async (
+  question: Question,
+  response: Prisma.InputJsonValue,
+  study: FullStudy,
+  studySiteId: string,
+) => {
+  const studyId = study.id
+
+  const value = Number(response) || 0
+
+  if (!value) {
+    return []
+  }
+
+  const emissionInfo = emissionFactorMap[question.idIntern]
+  if (!emissionInfo || !emissionInfo.emissionFactorImportedId) {
+    return []
+  }
+
+  const depreciationPeriodToStore = emissionInfo.depreciationPeriod ?? 0
+
+  const emissionFactor = await getEmissionFactorByImportedIdAndStudiesEmissionSource(
+    emissionInfo.emissionFactorImportedId,
+    study.emissionFactorVersions.map((v) => v.importVersionId),
+  )
+
+  if (!emissionFactor) {
+    return []
+  }
+
+  const newEmissionSource = await createEmissionSource({
+    studyId,
+    studySiteId,
+    value: value / 1000,
+    name: question.idIntern,
+    subPost: question.subPost,
+    emissionFactorId: emissionFactor.id,
+    validated: true,
+    ...(depreciationPeriodToStore > 0 && { depreciationPeriod: depreciationPeriodToStore }),
   })
 
   if (newEmissionSource.success && newEmissionSource.data) {
@@ -1149,6 +1255,11 @@ const handleSpecialQuestions = async (
     }
     case CLIMATISATION_QUESTION_ID: {
       emissionSourceIds = await handleClimatisationCalculation(question, response, study, studySite)
+      break
+    }
+    case RENOVATION_QUESTION_ID:
+    case SERVICES_QUESTION_ID: {
+      emissionSourceIds = await handleKEuroQuestions(question, response, study, studySiteId)
       break
     }
     default: {

@@ -5,12 +5,12 @@ import DebouncedInput from '@/components/base/DebouncedInput'
 import { FormCheckbox } from '@/components/form/Checkbox'
 import { FormTextField } from '@/components/form/TextField'
 import GlobalSites from '@/components/organization/Sites'
-import { getCNCByNumeroAutoCode } from '@/services/serverFunctions/study'
+import { getCncByNumeroAuto } from '@/services/serverFunctions/study'
 import { SitesCommand } from '@/services/serverFunctions/study.command'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { Control, Controller, UseFormGetValues, UseFormReturn, UseFormSetValue } from 'react-hook-form'
 import styles from '../../base/organization/Sites.module.css'
 
@@ -27,8 +27,37 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
   const setValue = form?.setValue as UseFormSetValue<SitesCommand>
   const getValues = form?.getValues as UseFormGetValues<SitesCommand>
 
-  const getCncData = useCallback(
+  // Track original site data to detect manual changes
+  const originalSiteDataRef = useRef<
+    Record<number, { numeroAuto: string; name: string; postalCode: string; city: string; cncId: string }>
+  >({})
+
+  const setCncData = useCallback(
     async (numeroAuto: string, index: number) => {
+      // Initialize original values if not set
+      if (!(index in originalSiteDataRef.current)) {
+        const currentSite = sites[index]
+        originalSiteDataRef.current[index] = {
+          numeroAuto: currentSite?.cncNumeroAuto || '',
+          name: currentSite?.name || '',
+          postalCode: currentSite?.postalCode || '',
+          city: currentSite?.city || '',
+          cncId: currentSite?.cncId || '',
+        }
+      }
+
+      const originalData = originalSiteDataRef.current[index]
+
+      // If going back to original value, restore original site data
+      if (numeroAuto === originalData.numeroAuto) {
+        setValue(`sites.${index}.cncId`, originalData.cncId)
+        setValue(`sites.${index}.name`, originalData.name)
+        setValue(`sites.${index}.postalCode`, originalData.postalCode)
+        setValue(`sites.${index}.city`, originalData.city)
+        setValue(`sites.${index}.cncNumeroAuto`, originalData.numeroAuto)
+        return
+      }
+
       if (!numeroAuto || numeroAuto.length < 2) {
         // Clear all fields if input is too short
         setValue(`sites.${index}.cncId`, '')
@@ -38,7 +67,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
         return
       }
       // Look up CNC by numeroAuto (what the user enters)
-      const response = await getCNCByNumeroAutoCode(numeroAuto)
+      const response = await getCncByNumeroAuto(numeroAuto)
       if (!response.success || !response.data) {
         // Clear all fields if CNC lookup fails
         setValue(`sites.${index}.cncId`, '')
@@ -66,7 +95,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
         setValue(`sites.${index}.city`, cnc.commune)
       }
     },
-    [setValue],
+    [setValue, sites],
   )
 
   const columns = useMemo(() => {
@@ -102,8 +131,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
                         debounce={200}
                         value={displayValue}
                         onChange={(newValue: string) => {
-                          // Always call getCncData - it will handle clearing fields if needed
-                          getCncData(newValue, row.index)
+                          setCncData(newValue, row.index)
                         }}
                         placeholder={t('cncPlaceholder')}
                         slotProps={{
@@ -220,7 +248,7 @@ const Sites = <T extends SitesCommand>({ sites, form, withSelection }: Props<T>)
       })
     }
     return columns
-  }, [t, form, withSelection, control, getCncData, setValue, getValues])
+  }, [t, form, withSelection, control, setCncData, setValue, getValues])
 
   return <GlobalSites sites={sites} columns={columns} form={form} withSelection={withSelection} isCut={true} />
 }

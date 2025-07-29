@@ -1,9 +1,11 @@
 import { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { default as AllPostsInfographyCut } from '@/environments/cut/study/infography/AllPostsInfography'
-import { BCPost, CutPost } from '@/services/posts'
+import { BCPost, CutPost, TiltPost } from '@/services/posts'
+import AllPostsInfographyCut from '@/environments/cut/study/infography/AllPostsInfography'
+import AllPostsInfographyTilt from '@/environments/tilt/study/infography/AllPostsInfography'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -19,6 +21,7 @@ interface Props {
 const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const [validatedOnly, setValidatedOnly] = useState(true)
+  const { environment } = useAppEnvironmentStore()
 
   useEffect(() => {
     applyUserSettings()
@@ -42,15 +45,24 @@ const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
   }, [study.organizationVersion.environment])
 
   const data = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, post),
-    [study, tPost, studySite, validatedOnly, post],
+    () =>
+      computeResultsByPost(
+        study,
+        tPost,
+        studySite,
+        true,
+        validatedOnly,
+        environment === Environment.TILT ? TiltPost : undefined,
+      ),
+    [study, tPost, studySite, validatedOnly],
   )
 
   return (
     <DynamicComponent
       defaultComponent={<AllPostsInfography study={study} data={data} />}
       environmentComponents={{
-        [Environment.CUT]: <AllPostsInfographyCut studySiteId={studySite} study={study} data={data} user={user} />,
+        [Environment.CUT]: <AllPostsInfographyCut study={study} data={data} />,
+        [Environment.TILT]: <AllPostsInfographyTilt study={study} data={data} />,
       }}
     />
   )
