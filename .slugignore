@@ -3,3 +3,10 @@
 node_modules/@mui/
 node_modules/next/
 node_modules/@next/
+node_modules/@img/
+node_modules/rxjs/
+node_modules/@aws-crypto/
+node_modules/@aws-sdk/
+node_modules/@smithy/
+node_modules/playwright-core/
+node_modules/xlsx/
