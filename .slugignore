@@ -1,3 +1,6 @@
 /.next/cache
 /.cache/Cypress/
-/node_modules
+/node_modules/*
+!/node_modules/prisma/
+!/node_modules/@prisma/
+!/node_modules/.bin/prisma
