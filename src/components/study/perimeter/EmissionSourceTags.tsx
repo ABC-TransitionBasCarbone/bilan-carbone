@@ -52,7 +52,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
     },
   })
 
-  const name = useWatch({ control, name: 'name', defaultValue: 'preview' })
+  const name = useWatch({ control, name: 'name', defaultValue: 'Preview' })
   const color = useWatch({ control, name: 'color', defaultValue: emissionSourceTagColors.GREY })
 
   const onSubmit = async () => {
@@ -77,14 +77,20 @@ const EmissionSourceTags = ({ studyId }: Props) => {
       {tags.length > 0 && (
         <div className={styles.tags}>
           {tags.map((tag) => (
-            <Chip onDelete={() => onDelete(tag.id)} sx={{ bgcolor: tag.color }} key={tag.id} label={tag.name} />
+            <Chip
+              className={styles.tag}
+              onDelete={() => onDelete(tag.id)}
+              sx={{ bgcolor: tag.color }}
+              key={tag.id}
+              label={tag.name}
+            />
           ))}
         </div>
       )}
 
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <FormControl>
-          <div className="flex justify-between mb-2">
+          <div className={styles.container}>
             <Controller
               control={control}
               name="color"
@@ -121,14 +127,14 @@ const EmissionSourceTags = ({ studyId }: Props) => {
               control={control}
               translation={t}
               name="name"
-              label={t('emissionSourceTag')}
+              label={t('emissionSourceTagLabel')}
               placeholder={t('emissionSourceTagsPlaceholder')}
               data-testid="create-emission-source-tags"
             />
+            <Chip className={styles.preview} sx={{ bgcolor: color }} label={name || 'Preview'} />
           </div>
-          <Chip className={styles.preview} sx={{ bgcolor: color }} label={name || 'preview'} />
-          <Button data-testid="submit-button" type="submit" fullWidth>
-            {t('validate')}
+          <Button data-testid="submit-button" type="submit">
+            {t('createEmissionSourceTag')}
           </Button>
         </FormControl>
       </Form>
