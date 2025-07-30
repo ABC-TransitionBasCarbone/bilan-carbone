@@ -10,7 +10,7 @@
     "dev": "next dev --turbopack",
     "dev:test": "NODE_ENV=test next dev --turbopack --port 3001",
     "build": "next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
-    "start": "next start",
+    "start": "node .next/standalone/server.js",
     "lint": "prettier --check . && next lint",
     "format": "prettier --write .",
     "test": "jest",
