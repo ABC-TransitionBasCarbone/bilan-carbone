@@ -1,6 +1,10 @@
-/.next/cache
-/.cache/Cypress/
-/node_modules/*
-!/node_modules/prisma/
-!/node_modules/@prisma/
-!/node_modules/.bin/prisma
+.next/cache
+.cache/Cypress/
+
+# Exclude all of node_modules to reduce standalone build size
+node_modules/
+
+# Then include back only prisma needed for postdeployment
+!node_modules/prisma/
+!node_modules/@prisma/
+!node_modules/.bin/prisma
