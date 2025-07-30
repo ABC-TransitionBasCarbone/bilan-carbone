@@ -4,10 +4,15 @@ import UserView from '@/components/home/UserView'
 import { default as CUTUserView } from '@/environments/cut/home/UserView'
 import Footer from '@/environments/cut/layout/Footer'
 import { Environment } from '@prisma/client'
+import { redirect } from 'next/navigation'
 
 export const revalidate = 0
 
 const Home = async ({ user: account }: UserSessionProps) => {
+  if (account.environment === Environment.TILT && !account.level) {
+    redirect('/equipe')
+  }
+
   return (
     <>
       <Block>
