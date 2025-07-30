@@ -19,7 +19,7 @@ import { Box, Chip, FormControl, MenuItem, Select } from '@mui/material'
 import { EmissionSourceTag } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import styles from './EmissionSourceTag.module.css'
 
 interface Props {
@@ -52,9 +52,6 @@ const EmissionSourceTags = ({ studyId }: Props) => {
     },
   })
 
-  const name = useWatch({ control, name: 'name', defaultValue: 'Preview' })
-  const color = useWatch({ control, name: 'color', defaultValue: emissionSourceTagColors.GREY })
-
   const onSubmit = async () => {
     const createTag = await createEmissionSourceTag(getValues())
     if (createTag.success) {
@@ -69,8 +66,6 @@ const EmissionSourceTags = ({ studyId }: Props) => {
       setTags((prevTags) => prevTags.filter((tag) => tag.id !== tagId))
     }
   }
-
-  console.log('EmissionSourceTags', tags)
 
   return (
     <Block title={t('emissionSourceTags')}>
@@ -131,7 +126,6 @@ const EmissionSourceTags = ({ studyId }: Props) => {
               placeholder={t('emissionSourceTagsPlaceholder')}
               data-testid="create-emission-source-tags"
             />
-            <Chip className={styles.preview} sx={{ bgcolor: color }} label={name || 'Preview'} />
           </div>
           <Button data-testid="submit-button" type="submit">
             {t('createEmissionSourceTag')}
