@@ -97,11 +97,6 @@ const getEmissionSourceEmission = (
   }
 
   let emission = getEmissionFactorValue(emissionSource.emissionFactor, environment) * emissionSource.value
-  if (emissionSource.emissionFactor.importedId === '34654') {
-    console.log('fe value', getEmissionFactorValue(emissionSource.emissionFactor, environment))
-    console.log('se value', emissionSource.value)
-    console.log('emission', emission)
-  }
   if (
     [...subPostsByPost[Post.Immobilisations], SubPost.Electromenager, SubPost.Batiment].includes(
       emissionSource.subPost,
