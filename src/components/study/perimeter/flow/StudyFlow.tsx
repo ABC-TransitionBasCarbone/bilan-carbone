@@ -17,6 +17,7 @@ import { Alert, InputLabel } from '@mui/material'
 import { Document } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Block from '../../../base/Block'
@@ -143,7 +144,9 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
       {environment && hasAccessToStudyFlowExample(environment) && (
         <div className="mb-2">
           <Alert severity="info" className="mb-2">
-            {t('info')}
+            {t.rich('info', {
+              mail: (children) => <Link href={`mailto:methodologie@abc-transitionbascarbone.fr`}>{children}</Link>,
+            })}
           </Alert>
           <Button loading={downloading} onClick={downloadSample}>
             {t('downloadSample')}

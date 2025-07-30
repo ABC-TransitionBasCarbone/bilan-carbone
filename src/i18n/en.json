@@ -677,7 +677,7 @@
       "notAuthorized": "Action not authorized",
       "removeFlow": "Remove mapping",
       "Not authorized": "You are not allowed to do this action",
-      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other associations, please send it to methodologie@abc-transitionbascarbone.fr",
+      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other associations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
       "downloadSample": "Download sample"
     },
     "delete": {
