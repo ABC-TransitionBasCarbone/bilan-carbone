@@ -9,7 +9,7 @@ export const getEmissionFactorValue = (
   environment?: Environment,
 ) => {
   if (
-    environment !== Environment.CUT &&
+    !(environment === Environment.CUT) &&
     emissionFactor.importedFrom === Import.BaseEmpreinte &&
     emissionFactor.importedId &&
     wasteEmissionFactors[emissionFactor.importedId]

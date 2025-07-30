@@ -121,7 +121,7 @@ const EmissionSourceContributorForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}{' '}
+            {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
             {tResultUnits(StudyResultUnit.K)}/
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}
           </p>
