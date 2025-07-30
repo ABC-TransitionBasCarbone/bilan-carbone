@@ -13,7 +13,12 @@ export const isValidAssociationSiret = async (siret: string) => {
   if (!result?.data?.identite?.id_siret_siege) {
     return false
   }
+
   if (result.data.identite.id_siret_siege !== parseInt(trimmedSiret)) {
+    return false
+  }
+
+  if (result?.data?.identite?.lib_forme_juridique !== 'Association déclarée') {
     return false
   }
 

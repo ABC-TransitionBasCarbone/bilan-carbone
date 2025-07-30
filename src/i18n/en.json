@@ -208,6 +208,7 @@
     "siretRequired": "Please enter a Siret",
     "validate": "Validate",
     "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
+    "Not association SIRET": "This tool is reserved for associations. Please use the classic version of Bilan Carbone®+",
     "Request sent": "A request has been sent to your colleagues",
     "Email sent": "You will receive an email to finish your account validation.",
     "validation": {
