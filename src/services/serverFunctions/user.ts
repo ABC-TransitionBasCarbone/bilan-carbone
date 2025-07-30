@@ -70,7 +70,14 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '../email/email'
-import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED, REQUEST_SENT, UNKNOWN_CNC } from '../permissions/check'
+import {
+  EMAIL_SENT,
+  MORE_THAN_ONE,
+  NOT_ASSOCIATION_SIRET,
+  NOT_AUTHORIZED,
+  REQUEST_SENT,
+  UNKNOWN_CNC,
+} from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
@@ -567,7 +574,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
     let organizationVersion = null
     if (siretOrCNC.length > 6) {
       if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
-        throw new Error(NOT_AUTHORIZED)
+        throw new Error(NOT_ASSOCIATION_SIRET)
       }
       organization = await getRawOrganizationBySiret(siretOrCNC)
       organizationVersion = organization?.id
