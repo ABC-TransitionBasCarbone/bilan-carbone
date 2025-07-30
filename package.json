@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:test": "NODE_ENV=test next dev --turbopack --port 3001",
-    "build": "next build",
+    "build": "next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
     "start": "next start",
     "lint": "prettier --check . && next lint",
     "format": "prettier --write .",
@@ -22,7 +22,7 @@
     "question:import:google": "npx tsx src/scripts/cut/question/add.ts -s google -f",
     "question:import:excel": "npx tsx src/scripts/cut/question/add.ts -f",
     "user:import": "tsx src/scripts/ftp/importUsers.ts",
-    "postinstall": "npx playwright install"
+    "postinstall": "npx playwright install --with-deps chromium"
   },
   "prisma": {
     "schema": "prisma/schema",
