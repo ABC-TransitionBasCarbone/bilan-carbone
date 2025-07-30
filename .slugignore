@@ -4,9 +4,14 @@ node_modules/@mui/
 node_modules/next/
 node_modules/@next/
 node_modules/@img/
-node_modules/rxjs/
 node_modules/@aws-crypto/
 node_modules/@aws-sdk/
 node_modules/@smithy/
-node_modules/playwright-core/
+node_modules/@babel/
 node_modules/xlsx/
+node_modules/react-dom
+node_modules/postcss-preset-env
+node_modules/@tanstack
+node_modules/update-browserslist-db
+node_modules/caniuse-lite
+node_modules/@types
