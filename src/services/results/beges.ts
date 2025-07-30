@@ -1,7 +1,11 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
 import { EmissionSourceCaracterisation, ExportRule } from '@prisma/client'
-import { getStandardDeviation, sumStandardDeviations } from '../emissionSource'
+import {
+  convertTiltEmissionSourceToBcEmissionSource,
+  getStandardDeviation,
+  sumStandardDeviations,
+} from '../emissionSource'
 import { Post, subPostsByPost } from '../posts'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
@@ -185,6 +189,9 @@ export const computeBegesResult = (
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 
   siteEmissionSources
+    .map((emissionSource) => {
+      return convertTiltEmissionSourceToBcEmissionSource(emissionSource)
+    })
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .forEach((emissionSource) => {
       if (

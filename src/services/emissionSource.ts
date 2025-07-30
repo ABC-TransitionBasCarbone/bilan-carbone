@@ -2,7 +2,7 @@ import { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
-import { Post, subPostsByPost } from './posts'
+import { Post, subPostsByPost, subPostTiltToBcSubPostMapping } from './posts'
 import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
 
 export const getEmissionSourceCompletion = (
@@ -169,6 +169,19 @@ export const getEmissionResultsCut = (emissionSource: (FullStudy | StudyWithoutD
     result.emission = result.emission / 5
   }
   return result
+}
+
+export const convertTiltEmissionSourceToBcEmissionSource = (
+  emissionSource: FullStudy['emissionSources'][0],
+): FullStudy['emissionSources'][0] => {
+  const bcSubPost =
+    emissionSource.subPost in subPostTiltToBcSubPostMapping
+      ? subPostTiltToBcSubPostMapping[emissionSource.subPost]
+      : emissionSource.subPost
+  if (!bcSubPost) {
+    return emissionSource
+  }
+  return { ...emissionSource, subPost: bcSubPost }
 }
 
 export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
