@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:test": "NODE_ENV=test next dev --turbopack --port 3001",
-    "build": "next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
+    "build": "next build",
     "start": "next start",
     "lint": "prettier --check . && next lint",
     "format": "prettier --write .",
@@ -21,8 +21,7 @@
     "seed:import": "prisma db seed -- -i",
     "question:import:google": "npx tsx src/scripts/cut/question/add.ts -s google -f",
     "question:import:excel": "npx tsx src/scripts/cut/question/add.ts -f",
-    "user:import": "tsx src/scripts/ftp/importUsers.ts",
-    "postinstall": "npx playwright install chromium"
+    "user:import": "tsx src/scripts/ftp/importUsers.ts"
   },
   "prisma": {
     "schema": "prisma/schema",
@@ -69,6 +68,7 @@
     "postcss-loader": "^8.1.1",
     "postcss-nested": "^7.0.2",
     "postcss-preset-env": "^10.2.3",
+    "prisma": "^6.9.0",
     "react": "19.1.0",
     "react-countdown": "^2.3.6",
     "react-dom": "19.1.0",
@@ -112,7 +112,6 @@
     "jest-environment-jsdom": "^30.0.0",
     "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^4.1.0",
-    "prisma": "^6.9.0",
     "ts-jest": "^29.3.4",
     "typescript": "^5.8.3"
   },

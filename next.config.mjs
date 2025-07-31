@@ -8,7 +8,7 @@ const scalewayUrl = `${bucketName}.s3.${region}.scw.cloud`
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  // output: 'standalone', // TODO: Uncomment this if we meed to reduce the app size and add heavy node_modules packages to .slugignore
   turbopack: {
     resolveAlias: { underscore: 'lodash' },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
