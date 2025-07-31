@@ -694,6 +694,21 @@
       "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other associations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
       "downloadSample": "Download sample"
     },
+    "dependencyMatrix": {
+      "loading": "Loading document...",
+      "add": "Add a matrix",
+      "documentNotFound": "Document not found",
+      "download": "Download matrix",
+      "dependencyMatrices": "Risk and dependency matrices",
+      "dependencyMatrixSelector": "Risk and dependency matrix to display",
+      "invalidFileType": "Unsupported file type",
+      "noMatrix": "No risk and dependency matrix to display",
+      "notAuthorized": "Action not authorized",
+      "removeDependencyMatrix": "Remove risk and dependency matrix",
+      "Not authorized": "You are not allowed to do this action",
+      "info": "You can download a sample risk and dependency matrix to help you build your own. Afterwards, if you wish to submit your own matrix to help other associations by providing a working base, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "downloadSample": "Download sample"
+    },
     "delete": {
       "cancel": "Cancel",
       "confirm": "Confirm",
