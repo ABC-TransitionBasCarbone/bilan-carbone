@@ -1644,5 +1644,17 @@
       "phone": "Please enter a valid phone number",
       "required": "This field is required"
     }
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Forgot password",
+      "newUser": "You have been invited to BC+",
+      "addedActiveUser": "You have been invited to a new environment on BC+",
+      "activation": "You have activated your account on BC+",
+      "activationRequest": "Access request to your BC+ organization",
+      "userOnStudyInvitation": "Added to the study {studyName}",
+      "contributorInvitation": "Contribution request on the study {studyName}",
+      "addedUsersByFile": "Authorization for user import"
+    }
   }
 }

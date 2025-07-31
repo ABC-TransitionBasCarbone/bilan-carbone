@@ -1653,7 +1653,7 @@
       "activation": "Vous avez activé votre compte sur le BC+",
       "activationRequest": "Demande d'accès à votre organisation BC+",
       "userOnStudyInvitation": "Ajout sur l'étude {studyName}",
-      "contributorInvatation": "Demande de contribution sur l'étude {studyName}",
+      "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
       "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
     }
   }

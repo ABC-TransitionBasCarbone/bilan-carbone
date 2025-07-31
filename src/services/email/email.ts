@@ -5,10 +5,11 @@ import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
 import { getEnvResetLink } from './utils'
 
-const tSubject = async () => await getTranslations('email.subject')
+const tSubject = async (keys: string, object?: Record<string, string | number | Date>) =>
+  (await getTranslations('email.subject'))(keys, object)
 
 export const sendResetPassword = async (toEmail: string, token: string, env: Environment) => {
-  return sendEmail(env, [toEmail], (await tSubject())('resetPassword'), 'reset-password', {
+  return sendEmail(env, [toEmail], await tSubject('resetPassword'), 'reset-password', {
     link: getEnvResetLink('reset-password', token, env),
   })
 }
@@ -20,7 +21,7 @@ export const sendNewUserEmail = async (
   userName: string,
   env: Environment,
 ) => {
-  return sendEmail(env, [toEmail], (await tSubject())('newUser'), 'new-user', {
+  return sendEmail(env, [toEmail], await tSubject('newUser'), 'new-user', {
     link: getEnvResetLink('reset-password', token, env),
     support: sharedEmailEnv.MAIL_USER,
     userName,
@@ -47,7 +48,7 @@ export const sendAddedActiveUserEmail = async (
   oldEnvs: Environment[],
   orga: string,
 ) => {
-  return sendEmail(newEnv, [toEmail], (await tSubject())('addedActiveUser'), 'added-active-user', {
+  return sendEmail(newEnv, [toEmail], await tSubject('addedActiveUser'), 'added-active-user', {
     link: `${sharedEmailEnv.NEXTAUTH_URL}/login`,
     support: sharedEmailEnv.MAIL_USER,
     userName,
@@ -66,7 +67,7 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
   return sendEmail(
     env,
     [toEmail],
-    (await tSubject())('activation'),
+    await tSubject('activation'),
     fromReset ? 'activate-account-from-reset' : 'activate-account',
     {
       link: getEnvResetLink('reset-password', token, env),
@@ -81,7 +82,7 @@ export const sendActivationRequest = async (
   userToActivate: string,
   env: Environment = Environment.BC,
 ) => {
-  return sendEmail(env, toEmailList, (await tSubject())('activation'), 'activation-request', {
+  return sendEmail(env, toEmailList, await tSubject('activation'), 'activation-request', {
     support: sharedEmailEnv.MAIL_USER,
     emailToActivate,
     userToActivate,
@@ -98,22 +99,16 @@ export const sendUserOnStudyInvitationEmail = async (
   roleOnStudy: string,
   env: Environment,
 ) => {
-  return sendEmail(
-    env,
-    [toEmail],
-    (await tSubject())('userOnStudyInvitation', { studyName }),
-    'user-on-study-invitation',
-    {
-      link: sharedEmailEnv.NEXTAUTH_URL,
-      userName,
-      studyName,
-      studyId,
-      studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
-      organizationName,
-      creatorName,
-      role: roleOnStudy,
-    },
-  )
+  return sendEmail(env, [toEmail], await tSubject('userOnStudyInvitation', { studyName }), 'user-on-study-invitation', {
+    link: sharedEmailEnv.NEXTAUTH_URL,
+    userName,
+    studyName,
+    studyId,
+    studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+    organizationName,
+    creatorName,
+    role: roleOnStudy,
+  })
 }
 
 export const sendNewUserOnStudyInvitationEmail = async (
@@ -129,7 +124,7 @@ export const sendNewUserOnStudyInvitationEmail = async (
   return sendEmail(
     env,
     [toEmail],
-    (await tSubject())('userOnStudyInvitation', { studyName }),
+    await tSubject('userOnStudyInvitation', { studyName }),
     'new-user-on-study-invitation',
     {
       link: getEnvResetLink('reset-password', token, env),
@@ -153,21 +148,15 @@ export const sendContributorInvitationEmail = async (
   userName: string,
   env: Environment,
 ) => {
-  return sendEmail(
-    env,
-    [toEmail],
-    (await tSubject())('contributorInvitation', { studyName }),
-    'contributor-invitation',
-    {
-      link: sharedEmailEnv.NEXTAUTH_URL,
-      userName,
-      studyName,
-      studyId,
-      studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
-      organizationName,
-      creatorName,
-    },
-  )
+  return sendEmail(env, [toEmail], await tSubject('contributorInvitation', { studyName }), 'contributor-invitation', {
+    link: sharedEmailEnv.NEXTAUTH_URL,
+    userName,
+    studyName,
+    studyId,
+    studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+    organizationName,
+    creatorName,
+  })
 }
 
 export const sendNewContributorInvitationEmail = async (
@@ -182,7 +171,7 @@ export const sendNewContributorInvitationEmail = async (
   return sendEmail(
     env,
     [toEmail],
-    (await tSubject())('contributorInvitation', { studyName }),
+    await tSubject('contributorInvitation', { studyName }),
     'new-contributor-invitation',
     {
       link: getEnvResetLink('reset-password', token, env),
@@ -197,11 +186,7 @@ export const sendNewContributorInvitationEmail = async (
 }
 
 export const sendAddedUsersByFile = async (results: Record<string, string>[], env: Environment) => {
-  return sendEmail(
-    env,
-    [sharedEmailEnv.MAIL_USER],
-    (await tSubject())('addedUsersByFile'),
-    'authorization-import-users',
-    { results },
-  )
+  return sendEmail(env, [sharedEmailEnv.MAIL_USER], await tSubject('addedUsersByFile'), 'authorization-import-users', {
+    results,
+  })
 }

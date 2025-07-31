@@ -6,5 +6,16 @@
   },
   "exports": {
     "env_specific_export": "Tilt"
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Mot de passe oublié",
+      "newUser": "Vous avez été invité sur Tilt",
+      "addedActiveUser": "Vous avez été invité sur un nouvel environnement Tilt",
+      "activation": "Vous avez activé votre compte sur Tilt",
+      "activationRequest": "Demande d'accès à votre organisation Tilt",
+      "userOnStudyInvitation": "Ajout sur l'étude {studyName}",
+      "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
+      "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
+    }
   }
-}

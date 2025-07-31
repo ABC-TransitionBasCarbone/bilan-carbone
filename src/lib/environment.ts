@@ -11,10 +11,6 @@ export const SharedEmailEnvSchema = z.object({
 
 export type SharedEmailEnv = z.infer<typeof SharedEmailEnvSchema>
 
-// const rawEnv = () => {
-//   return process.env
-// }
-
 export const sharedEmailEnv = SharedEmailEnvSchema.parse(process.env)
 
 const keys = ['MAIL_HOST', 'MAIL_PORT', 'MAIL_USER', 'MAIL_PASSWORD', 'BASE_URL', 'SUPPORT_EMAIL'] as const
