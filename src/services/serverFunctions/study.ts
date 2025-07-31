@@ -860,8 +860,8 @@ export const addDocumentToStudy = async (studyId: string, file: File, documentCa
     }
   })
 
-export const deleteFlowFromStudy = async (document: Document, studyId: string) =>
-  withServerResponse('deleteFlowFromStudy', async () => {
+export const deleteDocumentFromStudy = async (document: Document, studyId: string) =>
+  withServerResponse('deleteDocumentFromStudy', async () => {
     if (!(await canAccessFlowFromStudy(document.id, studyId)) || !(await canEditStudyFlows(studyId))) {
       throw new Error(NOT_AUTHORIZED)
     }

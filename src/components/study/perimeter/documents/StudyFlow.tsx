@@ -8,7 +8,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
 import { hasAccessToStudyFlowExample } from '@/services/permissions/environment'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
-import { addDocumentToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
+import { addDocumentToStudy, deleteDocumentFromStudy } from '@/services/serverFunctions/study'
 import { getStudyFlowSampleDocumentUrl } from '@/services/serverFunctions/studyFlow'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -21,9 +21,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Block from '../../../base/Block'
-import FlowSelector from './FlowSelector'
+import DocumentSelector from './DocumentSelector'
+import DocumentViewer from './DocumentViewer'
 import styles from './StudyFlow.module.css'
-import StudyFlowViewer from './StudyFlowViewer'
 
 interface Props {
   canAddFlow: boolean
@@ -89,7 +89,7 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
       return
     }
     setDeleting(true)
-    await callServerFunction(() => deleteFlowFromStudy(selectedFlow, study.id), {
+    await callServerFunction(() => deleteDocumentFromStudy(selectedFlow, study.id), {
       getErrorMessage: (error) => t(error),
       onSuccess: () => {
         router.refresh()
@@ -159,7 +159,11 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
           <div className="flex-col mb1">
             <InputLabel id="flow-selector-label">{t('flowSelector')}</InputLabel>
             <div className={classNames(styles.flowButtons, 'flex grow')}>
-              <FlowSelector documents={documents} selectedFlow={selectedFlow} setSelectedFlow={setSelectedFlow} />
+              <DocumentSelector
+                documents={documents}
+                selectedDocument={selectedFlow}
+                setSelectedDocument={setSelectedFlow}
+              />
               <LoadingButton
                 aria-label={t('download')}
                 title={t('download')}
@@ -183,7 +187,7 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
               </LoadingButton>
             </div>
           </div>
-          <StudyFlowViewer selectedFlow={selectedFlow} studyId={study.id} />
+          <DocumentViewer selectedDocument={selectedFlow} studyId={study.id} />
         </div>
       ) : (
         t('noFlows')
