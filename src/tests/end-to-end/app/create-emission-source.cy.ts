@@ -77,7 +77,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
-      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Bonne')
+      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Bonne')
     })
     cy.getByTestId('emission-source-quality-expand-button').should('not.exist')
     cy.getByTestId('emission-source-result').should(
@@ -104,7 +104,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').should('have.text', 'Validée')
       cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
-      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
+      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
       cy.get('[data-testid="emission-source-name"] > .MuiInputBase-root > .MuiInputBase-input').should('not.exist')
       cy.getByTestId('validated-emission-source-name').should('have.text', 'My emission source name')
     })
@@ -124,7 +124,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
-      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
+      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
     })
     cy.getByTestId('emission-source-My emission source name').click({ force: true })
     cy.getByTestId('emission-source-My emission source name').within(() => {
@@ -152,7 +152,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
-      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
+      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
     })
     cy.getByTestId('emission-source-My edited emission source name').click()
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
@@ -177,7 +177,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '1 008 tCO₂e')
-      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
+      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
       cy.getByTestId('emission-source-contributor').should('not.exist')
     })
     cy.getByTestId('emission-source-My edited emission source name').click({ force: true })
@@ -199,7 +199,7 @@ describe('Create study emission source', () => {
     cy.getByTestId('emission-source-My edited emission source name').within(() => {
       cy.getByTestId('emission-source-status').invoke('text').should('contain', 'À vérifier')
       cy.getByTestId('emission-source-value').should('have.text', '1 744 tCO₂e')
-      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
+      cy.getByTestId('emission-source-quality').should('have.text', 'Qualité : Mauvaise')
       cy.getByTestId('emission-source-contributor').should('have.text', 'bc-contributor@yopmail.com')
     })
   })
