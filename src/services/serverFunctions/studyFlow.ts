@@ -9,7 +9,12 @@ export const getStudyFlowSampleDocumentUrl = async (studyId: string) =>
     if (!(await canAccessStudyFlows(studyId))) {
       return ''
     }
-    console.log('proaacess', process.env.STUDY_FLOW_EXAMPLE_KEY)
     const res = await getFileUrlFromBucket(process.env.STUDY_FLOW_EXAMPLE_KEY || '')
+    return res.success ? res.data : ''
+  })
+
+export const getDependencyMatrixSampleDocumentUrl = async () =>
+  withServerResponse('getDependencyMatrixSampleDocumentUrl', async () => {
+    const res = await getFileUrlFromBucket(process.env.DEPENDENCY_MATRIX_EXAMPLE_KEY || '')
     return res.success ? res.data : ''
   })
