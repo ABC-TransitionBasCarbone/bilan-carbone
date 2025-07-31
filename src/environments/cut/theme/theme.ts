@@ -38,7 +38,9 @@ const base = createTheme({
       main: '#fc8514',
     },
     info: {
-      main: '#272768',
+      main: '#B0B8C4',
+      light: '#E5E7EB',
+      dark: '#9CA3AF',
     },
     background: {
       default: '#FBFCFC',

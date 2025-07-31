@@ -39,12 +39,12 @@ export const StyledSubPostItem = styled(Link, { shouldForwardProp: (prop) => pro
   margin: '0.125rem 0',
   textDecoration: 'none',
   color: theme.palette.primary.contrastText,
-  backgroundColor: validated ? theme.palette.success.light : theme.palette.warning.light,
+  backgroundColor: validated ? theme.palette.success.light : theme.palette.info.light,
   borderRadius: '0.5rem',
   overflow: 'visible',
 
   '&:hover': {
-    backgroundColor: validated ? theme.palette.success.dark : theme.palette.error.dark,
+    backgroundColor: validated ? theme.palette.success.dark : theme.palette.info.main,
   },
 }))
 
