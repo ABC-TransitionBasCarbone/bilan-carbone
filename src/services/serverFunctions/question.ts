@@ -17,6 +17,7 @@ import {
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
+import { prismaClient } from '@/db/client'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
@@ -38,6 +39,7 @@ import {
   upsertAnswerEmissionSource,
 } from '@/db/question'
 import { FullStudy, getStudyById } from '@/db/study'
+import { isTableResponse } from '@/typeguards/question'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   calculateTableEmissions,
@@ -46,9 +48,11 @@ import {
 } from '@/utils/tableEmissionCalculations'
 import { isTableAnswer } from '@/utils/tableInput'
 import { Answer, Prisma, Question, QuestionType, SubPost } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canReadStudy } from '../permissions/study'
+import { canReadStudy, canReadStudyDetail } from '../permissions/study'
+import { CutPost, subPostsByPost } from '../posts'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
 const cleanupTableEmissionSources = async (tableAnswer: TableAnswer, existingAnswer: Answer) => {
@@ -501,6 +505,133 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
 
   return emissionFactorInfo
 }
+
+export type QuestionStats = { answered: number; total: number }
+export type StatsResult = Record<CutPost, Partial<Record<SubPost, QuestionStats>>>
+
+export const getQuestionProgressBySubPostPerPost = async ({
+  study,
+  studySiteId,
+  user,
+}: {
+  study: FullStudy
+  studySiteId: string
+  user: UserSession
+}) =>
+  withServerResponse('getQuestionProgressBySubPostPerPost', async () => {
+    if (!canReadStudyDetail(user, study)) {
+      return
+    }
+
+    const cutSubPosts = Object.values(CutPost).flatMap((cutPost) => subPostsByPost[cutPost])
+
+    const questions = await prismaClient.question.findMany({
+      where: {
+        subPost: { in: cutSubPosts },
+      },
+      select: {
+        subPost: true,
+        type: true,
+      },
+    })
+
+    const totalCountBySubPost = questions.reduce<Partial<Record<SubPost, number>>>((acc, question) => {
+      const { subPost, type } = question
+      /**
+       * Since TABLE-type questions contain the answers of their sub-questions,
+       * We do not count them in the total number of questions,
+       * Otherwise, there would always be one more question than the number of answers.
+       */
+      if (type !== QuestionType.TABLE) {
+        acc[subPost] = (acc[subPost] || 0) + 1
+      }
+      return acc
+    }, {})
+
+    const answers = await prismaClient.answer.findMany({
+      where: {
+        studySiteId,
+        response: {
+          not: '',
+        },
+        question: {
+          subPost: { in: cutSubPosts },
+        },
+      },
+      select: {
+        response: true,
+        question: {
+          select: {
+            idIntern: true,
+            subPost: true,
+            type: true,
+          },
+        },
+      },
+    })
+
+    const answeredCountBySubPost = answers.reduce<Partial<Record<SubPost, number>>>((acc, answer) => {
+      const { response, question } = answer
+      const { type, subPost, idIntern } = question
+
+      const isConditional = Object.keys(emissionFactorMap).find((key) => {
+        const listQuestionWithConditionalResponse = emissionFactorMap[key].conditionalRules?.map(
+          ({ idIntern: idInternRule, expectedAnswers }) => {
+            /**
+             * Response in DB is '"[X,…]"'
+             */
+            if (typeof response === 'string' && response.startsWith('[')) {
+              /**
+               * Test if response is in conditional rules
+               */
+              const parsedValue = JSON.parse(response) as string[]
+              const result = parsedValue.every((res) => !expectedAnswers.includes(res))
+              return idInternRule === idIntern && result
+            }
+            return idInternRule === idIntern && !expectedAnswers.includes(response as string)
+          },
+        )
+        /**
+         * If question with conditional response not display subquestion
+         */
+        return listQuestionWithConditionalResponse?.filter((t) => t).length ?? 0 > 0
+      })
+
+      if (isConditional && totalCountBySubPost[subPost]) {
+        totalCountBySubPost[subPost] -= 1
+      }
+
+      if (type === QuestionType.TABLE && isTableResponse(response)) {
+        for (const row of response.rows) {
+          const data = row.data
+          const nonEmptyFields = Object.values(data).filter(
+            (value) => value !== null && value !== undefined && value !== '',
+          )
+          acc[subPost] = (acc[subPost] || 0) + nonEmptyFields.length
+        }
+      } else {
+        if (typeof response === 'string' && response.trim() !== '') {
+          acc[subPost] = (acc[subPost] || 0) + 1
+        }
+      }
+      return acc
+    }, {})
+
+    const result: StatsResult = {} as StatsResult
+
+    for (const cutPost of Object.values(CutPost)) {
+      result[cutPost] = {} as Partial<Record<SubPost, QuestionStats>>
+
+      for (const subPost of subPostsByPost[cutPost]) {
+        result[cutPost][subPost] = {
+          total: totalCountBySubPost[subPost] ?? 0,
+          answered: answeredCountBySubPost[subPost] ?? 0,
+        }
+      }
+    }
+
+    return result
+  })
 
 const cleanupEmissionSourcesByQuestionIdInterns = async (studySiteId: string, questionIdInterns: string[]) => {
   const answers = await Promise.all(
