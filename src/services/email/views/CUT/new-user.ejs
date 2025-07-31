@@ -2,13 +2,15 @@
   <%- include('../partials/style'); %>
   <body>
     <div>
-      <p>Bonjour,</p>
+      <p>Bonjour <span><%= userName %></span>,</p>
       <br />
       <p>
-        Bienvenue sur le site CoUnT! Vous avez fait une demande d'activation de votre compte. Pour finaliser celle-ci, veuillez cliquer sur
+        Bienvenue sur CoUnT ! Vous avez été ajouté par <span><%= creatorName %></span>.
+      </p>
+      <p>
+        Pour avoir acces à l'application, vous pouvez finaliser la création de votre compte sur
         <a href="<%= link %>">ce lien</a>.
       </p>
-      <br />
       <%- include('./partials/faq'); %>
       <br />
       <%- include('./partials/signature'); %>

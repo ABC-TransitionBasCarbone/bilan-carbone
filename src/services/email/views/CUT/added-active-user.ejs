@@ -5,7 +5,7 @@
       <p>Bonjour <span><%= userName %></span>,</p>
       <br />
       <p>
-        Vous avez été ajouté par <span><%= creatorName %></span> à l'organisation <%= orga %> et avez donc à présent accès à l'environnement <%= newEnv %> <%= envInfo%>.
+        Vous avez été ajouté par <span><%= creatorName %></span> au cinéma <%= orga %> et avez donc à présent accès à l'environnement <%= newEnv %> <%= envInfo%>.
       </p>
       <br />
       <p>
@@ -13,8 +13,9 @@
         En vous connectant, l'application vous demandera dorénavant à quel environnement vous souhaitez accéder. Vous pourrez changer d'environnement à n'importe quel moment via un nouveau bouton sur le bandeau principal de l'outil.
       </p>
       <br />
+      <%- include('./partials/faq'); %>
       <br />
-      <%- include('./partials/signature') %>
+      <%- include('./partials/signature'); %>
     </div>
   </body>
 </html>
