@@ -87,10 +87,11 @@ const fullStudyInclude = {
           },
         },
       },
-      emissionSourceTag: {
+      emissionSourceTags: {
         select: {
           id: true,
           name: true,
+          color: true,
           studyId: true,
         },
       },
@@ -191,6 +192,7 @@ const fullStudyInclude = {
     select: {
       id: true,
       name: true,
+      color: true,
       studyId: true,
     },
   },

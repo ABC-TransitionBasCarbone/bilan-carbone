@@ -76,11 +76,12 @@ model OpeningHours {
 model EmissionSourceTag {
   id String @id @default(uuid())
 
-  name String
+  name  String
+  color String?
 
   studyId             String                @map("study_id")
   study               Study                 @relation(fields: [studyId], references: [id])
-  StudyEmissionSource StudyEmissionSource[]
+  StudyEmissionSource StudyEmissionSource[] @relation("TagToEmissionSource")
 
   @@unique([name, studyId])
   @@map("emission_source_tag")
@@ -219,8 +220,7 @@ model StudyEmissionSource {
 
   answerEmissionSources AnswerEmissionSource[]
 
-  emissionSourceTagId String?            @map("emission_source_tag_id")
-  emissionSourceTag   EmissionSourceTag? @relation(fields: [emissionSourceTagId], references: [id])
+  emissionSourceTags EmissionSourceTag[] @relation("TagToEmissionSource")
 
   @@map("study_emission_sources")
 }

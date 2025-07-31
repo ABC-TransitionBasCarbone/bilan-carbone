@@ -155,7 +155,7 @@ const getEmissionSourcesRows = (
           isCAS(emissionSource) ? emissionSource.duration || '1' : ' ',
           tResultUnits(resultsUnit),
           emissionSourceSD ? getQuality(getStandardDeviationRating(emissionSourceSD), tQuality) : '',
-          emissionSource.emissionSourceTag?.name || '',
+          emissionSource.emissionSourceTags.map((tag) => tag.name).join(', ') || '',
           emissionSource.value || '0',
           emissionFactor?.unit ? tUnit(emissionFactor.unit) : '',
           getQuality(getQualityRating(emissionSource), tQuality),

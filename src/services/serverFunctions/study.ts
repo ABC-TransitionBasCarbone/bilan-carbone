@@ -218,7 +218,7 @@ export const createStudyCommand = async (
       createMany: {
         data:
           session.user.environment in defaultEmissionSourceTags
-            ? defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags]
+            ? defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags] || []
             : [],
       },
     }
