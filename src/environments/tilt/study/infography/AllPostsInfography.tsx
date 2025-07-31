@@ -94,7 +94,7 @@ const AllPostsInfography = ({ study, data }: Props) => {
         </div>
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
-        <div className={classNames(styles.borderFull, 'flex-col')}>
+        <div className={classNames(styles.borderFull, 'flex-col mb2')}>
           <div className={classNames(styles.postTitle)}>{t('UtilisationEtFinDeVie')}</div>
           <PostInfography
             studyId={study.id}
@@ -109,7 +109,7 @@ const AllPostsInfography = ({ study, data }: Props) => {
             resultsUnit={study.resultsUnit}
           />
         </div>
-        <div className={classNames(styles.borderFull, 'flex-col')}>
+        <div className={'flex-col mt2'}>
           <PostInfography
             studyId={study.id}
             data={data.find((d) => d.post === TiltPost.Teletravail)}

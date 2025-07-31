@@ -169,6 +169,12 @@ enum SubPost {
   // Télétravail 
   TeletravailSalaries
   TeletravailBenevoles
+
+  // Équipements et immobilisations
+  EquipementsDesSalaries
+  ParcInformatiqueDesSalaries
+  EquipementsDesBenevoles
+  ParcInformatiqueDesBenevoles
 }
 
 model EmissionFactorImportVersion {
