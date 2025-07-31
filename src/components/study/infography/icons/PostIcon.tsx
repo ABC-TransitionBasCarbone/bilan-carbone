@@ -19,10 +19,10 @@ import { UtilisationEtDependanceIcon } from './utilisationetdependance'
 
 import AcUnitOutlinedIcon from '@mui/icons-material/AcUnitOutlined'
 import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined'
-import ChairAltOutlinedIcon from '@mui/icons-material/ChairAltOutlined'
-import DinnerDiningOutlinedIcon from '@mui/icons-material/DinnerDiningOutlined'
+import ComputerOutlinedIcon from '@mui/icons-material/ComputerOutlined'
 import FilterDramaOutlinedIcon from '@mui/icons-material/FilterDramaOutlined'
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
+import LocalPizzaOutlinedIcon from '@mui/icons-material/LocalPizzaOutlined'
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined'
 import MapsHomeWorkOutlinedIcon from '@mui/icons-material/MapsHomeWorkOutlined'
 import TrainOutlinedIcon from '@mui/icons-material/TrainOutlined'
@@ -71,9 +71,9 @@ const PostIcon = ({ post, className }: Props) => {
     case Post.IntrantsBiensEtMatieresTilt:
       return <IntrantsBiensEtMatieresIcon className={className} />
     case Post.Alimentation:
-      return <DinnerDiningOutlinedIcon className={className} />
+      return <LocalPizzaOutlinedIcon className={className} />
     case Post.EquipementsEtImmobilisations:
-      return <ChairAltOutlinedIcon className={className} />
+      return <ComputerOutlinedIcon className={className} />
     case Post.DeplacementsDePersonne:
       return <TrainOutlinedIcon className={className} />
     case Post.TransportDeMarchandises:
