@@ -1,8 +1,8 @@
 import { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, Environment, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
-import { Post, subPostsByPost } from './posts'
+import { convertTiltSubPostToBCSubPost, Post, subPostsByPost } from './posts'
 import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
 
 export const getEmissionSourceCompletion = (
@@ -317,4 +317,12 @@ export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracteris
   [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: [],
   [SubPost.TeletravailSalaries]: [],
   [SubPost.TeletravailBenevoles]: [],
+}
+
+export const getCaracterisationBySubPostWithEnv = (subPost: SubPost, environment?: Environment) => {
+  if (environment === Environment.TILT) {
+    const bcSubpost = convertTiltSubPostToBCSubPost(subPost)
+    return caracterisationsBySubPost[bcSubpost]
+  }
+  return caracterisationsBySubPost[subPost]
 }

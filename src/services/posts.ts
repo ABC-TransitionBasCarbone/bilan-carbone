@@ -180,3 +180,35 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
   ...subPostsByPostCUT,
   ...subPostsByPostTILT,
 }
+
+export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = {
+  [SubPost.FroidEtClim]: SubPost.EmissionsLieesALaProductionDeFroid,
+  [SubPost.ActivitesAgricoles]: SubPost.Agriculture,
+  [SubPost.ActivitesIndustrielles]: SubPost.EmissionsLieesAuxProcedesIndustriels,
+  [SubPost.DeplacementsDomicileTravailSalaries]: SubPost.DeplacementsDomicileTravail,
+  [SubPost.DeplacementsDomicileTravailBenevoles]: SubPost.DeplacementsDomicileTravail,
+  [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries]: SubPost.DeplacementsProfessionnels,
+  [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles]: SubPost.DeplacementsProfessionnels,
+  [SubPost.DeplacementsDesBeneficiaires]: SubPost.DeplacementsVisiteurs,
+  [SubPost.DeplacementsFabricationDesVehicules]: SubPost.Equipements,
+  [SubPost.Entrant]: SubPost.FretEntrant,
+  [SubPost.Interne]: SubPost.FretInterne,
+  [SubPost.Sortant]: SubPost.FretSortant,
+  [SubPost.TransportFabricationDesVehicules]: SubPost.Equipements,
+  [SubPost.RepasPrisParLesSalaries]: SubPost.NourritureRepasBoissons,
+  [SubPost.RepasPrisParLesBenevoles]: SubPost.NourritureRepasBoissons,
+  [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnDependanceConsommationDeBiens]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnDependanceConsommationNumerique]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnDependanceConsommationDEnergie]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: SubPost.UtilisationEnDependance,
+  [SubPost.TeletravailSalaries]: SubPost.Electricite,
+  [SubPost.TeletravailBenevoles]: SubPost.Electricite,
+}
+
+export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
+  return subPostTiltToBcSubPostMapping[subPost] ?? subPost
+}

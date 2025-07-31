@@ -1,6 +1,7 @@
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
+import { filterEmissionFactorsBySubPostAndEnv, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import { displayOnlyExistingDataWithDash } from '@/utils/string'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -77,6 +78,7 @@ const EmissionSourceFactor = ({
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
+  const { environment } = useAppEnvironmentStore()
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -102,8 +104,8 @@ const EmissionSourceFactor = ({
   }, [selectedFactor])
 
   const subPostEmissionFactors = useMemo(
-    () => emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(subPost)),
-    [emissionFactors, subPost],
+    () => filterEmissionFactorsBySubPostAndEnv(emissionFactors, subPost, environment),
+    [emissionFactors, subPost, environment],
   )
   const fuse = useMemo(() => {
     return new Fuse(
