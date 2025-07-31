@@ -8,7 +8,7 @@ import { useServerFunction } from '@/hooks/useServerFunction'
 import { allowedFlowFileTypes, downloadFromUrl, maxAllowedFileSize, MB } from '@/services/file'
 import { hasAccessToStudyFlowExample } from '@/services/permissions/environment'
 import { getDocumentUrl } from '@/services/serverFunctions/file'
-import { addFlowToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
+import { addDocumentToStudy, deleteFlowFromStudy } from '@/services/serverFunctions/study'
 import { getStudyFlowSampleDocumentUrl } from '@/services/serverFunctions/studyFlow'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -61,7 +61,7 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
     }
 
     setUploading(true)
-    await callServerFunction(() => addFlowToStudy(study.id, file), {
+    await callServerFunction(() => addDocumentToStudy(study.id, file), {
       getErrorMessage: (error) => t(error),
       onSuccess: () => {
         router.refresh()
