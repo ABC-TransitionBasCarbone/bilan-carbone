@@ -1,0 +1,32 @@
+.modalBody {
+  overflow-y: auto;
+}
+
+.warningSection {
+  border: 1px solid var(--mui-palette-error-main);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.warningSection p {
+  font-weight: bold;
+}
+
+.warningSection ul ul {
+  list-style-type: disc;
+  padding-left: 1rem;
+}
+
+.warningSection > ul > li {
+  margin-bottom: 2rem;
+}
+
+.warningSection > ul > li:last-child {
+  margin-bottom: 0;
+}
+
+.questionAnswer {
+  background-color: var(--mui-palette-error-light);
+  border-radius: 0.25rem;
+  border-left: 0.2rem solid var(--mui-palette-info-main);
+}
