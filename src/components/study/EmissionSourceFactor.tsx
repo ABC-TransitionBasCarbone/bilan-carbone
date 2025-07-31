@@ -79,7 +79,6 @@ const EmissionSourceFactor = ({
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
-  const { environment } = useAppEnvironmentStore()
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
