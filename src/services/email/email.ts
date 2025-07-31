@@ -1,11 +1,14 @@
 import { EnvironmentNames } from '@/constants/environments'
 import { sharedEmailEnv } from '@/lib/environment'
 import { Environment } from '@prisma/client'
+import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
 import { getEnvResetLink } from './utils'
 
+const tSubject = async () => await getTranslations('email.subject')
+
 export const sendResetPassword = async (toEmail: string, token: string, env: Environment) => {
-  return sendEmail(env, [toEmail], 'Mot de passe oublié', 'reset-password', {
+  return sendEmail(env, [toEmail], (await tSubject())('resetPassword'), 'reset-password', {
     link: getEnvResetLink('reset-password', token, env),
   })
 }
@@ -17,7 +20,7 @@ export const sendNewUserEmail = async (
   userName: string,
   env: Environment,
 ) => {
-  return sendEmail(env, [toEmail], 'Vous avez été invité au BC+', 'new-user', {
+  return sendEmail(env, [toEmail], (await tSubject())('newUser'), 'new-user', {
     link: getEnvResetLink('reset-password', token, env),
     support: sharedEmailEnv.MAIL_USER,
     userName,
@@ -44,7 +47,7 @@ export const sendAddedActiveUserEmail = async (
   oldEnvs: Environment[],
   orga: string,
 ) => {
-  return sendEmail(newEnv, [toEmail], 'Vous avez été invité sur un nouvel environnement du BC+', 'added-active-user', {
+  return sendEmail(newEnv, [toEmail], (await tSubject())('addedActiveUser'), 'added-active-user', {
     link: `${sharedEmailEnv.NEXTAUTH_URL}/login`,
     support: sharedEmailEnv.MAIL_USER,
     userName,
@@ -63,7 +66,7 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
   return sendEmail(
     env,
     [toEmail],
-    `Vous avez activé votre compte sur ${env === Environment.BC ? 'le BC+' : env}`,
+    (await tSubject())('activation'),
     fromReset ? 'activate-account-from-reset' : 'activate-account',
     {
       link: getEnvResetLink('reset-password', token, env),
@@ -78,17 +81,11 @@ export const sendActivationRequest = async (
   userToActivate: string,
   env: Environment = Environment.BC,
 ) => {
-  return sendEmail(
-    env,
-    toEmailList,
-    `Demande d'accès à votre organisation ${env === Environment.BC ? 'BC+' : env}`,
-    'activation-request',
-    {
-      support: sharedEmailEnv.MAIL_USER,
-      emailToActivate,
-      userToActivate,
-    },
-  )
+  return sendEmail(env, toEmailList, (await tSubject())('activation'), 'activation-request', {
+    support: sharedEmailEnv.MAIL_USER,
+    emailToActivate,
+    userToActivate,
+  })
 }
 
 export const sendUserOnStudyInvitationEmail = async (
@@ -101,16 +98,22 @@ export const sendUserOnStudyInvitationEmail = async (
   roleOnStudy: string,
   env: Environment,
 ) => {
-  return sendEmail(env, [toEmail], `Ajout sur l'étude ${studyName}`, 'user-on-study-invitation', {
-    link: sharedEmailEnv.NEXTAUTH_URL,
-    userName,
-    studyName,
-    studyId,
-    studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
-    organizationName,
-    creatorName,
-    role: roleOnStudy,
-  })
+  return sendEmail(
+    env,
+    [toEmail],
+    (await tSubject())('userOnStudyInvitation', { studyName }),
+    'user-on-study-invitation',
+    {
+      link: sharedEmailEnv.NEXTAUTH_URL,
+      userName,
+      studyName,
+      studyId,
+      studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+      organizationName,
+      creatorName,
+      role: roleOnStudy,
+    },
+  )
 }
 
 export const sendNewUserOnStudyInvitationEmail = async (
@@ -123,16 +126,22 @@ export const sendNewUserOnStudyInvitationEmail = async (
   roleOnStudy: string,
   env: Environment,
 ) => {
-  return sendEmail(env, [toEmail], `Ajout sur l'étude ${studyName}`, 'new-user-on-study-invitation', {
-    link: getEnvResetLink('reset-password', token, env),
-    studyName,
-    studyId,
-    studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
-    organizationName,
-    creatorName,
-    support: sharedEmailEnv.MAIL_USER,
-    role: roleOnStudy,
-  })
+  return sendEmail(
+    env,
+    [toEmail],
+    (await tSubject())('userOnStudyInvitation', { studyName }),
+    'new-user-on-study-invitation',
+    {
+      link: getEnvResetLink('reset-password', token, env),
+      studyName,
+      studyId,
+      studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+      organizationName,
+      creatorName,
+      support: sharedEmailEnv.MAIL_USER,
+      role: roleOnStudy,
+    },
+  )
 }
 
 export const sendContributorInvitationEmail = async (
@@ -144,15 +153,21 @@ export const sendContributorInvitationEmail = async (
   userName: string,
   env: Environment,
 ) => {
-  return sendEmail(env, [toEmail], `Demande de contribution sur l'étude ${studyName}`, 'contributor-invitation', {
-    link: sharedEmailEnv.NEXTAUTH_URL,
-    userName,
-    studyName,
-    studyId,
-    studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
-    organizationName,
-    creatorName,
-  })
+  return sendEmail(
+    env,
+    [toEmail],
+    (await tSubject())('contributorInvitation', { studyName }),
+    'contributor-invitation',
+    {
+      link: sharedEmailEnv.NEXTAUTH_URL,
+      userName,
+      studyName,
+      studyId,
+      studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+      organizationName,
+      creatorName,
+    },
+  )
 }
 
 export const sendNewContributorInvitationEmail = async (
@@ -164,22 +179,28 @@ export const sendNewContributorInvitationEmail = async (
   creatorName: string,
   env: Environment,
 ) => {
-  return sendEmail(env, [toEmail], `Demande de contribution sur l'étude ${studyName}`, 'new-contributor-invitation', {
-    link: getEnvResetLink('reset-password', token, env),
-    studyName,
-    studyId,
-    studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
-    organizationName,
-    creatorName,
-    support: sharedEmailEnv.MAIL_USER,
-  })
+  return sendEmail(
+    env,
+    [toEmail],
+    (await tSubject())('contributorInvitation', { studyName }),
+    'new-contributor-invitation',
+    {
+      link: getEnvResetLink('reset-password', token, env),
+      studyName,
+      studyId,
+      studyLink: `${sharedEmailEnv.NEXTAUTH_URL}/etudes/${studyId}`,
+      organizationName,
+      creatorName,
+      support: sharedEmailEnv.MAIL_USER,
+    },
+  )
 }
 
 export const sendAddedUsersByFile = async (results: Record<string, string>[], env: Environment) => {
   return sendEmail(
     env,
     [sharedEmailEnv.MAIL_USER],
-    `Autorisation pour l'ajout d'utilisateurs`,
+    (await tSubject())('addedUsersByFile'),
     'authorization-import-users',
     { results },
   )

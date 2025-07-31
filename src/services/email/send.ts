@@ -42,13 +42,6 @@ export const sendEmail = async (
   const config = EMAIL_CLIENT_CONFIGS[env]
   const transporter = getTransporter(env)
   const html = await getHtml({ file: template, data: templateData, env })
-  console.debug('sendEmail', {
-    env,
-    to,
-    subject,
-    template,
-    templateData,
-  })
   return transporter.sendMail({
     to: to.join(','),
     from: config.mailUser,
