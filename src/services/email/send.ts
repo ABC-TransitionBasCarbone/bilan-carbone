@@ -15,10 +15,10 @@ import { getTransporter } from './transposter'
  * @returns Prosmise that resolves rendered HTML string.
  */
 const getHtml = async ({ file, env, data }: { file: string; env: Environment; data?: ejs.Data }) => {
-  const customPath = path.join(__dirname, 'views', env, `${file}.ejs`)
-  const fallbackPath = path.join(__dirname, 'views', 'common', `${file}.ejs`)
+  const basePath = path.join(process.cwd(), 'src', 'services', 'email', 'views')
+  const customPath = path.join(basePath, env, `${file}.ejs`)
+  const fallbackPath = path.join(basePath, 'common', `${file}.ejs`)
   const templatePath = fs.existsSync(customPath) ? customPath : fallbackPath
-
   return ejs.renderFile(templatePath, data)
 }
 
@@ -42,7 +42,13 @@ export const sendEmail = async (
   const config = EMAIL_CLIENT_CONFIGS[env]
   const transporter = getTransporter(env)
   const html = await getHtml({ file: template, data: templateData, env })
-
+  console.debug('sendEmail', {
+    env,
+    to,
+    subject,
+    template,
+    templateData,
+  })
   return transporter.sendMail({
     to: to.join(','),
     from: config.mailUser,
