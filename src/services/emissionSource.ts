@@ -1,8 +1,8 @@
 import { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
-import { EmissionSourceCaracterisation, StudyEmissionSource, SubPost } from '@prisma/client'
+import { EmissionSourceCaracterisation, Environment, StudyEmissionSource, SubPost } from '@prisma/client'
 import { StudyWithoutDetail } from './permissions/study'
-import { Post, subPostsByPost, subPostTiltToBcSubPostMapping } from './posts'
+import { convertTiltSubPostToBCSubPost, Post, subPostsByPost } from './posts'
 import { getConfidenceInterval, getQualityStandardDeviation, getSpecificEmissionFactorQuality } from './uncertainty'
 
 export const getEmissionSourceCompletion = (
@@ -171,19 +171,6 @@ export const getEmissionResultsCut = (emissionSource: (FullStudy | StudyWithoutD
   return result
 }
 
-export const convertTiltEmissionSourceToBcEmissionSource = (
-  emissionSource: FullStudy['emissionSources'][0],
-): FullStudy['emissionSources'][0] => {
-  const bcSubPost =
-    emissionSource.subPost in subPostTiltToBcSubPostMapping
-      ? subPostTiltToBcSubPostMapping[emissionSource.subPost]
-      : emissionSource.subPost
-  if (!bcSubPost) {
-    return emissionSource
-  }
-  return { ...emissionSource, subPost: bcSubPost }
-}
-
 export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
   [SubPost.CombustiblesFossiles]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
   [SubPost.CombustiblesOrganiques]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
@@ -330,4 +317,12 @@ export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracteris
   [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: [],
   [SubPost.TeletravailSalaries]: [],
   [SubPost.TeletravailBenevoles]: [],
+}
+
+export const getCaracterisationBySubPostWithEnv = (subPost: SubPost, environment?: Environment) => {
+  if (environment === Environment.TILT) {
+    const bcSubpost = convertTiltSubPostToBCSubPost(subPost)
+    return caracterisationsBySubPost[bcSubpost]
+  }
+  return caracterisationsBySubPost[subPost]
 }

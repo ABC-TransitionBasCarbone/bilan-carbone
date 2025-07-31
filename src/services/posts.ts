@@ -182,7 +182,7 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
 }
 
 export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = {
-  [SubPost.FroidEtClim]: SubPost.EmissionsLieesALaProductionDeFroid, // TODO pas sûr
+  [SubPost.FroidEtClim]: SubPost.EmissionsLieesALaProductionDeFroid,
   [SubPost.ActivitesAgricoles]: SubPost.Agriculture,
   [SubPost.ActivitesIndustrielles]: SubPost.EmissionsLieesAuxProcedesIndustriels,
   [SubPost.DeplacementsDomicileTravailSalaries]: SubPost.DeplacementsDomicileTravail,
@@ -207,4 +207,8 @@ export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = 
   [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: SubPost.UtilisationEnDependance,
   [SubPost.TeletravailSalaries]: SubPost.Electricite,
   [SubPost.TeletravailBenevoles]: SubPost.Electricite,
+}
+
+export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
+  return subPostTiltToBcSubPostMapping[subPost] ?? subPost
 }
