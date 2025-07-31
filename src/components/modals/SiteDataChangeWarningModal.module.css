@@ -28,5 +28,5 @@
 .questionAnswer {
   background-color: var(--mui-palette-error-light);
   border-radius: 0.25rem;
-  border-left: 0.2rem solid var(--mui-palette-info-main);
+  border-left: 0.2rem solid var(--mui-palette-error-main);
 }
