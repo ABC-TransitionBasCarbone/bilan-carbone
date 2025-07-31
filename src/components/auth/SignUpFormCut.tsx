@@ -41,6 +41,7 @@ const SignUpFormCut = () => {
     reValidateMode: 'onChange',
     defaultValues: {
       email: searchParams.get('email') ?? '',
+      siretOrCNC: '',
     },
   })
 
@@ -103,12 +104,13 @@ const SignUpFormCut = () => {
             value: cnc.numeroAuto ?? '',
           }))}
           name="siretOrCNC"
-          inputValue={siretOrCNC}
           label={t('siretOrCNC')}
           helperText={t('siretOrCNCPlaceholder')}
           freeSolo
-          onInputChange={(_, siretOrCNC) => {
-            setSiretOrCNC(siretOrCNC)
+          disableClearable
+          onInputChange={(_, value) => {
+            setSiretOrCNC(value)
+            setValue('siretOrCNC', value)
           }}
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
