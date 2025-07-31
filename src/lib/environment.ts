@@ -1,3 +1,4 @@
+import { Environment } from '@prisma/client'
 import { z } from 'zod'
 
 export const SharedEmailEnvSchema = z.object({
@@ -10,9 +11,11 @@ export const SharedEmailEnvSchema = z.object({
 
 export type SharedEmailEnv = z.infer<typeof SharedEmailEnvSchema>
 
-export const sharedEmailEnv = SharedEmailEnvSchema.parse(process.env)
+// const rawEnv = () => {
+//   return process.env
+// }
 
-import { Environment } from '@prisma/client'
+export const sharedEmailEnv = SharedEmailEnvSchema.parse(process.env)
 
 const keys = ['MAIL_HOST', 'MAIL_PORT', 'MAIL_USER', 'MAIL_PASSWORD', 'BASE_URL', 'SUPPORT_EMAIL'] as const
 
