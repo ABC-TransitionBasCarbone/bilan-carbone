@@ -141,6 +141,15 @@ const cutTheme = createTheme(base, {
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& input': {
+            backgroundColor: '#ffffff',
+          },
+        },
+      },
+    },
   },
   custom: {
     box: {

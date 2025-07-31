@@ -147,6 +147,15 @@ const theme = createTheme(base, {
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& input': {
+            backgroundColor: '#ffffff',
+          },
+        },
+      },
+    },
   },
   custom: {
     palette: {
