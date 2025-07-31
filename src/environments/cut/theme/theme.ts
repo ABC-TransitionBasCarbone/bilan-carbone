@@ -145,7 +145,10 @@ const cutTheme = createTheme(base, {
       styleOverrides: {
         root: {
           '& input': {
-            backgroundColor: '#ffffff',
+            '&:-webkit-autofill': {
+              WebkitBoxShadow: '0 0 0 1000px #ffffff inset',
+              WebkitTextFillColor: 'inherit',
+            },
           },
         },
       },
