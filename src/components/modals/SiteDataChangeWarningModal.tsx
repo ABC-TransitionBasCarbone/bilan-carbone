@@ -16,7 +16,20 @@ const SiteDataChangeWarningModal = ({ isOpen, onClose, onConfirm, questionsBySub
   const t = useTranslations('study.perimeter.siteDataChangeModal')
   const tPost = useTranslations('emissionFactors.post')
 
-  const affectedSubPostsCount = Object.keys(questionsBySubPost).length
+  // Filter to only show subposts and questions that have answers
+  const filteredQuestionsBySubPost: Record<
+    string,
+    Array<{ id: string; label: string; idIntern: string; answer?: string }>
+  > = Object.fromEntries(
+    Object.entries(questionsBySubPost)
+      .map(([subPost, questions]) => [
+        subPost,
+        questions.filter((question) => question.answer && question.answer.trim() !== ''),
+      ])
+      .filter(([, questions]) => questions.length > 0),
+  )
+
+  const affectedSubPostsCount = Object.keys(filteredQuestionsBySubPost).length
 
   return (
     <Modal
@@ -45,19 +58,17 @@ const SiteDataChangeWarningModal = ({ isOpen, onClose, onConfirm, questionsBySub
           <div>
             <p className="mb1">{t('affectedCalculations')}</p>
 
-            {Object.keys(questionsBySubPost).length > 0 && (
+            {Object.keys(filteredQuestionsBySubPost).length > 0 && (
               <div className={`my2 p1 ${styles.warningSection}`}>
                 <ul>
-                  {Object.entries(questionsBySubPost).map(([subPost, questions]) => (
+                  {Object.entries(filteredQuestionsBySubPost).map(([subPost, questions]) => (
                     <li key={subPost}>
                       <strong>{tPost(subPost)}</strong>
                       <ul className="mt-2 ml1">
                         {questions.map((question) => (
                           <li key={question.id} className="mb-2">
                             {question.label}
-                            {question.answer && (
-                              <div className={classNames(styles.questionAnswer, 'mb1 mt-2 p-2')}>{question.answer}</div>
-                            )}
+                            <div className={classNames(styles.questionAnswer, 'mb1 mt-2 p-2')}>{question.answer}</div>
                           </li>
                         ))}
                       </ul>

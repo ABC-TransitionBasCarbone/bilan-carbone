@@ -164,13 +164,19 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
               const questionsBySubPostResponse = await getQuestionsGroupedBySubPost(affectedQuestionIds, studySite)
               const questionsBySubPost = questionsBySubPostResponse.success ? questionsBySubPostResponse.data : {}
 
-              setPendingSiteChanges({
-                changedFields,
-                questionsBySubPost,
-                pendingData: data,
-              })
-              setShowSiteDataWarning(true)
-              return
+              const hasAnswers = Object.values(questionsBySubPost).some((questions) =>
+                questions.some((question) => question.answer && question.answer.trim() !== ''),
+              )
+
+              if (hasAnswers) {
+                setPendingSiteChanges({
+                  changedFields,
+                  questionsBySubPost,
+                  pendingData: data,
+                })
+                setShowSiteDataWarning(true)
+                return
+              }
             }
           }
         }
@@ -191,6 +197,15 @@ const StudyRights = ({ user, study, editionDisabled, emissionFactorSources }: Pr
   const handleSiteDataWarningCancel = () => {
     setShowSiteDataWarning(false)
     setPendingSiteChanges(null)
+    if (originalValues && siteData) {
+      form.reset({
+        numberOfSessions: originalValues.numberOfSessions,
+        numberOfTickets: originalValues.numberOfTickets,
+        numberOfOpenDays: originalValues.numberOfOpenDays,
+        distanceToParis: originalValues.distanceToParis,
+        numberOfProgrammedFilms: originalValues.numberOfProgrammedFilms,
+      })
+    }
   }
 
   const handleSiteDataWarningConfirm = async () => {
