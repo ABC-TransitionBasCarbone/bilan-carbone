@@ -14,6 +14,9 @@ jest.mock('../auth', () => ({ auth: jest.fn() }))
 
 jest.mock('./study', () => ({ canReadStudy: jest.fn() }))
 jest.mock('../../utils/study', () => ({ getAccountRoleOnStudy: jest.fn() }))
+jest.mock('next-intl/server', () => ({
+  getTranslations: jest.fn(() => (key: string) => key),
+}))
 
 const mockCanReadStudy = studyModule.canReadStudy as jest.Mock
 const mockGetAccountRoleOnStudy = studyUtilsModule.getAccountRoleOnStudy as jest.Mock

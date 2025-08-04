@@ -21,6 +21,9 @@ jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('../serverFunctions/emissionFactor', () => ({ getEmissionFactorsByIds: jest.fn() }))
+jest.mock('next-intl/server', () => ({
+  getTranslations: jest.fn(() => (key: string) => key),
+}))
 
 const mockedStudyId = 'mocked-study-id'
 
