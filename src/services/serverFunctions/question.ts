@@ -40,6 +40,7 @@ import {
 } from '@/db/question'
 import { FullStudy, getStudyById } from '@/db/study'
 import { isTableResponse } from '@/typeguards/question'
+import { findTableChildren, hasCompleteTableRow, shouldHideConditionalQuestion } from '@/utils/question'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   calculateTableEmissions,
@@ -508,6 +509,7 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
 
 export type QuestionStats = { answered: number; total: number }
 export type StatsResult = Record<CutPost, Partial<Record<SubPost, QuestionStats>>>
+type CompletedTableInfo = Partial<Record<SubPost, number>>
 
 export const getQuestionProgressBySubPostPerPost = async ({
   study,
@@ -530,6 +532,7 @@ export const getQuestionProgressBySubPostPerPost = async ({
         subPost: { in: cutSubPosts },
       },
       select: {
+        idIntern: true,
         subPost: true,
         type: true,
       },
@@ -570,52 +573,67 @@ export const getQuestionProgressBySubPostPerPost = async ({
       },
     })
 
-    const answeredCountBySubPost = answers.reduce<Partial<Record<SubPost, number>>>((acc, answer) => {
+    const answeredCountBySubPost: Partial<Record<SubPost, number>> = {}
+    const completedTablesInfo: CompletedTableInfo = {}
+
+    for (const answer of answers) {
       const { response, question } = answer
-      const { type, subPost, idIntern } = question
-
-      const isConditional = Object.keys(emissionFactorMap).find((key) => {
-        const listQuestionWithConditionalResponse = emissionFactorMap[key].conditionalRules?.map(
-          ({ idIntern: idInternRule, expectedAnswers }) => {
-            /**
-             * Response in DB is '"[X,…]"'
-             */
-            if (typeof response === 'string' && response.startsWith('[')) {
-              /**
-               * Test if response is in conditional rules
-               */
-              const parsedValue = JSON.parse(response) as string[]
-              const result = parsedValue.every((res) => !expectedAnswers.includes(res))
-              return idInternRule === idIntern && result
-            }
-            return idInternRule === idIntern && !expectedAnswers.includes(response as string)
-          },
-        )
-        /**
-         * If question with conditional response not display subquestion
-         */
-        return listQuestionWithConditionalResponse?.filter((t) => t).length ?? 0 > 0
-      })
-
-      if (isConditional && totalCountBySubPost[subPost]) {
-        totalCountBySubPost[subPost] -= 1
-      }
+      const { type, subPost } = question
 
       if (type === QuestionType.TABLE && isTableResponse(response)) {
-        for (const row of response.rows) {
-          const data = row.data
-          const nonEmptyFields = Object.values(data).filter(
-            (value) => value !== null && value !== undefined && value !== '',
-          )
-          acc[subPost] = (acc[subPost] || 0) + nonEmptyFields.length
+        // For tables (fixed or non-fixed), if at least one row is complete, count the table and its children as answered
+        if (hasCompleteTableRow(response)) {
+          const tableChildren = findTableChildren(question, questions)
+          answeredCountBySubPost[subPost] = (answeredCountBySubPost[subPost] || 0) + tableChildren.length
+          completedTablesInfo[subPost] = (completedTablesInfo[subPost] || 0) + tableChildren.length
         }
       } else {
         if (typeof response === 'string' && response.trim() !== '') {
-          acc[subPost] = (acc[subPost] || 0) + 1
+          answeredCountBySubPost[subPost] = (answeredCountBySubPost[subPost] || 0) + 1
         }
       }
-      return acc
-    }, {})
+    }
+
+    // Adjust total count by removing questions that should be hidden due to conditional rules
+    for (const answer of answers) {
+      const { response, question } = answer
+      const { idIntern } = question
+
+      for (const [conditionalQuestionId, emissionInfo] of Object.entries(emissionFactorMap)) {
+        if (!emissionInfo.conditionalRules) {
+          continue
+        }
+
+        for (const { idIntern: parentQuestionId, expectedAnswers } of emissionInfo.conditionalRules) {
+          if (parentQuestionId === idIntern) {
+            const shouldHide = shouldHideConditionalQuestion(response as string, expectedAnswers)
+
+            if (shouldHide) {
+              const conditionalQuestion = questions.find((q) => q.idIntern === conditionalQuestionId)
+              if (conditionalQuestion) {
+                const conditionalSubPost = conditionalQuestion.subPost
+
+                if (conditionalQuestion.type === QuestionType.TABLE) {
+                  // For TABLE questions, hide all their children
+                  const tableChildren = findTableChildren(conditionalQuestion, questions)
+
+                  for (let i = 0; i < tableChildren.length; i++) {
+                    if (totalCountBySubPost[conditionalSubPost] && totalCountBySubPost[conditionalSubPost]! > 0) {
+                      totalCountBySubPost[conditionalSubPost] -= 1
+                    }
+                  }
+                } else {
+                  // For non-TABLE questions, reduce count by 1
+                  if (totalCountBySubPost[conditionalSubPost] && totalCountBySubPost[conditionalSubPost]! > 0) {
+                    totalCountBySubPost[conditionalSubPost] -= 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 
     const result: StatsResult = {} as StatsResult
 
@@ -623,9 +641,19 @@ export const getQuestionProgressBySubPostPerPost = async ({
       result[cutPost] = {} as Partial<Record<SubPost, QuestionStats>>
 
       for (const subPost of subPostsByPost[cutPost]) {
+        let total = totalCountBySubPost[subPost] ?? 0
+        const answered = answeredCountBySubPost[subPost] ?? 0
+
+        // Adjust total count if a table is complete - treat table + children as 1 unit
+        const completedTableChildren = completedTablesInfo[subPost]
+        if (completedTableChildren && completedTableChildren > 0) {
+          // When table is complete: answered stays the same, but total = answered (to get 100%)
+          total = answered
+        }
+
         result[cutPost][subPost] = {
-          total: totalCountBySubPost[subPost] ?? 0,
-          answered: answeredCountBySubPost[subPost] ?? 0,
+          total,
+          answered,
         }
       }
     }
