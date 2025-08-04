@@ -54,13 +54,13 @@ const AllPostsInfography = ({ studySiteId, study, data, user }: Props) => {
     return Object.values(CutPost).map((cutPost) => {
       const subPostStats = questionProgress[cutPost] ?? {}
       let allAnswered = 0
-      let allTotal = 1
+      let allTotal = 0
       for (const stats of Object.values(subPostStats)) {
         allAnswered += stats?.answered ?? 0
         allTotal += stats?.total ?? 0
       }
 
-      const completionRate = (allAnswered / allTotal) * 100
+      const completionRate = allTotal > 0 ? (allAnswered / allTotal) * 100 : 0
 
       const unit = tUnits(study.resultsUnit)
       const dataByPost = data.find((d) => d.post === cutPost)

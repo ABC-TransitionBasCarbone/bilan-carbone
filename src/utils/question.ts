@@ -77,3 +77,35 @@ export const areQuestionsLinked = (
 
   return false
 }
+
+export const hasCompleteTableRow = (response: { rows: Array<{ data: Record<string, unknown> }> }): boolean => {
+  return response.rows.some((row) => {
+    const data = row.data
+    const fieldValues = Object.values(data)
+    return fieldValues.length > 0 && fieldValues.every((value) => value !== null && value !== undefined && value !== '')
+  })
+}
+
+export const findTableChildren = (
+  parentQuestion: { idIntern: string; type: string },
+  allQuestions: Array<{ idIntern: string; type: string }>,
+): Array<{ idIntern: string; type: string }> => {
+  const parentBase = parentQuestion.idIntern.replace(/^10-/, '')
+  return allQuestions.filter(
+    (q) =>
+      q.type !== 'TABLE' &&
+      q.idIntern !== parentQuestion.idIntern &&
+      q.idIntern.match(/^\d+-/) &&
+      !q.idIntern.startsWith('10-') &&
+      q.idIntern.replace(/^\d+-/, '') === parentBase,
+  )
+}
+
+export const shouldHideConditionalQuestion = (parentAnswer: string, expectedAnswers: string[]): boolean => {
+  if (typeof parentAnswer === 'string' && parentAnswer.startsWith('[')) {
+    const parsedValue = JSON.parse(parentAnswer) as string[]
+    return !parsedValue.some((res) => expectedAnswers.includes(res))
+  } else {
+    return !expectedAnswers.includes(parentAnswer)
+  }
+}
