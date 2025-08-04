@@ -5,7 +5,7 @@ import {
   getEmissionSourcesTotalMonetaryCo2,
   sumEmissionSourcesUncertainty,
 } from '../emissionSource'
-import { BCPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
+import { BCPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 export type ResultsByPost = {
@@ -40,6 +40,7 @@ export const computeResultsByPost = (
   validatedOnly: boolean = true,
   postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost = BCPost,
   environment: Environment | undefined,
+  convertToBc: boolean = false,
 ) => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
 
@@ -49,7 +50,13 @@ export const computeResultsByPost = (
       const subPosts = subPostsByPost[post]
         .filter((subPost) => filterWithDependencies(subPost, withDependencies))
         .map((subPost) => {
-          const emissionSources = siteEmissionSources.filter((emissionSource) => emissionSource.subPost === subPost)
+          const emissionSources = siteEmissionSources
+            .map((emissionSource) => {
+              return convertToBc
+                ? { ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }
+                : emissionSource
+            })
+            .filter((emissionSource) => emissionSource.subPost === subPost)
           const validatedEmissionSources = emissionSources.filter((emissionSource) => emissionSource.validated)
 
           return {

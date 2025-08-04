@@ -21,7 +21,8 @@
     "Beges": "Regulatory GHG Assesment",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
-    "developmentFile": "File under development"
+    "developmentFile": "File under development",
+    "convertToBc": "Carbon Assessment®"
   },
   "categorisations": {
     "Operated": "Operated",

@@ -3,5 +3,8 @@
     "form": {
       "activate": "Créer mon compte"
     }
+  },
+  "exports": {
+    "consolidated": "Tilt®"
   }
 }

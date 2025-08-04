@@ -3,11 +3,12 @@ import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
+import { hasAccessToBcExport } from '@/services/permissions/environment'
 import { downloadStudyResults } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { ControlMode, Export, ExportRule } from '@prisma/client'
+import { ControlMode, Environment, Export, ExportRule } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
@@ -36,7 +37,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
 
   const { environment } = useAppEnvironmentStore()
   const [withDependencies, setWithDependencies] = useState(true)
-  const [type, setType] = useState<Export | 'consolidated'>('consolidated')
+  const [type, setType] = useState<Export | 'consolidated' | 'convertToBc'>('consolidated')
   const exports = useMemo(() => study.exports, [study.exports])
 
   const { studySite, setSite } = useStudySite(study, true)
@@ -54,12 +55,15 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
             label={t('type')}
             aria-labelledby="result-type-selector-label"
             onChange={(event) => {
-              setType(event.target.value as Export | 'consolidated')
+              setType(event.target.value as Export | 'consolidated' | 'convertToBc')
             }}
             data-testid="result-type-select"
-            disabled={exports.length === 0}
+            disabled={exports.length === 0 && !hasAccessToBcExport(environment || Environment.BC)}
           >
             <MenuItem value="consolidated">{tExport('consolidated')}</MenuItem>
+            {hasAccessToBcExport(environment || Environment.BC) && (
+              <MenuItem value="convertToBc">{tExport('convertToBc')}</MenuItem>
+            )}
             {exports.map((exportItem) => (
               <MenuItem
                 key={exportItem.type}
@@ -94,7 +98,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
         >
           <DownloadIcon />
         </Button>
-        {type !== 'consolidated' && (
+        {type !== 'consolidated' && type !== 'convertToBc' && (
           <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
         )}
         {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
@@ -114,6 +118,15 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
             studySite={studySite}
             withDependencies={withDependencies}
             validatedOnly={validatedOnly}
+          />
+        )}
+        {type === 'convertToBc' && (
+          <ConsolidatedResults
+            study={study}
+            studySite={studySite}
+            withDependencies={withDependencies}
+            validatedOnly={validatedOnly}
+            convertToBc
           />
         )}
         {type === Export.Beges && (

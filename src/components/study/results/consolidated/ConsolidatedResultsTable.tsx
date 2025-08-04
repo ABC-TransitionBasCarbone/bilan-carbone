@@ -10,6 +10,7 @@ import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { Environment } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -23,6 +24,7 @@ interface Props {
   hiddenUncertainty?: boolean
   expandAll?: boolean
   hideExpandIcons?: boolean
+  convertToBc?: boolean
 }
 
 const ConsolidatedResultsTable = ({
@@ -32,6 +34,7 @@ const ConsolidatedResultsTable = ({
   hiddenUncertainty,
   expandAll,
   hideExpandIcons,
+  convertToBc,
 }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
@@ -112,14 +115,21 @@ const ConsolidatedResultsTable = ({
     if (!environment) {
       return []
     }
+    let forcedEnvironment = environment
+
+    if (convertToBc) {
+      forcedEnvironment = Environment.BC
+    }
+
     return computeResultsByPost(
       study,
       tPost,
       studySite,
       withDependencies,
       validatedOnly,
-      environmentPostMapping[environment],
-      environment,
+      environmentPostMapping[forcedEnvironment],
+      forcedEnvironment,
+      convertToBc,
     )
   }, [environment, study, tPost, studySite, withDependencies, validatedOnly])
 
