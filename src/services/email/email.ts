@@ -82,7 +82,7 @@ export const sendActivationRequest = async (
   userToActivate: string,
   env: Environment = Environment.BC,
 ) => {
-  return sendEmail(env, toEmailList, await tSubject('activation'), 'activation-request', {
+  return sendEmail(env, toEmailList, await tSubject('activationRequest'), 'activation-request', {
     support: sharedEmailEnv.MAIL_USER,
     emailToActivate,
     userToActivate,
