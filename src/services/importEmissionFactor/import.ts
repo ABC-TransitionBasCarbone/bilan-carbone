@@ -1,6 +1,14 @@
 import { getSourceLatestImportVersionId } from '@/db/study'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
-import { EmissionFactorPartType, EmissionFactorStatus, Import, Prisma, SubPost, Unit } from '@prisma/client'
+import {
+  EmissionFactorPartType,
+  EmissionFactorStatus,
+  Environment,
+  Import,
+  Prisma,
+  SubPost,
+  Unit,
+} from '@prisma/client'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
 
@@ -394,14 +402,28 @@ export const cleanImport = async (transaction: Prisma.TransactionClient, version
 
 export const addSourceToStudies = async (source: Import, transaction: Prisma.TransactionClient) => {
   const [studies, importVersion] = await Promise.all([
-    transaction.study.findMany({ select: { id: true } }),
+    transaction.study.findMany({
+      select: {
+        id: true,
+        createdBy: {
+          select: { environment: true },
+        },
+      },
+    }),
     getSourceLatestImportVersionId(source, transaction),
   ])
 
   if (studies.length && !!importVersion) {
-    await transaction.studyEmissionFactorVersion.createMany({
-      data: studies.map((study) => ({ studyId: study.id, source, importVersionId: importVersion.id })),
-      skipDuplicates: true,
+    const filteredStudies = studies.filter((study) => {
+      const environment = study.createdBy.environment
+      return environment === Environment.CUT || source !== Import.CUT
     })
+
+    if (filteredStudies.length > 0) {
+      await transaction.studyEmissionFactorVersion.createMany({
+        data: filteredStudies.map((study) => ({ studyId: study.id, source, importVersionId: importVersion.id })),
+        skipDuplicates: true,
+      })
+    }
   }
 }
