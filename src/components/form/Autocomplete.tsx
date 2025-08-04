@@ -33,7 +33,7 @@ export const FormAutocomplete = <T extends FieldValues>({
   translation,
   helperText,
   ...autocompleteProps
-}: Props<T> & Omit<AutocompleteProps<string | Option, false, false, boolean>, 'renderInput'>) => {
+}: Props<T> & Omit<AutocompleteProps<string | Option, false, boolean, boolean>, 'renderInput'>) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
   return (
     <Controller
