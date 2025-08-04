@@ -88,12 +88,15 @@ const getAlpha = (emission: number | null, confidenceInterval: number[] | null) 
   return (confidenceInterval[1] - emission) / emission
 }
 
-const getEmissionSourceEmission = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
+const getEmissionSourceEmission = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  environment?: Environment,
+) => {
   if (!emissionSource.emissionFactor || emissionSource.value === null) {
     return null
   }
 
-  let emission = getEmissionFactorValue(emissionSource.emissionFactor) * emissionSource.value
+  let emission = getEmissionFactorValue(emissionSource.emissionFactor, environment) * emissionSource.value
   if (
     [...subPostsByPost[Post.Immobilisations], SubPost.Electromenager, SubPost.Batiment].includes(
       emissionSource.subPost,
@@ -106,15 +109,21 @@ const getEmissionSourceEmission = (emissionSource: (FullStudy | StudyWithoutDeta
   return emission
 }
 
-const getEmissionSourceMonetaryEmission = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
+const getEmissionSourceMonetaryEmission = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  environment?: Environment,
+) => {
   if (!emissionSource.emissionFactor || !emissionSource.emissionFactor.isMonetary) {
     return null
   }
-  return getEmissionSourceEmission(emissionSource)
+  return getEmissionSourceEmission(emissionSource, environment)
 }
 
-export const getEmissionResults = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
-  const emission = getEmissionSourceEmission(emissionSource)
+export const getEmissionResults = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  environment?: Environment,
+) => {
+  const emission = getEmissionSourceEmission(emissionSource, environment)
   if (emission === null) {
     return null
   }
@@ -145,9 +154,12 @@ export const sumStandardDeviations = (standardDeviations: { value: number; stand
   )
 }
 
-export const sumEmissionSourcesUncertainty = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources']) => {
+export const sumEmissionSourcesUncertainty = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'],
+  environment?: Environment,
+) => {
   const results = emissionSource
-    .map(getEmissionResults)
+    .map((source) => getEmissionResults(source, environment))
     .filter((result) => result !== null)
     .map((result) => ({
       value: result.emission,
@@ -157,14 +169,29 @@ export const sumEmissionSourcesUncertainty = (emissionSource: (FullStudy | Study
   return sumStandardDeviations(results)
 }
 
-export const getEmissionSourcesTotalCo2 = (emissionSources: FullStudy['emissionSources']) =>
-  emissionSources.reduce((sum, emissionSource) => sum + (getEmissionSourceEmission(emissionSource) || 0), 0)
+export const getEmissionSourcesTotalCo2 = (
+  emissionSources: FullStudy['emissionSources'],
+  environment: Environment | undefined,
+) =>
+  emissionSources.reduce(
+    (sum, emissionSource) => sum + (getEmissionSourceEmission(emissionSource, environment) || 0),
+    0,
+  )
 
-export const getEmissionSourcesTotalMonetaryCo2 = (emissionSources: FullStudy['emissionSources']) =>
-  emissionSources.reduce((sum, emissionSource) => sum + (getEmissionSourceMonetaryEmission(emissionSource) || 0), 0)
+export const getEmissionSourcesTotalMonetaryCo2 = (
+  emissionSources: FullStudy['emissionSources'],
+  environment?: Environment,
+) =>
+  emissionSources.reduce(
+    (sum, emissionSource) => sum + (getEmissionSourceMonetaryEmission(emissionSource, environment) || 0),
+    0,
+  )
 
-export const getEmissionResultsCut = (emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0]) => {
-  const result = getEmissionResults(emissionSource)
+export const getEmissionResultsCut = (
+  emissionSource: (FullStudy | StudyWithoutDetail)['emissionSources'][0],
+  environment?: Environment,
+) => {
+  const result = getEmissionResults(emissionSource, environment)
   if (result?.emission && emissionSource.depreciationPeriod && emissionSource.depreciationPeriod < 5) {
     result.emission = result.emission / 5
   }

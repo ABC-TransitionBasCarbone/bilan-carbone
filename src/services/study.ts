@@ -90,6 +90,7 @@ const getEmissionSourcesRows = (
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
+  environment?: Environment,
 ) => {
   const initCols = ['site']
   if (type === 'Post') {
@@ -147,7 +148,7 @@ const getEmissionSourcesRows = (
           emissionSource.validated ? t('yes') : t('no'),
           emissionSource.name || '',
           emissionSource.caracterisation ? tCaracterisations(emissionSource.caracterisation) : '',
-          ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor) : 0)) /
+          ((emissionSource.value || 0) * (emissionFactor ? getEmissionFactorValue(emissionFactor, environment) : 0)) /
             STUDY_UNIT_VALUES[resultsUnit] /
             (withDeprecation ? emissionSource.depreciationPeriod || 1 : 1) || '0',
           withDeprecation ? emissionSource.depreciationPeriod || '1' : ' ',
@@ -161,7 +162,7 @@ const getEmissionSourcesRows = (
           getQuality(getQualityRating(emissionSource), tQuality),
           emissionSource.comment || '',
           emissionFactor?.metaData?.title || t('noFactor'),
-          emissionFactor ? getEmissionFactorValue(emissionFactor) : '',
+          emissionFactor ? getEmissionFactorValue(emissionFactor, environment) : '',
           emissionFactor?.unit ? `${tResultUnits(StudyResultUnit.K)}/${tUnit(emissionFactor.unit)}` : '',
           emissionFactor ? getQuality(getQualityRating(emissionFactor), tQuality) : '',
           emissionFactor?.source || '',
@@ -203,6 +204,7 @@ const getEmissionSourcesCSVContent = (
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
   type?: 'Post' | 'Study',
+  environment?: Environment,
 ) => {
   const { columns, rows } = getEmissionSourcesRows(
     emissionSources,
@@ -215,19 +217,20 @@ const getEmissionSourcesCSVContent = (
     tUnit,
     tResultUnits,
     type,
+    environment,
   )
 
   const emptyFieldsCount = type === 'Study' ? 4 : type === 'Post' ? 3 : 2
   const emptyFields = (count: number) => Array(count).fill('')
 
-  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources) / STUDY_UNIT_VALUES[resultsUnit]
+  const totalEmissions = getEmissionSourcesTotalCo2(emissionSources, environment) / STUDY_UNIT_VALUES[resultsUnit]
   const totalRow = [t('total'), ...emptyFields(emptyFieldsCount + 1), totalEmissions].join(';')
 
   const qualities = emissionSources.map((emissionSource) => getStandardDeviation(emissionSource))
   const quality = getQuality(getStandardDeviationRating(sumQualities(qualities)), tQuality)
   const qualityRow = [t('quality'), ...emptyFields(emptyFieldsCount + 1), quality].join(';')
 
-  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources)
+  const uncertainty = getEmissionSourcesGlobalUncertainty(emissionSources, environment)
   const uncertaintyRow = [
     t('uncertainty'),
     ...emptyFields(emptyFieldsCount),
@@ -248,6 +251,7 @@ export const downloadStudyPost = async (
   tQuality: ReturnType<typeof useTranslations>,
   tUnit: ReturnType<typeof useTranslations>,
   tResultUnits: ReturnType<typeof useTranslations>,
+  environment?: Environment,
 ) => {
   const emissionFactorIds = emissionSources
     .map((emissionSource) => emissionSource.emissionFactor?.id)
@@ -267,6 +271,7 @@ export const downloadStudyPost = async (
     tUnit,
     tResultUnits,
     'Post',
+    environment,
   )
 
   downloadCSV(csvContent, fileName)
@@ -350,6 +355,7 @@ export const formatConsolidatedStudyResultsForExport = (
       true,
       validatedEmissionSourcesOnly,
       environmentPostMapping[environment],
+      environment,
     )
     dataForExport.push([site.name])
     dataForExport.push(getFormattedHeadersForEnv(environment, tStudy, tUnits, study.resultsUnit))

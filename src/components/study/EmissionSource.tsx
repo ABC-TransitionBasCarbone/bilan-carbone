@@ -12,6 +12,7 @@ import {
 } from '@/services/serverFunctions/emissionSource.command'
 import { EmissionSourcesStatus, getEmissionSourceStatus } from '@/services/study'
 import { getStandardDeviationRating } from '@/services/uncertainty'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber, formatNumber } from '@/utils/number'
 import { hasEditionRights, STUDY_UNIT_VALUES } from '@/utils/study'
@@ -56,6 +57,7 @@ const EmissionSource = ({
   withoutDetail,
   caracterisations,
 }: Props & (StudyProps | StudyWithoutDetailProps)) => {
+  const { environment } = useAppEnvironmentStore()
   const ref = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -146,7 +148,7 @@ const EmissionSource = ({
   }, [emissionSource.emissionFactor, emissionFactors])
 
   const status = useMemo(() => getEmissionSourceStatus(study, emissionSource), [study, emissionSource])
-  const emissionResults = useMemo(() => getEmissionResults(emissionSource), [emissionSource])
+  const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
 
   const isFromOldImport = useMemo(
     () =>
@@ -215,7 +217,9 @@ const EmissionSource = ({
             {selectedFactor && (
               <div className={classNames(styles.emissionFactor, 'flex-col justify-center align-center text-center')}>
                 <>
-                  <p className="text-center">{formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))}</p>
+                  <p className="text-center">
+                    {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
+                  </p>
                   <p className="text-center">
                     {tResultstUnits(StudyResultUnit.K)}/
                     {selectedFactor.unit === Unit.CUSTOM
@@ -295,6 +299,7 @@ const EmissionSource = ({
                 isFromOldImport={isFromOldImport}
                 currentBEVersion={currentBEVersion}
                 advanced={study.level === Level.Advanced}
+                environment={environment}
               />
             ) : (
               <EmissionSourceForm
@@ -308,6 +313,7 @@ const EmissionSource = ({
                 emissionFactors={emissionFactors}
                 subPost={subPost}
                 update={update}
+                environment={environment}
                 caracterisations={caracterisations}
                 mandatoryCaracterisation={study.exports.length > 0}
                 status={status}

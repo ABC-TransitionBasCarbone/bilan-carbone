@@ -5,6 +5,7 @@ import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
 import { CutPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ThemeProvider } from '@mui/material/styles'
@@ -30,6 +31,7 @@ interface Props {
 }
 
 const PDFSummary = ({ study }: Props) => {
+  const { environment } = useAppEnvironmentStore()
   const tPost = useTranslations('emissionFactors.post')
   const tStudy = useTranslations('study.results')
   const tPdf = useTranslations('study.pdf')
@@ -46,7 +48,15 @@ const PDFSummary = ({ study }: Props) => {
         const sitesData: SiteData[] = []
 
         for (const studySite of study.sites) {
-          const siteComputedResults = computeResultsByPost(study, tPost, studySite.id, true, false, CutPost)
+          const siteComputedResults = computeResultsByPost(
+            study,
+            tPost,
+            studySite.id,
+            true,
+            false,
+            CutPost,
+            environment,
+          )
           const siteResults = siteComputedResults
             .filter((result) => result.post !== 'total')
             .map((result) => ({

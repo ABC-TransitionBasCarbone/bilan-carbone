@@ -24,3 +24,5 @@ export const hasAccessToCreateEmissionSourceTag = async (environment: Environmen
 
 export const hasAccessToStudyFlowExample = (environment: Environment) =>
   ([Environment.TILT] as Environment[]).includes(environment)
+
+export const hasWasteImpact = (environment: Environment) => environment !== Environment.CUT

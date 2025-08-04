@@ -3,6 +3,7 @@ import { useListPosts } from '@/hooks/useListPosts'
 import { BCPost, CutPost, Post } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
@@ -21,12 +22,13 @@ export const useChartComputations = ({
   validatedOnly = false,
   postValues,
 }: UseChartComputationsParams) => {
+  const { environment } = useAppEnvironmentStore()
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
 
   const resultsByPost = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, postValues),
-    [study, studySite, tPost, validatedOnly, postValues],
+    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, postValues, environment),
+    [study, studySite, tPost, validatedOnly, postValues, environment],
   )
 
   const chartFormatter = useCallback(

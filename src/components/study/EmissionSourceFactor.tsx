@@ -68,6 +68,7 @@ const EmissionSourceFactor = ({
   isFromOldImport,
   currentBEVersion,
 }: Props) => {
+  const { environment } = useAppEnvironmentStore()
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
   const tResultUnits = useTranslations('study.results.units')
@@ -78,7 +79,6 @@ const EmissionSourceFactor = ({
   const [value, setValue] = useState('')
   const [results, setResults] = useState<EmissionFactorWithMetaData[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
-  const { environment } = useAppEnvironmentStore()
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -183,7 +183,7 @@ const EmissionSourceFactor = ({
                   result.metaData?.frontiere,
                   result.location,
                   result.metaData?.location,
-                  formatEmissionFactorNumber(getEmissionFactorValue(result)),
+                  formatEmissionFactorNumber(getEmissionFactorValue(result, environment)),
                 ])}{' '}
                 {tResultUnits(StudyResultUnit.K)}/
                 {result.unit === Unit.CUSTOM ? result.customUnit : tUnits(result.unit || '')}

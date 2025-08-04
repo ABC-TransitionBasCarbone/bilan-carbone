@@ -119,6 +119,7 @@ const ConsolidatedResultsTable = ({
       withDependencies,
       validatedOnly,
       environmentPostMapping[environment],
+      environment,
     )
   }, [environment, study, tPost, studySite, withDependencies, validatedOnly])
 
