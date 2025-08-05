@@ -96,37 +96,6 @@ export const StyledBegesTable = styled('table')(({ theme }) => ({
           ]),
         ),
 
-        '&.category-cell[data-category="total"]': {
-          backgroundColor: theme.palette.grey[100],
-        },
-
-        // Total column with darker background per category
-        ...Object.fromEntries(
-          ([1, 2, 3, 4, 5, 6] as const).map((i) => [
-            `&.total-column[data-category="${i}"]`,
-            {
-              backgroundColor:
-                i === 1
-                  ? '#d14a43' // darker red
-                  : i === 2
-                    ? '#239d7a' // darker green
-                    : i === 3
-                      ? '#b07b6c' // darker brown
-                      : i === 4
-                        ? '#3d64a0' // darker blue
-                        : i === 5
-                          ? '#2591ac' // darker cyan
-                          : i === 6
-                            ? '#494a4c' // darker gray
-                            : theme.custom.beges.categoryLight[i],
-            },
-          ]),
-        ),
-
-        '&.total-column[data-category="total"]': {
-          backgroundColor: theme.palette.grey[200],
-        },
-
         ...Object.fromEntries(
           ([1, 2, 3, 4, 5, 6] as const).map((i) => [
             `&.post-cell[data-category="${i}"]`,
