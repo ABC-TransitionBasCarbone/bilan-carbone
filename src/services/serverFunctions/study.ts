@@ -591,6 +591,7 @@ export const clearInvalidCharacterizations = async (studyId: string, newControlM
         const validCaracterisations = getCaracterisationsBySubPost(
           emissionSource.subPost,
           exportsWithNewControlMode || [],
+          session.user.environment,
         )
         const isValidForNewControlMode = validCaracterisations.includes(
           emissionSource.caracterisation as EmissionSourceCaracterisation,
