@@ -291,13 +291,18 @@ export const getUserFeedbackDate = async (accountId: string) =>
 export const updateUserFeedbackDate = async (accountId: string, feedbackDate: Date) =>
   prismaClient.account.update({ where: { id: accountId }, data: { feedbackDate } })
 
-export const addUser = async (newMember: Prisma.UserCreateInput & { role?: Exclude<Role, 'SUPER_ADMIN'> }) => {
+export const addUser = async (
+  newMember: Omit<Prisma.UserCreateInput, 'accounts'> & {
+    accounts: { create: Omit<Prisma.AccountCreateInput, 'user'> }
+    role?: Exclude<Role, 'SUPER_ADMIN'>
+  },
+) => {
   const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
   if (deactivatedFeaturesRestrictions?.active) {
-    const createAccount = Array.isArray(newMember?.accounts?.create) ? undefined : newMember?.accounts?.create
+    const createAccount = newMember.accounts.create
 
     const notAllowedEnvironments =
-      createAccount?.environment === undefined ||
+      createAccount.environment === undefined ||
       deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(createAccount.environment)
 
     if (notAllowedEnvironments) {
