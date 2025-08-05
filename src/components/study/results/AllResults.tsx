@@ -92,6 +92,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
               tBeges,
               tUnits,
               environment,
+              type === 'convertToBc',
             )
           }
           title={t('download')}

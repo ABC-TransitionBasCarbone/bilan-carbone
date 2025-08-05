@@ -139,7 +139,6 @@ const getEmissionSourcesRows = (
         initCols.push(tPost(emissionSource.subPost))
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
-      console.log('CONSOLE', emissionSourceSD)
 
       const withDeprecation = subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)
 
@@ -343,22 +342,32 @@ export const formatConsolidatedStudyResultsForExport = (
   tUnits: ReturnType<typeof useTranslations>,
   validatedEmissionSourcesOnly?: boolean,
   environment: Environment = Environment.BC,
+  convertToBc: boolean = false,
 ) => {
   const dataForExport = []
   const headersForEnv = getHeadersForEnv(environment)
 
   for (const site of siteList) {
+    let forcedEnvironment = environment
+
+    if (convertToBc) {
+      forcedEnvironment = Environment.BC
+    }
+
     const resultList = computeResultsByPost(
       study,
       tPost,
       site.id,
       true,
       validatedEmissionSourcesOnly,
-      environmentPostMapping[environment],
-      environment,
+      environmentPostMapping[forcedEnvironment],
+      forcedEnvironment,
+      convertToBc,
     )
     dataForExport.push([site.name])
-    dataForExport.push(getFormattedHeadersForEnv(environment, tStudy, tUnits, study.resultsUnit))
+    dataForExport.push(
+      getFormattedHeadersForEnv(convertToBc ? Environment.BC : environment, tStudy, tUnits, study.resultsUnit),
+    )
 
     for (const result of resultList) {
       const resultLine = [tPost(result.post) ?? '']
@@ -486,6 +495,7 @@ export const downloadStudyResults = async (
   tBeges: ReturnType<typeof useTranslations>,
   tUnits: ReturnType<typeof useTranslations>,
   environment: Environment = Environment.BC,
+  convertToBc: boolean = false,
 ) => {
   const data = []
 
@@ -509,6 +519,7 @@ export const downloadStudyResults = async (
     tUnits,
     validatedEmissionSourcesOnly,
     environment,
+    convertToBc,
   )
 
   if (environment === Environment.CUT) {
