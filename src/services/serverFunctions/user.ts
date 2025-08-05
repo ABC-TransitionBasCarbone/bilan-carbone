@@ -546,28 +546,33 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
 
     let user = (await getUserByEmail(email)) as UserWithAccounts
     let organization = null
+    let account = null
 
     if (!user) {
       user = (await addUser({
         email,
         firstName: '',
         lastName: '',
+        accounts: {
+          create: {
+            status: UserStatus.PENDING_REQUEST,
+            role: Role.DEFAULT,
+            environment,
+          },
+        },
       })) as UserWithAccounts
+      account = user?.accounts[0]
+    } else {
+      account =
+        accountAlreadyCreated ||
+        ((await addAccount({
+          user: { connect: { id: user.id } },
+          role: Role.DEFAULT,
+          environment,
+          status: UserStatus.PENDING_REQUEST,
+        })) as AccountWithUser)
     }
-    if (!user) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    const account =
-      accountAlreadyCreated ||
-      ((await addAccount({
-        user: { connect: { id: user.id } },
-        role: Role.DEFAULT,
-        environment: environment,
-        status: UserStatus.PENDING_REQUEST,
-      })) as AccountWithUser)
-
-    if (!account) {
+    if (!user || !account) {
       throw new Error(NOT_AUTHORIZED)
     }
 
