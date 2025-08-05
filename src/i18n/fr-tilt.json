@@ -5,6 +5,6 @@
     }
   },
   "exports": {
-    "consolidated": "Tilt®"
+    "env_specific_export": "Tilt"
   }
 }

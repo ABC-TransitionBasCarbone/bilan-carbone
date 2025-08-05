@@ -22,6 +22,12 @@ import {
   sumQualities,
 } from './uncertainty'
 
+export enum AdditionalResultTypes {
+  CONSOLIDATED = 'consolidated',
+  ENV_SPECIFIC_EXPORT = 'env_specific_export',
+}
+export type ResultType = Export | AdditionalResultTypes
+
 const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<typeof useTranslations>) => {
   return quality === null ? t('unknown') : t(quality.toString())
 }
@@ -342,31 +348,30 @@ export const formatConsolidatedStudyResultsForExport = (
   tUnits: ReturnType<typeof useTranslations>,
   validatedEmissionSourcesOnly?: boolean,
   environment: Environment = Environment.BC,
-  convertToBc: boolean = false,
+  type: ResultType = AdditionalResultTypes.CONSOLIDATED,
 ) => {
   const dataForExport = []
   const headersForEnv = getHeadersForEnv(environment)
 
   for (const site of siteList) {
-    let forcedEnvironment = environment
-
-    if (convertToBc) {
-      forcedEnvironment = Environment.BC
-    }
-
     const resultList = computeResultsByPost(
       study,
       tPost,
       site.id,
       true,
       validatedEmissionSourcesOnly,
-      environmentPostMapping[forcedEnvironment],
-      forcedEnvironment,
-      convertToBc,
+      environmentPostMapping[environment],
+      environment,
+      type,
     )
     dataForExport.push([site.name])
     dataForExport.push(
-      getFormattedHeadersForEnv(convertToBc ? Environment.BC : environment, tStudy, tUnits, study.resultsUnit),
+      getFormattedHeadersForEnv(
+        type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? environment : Environment.BC,
+        tStudy,
+        tUnits,
+        study.resultsUnit,
+      ),
     )
 
     for (const result of resultList) {
@@ -382,7 +387,7 @@ export const formatConsolidatedStudyResultsForExport = (
   }
 
   return {
-    name: tExport('consolidated'),
+    name: tExport(type),
     data: dataForExport,
     options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
   }
@@ -495,7 +500,6 @@ export const downloadStudyResults = async (
   tBeges: ReturnType<typeof useTranslations>,
   tUnits: ReturnType<typeof useTranslations>,
   environment: Environment = Environment.BC,
-  convertToBc: boolean = false,
 ) => {
   const data = []
 
@@ -519,12 +523,26 @@ export const downloadStudyResults = async (
     tUnits,
     validatedEmissionSourcesOnly,
     environment,
-    convertToBc,
+    AdditionalResultTypes.CONSOLIDATED,
   )
 
   if (environment === Environment.CUT) {
     consolidatedResults.data.unshift([])
     consolidatedResults.data.unshift([tExport('developmentFile')])
+  } else if (environment !== Environment.BC) {
+    const environmentResults = formatConsolidatedStudyResultsForExport(
+      study,
+      siteList,
+      tStudy,
+      tExport,
+      tPost,
+      tQuality,
+      tUnits,
+      validatedEmissionSourcesOnly,
+      environment,
+      AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
+    )
+    data.push(environmentResults)
   }
 
   data.push(consolidatedResults)

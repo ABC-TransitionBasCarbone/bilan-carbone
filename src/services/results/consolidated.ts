@@ -6,6 +6,7 @@ import {
   sumEmissionSourcesUncertainty,
 } from '../emissionSource'
 import { BCPost, convertTiltSubPostToBCSubPost, CutPost, Post, subPostsByPost, TiltPost } from '../posts'
+import { AdditionalResultTypes, ResultType } from '../study'
 import { filterWithDependencies, getSiteEmissionSources } from './utils'
 
 export type ResultsByPost = {
@@ -40,28 +41,33 @@ export const computeResultsByPost = (
   validatedOnly: boolean = true,
   postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost = BCPost,
   environment: Environment | undefined,
-  convertToBc: boolean = false,
+  type: ResultType = AdditionalResultTypes.CONSOLIDATED,
 ) => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
+  const convertToBc = type === AdditionalResultTypes.CONSOLIDATED && environment !== Environment.BC
+  const convertedSiteEmissionSources = convertToBc
+    ? siteEmissionSources.map((emissionSource) => {
+        return { ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }
+      })
+    : siteEmissionSources
 
-  const postInfos = Object.values(postValues)
+  const postInfos = Object.values(convertToBc ? BCPost : postValues)
     .sort((a, b) => tPost(a).localeCompare(tPost(b)))
     .map((post: Post) => {
       const subPosts = subPostsByPost[post]
         .filter((subPost) => filterWithDependencies(subPost, withDependencies))
         .map((subPost) => {
-          const emissionSources = siteEmissionSources
-            .map((emissionSource) => {
-              return convertToBc
-                ? { ...emissionSource, subPost: convertTiltSubPostToBCSubPost(emissionSource.subPost) }
-                : emissionSource
-            })
-            .filter((emissionSource) => emissionSource.subPost === subPost)
+          const emissionSources = convertedSiteEmissionSources.filter(
+            (emissionSource) => emissionSource.subPost === subPost,
+          )
           const validatedEmissionSources = emissionSources.filter((emissionSource) => emissionSource.validated)
 
           return {
             post: subPost,
-            value: getEmissionSourcesTotalCo2(validatedOnly ? validatedEmissionSources : emissionSources, environment),
+            value: getEmissionSourcesTotalCo2(
+              validatedOnly ? validatedEmissionSources : emissionSources,
+              convertToBc ? Environment.BC : environment,
+            ),
             monetaryValue: getEmissionSourcesTotalMonetaryCo2(
               validatedOnly ? validatedEmissionSources : emissionSources,
             ),

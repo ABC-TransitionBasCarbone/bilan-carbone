@@ -4,13 +4,13 @@ import { FullStudy } from '@/db/study'
 import { environmentPostMapping } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
+import { ResultType } from '@/services/study'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { Environment } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -24,7 +24,7 @@ interface Props {
   hiddenUncertainty?: boolean
   expandAll?: boolean
   hideExpandIcons?: boolean
-  convertToBc?: boolean
+  type?: ResultType
 }
 
 const ConsolidatedResultsTable = ({
@@ -34,7 +34,7 @@ const ConsolidatedResultsTable = ({
   hiddenUncertainty,
   expandAll,
   hideExpandIcons,
-  convertToBc,
+  type,
 }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
@@ -115,11 +115,6 @@ const ConsolidatedResultsTable = ({
     if (!environment) {
       return []
     }
-    let forcedEnvironment = environment
-
-    if (convertToBc) {
-      forcedEnvironment = Environment.BC
-    }
 
     return computeResultsByPost(
       study,
@@ -127,9 +122,9 @@ const ConsolidatedResultsTable = ({
       studySite,
       withDependencies,
       validatedOnly,
-      environmentPostMapping[forcedEnvironment],
-      forcedEnvironment,
-      convertToBc,
+      environmentPostMapping[environment],
+      environment,
+      type,
     )
   }, [environment, study, tPost, studySite, withDependencies, validatedOnly])
 
