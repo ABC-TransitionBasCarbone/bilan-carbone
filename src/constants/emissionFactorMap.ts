@@ -392,7 +392,11 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
-  'de-combien-de-disques-durs-disposez-vous': { emissionFactorImportedId: '140' },
+  'de-combien-de-disques-durs-disposez-vous': {
+    emissionFactorImportedId: '140',
+    depreciationPeriod: 4,
+    linkDepreciationQuestionId: 'NO_DATE_REQUIRED',
+  },
   // Autre matériel
   'de-combien-de-lunettes-3d-disposez-vous': { emissionFactorImportedId: '139' },
   // Achats

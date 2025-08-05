@@ -175,10 +175,23 @@ const handleDepreciation = async (
   studyStartDate: Date,
   studySiteId: string,
 ) => {
-  const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
   let emissionSourceId: string | undefined
   let valueToStore = currentValue
   let emissionFactorToFindId: string | undefined
+
+  // Handle simple depreciation without date constraints
+  if (linkDepreciationQuestionId === 'NO_DATE_REQUIRED') {
+    const depreciationPeriodToStore = depreciationPeriod || 1
+    valueToStore = currentValue / depreciationPeriodToStore
+    return {
+      emissionSourceId,
+      valueToStore,
+      emissionFactorToFindId: emissionFactorImportedId,
+      depreciationPeriodToStore,
+    }
+  }
+
+  const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
   if (!linkQuestion) {
     throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
   }
@@ -313,7 +326,10 @@ export const saveAnswerForQuestion = async (
         study.startDate,
         studySiteId,
       )
-      emissionSourceId = depreciationInfo.emissionSourceId
+      // For 'NO_DATE_REQUIRED' depreciation, preserve the existing emissionSourceId
+      if (linkDepreciationQuestionId !== 'NO_DATE_REQUIRED') {
+        emissionSourceId = depreciationInfo.emissionSourceId
+      }
       valueToStore = depreciationInfo.valueToStore
       emissionFactorToFindId = depreciationInfo.emissionFactorToFindId
       depreciationPeriodToStore = depreciationInfo.depreciationPeriodToStore
