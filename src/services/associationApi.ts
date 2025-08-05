@@ -18,7 +18,7 @@ export const isValidAssociationSiret = async (siret: string) => {
     return false
   }
 
-  if (result?.data?.identite?.lib_forme_juridique !== 'Association déclarée') {
+  if (!result?.data?.identite?.lib_forme_juridique?.includes('Association déclarée')) {
     return false
   }
 
