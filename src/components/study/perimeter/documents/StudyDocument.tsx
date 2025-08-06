@@ -31,16 +31,16 @@ interface Props {
   t: ReturnType<typeof useTranslations>
   study: FullStudy
   documents: Document[]
-  initialDocument?: Document
   canUpload?: boolean
   documentCategory?: DocumentCategory
 }
 
-const StudyDocument = ({ title, t, study, documents, initialDocument, canUpload = true, documentCategory }: Props) => {
+const StudyDocument = ({ title, t, study, documents, canUpload = true, documentCategory }: Props) => {
   const { callServerFunction } = useServerFunction()
   const { showErrorToast } = useToast()
   const router = useRouter()
   const tUpload = useTranslations('upload')
+  const initialDocument = documents.length > 0 ? documents[0] : undefined
 
   const [uploading, setUploading] = useState(false)
   const [downloading, setDownloading] = useState(false)

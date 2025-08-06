@@ -7,11 +7,10 @@ import StudyDocument from './StudyDocument'
 
 interface Props {
   documents: Document[]
-  initialDocument?: Document
   study: FullStudy
 }
 
-const DependencyMatrix = ({ documents, initialDocument, study }: Props) => {
+const DependencyMatrix = ({ documents, study }: Props) => {
   const t = useTranslations('study.dependencyMatrix')
 
   return (
@@ -20,7 +19,6 @@ const DependencyMatrix = ({ documents, initialDocument, study }: Props) => {
       t={t}
       study={study}
       documents={documents}
-      initialDocument={initialDocument}
       documentCategory={DocumentCategory.DependencyMatrix}
     />
   )

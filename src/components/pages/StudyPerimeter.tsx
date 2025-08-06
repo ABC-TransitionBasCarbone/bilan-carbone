@@ -67,18 +67,9 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
         />
       </Block>
       <EmissionSourceTags studyId={study.id} />
-      <StudyFlow
-        canAddFlow={canAddFlow}
-        documents={studyFlowDocuments}
-        initialDocument={studyFlowDocuments.length > 0 ? studyFlowDocuments[0] : undefined}
-        study={study}
-      />
+      <StudyFlow canAddFlow={canAddFlow} documents={studyFlowDocuments} study={study} />
       {hasAccessToDependencyMatrix(user.environment) && (
-        <DependencyMatrix
-          documents={dependencyMatrixDocuments}
-          initialDocument={dependencyMatrixDocuments.length > 0 ? dependencyMatrixDocuments[0] : undefined}
-          study={study}
-        />
+        <DependencyMatrix documents={dependencyMatrixDocuments} study={study} />
       )}
     </>
   )

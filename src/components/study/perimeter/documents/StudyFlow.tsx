@@ -8,11 +8,10 @@ import StudyDocument from './StudyDocument'
 interface Props {
   canAddFlow: boolean
   documents: Document[]
-  initialDocument?: Document
   study: FullStudy
 }
 
-const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => {
+const StudyFlow = ({ canAddFlow, documents, study }: Props) => {
   const t = useTranslations('study.flow')
 
   return (
@@ -21,7 +20,6 @@ const StudyFlow = ({ canAddFlow, documents, initialDocument, study }: Props) => 
       t={t}
       study={study}
       documents={documents}
-      initialDocument={initialDocument}
       canUpload={canAddFlow}
     />
   )
