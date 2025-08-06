@@ -4,6 +4,7 @@ import { FullStudy } from '@/db/study'
 import { environmentPostMapping } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
+import { ResultType } from '@/services/study'
 import { getStandardDeviationRating } from '@/services/uncertainty'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
@@ -23,6 +24,7 @@ interface Props {
   hiddenUncertainty?: boolean
   expandAll?: boolean
   hideExpandIcons?: boolean
+  type?: ResultType
 }
 
 const ConsolidatedResultsTable = ({
@@ -32,6 +34,7 @@ const ConsolidatedResultsTable = ({
   hiddenUncertainty,
   expandAll,
   hideExpandIcons,
+  type,
 }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
@@ -112,6 +115,7 @@ const ConsolidatedResultsTable = ({
     if (!environment) {
       return []
     }
+
     return computeResultsByPost(
       study,
       tPost,
@@ -120,6 +124,7 @@ const ConsolidatedResultsTable = ({
       validatedOnly,
       environmentPostMapping[environment],
       environment,
+      type,
     )
   }, [environment, study, tPost, studySite, withDependencies, validatedOnly])
 

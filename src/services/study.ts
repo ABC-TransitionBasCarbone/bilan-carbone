@@ -22,6 +22,12 @@ import {
   sumQualities,
 } from './uncertainty'
 
+export enum AdditionalResultTypes {
+  CONSOLIDATED = 'consolidated',
+  ENV_SPECIFIC_EXPORT = 'env_specific_export',
+}
+export type ResultType = Export | AdditionalResultTypes
+
 const getQuality = (quality: ReturnType<typeof getQualityRating>, t: ReturnType<typeof useTranslations>) => {
   return quality === null ? t('unknown') : t(quality.toString())
 }
@@ -139,7 +145,6 @@ const getEmissionSourcesRows = (
         initCols.push(tPost(emissionSource.subPost))
       }
       const emissionSourceSD = getStandardDeviation(emissionSource)
-      console.log('CONSOLE', emissionSourceSD)
 
       const withDeprecation = subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)
 
@@ -343,6 +348,7 @@ export const formatConsolidatedStudyResultsForExport = (
   tUnits: ReturnType<typeof useTranslations>,
   validatedEmissionSourcesOnly?: boolean,
   environment: Environment = Environment.BC,
+  type: ResultType = AdditionalResultTypes.CONSOLIDATED,
 ) => {
   const dataForExport = []
   const headersForEnv = getHeadersForEnv(environment)
@@ -356,9 +362,17 @@ export const formatConsolidatedStudyResultsForExport = (
       validatedEmissionSourcesOnly,
       environmentPostMapping[environment],
       environment,
+      type,
     )
     dataForExport.push([site.name])
-    dataForExport.push(getFormattedHeadersForEnv(environment, tStudy, tUnits, study.resultsUnit))
+    dataForExport.push(
+      getFormattedHeadersForEnv(
+        type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? environment : Environment.BC,
+        tStudy,
+        tUnits,
+        study.resultsUnit,
+      ),
+    )
 
     for (const result of resultList) {
       const resultLine = [tPost(result.post) ?? '']
@@ -373,7 +387,7 @@ export const formatConsolidatedStudyResultsForExport = (
   }
 
   return {
-    name: tExport('consolidated'),
+    name: tExport(type),
     data: dataForExport,
     options: { '!cols': [{ wch: 30 }, { wch: 15 }, { wch: 20 }] },
   }
@@ -509,11 +523,26 @@ export const downloadStudyResults = async (
     tUnits,
     validatedEmissionSourcesOnly,
     environment,
+    AdditionalResultTypes.CONSOLIDATED,
   )
 
   if (environment === Environment.CUT) {
     consolidatedResults.data.unshift([])
     consolidatedResults.data.unshift([tExport('developmentFile')])
+  } else if (environment !== Environment.BC) {
+    const environmentResults = formatConsolidatedStudyResultsForExport(
+      study,
+      siteList,
+      tStudy,
+      tExport,
+      tPost,
+      tQuality,
+      tUnits,
+      validatedEmissionSourcesOnly,
+      environment,
+      AdditionalResultTypes.ENV_SPECIFIC_EXPORT,
+    )
+    data.push(environmentResults)
   }
 
   data.push(consolidatedResults)

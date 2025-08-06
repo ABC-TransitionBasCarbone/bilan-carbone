@@ -17,11 +17,12 @@
   },
   "exports": {
     "title": "Exports:",
-    "consolidated": "Carbon Assessment®",
+    "consolidated": "Bilan Carbone®",
     "Beges": "Regulatory GHG Assesment",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
-    "developmentFile": "File under development"
+    "developmentFile": "File under development",
+    "env_specific_export": "Bilan Carbone®"
   },
   "categorisations": {
     "Operated": "Operated",

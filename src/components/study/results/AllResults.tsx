@@ -3,19 +3,19 @@ import Block from '@/components/base/Block'
 import Button from '@/components/base/Button'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import { FullStudy } from '@/db/study'
-import { downloadStudyResults } from '@/services/study'
+import { hasAccessToBcExport } from '@/services/permissions/environment'
+import { AdditionalResultTypes, downloadStudyResults, ResultType } from '@/services/study'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { ControlMode, Export, ExportRule } from '@prisma/client'
 import { useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
 import useStudySite from '../site/useStudySite'
 import BegesResultsTable from './beges/BegesResultsTable'
 import ConsolatedBEGESDifference from './ConsolatedBEGESDifference'
 import ConsolidatedResults from './consolidated/ConsolidatedResults'
-import DependenciesSwitch from './DependenciesSwitch'
 
 interface Props {
   study: FullStudy
@@ -35,13 +35,28 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
   const tStudyNav = useTranslations('study.navigation')
 
   const { environment } = useAppEnvironmentStore()
-  const [withDependencies, setWithDependencies] = useState(true)
-  const [type, setType] = useState<Export | 'consolidated'>('consolidated')
+  const [type, setType] = useState<ResultType>(AdditionalResultTypes.CONSOLIDATED)
   const exports = useMemo(() => study.exports, [study.exports])
+
+  useEffect(() => {
+    if (environment && hasAccessToBcExport(environment)) {
+      setType(AdditionalResultTypes.ENV_SPECIFIC_EXPORT)
+    }
+  }, [environment])
 
   const { studySite, setSite } = useStudySite(study, true)
 
   const begesRules = useMemo(() => rules.filter((rule) => rule.export === Export.Beges), [rules])
+
+  const allowTypeSelect = useMemo(() => {
+    if (exports.length > 0) {
+      return true
+    }
+    if (environment && hasAccessToBcExport(environment)) {
+      return true
+    }
+    return false
+  }, [environment, exports])
 
   return (
     <Block title={tStudyNav('results')} as="h1">
@@ -54,12 +69,15 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
             label={t('type')}
             aria-labelledby="result-type-selector-label"
             onChange={(event) => {
-              setType(event.target.value as Export | 'consolidated')
+              setType(event.target.value as ResultType)
             }}
             data-testid="result-type-select"
-            disabled={exports.length === 0}
+            disabled={!allowTypeSelect}
           >
-            <MenuItem value="consolidated">{tExport('consolidated')}</MenuItem>
+            <MenuItem value={AdditionalResultTypes.CONSOLIDATED}>{tExport('consolidated')}</MenuItem>
+            {environment && hasAccessToBcExport(environment) && (
+              <MenuItem value={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}>{tExport('env_specific_export')}</MenuItem>
+            )}
             {exports.map((exportItem) => (
               <MenuItem
                 key={exportItem.type}
@@ -94,9 +112,6 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
         >
           <DownloadIcon />
         </Button>
-        {type !== 'consolidated' && (
-          <DependenciesSwitch withDependencies={withDependencies} setWithDependencies={setWithDependencies} />
-        )}
         {exports.map((exportType) => exportType.type).includes(Export.Beges) && (
           <ConsolatedBEGESDifference
             study={study}
@@ -108,12 +123,16 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
         )}
       </div>
       <div className="mt1">
-        {type === 'consolidated' && (
+        {type === AdditionalResultTypes.CONSOLIDATED && (
+          <ConsolidatedResults study={study} studySite={studySite} withDependencies validatedOnly={validatedOnly} />
+        )}
+        {type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT && (
           <ConsolidatedResults
             study={study}
             studySite={studySite}
-            withDependencies={withDependencies}
+            withDependencies
             validatedOnly={validatedOnly}
+            type={type}
           />
         )}
         {type === Export.Beges && (
@@ -122,7 +141,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
             rules={begesRules}
             emissionFactorsWithParts={emissionFactorsWithParts}
             studySite={studySite}
-            withDependencies={withDependencies}
+            withDependencies={false}
           />
         )}
       </div>
