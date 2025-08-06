@@ -18,7 +18,7 @@ describe('Register cut', () => {
         .within(() => {
           cy.get('.title')
             .invoke('text')
-            .should('match', /Vous avez activé votre compte sur CoUnT/)
+            .should('match', /Vous avez activé votre compte sur Count/)
         })
     })
   })
@@ -38,7 +38,7 @@ describe('Register cut', () => {
         .within(() => {
           cy.get('.title')
             .invoke('text')
-            .should('match', /Vous avez activé votre compte sur CoUnT/)
+            .should('match', /Vous avez activé votre compte sur Count/)
         })
     })
   })
@@ -74,7 +74,7 @@ describe('Register cut', () => {
         .within(() => {
           cy.get('.title')
             .invoke('text')
-            .should('match', /Demande d'accès à votre organisation CoUnT/)
+            .should('match', /Demande d'accès à votre organisation Count/)
         })
     })
   })
