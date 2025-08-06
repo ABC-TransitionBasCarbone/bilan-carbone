@@ -52,7 +52,7 @@ const AllPostsInfographyContainer = ({ study, studySite, user }: Props) => {
         studySite,
         true,
         validatedOnly,
-        environment === Environment.TILT ? TiltPost : undefined,
+        environment === Environment.TILT ? TiltPost : environment === Environment.CUT ? CutPost : undefined,
         environment,
       ),
     [study, tPost, studySite, validatedOnly, environment],
