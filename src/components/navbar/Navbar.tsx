@@ -55,6 +55,7 @@ const Navbar = ({ children, user, environment }: Props) => {
   }, [user])
 
   const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
+  const isTilt = useMemo(() => user.environment === Environment.TILT, [user?.environment])
 
   return (
     <AppBar position="sticky" elevation={0}>
@@ -159,7 +160,11 @@ const Navbar = ({ children, user, environment }: Props) => {
               <NavbarButton
                 aria-label={t('methodology')}
                 rel="noreferrer noopener"
-                href="https://www.bilancarbone-methode.com/"
+                href={
+                  isTilt
+                    ? 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative'
+                    : 'https://www.bilancarbone-methode.com/'
+                }
               >
                 <MenuBookIcon />
               </NavbarButton>
