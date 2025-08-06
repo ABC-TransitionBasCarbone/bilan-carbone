@@ -1108,7 +1108,7 @@
     "resend": "Renvoyer l'invitation",
     "table": {
       "title": "Mon équipe",
-      "newUser": "Inviter un·e utilisatr·ice",
+      "newUser": "Inviter un·e utilisateur·ice",
       "firstName": "Prénom",
       "lastName": "Nom",
       "email": "Email",
@@ -1116,7 +1116,7 @@
       "role": "Droits",
       "action": " ",
       "deleteMember": "Supprimer le·a membre",
-      "userDeletion": "Suppression d'un·e utilisatr·ice",
+      "userDeletion": "Suppression d'un·e utilisateur·ice",
       "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet·te utilisateur·ice ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
       "close": "Annuler",
       "confirm": "Confirmer",
@@ -1124,14 +1124,14 @@
     }
   },
   "newMember": {
-    "title": "Inviter un·e utilisatr·ice",
+    "title": "Inviter un·e utilisateur·ice",
     "email": "Email",
     "firstName": "Prénom",
     "lastName": "Nom",
     "role": "Droits",
     "level": "Formation",
     "create": "Inviter l'utilisateur·ice",
-    "Not authorized": "Impossible d'inviter cette utilisatr·ice. Veuillez contacter le <link>support</link> pour plus d'informations.",
+    "Not authorized": "Impossible d'inviter cette utilisateur·ice. Veuillez contacter le <link>support</link> pour plus d'informations.",
     "validation": {
       "email": "Veuillez renseigner un email valide",
       "firstName": "Veuillez renseigner un prénom",
