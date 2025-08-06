@@ -4,7 +4,7 @@ import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
 import DownloadIcon from '@mui/icons-material/Download'
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
+// import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { SyntheticEvent, useState } from 'react'
@@ -16,12 +16,12 @@ import { downloadStudyResults } from '@/services/study'
 import { Environment } from '@prisma/client'
 
 import Block from '@/components/base/Block'
-import LoadingButton from '@/components/base/LoadingButton'
+// import LoadingButton from '@/components/base/LoadingButton'
 import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
-import { useServerFunction } from '@/hooks/useServerFunction'
+// import { useServerFunction } from '@/hooks/useServerFunction'
 import { CutPost } from '@/services/posts'
-import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
+// import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
 import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
@@ -41,7 +41,7 @@ const a11yProps = (index: number) => {
 
 const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) => {
   const [value, setValue] = useState(0)
-  const [pdfLoading, setPdfLoading] = useState(false)
+  // const [pdfLoading, setPdfLoading] = useState(false)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
@@ -54,29 +54,29 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
   const tStudyNav = useTranslations('study.navigation')
-  const { callServerFunction } = useServerFunction()
+  // const { callServerFunction } = useServerFunction()
 
   const { studySite, setSite } = useStudySite(study, true)
 
-  const handlePDFDownload = async () => {
-    setPdfLoading(true)
-    await callServerFunction(() => generateStudySummaryPDF(study.id, study.name, study.startDate.getFullYear()), {
-      onSuccess: (data) => {
-        const pdfBuffer = new Uint8Array(data.pdfBuffer)
-        const pdfBlob = new Blob([pdfBuffer], { type: data.contentType })
+  // const handlePDFDownload = async () => {
+  //   setPdfLoading(true)
+  //   await callServerFunction(() => generateStudySummaryPDF(study.id, study.name, study.startDate.getFullYear()), {
+  //     onSuccess: (data) => {
+  //       const pdfBuffer = new Uint8Array(data.pdfBuffer)
+  //       const pdfBlob = new Blob([pdfBuffer], { type: data.contentType })
 
-        const url = URL.createObjectURL(pdfBlob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = data.filename
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        URL.revokeObjectURL(url)
-      },
-    })
-    setPdfLoading(false)
-  }
+  //       const url = URL.createObjectURL(pdfBlob)
+  //       const link = document.createElement('a')
+  //       link.href = url
+  //       link.download = data.filename
+  //       document.body.appendChild(link)
+  //       link.click()
+  //       document.body.removeChild(link)
+  //       URL.revokeObjectURL(url)
+  //     },
+  //   })
+  //   setPdfLoading(false)
+  // }
 
   return (
     <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
@@ -117,7 +117,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           >
             {tExportButton('export')}
           </Button>
-          <LoadingButton
+          {/* <LoadingButton
             variant="outlined"
             color="primary"
             size="large"
@@ -126,7 +126,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
             loading={pdfLoading}
           >
             {tResults('downloadPDF')}
-          </LoadingButton>
+          </LoadingButton> */}
         </div>
         <Typography className={classNames(styles.infoContainer, 'ml2')}>{tResults('info')}</Typography>
       </Box>
