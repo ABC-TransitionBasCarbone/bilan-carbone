@@ -1,9 +1,10 @@
 'use client'
 
 import { FullStudy } from '@/db/study'
-import { caracterisationsBySubPost, getEmissionResults } from '@/services/emissionSource'
+import { getCaracterisationBySubPostWithEnv, getEmissionResults } from '@/services/emissionSource'
 import { StudyWithoutDetail } from '@/services/permissions/study'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { withInfobulle } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
@@ -50,6 +51,7 @@ const SubPost = ({
   const t = useTranslations('study.post')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
+  const { environment } = useAppEnvironmentStore()
 
   const total = useMemo(
     () => emissionSources.reduce((sum, emissionSource) => sum + (getEmissionResults(emissionSource)?.emission || 0), 0),
@@ -66,7 +68,10 @@ const SubPost = ({
     [study, subPost, withoutDetail],
   )
 
-  const caracterisations = useMemo(() => caracterisationsBySubPost[subPost], [subPost])
+  const caracterisations = useMemo(
+    () => getCaracterisationBySubPostWithEnv(subPost, environment),
+    [subPost, environment],
+  )
 
   const [expanded, setExpanded] = useState(false)
 

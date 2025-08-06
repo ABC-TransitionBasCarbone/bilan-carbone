@@ -87,6 +87,14 @@ const fullStudyInclude = {
           },
         },
       },
+      emissionSourceTags: {
+        select: {
+          id: true,
+          name: true,
+          color: true,
+          studyId: true,
+        },
+      },
     },
     orderBy: [{ createdAt: 'asc' }, { name: 'asc' }],
   },
@@ -139,6 +147,8 @@ const fullStudyInclude = {
       numberOfSessions: true,
       numberOfTickets: true,
       distanceToParis: true,
+      volunteerNumber: true,
+      beneficiaryNumber: true,
       site: {
         select: {
           id: true,
@@ -147,6 +157,7 @@ const fullStudyInclude = {
           city: true,
           cnc: {
             select: {
+              id: true,
               numberOfProgrammedFilms: true,
               ecrans: true,
             },
@@ -175,6 +186,14 @@ const fullStudyInclude = {
           name: true,
         },
       },
+    },
+  },
+  emissionSourceTags: {
+    select: {
+      id: true,
+      name: true,
+      color: true,
+      studyId: true,
     },
   },
 } satisfies Prisma.StudyInclude
@@ -447,7 +466,12 @@ export const updateStudySites = async (
         promises.push(
           transaction.studySite.upsert({
             where: { studyId_siteId: { studyId, siteId: studySite.siteId } },
-            update: { ca: studySite.ca, etp: studySite.etp },
+            update: {
+              ca: studySite.ca,
+              etp: studySite.etp,
+              volunteerNumber: studySite.volunteerNumber,
+              beneficiaryNumber: studySite.beneficiaryNumber,
+            },
             create: studySite,
           }),
         )
@@ -548,6 +572,12 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
                   isCR: true,
                 },
               },
+            },
+          },
+          cnc: {
+            select: {
+              id: true,
+              numberOfProgrammedFilms: true,
             },
           },
         },

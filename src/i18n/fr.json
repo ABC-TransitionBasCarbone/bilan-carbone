@@ -1,10 +1,10 @@
 {
   "home": {
-    "userToValidate": "Un utilisateur a été ajouté à votre organisation car il vient d'être formé à la méthode bilan carbone. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte",
+    "userToValidate": "Un·e utilisateur·ice a été ajouté à votre organisation car il vient d'être formé à la méthode Bilan Carbone®. Rendez-vous dans <link>la page de votre équipe</link> pour valider son compte",
     "title": "Faire votre bilan d’impact vous permettra de :",
     "info": {
-      "0": "Comprendre la mesure d’impact de votre établissement",
-      "1": "Identifier les priorités d’action",
+      "0": "Comprendre la mesure d'impact de votre établissement",
+      "1": "Identifier les priorités d'action",
       "2": "Construire une trajectoire de réduction"
     },
     "message": {
@@ -103,7 +103,7 @@
     "newOrganization": "Ajouter une nouvelle organisation",
     "newStudy": "Ajouter une nouvelle étude",
     "studyPerimeter": "Périmètre",
-    "newStudyContributor": "Ajouter un contributeur",
+    "newStudyContributor": "Ajouter un·e contributeur·ice",
     "newStudyRight": "Ajouter une personne",
     "notFound": "Page non trouvée",
     "organization": "Organisation",
@@ -189,6 +189,7 @@
     "siretOrCNCPlaceholder": "Votre Siret/CNC",
     "siretOrCNCRequired": "Veuillez entrer un Siret/CNC",
     "validate": "Valider",
+    "clear": "Supprimer la valeur",
     "Unknown CNC": "Ce code CNC n'est pas reconnu. Veuillez vérifier votre saisie ou contacter le support si vous pensez qu'il s'agit d'une erreur.",
     "Not authorized": "Cet email est déjà inscrit avec un compte CUT ou il y a eu un soucis lors de sa création. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
     "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
@@ -196,6 +197,24 @@
     "validation": {
       "email": "Veuillez entrer un email",
       "siretOrCNC": "Veuillez entrer un Siret/CNC"
+    }
+  },
+  "signupTilt": {
+    "description": "Créez un compte sur Tilt en entrant votre email ainsi qu'un Siret",
+    "email": "Email",
+    "emailPlaceholder": "Votre adresse email",
+    "emailRequired": "Veuillez entrer un email",
+    "siret": "Siret",
+    "siretPlaceholder": "Votre Siret",
+    "siretRequired": "Veuillez entrer un Siret",
+    "validate": "Valider",
+    "Not authorized": "Cet email est déjà inscrit avec un compte Tilt ou ce SIRET n'est pas valide. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "Not association SIRET": "L'utilisation de cet outil est réservé aux associations. Veuillez utiliser la version classique du Bilan Carbone®+",
+    "Request sent": "Une demande d'activation de votre compte a été envoyé à vos collègues",
+    "Email sent": "Vous allez recevoir un mail pour finaliser l'activation de votre compte.",
+    "validation": {
+      "email": "Veuillez entrer un email",
+      "siret": "Veuillez entrer un Siret"
     }
   },
   "footer": {
@@ -248,7 +267,7 @@
     "glossary": {
       "title": "Glossaire",
       "exports": "Prendre en compte les émissions non validées",
-      "exportsDescription": "Au sein d'un Bilan Carbone®, vous pouvez choisir d'afficher toutes les émissions que vous avez renseignées, ou bien uniquement celles qui ont été validées par un validateur.",
+      "exportsDescription": "Au sein d'un Bilan Carbone®, vous pouvez choisir d'afficher toutes les émissions que vous avez renseignées, ou bien uniquement celles qui ont été validées par un·e validateur·ice.",
       "caUnits": "Unité des chiffres d'affaire",
       "caUnitsDescription": "Précisez l'unité que vous souhaitez utiliser pour les chiffres d'affaire.",
       "close": "Fermer"
@@ -263,7 +282,7 @@
   "admin": {
     "title": "Administration du BC+",
     "csvOnly": "Seuls les fichiers CSV sont acceptés",
-    "uploadButton": "Importer un fichier CSV d'utilisateurs"
+    "uploadButton": "Importer un fichier CSV d'utilisateur·ices"
   },
   "study": {
     "create": "Ajouter un Bilan Carbone®",
@@ -279,12 +298,12 @@
     "myStudies": "Mes Bilans Carbone®",
     "createFirstStudy": "Créer mon premier Bilan Carbone®",
     "seeResults": "Voir les résultats",
-    "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre premier bilan.",
+    "firstStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre premier Bilan Carbone®.",
     "validatedSources": "<data>{validated} / {total}</data> Sources d'émission validées",
     "see": "Voir mon Bilan Carbone®",
     "information": "Informations",
     "validatedOnly": "Sources d'émission validées",
-    "validatedOnlyDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
+    "validatedOnlyDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateur·rices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeur·ices et éditeur·rices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
     "withDependenciesDescription": "La nouvelle méthode Bilan Carbone® introduit le concept de responsabilité et de dépendance. Il est fortement recommandé de restituer les résultats du Bilan Carbone® avec et sans le sous-poste \"Utilisation en dépendance\", car l'organisation n'est généralement pas en mesure d'agir aisément sur ce sous-poste. En revanche, celui-ci reste capital pour comprendre les risques auxquels sont soumis l'organisation, notamment si elle est dépendante de secteurs ou d'activités très carbonés. Le résultat final à retenir doit inclure la dépendance. Pour plus d'information sur ces nouveaux concepts, nous vous invitons à consulter <link>cette page</link>.",
     "monetaryRatioDescription": "Il est fortement déconseillé d'utiliser des facteurs d'émission en ratio monétaire lorsqu'une alternative est possible. Vous pouvez trouver plus d'information sur la <monetaryLink>méthodologie de l'ABC</monetaryLink>.",
     "close": "Fermer",
@@ -306,7 +325,7 @@
     "new": {
       "title": "Informations sur la nouvelle étude",
       "name": "Nom de l'étude",
-      "validator": "Email du validateur",
+      "validator": "Email du ou de la validateur·rice",
       "studyDates": "Dates de l'étude",
       "realizationDates": "Date de la réalisation de l'étude",
       "start": "Début",
@@ -321,10 +340,11 @@
       "private": "Privée",
       "public": "Publique",
       "resultsUnit": "Unité des resultats de l'étude",
-      "numberOfSessions": "Nombre de séances (par an)",
-      "numberOfTickets": "Nombre d'entrées (par an)",
+      "numberOfSessions": "Nombre de séances (en {year})",
+      "numberOfTickets": "Nombre d'entrées (en {year})",
       "distanceToParis": "Distance à Paris (km)",
-      "numberOfOpenDays": "Nombre de jours d'ouverture (par an)",
+      "numberOfProgrammedFilms": "Nombre de films programmés (en {year})",
+      "numberOfOpenDays": "Nombre de jours d'ouverture (en {year})",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
       "clear": "Supprimer la valeur",
@@ -361,8 +381,8 @@
       },
       "glossary": {
         "title": "Glossaire",
-        "validatorEmail": "Email du validateur",
-        "validatorEmailDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateurs peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeurs et éditeurs de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
+        "validatorEmail": "Email du ou de la validateur·rice",
+        "validatorEmailDescription": "Pour chaque Bilan Carbone®, un ou plusieurs validateur·rices peuvent être définis. Ceux-ci ont la responsabilité de valider les sources d'émission lorsque celles-ci auront été renseignées par les contributeur·ices et éditeur·rices de l'étude. Par défaut, seules les émissions validées apparaissent au sein de vos résultats, mais vous pouvez changer ce comportement via le menu \"Paramètres\".",
         "studyDates": "Date de l'étude",
         "studyDatesDescription": "Il s'agit de la période sur laquelle l'étude s'étend. En général le début et la fin correspondent au 1er janvier et 31 décembre d'une même année.",
         "realizationDates": "Date de la réalisation de l'étude",
@@ -381,11 +401,12 @@
       },
       "validation": {
         "name": "Veuillez renseigner un nom",
-        "validator": "Veuillez selectionner un validateur",
+        "validator": "Veuillez selectionner un·e validateur·ice",
         "startDate": "Veuillez selectionner une date de debut d'étude",
         "endDate": "Veuillez selectionner une date de fin d'étude",
         "endDateBeforStartDate": "La date de fin doit etre superieur à la date de début",
-        "level": "Veuillez selectionner le type de Bilan Carbone®"
+        "level": "Veuillez selectionner le type de Bilan Carbone®",
+        "invalidNumber": "Veuillez saisir une valeur valide"
       },
       "error": {
         "default": "Une erreur s'est produite ...",
@@ -397,8 +418,8 @@
       "displayInfography": "Voir les différents postes",
       "hideInfography": "Cacher les différents postes",
       "emissionSource": "{count, plural, =0 {Pas de source d'emission} =1 {1 source d'émission} other {# sources d'émission}}",
-      "contributors": "{count, plural, =1 {1 contributeur} other {# contibuteurs}}",
-      "contributorsList": "{count, plural, =1 {Contributeur :} other {Contributeurs :}}",
+      "contributors": "{count, plural, =1 {1 contributeur·ice} other {# contibuteur·ices}}",
+      "contributorsList": "{count, plural, =1 {Contributeur·rice :} other {Contributeur·ices :}}",
       "label": "Libellé de la source d'émission",
       "new": "Donnez un titre à votre nouvelle source d'émission",
       "add": "Ajouter"
@@ -418,13 +439,13 @@
       }
     },
     "role": {
-      "Validator": "Validateur",
-      "Editor": "Éditeur",
-      "Reader": "Lecteur",
-      "Contributor": "Contributeur",
+      "Validator": "Validateur·rice",
+      "Editor": "Éditeur·rice",
+      "Reader": "Lecteur·rice",
+      "Contributor": "Contributeur·rice",
       "guide": "Guide des rôles",
-      "introduction": "Depuis cette page, vous pouvez gérer les membres de votre équipe impliqués dans ce Bilan Carbone®. Dans tous les cas, les administrateurs de votre organisation ont accès à toutes vos études en tant que validateur. Si votre étude est publique, les membres de votre organisation (collaborateurs, gestionnaires) y ont automatiquement accès en lecture. Vous pouvez également ajouter des personnes externes à votre organisation via ce menu.",
-      "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émission qui ont été renseignées par les validateurs, éditeurs et contributeurs.",
+      "introduction": "Depuis cette page, vous pouvez gérer les membres de votre équipe impliqués dans ce Bilan Carbone®. Dans tous les cas, les administrateur·ices de votre organisation ont accès à toutes vos études en tant que validateur·rice. Si votre étude est publique, les membres de votre organisation (collaborateur·ices, gestionnaires) y ont automatiquement accès en lecture. Vous pouvez également ajouter des personnes externes à votre organisation via ce menu.",
+      "Validator_description": "A tous les droits sur l'étude et peut valider les sources d'émission qui ont été renseignées par les validateur·rices, éditeur·rices et contributeur·ices.",
       "Editor_description": "A tous les droits sur l'étude à l'exception de la validation des sources d'émission.",
       "Reader_description": "Peut uniquement accéder en lecture à l'étude et exporter les informations de celle-ci.",
       "close": "Fermer",
@@ -457,7 +478,7 @@
         }
       },
       "newContributor": {
-        "title": "Ajouter un contributeur sur l'étude : {name}",
+        "title": "Ajouter un·e contributeur·ice sur l'étude : {name}",
         "email": "Email",
         "post": "Poste",
         "subPost": "Sous poste",
@@ -471,16 +492,16 @@
       },
       "contributorsTable": {
         "actions": " ",
-        "delete": "Supprimer le contributeur",
+        "delete": "Supprimer le contributeur·ice",
         "email": "Email",
         "post": "Poste",
         "subPosts": "Sous postes",
-        "title": "Contributeurs",
-        "newContributorLink": "Ajouter un contributeur",
+        "title": "Contributeur·ices",
+        "newContributorLink": "Ajouter un·e contributeur·ice",
         "andXOthers": "et {count, plural, =1 {1 autre} other {# autres}}",
         "deleting": {
           "title": "Confirmation",
-          "confirmation": "Êtes vous sûr de vouloir supprimer {email} des contributeurs de cette étude ?",
+          "confirmation": "Êtes vous sûr de vouloir supprimer {email} des contributeur·ices de cette étude ?",
           "confirmationPost": "Êtes vous sûr de vouloir supprimer l'accès de {email} au poste {post} ?",
           "yes": "Oui",
           "no": "Non",
@@ -488,13 +509,13 @@
         },
         "role": {
           "information": "Informations",
-          "description": "Vous pouvez ici gérer les contributeurs de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des contributeurs, n'hésitez pas à aller voir notre <link>FAQ</link>",
+          "description": "Vous pouvez ici gérer les contributeur·ices de votre étude. Ceux-ci auront accès à certains postes et sous postes (que vous pouvez définir) et pourront remplir certaines informations pour des sources d'émission que vous aurez déjà créées dans l'étude. Pour plus d'information sur l'interface des contributeur·ices, n'hésitez pas à aller voir notre <link>FAQ</link>",
           "close": "Fermer"
         }
       },
       "table": {
         "actions": " ",
-        "delete": "Supprimer le membre",
+        "delete": "Supprimer le·a membre",
         "email": "Email",
         "role": "Droits",
         "title": "Gestion de l'équipe",
@@ -534,8 +555,23 @@
       "editSites": "Modifier la liste de sites",
       "cancelEditSites": "Annuler la modification",
       "validSites": "Valider les changements",
+      "validSitesToRecalculate": "Valider les changements (recalcul des émissions)",
+      "siteDataChangeModal": {
+        "title": "Changement impactant les résultats existants",
+        "description": "La modification que vous venez d'apporter va affecter les calculs d'émissions existantes.",
+        "affectedCalculations": "Cela va recalculer les émissions pour les questions suivantes :",
+        "confirmation": "Êtes-vous sûr de vouloir continuer ?",
+        "cancel": "Annuler",
+        "proceed": "Confirmer les changements"
+      },
       "exports": "Exports",
       "control": "Mode de contrôle",
+      "emissionSourceTags": "Tags",
+      "emissionSourceTagLabel": "Libellé",
+      "color": "Couleur",
+      "emissionSourceTagsPlaceholder": "Votre tag",
+      "createEmissionSourceTag": "Créer mon tag",
+      "validate": "Valider",
       "deleteDialog": {
         "accept": "Oui",
         "decline": "Non",
@@ -548,7 +584,9 @@
       "type": "Type",
       "post": "Poste",
       "download": "Télécharger les résultats",
+      "downloadPDF": "Télécharger la fiche récapitulative",
       "value": "Émissions ({unit})",
+      "emissions": "Émissions",
       "uncertainty": "Incertitude",
       "withDependencies": "Avec le sous-poste 'Utilisation en dépendance'",
       "withoutDependencies": "Sans le sous-poste 'Utilisation en dépendance'",
@@ -580,7 +618,31 @@
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
       },
-      "noData": "Aucune données à afficher"
+      "noData": "Aucune donnée à afficher"
+    },
+    "pdf": {
+      "loading": "Chargement des données...",
+      "title": "Empreinte carbone simplifiée {year}",
+      "cinemas": {
+        "list": "Portant sur les cinémas suivants"
+      },
+      "results": {
+        "all": "Résultats - Tous cinémas",
+        "site": "Résultats - {site}"
+      },
+      "charts": {
+        "all": "Graphiques - Tous cinémas",
+        "site": "Graphiques - {site}",
+        "allEmissions": "Émissions dues aux activités de l'ensemble des cinémas, en tCO2e",
+        "siteEmissions": "Émissions dues aux activités du cinéma {site}, en tCO2e"
+      },
+      "labels": {
+        "cinemas": "Cinémas",
+        "screens": "Écrans",
+        "entries": "Entrées",
+        "sessions": "Séances"
+      },
+      "additionalInfo": "Informations complémentaires"
     },
     "export": {
       "activityDataComment": "Commentaire de la donnée d'activité",
@@ -607,12 +669,13 @@
       "sourceSurface": "Surface (ha)",
       "sourceUnit": "Unité de la source d'émission",
       "sourceValue": "Valeur de la source d'émission",
+      "sourceTag": "Tag de la source d'émission",
       "subPost": "Sous poste",
       "total": "Total",
       "uncertainty": "Incertitude",
       "validation": "Validation de la source d'émission",
       "yes": "Oui",
-      "export": "Exporter mon Bilan Carbone"
+      "export": "Exporter mon Bilan Carbone®"
     },
     "flow": {
       "loading": "Chargement du document...",
@@ -626,7 +689,9 @@
       "noFlows": "Aucune cartographie des flux à afficher",
       "notAuthorized": "Action non authorisée",
       "removeFlow": "Supprimer la cartographie",
-      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action"
+      "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+      "info": "Vous pouvez télécharger un exemple de cartographie des flux pour vous aider à construire la vôtre. Par la suite, si vous souhaitez soumettre votre propre cartographie des flux pour aider d'autres associations en leur fournissant une base de travail, merci de la soumettre à <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "downloadSample": "Télécharger un exemple"
     },
     "delete": {
       "cancel": "Annuler",
@@ -662,10 +727,11 @@
       "FinDeVie": "Fin de vie",
       "Fonctionnement": "Fonctionnement",
       "MobiliteSpectateurs": "Mobilité spectateurs",
-      "TourneesAvantPremiere": "Tournées avant-première",
+      "TourneesAvantPremieres": "Tournées avant-premières",
       "SallesEtCabines": "Salles et cabines",
       "ConfiseriesEtBoissons": "Confiseries et boissons",
       "Dechets": "Déchets",
+      "Déchets": "Déchets",
       "BilletterieEtCommunication": "Billetterie et communication",
       "CombustiblesFossiles": "Combustibles fossiles",
       "CombustiblesOrganiques": "Combustibles organiques",
@@ -694,6 +760,7 @@
       "DechetsBatiments": "Déchets matériaux",
       "DechetsFuitesOuEmissionsNonEnergetiques": "Fuites ou émissions non énergétiques",
       "EauxUsees": "Eaux usées",
+      "AutresDechets": "Autres déchets",
       "FretEntrant": "Fret entrant",
       "FretInterne": "Fret interne",
       "FretSortant": "Fret sortant",
@@ -704,6 +771,10 @@
       "AutresInfrastructures": "Autres infrastructures",
       "Equipements": "Équipements",
       "Informatique": "Informatique",
+      "EquipementsDesSalaries": "Équipements des salariés",
+      "ParcInformatiqueDesSalaries": "Parc informatique des salariés",
+      "EquipementsDesBenevoles": "Équipements des bénévoles",
+      "ParcInformatiqueDesBenevoles": "Parc informatique des bénévoles",
       "UtilisationEnResponsabilite": "Utilisation en responsabilité",
       "UtilisationEnDependance": "Utilisation en dépendance",
       "InvestissementsFinanciersRealises": "Investissements financiers réalisés",
@@ -726,6 +797,43 @@
       "MaterielCinema": "Matériel cinéma",
       "CommunicationDigitale": "Communication digitale",
       "CaissesEtBornes": "Caisses et bornes",
+      "IntrantsBiensEtServices": "Intrants biens et services",
+      "IntrantsBiensEtMatieresTilt": "Intrants biens et matières",
+      "Alimentation": "Alimentation",
+      "RepasPrisParLesSalaries": "Repas pris par les salariés",
+      "RepasPrisParLesBenevoles": "Repas pris par les bénévoles",
+      "EquipementsEtImmobilisations": "Équipements et immobilisations",
+      "DeplacementsDePersonne": "Déplacement de personne",
+      "DeplacementsDomicileTravailSalaries": "Déplacements domicile travail des salariés",
+      "DeplacementsDomicileTravailBenevoles": "Déplacements domicile travail des bénévoles",
+      "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Déplacements dans le cadre d'une mission associative des salariés",
+      "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Déplacements dans le cadre d'une mission associative des bénévoles",
+      "DeplacementsDesBeneficiaires": "Déplacements des bénéficiaires",
+      "DeplacementsFabricationDesVehicules": "Déplacements Fabrication des véhicules",
+      "TransportDeMarchandises": "Transport de marchandises",
+      "Entrant": "Entrant",
+      "Sortant": "Sortant",
+      "Interne": "Interne",
+      "TransportFabricationDesVehicules": "Transport fabrication de véhicules",
+      "LocauxEtInfrastructures": "Locaux et infrastructures",
+      "ConstructionDesLocaux": "Construction des locaux",
+      "FroidEtClim": "Froid et climatisation",
+      "AutresEmissions": "Autres émissions",
+      "ActivitesAgricoles": "Activités agricoles",
+      "ActivitesIndustrielles": "Activités industrielles",
+      "UtilisationEtFinDeVie": "Utilisation et fin de vie",
+      "Utilisation": "Utilisation",
+      "UtilisationEnResponsabiliteConsommationDeBiens": "Utilisation en responsabilité - Consommation de biens",
+      "UtilisationEnResponsabiliteConsommationNumerique": "Utilisation en responsabilité - Consommation numérique",
+      "UtilisationEnResponsabiliteConsommationDEnergie": "Utilisation en responsabilité - Consommation d'énergie",
+      "UtilisationEnResponsabiliteFuitesEtAutresConsommations": "Utilisation en responsabilité - Fuites et autres consommations",
+      "UtilisationEnDependanceConsommationDeBiens": "Utilisation en dépendance - Consommation de biens",
+      "UtilisationEnDependanceConsommationNumerique": "Utilisation en dépendance - Consommation numérique",
+      "UtilisationEnDependanceConsommationDEnergie": "Utilisation en dépendance - Consommation d'énergie",
+      "UtilisationEnDependanceFuitesEtAutresConsommations": "Utilisation en dépendance - Fuites et autres consommations",
+      "Teletravail": "Télétravail",
+      "TeletravailSalaries": "Télétravail des salariés",
+      "TeletravailBenevoles": "Télétravail des bénévoles",
       "glossary": "Glossaire",
       "close": "Fermer",
       "glossaryDescription": {
@@ -745,7 +853,7 @@
         "EmissionsLieesAuChangementDAffectationDesSolsCas": "Imperméabilisation des sols, ...",
         "EmissionsLieesALaProductionDeFroid": "Fuites de fluides réfrigérants.",
         "EmissionsLieesAuxProcedesIndustriels": "Production de ciment, émissions de process dans l'industrie des semiconducteurs, ...",
-        "FretInterne": "Dans le cas où les points de départ et d'arrivée deraient partie du périmètre organisationnel.",
+        "FretInterne": "Dans le cas où les points de départ et d'arrivée feraient partie du périmètre organisationnel.",
         "ServicesEnApprocheMonetaire": "Différents services reçus, comptabilisés via des facteurs d'émission en ratios monétaires.",
         "MatiereDestineeAuxEmballages": "Afin de pouvoir faire porter des actions du plan de transition sur les emballages, un sous-poste est dédié à la matière destinée à ces emballages est disponible.",
         "BiensEtMatieresEnApprocheMonetaire": "Un sous-poste est également dédié aux matières pour lesquelles des facteurs d'émission en ratios monétaires sont utilisés.",
@@ -836,7 +944,7 @@
         },
         "post": "Poste",
         "post_studyContributorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel votre facteur d'émission sera sélectionnable.",
-        "post_emissionFactorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel le contributeur pourra intervenir.",
+        "post_emissionFactorDescription": "Vous devez choisir le ou les postes et sous-postes au sein duquel le contributeur·ice pourra intervenir.",
         "close": "Fermer"
       },
       "validation": {
@@ -962,24 +1070,24 @@
     "Advanced": "Avancé"
   },
   "role": {
-    "SUPER_ADMIN": "Administrateur Global",
-    "ADMIN": "Administrateur",
+    "SUPER_ADMIN": "Administrateur·ice Global",
+    "ADMIN": "Administrateur·ice",
     "GESTIONNAIRE": "Gestionnaire",
-    "COLLABORATOR": "Collaborateur",
+    "COLLABORATOR": "Collaborateur·ice",
     "DEFAULT": "Membre",
-    "ADMIN_description": "Un administrateur possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées). Il est impossible de changer le rôle d'un administrateur sur une étude de son organisation.",
-    "ADMIN_description_CR": "Un administrateur possède tous les droits sur le compte et les études (qu'elles soient publiques ou privées) de l'organisation ou de ses clients. Il est impossible de changer le rôle d'un administrateur sur une étude de son organisation ou d'un de ses clients.",
+    "ADMIN_description": "Un·e administrateur·ice possède tous les droits sur le compte de l'organisation ainsi que sur l'ensemble des études pour son organisation (qu'elles soient publiques ou privées). Il est impossible de changer le rôle d'un·e administrateur·ice sur une étude de son organisation.",
+    "ADMIN_description_CR": "Un·e administrateur·ice possède tous les droits sur le compte et les études (qu'elles soient publiques ou privées) de l'organisation ou de ses clients. Il est impossible de changer le rôle d'un·e administrateur·ice sur une étude de son organisation ou d'un de ses clients.",
     "GESTIONNAIRE_description": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit spécifique sur les études. Il est donc par défaut lecteur pour tous les Bilans Carbone® publics de son organisation.",
     "GESTIONNAIRE_description_CR": "Un gestionnaire possède tous les droits sur le compte de l'organisation, il n'a aucun droit spécifique sur les clients et les études. Il est donc par défaut lecteur pour tous les Bilans Carbone® publics de son organisation ou de ses clients.",
-    "COLLABORATOR_description": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études pour son organisation. Il est par défaut éditeur sur tous les Bilans Carbone® publics de son organisation.",
-    "COLLABORATOR_description_CR": "Un collaborateur est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études pour son organisation et ses clients. Il est par défaut éditeur sur tous les Bilans Carbone® publics de son organisation ou de ses clients.",
+    "COLLABORATOR_description": "Un·e collaborateur·ice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des études pour son organisation. Il est par défaut éditeur·rice sur tous les Bilans Carbone® publics de son organisation.",
+    "COLLABORATOR_description_CR": "Un·e collaborateur·ice est une personne formée à la méthode Bilan Carbone®. Il n'a aucun droit sur le compte de l'organisation mais peut créer des clients et des études pour son organisation et ses clients. Il est par défaut éditeur·rice sur tous les Bilans Carbone® publics de son organisation ou de ses clients.",
     "DEFAULT_description": "Un membre de l'organisation n'a aucun droit spécifique ni sur l'organisation, ni sur l'équipe, ni sur les Bilan Carbone® réalisés. Il est par défaut lecteur sur tous les Bilans Carbone® publics de son organisation.",
     "DEFAULT_description_CR": "Un membre de l'organisation n'a aucun droit spécifique ni sur l'organisation, ni sur l'équipe, ni sur les clients, ni sur les Bilan Carbone® réalisés. Il est par défaut lecteur sur tous les Bilans Carbone® publics de son organisation et de ses clients",
     "close": "Fermer",
     "guide": "Guide des rôles",
     "saved": "Nouveau rôle sauvegardé",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
-    "More than one": "Il doit y avoir au moins un administrateur ou gestionnaire dans l'organisation"
+    "More than one": "Il doit y avoir au moins un·e administrateur·ice ou gestionnaire dans l'organisation"
   },
   "environment": {
     "BC": "BC+ 2.0",
@@ -995,34 +1103,34 @@
     "invitationDate": "Invitation envoyé le",
     "toValidate": "Invitations à valider",
     "addedDate": "Ajouté le",
-    "delete": "Supprimer l'utilisateur",
+    "delete": "Supprimer l'utilisateur·ice",
     "resend": "Renvoyer l'invitation",
     "table": {
       "title": "Mon équipe",
-      "newUser": "Inviter un utilisateur",
+      "newUser": "Inviter un·e utilisatr·ice",
       "firstName": "Prénom",
       "lastName": "Nom",
       "email": "Email",
       "level": "Formation",
       "role": "Droits",
       "action": " ",
-      "deleteMember": "Supprimer le membre",
-      "userDeletion": "Suppression d'un utilisateur",
-      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet utilisateur ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
+      "deleteMember": "Supprimer le·a membre",
+      "userDeletion": "Suppression d'un·e utilisatr·ice",
+      "userDeletionDescription": "Êtes vous sur de vouloir supprimer cet·te utilisateur·ice ? Il n'aura plus accès au compte de votre organisation, mais aura toujours accès aux études pour lesquelles il a été invité par d'autres organisations.",
       "close": "Annuler",
       "confirm": "Confirmer",
-      "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur des études suivantes : "
+      "necessaryAdmin": "La suppression de cet administrateur est impossible. Il est le seul validateur·rice des études suivantes : "
     }
   },
   "newMember": {
-    "title": "Inviter un utilisateur",
+    "title": "Inviter un·e utilisatr·ice",
     "email": "Email",
     "firstName": "Prénom",
     "lastName": "Nom",
     "role": "Droits",
     "level": "Formation",
-    "create": "Inviter l'utilisateur",
-    "Not authorized": "Impossible d'inviter cette utilisateur. Veuillez contacter le <link>support</link> pour plus d'informations.",
+    "create": "Inviter l'utilisateur·ice",
+    "Not authorized": "Impossible d'inviter cette utilisatr·ice. Veuillez contacter le <link>support</link> pour plus d'informations.",
     "validation": {
       "email": "Veuillez renseigner un email valide",
       "firstName": "Veuillez renseigner un prénom",
@@ -1030,7 +1138,7 @@
       "level": "Veuillez renseigner un niveau de formation",
       "role": "Veuillez renseigner un rôle"
     },
-    "addedMember": "L'utilisateur a bien été ajouté à votre organisation"
+    "addedMember": "L'utilisateur·ice a bien été ajouté à votre organisation"
   },
   "units": {
     "selectAll": "Tout sélectionner",
@@ -1134,6 +1242,7 @@
     "PORTION": "portion",
     "MEAL": "repas",
     "T": "t",
+    "TEAM": "équipe",
     "TEP": "tep",
     "TEP_PCI": "tep PCI",
     "TEP_PCS": "tep PCS",
@@ -1195,14 +1304,14 @@
   "organization": {
     "create": "Nouvelle Organisation",
     "modify": "Modifier",
-    "myOrganization": "Organisation :",
+    "myOrganization": "Organisation",
     "myOrganizations": "Mes clients actuels",
     "seeLess": "Voir moins",
     "seeMore": "Voir plus",
     "name": "Nom : ",
     "title": "Organisation",
-    "createFirstClient": "Créer mon premier client",
-    "firstClientMessage": "Nous vous invitons à créer votre premier client puis à créer votre premier Bilan Carbone®",
+    "createFirstClient": "Créer mon premier·ère client·e",
+    "firstClientMessage": "Nous vous invitons à créer votre premier·ère client·e puis à créer votre premier Bilan Carbone®",
     "form": {
       "create": "Créer l'organisation",
       "editTitle": "Modifier mon organisation",
@@ -1224,6 +1333,10 @@
       "postalCodePlaceholder": "Code postal",
       "city": "Ville",
       "cityPlaceholder": "Ville",
+      "volunteerNumber": "Nombre de bénévoles",
+      "volunteerNumberPlaceholder": "Entrez le nombre de bénévoles pour ce site ici",
+      "beneficiaryNumber": "Nombre de bénéficiaires",
+      "beneficiaryNumberPlaceholder": "Entrez le nombre de bénéficiaires pour ce site ici",
       "actions": "Actions",
       "delete": "Supprimer",
       "add": "Ajouter un site",
@@ -1261,7 +1374,7 @@
     "delete": {
       "button": "Supprimer l'organisation",
       "title": "Êtes-vous sûr de vouloir supprimer ce client ?",
-      "content": "Êtes vous sur de vouloir supprimer ce client ? <warning>Toutes ses données et études seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'organisation dans le champs ci-dessous:",
+      "content": "Êtes vous sur de vouloir supprimer ce·tte client·e ? <warning>Toutes ses données et études seront supprimées définitivement et seront impossible à récupérées.</warning> Si c'est bien le cas, merci d'écrire le nom de l'organisation dans le champs ci-dessous:",
       "name": "Nom du client",
       "cancel": "Annuler",
       "confirm": "Confirmer",
@@ -1305,8 +1418,8 @@
     "deleteDialog": {
       "button": "Supprimer la source",
       "delete": "Supprimer cette source d'émission",
-      "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
-      "description": "<warning>Toutes les données renseignées seront définitivement perdues</warning>, et les éventuels contributeurs n'auront plus accès à cette source d'émission.",
+      "title": "Êtes-vous sûr de vouloir supprimer cette source d'émission ?",
+      "description": "<warning>Toutes les données renseignées seront définitivement perdues</warning>, et les éventuels contributeur·ices n'auront plus accès à cette source d'émission.",
       "accept": "Oui",
       "decline": "Non"
     },
@@ -1321,7 +1434,7 @@
     "status": {
       "valid": "Validée",
       "waiting": "En complétion",
-      "waitingContributor": "En attente d'un contributeur",
+      "waitingContributor": "En attente d'un·e contributeur·ice",
       "toVerify": "À vérifier"
     },
     "type": {
@@ -1331,12 +1444,12 @@
       "Statistical": "Statistique",
       "Approched": "Approchée"
     },
-    "informations": "Informations :",
+    "informations": "Informations :",
     "results": {
-      "title": "Résultats :",
-      "emission": "Émission :",
-      "confiance": "Intervalle de confiance à 95% :",
-      "alpha": "Alpha :"
+      "title": "Résultats :",
+      "emission": "Émission :",
+      "confiance": "Intervalle de confiance à 95% :",
+      "alpha": "Alpha :"
     },
     "form": {
       "validate": "Validée",
@@ -1359,7 +1472,9 @@
       "quality": "Qualité",
       "expand": "Développer les qualités",
       "shrink": "Simplifier les qualités",
-      "comment": "Commentaires"
+      "comment": "Commentaires",
+      "tag": "Tag",
+      "create": "Créer {tag}"
     },
     "cut": {
       "form": {
@@ -1375,7 +1490,7 @@
     }
   },
   "quality": {
-    "name": "Qualité :",
+    "name": "Qualité :",
     "1": "Très mauvaise",
     "2": "Mauvaise",
     "3": "Moyenne",
@@ -1385,6 +1500,7 @@
   },
   "error": {
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
+    "Server error": "Une erreur serveur est survenue, veuillez contacter le support",
     "default": "Une erreur s'est produite, veuillez reessayer. Si le problème persiste, contactez le support.",
     "error": "Une erreur s'est produite...",
     "contactSupport": "Un problème est survenu. Essayez de revenir sur <link>la page d'accueil</link>. <p>Si cela ne fonctionne pas, contactez notre support à <m></m> ou essayez de vous <logout>reconnecter</logout>.</p>"
@@ -1400,7 +1516,7 @@
     "title-1": "Bienvenue sur le BC+ ! Avant de commencer, veuillez configurer votre organisation",
     "titleDescription-1": "Nous avons pré-rempli certaines informations concernant votre organisation (association, entreprise, ...) suite à votre adhésion à l'ABC. Vous pouvez modifier le nom de votre organisation maintenant, ou à tout moment dans le BC+ via la rubrique \"Organisation\".",
     "title-2": "Gestion de votre équipe",
-    "titleDescription-2": "Vous pouvez d'ores et déjà ajouter vos collaborateurs au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Mon équipe\" située dans le menu \"Mon organisation\".",
+    "titleDescription-2": "Vous pouvez d'ores et déjà ajouter vos collaborateur·ices au sein de votre équipe ! Vous pourrez toujours ajouter de nouvelles personnes plus tard via la rubrique \"Mon équipe\" située dans le menu \"Mon organisation\".",
     "previous": "Précédent",
     "next": "Suivant",
     "validate": "Valider",
@@ -1414,7 +1530,7 @@
       "gestionnaireDescription": "Vous n'avez pas été formé au Bilan Carbone® : Le rôle qui vous a été attribué est celui de gestionnaire de votre organisation."
     },
     "step2": {
-      "addCollaborator": "Ajouter un collaborateur",
+      "addCollaborator": "Ajouter un·e collaborateur·ice",
       "email": "Adresse email",
       "emailPlaceholder": "Ajouter une adresse email ici",
       "role": "Rôle",
@@ -1435,10 +1551,10 @@
     "done": "Fait",
     "CreateAccount": "Créer votre compte",
     "CreateAccountDetails": "",
-    "AddCollaborator": "Ajouter des collaborateurs",
+    "AddCollaborator": "Ajouter des collaborateur·ices",
     "AddCollaboratorDetails": "Ajouter vos collègues pour qu'ils puissent vous aider à établir le Bilan Carbone® de votre entreprise.",
-    "AddClient": "Créer votre premier client",
-    "AddClientDetails": "Ajouter votre premier client afin de commencer vos Bilans Carbone®",
+    "AddClient": "Créer votre premier·ère client·e",
+    "AddClientDetails": "Ajouter votre premier·ère client·e afin de commencer vos Bilans Carbone®",
     "AddSiteCR": "Ajouter les sites",
     "AddSiteCRDetails": "Ajouter des sites à votre <orga>organisation</orga> ou à <client>un de vos clients</client> pour que vous puissiez établir les émissions de chacun des sites. Si votre organisation ou client n'a qu'un site, créer un site 'Tous sites'",
     "AddSiteCRCollaborator": "Ajouter les sites",
@@ -1462,20 +1578,21 @@
     "warning": "Avertissement",
     "warningMessage": "<error>Veuillez vérifier sur votre compte BC+ le nom de votre organisation dans la page <i>Mon organisation > Informations générales</i>, ainsi que vos nom et prénom dans votre profil (en haut à droite). Ces informations seront utilisées pour générer votre attestation personnalisée.</error><br></br>Vous êtes actuellement connecté en tant que {name}, de l'organisation {organization} et êtes formé au niveau {level}. Si cette dernière information n'est pas correcte, merci d'envoyer votre attestation de formation à l'adresse <support>support</support>.<br></br><b>Rappel :</b> la formation doit être suivie avec <b>votre compte personnel</b> et <b>votre adresse e-mail nominative</b>, et non avec un compte générique de l'entreprise. Vous pouvez ajouter d'autres membres de votre organisation depuis le BC+ : page <i>Mon organisation > Mon équipe</i>.",
     "videos": "Vidéos",
-    "videoExplanation": "Notez bien que l’évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d’obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
+    "videoExplanation": "Notez bien que l'évaluation associée à cette formation « condensée » ne comporte aucun piège si vous visionnez la formation avec attention. Sa réussite vous permettra d'obtenir gratuitement une attestation de formation mise à jour. En revanche, un résultat insuffisant impliquerait de vous réintégrer au parcours de formation intégral (nouveau module Initiation si vous étiez formé M1 sur la V8, ou nouveau module Professionnel si vous étiez formé M2 sur la V8).",
     "evaluation": "Evaluation des connaissances",
     "evaluationEnded": "Vous avez déjà répondu au questionnaire",
-    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><red> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l’outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</red>",
+    "evaluationSubtitle": "Veuillez à présent répondre au questionnaire d'évaluation des connaissances afin de recevoir votre attestation de formation de mise à jour. <b>Ce dernier est chronométré et vous aurez au maximum {time} minutes pour répondre aux questions. Vous ne pouvez répondre au questionnaire qu'une seule fois.</b><red> Une fois lancé, impossible de revenir en arrière. Des exercices pratiques sont présents dans le questionnaire. Nous vous invitons, avant de le commencer, à ouvrir le guide en ligne ainsi que l'outil Excel Bilan Carbone® v9 (pour rappel il est disponible dans votre espace adhérent). Ceux-ci seront utiles et nécessaires pour certaines questions.</red>",
     "acceptation": "J'ai compris que je ne pourrais lancer qu'une seule fois le questionnaire et que je vais avoir un temps limité pour répondre aux questions. Je suis dans les bonnes conditions pour commencer mon test.",
     "answer": "Répondre au questionnaire",
     "timer": "Temps restant : ",
-    "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite de {time} minutes avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d’attestation de réussite.",
+    "alertMessage": "Il ne vous reste que 10 minutes. Passé ce délai, le formulaire restera accessible et vous pourrez toujours transmettre vos réponses. Cependant, si vous dépassez la limite de {time} minutes avant de les envoyer, celles-ci ne seront pas prises en compte et vous ne recevrez pas d'attestation de réussite.",
     "form": "Questionnaire Typeform"
   },
   "deactivableFeatures": {
     "title": "Fonctionnalités désactivables",
     "Formation": "Formation",
     "Feedback": "Feedback",
+    "Creation": "Création",
     "source": "Sources",
     "environment": "Environnements",
     "true": "Active",

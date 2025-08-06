@@ -2,9 +2,10 @@
 
 import { FullStudy } from '@/db/study'
 import { StudyWithoutDetail } from '@/services/permissions/study'
-import { Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { withInfobulle } from '@/utils/post'
-import { StudyRole } from '@prisma/client'
+import { Environment, StudyRole } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import Block from '../base/Block'
@@ -26,6 +27,7 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const [glossary, setGlossary] = useState('')
   const { studySite, setSite } = useStudySite(study)
+  const { environment } = useAppEnvironmentStore()
 
   const emissionSources = useMemo(
     () =>
@@ -42,8 +44,8 @@ const StudyContributorPage = ({ study, userRole }: Props) => {
         <SelectStudySite study={study} studySite={studySite} setSite={setSite} />
       </Block>
 
-      {Object.values(Post)
-        .filter((post) =>
+      {Object.values(environmentPostMapping[environment || Environment.BC])
+        .filter((post: Post) =>
           study.emissionSources.some((emissionSource) => subPostsByPost[post].includes(emissionSource.subPost)),
         )
         .map((post) => (

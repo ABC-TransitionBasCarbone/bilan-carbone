@@ -1,11 +1,13 @@
 'use client'
 
+import { useServerFunction } from '@/hooks/useServerFunction'
 import { getEnvRoute } from '@/services/email/utils'
-import { signUpCutUser } from '@/services/serverFunctions/user'
+import { getAllCNCs } from '@/services/serverFunctions/cnc'
+import { signUpWithSiretOrCNC } from '@/services/serverFunctions/user'
 import { SignUpCutCommand, SignUpCutCommandValidation } from '@/services/serverFunctions/user.command'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
-import { Environment } from '@prisma/client'
+import { Cnc, Environment } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -14,6 +16,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Form from '../base/Form'
 import LoadingButton from '../base/LoadingButton'
+import { FormAutocomplete } from '../form/Autocomplete'
 import { FormTextField } from '../form/TextField'
 import authStyles from './Auth.module.css'
 
@@ -26,15 +29,11 @@ const SignUpFormCut = () => {
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(false)
+  const [cncs, setCNCs] = useState<Cnc[]>([])
+  const [siretOrCNC, setSiretOrCNC] = useState('')
+  const { callServerFunction } = useServerFunction()
 
   const searchParams = useSearchParams()
-
-  useEffect(() => {
-    const email = searchParams.get('email')
-    if (email) {
-      setValue('email', email)
-    }
-  }, [searchParams])
 
   const { control, getValues, setValue, handleSubmit } = useForm<SignUpCutCommand>({
     resolver: zodResolver(SignUpCutCommandValidation),
@@ -42,14 +41,37 @@ const SignUpFormCut = () => {
     reValidateMode: 'onChange',
     defaultValues: {
       email: searchParams.get('email') ?? '',
+      siretOrCNC: '',
     },
   })
+
+  useEffect(() => {
+    const fetchCNCs = async () => {
+      const response = await callServerFunction(async () => {
+        const data = await getAllCNCs()
+        return { success: true, data }
+      })
+
+      if (response.success) {
+        setCNCs(response.data)
+      }
+    }
+
+    fetchCNCs()
+  }, [setCNCs])
+
+  useEffect(() => {
+    const email = searchParams.get('email')
+    if (email) {
+      setValue('email', email)
+    }
+  }, [searchParams, setValue])
 
   const onSubmit = async () => {
     setMessage('')
     setSubmitting(true)
 
-    const activation = await signUpCutUser(getValues().email, getValues().siretOrCNC)
+    const activation = await signUpWithSiretOrCNC(getValues().email, siretOrCNC, Environment.CUT)
     setSubmitting(false)
 
     if (activation.success) {
@@ -73,14 +95,23 @@ const SignUpFormCut = () => {
           placeholder={t('emailPlaceholder')}
           data-testid="activation-email"
         />
-        <FormTextField
+        <FormAutocomplete
+          data-testid="activation-siretOrCNC"
           control={control}
           translation={t}
+          options={cncs.map((cnc) => ({
+            label: `${cnc.nom} (Dep : ${cnc.dep} | Numéro CNC : ${cnc.numeroAuto})`,
+            value: cnc.numeroAuto ?? '',
+          }))}
           name="siretOrCNC"
-          className={authStyles.input}
           label={t('siretOrCNC')}
-          placeholder={t('siretOrCNCPlaceholder')}
-          data-testid="activation-siretOrCNC"
+          helperText={t('siretOrCNCPlaceholder')}
+          freeSolo
+          disableClearable
+          onInputChange={(_, value) => {
+            setSiretOrCNC(value)
+            setValue('siretOrCNC', value)
+          }}
         />
         <LoadingButton data-testid="activation-button" type="submit" loading={submitting} variant="contained" fullWidth>
           {t('validate')}

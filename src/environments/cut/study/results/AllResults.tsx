@@ -3,26 +3,25 @@
 import SelectStudySite from '@/components/study/site/SelectStudySite'
 import useStudySite from '@/components/study/site/useStudySite'
 import { FullStudy } from '@/db/study'
-import { computeResultsByPost } from '@/services/results/consolidated'
 import DownloadIcon from '@mui/icons-material/Download'
-import { Box, Button, Tab, Tabs, Typography, useTheme } from '@mui/material'
-import { BarChart, PieChart } from '@mui/x-charts'
+// import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
+import { Box, Button, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
-import { SyntheticEvent, useMemo, useState } from 'react'
+import { SyntheticEvent, useState } from 'react'
 
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { useChartData, useComputedResults } from '@/hooks/useComputedResults'
-import { useListPosts } from '@/hooks/useListPosts'
-import { CutPost } from '@/services/posts'
 import { downloadStudyResults } from '@/services/study'
-import { STUDY_UNIT_VALUES } from '@/utils/study'
-import { axisClasses } from '@mui/x-charts/ChartsAxis'
+import { Environment } from '@prisma/client'
 
 import Block from '@/components/base/Block'
-import { formatNumber } from '@/utils/number'
-import { Environment } from '@prisma/client'
+// import LoadingButton from '@/components/base/LoadingButton'
+import BarChart from '@/components/study/charts/BarChart'
+import PieChart from '@/components/study/charts/PieChart'
+// import { useServerFunction } from '@/hooks/useServerFunction'
+import { CutPost } from '@/services/posts'
+// import { generateStudySummaryPDF } from '@/services/serverFunctions/pdf'
 import classNames from 'classnames'
 import Link from 'next/link'
 import styles from './AllResults.module.css'
@@ -41,8 +40,8 @@ const a11yProps = (index: number) => {
 }
 
 const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) => {
-  const theme = useTheme()
   const [value, setValue] = useState(0)
+  // const [pdfLoading, setPdfLoading] = useState(false)
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
@@ -55,31 +54,29 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
   const tUnits = useTranslations('study.results.units')
   const tExportButton = useTranslations('study.export')
   const tStudyNav = useTranslations('study.navigation')
+  // const { callServerFunction } = useServerFunction()
 
   const { studySite, setSite } = useStudySite(study, true)
 
-  const resultsByPost = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, CutPost),
-    [study, studySite, tPost, validatedOnly],
-  )
+  // const handlePDFDownload = async () => {
+  //   setPdfLoading(true)
+  //   await callServerFunction(() => generateStudySummaryPDF(study.id, study.name, study.startDate.getFullYear()), {
+  //     onSuccess: (data) => {
+  //       const pdfBuffer = new Uint8Array(data.pdfBuffer)
+  //       const pdfBlob = new Blob([pdfBuffer], { type: data.contentType })
 
-  const barChartSettings = {
-    height: 450,
-    sx: { [`.${axisClasses.left} .${axisClasses.label}`]: { transform: 'translate(-1rem, 0)' } },
-    borderRadius: 10,
-  }
-
-  const listCutPosts = useListPosts() as CutPost[]
-  const computeResults = useComputedResults(resultsByPost, tPost, listCutPosts)
-
-  const { pieData, barData } = useChartData(computeResults, theme)
-
-  const chartFormatter = (value: number | null) => {
-    const safeValue = value ?? 0
-    const unit = study.resultsUnit
-    const precision = unit === 'K' ? 3 : 0
-    return `${formatNumber(safeValue / STUDY_UNIT_VALUES[unit], precision)} ${tUnits(unit)}`
-  }
+  //       const url = URL.createObjectURL(pdfBlob)
+  //       const link = document.createElement('a')
+  //       link.href = url
+  //       link.download = data.filename
+  //       document.body.appendChild(link)
+  //       link.click()
+  //       document.body.removeChild(link)
+  //       URL.revokeObjectURL(url)
+  //     },
+  //   })
+  //   setPdfLoading(false)
+  // }
 
   return (
     <Block title={study.name} as="h1" description={tStudyNav('results')} bold descriptionColor="primary">
@@ -120,6 +117,16 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           >
             {tExportButton('export')}
           </Button>
+          {/* <LoadingButton
+            variant="outlined"
+            color="primary"
+            size="large"
+            endIcon={<PictureAsPdfIcon />}
+            onClick={handlePDFDownload}
+            loading={pdfLoading}
+          >
+            {tResults('downloadPDF')}
+          </LoadingButton> */}
         </div>
         <Typography className={classNames(styles.infoContainer, 'ml2')}>{tResults('info')}</Typography>
       </Box>
@@ -133,52 +140,29 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
           <TabPanel value={value} index={0}>
             <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} hiddenUncertainty />
           </TabPanel>
-          {resultsByPost.length !== 0 && (
-            <>
-              <TabPanel value={value} index={1}>
-                {barData.values.length !== 0 && barData.values.some((v) => v !== 0) ? (
-                  <BarChart
-                    xAxis={[
-                      {
-                        data: barData.labels,
-                        height: 80,
-                        scaleType: 'band',
-                        tickLabelStyle: { angle: -20, textAnchor: 'end' },
-                        tickPlacement: 'extremities',
-                        tickLabelPlacement: 'middle',
-                        colorMap: {
-                          type: 'ordinal',
-                          values: barData.labels,
-                          colors: barData.colors,
-                        },
-                      },
-                    ]}
-                    series={[{ data: barData.values, valueFormatter: chartFormatter }]}
-                    grid={{ horizontal: true }}
-                    yAxis={[{ label: tUnits(study.resultsUnit) }]}
-                    axisHighlight={{ x: 'none' }}
-                    {...barChartSettings}
-                  />
-                ) : (
-                  <Typography align="center" sx={{ mt: '0.25rem' }}>
-                    {tResults('noData')}
-                  </Typography>
-                )}
-              </TabPanel>
-              <TabPanel value={value} index={2}>
-                {pieData.length !== 0 ? (
-                  <PieChart
-                    series={[{ data: pieData, valueFormatter: ({ value }) => chartFormatter(value) }]}
-                    height={350}
-                  />
-                ) : (
-                  <Typography align="center" sx={{ mt: '0.25rem' }}>
-                    {tResults('noData')}
-                  </Typography>
-                )}
-              </TabPanel>
-            </>
-          )}
+          <TabPanel value={value} index={1}>
+            <BarChart
+              study={study}
+              studySite={studySite}
+              height={400}
+              showTitle={false}
+              showLegend={true}
+              showLabelsOnBars={true}
+              validatedOnly={validatedOnly}
+              postValues={CutPost}
+            />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <PieChart
+              study={study}
+              studySite={studySite}
+              height={400}
+              showTitle={false}
+              showLabelsOnPie={true}
+              validatedOnly={validatedOnly}
+              postValues={CutPost}
+            />
+          </TabPanel>
         </Box>
       </Box>
     </Block>

@@ -2,6 +2,7 @@ import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({
+  cssVariables: true,
   palette: {
     primary: {
       main: '#63EA90',
@@ -13,7 +14,15 @@ const base = createTheme({
       main: '#63EA90',
     },
     grey: {
-      '500': '#2C303A',
+      50: '#e9eff9',
+      100: '#dbe5f6',
+      200: '#eae5e8',
+      300: '#c6d8f5',
+      400: '#9fbff3',
+      500: '#2C303A',
+      600: '#080212',
+      800: '#040109',
+      900: '#020105',
     },
     success: {
       main: '#94EBBF',
@@ -29,7 +38,9 @@ const base = createTheme({
       main: '#fc8514',
     },
     info: {
-      main: '#272768',
+      main: '#B0B8C4',
+      light: '#E5E7EB',
+      dark: '#9CA3AF',
     },
     background: {
       default: '#FBFCFC',
@@ -132,6 +143,18 @@ const cutTheme = createTheme(base, {
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& input': {
+            '&:-webkit-autofill': {
+              WebkitBoxShadow: '0 0 0 1000px #ffffff inset',
+              WebkitTextFillColor: 'inherit',
+            },
+          },
+        },
+      },
+    },
   },
   custom: {
     box: {
@@ -146,7 +169,7 @@ const cutTheme = createTheme(base, {
     postColors: {
       [Post.Fonctionnement]: { light: '#FF8145' },
       [Post.MobiliteSpectateurs]: { light: '#FEBC0C' },
-      [Post.TourneesAvantPremiere]: { light: '#3CCDB4' },
+      [Post.TourneesAvantPremieres]: { light: '#3CCDB4' },
       [Post.Dechets]: { light: '#9A61FA' },
       [Post.ConfiseriesEtBoissons]: { light: '#FF49A2' },
       [Post.BilletterieEtCommunication]: { light: '#FF4052' },

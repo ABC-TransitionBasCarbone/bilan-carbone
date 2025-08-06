@@ -6,6 +6,9 @@ export const getEnvRoute = (path: string, env?: Environment) => {
     case Environment.CUT:
       base = '/count'
       break
+    case Environment.TILT:
+      base = '/tilt'
+      break
     default:
       break
   }

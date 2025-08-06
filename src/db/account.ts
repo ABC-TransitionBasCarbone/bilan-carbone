@@ -1,5 +1,7 @@
+import { NOT_AUTHORIZED } from '@/services/permissions/check'
+import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { findUserInfo } from '@/utils/user'
-import { Account, Environment, Prisma, Role, User } from '@prisma/client'
+import { Account, DeactivatableFeature, Environment, Prisma, Role, User } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
 import { OrganizationVersionWithOrganizationSelect } from './organization'
@@ -105,12 +107,20 @@ export const getAccountFromUserOrganization = (user: UserSession) =>
   prismaClient.account.findMany({ ...findUserInfo(user), orderBy: { user: { email: 'asc' } } })
 export type TeamMember = AsyncReturnType<typeof getAccountFromUserOrganization>[0]
 
-export const addAccount = (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) =>
-  prismaClient.account.create({
+export const addAccount = async (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) => {
+  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+  if (
+    deactivatedFeaturesRestrictions?.active &&
+    deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(account.environment)
+  ) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  return prismaClient.account.create({
     data: account,
     select: AccountWithUserSelect,
   })
-
+}
 export const getAccountsUserLevel = (ids: string[]) =>
   prismaClient.account.findMany({
     where: { id: { in: ids } },

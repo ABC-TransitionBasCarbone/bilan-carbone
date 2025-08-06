@@ -2,13 +2,19 @@
 
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import {
+  getQuestionsAffectedBySiteDataChange,
+  SITE_DEPENDENT_FIELDS,
+  SiteDependentField,
+} from '@/constants/emissionFactorMap'
+import { defaultEmissionSourceTags } from '@/constants/emissionSourceTags'
+import {
   AccountWithUser,
   addAccount,
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
   getAccountsUserLevel,
 } from '@/db/account'
-import { findCncByNumeroAuto } from '@/db/cnc'
+import { findCncByNumeroAuto, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
@@ -22,6 +28,7 @@ import {
   getOrganizationWithSitesById,
   OrganizationVersionWithOrganization,
 } from '@/db/organization'
+import { getAnswerByQuestionId, getQuestionByIdIntern, getQuestionsByIdIntern } from '@/db/question'
 import {
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
@@ -105,6 +112,7 @@ import {
 } from '../permissions/study'
 import { deleteFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { checkLevel } from '../study'
+import { saveAnswerForQuestion } from './question'
 import {
   ChangeStudyCinemaCommand,
   ChangeStudyDatesCommand,
@@ -213,6 +221,15 @@ export const createStudyCommand = async (
     const userCAUnit = (await getUserApplicationSettings(session.user.accountId))?.caUnit
     const caUnit = CA_UNIT_VALUES[userCAUnit || defaultCAUnit]
 
+    const emissionSourceTags = {
+      createMany: {
+        data:
+          session.user.environment in defaultEmissionSourceTags
+            ? defaultEmissionSourceTags[session.user.environment as keyof typeof defaultEmissionSourceTags] || []
+            : [],
+      },
+    }
+
     const study = {
       ...command,
       createdBy: { connect: { id: session.user.accountId } },
@@ -246,11 +263,14 @@ export const createStudyCommand = async (
                 siteId: site.id,
                 etp: site.etp || organizationSite.etp,
                 ca: site.ca ? site.ca * caUnit : organizationSite.ca,
+                volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
+                beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
               }
             })
             .filter((site) => site !== undefined),
         },
       },
+      emissionSourceTags,
     } satisfies Prisma.StudyCreateInput
 
     if (!(await canCreateSpecificStudy(session.user, study, organizationVersionId))) {
@@ -356,7 +376,7 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
     await updateStudy(studyId, { name: command.name })
   })
 
-export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCinemaCommand) =>
+export const changeStudyCinema = async (studySiteId: string, cncId: string, data: ChangeStudyCinemaCommand) =>
   withServerResponse('changeStudyCinema', async () => {
     const studySites = await getStudiesSitesFromIds([studySiteId])
 
@@ -375,14 +395,38 @@ export const changeStudyCinema = async (studySiteId: string, data: ChangeStudyCi
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
-    const { openingHours, openingHoursHoliday, ...updateData } = data
+    const { openingHours, openingHoursHoliday, numberOfProgrammedFilms, ...updateData } = data
 
     if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
+    // Detect changes in fields with dependencies
+    const currentSite = studySites[0]
+    const changedFields: SiteDependentField[] = []
+
+    for (const field of SITE_DEPENDENT_FIELDS) {
+      if (field === 'numberOfProgrammedFilms') {
+        const currentCncValue = currentSite.site.cnc?.numberOfProgrammedFilms ?? 0
+        if (numberOfProgrammedFilms !== undefined && numberOfProgrammedFilms !== currentCncValue) {
+          changedFields.push(field)
+        }
+      } else {
+        if (updateData[field] !== undefined && updateData[field] !== currentSite[field]) {
+          changedFields.push(field)
+        }
+      }
+    }
+
+    await updateNumberOfProgrammedFilms({ cncId, numberOfProgrammedFilms })
     await updateStudyOpeningHours(studySiteId, openingHours, openingHoursHoliday)
     await updateStudySiteData(studySiteId, updateData)
+
+    // Recalculate emissions for affected emissions if dependent fields changed
+    if (changedFields.length > 0 && informations.user.organizationVersionId) {
+      const affectedQuestionIds = getQuestionsAffectedBySiteDataChange(changedFields)
+      await recalculateEmissionsForQuestions(study.id, informations.user.organizationVersionId, affectedQuestionIds)
+    }
   })
 
 export const hasActivityData = async (
@@ -417,14 +461,47 @@ const hasEmissionSources = async (study: FullStudy, siteId: string) => {
   return true
 }
 
+const recalculateEmissionsForQuestions = async (
+  studyId: string,
+  organizationVersionId: string,
+  affectedQuestionIds: string[],
+) => {
+  if (affectedQuestionIds.length === 0) {
+    return
+  }
+
+  const study = await getStudyById(studyId, organizationVersionId)
+  if (!study) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  for (const questionIdIntern of affectedQuestionIds) {
+    const question = await getQuestionByIdIntern(questionIdIntern)
+    if (!question) {
+      continue
+    }
+
+    for (const studySite of study.sites) {
+      const answer = await getAnswerByQuestionId(question.id, studySite.id)
+      if (!answer || !answer.response) {
+        continue
+      }
+
+      // Re-save the answer to trigger recalculation through the normal flow
+      await saveAnswerForQuestion(question, answer.response, study.id, studySite.id)
+    }
+  }
+}
+
 export const changeStudySites = async (studyId: string, { organizationId, ...command }: ChangeStudySitesCommand) =>
   withServerResponse('changeStudySites', async () => {
-    const [organization, session] = await Promise.all([
+    const [organization, session, study] = await Promise.all([
       getOrganizationWithSitesById(organizationId),
       dbActualizedAuth(),
+      getStudyById(studyId, organizationId),
     ])
 
-    if (!organization || !session) {
+    if (!organization || !session || !study) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -443,6 +520,8 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
           siteId: site.id,
           etp: site.etp || organizationSite.etp,
           ca: (site?.ca || 0) * caUnit || organizationSite.ca,
+          volunteerNumber: site.volunteerNumber || organizationSite.volunteerNumber,
+          beneficiaryNumber: site.beneficiaryNumber || organizationSite.beneficiaryNumber,
         }
       })
       .filter((site) => site !== undefined)
@@ -788,6 +867,42 @@ export const deleteFlowFromStudy = async (document: Document, studyId: string) =
     if (bucketDelete.success) {
       await deleteDocument(document.id)
     }
+  })
+
+export const getQuestionsGroupedBySubPost = async (questionIds: string[], studySiteId?: string) =>
+  withServerResponse('getQuestionsGroupedBySubPost', async () => {
+    const questionsBySubPost: Record<
+      string,
+      Array<{ id: string; label: string; idIntern: string; answer?: string }>
+    > = {}
+
+    for (const questionId of questionIds) {
+      const questions = await getQuestionsByIdIntern(questionId)
+      if (questions) {
+        for (const question of questions) {
+          if (!questionsBySubPost[question.subPost]) {
+            questionsBySubPost[question.subPost] = []
+          }
+
+          let answerText: string | undefined
+          if (studySiteId) {
+            const answer = await getAnswerByQuestionId(question.id, studySiteId)
+            if (answer && answer.response) {
+              answerText = typeof answer.response === 'string' ? answer.response : JSON.stringify(answer.response)
+            }
+          }
+
+          questionsBySubPost[question.subPost].push({
+            id: question.id,
+            label: question.label,
+            idIntern: question.idIntern,
+            answer: answerText,
+          })
+        }
+      }
+    }
+
+    return questionsBySubPost
   })
 
 const hasAccessToStudy = (user: UserSession, study: AsyncReturnType<typeof getStudiesSitesFromIds>[0]['study']) => {

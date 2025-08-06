@@ -2,6 +2,7 @@ import { Post } from '@/services/posts'
 import { createTheme } from '@mui/material/styles'
 
 const base = createTheme({
+  cssVariables: true,
   palette: {
     background: {
       default: '#3880ff0d',
@@ -143,6 +144,18 @@ const theme = createTheme(base, {
         },
         '& .MuiLinearProgress-barColorPrimary': {
           backgroundColor: base.palette.success.main,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& input': {
+            '&:-webkit-autofill': {
+              WebkitBoxShadow: '0 0 0 1000px #ffffff inset',
+              WebkitTextFillColor: 'inherit',
+            },
+          },
         },
       },
     },

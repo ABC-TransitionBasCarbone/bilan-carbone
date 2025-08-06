@@ -4,6 +4,7 @@ import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { BCPost, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
@@ -104,6 +105,7 @@ const EmissionFactorsTable = ({
   importVersions,
   initialSelectedSources,
 }: Props) => {
+  const { environment } = useAppEnvironmentStore()
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const tPosts = useTranslations('emissionFactors.post')
@@ -181,7 +183,7 @@ const EmissionFactorsTable = ({
       {
         header: t('value'),
         accessorFn: (emissionFactor) =>
-          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === BCUnit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}`,
+          `${formatEmissionFactorNumber(getEmissionFactorValue(emissionFactor, environment))} ${tResultUnits(StudyResultUnit.K)}/${emissionFactor.unit === BCUnit.CUSTOM ? emissionFactor.customUnit : tUnits(emissionFactor.unit || '')}`,
       },
       {
         header: t('location'),

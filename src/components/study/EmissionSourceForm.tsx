@@ -4,6 +4,7 @@ import { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { getEmissionSourceTagsByStudyId } from '@/services/serverFunctions/emissionSource'
 import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emissionSource.command'
 import { duplicateStudyEmissionSource } from '@/services/serverFunctions/study'
 import { EmissionSourcesStatus } from '@/services/study'
@@ -20,10 +21,12 @@ import AddIcon from '@mui/icons-material/Add'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import EditIcon from '@mui/icons-material/Edit'
 import HideIcon from '@mui/icons-material/VisibilityOff'
-import { FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
+import { Autocomplete, Chip, FormControl, InputLabel, MenuItem, TextField } from '@mui/material'
 import {
   EmissionSourceCaracterisation,
+  EmissionSourceTag,
   EmissionSourceType,
+  Environment,
   StudyResultUnit,
   StudyRole,
   SubPost,
@@ -47,6 +50,8 @@ import EmissionSourceFactor from './EmissionSourceFactor'
 import emissionFactorStyles from './EmissionSourceFactor.module.css'
 import QualitySelectGroup from './QualitySelectGroup'
 
+type Option = { label: string; value: string; color?: string | null }
+
 const getDetail = (metadata: Exclude<EmissionFactorWithMetaData['metaData'], undefined>) =>
   [metadata.attribute, metadata.comment, metadata.location].filter(Boolean).join(' - ')
 
@@ -60,7 +65,8 @@ interface Props {
   emissionFactors: EmissionFactorWithMetaData[]
   subPost: SubPost
   selectedFactor?: EmissionFactorWithMetaData
-  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null) => void
+  update: (key: Path<UpdateEmissionSourceCommand>, value: string | number | boolean | null | string[]) => void
+  environment: Environment | undefined
   caracterisations: EmissionSourceCaracterisation[]
   mandatoryCaracterisation: boolean
   status: EmissionSourcesStatus
@@ -88,6 +94,7 @@ const EmissionSourceForm = ({
   isFromOldImport,
   currentBEVersion,
   studyUnit,
+  environment,
 }: Props) => {
   const t = useTranslations('emissionSource')
   const tUnits = useTranslations('units')
@@ -102,6 +109,7 @@ const EmissionSourceForm = ({
   const [duplicationSite, setDuplicationSite] = useState(emissionSource.studySite.id)
   const [expandedQuality, setExpandedQuality] = useState(!!advanced)
   const [expandedFEQuality, setExpandedFEQuality] = useState(true)
+  const [tags, setTags] = useState<EmissionSourceTag[]>([])
   const router = useRouter()
 
   const qualities = qualityKeys.map((column) => emissionSource[column])
@@ -138,6 +146,17 @@ const EmissionSourceForm = ({
       update('value', (emissionSource.hectare || 0) * (emissionSource.duration || 0))
     }
   }, [emissionSource.hectare, emissionSource.duration])
+
+  useEffect(() => {
+    getEmissionSourceTags()
+  }, [studyId, subPost])
+
+  const getEmissionSourceTags = async () => {
+    const response = await getEmissionSourceTagsByStudyId(studyId)
+    if (response.success && response.data) {
+      setTags(response.data)
+    }
+  }
 
   const glossaryLink = useMemo(() => {
     switch (glossary) {
@@ -313,7 +332,8 @@ const EmissionSourceForm = ({
             {selectedFactor.metaData?.title}
             {selectedFactor.location ? ` - ${selectedFactor.location}` : ''}
             {selectedFactor.metaData?.location ? ` - ${selectedFactor.metaData.location}` : ''} -{' '}
-            {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor))} {tResultUnits(StudyResultUnit.K)}/
+            {formatEmissionFactorNumber(getEmissionFactorValue(selectedFactor, environment))}
+            {tResultUnits(StudyResultUnit.K)}/
             {selectedFactor.unit === Unit.CUSTOM ? selectedFactor.customUnit : tUnits(selectedFactor.unit || '')}{' '}
             {qualityRating && (
               <>
@@ -369,6 +389,37 @@ const EmissionSourceForm = ({
 
       <p className={classNames(styles.subTitle, 'mt1 mb-2')}>{t('optionalFields')}</p>
       <div className={classNames(styles.row, 'flex', expandedQuality || !canShrink ? 'flex-col' : '')}>
+        <Autocomplete
+          multiple
+          disabled={!canEdit}
+          data-testid="emission-source-tag"
+          options={tags.map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
+          value={emissionSource.emissionSourceTags.map((tag) => ({ label: tag.name, value: tag.id, color: tag.color }))}
+          onChange={(_, options: Option[]) => {
+            update(
+              'emissionSourceTags',
+              options.map((tag) => tag.value),
+            )
+          }}
+          renderOption={(props, option) => {
+            const { key, ...optionProps } = props
+
+            return (
+              <li key={key} {...optionProps}>
+                <Chip label={option.label} size="small" sx={{ bgcolor: option.color }} />
+              </li>
+            )
+          }}
+          renderInput={(params) => <TextField {...params} label={t('form.tag')} />}
+          renderValue={(value: Option[], getItemProps) =>
+            value.map((option: Option, index: number) => {
+              const { key, ...itemProps } = getItemProps({ index })
+              return (
+                <Chip variant="outlined" label={option.label} key={key} sx={{ bgcolor: option.color }} {...itemProps} />
+              )
+            })
+          }
+        />
         <div className={classNames(styles.gapped, styles.optionnalFields, 'grow flex')}>
           <TextField
             className="grow"

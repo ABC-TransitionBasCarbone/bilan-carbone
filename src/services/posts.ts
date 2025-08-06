@@ -16,32 +16,49 @@ export enum BCPost {
 export enum CutPost {
   Fonctionnement = 'Fonctionnement',
   MobiliteSpectateurs = 'MobiliteSpectateurs',
-  TourneesAvantPremiere = 'TourneesAvantPremiere',
+  TourneesAvantPremieres = 'TourneesAvantPremieres',
   SallesEtCabines = 'SallesEtCabines',
   ConfiseriesEtBoissons = 'ConfiseriesEtBoissons',
   Dechets = 'Dechets',
   BilletterieEtCommunication = 'BilletterieEtCommunication',
 }
 
-export const Post = { ...BCPost, ...CutPost }
-export type Post = BCPost | CutPost
+export enum TiltPost {
+  ConstructionDesLocaux = 'ConstructionDesLocaux',
+  Energies = BCPost.Energies,
+  Déchets = BCPost.DechetsDirects,
+  FroidEtClim = 'FroidEtClim',
+  AutresEmissions = 'AutresEmissions',
+  DeplacementsDePersonne = 'DeplacementsDePersonne',
+  TransportDeMarchandises = 'TransportDeMarchandises',
+  IntrantsBiensEtMatieresTilt = 'IntrantsBiensEtMatieresTilt',
+  Alimentation = 'Alimentation',
+  IntrantsServices = BCPost.IntrantsServices,
+  EquipementsEtImmobilisations = 'EquipementsEtImmobilisations',
+  Utilisation = 'Utilisation',
+  FinDeVie = BCPost.FinDeVie,
+  Teletravail = 'Teletravail',
+}
 
-export const subPostsByPost: Record<Post, SubPost[]> = {
-  [Post.Energies]: [
+export const Post = { ...BCPost, ...CutPost, ...TiltPost }
+export type Post = BCPost | CutPost | TiltPost
+
+export const subPostsByPostBC: Record<BCPost, SubPost[]> = {
+  [BCPost.Energies]: [
     SubPost.CombustiblesFossiles,
     SubPost.CombustiblesOrganiques,
     SubPost.ReseauxDeChaleurEtDeVapeur,
     SubPost.ReseauxDeFroid,
     SubPost.Electricite,
   ],
-  [Post.AutresEmissionsNonEnergetiques]: [
+  [BCPost.AutresEmissionsNonEnergetiques]: [
     SubPost.Agriculture,
     SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
     SubPost.EmissionsLieesALaProductionDeFroid,
     SubPost.EmissionsLieesAuxProcedesIndustriels,
     SubPost.AutresEmissionsNonEnergetiques,
   ],
-  [Post.IntrantsBiensEtMatieres]: [
+  [BCPost.IntrantsBiensEtMatieres]: [
     SubPost.MetauxPlastiquesEtVerre,
     SubPost.PapiersCartons,
     SubPost.MateriauxDeConstruction,
@@ -51,8 +68,8 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
     SubPost.AutresIntrants,
     SubPost.BiensEtMatieresEnApprocheMonetaire,
   ],
-  [Post.IntrantsServices]: [SubPost.AchatsDeServices, SubPost.UsagesNumeriques, SubPost.ServicesEnApprocheMonetaire],
-  [Post.DechetsDirects]: [
+  [BCPost.IntrantsServices]: [SubPost.AchatsDeServices, SubPost.UsagesNumeriques, SubPost.ServicesEnApprocheMonetaire],
+  [BCPost.DechetsDirects]: [
     SubPost.DechetsDEmballagesEtPlastiques,
     SubPost.DechetsOrganiques,
     SubPost.DechetsOrduresMenageres,
@@ -61,38 +78,45 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
     SubPost.DechetsFuitesOuEmissionsNonEnergetiques,
     SubPost.EauxUsees,
   ],
-  [Post.Fret]: [SubPost.FretEntrant, SubPost.FretInterne, SubPost.FretSortant],
-  [Post.Deplacements]: [
+  [BCPost.Fret]: [SubPost.FretEntrant, SubPost.FretInterne, SubPost.FretSortant],
+  [BCPost.Deplacements]: [
     SubPost.DeplacementsDomicileTravail,
     SubPost.DeplacementsProfessionnels,
     SubPost.DeplacementsVisiteurs,
   ],
-  [Post.Immobilisations]: [SubPost.Batiments, SubPost.AutresInfrastructures, SubPost.Equipements, SubPost.Informatique],
-  [Post.UtilisationEtDependance]: [
+  [BCPost.Immobilisations]: [
+    SubPost.Batiments,
+    SubPost.AutresInfrastructures,
+    SubPost.Equipements,
+    SubPost.Informatique,
+  ],
+  [BCPost.UtilisationEtDependance]: [
     SubPost.UtilisationEnResponsabilite,
     SubPost.UtilisationEnDependance,
     SubPost.InvestissementsFinanciersRealises,
   ],
-  [Post.FinDeVie]: [
+  [BCPost.FinDeVie]: [
     SubPost.ConsommationDEnergieEnFinDeVie,
     SubPost.TraitementDesDechetsEnFinDeVie,
     SubPost.FuitesOuEmissionsNonEnergetiques,
     SubPost.TraitementDesEmballagesEnFinDeVie,
   ],
+}
 
-  [Post.Fonctionnement]: [
+export const subPostsByPostCUT: Record<CutPost, SubPost[]> = {
+  [CutPost.Fonctionnement]: [
     SubPost.Batiment,
     SubPost.Equipe,
     SubPost.DeplacementsProfessionnels,
     SubPost.Energie,
     SubPost.ActivitesDeBureau,
   ],
-  [Post.MobiliteSpectateurs]: [SubPost.MobiliteSpectateurs],
-  [Post.TourneesAvantPremiere]: [SubPost.EquipesRecues],
-  [Post.SallesEtCabines]: [SubPost.MaterielTechnique, SubPost.AutreMateriel],
-  [Post.ConfiseriesEtBoissons]: [SubPost.Achats, SubPost.Fret, SubPost.Electromenager],
-  [Post.Dechets]: [SubPost.DechetsOrdinaires, SubPost.DechetsExceptionnels],
-  [Post.BilletterieEtCommunication]: [
+  [CutPost.MobiliteSpectateurs]: [SubPost.MobiliteSpectateurs],
+  [CutPost.TourneesAvantPremieres]: [SubPost.EquipesRecues],
+  [CutPost.SallesEtCabines]: [SubPost.MaterielTechnique, SubPost.AutreMateriel],
+  [CutPost.ConfiseriesEtBoissons]: [SubPost.Achats, SubPost.Fret, SubPost.Electromenager],
+  [CutPost.Dechets]: [SubPost.DechetsOrdinaires, SubPost.DechetsExceptionnels],
+  [CutPost.BilletterieEtCommunication]: [
     SubPost.MaterielDistributeurs,
     SubPost.MaterielCinema,
     SubPost.CommunicationDigitale,
@@ -100,8 +124,100 @@ export const subPostsByPost: Record<Post, SubPost[]> = {
   ],
 }
 
+export const subPostsByPostTILT: Record<TiltPost, SubPost[]> = {
+  [TiltPost.ConstructionDesLocaux]: [SubPost.Batiments, SubPost.AutresInfrastructures],
+  [TiltPost.Energies]: subPostsByPostBC[BCPost.Energies],
+  [TiltPost.Déchets]: subPostsByPostBC[BCPost.DechetsDirects],
+  [TiltPost.FroidEtClim]: [SubPost.FroidEtClim],
+  [TiltPost.AutresEmissions]: [
+    SubPost.ActivitesAgricoles,
+    SubPost.EmissionsLieesAuChangementDAffectationDesSolsCas,
+    SubPost.ActivitesIndustrielles,
+  ],
+  [TiltPost.DeplacementsDePersonne]: [
+    SubPost.DeplacementsDomicileTravailSalaries,
+    SubPost.DeplacementsDomicileTravailBenevoles,
+    SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries,
+    SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles,
+    SubPost.DeplacementsDesBeneficiaires,
+    SubPost.DeplacementsFabricationDesVehicules,
+  ],
+  [TiltPost.TransportDeMarchandises]: [
+    SubPost.Entrant,
+    SubPost.Interne,
+    SubPost.Sortant,
+    SubPost.TransportFabricationDesVehicules,
+  ],
+  [TiltPost.IntrantsBiensEtMatieresTilt]: subPostsByPostBC[BCPost.IntrantsBiensEtMatieres].filter(
+    (sp) => sp !== SubPost.NourritureRepasBoissons,
+  ),
+  [TiltPost.Alimentation]: [SubPost.RepasPrisParLesSalaries, SubPost.RepasPrisParLesBenevoles],
+  [TiltPost.IntrantsServices]: subPostsByPostBC[BCPost.IntrantsServices],
+  [TiltPost.EquipementsEtImmobilisations]: [
+    SubPost.EquipementsDesSalaries,
+    SubPost.ParcInformatiqueDesSalaries,
+    SubPost.EquipementsDesBenevoles,
+    SubPost.ParcInformatiqueDesBenevoles,
+  ],
+  [TiltPost.Utilisation]: [
+    SubPost.UtilisationEnResponsabiliteConsommationDeBiens,
+    SubPost.UtilisationEnResponsabiliteConsommationNumerique,
+    SubPost.UtilisationEnResponsabiliteConsommationDEnergie,
+    SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations,
+    SubPost.UtilisationEnDependanceConsommationDeBiens,
+    SubPost.UtilisationEnDependanceConsommationNumerique,
+    SubPost.UtilisationEnDependanceConsommationDEnergie,
+    SubPost.UtilisationEnDependanceFuitesEtAutresConsommations,
+    SubPost.InvestissementsFinanciersRealises,
+  ],
+  [TiltPost.FinDeVie]: subPostsByPostBC[BCPost.FinDeVie],
+  [TiltPost.Teletravail]: [SubPost.TeletravailSalaries, SubPost.TeletravailBenevoles],
+}
+
 export const environmentPostMapping = {
   [Environment.BC]: BCPost,
   [Environment.CUT]: CutPost,
-  [Environment.TILT]: BCPost,
+  [Environment.TILT]: TiltPost,
+}
+
+export const subPostsByPost: Record<Post, SubPost[]> = {
+  ...subPostsByPostBC,
+  ...subPostsByPostCUT,
+  ...subPostsByPostTILT,
+}
+
+export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = {
+  [SubPost.FroidEtClim]: SubPost.EmissionsLieesALaProductionDeFroid,
+  [SubPost.ActivitesAgricoles]: SubPost.Agriculture,
+  [SubPost.ActivitesIndustrielles]: SubPost.EmissionsLieesAuxProcedesIndustriels,
+  [SubPost.DeplacementsDomicileTravailSalaries]: SubPost.DeplacementsDomicileTravail,
+  [SubPost.DeplacementsDomicileTravailBenevoles]: SubPost.DeplacementsDomicileTravail,
+  [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries]: SubPost.DeplacementsProfessionnels,
+  [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles]: SubPost.DeplacementsProfessionnels,
+  [SubPost.DeplacementsDesBeneficiaires]: SubPost.DeplacementsVisiteurs,
+  [SubPost.DeplacementsFabricationDesVehicules]: SubPost.Equipements,
+  [SubPost.Entrant]: SubPost.FretEntrant,
+  [SubPost.Interne]: SubPost.FretInterne,
+  [SubPost.Sortant]: SubPost.FretSortant,
+  [SubPost.TransportFabricationDesVehicules]: SubPost.Equipements,
+  [SubPost.RepasPrisParLesSalaries]: SubPost.NourritureRepasBoissons,
+  [SubPost.RepasPrisParLesBenevoles]: SubPost.NourritureRepasBoissons,
+  [SubPost.EquipementsDesSalaries]: SubPost.Equipements,
+  [SubPost.ParcInformatiqueDesSalaries]: SubPost.Informatique,
+  [SubPost.EquipementsDesBenevoles]: SubPost.Equipements,
+  [SubPost.ParcInformatiqueDesBenevoles]: SubPost.Informatique,
+  [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnDependanceConsommationDeBiens]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnDependanceConsommationNumerique]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnDependanceConsommationDEnergie]: SubPost.UtilisationEnDependance,
+  [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: SubPost.UtilisationEnDependance,
+  [SubPost.TeletravailSalaries]: SubPost.Electricite,
+  [SubPost.TeletravailBenevoles]: SubPost.Electricite,
+}
+
+export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
+  return subPostTiltToBcSubPostMapping[subPost] ?? subPost
 }

@@ -13,7 +13,7 @@ export function useListPosts(): Array<CutPost | Post> {
         CutPost.Fonctionnement,
         CutPost.MobiliteSpectateurs,
         CutPost.SallesEtCabines,
-        CutPost.TourneesAvantPremiere,
+        CutPost.TourneesAvantPremieres,
       ] as CutPost[]
     default:
       return [

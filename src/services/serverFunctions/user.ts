@@ -56,6 +56,7 @@ import { accountWithUserToUserSession, userSessionToDbUser } from '@/utils/userA
 import { DeactivatableFeature, Environment, Organization, Role, User, UserChecklist, UserStatus } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
+import { isValidAssociationSiret } from '../associationApi'
 import { auth, dbActualizedAuth } from '../auth'
 import { getUserCheckList } from '../checklist'
 import {
@@ -69,8 +70,16 @@ import {
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '../email/email'
-import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED, REQUEST_SENT, UNKNOWN_CNC } from '../permissions/check'
+import {
+  EMAIL_SENT,
+  MORE_THAN_ONE,
+  NOT_ASSOCIATION_SIRET,
+  NOT_AUTHORIZED,
+  REQUEST_SENT,
+  UNKNOWN_CNC,
+} from '../permissions/check'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
+import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { AddMemberCommand, EditProfileCommand, EditSettingsCommand } from './user.command'
 
 const updateUserResetToken = async (email: string, duration: number) => {
@@ -520,60 +529,73 @@ export const answerFeeback = async () =>
     updateUserFeedbackDate(session.user.accountId, feedbackDate)
   })
 
-export const signUpCutUser = async (email: string, siretOrCNC: string) =>
-  withServerResponse('signUpCutUser', async () => {
-    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, Environment.CUT)
+export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, environment: Environment) =>
+  withServerResponse('signUpWithSiretOrCNC', async () => {
+    const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+    if (
+      deactivatedFeaturesRestrictions?.active &&
+      deactivatedFeaturesRestrictions.deactivatedEnvironments?.includes(environment)
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(email, environment)
     if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
       throw new Error(NOT_AUTHORIZED)
     }
 
     let user = (await getUserByEmail(email)) as UserWithAccounts
     let organization = null
+    let account = null
 
     if (!user) {
       user = (await addUser({
         email,
         firstName: '',
         lastName: '',
+        accounts: {
+          create: {
+            status: UserStatus.PENDING_REQUEST,
+            role: Role.DEFAULT,
+            environment,
+          },
+        },
       })) as UserWithAccounts
+      account = user?.accounts[0]
+    } else {
+      account =
+        accountAlreadyCreated ||
+        ((await addAccount({
+          user: { connect: { id: user.id } },
+          role: Role.DEFAULT,
+          environment,
+          status: UserStatus.PENDING_REQUEST,
+        })) as AccountWithUser)
     }
-    if (!user) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    const account =
-      accountAlreadyCreated ||
-      ((await addAccount({
-        user: { connect: { id: user.id } },
-        role: Role.DEFAULT,
-        environment: Environment.CUT,
-        status: UserStatus.PENDING_REQUEST,
-      })) as AccountWithUser)
-
-    if (!account) {
+    if (!user || !account) {
       throw new Error(NOT_AUTHORIZED)
     }
 
     let organizationVersion = null
     if (siretOrCNC.length > 6) {
+      if (environment === Environment.TILT && !(await isValidAssociationSiret(siretOrCNC))) {
+        throw new Error(NOT_ASSOCIATION_SIRET)
+      }
       organization = await getRawOrganizationBySiret(siretOrCNC)
       organizationVersion = organization?.id
-        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, Environment.CUT)
-        : await createOrganizationWithVersion({ wordpressId: siretOrCNC, name: '' }, { environment: Environment.CUT })
+        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
+        : await createOrganizationWithVersion({ wordpressId: siretOrCNC, name: '' }, { environment: environment })
     } else {
       organization = await getRawOrganizationBySiteCNC(siretOrCNC)
       organizationVersion = organization?.id
-        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, Environment.CUT)
+        ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
         : null
       if (!organizationVersion) {
         const CNC = await findCncByNumeroAuto(siretOrCNC)
         if (!CNC) {
           throw new Error(UNKNOWN_CNC)
         }
-        organizationVersion = await createOrganizationWithVersion(
-          { name: CNC.nom || '' },
-          { environment: Environment.CUT },
-        )
+        organizationVersion = await createOrganizationWithVersion({ name: CNC.nom || '' }, { environment: environment })
         await addSite({
           name: CNC.nom || '',
           postalCode: CNC.codeInsee || '',
@@ -606,12 +628,12 @@ export const signUpCutUser = async (email: string, siretOrCNC: string) =>
         accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
         email.toLowerCase(),
         `${user.firstName} ${user.lastName}`,
-        Environment.CUT,
+        environment,
       )
       return REQUEST_SENT
     } else {
       await validateUser(account.id)
-      await sendActivation(email, false, Environment.CUT)
+      await sendActivation(email, false, environment)
     }
     return EMAIL_SENT
   })

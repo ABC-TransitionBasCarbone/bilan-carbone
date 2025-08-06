@@ -4,6 +4,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import { FullStudy } from '@/db/study'
 import { Post } from '@/services/posts'
 import { downloadStudyPost } from '@/services/study'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { withInfobulle } from '@/utils/post'
 import DownloadIcon from '@mui/icons-material/Download'
 import { useTranslations } from 'next-intl'
@@ -21,6 +22,7 @@ interface Props {
 }
 
 const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionSources, setGlossary }: Props) => {
+  const { environment } = useAppEnvironmentStore()
   const [downloading, setDownloading] = useState(false)
   const tCaracterisations = useTranslations('categorisations')
   const tExport = useTranslations('study.export')
@@ -57,6 +59,7 @@ const StudyPostsBlock = ({ post, study, display, setDisplay, children, emissionS
               tQuality,
               tUnit,
               tResultUnits,
+              environment,
             )
             setDownloading(false)
           },

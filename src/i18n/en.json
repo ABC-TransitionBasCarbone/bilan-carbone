@@ -189,6 +189,7 @@
     "siretOrCNCPlaceholder": "Your Siret/CNC",
     "siretOrCNCRequired": "Please enter a Siret/CNC number",
     "validate": "Validate",
+    "clear": "Clear value",
     "Unknown CNC": "The CNC number you entered is not recognized. Please check it and try again.",
     "Not authorized": "This email is already used for CUT or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
     "Request sent": "A request has been sent to your colleagues",
@@ -196,6 +197,24 @@
     "validation": {
       "email": "Please enter an email",
       "siretOrCNC": "Please enter a Siret/CNC number"
+    }
+  },
+  "signupTilt": {
+    "description": "Create a Tilt account with your email and a Siret",
+    "email": "Email",
+    "emailPlaceholder": "Email used during your training",
+    "emailRequired": "Please enter an email",
+    "siret": "Siret",
+    "siretPlaceholder": "Your Siret",
+    "siretRequired": "Please enter a Siret",
+    "validate": "Validate",
+    "Not authorized": "This email is already used for Tilt or there's an issue with the account creation. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
+    "Not association SIRET": "This tool is reserved for associations. Please use the classic version of Bilan Carbone®+",
+    "Request sent": "A request has been sent to your colleagues",
+    "Email sent": "You will receive an email to finish your account validation.",
+    "validation": {
+      "email": "Please enter an email",
+      "siret": "Please enter a Siret"
     }
   },
   "footer": {
@@ -318,10 +337,11 @@
       "Financial": "Financial",
       "Operational": "Operational",
       "isPublicTitle": "Study visibility",
-      "numberOfSessions": "Number of sessions",
-      "numberOfTickets": "Number of tickets",
+      "numberOfSessions": "Number of sessions (in {year})",
+      "numberOfTickets": "Number of tickets (in {year})",
       "distanceToParis": "Distance to Paris (km)",
-      "numberOfOpenDays": "Number of open days",
+      "numberOfProgrammedFilms": "Number of scheduled films (in {year})",
+      "numberOfOpenDays": "Number of opening days (in {year})",
       "openingHours": "Opening hours",
       "openingHoursHoliday": "Opening hours during school holidays",
       "clear": "Clear value",
@@ -385,7 +405,8 @@
         "startDate": "Please select a study start date",
         "endDate": "Please select a study end date",
         "endDateBeforStartDate": "The end date must be after the start date",
-        "level": "Please select the type of Carbon Assessment"
+        "level": "Please select the type of Carbon Assessment",
+        "invalidNumber": "Please enter a valid value"
       },
       "error": {
         "default": "Something went wrong ...",
@@ -534,8 +555,23 @@
       "editSites": "Edit sites list",
       "cancelEditSites": "Cancel modification",
       "validSites": "Validate changes",
+      "validSitesToRecalculate": "Validate changes (recalculate emissions)",
+      "siteDataChangeModal": {
+        "title": "Data Changes Impacting Existing Results",
+        "description": "The changes you just made will affect existing emission calculations.",
+        "affectedCalculations": "This will recalculate emissions for the following questions:",
+        "confirmation": "Are you sure you want to continue?",
+        "cancel": "Cancel",
+        "proceed": "Confirm changes"
+      },
       "exports": "Exports",
       "control": "Control mode",
+      "emissionSourceTags": "Tags",
+      "emissionSourceTagLabel": "Label",
+      "color": "Color",
+      "emissionSourceTagsPlaceholder": "Your tag",
+      "createEmissionSourceTag": "Create my tag",
+      "validate": "Validate",
       "deleteDialog": {
         "accept": "Yes",
         "decline": "No",
@@ -548,7 +584,9 @@
       "type": "Type",
       "post": "Post",
       "download": "Download results",
+      "downloadPDF": "Download the summary",
       "value": "Emissions ({unit})",
+      "emissions": "Emissions",
       "uncertainty": "Uncertainty",
       "withDependencies": "With dependencies",
       "withoutDependencies": "Without dependencies",
@@ -582,6 +620,30 @@
       "noData": "No data to display",
       "info": ""
     },
+    "pdf": {
+      "loading": "Loading data...",
+      "title": "Simplified carbon footprint {year}",
+      "cinemas": {
+        "list": "Covering the following cinemas"
+      },
+      "results": {
+        "all": "Results - All cinemas",
+        "site": "Results - {site}"
+      },
+      "charts": {
+        "all": "Charts - All cinemas",
+        "site": "Charts - {site}",
+        "allEmissions": "Emissions from all cinema activities, in tCO2e",
+        "siteEmissions": "Emissions from cinema {site} activities, in tCO2e"
+      },
+      "labels": {
+        "cinemas": "Cinemas",
+        "screens": "Screens",
+        "entries": "Entries",
+        "sessions": "Sessions"
+      },
+      "additionalInfo": "Additional information"
+    },
     "export": {
       "activityDataComment": "Activity data comment",
       "activityDataQuality": "Activity data quality",
@@ -607,6 +669,7 @@
       "sourceSurface": "Surface (ha)",
       "sourceUnit": "Emission source unit",
       "sourceValue": "Emission source value",
+      "sourceTag": "Emission source tag",
       "subPost": "Sub post",
       "total": "Total",
       "uncertainty": "Uncertainty",
@@ -626,7 +689,9 @@
       "noFlows": "No mapping to display",
       "notAuthorized": "Action not authorized",
       "removeFlow": "Remove mapping",
-      "Not authorized": "You are not allowed to do this action"
+      "Not authorized": "You are not allowed to do this action",
+      "info": "You can download a sample flow mapping to help you build your own. Afterwards, if you wish to submit your flow mapping so that other users can use it as an example and help other associations, please send it to <mail>methodologie@abc-transitionbascarbone.fr</mail>",
+      "downloadSample": "Download sample"
     },
     "delete": {
       "cancel": "Cancel",
@@ -662,10 +727,11 @@
       "FinDeVie": "End of life",
       "Fonctionnement": "Operations",
       "MobiliteSpectateurs": "Audience Mobility",
-      "TourneesAvantPremiere": "Preview Tours",
+      "TourneesAvantPremieres": "Preview Tours",
       "SallesEtCabines": "Rooms and Booths",
       "ConfiseriesEtBoissons": "Confectionery and Drinks",
       "Dechets": "Waste",
+      "Déchets": "Waste",
       "BilletterieEtCommunication": "Ticketing and Communication",
       "CombustiblesFossiles": "Fossil fuels",
       "CombustiblesOrganiques": "Organic fuels",
@@ -694,6 +760,7 @@
       "DechetsBatiments": "Materials waste",
       "DechetsFuitesOuEmissionsNonEnergetiques": "Leaks or non-energy emissions waste",
       "EauxUsees": "Wastewater",
+      "AutresDechets": "Other waste",
       "FretEntrant": "Incoming freight",
       "FretInterne": "Internal freight",
       "FretSortant": "Outgoing freight",
@@ -704,6 +771,10 @@
       "AutresInfrastructures": "Other infrastructures",
       "Equipements": "Equipment",
       "Informatique": "IT",
+      "EquipementsDesSalaries": "Employee equipment",
+      "ParcInformatiqueDesSalaries": "Employee IT equipment",
+      "EquipementsDesBenevoles": "Volunteer equipment",
+      "ParcInformatiqueDesBenevoles": "Volunteer IT equipment",
       "UtilisationEnResponsabilite": "Use in responsibility",
       "UtilisationEnDependance": "Use in dependence",
       "InvestissementsFinanciersRealises": "Financial investments made",
@@ -726,6 +797,43 @@
       "MaterielCinema": "Cinema Equipment",
       "CommunicationDigitale": "Digital Communication",
       "CaissesEtBornes": "Registers and Kiosks",
+      "IntrantsBiensEtServices": "Goods and services inputs",
+      "IntrantsBiensEtMatieresTilt": "Goods and materials inputs",
+      "Alimentation": "Food",
+      "RepasPrisParLesSalaries": "Meals taken by employees",
+      "RepasPrisParLesBenevoles": "Meals taken by volunteers",
+      "EquipementsEtImmobilisations": "Equipment and fixed assets",
+      "DeplacementsDePersonne": "People travel",
+      "DeplacementsDomicileTravailSalaries": "Employee home-to-work travel",
+      "DeplacementsDomicileTravailBenevoles": "Volunteer home-to-work travel",
+      "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Associative mission by employees travel",
+      "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Associative mission by volunteers travel",
+      "DeplacementsDesBeneficiaires": "Beneficiaries travel",
+      "DeplacementsFabricationDesVehicules": "Vehicle manufacturing travel",
+      "TransportDeMarchandises": "Goods travel",
+      "Entrant": "Entering",
+      "Sortant": "Exiting",
+      "Interne": "Internal",
+      "TransportFabricationDesVehicules": "Vehicle manufacturing transport",
+      "LocauxEtInfrastructures": "Premises and infrastructures",
+      "ConstructionDesLocaux": "Construction of premises",
+      "FroidEtClim": "Cooling and air conditioning",
+      "AutresEmissions": "Other emissions",
+      "ActivitesAgricoles": "Agricultural activities",
+      "ActivitesIndustrielles": "Industrial activities",
+      "UtilisationEtFinDeVie": "Use and end of life",
+      "Utilisation": "Use",
+      "UtilisationEnResponsabiliteConsommationDeBiens": "Responsible use - Consumption of goods",
+      "UtilisationEnResponsabiliteConsommationNumerique": "Responsible use - Digital consumption",
+      "UtilisationEnResponsabiliteConsommationDEnergie": "Responsible use - Energy consumption",
+      "UtilisationEnResponsabiliteFuitesEtAutresConsommations": "Responsible use - Leaks and other consumption",
+      "UtilisationEnDependanceConsommationDeBiens": "Dependent use - Consumption of goods",
+      "UtilisationEnDependanceConsommationNumerique": "Dependent use - Digital consumption",
+      "UtilisationEnDependanceConsommationDEnergie": "Dependent use - Energy consumption",
+      "UtilisationEnDependanceFuitesEtAutresConsommations": "Dependent use - Leaks and other consumption",
+      "Teletravail": "Remote work",
+      "TeletravailSalaries": "Remote work by employees",
+      "TeletravailBenevoles": "Remote work by volunteers",
       "glossary": "Glossary",
       "close": "Close",
       "glossaryDescription": {
@@ -1134,6 +1242,7 @@
     "PORTION": "portion",
     "MEAL": "meal",
     "T": "t",
+    "TEAM": "team",
     "TEP": "tep",
     "TEP_PCI": "tep PCI",
     "TEP_PCS": "tep PCS",
@@ -1224,6 +1333,10 @@
       "postalCodePlaceholder": "Postal code",
       "city": "City",
       "cityPlaceholder": "City",
+      "volunteerNumber": "Number of volunteers",
+      "volunteerNumberPlaceholder": "Enter the number of volunteers for this site here",
+      "beneficiaryNumber": "Number of beneficiaries",
+      "beneficiaryNumberPlaceholder": "Enter the number of beneficiaries for this site here",
       "actions": "Actions",
       "delete": "Delete",
       "add": "Add a site",
@@ -1359,7 +1472,9 @@
       "quality": "Quality",
       "expand": "Expand qualities",
       "shrink": "Shrink qualities",
-      "comment": "Comments"
+      "comment": "Comments",
+      "tag": "Tag",
+      "create": "Create {tag}"
     },
     "cut": {
       "form": {
@@ -1385,6 +1500,7 @@
   },
   "error": {
     "Not authorized": "You are not allowed to do this action",
+    "Server error": "A server error occurred, please contact support",
     "default": "Something went wrong ..., please try again. If the problem persists, please contact support",
     "error": "Something went wrong ...",
     "contactSupport": "A problem has occurred. Try returning to the <link>home page</link>. <p>If this does not work, contact our support at <m></m> or try to <logout>reconnect</logout>.</p>"
@@ -1398,9 +1514,9 @@
   },
   "onboarding": {
     "title-1": "Welcome to BC+! Before you start, please set up your organization",
-    "titleDescription-1": "We’ve pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization’s name now, or at any time in BC+ via the \"Organization\" section.",
+    "titleDescription-1": "We've pre-filled some information about your organization (association, company, ...) based on your membership with ABC. You can update your organization's name now, or at any time in BC+ via the \"Organization\" section.",
     "title-2": "Manage your team",
-    "titleDescription-2": "You can already add your team members! You’ll still be able to add new people later via the \"Team\" section within the \"Organization\" menu.",
+    "titleDescription-2": "You can already add your team members! You'll still be able to add new people later via the \"Team\" section within the \"Organization\" menu.",
     "previous": "Previous",
     "next": "Next",
     "validate": "Validate",
@@ -1476,6 +1592,7 @@
     "title": "Deactivable functionnalities",
     "Formation": "Formation",
     "Feedback": "Feedback",
+    "Creation": "Creation",
     "source": "Sources",
     "environment": "Environments",
     "true": "Activated",

@@ -20,7 +20,6 @@ export const deleteAnswerKeysByRow = async (idIntern: string, indexToDelete: str
       if (typeof answer.response === 'object' && answer.response !== null && !Array.isArray(answer.response)) {
         const responseCopy = { ...answer.response }
         delete responseCopy[indexToDelete]
-        console.debug({ responseCopy })
         await prismaClient.answer.update({
           where: {
             questionId_studySiteId: {

@@ -55,7 +55,7 @@ describe('Onboarding', () => {
     cy.getByTestId('onboarding-modal').should('be.visible')
     cy.getByTestId('user-role').scrollIntoView()
     cy.getByTestId('user-role').should('be.visible')
-    cy.getByTestId('user-role').should('have.text', 'Administrateur')
+    cy.getByTestId('user-role').should('have.text', 'Administrateur·ice')
   })
 
   it('untrained user has GESTIONNAIRE role after onboarding', () => {

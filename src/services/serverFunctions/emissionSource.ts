@@ -1,16 +1,19 @@
 'use server'
 
+import { DefaultEmissionSourceTag, emissionSourceTagMap } from '@/constants/emissionSourceTags'
 import { AccountWithUser, getAccountById } from '@/db/account'
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import {
   createEmissionSourceOnStudy,
+  createEmissionSourceTagOnStudy,
   deleteEmissionSourceOnStudy,
+  deleteEmissionSourceTagOnStudy,
   getEmissionSourceById,
   updateEmissionSourceOnStudy,
 } from '@/db/emissionSource'
 import { getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Import, UserChecklist } from '@prisma/client'
+import { EmissionSourceTag, Import, SubPost, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
 import {
@@ -18,8 +21,13 @@ import {
   canDeleteEmissionSource,
   canUpdateEmissionSource,
 } from '../permissions/emissionSource'
+import { hasAccessToCreateEmissionSourceTag } from '../permissions/environment'
 import { isVersionInOrgaOrParent } from '../permissions/organization'
-import { CreateEmissionSourceCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
+import {
+  CreateEmissionSourceCommand,
+  NewEmissionSourceTagCommand,
+  UpdateEmissionSourceCommand,
+} from './emissionSource.command'
 import { addUserChecklistItem } from './user'
 
 export const createEmissionSource = async ({
@@ -57,8 +65,15 @@ export const createEmissionSource = async ({
       throw new Error(NOT_AUTHORIZED)
     }
 
+    let defaultTags: string[] = []
+    const tags = await getDefaultEmissionSourceTags(command.subPost, studyId)
+    if (tags && tags.success) {
+      defaultTags = tags.data as string[]
+    }
+
     return await createEmissionSourceOnStudy({
       ...command,
+      emissionSourceTags: { connect: defaultTags.map((id) => ({ id })) },
       ...(emissionFactorId ? { emissionFactor: { connect: { id: emissionFactorId } } } : {}),
       studySite: { connect: { id: studySiteId } },
       study: { connect: { id: studyId } },
@@ -113,7 +128,13 @@ export const updateEmissionSource = async ({
     )
 
     const data = {
-      ...command,
+      ...{
+        ...command,
+        emissionSourceTags:
+          command.emissionSourceTags && Array.isArray(command.emissionSourceTags)
+            ? { set: command.emissionSourceTags.map((id) => ({ id })) }
+            : command.emissionSourceTags,
+      },
       ...(emissionFactorId !== undefined
         ? {
             ...(emissionFactorId
@@ -176,4 +197,109 @@ export const getEmissionSourcesByStudyId = async (studyId: string) =>
     }
 
     return study.emissionSources
+  })
+
+export const createEmissionSourceTag = async ({ studyId, name, color }: NewEmissionSourceTagCommand) =>
+  withServerResponse('createEmissionSourceTag', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const account = await getAccountById(session.user.accountId)
+    if (!account) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasAccessToCreateEmissionSourceTag(account.environment))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, account.organizationVersionId)
+
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return await createEmissionSourceTagOnStudy({
+      study: { connect: { id: studyId } },
+      name,
+      color,
+    })
+  })
+
+export const deleteEmissionSourceTag = async (tagId: string) =>
+  withServerResponse('deleteEmissionSourceTag', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const account = await getAccountById(session.user.accountId)
+    if (!account) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasAccessToCreateEmissionSourceTag(account.environment))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await deleteEmissionSourceTagOnStudy(tagId)
+  })
+
+export const getEmissionSourceTagsByStudyId = async (studyId: string) =>
+  withServerResponse('getEmissionSourceTagsByStudyId', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      return []
+    }
+
+    const account = await getAccountById(session.user.accountId)
+    if (!account) {
+      return []
+    }
+
+    const study = await getStudyById(studyId, account.organizationVersionId)
+    if (!study) {
+      return []
+    }
+
+    return study.emissionSourceTags
+  })
+
+const getDefaultEmissionSourceTags = async (subPost: SubPost, studyId: string) =>
+  withServerResponse('getDefaultEmissionSourceTag', async () => {
+    const session = await auth()
+    if (!session || !session.user) {
+      return []
+    }
+
+    const account = await getAccountById(session.user.accountId)
+    if (!account) {
+      return []
+    }
+
+    const study = await getStudyById(studyId, account.organizationVersionId)
+    if (!study) {
+      return []
+    }
+
+    if (!(account.environment in emissionSourceTagMap)) {
+      return []
+    }
+    const tagObj = emissionSourceTagMap[account.environment]
+    if (!tagObj) {
+      return []
+    }
+    const studyTags = study.emissionSourceTags || ([] as EmissionSourceTag[])
+    const defaultTags = []
+    for (const tag of Object.keys(tagObj)) {
+      if (tagObj[tag as DefaultEmissionSourceTag]?.includes(subPost)) {
+        const tagData = studyTags?.find((studyTag) => studyTag.name === tag)
+        if (tagData) {
+          defaultTags.push(tagData.id)
+        }
+      }
+    }
+    return defaultTags
   })

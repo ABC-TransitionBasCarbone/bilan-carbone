@@ -1,11 +1,16 @@
 import { wasteImpact } from '@/constants/emissions'
 import { wasteEmissionFactors } from '@/constants/wasteEmissionFactors'
-import { EmissionFactor, Import, Prisma, Unit } from '@prisma/client'
+import { hasWasteImpact } from '@/services/permissions/environment'
+import { convertTiltSubPostToBCSubPost } from '@/services/posts'
+import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
+import { EmissionFactor, Environment, Import, Prisma, SubPost, Unit } from '@prisma/client'
 
 export const getEmissionFactorValue = (
   emissionFactor: Pick<EmissionFactor, 'importedFrom' | 'importedId' | 'totalCo2'>,
+  environment?: Environment,
 ) => {
   if (
+    (!environment || hasWasteImpact(environment)) &&
     emissionFactor.importedFrom === Import.BaseEmpreinte &&
     emissionFactor.importedId &&
     wasteEmissionFactors[emissionFactor.importedId]
@@ -69,3 +74,15 @@ export const monetaryUnits: Unit[] = [
   Unit.EURO_SPENT,
   Unit.FRANC_CFP,
 ]
+
+export const filterEmissionFactorsBySubPostAndEnv = (
+  emissionFactors: EmissionFactorWithMetaData[],
+  subPost: SubPost,
+  environment?: Environment,
+) => {
+  let filterSubPost = subPost
+  if (environment === Environment.TILT) {
+    filterSubPost = convertTiltSubPostToBCSubPost(subPost)
+  }
+  return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(filterSubPost))
+}

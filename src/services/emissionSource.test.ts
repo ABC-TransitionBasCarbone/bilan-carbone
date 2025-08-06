@@ -42,6 +42,7 @@ const defaultEmissionSource = {
   depreciationPeriod: null,
   duration: null,
   hectare: null,
+  emissionSourceTags: [],
 } satisfies FullStudy['emissionSources'][0]
 
 describe('emissionSource Service', () => {

@@ -2,12 +2,13 @@
 
 import Button from '@/components/base/Button'
 import { Select } from '@/components/base/Select'
-import { BCPost, Post, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
 import { SubPostsCommand } from '@/services/serverFunctions/emissionFactor.command'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { getPost } from '@/utils/post'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, FormControl, FormHelperText, MenuItem, SelectChangeEvent } from '@mui/material'
-import { SubPost } from '@prisma/client'
+import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Control, Controller, FieldPath, Path, UseFormReturn, UseFormSetValue } from 'react-hook-form'
@@ -51,6 +52,7 @@ const Posts = <T extends SubPostsCommand>({
   const t = useTranslations('emissionFactors.create')
   const tPost = useTranslations('emissionFactors.post')
   const [selectedSubPosts, setSelectedSubPosts] = useState<SubPost[] | undefined>(initalSubPosts)
+  const { environment } = useAppEnvironmentStore()
 
   const isAllPosts = !initialPost
 
@@ -59,15 +61,21 @@ const Posts = <T extends SubPostsCommand>({
 
   const setValue = form.setValue as UseFormSetValue<SubPostsCommand>
 
-  const sortedPosts = useMemo(() => Object.keys(BCPost).sort((a, b) => tPost(a).localeCompare(tPost(b))), [tPost])
+  const sortedPosts = useMemo(
+    () =>
+      Object.keys(environmentPostMapping[environment || Environment.BC]).sort((a, b) =>
+        tPost(a).localeCompare(tPost(b)),
+      ),
+    [tPost],
+  )
 
   // For regular posts, show sub-posts for that specific post
   // For "All Posts", show all sub-posts grouped by their parent posts
   const sortedSubPosts = useMemo<SubPost[]>(() => {
     if (isAllPosts) {
       // Return all sub-posts from all posts
-      return Object.values(BCPost)
-        .flatMap((post) => subPostsByPost[post])
+      return Object.values(environmentPostMapping[environment || Environment.BC])
+        .flatMap((post: Post) => subPostsByPost[post])
         .sort((a, b) => tPost(a).localeCompare(tPost(b)))
     }
     return post ? subPostsByPost[post].sort((a, b) => tPost(a).localeCompare(tPost(b))) : []

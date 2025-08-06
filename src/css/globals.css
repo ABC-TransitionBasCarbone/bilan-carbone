@@ -128,7 +128,7 @@ table {
       }
 
       &:nth-child(odd) {
-        background: var(--background-150);
+        background: var(--mui-palette-primary-light);
       }
     }
   }

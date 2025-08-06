@@ -126,6 +126,8 @@ export const canCreateSpecificStudy = async (
       return canCreateSpecificStudyCUT(user.accountId, study, organizationVersionId)
     case Environment.BC:
       return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
+    case Environment.TILT:
+      return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
     default:
       return false
   }
@@ -354,7 +356,7 @@ export const canReadStudyDetail = async (user: UserSession, study: FullStudy) =>
   return true
 }
 
-const canAccessStudyFlows = async (studyId: string) => {
+export const canAccessStudyFlows = async (studyId: string) => {
   const session = await dbActualizedAuth()
 
   if (!session || !session.user) {

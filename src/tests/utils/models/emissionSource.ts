@@ -35,6 +35,7 @@ export const mockedDbEmissionSource = {
   feGeographicRepresentativeness: null,
   feTemporalRepresentativeness: null,
   feCompleteness: null,
+  emissionSourceTags: [],
 }
 
 export const getMockedEmissionSource = (props?: Partial<StudyEmissionSource>): StudyEmissionSource => ({

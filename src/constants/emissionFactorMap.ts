@@ -1,15 +1,24 @@
 import {
   CLIMATISATION_QUESTION_ID,
   CONFECTIONERY_QUESTION_ID,
+  CONFECTIONERY_SELECT_QUESTION_ID,
+  INCREASE_SURFACE_QUESTION_ID,
   LONG_DISTANCE_QUESTION_ID,
+  MOBILITY_DOWNLOAD_MODEL_QUESTION_ID,
+  MOBILIY_SURVEY_QUESTION_ID,
   MOVIE_DCP_QUESTION_ID,
   MOVIE_DEMAT_QUESTION_ID,
   MOVIE_TEAM_QUESTION_ID,
   NEWSLETTER_QUESTION_ID,
   NEWSLETTER_RECEIVER_COUNT_QUESTION_ID,
   RENOVATION_QUESTION_ID,
+  RENOVATION_SELECTION_QUESTION_ID,
+  RESEAU_CHALLEUR_QUESTION_ID,
+  RESEAU_FROID_QUESTION_ID,
   SERVICES_QUESTION_ID,
+  SHARED_ACTIVITY_QUESTION_ID,
   SHORT_DISTANCE_QUESTION_ID,
+  SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from './questions'
 
@@ -26,7 +35,12 @@ type LongDistanceConfig = {
   shortDistancePercentage: number
 }
 
-export type EmissionFactorInfo = {
+export type ConditionalRule = {
+  idIntern: string
+  expectedAnswers: string[]
+}
+
+export interface EmissionFactorInfo {
   emissionFactorImportedId?: string | undefined
   depreciationPeriod?: number
   linkDepreciationQuestionId?: string
@@ -37,12 +51,26 @@ export type EmissionFactorInfo = {
   shortDistanceProfiles?: Record<string, CinemaProfileConfig>
   longDistanceProfiles?: Record<string, LongDistanceConfig>
   relatedQuestions?: string[]
+  conditionalRules?: ConditionalRule[]
+  dependentFields?: SiteDependentField[]
 }
+
+export const SITE_DEPENDENT_FIELDS = [
+  'numberOfSessions',
+  'numberOfTickets',
+  'numberOfOpenDays',
+  'distanceToParis',
+  'numberOfProgrammedFilms',
+] as const
+
+export type SiteDependentField = (typeof SITE_DEPENDENT_FIELDS)[number]
+
+export type SiteDependentFields = Record<SiteDependentField, boolean>
 
 const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'RER et Transilien': '43254',
-  'Métro, tramway (FE agglo 100-250k habitants)': '28150',
-  'Bus (FE agglo 100-250k habitants)': '27999',
+  'Métro, tramway': '28150',
+  Bus: '27999',
   'Vélo électrique': '28331',
   'Vélo classique': '134',
   Marche: '135',
@@ -57,8 +85,8 @@ const SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
 
 const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   'RER et Transilien': '43254',
-  'Métro, tramway (FE agglo 100-250k habitants)': '28150',
-  'Bus (FE agglo 100-250k habitants)': '27999',
+  'Métro, tramway': '28150',
+  Bus: '27999',
   'Vélo électrique': '28331',
   'Voiture diesel': '27978',
   'Voiture essence': '27977',
@@ -68,6 +96,21 @@ const LONG_DISTANCE_TRANSPORT_EMISSION_FACTORS = {
   Scooter: '27992',
   TGV: '43256',
   'Avion moyen courrier': '28132',
+}
+
+export const getQuestionsAffectedBySiteDataChange = (changedFields: SiteDependentField[]): string[] => {
+  const affectedQuestions: string[] = []
+
+  for (const [questionId, info] of Object.entries(emissionFactorMap)) {
+    if (info.dependentFields) {
+      const hasAffectedField = info.dependentFields.some((field) => changedFields.includes(field))
+      if (hasAffectedField) {
+        affectedQuestions.push(questionId)
+      }
+    }
+  }
+
+  return affectedQuestions
 }
 
 export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
@@ -85,19 +128,48 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
     linkDepreciationQuestionId: 'quelle-est-la-surface-plancher-du-cinema',
   },
   'de-quel-type-de-renovation-sagi-t-il': {},
-  'dans-le-cas-dun-agrandissement-quelle-est-la-surface-supplementaire-ajoutee': {
+  [INCREASE_SURFACE_QUESTION_ID]: {
     emissionFactorImportedId: '20730',
-    linkDepreciationQuestionId: 'a-quand-remonte-la-derniere-renovation-importante',
+    conditionalRules: [
+      {
+        idIntern: RENOVATION_SELECTION_QUESTION_ID,
+        expectedAnswers: ['Agrandissement - extension'],
+      },
+    ],
   },
   [RENOVATION_QUESTION_ID]: {
     emissionFactorImportedId: '43340',
     isSpecial: true,
     depreciationPeriod: 10,
+    conditionalRules: [
+      {
+        idIntern: RENOVATION_SELECTION_QUESTION_ID,
+        expectedAnswers: [
+          'Rénovation totale (hors agrandissement)',
+          'Autres travaux importants (par ex : changement moquette, ravalement, peinture etc)',
+        ],
+      },
+    ],
   },
-  'le-batiment-est-il-partage-avec-une-autre-activite': {},
-  'quelle-est-la-surface-totale-du-batiment': {},
+  'quelle-est-la-surface-totale-du-batiment': {
+    conditionalRules: [
+      {
+        idIntern: SHARED_ACTIVITY_QUESTION_ID,
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
+  },
   'le-cinema-dispose-t-il-dun-parking': {},
-  'si-oui-de-combien-de-places': { emissionFactorImportedId: '26008', depreciationPeriod: 50 },
+  'si-oui-de-combien-de-places': {
+    emissionFactorImportedId: '26008',
+    depreciationPeriod: 50,
+    conditionalRules: [
+      {
+        idIntern: 'le-cinema-dispose-t-il-dun-parking',
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
+  },
   // Equipe - attente de la fonctionnalité table
   '11-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': {},
   '12-quel-est-le-rythme-de-travail-des-collaborateurs-du-cinema': { emissionFactorImportedId: '20682' },
@@ -115,10 +187,9 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   '15-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {},
   '16-decrivez-les-deplacements-professionnels-de-vos-collaborateurs': {
     emissionFactors: {
-      "tous types d'hôtel": '100',
+      appartement: '100',
       'hôtel 1*': '101',
       'hôtel 2*': '102',
-      'hôtel 3*': '103',
       'hôtel 4*': '104',
       'hôtel 5*': '105',
       nuitée: '106',
@@ -129,7 +200,8 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quelles-etaient-les-consommations-energetiques-du-cinema': { emissionFactorImportedId: '15591' },
   gaz: { emissionFactorImportedId: '37138' },
   fuel: { emissionFactorImportedId: '14086' },
-  'reseaux-urbains-chaleurfroid': { emissionFactorImportedId: '' }, // Attente d'une fonctionnalité pour gérer les départements
+  [RESEAU_CHALLEUR_QUESTION_ID]: { emissionFactorImportedId: '37089' },
+  [RESEAU_FROID_QUESTION_ID]: { emissionFactorImportedId: '37090' },
   'bois-granules': { emissionFactorImportedId: '34942' },
   [CLIMATISATION_QUESTION_ID]: { emissionFactorImportedId: '145', isSpecial: true },
   'le-cinema-dispose-t-il-d-un-ou-plusieurs-groupes-electrogenes': { emissionFactorImportedId: '20911' },
@@ -138,7 +210,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   'quel-montant-avez-vous-depense-en-petites-fournitures-de-bureau': { emissionFactorImportedId: '20556' },
   [SERVICES_QUESTION_ID]: { emissionFactorImportedId: '43545', isSpecial: true },
   '10-pour-chacun-de-ces-equipements-informatiques-veuillez-indiquer': {
-    isFixed: true,
     depreciationPeriod: 4,
     emissionFactors: {
       'Ordinateurs fixes': '27003',
@@ -150,16 +221,34 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       Tablettes: '27007',
     },
   },
-  'avez-vous-deja-realise-une-enquete-mobilite-spectateur': {},
-  '10-quelles-sont-les-distances-parcourues-au-total-sur-lannee-pour-chacun-des-modes-de-transport-suivants': {
+  [SPECTATOR_SHORT_DISTANCE_DETAILS_QUESTION_ID]: {
     isFixed: true,
     emissionFactors: SHORT_DISTANCE_TRANSPORT_EMISSION_FACTORS,
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ['11-Oui et je peux rentrer les résultats'],
+      },
+    ],
   },
-  'si-vous-souhaitez-realiser-une-enquete-mobilite-spectateur-vous-pouvez-ici-telecharger-un-modele-denquete-qui-vous-permettra-de-remplir-dici-quelques-semaines-les-informations-demandees':
-    {},
+  [MOBILITY_DOWNLOAD_MODEL_QUESTION_ID]: {
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ["12-Non mais je voudrais le faire pour estimer l'impact du cinéma"],
+      },
+    ],
+  },
   [SHORT_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [LONG_DISTANCE_QUESTION_ID],
+    dependentFields: ['numberOfTickets', 'distanceToParis'],
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ["13-Non mais je préfère m'identifier dans des profils de cinéma comparables"],
+      },
+    ],
     shortDistanceProfiles: {
       'Les spectateurs parcourent des distances très courtes pour venir au cinéma (moins de 10km aller-retour). Très peu viennent en voiture (- de 10%) et la grande majorité des spectateurs vient à pied ou en transports en commun':
         {
@@ -221,6 +310,13 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [LONG_DISTANCE_QUESTION_ID]: {
     isSpecial: true,
     relatedQuestions: [SHORT_DISTANCE_QUESTION_ID],
+    dependentFields: ['numberOfTickets', 'distanceToParis'],
+    conditionalRules: [
+      {
+        idIntern: MOBILIY_SURVEY_QUESTION_ID,
+        expectedAnswers: ["13-Non mais je préfère m'identifier dans des profils de cinéma comparables"],
+      },
+    ],
     emissionFactors: {
       TGV: '43256',
       'Voiture longue distance': '27977',
@@ -248,6 +344,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   [MOVIE_TEAM_QUESTION_ID]: {
     emissionFactors: { transport: '43256', meal: '20682' },
     isSpecial: true,
+    dependentFields: ['distanceToParis'],
   },
   // Matériel technique
   '10-decrivez-les-differentes-salles-du-cinema': {},
@@ -288,20 +385,35 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
   },
   '11-comment-stockez-vous-les-films': { emissionFactorImportedId: '20894' },
   '12-comment-stockez-vous-les-films': { emissionFactorImportedId: '20893' },
-  [MOVIE_DEMAT_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '142' },
+  [MOVIE_DEMAT_QUESTION_ID]: {
+    isSpecial: true,
+    emissionFactorImportedId: '142',
+    dependentFields: ['distanceToParis', 'numberOfProgrammedFilms'],
+  },
   [MOVIE_DCP_QUESTION_ID]: { isSpecial: true, emissionFactorImportedId: '143' },
   'combien-de-donnees-stockez-vous-dans-un-cloud': { emissionFactorImportedId: '141' },
-  'de-combien-de-disques-durs-disposez-vous': { emissionFactorImportedId: '140' },
+  'de-combien-de-disques-durs-disposez-vous': {
+    emissionFactorImportedId: '140',
+    depreciationPeriod: 4,
+    linkDepreciationQuestionId: 'NO_DATE_REQUIRED',
+  },
   // Autre matériel
   'de-combien-de-lunettes-3d-disposez-vous': { emissionFactorImportedId: '139' },
   // Achats
   [CONFECTIONERY_QUESTION_ID]: {
     isSpecial: true,
+    conditionalRules: [
+      {
+        idIntern: CONFECTIONERY_SELECT_QUESTION_ID,
+        expectedAnswers: ['11-Oui'],
+      },
+    ],
     emissionFactors: {
       'Un peu de confiseries et de boissons (~30g)': '136',
       'Une part standard de confiseries et de boissons (~120g)': '137',
       'Une part significative de confiseries et de boissons (~200g)': '138',
     },
+    dependentFields: ['numberOfTickets'],
   },
   // Fret
   'quelle-est-la-distance-entre-votre-cinema-et-votre-principal-fournisseur': { emissionFactorImportedId: '28026' },
@@ -323,6 +435,7 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Ordures ménagères (déchets non triés / sans filière)': '34654',
       'Emballages et papier (plastique, métal, papier et carton)': '34486',
       'Biodéchets (restes alimentaires)': '22040',
+      'Déchets verre': '34478',
     },
   },
   // DechetsExceptionnels
@@ -336,7 +449,6 @@ export const emissionFactorMap: Record<string, EmissionFactorInfo> = {
       'Affiches 40x60': '126',
       'PLV comptoir': '127',
       'PLV grand format': '128',
-      Goodies: '129',
     },
     weights: {
       'Affiches 120x160': 0.22,

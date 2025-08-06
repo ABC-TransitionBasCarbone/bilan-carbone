@@ -17,9 +17,11 @@ import {
   SHORT_DISTANCE_QUESTION_ID,
   XENON_LAMPS_QUESTION_ID,
 } from '@/constants/questions'
+import { prismaClient } from '@/db/client'
 import { getEmissionFactorByImportedIdAndStudiesEmissionSource } from '@/db/emissionFactors'
 import {
   createAnswerEmissionSource,
+  deleteAnswer,
   deleteAnswerEmissionSourceById,
   deleteAnswerEmissionSourcesForRow,
   findAllAnswerEmissionSourcesByAnswer,
@@ -37,6 +39,8 @@ import {
   upsertAnswerEmissionSource,
 } from '@/db/question'
 import { FullStudy, getStudyById } from '@/db/study'
+import { isTableResponse } from '@/typeguards/question'
+import { findTableChildren, hasCompleteTableRow, shouldHideConditionalQuestion } from '@/utils/question'
 import { withServerResponse } from '@/utils/serverResponse'
 import {
   calculateTableEmissions,
@@ -45,9 +49,11 @@ import {
 } from '@/utils/tableEmissionCalculations'
 import { isTableAnswer } from '@/utils/tableInput'
 import { Answer, Prisma, Question, QuestionType, SubPost } from '@prisma/client'
+import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
-import { canReadStudy } from '../permissions/study'
+import { canReadStudy, canReadStudyDetail } from '../permissions/study'
+import { CutPost, subPostsByPost } from '../posts'
 import { createEmissionSource, updateEmissionSource } from './emissionSource'
 
 const cleanupTableEmissionSources = async (tableAnswer: TableAnswer, existingAnswer: Answer) => {
@@ -169,10 +175,23 @@ const handleDepreciation = async (
   studyStartDate: Date,
   studySiteId: string,
 ) => {
-  const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
   let emissionSourceId: string | undefined
   let valueToStore = currentValue
   let emissionFactorToFindId: string | undefined
+
+  // Handle simple depreciation without date constraints
+  if (linkDepreciationQuestionId === 'NO_DATE_REQUIRED') {
+    const depreciationPeriodToStore = depreciationPeriod || 1
+    valueToStore = currentValue / depreciationPeriodToStore
+    return {
+      emissionSourceId,
+      valueToStore,
+      emissionFactorToFindId: emissionFactorImportedId,
+      depreciationPeriodToStore,
+    }
+  }
+
+  const linkQuestion = await getQuestionByIdIntern(linkDepreciationQuestionId)
   if (!linkQuestion) {
     throw new Error(`Previous question not found for idIntern: ${linkDepreciationQuestionId}`)
   }
@@ -307,7 +326,10 @@ export const saveAnswerForQuestion = async (
         study.startDate,
         studySiteId,
       )
-      emissionSourceId = depreciationInfo.emissionSourceId
+      // For 'NO_DATE_REQUIRED' depreciation, preserve the existing emissionSourceId
+      if (linkDepreciationQuestionId !== 'NO_DATE_REQUIRED') {
+        emissionSourceId = depreciationInfo.emissionSourceId
+      }
       valueToStore = depreciationInfo.valueToStore
       emissionFactorToFindId = depreciationInfo.emissionFactorToFindId
       depreciationPeriodToStore = depreciationInfo.depreciationPeriodToStore
@@ -415,6 +437,33 @@ export const getQuestionsFromIdIntern = async (idIntern: string) =>
     return getQuestionsByIdIntern(idIntern)
   })
 
+export const cleanupHiddenQuestion = async (questionIdIntern: string, studySiteId: string) =>
+  withServerResponse('cleanupHiddenQuestion', async () => {
+    const session = await dbActualizedAuth()
+    if (!session || !session.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const question = await getQuestionByIdIntern(questionIdIntern)
+    if (!question) {
+      throw new Error(`Question not found for idIntern: ${questionIdIntern}`)
+    }
+
+    const existingAnswer = await getAnswerByQuestionId(question.id, studySiteId)
+    if (existingAnswer) {
+      const existingAnswerEmissionSources = await findAllAnswerEmissionSourcesByAnswer(existingAnswer.id)
+
+      for (const existingAnswerEmissionSource of existingAnswerEmissionSources) {
+        await deleteAnswerEmissionSourceById(
+          existingAnswerEmissionSource.id,
+          existingAnswerEmissionSource.emissionSourceId,
+        )
+      }
+    }
+
+    await deleteAnswer(question.id, studySiteId)
+  })
+
 export const getParentTableQuestion = async (columnQuestionId: string) =>
   withServerResponse('getParentTableQuestion', async () => {
     const session = await dbActualizedAuth()
@@ -473,6 +522,160 @@ const getEmissionFactorByIdIntern = (idIntern: string, response: Prisma.InputJso
 
   return emissionFactorInfo
 }
+
+export type QuestionStats = { answered: number; total: number }
+export type StatsResult = Record<CutPost, Partial<Record<SubPost, QuestionStats>>>
+type CompletedTableInfo = Partial<Record<SubPost, number>>
+
+export const getQuestionProgressBySubPostPerPost = async ({
+  study,
+  studySiteId,
+  user,
+}: {
+  study: FullStudy
+  studySiteId: string
+  user: UserSession
+}) =>
+  withServerResponse('getQuestionProgressBySubPostPerPost', async () => {
+    if (!canReadStudyDetail(user, study)) {
+      return
+    }
+
+    const cutSubPosts = Object.values(CutPost).flatMap((cutPost) => subPostsByPost[cutPost])
+
+    const questions = await prismaClient.question.findMany({
+      where: {
+        subPost: { in: cutSubPosts },
+      },
+      select: {
+        idIntern: true,
+        subPost: true,
+        type: true,
+      },
+    })
+
+    const totalCountBySubPost = questions.reduce<Partial<Record<SubPost, number>>>((acc, question) => {
+      const { subPost, type } = question
+      /**
+       * Since TABLE-type questions contain the answers of their sub-questions,
+       * We do not count them in the total number of questions,
+       * Otherwise, there would always be one more question than the number of answers.
+       */
+      if (type !== QuestionType.TABLE) {
+        acc[subPost] = (acc[subPost] || 0) + 1
+      }
+      return acc
+    }, {})
+
+    const answers = await prismaClient.answer.findMany({
+      where: {
+        studySiteId,
+        response: {
+          not: '',
+        },
+        question: {
+          subPost: { in: cutSubPosts },
+        },
+      },
+      select: {
+        response: true,
+        question: {
+          select: {
+            idIntern: true,
+            subPost: true,
+            type: true,
+          },
+        },
+      },
+    })
+
+    const answeredCountBySubPost: Partial<Record<SubPost, number>> = {}
+    const completedTablesInfo: CompletedTableInfo = {}
+
+    for (const answer of answers) {
+      const { response, question } = answer
+      const { type, subPost } = question
+
+      if (type === QuestionType.TABLE && isTableResponse(response)) {
+        // For tables (fixed or non-fixed), if at least one row is complete, count the table and its children as answered
+        if (hasCompleteTableRow(response)) {
+          const tableChildren = findTableChildren(question, questions)
+          answeredCountBySubPost[subPost] = (answeredCountBySubPost[subPost] || 0) + tableChildren.length
+          completedTablesInfo[subPost] = (completedTablesInfo[subPost] || 0) + tableChildren.length
+        }
+      } else {
+        if (typeof response === 'string' && response.trim() !== '') {
+          answeredCountBySubPost[subPost] = (answeredCountBySubPost[subPost] || 0) + 1
+        }
+      }
+    }
+
+    // Adjust total count by removing questions that should be hidden due to conditional rules
+    for (const answer of answers) {
+      const { response, question } = answer
+      const { idIntern } = question
+
+      for (const [conditionalQuestionId, emissionInfo] of Object.entries(emissionFactorMap)) {
+        if (!emissionInfo.conditionalRules) {
+          continue
+        }
+
+        for (const { idIntern: parentQuestionId, expectedAnswers } of emissionInfo.conditionalRules) {
+          if (parentQuestionId === idIntern) {
+            const shouldHide = shouldHideConditionalQuestion(response as string, expectedAnswers)
+
+            if (shouldHide) {
+              const conditionalQuestion = questions.find((q) => q.idIntern === conditionalQuestionId)
+              if (conditionalQuestion) {
+                const conditionalSubPost = conditionalQuestion.subPost
+
+                if (conditionalQuestion.type === QuestionType.TABLE) {
+                  // For TABLE questions, hide all their children
+                  const tableChildren = findTableChildren(conditionalQuestion, questions)
+
+                  for (let i = 0; i < tableChildren.length; i++) {
+                    if (totalCountBySubPost[conditionalSubPost] && totalCountBySubPost[conditionalSubPost]! > 0) {
+                      totalCountBySubPost[conditionalSubPost] -= 1
+                    }
+                  }
+                } else {
+                  // For non-TABLE questions, reduce count by 1
+                  if (totalCountBySubPost[conditionalSubPost] && totalCountBySubPost[conditionalSubPost]! > 0) {
+                    totalCountBySubPost[conditionalSubPost] -= 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    const result: StatsResult = {} as StatsResult
+
+    for (const cutPost of Object.values(CutPost)) {
+      result[cutPost] = {} as Partial<Record<SubPost, QuestionStats>>
+
+      for (const subPost of subPostsByPost[cutPost]) {
+        let total = totalCountBySubPost[subPost] ?? 0
+        const answered = answeredCountBySubPost[subPost] ?? 0
+
+        // Adjust total count if a table is complete - treat table + children as 1 unit
+        const completedTableChildren = completedTablesInfo[subPost]
+        if (completedTableChildren && completedTableChildren > 0) {
+          // When table is complete: answered stays the same, but total = answered (to get 100%)
+          total = answered
+        }
+
+        result[cutPost][subPost] = {
+          total,
+          answered,
+        }
+      }
+    }
+
+    return result
+  })
 
 const cleanupEmissionSourcesByQuestionIdInterns = async (studySiteId: string, questionIdInterns: string[]) => {
   const answers = await Promise.all(

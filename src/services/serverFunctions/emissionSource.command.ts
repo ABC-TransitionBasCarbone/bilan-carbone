@@ -38,5 +38,14 @@ export const UpdateEmissionSourceCommandValidation = z.object({
   feGeographicRepresentativeness: z.number().nullable().optional(),
   feTemporalRepresentativeness: z.number().nullable().optional(),
   feCompleteness: z.number().nullable().optional(),
+  emissionSourceTags: z.array(z.string()).optional(),
 })
 export type UpdateEmissionSourceCommand = z.infer<typeof UpdateEmissionSourceCommandValidation>
+
+export const NewEmissionSourceTagCommandValidation = z.object({
+  studyId: z.string(),
+  name: z.string(),
+  color: z.string().optional(),
+})
+
+export type NewEmissionSourceTagCommand = z.infer<typeof NewEmissionSourceTagCommandValidation>

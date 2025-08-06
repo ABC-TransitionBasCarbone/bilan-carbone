@@ -107,7 +107,6 @@ export function validateRow(
   }
 
   if (!isValidEnumValue(QuestionType, type)) {
-    console.debug({ QuestionType, type })
     return { error: `(ligne ${line}) Type invalide "${type}", pour question "${label}"` }
   }
 
