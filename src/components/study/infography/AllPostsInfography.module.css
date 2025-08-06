@@ -20,7 +20,8 @@
   padding: 0.5rem 0.5rem;
   gap: 1rem;
   border-radius: 1rem;
-  border: solid 4px #102a6b;
+  border-width: 4px;
+  border-style: solid;
 }
 
 .postTitle {

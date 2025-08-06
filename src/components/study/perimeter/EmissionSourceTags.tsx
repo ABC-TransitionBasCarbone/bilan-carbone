@@ -105,8 +105,9 @@ const EmissionSourceTags = ({ studyId }: Props) => {
                       <MenuItem key={color} value={color}>
                         <Box
                           sx={{
-                            width: 16,
-                            height: 16,
+                            width: 18,
+                            height: 18,
+                            margin: '2px',
                             borderRadius: '50%',
                             backgroundColor: color,
                             border: '1px solid #ccc',

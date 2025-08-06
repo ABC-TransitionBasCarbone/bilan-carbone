@@ -23,7 +23,7 @@ export const getEmissionSourceCompletion = (
 ) => {
   const mandatoryFields = ['name', 'type', 'value', 'emissionFactorId'] as (keyof typeof emissionSource)[]
   const caracterisations = caracterisationsBySubPost[emissionSource.subPost]
-  if (study.exports.length > 0 && caracterisations.length > 0) {
+  if (study.exports.length > 0 && caracterisations && caracterisations.length > 0) {
     mandatoryFields.push('caracterisation')
   }
   if (subPostsByPost[Post.Immobilisations].includes(emissionSource.subPost)) {
@@ -198,7 +198,7 @@ export const getEmissionResultsCut = (
   return result
 }
 
-export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracterisation[]> = {
+export const caracterisationsBySubPost: Partial<Record<SubPost, EmissionSourceCaracterisation[]>> = {
   [SubPost.CombustiblesFossiles]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
   [SubPost.CombustiblesOrganiques]: [EmissionSourceCaracterisation.Operated, EmissionSourceCaracterisation.NotOperated],
   [SubPost.ReseauxDeChaleurEtDeVapeur]: [
@@ -301,59 +301,12 @@ export const caracterisationsBySubPost: Record<SubPost, EmissionSourceCaracteris
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
   ],
-
-  [SubPost.ActivitesDeBureau]: [],
-  [SubPost.Equipe]: [],
-  [SubPost.Batiment]: [],
-  [SubPost.Fret]: [],
-  [SubPost.MobiliteSpectateurs]: [],
-  [SubPost.Energie]: [],
-  [SubPost.EquipesRecues]: [],
-  [SubPost.MaterielTechnique]: [],
-  [SubPost.AutreMateriel]: [],
-  [SubPost.Achats]: [],
-  [SubPost.Electromenager]: [],
-  [SubPost.DechetsOrdinaires]: [],
-  [SubPost.DechetsExceptionnels]: [],
-  [SubPost.MaterielDistributeurs]: [],
-  [SubPost.MaterielCinema]: [],
-  [SubPost.CommunicationDigitale]: [],
-  [SubPost.CaissesEtBornes]: [],
-  [SubPost.FroidEtClim]: [],
-  [SubPost.ActivitesAgricoles]: [],
-  [SubPost.ActivitesIndustrielles]: [],
-  [SubPost.DeplacementsDomicileTravailSalaries]: [],
-  [SubPost.DeplacementsDomicileTravailBenevoles]: [],
-  [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeSalaries]: [],
-  [SubPost.DeplacementsDansLeCadreDUneMissionAssociativeBenevoles]: [],
-  [SubPost.DeplacementsDesBeneficiaires]: [],
-  [SubPost.DeplacementsFabricationDesVehicules]: [],
-  [SubPost.Entrant]: [],
-  [SubPost.Interne]: [],
-  [SubPost.Sortant]: [],
-  [SubPost.TransportFabricationDesVehicules]: [],
-  [SubPost.RepasPrisParLesSalaries]: [],
-  [SubPost.RepasPrisParLesBenevoles]: [],
-  [SubPost.EquipementsDesSalaries]: [],
-  [SubPost.ParcInformatiqueDesSalaries]: [],
-  [SubPost.EquipementsDesBenevoles]: [],
-  [SubPost.ParcInformatiqueDesBenevoles]: [],
-  [SubPost.UtilisationEnResponsabiliteConsommationDeBiens]: [],
-  [SubPost.UtilisationEnResponsabiliteConsommationNumerique]: [],
-  [SubPost.UtilisationEnResponsabiliteConsommationDEnergie]: [],
-  [SubPost.UtilisationEnResponsabiliteFuitesEtAutresConsommations]: [],
-  [SubPost.UtilisationEnDependanceConsommationDeBiens]: [],
-  [SubPost.UtilisationEnDependanceConsommationNumerique]: [],
-  [SubPost.UtilisationEnDependanceConsommationDEnergie]: [],
-  [SubPost.UtilisationEnDependanceFuitesEtAutresConsommations]: [],
-  [SubPost.TeletravailSalaries]: [],
-  [SubPost.TeletravailBenevoles]: [],
 }
 
 export const getCaracterisationBySubPostWithEnv = (subPost: SubPost, environment?: Environment) => {
   if (environment === Environment.TILT) {
     const bcSubpost = convertTiltSubPostToBCSubPost(subPost)
-    return caracterisationsBySubPost[bcSubpost]
+    return caracterisationsBySubPost[bcSubpost] || []
   }
-  return caracterisationsBySubPost[subPost]
+  return caracterisationsBySubPost[subPost] || []
 }
