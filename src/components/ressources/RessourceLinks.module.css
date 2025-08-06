@@ -1,0 +1,22 @@
+.card {
+  border: 2px solid var(--mui-palette-info-main);
+  border-radius: 1rem;
+  width: 25rem;
+  margin: 0.3rem;
+}
+
+.cardContent {
+  padding: 0rem !important;
+}
+
+.cardHeader {
+  background: var(--mui-palette-primary-light);
+  min-height: 6.5rem;
+  align-content: center;
+}
+
+.cardLinks {
+  height: 100%;
+  align-content: center;
+  padding: 0.7rem;
+}
