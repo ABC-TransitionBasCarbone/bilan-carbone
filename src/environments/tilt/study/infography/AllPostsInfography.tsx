@@ -1,8 +1,10 @@
 import styles from '@/components/study/infography/AllPostsInfography.module.css'
 import PostInfography from '@/components/study/infography/PostInfography'
 import { FullStudy } from '@/db/study'
+import theme from '@/environments/tilt/theme/theme'
 import { TiltPost } from '@/services/posts'
 import { ResultsByPost } from '@/services/results/consolidated'
+import { Box } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 
@@ -16,7 +18,10 @@ const AllPostsInfography = ({ study, data }: Props) => {
 
   return (
     <div className={classNames(styles.infography, 'flex', 'justify-between', 'align-center')}>
-      <div className={classNames(styles.borderFull, 'flex-col')}>
+      <Box
+        className={classNames(styles.borderFull, 'flex-col')}
+        borderColor={theme.custom.postColors[TiltPost.IntrantsBiensEtMatieresTilt].dark}
+      >
         <div className={classNames(styles.postTitle)}>{t('IntrantsBiensEtServices')}</div>
         <PostInfography
           studyId={study.id}
@@ -42,9 +47,12 @@ const AllPostsInfography = ({ study, data }: Props) => {
           post={TiltPost.EquipementsEtImmobilisations}
           resultsUnit={study.resultsUnit}
         />
-      </div>
+      </Box>
       <div className={classNames(styles.column, 'flex-col')}>
-        <div className={classNames(styles.borderFull, 'flex-col')}>
+        <Box
+          className={classNames(styles.borderFull, 'flex-col')}
+          borderColor={theme.custom.postColors[TiltPost.DeplacementsDePersonne].dark}
+        >
           <div className={classNames(styles.postTitle)}>{t('Deplacements')}</div>
           <PostInfography
             studyId={study.id}
@@ -58,8 +66,11 @@ const AllPostsInfography = ({ study, data }: Props) => {
             post={TiltPost.TransportDeMarchandises}
             resultsUnit={study.resultsUnit}
           />
-        </div>
-        <div className={classNames(styles.borderFull, 'flex-col')}>
+        </Box>
+        <Box
+          className={classNames(styles.borderFull, 'flex-col')}
+          borderColor={theme.custom.postColors[TiltPost.ConstructionDesLocaux].dark}
+        >
           <div className={classNames(styles.postTitle)}>{t('LocauxEtInfrastructures')}</div>
           <PostInfography
             studyId={study.id}
@@ -91,10 +102,13 @@ const AllPostsInfography = ({ study, data }: Props) => {
             post={TiltPost.AutresEmissions}
             resultsUnit={study.resultsUnit}
           />
-        </div>
+        </Box>
       </div>
       <div className={classNames(styles.column, 'flex-col')}>
-        <div className={classNames(styles.borderFull, 'flex-col mb2')}>
+        <Box
+          className={classNames(styles.borderFull, 'flex-col mb2')}
+          borderColor={theme.custom.postColors[TiltPost.Utilisation].dark}
+        >
           <div className={classNames(styles.postTitle)}>{t('UtilisationEtFinDeVie')}</div>
           <PostInfography
             studyId={study.id}
@@ -108,7 +122,7 @@ const AllPostsInfography = ({ study, data }: Props) => {
             post={TiltPost.FinDeVie}
             resultsUnit={study.resultsUnit}
           />
-        </div>
+        </Box>
         <div className={'flex-col mt2'}>
           <PostInfography
             studyId={study.id}

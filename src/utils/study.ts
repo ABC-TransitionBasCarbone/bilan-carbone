@@ -80,7 +80,7 @@ export const postColors: Record<Post, string> = {
   [Post.FroidEtClim]: 'darkBlue',
   [Post.AutresEmissions]: 'darkBlue',
   [Post.DeplacementsDePersonne]: 'green',
-  [Post.TransportDeMarchandises]: 'orange',
+  [Post.TransportDeMarchandises]: 'green',
   [Post.IntrantsBiensEtMatieresTilt]: 'blue',
   [Post.Alimentation]: 'blue',
   [Post.EquipementsEtImmobilisations]: 'blue',
