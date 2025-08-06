@@ -71,7 +71,7 @@ const OrganizationInfo = ({ organizationVersion, canDelete, canUpdate }: Props) 
 
   return (
     <>
-      <Block as="h1" title={t('myOrganization')} actions={[...deleteAction, ...updateAction]}>
+      <Block title={t('myOrganization')} actions={[...deleteAction, ...updateAction]}>
         <p data-testid="organization-name">
           <span className={styles.info}>{t('name')}</span> {organizationVersion.organization.name}
         </p>

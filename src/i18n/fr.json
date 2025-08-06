@@ -618,7 +618,7 @@
         "additionalMissing": "+ {count, plural,  =1 {1 autre source} other {# autres sources}} d'émission",
         "close": "Fermer"
       },
-      "noData": "Aucune données à afficher"
+      "noData": "Aucune donnée à afficher"
     },
     "pdf": {
       "loading": "Chargement des données...",
@@ -1304,7 +1304,7 @@
   "organization": {
     "create": "Nouvelle Organisation",
     "modify": "Modifier",
-    "myOrganization": "Organisation :",
+    "myOrganization": "Organisation",
     "myOrganizations": "Mes clients actuels",
     "seeLess": "Voir moins",
     "seeMore": "Voir plus",

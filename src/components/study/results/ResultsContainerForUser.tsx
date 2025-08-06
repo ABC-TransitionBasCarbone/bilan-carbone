@@ -4,7 +4,9 @@ import Block from '@/components/base/Block'
 import { getOrganizationVersionStudiesOrderedByStartDate } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import { canReadStudy } from '@/services/permissions/study'
+import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
+import { getTranslations } from 'next-intl/server'
 import StudyResultsContainerSummary from './StudyResultsContainerSummary'
 
 interface Props {
@@ -13,6 +15,8 @@ interface Props {
 }
 
 const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }: Props) => {
+  const environment = user.environment
+  const t = await getTranslations('study')
   const [studies, settings] = await Promise.all([
     getOrganizationVersionStudiesOrderedByStartDate(mainStudyOrganizationVersionId),
     getUserApplicationSettings(user.accountId),
@@ -27,6 +31,8 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }:
   }
   return (
     <Block>
+      {environment === Environment.CUT && <h2 className="pb2">{t('lastStudyTitle')}</h2>}
+
       {mainStudy ? (
         <StudyResultsContainerSummary
           study={mainStudy}

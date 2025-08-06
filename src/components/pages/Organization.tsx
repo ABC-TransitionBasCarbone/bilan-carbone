@@ -2,6 +2,7 @@
 
 import { OrganizationWithSites } from '@/db/account'
 import { canDeleteOrganizationVersion, canUpdateOrganizationVersion } from '@/services/permissions/organization'
+import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const OrganizationPage = async ({ organizationVersion, user }: Props) => {
+  const environment = user.environment
   const tNav = await getTranslations('nav')
   const [canUpdate, canDelete] = await Promise.all([
     canUpdateOrganizationVersion(user, organizationVersion.id),
@@ -23,7 +25,9 @@ const OrganizationPage = async ({ organizationVersion, user }: Props) => {
   return (
     <>
       <Breadcrumbs current={organizationVersion.organization.name} links={[{ label: tNav('home'), link: '/' }]} />
-      <OrganizationInfo organizationVersion={organizationVersion} canUpdate={canUpdate} canDelete={canDelete} />
+      {environment !== Environment.CUT && (
+        <OrganizationInfo organizationVersion={organizationVersion} canUpdate={canUpdate} canDelete={canDelete} />
+      )}
       <StudiesContainer user={user} organizationVersionId={organizationVersion.id} />
     </>
   )
