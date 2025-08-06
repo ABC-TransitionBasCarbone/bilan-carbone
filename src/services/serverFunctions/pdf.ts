@@ -2,55 +2,39 @@
 
 import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
-import { chromium } from 'playwright'
+import axios from 'axios'
+import { cookies } from 'next/headers'
+import { NOT_AUTHORIZED, SERVER_ERROR } from '../permissions/check'
 
 export const generateStudySummaryPDF = async (studyId: string, studyName: string, referenceYear: number) =>
   withServerResponse('generateStudySummaryPDF', async () => {
     const session = await dbActualizedAuth()
     if (!session?.user) {
-      throw new Error('Not authorized')
+      throw new Error(NOT_AUTHORIZED)
     }
 
-    let browser
+    const API_URL = process.env.PDF_SERVICE_URL
+    const API_SECRET = process.env.PDF_SERVICE_API_SECRET
+
+    if (!API_URL || !API_SECRET) {
+      console.error('PDF service URL or API secret not set')
+      throw new Error(SERVER_ERROR)
+    }
+
     try {
-      browser = await chromium.launch({
-        headless: true,
-        timeout: 30000,
-      })
-      const page = await browser.newPage()
-
-      page.setDefaultTimeout(30000)
-      page.setDefaultNavigationTimeout(30000)
-
-      const { cookies } = await import('next/headers')
       const cookieStore = await cookies()
-
-      const sessionCookies = []
       const allCookies = cookieStore.getAll()
-      for (const cookie of allCookies) {
-        sessionCookies.push({
-          name: cookie.name,
-          value: cookie.value,
-          domain: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000').hostname,
-          path: '/',
-        })
-      }
 
-      if (sessionCookies.length > 0) {
-        await page.context().addCookies(sessionCookies)
-      }
+      const sessionCookies = allCookies.map((cookie) => ({
+        name: cookie.name,
+        value: cookie.value,
+        path: '/',
+      }))
 
       const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
       const pdfUrl = `${baseUrl}/preview/etudes/${studyId}`
 
-      await page.goto(pdfUrl, { waitUntil: 'networkidle', timeout: 30000 })
-
-      const content = await page.content()
-      if (!content.includes('pdf-container')) {
-        throw new Error('PDF content not properly loaded')
-      }
-
-      const pdfBuffer = await page.pdf({
+      const pdfOptions = {
         format: 'A4',
         printBackground: true,
         margin: {
@@ -59,22 +43,34 @@ export const generateStudySummaryPDF = async (studyId: string, studyName: string
           left: '1.5cm',
           right: '1.5cm',
         },
-      })
+      }
 
+      const response = await axios.post(
+        `${API_URL}/generate-pdf`,
+        {
+          url: pdfUrl,
+          cookies: sessionCookies,
+          pdfOptions,
+        },
+        {
+          headers: {
+            'x-api-key': API_SECRET,
+          },
+          responseType: 'arraybuffer',
+        },
+      )
+
+      const pdfBuffer = response.data
       const filename = `${studyName}_empreinte_carbone_${referenceYear}.pdf`
 
       return {
-        pdfBuffer: Array.from(pdfBuffer),
+        pdfBuffer: Array.from(new Uint8Array(pdfBuffer)),
         filename,
         contentType: 'application/pdf',
       }
     } catch (error) {
-      console.error('Error in PDF generation:', error)
+      console.error('Error calling PDF service:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       throw new Error(`PDF generation failed: ${errorMessage}`)
-    } finally {
-      if (browser) {
-        await browser.close()
-      }
     }
   })
