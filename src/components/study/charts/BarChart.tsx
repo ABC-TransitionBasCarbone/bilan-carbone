@@ -11,6 +11,7 @@ import styles from './BarChart.module.css'
 import { BCPost, CutPost } from '@/services/posts'
 import { isPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
+import { Environment } from '@prisma/client'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,
@@ -29,6 +30,8 @@ interface Props {
   validatedOnly?: boolean
   postValues: typeof CutPost | typeof BCPost
   fixedColor?: boolean
+  environment: Environment | undefined
+  skipAnimation?: boolean
 }
 
 const BarChart = ({
@@ -42,6 +45,8 @@ const BarChart = ({
   validatedOnly = false,
   postValues,
   fixedColor,
+  environment,
+  skipAnimation = false,
 }: Props) => {
   const tResults = useTranslations('study.results')
   const theme = useTheme()
@@ -51,6 +56,7 @@ const BarChart = ({
     studySite,
     validatedOnly,
     postValues,
+    environment,
   })
 
   const barData = useMemo(
@@ -75,55 +81,51 @@ const BarChart = ({
     ],
   )
 
-  const hasBarData = barData.values.length > 0 && barData.values.some((v) => v !== 0)
   const getBarLabel = (item: { value: number | null }) =>
     showLabelsOnBars && item.value && item.value > 0 ? chartFormatter(item.value) : ''
 
   return (
     <div className={styles.barChart}>
-      {hasBarData ? (
-        <MuiBarChart
-          xAxis={[
-            {
-              data: barData.labels,
-              height: BAR_CHART_CONSTANTS.AXIS_HEIGHT,
-              scaleType: 'band',
-              tickLabelStyle: {
-                angle: BAR_CHART_CONSTANTS.TICK_ANGLE,
-                textAnchor: 'end',
-                fontSize: BAR_CHART_CONSTANTS.TICK_FONT_SIZE,
-              },
-              tickPlacement: 'extremities',
-              tickLabelPlacement: 'middle',
-              colorMap: {
-                type: 'ordinal',
-                values: barData.labels,
-                colors: barData.colors,
-              },
+      <MuiBarChart
+        skipAnimation={skipAnimation}
+        xAxis={[
+          {
+            data: barData.labels,
+            height: BAR_CHART_CONSTANTS.AXIS_HEIGHT,
+            scaleType: 'band',
+            tickLabelStyle: {
+              angle: BAR_CHART_CONSTANTS.TICK_ANGLE,
+              textAnchor: 'end',
+              fontSize: BAR_CHART_CONSTANTS.TICK_FONT_SIZE,
             },
-          ]}
-          series={[
-            {
-              data: barData.values,
-              valueFormatter: (value) => chartFormatter(value ?? 0, false),
-              label: showLegend ? tResults('emissions') : undefined,
+            tickPlacement: 'extremities',
+            tickLabelPlacement: 'middle',
+            colorMap: {
+              type: 'ordinal',
+              values: barData.labels,
+              colors: barData.colors,
             },
-          ]}
-          grid={{ horizontal: true }}
-          yAxis={[
-            {
-              label: tUnits(study.resultsUnit),
-            },
-          ]}
-          axisHighlight={{ x: 'none' }}
-          barLabel={showLabelsOnBars ? getBarLabel : undefined}
-          slots={showLegend ? undefined : { legend: () => null }}
-          height={height}
-          borderRadius={10}
-        />
-      ) : (
-        <Typography align="center">{tResults('noData')}</Typography>
-      )}
+          },
+        ]}
+        series={[
+          {
+            data: barData.values,
+            valueFormatter: (value) => chartFormatter(value ?? 0, false),
+            label: showLegend ? tResults('emissions') : undefined,
+          },
+        ]}
+        grid={{ horizontal: true }}
+        yAxis={[
+          {
+            label: tUnits(study.resultsUnit),
+          },
+        ]}
+        axisHighlight={{ x: 'none' }}
+        barLabel={showLabelsOnBars ? getBarLabel : undefined}
+        slots={showLegend ? undefined : { legend: () => null }}
+        height={height}
+        borderRadius={10}
+      />
       {showTitle && (
         <Typography variant="h6" align="center" className={styles.chartTitle}>
           {title}

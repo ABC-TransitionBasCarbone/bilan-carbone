@@ -1,11 +1,10 @@
 import { FullStudy } from '@/db/study'
-import { useListPosts } from '@/hooks/useListPosts'
 import { BCPost, CutPost, Post } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
-import { SubPost } from '@prisma/client'
+import { getPostByEnvironment } from '@/utils/post'
+import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 
@@ -14,6 +13,7 @@ interface UseChartComputationsParams {
   studySite: string
   validatedOnly?: boolean
   postValues: typeof Post | typeof CutPost | typeof BCPost
+  environment: Environment | undefined
 }
 
 export const useChartComputations = ({
@@ -21,8 +21,8 @@ export const useChartComputations = ({
   studySite,
   validatedOnly = false,
   postValues,
+  environment,
 }: UseChartComputationsParams) => {
-  const { environment } = useAppEnvironmentStore()
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
 
@@ -40,10 +40,10 @@ export const useChartComputations = ({
     [study.resultsUnit, tUnits],
   )
 
-  const listCutPosts = useListPosts() as CutPost[]
+  const posts = getPostByEnvironment(environment)
 
   const computeResults = useMemo(() => {
-    const validPosts = new Set(Object.values(listCutPosts))
+    const validPosts = new Set(Object.values(posts))
 
     return resultsByPost
       .map((post) => {
@@ -54,9 +54,9 @@ export const useChartComputations = ({
 
         return { ...post, subPosts: filteredSubPosts, value }
       })
-      .filter((post) => validPosts.has(post.post as CutPost))
+      .filter((post) => validPosts.has(post.post as Post))
       .map((post) => ({ ...post, label: tPost(post.post) }))
-  }, [listCutPosts, resultsByPost, tPost])
+  }, [posts, resultsByPost, tPost])
 
   return {
     resultsByPost,

@@ -6,11 +6,11 @@ import { computeResultsByPost, ResultsByPost } from '@/services/results/consolid
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { ResultType } from '@/services/study'
 import { getStandardDeviationRating } from '@/services/uncertainty'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { Environment } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -25,6 +25,7 @@ interface Props {
   expandAll?: boolean
   hideExpandIcons?: boolean
   type?: ResultType
+  environment: Environment | undefined
 }
 
 const ConsolidatedResultsTable = ({
@@ -35,13 +36,13 @@ const ConsolidatedResultsTable = ({
   expandAll,
   hideExpandIcons,
   type,
+  environment,
 }: Props) => {
   const t = useTranslations('study.results')
   const tQuality = useTranslations('quality')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
   const [validatedOnly, setValidatedOnly] = useState(true)
-  const { environment } = useAppEnvironmentStore()
 
   useEffect(() => {
     applyUserSettings()
@@ -126,7 +127,7 @@ const ConsolidatedResultsTable = ({
       environment,
       type,
     )
-  }, [environment, study, tPost, studySite, withDependencies, validatedOnly])
+  }, [environment, study, tPost, studySite, withDependencies, validatedOnly, type])
 
   const table = useReactTable({
     columns,

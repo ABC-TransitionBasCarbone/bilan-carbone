@@ -5,10 +5,10 @@ import { FullStudy } from '@/db/study'
 import cutTheme from '@/environments/cut/theme/theme'
 import { CutPost } from '@/services/posts'
 import { computeResultsByPost, ResultsByPost } from '@/services/results/consolidated'
-import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { ThemeProvider } from '@mui/material/styles'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
@@ -28,17 +28,16 @@ interface SiteData {
 
 interface Props {
   study: FullStudy
+  environment: Environment
 }
 
-const PDFSummary = ({ study }: Props) => {
-  const { environment } = useAppEnvironmentStore()
+const PDFSummary = ({ study, environment }: Props) => {
   const tPost = useTranslations('emissionFactors.post')
   const tStudy = useTranslations('study.results')
   const tPdf = useTranslations('study.pdf')
 
-  const [sites, setSites] = useState<SiteData[]>([])
+  const [sitesData, setSitesData] = useState<SiteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const referenceYear = study.startDate.getFullYear() || new Date().getFullYear()
 
   useEffect(() => {
     const loadData = async () => {
@@ -57,6 +56,7 @@ const PDFSummary = ({ study }: Props) => {
             CutPost,
             environment,
           )
+
           const siteResults = siteComputedResults
             .filter((result) => result.post !== 'total')
             .map((result) => ({
@@ -82,7 +82,7 @@ const PDFSummary = ({ study }: Props) => {
           })
         }
 
-        setSites(sitesData)
+        setSitesData(sitesData)
       } catch (error) {
         console.error('Error loading PDF data:', error)
       } finally {
@@ -91,7 +91,7 @@ const PDFSummary = ({ study }: Props) => {
     }
 
     loadData()
-  }, [study, tPost])
+  }, [environment, study, tPost])
 
   if (isLoading) {
     return (
@@ -125,14 +125,14 @@ const PDFSummary = ({ study }: Props) => {
 
         <div className="pdf-content pdf-page-content">
           <div className="pdf-header-section page-break-avoid">
-            <h1 className="pdf-title">{tPdf('title', { year: referenceYear })}</h1>
+            <h1 className="pdf-title">{tPdf('title', { year: study.startDate.getFullYear() })}</h1>
           </div>
 
           <div className="pdf-cinemas-list page-break-avoid">
             <span>
               <h2 className="pdf-cinemas-title">{tPdf('cinemas.list')}:</h2>
               <ul>
-                {sites.map((site) => (
+                {sitesData.map((site) => (
                   <li key={site.id}>{site.fullName}</li>
                 ))}
               </ul>
@@ -145,22 +145,24 @@ const PDFSummary = ({ study }: Props) => {
             <div className="pdf-general-data pdf-summary-stats flex justify-between mt2">
               <div className="pdf-data-item">
                 <div className="pdf-data-label">{tPdf('labels.cinemas')}</div>
-                <div className="pdf-data-value">{sites.length}</div>
+                <div className="pdf-data-value">{sitesData.length}</div>
               </div>
               <div className="pdf-data-item">
                 <div className="pdf-data-label">{tPdf('labels.screens')}</div>
-                <div className="pdf-data-value">{sites.reduce((sum, site) => sum + site.generalData.screens, 0)}</div>
+                <div className="pdf-data-value">
+                  {sitesData.reduce((sum, site) => sum + site.generalData.screens, 0)}
+                </div>
               </div>
               <div className="pdf-data-item">
                 <div className="pdf-data-label">{tPdf('labels.entries')}</div>
                 <div className="pdf-data-value">
-                  {formatNumber(sites.reduce((sum, site) => sum + site.generalData.entries, 0))}
+                  {formatNumber(sitesData.reduce((sum, site) => sum + site.generalData.entries, 0))}
                 </div>
               </div>
               <div className="pdf-data-item">
                 <div className="pdf-data-label">{tPdf('labels.sessions')}</div>
                 <div className="pdf-data-value">
-                  {formatNumber(sites.reduce((sum, site) => sum + site.generalData.sessions, 0))}
+                  {formatNumber(sitesData.reduce((sum, site) => sum + site.generalData.sessions, 0))}
                 </div>
               </div>
             </div>
@@ -169,13 +171,22 @@ const PDFSummary = ({ study }: Props) => {
               study={study}
               studySite="all"
               withDependencies={false}
+              environment={environment}
               hiddenUncertainty
               hideExpandIcons
             />
           </div>
         </div>
 
-        <ChartsPage study={study} studySite="all" siteName="" tPdf={tPdf} isAll={true} postValues={CutPost} />
+        <ChartsPage
+          study={study}
+          studySite="all"
+          siteName=""
+          tPdf={tPdf}
+          isAll={true}
+          postValues={CutPost}
+          environment={environment}
+        />
 
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
@@ -188,7 +199,7 @@ const PDFSummary = ({ study }: Props) => {
           </div>
         </div>
 
-        {sites.map((site) => (
+        {sitesData.map((site) => (
           <React.Fragment key={site.id}>
             <div className="pdf-content page-break-before pdf-page-content">
               <div className="pdf-section">
@@ -215,6 +226,7 @@ const PDFSummary = ({ study }: Props) => {
                   study={study}
                   studySite={site.id}
                   withDependencies={false}
+                  environment={environment}
                   hiddenUncertainty
                   expandAll
                   hideExpandIcons
@@ -229,6 +241,7 @@ const PDFSummary = ({ study }: Props) => {
               tPdf={tPdf}
               isAll={false}
               postValues={CutPost}
+              environment={environment}
             />
           </React.Fragment>
         ))}

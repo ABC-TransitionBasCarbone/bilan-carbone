@@ -161,6 +161,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             validatedOnly={false}
             postValues={isCut ? CutPost : BCPost}
             fixedColor={isCut ? false : true}
+            environment={environment}
           />
         </div>
       </div>

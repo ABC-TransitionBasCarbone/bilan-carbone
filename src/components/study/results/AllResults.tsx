@@ -124,7 +124,13 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
       </div>
       <div className="mt1">
         {type === AdditionalResultTypes.CONSOLIDATED && (
-          <ConsolidatedResults study={study} studySite={studySite} withDependencies validatedOnly={validatedOnly} />
+          <ConsolidatedResults
+            study={study}
+            studySite={studySite}
+            withDependencies
+            validatedOnly={validatedOnly}
+            environment={environment}
+          />
         )}
         {type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT && (
           <ConsolidatedResults
@@ -132,6 +138,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
             studySite={studySite}
             withDependencies
             validatedOnly={validatedOnly}
+            environment={environment}
             type={type}
           />
         )}
