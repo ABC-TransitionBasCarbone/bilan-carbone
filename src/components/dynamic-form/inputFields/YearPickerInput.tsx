@@ -1,7 +1,7 @@
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers'
 import { PickerValue } from '@mui/x-date-pickers/internals/models'
 import dayjs from 'dayjs'
-import { InputHTMLAttributes, useMemo } from 'react'
+import { ChangeEvent, InputHTMLAttributes, useMemo } from 'react'
 import { BaseInputProps } from '../types/formTypes'
 
 const YearPickerInput = ({
@@ -12,33 +12,18 @@ const YearPickerInput = ({
   disabled,
   ...props
 }: BaseInputProps & Omit<DatePickerProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
-  const handleYearChange = (newValue: PickerValue) => {
-    onChange(newValue?.format('YYYY') || '')
-  }
-
-  const handleAccept = () => {
+  const handleAccept = (value: PickerValue) => {
     if (onBlur) {
+      onChange(value?.format('YYYY') || '')
       onBlur()
     }
   }
-
-  const convertedValue = useMemo(() => {
-    if (value && typeof value === 'string') {
-      const year = parseInt(value, 10)
-      if (!isNaN(year) && year >= 1900 && year <= 2100) {
-        return dayjs().year(year)
-      }
-    }
-    return null
-  }, [value])
 
   return (
     <DatePicker
       {...props}
       label={''}
-      value={convertedValue}
-      onChange={handleYearChange}
-      onAccept={handleAccept}
+      onAccept={(value: PickerValue) => handleAccept(value)}
       disabled={disabled}
       views={['year']}
       openTo="year"
