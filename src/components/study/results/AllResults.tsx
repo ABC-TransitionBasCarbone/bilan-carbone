@@ -133,6 +133,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
             withDependencies
             validatedOnly={validatedOnly}
             type={type}
+            environment={environment}
           />
         )}
         {type === Export.Beges && (

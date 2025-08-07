@@ -1,5 +1,5 @@
-import { Post, subPostsByPost } from '@/services/posts'
-import { SubPost } from '@prisma/client'
+import { CutPost, Post, subPostsByPost } from '@/services/posts'
+import { Environment, SubPost } from '@prisma/client'
 
 export const getPost = (subPost?: SubPost) =>
   subPost
@@ -40,4 +40,32 @@ export const withInfobulle = (post: Post | SubPost) => withInfobulleList.include
 
 export const isPost = (post: Post | SubPost | 'total'): post is Post => {
   return post in Post
+}
+
+export const getPostByEnvironment = (environment: Environment | undefined): Post[] => {
+  switch (environment) {
+    case Environment.CUT:
+      return [
+        CutPost.Dechets,
+        CutPost.BilletterieEtCommunication,
+        CutPost.ConfiseriesEtBoissons,
+        CutPost.Fonctionnement,
+        CutPost.MobiliteSpectateurs,
+        CutPost.SallesEtCabines,
+        CutPost.TourneesAvantPremieres,
+      ]
+    default:
+      return [
+        Post.Energies,
+        Post.DechetsDirects,
+        Post.IntrantsBiensEtMatieres,
+        Post.IntrantsServices,
+        Post.AutresEmissionsNonEnergetiques,
+        Post.Fret,
+        Post.Deplacements,
+        Post.Immobilisations,
+        Post.UtilisationEtDependance,
+        Post.FinDeVie,
+      ]
+  }
 }

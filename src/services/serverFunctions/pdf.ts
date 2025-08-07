@@ -2,8 +2,8 @@
 
 import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
-import axios from 'axios'
-import { cookies } from 'next/headers'
+import axios, { isAxiosError } from 'axios'
+import jwt from 'jsonwebtoken'
 import { NOT_AUTHORIZED, SERVER_ERROR } from '../permissions/check'
 
 export const generateStudySummaryPDF = async (studyId: string, studyName: string, referenceYear: number) =>
@@ -15,24 +15,27 @@ export const generateStudySummaryPDF = async (studyId: string, studyName: string
 
     const API_URL = process.env.PDF_SERVICE_URL
     const API_SECRET = process.env.PDF_SERVICE_API_SECRET
+    const JWT_KEY = process.env.PDF_JWT_SECRET
 
-    if (!API_URL || !API_SECRET) {
-      console.error('PDF service URL or API secret not set')
+    if (!API_URL || !API_SECRET || !JWT_KEY) {
+      console.error('PDF service URL, API secret, or JWT key not set')
       throw new Error(SERVER_ERROR)
     }
 
     try {
-      const cookieStore = await cookies()
-      const allCookies = cookieStore.getAll()
-
-      const sessionCookies = allCookies.map((cookie) => ({
-        name: cookie.name,
-        value: cookie.value,
-        path: '/',
-      }))
+      const token = jwt.sign(
+        {
+          userId: session.user.id,
+          studyId: studyId,
+          organizationVersionId: session.user.organizationVersionId,
+          environment: session.user.environment,
+          exp: Math.floor(Date.now() / 1000) + 1 * 60, // 1 minute
+        },
+        JWT_KEY,
+      )
 
       const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-      const pdfUrl = `${baseUrl}/preview/etudes/${studyId}`
+      const pdfUrl = `${baseUrl}/preview/etudes/${studyId}?t=${token}`
 
       const pdfOptions = {
         format: 'A4',
@@ -49,7 +52,6 @@ export const generateStudySummaryPDF = async (studyId: string, studyName: string
         `${API_URL}/generate-pdf`,
         {
           url: pdfUrl,
-          cookies: sessionCookies,
           pdfOptions,
         },
         {
@@ -69,8 +71,13 @@ export const generateStudySummaryPDF = async (studyId: string, studyName: string
         contentType: 'application/pdf',
       }
     } catch (error) {
-      console.error('Error calling PDF service:', error)
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      let errorMessage = 'Unknown error'
+      if (isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || error.message || 'Axios request failed'
+      } else if (error instanceof Error) {
+        errorMessage = error.message
+      }
+      console.error('PDF generation failed:', errorMessage)
       throw new Error(`PDF generation failed: ${errorMessage}`)
     }
   })

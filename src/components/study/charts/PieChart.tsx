@@ -7,7 +7,7 @@ import { isPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Typography, useTheme } from '@mui/material'
 import { PieChart as MuiPieChart } from '@mui/x-charts'
-import { useTranslations } from 'next-intl'
+import { Environment } from '@prisma/client'
 import { useMemo } from 'react'
 import styles from './PieChart.module.css'
 
@@ -27,6 +27,8 @@ interface Props {
   showLabelsOnPie?: boolean
   validatedOnly?: boolean
   postValues: typeof Post | typeof CutPost | typeof BCPost
+  environment: Environment | undefined
+  skipAnimation?: boolean
 }
 
 const PieChart = ({
@@ -38,8 +40,9 @@ const PieChart = ({
   showLabelsOnPie = true,
   validatedOnly = false,
   postValues,
+  environment,
+  skipAnimation = false,
 }: Props) => {
-  const tResults = useTranslations('study.results')
   const theme = useTheme()
 
   const { chartFormatter, computeResults } = useChartComputations({
@@ -47,6 +50,7 @@ const PieChart = ({
     studySite,
     validatedOnly,
     postValues,
+    environment,
   })
 
   const pieData = useMemo(
@@ -66,23 +70,20 @@ const PieChart = ({
 
   return (
     <div className={styles.pieChart}>
-      {pieData.length > 0 ? (
-        <MuiPieChart
-          series={[
-            {
-              data: pieData,
-              arcLabel: showLabelsOnPie ? (item) => chartFormatter(item.value, false) : undefined,
-              arcLabelMinAngle: PIE_CHART_CONSTANTS.ARC_LABEL_MIN_ANGLE,
-              arcLabelRadius: PIE_CHART_CONSTANTS.ARC_LABEL_RADIUS,
-              innerRadius: PIE_CHART_CONSTANTS.PIE_INNER_RADIUS,
-              outerRadius: PIE_CHART_CONSTANTS.PIE_OUTER_RADIUS,
-            },
-          ]}
-          height={height}
-        />
-      ) : (
-        <Typography align="center">{tResults('noData')}</Typography>
-      )}
+      <MuiPieChart
+        series={[
+          {
+            data: pieData,
+            arcLabel: showLabelsOnPie ? (item) => chartFormatter(item.value, false) : undefined,
+            arcLabelMinAngle: PIE_CHART_CONSTANTS.ARC_LABEL_MIN_ANGLE,
+            arcLabelRadius: PIE_CHART_CONSTANTS.ARC_LABEL_RADIUS,
+            innerRadius: PIE_CHART_CONSTANTS.PIE_INNER_RADIUS,
+            outerRadius: PIE_CHART_CONSTANTS.PIE_OUTER_RADIUS,
+          },
+        ]}
+        height={height}
+        skipAnimation={skipAnimation}
+      />
       {showTitle && (
         <Typography variant="h6" align="center" className={styles.chartTitle}>
           {title}

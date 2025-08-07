@@ -138,7 +138,13 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
         </Tabs>
         <Box component="section" sx={{ marginTop: '1rem' }}>
           <TabPanel value={value} index={0}>
-            <ConsolidatedResultsTable study={study} studySite={studySite} withDependencies={false} hiddenUncertainty />
+            <ConsolidatedResultsTable
+              study={study}
+              studySite={studySite}
+              withDependencies={false}
+              hiddenUncertainty
+              environment={Environment.CUT}
+            />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <BarChart
@@ -150,6 +156,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showLabelsOnBars={true}
               validatedOnly={validatedOnly}
               postValues={CutPost}
+              environment={Environment.CUT}
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
@@ -161,6 +168,7 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showLabelsOnPie={true}
               validatedOnly={validatedOnly}
               postValues={CutPost}
+              environment={Environment.CUT}
             />
           </TabPanel>
         </Box>

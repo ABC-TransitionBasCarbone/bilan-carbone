@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 const COUNT_ROUTE = '/count'
 const TILT_ROUTE = '/tilt'
 const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE]
-const publicRoutes = ['/login', '/reset-password', '/activation', ...ENV_ROUTES]
+const publicRoutes = ['/login', '/reset-password', '/activation', '/preview', ...ENV_ROUTES]
 
 const bucketName = process.env.SCW_BUCKET_NAME as string
 const region = process.env.SCW_REGION
@@ -61,6 +61,7 @@ export async function middleware(req: NextRequest) {
   const requestHeaders = new Headers(req.headers)
   requestHeaders.set('x-nonce', nonce)
   requestHeaders.set('Content-Security-Policy', contentSecurityPolicyHeader)
+  requestHeaders.set('x-url', req.url)
 
   const response = NextResponse.next({ request: { headers: requestHeaders } })
   response.headers.set('Content-Security-Policy', contentSecurityPolicyHeader)

@@ -2,6 +2,7 @@ import BarChart from '@/components/study/charts/BarChart'
 import PieChart from '@/components/study/charts/PieChart'
 import { FullStudy } from '@/db/study'
 import { BCPost, CutPost } from '@/services/posts'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 
 interface Props {
@@ -11,9 +12,10 @@ interface Props {
   tPdf: ReturnType<typeof useTranslations>
   isAll: boolean
   postValues: typeof BCPost | typeof CutPost
+  environment: Environment | undefined
 }
 
-export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, postValues }: Props) => (
+export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, postValues, environment }: Props) => (
   <div className="pdf-content page-break-before pdf-page-content">
     <div className="pdf-section">
       <h2 className={`pdf-${isAll ? 'totals' : 'cinema'}-header pdf-header-with-border`}>
@@ -30,6 +32,8 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, postValues
         showLabelsOnBars={true}
         validatedOnly={false}
         postValues={postValues}
+        environment={environment}
+        skipAnimation={true}
       />
 
       <PieChart
@@ -41,6 +45,8 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, postValues
         showLabelsOnPie={true}
         validatedOnly={false}
         postValues={postValues}
+        environment={environment}
+        skipAnimation={true}
       />
     </div>
   </div>

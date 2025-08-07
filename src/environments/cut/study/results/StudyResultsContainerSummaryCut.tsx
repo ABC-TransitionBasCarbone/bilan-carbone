@@ -5,6 +5,7 @@ import StudyName from '@/components/study/card/StudyName'
 import BarChart from '@/components/study/charts/BarChart'
 import { FullStudy } from '@/db/study'
 import { CutPost } from '@/services/posts'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import styles from './ResultsContainer.module.css'
@@ -35,6 +36,7 @@ const StudyResultsContainerSummaryCut = ({ study }: Props) => {
           showLabelsOnBars={false}
           validatedOnly={false}
           postValues={CutPost}
+          environment={Environment.CUT}
         />
       </div>
     </>
