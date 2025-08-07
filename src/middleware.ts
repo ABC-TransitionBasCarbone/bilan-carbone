@@ -54,7 +54,7 @@ export async function middleware(req: NextRequest) {
     form-action 'self';
     frame-ancestors 'none';
     frame-src 'self' ${scaleway} https://www.youtube.com https://form.typeform.com;
-    connect-src 'self' https://api.typeform.com;
+    connect-src 'self' ${scaleway} https://api.typeform.com;
   `
   const contentSecurityPolicyHeader = cspHeader.replace(/\s{2,}/g, ' ').trim()
 

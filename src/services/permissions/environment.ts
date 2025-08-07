@@ -29,3 +29,6 @@ export const hasWasteImpact = (environment: Environment) => environment !== Envi
 
 export const hasAccessToBcExport = (environment: Environment) =>
   ([Environment.TILT] as Environment[]).includes(environment)
+
+export const hasAccessToDependencyMatrix = (environment: Environment) =>
+  ([Environment.TILT] as Environment[]).includes(environment)

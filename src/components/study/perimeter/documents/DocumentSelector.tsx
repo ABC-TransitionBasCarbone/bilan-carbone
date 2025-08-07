@@ -5,17 +5,17 @@ import { Document } from '@prisma/client'
 
 interface Props {
   documents: Document[]
-  selectedFlow: Document
-  setSelectedFlow: (document?: Document) => void
+  selectedDocument: Document
+  setSelectedDocument: (document?: Document) => void
 }
 
-const FlowSelector = ({ documents, selectedFlow, setSelectedFlow }: Props) => {
+const DocumentSelector = ({ documents, selectedDocument, setSelectedDocument }: Props) => {
   return (
     <Select
       className="grow"
-      value={selectedFlow.id}
+      value={selectedDocument.id}
       aria-labelledby="flow-selector-label"
-      onChange={(event) => setSelectedFlow(documents.find((flow) => flow.id === event.target.value))}
+      onChange={(event) => setSelectedDocument(documents.find((flow) => flow.id === event.target.value))}
       disabled={documents.length === 1}
     >
       {documents.map((document) => (
@@ -27,4 +27,4 @@ const FlowSelector = ({ documents, selectedFlow, setSelectedFlow }: Props) => {
   )
 }
 
-export default FlowSelector
+export default DocumentSelector

@@ -1,3 +1,7 @@
+enum DocumentCategory {
+  DependencyMatrix
+}
+
 model Document {
   id   String @id @default(uuid())
   name String
@@ -11,6 +15,8 @@ model Document {
 
   uploaderId String  @map("uploader_account_id")
   uploader   Account @relation(fields: [uploaderId], references: [id])
+
+  documentCategory DocumentCategory? @map("document_category")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

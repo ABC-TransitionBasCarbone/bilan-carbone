@@ -4,15 +4,18 @@ import { OrganizationWithSites } from '@/db/account'
 import { getDocumentsForStudy } from '@/db/document'
 import { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
+import { hasAccessToDependencyMatrix } from '@/services/permissions/environment'
 import { canEditStudyFlows } from '@/services/permissions/study'
 import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy } from '@/utils/study'
+import { DocumentCategory } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
+import DependencyMatrix from '../study/perimeter/documents/DependencyMatrix'
+import StudyFlow from '../study/perimeter/documents/StudyFlow'
 import EmissionSourceTags from '../study/perimeter/EmissionSourceTags'
-import StudyFlow from '../study/perimeter/flow/StudyFlow'
 import StudyPerimeter from '../study/perimeter/StudyPerimeter'
 
 interface Props {
@@ -34,6 +37,11 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
 
   const caUnit = (await getUserApplicationSettings(user.accountId))?.caUnit || defaultCAUnit
   const canAddFlow = await canEditStudyFlows(study.id)
+
+  const studyFlowDocuments = documents.filter((document) => !document.documentCategory)
+  const dependencyMatrixDocuments = documents.filter(
+    (document) => document.documentCategory === DocumentCategory.DependencyMatrix,
+  )
 
   return (
     <>
@@ -59,12 +67,10 @@ const StudyPerimeterPage = async ({ study, organizationVersion, user }: Props) =
         />
       </Block>
       <EmissionSourceTags studyId={study.id} />
-      <StudyFlow
-        canAddFlow={canAddFlow}
-        documents={documents}
-        initialDocument={documents.length > 0 ? documents[0] : undefined}
-        study={study}
-      />
+      <StudyFlow canAddFlow={canAddFlow} documents={studyFlowDocuments} study={study} />
+      {hasAccessToDependencyMatrix(user.environment) && (
+        <DependencyMatrix documents={dependencyMatrixDocuments} study={study} />
+      )}
     </>
   )
 }

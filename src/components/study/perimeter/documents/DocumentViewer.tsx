@@ -7,21 +7,21 @@ import { useEffect, useMemo, useState } from 'react'
 import styles from './StudyFlow.module.css'
 
 interface Props {
-  selectedFlow: Document
+  selectedDocument: Document
   studyId: string
 }
 
-const StudyFlowViewer = ({ studyId, selectedFlow }: Props) => {
+const DocumentViewer = ({ studyId, selectedDocument }: Props) => {
   const t = useTranslations('study.flow')
-  const isPdf = useMemo(() => selectedFlow?.type === 'application/pdf', [selectedFlow])
+  const isPdf = useMemo(() => selectedDocument?.type === 'application/pdf', [selectedDocument])
   const [documentUrl, setDocumentUrl] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchAndSetFlowUrl(selectedFlow)
-  }, [selectedFlow])
+    fetchAndSetDocumentUrl(selectedDocument)
+  }, [selectedDocument])
 
-  const fetchAndSetFlowUrl = async (document: Document) => {
+  const fetchAndSetDocumentUrl = async (document: Document) => {
     setLoading(true)
     const url = await getDocumentUrl(document, studyId)
     if (url.success) {
@@ -41,12 +41,12 @@ const StudyFlowViewer = ({ studyId, selectedFlow }: Props) => {
   return (
     <div className="flex-cc">
       {isPdf ? (
-        <PdfViewer pdfUrl={documentUrl} fileName={selectedFlow.name} />
+        <PdfViewer pdfUrl={documentUrl} fileName={selectedDocument.name} />
       ) : (
         <Image
           className={styles.flowImage}
           src={documentUrl}
-          alt={selectedFlow.name}
+          alt={selectedDocument.name}
           width={0}
           height={0}
           layout="responsive"
@@ -56,4 +56,4 @@ const StudyFlowViewer = ({ studyId, selectedFlow }: Props) => {
   )
 }
 
-export default StudyFlowViewer
+export default DocumentViewer

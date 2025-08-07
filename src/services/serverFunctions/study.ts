@@ -72,6 +72,7 @@ import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import {
   ControlMode,
   Document,
+  DocumentCategory,
   EmissionFactor,
   EmissionFactorImportVersion,
   Export,
@@ -834,8 +835,8 @@ export const deleteStudyCommand = async ({ id, name }: DeleteCommand) =>
     await deleteStudy(id)
   })
 
-export const addFlowToStudy = async (studyId: string, file: File) =>
-  withServerResponse('addFlowToStudy', async () => {
+export const addDocumentToStudy = async (studyId: string, file: File, documentCategory?: DocumentCategory) =>
+  withServerResponse('addDocumentToStudy', async () => {
     const session = await auth()
     const allowedType = await isAllowedFileType(file, allowedFlowFileTypes)
     if (!allowedType) {
@@ -854,12 +855,13 @@ export const addFlowToStudy = async (studyId: string, file: File) =>
         study: { connect: { id: studyId } },
         bucketKey: butcketUploadResult.data.key,
         bucketETag: butcketUploadResult.data.ETag || '',
+        documentCategory,
       })
     }
   })
 
-export const deleteFlowFromStudy = async (document: Document, studyId: string) =>
-  withServerResponse('deleteFlowFromStudy', async () => {
+export const deleteDocumentFromStudy = async (document: Document, studyId: string) =>
+  withServerResponse('deleteDocumentFromStudy', async () => {
     if (!(await canAccessFlowFromStudy(document.id, studyId)) || !(await canEditStudyFlows(studyId))) {
       throw new Error(NOT_AUTHORIZED)
     }
