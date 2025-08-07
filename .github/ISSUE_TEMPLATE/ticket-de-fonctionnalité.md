@@ -11,8 +11,9 @@ assignees: ''
 Donner quelques phrases de contexte, dans quel cadre s'inscrit ce ticket
 
 ## Tests d'acceptance
+Quelles sont les fonctionnalités à développer dans ce ticket.
+Les environnements impactés sont : [ ] le BC+, [ ] TILT, [ ] CUT (Vérifier que la fonctionnalité fonctionne sur ceux cochés, vérifier que la fonctionnalité n'a pas d'impact sur ceux décochés)
 
-Quelles sont les fonctionnalités à développer dans ce ticket
 
 ## Infos de test
 
