@@ -18,7 +18,7 @@ const RessourceLinks = ({ title, links }: Props) => {
         <div className={classNames(styles.cardHeader, 'p1')}>
           <Typography className="mb-2 bold text-center">{t(title)}</Typography>
         </div>
-        <div className={styles.cardLinks}>
+        <div className={classNames(styles.cardLinks, 'text-center')}>
           {links.map(({ title, link }) => (
             <div className="mt-2 mb-2" key={link}>
               <Link href={link}>{t(title)}</Link>

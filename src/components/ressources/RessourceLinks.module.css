@@ -12,11 +12,9 @@
 .cardHeader {
   background: var(--mui-palette-primary-light);
   min-height: 6.5rem;
-  align-content: center;
 }
 
 .cardLinks {
   height: 100%;
-  align-content: center;
   padding: 0.7rem;
 }

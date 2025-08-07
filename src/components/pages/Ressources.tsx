@@ -37,15 +37,13 @@ const RessourcesPage = async () => {
   ]
 
   return (
-    <>
-      <Block title={t('title')} as="h1">
-        <div className={styles.ressources}>
-          {ressources.map(({ title, links }) => (
-            <RessourceLinks key={title} title={title} links={links} />
-          ))}
-        </div>
-      </Block>
-    </>
+    <Block title={t('title')} as="h1">
+      <div className={styles.ressources}>
+        {ressources.map(({ title, links }) => (
+          <RessourceLinks key={title} title={title} links={links} />
+        ))}
+      </div>
+    </Block>
   )
 }
 
