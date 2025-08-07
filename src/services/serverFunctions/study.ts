@@ -578,53 +578,51 @@ export const updateCaracterisationsForControlMode = async (studyId: string, newC
 
     const emissionSources = study.data.emissionSources
 
-    const updatePromises = emissionSources
-      .map((emissionSource) => {
-        if (!emissionSource.caracterisation && !emissionSource.validated) {
-          return null
-        }
-
-        const exportsWithNewControlMode = study.data?.exports.map((exp) => ({
-          ...exp,
-          control: newControlMode,
-        }))
-
-        const validCaracterisations = getCaracterisationsBySubPost(
-          emissionSource.subPost,
-          exportsWithNewControlMode || [],
-          session.user.environment,
-        )
-
-        const isValidForNewControlMode = validCaracterisations.includes(
-          emissionSource.caracterisation as EmissionSourceCaracterisation,
-        )
-
-        if (!isValidForNewControlMode) {
-          if (validCaracterisations.length === 1) {
-            const newCaracterisation = validCaracterisations[0]
-            const shouldKeepValidation = emissionSource.caracterisation && emissionSource.validated
-
-            return prismaClient.studyEmissionSource.update({
-              where: { id: emissionSource.id },
-              data: {
-                caracterisation: newCaracterisation,
-                validated: shouldKeepValidation,
-              },
-            })
-          } else {
-            return prismaClient.studyEmissionSource.update({
-              where: { id: emissionSource.id },
-              data: { caracterisation: null, validated: false },
-            })
+    await Promise.all(
+      emissionSources
+        .map((emissionSource) => {
+          if (!emissionSource.caracterisation && !emissionSource.validated) {
+            return null
           }
-        }
-        return null
-      })
-      .filter(Boolean)
 
-    if (updatePromises.length > 0) {
-      await Promise.all(updatePromises)
-    }
+          const exportsWithNewControlMode = study.data?.exports.map((exp) => ({
+            ...exp,
+            control: newControlMode,
+          }))
+
+          const validCaracterisations = getCaracterisationsBySubPost(
+            emissionSource.subPost,
+            exportsWithNewControlMode || [],
+            session.user.environment,
+          )
+
+          const isValidForNewControlMode = validCaracterisations.includes(
+            emissionSource.caracterisation as EmissionSourceCaracterisation,
+          )
+
+          if (!isValidForNewControlMode) {
+            if (validCaracterisations.length === 1) {
+              const newCaracterisation = validCaracterisations[0]
+              const shouldKeepValidation = emissionSource.caracterisation && emissionSource.validated
+
+              return prismaClient.studyEmissionSource.update({
+                where: { id: emissionSource.id },
+                data: {
+                  caracterisation: newCaracterisation,
+                  validated: shouldKeepValidation,
+                },
+              })
+            } else {
+              return prismaClient.studyEmissionSource.update({
+                where: { id: emissionSource.id },
+                data: { caracterisation: null, validated: false },
+              })
+            }
+          }
+          return null
+        })
+        .filter(Boolean),
+    )
 
     return
   })
@@ -1217,10 +1215,7 @@ export const duplicateStudyCommand = async (
     const studySites = await getStudySites(createdStudyId)
 
     for (const sourceVersion of sourceStudy.emissionFactorVersions) {
-      // TODO: Clean check when we fix: https://github.com/ABC-TransitionBasCarbone/bilan-carbone/issues/1377
-      if (sourceVersion.source !== Import.CUT) {
-        await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId)
-      }
+      await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId)
     }
 
     // Check if control modes have changed to determine if we should clear characterizations

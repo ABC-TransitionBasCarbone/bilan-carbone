@@ -49,10 +49,20 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
     }
   }
 
+  const closeControlModeChange = () => {
+    setShowWarning(false)
+    setPendingControlMode(null)
+  }
+
+  const closeBegesActivation = () => {
+    setShowBegesWarning(false)
+    setPendingBegesCheck(false)
+  }
+
   const confirmControlModeChange = async () => {
-    if (pendingControlMode) {
-      if (!study || duplicateStudyId) {
-        // For new studies or duplicate studies, don't clear characterizations immediately
+    if (pendingControlMode && study) {
+      if (duplicateStudyId) {
+        // For duplicate studies, don't clear characterizations immediately
         setValues({ ...values, [id]: pendingControlMode })
       } else {
         // For existing studies, clear characterizations immediately
@@ -63,8 +73,7 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
         })
       }
     }
-    setShowWarning(false)
-    setPendingControlMode(null)
+    closeControlModeChange()
   }
 
   const confirmBegesActivation = async () => {
@@ -79,18 +88,7 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
         })
       }
     }
-    setShowBegesWarning(false)
-    setPendingBegesCheck(false)
-  }
-
-  const cancelControlModeChange = () => {
-    setShowWarning(false)
-    setPendingControlMode(null)
-  }
-
-  const cancelBegesActivation = () => {
-    setShowBegesWarning(false)
-    setPendingBegesCheck(false)
+    closeBegesActivation()
   }
 
   return (
@@ -146,14 +144,14 @@ const ExportCheckbox = ({ id, study, values, setValues, disabled, duplicateStudy
           currentMode={values[id] as ControlMode}
           newMode={pendingControlMode}
           onConfirm={confirmControlModeChange}
-          onCancel={cancelControlModeChange}
+          onCancel={closeControlModeChange}
         />
       )}
       {showBegesWarning && pendingBegesCheck && (
         <BegesActivationWarningModal
           open={showBegesWarning}
           onConfirm={confirmBegesActivation}
-          onCancel={cancelBegesActivation}
+          onCancel={closeBegesActivation}
         />
       )}
     </div>

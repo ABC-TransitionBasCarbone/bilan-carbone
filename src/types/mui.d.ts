@@ -30,24 +30,6 @@ declare module '@mui/material/styles' {
       publicContainer: {
         background?: string
       }
-      beges: {
-        category: {
-          1: string
-          2: string
-          3: string
-          4: string
-          5: string
-          6: string
-        }
-        categoryLight: {
-          1: string
-          2: string
-          3: string
-          4: string
-          5: string
-          6: string
-        }
-      }
     }
   }
 
@@ -92,6 +74,33 @@ declare module '@mui/material/styles' {
           6?: string
         }
       }
+    }
+  }
+
+  interface PaletteOptions {
+    beges1?: {
+      main?: string
+      light?: string
+    }
+    beges2?: {
+      main?: string
+      light?: string
+    }
+    beges3?: {
+      main?: string
+      light?: string
+    }
+    beges4?: {
+      main?: string
+      light?: string
+    }
+    beges5?: {
+      main?: string
+      light?: string
+    }
+    beges6?: {
+      main?: string
+      light?: string
     }
   }
 }

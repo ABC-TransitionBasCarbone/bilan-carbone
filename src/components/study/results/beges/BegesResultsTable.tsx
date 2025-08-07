@@ -11,7 +11,7 @@ import { ExportRule } from '@prisma/client'
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
-import { StyledBegesTable } from './StyledBegesTable'
+import styles from './BegesResultsTable.module.css'
 
 interface Props {
   study: FullStudy
@@ -118,7 +118,7 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
 
   return (
     <>
-      <StyledBegesTable aria-labelledby="study-rights-table-title">
+      <table className={styles.begesTable} aria-labelledby="study-rights-table-title">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -135,17 +135,17 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
             const rule = row.original.rule.split('.')
             const category = rule[0]
             const isTotal = category === 'total'
-            const isCategoryHeader = rule[1] === '1' || isTotal
+            const isCategorieFirstRow = rule[1] === '1' || isTotal
 
             return (
               <tr
                 key={row.id}
                 data-testid="beges-results-table-row"
                 data-category={category}
-                className={isCategoryHeader ? 'category-first-row' : ''}
+                className={isCategorieFirstRow ? styles.categoryFirstRow : ''}
               >
                 {row.getVisibleCells().map((cell) => {
-                  const shouldRenderCell = cell.column.id !== 'category' || isCategoryHeader
+                  const shouldRenderCell = cell.column.id !== 'category' || isCategorieFirstRow
 
                   if (!shouldRenderCell) {
                     return null
@@ -156,17 +156,17 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
                   const isTotalColumn = cell.column.id === 'total'
 
                   if (cell.column.id === 'category') {
-                    cellClass = 'category-cell category-bold'
+                    cellClass = `${styles.categoryCell} ${styles.categoryBold}`
                   } else if (isTotal) {
-                    cellClass = 'total-row'
+                    cellClass = styles.totalRow
                   } else if (isSubtotal) {
-                    cellClass = 'post-cell subtotal-row'
+                    cellClass = `${styles.postCell} ${styles.subtotalRow}`
                   } else {
-                    cellClass = 'post-cell'
+                    cellClass = styles.postCell
                   }
 
                   if (isTotalColumn) {
-                    cellClass += ' total-column'
+                    cellClass += ` ${styles.totalColumn}`
                   }
 
                   return (
@@ -184,7 +184,7 @@ const BegesResultsTable = ({ study, rules, emissionFactorsWithParts, studySite, 
             )
           })}
         </tbody>
-      </StyledBegesTable>
+      </table>
     </>
   )
 }
