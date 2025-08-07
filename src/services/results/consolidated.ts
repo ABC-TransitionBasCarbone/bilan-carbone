@@ -41,7 +41,7 @@ export const computeResultsByPost = (
   validatedOnly: boolean = true,
   postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost = BCPost,
   environment: Environment | undefined,
-  type: ResultType = AdditionalResultTypes.CONSOLIDATED,
+  type?: ResultType,
 ) => {
   const siteEmissionSources = getSiteEmissionSources(study.emissionSources, studySite)
   const convertToBc = type === AdditionalResultTypes.CONSOLIDATED && environment !== Environment.BC
