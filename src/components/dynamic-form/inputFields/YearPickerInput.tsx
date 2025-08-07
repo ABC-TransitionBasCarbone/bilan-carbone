@@ -12,9 +12,9 @@ const YearPickerInput = ({
   disabled,
   ...props
 }: BaseInputProps & Omit<DatePickerProps & InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'onBlur'>) => {
-  const handleAccept = (value: PickerValue) => {
+  const handleAccept = (newValue: PickerValue) => {
     if (onBlur) {
-      onChange(value?.format('YYYY') || '')
+      onChange(newValue?.format('YYYY') || '')
       onBlur()
     }
   }
@@ -23,7 +23,8 @@ const YearPickerInput = ({
     <DatePicker
       {...props}
       label={''}
-      onAccept={(value: PickerValue) => handleAccept(value)}
+      defaultValue={dayjs(value) ?? undefined}
+      onAccept={(newValue: PickerValue) => handleAccept(newValue)}
       disabled={disabled}
       views={['year']}
       openTo="year"
