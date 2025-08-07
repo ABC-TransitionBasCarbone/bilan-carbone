@@ -55,6 +55,7 @@ const Navbar = ({ children, user, environment }: Props) => {
   }, [user])
 
   const isCut = useMemo(() => user.environment === Environment.CUT, [user?.environment])
+  const isTilt = useMemo(() => user.environment === Environment.TILT, [user?.environment])
 
   return (
     <AppBar position="sticky" elevation={0}>
@@ -140,11 +141,7 @@ const Navbar = ({ children, user, environment }: Props) => {
             )}
 
             {user.role === Role.SUPER_ADMIN && <NavbarLink href="/super-admin">{t('admin')}</NavbarLink>}
-            <NavbarButton
-              rel="noreferrer noopener"
-              href={process.env.NEXT_PUBLIC_ABC_FAQ_LINK || ''}
-              aria-label={t('help')}
-            >
+            <NavbarButton rel="noreferrer noopener" href={'/ressources'} aria-label={t('help')}>
               <HelpOutlineIcon />
             </NavbarButton>
             {!isCut && (
@@ -159,7 +156,11 @@ const Navbar = ({ children, user, environment }: Props) => {
               <NavbarButton
                 aria-label={t('methodology')}
                 rel="noreferrer noopener"
-                href="https://www.bilancarbone-methode.com/"
+                href={
+                  isTilt
+                    ? 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative'
+                    : 'https://www.bilancarbone-methode.com/'
+                }
               >
                 <MenuBookIcon />
               </NavbarButton>

@@ -120,6 +120,19 @@
     "seeLess": "See less",
     "seeMore": "See more"
   },
+  "ressources": {
+    "title": "Resources",
+    "methodeAssociative": "For any questions about the associative method:",
+    "sphereAssociative": "Associative Sphere",
+    "enSavoirPlusBilan": "To learn more about the Bilan Carbone® method:",
+    "methodeBilanCarbone": "Bilan Carbone® Methodological Guide",
+    "questionMethodo": "For any methodological questions:",
+    "openCarbonPractice": "Open Carbon Practice",
+    "contacterViaFormulaire": "Contact the ABC directly via the form",
+    "questionTechnique": "For any technical questions or IT support needs:",
+    "lireLaFAQ": "Read the FAQ",
+    "ecrireMail": "Write directly to support@abc-transitionbascarbone.fr"
+  },
   "legalNotices": {
     "profile": "Return to profile"
   },
