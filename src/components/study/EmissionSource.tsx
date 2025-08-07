@@ -147,7 +147,10 @@ const EmissionSource = ({
     }
   }, [emissionSource.emissionFactor, emissionFactors])
 
-  const status = useMemo(() => getEmissionSourceStatus(study, emissionSource), [study, emissionSource])
+  const status = useMemo(
+    () => getEmissionSourceStatus(study, emissionSource, environment),
+    [study, emissionSource, environment],
+  )
   const emissionResults = useMemo(() => getEmissionResults(emissionSource, environment), [emissionSource, environment])
 
   const isFromOldImport = useMemo(

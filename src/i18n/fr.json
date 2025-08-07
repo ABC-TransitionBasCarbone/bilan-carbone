@@ -18,7 +18,7 @@
   "exports": {
     "title": "Exports :",
     "consolidated": "Bilan Carbone®",
-    "Beges": "Bilan GES Reglementaire",
+    "Beges": "Bilan GES Réglementaire",
     "GHGP": "GHG Protocol",
     "ISO14069": "ISO 14069",
     "developmentFile": "⚠️ Fichier en cours de développement ⚠️",
@@ -592,6 +592,18 @@
         "delete": "Supprimer",
         "description": "{count, plural, =1 {Il contient} other {Certains contiennent}} des sources d'emission. <warning>Toutes les données renseignées seront definitivement perdues.</warning>",
         "title": "Êtes-vous sûr de vouloir supprimer {count, plural, =1 {ce site} other {ces sites}} ?"
+      },
+      "controlModeWarning": {
+        "title": "Changement de mode de contrôle",
+        "description": "Vous êtes sur le point de changer le mode de contrôle de {currentMode} vers {newMode}. <warning>Cette action supprimera la majorité des caractérisations existantes et dévalidera les sources d'émission associées</warning>, car elles ne correspondent plus au nouveau mode de contrôle. Voulez-vous continuer ?",
+        "continue": "Continuer",
+        "cancel": "Annuler"
+      },
+      "begesActivationWarning": {
+        "title": "Activation de l'export BEGES",
+        "description": "Vous êtes sur le point d'activer l'export BEGES règlementaire. Lorsque cet export est activé, vous devez renseigner un champ supplémentaire \"Caractérisation\" dans certaines sources d'émissions. En conséquence, <warning>l'activation de cet export dévalidera les sources d'émission concernées</warning>. Voulez-vous continuer ?",
+        "continue": "Continuer",
+        "cancel": "Annuler"
       }
     },
     "results": {

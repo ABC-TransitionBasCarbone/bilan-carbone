@@ -607,8 +607,12 @@ export const getSourceLatestImportVersionId = async (source: Import, transaction
     orderBy: { createdAt: 'desc' },
   })
 
-export const createStudyExport = async (studyId: string, type: Export, control: ControlMode) =>
-  prismaClient.studyExport.create({ data: { studyId, type, control } })
+export const upsertStudyExport = async (studyId: string, type: Export, control: ControlMode) =>
+  prismaClient.studyExport.upsert({
+    where: { studyId_type: { studyId, type } },
+    update: { control },
+    create: { studyId, type, control },
+  })
 
 export const deleteStudyExport = async (studyId: string, type: Export) =>
   prismaClient.studyExport.delete({ where: { studyId_type: { studyId, type } } })

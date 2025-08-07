@@ -14,6 +14,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountsUserLevel,
 } from '@/db/account'
+import { prismaClient } from '@/db/client'
 import { findCncByNumeroAuto, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -35,7 +36,6 @@ import {
   createContributorOnStudy,
   createStudy,
   createStudyEmissionSource,
-  createStudyExport,
   createUserOnStudy,
   deleteAccountOnStudy,
   deleteContributor,
@@ -55,6 +55,7 @@ import {
   updateStudySiteData,
   updateStudySites,
   updateUserOnStudy,
+  upsertStudyExport,
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
 import { LocaleType } from '@/i18n/config'
@@ -75,6 +76,7 @@ import {
   DocumentCategory,
   EmissionFactor,
   EmissionFactorImportVersion,
+  EmissionSourceCaracterisation,
   Export,
   Import,
   Prisma,
@@ -90,6 +92,7 @@ import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { v4 as uuidv4 } from 'uuid'
 import { auth, dbActualizedAuth } from '../auth'
+import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, NOT_AUTHORIZED } from '../permissions/check'
 import { isInOrgaOrParentFromId } from '../permissions/organization'
@@ -560,7 +563,67 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
     if (control === false) {
       return deleteStudyExport(studyId, type)
     }
-    return createStudyExport(studyId, type, control)
+    return upsertStudyExport(studyId, type, control)
+  })
+
+export const updateCaracterisationsForControlMode = async (studyId: string, newControlMode: ControlMode) =>
+  withServerResponse('updateCaracterisationsForControlMode', async () => {
+    const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
+    if (!session || !session.user || !study.success || !study.data) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    if (!hasEditionRights(getAccountRoleOnStudy(session.user, study.data))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const emissionSources = study.data.emissionSources
+    const exportsWithNewControlMode = study.data.exports.map((exp) => ({
+      ...exp,
+      control: newControlMode,
+    }))
+
+    await Promise.all(
+      emissionSources
+        .map((emissionSource) => {
+          if (!emissionSource.caracterisation && !emissionSource.validated) {
+            return null
+          }
+
+          const validCaracterisations = getCaracterisationsBySubPost(
+            emissionSource.subPost,
+            exportsWithNewControlMode || [],
+            session.user.environment,
+          )
+
+          const isValidForNewControlMode = validCaracterisations.includes(
+            emissionSource.caracterisation as EmissionSourceCaracterisation,
+          )
+
+          if (!isValidForNewControlMode) {
+            if (validCaracterisations.length === 1) {
+              const newCaracterisation = validCaracterisations[0]
+              const shouldKeepValidation = emissionSource.caracterisation && emissionSource.validated
+
+              return prismaClient.studyEmissionSource.update({
+                where: { id: emissionSource.id },
+                data: {
+                  caracterisation: newCaracterisation,
+                  validated: shouldKeepValidation,
+                },
+              })
+            } else {
+              return prismaClient.studyEmissionSource.update({
+                where: { id: emissionSource.id },
+                data: { caracterisation: null, validated: false },
+              })
+            }
+          }
+          return null
+        })
+        .filter(Boolean),
+    )
+
+    return
   })
 
 const getOrCreateUserAndSendStudyInvite = async (
@@ -1154,6 +1217,23 @@ export const duplicateStudyCommand = async (
       await updateStudyEmissionFactorVersion(createdStudyId, sourceVersion.source, sourceVersion.importVersionId)
     }
 
+    // Check if control modes have changed to determine if we should clear characterizations
+    const sourceExportsByType = sourceStudy.exports.reduce(
+      (acc, exp) => {
+        acc[exp.type] = exp.control
+        return acc
+      },
+      {} as Record<Export, ControlMode>,
+    )
+
+    const hasControlModeChanged = (exportType: Export) => {
+      const sourceControl = sourceExportsByType[exportType]
+      const newControl = studyCommand.exports[exportType]
+      return sourceControl && newControl && sourceControl !== newControl
+    }
+
+    const shouldClearCaracterisations = Object.values(Export).some(hasControlModeChanged)
+
     const sourceEmissionSources = sourceStudy.emissionSources
     for (const sourceEmissionSource of sourceEmissionSources) {
       const sourceSiteId = sourceEmissionSource.studySite.site.id
@@ -1181,7 +1261,8 @@ export const duplicateStudyCommand = async (
           feGeographicRepresentativeness: sourceEmissionSource.feGeographicRepresentativeness,
           feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
           feCompleteness: sourceEmissionSource.feCompleteness,
-          caracterisation: sourceEmissionSource.caracterisation,
+          // Clear characterization if control mode changed, otherwise keep it
+          caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
           study: { connect: { id: createdStudyId } },
           emissionFactor: sourceEmissionSource.emissionFactor
             ? { connect: { id: sourceEmissionSource.emissionFactor.id } }

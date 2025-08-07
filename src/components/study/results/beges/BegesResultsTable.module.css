@@ -1,0 +1,140 @@
+.begesTable {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  box-shadow: none !important;
+}
+
+.begesTable thead th {
+  font-weight: 600;
+  padding: 0.75rem;
+  text-align: center;
+  vertical-align: middle;
+  background-color: var(--mui-palette-grey-100);
+}
+
+.begesTable thead th:first-child {
+  font-size: 0.875rem;
+  color: var(--mui-palette-grey-600);
+}
+
+.begesTable thead th:not(:first-child) {
+  font-size: 0.875rem;
+}
+
+.begesTable thead th[rowspan='2'] {
+  font-size: 1rem;
+  color: var(--mui-palette-text-primary);
+  font-weight: 600;
+}
+
+.begesTable thead tr:first-child th {
+  font-size: 0.875rem;
+  color: var(--mui-palette-grey-600);
+  padding-bottom: 0.375rem;
+}
+
+.begesTable thead tr:first-child th[rowspan='2'] {
+  font-size: 1rem;
+  color: var(--mui-palette-text-primary);
+  padding-bottom: 0.75rem;
+}
+
+.begesTable thead tr:last-child th {
+  font-size: 0.875rem;
+  padding-top: 0.375rem;
+}
+
+.begesTable tbody tr td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid white;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.begesTable tbody tr td.totalRow {
+  background-color: var(--mui-palette-grey-100) !important;
+  font-weight: 600;
+  border-top: 0.5rem solid white;
+}
+
+.begesTable tbody tr td.categoryCell:not([data-category='total']) {
+  color: var(--mui-palette-common-white);
+  border-right: 0.5rem solid white;
+  font-weight: 600;
+}
+
+.begesTable tbody tr td.categoryBold {
+  font-weight: 600;
+}
+
+.begesTable tbody tr td.subtotalRow {
+  font-weight: 600;
+}
+
+.begesTable tbody tr td.totalColumn {
+  font-weight: 600;
+}
+
+.begesTable tbody tr td.categoryCell[data-category='1'] {
+  background-color: var(--mui-palette-beges1-main);
+}
+
+.begesTable tbody tr td.categoryCell[data-category='2'] {
+  background-color: var(--mui-palette-beges2-main);
+}
+
+.begesTable tbody tr td.categoryCell[data-category='3'] {
+  background-color: var(--mui-palette-beges3-main);
+}
+
+.begesTable tbody tr td.categoryCell[data-category='4'] {
+  background-color: var(--mui-palette-beges4-main);
+}
+
+.begesTable tbody tr td.categoryCell[data-category='5'] {
+  background-color: var(--mui-palette-beges5-main);
+}
+
+.begesTable tbody tr td.categoryCell[data-category='6'] {
+  background-color: var(--mui-palette-beges6-main);
+}
+
+.begesTable tbody tr td.categoryCell[data-category='total'] {
+  background-color: var(--mui-palette-grey-100);
+}
+
+/* Post cell background colors (lighter variants) */
+.begesTable tbody tr td.postCell[data-category='1'] {
+  background-color: var(--mui-palette-beges1-light);
+}
+
+.begesTable tbody tr td.postCell[data-category='2'] {
+  background-color: var(--mui-palette-beges2-light);
+}
+
+.begesTable tbody tr td.postCell[data-category='3'] {
+  background-color: var(--mui-palette-beges3-light);
+}
+
+.begesTable tbody tr td.postCell[data-category='4'] {
+  background-color: var(--mui-palette-beges4-light);
+}
+
+.begesTable tbody tr td.postCell[data-category='5'] {
+  background-color: var(--mui-palette-beges5-light);
+}
+
+.begesTable tbody tr td.postCell[data-category='6'] {
+  background-color: var(--mui-palette-beges6-light);
+}
+
+.begesTable tbody tr td:last-child {
+  padding-left: 0rem;
+  padding-right: 0rem;
+}
+
+.begesTable tbody tr.categoryFirstRow td {
+  border-top: 0.5rem solid white;
+}

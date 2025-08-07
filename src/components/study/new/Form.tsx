@@ -10,7 +10,6 @@ import StudyDuplicationForm, { InviteOptions } from '@/components/study/duplicat
 import { useServerFunction } from '@/hooks/useServerFunction'
 import { createStudyCommand, duplicateStudyCommand } from '@/services/serverFunctions/study'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
-import { Tooltip } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -33,7 +32,6 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
   const tError = useTranslations('study.new.error')
   const tGlossary = useTranslations('study.new.glossary')
   const tStudyNewSuggestion = useTranslations('study.new.suggestion')
-  const tStudyNewInfo = useTranslations('study.new.info')
   const { callServerFunction } = useServerFunction()
   const [inviteOptions, setInviteOptions] = useState<InviteOptions>({
     team: true,
@@ -55,9 +53,7 @@ const NewStudyForm = ({ form, children, glossary, setGlossary, t, duplicateStudy
   }
 
   const Help = (name: string) => (
-    <Tooltip placement="right" title={tStudyNewInfo('date')}>
-      <HelpIcon className="ml-4" onClick={() => setGlossary && setGlossary(name)} label={tGlossary('title')} />
-    </Tooltip>
+    <HelpIcon className="ml-4" onClick={() => setGlossary && setGlossary(name)} label={tGlossary('title')} />
   )
 
   const studyNamePlaceHolder = useMemo(

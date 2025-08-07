@@ -117,12 +117,20 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
 
   const missingCaract = useMemo(
     () =>
-      study.emissionSources.filter(
-        (emissionSource) =>
-          (emissionSource.validated || !validatedOnly) &&
-          !emissionSource.caracterisation &&
-          emissionSource.subPost !== SubPost.UtilisationEnDependance,
-      ),
+      study.emissionSources.filter((emissionSource) => {
+        if (
+          (!emissionSource.validated && validatedOnly) ||
+          emissionSource.subPost === SubPost.UtilisationEnDependance
+        ) {
+          return false
+        }
+
+        if (!emissionSource.caracterisation) {
+          return true
+        }
+
+        return false
+      }),
     [study.emissionSources, validatedOnly],
   )
 
@@ -142,7 +150,7 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
     }, 0)
   }, [missingCaract, emissionFactorsWithParts, unitValue, environment])
 
-  const maxListedEmissionSources = 10
+  const maxButtonEmissionSources = 10
 
   return begesTotal !== computedTotal ? (
     <>
@@ -261,22 +269,23 @@ const Difference = ({ study, rules, emissionFactorsWithParts, studySite, validat
                 </p>
                 <div className={classNames(styles.missingSourcesList, 'wrap')}>
                   {missingCaract
-                    .filter((_, i) => i < maxListedEmissionSources)
+                    .filter((_, i) => i < maxButtonEmissionSources)
                     .map((emissionSource) => (
                       <Button
                         key={`caract-emission-source-${emissionSource.id}`}
                         onClick={() => navigateToEmissionSource(emissionSource.id, emissionSource.subPost)}
                         color="secondary"
+                        variant="outlined"
                         size="small"
                         className={styles.missingSourceButton}
                       >
                         {emissionSource.name}
                       </Button>
                     ))}
-                  {missingCaract.length > maxListedEmissionSources && (
-                    <span className={styles.additionalCount}>
-                      +{missingCaract.length - maxListedEmissionSources} {t('additionalMissing')}
-                    </span>
+                  {missingCaract.length > maxButtonEmissionSources && (
+                    <div className={classNames(styles.additionalMissingSources, 'mt-2')}>
+                      {t('additionalMissing', { count: missingCaract.length - maxButtonEmissionSources })}
+                    </div>
                   )}
                 </div>
               </div>
