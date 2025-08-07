@@ -1,10 +1,15 @@
 'use client'
 
 import { sendAddedUsersAndProccess, verifyPasswordAndProcessUsers } from '@/services/serverFunctions/user'
+import { Environment } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import InputFileUpload from '../base/InputFileUpload'
 
-const SuperAdminImport = () => {
+interface Props {
+  environment: Environment
+}
+
+const SuperAdminImport = ({ environment }: Props) => {
   const t = useTranslations('admin')
 
   const onChange = (files: FileList) => {
@@ -25,7 +30,7 @@ const SuperAdminImport = () => {
             }
 
             const results = JSON.parse(event.target.result) as Record<string, string>[]
-            await sendAddedUsersAndProccess(results)
+            await sendAddedUsersAndProccess(results, environment)
           } catch (error) {
             console.error("Erreur lors de l'analyse du JSON :", error)
           }

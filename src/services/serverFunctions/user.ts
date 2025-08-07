@@ -140,6 +140,7 @@ export const sendInvitation = async (
             `${creator.firstName} ${creator.lastName}`,
             existingAccount.user.firstName,
             roleOnStudy,
+            env,
           )
         : sendNewContributorInvitationEmail(
             email,
@@ -432,9 +433,9 @@ export const addUserChecklistItem = async (step: UserChecklist) =>
     }
   })
 
-export const sendAddedUsersAndProccess = async (results: Record<string, string>[]) =>
+export const sendAddedUsersAndProccess = async (results: Record<string, string>[], env: Environment) =>
   withServerResponse('sendAddedUsersAndProccess', async () => {
-    sendAddedUsersByFile(results)
+    sendAddedUsersByFile(results, env)
     processUsers(results, new Date())
   })
 

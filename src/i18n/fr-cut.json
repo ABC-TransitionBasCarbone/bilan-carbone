@@ -151,5 +151,17 @@
     "form": {
       "activate": "Créer mon compte"
     }
+  },
+  "email": {
+    "subject": {
+      "resetPassword": "Mot de passe oublié",
+      "newUser": "Vous avez été invité sur Count",
+      "addedActiveUser": "Vous avez été invité sur un nouvel environnement Count",
+      "activation": "Vous avez activé votre compte sur Count",
+      "activationRequest": "Demande d'accès à votre organisation Count",
+      "userOnStudyInvitation": "Ajout sur l'étude {studyName}",
+      "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
+      "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs"
+    }
   }
 }
