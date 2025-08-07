@@ -109,7 +109,7 @@ const PDFSummary = ({ study, environment }: Props) => {
 
   return (
     <ThemeProvider theme={cutTheme}>
-      <div className="pdf-container">
+      <div className="pdf-container" data-testid="pdf-container">
         <div className="pdf-page-header flex align-center justify-center">
           <Image src="/logos/cut/logo-filled.svg" alt="COUNT Logo" width={100} height={40} />
         </div>
