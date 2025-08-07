@@ -9,11 +9,11 @@ interface Props {
   studySite: string
   withDependencies: boolean
   validatedOnly: boolean
-  type?: ResultType
   environment: Environment | undefined
+  type?: ResultType
 }
 
-const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly, type }: Props) => {
+const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly, environment, type }: Props) => {
   return (
     <>
       <div className="mb1">
@@ -28,8 +28,8 @@ const ConsolidatedResults = ({ study, studySite, withDependencies, validatedOnly
         study={study}
         studySite={studySite}
         withDependencies={withDependencies}
-        type={type}
         environment={environment}
+        type={type}
       />
     </>
   )
