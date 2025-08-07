@@ -595,7 +595,13 @@
       },
       "controlModeWarning": {
         "title": "Control Mode Change",
-        "description": "You are about to change the control mode from {currentMode} to {newMode}. <warning>This action will delete all existing characterizations of emission sources</warning>, as they no longer correspond to the new control mode. Do you want to continue?",
+        "description": "You are about to change the control mode from {currentMode} to {newMode}. <warning>This action will remove most existing characterizations and invalidate the associated emission sources</warning>, as they no longer correspond to the new control mode. Do you want to continue?",
+        "continue": "Continue",
+        "cancel": "Cancel"
+      },
+      "begesActivationWarning": {
+        "title": "BEGES Export Activation",
+        "description": "You are about to activate the regulatory BEGES export. When this export is enabled, you must fill in an additional \"Characterization\" field in certain emission sources. As a result, <warning>activating this export will invalidate the affected emission sources</warning>. Do you want to continue?",
         "continue": "Continue",
         "cancel": "Cancel"
       }

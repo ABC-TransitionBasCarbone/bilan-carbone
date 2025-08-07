@@ -405,18 +405,24 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   ],
   [SubPost.DeplacementsDomicileTravail]: [
     EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
     EmissionSourceCaracterisation.NotHeldSupported,
     EmissionSourceCaracterisation.NotHeldNotSupported,
+    EmissionSourceCaracterisation.NotHeldOther,
   ],
   [SubPost.DeplacementsProfessionnels]: [
     EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
     EmissionSourceCaracterisation.NotHeldSupported,
     EmissionSourceCaracterisation.NotHeldNotSupported,
+    EmissionSourceCaracterisation.NotHeldOther,
   ],
   [SubPost.DeplacementsVisiteurs]: [
     EmissionSourceCaracterisation.Held,
+    EmissionSourceCaracterisation.NotHeldSimpleRent,
     EmissionSourceCaracterisation.NotHeldSupported,
     EmissionSourceCaracterisation.NotHeldNotSupported,
+    EmissionSourceCaracterisation.NotHeldOther,
   ],
   [SubPost.Batiments]: [EmissionSourceCaracterisation.Held],
   [SubPost.AutresInfrastructures]: [EmissionSourceCaracterisation.Held],
@@ -432,22 +438,18 @@ export const financialCaracterisations: CaracterisationsBySubPost = {
   [SubPost.ConsommationDEnergieEnFinDeVie]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
-    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.TraitementDesDechetsEnFinDeVie]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
-    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.FuitesOuEmissionsNonEnergetiques]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
-    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
   [SubPost.TraitementDesEmballagesEnFinDeVie]: [
     EmissionSourceCaracterisation.Rented,
     EmissionSourceCaracterisation.FinalClient,
-    EmissionSourceCaracterisation.UsedByIntermediary,
   ],
 }
 
@@ -474,7 +476,11 @@ export const getCaracterisationsBySubPost = (
   }
 
   const begesExport = exports.find((exp) => exp.type === Export.Beges)
-  const controlMode = begesExport?.control || 'Operational'
+  if (!begesExport) {
+    return []
+  }
+
+  const controlMode = begesExport.control || 'Operational'
   const caracterisationMap = getAllCaracterisationsBySubPost(controlMode)
   const caracterisations = caracterisationMap[subPostToUse]
 

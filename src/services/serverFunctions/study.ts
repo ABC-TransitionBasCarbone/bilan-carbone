@@ -566,8 +566,8 @@ export const changeStudyExports = async (studyId: string, type: Export, control:
     return upsertStudyExport(studyId, type, control)
   })
 
-export const clearInvalidCharacterizations = async (studyId: string, newControlMode: ControlMode) =>
-  withServerResponse('clearInvalidCharacterizations', async () => {
+export const updateCaracterisationsForControlMode = async (studyId: string, newControlMode: ControlMode) =>
+  withServerResponse('updateCaracterisationsForControlMode', async () => {
     const [session, study] = await Promise.all([dbActualizedAuth(), getStudy(studyId)])
     if (!session || !session.user || !study.success || !study.data) {
       throw new Error(NOT_AUTHORIZED)
@@ -580,7 +580,7 @@ export const clearInvalidCharacterizations = async (studyId: string, newControlM
 
     const updatePromises = emissionSources
       .map((emissionSource) => {
-        if (!emissionSource.caracterisation) {
+        if (!emissionSource.caracterisation && !emissionSource.validated) {
           return null
         }
 
@@ -588,20 +588,35 @@ export const clearInvalidCharacterizations = async (studyId: string, newControlM
           ...exp,
           control: newControlMode,
         }))
+
         const validCaracterisations = getCaracterisationsBySubPost(
           emissionSource.subPost,
           exportsWithNewControlMode || [],
           session.user.environment,
         )
+
         const isValidForNewControlMode = validCaracterisations.includes(
           emissionSource.caracterisation as EmissionSourceCaracterisation,
         )
 
         if (!isValidForNewControlMode) {
-          return prismaClient.studyEmissionSource.update({
-            where: { id: emissionSource.id },
-            data: { caracterisation: null },
-          })
+          if (validCaracterisations.length === 1) {
+            const newCaracterisation = validCaracterisations[0]
+            const shouldKeepValidation = emissionSource.caracterisation && emissionSource.validated
+
+            return prismaClient.studyEmissionSource.update({
+              where: { id: emissionSource.id },
+              data: {
+                caracterisation: newCaracterisation,
+                validated: shouldKeepValidation,
+              },
+            })
+          } else {
+            return prismaClient.studyEmissionSource.update({
+              where: { id: emissionSource.id },
+              data: { caracterisation: null, validated: false },
+            })
+          }
         }
         return null
       })
@@ -1223,7 +1238,7 @@ export const duplicateStudyCommand = async (
       return sourceControl && newControl && sourceControl !== newControl
     }
 
-    const shouldClearCharacterizations = Object.values(Export).some(hasControlModeChanged)
+    const shouldClearCaracterisations = Object.values(Export).some(hasControlModeChanged)
 
     const sourceEmissionSources = sourceStudy.emissionSources
     for (const sourceEmissionSource of sourceEmissionSources) {
@@ -1253,7 +1268,7 @@ export const duplicateStudyCommand = async (
           feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
           feCompleteness: sourceEmissionSource.feCompleteness,
           // Clear characterization if control mode changed, otherwise keep it
-          caracterisation: shouldClearCharacterizations ? null : sourceEmissionSource.caracterisation,
+          caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
           study: { connect: { id: createdStudyId } },
           emissionFactor: sourceEmissionSource.emissionFactor
             ? { connect: { id: sourceEmissionSource.emissionFactor.id } }

@@ -5,6 +5,7 @@ import {
   ControlMode,
   EmissionFactorStatus,
   EmissionSourceCaracterisation,
+  EmissionSourceType,
   Export,
   Import,
   Level,
@@ -113,6 +114,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
     data: [
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -124,6 +126,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -135,6 +138,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -146,6 +150,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -157,6 +162,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -168,6 +174,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -179,6 +186,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -190,6 +198,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -201,6 +210,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -212,6 +222,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -223,6 +234,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -234,6 +246,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -245,6 +258,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -256,6 +270,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -267,6 +282,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -278,6 +294,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -289,6 +306,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -300,6 +318,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -311,6 +330,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -322,6 +342,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -333,6 +354,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -344,6 +366,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -355,6 +378,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -366,6 +390,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -377,6 +402,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -388,6 +414,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -399,6 +426,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -410,6 +438,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -421,6 +450,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -432,6 +462,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -443,6 +474,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -454,6 +486,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -465,6 +498,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -476,6 +510,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -487,6 +522,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -498,6 +534,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -509,6 +546,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -520,6 +558,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -531,6 +570,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -542,6 +582,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -553,6 +594,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -564,6 +606,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -575,6 +618,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -586,6 +630,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -597,6 +642,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -608,6 +654,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -619,6 +666,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -630,6 +678,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -641,6 +690,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -652,6 +702,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -663,6 +714,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -675,6 +727,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -687,6 +740,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -699,6 +753,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -711,6 +766,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -723,6 +779,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -735,6 +792,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
@@ -747,6 +805,7 @@ export const createRealStudy = async (prisma: PrismaClient, creator: Account) =>
       },
       {
         studyId,
+        type: EmissionSourceType.Physical,
         studySiteId,
         validated: true,
         reliability: 5,
