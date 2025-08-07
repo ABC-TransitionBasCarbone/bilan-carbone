@@ -577,6 +577,10 @@ export const updateCaracterisationsForControlMode = async (studyId: string, newC
     }
 
     const emissionSources = study.data.emissionSources
+    const exportsWithNewControlMode = study.data.exports.map((exp) => ({
+      ...exp,
+      control: newControlMode,
+    }))
 
     await Promise.all(
       emissionSources
@@ -584,11 +588,6 @@ export const updateCaracterisationsForControlMode = async (studyId: string, newC
           if (!emissionSource.caracterisation && !emissionSource.validated) {
             return null
           }
-
-          const exportsWithNewControlMode = study.data?.exports.map((exp) => ({
-            ...exp,
-            control: newControlMode,
-          }))
 
           const validCaracterisations = getCaracterisationsBySubPost(
             emissionSource.subPost,
