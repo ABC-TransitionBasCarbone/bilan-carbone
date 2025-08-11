@@ -112,7 +112,8 @@
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0",
     "ts-jest": "^29.4.1",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "tmp": "^0.2.4"
   },
   "resolutions": {
     "brace-expansion": "^2.0.2"
