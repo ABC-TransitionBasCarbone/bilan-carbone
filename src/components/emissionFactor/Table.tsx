@@ -92,6 +92,7 @@ interface Props {
   importVersions: EmissionFactorImportVersion[]
   initialSelectedSources: string[]
   userOrganizationId?: string | null
+  initialSelectedSubPosts: SubPost[]
 }
 
 const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
@@ -103,6 +104,7 @@ const EmissionFactorsTable = ({
   userOrganizationId,
   importVersions,
   initialSelectedSources,
+  initialSelectedSubPosts
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
   const t = useTranslations('emissionFactors.table')
@@ -116,21 +118,11 @@ const EmissionFactorsTable = ({
   const [locationFilter, setLocationFilter] = useState('')
   const [filteredSources, setFilteredSources] = useState(initialSelectedSources)
   const [filteredUnits, setFilteredUnits] = useState(initialSelectedUnits)
-  const [filteredSubPosts, setFilteredSubPosts] = useState<(SubPost | never)[]>([])
+  const [filteredSubPosts, setFilteredSubPosts] = useState(initialSelectedSubPosts)
   const [displayHideButton, setDisplayHideButton] = useState(false)
   const [displayFilters, setDisplayFilters] = useState(true)
   const filtersRef = useRef<HTMLDivElement>(null)
   const fromModal = !!selectEmissionFactor
-
-  const initialSelectedSubPosts: SubPost[] = useMemo(() => {
-    if (!environment) {
-      return [] as SubPost[]
-    }
-
-    const calculatedSubPosts = Object.values(environmentSubPostsMapping[environment]).flatMap((subPosts) => subPosts)
-    setFilteredSubPosts(calculatedSubPosts)
-    return calculatedSubPosts
-  }, [environment])
 
   const envPosts = useMemo(() => {
     if (!environment) {
@@ -344,12 +336,17 @@ const EmissionFactorsTable = ({
     () => {
       const emissionFactorsAllSubposts = searchedEmissionFactors
         .filter(
-          (emissionFactor) =>
-            (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
-            (!emissionFactor.version && filteredSources.includes(Import.Manual)),
+          (emissionFactor) => {
+            const isInRightSources = (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
+            (!emissionFactor.version && filteredSources.includes(Import.Manual))
+
+            const isWithGoodUnit = filteredUnits.includes(emissionFactor.unit || '')
+
+            const isWithGoodArchivedStatus = displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived
+
+            return isInRightSources && isWithGoodUnit && isWithGoodArchivedStatus
+          }
         )
-        .filter((emissionFactor) => filteredUnits.includes(emissionFactor.unit || ''))
-        .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived)
 
       return filterEmissionFactorsBySubPostAndEnv(emissionFactorsAllSubposts, filteredSubPosts, environment)
     },

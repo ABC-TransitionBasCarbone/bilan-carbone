@@ -3,15 +3,18 @@ import { Suspense } from 'react'
 import Block from '../base/Block'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'
 import EmissionFactors from '../emissionFactor/EmissionFactors'
+import { Environment } from '@prisma/client'
 
 interface Props {
   userOrganizationId?: string
   manualOnly: boolean
+  environment: Environment
 }
 
-const EmissionFactorsPage = ({ userOrganizationId, manualOnly }: Props) => {
+const EmissionFactorsPage = ({ userOrganizationId, manualOnly, environment }: Props) => {
   const tNav = useTranslations('nav')
   const t = useTranslations('emissionFactors')
+
   return (
     <>
       <Breadcrumbs current={tNav('emissionFactors')} links={[{ label: tNav('home'), link: '/' }]} />
@@ -32,7 +35,7 @@ const EmissionFactorsPage = ({ userOrganizationId, manualOnly }: Props) => {
         }
       >
         <Suspense fallback={t('loading')}>
-          <EmissionFactors userOrganizationId={userOrganizationId} manualOnly={manualOnly} />
+          <EmissionFactors userOrganizationId={userOrganizationId} manualOnly={manualOnly} environment={environment} />
         </Suspense>
       </Block>
     </>
