@@ -77,12 +77,20 @@ export const monetaryUnits: Unit[] = [
 
 export const filterEmissionFactorsBySubPostAndEnv = (
   emissionFactors: EmissionFactorWithMetaData[],
-  subPost: SubPost,
+  subPosts: SubPost[],
   environment?: Environment,
 ) => {
-  let filterSubPost = subPost
+  let filterSubPostList = []
   if (environment === Environment.TILT) {
-    filterSubPost = convertTiltSubPostToBCSubPost(subPost)
+    for (const subPost of subPosts) {
+      const converted = convertTiltSubPostToBCSubPost(subPost)
+      if (converted) {
+        filterSubPostList.push(converted)
+      }
+    }
+  } else {
+    filterSubPostList = subPosts
   }
-  return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.includes(filterSubPost))
+
+  return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.some((efSubPost) => filterSubPostList.includes(efSubPost)))
 }

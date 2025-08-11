@@ -1,20 +1,23 @@
 import { gazKeys } from '@/constants/emissions'
-import { Post, subPostsByPost } from '@/services/posts'
+import { environmentSubPostsMapping, getSubPostBCToSubPostTiltMapping, Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { getQualityRating, qualityKeys } from '@/services/uncertainty'
 import { BCUnit } from '@/services/unit'
 import ShrinkIcon from '@mui/icons-material/ZoomInMap'
 import ExpandIcon from '@mui/icons-material/ZoomOutMap'
-import { Import, StudyResultUnit, SubPost } from '@prisma/client'
+import { Environment, Import, StudyResultUnit, SubPost } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { Fragment, useMemo, useState } from 'react'
 import styles from './Detail.module.css'
+import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 
 interface Props {
   emissionFactor: EmissionFactorWithMetaData
 }
 const EmissionFactorDetails = ({ emissionFactor }: Props) => {
+  const { environment } = useAppEnvironmentStore()
+
   const t = useTranslations('emissionFactors.table')
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('units')
@@ -26,13 +29,30 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
   const qualities = useMemo(() => qualityKeys.filter((quality) => emissionFactor[quality]), [emissionFactor])
   const quality = useMemo(() => getQualityRating(emissionFactor), [emissionFactor])
 
-  const subPosts = emissionFactor.subPosts.reduce(
-    (res, subPost) => {
-      const post = Object.entries(subPostsByPost).find(([, value]) => value.includes(subPost))?.[0] as Post
-      return { ...res, [post]: (res[post] || []).concat([subPost]) }
-    },
-    {} as Record<Post, SubPost[]>,
-  )
+  const subPosts = useMemo(() => {
+    return emissionFactor.subPosts
+    .flatMap((subPost) => {
+      if (!environment) return [subPost]
+
+      switch (environment) {
+        case Environment.TILT:
+          return getSubPostBCToSubPostTiltMapping()[subPost] ?? []
+        case Environment.BC:
+        default:
+          return [subPost]
+      }
+    })
+    .reduce(
+      (res, subPost) => {
+        if (!environment) return res
+
+        const post = Object.entries(environmentSubPostsMapping[environment]).find(([, value]) => value.includes(subPost))?.[0] as Post
+
+        return { ...res, [post]: (res[post] || new Set()).add(subPost) }
+      },
+      {} as Record<Post, Set<SubPost>>,
+    )
+  }, [emissionFactor.subPosts, environment])
 
   return (
     <>
@@ -81,7 +101,7 @@ const EmissionFactorDetails = ({ emissionFactor }: Props) => {
           {t('post')}
           {Object.entries(subPosts).map(([post, subPosts]) => (
             <div key={post}>
-              {tPost(post)} ({subPosts.map((subPost) => tPost(subPost)).join(', ')})
+              {tPost(post)} ({Array.from(subPosts).map((subPost) => tPost(subPost)).join(', ')})
             </div>
           ))}
         </div>

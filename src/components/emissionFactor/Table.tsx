@@ -1,11 +1,11 @@
 'use client'
 
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
-import { BCPost, subPostsByPost } from '@/services/posts'
+import { environmentPostMapping, environmentSubPostsMapping, Post, subPostsByPost } from '@/services/posts'
 import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionFactor'
 import { BCUnit } from '@/services/unit'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { getEmissionFactorValue } from '@/utils/emissionFactors'
+import { filterEmissionFactorsBySubPostAndEnv, getEmissionFactorValue } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import CheckIcon from '@mui/icons-material/Check'
@@ -95,7 +95,6 @@ interface Props {
 }
 
 const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
-const initialSelectedSubPosts: SubPost[] = Object.values(subPostsByPost).flatMap((subPosts) => subPosts)
 
 const EmissionFactorsTable = ({
   emissionFactors,
@@ -117,11 +116,28 @@ const EmissionFactorsTable = ({
   const [locationFilter, setLocationFilter] = useState('')
   const [filteredSources, setFilteredSources] = useState(initialSelectedSources)
   const [filteredUnits, setFilteredUnits] = useState(initialSelectedUnits)
-  const [filteredSubPosts, setFilteredSubPosts] = useState(initialSelectedSubPosts)
+  const [filteredSubPosts, setFilteredSubPosts] = useState<(SubPost | never)[]>([])
   const [displayHideButton, setDisplayHideButton] = useState(false)
   const [displayFilters, setDisplayFilters] = useState(true)
   const filtersRef = useRef<HTMLDivElement>(null)
   const fromModal = !!selectEmissionFactor
+
+  const initialSelectedSubPosts: SubPost[] = useMemo(() => {
+    if (!environment) {
+      return [] as SubPost[]
+    }
+
+    const calculatedSubPosts = Object.values(environmentSubPostsMapping[environment]).flatMap((subPosts) => subPosts)
+    setFilteredSubPosts(calculatedSubPosts)
+    return calculatedSubPosts
+  }, [environment])
+
+  const envPosts = useMemo(() => {
+    if (!environment) {
+      return [] as Post[]
+    }
+    return environmentPostMapping[environment]
+  }, [environment])
 
   useEffect(() => {
     const checkWrappedRows = () => {
@@ -325,16 +341,18 @@ const EmissionFactorsTable = ({
   }, [emissionFactors, filter, locationFilter])
 
   const data = useMemo(
-    () =>
-      searchedEmissionFactors
+    () => {
+      const emissionFactorsAllSubposts = searchedEmissionFactors
         .filter(
           (emissionFactor) =>
             (emissionFactor.version && filteredSources.includes(emissionFactor.version.id)) ||
             (!emissionFactor.version && filteredSources.includes(Import.Manual)),
         )
         .filter((emissionFactor) => filteredUnits.includes(emissionFactor.unit || ''))
-        .filter((emissionFactor) => emissionFactor.subPosts.some((subPost) => filteredSubPosts.includes(subPost)))
-        .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived),
+        .filter((emissionFactor) => displayArchived || emissionFactor.status !== EmissionFactorStatus.Archived)
+
+      return filterEmissionFactorsBySubPostAndEnv(emissionFactorsAllSubposts, filteredSubPosts, environment)
+    },
     [searchedEmissionFactors, filteredSources, filteredUnits, filteredSubPosts, displayArchived],
   )
 
@@ -419,11 +437,11 @@ const EmissionFactorsTable = ({
         ? tPosts('none')
         : filteredSubPosts.map((subPosts) => tPosts(subPosts)).join(', ')
 
-  const areAllSelected = (post: BCPost) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
+  const areAllSelected = (post: Post) => !subPostsByPost[post].some((subPost) => !filteredSubPosts.includes(subPost))
 
   const selectAllSubPosts = () => setFilteredSubPosts(allSelectedSubPosts ? [] : initialSelectedSubPosts)
 
-  const selectPost = (post: BCPost) => {
+  const selectPost = (post: Post) => {
     const newValue = areAllSelected(post)
       ? filteredSubPosts.filter((filteredSubPost) => !subPostsByPost[post].includes(filteredSubPost))
       : filteredSubPosts.concat(subPostsByPost[post].filter((a) => !filteredSubPosts.includes(a)))
@@ -540,7 +558,7 @@ const EmissionFactorsTable = ({
                   <Checkbox checked={allSelectedSubPosts} />
                   <ListItemText primary={tPosts(allSelectedSubPosts ? 'unselectAll' : 'selectAll')} />
                 </MenuItem>
-                {Object.values(BCPost).map((post) => (
+                {Object.values(envPosts).map((post) => (
                   <div key={`subpostGroup-${post}`}>
                     <MenuItem key={`subpost-${post}`} selected={areAllSelected(post)} onClick={() => selectPost(post)}>
                       <Checkbox checked={areAllSelected(post)} />

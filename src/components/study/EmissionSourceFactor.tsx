@@ -104,7 +104,7 @@ const EmissionSourceFactor = ({
   }, [selectedFactor])
 
   const subPostEmissionFactors = useMemo(
-    () => filterEmissionFactorsBySubPostAndEnv(emissionFactors, subPost, environment),
+    () => filterEmissionFactorsBySubPostAndEnv(emissionFactors, [subPost], environment),
     [emissionFactors, subPost, environment],
   )
   const fuse = useMemo(() => {
@@ -201,7 +201,7 @@ const EmissionSourceFactor = ({
         <EmissionSourceFactorModal
           open={advancedSearch}
           close={() => setAdvancedSearch(false)}
-          emissionFactors={emissionFactors}
+          emissionFactors={subPostEmissionFactors}
           subPost={subPost}
           selectEmissionFactor={(emissionFactor) => {
             update('emissionFactorId', emissionFactor.id)
