@@ -40,8 +40,7 @@
     "HeldFugitive": "Détenue, fugitives",
     "NotHeldSupported": "Non détenu, supporté",
     "NotHeldNotSupported": "Non détenue, non supporté",
-    "UsedByIntermediary": "Utilisé par un intermédiaire",
-    "LandUse": "Utilisation des terres, changement d'affectation des terres et foresterie (UTCATF)"
+    "UsedByIntermediary": "Utilisé par un intermédiaire"
   },
   "beges": {
     "rule": "Règle",

@@ -40,8 +40,7 @@
     "HeldFugitive": "Held, fugitive",
     "NotHeldSupported": "Not held, supported",
     "NotHeldNotSupported": "Not held, not supported",
-    "UsedByIntermediary": "Used by an intermediary",
-    "LandUse": "Land use, land-use change, and forestry (LULUCF)"
+    "UsedByIntermediary": "Used by an intermediary"
   },
   "beges": {
     "rule": "Rule",

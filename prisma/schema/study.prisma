@@ -44,7 +44,6 @@ enum EmissionSourceCaracterisation {
   NotHeldSupported
   NotHeldNotSupported
   UsedByIntermediary
-  LandUse
 }
 
 enum DayOfWeek {
@@ -249,7 +248,6 @@ model ExportRule {
   notHeldSupported        String? @map("not_held_supported")
   notHeldNotSupported     String? @map("not_held_not_supported")
   usedByIntermediary      String? @map("used_by_intermediary")
-  landUse                 String? @map("land_use")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
