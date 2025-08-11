@@ -7,3 +7,7 @@
 .video {
   max-width: 100%;
 }
+
+.videoContainer {
+  aspect-ratio: 16 / 9;
+}
