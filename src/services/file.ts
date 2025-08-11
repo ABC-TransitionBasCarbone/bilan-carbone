@@ -7,7 +7,7 @@ export const allowedFlowFileTypes = ['application/pdf', 'image/png', 'image/jpeg
 
 export const maxAllowedFileSize = 5 * MB
 
-export const download = (fileContent: string[] | Buffer<ArrayBufferLike>[], fileName: string, fileType: string) => {
+export const download = (fileContent: string[] | ArrayBuffer[], fileName: string, fileType: string) => {
   const blob = new Blob(fileContent, { type: fileType })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
