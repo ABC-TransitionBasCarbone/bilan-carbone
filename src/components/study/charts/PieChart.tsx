@@ -40,7 +40,7 @@ const PieChart = ({
   validatedOnly = false,
   environment,
   skipAnimation = false,
-  withDep
+  withDep,
 }: Props) => {
   const theme = useTheme()
 
@@ -49,7 +49,7 @@ const PieChart = ({
     studySite,
     validatedOnly,
     environment,
-    withDep
+    withDep,
   })
 
   const pieData = useMemo(

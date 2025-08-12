@@ -178,14 +178,7 @@ const PDFSummary = ({ study, environment }: Props) => {
           </div>
         </div>
 
-        <ChartsPage
-          study={study}
-          studySite="all"
-          siteName=""
-          tPdf={tPdf}
-          isAll={true}
-          environment={environment}
-        />
+        <ChartsPage study={study} studySite="all" siteName="" tPdf={tPdf} isAll={true} environment={environment} />
 
         <div className="pdf-content page-break-before pdf-page-content">
           <div className="pdf-section">
