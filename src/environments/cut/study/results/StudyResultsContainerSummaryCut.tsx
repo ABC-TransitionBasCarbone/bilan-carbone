@@ -35,7 +35,6 @@ const StudyResultsContainerSummaryCut = ({ study }: Props) => {
           showLegend={false}
           showLabelsOnBars={false}
           validatedOnly={false}
-          postValues={CutPost}
           environment={Environment.CUT}
         />
       </div>

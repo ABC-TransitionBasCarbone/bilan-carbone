@@ -11,11 +11,10 @@ interface Props {
   siteName: string
   tPdf: ReturnType<typeof useTranslations>
   isAll: boolean
-  postValues: typeof BCPost | typeof CutPost
   environment: Environment
 }
 
-export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, postValues, environment }: Props) => (
+export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, environment }: Props) => (
   <div className="pdf-content page-break-before pdf-page-content">
     <div className="pdf-section">
       <h2 className={`pdf-${isAll ? 'totals' : 'cinema'}-header pdf-header-with-border`}>
@@ -31,7 +30,6 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, postValues
         showLegend={false}
         showLabelsOnBars={true}
         validatedOnly={false}
-        postValues={postValues}
         environment={environment}
         skipAnimation={true}
       />
@@ -44,7 +42,6 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, postValues
         title={isAll ? tPdf('charts.allEmissions') : tPdf('charts.siteEmissions', { site: siteName })}
         showLabelsOnPie={true}
         validatedOnly={false}
-        postValues={postValues}
         environment={environment}
         skipAnimation={true}
       />

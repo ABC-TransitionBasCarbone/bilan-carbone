@@ -31,20 +31,6 @@ interface Props {
   type?: ResultType
 }
 
-const getPostValues = (environment: Environment | undefined, type?: ResultType) => {
-  if (!environment) return BCPost
-
-  switch (environment) {
-    case Environment.TILT: 
-      return type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? TiltPost : BCPost
-    case Environment.CUT:
-      return CutPost
-    case Environment.BC:
-    default:
-      return BCPost
-  }
-}
-
 const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies, type }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
@@ -179,7 +165,6 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             showLegend={false}
             showLabelsOnBars={false}
             validatedOnly={validatedOnly}
-            postValues={getPostValues(environment, type)}
             fixedColor={isCut ? false : true}
             environment={environment}
             type={type}

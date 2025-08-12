@@ -26,7 +26,6 @@ interface Props {
   showTitle?: boolean
   showLabelsOnPie?: boolean
   validatedOnly?: boolean
-  postValues: typeof Post | typeof CutPost | typeof BCPost
   environment: Environment
   skipAnimation?: boolean
 }
@@ -39,7 +38,6 @@ const PieChart = ({
   showTitle = true,
   showLabelsOnPie = true,
   validatedOnly = false,
-  postValues,
   environment,
   skipAnimation = false,
 }: Props) => {
@@ -49,7 +47,6 @@ const PieChart = ({
     study,
     studySite,
     validatedOnly,
-    postValues,
     environment,
   })
 

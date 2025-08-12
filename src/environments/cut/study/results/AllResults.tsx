@@ -12,7 +12,7 @@ import { SyntheticEvent, useState } from 'react'
 import ConsolidatedResultsTable from '@/components/study/results/consolidated/ConsolidatedResultsTable'
 import TabPanel from '@/components/tabPanel/tabPanel'
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
-import { downloadStudyResults } from '@/services/study'
+import { AdditionalResultTypes, downloadStudyResults } from '@/services/study'
 import { Environment } from '@prisma/client'
 
 import Block from '@/components/base/Block'
@@ -155,7 +155,6 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showLegend={true}
               showLabelsOnBars={true}
               validatedOnly={validatedOnly}
-              postValues={CutPost}
               environment={Environment.CUT}
             />
           </TabPanel>
@@ -167,7 +166,6 @@ const AllResults = ({ emissionFactorsWithParts, study, validatedOnly }: Props) =
               showTitle={false}
               showLabelsOnPie={true}
               validatedOnly={validatedOnly}
-              postValues={CutPost}
               environment={Environment.CUT}
             />
           </TabPanel>

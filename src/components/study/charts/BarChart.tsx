@@ -29,7 +29,6 @@ interface Props {
   showLegend?: boolean
   showLabelsOnBars?: boolean
   validatedOnly?: boolean
-  postValues: typeof CutPost | typeof BCPost | typeof TiltPost
   fixedColor?: boolean
   environment: Environment
   skipAnimation?: boolean
@@ -45,7 +44,6 @@ const BarChart = ({
   showLegend = true,
   showLabelsOnBars = true,
   validatedOnly = false,
-  postValues,
   fixedColor,
   environment,
   skipAnimation = false,
@@ -58,7 +56,6 @@ const BarChart = ({
     study,
     studySite,
     validatedOnly,
-    postValues,
     environment,
     type,
   })
