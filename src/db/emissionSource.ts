@@ -25,3 +25,22 @@ export const createEmissionSourceTagOnStudy = (emissionSourceTag: Prisma.Emissio
   })
 
 export const deleteEmissionSourceTagOnStudy = (id: string) => prismaClient.emissionSourceTag.delete({ where: { id } })
+
+export const getEmissionSourceTagFamilyById = async (familyId: string) =>
+  prismaClient.emissionSourceTagFamily.findUnique({ where: { id: familyId } })
+
+export const upsertEmissionSourceTagFamilyById = async (studyId: string, name: string, familyId?: string) =>
+  familyId
+    ? prismaClient.emissionSourceTagFamily.update({
+        where: { id: familyId },
+        data: { name },
+      })
+    : prismaClient.emissionSourceTagFamily.create({
+        data: { name, studyId },
+      })
+
+export const removeSourceTagFamilyById = async (familyId: string) => {
+  const tags = await prismaClient.emissionSourceTag.findMany({ where: { familyId } })
+  await prismaClient.emissionSourceTag.deleteMany({ where: { id: { in: tags.map((tag) => tag.id) } } })
+  return prismaClient.emissionSourceTagFamily.delete({ where: { id: familyId } })
+}

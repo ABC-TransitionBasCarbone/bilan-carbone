@@ -1,8 +1,11 @@
 import {
+  createOrUpdateEmissionSourceTagFamily,
+  deleteEmissionSourceTagFamily,
+} from '@/services/serverFunctions/emissionSource'
+import {
   NewEmissionSourceTagFamilyCommand,
   NewEmissionSourceTagFamilyCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
-import { createOrUpdateEmissionSourceTagFamily } from '@/services/serverFunctions/study'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { EmissionSourceTagFamily } from '@prisma/client'
@@ -14,12 +17,13 @@ import LoadingButton from '../../base/LoadingButton'
 import { FormTextField } from '../../form/TextField'
 
 interface Props {
-  studyId: string
+  studyId?: string
   family: Partial<EmissionSourceTagFamily> | undefined
   onClose: () => void
+  action: 'edit' | 'delete'
 }
 
-const EmissionTagFamilyModal = ({ studyId, family, onClose }: Props) => {
+const EmissionTagFamilyModal = ({ action, studyId, family, onClose }: Props) => {
   const t = useTranslations('study.perimeter.family')
   const { getValues, control, handleSubmit, formState } = useForm<NewEmissionSourceTagFamilyCommand>({
     resolver: zodResolver(NewEmissionSourceTagFamilyCommandValidation),
@@ -32,30 +36,37 @@ const EmissionTagFamilyModal = ({ studyId, family, onClose }: Props) => {
   })
 
   const onSumbit = async () => {
-    const values = getValues()
-    await createOrUpdateEmissionSourceTagFamily(studyId, values.name, family?.id)
+    if (action === 'edit' && studyId) {
+      const values = getValues()
+      await createOrUpdateEmissionSourceTagFamily(studyId, values.name, family?.id)
+    } else if (action === 'delete' && family?.id && studyId) {
+      await deleteEmissionSourceTagFamily(studyId, family.id)
+    }
     onClose()
   }
 
-  const title = family ? 'edit' : 'new'
+  const title = action === 'edit' ? (family ? 'edit' : 'new') : 'delete'
+  const content = action === 'edit' ? 'content' : 'deleteContent'
 
   return (
     <Dialog open aria-labelledby="emission-tag-family-title" aria-describedby="emission-tag-family-description">
       <Form onSubmit={handleSubmit(onSumbit)}>
         <DialogTitle id="emission-tag-family-modal-title">{t(title)}</DialogTitle>
         <DialogContent id="emission-tag-family-modal-content">
-          {t('content')}
-          <div className="flex mt1">
-            <FormTextField
-              className="grow"
-              control={control}
-              name="name"
-              label={t('name')}
-              translation={t}
-              data-testid="emission-tag-family-name-field"
-              fullWidth
-            />
-          </div>
+          {t(content, { name: family?.name || '' })}
+          {action === 'edit' && (
+            <div className="flex mt1">
+              <FormTextField
+                className="grow"
+                control={control}
+                name="name"
+                label={t('name')}
+                translation={t}
+                data-testid="emission-tag-family-name-field"
+                fullWidth
+              />
+            </div>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>{t('cancel')}</Button>

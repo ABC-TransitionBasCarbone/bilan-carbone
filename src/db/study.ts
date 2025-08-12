@@ -696,24 +696,3 @@ export const deleteStudyMemberFromOrganization = async (accountId: string, organ
     where: { accountId, studyId: { in: studies.map((study) => study.id) } },
   })
 }
-
-export const createEmissionSourceTagFamily = async (studyId: string, name: string) => {
-  const study = await prismaClient.study.findUnique({ select: { id: true }, where: { id: studyId } })
-  if (!study) {
-    return null
-  }
-  return prismaClient.emissionSourceTagFamily.create({ data: { studyId, name } })
-}
-
-export const getEmissionSourceTagFamilyById = async (familyId: string) =>
-  prismaClient.emissionSourceTagFamily.findUnique({ where: { id: familyId } })
-
-export const upsertEmissionSourceTagFamilyById = async (studyId: string, name: string, familyId?: string) =>
-  familyId
-    ? prismaClient.emissionSourceTagFamily.update({
-        where: { id: familyId },
-        data: { name },
-      })
-    : prismaClient.emissionSourceTagFamily.create({
-        data: { name, studyId },
-      })

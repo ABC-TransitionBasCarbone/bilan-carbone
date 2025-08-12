@@ -55,7 +55,6 @@ import {
   updateStudySiteData,
   updateStudySites,
   updateUserOnStudy,
-  upsertEmissionSourceTagFamilyById,
   upsertStudyExport,
 } from '@/db/study'
 import { addUser, getUserApplicationSettings, getUserByEmail, getUserSourceById, UserWithAccounts } from '@/db/user'
@@ -1398,21 +1397,4 @@ export const getCncByNumeroAuto = async (numeroAuto: string) =>
     }
 
     return await findCncByNumeroAuto(numeroAuto)
-  })
-
-export const createOrUpdateEmissionSourceTagFamily = async (studyId: string, name: string, familyId?: string) =>
-  withServerResponse('createOrUpdateEmissionSourceTagFamily', async () => {
-    const account = await auth()
-    if (!account || !account.user) {
-      throw NOT_AUTHORIZED
-    }
-    const study = await getStudyById(studyId, account.user.organizationVersionId)
-    if (!study) {
-      throw NOT_AUTHORIZED
-    }
-    const role = getAccountRoleOnStudy(account.user, study)
-    if (!role || !hasEditionRights(role)) {
-      throw NOT_AUTHORIZED
-    }
-    return upsertEmissionSourceTagFamilyById(studyId, name, familyId)
   })

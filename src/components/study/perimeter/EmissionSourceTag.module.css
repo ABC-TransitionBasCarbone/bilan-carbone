@@ -4,6 +4,11 @@
 
 .familyNameButton {
   height: 2.5rem;
+  min-width: 0;
+}
+
+.separator {
+  border-right: 1px solid var(--neutral-500);
 }
 
 .tags {

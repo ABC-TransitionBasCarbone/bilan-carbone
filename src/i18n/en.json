@@ -608,6 +608,8 @@
       "family": {
         "name": "Label",
         "edit": "Rename family",
+        "delete": "Delete family",
+        "deleteContent": "Do you really want to delete the \"{name}\" tag family ? All its tags will be permanently deleted.",
         "new": "New family",
         "content": "Which name do you want to give to you family ?",
         "cancel": "Cancel",

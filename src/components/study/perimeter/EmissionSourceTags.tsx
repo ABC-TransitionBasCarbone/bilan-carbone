@@ -19,8 +19,9 @@ import {
   NewEmissionSourceTagCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
 import { zodResolver } from '@hookform/resolvers/zod'
+import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
-import { Box, Chip, FormControl, MenuItem, Select } from '@mui/material'
+import { Box, Chip, FormControl, MenuItem, Button as MuiButton, Select } from '@mui/material'
 import { EmissionSourceTagFamily } from '@prisma/client'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -36,8 +37,9 @@ interface Props {
 const EmissionSourceTags = ({ studyId }: Props) => {
   const t = useTranslations('study.perimeter')
 
-  const [tags, setTags] = useState<EmissionSourceTagFamilyWithTags[]>([])
+  const [tagFamilies, setTagFamilies] = useState<EmissionSourceTagFamilyWithTags[]>([])
   const [editingFamily, setEditingFamily] = useState<Partial<EmissionSourceTagFamily> | null | undefined>(null)
+  const [deletingFamily, setDeletingFamily] = useState<Partial<EmissionSourceTagFamily> | null>(null)
 
   useEffect(() => {
     getEmissionSourceTags()
@@ -46,7 +48,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   const getEmissionSourceTags = async () => {
     const response = await getEmissionSourceTagsByStudyId(studyId)
     if (response.success && response.data) {
-      setTags(response.data)
+      setTagFamilies(response.data)
     }
   }
 
@@ -62,13 +64,13 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   const onSubmit = async () => {
     const createTag = await createEmissionSourceTag(getValues())
     if (createTag.success) {
-      const targetedFamily: EmissionSourceTagFamilyWithTags | undefined = tags.find(
+      const targetedFamily: EmissionSourceTagFamilyWithTags | undefined = tagFamilies.find(
         (tag) => tag.id === getValues().familyId,
       )
       if (targetedFamily) {
         targetedFamily?.emissionSourceTags.push(createTag.data)
-        const newTags = tags.filter((tag) => tag.id !== getValues().familyId).concat([targetedFamily])
-        setTags(newTags)
+        const newTags = tagFamilies.filter((tag) => tag.id !== getValues().familyId).concat([targetedFamily])
+        setTagFamilies(newTags)
       }
       setValue('name', '')
       setValue('familyId', '')
@@ -78,37 +80,53 @@ const EmissionSourceTags = ({ studyId }: Props) => {
   const onDelete = async (tagId: string) => {
     const deleteTag = await deleteEmissionSourceTag(tagId)
     if (deleteTag.success) {
-      setTags((prevTags) => prevTags.filter((tag) => tag.id !== tagId))
+      setTagFamilies((prevTags) => prevTags.filter((tag) => tag.id !== tagId))
     }
   }
 
   return (
     <Block title={t('emissionSourceTags')}>
-      {tags.length > 0 && (
+      {tagFamilies.length > 0 && (
         <div className={classNames(styles.gapped, 'flex')}>
           <>
-            {tags.map((family) => (
-              <div key={family.id} className="flex-col">
-                <div className={classNames(styles.gapped, 'flex')}>
-                  <span className={classNames(styles.familyName, styles.gapped, 'flex bold pb-2')}>{family.name}</span>
-                  <Button
-                    className={styles.familyNameButton}
-                    onClick={() => setEditingFamily(family)}
-                    title={t('family.edit')}
-                  >
-                    <EditIcon />
-                  </Button>
-                </div>
-                {family.emissionSourceTags.map((tag) => (
-                  <div key={tag.id} className={classNames(styles.tags)}>
-                    <Chip
-                      className={styles.tag}
-                      onDelete={() => onDelete(tag.id)}
-                      sx={{ bgcolor: tag.color }}
-                      label={tag.name}
-                    />
+            {tagFamilies.map((family) => (
+              <div key={family.id} className={classNames(styles.gapped, 'flex')}>
+                <div className="flex-col">
+                  <div className={classNames(styles.gapped, 'flex')}>
+                    <span className={classNames(styles.familyName, styles.gapped, 'flex bold pb-2')}>
+                      {family.name}
+                    </span>
+                    <div>
+                      <MuiButton
+                        className={styles.familyNameButton}
+                        onClick={() => setEditingFamily(family)}
+                        title={t('family.edit')}
+                      >
+                        <EditIcon />
+                      </MuiButton>
+                      <Button
+                        className={styles.familyNameButton}
+                        title={t('family.delete')}
+                        onClick={() => setDeletingFamily(family)}
+                        color="error"
+                        variant="text"
+                      >
+                        <DeleteIcon />
+                      </Button>
+                    </div>
                   </div>
-                ))}
+                  {family.emissionSourceTags.map((tag) => (
+                    <div key={tag.id} className={classNames(styles.tags)}>
+                      <Chip
+                        className={styles.tag}
+                        onDelete={() => onDelete(tag.id)}
+                        sx={{ bgcolor: tag.color }}
+                        label={tag.name}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className={classNames(styles.separator, 'h100')} />
               </div>
             ))}
             <div className="ml2">
@@ -169,9 +187,9 @@ const EmissionSourceTags = ({ studyId }: Props) => {
                 data-testid="create-emission-source-tag-family"
                 fullWidth
               >
-                {tags.map((tag) => (
-                  <MenuItem key={tag.id} value={tag.id}>
-                    {tag.name}
+                {tagFamilies.map((family) => (
+                  <MenuItem key={family.id} value={family.id}>
+                    {family.name}
                   </MenuItem>
                 ))}
               </FormSelect>
@@ -183,7 +201,7 @@ const EmissionSourceTags = ({ studyId }: Props) => {
               name="name"
               label={t('emissionSourceTagLabel')}
               placeholder={t('emissionSourceTagsPlaceholder')}
-              data-testid="create-emission-source-tags"
+              data-testid="create-emission-source-tagFamilies"
             />
           </div>
           <Button data-testid="submit-button" type="submit">
@@ -193,10 +211,22 @@ const EmissionSourceTags = ({ studyId }: Props) => {
       </Form>
       {editingFamily !== null && (
         <EmissionTagFamilyModal
+          action="edit"
           studyId={studyId}
           family={editingFamily}
           onClose={() => {
             setEditingFamily(null)
+            getEmissionSourceTags()
+          }}
+        />
+      )}
+      {deletingFamily && (
+        <EmissionTagFamilyModal
+          action="delete"
+          studyId={studyId}
+          family={deletingFamily}
+          onClose={() => {
+            setDeletingFamily(null)
             getEmissionSourceTags()
           }}
         />

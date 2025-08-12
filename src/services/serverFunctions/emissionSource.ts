@@ -9,10 +9,14 @@ import {
   deleteEmissionSourceOnStudy,
   deleteEmissionSourceTagOnStudy,
   getEmissionSourceById,
+  getEmissionSourceTagFamilyById,
+  removeSourceTagFamilyById,
   updateEmissionSourceOnStudy,
+  upsertEmissionSourceTagFamilyById,
 } from '@/db/emissionSource'
-import { getEmissionSourceTagFamilyById, getStudyById } from '@/db/study'
+import { getStudyById } from '@/db/study'
 import { withServerResponse } from '@/utils/serverResponse'
+import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import { EmissionSourceTag, Import, SubPost, UserChecklist } from '@prisma/client'
 import { auth } from '../auth'
 import { NOT_AUTHORIZED } from '../permissions/check'
@@ -313,4 +317,51 @@ const getDefaultEmissionSourceTags = async (subPost: SubPost, studyId: string) =
       }
     }
     return defaultTags
+  })
+
+export const createOrUpdateEmissionSourceTagFamily = async (studyId: string, name: string, familyId?: string) =>
+  withServerResponse('createOrUpdateEmissionSourceTagFamily', async () => {
+    const account = await auth()
+    if (!account || !account.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasAccessToCreateEmissionSourceTag(account.user.environment))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, account.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const role = getAccountRoleOnStudy(account.user, study)
+    if (!role || !hasEditionRights(role)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+    return upsertEmissionSourceTagFamilyById(studyId, name, familyId)
+  })
+
+export const deleteEmissionSourceTagFamily = async (studyId: string, familyId: string) =>
+  withServerResponse('deleteEmissionSourceTagFamily', async () => {
+    const account = await auth()
+    if (!account || !account.user) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasAccessToCreateEmissionSourceTag(account.user.environment))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const study = await getStudyById(studyId, account.user.organizationVersionId)
+    if (!study) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const role = getAccountRoleOnStudy(account.user, study)
+    if (!role || !hasEditionRights(role)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return removeSourceTagFamilyById(familyId)
   })
