@@ -8,7 +8,7 @@ import { AdditionalResultTypes, downloadStudyResults, ResultType } from '@/servi
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { ControlMode, Export, ExportRule } from '@prisma/client'
+import { ControlMode, Environment, Export, ExportRule } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import SelectStudySite from '../site/SelectStudySite'
@@ -39,7 +39,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
   const exports = useMemo(() => study.exports, [study.exports])
 
   useEffect(() => {
-    if (environment && hasAccessToBcExport(environment)) {
+    if (environment && environment !== Environment.BC) {
       setType(AdditionalResultTypes.ENV_SPECIFIC_EXPORT)
     }
   }, [environment])
@@ -123,16 +123,7 @@ const AllResults = ({ study, rules, emissionFactorsWithParts, validatedOnly }: P
         )}
       </div>
       <div className="mt1">
-        {type === AdditionalResultTypes.CONSOLIDATED && (
-          <ConsolidatedResults
-            study={study}
-            studySite={studySite}
-            withDependencies
-            validatedOnly={validatedOnly}
-            environment={environment}
-          />
-        )}
-        {type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT && (
+        {type !== Export.Beges && (
           <ConsolidatedResults
             study={study}
             studySite={studySite}

@@ -6,7 +6,7 @@ import HelpIcon from '@/components/base/HelpIcon'
 import StyledChip from '@/components/base/StyledChip'
 import GlossaryModal from '@/components/modals/GlossaryModal'
 import { FullStudy } from '@/db/study'
-import { BCPost, CutPost, environmentPostMapping, Post, subPostsByPost } from '@/services/posts'
+import { BCPost, CutPost, environmentPostMapping, Post, subPostsByPost, TiltPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { formatNumber } from '@/utils/number'
@@ -20,6 +20,7 @@ import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import BarChart from '../charts/BarChart'
 import styles from './ResultsContainer.module.css'
+import { AdditionalResultTypes, ResultType } from '@/services/study'
 
 interface Props {
   study: FullStudy
@@ -27,9 +28,24 @@ interface Props {
   showTitle?: boolean
   validatedOnly?: boolean
   withDependencies?: boolean
+  type?: ResultType
 }
 
-const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies }: Props) => {
+const getPostValues = (environment: Environment | undefined, type?: ResultType) => {
+  if (!environment) return BCPost
+
+  switch (environment) {
+    case Environment.TILT: 
+      return type === AdditionalResultTypes.ENV_SPECIFIC_EXPORT ? TiltPost : BCPost
+    case Environment.CUT:
+      return CutPost
+    case Environment.BC:
+    default:
+      return BCPost
+  }
+}
+
+const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies, type }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
@@ -69,6 +85,10 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
 
     return [formatedTotal, formatedDiff, formatedMonetaryRatio]
   }, [environment, study, studySite, tPost, validatedOnly])
+
+  if (!environment) {
+    return null
+  }
 
   return (
     <>
@@ -159,9 +179,10 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             showLegend={false}
             showLabelsOnBars={false}
             validatedOnly={validatedOnly}
-            postValues={isCut ? CutPost : BCPost}
+            postValues={getPostValues(environment, type)}
             fixedColor={isCut ? false : true}
             environment={environment}
+            type={type}
           />
         </div>
       </div>

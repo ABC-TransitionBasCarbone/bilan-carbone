@@ -8,10 +8,11 @@ import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import styles from './BarChart.module.css'
 
-import { BCPost, CutPost } from '@/services/posts'
+import { BCPost, CutPost, TiltPost } from '@/services/posts'
 import { isPost } from '@/utils/post'
 import { STUDY_UNIT_VALUES } from '@/utils/study'
 import { Environment } from '@prisma/client'
+import { AdditionalResultTypes, ResultType } from '@/services/study'
 
 const BAR_CHART_CONSTANTS = {
   TICK_ANGLE: -20,
@@ -28,10 +29,11 @@ interface Props {
   showLegend?: boolean
   showLabelsOnBars?: boolean
   validatedOnly?: boolean
-  postValues: typeof CutPost | typeof BCPost
+  postValues: typeof CutPost | typeof BCPost | typeof TiltPost
   fixedColor?: boolean
-  environment: Environment | undefined
+  environment: Environment
   skipAnimation?: boolean
+  type?: ResultType
 }
 
 const BarChart = ({
@@ -47,6 +49,7 @@ const BarChart = ({
   fixedColor,
   environment,
   skipAnimation = false,
+  type,
 }: Props) => {
   const tResults = useTranslations('study.results')
   const theme = useTheme()
@@ -57,6 +60,7 @@ const BarChart = ({
     validatedOnly,
     postValues,
     environment,
+    type,
   })
 
   const barData = useMemo(

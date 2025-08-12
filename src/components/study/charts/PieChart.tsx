@@ -27,7 +27,7 @@ interface Props {
   showLabelsOnPie?: boolean
   validatedOnly?: boolean
   postValues: typeof Post | typeof CutPost | typeof BCPost
-  environment: Environment | undefined
+  environment: Environment
   skipAnimation?: boolean
 }
 

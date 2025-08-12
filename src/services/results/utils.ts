@@ -7,8 +7,15 @@ export const getSiteEmissionSources = (emissionSources: FullStudy['emissionSourc
     ? emissionSources
     : emissionSources.filter((emissionSource) => emissionSource.studySite.id === studySite)
 
+const dependencySubPosts = [
+  SubPost.UtilisationEnDependance,
+  SubPost.UtilisationEnDependanceConsommationDEnergie,
+  SubPost.UtilisationEnDependanceConsommationDeBiens,
+  SubPost.UtilisationEnDependanceConsommationNumerique,
+  SubPost.UtilisationEnDependanceFuitesEtAutresConsommations
+] as SubPost[]
 export const filterWithDependencies = (subPost: SubPost, withDependencies: boolean) =>
-  withDependencies || subPost !== SubPost.UtilisationEnDependance
+  withDependencies || !dependencySubPosts.includes(subPost)
 
 export const mapResultsByPost = (allComputedResults: ResultsByPost[], withDependencies: boolean) =>
   allComputedResults

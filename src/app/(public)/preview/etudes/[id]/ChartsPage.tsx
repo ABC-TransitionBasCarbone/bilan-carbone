@@ -12,7 +12,7 @@ interface Props {
   tPdf: ReturnType<typeof useTranslations>
   isAll: boolean
   postValues: typeof BCPost | typeof CutPost
-  environment: Environment | undefined
+  environment: Environment
 }
 
 export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, postValues, environment }: Props) => (

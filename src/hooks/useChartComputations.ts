@@ -1,9 +1,9 @@
 import { FullStudy } from '@/db/study'
-import { BCPost, CutPost, Post } from '@/services/posts'
+import { BCPost, CutPost, environmentPostMapping, Post, TiltPost } from '@/services/posts'
 import { computeResultsByPost } from '@/services/results/consolidated'
 import { filterWithDependencies } from '@/services/results/utils'
+import { AdditionalResultTypes, ResultType } from '@/services/study'
 import { formatNumber } from '@/utils/number'
-import { getPostByEnvironment } from '@/utils/post'
 import { Environment, SubPost } from '@prisma/client'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
@@ -12,8 +12,9 @@ interface UseChartComputationsParams {
   study: FullStudy
   studySite: string
   validatedOnly?: boolean
-  postValues: typeof Post | typeof CutPost | typeof BCPost
-  environment: Environment | undefined
+  postValues: typeof Post | typeof CutPost | typeof BCPost | typeof TiltPost
+  environment: Environment
+  type?: ResultType
 }
 
 export const useChartComputations = ({
@@ -22,12 +23,13 @@ export const useChartComputations = ({
   validatedOnly = false,
   postValues,
   environment,
+  type
 }: UseChartComputationsParams) => {
   const tPost = useTranslations('emissionFactors.post')
   const tUnits = useTranslations('study.results.units')
 
   const resultsByPost = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, postValues, environment),
+    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, postValues, environment, type),
     [study, studySite, tPost, validatedOnly, postValues, environment],
   )
 
@@ -40,10 +42,8 @@ export const useChartComputations = ({
     [study.resultsUnit, tUnits],
   )
 
-  const posts = getPostByEnvironment(environment)
-
   const computeResults = useMemo(() => {
-    const validPosts = new Set(Object.values(posts))
+    const validPosts = new Set(Object.values(postValues)) // Ici il faut réussir à récupérer les infos des bons postes, soit ceux passés soit suivant le type mettre ceux du BC ou de l'env ? 
 
     return resultsByPost
       .map((post) => {
@@ -56,7 +56,7 @@ export const useChartComputations = ({
       })
       .filter((post) => validPosts.has(post.post as Post))
       .map((post) => ({ ...post, label: tPost(post.post) }))
-  }, [posts, resultsByPost, tPost])
+  }, [resultsByPost, tPost])
 
   return {
     resultsByPost,
