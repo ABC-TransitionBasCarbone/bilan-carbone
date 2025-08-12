@@ -75,22 +75,23 @@ export const monetaryUnits: Unit[] = [
   Unit.FRANC_CFP,
 ]
 
-export const filterEmissionFactorsBySubPostAndEnv = (
-  emissionFactors: Pick<EmissionFactorWithMetaData, 'subPosts'>[],
+const getTiltSubPostList = (subPosts: SubPost[]) => {
+  const result = []
+  for (const subPost of subPosts) {
+    const converted = convertTiltSubPostToBCSubPost(subPost)
+    if (converted) {
+      result.push(converted)
+    }
+  }
+  return result
+}
+
+export const filterEmissionFactorsBySubPostAndEnv = <T extends Pick<EmissionFactorWithMetaData, 'subPosts'>>(
+  emissionFactors: T[],
   subPosts: SubPost[],
   environment?: Environment,
 ) => {
-  let filterSubPostList = []
-  if (environment === Environment.TILT) {
-    for (const subPost of subPosts) {
-      const converted = convertTiltSubPostToBCSubPost(subPost)
-      if (converted) {
-        filterSubPostList.push(converted)
-      }
-    }
-  } else {
-    filterSubPostList = subPosts
-  }
+  let filterSubPostList = environment === Environment.TILT ? getTiltSubPostList(subPosts) : subPosts
 
   return emissionFactors.filter((emissionFactor) => emissionFactor.subPosts.some((efSubPost) => filterSubPostList.includes(efSubPost)))
 }

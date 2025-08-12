@@ -128,6 +128,10 @@ const EmissionSourceFactor = ({
     )
   }, [fuse, value])
 
+  if (!environment) {
+    return null
+  }
+
   return (
     <div ref={containerRef}>
       <div className={classNames(styles.gapped, 'align-center')}>
@@ -208,6 +212,7 @@ const EmissionSourceFactor = ({
             setDisplay(false)
             setAdvancedSearch(false)
           }}
+          environment={environment}
         />
       )}
       <Modal
