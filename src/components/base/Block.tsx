@@ -18,7 +18,7 @@ export interface Props {
   icon?: ReactNode
   expIcon?: boolean
   iconPosition?: 'before' | 'after'
-  as?: 'h1'
+  as?: 'h1' | 'h2' | 'h3' | 'h4'
   id?: string
   ['data-testid']?: string
   description?: ReactNode
@@ -44,7 +44,7 @@ const Block = ({
   descriptionColor,
   ...rest
 }: Props) => {
-  const Title = as === 'h1' ? 'h1' : 'h2'
+  const Title = as || 'h2'
   const iconDiv = icon ? (
     <div className={classNames(as === 'h1' ? styles.bigIcon : styles.icon, { [styles.exp]: expIcon })}>{icon}</div>
   ) : null

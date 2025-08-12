@@ -1,0 +1,9 @@
+.container {
+    background-color: var(--mui-palette-grey-200);
+    height: 3rem
+}
+
+.bar {
+    height: 3rem;
+    background-color: var(--mui-palette-primary-light);
+}
