@@ -31,7 +31,7 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import { EmissionFactorImportVersion, EmissionFactorStatus, Import, StudyResultUnit, SubPost } from '@prisma/client'
+import { EmissionFactorImportVersion, EmissionFactorStatus, Environment, Import, StudyResultUnit, SubPost } from '@prisma/client'
 import {
   ColumnDef,
   flexRender,
@@ -93,6 +93,8 @@ interface Props {
   initialSelectedSources: string[]
   userOrganizationId?: string | null
   initialSelectedSubPosts: SubPost[]
+  environment: Environment
+  envPosts: Post[]
 }
 
 const initialSelectedUnits: (BCUnit | string)[] = [...['all'], ...Object.values(BCUnit)]
@@ -104,9 +106,10 @@ const EmissionFactorsTable = ({
   userOrganizationId,
   importVersions,
   initialSelectedSources,
-  initialSelectedSubPosts
+  initialSelectedSubPosts,
+  environment,
+  envPosts
 }: Props) => {
-  const { environment } = useAppEnvironmentStore()
   const t = useTranslations('emissionFactors.table')
   const tUnits = useTranslations('units')
   const tPosts = useTranslations('emissionFactors.post')
@@ -123,13 +126,6 @@ const EmissionFactorsTable = ({
   const [displayFilters, setDisplayFilters] = useState(true)
   const filtersRef = useRef<HTMLDivElement>(null)
   const fromModal = !!selectEmissionFactor
-
-  const envPosts = useMemo(() => {
-    if (!environment) {
-      return [] as Post[]
-    }
-    return environmentPostMapping[environment]
-  }, [environment])
 
   useEffect(() => {
     const checkWrappedRows = () => {

@@ -31,50 +31,45 @@ interface Props {
   type?: ResultType
 }
 
-const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies, type }: Props) => {
+const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOnly, withDependencies, type = AdditionalResultTypes.ENV_SPECIFIC_EXPORT }: Props) => {
   const t = useTranslations('study')
   const tPost = useTranslations('emissionFactors.post')
   const tResultUnits = useTranslations('study.results.units')
   const [glossary, setGlossary] = useState('')
   const [withDep, setWithDependencies] = useState(!!withDependencies)
-  const { environment } = useAppEnvironmentStore()
+  const environment = study.organizationVersion.environment
 
   const isCut = useMemo(() => environment === Environment.CUT, [environment])
 
   const [withDepValue, withoutDepValue, monetaryRatio] = useMemo(() => {
-    const computedResults = computeResultsByPost(
+    const computedResultsWithDep = computeResultsByPost(
       study,
       tPost,
       studySite,
       true,
       validatedOnly,
-      environmentPostMapping[environment || Environment.BC],
+      environmentPostMapping[environment],
       environment,
     )
-    const total = computedResults.find((result) => result.post === 'total')?.value || 0
-    const monetaryTotal = computedResults.find((result) => result.post === 'total')?.monetaryValue || 0
-
-    const dependenciesSubPost = SubPost.UtilisationEnDependance
-
-    const dependenciesPost = Object.keys(subPostsByPost).find((key) =>
-      subPostsByPost[key as Post].includes(dependenciesSubPost),
+    const computedResultsWithoutDep = computeResultsByPost(
+      study,
+      tPost,
+      studySite,
+      false,
+      validatedOnly,
+      environmentPostMapping[environment],
+      environment,
     )
 
-    const dependenciesValue =
-      computedResults
-        .find((result) => result.post === dependenciesPost)
-        ?.subPosts.find((subPost) => subPost.post === dependenciesSubPost)?.value || 0
+    const total = computedResultsWithDep.find((result) => result.post === 'total')?.value || 0
+    const monetaryTotal = computedResultsWithDep.find((result) => result.post === 'total')?.monetaryValue || 0
 
     const formatedTotal = formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])
-    const formatedDiff = formatNumber((total - dependenciesValue) / STUDY_UNIT_VALUES[study.resultsUnit])
+    const formatedDiff = formatNumber(((total - (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0)) / STUDY_UNIT_VALUES[study.resultsUnit]))
     const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
 
     return [formatedTotal, formatedDiff, formatedMonetaryRatio]
   }, [environment, study, studySite, tPost, validatedOnly])
-
-  if (!environment) {
-    return null
-  }
 
   return (
     <>

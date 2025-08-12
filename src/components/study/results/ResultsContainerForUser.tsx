@@ -8,7 +8,6 @@ import { Environment } from '@prisma/client'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import StudyResultsContainerSummary from './StudyResultsContainerSummary'
-import { AdditionalResultTypes } from '@/services/study'
 
 interface Props {
   user: UserSession
@@ -40,7 +39,6 @@ const ResultsContainerForUser = async ({ user, mainStudyOrganizationVersionId }:
           studySite="all"
           showTitle
           validatedOnly={settings.validatedEmissionSourcesOnly}
-          type={AdditionalResultTypes.ENV_SPECIFIC_EXPORT}
         />
       ) : null}
     </Block>

@@ -224,7 +224,7 @@ export const subPostTiltToBcSubPostMapping: Partial<Record<SubPost, SubPost>> = 
   [SubPost.TeletravailBenevoles]: SubPost.Electricite,
 }
 
-export const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>> => {
+const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubPost[]>> => {
   const result = {} as Partial<Record<SubPost, SubPost[]>>
   for (const [tiltSubPost, bcSubPost] of Object.entries(subPostTiltToBcSubPostMapping)) {
     if (result[bcSubPost]) {
@@ -235,6 +235,8 @@ export const getSubPostBCToSubPostTiltMapping = (): Partial<Record<SubPost, SubP
   }
   return result as Partial<Record<SubPost, SubPost[]>>
 }
+
+export const subPostBCToSubPostTiltMapping = getSubPostBCToSubPostTiltMapping()
 
 export const convertTiltSubPostToBCSubPost = (subPost: SubPost): SubPost => {
   return subPostTiltToBcSubPostMapping[subPost] ?? subPost

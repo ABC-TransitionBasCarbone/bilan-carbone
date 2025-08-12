@@ -8,7 +8,6 @@ import Block from '../base/Block'
 import StudyResultsContainerSummary from './results/StudyResultsContainerSummary'
 import useStudySite from './site/useStudySite'
 import StudyDetailsHeader from './StudyDetailsHeader'
-import { AdditionalResultTypes } from '@/services/study'
 
 interface Props {
   canDeleteStudy?: boolean
@@ -37,7 +36,7 @@ const StudyDetails = ({ canDeleteStudy, canDuplicateStudy, study, validatedOnly,
             [Environment.CUT]: <StudyResultsContainerSummaryCut study={study} />,
           }}
           defaultComponent={
-            <StudyResultsContainerSummary study={study} studySite={studySite} validatedOnly={validatedOnly} type={AdditionalResultTypes.ENV_SPECIFIC_EXPORT} />
+            <StudyResultsContainerSummary study={study} studySite={studySite} validatedOnly={validatedOnly} />
           }
         />
       </Block>

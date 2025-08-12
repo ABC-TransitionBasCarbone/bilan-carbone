@@ -57,7 +57,7 @@ export const ManualEmissionFactorUnitList: Unit[] = [
 ]
 
 export const isMonetaryEmissionFactor = (
-  emissionFactor: Pick<Prisma.EmissionFactorCreateInput, 'unit' | 'customUnit' | 'isMonetary'>,
+  emissionFactor: Partial<Pick<Prisma.EmissionFactorCreateInput, 'unit' | 'customUnit' | 'isMonetary'>>,
 ) => (emissionFactor.customUnit && emissionFactor.isMonetary) || monetaryUnits.includes(emissionFactor.unit as Unit)
 
 export const monetaryUnits: Unit[] = [
@@ -76,7 +76,7 @@ export const monetaryUnits: Unit[] = [
 ]
 
 export const filterEmissionFactorsBySubPostAndEnv = (
-  emissionFactors: EmissionFactorWithMetaData[],
+  emissionFactors: Pick<EmissionFactorWithMetaData, 'subPosts'>[],
   subPosts: SubPost[],
   environment?: Environment,
 ) => {
