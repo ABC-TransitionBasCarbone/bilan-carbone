@@ -31,6 +31,7 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, environmen
         validatedOnly={false}
         environment={environment}
         skipAnimation={true}
+        withDep
       />
 
       <PieChart
@@ -43,6 +44,7 @@ export const ChartsPage = ({ study, studySite, siteName, tPdf, isAll, environmen
         validatedOnly={false}
         environment={environment}
         skipAnimation={true}
+        withDep
       />
     </div>
   </div>

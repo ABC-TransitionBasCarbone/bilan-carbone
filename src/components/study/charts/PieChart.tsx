@@ -27,6 +27,7 @@ interface Props {
   validatedOnly?: boolean
   environment: Environment
   skipAnimation?: boolean
+  withDep: boolean
 }
 
 const PieChart = ({
@@ -39,6 +40,7 @@ const PieChart = ({
   validatedOnly = false,
   environment,
   skipAnimation = false,
+  withDep
 }: Props) => {
   const theme = useTheme()
 
@@ -47,6 +49,7 @@ const PieChart = ({
     studySite,
     validatedOnly,
     environment,
+    withDep
   })
 
   const pieData = useMemo(

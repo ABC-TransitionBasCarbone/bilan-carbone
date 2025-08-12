@@ -184,7 +184,6 @@ const PDFSummary = ({ study, environment }: Props) => {
           siteName=""
           tPdf={tPdf}
           isAll={true}
-          postValues={CutPost}
           environment={environment}
         />
 
@@ -240,7 +239,6 @@ const PDFSummary = ({ study, environment }: Props) => {
               siteName={site.fullName}
               tPdf={tPdf}
               isAll={false}
-              postValues={CutPost}
               environment={environment}
             />
           </React.Fragment>
