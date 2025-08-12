@@ -65,7 +65,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
     const monetaryTotal = computedResultsWithDep.find((result) => result.post === 'total')?.monetaryValue || 0
 
     const formatedTotal = formatNumber(total / STUDY_UNIT_VALUES[study.resultsUnit])
-    const formatedDiff = formatNumber(((total - (computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0)) / STUDY_UNIT_VALUES[study.resultsUnit]))
+    const formatedDiff = formatNumber(((computedResultsWithoutDep.find((result) => result.post === 'total')?.value || 0) / STUDY_UNIT_VALUES[study.resultsUnit]))
     const formatedMonetaryRatio = formatNumber((monetaryTotal / total) * 100, 2)
 
     return [formatedTotal, formatedDiff, formatedMonetaryRatio]
@@ -163,6 +163,7 @@ const StudyResultsContainerSummary = ({ study, studySite, showTitle, validatedOn
             fixedColor={isCut ? false : true}
             environment={environment}
             type={type}
+            withDep={withDep}
           />
         </div>
       </div>

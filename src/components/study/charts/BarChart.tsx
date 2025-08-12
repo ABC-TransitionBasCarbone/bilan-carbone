@@ -32,6 +32,7 @@ interface Props {
   fixedColor?: boolean
   environment: Environment
   skipAnimation?: boolean
+  withDep: boolean
   type?: ResultType
 }
 
@@ -47,6 +48,7 @@ const BarChart = ({
   fixedColor,
   environment,
   skipAnimation = false,
+  withDep,
   type,
 }: Props) => {
   const tResults = useTranslations('study.results')
@@ -57,6 +59,7 @@ const BarChart = ({
     studySite,
     validatedOnly,
     environment,
+    withDep,
     type,
   })
 

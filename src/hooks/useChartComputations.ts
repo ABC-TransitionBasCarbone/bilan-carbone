@@ -14,6 +14,7 @@ interface UseChartComputationsParams {
   studySite: string
   validatedOnly?: boolean
   environment: Environment
+  withDep: boolean
   type?: ResultType
 }
 
@@ -22,6 +23,7 @@ export const useChartComputations = ({
   studySite,
   validatedOnly = false,
   environment,
+  withDep,
   type
 }: UseChartComputationsParams) => {
   const tPost = useTranslations('emissionFactors.post')
@@ -30,8 +32,8 @@ export const useChartComputations = ({
   const postValues = useMemo(() => getPostValues(environment, type), [environment, type])
 
   const resultsByPost = useMemo(
-    () => computeResultsByPost(study, tPost, studySite, true, validatedOnly, postValues, environment, type),
-    [study, studySite, tPost, validatedOnly, postValues, environment],
+    () => computeResultsByPost(study, tPost, studySite, withDep, validatedOnly, postValues, environment, type),
+    [study, studySite, tPost, validatedOnly, postValues, environment, withDep],
   )
 
   const chartFormatter = useCallback(
@@ -47,7 +49,7 @@ export const useChartComputations = ({
     return resultsByPost
       .map((post) => {
         const filteredSubPosts = post.subPosts.filter((subPost) =>
-          filterWithDependencies(subPost.post as SubPost, false),
+          filterWithDependencies(subPost.post as SubPost, withDep),
         )
         const value = filteredSubPosts.reduce((res, subPost) => res + subPost.value, 0)
 
